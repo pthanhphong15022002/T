@@ -2,22 +2,19 @@
   [footer]="!hideFooter ? footer : null" [hideMF]="hideMF" (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, dataItem)" class="h-100">
   <ng-template #header>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mt-2">
       <div class="w-100">
         <div>
           <codx-temp-full [title]="data?.title" [titleCss]="'fs-5'"
             [desc]="convertHtmlAgency(data?.agencyName, data?.deptName)" [bookmark]="false" [titleLine]="2">
           </codx-temp-full>
         </div>
-        <div class="d-flex flex-wrap mt-2">
+        <div class="d-flex flex-wrap mt-3">
           <div class="d-flex align-items-center me-5 mb-3">
-            <codx-label
-              [gridViewName]="formModel['gridViewName']"
-              [formName]="formModel['formName']"
-              fiedName="CategoryID"
-              class="me-2 fw-bold"
-            ></codx-label>
-           <span [class.text-gray-600]="!data?.category">{{data?.category?data?.category:gridViewSetup["CategoryID"]["headerText"]}}</span>
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="CategoryID" class="me-2 fw-bold"></codx-label>
+            <span
+              [class.text-gray-600]="!data?.category">{{data?.category?data?.category:gridViewSetup["CategoryID"]["headerText"]}}</span>
           </div>
           <div class="d-flex align-items-center me-5 mb-3">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Urgency"
@@ -197,7 +194,8 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID"
+      [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>
@@ -208,13 +206,8 @@
         </codx-temp-full>
       </div>
       <div class="mt-5 ms-5 justify-content-end w-120px text-center">
-        <codx-vll
-          [name]="item?.category=='3'? vllStatusAssign:vllStatus"
-          [value]="item?.status"
-          [showText]="true"
-          [showBgColor]="true"
-          class="badge badge-light badge-md fs-7 ms-2"
-        ></codx-vll>
+        <codx-vll [name]="item?.category=='3'? vllStatusAssign:vllStatus" [value]="item?.status" [showText]="true"
+          [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2"></codx-vll>
         <div class="fs-7 text-gray-600 mt-1">
           {{ data?.percentage.toFixed(2) }}%
         </div>
@@ -284,43 +277,41 @@
   </div>
 </ng-template>
 <ng-template #reference>
- <ng-container *ngIf="data?.linkss">
-  <div *ngFor="let item of data?.linkss">
-    <codx-temp-full 
-    [title]="item.oDis?.title" [desc]="
+  <ng-container *ngIf="data?.linkss">
+    <div *ngFor="let item of data?.linkss">
+      <codx-temp-full [title]="item.oDis?.title" [desc]="
       convertHtmlAgency(
         item.oDis.agencyName,
         this.gridViewSetup?.AgencyName?.headerText
       )
-    "
-    cardCss="card-template border-bottom px-2 pt-4 pb-2" 
-    [icoStatus]="item.oDis?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item.oDis.isBookmark"
-    [titleLine]="2" [icoDateCss]="checkDeadLine(item.oDis?.deadline)" [dataItem]="item"
-    [footer]="footerTmp"
-    [moreFuncCss]="'me-10'"
-    >
-    </codx-temp-full>
-   
-  </div>
- </ng-container>
+    " cardCss="card-template border-bottom px-2 pt-4 pb-2" [icoStatus]="item.oDis?.urgency"
+        [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="item.oDis?.security"
+        [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="item.oDis.isBookmark"
+        [titleLine]="2" [icoDateCss]="checkDeadLine(item.oDis?.deadline)" [dataItem]="item" [footer]="footerTmp"
+        [moreFuncCss]="'me-10'">
+      </codx-temp-full>
+
+    </div>
+  </ng-container>
 </ng-template>
 <ng-template #footerTmp let-data>
-  <div  class="d-flex flex-wrap justify-content-between ">
+  <div class="d-flex flex-wrap justify-content-between ">
     <div class="d-flex align-items-center">
-      <codx-vll [value]="data.oDis.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+      <codx-vll [value]="data.oDis.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true"
+        [showText]="true" [showBgColor]="true" class="badge">
       </codx-vll>
 
-      <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.oDis.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true" class="badge">
+      <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41'" [value]="data.oDis.approveStatus"
+        [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true" [showText]="true" [showBgColor]="true"
+        class="badge">
       </codx-vll>
       <div class="d-flex align-items-center">
         <span class="me-1 icon-16" [ngClass]="checkDeadLine(data.oDis?.deadline)"></span>
         <span class="text-dark-50">{{data.oDis.createdOn | amDateFormat: (''||'L')}}</span>
       </div>
     </div>
-    <codx-imgs [objectId]="getIdUser(data.oDis.createdBy, data.oDis.owner)" [objectType]="'AD_Users'"
-      [width]="30" [numberImages]="3" [mode]="false">
+    <codx-imgs [objectId]="getIdUser(data.oDis.createdBy, data.oDis.owner)" [objectType]="'AD_Users'" [width]="30"
+      [numberImages]="3" [mode]="false">
     </codx-imgs>
   </div>
   <ng-container *ngIf="data?.filess">
