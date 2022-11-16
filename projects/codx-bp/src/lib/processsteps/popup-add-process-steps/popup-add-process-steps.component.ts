@@ -77,7 +77,7 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );   
-
+      
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
@@ -112,6 +112,11 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
       if(this.listOwnerID.length > 0){
         this.getListUser();
       }
+      debugger
+  const date1 = new Date(this.processSteps['createdOn'].toString());
+
+  console.log(date1.getHours());
+// expected output: 12
   }
 
   loadData() {
@@ -142,18 +147,13 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
     );
 
     popEmail.closed.subscribe((res) => {
-      this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
-      if (res.event) {
+      if (res&& res.event) {
+        this.processSteps["reference"] = res.event?.recID;
         // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
       }
     });
   }
     
-  //#region
-
-  //endregio
-
-  //#region method
 
   viewDetailSurveys(e) {
     let url = 'sv/surveys/SVT01';
