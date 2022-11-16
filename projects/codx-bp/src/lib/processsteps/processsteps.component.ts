@@ -98,6 +98,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dataFile: any;
   crrParentID = '';
   kanban: any;
+  checkList = [];
 
   constructor(
     inject: Injector,
@@ -944,8 +945,18 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   getfileCount(e) {}
 
-  showIconByStepType(stepType){
-     var type = this.button?.items.find(x=>x.id==stepType)
-     return type?.icon
+  showIconByStepType(stepType) {
+    var type = this.button?.items.find((x) => x.id == stepType);
+    return type?.icon;
   }
+  checkReferencesByCheck(data,stepType) :boolean {
+    if(!data?.items || data?.items?.length ==0) return false
+    this.checkList = data?.items.map((x) => {
+      if (x.stepType == stepType) return x;
+    });
+    let check =this.checkList.length > 0
+    return check;
+  }
+
+ 
 }
