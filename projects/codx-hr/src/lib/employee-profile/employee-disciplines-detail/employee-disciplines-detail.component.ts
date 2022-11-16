@@ -38,7 +38,10 @@ export class EmployeeDisciplinesDetailComponent extends UIComponent implements O
   }
   
   onSaveForm(){
-
+    if(this.data.fromDate > this.data.toDate){
+      this.notify.notifyCode('HR002');
+      return;
+    }
   }
 
 }

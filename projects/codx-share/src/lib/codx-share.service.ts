@@ -17,6 +17,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
+  dataRefreshImage = new BehaviorSubject<any>(null);
   constructor(
     private callfunc: CallFuncService,
     private api: ApiHttpService,

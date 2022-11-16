@@ -245,7 +245,16 @@ export class PopupSettingCalendarComponent extends UIComponent {
         endTime,
       ])
       .closed.subscribe((res) => {
-        console.log(res);
+        if (res.event) {
+          const { shiftType, startTime, endTime } = res.event;
+          if (shiftType == '1') {
+            this.stShift.startTime = startTime;
+            this.stShift.endTime = endTime;
+          } else {
+            this.ndShift.startTime = startTime;
+            this.ndShift.endTime = endTime;
+          }
+        }
       });
   }
 

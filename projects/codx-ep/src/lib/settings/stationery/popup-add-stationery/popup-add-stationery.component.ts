@@ -81,11 +81,10 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.tmpTitle = dt?.data[2];
     this.dialogRef = dialog;
     this.formModel = this.dialogRef.formModel;
-    if(this.isAdd){
-      this.imgRecID=null;
-    }
-    else{
-      this.imgRecID=this.data.recID;
+    if (this.isAdd) {
+      this.imgRecID = null;
+    } else {
+      this.imgRecID = this.data.recID;
     }
   }
 
