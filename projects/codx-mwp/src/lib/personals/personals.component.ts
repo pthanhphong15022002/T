@@ -49,6 +49,14 @@ export class PersonalsComponent implements OnInit {
     },
   ];
 
+  headerMF = {
+    POST: true,
+    IMAGE: false,
+    VIDEO: false,
+    NOTEBOOK: false,
+    STORAGE: false,
+  };
+
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
@@ -109,6 +117,16 @@ export class PersonalsComponent implements OnInit {
 
     this.funcID = url;
     // this.codxService.navigate('', `mwp/personals/${url}`);
+    this.changedt.detectChanges();
+  }
+
+  activeMF(type) {
+    this.headerMF.IMAGE = false;
+    this.headerMF.VIDEO = false;
+    this.headerMF.POST = false;
+    this.headerMF.NOTEBOOK = false;
+    this.headerMF.STORAGE = false;
+    this.headerMF[type] = true;
     this.changedt.detectChanges();
   }
 }
