@@ -440,6 +440,16 @@ export class CodxTMService {
     );
   }
 
+  RPASendMailMeeting(valueNo: string, funcID: string){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'RPASendAlertMailAsync',
+      [valueNo, funcID]
+    );
+  }
+
   changeBookingDateTime(recID, startDate, endDate){
     return this.api.execSv('CO','CO','MeetingsBusiness','ChangeBookingDateTimeAsync', [recID, startDate, endDate]);
   }

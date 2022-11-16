@@ -1,4 +1,3 @@
-import { NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -45,23 +44,18 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   assemblyName = "ERM.Business.WP"
   className = "CommentsBusiness"
   method = "GetListPostAsync";
-  totalPage: number = 0;
-  pageIndex = 0;
   user: any;
-  dataDetail: any;
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
   strEmtyData: string = '';
-
-  searchField = '';
-  checkFormAddPost = false;
+  function:any = null;  
+  defaultMoreFC:any[] = [];
+  gridViewSetup:any = null;
   predicateWP: string = '';
   dataValueWP: string = '';
   predicateFD: string = "Category =@0 && Stop=false";
   dataValueFD: string = "3";
-  modal: DialogRef;
-  headerText = '';
   lstData: any;
   lstUserShare: any[] = [];
   lstUserTag: any = [];
@@ -80,6 +74,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     FEEDBACK: "3",
     SHARE: "4",
   }
+  
   @Input() funcID: string = "";
   @Input() dataService: CRUDService = null;
   @Input() objectID: string = "";
@@ -112,7 +107,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.user = this.authStore.userValue;
-    this.getGridViewSetUp("WP");
+    this.getSetUp("WP");
     this.getValueList();
     // this.clearData();
   }
@@ -142,28 +137,67 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  getGridViewSetUp(funcID: string) {
-    if (!funcID) return;
-    this.cache
-      .functionList(funcID)
-      .subscribe((func) => {
+  getSetUp(funcID: string) {
+    if (funcID){
+      // get function
+      this.cache.functionList(funcID).subscribe((func) => {
         if (func) {
-          this.cache
-            .gridViewSetup(func.formName, func.gridViewName)
-            .subscribe((grd: any) => {
-              if (grd) {
-                this.headerText = grd['Comments'] ? grd['Comments']['headerText'] : "";
-              }
-            });
+          this.function = func;
           this.formModel = new FormModel();
-          this.formModel.funcID = funcID;
+          this.formModel.funcID = func.functionID;
           this.formModel.formName = func.formName;
           this.formModel.gridViewName = func.gridViewName;
           this.formModel.entityName = func.entityName;
+          // get gridviewSetup
+          this.cache.gridViewSetup(func.formName, func.gridViewName).subscribe((grd: any) => {
+            if (grd) 
+            {
+              console.log('gridViewSetup',grd)
+              this.gridViewSetup = grd;
+            }
+          });
+          // get more function
+          this.cache.moreFunction(func.formName,func.gridViewName).subscribe((mFC:any) => {
+            if(mFC)
+            {
+              console.log(mFC)
+              this.defaultMoreFC = mFC;
+            }
+          });
         }
       });
+    }
   }
-
+  changeMoreFunction(arrMoreFc)
+  { // set moreFucntion
+    if(arrMoreFc){
+      arrMoreFc.forEach((x:any) =>{
+        if(x.functionID == "WP000" || !this.defaultMoreFC.some(e => e.functionID == x.functionID)){
+          x.disabled = true;
+        }
+      });
+    }
+  }
+  clickMF(event:any,post:any){
+    if(event && post){
+      switch(event.functionID){
+        case "WP001": // cập nhật
+          this.openPopupEdit(post);
+          break;        
+        case "WP002": // xóa
+          this.removePost(post);
+          break;
+        case "WP003": // chia sẻ
+          this.openPopupShare(post);
+          break;
+        case "WP004": // lưu vào sổ tay
+          this.openPopupSave(post);
+          break;
+        default:
+          break;
+      }
+    }
+  }
   beforDelete(option: RequestOption, data: any) {
     if (!option || !data) return false;
     option.service = "WP";
@@ -173,13 +207,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     option.data = data;
     return true;
   }
-  removePost(data: any) {
-    if (!data) return;
-    (this.listview.dataService as CRUDService).
+  removePost(data: any) 
+  {
+    // xóa bài viết
+    if(data)
+    {
+      (this.listview.dataService as CRUDService).
       delete([data], true, (op: any) => this.beforDelete(op, data), '', 'WP022', '', 'WP023').
       subscribe((res) => {
         if (res) {
-          if (data.files) {
+          if (data.files) //xóa files
+          {
             this.api.execSv("DM",
               "ERM.Business.DM",
               "FileBussiness",
@@ -189,20 +227,19 @@ export class ListPostComponent implements OnInit, AfterViewInit {
           }
         }
       });
-
+    }
   }
-  openCreateModal() {
+  openPopupAdd() {
     let data = new WP_Comments();
-    data.recID = Util.uid();
-    data.shareControl = "1";
+    data.shareControl = "9";
     data.refType = "WP_Comments"
     data.createdBy = this.user.userID;
     data.createdName = this.user.userName;
+    let moreFcAdd = this.defaultMoreFC.find(x => x.functionID == "WP000");
     var obj = {
+      data: data,
       status: 'create',
-      headerText: 'Tạo bài viết',
-      lstView: this.listview,
-      data: data
+      headerText: moreFcAdd.customName + " " + this.function.description
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -220,26 +257,25 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     popup.closed.subscribe((res:any)=>{
       if(res?.event?.recID)
       {
-        debugger;
         (this.listview.dataService as CRUDService).add(res.event).subscribe();
         this.notifySvr.notifyCode("WP024");
       }
     });
 
   }
-  openEditModal(data: any) {
-    if (!data) return;
-    let dataEdit = { ...data };
+  openPopupEdit(post: any) {
+    let moreFcEdit = this.defaultMoreFC.find(x => x.functionID == "WP001");
+    let data = JSON.parse(JSON.stringify(post));
     let obj = {
-      post: dataEdit,
+      data: data,
       status: 'edit',
-      headerText: 'Chỉnh sửa bài viết',
+      headerText: moreFcEdit.customName + " " + this.function.description
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
     option.FormModel = this.listview.formModel;
-    this.modal = this.callFC.openForm(
-      PopupAddPostComponents,
+    let popup = this.callFC.openForm(
+      PopupAddPostComponent,
       '',
       700,
       550,
@@ -248,38 +284,66 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       '',
       option
     );
+    popup.closed.subscribe((res:any) => {
+      if(res?.event?.recID)
+      {
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        this.notifySvr.notifyCode("WP021");
+      }
+    });
   }
-  openModalShare(data: any) {
-    if (!data) return;
-    var obj = {
-      post: data,
-      status: 'share',
-      headerText: 'Chia sẻ bài viết',
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    this.modal = this.callFC.openForm(
-      PopupAddPostComponents,
-      '',
-      650,
-      550,
-      '',
-      obj,
-      '',
-      option
-    );
+  openPopupShare(post: any) 
+  {
+    if (post){
+      let moreFcShare = this.defaultMoreFC.find(x => x.functionID == "WP003");
+      let data = new WP_Comments();
+      data.shareControl = "9";
+      data.refType = 'WP_Comments'
+      data.refID = post.recID;
+      data.createdBy = this.user.userID;
+      data.createdName = this.user.userName;
+      data.shares = JSON.parse(JSON.stringify(post));
+      var obj = {
+        data: data,
+        status: 'share',
+        headerText: moreFcShare.customName + " " + this.function.description
+      };
+      let option = new DialogModel();
+      option.DataService = this.listview.dataService as CRUDService;
+      option.FormModel = this.listview.formModel;
+      let popup = this.callFC.openForm(
+        PopupAddPostComponent,
+        '',
+        700,
+        550,
+        '',
+        obj,
+        '',
+        option
+      );
+      popup.closed.subscribe((res:any)=>{
+        if(res?.event?.recID)
+        {
+          (this.listview.dataService as CRUDService).add(res.event).subscribe();
+          this.notifySvr.notifyCode("WP020");
+        }
+      });
+    }
   }
-  openModalDownload(data: any) {
-    if (!data) return;
-    var obj = {
-      post: data,
-      headerText: 'Thêm vào kho lưu trữ',
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
+  openPopupSave(post: any) {
+    if(post)
+    {
+      let moreFcSave = this.defaultMoreFC.find(x => x.functionID == "WP003");
+      let data = JSON.parse(JSON.stringify(post));
+      var obj = {
+        data: data,
+        headerText: moreFcSave.customName,
+      };
+      let option = new DialogModel();
+      option.DataService = this.listview.dataService as CRUDService;
+      option.FormModel = this.listview.formModel;
+      this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
+    }
   }
   pushComment(data: any) {
     if (!data) return;
@@ -289,37 +353,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         return;
       }
     });
-  }
-  showListTag(item: any) {
-    if (!item || !item.listTag) return;
-    item.isShowTag = true;
-    this.lstUserTag = item.listTag;
-    this.dt.detectChanges();
-  }
-  showListShare(item: any) {
-    if (!item || !item.listShare) return;
-    if (item.shareControl == 'U' ||
-      item.shareControl == 'G' || item.shareControl == 'R' ||
-      item.shareControl == 'P' || item.shareControl == 'D' ||
-      item.shareControl == 'O') {
-      item.isShowShare = !item.isShowShare;
-      this.lstUserShare = item.listShare;
-      this.dt.detectChanges();
-    }
-  }
-  closeListShare(item: any) {
-    if (!item) return;
-    if (item.isShowShare) {
-      item.isShowShare = false;
-      this.dt.detectChanges();
-    }
-  }
-  closeListTag(item: any) {
-    if (!item) return;
-    if (item.isShowTag) {
-      item.isShowTag = false;
-      this.dt.detectChanges();
-    }
   }
   naviagteWPNew(data: any) {
     if (!data || !data.recID || !data.category) return;
@@ -343,12 +376,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   clickViewDetail(file: any) 
   {
-    if (!file) return;
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    option.IsFull = true;
-    this.callFC.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
+    if (file)
+    {
+      debugger
+      let option = new DialogModel();
+      option.DataService = this.listview.dataService as CRUDService;
+      option.FormModel = this.listview.formModel;
+      option.IsFull = true;
+      this.callFC.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
+    }
   }
   clickShowComment(data: any) {
     data.isShowComment = !data.isShowComment;
