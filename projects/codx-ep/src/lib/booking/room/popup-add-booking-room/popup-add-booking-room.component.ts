@@ -557,19 +557,19 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {   
-    let roleCheck=0;
-    if(this.curUser.roleType!="1"){
-      this.attendeesList.forEach(item=>{
-        if(item.roleType=="1"){
-          roleCheck=roleCheck+1;        
-        }      
-      });
-      if(roleCheck<1){
-        this.notificationsService.notify('Chưa có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
-        return;
-      }
-    }
-    
+    // let roleCheck=0;
+    // if(this.curUser.roleType!="1"){
+    //   this.attendeesList.forEach(item=>{
+    //     if(item.roleType=="1"){
+    //       roleCheck=roleCheck+1;        
+    //     }      
+    //   });
+    //   if(roleCheck<1){
+    //     this.notificationsService.notify('Chưa có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
+    //     return;
+    //   }
+    // }
+    this.data.reminder=15;
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -1192,27 +1192,37 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
   selectRoseType(idUserSelected, value) {
     if(value=="1"){
-      let checkRole=true;
-      this.attendeesList.forEach(att=>{
-        if(att.roleType == value || this.curUser.roleType== value){
-          checkRole=false;          
-        }      
-      });
-      if(!checkRole){
-        //this.notificationsService.notifyCode('');
-        this.notificationsService.notify('Đã có người chủ trì', '2', 0); //EP_WAITING Đợi messcode từ BA 
-        this.popover.close();
-        return;
+      if(this.curUser.roleType=="1"){
+        this.curUser.roleType="3";
+        this.listRoles.forEach((role) => {
+          if (this.curUser.roleType == role.value) {
+            this.curUser.icon = role.icon;
+          }
+        });
+        this.detectorRef.detectChanges();
       }
+      else{
+        this.attendeesList.forEach(att=>{
+          if(att.roleType == "1"){
+            att.roleType="3";
+            this.listRoles.forEach((role) => {
+              if (att.roleType == role.value) {
+                att.icon = role.icon;
+              }
+            });
+            this.detectorRef.detectChanges();     
+          }      
+        });
+      }      
     }
+
     if(idUserSelected==this.curUser.userID){
       this.curUser.roleType=value;
       this.listRoles.forEach((role) => {
         if (this.curUser.roleType == role.value) {
           this.curUser.icon = role.icon;
         }
-      });
-      
+      });      
       this.changeDetectorRef.detectChanges();
     }
     else{
@@ -1227,120 +1237,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       });      
       this.changeDetectorRef.detectChanges();
-    }
-    
+    }    
     this.changeDetectorRef.detectChanges();
-
     this.popover.close();
+
   }
-  eventApply(e) {
-    var listUserID = '';
-    var listDepartmentID = '';
-    var listUserIDByOrg = '';
-    var type = 'U';
-    e?.data?.forEach((obj) => {
-      type = obj.objectType;
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
-      }
-    });
-    if (listUserID != '') {
-      listUserID = listUserID.substring(0, listUserID.length - 1);
-      //this.valueUser(listUserID);
-    }
-
-    if (listDepartmentID != '')
-      listDepartmentID = listDepartmentID.substring(
-        0,
-        listDepartmentID.length - 1
-      );
-    // if (listDepartmentID != '') {
-    //   this.tmSv
-    //     .getListUserIDByListOrgIDAsync([listDepartmentID, type])
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         listUserIDByOrg += res;
-    //         if (listUserID != '') listUserIDByOrg += ';' + listUserID;
-    //         this.valueUser(listUserIDByOrg);
-    //       }
-    //     });
-    // }
-  }
-
-  // valueUser(resourceID) {
-  //   if (resourceID != '') {
-  //     if (this.resources != null) {
-  //       var user = this.resources;
-  //       var array = resourceID.split(';');
-  //       var id = '';
-  //       var arrayNew = [];
-  //       user.forEach((e) => {
-  //         id += e.resourceID + ';';
-  //       });
-  //       if (id != '') {
-  //         id = id.substring(0, id.length - 1);
-
-  //         array.forEach((element) => {
-  //           if (!id.split(';').includes(element)) arrayNew.push(element);
-  //         });
-  //       }
-  //       if (arrayNew.length > 0) {
-  //         resourceID = arrayNew.join(';');
-  //         id += ';' + resourceID;
-  //         this.getListUser(resourceID);
-  //       }
-  //     } else {
-  //       this.getListUser(resourceID);
-  //     }
-  //   }
-  // }
-
-  // getListUser(resource) {
-  //   while (resource.includes(' ')) {
-  //     resource = resource.replace(' ', '');
-  //   }
-  //   var arrUser = resource.split(';');
-  //   this.listUserID = this.listUserID.concat(arrUser);
-  //   this.api
-  //     .execSv<any>(
-  //       'HR',
-  //       'ERM.Business.HR',
-  //       'EmployeesBusiness',
-  //       'GetListEmployeesByUserIDAsync',
-  //       JSON.stringify(resource.split(';'))
-  //     )
-  //     .subscribe((res) => {
-  //       if (res && res.length > 0) {
-  //         for (var i = 0; i < res.length; i++) {
-  //           let emp = res[i];
-  //           var tmpResource = new CO_Resources();
-  //           if (emp.userID == this.user.userID) {
-  //             tmpResource.resourceID = emp?.userID;
-  //             tmpResource.resourceName = emp?.userName;
-  //             tmpResource.positionName = emp?.positionName;
-  //             tmpResource.roleType = 'A';
-  //             tmpResource.taskControl = true;
-  //             this.resources.push(tmpResource);
-  //           } else {
-  //             tmpResource.resourceID = emp?.userID;
-  //             tmpResource.resourceName = emp?.userName;
-  //             tmpResource.positionName = emp?.positionName;
-  //             tmpResource.roleType = 'P';
-  //             tmpResource.taskControl = true;
-  //             this.resources.push(tmpResource);
-  //           }
-  //           this.meeting.resources = this.resources;
-  //         }
-  //       }
-  //     });
-  // }
-
   connectMeetingNow() {
     this.codxEpService
       .connectMeetingNow(

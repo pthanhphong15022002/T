@@ -1,84 +1,176 @@
 <div class="page-pw h-100">
-    <div class="pw-profile"
-        style="background-image:url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');">
-        <div class="d-flex align-items-center avatar">
-            <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="employeeInfo.userID"
-                [objectName]="employeeInfo.userName" [width]="60">
-            </codx-img>
-            <div class="d-flex flex-column">
-                <div class="fs-6 fw-bold text-dark">{{employeeInfo?.userName}}</div>
-                <div class="text-gray-700">{{employeeInfo?.email}}</div>
-                <div class="text-gray-500">{{employeeInfo?.mobile}}</div>
-            </div>
-        </div>
+  <div class="pw-profile" style="
+      background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
+    ">
+    <div class="d-flex align-items-center avatar">
+      <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="employeeInfo.userID"
+        [objectName]="employeeInfo.userName" [width]="60">
+      </codx-img>
+      <div class="d-flex flex-column">
+        <div class="fs-6 fw-bold text-dark">{{ employeeInfo?.userName }}</div>
+        <div class="text-gray-700">{{ employeeInfo?.email }}</div>
+        <div class="text-gray-500">{{ employeeInfo?.mobile }}</div>
+      </div>
     </div>
-    <div class="personal-container">
-        <div class="pw-menu d-flex" *ngIf="moreFunc">
-            <div *ngFor="let item of moreFunc">
-                <a (click)="getMenu(item.functionID, item.smallIcon)">
-                    <div *ngIf="funcID == 'MWP009'">
-                        <div class="d-flex align-items-center" *ngIf="item.functionID == 'MWP0091'">
-                            <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}_active.svg" alt="">
-                            <span class="fw-bolder ms-2" style="color:  #0078ff;">
-                                <codx-label name="lblDescription" formName="personals" default="{{item.description}}">
-                                </codx-label>
-                            </span>
-                        </div>
-                        <div class="d-flex align-items-center" *ngIf="item.functionID != 'MWP0091'">
-                            <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg" alt="">
-                            <span class="fw-bolder ms-2">
-                                <codx-label name="lblDescription" formName="personals" default="{{item.description}}">
-                                </codx-label>
-                            </span>
-                        </div>
-                    </div>
-                    <div *ngIf="funcID != 'MWP009'">
-                        <div class="d-flex align-items-center" *ngIf="active == false">
-                            <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg" alt="">
-                            <span class="fw-bolder ms-2">
-                                <codx-label name="lblDescription" formName="personals" default="{{item.description}}">
-                                </codx-label>
-                            </span>
-                        </div>
-                        <div class="d-flex align-items-center"
-                            *ngIf="item.functionID == menuUrl || item.functionID == funcID">
-                            <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}_active.svg" alt="">
-                            <span class="fw-bolder ms-2" style="color:  #0078ff;">
-                                <codx-label name="lblDescription" formName="personals" default="{{item.description}}">
-                                </codx-label>
-                            </span>
-                        </div>
-                        <div class="d-flex align-items-center" *ngIf="item.functionID != menuUrl">
-                            <img src="../assets/themes/mwp/default/light/img/{{item.smallIcon}}.svg" alt=""
-                                *ngIf="active == true ">
-                            <span class="fw-bolder ms-2" *ngIf="active == true">
-                                <codx-label name="lblDescription" formName="personals" default="{{item.description}}">
-                                </codx-label>
-                            </span>
-                        </div>
-                    </div>
-                </a>
+  </div>
+  <div class="personal-container">
+    <div class="pw-menu d-flex">
+      <!-- <div *ngFor="let item of moreFunc">
+        <a (click)="getMenu(item.functionID, item.smallIcon)">
+          <div *ngIf="funcID == 'MWP009'">
+            <div
+              class="d-flex align-items-center"
+              *ngIf="item.functionID == 'MWP0091'"
+            >
+              <img
+                src="../assets/themes/mwp/default/light/img/{{
+                  item.smallIcon
+                }}_active.svg"
+                alt=""
+              />
+              <span class="fw-bolder ms-2" style="color: #0078ff">
+                <codx-label
+                  name="lblDescription"
+                  formName="personals"
+                  default="{{ item.description }}"
+                >
+                </codx-label>
+              </span>
             </div>
-        </div>
-        <div class="pw-feed h-100 pw-md" *ngIf="funcID == 'MWP009'">
-            <app-posts></app-posts>
-        </div>
-        <div class="pw-content h-100 w-100 pw-md rounded-2 bg-body" *ngIf="funcID == 'MWP0091'">
-            <app-posts></app-posts>
-        </div>
-        <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body" *ngIf="funcID == 'MWP0092'">
-            <app-img></app-img>
-        </div>
-        <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body" *ngIf="funcID == 'MWP0093'">
-            <div class="px-5">
-                <app-video></app-video>
+            <div
+              class="d-flex align-items-center"
+              *ngIf="item.functionID != 'MWP0091'"
+            >
+              <img
+                src="../assets/themes/mwp/default/light/img/{{
+                  item.smallIcon
+                }}.svg"
+                alt=""
+              />
+              <span class="fw-bolder ms-2">
+                <codx-label
+                  name="lblDescription"
+                  formName="personals"
+                  default="{{ item.description }}"
+                >
+                </codx-label>
+              </span>
             </div>
-        </div>
-        <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body" *ngIf="funcID == 'MWP0094'">
-            <app-note-books></app-note-books>
-        </div>
-        <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y" *ngIf="funcID == 'MWP0095'">
-            <app-storage></app-storage>
-        </div>
+          </div>
+          <div *ngIf="funcID != 'MWP009'">
+            <div class="d-flex align-items-center" *ngIf="active == false">
+              <img
+                src="../assets/themes/mwp/default/light/img/{{
+                  item.smallIcon
+                }}.svg"
+                alt=""
+              />
+              <span class="fw-bolder ms-2">
+                <codx-label
+                  name="lblDescription"
+                  formName="personals"
+                  default="{{ item.description }}"
+                >
+                </codx-label>
+              </span>
+            </div>
+            <div
+              class="d-flex align-items-center"
+              *ngIf="item.functionID == menuUrl || item.functionID == funcID"
+            >
+              <img
+                src="../assets/themes/mwp/default/light/img/{{
+                  item.smallIcon
+                }}_active.svg"
+                alt=""
+              />
+              <span class="fw-bolder ms-2" style="color: #0078ff">
+                <codx-label
+                  name="lblDescription"
+                  formName="personals"
+                  default="{{ item.description }}"
+                >
+                </codx-label>
+              </span>
+            </div>
+            <div
+              class="d-flex align-items-center"
+              *ngIf="item.functionID != menuUrl"
+            >
+              <img
+                src="../assets/themes/mwp/default/light/img/{{
+                  item.smallIcon
+                }}.svg"
+                alt=""
+                *ngIf="active == true"
+              />
+              <span class="fw-bolder ms-2" *ngIf="active == true">
+                <codx-label
+                  name="lblDescription"
+                  formName="personals"
+                  default="{{ item.description }}"
+                >
+                </codx-label>
+              </span>
+            </div>
+          </div>
+        </a>
+      </div> -->
+      <ejs-tab id="tab_default" heightAdjustMode="Auto">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>test template header</ng-template>
+            <ng-template #content>
+              Twitter is an online social networking service that enables users
+              to send and read short 140-character messages called "tweets".
+              Registered users can read and post tweets, but those who are
+              unregistered can only read them. Users access Twitter through the
+              website interface, SMS or mobile device app Twitter Inc. is based
+              in San Francisco and has more than 25 offices around the world.
+              Twitter was created in March 2006 by Jack Dorsey, Evan Williams,
+              Biz Stone, and Noah Glass and launched in July 2006. The service
+              rapidly gained worldwide popularity, with more than 100 million
+              users posting 340 million tweets a day in 2012.The service also
+              handled 1.6 billion search queries per day.
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
+    <!-- <div class="pw-feed h-100 pw-md" *ngIf="funcID == 'MWP009'">
+      <app-posts></app-posts>
+    </div>
+    <div
+      class="pw-content h-100 w-100 pw-md rounded-2 bg-body"
+      *ngIf="funcID == 'MWP0091'"
+    >
+      <app-posts></app-posts>
+    </div>
+    <div
+      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
+      *ngIf="funcID == 'MWP0092'"
+    >
+      <app-img></app-img>
+    </div>
+    <div
+      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
+      *ngIf="funcID == 'MWP0093'"
+    >
+      <div class="px-5">
+        <app-video></app-video>
+      </div>
+    </div>
+    <div
+      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
+      *ngIf="funcID == 'MWP0094'"
+    >
+      <app-note-books></app-note-books>
+    </div>
+    <div
+      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
+      *ngIf="funcID == 'MWP0095'"
+    >
+      <app-storage></app-storage>
+    </div> -->
+  </div>
 </div>
