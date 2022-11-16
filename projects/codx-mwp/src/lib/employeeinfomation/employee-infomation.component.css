@@ -32,17 +32,6 @@ ngx-skeleton-loader {
     width: initial;
 }
 
-.line {
-    position: absolute;
-    display: block;
-    height: 1px;
-    left: 20px;
-    right: -60px;
-    top: 16px;
-    background-color: #eee;
-    content: "";
-    z-index: 1;
-}
 
 .tagitem {
     border-radius: 15px;

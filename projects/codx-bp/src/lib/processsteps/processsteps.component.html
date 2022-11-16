@@ -1,4 +1,3 @@
-
 <codx-views
   #view
   [funcID]="funcID"
@@ -34,7 +33,10 @@
   </codx-card-img>
 
   <ng-template #cardImgFooter>
-    <div class="d-flex bg-footer {{data?.color?'':'bg-light-warning'}}" [style.background]="data?.color">
+    <div
+      class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }}"
+      [style.background]="data?.color"
+    >
       <div class="d-flex flex-column w-100 p-3">
         <div class="d-flex align-items-center">
           <div class="d-flex align-items-center card-icon-nowrap me-1">
@@ -90,7 +92,10 @@
       <label class="text-danger fw-bold mb-2">{{ data.stepName }}</label>
       <div class="check-list text-dark">
         <ng-container *ngFor="let item of data?.items">
-          <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
+          <div class="d-flex">
+            <i class="{{ showIconByStepType(item.stepType) }}"></i>
+            <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
+          </div>
         </ng-container>
       </div>
     </div>
@@ -120,7 +125,7 @@
           displayThumb="full"
         >
         </codx-attachment>
-        <ng-container *ngFor="let item of data?.items">
+        <!-- <ng-container *ngFor="let item of data?.items">
           <codx-attachment
             #attachment
             [objectType]="view.formModel.entityName"
@@ -137,7 +142,7 @@
             displayThumb="full"
           >
           </codx-attachment>
-        </ng-container>
+        </ng-container> -->
       </div>
     </div>
   </div>
@@ -293,6 +298,7 @@
                                 [titleTmp]="titleTmp"
                                 [desc]="item1?.memo"
                                 [dataItem]="item1"
+                              
                               >
                               </codx-temp-full>
 
@@ -301,7 +307,7 @@
                                   <div
                                     class="steplist-item step-items rounded p-4"
                                   >
-                                    <codx-temp-full
+                                   <codx-temp-full
                                       [titleTmp]="titleTmp"
                                       [desc]="item2?.memo"
                                       [footer]="footerBase"
@@ -375,6 +381,7 @@
   </div>
 </ng-template>
 
+
 <ng-template #footerBase let-data>
   <ng-container [ngTemplateOutlet]="content"></ng-container>
   <div
@@ -423,6 +430,16 @@
   </div>
 
   <ng-template #content>
+    <ng-container *ngIf=" data.stepType == 'A'">
+      <div class="check-list text-dark">
+        <ng-container *ngFor="let item of data?.items">
+          <div class="d-flex">
+            <i class="{{ showIconByStepType(item.stepType) }}"></i>
+            <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
     <ng-container
       *ngIf="data?.reference != null && data?.reference.split(';').length > 0"
     >
@@ -517,35 +534,34 @@
       </button>
     </div>
     <!-- chua co referedType -->
-    <ng-container >
+    <ng-container>
       <codx-attachment
-      #addFlowchart
-      [objectType]="'BP_Processes'"
-      [objectId]="processID"
-      [hideFolder]="1"
-      [hideImageUpload]="1"
-      [hideImageThumb]="1"
-      [hideUploadBtn]="1"
-      [hideDes]="1"
-      [type]="'inline'"
-      [allowMultiFile]="0"
-      [formModel]="view.formModel"
-      [functionID]="funcID" 
-      [isSaveSelected]="1"
-      allowExtensions=".jpg,.png"
-      (fileAdded)="fileAdded($event)"
-      (fileCount)="getfileCount($event)"
-      displayThumb="full"
-    >
-    </codx-attachment>
-         <!-- [isSaveSelected]="1" -->
-  </ng-container>
-  <ng-container *ngIf="dataFile" >
-    <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
-  </ng-container>
-  <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
-  </ng-container>
- 
+        #addFlowchart
+        [objectType]="'BP_Processes'"
+        [objectId]="processID"
+        [hideFolder]="1"
+        [hideImageUpload]="1"
+        [hideImageThumb]="1"
+        [hideUploadBtn]="1"
+        [hideDes]="1"
+        [type]="'inline'"
+        [allowMultiFile]="0"
+        [formModel]="view.formModel"
+        [functionID]="funcID"
+        [isSaveSelected]="1"
+        allowExtensions=".jpg,.png"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        displayThumb="full"
+      >
+      </codx-attachment>
+      <!-- [isSaveSelected]="1" -->
+    </ng-container>
+    <ng-container *ngIf="dataFile">
+      <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+    </ng-container>
+    <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
+    </ng-container>
   </div>
 </ng-template>
 

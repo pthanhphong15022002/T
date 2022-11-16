@@ -51,6 +51,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   isAddAutoNumber = true;
   isClose = true;
   transID: String = '';
+  disableCategoryID: string;
 
   headerText = '';
   subHeaderText = '';
@@ -80,7 +81,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     private cache: CacheService,
     private cfService: CallFuncService,
     private cr: ChangeDetectorRef,
-    private codxService: CodxService,
     private notify: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -93,6 +93,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     this.headerText = data?.data?.headerText;
     this.type = data?.data?.type;
     this.oldRecID = data?.data?.oldRecID;
+    this.disableCategoryID = data?.data?.disableCategoryID ?? '0';
   }
 
   ngAfterViewInit(): void {
@@ -152,16 +153,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     });
     if (this.isAdd) {
       this.data.countStep = 0;
-      this.data.signatureType = '1';
-      this.data.icon = 'icon-text_snippet';
-      this.data.color = '#0078FF';
-      this.signatureType = '1';
-
-      this.form?.formGroup?.patchValue({
-        signatureType: '1',
-        icon: 'icon-text_snippet',
-        color: '#0078FF',
-      });
 
       this.esService
         .getSettingByPredicate(
@@ -256,6 +247,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               );
 
               if (x.event?.status == 'Y') {
+                this.data.confirmControl = event?.data ? '1' : '0';
                 this.form?.formGroup?.patchValue({
                   [event['field']]: event.data,
                 });
@@ -280,7 +272,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               }
             });
           } else {
-            this.data[event['field']] = event.data ? true : false;
+            this.data[event['field']] = event.data ? '1' : '0';
             this.form?.formGroup?.patchValue({
               [event['field']]: this.data[event['field']],
             });
@@ -296,6 +288,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
               );
 
               if (x.event?.status == 'Y') {
+                this.data[event['field']] = event.data;
                 this.form?.formGroup?.patchValue({
                   [event['field']]: event.data,
                 });
@@ -362,40 +355,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     }
 
     this.dialog.dataService.dataSelected = this.data;
-
-    // this.esService.checkCategoryName(this.data).subscribe((res) => {
-    //   if (res) {
-    //     this.notify.notifyCode('ES024');
-    //     return;
-    //   } else {
-    //     this.dialog.dataService
-    //       .save((opt: any) => this.beforeSave(opt), 0)
-    //       .subscribe((res) => {
-    //         if (res.update || res.save) {
-    //           let resData = res.save;
-    //           if (res.update) resData = res.update;
-    //           this.isSaved = true;
-    //           if (isClose) {
-    //             this.dialog && this.dialog.close(resData);
-    //           }
-    //         }
-    //       });
-    //   }
-    // });
-
-    // this.dialog.dataService
-    //   .save((opt: any) => this.beforeSave(opt), 0)
-    //   .subscribe((res) => {
-    //     if (res.update || res.save) {
-    //       let resData = res.save;
-    //       if (res.update) resData = res.update;
-    //       this.isSaved = true;
-    //       if (isClose) {
-    //         this.dialog && this.dialog.close(resData);
-    //       }
-    //     }
-    //   });
-
     if (
       (this.isAdd && this.isSaved == false) ||
       (this.isSaved == false && this.type == 'copy')

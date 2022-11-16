@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiHttpService } from 'codx-core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,7 @@ export class PatternService {
     );
   }
 
-  deleteFile(recID) {
+  deleteFile(recID) : Observable<any>{
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',

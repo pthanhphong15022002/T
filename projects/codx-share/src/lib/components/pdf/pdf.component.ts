@@ -121,15 +121,16 @@ export class PdfComponent
   curPage = 1;
 
   //zoom
-  zoomValue: any = 60;
+  zoomValue: any = 100;
   zoomFields = { text: 'show', value: 'realValue' };
   lstZoomValue = [
+    { realValue: '10', show: 10 },
     { realValue: '25', show: 25 },
     { realValue: '30', show: 30 },
     { realValue: '50', show: 50 },
     { realValue: '90', show: 90 },
     { realValue: '100', show: 100 },
-    { realValue: 'Auto', show: 'Auto' },
+    // { realValue: 'Auto', show: 'Auto' },
     // { realValue: 'Fit to Width', show: 'Fit to Width' },
     // { realValue: 'Fit to page', show: 'Fit to page' },
   ];
@@ -151,6 +152,17 @@ export class PdfComponent
   renderQRAllPage = false;
 
   imgConfig = ['S1', 'S2', 'S3', '8', '9'];
+  fullAnchor = [
+    'top-left',
+    'top-center',
+    'top-right',
+    'middle-right',
+    'middle-left',
+    'bottom-left',
+    'bottom-center',
+    'bottom-right',
+  ];
+  textAnchor = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
 
   //save to db
   after_X_Second: number = 100;
@@ -337,7 +349,6 @@ export class PdfComponent
     }
     this.tr = new Konva.Transformer({
       rotateEnabled: false,
-      enabledAnchors: ['top-left', 'top-right', 'bottom-left', 'bottom-right'],
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -465,6 +476,20 @@ export class PdfComponent
           : area.isLock == true
           ? false
           : true
+      );
+
+      this.tr?.enabledAnchors(
+        this.isEditable == false
+          ? []
+          : area.allowEditAreas == false
+          ? []
+          : area.isLock == true
+          ? []
+          : this.imgConfig.includes(area.labelType)
+          ? this.checkIsUrl(area.labelValue)
+            ? this.fullAnchor
+            : this.textAnchor
+          : this.textAnchor
       );
       this.tr?.draggable(
         this.isEditable == false
@@ -700,8 +725,15 @@ export class PdfComponent
           width: canvasBounds.width,
           height: canvasBounds.height,
         });
-        this.xScale = canvasBounds.width / 794;
-        this.yScale = canvasBounds.height / 1123;
+        if (this.zoomValue == 100) {
+          this.xAt100 = canvasBounds.width;
+          this.yAt100 = canvasBounds.height;
+          console.log('xscale', this.xAt100, 'yscale', this.yAt100);
+        }
+        this.xScale = canvasBounds.width / this.xAt100;
+        this.yScale = canvasBounds.height / this.yAt100;
+        console.log('xscale', this.xScale, 'yscale', this.yScale);
+
         let layer = new Konva.Layer({
           id: id,
           opacity: 1,
@@ -883,6 +915,9 @@ export class PdfComponent
         //stage event
         stage.on('mouseenter', (mouseover: any) => {
           if (this.needAddKonva) {
+            let attrs = this.needAddKonva.attrs;
+            let name: tmpAreaName = JSON.parse(attrs.name);
+
             let transformable =
               this.isEditable == false
                 ? false
@@ -891,6 +926,15 @@ export class PdfComponent
                 : true;
             this.tr?.rotateEnabled(false);
             this.tr?.draggable(transformable);
+            this.tr?.enabledAnchors(
+              !transformable
+                ? []
+                : name.Type == 'img'
+                ? this.checkIsUrl(name.LabelValue)
+                  ? this.fullAnchor
+                  : this.textAnchor
+                : this.textAnchor
+            );
             this.tr?.resizeEnabled(transformable);
             this.tr?.nodes([this.needAddKonva]);
             this.tr?.forceUpdate();
@@ -902,9 +946,6 @@ export class PdfComponent
             this.needAddKonva.on('dragend', (dragEnd) => {
               if (dragEnd?.evt?.toElement?.tagName == 'CANVAS') {
                 if (this.needAddKonva) {
-                  let attrs = this.needAddKonva.attrs;
-                  let name: tmpAreaName = JSON.parse(attrs.name);
-
                   let curLayer = stage?.children[0]?.children;
                   let signed = curLayer.filter((child) => {
                     if (child != this.tr) {
@@ -992,6 +1033,18 @@ export class PdfComponent
                 this.isEditable == false
                   ? false
                   : this.curSelectedArea.draggable()
+              );
+
+              let attrs = this.curSelectedArea?.attrs;
+              let name: tmpAreaName = JSON.parse(attrs.name);
+              this.tr?.enabledAnchors(
+                this.isEditable == false
+                  ? []
+                  : name.Type == 'img'
+                  ? this.checkIsUrl(name.LabelValue)
+                    ? this.fullAnchor
+                    : this.textAnchor
+                  : this.textAnchor
               );
               this.tr?.forceUpdate();
               this.tr?.nodes([this.curSelectedArea]);
@@ -1773,22 +1826,19 @@ export class PdfComponent
   }
 
   changeZoom(type: string, e?: any) {
-    if (!isNaN(Number(e?.value))) {
+    if (
+      !isNaN(Number(e?.value)) &&
+      Number(e?.value) <= 100 &&
+      Number(e?.value) >= 10
+    ) {
       this.zoomValue = e.value;
+    } else if (!isNaN(Number(e)) && Number(e) <= 100 && Number(e) >= 10) {
+      this.ngxPdfView.zoom = e;
     } else {
-      switch (e.value) {
-        case 'Auto':
-          this.zoomValue = 'auto';
-          return;
-        case 'Fit to Width':
-          this.zoomValue = 'page-width';
-          return;
-        case 'Fit to page':
-          this.zoomValue = 'page-fit';
-          return;
-      }
+      // this.zoomValue = 10;
     }
-    if (this.inputUrl == null) {
+    this.detectorRef.detectChanges();
+    if (this.curSelectedArea) {
       this.tr?.forceUpdate();
       this.tr?.draw();
     }

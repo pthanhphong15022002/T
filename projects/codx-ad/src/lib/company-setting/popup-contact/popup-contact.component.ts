@@ -19,7 +19,6 @@ import { AD_CompanySettings } from '../../models/AD_CompanySettings.models';
   styleUrls: ['./popup-contact.component.css'],
 })
 export class PopupContactComponent implements OnInit {
-  data: any;
   dialog: any;
   items: AD_CompanySettings;
   title: string = 'Liên hệ';
@@ -32,16 +31,17 @@ export class PopupContactComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dt?.data;
+    this.items = dt?.data;
     this.dialog = dialog;
   }
 
   ngOnInit(): void {
-    this.items = this.data;
     this.getURLEmbed(this.items.timeZone);
   }
 
   update() {
+    this.items;
+    debugger;
     this.adService
       .updateInformationCompanySettings(this.items, this.option)
       .subscribe((response) => {
@@ -50,9 +50,9 @@ export class PopupContactComponent implements OnInit {
         } else {
           this.notiService.notifyCode('SYS021');
         }
+        this.dialog.close(response);
+        this.changeDetectorRef.detectChanges();
       });
-    this.dialog.close();
-    this.changeDetectorRef.detectChanges();
   }
 
   valueChange(e: any) {
@@ -67,14 +67,18 @@ export class PopupContactComponent implements OnInit {
       var doc = parser.parseFromString(e.data, 'text/html');
       if (doc) {
         var htmlE: any = doc.body.childNodes[0];
-        this.items.timeZone = htmlE.src;
-        this.getURLEmbed(htmlE.src);
+        if (htmlE?.src) {
+          this.items.timeZone = htmlE.src;
+          this.getURLEmbed(htmlE.src);
+        }
       }
     }
   }
 
   urlEmbedSafe: any;
   getURLEmbed(url) {
-    this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    if (url) {
+      this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    }
   }
 }

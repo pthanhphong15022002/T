@@ -34,6 +34,7 @@ export class CO_Meetings{
     online: boolean;
     avataResource: string;
     userName: string;
+    reminder: number;
 }
 
 export class CO_Resources{
