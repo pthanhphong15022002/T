@@ -58,7 +58,6 @@ export class UpdateStatusComponent implements OnInit {
 
   valueChange(e) {
     if (e) {
-      debugger;
       var arrData = e.component?.dataSource;
       // this.employee.status = e.data;
       this.statusSelected = e.data;

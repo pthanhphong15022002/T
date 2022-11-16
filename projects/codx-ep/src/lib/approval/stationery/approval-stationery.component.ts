@@ -106,7 +106,6 @@ export class ApprovalStationeryComponent
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
-        debugger;
         this.codxEpService
           .approve(            
             data?.approvalTransRecID,//ApprovelTrans.RecID

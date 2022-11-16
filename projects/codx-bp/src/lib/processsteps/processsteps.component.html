@@ -93,7 +93,7 @@
       <div class="check-list text-dark">
         <ng-container *ngFor="let item of data?.items">
           <div class="d-flex">
-            <i class="{{showIconByStepType(item.stepType)}}"></i>
+            <i class="{{ showIconByStepType(item.stepType) }}"></i>
             <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
           </div>
         </ng-container>
@@ -298,6 +298,7 @@
                                 [titleTmp]="titleTmp"
                                 [desc]="item1?.memo"
                                 [dataItem]="item1"
+                              
                               >
                               </codx-temp-full>
 
@@ -306,7 +307,7 @@
                                   <div
                                     class="steplist-item step-items rounded p-4"
                                   >
-                                    <codx-temp-full
+                                   <codx-temp-full
                                       [titleTmp]="titleTmp"
                                       [desc]="item2?.memo"
                                       [footer]="footerBase"
@@ -380,6 +381,7 @@
   </div>
 </ng-template>
 
+
 <ng-template #footerBase let-data>
   <ng-container [ngTemplateOutlet]="content"></ng-container>
   <div
@@ -428,6 +430,16 @@
   </div>
 
   <ng-template #content>
+    <ng-container *ngIf=" data.stepType == 'A'">
+      <div class="check-list text-dark">
+        <ng-container *ngFor="let item of data?.items">
+          <div class="d-flex">
+            <i class="{{ showIconByStepType(item.stepType) }}"></i>
+            <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
     <ng-container
       *ngIf="data?.reference != null && data?.reference.split(';').length > 0"
     >

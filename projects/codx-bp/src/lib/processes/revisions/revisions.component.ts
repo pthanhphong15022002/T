@@ -37,8 +37,8 @@ export class RevisionsComponent implements OnInit {
   comment = '';
   funcID: any;
   user: any;
-
-  ver = new BP_ProcessRevisions();
+  testHeader:any;
+  version = new BP_ProcessRevisions();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -49,25 +49,28 @@ export class RevisionsComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.data = JSON.parse(JSON.stringify(dt?.data));
+    // this.testHeader = JSON.parse(JSON.stringify(dt?.data));
     this.dialog = dialog;
     this.more = this.data?.more;
     this.funcID = this.more?.functionID;
     this.process = this.data?.data;
     this.revisions = this.process?.versions;
-    this.headerText = this.more?.customName;
+    this.headerText = 'Quản lý phiên bản';
     this.user = this.authStore.get();
   }
 
   ngOnInit(): void {
-    if(this.revisions.length > 0 && this.revisions != null){
-      var lastVersion = this.revisions[this.revisions.length - 1];
-      if(lastVersion.comment != ''){
-        this.comment = lastVersion.comment;
-      }else{
-        this.comment = '';
-      }
-    }
-    console.log(lastVersion);
+    // if(this.revisions.length > 0 && this.revisions != null){
+    //   var lastVersion = this.revisions[this.revisions.length - 1];
+    //   if(lastVersion.comment != ''){
+    //     this.comment = lastVersion.comment;
+    //   }else{
+    //     this.comment = '';
+    //   }
+    // }
+   // console.log(lastVersion);
+   this.process.versionNo='';
+   this.comment=''
   }
 
   //#region event
@@ -96,10 +99,9 @@ export class RevisionsComponent implements OnInit {
         this.comment,
       ])
       .subscribe((res) => {
-        if (res != null) {
+        if (res) {
             this.dialog.close(res);
             this.notiService.notifyCode('SYS007');
-
         }
       });
   }

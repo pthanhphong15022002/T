@@ -429,7 +429,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null) {
-    debugger;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {
@@ -515,6 +514,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
           this.view.dataService.dataSelected.recID = res?.recID;
+          this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
@@ -1065,15 +1065,18 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     var approvelCL = e.filter(
       (x: { functionID: string }) => x.functionID == 'ODT114' 
     );
-    approvelCL[0].disabled = true;
+    if(approvelCL[0])
+      approvelCL[0].disabled = true;
     //Trả lại
     if(data?.status == "4")
     {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT113' 
       );
-      approvel[0].disabled = true;
-      approvelCL[0].disabled = false;
+      if(approvel[0])
+        approvel[0].disabled = true;
+      if(approvelCL[0])
+        approvelCL[0].disabled = false;
     }
     //data?.isblur = true
   }

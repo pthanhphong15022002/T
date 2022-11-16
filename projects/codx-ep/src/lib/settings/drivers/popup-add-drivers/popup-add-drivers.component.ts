@@ -52,6 +52,7 @@ export class PopupAddDriversComponent
   CbxName: any;
   isAfterRender = false;
   returnData:any;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -65,6 +66,12 @@ export class PopupAddDriversComponent
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    if(this.isAdd){
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
+    }
   }
 
   onInit(): void {
@@ -98,10 +105,16 @@ export class PopupAddDriversComponent
   valueChange(event: any) {
     if (event?.field != null && event?.field != '') {
       if (event.data instanceof Object) {
-        //this.fGroupAddDriver.patchValue({ [event['field']]: event.data.value });
+        this.data['field']=event.data.value;
       } else {
-        //this.fGroupAddDriver.patchValue({ [event['field']]: event.data });
+        this.data['field']=event.data;
       }
+    }
+  }
+  emailChange(event: any) {
+    if (event?.field != null && event?.field != '') {
+      this.data.email=event.data;      
+      this.detectorRef.detectChanges();  
     }
   }
   valueCbxCarChange(event: any) {

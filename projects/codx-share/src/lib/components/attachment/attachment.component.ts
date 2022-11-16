@@ -1295,11 +1295,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var files = this.dmSV.listFiles;
             if (files == null) files = [];
             var res = item.data;
-            var thumbnail = res.thumbnail;
-            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
-              res.extension
-            )}`; //'../../../assets/img/loader.gif';
-            files.push(Object.assign({}, res));
+            var thumbnail = res.thumbnail; //'../../../assets/img/loader.gif';
+            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.extension)}`;
+            if(item.unit != "isSubFolder")
+            {
+              files.push(Object.assign({}, res));
+            }
             this.dmSV.listFiles = files;
             this.dmSV.ChangeData.next(true);
             this.atSV.fileListAdded.push(Object.assign({}, item));

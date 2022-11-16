@@ -145,11 +145,11 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: 'wp/portal/wp',
-  //   redirectTo: 'portal/WP',
-  //   pathMatch: 'full',
-  // },
+  {
+    path: 'wp/portal/wp',
+    redirectTo: 'portal/WP',
+    pathMatch: 'full',
+  },
   {
     path: '',
     redirectTo: 'portal/WP',

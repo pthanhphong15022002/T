@@ -57,6 +57,7 @@ export class PopupAddCarsComponent extends UIComponent {
   avatarID: any = null;
   returnData:any;
   useCardCheck = false;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -73,6 +74,10 @@ export class PopupAddCarsComponent extends UIComponent {
     this.formModel = this.dialogRef.formModel;
     if(this.isAdd){
       this.data.capacity=null;
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
     }
   }
 

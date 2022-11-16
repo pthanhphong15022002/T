@@ -825,17 +825,36 @@
 
 <ng-template #popoverSelectRoles>
   <div class="d-flex flex-column mb-1 w-150px" >
-    <ng-container *ngFor="let item of listRoles">
-      <div
-        class="d-flex align-items-center btn btn-sm btn-white"
-        (click)="selectRoseType(idUserSelected, item.value)"
-        style="cursor: pointer"
-      >
-        <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
-        <div class="fs-7 ms-2 text-gray-600">
-          {{ item.text }}
+    <ng-container *ngIf="attendeesList && attendeesList.length>0">
+      <ng-container *ngFor="let item of listRoles">
+        <div
+          class="d-flex align-items-center btn btn-sm btn-white"
+          (click)="selectRoseType(idUserSelected, item.value)"
+          style="cursor: pointer"
+        >
+          <span inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"></span>
+          <div class="fs-7 ms-2 text-gray-600">
+            {{ item.text }}
+          </div>
         </div>
-      </div>
+      </ng-container>
     </ng-container>
+    
+    
+    <ng-container *ngIf="attendeesList && attendeesList.length==0">
+      <ng-container>
+        <div
+          class="d-flex align-items-center btn btn-sm btn-white"
+          (click)="selectRoseType(idUserSelected, listRoles[0].value)"
+          style="cursor: pointer"
+        >
+          <span inlineSVG="./assets/themes/ep/default/img/{{ listRoles[0].icon }}"></span>
+          <div class="fs-7 ms-2 text-gray-600">
+            {{ listRoles[0].text }}
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
   </div>
 </ng-template>
