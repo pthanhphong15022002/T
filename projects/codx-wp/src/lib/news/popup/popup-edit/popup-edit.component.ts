@@ -205,7 +205,7 @@ export class PopupEditComponent implements OnInit {
       this.notifSV.notify(mssgCode);
       return;
     }
-    this.api.execSv(
+    this.api.execSv( 
       "WP",
       "ERM.Business.WP",
       "NewsBusiness",
