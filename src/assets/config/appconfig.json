@@ -1,7 +1,7 @@
 {
-  "apiUrl": "http://localhost:8011",
-  "reportUrl": "http://172.16.7.34:4203/report",
-  "shopping": "https://172.16.7.34:44317/Shopping",
+  "apiUrl": "http://172.16.7.34:8011",
+  "reportUrl": "http://localhost:4203/report",
+  "shopping": "https://localhost:44317/Shopping",
   "urlUpload": "http://172.16.1.210:8011",
   "appName": "hps-file-test",
   "office365": ""

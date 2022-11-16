@@ -98,10 +98,16 @@ export class PopupAddDriversComponent
   valueChange(event: any) {
     if (event?.field != null && event?.field != '') {
       if (event.data instanceof Object) {
-        //this.fGroupAddDriver.patchValue({ [event['field']]: event.data.value });
+        this.data['field']=event.data.value;
       } else {
-        //this.fGroupAddDriver.patchValue({ [event['field']]: event.data });
+        this.data['field']=event.data;
       }
+    }
+  }
+  emailChange(event: any) {
+    if (event?.field != null && event?.field != '') {
+      this.data.email=event.data;      
+      this.detectorRef.detectChanges();  
     }
   }
   valueCbxCarChange(event: any) {
