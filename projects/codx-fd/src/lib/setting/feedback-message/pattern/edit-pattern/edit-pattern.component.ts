@@ -44,9 +44,9 @@ export class EditPatternComponent implements OnInit {
     VIDEO: 'video',
     APPLICATION: 'application',
   };
-  listFileView: any;
   user: any;
-  checkFile = false;
+  checkFileUpload = false;
+  checkGetFile = false;
 
   @ViewChild('uploadImage') uploadImage: ImageViewerComponent;
   @ViewChild('attachment') attachment: AttachmentComponent;
@@ -73,7 +73,7 @@ export class EditPatternComponent implements OnInit {
         .subscribe((res: any[]) => {
           if (res.length > 0) {
             this.listFile = res;
-            this.checkFile = true;
+            this.checkGetFile = !this.checkGetFile;
           }
         });
     } else {
@@ -136,7 +136,7 @@ export class EditPatternComponent implements OnInit {
         }
       });
       this.listFile = files;
-      this.listFileView = files;
+      this.checkFileUpload = !this.checkFileUpload;
     }
   }
 
@@ -172,42 +172,39 @@ export class EditPatternComponent implements OnInit {
       this.notificationsService.notify('Vui lòng nhập mô tả');
       return;
     }
-    if (
-      this.formType == 'edit' &&
-      //this.pattern.backgroundColor &&
-      this.checkFile
-    )
-      this.patternSV.deleteFile(this.pattern.recID).subscribe(item=>{
-        if(item)
-        {
-          this.dialog.dataService
-          .save((opt: any) => this.beforeSave(opt), -1)
-          .subscribe(async (res) => {
-            if (res.save || res.update) {
-              var dt = res.save ? res.save : res.update;
-              if (this.listFileView && this.listFileView.length > 0) {
-                if (this.listFile && this.listFile?.length > 0) {
-                  this.listFile[0].objectID = dt.recID;
-                  this.listFile[0].objectId = dt.recID;
-                  this.attachment.objectId = dt.recID;
-                  this.attachment.fileUploadList = this.listFile;
-                  (await this.attachment.saveFilesObservable()).subscribe(
-                    (result: any) => {
-                      var obj = { data: res, listFile: this.listFile };
-                      this.dialog.close(obj);
-                      this.change.detectChanges();
-                    }
-                  );
-                }
-              } else {
-                var obj = { data: res, listFile: null };
-                this.dialog.close(obj);
-              }
-            }
-          });
+    if (this.formType == 'edit' && this.checkFileUpload && this.checkGetFile) {
+      this.patternSV.deleteFile(this.pattern.recID).subscribe((item) => {
+        if (item) {
+          this.onSave();
         }
       });
-   
+    } else this.onSave();
+  }
+
+  onSave() {
+    this.dialog.dataService
+      .save((opt: any) => this.beforeSave(opt), -1)
+      .subscribe(async (res) => {
+        if (res.save || res.update) {
+          var dt = res.save ? res.save : res.update;
+          if (this.listFile && this.listFile.length > 0) {
+            this.listFile[0].objectID = dt.recID;
+            this.listFile[0].objectId = dt.recID;
+            this.attachment.objectId = dt.recID;
+            this.attachment.fileUploadList = this.listFile;
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (result: any) => {
+                var obj = { data: res, listFile: this.listFile };
+                this.dialog.close(obj);
+                this.change.detectChanges();
+              }
+            );
+          } else {
+            var obj = { data: res, listFile: null };
+            this.dialog.close(obj);
+          }
+        }
+      });
   }
 
   beforeSave(op: RequestOption) {

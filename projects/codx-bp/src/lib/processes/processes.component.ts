@@ -302,6 +302,7 @@ export class ProcessesComponent
             e?.event.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
             });
+
             this.detectorRef.detectChanges();
           }
         });
@@ -438,7 +439,16 @@ export class ProcessesComponent
           [this.titleAction],
           option,
         );
-        this.dialog.closed.subscribe();
+       // this.dialog.closed.subscribe(e=>{
+          // if(e?.event && e?.event != null){
+          //   this.view.dataService.clear();
+          //   this.view.dataService.update(e?.event).subscribe();
+          //   this.detectorRef.detectChanges();
+
+          // }
+      //  }
+
+    //    );
       });
   }
   revisions(more, data) {

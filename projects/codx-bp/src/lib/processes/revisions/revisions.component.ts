@@ -48,7 +48,7 @@ export class RevisionsComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    this.data = dt?.data;
+    this.data = JSON.parse(JSON.stringify(dt?.data));
     this.dialog = dialog;
     this.more = this.data?.more;
     this.funcID = this.more?.functionID;
@@ -59,7 +59,7 @@ export class RevisionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.revisions){
+    if(this.revisions.length > 0 && this.revisions != null){
       var lastVersion = this.revisions[this.revisions.length - 1];
       if(lastVersion.comment != ''){
         this.comment = lastVersion.comment;
@@ -96,9 +96,10 @@ export class RevisionsComponent implements OnInit {
         this.comment,
       ])
       .subscribe((res) => {
-        if (res) {
-          this.dialog.close(this.process);
-          this.notiService.notifyCode('SYS007');
+        if (res != null) {
+            this.dialog.close(res);
+            this.notiService.notifyCode('SYS007');
+
         }
       });
   }
