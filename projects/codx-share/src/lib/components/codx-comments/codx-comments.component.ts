@@ -105,7 +105,7 @@ export class CodxCommentsComponent implements OnInit {
     {
       comment.parentID = comment.refID;
     }
-    let parent = this.new ? this.post:null;
+    let parent = this.new ? this.post : null;
     this.api
       .execSv<any>(
         'WP',
@@ -288,6 +288,7 @@ export class CodxCommentsComponent implements OnInit {
   }
 
   votePost(data: any, voteType = null) {
+    debugger
     this.api.execSv(
       "WP",
       "ERM.Business.WP",

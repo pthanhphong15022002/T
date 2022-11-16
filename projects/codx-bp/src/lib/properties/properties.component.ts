@@ -6,6 +6,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import {
+  ApiHttpService,
   CacheService,
   DialogData,
   DialogRef,
@@ -39,24 +40,34 @@ export class PropertiesComponent implements OnInit {
   id: string;
   vlL1473: any;
   requestTitle: string;
-
+  userName = "";
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private bpSV: CodxBpService,
     private cache: CacheService,
+    private api: ApiHttpService,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = data.data;
+    this.data = JSON.parse(JSON.stringify(data.data));
     this.process = this.data;
+    if (this.process.rattings.length > 0) this.rattings = this.process.rattings;
     this.totalRating = 0;
   }
 
   ngOnInit(): void {
     this.openProperties(this.data.recID);
     this.changeDetectorRef.detectChanges();
+  }
+
+  loadUserName(id){
+    // this.api.callSv('SYS','AD','UsersBusiness','GetAsync', id).subscribe(res=>{
+    //   if(res.msgBodyData[0]){
+    //     this.userName = res.msgBodyData[0].userName;
+    //   }
+    // });
   }
 
   openProperties(id): void {
@@ -66,36 +77,8 @@ export class PropertiesComponent implements OnInit {
     this.commenttext = '';
     this.requestTitle = '';
     this.currentRate = 1;
-    this.getRating(this.process.rattings);
+    this.getRating(this.rattings);
     this.changeDetectorRef.detectChanges();
-    // this.fileService.getFile(id, false).subscribe(async res => {
-    //   if (res != null) {
-    //     this.fileEditing = res;
-
-    //     if (this.fileEditing.version != null) {
-    //       this.fileEditing.version = this.fileEditing.version.replace('Ver ', 'V');
-    //     }
-    //     if (this.fileEditing.language) {
-    //       if (this.vlL1473 && this.vlL1473 && this.vlL1473.length) {
-    //         var lang = this.vlL1473.filter(x => x.value === this.fileEditing.language);
-    //         if (lang && lang[0]) {
-    //           this.fileEditing.language /* this.namelanguage */ = lang[0].text;
-    //         }
-    //       }
-    //     }
-
-    //     this.onUpdateTags();
-    //
-    //     this.getRating(res.views);
-    //     // var files = this.dmSV.listFiles;
-    //     // if (files != null) {
-    //     //   this.dmSV.listFiles = files;
-    //       this.bpSV.ChangeData.next(true);
-    //     // }
-
-    //     this.changeDetectorRef.detectChanges();
-    //   }
-    // });
   }
 
   //#region mo rong
@@ -197,15 +180,15 @@ export class PropertiesComponent implements OnInit {
   setComment() {
     this.bpSV
       .setViewRattings(this.id, this.currentRate.toString(), this.commenttext)
-      .subscribe(async (res) => {
+      .subscribe((res) => {
         if (res.rattings.length > 0) {
           this.currentRate = 1;
           this.readonly = false;
           this.commenttext = '';
+          this.rattings = res.rattings;
           this.getRating(res.rattings);
-          this.process.rattings.push(res.rattings);
           this.changeDetectorRef.detectChanges();
-          this.notificationsService.notify(res.message);
+          this.notificationsService.notify('Rating thành công');
         }
       });
   }

@@ -1,3 +1,5 @@
+import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
+import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
 import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
 import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
@@ -75,7 +77,7 @@ export class EmployeeProfileComponent extends UIComponent {
   itemDetail;
 
   hrEContract;
-  crrTab: number = 4;
+  crrTab: number = 2;
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -444,6 +446,7 @@ export class EmployeeProfileComponent extends UIComponent {
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeVisaInfoComponent,
+      //TestingTwoSideFormComponent,
       {
         isAdd: true,
         headerText: 'Thị thực',
@@ -454,4 +457,44 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
   }
+
+  addEmployeeDisciplinesInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeDisciplinesInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Kỷ luật'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  addEmployeeAwardsInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeAwardsInfoComponent,
+      {
+        isAdd: true,
+        headerText: 'Khen thưởng'
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    });
+  }
+
+
 }

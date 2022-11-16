@@ -173,23 +173,25 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
               mandatory: false,
               answerType: null,
               category: 'S',
-            },
-            {
-              seqNo: 1,
-              question: 'Câu hỏi 1',
-              answers: [
+              children: [
                 {
                   seqNo: 0,
-                  answer: 'Tùy chọn 1',
-                  other: false,
-                  isColumn: false,
-                  hasPicture: false,
+                  question: 'Câu hỏi 1',
+                  answers: [
+                    {
+                      seqNo: 0,
+                      answer: 'Tùy chọn 1',
+                      other: false,
+                      isColumn: false,
+                      hasPicture: false,
+                    },
+                  ],
+                  other: true,
+                  mandatory: false,
+                  answerType: 'O',
+                  category: 'Q',
                 },
               ],
-              other: true,
-              mandatory: false,
-              answerType: 'O',
-              category: 'Q',
             },
           ];
         }
@@ -697,7 +699,12 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         )
       );
       data.answerType = answerType;
-      if (answerType == 'O' || answerType == 'C' || answerType == 'L' || answerType == 'R') {
+      if (
+        answerType == 'O' ||
+        answerType == 'C' ||
+        answerType == 'L' ||
+        answerType == 'R'
+      ) {
         if (itemQuestion.answerType != 'O' && itemQuestion.answerType != 'C') {
           data.answers = new Array();
           let dataAnswerTemp = {
@@ -846,5 +853,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   filterDataRow(data) {
     data = data.filter((x) => !x.isColumn);
     return data;
+  }
+
+  hideComment(seqNoSession, seqNoQuestion) {
+    var dataTemp = JSON.parse(JSON.stringify(this.questions))
+    dataTemp[seqNoQuestion]
   }
 }

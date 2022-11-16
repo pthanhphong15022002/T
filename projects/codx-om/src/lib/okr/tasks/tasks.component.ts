@@ -19,9 +19,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
         type: ViewType.kanban,
         active: true,
         sameData: false,
-        model: {
-         
-        },
+        model: {},
       },
       {
         id: '2',
