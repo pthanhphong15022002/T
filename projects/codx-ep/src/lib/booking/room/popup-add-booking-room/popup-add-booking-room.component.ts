@@ -1076,6 +1076,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     if (event?.dataSelected) {
       this.lstUser = [];
       event.dataSelected.forEach((people) => {
+        
         let tempAttender = new BookingAttendees();
         tempAttender.userID = people.UserID;
         tempAttender.userName = people.UserName;
@@ -1102,8 +1103,26 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       // this.attendeesList.forEach(item=>{
       //   tmpDataCBB=tmpDataCBB+";"+item.userID;        
       // });
+      let roleCheck=0;
+      if(this.curUser.roleType!="1"){
+        this.attendeesList.forEach(item=>{
+          if(item.roleType=="1"){
+            roleCheck=roleCheck+1;        
+          }      
+        });
+        if(roleCheck<1){
+          this.curUser.roleType='1';
+          this.listRoles.forEach((element) => {
+            if (element.value == this.curUser.roleType) {
+              this.curUser.icon = element.icon;
+              this.curUser.roleName = element.text;
+            }
+          });
+        }
+      }
       this.cbbDataUser=tmpDataCBB;
       this.isPopupUserCbb = false;
+      this.changeDetectorRef.detectChanges();
     }
   }
   filterArray(arr) {

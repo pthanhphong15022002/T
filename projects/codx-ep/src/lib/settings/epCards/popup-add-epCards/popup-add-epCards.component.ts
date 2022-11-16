@@ -52,6 +52,7 @@ export class PopupAddEpCardsComponent extends UIComponent {
   avatarID: any = null;
   funcID: any;
   autoNumDisable= false;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -65,7 +66,12 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
-    
+    if(this.isAdd){
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
+    }
   }
 
   ngAfterViewInit(): void {}

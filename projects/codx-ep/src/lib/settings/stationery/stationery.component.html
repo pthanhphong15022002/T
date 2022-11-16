@@ -164,35 +164,39 @@
       {{ data?.resourceName }}
     </div>
     <div class="text-start">
-      {{ data?.costPrice | currency: "VND":"symbol":"3.0" }}
+      {{
+        data?.costPrice == 0
+          ? (0 | currency: "VND")
+          : (data?.costPrice | currency: "VND":"symbol":"3.0")
+      }}
     </div>
-    <div class="d-flex justify-content-between align-items-end mt-2">
-      <div class="d-flex align-items-end me-2 codx-badge mb-3">
-        <div
-          class="d-flex align-items-center position-relative me-4"
-          [title]="grvStationery['CurrentQty'].headerText"
-        >
-          <span class="icon-view_agenda icon-20 text-gray-400"></span>
-          <span>{{ data?.currentQty }}</span>
-        </div>
-        <div
-          class="d-flex align-items-center position-relative me-4"
-          [title]="grvStationery['ReservedQty'].headerText"
-        >
-          <span
-            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
-          ></span>
-          <span>{{ data?.reservedQty }}</span>
-        </div>
-        <div
-          class="d-flex align-items-center position-relative me-4"
-          [title]="grvStationery['AvailableQty'].headerText"
-        >
-          <span
-            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
-          ></span>
-          <span>{{ data?.availableQty }}</span>
-        </div>
+    <div
+      class="d-flex justify-content-between align-items-end me-2 codx-badge m-3"
+    >
+      <div
+        class="d-flex align-items-center position-relative me-4"
+        [title]="grvStationery['CurrentQty'].headerText"
+      >
+        <span class="icon-view_agenda icon-20 text-gray-400"></span>
+        <span>{{ data?.currentQty }}</span>
+      </div>
+      <div
+        class="d-flex align-items-center position-relative me-4"
+        [title]="grvStationery['ReservedQty'].headerText"
+      >
+        <span
+          class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
+        ></span>
+        <span>{{ data?.reservedQty }}</span>
+      </div>
+      <div
+        class="d-flex align-items-center position-relative me-4"
+        [title]="grvStationery['AvailableQty'].headerText"
+      >
+        <span
+          class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
+        ></span>
+        <span>{{ data?.availableQty }}</span>
       </div>
     </div>
   </div>

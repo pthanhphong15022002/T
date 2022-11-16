@@ -37,6 +37,7 @@ export class PopupSearchPostComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getMessage("WP025");
+    this.searchEvent("");
   }
 
   filter: any = {};
@@ -57,15 +58,15 @@ export class PopupSearchPostComponent implements OnInit {
     });
   }
   searchEvent(searchValue:string){
-    if(!searchValue) {
-      this.lstData = [];
-      this.countData = 0;
-      this.dt.detectChanges();
-      return;
-    }
+    // if(!searchValue) {
+    //   this.lstData = [];
+    //   this.countData = 0;
+    //   this.dt.detectChanges();
+    //   return;
+    // }
     this.api
       .execSv<any>(
-        'WP',
+        'SYS',
         'CM',
         'DataBusiness',
         'SearchFullTextAdvAsync',
