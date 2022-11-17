@@ -191,8 +191,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        showSearchBar: false,
-        showFilter:false,
         model: {
           template: this.cardKanban,
         },
@@ -956,10 +954,19 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     var type = this.button?.items.find((x) => x.id == stepType);
     return type?.icon;
   }
-  checkReferencesByCheck(data,stepType) :boolean {
+  checkReferencesByStepType(data,stepType) :boolean {
     if(!data?.items || data?.items?.length ==0) return false
     this.checkList = data?.items.map((x) => {
       if (x.stepType == stepType) return x;
+    });
+    let check =this.checkList.length > 0
+    return check;
+  }
+
+  checkAction(data) :boolean {
+    if(!data?.items || data?.items?.length ==0) return false
+    this.checkList = data?.items.map((x) => {
+      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') return x;
     });
     let check =this.checkList.length > 0
     return check;
