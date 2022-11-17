@@ -57,8 +57,10 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private injector: Injector
   ) {
     this.cache.functionList('WP').subscribe((res) => {
-      this.functionList.entityName = res.entityName;
-      this.functionList.funcID = res.functionID;
+      if (res) {
+        this.functionList.entityName = res.entityName;
+        this.functionList.funcID = res.functionID;
+      }
     });
     this.user = this.auth.get();
     this.dataValue = `WP_Comments;false;${this.user?.userID};image`;

@@ -1,0 +1,22 @@
+.theme-color .symbol-list {
+  .symbol {
+    position: relative;
+
+    span::after {
+      display: block;
+      width: 18px;
+      height: 36px;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      background-color: #f8f5ff;
+      z-index: 9;
+      border-radius: 20px 0 0 20px;
+      content: "";
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}

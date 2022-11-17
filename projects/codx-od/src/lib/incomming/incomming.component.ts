@@ -198,7 +198,6 @@ export class IncommingComponent
 
   show() {
     this.view.dataService.addNew().subscribe((res: any) => {
-      debugger;
       let option = new SidebarModel();
       // option.zIndex = 499;
       option.DataService = this.view?.currentView?.dataService;

@@ -70,6 +70,12 @@ import { EmployeeDisciplinesInfoComponent } from './employee-profile/employee-di
 import { EmployeeDisciplinesDetailComponent } from './employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
 import { EmployeeAllocatedPropertyDetailComponent } from './employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
 import { EmployeeAllocatedPropertyComponent } from './employee-profile/employee-allocated-property/employee-allocated-property.component';
+import { EmployeeSkillInfoComponent } from './employee-profile/employee-skill-info/employee-skill-info.component';
+import { EmployeeSkillDetailComponent } from './employee-profile/employee-skill-detail/employee-skill-detail.component';
+import { EmployeeCertificateDetailComponent } from './employee-profile/employee-certificate-detail/employee-certificate-detail.component';
+import { EmployeeCertificateInfoComponent } from './employee-profile/employee-certificate-info/employee-certificate-info.component';
+import { EmployeeDegreeDetailComponent } from './employee-profile/employee-degree-detail/employee-degree-detail.component';
+import { EmployeeDegreeInfoComponent } from './employee-profile/employee-degree-info/employee-degree-info.component';
 
 export const routes: Routes = [
   {
@@ -250,6 +256,12 @@ const T_Component: Type<any>[] = [
   EmployeeDisciplinesInfoComponent,
   EmployeeAllocatedPropertyComponent,
   EmployeeAllocatedPropertyDetailComponent,
+  EmployeeSkillDetailComponent,
+  EmployeeSkillInfoComponent,
+  EmployeeCertificateInfoComponent,
+  EmployeeCertificateDetailComponent,
+  EmployeeDegreeDetailComponent,
+  EmployeeDegreeInfoComponent,
 ];
 @NgModule({
   imports: [
