@@ -147,11 +147,11 @@ export class BP_ProcessesRating{
   positionName: string;
   comment: string;
   ratting: number;
-  createOn: Date;
+  createdOn: Date;
 }
 
 export class tmpPermission{
-  recID: string;
+  recIDProcess: string;
   form: string;
   titleEmail: string;
   contentEmail: string;
