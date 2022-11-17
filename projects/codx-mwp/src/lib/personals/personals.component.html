@@ -185,7 +185,7 @@
               >
                 <img
                   src="../assets/themes/mwp/default/light/img/{{
-                    !headerMF.STORAGE ? 'mwp_info' : 'mwp_info_active'
+                    !headerMF.INFORMATION ? 'mwp_info' : 'mwp_info_active'
                   }}.svg"
                   alt=""
                 />
@@ -201,7 +201,7 @@
             </ng-template>
             <ng-template #content>
               <div
-                class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
+                class="pw-feed h-100 pw-md scroll-y"
               >
                 <app-information></app-information>
               </div>
@@ -210,40 +210,5 @@
         </e-tabitems>
       </ejs-tab>
     </div>
-    <!-- <div class="pw-feed h-100 pw-md" *ngIf="funcID == 'MWP009'">
-      <app-posts></app-posts>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-md rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0091'"
-    >
-      <app-posts></app-posts>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0092'"
-    >
-      <app-img></app-img>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0093'"
-    >
-      <div class="px-5">
-        <app-video></app-video>
-      </div>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0094'"
-    >
-      <app-note-books></app-note-books>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
-      *ngIf="funcID == 'MWP0095'"
-    >
-      <app-storage></app-storage>
-    </div> -->
   </div>
 </div>

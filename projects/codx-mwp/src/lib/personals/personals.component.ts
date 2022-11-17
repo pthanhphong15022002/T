@@ -42,6 +42,7 @@ export class PersonalsComponent implements OnInit {
     VIDEO: false,
     NOTEBOOK: false,
     STORAGE: false,
+    INFORMATION: false,
   };
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -106,6 +107,7 @@ export class PersonalsComponent implements OnInit {
     this.headerMF.POST = false;
     this.headerMF.NOTEBOOK = false;
     this.headerMF.STORAGE = false;
+    this.headerMF.INFORMATION = false;
     this.headerMF[type] = true;
     this.changedt.detectChanges();
   }

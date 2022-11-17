@@ -13,6 +13,8 @@ export class NotifyDrawerSliderComponent implements OnInit {
   lstNotify:any[] = [];
   model:DataRequest = {
     entityName:"BG_Notification",
+    predicate: "ActionType != @0",
+    dataValue: "AP",
     formName:"Notification",
     gridViewName:"grvNotification",
     srtColumns:"CreatedOn",

@@ -108,23 +108,23 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: 'companyinfo',
-  //   component: LayoutComponent,
-  //   children: [
-  //     {
-  //       path: 'settings/:funcID',
-  //       loadChildren: () =>
-  //         import(
-  //           'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
-  //         ).then((m) => m.DynamicSettingModule),
-  //     },
-  //     {
-  //       path: ':funcID',
-  //       component: CompanyInforComponent,
-  //     },
-  //   ],
-  // },
+  {
+    path: 'companyinfo',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'settings/:funcID',
+        loadChildren: () =>
+          import(
+            'projects/codx-share/src/lib/components/dynamic-setting/dynamic-setting.module'
+          ).then((m) => m.DynamicSettingModule),
+      },
+      {
+        path: ':funcID',
+        component: CompanyInforComponent,
+      },
+    ],
+  },
   {
     path: 'approvals',
     component: LayoutApprovalComponent,

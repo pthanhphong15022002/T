@@ -19,13 +19,21 @@
     <ng-container *ngFor="let item of lstApproval">
       <div class="d-flex p-4 my-2">
         <div class="">
-          <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
+          <codx-vll [name]="'ES022'" [value]="item.title" [showIcon]="true"></codx-vll>
         </div>
         <div class="ms-4">
-          <div class="fw-bolder">{{item.textValue}}</div>
-          <div>{{item.title}}</div>
           <div>
+            <codx-vll [name]="'ES022'" [value]="item.title" [showText]="true"></codx-vll>
+          </div>
+          <div class="" [innerHTML]="item.textValue"></div>
+          <div class="d-flex align-items-center justify-content-between ">
             <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+            <codx-img 
+              [width]="30" 
+              [isDefaulImg]="true" 
+              [objectId]="item.userID" 
+              [objectType]="'AD_Users'">
+            </codx-img>
           </div>
           <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
             <div>
