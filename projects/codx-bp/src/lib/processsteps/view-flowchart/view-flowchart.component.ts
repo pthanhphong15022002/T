@@ -78,7 +78,7 @@ export class ViewFlowchartComponent implements OnInit,OnChanges {
     var that = this;
     
     if (this.checkDownloadRight()) {   
-      ///lấy hàm của chung dang fail
+    
       this.fileService.downloadFile(id).subscribe(async res => {
         if (res) {                   
           let blob = await fetch(res).then(r => r.blob());                
