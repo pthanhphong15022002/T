@@ -8,12 +8,12 @@
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex h-100 w-100">
         <div
-          class="aside-detail h-100 hover-scroll-overlay-y w-250px min-w-250px pe-3 me-5"
+          class="aside-detail h-100 hover-scroll-overlay-y w-250px min-w-250px me-5 pt-5 px-5 bg-white rounded-top-ad"
         >
           <div class="aside-menu">
             <ng-container *ngFor="let data of myTree; let i = index">
               <a
-                class="d-flex align-items-center my-3"
+                class="d-flex align-items-center cursor-pointer"
                 [class.active]="selectIndex === i"
                 (click)="asideClick($event, i, data)"
               >
@@ -356,67 +356,69 @@
                       </thead>
                       <tbody>
                         <tr *ngFor="let item of dataAuthorize">
-                          <td>
-                            {{ item.customName || item.defaultName }}
-                          </td>
-                          <td>
-                            <codx-input
-                              type="checkbox"
-                              [disabled]="!active"
-                              [checked]="false"
-                              field="selectAll"
-                              (valueChange)="
-                                valueChange($event, item.functionID)
-                              "
-                            >
-                            </codx-input>
-                          </td>
-                          <td>
-                            <div class="row">
-                              <ng-container
-                                *ngFor="
-                                  let itemMore of dataRole[item.functionID]
-                                    ?.More
+                          <ng-container *ngIf="dataRole[item.functionID]?.More && dataRole[item.functionID]?.More.length>0">
+                            <td>
+                              {{ item.customName || item.defaultName }}
+                            </td>
+                            <td>
+                              <codx-input
+                                type="checkbox"
+                                [disabled]="!active"
+                                [checked]="false"
+                                field="selectAll"
+                                (valueChange)="
+                                  valueChange($event, item.functionID)
                                 "
                               >
-                                <div class="col-4">
-                                  <codx-input
-                                    type="checkbox"
-                                    class="check-circle"
-                                    [disabled]="!active"
-                                    [checked]="
-                                      itemMore.functionID
-                                        | bind: item.functionID:dataAdv
-                                    "
-                                    field="more"
-                                    labelPosition="after"
-                                    [label]="itemMore.customName"
-                                    [attr.data-parent]="item.functionID"
-                                    [attr.data-function]="itemMore.functionID"
-                                  >
-                                  </codx-input>
-                                </div>
-                              </ng-container>
-                            </div>
-
-                            <!-- <codx-input
-                              type="valuelist"
-                              name="select"
-                              class="cotrol-vll"
-                              placeholder=""
-                              ngDefaultControl
-                              refValue="SYS026"
-                              [disabled]="!active"
-                              [crrValue]="
-                                dataRole[item.functionID]?.DataPer?.read
-                                  ? dataRole[item.functionID]?.DataPer?.read
-                                  : 0
-                              "
-                              field="read"
-                              (valueChange)="valueChange($event)"
-                            >
-                            </codx-input> -->
-                          </td>
+                              </codx-input>
+                            </td>
+                            <td>
+                              <div class="row">
+                                <ng-container
+                                  *ngFor="
+                                    let itemMore of dataRole[item.functionID]
+                                      ?.More
+                                  "
+                                >
+                                  <div class="col-4">
+                                    <codx-input
+                                      type="checkbox"
+                                      class="check-circle"
+                                      [disabled]="!active"
+                                      [checked]="
+                                        itemMore.functionID
+                                          | bind: item.functionID:dataAdv
+                                      "
+                                      field="more"
+                                      labelPosition="after"
+                                      [label]="itemMore.customName"
+                                      [attr.data-parent]="item.functionID"
+                                      [attr.data-function]="itemMore.functionID"
+                                    >
+                                    </codx-input>
+                                  </div>
+                                </ng-container>
+                              </div>
+  
+                              <!-- <codx-input
+                                type="valuelist"
+                                name="select"
+                                class="cotrol-vll"
+                                placeholder=""
+                                ngDefaultControl
+                                refValue="SYS026"
+                                [disabled]="!active"
+                                [crrValue]="
+                                  dataRole[item.functionID]?.DataPer?.read
+                                    ? dataRole[item.functionID]?.DataPer?.read
+                                    : 0
+                                "
+                                field="read"
+                                (valueChange)="valueChange($event)"
+                              >
+                              </codx-input> -->
+                            </td>
+                          </ng-container>
                         </tr>
                       </tbody>
                     </table>

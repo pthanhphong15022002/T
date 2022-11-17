@@ -15,11 +15,23 @@
 .pd-r {
   padding-right: 13rem !important;
 }
-
+a.align-items-center
+{
+  height: 50px;
+  padding-left: 7px;
+  border-radius: 4px;
+}
 a.align-items-center.active {
   background-color: #3699ff;
 }
-
+a.align-items-center.active span{
+  color: white !important;
+}
+.rounded-top-ad
+{
+  border-top-left-radius: 0.475rem !important;
+  border-top-right-radius: 0.475rem !important;
+}
 // thead,
 // tbody {
 //   display: block;
