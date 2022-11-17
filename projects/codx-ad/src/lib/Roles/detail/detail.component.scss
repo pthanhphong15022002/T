@@ -30,6 +30,11 @@
   background-color: var(--gray-200);
 }
 
+.rounded-top-ad {
+  border-top-left-radius: 0.475rem !important;
+  border-top-right-radius: 0.475rem !important;
+}
+
 // thead,
 // tbody {
 //   display: block;

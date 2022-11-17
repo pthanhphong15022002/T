@@ -123,7 +123,7 @@ export class RoleDetailComponent
     this.api
       .execSv(
         'SYS',
-        'ERM.Business.SYS',
+        'SYS',
         'FunctionListBusiness',
         'GetModuleFunctionAsync',
         [this.recid]
