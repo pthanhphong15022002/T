@@ -193,19 +193,6 @@
                     </div>
                   </a>
                   <ng-template ngbNavContent>
-<<<<<<< HEAD
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th scope="col" class="w-200px">Tên chức năng</th>
-                          <th scope="col" class="w-80px">Chọn tất cả</th>
-                          <th scope="col" class="w-500px">Chức năng mở rộng</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr *ngFor="let item of dataAuthorize">
-                          <ng-container *ngIf="dataRole[item.functionID]?.More && dataRole[item.functionID]?.More.length>0">
-=======
                     <div class="detail-scroll">
                       <table class="table">
                         <thead>
@@ -217,100 +204,42 @@
                         </thead>
                         <tbody>
                           <tr *ngFor="let item of dataAuthorize">
->>>>>>> 4a11b82a52e18e27c6ba993bc931dcf989102deb
-                            <td>
-                              {{ item.customName || item.defaultName }}
-                            </td>
-                            <td>
-<<<<<<< HEAD
-                              <codx-input
-                                type="checkbox"
-                                [disabled]="!active"
-                                [checked]="false"
-                                field="selectAll"
-                                (valueChange)="
+                            <ng-container *ngIf="dataRole[item.functionID]
+                            ?.More && dataRole[item.functionID]
+                            ?.More.length>0">
+                              <td>
+                                {{ item.customName || item.defaultName }}
+                              </td>
+                              <td>
+                                <codx-input type="checkbox" [disabled]="!active" [checked]="false" field="selectAll"
+                                  (valueChange)="
                                   valueChange($event, item.functionID)
-                                "
-                              >
-=======
-                              <codx-input type="checkbox" [disabled]="!active" [checked]="false" field="selectAll"
-                                (valueChange)="
-                                valueChange($event, item.functionID)
-                              ">
->>>>>>> 4a11b82a52e18e27c6ba993bc931dcf989102deb
-                              </codx-input>
-                            </td>
-                            <td>
-                              <div class="row">
-<<<<<<< HEAD
-                                <ng-container
-                                  *ngFor="
+                                ">
+                                </codx-input>
+                              </td>
+                              <td>
+                                <div class="row">
+                                  <ng-container *ngFor="
                                     let itemMore of dataRole[item.functionID]
                                       ?.More
-                                  "
-                                >
-                                  <div class="col-4">
-                                    <codx-input
-                                      type="checkbox"
-                                      class="check-circle"
-                                      [disabled]="!active"
-                                      [checked]="
+                                  ">
+                                    <div class="col-4">
+                                      <codx-input type="checkbox" class="check-circle" [disabled]="!active" [checked]="
                                         itemMore.functionID
                                           | bind: item.functionID:dataAdv
-                                      "
-                                      field="more"
-                                      labelPosition="after"
-                                      [label]="itemMore.customName"
-                                      [attr.data-parent]="item.functionID"
-                                      [attr.data-function]="itemMore.functionID"
-                                    >
-=======
-                                <ng-container *ngFor="
-                                  let itemMore of dataRole[item.functionID]
-                                    ?.More
-                                ">
-                                  <div class="col-4">
-                                    <codx-input type="checkbox" class="check-circle" [disabled]="!active" [checked]="
-                                      itemMore.functionID
-                                        | bind: item.functionID:dataAdv
-                                    " field="more" labelPosition="after" [label]="itemMore.customName"
-                                      [attr.data-parent]="item.functionID" [attr.data-function]="itemMore.functionID">
->>>>>>> 4a11b82a52e18e27c6ba993bc931dcf989102deb
-                                    </codx-input>
-                                  </div>
-                                </ng-container>
-                              </div>
-<<<<<<< HEAD
-  
-                              <!-- <codx-input
-                                type="valuelist"
-                                name="select"
-                                class="cotrol-vll"
-                                placeholder=""
-                                ngDefaultControl
-                                refValue="SYS026"
-                                [disabled]="!active"
-                                [crrValue]="
-                                  dataRole[item.functionID]?.DataPer?.read
-                                    ? dataRole[item.functionID]?.DataPer?.read
-                                    : 0
-                                "
-                                field="read"
-                                (valueChange)="valueChange($event)"
-                              >
-                              </codx-input> -->
-                            </td>
+                                      " field="more" labelPosition="after" [label]="itemMore.customName"
+                                        [attr.data-parent]="item.functionID" [attr.data-function]="itemMore.functionID">
+                                      </codx-input>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                              </td>
                           </ng-container>
-                        </tr>
-                      </tbody>
-                    </table>
-=======
-                            </td>
+                         
                           </tr>
                         </tbody>
                       </table>
                     </div>
->>>>>>> 4a11b82a52e18e27c6ba993bc931dcf989102deb
                   </ng-template>
                 </li>
               </ul>
