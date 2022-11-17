@@ -412,6 +412,8 @@ export class ViewDetailComponent implements OnInit {
       dialogAdd.closed.subscribe((res) => {
         if (!res.event) {
           this.esService.deleteStepByTransID(res.recID).subscribe();
+        } else {
+          this.view.dataService.add(res.event.data, 0).subscribe();
         }
       });
     });

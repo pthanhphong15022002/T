@@ -63,6 +63,7 @@ export class EmployeeSelfInfoComponent extends UIComponent implements OnInit {
   ngAfterViewInit() {
     console.log('check form', this.form);
     console.log('form', this.form);
+    console.log('self info', this.data)
   }
 
   swipeToRightTab(e) {
