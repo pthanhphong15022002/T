@@ -1,0 +1,95 @@
+<codx-form
+  [headerText]="header"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="formModel"
+  #form
+>
+  <ng-template #body>
+    <ejs-tab headerPlacement="Top">
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label
+                    fiedName="Template"
+                    [formModel]="form.formModel"
+                    default="Biểu mẫu"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content>
+            <codx-listview
+              #lstView
+              [itemTemplate]="templateListCard"
+              type="cardView"
+              [funcID]="form.formModel.funcID"
+              [service]="'SV'"
+              [entityName]="form.formModel.entityName"
+            >
+            </codx-listview>
+            <ng-template #templateListCard let-item>
+              <div (click)="choose(item)">
+                <codx-card-img
+                  [cardCss]="
+                    item?.active
+                      ? 'border card-img-mwp rounded-3 img-storage w-225px h-200px card-active'
+                      : 'border card-img-mwp rounded-3 img-storage w-225px h-200px'
+                  "
+                  [imageId]="item.recID"
+                  imgCss="h-140px mb-2"
+                  icoTitleCss="icon-assignment icon-16"
+                  [title]="item.title"
+                  cssTitle="line-clamp line-clamp-1"
+                  [imgOn]="item?.modifiedOn"
+                  [desc2]="item.memo"
+                  cssDes2="line-clamp line-clamp-2"
+                  imageWidth="223"
+                  [imageObjType]="form.formModel.entityName"
+                  [formModel]=""
+                  [dataItem]="item"
+                  [imageObjName]="item.title"
+                >
+                </codx-card-img>
+              </div>
+            </ng-template>
+          </ng-template>
+        </e-tabitem>
+        <e-tabitem>
+          <ng-template #headerText>
+            <div class="nav-item">
+              <a class="nav-link d-flex px-0">
+                <span class="fw-bold">
+                  <codx-label
+                    fiedName="TemplateRecent"
+                    [formModel]="form.formModel"
+                    default="Gần đây"
+                  >
+                  </codx-label>
+                </span>
+              </a>
+            </div>
+          </ng-template>
+          <ng-template #content> </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-1" (click)="onSave()" [disabled]="disableSave">
+        <codx-label
+          fiedName="Save"
+          [formModel]="form.formModel"
+          default="Chọn"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

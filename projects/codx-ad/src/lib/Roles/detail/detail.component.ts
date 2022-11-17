@@ -112,6 +112,7 @@ export class RoleDetailComponent
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
   ngOnDestroy(): void {
     if (this.sub) this.sub.unsubscribe();
@@ -122,7 +123,7 @@ export class RoleDetailComponent
     this.api
       .execSv(
         'SYS',
-        'ERM.Business.SYS',
+        'SYS',
         'FunctionListBusiness',
         'GetModuleFunctionAsync',
         [this.recid]
@@ -133,7 +134,6 @@ export class RoleDetailComponent
           this.myTree = data;
           this.df.detectChanges();
           this.asideClick(null, 0, data[0]);
-          //this.loadSource();
         }
       });
   }
@@ -165,165 +165,17 @@ export class RoleDetailComponent
 
           this.dataRole = res[1];
           this.dataAdv = res[2];
-          // if (this.dataRole) {
-          //   this.dataMore = this.dataRole.More;
-          // }
           this.df.detectChanges();
-          //this.loadSource();
         }
       });
   }
-
-  // onSelectionAddChanged(evt: any, item: any) {
-  //   ScrollComponent.reinitialization();
-  //   if (evt) {
-  //     //let item = evt.data;
-  //     this.formName = item.formName;
-  //     this.gridViewName = item.gridViewName;
-  //     this.functionID = item.functionID;
-  //     this.tempService.roleName.next(item.customName);
-  //     this.api
-  //       .execSv(
-  //         'SYS',
-  //         'ERM.Business.AD',
-  //         'RolesBusiness',
-  //         'GetPermissionAsync',
-  //         [this.functionID, this.formName, this.gridViewName, this.recid]
-  //       )
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           //this.LoadPermission(res);
-  //         }
-  //       });
-  //     // if (item.isFunction) {
-  //     //   this.roleName = this.tempService.roleName + ' - ' + item.customName;
-  //     //   this.api
-  //     //     .execSv(
-  //     //       'SYS',
-  //     //       'ERM.Business.AD',
-  //     //       'RolesBusiness',
-  //     //       'GetPermissionAsync',
-  //     //       [this.functionID, this.formName, this.gridViewName, this.recid]
-  //     //     )
-  //     //     .subscribe((res) => {
-  //     //       if (res) {
-  //     //         this.LoadPermission(res);
-  //     //       }
-  //     //     });
-  //     // } else {
-  //     // this.api
-  //     //   .execSv(
-  //     //     'SYS',
-  //     //     'ERM.Business.SYS',
-  //     //     'FunctionListBusiness',
-  //     //     'GetFunctionRoleAsync',
-  //     //     [this.recid, item.functionID]
-  //     //   )
-  //     //   .subscribe((res: any) => {
-  //     //     if (res) {
-  //     //       var dataTree = tree.dicDatas[item.functionID];
-  //     //       dataTree.items = res;
-  //     //       this.df.detectChanges();
-  //     //       //this.loadSource();
-  //     //     }
-  //     //   });
-  //     //}
-  //   }
-  // }
 
   navChange(evt: any) {
     this.tabActive = evt.nextId;
   }
 
-  loadDetail() {
-    switch (this.tabActive) {
-      case 'DataAuthorize':
-        this.api
-          .execSv(
-            'SYS',
-            'ERM.Business.SYS',
-            'FunctionListBusiness',
-            'GetDataByFunctionAsync',
-            [this.recid, this.parent]
-          )
-          .subscribe((res: any) => {
-            if (res) {
-              var data = res;
-              this.myTree = data;
-              this.df.detectChanges();
-              //this.loadSource();
-            }
-          });
-        break;
-    }
-  }
-
-  LoadPermission(d: any) {
-    if (!d) return;
-
-    // this.dataBasic = d.Basic || [];
-    // this.dataMore = d.More || [];
-    // this.dataExport = d.Export || [];
-
-    this.dataPermission = d.Data || {};
-
-    this.df.detectChanges();
-
-    this.dataAdv = d.Adv || [];
-
-    this.active = true;
-
-    this.checkAndLock('exp', false);
-
-    this.activeSys = this.RolesService._activeSysFuction;
-    this.checkAndLock('sys', this.activeSys);
-
-    this.activeMore = this.RolesService._activeMoreFuction;
-    this.checkAndLock('more', this.activeMore);
-
-    var sysfunc = document.querySelectorAll('codx-input[data-funcID]');
-
-    sysfunc.forEach((elm: any) => {
-      let funcID = elm.dataset?.funcid;
-      let inner = elm.querySelector('span.e-switch-inner');
-      let handle = elm.querySelector('span.e-switch-handle');
-
-      if (this.dataAdv.indexOf(funcID) >= 0) {
-        if (inner) inner.classList.add('e-switch-active');
-        if (handle) handle.classList.add('e-switch-active');
-      } else {
-        if (inner) inner.classList.remove('e-switch-active');
-        if (handle) handle.classList.remove('e-switch-active');
-      }
-    });
-    this.df.detectChanges();
-  }
-
-  loadSource() {
-    var formName = this.formName;
-    var gridViewName = this.gridViewName;
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.AD',
-        'RolesBusiness',
-        'GetModelFromRolesAsync',
-        [formName, gridViewName]
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          // this.dataBasic = res.Basic;
-          // this.dataMore = res.More;
-          // this.dataExport = res.Export;
-          this.df.detectChanges();
-        }
-      });
-  }
-
   valueChange(e, funcID) {
     if (e.field === 'selectAll') {
-      // this.checkAll[funcID] = e.data;
-      // this.detectorRef.detectChanges();
       var codxinput = document.querySelectorAll(
         'codx-input[data-parent="' + funcID + '"]'
       );
@@ -331,9 +183,7 @@ export class RoleDetailComponent
         codxinput.forEach((element) => {
           var ejcheck = element.getElementsByTagName('ejs-checkbox');
           var check = null;
-          var input = null;
           if (ejcheck) {
-            //ejcheck[0].setAttribute("aria-checked", "true");
             check = ejcheck[0].querySelector('span.e-frame');
           }
           if (e.data) {
@@ -353,23 +203,8 @@ export class RoleDetailComponent
       }
     } else {
       if (e.field == 'sys' || e.field == 'exp' || e.field == 'more') {
-        //var more = 'SYS002';
-        // if (e.data) {
-        //   var dt = this.dataFuncRole[funcID] as any[];
-        //   if (dt && dt.length > 0) {
-        //     dt.push(more);
-        //     //this.dataFuncRole[funcID];
-        //   } else {
-        //     var arr = [];
-        //     arr.push(more);
-        //     this.dataFuncRole[funcID] = arr;
-        //   }
-        // } else {
-        //   this.dataFuncRole = this.dataFuncRole.filter((res) => res != funcID);
-        // }
         this.checkAndLock(e.field, e.data);
       } else {
-        //if (!dataPermission) dataPermission = {};
         var per = {};
         if (
           this.dataRole &&
@@ -382,21 +217,9 @@ export class RoleDetailComponent
         per['functionID'] = funcID;
         per['roleID'] = this.recid;
         this.dataRole[funcID].DataPer = per;
-        //this.dataPermission[e.field] = e.data;
         this.RolesService._dataChanged = true;
       }
     }
-  }
-
-  inputChange($event) {
-    this.RolesService._dataChanged = true;
-  }
-  activeSysChange(e) {
-    this.checkAndLock('sys', e.srcElement.checked);
-  }
-
-  activeMoreChange(e) {
-    this.checkAndLock('more', e.srcElement.checked);
   }
 
   checkAndLock(t, check) {
@@ -503,26 +326,9 @@ export class RoleDetailComponent
       ])
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
-          var checkper = document.querySelector(
-            '.check-per[data-id="' + funcID + '"]'
-          );
-          if (checkper) checkper.classList.remove('far', 'fa-check-square');
           this.notificationsService.notifyCode('SYS019');
           this.RolesService._dataChanged = false;
           this.asideClick(null, 0, this.myTree[0]);
-          // this.api
-          //   .execSv(
-          //     'SYS',
-          //     'ERM.Business.AD',
-          //     'RolesBusiness',
-          //     'GetPermissionAsync',
-          //     [funcID, formName, '', this.recid]
-          //   )
-          //   .subscribe((res) => {
-          //     if (res) {
-          //       this.LoadPermission(res);
-          //     }
-          //   });
         }
       });
   }
