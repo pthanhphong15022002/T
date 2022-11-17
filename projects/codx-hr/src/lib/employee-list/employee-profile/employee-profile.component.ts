@@ -56,6 +56,8 @@ export class EmployeeProfileComponent extends UIComponent {
   ) {
     super(inject);
     this.user = this.auth.get();
+    console.log('dtttt', dialog);
+    
   }
 
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -405,6 +407,8 @@ export class EmployeeProfileComponent extends UIComponent {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
+    console.log('datas', option.DataService);
+    
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
@@ -412,9 +416,11 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         isAdd: true,
         headerText: 'Hộ chiếu',
+        employeeId: this.data.employeeID,
       },
       option
     );
+    
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
     });
@@ -502,6 +508,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
+    
     option.Width = '800px'
     let dialogAdd = this.callfunc.openSide(
       EmployeeAllocatedPropertyComponent,

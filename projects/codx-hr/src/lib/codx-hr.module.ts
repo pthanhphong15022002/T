@@ -76,6 +76,7 @@ import { EmployeeCertificateDetailComponent } from './employee-profile/employee-
 import { EmployeeCertificateInfoComponent } from './employee-profile/employee-certificate-info/employee-certificate-info.component';
 import { EmployeeDegreeDetailComponent } from './employee-profile/employee-degree-detail/employee-degree-detail.component';
 import { EmployeeDegreeInfoComponent } from './employee-profile/employee-degree-info/employee-degree-info.component';
+import { EmployeeTraincoursesComponent } from './employee-profile/employee-traincourses/employee-traincourses.component';
 
 export const routes: Routes = [
   {
@@ -262,6 +263,7 @@ const T_Component: Type<any>[] = [
   EmployeeCertificateDetailComponent,
   EmployeeDegreeDetailComponent,
   EmployeeDegreeInfoComponent,
+  EmployeeTraincoursesComponent,
 ];
 @NgModule({
   imports: [
