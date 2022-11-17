@@ -13,6 +13,8 @@ export class NotifyDrawerSliderComponent implements OnInit {
   lstNotify:any[] = [];
   model:DataRequest = {
     entityName:"BG_Notification",
+    predicate: "ActionType != @0",
+    dataValue: "AP",
     formName:"Notification",
     gridViewName:"grvNotification",
     srtColumns:"CreatedOn",
@@ -93,7 +95,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.api.execSv(
     'BG',
     'ERM.Business.BG',
-    'NotificationBusiness',
+    'NotificationBusinesss',
     'UpdateNotificationAsync', 
     [item.recID]).subscribe((res:boolean) => {
       if(res){

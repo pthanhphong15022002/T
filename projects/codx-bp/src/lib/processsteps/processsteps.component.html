@@ -11,7 +11,6 @@
   [button]="button"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
-  [moreFuncs]="moreFuncs"
   [autoLoad]="true"
   (onActions)="onActions($event)"
   (viewChanged)="viewChanged($event)"
@@ -90,7 +89,7 @@
   <div class="box-body">
     <div class="Activities mb-3">
       <label class="text-dark fw-bold mb-5">{{ data.stepName }}</label>
-      <ng-container>
+      <ng-container *ngIf="checkAction(data)">
         <label class="text-danger fw-bold mb-2">
           <codx-label
             name="Action"
@@ -101,18 +100,18 @@
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
             <div class="d-flex">
-              <i class="{{ showIconByStepType(item.stepType) }}"></i>
+              <i class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"></i>
               <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
             </div>
           </ng-container>
         </div>
       </ng-container>
-      <ng-container *ngIf="checkReferencesByCheck(data,'C')">
+      <ng-container *ngIf="checkReferencesByStepType(data,'C')">
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'C'">
             <label class="text-danger fw-bold mb-2" >
               {{
-                item?.memo
+                item?.stepName
               }}
             </label>
             <div class="check-list text-dark">
@@ -141,6 +140,20 @@
                   </div>
                 </div>
               </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="checkReferencesByStepType(data,'Q')">
+        <ng-container *ngFor="let item of data?.items">
+          <ng-container *ngIf="item.stepType == 'Q'">
+            <label class="text-danger fw-bold mb-2" >
+              <codx-label [fiedName]="'Reference'" [formName]="'BPQuestionnaires'" [gridViewName]="'grvBPQuestionnaires'" default="Bảng khảo sát"></codx-label>
+            </label>
+            <div class="check-list text-dark" #reference>
+             {{item.reference|formatvalue:view?.formModel :'reference':reference: "BPQuestionnaires"
+             : "grvBPQuestionnaires"
+           | async}}
             </div>
           </ng-container>
         </ng-container>

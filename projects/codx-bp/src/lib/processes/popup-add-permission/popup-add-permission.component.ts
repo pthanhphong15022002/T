@@ -47,8 +47,8 @@ export class PopupAddPermissionComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.title = dt.data[0];
-    this.process = dt.data[1];
-    this.per = dt.data[1];
+    this.process = JSON.parse(JSON.stringify(dt.data[1]));
+    this.per = JSON.parse(JSON.stringify(dt.data[1]));
     this.id = this.process.recID;
     this.fullName = this.process.processName;
     this.isShare = dt.data[2];
@@ -58,6 +58,7 @@ export class PopupAddPermissionComponent implements OnInit {
 
   //#region footer
   onShare() {
+    this.per.recIDProcess = this.id;
     this.per.toPermission = this.toPermission;
     this.per.byPermission = this.byPermission;
     this.per.ccPermission = this.ccPermission;
@@ -92,34 +93,36 @@ export class PopupAddPermissionComponent implements OnInit {
         this.per.contentEmail = this.shareContent;
       }
       this.per.urlShare = this.getPath();
-      this.per.sendEmail = this.sentEmail;
-      this.per.postBlog = this.postblog;
       this.per.urlPath = this.getPath();
-
     }
     this.api
-        .execSv<any>(
-          'BP',
-          'BP',
-          'ProcessesBusiness',
-          'RequestOrShareProcessAsync',
-          [this.per]
-        )
-        .subscribe((res) => {
-          if (res) {
-            if (this.per.form == '2')
-              this.notificationsService.notify('Chia sẻ thành công');
-            else this.notificationsService.notify('Đã yêu cầu cấp quyền');
+      .execSv<any>(
+        'BP',
+        'BP',
+        'ProcessesBusiness',
+        'RequestOrShareProcessAsync',
+        [this.per]
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (this.per.form == '2') {
+            this.notificationsService.notify('Chia sẻ thành công');
+            this.dialog.close(res);
           } else {
-            if (this.per.form == '2')
-              this.notificationsService.notify('Chia sẻ không thành công');
-            else
-              this.notificationsService.notify(
-                'Yêu cầu cấp quyền không thành công'
-              );
+            this.notificationsService.notify('Đã yêu cầu cấp quyền');
+            this.dialog.close(res);
           }
-        });
 
+        } else {
+          if (this.per.form == '2')
+            this.notificationsService.notify('Chia sẻ không thành công');
+          else
+            this.notificationsService.notify(
+              'Yêu cầu cấp quyền không thành công'
+            );
+          this.dialog.close();
+        }
+      });
   }
   //#endregion
 
@@ -155,7 +158,6 @@ export class PopupAddPermissionComponent implements OnInit {
           this.byPermission = [];
           this.byPermission = list;
           break;
-
       }
       this.changeDetectorRef.detectChanges();
     }

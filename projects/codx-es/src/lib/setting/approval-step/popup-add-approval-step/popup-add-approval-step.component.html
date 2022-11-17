@@ -383,6 +383,7 @@
         [formModel]="formModel"
         [Group]="dialogApprovalStep"
         field="overdueControl"
+        (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>
@@ -395,6 +396,7 @@
         placeholder="0"
         field="loops"
         [showSpinButton]="false"
+        [disabled]="data.overdueControl != '3'"
       >
       </codx-input>
     </div>

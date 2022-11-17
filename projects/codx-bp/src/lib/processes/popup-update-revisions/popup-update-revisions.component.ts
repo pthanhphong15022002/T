@@ -65,9 +65,6 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     console.log(this.revisions);
   }
 
-  valueCbx(e, fieldValue) {
-  }
-
   onCreate() {
     var obj = {
       more: 'BPT103',
