@@ -183,7 +183,7 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="hideImageUpload == '0'" class="overflow-auto pb-3 mh-200px">
+                    <div *ngIf="hideImageUpload == '0'" class="overflow-auto mh-200px">
                         <div *ngFor="let file of sortBy();  index as i;"
                             class="d-flex align-items-center mb-3 has-action-menu">
                             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
