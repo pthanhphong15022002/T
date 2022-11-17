@@ -174,3 +174,10 @@ export class ColumnsModel{
    allowDrag :boolean = true;
    allowDrop :boolean = true;
 }
+
+export class TabModel {
+  name: 'ViewList' | 'Kanban' | 'FlowChart' | string;
+  textDefault: string;
+  template?: any;
+  isActive: boolean = false;
+}

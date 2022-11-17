@@ -15,12 +15,14 @@ import { DataRequest } from '@shared/models/data.request';
 import {
   AuthStore,
   ButtonModel,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -28,6 +30,7 @@ import { Subject } from 'rxjs';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { BP_ProcessesPageSize } from '../models/BP_Processes.modelPageSize';
+import { PopupViewDetailProcessesComponent } from '../popup-view-detail-processes/popup-view-detail-processes.component';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
@@ -97,6 +100,9 @@ export class ProcessesComponent
   pageNumberCliked: number;
   pageNumberSearch: number;
   clickDisable: string;
+  heightWin: any ;
+  widthWin : any
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -114,6 +120,9 @@ export class ProcessesComponent
         this.gridViewSetup = res;
       }
     });
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -571,8 +580,29 @@ export class ProcessesComponent
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
+    //đoi view
     let url = 'bp/processstep/BPT11';
     this.codxService.navigate('', url, { processID: data.recID });
+     
+    //view popup
+    // let obj ={
+    //   moreFunc : e?.data,
+    //   data : data
+    // }
+
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // dialogModel.zIndex = 900;
+    // var dialog = this.callfc.openForm(
+    //   PopupViewDetailProcessesComponent,
+    //   '',
+    //   this.widthWin,
+    //   this.heightWin,
+    //   '',
+    //   obj,
+    //   '',
+    //   dialogModel
+    // );
   }
 
   approval($event) {}
