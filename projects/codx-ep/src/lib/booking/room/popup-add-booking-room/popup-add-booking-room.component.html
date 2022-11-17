@@ -9,7 +9,7 @@
   [dialog]="dialogRef"
   (setTitle)="setTitle($event)"
   [openMore]="true"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo]"
+  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo, tabReminder]"
   [data]="data"
 >
   <ng-template #tabGeneralInfo>
@@ -701,6 +701,22 @@
         >
         </codx-input>
       </div> -->
+    </ng-container>
+  </ng-template>
+
+  <ng-template #tabReminder>
+    <ng-container *ngIf="form && form.formGroup">
+      <div class="form-group">
+        <codx-label
+          default="Nhắc nhở trước giờ họp" name="lblReminder"
+        ></codx-label>
+        <codx-input
+          ControlName="reminder"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
     </ng-container>
   </ng-template>
 

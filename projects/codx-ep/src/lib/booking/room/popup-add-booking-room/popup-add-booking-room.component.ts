@@ -127,6 +127,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
     },
+    { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'tabReminder' },
   ];
   lstEquipment = [];
 
@@ -569,7 +570,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //     return;
     //   }
     // }
-    this.data.reminder=15;
+    //this.data.reminder=15;
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
