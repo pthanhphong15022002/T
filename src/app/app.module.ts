@@ -36,6 +36,7 @@ import { FileComponent } from './file/file.component';
 import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
+import { CodxEiModule } from 'projects/codx-ei/src/public-api';
 
 registerLocaleData(localeFr);
 
@@ -101,6 +102,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     CodxCoreModule.forRoot({ environment }),
     TMModule.forRoot({ environment }),
     CodxEpModule.forRoot({ environment }),
+    CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
     CodxReportModule.forRoot({ environment }),
     AppRoutingModule,
