@@ -42,13 +42,12 @@ export class TemplateSurveyOtherComponent
 
   onInit(): void {}
 
-  onSave() {}
-
-  ngAfterViewInit() {
-    // this.lstView.dataService.requestEnd = (t, data) => {
-    //   if(t == 'loaded')
-    // }
+  onSave() {
+    delete this.dataSelected.active;
+    this.dialog.close(this.dataSelected);
   }
+
+  ngAfterViewInit() {}
 
   choose(data) {
     if (data) {
