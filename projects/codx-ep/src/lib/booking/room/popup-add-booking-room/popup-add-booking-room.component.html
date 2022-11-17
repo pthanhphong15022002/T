@@ -719,7 +719,8 @@
         <codx-input
           field="reminder"
           type="number"
-          [min]="1"
+          [min]="0"
+          [crrValue]="data.reminder"
           (valueChange)="reminderChange($event)"
         >
         </codx-input>
