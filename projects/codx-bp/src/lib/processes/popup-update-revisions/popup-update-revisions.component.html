@@ -42,6 +42,7 @@
             <span class="text-dark fw-bold" > |</span>
             <span class="text-primary">
              <!-- <lib-date-pipe-format [dateFormatSimple]="item.createdOn"></lib-date-pipe-format> -->
+             {{item.createdOn| timefrom}}
             </span>
 
           </div>
@@ -98,7 +99,7 @@
   </div>
 </ng-template>
 
-<ng-template #controlShare let-dialogShare>
+<!-- <ng-template #controlShare let-dialogShare>
   <codx-share
     [listName]="listName"
     [field]="fieldValue"
@@ -108,4 +109,4 @@
     (eventApply)="valueCbx($event, fieldValue)"
   >
   </codx-share>
-</ng-template>
+</ng-template> -->
