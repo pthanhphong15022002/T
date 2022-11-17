@@ -83,10 +83,11 @@ export class PopupUpdateRevisionsComponent implements OnInit {
       );
       dialogRevisions.closed.subscribe((e) => {
         if (e?.event != null && e?.event.versions.length > 0) {
-          this.getProcess = e.event;
-          this.revisions = e?.event.versions.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
+          this.getProcess.versions = e.event?.versions;
+          this.getProcess.versionNo = e.event?.versionNo;
+           this.revisions = e?.event.versions.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
+          this.dialog.close(this.getProcess);
           this.change.detectChanges();
-          // this.dialog.close(e.event);
         }
       });
   }
