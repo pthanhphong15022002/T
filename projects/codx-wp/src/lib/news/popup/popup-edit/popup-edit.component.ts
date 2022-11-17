@@ -232,7 +232,7 @@ export class PopupEditComponent implements OnInit {
   }
 
   valueChange(event: any) {
-    if(event?.field && event?.data){
+    if(event?.field){
       let field = event.field;
       let value = event.data;
       switch(field){
@@ -251,7 +251,7 @@ export class PopupEditComponent implements OnInit {
         case "Subject":
           this.data.subject = value;
           break;
-        case "subContent":
+        case "SubContent":
           this.data.subContent = value;
           break;
         case "AllowShare":

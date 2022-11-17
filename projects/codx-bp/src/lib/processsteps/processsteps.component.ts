@@ -48,7 +48,7 @@ import {
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
-  selector: 'lib-processsteps',
+  selector: 'codx-processsteps',
   templateUrl: './processsteps.component.html',
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -60,7 +60,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
-  process?: BP_Processes;
+  @Input() process?: BP_Processes;
+  @Input() viewMode = '6'
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -178,6 +179,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         type: ViewType.content,
         active: false,
         sameData: false,
+        showSearchBar: false,
+        showFilter:false,
         model: {
           panelRightRef: this.itemViewList,
         },
@@ -188,6 +191,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
+        showSearchBar: false,
+        showFilter:false,
         model: {
           template: this.cardKanban,
         },
@@ -198,6 +203,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         icon: 'icon-bubble_chart',
         text: 'Flowchart',
+        showSearchBar: false,
+        showFilter:false,
         model: {
           panelRightRef: this.flowChart,
         },
@@ -208,7 +215,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
 
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD bước công việc
