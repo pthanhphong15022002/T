@@ -20,7 +20,10 @@ import {
 } from 'codx-core';
 import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
-import {  BP_ProcessOwners,  BP_ProcessSteps} from '../../models/BP_Processes.model';
+import {
+  BP_ProcessOwners,
+  BP_ProcessSteps,
+} from '../../models/BP_Processes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
@@ -30,7 +33,10 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
   templateUrl: './popup-add-process-steps.component.html',
   styleUrls: ['./popup-add-process-steps.component.css'],
 })
-export class PopupAddProcessStepsComponent extends UIComponent implements OnInit {
+export class PopupAddProcessStepsComponent
+  extends UIComponent
+  implements OnInit
+{
   @ViewChild('form') form: FormControlName;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -58,7 +64,7 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
   referenceText = [];
   listOwnerDetails = [];
   popover: any;
-  formModelMenu :FormModel ;
+  formModelMenu: FormModel;
   crrIndex = 0;
 
   constructor(
@@ -76,47 +82,43 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
     super(inject);
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
-    );   
-      
+    );
+
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-   
+
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
 
     this.title = this.titleActon;
-    if (this.action == 'edit'){
-      this.showLabelAttachment = this.processSteps.attachments > 0 ? true : false;
-      this.processSteps!.owners
-      this.processSteps.owners
-      if(this.stepType === "A"){
-        this.getOwnerByParentID(this.processSteps["recID"]);
-      }else{
-        this.listOwnerID =  this.processSteps.owners.map((item) => {
-          return item?.objectID ? item.objectID : null ;
-        }) 
-      } 
-      if(this.stepType === "E" && this.processSteps.reference){
+    if (this.action == 'edit') {
+      this.showLabelAttachment =
+        this.processSteps.attachments > 0 ? true : false;
+      this.processSteps!.owners;
+      this.processSteps.owners;
+      if (this.stepType === 'A') {
+        this.getOwnerByParentID(this.processSteps['recID']);
+      } else {
+        this.listOwnerID = this.processSteps.owners.map((item) => {
+          return item?.objectID ? item.objectID : null;
+        });
+      }
+      if (this.stepType === 'E' && this.processSteps.reference) {
         this.isNewEmails = false;
         this.recIdEmail = this.processSteps.reference;
-      }   
+      }
     }
   }
 
   onInit(): void {
-    this.loadData();   
-      if(this.listOwnerID.length > 0){
-        this.getListUser();
-      }
-      debugger
-  const date1 = new Date(this.processSteps['createdOn'].toString());
-
-  console.log(date1.getHours());
-// expected output: 12
+    this.loadData();
+    if (this.listOwnerID.length > 0) {
+      this.getListUser();
+    }
   }
 
   loadData() {
@@ -147,13 +149,12 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
     );
 
     popEmail.closed.subscribe((res) => {
-      if (res&& res.event) {
-        this.processSteps["reference"] = res.event?.recID;
+      if (res && res.event) {
+        this.processSteps['reference'] = res.event?.recID;
         // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
       }
     });
   }
-    
 
   viewDetailSurveys(e) {
     let url = 'sv/surveys/SVT01';
@@ -173,7 +174,7 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
       });
     else {
       if (this.action == 'edit') this.updateProcessStep();
-      else this.addProcessStep();     
+      else this.addProcessStep();
     }
   }
 
@@ -217,7 +218,6 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
         if (data) {
           this.attachment?.clearData();
           this.dialog.close(data);
-          
         } else this.dialog.close();
       });
   }
@@ -232,20 +232,21 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
     let parentID = e?.data;
-    // Get owners  
-    if(this.stepType !== "A" && this.stepType !== "P"){
+    // Get owners
+    if (this.stepType !== 'A' && this.stepType !== 'P') {
       this.getOwnerByParentID(parentID);
-    } 
+    }
   }
 
   valueChangeRefrence(e) {
     if (e?.data && e?.data.trim() != '') {
       this.textChange = e?.data;
-      this.changeDef.detectChanges();
+      // this.enterRefrence();
     }
   }
   enterRefrence() {
     if (this.textChange && this.textChange.trim() != '') {
+      if (!this.referenceText) this.referenceText = [];
       this.referenceText.push(this.textChange);
       this.textChange = '';
       this.changeDef.detectChanges();
@@ -284,7 +285,7 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
   convertReference() {
     switch (this.processSteps.stepType) {
       case 'C':
-        if (this.referenceText.length > 0) {
+        if (this.referenceText?.length > 0) {
           this.processSteps.reference = this.referenceText.join(';');
         }
         break;
@@ -331,30 +332,28 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
         JSON.stringify(this.listOwnerID)
       )
       .subscribe((res) => {
-        this.listOwnerDetails = res.map(user => {
-          return {id: user.userID, name: user.userName}
-        })        
+        this.listOwnerDetails = res.map((user) => {
+          return { id: user.userID, name: user.userName };
+        });
       });
   }
-  getOwnerByParentID(id){
-      this.bpService
-      .getOwnersByParentID( [id])
-      .subscribe((data) => {
-        let ownerIDs = [];
-        let owenrs = [];
-        data.forEach((item) => {
-          if(item.objectID){
-            ownerIDs.push(item.objectID);
-            var owner = new BP_ProcessOwners();
-            owner.objectType = item.objectType;
-            owner.objectID = item.objectID;
-            owner.rAIC = item.raic;
-            owenrs.push(owner);
-          }
-        })
-        this.listOwnerID = [...ownerIDs];
-        this.owners = [...owenrs];
-        this.getListUser();               
+  getOwnerByParentID(id) {
+    this.bpService.getOwnersByParentID([id]).subscribe((data) => {
+      let ownerIDs = [];
+      let owenrs = [];
+      data.forEach((item) => {
+        if (item.objectID) {
+          ownerIDs.push(item.objectID);
+          var owner = new BP_ProcessOwners();
+          owner.objectType = item.objectType;
+          owner.objectID = item.objectID;
+          owner.rAIC = item.raic;
+          owenrs.push(owner);
+        }
       });
-    }
+      this.listOwnerID = [...ownerIDs];
+      this.owners = [...owenrs];
+      this.getListUser();
+    });
+  }
 }
