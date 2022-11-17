@@ -13,6 +13,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
+import { B } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-properties',
@@ -40,7 +41,7 @@ export class PropertiesComponent implements OnInit {
   id: string;
   vlL1473: any;
   requestTitle: string;
-  userName = "";
+  userName = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -51,9 +52,9 @@ export class PropertiesComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = JSON.parse(JSON.stringify(data.data));
+    this.data = data.data;
     this.process = this.data;
-    if (this.process.rattings.length > 0) this.rattings = this.process.rattings;
+    if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     this.totalRating = 0;
   }
 
@@ -62,7 +63,7 @@ export class PropertiesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  loadUserName(id){
+  loadUserName(id) {
     // this.api.callSv('SYS','AD','UsersBusiness','GetAsync', id).subscribe(res=>{
     //   if(res.msgBodyData[0]){
     //     this.userName = res.msgBodyData[0].userName;
@@ -185,10 +186,12 @@ export class PropertiesComponent implements OnInit {
           this.currentRate = 1;
           this.readonly = false;
           this.commenttext = '';
-          this.rattings = res.rattings;
+          this.process = res;
+          this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
           this.getRating(res.rattings);
           this.changeDetectorRef.detectChanges();
-          this.notificationsService.notify('Rating thành công');
+          this.notificationsService.notify('Đánh giá thành công');
+          this.dialog.dataService.update(this.process).subscribe();
         }
       });
   }
@@ -197,4 +200,12 @@ export class PropertiesComponent implements OnInit {
     if (i <= rating) return 'icon-star text-warning icon-16 mr-1';
     else return 'icon-star text-muted icon-16 mr-1';
   }
+
+  // sortRattings(data: BP_ProcessesRating[]) {
+  //   data.sort((a, b) => {
+  //     var date1 = a.createdOn.getTime();
+  //     var date2 = b.createdOn.getTime();
+  //     return date1 - date2;
+  //   });
+
 }
