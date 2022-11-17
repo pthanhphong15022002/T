@@ -51,7 +51,7 @@ export class PropertiesComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = JSON.parse(JSON.stringify(data.data));
+    this.data = data.data;
     this.process = this.data;
     if (this.process.rattings.length > 0) this.rattings = this.process.rattings;
     this.totalRating = 0;
@@ -77,7 +77,7 @@ export class PropertiesComponent implements OnInit {
     this.commenttext = '';
     this.requestTitle = '';
     this.currentRate = 1;
-    this.getRating(this.rattings);
+    this.getRating(this.process.rattings);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -185,10 +185,11 @@ export class PropertiesComponent implements OnInit {
           this.currentRate = 1;
           this.readonly = false;
           this.commenttext = '';
-          this.rattings = res.rattings;
+          this.process = res;
           this.getRating(res.rattings);
           this.changeDetectorRef.detectChanges();
-          this.notificationsService.notify('Rating thành công');
+          this.notificationsService.notify('Đánh giá thành công');
+          this.dialog.dataService.update(this.process).subscribe();
         }
       });
   }

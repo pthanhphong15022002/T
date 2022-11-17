@@ -172,7 +172,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             .subscribe((mFC: any) => {
               if (mFC) {
                 console.log(mFC);
-                this.defaultMoreFC = mFC;
+                //this.defaultMoreFC = mFC;
+                if (typeof mFC == 'object' && !Array.isArray(mFC)) {
+                  for (let i of Object.keys(mFC)) {
+                    this.defaultMoreFC.push(mFC[i]);
+                  }
+                }
               }
             });
         }
@@ -394,11 +399,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) 
-  {
-    if (file)
-    {
-      debugger
+  clickViewDetail(file: any) {
+    if (file) {
+      debugger;
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;

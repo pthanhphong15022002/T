@@ -136,6 +136,7 @@ export class ApprovalCarsComponent extends UIComponent {
         request: this.request,
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
+        showFilter:false,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
