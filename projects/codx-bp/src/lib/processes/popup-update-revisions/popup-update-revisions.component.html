@@ -41,7 +41,7 @@
             <span class="text-primary">Cập nhật bởi, {{ item.createdBy }} </span>
             <span class="text-dark fw-bold" > |</span>
             <span class="text-primary">
-             1 ngày trước
+             <lib-date-pipe-format [dateFormatSimple]="item.createdOn"></lib-date-pipe-format>
             </span>
 
           </div>
@@ -72,13 +72,6 @@
               }}
             </span>
           </div>
-
-          <div class="justify-content-end p-2">
-            <span>
-              {{item.createdOn | date:'MMM d, y, h:mm:ss a'}}
-            </span>
-          </div>
-
         </div>
       </div>
     </div>
