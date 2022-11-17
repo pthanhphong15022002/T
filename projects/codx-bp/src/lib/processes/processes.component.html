@@ -33,7 +33,7 @@
   >
   </codx-card-img>
 
-  <ng-template #footerbg>
+  <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.color]="'1'
     | vll: 'BP003':'textColor'
     | async
@@ -58,13 +58,12 @@
               <span class=" ">{{ data.attachments }}</span>
             </div>
           </div>
-          <codx-imgs
+          <codx-img
             [width]="25"
-            [objectId]="data.owner"
+            [objectId]="data?.owner"
             objectType="AD_Users"
-            [numberImages]="2"
           >
-          </codx-imgs>
+          </codx-img>
         </div>
       </div>
     </div>
