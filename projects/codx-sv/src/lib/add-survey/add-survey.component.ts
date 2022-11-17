@@ -33,6 +33,7 @@ import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 import { Observable, Subscription } from 'rxjs';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { environment } from 'src/environments/environment';
+import { TemplateSurveyOtherComponent } from '../template-survey-other.component/template-survey-other.component';
 
 @Component({
   selector: 'app-add-survey',
@@ -93,8 +94,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   lstEditIV: any = new Array();
   recID: any;
   children: any = new Array();
+  views: Array<ViewModel> = [];
+  viewType = ViewType;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
+  @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   src: any;
   constructor(
     inject: Injector,
@@ -112,10 +116,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
-    this.router.params.subscribe((params) => {
-      if (params) this.funcID = params['funcID'];
-    });
+    // this.router.params.subscribe((params) => {
+    //   if (params) this.funcID = params['funcID'];
+    // });
     this.router.queryParams.subscribe((queryParams) => {
+      if (queryParams?.funcID) this.funcID = queryParams.funcID;
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
         this.loadData();
@@ -143,15 +148,31 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     // });
   }
 
-  ngAfterViewInit() {
-    var html = document.querySelector('codx-wrapper');
-    if (html) {
-      html.addEventListener('scroll', (e) => {
-        var htmlMF = document.querySelector('.moreFC');
-        if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
-      });
+  onLoading(e) {
+    if (this.view.formModel) {
+      var formModel = this.view.formModel;
+      this.views = [
+        {
+          active: true,
+          type: ViewType.content,
+          sameData: true,
+          model: {
+            panelLeftRef: this.panelLeftRef,
+          },
+        },
+      ];
+      this.change.detectChanges();
+      var html = document.querySelector('codx-wrapper');
+      if (html) {
+        html.addEventListener('scroll', (e) => {
+          var htmlMF = document.querySelector('.moreFC');
+          if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
+        });
+      }
     }
   }
+
+  ngAfterViewInit() {}
 
   loadData() {
     this.questions = null;
@@ -497,6 +518,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           this.addCard(this.itemActive, this.indexSessionA, 'Q');
           break;
         case 'LTN02':
+          this.addQuestionOther();
           break;
         case 'LTN03':
           this.addCard(this.itemActive, this.indexSessionA, 'T');
@@ -512,6 +534,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           break;
       }
     }
+  }
+
+  addQuestionOther() {
+    var obj = {};
+    var option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    var dialog = this.callfc.openForm(
+      TemplateSurveyOtherComponent,
+      '',
+      1000,
+      700,
+      '',
+      obj,
+      '',
+      option
+    );
+    dialog.closed.subscribe((res) => {
+      if (res) {
+      }
+    });
   }
 
   uploadFile(typeFile, modeFile) {
@@ -839,7 +882,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        debugger;
         this.questions = res.event;
       }
     });
@@ -856,7 +898,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   hideComment(seqNoSession, seqNoQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(this.questions))
-    dataTemp[seqNoQuestion]
+    this.questions[seqNoSession].children[seqNoQuestion].hideComment = true;
   }
 }

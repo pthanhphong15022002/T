@@ -22,6 +22,8 @@ import { LayoutHomeComponent } from './_layout-home/layout-home.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { FormsModule } from '@angular/forms';
 import { SortSessionComponent } from './add-survey/sort-session/sort-session.component';
+import { TemplateSurveyOtherComponent } from './template-survey-other.component/template-survey-other.component';
+import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 
 export const routes: Routes = [
   {
@@ -53,6 +55,8 @@ const Component: Type<any>[] = [
   AddSurveyComponent,
   PopupUploadComponent,
   SortSessionComponent,
+  TemplateSurveyOtherComponent,
+  PopupQuestionOtherComponent,
 ];
 
 @NgModule({
