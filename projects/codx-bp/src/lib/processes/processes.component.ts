@@ -100,9 +100,9 @@ export class ProcessesComponent
   pageNumberCliked: number;
   pageNumberSearch: number;
   clickDisable: string;
-  heightWin: any ;
-  widthWin : any
-
+  moreFunc: any;
+  heightWin: any;
+  widthWin: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -379,6 +379,7 @@ export class ProcessesComponent
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     this.titleAction = e.text;
+    this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -409,7 +410,7 @@ export class ProcessesComponent
         this.permission(data);
         break;
       case 'BPT105':
-        this.share(data);
+        this.permission(data);
     }
   }
 
@@ -446,17 +447,15 @@ export class ProcessesComponent
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
           [this.titleAction],
-          option,
+          option
         );
-       this.dialog.closed.subscribe(e=>{
-          if(e?.event && e?.event != null){
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event && e?.event != null) {
             this.view.dataService.clear();
             this.view.dataService.update(e?.event).subscribe();
             this.detectorRef.detectChanges();
           }
-       }
-
-       );
+        });
       });
   }
   revisions(more, data) {
@@ -481,17 +480,44 @@ export class ProcessesComponent
   }
 
   permission(data) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    data.id = data.recID;
-    this.callfc.openSide(
-      PopupAddPermissionComponent,
-      [this.titleAction, data, false],
-      option
-    );
+    if(this.moreFunc == 'BPT104'){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, false],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }else if(this.moreFunc == 'BPT105'){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, true],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+
   }
+
 
   roles(e: any) {
     console.log(e);
@@ -511,21 +537,6 @@ export class ProcessesComponent
           this.detectorRef.detectChanges();
         }
       });
-  }
-
-  share(data) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    // let data = {} as any;
-    // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(
-      PopupAddPermissionComponent,
-      [this.titleAction, data, true],
-      option
-    );
   }
 
   valueChange(e) {
@@ -583,7 +594,7 @@ export class ProcessesComponent
     //đoi view
     let url = 'bp/processstep/BPT11';
     this.codxService.navigate('', url, { processID: data.recID });
-     
+
     //view popup
     // let obj ={
     //   moreFunc : e?.data,

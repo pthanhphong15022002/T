@@ -20,10 +20,7 @@ import {
 } from 'codx-core';
 import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
-import {
-  BP_ProcessOwners,
-  BP_ProcessSteps,
-} from '../../models/BP_Processes.model';
+import { BP_ProcessOwners, BP_ProcessSteps } from '../../models/BP_Processes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
@@ -44,6 +41,7 @@ export class PopupAddProcessStepsComponent
   formModel: FormModel;
   processSteps: BP_ProcessSteps;
   owners: Array<BP_ProcessOwners> = [];
+  ownersClone: any = [];
 
   user: any;
   data: any;
@@ -61,6 +59,7 @@ export class PopupAddProcessStepsComponent
   showLabelAttachment = false;
   listUser = [];
   listOwnerID = [];
+  listOwnerIDClone = [];
   referenceText = [];
   listOwnerDetails = [];
   popover: any;
@@ -118,6 +117,10 @@ export class PopupAddProcessStepsComponent
     this.loadData();
     if (this.listOwnerID.length > 0) {
       this.getListUser();
+    }
+    if (this.action == 'edit') {
+      this.ownersClone = JSON.parse(JSON.stringify(this.owners));
+      this.listOwnerIDClone = JSON.parse(JSON.stringify(this.listOwnerID));
     }
   }
 
@@ -232,9 +235,19 @@ export class PopupAddProcessStepsComponent
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
     let parentID = e?.data;
-    // Get owners
-    if (this.stepType !== 'A' && this.stepType !== 'P') {
-      this.getOwnerByParentID(parentID);
+    // Get owners  
+    if (this.stepType !== "A" && this.stepType !== "P") {
+      this.getOwnerByParentID(parentID, true);
+    }
+  }
+  valueChangeCbxTest() {
+    var e ='cdc08630-2790-45f1-a3af-b1b7b8572156';
+    // var e = 'ffcc6e88-f3c4-4d4a-8463-dfdd6a865c06';
+    this.processSteps.parentID = e;
+    let parentID = e;
+    // Get owners  
+    if (this.stepType !== "A" && this.stepType !== "P") {
+      this.getOwnerByParentID(parentID, true);
     }
   }
 
@@ -332,28 +345,38 @@ export class PopupAddProcessStepsComponent
         JSON.stringify(this.listOwnerID)
       )
       .subscribe((res) => {
-        this.listOwnerDetails = res.map((user) => {
-          return { id: user.userID, name: user.userName };
-        });
+        this.listOwnerDetails = res.map(user => {
+          return { id: user.userID, name: user.userName }
+        })
       });
   }
-  getOwnerByParentID(id) {
-    this.bpService.getOwnersByParentID([id]).subscribe((data) => {
-      let ownerIDs = [];
-      let owenrs = [];
-      data.forEach((item) => {
-        if (item.objectID) {
-          ownerIDs.push(item.objectID);
-          var owner = new BP_ProcessOwners();
-          owner.objectType = item.objectType;
-          owner.objectID = item.objectID;
-          owner.rAIC = item.raic;
-          owenrs.push(owner);
+  getOwnerByParentID(id, isChange = false) {
+    this.bpService
+      .getOwnersByParentID([id])
+      .subscribe((data) => {
+        let ownerIDs = [];
+        let owenrs = [];
+        data.forEach((item) => {
+          if (item.objectID) {
+            ownerIDs.push(item.objectID);
+            var owner = new BP_ProcessOwners();
+            owner.objectType = item.objectType;
+            owner.objectID = item.objectID;
+            owner.rAIC = item.raic;
+            owenrs.push(owner);
+          }
+        })
+
+        if (this.action == 'edit' && isChange) {
+          this.owners = [...owenrs, ...this.ownersClone].filter((item, pos, self) => {
+            return self.findIndex(i => i['objectID'] == item['objectID']) == pos;
+          })
+          this.listOwnerID = this.owners.map(item => {return item['objectID']})
+        } else {
+          this.listOwnerID = [...ownerIDs];
+          this.owners = [...owenrs];
         }
+        this.getListUser();
       });
-      this.listOwnerID = [...ownerIDs];
-      this.owners = [...owenrs];
-      this.getListUser();
-    });
   }
 }

@@ -127,6 +127,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
     },
+    { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'tabReminder' },
   ];
   lstEquipment = [];
 
@@ -168,6 +169,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
+      this.data.reminder = 0;
     } else if (!this.isAdd) {
       let tmpStartTime = new Date(this.data?.startDate);
       let tmpEndTime = new Date(this.data?.endDate);
@@ -542,7 +544,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // }
     return '';
   }
-
+  reminderChange(evt:any){
+    if(evt!=null){
+      this.data.reminder=evt.data;
+    }
+  }
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -569,7 +575,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //     return;
     //   }
     // }
-    this.data.reminder=15;
+    //this.data.reminder=15;
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {

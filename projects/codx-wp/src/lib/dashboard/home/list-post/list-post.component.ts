@@ -162,7 +162,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             .gridViewSetup(func.formName, func.gridViewName)
             .subscribe((grd: any) => {
               if (grd) {
-                console.log('gridViewSetup', grd);
                 this.gridViewSetup = grd;
               }
             });
@@ -171,12 +170,15 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             .moreFunction(func.formName, func.gridViewName)
             .subscribe((mFC: any) => {
               if (mFC) {
-                console.log(mFC);
                 //this.defaultMoreFC = mFC;
                 if (typeof mFC == 'object' && !Array.isArray(mFC)) {
                   for (let i of Object.keys(mFC)) {
                     this.defaultMoreFC.push(mFC[i]);
                   }
+                }
+                else if(Array.isArray(mFC))
+                {
+                  this.defaultMoreFC = mFC;
                 }
               }
             });
@@ -399,9 +401,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) {
-    if (file) {
-      debugger;
+  clickViewDetail(file: any) 
+  {
+    if (file)
+    {
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
