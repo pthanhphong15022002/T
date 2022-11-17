@@ -706,14 +706,21 @@
 
   <ng-template #tabReminder>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="form-group">
+      <div class="form-group col-5">
         <codx-label
-          default="Nhắc nhở trước giờ họp" name="lblReminder"
+          default="Nhắc nhở trước giờ họp (phút)" name="lblReminder"
         ></codx-label>
-        <codx-input
+        <!-- <codx-input
           ControlName="reminder"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+        >
+        </codx-input> -->
+        <codx-input
+          field="reminder"
+          type="number"
+          [min]="1"
+          (valueChange)="reminderChange($event)"
         >
         </codx-input>
       </div>

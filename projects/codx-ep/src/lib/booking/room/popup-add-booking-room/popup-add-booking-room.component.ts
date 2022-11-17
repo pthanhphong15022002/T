@@ -543,7 +543,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // }
     return '';
   }
-
+  reminderChange(evt:any){
+    if(evt!=null){
+      this.data.reminder=evt.data;
+    }
+  }
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
