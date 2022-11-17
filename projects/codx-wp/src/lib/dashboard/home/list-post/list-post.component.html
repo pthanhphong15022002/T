@@ -3,7 +3,7 @@
     <div class="card-body">
       <div class="d-flex align-items-center">
         <div class="me-3">
-          <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40">
+          <codx-img [objectId]="user.userID" objectType="AD_Users" [width]="40" [imgOn]="user?.modifiedOn">
           </codx-img>
         </div>
         <div class="d-flex flex-column flex-grow-1 share">
@@ -19,15 +19,15 @@
   <div id="newfeed" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
     data-kt-scroll-dependencies="#postnew, .pw-profile, .pw-menu"
     data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #newfeed, .pw-content" data-kt-scroll-offset="0">
-      <codx-listview #listview 
-        [dataService]="dataService" 
-        [funcId]="'WP'" 
+      <codx-listview #listview
+        [dataService]="dataService"
+        [funcId]="'WP'"
         [service]="service"
-        [assemblyName]="assemblyName" 
-        [className]="className" 
-        [method]="method" 
+        [assemblyName]="assemblyName"
+        [className]="className"
+        [method]="method"
         entityName="WP_Comments"
-        [itemTemplate]="tmpPortal" 
+        [itemTemplate]="tmpPortal"
         [emptyTemplate]="empty"
         [predicates]="predicateWP "
         [dataValues]="dataValueWP "
@@ -60,12 +60,11 @@
               item.createdOn | timefrom
               }}</span>
             <span class="rounded-1 py-0 px-2 bg-gray-200 d-flex algin-items-center">
-              <codx-vll 
-                [name]="'L1901'" 
-                [path]="'assets/themes/sys/default/img/'"
-                [value]="item.shareControl" 
-                [showText]="true" 
-                [showIcon]="true" 
+              <codx-vll
+                [name]="'L1901'"
+                [value]="item.shareControl"
+                [showText]="true"
+                [showIcon]="true"
                 [showBgColor]="true">
               </codx-vll>
             </span>
@@ -84,7 +83,7 @@
       <ng-template #defaultMoreFunc>
         <div class="more">
           <codx-mfunc
-            [formModel]="formModel" 
+            [formModel]="formModel"
             (changeDataMF)="changeMoreFunction($event)"
             (clickMF)="clickMF($event,item)"
             [dataItem]="item" >
@@ -182,11 +181,11 @@
               <div [innerHTML]="item.shares.content" class="mb-2"></div>
               <div class="d-flex">
                 <div class="me-3">
-                  <codx-img 
-                    slot="start" 
-                    [objectName]="item.shares.createdName" 
-                    [objectId]="item.shares.createdBy" 
-                    objectType="AD_Users" 
+                  <codx-img
+                    slot="start"
+                    [objectName]="item.shares.createdName"
+                    [objectId]="item.shares.createdBy"
+                    objectType="AD_Users"
                     [width]="30">
                   </codx-img>
                 </div>
@@ -217,11 +216,11 @@
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
-    <treeview-comment 
-      [funcID]="listview.formModel.funcID" 
-      [formModel]="listview.formModel" 
+    <treeview-comment
+      [funcID]="listview.formModel.funcID"
+      [formModel]="listview.formModel"
       [objectType]="'WP_Comments'"
-      [dataComment]="item" 
+      [dataComment]="item"
       [objectID]="item.recID">
     </treeview-comment>
     <!-- end comment -->
@@ -338,11 +337,11 @@
               <ng-container *ngFor="let perrmisison of data.permissions">
                   <ng-container *ngIf="perrmisison.memberType == '2'">
                     <div class="d-flex align-items-center mt-3">
-                      <codx-img 
-                          [objectId]="perrmisison.objectID" 
-                          [objectType]="'AD_Users'" 
+                      <codx-img
+                          [objectId]="perrmisison.objectID"
+                          [objectType]="'AD_Users'"
                           [cssClass]="'me-3'"
-                          [objectName]="perrmisison.objectName" 
+                          [objectName]="perrmisison.objectName"
                           [width]="30">
                       </codx-img>
                       <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
@@ -367,11 +366,11 @@
               <ng-container *ngFor="let perrmisison of data.permissions">
                   <ng-container *ngIf="perrmisison.memberType == '3'">
                     <div class="d-flex align-items-center mt-3">
-                      <codx-img 
-                          [objectId]="perrmisison.objectID" 
-                          [objectType]="'AD_Users'" 
+                      <codx-img
+                          [objectId]="perrmisison.objectID"
+                          [objectType]="'AD_Users'"
                           [cssClass]="'me-3'"
-                          [objectName]="perrmisison.objectName" 
+                          [objectName]="perrmisison.objectName"
                           [width]="30">
                       </codx-img>
                       <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>

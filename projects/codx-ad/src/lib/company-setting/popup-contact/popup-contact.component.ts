@@ -41,7 +41,6 @@ export class PopupContactComponent implements OnInit {
 
   update() {
     this.items;
-    debugger;
     this.adService
       .updateInformationCompanySettings(this.items, this.option)
       .subscribe((response) => {

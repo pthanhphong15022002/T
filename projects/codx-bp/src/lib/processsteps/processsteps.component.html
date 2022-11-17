@@ -11,10 +11,10 @@
   [button]="button"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
-  [moreFuncs]="moreFuncs"
   [autoLoad]="true"
   (onActions)="onActions($event)"
   (viewChanged)="viewChanged($event)"
+  [viewActiveType]="viewMode"
 >
 </codx-views>
 
@@ -89,15 +89,62 @@
 <ng-template #cardTitleTmp let-data>
   <div class="box-body">
     <div class="Activities mb-3">
-      <label class="text-danger fw-bold mb-2">{{ data.stepName }}</label>
-      <div class="check-list text-dark">
+      <label class="text-dark fw-bold mb-5">{{ data.stepName }}</label>
+      <ng-container>
+        <label class="text-danger fw-bold mb-2">
+          <codx-label
+            name="Action"
+            [formModel]="view.formModel"
+            default="Hoạt động"
+          ></codx-label>
+        </label>
+        <div class="check-list text-dark">
+          <ng-container *ngFor="let item of data?.items">
+            <div class="d-flex">
+              <i class="{{ showIconByStepType(item.stepType) }}"></i>
+              <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="checkReferencesByCheck(data,'C')">
         <ng-container *ngFor="let item of data?.items">
-          <div class="d-flex">
-            <i class="{{ showIconByStepType(item.stepType) }}"></i>
-            <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
-          </div>
+          <ng-container *ngIf="item.stepType == 'C'">
+            <label class="text-danger fw-bold mb-2" >
+              {{
+                item?.memo
+              }}
+            </label>
+            <div class="check-list text-dark">
+              <ng-container
+                *ngIf="
+                  item?.reference != null &&
+                  item?.reference.split(';').length > 0
+                "
+              >
+                <div class="Activities mb-3">
+                  <div class="check-list text-dark">
+                    <ng-container
+                      *ngFor="let text of item?.reference.split(';')"
+                    >
+                      <div>
+                        <codx-input
+                          type="checkbox"
+                          [label]="text"
+                          [checked]="false"
+                          labelPosition="After"
+                          [disabled]="false"
+                          class="test-check me-4 mb-2"
+                        ></codx-input>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
         </ng-container>
-      </div>
+      </ng-container>
     </div>
     <div class="Attachments mb-3" *ngIf="checkAttachment(data)">
       <label class="text-primary fw-bold mb-2">
@@ -298,7 +345,6 @@
                                 [titleTmp]="titleTmp"
                                 [desc]="item1?.memo"
                                 [dataItem]="item1"
-                              
                               >
                               </codx-temp-full>
 
@@ -307,7 +353,7 @@
                                   <div
                                     class="steplist-item step-items rounded p-4"
                                   >
-                                   <codx-temp-full
+                                    <codx-temp-full
                                       [titleTmp]="titleTmp"
                                       [desc]="item2?.memo"
                                       [footer]="footerBase"
@@ -381,7 +427,6 @@
   </div>
 </ng-template>
 
-
 <ng-template #footerBase let-data>
   <ng-container [ngTemplateOutlet]="content"></ng-container>
   <div
@@ -430,7 +475,7 @@
   </div>
 
   <ng-template #content>
-    <ng-container *ngIf=" data.stepType == 'A'">
+    <ng-container *ngIf="data.stepType == 'A'">
       <div class="check-list text-dark">
         <ng-container *ngFor="let item of data?.items">
           <div class="d-flex">

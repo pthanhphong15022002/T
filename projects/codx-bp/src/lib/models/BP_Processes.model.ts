@@ -147,11 +147,11 @@ export class BP_ProcessesRating{
   positionName: string;
   comment: string;
   ratting: number;
-  createOn: Date;
+  createdOn: Date;
 }
 
 export class tmpPermission{
-  recID: string;
+  recIDProcess: string;
   form: string;
   titleEmail: string;
   contentEmail: string;
@@ -173,4 +173,11 @@ export class ColumnsModel{
    showItemCount :boolean =true ;
    allowDrag :boolean = true;
    allowDrop :boolean = true;
+}
+
+export class TabModel {
+  name: 'ViewList' | 'Kanban' | 'FlowChart' | string;
+  textDefault: string;
+  template?: any;
+  isActive: boolean = false;
 }

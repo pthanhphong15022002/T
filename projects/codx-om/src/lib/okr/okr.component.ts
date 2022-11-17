@@ -50,10 +50,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe(item=>{
-      if(item)
-        this.titleRoom = item.organizationName
-    })
+    // this.cache.getCompany(user.userID).subscribe(item=>{
+    //   if(item)
+    //     this.titleRoom = item.organizationName
+    // })
   }
 
   //Hàm click

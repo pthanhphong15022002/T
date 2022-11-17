@@ -16,6 +16,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-personals',
@@ -33,6 +34,7 @@ export class PersonalsComponent implements OnInit {
   funcID = '';
   default = true;
   showHeader: boolean = true;
+  checkRefreshAvatar = false;
 
   headerMF = {
     POST: true,
@@ -40,6 +42,7 @@ export class PersonalsComponent implements OnInit {
     VIDEO: false,
     NOTEBOOK: false,
     STORAGE: false,
+    INFORMATION: false,
   };
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
@@ -50,6 +53,7 @@ export class PersonalsComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private auth: AuthService,
     private route: ActivatedRoute,
+    private codxShareSV: CodxShareService
   ) {
     var data: any = this.auth.user$;
     this.employeeInfo = data.source._value;
@@ -60,12 +64,21 @@ export class PersonalsComponent implements OnInit {
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
-      this.changedt.detectChanges();
     });
+    this.refreshAvatar();
   }
 
   ngAfterViewInit() {
-    this.changedt.detectChanges();
+  }
+
+  refreshAvatar() {
+    this.codxShareSV.dataRefreshImage.subscribe((res) => {
+      if (res) {
+        this.checkRefreshAvatar = !this.checkRefreshAvatar;
+        this.employeeInfo['modifiedOn'] = res?.modifiedOn;
+        this.changedt.detectChanges();
+      }
+    });
   }
 
   getFunctionList() {
@@ -88,23 +101,13 @@ export class PersonalsComponent implements OnInit {
     // }
   }
 
-  getMenu(url, icon) {
-    this.icon = icon;
-    this.active = true;
-    this.default = false;
-    this.menuUrl = url;
-
-    this.funcID = url;
-    // this.codxService.navigate('', `mwp/personals/${url}`);
-    this.changedt.detectChanges();
-  }
-
   activeMF(type) {
     this.headerMF.IMAGE = false;
     this.headerMF.VIDEO = false;
     this.headerMF.POST = false;
     this.headerMF.NOTEBOOK = false;
     this.headerMF.STORAGE = false;
+    this.headerMF.INFORMATION = false;
     this.headerMF[type] = true;
     this.changedt.detectChanges();
   }

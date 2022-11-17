@@ -1,4 +1,3 @@
-import { CodxEpService } from 'projects/codx-ep/src/public-api';
 import { SettingCalendarService } from './setting-calender.service';
 import {
   Component,
@@ -8,17 +7,14 @@ import {
   TemplateRef,
 } from '@angular/core';
 import {
-  CodxScheduleComponent,
   UIComponent,
   FormModel,
   ViewType,
   ViewModel,
-  ResourceModel,
   ViewsComponent,
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
 import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
-import { ViewBaseComponent } from 'codx-core/lib/layout/views/view-base/view-base.component';
 
 @Component({
   selector: 'setting-calendar',
@@ -38,6 +34,7 @@ export class SettingCalendarComponent
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
+
   constructor(
     private injector: Injector,
     private settingCalendar: SettingCalendarService

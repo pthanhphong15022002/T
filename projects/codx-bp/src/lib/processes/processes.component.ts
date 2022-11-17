@@ -15,12 +15,14 @@ import { DataRequest } from '@shared/models/data.request';
 import {
   AuthStore,
   ButtonModel,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
@@ -28,6 +30,7 @@ import { Subject } from 'rxjs';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { BP_ProcessesPageSize } from '../models/BP_Processes.modelPageSize';
+import { PopupViewDetailProcessesComponent } from '../popup-view-detail-processes/popup-view-detail-processes.component';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
@@ -97,6 +100,9 @@ export class ProcessesComponent
   pageNumberCliked: number;
   pageNumberSearch: number;
   clickDisable: string;
+  moreFunc: any;
+  heightWin: any;
+  widthWin: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -114,6 +120,9 @@ export class ProcessesComponent
         this.gridViewSetup = res;
       }
     });
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -370,6 +379,7 @@ export class ProcessesComponent
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
     this.titleAction = e.text;
+    this.moreFunc = e.functionID;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -394,13 +404,13 @@ export class ProcessesComponent
         break;
       case 'BPT103': // gán tạm cập nhật phiên bản
         //this.revisions(e.data, data);
-        this.Updaterevisions(e.data,data);
+        this.Updaterevisions(data);
         break;
       case 'BPT104':
         this.permission(data);
         break;
       case 'BPT105':
-        this.share(data);
+        this.permission(data);
     }
   }
 
@@ -422,7 +432,7 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(more,data) {
+  Updaterevisions(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -437,18 +447,15 @@ export class ProcessesComponent
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
           [this.titleAction],
-          option,
+          option
         );
-       // this.dialog.closed.subscribe(e=>{
-          // if(e?.event && e?.event != null){
-          //   this.view.dataService.clear();
-          //   this.view.dataService.update(e?.event).subscribe();
-          //   this.detectorRef.detectChanges();
-
-          // }
-      //  }
-
-    //    );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event && e?.event != null) {
+            this.view.dataService.clear();
+            this.view.dataService.update(e?.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       });
   }
   revisions(more, data) {
@@ -473,17 +480,44 @@ export class ProcessesComponent
   }
 
   permission(data) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    data.id = data.recID;
-    this.callfc.openSide(
-      PopupAddPermissionComponent,
-      [this.titleAction, data, false],
-      option
-    );
+    if(this.moreFunc == 'BPT104'){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, false],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }else if(this.moreFunc == 'BPT105'){
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, true],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+
   }
+
 
   roles(e: any) {
     console.log(e);
@@ -503,21 +537,6 @@ export class ProcessesComponent
           this.detectorRef.detectChanges();
         }
       });
-  }
-
-  share(data) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    // let data = {} as any;
-    // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(
-      PopupAddPermissionComponent,
-      [this.titleAction, data, true],
-      option
-    );
   }
 
   valueChange(e) {
@@ -572,8 +591,29 @@ export class ProcessesComponent
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
+    //đoi view
     let url = 'bp/processstep/BPT11';
     this.codxService.navigate('', url, { processID: data.recID });
+
+    //view popup
+    // let obj ={
+    //   moreFunc : e?.data,
+    //   data : data
+    // }
+
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    // dialogModel.zIndex = 900;
+    // var dialog = this.callfc.openForm(
+    //   PopupViewDetailProcessesComponent,
+    //   '',
+    //   this.widthWin,
+    //   this.heightWin,
+    //   '',
+    //   obj,
+    //   '',
+    //   dialogModel
+    // );
   }
 
   approval($event) {}

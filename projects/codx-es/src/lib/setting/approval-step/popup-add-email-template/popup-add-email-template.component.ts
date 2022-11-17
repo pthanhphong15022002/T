@@ -269,7 +269,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       this.esService
         .addEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
-          debugger
           console.log(res);
           if (res) {
             console.log(res);
@@ -299,7 +298,6 @@ export class PopupAddEmailTemplateComponent implements OnInit, AfterViewInit {
       this.esService
         .editEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
-          debugger
           console.log(res);
           if (res) {
             console.log(res);

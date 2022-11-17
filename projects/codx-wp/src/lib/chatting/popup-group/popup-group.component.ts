@@ -62,7 +62,6 @@ export class PopupGroupComponent implements OnInit {
         data.forEach(x => {
           x['checked'] = false;
         })
-        debugger;
         this.dataRequest = data;
       }
     }
@@ -175,7 +174,6 @@ export class PopupGroupComponent implements OnInit {
       return;
     }
     if (this.data.members.length < 2) {
-      debugger
       //this.notificationsService.notify(this.usersmessage);
       this.notificationsService.notifyCode("WP036");
       this.cacheSer.message("").subscribe((res)=>{
@@ -184,12 +182,10 @@ export class PopupGroupComponent implements OnInit {
       return;
     }
 
-    debugger;
     this.senderId = this.users.userID;//
     this.senderName = this.users.userName;//
     this.api.execSv("WP", "ERM.Business.WP", "ChatBusiness", "AddGroupChatAsync", this.data).subscribe((res: any) => {
       if (res) {
-        debugger;
         this.Group = res ;
         this.groupId = res.groupID;
         
@@ -236,7 +232,6 @@ export class PopupGroupComponent implements OnInit {
         // if(this.evtNewGroup){
         //   this.evtNewGroup.emit(res);
         // }
-        debugger;
         this.dialogRef.close(res);//close form
 
       }
