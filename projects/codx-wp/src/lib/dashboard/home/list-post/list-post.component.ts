@@ -157,6 +157,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             }
           });
           // get more function
+          
           this.cache.moreFunction(func.formName,func.gridViewName).subscribe((mFC:any) => {
             if(mFC)
             {
@@ -172,7 +173,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   { // set moreFucntion
     if(arrMoreFc){
       arrMoreFc.forEach((x:any) =>{
-        if(x.functionID == "WP000" || !this.defaultMoreFC.some(e => e.functionID == x.functionID)){
+        if(x.functionID == "WP000" || !this.defaultMoreFC.some(e => e.functionID == x.functionID))
+        {
           x.disabled = true;
         }
       });
@@ -378,7 +380,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   {
     if (file)
     {
-      debugger
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
