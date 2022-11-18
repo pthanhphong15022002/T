@@ -163,18 +163,9 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
   fileAdded(e) {}
-  openShare(share: any, isOpen) {
-    if (isOpen == true) {
-      // this.listCombobox = {
-      //   U: 'Users',
-      // };
-      this.listName = 'Users';
-      this.fieldValue = 'owner';
-      this.callfc.openForm(share, '', 420, window.innerHeight);
-    }
-  }
 
-  valueCbx(e, fieldValue) {
+
+  valueCbx(e) {
   }
   //#endregion event
 }

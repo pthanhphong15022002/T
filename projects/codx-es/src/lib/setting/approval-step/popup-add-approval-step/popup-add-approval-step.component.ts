@@ -245,29 +245,45 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
-      if (event.field == 'allowEditAreas') {
-        this.allowEditAreas = event.data;
-      } else if (event.field == 'stepType') {
-        this.data[event?.field] = event.data;
-        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-        if (this.data.stepName == '' || this.data.stepName == null) {
-          let vllName = this.eSign == true ? 'ES002' : 'ES026';
-          this.cache.valueList(vllName).subscribe((res) => {
-            if (res?.datas) {
-              let i = res.datas.findIndex((p) => p.value == event.data);
-              this.data.stepName = res.datas[i]?.text;
-              this.dialogApprovalStep.patchValue({
-                stepName: this.data.stepName,
-              });
-              this.cr.detectChanges();
-            }
-          });
+      switch (event.field) {
+        case 'allowEditAreas': {
+          this.allowEditAreas = event.data;
+          break;
         }
-      } else {
-        this.data[event?.field] = event.data;
-        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-      }
+        case 'stepType': {
+          this.data[event?.field] = event.data;
+          this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+          if (this.data.stepName == '' || this.data.stepName == null) {
+            let vllName = this.eSign == true ? 'ES002' : 'ES026';
+            this.cache.valueList(vllName).subscribe((res) => {
+              if (res?.datas) {
+                let i = res.datas.findIndex((p) => p.value == event.data);
+                this.data.stepName = res.datas[i]?.text;
+                this.dialogApprovalStep.patchValue({
+                  stepName: this.data.stepName,
+                });
+                this.cr.detectChanges();
+              }
+            });
+          }
+          break;
+        }
+        case 'overdueControl': {
+          if (event.data == '3') {
+            this.data.loops = 1;
+            this.dialogApprovalStep.patchValue({ loops: this.data.loops });
+          } else {
+            this.data.loops = 0;
+            this.dialogApprovalStep.patchValue({ loops: this.data.loops });
+          }
 
+          break;
+        }
+        default: {
+          this.data[event?.field] = event.data;
+          this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+        }
+      }
       this.cr.detectChanges();
     }
   }

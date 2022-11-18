@@ -1111,6 +1111,16 @@ export class CodxEsService {
     );
   }
 
+  overdue() {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'OverDueAsync',
+      []
+    );
+  }
+
   //#endregion
 
   //#region confirm otp
