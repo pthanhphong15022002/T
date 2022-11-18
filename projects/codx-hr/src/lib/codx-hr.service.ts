@@ -235,12 +235,32 @@ export class CodxHrService {
     )
   }
 
-  saveEmployeePassportInfo(data){
+  getEmployeeVisasInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'GetEmployeeVisasInfoAsync',
+      data
+    )
+  }
+
+  updateEmployeePassportInfo(data){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
-      'AddEmployeePassportInfoAsync',
+      'EditEmployeePassportInfoAsync',
+      data
+    )
+  }
+
+  updateEmployeeVisaInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'AddEmployeeVisasInfoAsync',
       data
     )
   }

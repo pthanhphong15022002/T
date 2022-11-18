@@ -21,7 +21,6 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-
     cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
     [imageObjType]="'BP_Processes'"
     imageSrc="../assets/media/img/codx/default/card-default.svg"
@@ -29,6 +28,8 @@
     [imageObjName]="data?.processName"
     [imageId]="data?.recID"
     [rootData]="data"
+    [dataItem]="data"
+    [formModel]="view.formModel"
     [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
@@ -72,8 +73,20 @@
         <div class="d-flex flex-wrap justify-content-between my-1">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3">
-              <span class="icon-check-correct text-warning icon-16 me-1"></span>
-              <span class="">0</span>
+              <span class="icon-server text-dark icon-16 me-1"></span>
+                <span #phases class="">
+                  {{
+                    data.phases
+                    }}
+                </span>
+            </div>
+            <div class="d-flex me-3">
+              <span
+                class="icon-format_list_numbered text-danger icon-16 me-1"
+              ></span>
+              <span #activities class="">
+                {{data.activities}}
+              </span>
             </div>
             <div class="d-flex me-3">
               <span class="icon-attach_file text-primary icon-16 me-1"></span>
@@ -182,11 +195,11 @@
       </div>
     </td>
     <td class="rowphoto position-relative">
-      <!-- <div class="padding" *ngIf="funcID == 'BPT4'">
+      <div class="padding" *ngIf="funcID == 'BPT4'">
         <button class="btn btn-primary" (click)="approval(data)">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
-      </div> -->
+      </div>
       <div class="padding position-absolute top-0 end-0" >
         <codx-mfunc
           [formModel]="view.formModel"
@@ -329,7 +342,7 @@
 <ng-template #templateSearch>
   <ng-container *ngIf="listProcess !=null; else tmpEmpty" >
     <div class="card rounded-0 p-10">
-      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} kết quả được tìm thấy</div>
+      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} <codx-label default="kết quả được tìm thấy"></codx-label></div>
       <div class="card-body" *ngFor="let item of listProcess">
         <div class="mt-6">
           <div class="d-flex align-items-center mb-2">
@@ -361,7 +374,9 @@
               </div>
               <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
                 <span class="me-1">{{item.views}}</span
-                ><span class="line-clamp">lượt xem</span>
+                ><span class="line-clamp">
+                  <codx-label default="lượt xem"></codx-label>
+                </span>
               </div>
               <div class="rating px-4 me-2">
                 <div class="rating-label checked">
@@ -384,8 +399,12 @@
                 <codx-tag [entityName]="gridModels.entityName" [disabled]="true" [isEdit]="false" [value]="item.tags">
                 </codx-tag>
               </div> -->
-              <span class="badge badge-warning my-1 me-3">Tuyển dụng</span>
-              <div class="badge badge-success my-1 me-3">Onboard</div>
+              <span class="badge badge-warning my-1 me-3">
+                <codx-label default="Tuyển dụng"></codx-label>
+              </span>
+              <div class="badge badge-success my-1 me-3">
+                <codx-label default="Onboard"></codx-label>
+              </div>
             </div>
           </div>
           <!--end::Foot-->

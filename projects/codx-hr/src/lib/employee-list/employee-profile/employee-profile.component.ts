@@ -1,3 +1,4 @@
+import { EmployeeVisaFormComponent } from './../../employee-profile/employee-visa-form/employee-visa-form.component';
 import { EmployeeAllocatedPropertyComponent } from './../../employee-profile/employee-allocated-property/employee-allocated-property.component';
 import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
 import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
@@ -452,11 +453,12 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeVisaInfoComponent,
+      EmployeeVisaFormComponent,
       //TestingTwoSideFormComponent,
       {
         isAdd: true,
         headerText: 'Thị thực',
+        employeeId: this.data.employeeID,
       },
       option
     );

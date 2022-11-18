@@ -103,7 +103,7 @@ export const routes: Routes = [
     TabModule,
     CommonModule,
     DragDropModule,
-    PinchZoomModule
+    PinchZoomModule,
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

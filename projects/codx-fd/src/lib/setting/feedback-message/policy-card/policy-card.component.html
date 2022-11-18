@@ -207,17 +207,17 @@
     </div>
 </ng-container>
 <ng-template #content let-modal>
-    <div class="modal-header">
+    <div class="modal-header p-5">
         <h4 class="modal-title" id="modal-basic-title">{{ modelForm.title }}</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         </button>
     </div>
     <div class="modal-body">
-        <div class="row form-group">
-            <div class="col-xl-3 col-md-3">
+        <div class="form-group">
+            <div class="mb-1">
                 <codx-label name="lblQuantity" [formModel]="formModel" [default]="'Số lượng'"></codx-label>
             </div>
-            <div class="col-xl-9 col-md-9">
+            <div class="">
                 <codx-input [crrValue]="modelForm.quantity" type="number" min="1" class="form-control"
                     [showSpinButton]="false" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
                     placeholder="3" (valueChange)="valueChangeQuantity($event)">
@@ -225,21 +225,18 @@
             </div>
         </div>
 
-        <div class="row form-group" *ngIf="modelForm.type == 0 || modelForm.type == 1 || modelForm.type == 2">
-            <div class="col-xl-3 col-md-3">
+        <div class="form-group" *ngIf="modelForm.type == 0 || modelForm.type == 1 || modelForm.type == 2">
+            <div class="mb-1">
                 <codx-label name="lblCycle" [formModel]="formModel" [default]="'Chu kỳ'"></codx-label>
             </div>
-            <div class="col-xl-9 col-md-9">
-                <div class="lv-control">
-                    <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435"
-                        field="edit" [crrValue]="modelForm.cycle"
-                        (valueChange)="changValueListPopup($event,modelForm.type)">
-                    </codx-input>
-                </div>
+            <div class="lv-control">
+                <codx-input type="valuelist" class="control-vll w-338px" placeholder="" refValue="L1435" field="edit"
+                    [crrValue]="modelForm.cycle" (valueChange)="changValueListPopup($event,modelForm.type)">
+                </codx-input>
             </div>
         </div>
     </div>
-    <div class="modal-footer">
+    <div class="modal-footer px-5 py-4">
         <button type="button" class="btn btn-primary" (click)="onSavePopup(modelForm.type)"
             (click)="modal.close('Save click')">
             {{'Lưu' | lang:'PolicyCard':'lblSave' | async}}

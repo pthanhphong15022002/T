@@ -31,6 +31,7 @@ export class LayoutListDetailComponent implements OnInit {
   @Input() dialog?: DialogRef;
   @Input() subHeaderText?: string;
   @Input() leftTemlate?: TemplateRef<any>;
+  @Input() RightTemlate?: TemplateRef<any>;
   @Input() subHeader?: TemplateRef<any>;
   @Input() subTab?: TemplateRef<any>;
   @Input() body?: TemplateRef<any>;

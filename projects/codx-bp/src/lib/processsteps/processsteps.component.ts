@@ -254,6 +254,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
+                      if (processStep?.ownersOfParent)
+                        dt.owners = processStep?.ownersOfParent;
                       if (this.kanban) this.kanban.updateCard(dt);
                     }
                   });
@@ -405,34 +407,54 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   editStepChild(data, processStep) {
-    //khong doi parent
-    if ((this.view.currentView as any)?.kanban)
-      this.kanban = (this.view.currentView as any).kanban;
-    this.view.dataService.data.forEach((obj) => {
-      var index = -1;
-      index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
-      if (index != -1) {
-        var dataParents = obj.items[index];
-        var indexChild = dataParents.items.findIndex(
-          (dt) => dt.recID == processStep.recID
-        );
-        if (indexChild != -1) {
-          dataParents.items[indexChild] = processStep;
-          // this.bpService.getOwnersByParentID(processStep.parentID).subscribe(res=>{
-          //   if(res){
-          //     dataParents.owners= res
-          //   }
+    if (data.parentID == processStep.parentID) {
+      //khong doi parent
+      if ((this.view.currentView as any)?.kanban)
+        this.kanban = (this.view.currentView as any).kanban;
+      this.view.dataService.data.forEach((obj) => {
+        var index = -1;
+        index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
+        if (index != -1) {
+          var dataParents = obj.items[index];
+          var indexChild = dataParents.items.findIndex(
+            (dt) => dt.recID == processStep.recID
+          );
+          if (indexChild != -1) {
+            dataParents.items[indexChild] = processStep;
+            if (processStep?.ownersOfParent)
+              dataParents.owners = processStep?.ownersOfParent;
             if (this.kanban) this.kanban.updateCard(dataParents);
-          // })
-          obj.items[index] = dataParents;
+            obj.items[index] = dataParents;
+          }
         }
-       
-      }
-    });
+      });
+    } else {
+      // doi parent
+      this.view.dataService.data.forEach((obj) => {
+        var indexParentNew = -1;
+        var indexParentOld = -1;
+        indexParentOld = obj.items?.findIndex((x) => x.recID == data.parentID);
+        indexParentNew = obj.items?.findIndex(
+          (x) => x.recID == processStep.parentID
+        );
+        if (indexParentOld != -1 && indexParentNew != -1) {
+          var dataParentsOld = obj.items[indexParentOld];
+          var dataParentsNew = obj.items[indexParentNew];
+          dataParentsOld.splice(data.stepNo - 1, 1); ///xu ly xoa nhuw the nao
+          dataParentsNew.push(processStep);
+          if (processStep?.ownersOfParent)
+            dataParentsNew.owners = processStep?.ownersOfParent;
 
-    // doi parent hoir laji thuong
+          if (this.kanban) {
+            this.kanban.updateCard(dataParentsOld);
+            this.kanban.updateCard(dataParentsNew);
+          }
+          obj.items[indexParentOld] = dataParentsOld;
+          obj.items[indexParentNew] = dataParentsNew;
+        }
+      });
+    }
   }
-
   copy(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res) => {
@@ -530,7 +552,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
                 if (index != -1) {
-                  if (this.kanban) this.kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
                   obj.items.forEach((dt) => {
                     if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -540,22 +561,25 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               break;
             default:
               this.view.dataService.data.forEach((obj) => {
-                var index = -1;
-                if (obj.items.length > 0)
-                  obj.items.forEach((child) => {
+                var indexParent = -1;
+                if (obj.items.length > 0){
+                  obj.items.forEach((child,crrIndex) => {
+                    var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
                         (x) => x.recID == data.recID
                       );
                     if (index != -1) {
                       child.items.splice(index, 1);
-                      if (this.kanban) this.kanban.updateCard(obj.items[index]);
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
-                      index = -1;
-                    }
+                      indexParent=crrIndex
+                    }  
                   });
+                }
+                if(indexParent!=-1) if (this.kanban) this.kanban.updateCard(obj.items[indexParent]);
+                 
               });
               break;
           }
@@ -605,10 +629,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     // test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
+
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
   }
 
@@ -951,7 +982,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //     if(arrFlowChart.length==1){
     //       this.dataFile = arrFlowChart[0];
     //       return
-    //     } 
+    //     }
     //     arrFlowChart = arrFlowChart.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf())
     //     this.dataFile = arrFlowChart[0];
     //     return
@@ -965,7 +996,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   fileAdded(e) {
     if (e && e?.data?.length > 0) {
       this.dataFile = e.data[0];
-     let flowchart = this.dataFile.recID;
+      let flowchart = this.dataFile.recID;
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -993,5 +1024,4 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     let check = this.checkList.length > 0;
     return check;
   }
-  
 }
