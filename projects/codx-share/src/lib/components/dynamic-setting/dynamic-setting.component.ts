@@ -44,7 +44,7 @@ export class DynamicSettingComponent implements OnInit {
     private pageTitle: PageTitleService,
     private cacheService: CacheService,
     private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {}
@@ -60,15 +60,16 @@ export class DynamicSettingComponent implements OnInit {
         },
       },
     ];
+    this.changeDetectorRef.detectChanges();
   }
 
-  loadContent(evt: any, catagory: string){
+  loadContent(evt: any, catagory: string) {
     this.loaded = false;
     var res = this.valuelist as any;
     if (res && res.datas) {
       this.catagory = catagory;
       let componentRef: ComponentRef<CatagoryComponent>;
-    
+
       this.hideCurrentView();
       this.acitveMenuView();
       if (this.components.has(catagory)) {
@@ -84,7 +85,8 @@ export class DynamicSettingComponent implements OnInit {
         return;
       } else {
         let component: Type<any> = CatagoryComponent;
-        componentRef = this.content.createComponent<CatagoryComponent>(component);
+        componentRef =
+          this.content.createComponent<CatagoryComponent>(component);
         componentRef.location.nativeElement.classList.add(
           'd-block',
           'animate__animated',
@@ -92,7 +94,7 @@ export class DynamicSettingComponent implements OnInit {
         );
         componentRef.instance.category = this.catagory;
         componentRef.instance.setting = this.dataSetting[this.catagory];
-        componentRef.instance.function =this.view.function;
+        componentRef.instance.function = this.view.function;
         componentRef.instance.valuelist = this.valuelist;
 
         this.components.set(this.catagory, componentRef);
@@ -101,7 +103,7 @@ export class DynamicSettingComponent implements OnInit {
       }
     }
   }
-  
+
   private hideCurrentView() {
     if (this.currentView?.category) {
       var curRef = this.components.get(this.currentView.category)!;
@@ -121,7 +123,7 @@ export class DynamicSettingComponent implements OnInit {
     //   else v.active = false;
     // });
   }
-  
+
   viewChanged(evt: any, view: ViewsComponent) {
     this.view = view;
     var formName = view.function!.formName;

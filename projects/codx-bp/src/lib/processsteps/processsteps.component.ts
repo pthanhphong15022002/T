@@ -422,11 +422,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           //   if(res){
           //     dataParents.owners= res
           //   }
-            if (this.kanban) this.kanban.updateCard(dataParents);
+          if (this.kanban) this.kanban.updateCard(dataParents);
           // })
           obj.items[index] = dataParents;
         }
-       
       }
     });
 
@@ -604,11 +603,19 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
     // test
     this.formModelMenu = this.view?.formModel;
+    debugger;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
+
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
   }
 
@@ -951,7 +958,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //     if(arrFlowChart.length==1){
     //       this.dataFile = arrFlowChart[0];
     //       return
-    //     } 
+    //     }
     //     arrFlowChart = arrFlowChart.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf())
     //     this.dataFile = arrFlowChart[0];
     //     return
@@ -965,7 +972,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   fileAdded(e) {
     if (e && e?.data?.length > 0) {
       this.dataFile = e.data[0];
-     let flowchart = this.dataFile.recID;
+      let flowchart = this.dataFile.recID;
     }
     this.changeDetectorRef.detectChanges();
   }
@@ -993,5 +1000,4 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     let check = this.checkList.length > 0;
     return check;
   }
-  
 }
