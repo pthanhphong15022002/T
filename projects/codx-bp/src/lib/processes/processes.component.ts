@@ -118,7 +118,7 @@ export class ProcessesComponent
     if (this.funcID == 'BPT3') {
       this.method = 'GetListShareByProcessAsync';
     }
-    if(this.funcID == "BPT2") {
+    if (this.funcID == 'BPT2') {
       this.method = 'GetListMyProcessesAsync';
     }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
@@ -372,8 +372,8 @@ export class ProcessesComponent
     // data.title = this.titleUpdateFolder;
     // data.id = data.recID;
     this.dialog = this.callfc.openSide(PropertiesComponent, data, option);
-    this.dialog.closed.subscribe(e=>{
-      this.view.dataService.clear();
+    this.dialog.closed.subscribe((e) => {
+      if (!e.event) this.view.dataService.clear();
     });
   }
 
