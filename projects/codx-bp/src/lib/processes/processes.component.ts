@@ -410,6 +410,10 @@ export class ProcessesComponent
         //this.revisions(e.data, data);
         this.Updaterevisions(data);
         break;
+        case 'BPT107': // gán tạm cập nhật phiên bản
+        this.revisions(e.data, data);
+       // this.Updaterevisions(data);
+        break;
       case 'BPT104':
         this.permission(data);
         break;
@@ -471,7 +475,7 @@ export class ProcessesComponent
       RevisionsComponent,
       '',
       500,
-      350,
+      200,
       '',
       obj
     );

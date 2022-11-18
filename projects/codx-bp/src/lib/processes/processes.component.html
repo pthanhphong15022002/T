@@ -335,7 +335,7 @@
 <ng-template #templateSearch>
   <ng-container *ngIf="listProcess !=null; else tmpEmpty" >
     <div class="card rounded-0 p-10">
-      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} kết quả được tìm thấy</div>
+      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} <codx-label default="kết quả được tìm thấy"></codx-label></div>
       <div class="card-body" *ngFor="let item of listProcess">
         <div class="mt-6">
           <div class="d-flex align-items-center mb-2">
@@ -367,7 +367,9 @@
               </div>
               <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
                 <span class="me-1">{{item.views}}</span
-                ><span class="line-clamp">lượt xem</span>
+                ><span class="line-clamp">
+                  <codx-label default="lượt xem"></codx-label>
+                </span>
               </div>
               <div class="rating px-4 me-2">
                 <div class="rating-label checked">
@@ -390,8 +392,12 @@
                 <codx-tag [entityName]="gridModels.entityName" [disabled]="true" [isEdit]="false" [value]="item.tags">
                 </codx-tag>
               </div> -->
-              <span class="badge badge-warning my-1 me-3">Tuyển dụng</span>
-              <div class="badge badge-success my-1 me-3">Onboard</div>
+              <span class="badge badge-warning my-1 me-3">
+                <codx-label default="Tuyển dụng"></codx-label>
+              </span>
+              <div class="badge badge-success my-1 me-3">
+                <codx-label default="Onboard"></codx-label>
+              </div>
             </div>
           </div>
           <!--end::Foot-->
