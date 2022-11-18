@@ -1,10 +1,10 @@
 <codx-views #view [funcID]="funcIDPara" [autoLoad]="false" [views]="views">
 </codx-views>
 <ng-template #template>
-  <div class="content h-100 d-flex flex-column flex-column-fluid p-0 roledetail mx-6" id="kt_content">
+  <div class="content h-100 d-flex flex-column flex-column-fluid p-0 roledetail" id="kt_content">
     <div id="erm_content" class="d-flex flex-column-fluid h-100">
       <div class="d-flex h-100 w-100">
-        <div class="aside-detail h-100 hover-scroll-overlay-y w-250px min-w-250px me-6">
+        <div class="aside-detail h-100 hover-scroll-overlay-y w-250px min-w-250px me-3">
           <div class="aside-menu pe-6 mt-4">
             <ng-container *ngFor="let data of myTree; let i = index">
               <a class="d-flex align-items-center menu-item my-1" [class.active]="selectIndex === i"
@@ -22,16 +22,16 @@
                 <codx-label name="lblRoleAuthorize" formName="Roles" [default]="'Phân quyền vai trò '">
                 </codx-label>
               </div>
-              <span class="mx-2 icon-i-chevron-right"></span>
+              <span class="mx-2 icon-i-chevron-right icon-16"></span>
               <div class="text-dark fs-6">
                 {{ roleName }}
               </div>
             </div>
             <div>
-              <button class="btn btn-primary btn-md ms-1" [disabled]="!active" (click)="Save()">
+              <button class="btn btn-primary btn-md ms-2" [disabled]="!active" (click)="Save()">
                 Lưu
               </button>
-              <button class="btn btn-primary btn-md ms-1" [disabled]="!active" (click)="Delete()">
+              <button class="btn btn-primary btn-md ms-2" [disabled]="!active" (click)="Delete()">
                 Xóa
               </button>
             </div>
@@ -51,7 +51,7 @@
                     <div class="detail-scroll">
                       <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
-                          <tr class="fw-bold fs-6 text-gray-800 bg-gray-200 text-center">
+                          <tr class="fw-bold text-dark bg-gray-100">
                             <th scope="col" class="w-150px">Tên chức năng</th>
                             <th scope="col" class="w-80px">Cho phép sử dụng</th>
                             <th scope="col" class="w-50px">Thêm</th>
@@ -149,9 +149,9 @@
                   </a>
                   <ng-template ngbNavContent>
                     <div class="detail-scroll">
-                      <table class="table">
+                      <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
-                          <tr>
+                          <tr class="fw-bold text-dark bg-gray-100">
                             <th scope="col" class="w-500px">Tên báo cáo</th>
                             <th scope="col" class="w-80px">Cho phép xem</th>
                             <th scope="col" class="w-200px">Dữ liệu xem theo</th>
@@ -194,43 +194,48 @@
                   </a>
                   <ng-template ngbNavContent>
                     <div class="detail-scroll">
-                      <table class="table">
+                      <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
-                          <tr>
-                            <th scope="col" class="w-200px">Tên chức năng</th>
-                            <th scope="col" class="w-80px">Chọn tất cả</th>
-                            <th scope="col" class="w-500px">Chức năng mở rộng</th>
+                          <tr class="fw-bold text-dark bg-gray-100">
+                            <th scope="col" class="w-250px">Tên chức năng</th>
+                            <th scope="col" class="w-150px">Chọn tất cả</th>
+                            <th scope="col">Chức năng mở rộng</th>
                           </tr>
                         </thead>
                         <tbody>
                           <tr *ngFor="let item of dataAuthorize">
-                            <td>
-                              {{ item.customName || item.defaultName }}
-                            </td>
-                            <td>
-                              <codx-input type="checkbox" [disabled]="!active" [checked]="false" field="selectAll"
-                                (valueChange)="
-                                valueChange($event, item.functionID)
-                              ">
-                              </codx-input>
-                            </td>
-                            <td>
-                              <div class="row">
-                                <ng-container *ngFor="
-                                  let itemMore of dataRole[item.functionID]
-                                    ?.More
+                            <ng-container *ngIf="dataRole[item.functionID]
+                            ?.More && dataRole[item.functionID]
+                            ?.More.length>0">
+                              <td>
+                                {{ item.customName || item.defaultName }}
+                              </td>
+                              <td>
+                                <codx-input type="checkbox" [disabled]="!active" [checked]="false" field="selectAll"
+                                  (valueChange)="
+                                  valueChange($event, item.functionID)
                                 ">
-                                  <div class="col-4">
-                                    <codx-input type="checkbox" class="check-circle" [disabled]="!active" [checked]="
-                                      itemMore.functionID
-                                        | bind: item.functionID:dataAdv
-                                    " field="more" labelPosition="after" [label]="itemMore.customName"
-                                      [attr.data-parent]="item.functionID" [attr.data-function]="itemMore.functionID">
-                                    </codx-input>
-                                  </div>
-                                </ng-container>
-                              </div>
-                            </td>
+                                </codx-input>
+                              </td>
+                              <td>
+                                <div class="row">
+                                  <ng-container *ngFor="
+                                    let itemMore of dataRole[item.functionID]
+                                      ?.More
+                                  ">
+                                    <div class="col-4">
+                                      <codx-input type="checkbox" class="check-circle" [disabled]="!active" [checked]="
+                                        itemMore.functionID
+                                          | bind: item.functionID:dataAdv
+                                      " field="more" labelPosition="after" [label]="itemMore.customName"
+                                        [attr.data-parent]="item.functionID" [attr.data-function]="itemMore.functionID">
+                                      </codx-input>
+                                    </div>
+                                  </ng-container>
+                                </div>
+                              </td>
+                            </ng-container>
+
                           </tr>
                         </tbody>
                       </table>
@@ -238,7 +243,6 @@
                   </ng-template>
                 </li>
               </ul>
-
               <div [ngbNavOutlet]="nav" class="mt-3"></div>
             </div>
           </div>

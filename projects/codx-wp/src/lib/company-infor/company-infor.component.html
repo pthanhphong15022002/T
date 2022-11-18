@@ -10,9 +10,9 @@
   </div>
 </ng-container>
 <ng-template #panelLeftRef>
-  <div class="container h-100 bg-body">
+  <div class="container container-md h-100 bg-body rounded-4 scroll-y">
     <ng-container *ngIf="data;else empty">
-      <div class="rounded-4 py-6 px-8 bg-body fix-container w-larger" [innerHTML]="data.contentHtml.changingThisBreaksApplicationSecurity"></div>
+      <div class="w-larger p-9" [innerHTML]="data.contentHtml.changingThisBreaksApplicationSecurity"></div>
     </ng-container>
   </div>
 </ng-template>

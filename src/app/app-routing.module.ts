@@ -55,6 +55,14 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'ei',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('projects/codx-ei/src/lib/codx-ei.module').then(
+            (m) => m.CodxEiModule
+          ),
+      },
+      {
         path: 'ep',
         canActivate: [AuthGuard],
         loadChildren: () =>

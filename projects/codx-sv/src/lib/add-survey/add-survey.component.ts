@@ -22,6 +22,7 @@ import {
   CallFuncService,
   DialogModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -34,6 +35,7 @@ import { Observable, Subscription } from 'rxjs';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { environment } from 'src/environments/environment';
 import { TemplateSurveyOtherComponent } from '../template-survey-other.component/template-survey-other.component';
+import { PopupQuestionOtherComponent } from '../template-survey-other.component/popup-question-other/popup-question-other.component';
 
 @Component({
   selector: 'app-add-survey',
@@ -105,7 +107,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
     private notification: NotificationsService,
-    private call: CallFuncService
   ) {
     super(inject);
 
@@ -537,7 +538,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   addQuestionOther() {
-    var obj = {};
     var option = new DialogModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -547,12 +547,20 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       1000,
       700,
       '',
-      obj,
+      '',
       '',
       option
     );
     dialog.closed.subscribe((res) => {
-      if (res) {
+      if (res.event) {
+        var obj = {dataSurvey: res.event, dataQuestion: this.questions};
+        var option = new SidebarModel();
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        var dialog = this.callfc.openSide(PopupQuestionOtherComponent, obj, option);
+        dialog.closed.subscribe(res => {
+          if(res.event) {}
+        })
       }
     });
   }
@@ -872,7 +880,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     var obj = {
       data: this.questions,
     };
-    var dialog = this.call.openForm(
+    var dialog = this.callfc.openForm(
       SortSessionComponent,
       '',
       500,
