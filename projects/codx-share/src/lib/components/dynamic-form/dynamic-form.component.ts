@@ -106,6 +106,24 @@ export class DynamicFormComponent extends UIComponent {
     }
   }
 
+  changeMF(evt:any,data:any)
+  {
+    //Xử lý riêng bên OD
+    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
+    {
+      //Check đã có công văn sử dụng chưa
+      this.api.execSv("OD","OD","DispatchesBusiness","GetItemByCategoryIDAsync",data.categoryID).subscribe(item=>{
+        if(item)
+        {
+           var dlt = evt.filter(
+              (x: { functionID: string }) => x.functionID == 'SYS02'
+            );
+            dlt[0].disabled = true;
+        }
+      });
+    }
+  }
+
   click(evt: ButtonModel) {
     this.function = evt;
     switch (evt.id) {
