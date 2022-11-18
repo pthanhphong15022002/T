@@ -552,7 +552,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
                 if (index != -1) {
-                  // if (this.kanban) this.kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
                   obj.items.forEach((dt) => {
                     if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -630,7 +629,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
     // test
     this.formModelMenu = this.view?.formModel;
-    debugger;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
 
     if (funcMenu) {
