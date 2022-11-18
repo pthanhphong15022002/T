@@ -81,8 +81,8 @@ export class ProcessesComponent
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   user: any;
-  funcID= "BPT1";
-  method='GetListProcessesAsync';
+  funcID = 'BPT1';
+  method = 'GetListProcessesAsync';
   itemSelected: any;
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
@@ -116,7 +116,7 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID == "BPT3"){
+    if (this.funcID == 'BPT3') {
       this.method = 'GetListShareByProcessAsync';
     }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
@@ -311,10 +311,7 @@ export class ProcessesComponent
         this.dialog.closed.subscribe((e) => {
           console.log(e);
           if (e && e.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-
+            this.view.dataService.update(e).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -363,63 +360,6 @@ export class ProcessesComponent
     opt.data = itemSelected.recID;
     return true;
   }
-  //#endregion
-
-  //#region event
-  click(evt: ButtonModel) {
-    this.titleAction = evt.text;
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
-
-  receiveMF(e: any) {
-    this.clickMF(e.e, e.data);
-  }
-
-  clickMF(e: any, data?: any) {
-    this.itemSelected = data;
-    this.titleAction = e.text;
-    this.moreFunc = e.functionID;
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'BPT106':
-        this.properties(data);
-        break;
-      case 'BPT101':
-        this.viewDetailProcessSteps(e?.data, data);
-        break;
-      case 'BPT102':
-        this.reName(data);
-        break;
-      case 'BPT103': // gán tạm cập nhật phiên bản
-        //this.revisions(e.data, data);
-        this.Updaterevisions(data);
-        break;
-      case 'BPT104':
-        this.permission(data);
-        break;
-      case 'BPT105':
-        this.permission(data);
-        break;
-      case 'BPT108':
-        this.roles(data);
-        break;
-    }
-  }
 
   properties(data?: any) {
     let option = new SidebarModel();
@@ -428,8 +368,11 @@ export class ProcessesComponent
     option.Width = '550px';
     // let data = {} as any;
     // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(PropertiesComponent, data, option);
+    // data.id = data.recID;
+    this.dialog = this.callfc.openSide(PropertiesComponent, data, option);
+    this.dialog.closed.subscribe(e=>{
+      this.view.dataService.clear();
+    });
   }
 
   reName(data) {
@@ -487,7 +430,7 @@ export class ProcessesComponent
   }
 
   permission(data) {
-    if(this.moreFunc == 'BPT104'){
+    if (this.moreFunc == 'BPT104') {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -504,7 +447,7 @@ export class ProcessesComponent
           this.detectorRef.detectChanges();
         }
       });
-    }else if(this.moreFunc == 'BPT105'){
+    } else if (this.moreFunc == 'BPT105') {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -522,9 +465,7 @@ export class ProcessesComponent
         }
       });
     }
-
   }
-
 
   roles(e: any) {
     console.log(e);
@@ -544,6 +485,63 @@ export class ProcessesComponent
           this.detectorRef.detectChanges();
         }
       });
+  }
+  //#endregion
+
+  //#region event
+  click(evt: ButtonModel) {
+    this.titleAction = evt.text;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  receiveMF(e: any) {
+    this.clickMF(e.e, e.data);
+  }
+
+  clickMF(e: any, data?: any) {
+    this.itemSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'BPT106':
+        this.properties(data);
+        break;
+      case 'BPT101':
+        this.viewDetailProcessSteps(e?.data, data);
+        break;
+      case 'BPT102':
+        this.reName(data);
+        break;
+      case 'BPT103': // gán tạm cập nhật phiên bản
+        //this.revisions(e.data, data);
+        this.Updaterevisions(data);
+        break;
+      case 'BPT104':
+        this.permission(data);
+        break;
+      case 'BPT105':
+        this.permission(data);
+        break;
+      case 'BPT108':
+        this.roles(data);
+        break;
+    }
   }
 
   valueChange(e) {
