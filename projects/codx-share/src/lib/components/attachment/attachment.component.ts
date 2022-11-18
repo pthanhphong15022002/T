@@ -1425,7 +1425,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
     dialog.closed.subscribe((item) => {
       if (item.event) 
       {
-        debugger;
         var index = this.fileUploadList.findIndex(x=>x.recID == item.event.recID);
         this.fileUploadList[index]=item.event;
         this.isCopyRight--;
