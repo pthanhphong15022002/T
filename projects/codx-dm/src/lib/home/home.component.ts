@@ -983,7 +983,9 @@ export class HomeComponent extends UIComponent {
 
   filterChange($event) {
     if (!$event) {
-      //alert("aa");
+      this.dmSV.page = 1;
+      this.getDataFolder(this.dmSV.folderID);
+      this.getDataFile(this.dmSV.folderID);
     } else {
       try {
         this.data = [];
