@@ -21,7 +21,6 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
-
     cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
     [imageObjType]="'BP_Processes'"
     imageSrc="../assets/media/img/codx/default/card-default.svg"
@@ -29,6 +28,8 @@
     [imageObjName]="data?.processName"
     [imageId]="data?.recID"
     [rootData]="data"
+    [dataItem]="data"
+    [formModel]="view.formModel"
     [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
