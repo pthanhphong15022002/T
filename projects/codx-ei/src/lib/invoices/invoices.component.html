@@ -1,8 +1,10 @@
-<!-- <codx-views
+<codx-views
   #view
   [views]="views"
+  [button]="buttons"
   entityName="EI_Invoices"
-  assemblyName="EI"
-  [className]="className"
+  (buttonClick)="toolBarClick($event)"
 >
-</codx-views> -->
+</codx-views>
+
+<ng-template #itemTemplate let-data> aaaaaaaaaaa </ng-template>
