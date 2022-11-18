@@ -137,4 +137,14 @@ export class CodxSvService {
       recID
     );
   }
+
+  loadTemplateData(recID) {
+    return this.api.execSv(
+      'SV',
+      'ERM.Business.SV',
+      'QuestionsBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+  }
 }
