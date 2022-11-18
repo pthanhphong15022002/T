@@ -21,15 +21,19 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
+
     cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
+    [imageObjType]="'BP_Processes'"
     imageSrc="../assets/media/img/codx/default/card-default.svg"
     imgCss="w-100 h-140px p-1"
-    [dataItem]="data"
-    [formModel]="view.formModel"
+    [imageObjName]="data?.processName"
+    [imageId]="data?.recID"
+    [rootData]="data"
+    [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
     [statusVll]="'BP003'"
-    [footer]="footerbg"
+    [imageWidth]="600"
   >
   </codx-card-img>
 
@@ -40,7 +44,7 @@
 ">
       <div class="d-flex flex-column w-100 p-3">
         <div #processName class="fs-4 fw-bold lh-base"> {{
-          data.processName | formatvalue
+          data?.processName | formatvalue
           : view.formModel
           : "processName"
           : processName
@@ -49,7 +53,7 @@
           | async
           }}</div>
         <div class="d-flex align-items-center">
-          <div class="badge badge-white my-1 me-3">{{ data.versionNo }}</div>
+          <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
             <span class="me-1 icon-16 icon-access_alarm"></span
             ><span class="line-clamp" #activedOn>
