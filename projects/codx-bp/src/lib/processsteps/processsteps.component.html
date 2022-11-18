@@ -28,61 +28,9 @@
     [setting]="setting"
     [footer]="cardImgFooter"
     [dataItem]="data"
+    [rootData]="data"
   >
   </codx-card-img>
-
-  <ng-template #cardImgFooter>
-    <div
-      class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }}"
-      [style.background]="data?.color"
-    >
-      <div class="d-flex flex-column w-100 p-3">
-        <div class="d-flex align-items-center">
-          <div class="d-flex align-items-center card-icon-nowrap me-1">
-            <span class="me-1 icon-16 icon-access_alarm"></span
-            ><span class="fw-bolb">
-              <codx-label name="lblTime" default="Thời gian:"></codx-label>
-            </span>
-          </div>
-          <div class="badge badge-white my-1 me-3 text-danger">
-            <span #duration>
-              {{
-                data?.duration
-                  | formatvalue
-                    : view.formModel
-                    : "duration"
-                    : duration
-                    : "BPActivity"
-                    : "grvBPActivity"
-                  | async
-              }}</span
-            >&nbsp;
-            <span>{{ data?.interval | vll: vllInterval:"text" | async }}</span>
-          </div>
-        </div>
-        <ng-container *ngIf="data?.owners != null && data?.owners.length > 0">
-          <div class="d-flex align-items-center card-icon-nowrap me-1">
-            <span class="me-1 icon-person_pin_circle"></span
-            ><span class="fw-bolb"
-              ><codx-label
-                name="lblRecruitmentStaff"
-                default="Nhân viên tuyển dụng"
-              ></codx-label
-            ></span>
-          </div>
-          <div class="d-flex align-items-center mt-2">
-            <codx-imgs
-              [width]="25"
-              [objectId]="getOwnerID(data?.owners)"
-              objectType="AD_Users"
-              [numberImages]="3"
-            >
-            </codx-imgs>
-          </div>
-        </ng-container>
-      </div>
-    </div>
-  </ng-template>
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
@@ -204,6 +152,58 @@
           </codx-attachment>
         </ng-container> -->
       </div>
+    </div>
+  </div>
+</ng-template>
+<ng-template #cardImgFooter let-data>
+  <div
+    class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }}"
+    [style.background]="data?.color"
+  >
+    <div class="d-flex flex-column w-100 p-3">
+      <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center card-icon-nowrap me-1">
+          <span class="me-1 icon-16 icon-access_alarm"></span
+          ><span class="fw-bolb">
+            <codx-label name="lblTime" default="Thời gian:"></codx-label>
+          </span>
+        </div>
+        <div class="badge badge-white my-1 me-3 text-danger">
+          <span #duration>
+            {{
+              data?.duration
+                | formatvalue
+                  : view.formModel
+                  : "duration"
+                  : duration
+                  : "BPActivity"
+                  : "grvBPActivity"
+                | async
+            }}</span
+          >&nbsp;
+          <span>{{ data?.interval | vll: vllInterval:"text" | async }}</span>
+        </div>
+      </div>
+      <ng-container *ngIf="data?.owners != null && data?.owners.length > 0">
+        <div class="d-flex align-items-center card-icon-nowrap me-1">
+          <span class="me-1 icon-person_pin_circle"></span
+          ><span class="fw-bolb"
+            ><codx-label
+              name="lblRecruitmentStaff"
+              default="Nhân viên tuyển dụng"
+            ></codx-label
+          ></span>
+        </div>
+        <div class="d-flex align-items-center mt-2">
+          <codx-imgs
+            [width]="25"
+            [objectId]="getOwnerID(data?.owners)"
+            objectType="AD_Users"
+            [numberImages]="3"
+          >
+          </codx-imgs>
+        </div>
+      </ng-container>
     </div>
   </div>
 </ng-template>
