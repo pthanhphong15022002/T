@@ -178,6 +178,16 @@ export class CodxEpService {
       .subscribe();
   }
 
+  getParams(formName, fieldName) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetOneField',
+      [formName, null, fieldName]
+    );
+  }
+
   getStationeryGroup() {
     return this.api.execSv(
       'EP',
@@ -256,6 +266,15 @@ export class CodxEpService {
     );
   }
 
+  getBookingByRefID(recID: string) {
+    return this.api.exec(
+      'EP',
+      'BookingsBusiness',
+      'GetBookingByRefIDAsync',
+      recID
+    );
+  }
+
   updateResource(model: any, isAdd: boolean) {
     return this.api.callSv(
       'EP',
@@ -316,20 +335,6 @@ export class CodxEpService {
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
     }
-  }
-
-  execEP(
-    className: string,
-    methodName: string,
-    data: any = null,
-    uploadFiles: UploadFile[] = null
-  ) {
-    return this.api.exec<any>(
-      APICONSTANT.ASSEMBLY.EP,
-      className,
-      methodName,
-      data
-    );
   }
 
   //#region File
@@ -405,6 +410,17 @@ export class CodxEpService {
       [entityName]
     );
   }
+
+  getApprovalTransByTransID(booking: any) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetApprovalTransByTransIDAsync',
+      [booking.recID]
+    );
+  }
+
   getAvailableResources(
     resourceType: string,
     startDate: string,
@@ -439,47 +455,6 @@ export class CodxEpService {
   //#endregion
 
   //#region EmailTemplate
-  public lstTmpEmail = [];
-  deleteEmailTemplate(): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'DeleteEmailTemplateAsync',
-      [this.lstTmpEmail]
-    );
-  }
-
-  getEmailTemplate(templateID: string): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'GetViewEmailTemplateAsyncLogic',
-      templateID
-    );
-  }
-
-  addEmailTemplate(data: any, sendTo: any): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'AddEmaiTemplateAsync',
-      [data, sendTo]
-    );
-  }
-
-  editEmailTemplate(data: any, sendTo: any): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'EditEmaiTemplateAsync',
-      [data, sendTo]
-    );
-  }
-
   createMeeting(
     meetingUrl,
     meetingTitle,
