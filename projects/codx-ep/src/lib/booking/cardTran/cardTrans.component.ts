@@ -62,7 +62,20 @@ export class CardTransComponent
       id:'btnAdd',
     }
   }
-  
+  viewChanged(evt: any) {
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.popupTitle = res.defaultName.toString();
+      }
+    });
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;        
+        
+      }
+    });
+  }
   initForm() {
     this.codxEpService
       .getFormGroup(
