@@ -5,7 +5,7 @@
   assemblyName="ERM.Business.BP"
   entityName="BP_Processes"
   className="ProcessesBusiness"
-  method="GetListProcessesAsync"
+  [method]="method"
   [views]="views"
   [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
@@ -21,15 +21,19 @@
 
 <ng-template #templateListCard let-data>
   <codx-card-img
+
     cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
+    [imageObjType]="'BP_Processes'"
     imageSrc="../assets/media/img/codx/default/card-default.svg"
     imgCss="w-100 h-140px p-1"
-    [dataItem]="data"
-    [formModel]="view.formModel"
+    [imageObjName]="data?.processName"
+    [imageId]="data?.recID"
+    [rootData]="data"
+    [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
     [statusVll]="'BP003'"
-    [footer]="footerbg"
+    [imageWidth]="600"
   >
   </codx-card-img>
 
@@ -39,12 +43,30 @@
     | async
 ">
       <div class="d-flex flex-column w-100 p-3">
-        <div class="fs-4 fw-bold lh-base">{{ data.processName }}</div>
+        <div #processName class="fs-4 fw-bold lh-base"> {{
+          data?.processName | formatvalue
+          : view.formModel
+          : "processName"
+          : processName
+          : "Processes"
+          : "grvProcesses"
+          | async
+          }}</div>
         <div class="d-flex align-items-center">
-          <div class="badge badge-white my-1 me-3">{{ data.versionNo }}</div>
+          <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
             <span class="me-1 icon-16 icon-access_alarm"></span
-            ><span class="line-clamp">{{ data.activedOn | fmDT }} </span>
+            ><span class="line-clamp" #activedOn>
+              {{
+                data.activedOn | formatvalue
+                : view.formModel
+                : "activedOn"
+                : activedOn
+                : "Processes"
+                : "grvProcesses"
+                | async
+                }}
+            </span>
           </div>
         </div>
         <div class="d-flex flex-wrap justify-content-between my-1">
@@ -160,11 +182,11 @@
       </div>
     </td>
     <td class="rowphoto position-relative">
-      <div class="padding" *ngIf="funcID == 'BPT4'">
+      <!-- <div class="padding" *ngIf="funcID == 'BPT4'">
         <button class="btn btn-primary" (click)="approval(data)">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
-      </div>
+      </div> -->
       <div class="padding position-absolute top-0 end-0" >
         <codx-mfunc
           [formModel]="view.formModel"

@@ -559,7 +559,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         option.FormModel = this.view.formModel;
         var dialog = this.callfc.openSide(PopupQuestionOtherComponent, obj, option);
         dialog.closed.subscribe(res => {
-          if(res.event) {}
+          if(res.event) {
+            debugger
+          }
         })
       }
     });
