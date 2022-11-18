@@ -37,6 +37,7 @@ export class RevisionsComponent implements OnInit {
   comment = '';
   funcID: any;
   user: any;
+  disableTitle =true;
   testHeader:any;
   version = new BP_ProcessRevisions();
   constructor(
@@ -55,13 +56,22 @@ export class RevisionsComponent implements OnInit {
     this.funcID = this.more?.functionID;
     this.process = this.data?.data;
     this.revisions = this.process?.versions;
-    this.headerText = 'Quản lý phiên bản';
+    this.headerText =dt?.data.more.defaultName;
     this.user = this.authStore.get();
   }
 
   ngOnInit(): void {
    this.process.versionNo='';
    this.comment=''
+   this.notiService
+   .alertCode('BP001')
+   .subscribe((x) => {
+     if (x.event.status == 'Y') {
+       this.disableTitle =false;
+     } else {
+       return;
+     }
+   });
   }
 
   //#region event
@@ -80,6 +90,7 @@ export class RevisionsComponent implements OnInit {
   //#endregion
 
   onSave() {
+
     this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [
         this.funcID,

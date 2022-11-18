@@ -401,13 +401,15 @@ export class ProcessesComponent
           [this.titleAction],
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event && e?.event != null) {
-            this.view.dataService.clear();
-            this.view.dataService.update(e?.event).subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
+        this.dialog.closed.subscribe(
+          //(e) => {
+          // if (e?.event && e?.event != null) {
+          //   this.view.dataService.clear();
+          //   this.view.dataService.update(e?.event).subscribe();
+          //   this.detectorRef.detectChanges();
+          // }
+        //}
+        );
       });
   }
   revisions(more, data) {
@@ -419,12 +421,13 @@ export class ProcessesComponent
       RevisionsComponent,
       '',
       500,
-      200,
+      50,
       '',
       obj
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
@@ -542,6 +545,9 @@ export class ProcessesComponent
         break;
       case 'BPT108':
         this.roles(data);
+        break;
+        case 'BPT107': // gán tạm cập nhật phiên bản
+        this.revisions(e.data, data);
         break;
     }
   }
