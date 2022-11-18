@@ -18,11 +18,11 @@
           <div class="d-flex flex-column">
             <div class="p-2">
               <h4 *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                Phiên bản đầu tiên
+                <codx-label default="Phiên bản đầu tiên"></codx-label>
               </h4>
               <ng-template #firstVersionNo>
                 <h4>
-                  Phiên bản:
+                  <codx-label default="Phiên bản:"></codx-label>
                   <span #versionNo>
                     {{
                       item?.versionNo
@@ -39,18 +39,18 @@
               </ng-template>
             </div>
             <div class="p-2">
-              <span class="text-primary">Cập nhật bởi, {{ item.createdBy }} </span>
+              <span class="text-primary"> <codx-label default="Cập nhật bởi, "></codx-label>{{ item.createdBy }} </span>
               <span class="text-dark fw-bold" > |</span>
               <span class="text-primary">
                <!-- <lib-date-pipe-format [dateFormatSimple]="item.createdOn"></lib-date-pipe-format> -->
                {{item.createdOn| timefrom}}
               </span>
-  
+
             </div>
             <div class="p-2" [innerHTML]="item.comment"></div>
             </div>
         </div>
-      
+
         <div class="d-flex flex-column" style="min-width: 100px;">
           <div class="justify-content-end p-2">
             <codx-label

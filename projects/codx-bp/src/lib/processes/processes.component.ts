@@ -80,8 +80,8 @@ export class ProcessesComponent
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   user: any;
-  funcID= "BPT1";
-  method='GetListProcessesAsync';
+  funcID = 'BPT1';
+  method = 'GetListProcessesAsync';
   itemSelected: any;
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
@@ -115,10 +115,10 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID == "BPT3"){
+    if (this.funcID == 'BPT3') {
       this.method = 'GetListShareByProcessAsync';
     }
-    if(this.funcID == "BPT2") {
+    if (this.funcID == 'BPT2') {
       this.method = 'GetListMyProcessesAsync';
     }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
@@ -313,10 +313,7 @@ export class ProcessesComponent
         this.dialog.closed.subscribe((e) => {
           console.log(e);
           if (e && e.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-
+            this.view.dataService.update(e).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -364,6 +361,132 @@ export class ProcessesComponent
 
     opt.data = itemSelected.recID;
     return true;
+  }
+
+  properties(data?: any) {
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    // let data = {} as any;
+    // data.title = this.titleUpdateFolder;
+    // data.id = data.recID;
+    this.dialog = this.callfc.openSide(PropertiesComponent, data, option);
+    this.dialog.closed.subscribe((e) => {
+      if (!e.event) this.view.dataService.clear();
+    });
+  }
+
+  reName(data) {
+    this.dataSelected = data;
+    this.newName = data.processName;
+    this.crrRecID = data.recID;
+    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+  }
+
+  Updaterevisions(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          PopupUpdateRevisionsComponent,
+          [this.titleAction],
+          option
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (e?.event && e?.event != null) {
+            this.view.dataService.clear();
+            this.view.dataService.update(e?.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
+      });
+  }
+  revisions(more, data) {
+    var obj = {
+      more: more,
+      data: data,
+    };
+    this.dialog = this.callfc.openForm(
+      RevisionsComponent,
+      '',
+      500,
+      200,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  permission(data) {
+    if (this.moreFunc == 'BPT104') {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, false],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    } else if (this.moreFunc == 'BPT105') {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, true],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+  }
+
+  roles(e: any) {
+    console.log(e);
+    this.callfc
+      .openForm(
+        PopupRolesComponent,
+        '',
+        950,
+        650,
+        '',
+        [this.titleAction, e],
+        ''
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
   //#endregion
 
@@ -421,131 +544,6 @@ export class ProcessesComponent
         this.roles(data);
         break;
     }
-  }
-
-  properties(data?: any) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    // let data = {} as any;
-    // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(PropertiesComponent, data, option);
-  }
-
-  reName(data) {
-    this.dataSelected = data;
-    this.newName = data.processName;
-    this.crrRecID = data.recID;
-    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
-  }
-
-  Updaterevisions(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupUpdateRevisionsComponent,
-          [this.titleAction],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event && e?.event != null) {
-            this.view.dataService.clear();
-            this.view.dataService.update(e?.event).subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
-      });
-  }
-  revisions(more, data) {
-    var obj = {
-      more: more,
-      data: data,
-    };
-    this.dialog = this.callfc.openForm(
-      RevisionsComponent,
-      '',
-      500,
-      350,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.view.dataService.update(e?.event).subscribe();
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  permission(data) {
-    if(this.moreFunc == 'BPT104'){
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        PopupAddPermissionComponent,
-        [this.titleAction, data, false],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.clear();
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
-    }else if(this.moreFunc == 'BPT105'){
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        PopupAddPermissionComponent,
-        [this.titleAction, data, true],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.clear();
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
-    }
-
-  }
-
-
-  roles(e: any) {
-    console.log(e);
-    this.callfc
-      .openForm(
-        PopupRolesComponent,
-        '',
-        950,
-        650,
-        '',
-        [this.titleAction, e],
-        ''
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
   }
 
   valueChange(e) {
