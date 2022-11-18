@@ -60,15 +60,6 @@ export class RevisionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // if(this.revisions.length > 0 && this.revisions != null){
-    //   var lastVersion = this.revisions[this.revisions.length - 1];
-    //   if(lastVersion.comment != ''){
-    //     this.comment = lastVersion.comment;
-    //   }else{
-    //     this.comment = '';
-    //   }
-    // }
-   // console.log(lastVersion);
    this.process.versionNo='';
    this.comment=''
   }
@@ -77,8 +68,6 @@ export class RevisionsComponent implements OnInit {
   valueChange(e) {
     if (e?.data) {
       this.process.versionNo = e.data;
-
-      // this.process.versions = this.revisions;
     }
   }
 
