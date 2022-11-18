@@ -88,6 +88,14 @@ export class CodxBpService {
       data
     );
   }
+  GetProcessStepDetailsByRecID(recID) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessStepsBusiness',
+      'GetOwnersByParentIDAsync',
+      recID
+    );
+  }
 
   setViewRattings(recID: string, ratting: string, comment: string){
     return this.api.exec<any>(

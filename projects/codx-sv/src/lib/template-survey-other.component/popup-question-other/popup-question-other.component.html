@@ -10,7 +10,7 @@
     <div class="w-100 pb-6">
       <span>{{ dataSurvey?.title }}</span>
     </div>
-    <span class="color-blue">
+    <span class="color-blue pointer" (click)="chooseOtherTemplate()">
       <codx-label
         fiedName="Save"
         [formModel]="form.formModel"
@@ -40,22 +40,31 @@
           (valueChange)="valueChangeSession($event, itemSession.seqNo)"
         >
         </codx-input>
-        <br>
-        <div *ngFor="let itemQuestion of itemSession.children" class="pt-6 pb-6">
+        <br />
+        <div
+          *ngFor="let itemQuestion of itemSession.children"
+          class="pt-6 pb-6"
+        >
           <div class="w-100">
             <codx-input
               type="checkBox"
               field="status"
               labelPosition="After"
               class="test-check fs-16px"
-              [checked]="itemQuestion?.check == '1' || itemQuestion?.check == 'true'"
+              [checked]="
+                itemQuestion?.check == '1' || itemQuestion?.check == 'true'
+              "
               [label]="itemQuestion.question"
-              (valueChange)="valueChange($event)"
+              (valueChange)="
+                valueChangeQuestion($event, itemSession, itemQuestion)
+              "
             >
             </codx-input>
           </div>
-          <span class="placeholder ps-8">{{ answerType[itemQuestion.answerType] }}</span>
-          <br>
+          <span class="placeholder ps-8">{{
+            answerType[itemQuestion.answerType]
+          }}</span>
+          <br />
         </div>
         <hr />
       </div>

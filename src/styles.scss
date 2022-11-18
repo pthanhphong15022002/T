@@ -1056,6 +1056,20 @@ codx-tag .codx-tag:hover {
 
 }
 
+.badge-secondary {
+  background-color: var(--gray-200);
+}
+
+.img-14 img {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 4px;
+}
+
+.home-right .list-empty.card img {
+  max-width: 140px !important;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
