@@ -18,7 +18,7 @@
       [openMore]="openMore"
     >
       <ng-template #body>
-        <span>body</span>
+        <ng-container [ngTemplateOutlet]="RightTemlate"> </ng-container>
       </ng-template>
     </codx-form>
   </div>
