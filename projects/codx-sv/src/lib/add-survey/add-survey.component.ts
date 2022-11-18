@@ -839,7 +839,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        debugger;
         this.questions = res.event;
       }
     });

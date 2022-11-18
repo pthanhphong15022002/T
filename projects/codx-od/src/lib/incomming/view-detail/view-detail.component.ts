@@ -1047,7 +1047,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           x.functionID == 'SYS02' ||
           x.functionID == 'SYS03' ||
           x.functionID == 'ODT103' ||
-          x.functionID == 'ODT202'
+          x.functionID == 'ODT202' ||
+          x.functionID == "ODT101" ||
+          x.functionID == 'ODT113'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;
