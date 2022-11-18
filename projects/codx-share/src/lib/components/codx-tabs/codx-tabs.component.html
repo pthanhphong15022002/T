@@ -22,7 +22,13 @@
     <ng-container *ngSwitchCase="'history'">
       <div class="tab-his">
         <div class="tab_body">
-          <codx-tree-history [objectID]="objectID" [objectType]="entityName" [viewIcon]="true" [funcID]="funcID">
+          <codx-tree-history
+            [objectID]="objectID"
+            [formModel]="formModel"
+            [objectType]="entityName"
+            [viewIcon]="true"
+            [funcID]="funcID"
+          >
           </codx-tree-history>
         </div>
       </div>

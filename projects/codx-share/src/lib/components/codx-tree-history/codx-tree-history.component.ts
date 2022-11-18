@@ -13,6 +13,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() objectType:string;
   @Input() objectID:string;
   @Input() actionType:string;
+  @Input() formModel:any;
   @Input() addNew:boolean = false;
   @Input() viewIcon:boolean = false;
   @Input() viewVote:boolean = false;

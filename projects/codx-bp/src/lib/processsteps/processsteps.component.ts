@@ -254,6 +254,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
+                      if (processStep?.ownersOfParent)
+                        dt.owners = processStep?.ownersOfParent;
                       if (this.kanban) this.kanban.updateCard(dt);
                     }
                   });
@@ -405,33 +407,54 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   editStepChild(data, processStep) {
-    //khong doi parent
-    if ((this.view.currentView as any)?.kanban)
-      this.kanban = (this.view.currentView as any).kanban;
-    this.view.dataService.data.forEach((obj) => {
-      var index = -1;
-      index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
-      if (index != -1) {
-        var dataParents = obj.items[index];
-        var indexChild = dataParents.items.findIndex(
-          (dt) => dt.recID == processStep.recID
-        );
-        if (indexChild != -1) {
-          dataParents.items[indexChild] = processStep;
-          // this.bpService.getOwnersByParentID(processStep.parentID).subscribe(res=>{
-          //   if(res){
-          //     dataParents.owners= res
-          //   }
-          if (this.kanban) this.kanban.updateCard(dataParents);
-          // })
-          obj.items[index] = dataParents;
+    if (data.parentID == processStep.parentID) {
+      //khong doi parent
+      if ((this.view.currentView as any)?.kanban)
+        this.kanban = (this.view.currentView as any).kanban;
+      this.view.dataService.data.forEach((obj) => {
+        var index = -1;
+        index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
+        if (index != -1) {
+          var dataParents = obj.items[index];
+          var indexChild = dataParents.items.findIndex(
+            (dt) => dt.recID == processStep.recID
+          );
+          if (indexChild != -1) {
+            dataParents.items[indexChild] = processStep;
+            if (processStep?.ownersOfParent)
+              dataParents.owners = processStep?.ownersOfParent;
+            if (this.kanban) this.kanban.updateCard(dataParents);
+            obj.items[index] = dataParents;
+          }
         }
-      }
-    });
+      });
+    } else {
+      // doi parent
+      this.view.dataService.data.forEach((obj) => {
+        var indexParentNew = -1;
+        var indexParentOld = -1;
+        indexParentOld = obj.items?.findIndex((x) => x.recID == data.parentID);
+        indexParentNew = obj.items?.findIndex(
+          (x) => x.recID == processStep.parentID
+        );
+        if (indexParentOld != -1 && indexParentNew != -1) {
+          var dataParentsOld = obj.items[indexParentOld];
+          var dataParentsNew = obj.items[indexParentNew];
+          dataParentsOld.splice(data.stepNo - 1, 1); ///xu ly xoa nhuw the nao
+          dataParentsNew.push(processStep);
+          if (processStep?.ownersOfParent)
+            dataParentsNew.owners = processStep?.ownersOfParent;
 
-    // doi parent hoir laji thuong
+          if (this.kanban) {
+            this.kanban.updateCard(dataParentsOld);
+            this.kanban.updateCard(dataParentsNew);
+          }
+          obj.items[indexParentOld] = dataParentsOld;
+          obj.items[indexParentNew] = dataParentsNew;
+        }
+      });
+    }
   }
-
   copy(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res) => {

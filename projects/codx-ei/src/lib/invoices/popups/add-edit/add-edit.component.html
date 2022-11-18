@@ -11,13 +11,32 @@
         <div class="form-group">
           <div class="form-group pt-1">
             <codx-label
-              fiedName="RangeID"
+              fiedName="InvoiceForm"
               [formModel]="form.formModel"
               default="Mã danh mục"
             >
             </codx-label>
             <codx-input
-              field="rangeID"
+              field="invoiceForm"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [disabled]="invoices?.allowEditKey"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <div class="form-group pt-1">
+            <codx-label
+              fiedName="InvoiceSeriNo"
+              [formModel]="form.formModel"
+              default="Mã danh mục"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceSeriNo"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
               [disabled]="invoices?.allowEditKey"
