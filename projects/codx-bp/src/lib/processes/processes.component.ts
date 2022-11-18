@@ -140,7 +140,6 @@ export class ProcessesComponent
       { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
-      { field: '', headerText: '', width: 100 },
     ];
   }
 
@@ -415,6 +414,10 @@ export class ProcessesComponent
         break;
       case 'BPT105':
         this.permission(data);
+        break;
+      case 'BPT108':
+        this.roles(data);
+        break;
     }
   }
 
