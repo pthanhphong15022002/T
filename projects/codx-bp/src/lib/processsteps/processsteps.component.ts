@@ -418,9 +418,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
         if (indexChild != -1) {
           dataParents.items[indexChild] = processStep;
-          if (this.kanban) this.kanban.updateCard(dataParents);
+          // this.bpService.getOwnersByParentID(processStep.parentID).subscribe(res=>{
+          //   if(res){
+          //     dataParents.owners= res
+          //   }
+            if (this.kanban) this.kanban.updateCard(dataParents);
+          // })
+          obj.items[index] = dataParents;
         }
-        obj.items[index] = dataParents;
+       
       }
     });
 
@@ -987,4 +993,5 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     let check = this.checkList.length > 0;
     return check;
   }
+  
 }

@@ -1,11 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, AuthService, AuthStore, DataRequest, DialogData, DialogRef, ScrollComponent } from 'codx-core';
+import { off } from 'process';
 
 @Component({
   selector: 'lib-activies-slider',
   templateUrl: './activies-slider.component.html',
   styleUrls: ['./activies-slider.component.scss']
 })
+
 export class ActiviesSliderComponent implements OnInit {
   dialog: DialogRef;
   user:any = null;
@@ -22,6 +24,7 @@ export class ActiviesSliderComponent implements OnInit {
     pageSize:20,
     page: 1
   }
+
   totalPage:number = 0;
   isScroll = true;
   pageIndex:number = 0;
@@ -91,20 +94,41 @@ export class ActiviesSliderComponent implements OnInit {
 
   approvalAsync(recID:string ,transID:string, status:string){
     if(transID && status){
-      this.api
+      if(status == ApprovalStatus.approved || status == ApprovalStatus.denied)
+      {
+        this.api
         .execSv(
           'ES',
           'ERM.Business.ES',
           'ApprovalTransBusiness',
           'ApproveAsync',
           [transID, status, '', '']
-        )
-        .subscribe((res: any) => {
+        ).subscribe((res: any) => {
           if (!res?.msgCodeError) 
           {
-            
+            let index = this.lstApproval.findIndex(x => x.recID == recID);
+            if(index > -1){
+              this.lstApproval.splice(index,1);
+              this.lstApproval = JSON.parse(JSON.stringify(this.lstApproval));
+              if(recID)
+              {
+                this.api.execSv(
+                  'BG',
+                  'ERM.Business.BG',
+                  'NotificationBusinesss',
+                  'UpdateNotificationAsync', 
+                  [recID])
+                  .subscribe();
+              }
+            }
           } 
         });
+      }
     }
   }
 }
+
+enum ApprovalStatus {
+  approved = "5",
+  denied = "4"
+};

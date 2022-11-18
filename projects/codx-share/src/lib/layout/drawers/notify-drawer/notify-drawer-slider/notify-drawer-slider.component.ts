@@ -95,7 +95,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     this.api.execSv(
     'BG',
     'ERM.Business.BG',
-    'NotificationBusiness',
+    'NotificationBusinesss',
     'UpdateNotificationAsync', 
     [item.recID]).subscribe((res:boolean) => {
       if(res){
