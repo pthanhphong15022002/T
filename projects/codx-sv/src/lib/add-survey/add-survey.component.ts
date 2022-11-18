@@ -553,60 +553,68 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        var dataQuestion;
+        var dataQuestion = new Array();
         if (res.event.recID == this.recID) dataQuestion = this.questions;
         else {
-          this.SVServices.loadTemplateData(res.event.recID).subscribe((res: any) => {
-            if (res[0] && res[0].length > 0) {
-              dataQuestion = this.getHierarchy(res[0], res[1]);
-            } else {
-              dataQuestion = [
-                {
-                  seqNo: 0,
-                  question: null,
-                  answers: null,
-                  other: false,
-                  mandatory: false,
-                  answerType: null,
-                  category: 'S',
-                  children: [
-                    {
-                      seqNo: 0,
-                      question: 'Câu hỏi 1',
-                      answers: [
-                        {
-                          seqNo: 0,
-                          answer: 'Tùy chọn 1',
-                          other: false,
-                          isColumn: false,
-                          hasPicture: false,
-                        },
-                      ],
-                      other: true,
-                      mandatory: false,
-                      answerType: 'O',
-                      category: 'Q',
-                    },
-                  ],
-                },
-              ];
+          this.SVServices.loadTemplateData(res.event.recID).subscribe(
+            (res: any) => {
+              if (res[0] && res[0].length > 0) {
+                dataQuestion = this.getHierarchy(res[0], res[1]);
+              } else {
+                dataQuestion = [
+                  {
+                    seqNo: 0,
+                    question: 'Mẫu không có tiêu đề',
+                    answers: null,
+                    other: false,
+                    mandatory: false,
+                    answerType: null,
+                    category: 'S',
+                    children: [
+                      {
+                        seqNo: 0,
+                        question: 'Câu hỏi 1',
+                        answers: [
+                          {
+                            seqNo: 0,
+                            answer: 'Tùy chọn 1',
+                            other: false,
+                            isColumn: false,
+                            hasPicture: false,
+                          },
+                        ],
+                        other: true,
+                        mandatory: false,
+                        answerType: 'O',
+                        category: 'Q',
+                      },
+                    ],
+                  },
+                ];
+              }
             }
-          });
+          );
         }
-        var obj = { dataSurvey: res.event, dataQuestion: dataQuestion };
-        var option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        var dialog = this.callfc.openSide(
-          PopupQuestionOtherComponent,
-          obj,
-          option
-        );
-        dialog.closed.subscribe((res) => {
-          if (res.event?.changeTemplate == true) {
-            this.addQuestionOther();
+        let myInterval = setInterval(() => {
+          if (dataQuestion && dataQuestion.length > 0) {
+            clearInterval(myInterval);
+            var obj = { dataSurvey: res.event, dataQuestion: dataQuestion };
+            var option = new SidebarModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = this.view.formModel;
+            var dialog = this.callfc.openSide(
+              PopupQuestionOtherComponent,
+              obj,
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event?.changeTemplate == true) {
+                this.addQuestionOther();
+              } else if (res.event?.changeTemplate == false) {
+              }
+            });
           }
-        });
+        }, 200);
       }
     });
   }
