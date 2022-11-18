@@ -54,7 +54,7 @@
         </codx-input>
       </div>
 
-      <div class="form-group" *ngIf="stepType == 'Q'" (keyup.enter)="enterRefrence()">
+      <div class="form-group" *ngIf="stepType == 'Q'" >
         <div class="d-flex justify-content-between align-items-center mail">
           <codx-label name="Reference" [formModel]="form.formModel" default="Bảng khảo sát"></codx-label>
           <a class="d-flex justify-content-end align-items-center" *ngIf="stepType === 'Q'" (click)="viewDetailSurveys($event)">
@@ -235,9 +235,6 @@
     </button>
     <button type="button" class="btn btn-primary" (click)="saveData()">
       <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
-    </button>
-    <button type="button" class="btn btn-primary" (click)="valueChangeCbxTest()">
-      <codx-label name="Save" formName="Sprints" default="ChangeTest"></codx-label>
     </button>
     <!-- </div> -->
   </ng-template>

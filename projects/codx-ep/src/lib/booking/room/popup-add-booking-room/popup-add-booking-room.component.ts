@@ -169,6 +169,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
+      this.data.reminder = 0;
     } else if (!this.isAdd) {
       let tmpStartTime = new Date(this.data?.startDate);
       let tmpEndTime = new Date(this.data?.endDate);

@@ -36,6 +36,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { debug } from 'console';
+import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 import { CodxBpService } from '../codx-bp.service';
@@ -61,7 +62,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   @Input() process?: BP_Processes;
-  @Input() viewMode = '6'
+  @Input() viewMode = '6';
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -179,8 +180,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         type: ViewType.content,
         active: false,
         sameData: false,
-        showSearchBar: false,
-        showFilter:false,
         model: {
           panelRightRef: this.itemViewList,
         },
@@ -191,8 +190,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        showSearchBar: false,
-        showFilter:false,
         model: {
           template: this.cardKanban,
         },
@@ -203,8 +200,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         icon: 'icon-bubble_chart',
         text: 'Flowchart',
-        showSearchBar: false,
-        showFilter:false,
         model: {
           panelRightRef: this.flowChart,
         },
@@ -423,9 +418,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         );
         if (indexChild != -1) {
           dataParents.items[indexChild] = processStep;
-          if (this.kanban) this.kanban.updateCard(dataParents);
+          // this.bpService.getOwnersByParentID(processStep.parentID).subscribe(res=>{
+          //   if(res){
+          //     dataParents.owners= res
+          //   }
+            if (this.kanban) this.kanban.updateCard(dataParents);
+          // })
+          obj.items[index] = dataParents;
         }
-        obj.items[index] = dataParents;
+       
       }
     });
 
@@ -941,12 +942,31 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
       if (data) this.dataFile = data;
     });
+    // this.api.exec<any>("DM","FileBussiness","GetFileByObjectIDAsync",[this.process?.recID,"BP_Processes"]).subscribe(res=>{
+    //   let arrFlowChart = []
+    //   if(res&& res.length> 0){
+    //     arrFlowChart = res.map(x=>{if(x.referType="Flowchart") return x})
+    //   }
+    //   if(arrFlowChart.length>0){
+    //     if(arrFlowChart.length==1){
+    //       this.dataFile = arrFlowChart[0];
+    //       return
+    //     } 
+    //     arrFlowChart = arrFlowChart.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf())
+    //     this.dataFile = arrFlowChart[0];
+    //     return
+    //   }
+    // })
   }
   async addFile(evt: any) {
+    this.addFlowchart.referType = 'Flowchart';
     this.addFlowchart.uploadFile();
   }
   fileAdded(e) {
-    if (e && e?.data?.length > 0) this.dataFile = e.data[0];
+    if (e && e?.data?.length > 0) {
+      this.dataFile = e.data[0];
+     let flowchart = this.dataFile.recID;
+    }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -956,14 +976,22 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     var type = this.button?.items.find((x) => x.id == stepType);
     return type?.icon;
   }
-  checkReferencesByCheck(data,stepType) :boolean {
-    if(!data?.items || data?.items?.length ==0) return false
+  checkReferencesByStepType(data, stepType): boolean {
+    if (!data?.items || data?.items?.length == 0) return false;
     this.checkList = data?.items.map((x) => {
       if (x.stepType == stepType) return x;
     });
-    let check =this.checkList.length > 0
+    let check = this.checkList.length > 0;
     return check;
   }
 
- 
+  checkAction(data): boolean {
+    if (!data?.items || data?.items?.length == 0) return false;
+    this.checkList = data?.items.map((x) => {
+      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') return x;
+    });
+    let check = this.checkList.length > 0;
+    return check;
+  }
+  
 }

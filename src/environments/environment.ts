@@ -4,7 +4,7 @@ export const environment = {
   mutiTenant: true,
   dfPe: '',
   appVersion: 'v101lv',
-  TNDATA_KEY: 'tnf649fc9a5f55',
+  TNKey: 'tnf649fc9a5f55',
   shopping: '',
   reportUrl: '',
   apiUrl: '',
