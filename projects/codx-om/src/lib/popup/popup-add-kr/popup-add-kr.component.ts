@@ -41,14 +41,10 @@ export class PopupAddKRComponent extends UIComponent {
   headerText = '';
   subHeaderText = '';
 
-  fGroupAddCar: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
-  lstEquipment = [];
-  CbxName: any;
-  isAfterRender = false;
-  gviewCar: any;
-  returnData: any;
+  isAfterRender: boolean;
+  fGroupAddKR: FormGroup;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -78,7 +74,7 @@ export class PopupAddKRComponent extends UIComponent {
     this.codxOmService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        this.fGroupAddCar = item;        
+        this.fGroupAddKR = item;        
         this.isAfterRender = true;
       });    
   }
@@ -89,74 +85,15 @@ export class PopupAddKRComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  valueChange(event: any) {
-    if (event?.field != null) {
-      if (event.data instanceof Object) {
-        this.fGroupAddCar.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.fGroupAddCar.patchValue({ [event['field']]: event.data });
-      }
-    }
-  }
-
-  valueCbxChange(event: any) {
-    if (event?.field != null) {
-      if (event.data instanceof Object) {
-        this.fGroupAddCar.patchValue({ [event['field']]: event.data.value });
-      } else {
-        this.fGroupAddCar.patchValue({ [event['field']]: event.data });
-      }
-    }
-  }
+  
   
   beforeSave(option: RequestOption) {
-    let itemData = this.fGroupAddCar.value;
+    let itemData = this.fGroupAddKR.value;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd];
     return true;
   }
 
-  onSaveForm() {
-    this.fGroupAddCar.patchValue(this.data);
-    if (this.fGroupAddCar.invalid == true) {
-      // this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
-      // return;
-    }
-
-    if (this.fGroupAddCar.value.category != 1) {
-      this.fGroupAddCar.patchValue({companyID:null});
-    }    
-    this.fGroupAddCar.patchValue({
-      equipments: this.lstEquipment,
-    });
-    let index:any
-    if(this.isAdd){
-      index=0;
-    }
-    else{
-      index=null;
-    }
-    this.dialogRef.dataService
-      .save((opt: any) => this.beforeSave(opt),index)
-      .subscribe(async (res) => {
-        if (res.save || res.update) {          
-          if (!res.save) {
-            this.returnData = res.update;
-          } else {
-            this.returnData = res.save;
-          }
-          if(this.returnData?.recID)
-          {
-            
-              this.dialogRef && this.dialogRef.close(this.returnData);
-            
-          } 
-        }
-        else{ 
-          //Trả lỗi từ backend.         
-          return;
-        }
-      });
-  }
+  onSaveForm(){}
 
 }

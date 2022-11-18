@@ -90,27 +90,18 @@ export class NotifyDrawerSliderComponent implements OnInit {
   }
 
   clickNotification(item:any){
-    if(!item || !item.recID) return;
-    
     this.api.execSv(
     'BG',
     'ERM.Business.BG',
-    'NotificationBusiness',
+    'NotificationBusinesss',
     'UpdateNotificationAsync', 
     [item.recID]).subscribe((res:boolean) => {
-      if(res){
-        if(!item.isRead || item.isRead.length == 0){
-          item.isRead = [];
-        }
-        let object = {
-          objectID: this.user.userID,
-          objectName: this.user.userName,
-          createdOn: new DateTime()
-        }
-        item.isRead.push(object);
+      if(res)
+      {
+        item.read = true;
+        this.dt.detectChanges();
       }
     })
-    this.dt.detectChanges();
   }
 
 }

@@ -16,7 +16,8 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { OKRTasksComponent } from './okr/tasks/tasks.component';
 import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
-import { PopupAddKRComponent } from './okr/popup-add-kr/popup-add-kr.component';
+import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
+import { PopupAlignKRComponent } from './popup/popup-align-kr/popup-align-kr.component';
 
 const routes: Routes = [
   {
@@ -64,6 +65,7 @@ const routes: Routes = [
     OkrAddComponent,
     OkrToolbarComponent,
     PopupAddKRComponent,
+    PopupAlignKRComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

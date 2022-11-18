@@ -1,84 +1,71 @@
 <ng-container *ngIf="positionID; else tmpEmpty">
-    <div>
-      <ejs-diagram #diagram 
-        class="codx-orgchart" 
-        width="100%" 
-        height="650px" 
-        [getConnectorDefaults]="connDefaults"
-        [getNodeDefaults]="nodeDefaults" 
-        [layout]="layout" 
-        [tool]="tool" 
-        [snapSettings]="snapSettings"
-        [dataSourceSettings]="datasetting"
-        (click)="orgClick($event)">
-        <ng-template #nodeTemplate let-node>
-          <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
-            [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
-          </ng-container>
-        </ng-template>
-      </ejs-diagram>
-    </div>
+  <div>
+    <ejs-diagram #diagram class="codx-orgchart" width="100%" height="650px" [getConnectorDefaults]="connDefaults"
+      [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
+      [dataSourceSettings]="datasetting" (click)="orgClick($event)">
+      <ng-template #nodeTemplate let-node>
+        <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
+        </ng-container>
+      </ng-template>
+    </ejs-diagram>
+  </div>
 </ng-container>
 <ng-template #tmpEmpty>
-  <div class="h-100 w-100">
-    <img src="assets/themes/sys/default/img/DataEmpty.svg" />
-</div>
+
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 
-  <ng-template #template let-data>
-    <div class="w-250px position-relative p-4">
-      <div class="position-relative">
-        <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
-          <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
-            <div class="d-flex flex-column flex-grow-1 align-items-center">
-              <codx-img 
-                [isDefaulImg]="true" 
-                [objectId]="data.employees[0].employeeID" 
-                [objectType]="'HR_Employees'"
-                [width]="60"
-                [referType]="'avt'">
-              </codx-img>
-            </div>
-          </ng-container>
-          <ng-template #tmpMoreEmploye>
-            <div class="d-flex justify-content-center">
-              <codx-img 
-                [isDefaulImg]="true" 
-                [objectId]="data.employees[0].employeeID" 
-                [objectType]="'HR_Employees'" 
-                [width]="60"
-                [referType]="'avt'">
-              </codx-img>
-              <div class="rounded-circle w-60px h-60px bg-secondary d-flex align-items-center justify-content-center">
-                <span class="text-white-50 fs-3">+{{data.employees?.length - 1}}</span>
-              </div>
-            </div>
-          </ng-template>
-          <div class="text-center mt-2">
-            <p class="text-dark m-0 p-0 fw-bolder">{{data.employees[0].employeeName}}</p>
-            <p class="text-dark m-0 p-0">{{data.employees[0].positionName}}</p>
-            <p class="text-dark m-0 p-0">{{data.employees[0].orgUnitName}}</p>
+<ng-template #template let-data>
+  <div class="w-250px position-relative p-4">
+    <div class="position-relative">
+      <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
+        <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
+          <div class="d-flex flex-column flex-grow-1 align-items-center">
+            <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
+              [width]="60" [referType]="'avt'">
+            </codx-img>
           </div>
         </ng-container>
-        <ng-template #tmpNoEmployee>
-          <div class="d-flex justify-content-center w-100">
-            <img src="assets/themes/sys/default/img/Avatar_Default.svg" class="w-60px" alt=""/>
-          </div>
-          <div class="text-center mt-2">
-            <p class="text-dark m-0 p-0 ">{{data.positionName}}</p>
-            <p class="text-dark m-0 p-0">{{data.orgUnitName}}</p>
+        <ng-template #tmpMoreEmploye>
+          <div class="d-flex justify-content-center">
+            <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
+              [width]="60" [referType]="'avt'">
+            </codx-img>
+            <div class="rounded-circle w-60px h-60px bg-secondary d-flex align-items-center justify-content-center">
+              <span class="text-white-50 fs-3">+{{data.employees?.length - 1}}</span>
+            </div>
           </div>
         </ng-template>
-      </div>
-      <div *ngIf="data.isChildrent" class="d-flex justify-content-center">
-        <span
-          #icon
-          class="icon-20"
-          [ngClass]="classIcon(data, icon)"
-          (mouseup)="mouseUp(data, $event)"
-          (click)="loadDataChild(data)"
-        ></span>
-      </div>
+        <div class="text-center mt-2">
+          <p class="text-dark m-0 p-0 fw-bolder">{{data.employees[0].employeeName}}</p>
+          <p class="text-dark m-0 p-0">{{data.employees[0].positionName}}</p>
+          <p class="text-dark m-0 p-0">{{data.employees[0].orgUnitName}}</p>
+        </div>
+      </ng-container>
+      <ng-template #tmpNoEmployee>
+        <div class="d-flex justify-content-center w-100">
+          <img src="assets/themes/sys/default/img/Avatar_Default.svg" class="w-60px" alt="" />
+        </div>
+        <div class="text-center mt-2">
+          <p class="text-dark m-0 p-0 ">{{data.positionName}}</p>
+          <p class="text-dark m-0 p-0">{{data.orgUnitName}}</p>
+        </div>
+      </ng-template>
     </div>
-  </ng-template>
+    <div *ngIf="data.isChildrent" class="d-flex justify-content-center">
+      <span #icon class="icon-20" [ngClass]="classIcon(data, icon)" (mouseup)="mouseUp(data, $event)"
+        (click)="loadDataChild(data)"></span>
+    </div>
+  </div>
+</ng-template>

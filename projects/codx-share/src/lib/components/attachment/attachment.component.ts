@@ -127,6 +127,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() showMessage = '1';
   @Input() hideMoreF = '1';
   @Input() displayThumb: string;
+  @Input() category: string;
   ////////////////////////////////////////////////////
   @Input() fdID: any = ''; //Folder ID truyền vào
   @Input() fdName: any = ''; //Folder Name truyền vào
@@ -1422,7 +1423,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       ''
     );
     dialog.closed.subscribe((item) => {
-      if (item.event) this.isCopyRight--;
+      if (item.event) 
+      {
+        var index = this.fileUploadList.findIndex(x=>x.recID == item.event.recID);
+        if(index >= 0) this.fileUploadList[index]=item.event;
+        this.isCopyRight--;
+      }
     });
   }
 

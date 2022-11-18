@@ -374,7 +374,7 @@ export class EditFileComponent implements OnInit {
 
     }
     else {
-      this.dialog.close(true);
+      this.dialog.close(this.fileEditing);
     }
     // else {
     //   //  this.dmSV.fileEditing.next(this.fileEditing);

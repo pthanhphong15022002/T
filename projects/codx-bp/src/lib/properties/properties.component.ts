@@ -20,6 +20,9 @@ import { B } from '@angular/cdk/keycodes';
   templateUrl: './properties.component.html',
   styleUrls: ['./properties.component.css'],
 })
+
+
+
 export class PropertiesComponent implements OnInit {
   process = new BP_Processes();
   rattings: BP_ProcessesRating[] = [];
@@ -52,11 +55,12 @@ export class PropertiesComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = data.data;
+    this.data = JSON.parse(JSON.stringify(data.data));
     this.process = this.data;
     if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     this.totalRating = 0;
   }
+
 
   ngOnInit(): void {
     this.openProperties(this.data.recID);
