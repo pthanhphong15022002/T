@@ -81,7 +81,8 @@ export class ProcessesComponent
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   user: any;
-  funcID: any;
+  funcID= "BPT1";
+  method='GetListProcessesAsync';
   itemSelected: any;
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
@@ -115,6 +116,9 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if(this.funcID == "BPT3"){
+      this.method = 'GetListShareByProcessAsync';
+    }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
