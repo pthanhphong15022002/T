@@ -240,17 +240,6 @@ export class PopupAddProcessStepsComponent
       this.getOwnerByParentID(parentID, true);
     }
   }
-  valueChangeCbxTest() {
-    var e ='cdc08630-2790-45f1-a3af-b1b7b8572156';
-    // var e = 'ffcc6e88-f3c4-4d4a-8463-dfdd6a865c06';
-    this.processSteps.parentID = e;
-    let parentID = e;
-    // Get owners  
-    if (this.stepType !== "A" && this.stepType !== "P") {
-      this.getOwnerByParentID(parentID, true);
-    }
-  }
-
   valueChangeRefrence(e) {
     if (e?.data && e?.data.trim() != '') {
       this.textChange = e?.data;
