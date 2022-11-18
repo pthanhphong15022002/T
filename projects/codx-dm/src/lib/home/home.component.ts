@@ -992,8 +992,6 @@ export class HomeComponent extends UIComponent {
         this.isSearch = true;
         this.view.orgView = this.orgViews;
         this.dmSV.page = 1;
-        // if (this.codxview.currentView.viewModel.model != null)
-        //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
         this.dmSV.listFiles = [];
         this.dmSV.listFolder = [];
         if ($event != undefined) {
