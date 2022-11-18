@@ -560,11 +560,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               });
               break;
             default:
-              //dang lỗi
               this.view.dataService.data.forEach((obj) => {
                 var indexParent = -1;
                 if (obj.items.length > 0){
-                  obj.items.forEach((child) => {
+                  obj.items.forEach((child,crrIndex) => {
                     var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
@@ -575,7 +574,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
-                      indexParent=index
+                      indexParent=crrIndex
                     }  
                   });
                 }
