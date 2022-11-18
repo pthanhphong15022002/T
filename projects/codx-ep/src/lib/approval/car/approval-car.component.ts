@@ -36,8 +36,7 @@ export class ApprovalCarsComponent extends UIComponent {
   entity = 'EP_Bookings';
   className = 'BookingsBusiness';
   method = 'GetListApprovalAsync';
-  predicate = 'ResourceType=@0';
-  datavalue = '2';
+
   cbbDriver: DriverModel[]=[];
   idField = 'recID';
 
