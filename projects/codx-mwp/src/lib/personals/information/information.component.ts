@@ -172,8 +172,19 @@ export class InformationComponent extends UIComponent implements OnInit {
       }
     }
     if (this.isModeAddES)
-      this.mwpService.addNewSignature(this.data).subscribe();
-    else this.mwpService.editSignature(this.data).subscribe();
+      this.mwpService.addNewSignature(this.data).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          this.isModeAddES = false;
+        }
+      });
+    else
+      this.mwpService.editSignature(this.data).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          this.isModeAddES = false;
+        }
+      });
   }
 }
 

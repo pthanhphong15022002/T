@@ -103,8 +103,10 @@ app-notes-home {
   width: 136px;
 }
 
-.w-5px {
-  width: 5px;
+.w-5px,
+.w-5px li {
+  width: 4px;
+  height: 18px;
 }
 
 .show-event {

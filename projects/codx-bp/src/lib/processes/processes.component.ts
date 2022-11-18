@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -119,6 +118,9 @@ export class ProcessesComponent
     if(this.funcID == "BPT3"){
       this.method = 'GetListShareByProcessAsync';
     }
+    if(this.funcID == "BPT2") {
+      this.method = 'GetListMyProcessesAsync';
+    }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -139,7 +141,6 @@ export class ProcessesComponent
       { headerTemplate: this.itemVersionNo, width: 100 },
       { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
-      { field: '', headerText: '', width: 100 },
       { field: '', headerText: '', width: 100 },
     ];
   }
@@ -415,6 +416,10 @@ export class ProcessesComponent
         break;
       case 'BPT105':
         this.permission(data);
+        break;
+      case 'BPT108':
+        this.roles(data);
+        break;
     }
   }
 
