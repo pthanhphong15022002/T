@@ -273,7 +273,7 @@ export class IncommingComponent
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) =>
-          x.functionID == 'SYS02' || x.functionID == 'ODT101'
+          x.functionID == 'SYS02' 
       );
       completed.forEach((elm) => {
         elm.disabled = true;

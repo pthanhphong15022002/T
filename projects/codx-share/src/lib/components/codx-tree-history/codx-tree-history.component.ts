@@ -12,7 +12,9 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() funcID:string;
   @Input() objectType:string;
   @Input() objectID:string;
+  @Input() id:string;
   @Input() actionType:string;
+  @Input() formModel:any;
   @Input() addNew:boolean = false;
   @Input() viewIcon:boolean = false;
   @Input() viewVote:boolean = false;
@@ -41,12 +43,12 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   { }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.objectID.previousValue != changes.objectID.currentValue ){
-      this.getDataAsync(this.objectID);
+      this.getDataAsync(this.objectID,this.id);
     }
   }
 
   ngOnInit(): void {
-    this.getDataAsync(this.objectID);
+    this.getDataAsync(this.objectID,this.id);
   }
   
   getValueIcon(){
@@ -61,22 +63,25 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
       }
     });
   }
-  getDataAsync(objectID:string){
-    console.log(this.objectID);
-
+  getDataAsync(objectID:string,id:string){
     if(this.actionType && this.actionType == "C")
     {
-      this.GetCommentTrackLogByObjectIDAsync(objectID);
+      this.GetCommentTrackLogByObjectIDAsync(objectID,id);
     }
     else
     {
-      this.getTrackLogAsync(objectID);
+      this.getTrackLogAsync(objectID,id);
     }
     this.getValueIcon();
   }
-  getTrackLogAsync(objectID:string){
+  getTrackLogAsync(objectID:string,id:string){
     if(!objectID) return;
-    this.api.execSv(this.service,this.assemply,this.className,"GetTrackLogsByObjectIDAsync",[this.objectID]).
+    this.api.execSv(
+      this.service,
+      this.assemply,
+      this.className,
+      "GetTrackLogsByObjectIDAsync",
+      [objectID,id]).
     subscribe((res:any[]) =>{
       if(res) {
         this.root.listSubComment = res;
@@ -84,10 +89,14 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     });
   }
 
-  GetCommentTrackLogByObjectIDAsync(objectID:string){
-    if(!objectID) return;
-    this.api.execSv(this.service,this.assemply,this.className,"GetCommentTrackLogByObjectIDAsync",[this.objectID,this.actionType]).
-    subscribe((res:any[]) =>{
+  GetCommentTrackLogByObjectIDAsync(objectID:string,id:string){
+    this.api.execSv(
+      this.service,
+      this.assemply,
+      this.className,
+      "GetCommentTrackLogByObjectIDAsync",
+      [objectID,id,this.actionType])
+      .subscribe((res:any[]) =>{
       if(res) {
         this.root.listSubComment = res[0];
         this.totalComment = res[1];

@@ -1,0 +1,67 @@
+#om-tab .e-tab-header
+{
+    text-align: center;
+}
+#om-tab .e-tab-text
+{
+    color: black;
+}
+#om-tab .e-tab-header::before
+{
+    border-style: none;
+}
+#om-tab .e-tab-header .e-toolbar-item.e-active
+{
+    border-bottom: solid 2px #0379FF !important;
+}
+#om-tab .e-active codx-label , #om-tab .e-active i
+{
+    color: #0379FF;
+}
+.bgEDEDED
+{
+    background-color: #EDEDED;
+}
+.okr-add-body
+{
+    padding: 30px 20rem 0 20rem !important;
+}
+.om-input
+{
+    border : solid 1px white !important;
+}
+.om-input:focus
+{
+    border:solid 1px white;
+    border-bottom-color: #9ACCFF !important;
+}
+.om-border-bottom-add
+{
+    border-bottom: solid 1px #9ACCFF;
+}
+.w-70
+{
+    width: 70%;
+}
+.om-add-btn i , .check-with-label:checked + .icon-language
+{
+    color: #3699FF;
+}
+.om-add-btn span
+{
+    color: #5EADFF;
+}
+.om-fs-3
+{
+    font-size: 1.5rem !important;
+}
+.om-h-header
+{
+    height: 100px;
+}
+.om-h-body
+{
+    overflow: auto;
+    height: calc(100% - 145px);
+}
+.om-select { font-family: 'FontAwesome', Verdana }
