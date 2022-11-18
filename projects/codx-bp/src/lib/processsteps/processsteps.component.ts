@@ -443,8 +443,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           dataParentsOld.splice(data.stepNo - 1, 1); ///xu ly xoa nhuw the nao
           dataParentsNew.push(processStep);
           if (processStep?.ownersOfParent)
-          dataParentsNew.owners = processStep?.ownersOfParent;
-          
+            dataParentsNew.owners = processStep?.ownersOfParent;
+
           if (this.kanban) {
             this.kanban.updateCard(dataParentsOld);
             this.kanban.updateCard(dataParentsNew);
@@ -552,7 +552,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
                 if (index != -1) {
-                  if (this.kanban) this.kanban.removeCard(obj.items[index]);
+                  // if (this.kanban) this.kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
                   obj.items.forEach((dt) => {
                     if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -561,23 +561,27 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               });
               break;
             default:
+              //dang lỗi
               this.view.dataService.data.forEach((obj) => {
-                var index = -1;
-                if (obj.items.length > 0)
+                var indexParent = -1;
+                if (obj.items.length > 0){
                   obj.items.forEach((child) => {
+                    var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
                         (x) => x.recID == data.recID
                       );
                     if (index != -1) {
                       child.items.splice(index, 1);
-                      if (this.kanban) this.kanban.updateCard(obj.items[index]);
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
-                      index = -1;
-                    }
+                      indexParent=index
+                    }  
                   });
+                }
+                if(indexParent!=-1) if (this.kanban) this.kanban.updateCard(obj.items[indexParent]);
+                 
               });
               break;
           }
@@ -626,11 +630,19 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
     // test
     this.formModelMenu = this.view?.formModel;
+    debugger;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
+
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
   }
 
