@@ -1017,7 +1017,8 @@ export class HomeComponent extends UIComponent {
               values,
               this.dmSV.page,
               this.dmSV.pageSize,
-              this.searchAdvance
+              this.searchAdvance,
+              this.view.formModel.funcID
             )
             .subscribe((item) => {
               if (item != null) {
