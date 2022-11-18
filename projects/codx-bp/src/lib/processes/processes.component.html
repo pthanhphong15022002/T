@@ -5,7 +5,7 @@
   assemblyName="ERM.Business.BP"
   entityName="BP_Processes"
   className="ProcessesBusiness"
-  method="GetListProcessesAsync"
+  [method]="method"
   [views]="views"
   [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
@@ -182,11 +182,11 @@
       </div>
     </td>
     <td class="rowphoto position-relative">
-      <div class="padding" *ngIf="funcID == 'BPT4'">
+      <!-- <div class="padding" *ngIf="funcID == 'BPT4'">
         <button class="btn btn-primary" (click)="approval(data)">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
-      </div>
+      </div> -->
       <div class="padding position-absolute top-0 end-0" >
         <codx-mfunc
           [formModel]="view.formModel"
