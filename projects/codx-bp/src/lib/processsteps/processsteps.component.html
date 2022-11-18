@@ -34,9 +34,9 @@
 </ng-template>
 
 <ng-template #cardTitleTmp let-data>
-  <div class="box-body">
+  <div class="box-body  {{isKanban ?'':'mt-5'}}">
     <div class="Activities mb-3">
-      <label class="text-dark fw-bold mb-5">{{ data.stepName }}</label>
+      <label class="text-dark fw-bold mb-5" *ngIf="isKanban">{{ data.stepName }}</label>
       <ng-container *ngIf="checkAction(data)">
         <label class="text-danger fw-bold mb-2">
           <codx-label
@@ -358,10 +358,12 @@
                                 [titleTmp]="titleTmp"
                                 [desc]="item1?.memo"
                                 [dataItem]="item1"
+                                [desc2Tmp]="cardTitleTmp"
+                                [footer]="cardImgFooter"
                               >
                               </codx-temp-full>
-
-                              <ng-container *ngIf="item?.items?.length > 0">
+                        
+                              <!-- <ng-container *ngIf="item?.items?.length > 0">
                                 <ng-container *ngFor="let item2 of item1.items">
                                   <div
                                     class="steplist-item step-items rounded p-4"
@@ -374,8 +376,8 @@
                                     >
                                     </codx-temp-full>
                                   </div>
-                                </ng-container>
-                              </ng-container>
+                                </ng-container> 
+                              </ng-container>-->
                             </div>
                           </div>
                         </div>

@@ -101,6 +101,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   crrParentID = '';
   kanban: any;
   checkList = [];
+  isKanban =true;
 
   constructor(
     inject: Injector,
@@ -712,6 +713,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   viewChanged(e) {
     // test
     if (e?.view.type == 16) {
+      this.isKanban = false
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
       this.dataTreeProcessStep.forEach((obj) => {
@@ -720,6 +722,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
     if (e?.view.type == 6) {
+      this.isKanban = true
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
