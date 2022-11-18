@@ -27,6 +27,8 @@ export class ApprovalStationeryComponent
   className = 'BookingsBusiness';
   method = 'GetListApprovalAsync';
   idField = 'recID';
+  predicate = 'ResourceType=@0';
+  datavalue = '6';
   taskViewStt;
   jobs;
   itemDetail;
