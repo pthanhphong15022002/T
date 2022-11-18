@@ -30,7 +30,10 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
   templateUrl: './popup-add-process-steps.component.html',
   styleUrls: ['./popup-add-process-steps.component.css'],
 })
-export class PopupAddProcessStepsComponent extends UIComponent implements OnInit {
+export class PopupAddProcessStepsComponent
+  extends UIComponent
+  implements OnInit
+{
   @ViewChild('form') form: FormControlName;
   @ViewChild('attachment') attachment: AttachmentComponent;
 
@@ -92,17 +95,18 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
 
     this.title = this.titleActon;
     if (this.action == 'edit') {
-      this.showLabelAttachment = this.processSteps.attachments > 0 ? true : false;
-      this.processSteps!.owners
-      this.processSteps.owners
-      if (this.stepType === "A") {
-        this.getOwnerByParentID(this.processSteps["recID"]);
+      this.showLabelAttachment =
+        this.processSteps.attachments > 0 ? true : false;
+      this.processSteps!.owners;
+      this.processSteps.owners;
+      if (this.stepType === 'A') {
+        this.getOwnerByParentID(this.processSteps['recID']);
       } else {
         this.listOwnerID = this.processSteps.owners.map((item) => {
           return item?.objectID ? item.objectID : null;
-        })
+        });
       }
-      if (this.stepType === "E" && this.processSteps.reference) {
+      if (this.stepType === 'E' && this.processSteps.reference) {
         this.isNewEmails = false;
         this.recIdEmail = this.processSteps.reference;
       }
@@ -149,12 +153,11 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
 
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
-        this.processSteps["reference"] = res.event?.recID;
+        this.processSteps['reference'] = res.event?.recID;
         // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
       }
     });
   }
-
 
   viewDetailSurveys(e) {
     let url = 'sv/surveys/SVT01';
@@ -218,7 +221,6 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
         if (data) {
           this.attachment?.clearData();
           this.dialog.close(data);
-
         } else this.dialog.close();
       });
   }
@@ -241,11 +243,12 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
   valueChangeRefrence(e) {
     if (e?.data && e?.data.trim() != '') {
       this.textChange = e?.data;
-      this.changeDef.detectChanges();
+      // this.enterRefrence();
     }
   }
   enterRefrence() {
     if (this.textChange && this.textChange.trim() != '') {
+      if (!this.referenceText) this.referenceText = [];
       this.referenceText.push(this.textChange);
       this.textChange = '';
       this.changeDef.detectChanges();
@@ -284,7 +287,7 @@ export class PopupAddProcessStepsComponent extends UIComponent implements OnInit
   convertReference() {
     switch (this.processSteps.stepType) {
       case 'C':
-        if (this.referenceText.length > 0) {
+        if (this.referenceText?.length > 0) {
           this.processSteps.reference = this.referenceText.join(';');
         }
         break;

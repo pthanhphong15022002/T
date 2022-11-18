@@ -2,22 +2,22 @@
   [dialog]="dialog">
 </codx-form>
 <ng-template #subheader>
-  <div class="d-flex justify-content-end w-100">
-    <div class="rounded-pill p-2">
+  <div class="d-flex align-items-center justify-content-end w-100">
+    <div class="border rounded-pill p-2">
       <span>
         <i class="icon-filter_alt"></i>
       </span>
       <span class="mx-1">
         <codx-label [formModel]="dialog.formModel" name="" default="Loại xét duyệt"></codx-label>
       </span>
-      <span><i class="fas fa-ellipsis-h"></i></span>
     </div>
+    <span class="ms-2"><i class="fas fa-ellipsis-h"></i></span>
   </div>
 </ng-template>
 <ng-template #body>
   <div class="p-2">
     <ng-container *ngFor="let item of lstApproval">
-      <div class="d-flex p-4 my-2">
+      <div class="p-4">
         <div class="">
           <codx-vll [name]="'ES022'" [value]="item.title" [showIcon]="true"></codx-vll>
         </div>
@@ -36,16 +36,16 @@
             </codx-img>
           </div>
           <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
-            <div>
-              <button type="button" class="btn btn-sm btn-light-primary">
+            <div class="">
+              <button type="button" class="btn btn-outline-success w-100px" (click)="approvalAsync(item.recID,item.transID,'5')">
                 <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
               </button>
-              <button type="button" class="btn btn-outline-danger min-w-90px ms-4">
+              <button type="button" class="btn btn-outline-danger w-100px ms-6" (click)="approvalAsync(item.recID,item.transID,'4')">
                 <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
               </button>
             </div>
-            <div>
-              <codx-label [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
+            <div class="cursor-pointer">
+              <codx-label [classList]="'fst-italic'" [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
             </div>
           </div>
         </div>

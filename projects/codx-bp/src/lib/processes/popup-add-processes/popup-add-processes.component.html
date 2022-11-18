@@ -1,5 +1,5 @@
-<codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer" [data]="process"
-  [dialog]="dialog" #form>
+<codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer"
+  [data]="process" [dialog]="dialog" #form>
   <ng-template #body>
     <div class="form-group">
       <div>
@@ -34,8 +34,8 @@
       </div>
       <div class="d-flex flex-wrap">
         <div class="">
-            <codx-img class="flex symbol-40px" [objectId]="process.owner" objectType="AD_Users">
-            </codx-img>
+          <codx-img class="flex symbol-40px" [objectId]="process.owner" objectType="AD_Users">
+          </codx-img>
         </div>
 
       </div>
@@ -44,12 +44,10 @@
       <div class="col-md-6">
         <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
         </codx-label>
-
-      <codx-input type="combobox" refValue="ProcessGroups" field="groupID" [crrValue]="process.groupID"
-        (valueChange)="valueChange($event)" [multiple]="false" loadFull="true"
-        [placeholder]="gridViewSetup?.GroupID?.headerText">
-      </codx-input>
-    </div>
+        <codx-input field="groupID" [crrValue]="process.groupID" [refValue]="gridViewSetup['GroupID']['referedValue']"
+          type="combobox" (valueChange)="valueChange($event)" >
+        </codx-input>
+      </div>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -108,10 +106,4 @@
 
 <ng-template #subHeader>
   <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"></codx-tag>
-</ng-template>
-
-<ng-template #controlShare let-dialogShare>
-  <codx-share [listName]="listName" [field]="fieldValue" [dataShare]="[]" [dialog]="dialogShare" [multiple]="false"
-    (eventApply)="valueCbx($event, fieldValue)">
-  </codx-share>
 </ng-template>
