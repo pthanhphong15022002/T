@@ -1070,10 +1070,71 @@ codx-tag .codx-tag:hover {
   max-width: 140px !important;
 }
 
+
+.e-colorpicker-wrapper .e-btn.e-icon-btn:hover {
+  background-color: transparent;
+  color: var(--primary);
+}
+
+.e-colorpicker-wrapper .e-btn.e-icon-btn .e-icons {
+  font-family: 'icomoon' !important;
+  font-size: 18px !important;
+}
+
+.e-colorpicker-wrapper .e-btn.e-icon-btn .e-icons::before {
+  content: "\ea00";
+}
+
+.symbol-50 .e-colorpicker-wrapper {
+  width: 50px !important;
+  height: 50px !important;
+  overflow: hidden;
+
+  position: relative;
+}
+
+.symbol-50 .e-colorpicker-wrapper button {
+  width: 50px !important;
+  height: 50px !important;
+  position: absolute;
+  padding: 0 !important;
+  margin: 0 !important;
+  top: 0;
+  left: 0;
+  border-radius: 50% !important;
+  border: 0 !important;
+
+
+}
+
+.symbol-50 .e-colorpicker-wrapper button span {
+  width: 50px !important;
+  height: 50px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+}
+
+.symbol-50 .e-colorpicker-wrapper button.e-btn.e-icon-btn span.e-icons {
+  font-size: 21px !important;
+  color: var(--gray-700);
+}
+
+.pattern-teams .symbol-50 {
+  float: left;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
 
+#kt_aside_menu img.w-25px {
+  width: 22px !important;
+}
 
 /******* tam ***/
 .codx-form .card-footer,

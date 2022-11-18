@@ -1,0 +1,50 @@
+<codx-form
+  #form
+  [body]="body"
+  [data]="invoices"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="card-add">
+      <div class="row">
+        <div class="form-group">
+          <div class="form-group pt-1">
+            <codx-label
+              fiedName="InvoiceForm"
+              [formModel]="form.formModel"
+              default="Mã danh mục"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceForm"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [disabled]="invoices?.allowEditKey"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group">
+          <div class="form-group pt-1">
+            <codx-label
+              fiedName="InvoiceSeriNo"
+              [formModel]="form.formModel"
+              default="Mã danh mục"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceSeriNo"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [disabled]="invoices?.allowEditKey"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

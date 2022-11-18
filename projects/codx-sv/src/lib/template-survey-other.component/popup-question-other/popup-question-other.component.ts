@@ -54,8 +54,8 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
   onInit(): void {}
 
   onSave() {
-    var obj = 
-    this.dialog.close(this.dataQuestion);
+    var obj = { data: this.dataQuestion, changeTemplate: false };
+    this.dialog.close(obj);
   }
 
   valueChangeAll(e) {
@@ -93,7 +93,8 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
   }
 
   chooseOtherTemplate() {
-    this.dialog.close();
+    var obj = { data: this.dataQuestion, changeTemplate: true };
+    this.dialog.close(obj);
   }
 
   generateGuid() {

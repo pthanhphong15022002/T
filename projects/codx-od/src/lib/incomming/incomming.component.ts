@@ -236,8 +236,6 @@ export class IncommingComponent
       (x: { functionID: string }) =>
         x.functionID == 'ODT111' || x.functionID == 'ODT210'
     );
-    /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
-    blur[0].isblur = true; */
     if (data?.isBookmark) {
       bm[0].disabled = true;
       unbm[0].disabled = false;
@@ -255,6 +253,7 @@ export class IncommingComponent
       );
       approvel[0].disabled = true;
     }
+    //Hoàn tất
     if (data?.status == '7') {
       var completed = e.filter(
         (x: { functionID: string }) =>
@@ -263,7 +262,9 @@ export class IncommingComponent
           x.functionID == 'SYS02' ||
           x.functionID == 'SYS03' ||
           x.functionID == 'ODT103' ||
-          x.functionID == 'ODT202'
+          x.functionID == 'ODT202' ||
+          x.functionID == "ODT101" ||
+          x.functionID == 'ODT113'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;
@@ -271,9 +272,12 @@ export class IncommingComponent
     }
     if (data?.status == '3') {
       var completed = e.filter(
-        (x: { functionID: string }) => x.functionID == 'SYS02'
+        (x: { functionID: string }) =>
+          x.functionID == 'SYS02' 
       );
-      completed[0].disabled = true;
+      completed.forEach((elm) => {
+        elm.disabled = true;
+      });
     }
     var approvelCL = e.filter(
       (x: { functionID: string }) => x.functionID == 'ODT114' 
@@ -286,8 +290,10 @@ export class IncommingComponent
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT113' 
       );
-      if(approvel[0]) approvel[0].disabled = true;
-      if(approvelCL[0]) approvelCL[0].disabled = false;
+      if(approvel[0])
+        approvel[0].disabled = true;
+      if(approvelCL[0])
+        approvelCL[0].disabled = false;
     }
   }
   aaaa(e: any) {
