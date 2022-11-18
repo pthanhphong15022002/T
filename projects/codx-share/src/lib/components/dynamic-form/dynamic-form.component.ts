@@ -12,6 +12,7 @@ import {
   DataRequest,
   CallFuncService,
   LayoutService,
+  NotificationsService,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
@@ -43,7 +44,8 @@ export class DynamicFormComponent extends UIComponent {
     private inject: Injector,
     private callfunc: CallFuncService,
     private route: ActivatedRoute,
-    private layout: LayoutService
+    private layout: LayoutService,
+    private notifySvr: NotificationsService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -105,25 +107,7 @@ export class DynamicFormComponent extends UIComponent {
         break;
     }
   }
-
-  changeMF(evt:any,data:any)
-  {
-    //Xử lý riêng bên OD
-    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
-    {
-      //Check đã có công văn sử dụng chưa
-      this.api.execSv("OD","OD","DispatchesBusiness","GetItemByCategoryIDAsync",data.categoryID).subscribe(item=>{
-        if(item)
-        {
-           var dlt = evt.filter(
-              (x: { functionID: string }) => x.functionID == 'SYS02'
-            );
-            dlt[0].disabled = true;
-        }
-      });
-    }
-  }
-
+  
   click(evt: ButtonModel) {
     this.function = evt;
     switch (evt.id) {
@@ -227,15 +211,28 @@ export class DynamicFormComponent extends UIComponent {
   private delete(evt?) {
     let delItem = this.viewBase.dataService.dataSelected;
     if (evt) delItem = evt;
-    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-      this.dataSelected = res;
-    });
     //Xử lý riêng OD
     if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
-      this.api
+    {
+      this.api.execSv("OD","OD","DispatchesBusiness","GetItemByCategoryIDAsync",delItem.categoryID).subscribe(item=>{
+        if(!item)
+        {
+          this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+            this.dataSelected = res;
+          });
+          this.api
           .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [delItem?.categoryID])
           .subscribe();
-    
+        }
+        else this.notifySvr.notifyCode("SYS002")
+      })
+    }
+    else
+    {
+      this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+        this.dataSelected = res;
+      });
+    }
   }
 
   private export(evt: any) {
