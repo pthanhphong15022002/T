@@ -419,7 +419,7 @@ export class ProcessesComponent
       RevisionsComponent,
       '',
       500,
-      350,
+      200,
       '',
       obj
     );

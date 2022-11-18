@@ -86,8 +86,6 @@ export class ApprovalCarsComponent extends UIComponent {
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
-    this.request.predicate = 'ResourceType=@0';
-    this.request.dataValue = '2';
     this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();

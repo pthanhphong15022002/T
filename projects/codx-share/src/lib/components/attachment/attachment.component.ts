@@ -1423,7 +1423,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       ''
     );
     dialog.closed.subscribe((item) => {
-      if (item.event) this.isCopyRight--;
+      if (item.event) 
+      {
+        var index = this.fileUploadList.findIndex(x=>x.recID == item.event.recID);
+        if(index >= 0) this.fileUploadList[index]=item.event;
+        this.isCopyRight--;
+      }
     });
   }
 
