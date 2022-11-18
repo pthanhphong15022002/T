@@ -36,7 +36,8 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
     L2: 'Value list',
     L3: 'Combobox',
   };
-
+  seqNoSessionChoosed: any;
+  seqNoQuestionChoosed: any;
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
@@ -52,9 +53,10 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
-  onSave() {}
-
-  valueChange(e) {}
+  onSave() {
+    var obj = 
+    this.dialog.close(this.dataQuestion);
+  }
 
   valueChangeAll(e) {
     if (e) {
@@ -64,17 +66,59 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
           y['check'] = e.data;
         });
       });
-      console.log('check this.dataQuestion', this.dataQuestion);
-      this.change.detectChanges();
+      this.disableSave = !e.data;
     }
   }
 
   valueChangeSession(e, seqNoSession) {
     if (e) {
-      this.dataQuestion[seqNoSession]['check'] = true;
+      this.dataQuestion[seqNoSession]['check'] = e.data;
       this.dataQuestion[seqNoSession].children.forEach((x) => {
-        x['check'] = true;
+        x['check'] = e.data;
       });
+      this.disableSave = !e.data;
     }
+  }
+
+  valueChangeQuestion(e, itemSession, itemQuestion) {
+    if (e) {
+      this.dataQuestion[itemSession.seqNo].children[itemQuestion.seqNo][
+        'check'
+      ] = e.data;
+      if (!this.dataQuestion[itemSession.seqNo]['check']) {
+        if (e.data) this.disableSave = false;
+        else this.disableSave = true;
+      } else this.disableSave = false;
+    }
+  }
+
+  chooseOtherTemplate() {
+    this.dialog.close();
+  }
+
+  generateGuid() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    var GUID;
+    return (GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    ));
   }
 }
