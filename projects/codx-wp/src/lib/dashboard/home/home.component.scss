@@ -151,8 +151,7 @@
 
 .card.sp-my-task {
     height: calc(100vh - 245px);
-    border: 1px aqua solid;
-
+    overflow: auto;
 }
 
 .card.my-team {
@@ -161,7 +160,7 @@
 
 
 .cal-notes .lstView .card-body.p-0 {
-    height: calc(100vh - 422px) !important;
+    height: calc(100vh - 425px) !important;
 }
 
 // .cal-notes .lstView .w-200px {
