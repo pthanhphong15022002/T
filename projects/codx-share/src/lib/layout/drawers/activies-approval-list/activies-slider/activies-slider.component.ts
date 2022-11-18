@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, DataRequest, DialogData, DialogRef, ScrollComponent } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
 import { off } from 'process';
 
 @Component({
@@ -33,6 +33,7 @@ export class ActiviesSliderComponent implements OnInit {
   (
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
+    private notiSV:NotificationsService,
     private auth:AuthStore,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
@@ -93,7 +94,8 @@ export class ActiviesSliderComponent implements OnInit {
   }
 
   approvalAsync(recID:string ,transID:string, status:string){
-    if(transID && status){
+    if(recID && transID && status)
+    {
       if(status == ApprovalStatus.approved || status == ApprovalStatus.denied)
       {
         this.api
@@ -102,29 +104,38 @@ export class ActiviesSliderComponent implements OnInit {
           'ERM.Business.ES',
           'ApprovalTransBusiness',
           'ApproveAsync',
-          [transID, status, '', '']
-        ).subscribe((res: any) => {
-          if (!res?.msgCodeError) 
+          [transID, status, '', ''])
+          .subscribe((res: any) => {
+          if (res) 
           {
+            let mssgCodeNoti = status == ApprovalStatus.approved ? "WP005" : "WP007";
+            this.notiSV.notifyCode(mssgCodeNoti);
             let index = this.lstApproval.findIndex(x => x.recID == recID);
-            if(index > -1){
+            if(index > -1)
+            {
               this.lstApproval.splice(index,1);
               this.lstApproval = JSON.parse(JSON.stringify(this.lstApproval));
-              if(recID)
-              {
-                this.api.execSv(
-                  'BG',
-                  'ERM.Business.BG',
-                  'NotificationBusinesss',
-                  'UpdateNotificationAsync', 
-                  [recID])
-                  .subscribe();
-              }
+              this.api.execSv(
+                'BG',
+                'ERM.Business.BG',
+                'NotificationBusinesss',
+                'UpdateNotificationAsync', 
+                [recID]).subscribe();
             }
+            this.dt.detectChanges();
           } 
         });
       }
     }
+  }
+
+  setStyles(data) 
+  {
+    let styles = {
+      backgroundColor: data ? data : '#1E8449',
+      color: 'white',
+    };
+    return styles;
   }
 }
 

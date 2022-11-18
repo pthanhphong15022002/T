@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { InvoicesComponent } from './invoices/invoices.component';
+import { AddEditComponent } from './invoices/popups/add-edit/add-edit.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,7 @@ const T_Component: Type<any>[] = [
   LayoutComponent,
   CodxEiComponent,
   InvoicesComponent,
+  AddEditComponent,
 ];
 
 @NgModule({
