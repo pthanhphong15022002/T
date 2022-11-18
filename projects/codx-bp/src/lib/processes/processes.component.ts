@@ -118,6 +118,9 @@ export class ProcessesComponent
     if(this.funcID == "BPT3"){
       this.method = 'GetListShareByProcessAsync';
     }
+    if(this.funcID == "BPT2") {
+      this.method = 'GetListMyProcessesAsync';
+    }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
