@@ -1426,7 +1426,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
       if (item.event) 
       {
         var index = this.fileUploadList.findIndex(x=>x.recID == item.event.recID);
-        this.fileUploadList[index]=item.event;
+        if(index >= 0) this.fileUploadList[index]=item.event;
         this.isCopyRight--;
       }
     });
