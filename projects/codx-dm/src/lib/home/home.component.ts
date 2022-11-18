@@ -983,15 +983,15 @@ export class HomeComponent extends UIComponent {
 
   filterChange($event) {
     if (!$event) {
-      this.dmSV.page = 1;
-      this.getDataFolder(this.dmSV.folderID);
-      this.getDataFile(this.dmSV.folderID);
+      //alert("aa");
     } else {
       try {
         this.data = [];
         this.isSearch = true;
         this.view.orgView = this.orgViews;
         this.dmSV.page = 1;
+        // if (this.codxview.currentView.viewModel.model != null)
+        //   this.codxview.currentView.viewModel.model.panelLeftHide = true;
         this.dmSV.listFiles = [];
         this.dmSV.listFolder = [];
         if ($event != undefined) {
@@ -1017,8 +1017,7 @@ export class HomeComponent extends UIComponent {
               values,
               this.dmSV.page,
               this.dmSV.pageSize,
-              this.searchAdvance,
-              this.view.formModel.funcID
+              this.searchAdvance
             )
             .subscribe((item) => {
               if (item != null) {
