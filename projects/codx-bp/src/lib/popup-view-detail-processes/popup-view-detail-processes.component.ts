@@ -5,7 +5,7 @@ import { BP_Processes, TabModel } from '../models/BP_Processes.model';
 @Component({
   selector: 'lib-popup-view-detail-processes',
   templateUrl: './popup-view-detail-processes.component.html',
-  styleUrls: ['./popup-view-detail-processes.component.css'],
+  styleUrls: ['./popup-view-detail-processes.component.scss'],
 })
 export class PopupViewDetailProcessesComponent implements OnInit {
   process: BP_Processes;

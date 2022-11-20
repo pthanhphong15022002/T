@@ -1,8 +1,7 @@
 <codx-card-img (dblclick)="dbView()" cardCss="border w-200px h-100 card-folder-center" [imageSrc]="dmSV.getImage(data)"
-  imgCss="card-img-center h-100px mt-2" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
-  [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)"
-  [typeMF]="'hover'" [footer]="cardImgFooter" 
-  (changeDataMF)="dmSV.filterMoreFunction($event, data)" >
+  imgCss="card-img-center h-75px mt-5" [rootData]="data" [typeMF]="'hover'" [bookmark]="dmSV.showBookmark(data)"
+  [formModel]="formModel" (clickMF)="clickMoreFunction($event,data)" [typeMF]="'hover'" [footer]="cardImgFooter"
+  (changeDataMF)="dmSV.filterMoreFunction($event, data)">
 </codx-card-img>
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div [title]="data.folderName != undefined ? data.folderName : data.fileName"
@@ -35,16 +34,19 @@
           <ng-template #nocreateBy2>
             <span class="text-dark-50"></span>
           </ng-template>
-          <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18 position-absolute end-0"></span>
+          <span *ngIf="dmSV.checkView(data.read) == false"
+            class="icon-security text-primary icon-18 position-absolute end-0"></span>
         </div>
       </div>
     </ng-template>
     <ng-template #file>
       <div title="{{data.fileName}}" class="dms-card-footer d-flex">
         <div class="d-flex flex-column w-100 align-items-center">
-          <div><!-- <div class="d-flex align-items-center"> -->
+          <div>
+            <!-- <div class="d-flex align-items-center"> -->
             <!-- <img alt="" class="mh-15px me-2" src="{{dmSV.getThumbnail(data)}}"> -->
-            <div class="text-gray-600 fw-bold file-name text-box-140">{{data.fileName?data.fileName:data.folderName}}</div>
+            <div class="text-gray-600 fw-bold file-name text-box-140">{{data.fileName?data.fileName:data.folderName}}
+            </div>
           </div>
           <div class="d-flex align-items-center mt-2">
             <div class="d-flex w-100 text-gray-600">
@@ -61,7 +63,8 @@
                 <span class="icon-download icon-16"></span>
               </div>
             </div>
-            <span *ngIf="dmSV.checkView(data.read) == false" class="icon-security text-primary icon-18  position-absolute end-0"></span>
+            <span *ngIf="dmSV.checkView(data.read) == false"
+              class="icon-security text-primary icon-18  position-absolute end-0"></span>
           </div>
         </div>
       </div>

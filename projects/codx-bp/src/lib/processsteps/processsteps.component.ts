@@ -101,6 +101,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   crrParentID = '';
   kanban: any;
   checkList = [];
+  isKanban =true;
 
   constructor(
     inject: Injector,
@@ -552,7 +553,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
                 if (index != -1) {
-                  // if (this.kanban) this.kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
                   obj.items.forEach((dt) => {
                     if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -561,11 +561,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               });
               break;
             default:
-              //dang lỗi
               this.view.dataService.data.forEach((obj) => {
                 var indexParent = -1;
                 if (obj.items.length > 0){
-                  obj.items.forEach((child) => {
+                  obj.items.forEach((child,crrIndex) => {
                     var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
@@ -576,7 +575,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
-                      indexParent=index
+                      indexParent=crrIndex
                     }  
                   });
                 }
@@ -630,7 +629,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
     // test
     this.formModelMenu = this.view?.formModel;
-    debugger;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
 
     if (funcMenu) {
@@ -715,6 +713,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   viewChanged(e) {
     // test
     if (e?.view.type == 16) {
+      this.isKanban = false
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
       this.dataTreeProcessStep.forEach((obj) => {
@@ -723,6 +722,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
     if (e?.view.type == 6) {
+      this.isKanban = true
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
