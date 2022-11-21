@@ -71,7 +71,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
       this.notiService.notifyCode('CO002');
       return;
     }
-    this.confirmResourcesTrackEvent();
+    this.onUpdate();
   }
   //#endgion
 
@@ -115,7 +115,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
         //chưa có mssgcode dời lịch
         this.notiService.notify('Cập nhật thành công');
         this.tmSv.changeBookingDateTime(this.meeting.recID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString())
-        this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0023', this.funcID).subscribe();
+        this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0025', this.funcID).subscribe();
         //dời phòng bên EP
         this.api.execSv(
           'EP',

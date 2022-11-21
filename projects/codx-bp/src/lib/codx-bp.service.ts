@@ -97,12 +97,12 @@ export class CodxBpService {
     );
   }
 
-  setViewRattings(recID: string, ratting: string, comment: string){
+  setViewRattings(recID: string, ratting: string, comment: string, funcID: string, entityName: string){
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'SetViewRattingAsync',
-      [recID, ratting, comment]
+      [recID, ratting, comment, funcID, entityName]
     );
   }
 

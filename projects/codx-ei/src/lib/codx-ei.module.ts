@@ -11,6 +11,8 @@ import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { InvoicesComponent } from './invoices/invoices.component';
 import { AddEditComponent } from './invoices/popups/add-edit/add-edit.component';
+import { TabModule } from '@syncfusion/ej2-angular-navigations';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
 
 const routes: Routes = [
   {
@@ -51,6 +53,8 @@ const T_Component: Type<any>[] = [
     ReactiveFormsModule,
     SharedModule,
     CodxShareModule,
+    TabModule,
+    GridModule,
   ],
   exports: [RouterModule],
 })

@@ -132,7 +132,7 @@ export class BP_ProcessPermissions {
   approvalRule: string;
   approvedBy: string;
   approvedOn: Date;
-  autoCreat: boolean;
+  autoCreate: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
