@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, DataRequest, FormModel, NotificationsService } from 'codx-core';
 import { ModelPage } from 'projects/codx-ep/src/public-api';
 
 @Injectable({
@@ -166,5 +166,18 @@ export class CodxOmService {
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
     }
+  }
+
+  //Lấy danh sách mục tiêu
+  getOKR(dataRequest: DataRequest)
+  {
+    return this.api.execSv("OM","OM","OKRBusiness","GetAsync",dataRequest);
+  }
+
+  //Lấy danh sách chi tiết KR từ recID OKR
+
+  getKRByOKR(recID : any)
+  {
+    return this.api.execSv("OM","OM","OKRBusiness","GetChildByIDAsync",recID);
   }
 }
