@@ -9,7 +9,7 @@
         class="fw-bold fs-2"
       ></codx-label>
     </div>
-    <div>
+    <div class="p-om-okr">
       <ejs-tab id="om-tab">
         <e-tabitems>
           <e-tabitem>
@@ -23,7 +23,157 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Mục tiêu </ng-template>
+            <ng-template #content> 
+              <ng-container *ngIf="dataOKR && dataOKR.length>0 , else elseOKR">
+                <div class="accordion mt-5">
+                  <div *ngFor="let data of dataOKR; let i = index">
+                    <div class="d-flex align-items-center justify-content-between mt-5">
+                        <div class="d-flex align-items-center cursor-pointer" (click)='getItemOKR(i,data.recID)' data-bs-toggle="collapse"
+                        [attr.data-target]="'#collapse' + i" aria-expanded="true" [attr.aria-controls]="'collapse' + i">
+                          <i class="fas fa-chevron-circle-right fs-4 me-3 text-gray-300"></i>
+                          <i class="fa-solid fa-bullseye me-3 fs-3 txt-color-0E4C55" ></i>
+                          <span>{{ data.okrName }}</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end">
+                          <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
+                            <div class="h-15px w-100 bg-gray-200 rounded-4">
+                              <div class="bg-primary rounded-4 h-15px" role="progressbar" style="width: 72%;" aria-valuenow="50"
+                                aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="process-per position-absolute top-0 fs-8" style="left:72%">72%</div>
+                            <div class="pic-face" style="left:77%;">
+                              <img class="w-20px h-20px" src="assets/themes/wp/default/img/L1480_3.svg">
+                            </div>
+                            <div class="pic-local" style="left:90%;">
+                              <span class="icon-language text-primary icon-20"></span>
+                            </div>
+                          </div>
+                          <div class="d-flex ms-9">
+                            <button class="btn btn-icon btn-sm position-relative ms-4">
+                              <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
+                              <span
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
+                            </button>
+                            <button class="btn btn-icon btn-sm position-relative ms-4">
+                              <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
+                              <span
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
+                            </button>
+                            <button class="btn btn-icon btn-sm position-relative ms-4">
+                              <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
+                              <span
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
+                            </button>
+                            <button class="btn btn-icon btn-sm position-relative ms-4">
+                              <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
+                              <span
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">5</span>
+                            </button>
+                           <codx-mfunc [formModel]="view?.formModel" type="view" [dataItem]="data" class="ms-4"></codx-mfunc>
+                          </div>
+                        </div>
+                    </div>
+                    <div [attr.id]="'collapse' + i" class="accordion-collapse collapse" [class.show]='openAccordion[i]'
+                      [attr.aria-labelledby]="'heading' + i" data-bs-parent="#accordionExample">
+                      <ejs-tab id="om-tab-child">
+                        <e-tabitems>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="d-flex align-items-center">
+                                <i class="icon-vpn_key me-2"></i>
+                                <codx-label
+                                  default="Kết quả"
+                                  fiedName="lblResult"
+                                  class="fw-bold"
+                                ></codx-label>
+                              </div>
+                            </ng-template>
+                            <ng-template #content> 
+                              <div class="d-flex align-items-center mt-2 cursor-pointer justify-content-between" *ngFor="let item of data?.child">
+                                <div class="d-flex align-items-center">
+                                  <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-2 text-center">
+                                    KR
+                                  </div>
+                                  <span class="icon-link me-3"></span>
+                                  <div >
+                                    {{item.okrName}}
+                                  </div>
+                                </div>
+                                <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'" ></codx-img>
+                              </div>
+                            </ng-template>
+                          </e-tabitem>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="d-flex align-items-center">
+                                <i class="icon-link me-2"></i>
+                                <codx-label
+                                  default="Liên kết"
+                                  fiedName="lblLink"
+                                  class="fw-bold"
+                                ></codx-label>
+                              </div>
+                            </ng-template>
+                            <ng-template #content> 
+                              Liên kết
+                            </ng-template>
+                          </e-tabitem>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="d-flex align-items-center">
+                                <i class="icon-format_list_numbered me-2"></i>
+                                <codx-label
+                                  default="Công việc"
+                                  fiedName="lblwork"
+                                  class="fw-bold"
+                                ></codx-label>
+                              </div>
+                            </ng-template>
+                            <ng-template #content> 
+                              Công việc
+                            </ng-template>
+                          </e-tabitem>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="d-flex align-items-center">
+                                <i class="icon-month me-2"></i>
+                                <codx-label
+                                  default="Họp định kỳ"
+                                  fiedName="lblRegularMeeting"
+                                  class="fw-bold"
+                                ></codx-label>
+                              </div>
+                            </ng-template>
+                            <ng-template #content> 
+                              Họp định kỳ
+                            </ng-template>
+                          </e-tabitem>
+                          <e-tabitem>
+                            <ng-template #headerText>
+                              <div class="d-flex align-items-center">
+                                <i class="icon-chat_bubble_outline me-2"></i>
+                                <codx-label
+                                  default="Ghi chú"
+                                  fiedName="lblNote"
+                                  class="fw-bold"
+                                ></codx-label>
+                              </div>
+                            </ng-template>
+                            <ng-template #content> 
+                              Ghi chú
+                            </ng-template>
+                          </e-tabitem>
+                        </e-tabitems>
+                      </ejs-tab>
+                    
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-template #elseOKR>
+                <span>Chưa có dữ liệu</span>
+              </ng-template>
+            </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>

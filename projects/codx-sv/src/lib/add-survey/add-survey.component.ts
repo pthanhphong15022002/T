@@ -608,10 +608,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
               option
             );
             dialog.closed.subscribe((res) => {
+              var data: any = new Array();
               if (res.event?.changeTemplate == true) {
+                // Choose other template
                 this.addQuestionOther();
               } else if (res.event?.changeTemplate == false) {
+                data = res.event?.data.filter((x) => x['check']);
+                if (data.length == 0) {
+                  var dataQuestionTemp: any = new Array();
+                  res.event?.data.forEach((y) => {
+                    y.children.forEach((z) => {
+                      if (z['check']) dataQuestionTemp.push(z);
+                    });
+                  });
+                  data = dataQuestionTemp;
+                } else {
+                  res.event?.data.forEach(x => {
+                  });
+                }
               }
+              debugger;
+              this.addTemplateCard(this.itemActive, this.indexSessionA, data);
             });
           }
         }, 200);
@@ -686,6 +703,16 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       else this.addNoSession(itemActive, seqNoSession, category);
       console.log('check addCard', this.questions);
     }
+  }
+
+  addTemplateCard(itemActive, seqNoSession, data) {
+    this.questions[seqNoSession].children =
+      this.questions[seqNoSession].children.concat(data);
+    this.questions[seqNoSession].children.forEach(
+      (x, index) => (x.seqNo = index)
+    );
+    console.log('check addTemplateCard', this.questions);
+    this.change.detectChanges();
   }
 
   addSession(itemActive, seqNoSession) {

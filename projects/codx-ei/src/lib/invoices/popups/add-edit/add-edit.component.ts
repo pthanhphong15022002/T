@@ -17,7 +17,6 @@ export class AddEditComponent implements OnInit {
   invoices: any;
   action: string;
   constructor(
-    private api: ApiHttpService,
     private cache: CacheService,
     private callfc: CallFuncService,
     @Optional() dialog?: DialogRef,

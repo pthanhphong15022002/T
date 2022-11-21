@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -12,6 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
+import { FileService } from '@shared/services/file.service';
 import {
   AuthStore,
   ButtonModel,
@@ -27,6 +27,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { BP_ProcessesPageSize } from '../models/BP_Processes.modelPageSize';
@@ -45,8 +46,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -81,8 +81,8 @@ export class ProcessesComponent
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   user: any;
-  funcID= "BPT1";
-  method='GetListProcessesAsync';
+  funcID = 'BPT1';
+  method = 'GetListProcessesAsync';
   itemSelected: any;
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
@@ -110,14 +110,18 @@ export class ProcessesComponent
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private fileService :FileService
   ) {
     super(inject);
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if(this.funcID == "BPT3"){
+    if (this.funcID == 'BPT3') {
       this.method = 'GetListShareByProcessAsync';
+    }
+    if (this.funcID == 'BPT2') {
+      this.method = 'GetListMyProcessesAsync';
     }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
@@ -311,10 +315,7 @@ export class ProcessesComponent
         this.dialog.closed.subscribe((e) => {
           console.log(e);
           if (e && e.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-
+            this.view.dataService.update(e).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -362,6 +363,135 @@ export class ProcessesComponent
 
     opt.data = itemSelected.recID;
     return true;
+  }
+
+  properties(data?: any) {
+    let option = new SidebarModel();
+    option.DataService = this.view?.dataService;
+    option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    // let data = {} as any;
+    // data.title = this.titleUpdateFolder;
+    // data.id = data.recID;
+    this.dialog = this.callfc.openSide(PropertiesComponent, data, option);
+    this.dialog.closed.subscribe((e) => {
+      if (!e.event) this.view.dataService.clear();
+    });
+  }
+
+  reName(data) {
+    this.dataSelected = data;
+    this.newName = data.processName;
+    this.crrRecID = data.recID;
+    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+  }
+
+  Updaterevisions(data) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '550px';
+        this.dialog = this.callfc.openSide(
+          PopupUpdateRevisionsComponent,
+          [this.titleAction],
+          option
+        );
+        this.dialog.closed.subscribe(
+          //(e) => {
+          // if (e?.event && e?.event != null) {
+          //   this.view.dataService.clear();
+          //   this.view.dataService.update(e?.event).subscribe();
+          //   this.detectorRef.detectChanges();
+          // }
+          //}
+        );
+      });
+  }
+  revisions(more, data) {
+    var obj = {
+      more: more,
+      data: data,
+    };
+    this.dialog = this.callfc.openForm(
+      RevisionsComponent,
+      '',
+      500,
+      50,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
+        this.view.dataService.update(e?.event).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  permission(data) {
+    if (this.moreFunc == 'BPT104') {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, false],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    } else if (this.moreFunc == 'BPT105') {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, true],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
+  }
+
+  roles(e: any) {
+    console.log(e);
+    this.callfc
+      .openForm(
+        PopupRolesComponent,
+        '',
+        950,
+        650,
+        '',
+        [this.titleAction, e],
+        ''
+      )
+      .closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
   //#endregion
 
@@ -418,132 +548,10 @@ export class ProcessesComponent
       case 'BPT108':
         this.roles(data);
         break;
+      case 'BPT107': // gán tạm cập nhật phiên bản
+        this.revisions(e.data, data);
+        break;
     }
-  }
-
-  properties(data?: any) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    // let data = {} as any;
-    // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(PropertiesComponent, data, option);
-  }
-
-  reName(data) {
-    this.dataSelected = data;
-    this.newName = data.processName;
-    this.crrRecID = data.recID;
-    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
-  }
-
-  Updaterevisions(data) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupUpdateRevisionsComponent,
-          [this.titleAction],
-          option
-        );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event && e?.event != null) {
-            this.view.dataService.clear();
-            this.view.dataService.update(e?.event).subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
-      });
-  }
-  revisions(more, data) {
-    var obj = {
-      more: more,
-      data: data,
-    };
-    this.dialog = this.callfc.openForm(
-      RevisionsComponent,
-      '',
-      500,
-      350,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.view.dataService.update(e?.event).subscribe();
-        this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  permission(data) {
-    if(this.moreFunc == 'BPT104'){
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        PopupAddPermissionComponent,
-        [this.titleAction, data, false],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.clear();
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
-    }else if(this.moreFunc == 'BPT105'){
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '550px';
-      this.dialog = this.callfc.openSide(
-        PopupAddPermissionComponent,
-        [this.titleAction, data, true],
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.clear();
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
-    }
-
-  }
-
-
-  roles(e: any) {
-    console.log(e);
-    this.callfc
-      .openForm(
-        PopupRolesComponent,
-        '',
-        950,
-        650,
-        '',
-        [this.titleAction, e],
-        ''
-      )
-      .closed.subscribe((e) => {
-        if (e?.event && e?.event != null) {
-          this.view.dataService.update(e?.event).subscribe();
-          this.detectorRef.detectChanges();
-        }
-      });
   }
 
   valueChange(e) {
@@ -623,7 +631,17 @@ export class ProcessesComponent
     // );
   }
 
-  approval($event) {}
+  approval($event) { }
+//tesst
+  getFlowchart(data) {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe(dt=> {
+      if (dt) {
+         let link = environment.urlUpload+"/"+ dt?.pathDisk;
+         return link
+      }else  return "../assets/media/img/codx/default/card-default.svg"
+    });
+   
+  }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {

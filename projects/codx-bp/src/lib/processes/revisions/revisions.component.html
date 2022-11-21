@@ -39,11 +39,22 @@
 </ng-template> -->
 <ng-template #body>
   <div class="form-group">
-    <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã version">
-    </codx-label>
-    <codx-input field="versionNo" type="text" [placeholder]="'Mã version'" [crrValue]="version?.versionNo"
-      (valueChange)="valueChange($event)">
-    </codx-input>
+    <div class="row g-3">
+      <div class="col-8">
+        <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Tên phiên bản">
+        </codx-label>
+        <codx-input field="versionNo" type="text" [placeholder]="'Mã phiên bản'" [crrValue]="version?.versionNo"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã phiên bản">
+        </codx-label>
+        <codx-input field="versionNo" type="text"  [refValue]="'BP001'" [crrValue]="version?.versionNo" [disabled]="disableTitle"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
   </div>
   <div class="form-group">
     <codx-label fiedName="Comment" [formModel]="form.formModel" default="Mô tả">

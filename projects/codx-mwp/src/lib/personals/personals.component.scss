@@ -13,7 +13,7 @@
 }
 
 .personal-container .e-tab-header {
-  max-width: 720px;
+  max-width: 750px;
 }
 
 .personal-container>div.pw-lg {
@@ -21,14 +21,14 @@
 }
 
 .personal-container>div.pw-md {
-  max-width: 720px;
+  max-width: 760px;
   margin-left: auto;
   margin-right: auto;
   padding: 0;
 }
 
 .pw-feed {
-  width: 720px;
+  width: 760px;
   margin-left: auto;
   margin-right: auto;
   padding: 0;
@@ -55,6 +55,22 @@
   position: relative;
   z-index: 99;
   justify-content: space-around;
+  padding-left: 10px;
+}
+
+
+.pw-menu .e-tab-header .e-toolbar-items {
+  height: 48px;
+  min-height: 48px;
+}
+
+.pw-menu .e-tab .e-tab-header .e-toolbar-item.e-active {
+  border: 0 !important;
+  border-bottom-color: transparent !important
+}
+
+.pw-menu .e-tab .e-tab-header::before {
+  border-color: transparent;
 }
 
 .e-tab-header .pw-menu a {
@@ -62,9 +78,11 @@
 }
 
 app-personals .pw-content {
-  margin-top: 16px;
-  padding: 15px 20px;
-  min-width: 720px;
+  margin-top: 15px;
+  padding: 15px 15px 0;
+  min-width: 760px;
+  height: calc(100vh - 250px) !important;
+  overflow: auto;
   background-color: white;
   box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }
@@ -177,7 +195,6 @@ codx-card-img .card-icon-nowrap {
 
 .pw-storgae .container-fluid {
   padding: 0 !important;
-  margin-top: 10px;
 }
 
 .e-listview .e-content {
@@ -196,4 +213,9 @@ codx-card-img .card-icon-nowrap {
   align-self: center;
   align-items: stretch;
   height: 100%;
+}
+
+.w-25px.h-25px {
+  width: 24px !important;
+  height: 24px !important;
 }

@@ -1128,10 +1128,15 @@ codx-tag .codx-tag:hover {
   float: left;
 }
 
+button[type="button"],
+button[type="button"]:hover,
+button[type="button"]:focus {
+  box-shadow: none !important;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
-
 
 /******* tam ***/
 .codx-form .card-footer,

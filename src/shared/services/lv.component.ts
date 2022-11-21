@@ -189,7 +189,7 @@ var lvFileClientAPI = {
             return ret;
         }
         catch (e) {
-
+            return null;
             throw (e);
         }
     },

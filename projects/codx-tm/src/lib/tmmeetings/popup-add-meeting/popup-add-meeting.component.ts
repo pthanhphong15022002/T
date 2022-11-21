@@ -133,12 +133,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         console.log(res);
         this.isRoom = res.msgBodyData[0];
-
       });
 
     if (this.action == 'add') {
       this.meeting.startDate = new Date();
-
     }
     this.selectedDate = moment(new Date(this.meeting.startDate))
       .set({ hour: 0, minute: 0, second: 0 })
@@ -233,7 +231,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               re['resourceID'] = element.resourceID;
               re['location'] = element.resourceName;
               this.listRoom.push(re);
-
             }
           });
           console.log(this.listRoom);
@@ -330,7 +327,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         this.dialog.close();
-
       });
   }
   ///cần 1 đống mess Code
@@ -374,8 +370,10 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
     var re = Number(this.meeting.reminder);
 
-    if(re <= 0 && re >= 60){
-      this.notiService.notify('Vui lòng chỉ được nhập trong khoảng từ 0 đến 60');
+    if (re <= 0 && re >= 60) {
+      this.notiService.notify(
+        'Vui lòng chỉ được nhập trong khoảng từ 0 đến 60'
+      );
       return;
     }
 
@@ -859,15 +857,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     var listUserIDByOrg = '';
     var type = 'U';
     e?.data?.forEach((obj) => {
-      type = obj.objectType;
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+      if (obj.objectType && obj.id) {
+        type = obj.objectType;
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
       }
     });
     if (listUserID != '') {
@@ -995,7 +995,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    if (
+      this.action != 'edit' ||
+      (this.action == 'edit' && !this.showLabelAttachment)
+    )
+      this.showLabelAttachment = this.isHaveFile;
   }
   //region time work
   getTimeParameter() {
@@ -1010,7 +1014,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res) {
           var param = JSON.parse(res.dataValue);
-          if(this.action === 'add'){
+          if (this.action === 'add') {
             this.reminder = param.Reminder;
             this.meeting.reminder = this.reminder;
           }
@@ -1084,7 +1088,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
     booking.reasonID = null;
-    booking.refID = data.recID;//mã lí do cuộc họp
+    booking.refID = data.recID; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {

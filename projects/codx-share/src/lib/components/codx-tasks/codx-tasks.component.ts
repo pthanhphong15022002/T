@@ -1416,6 +1416,9 @@ export class CodxTasksComponent
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
+        if ((x.functionID == 'TMT02015'|| x.functionID == 'TMT02025')&& data.status=='90') {
+          x.disabled = true;
+        }
         //an cap nhat tien do khi hoan tat 
         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
           x.disabled = true;
