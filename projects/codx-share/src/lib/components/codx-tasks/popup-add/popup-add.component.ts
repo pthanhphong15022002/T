@@ -637,7 +637,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      if (obj.objectType && obj.id) {
+      // if (obj.objectType && obj.id) {
         switch (obj.objectType && obj.id) {
           case 'U':
             listUserID += obj.id + ';';
@@ -647,7 +647,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             listDepartmentID += obj.id + ';';
             break;
         }
-      }
+      // }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
