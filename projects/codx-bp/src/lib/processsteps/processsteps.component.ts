@@ -3,7 +3,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { I, V } from '@angular/cdk/keycodes';
+import { D, I, V } from '@angular/cdk/keycodes';
 import {
   Component,
   Input,
@@ -101,6 +101,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   crrParentID = '';
   kanban: any;
   checkList = [];
+  isKanban = true;
 
   constructor(
     inject: Injector,
@@ -441,6 +442,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           var dataParentsOld = obj.items[indexParentOld];
           var dataParentsNew = obj.items[indexParentNew];
           dataParentsOld.splice(data.stepNo - 1, 1); ///xu ly xoa nhuw the nao
+          dataParentsOld.forEach((dt) => {
+            if (dt.stepNo > data.stepNo) dt.stepNo--;
+          });
           dataParentsNew.push(processStep);
           if (processStep?.ownersOfParent)
             dataParentsNew.owners = processStep?.ownersOfParent;
@@ -562,8 +566,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             default:
               this.view.dataService.data.forEach((obj) => {
                 var indexParent = -1;
-                if (obj.items.length > 0){
-                  obj.items.forEach((child,crrIndex) => {
+                if (obj.items.length > 0) {
+                  obj.items.forEach((child, crrIndex) => {
                     var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
@@ -574,12 +578,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
-                      indexParent=crrIndex
-                    }  
+                      indexParent = crrIndex;
+                    }
                   });
                 }
-                if(indexParent!=-1) if (this.kanban) this.kanban.updateCard(obj.items[indexParent]);
-                 
+                if (indexParent != -1)
+                  if (this.kanban)
+                    this.kanban.updateCard(obj.items[indexParent]);
               });
               break;
           }
@@ -712,6 +717,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   viewChanged(e) {
     // test
     if (e?.view.type == 16) {
+      this.isKanban = false;
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
       this.dataTreeProcessStep.forEach((obj) => {
@@ -720,6 +726,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
     if (e?.view.type == 6) {
+      this.isKanban = true;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
