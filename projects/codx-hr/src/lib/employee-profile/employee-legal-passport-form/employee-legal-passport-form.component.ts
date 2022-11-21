@@ -16,7 +16,6 @@ import {
   NotificationsService,
   UIComponent,
  } from 'codx-core';
-import { L } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-employee-legal-passport-form',
@@ -36,8 +35,6 @@ export class EmployeeLegalPassportFormComponent extends UIComponent implements O
   @ViewChild('form') form: CodxFormComponent;
   onInit(): void {
     this.initForm();
-    
-
   }
 
   constructor(
@@ -68,13 +65,27 @@ export class EmployeeLegalPassportFormComponent extends UIComponent implements O
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
+        // this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
+        //   this.cache.setGridView(this.formModel.gridViewName, gridView);
+        //   this.cache
+        //     .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        //     .subscribe((gridViewSetup) => {
+        //       this.cache.setGridViewSetup(
+        //         this.formModel.formName,
+        //         this.formModel.gridViewName,
+        //         gridViewSetup
+        //       );
+        //     });
+        // });
         this.formGroup = item;  
         console.log('formgr test:', this.formGroup)  
         this.hrService.getEmployeePassportInfo(this.employId).subscribe(p => {
           console.log('thong tin ho chieu', p);
           this.data = p;
           this.formModel.currentData = this.data
+          // this.dialog.dataService.dataSelected = this.data
           console.log('du lieu formmodel',this.formModel.currentData);
+          this.formGroup.patchValue(this.data)
           
           this.isAfterRender = true
         })    
@@ -84,7 +95,7 @@ export class EmployeeLegalPassportFormComponent extends UIComponent implements O
     onSaveForm(){
       console.log('du lieu form', this.formGroup.value);
       
-      this.hrService.saveEmployeePassportInfo(this.data).subscribe(p => {
+      this.hrService.updateEmployeePassportInfo(this.data).subscribe(p => {
         if(p === "True"){
           this.notify.notifyCode('SYS007')
           this.dialog.close()

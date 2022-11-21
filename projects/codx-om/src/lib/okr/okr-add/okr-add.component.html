@@ -13,7 +13,7 @@
                 <div #subtitle>
                 </div>
             </div>
-            <codx-dropdown-calendar cssPopup="h-500px w-800px " cssClass="w-100 om-calendar fs-6 fw-bold" class="me-20">
+            <codx-dropdown-calendar cssPopup="h-500px w-800px " cssClass="w-100 om-calendar fs-6 fw-bold" class="me-20" (change)="changeCalendar($event)">
             </codx-dropdown-calendar >
         </div>
         <div #body class="om-h-body">
@@ -41,16 +41,19 @@
                                     </select> -->
                                 </div>
                             </div>
-                            <div [formArrayName]="'targets'">
+                            <div [formArrayName]="'child'">
                                 <div *ngFor="let kr of getTargets(g); let x=index " class="py-3">
                                     <div class="d-flex align-items-center ps-10" [formGroupName]="x">
                                         <div class="d-flex align-items-center w-70">
                                             <i class="icon-drag_indicator me-3 fs-3" ></i>
                                             <span class="fw-bold me-1">KR{{(x+1)}}:</span>
-                                            <input #commentInput type="text" class="om-input w-100" formControlName ='comment' [placeholder]="'Kết quả chính ' +(x+1)"/>
+                                            <input #commentInput type="text" class="om-input w-100" formControlName ='okrName' [placeholder]="'Kết quả chính ' +(x+1)"/>
                                         </div>
                                         <div class="w-30">
-                                            <input #commentInput type="number" class="om-input w-10 ms-5" formControlName ='target' [placeholder]="'Chỉ tiêu ' +(x+1)"/>
+                                            <input #commentInput type="number" class="om-input w-10 ms-5" [min]="0" formControlName ='target' [placeholder]="'Chỉ tiêu ' +(x+1)"/>
+                                        </div>
+                                        <div class="w-30">
+                                            <span>Thiếu combobox </span>
                                         </div>
                                     </div>
                                 </div>
