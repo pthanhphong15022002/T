@@ -546,7 +546,7 @@ export class ProcessesComponent
       case 'BPT108':
         this.roles(data);
         break;
-        case 'BPT107': // gán tạm cập nhật phiên bản
+      case 'BPT107': // gán tạm cập nhật phiên bản
         this.revisions(e.data, data);
         break;
     }
