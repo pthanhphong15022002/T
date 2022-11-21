@@ -288,51 +288,57 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.optionalData == null
         
       ) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        if(this.data?.equipments)
+        {
+          this.data?.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceRoom.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
         this.data.resourceID=this.data.resourceID;
       }
       if(this.isCopy){
-        this.data.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        if(this.data?.equipments){
+          this.data?.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceRoom.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
       }
       this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {        
-        let equips = [];
         this.data.resourceID = this.optionalData.resourceId;
-        equips = this.optionalData.resource.equipments;
-        equips.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = false;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        let equips = this.optionalData.resource.equipments;
+        if(equips){
+          equips.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = false;
+            this.lstDeviceRoom.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
         this.data.bookingOn = this.optionalData.startDate;
         let tmpStartTime = this.optionalData.startDate;
         let tmpEndTime = this.optionalData.endDate;
