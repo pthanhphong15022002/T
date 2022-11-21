@@ -198,7 +198,6 @@ export class CodxAdService {
         'DeleteByObjectIDAsync',
         [objectID, objectType, delForever]
       )
-      .subscribe();
   }
 
   stopUser(data) {
