@@ -97,12 +97,12 @@ export class CodxBpService {
     );
   }
 
-  setViewRattings(recID: string, ratting: string, comment: string){
+  setViewRattings(recID: string, ratting: string, comment: string, funcID: string, entityName: string){
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'SetViewRattingAsync',
-      [recID, ratting, comment]
+      [recID, ratting, comment, funcID, entityName]
     );
   }
 
@@ -128,6 +128,10 @@ export class CodxBpService {
       'GetProcessesByKeyAsync',
       [gridModel,searchKey]
     );
-    //.subscribe((res)=>{ console.log(res)});
+  }
+
+  updateRevision(funcID,recID,verNo, verName,comment ): Observable<any> {
+    return this.api
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,]);
   }
 }

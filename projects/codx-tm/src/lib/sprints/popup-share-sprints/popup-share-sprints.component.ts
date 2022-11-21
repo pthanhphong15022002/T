@@ -1,4 +1,10 @@
-import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+} from '@angular/core';
 
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import {
@@ -17,7 +23,7 @@ import { CodxTMService } from '../../codx-tm.service';
   styleUrls: ['./popup-share-sprints.component.scss'],
 })
 export class PopupShareSprintsComponent implements OnInit {
-  title = "Chia sẻ view board"
+  title = 'Chia sẻ view board';
   data: any;
   dialog: any;
   searchField = '';
@@ -48,7 +54,7 @@ export class PopupShareSprintsComponent implements OnInit {
     }
     this.listIdUserOld = this.listIdUser;
   }
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   onDeleteUser(userID) {
     var listUserDetail = [];
@@ -78,9 +84,9 @@ export class PopupShareSprintsComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          this.notiService.notifyCode('SYS015')
+          this.notiService.notifyCode('SYS015');
         } else {
-          this.notiService.notifyCode('SYS016')
+          this.notiService.notifyCode('SYS016');
         }
         this.dialog.close();
       });
@@ -93,14 +99,16 @@ export class PopupShareSprintsComponent implements OnInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
       }
     });
     if (listUserID != '')
@@ -126,7 +134,7 @@ export class PopupShareSprintsComponent implements OnInit {
       if (this.listIdUser.length > 0) {
         var arrResource = resources.split(';');
         var arrNew = [];
-        var oldListUser = this.listIdUser.join(";");
+        var oldListUser = this.listIdUser.join(';');
         arrResource.forEach((e) => {
           if (!oldListUser.includes(e)) {
             arrNew.push(e);
@@ -147,15 +155,15 @@ export class PopupShareSprintsComponent implements OnInit {
     while (listUser.includes(' ')) {
       listUser = listUser.replace(' ', '');
     }
-    this.listIdUser = this.listIdUser.concat(listUser.split(";"));
+    this.listIdUser = this.listIdUser.concat(listUser.split(';'));
     this.api
-    .execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EmployeesBusiness',
-      'GetListEmployeesByUserIDAsync',
-      JSON.stringify(listUser.split(';'))
-    )
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(listUser.split(';'))
+      )
       .subscribe((res) => {
         this.listUserDetail = this.listUserDetail.concat(res);
       });

@@ -78,9 +78,11 @@
 }
 
 app-personals .pw-content {
-  margin-top: 16px;
-  padding: 15px 20px;
+  margin-top: 15px;
+  padding: 15px 15px 0;
   min-width: 760px;
+  height: calc(100vh - 250px) !important;
+  overflow: auto;
   background-color: white;
   box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }
@@ -193,7 +195,6 @@ codx-card-img .card-icon-nowrap {
 
 .pw-storgae .container-fluid {
   padding: 0 !important;
-  margin-top: 10px;
 }
 
 .e-listview .e-content {

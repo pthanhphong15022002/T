@@ -65,6 +65,7 @@ export class PopupAddProcessStepsComponent
   popover: any;
   formModelMenu: FormModel;
   crrIndex = 0;
+  gridViewSetup: any;
 
   constructor(
     private inject: Injector,
@@ -72,6 +73,7 @@ export class PopupAddProcessStepsComponent
     // private api: ApiHttpService,
     private authStore: AuthStore,
     // private cache: CacheService,
+    private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
@@ -87,7 +89,7 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-
+    
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
@@ -111,6 +113,16 @@ export class PopupAddProcessStepsComponent
         this.recIdEmail = this.processSteps.reference;
       }
     }
+    this.cache
+    .gridViewSetup(
+      this.dialog.formModel.formName,
+      this.dialog.formModel.gridViewName
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
   onInit(): void {
@@ -165,6 +177,11 @@ export class PopupAddProcessStepsComponent
   }
 
   async saveData() {
+    this.gridViewSetup
+    if(this.stepType != "P" && (this.processSteps.parentID == '' || this.processSteps.parentID == null)){
+      let headerText = this.gridViewSetup['ParentID']?.headerText ?? 'IterationName';
+      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+    }
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)

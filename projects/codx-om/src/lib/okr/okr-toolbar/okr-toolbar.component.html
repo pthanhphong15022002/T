@@ -4,31 +4,31 @@
             Phòng tôi
         </div>
         <div class="w-100px text-center bgC5C7D0 py-2 om-rounded-pill-right">
-            Share Cho tôi
+            Share cho tôi
         </div>
     </div>
     <div class="d-flex align-items-center">
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
             <span class="symbol-label bg-om-gray">
-                <i class="icon-create"></i>
+                <i class="icon-create text-dark"></i>
             </span>
         </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
             <span class="symbol-label bg-om-gray">
-                <i class="fas fa-balance-scale"></i>
+                <i class="fas fa-balance-scale text-dark"></i>
             </span>
         </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
             <span class="symbol-label bg-om-gray">
-                <i class="icon-bar_chart"></i>
+                <i class="icon-bar_chart text-dark"></i>
             </span>
         </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
             <span class="symbol-label bg-om-gray">
-                <i class="icon-vertical_align_center"></i>
+                <i class="icon-vertical_align_center text-dark"></i>
             </span>
         </div>
-        <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4"
+        <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event)"
         ></codx-dropdown-calendar >
         <div class="me-4">
             <codx-toolbar-button [button]="button" (buttonClick)="buttonClick('add')">
@@ -36,7 +36,7 @@
         </div> 
         <div class="symbol symbol-30px symbol-circle cursor-pointer">
             <span class="symbol-label bg-om-gray">
-                <i class="fas fa-ellipsis-h "></i>
+                <i class="fas fa-ellipsis-h text-dark"></i>
             </span>
         </div>
     </div>
