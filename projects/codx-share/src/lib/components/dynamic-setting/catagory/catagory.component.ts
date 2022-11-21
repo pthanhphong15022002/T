@@ -373,6 +373,7 @@ export class CatagoryComponent implements OnInit {
           if (data.displayMode !== '4' && data.displayMode !== '5') {
             this.dataValue[field] = value;
           } else {
+            this.dataValue[field] = value;
             let fID = '',
               id = '',
               fName = '',

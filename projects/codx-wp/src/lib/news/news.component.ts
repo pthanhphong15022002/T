@@ -61,6 +61,7 @@ export class NewsComponent extends UIComponent {
     super(injector)
   }
   onInit(): void {
+    // this.clearData();
     this.router.params.subscribe((param) => {
       if (param) {
         this.funcID = param["funcID"];
@@ -210,7 +211,9 @@ export class NewsComponent extends UIComponent {
     } 
   }
 
-
+  clearData(){
+    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","DeleteAllDataAsync",[]).subscribe()
+  }
 
 
 }

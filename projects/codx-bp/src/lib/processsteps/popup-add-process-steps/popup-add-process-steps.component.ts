@@ -294,7 +294,7 @@ export class PopupAddProcessStepsComponent
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    if (this.action != 'edit' || (this.action == 'edit' &&  !this.showLabelAttachment)) this.showLabelAttachment = this.isHaveFile;
   }
   valueChangeAlert(e) {
     this.processSteps[e?.field] = e.data;

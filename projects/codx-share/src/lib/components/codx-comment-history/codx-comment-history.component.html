@@ -367,7 +367,7 @@
                 <table class="table w-100">
                     <thead class="border-bottom bg-light">
                         <th scope="col-4">
-                            <codx-label formName="System" name="lblFieldName" [default]="'Trường thông tin'">
+                            <codx-label formName="System" name="lblFieldName" [default]="'Thông tin'">
                             </codx-label>
                         </th>
                         <th scope="col-4">
@@ -383,8 +383,7 @@
                         <ng-container *ngIf="data.datas">
                             <tr class="my-2" *ngFor="let item of data.datas">
                                 <td scope="col-4">
-                                    <codx-label [formModel]="formModel" [fiedName]="item.fieldName" name="lblFieldName"
-                                        [default]="item.fieldName"></codx-label>
+                                    <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
                                 </td>
                                 <td scope="col-4">
                                     {{item.oldValue}}

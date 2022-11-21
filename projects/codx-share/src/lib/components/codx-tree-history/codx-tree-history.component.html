@@ -5,6 +5,7 @@
                 [type]="'create'" 
                 [dVll]="dVll" [vllIcon]="vllIcon" 
                 [funcID]="funcID" 
+                [formModel]="formModel"
                 [actionType]="actionType" 
                 [objectID]="objectID"
                 [objectType]="objectType" 
@@ -27,6 +28,7 @@
             [vllIcon]="vllIcon"  
             [actionType]="item.actionType" 
             [type]="'view'"
+            [formModel]="formModel"
             (evtDelete)="deleteComment($event)" 
             (evtReply)="replyTo($event)" 
             [viewIcon]="viewIcon"
@@ -40,7 +42,10 @@
             </ng-container>
         </ng-container>
         <ng-container *ngIf="item.showReply">
-            <codx-comment-history [type]="'create'" [funcID]="funcID" [actionType]="actionType"
+            <codx-comment-history 
+                [type]="'create'" 
+                [funcID]="funcID" [actionType]="actionType"
+                [formModel]="formModel"
                 [objectID]="item.objectID" [objectType]="item.objectType" [reference]="item.recID"
                 (evtSend)="sendComment($event,item)">
             </codx-comment-history>

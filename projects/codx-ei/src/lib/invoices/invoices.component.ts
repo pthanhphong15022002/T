@@ -3,17 +3,11 @@ import {
   UIComponent,
   ViewType,
   ButtonModel,
-  SidebarModel,
+  DialogModel,
 } from 'codx-core';
-import {
-  Component,
-  OnInit,
-  Injector,
-  ViewChild,
-  ElementRef,
-  TemplateRef,
-} from '@angular/core';
+import { Component, Injector, ViewChild, TemplateRef } from '@angular/core';
 import { AddEditComponent } from './popups/add-edit/add-edit.component';
+import { futimesSync } from 'fs';
 
 @Component({
   selector: 'lib-invoices',
@@ -24,6 +18,8 @@ export class InvoicesComponent extends UIComponent {
   //#region Constructor
   views: Array<ViewModel> = [];
   buttons: ButtonModel = { id: 'btnAdd' };
+  funcName = '';
+  moreFuncName = '';
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
 
   constructor(private injector: Injector) {
@@ -32,7 +28,19 @@ export class InvoicesComponent extends UIComponent {
   //#endregion
 
   //#region Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+        console.log(this.moreFuncName);
+      }
+    });
+
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) this.funcName = res.defaultName;
+    });
+  }
 
   ngAfterViewInit() {
     this.views = [
@@ -70,15 +78,16 @@ export class InvoicesComponent extends UIComponent {
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       if (res) {
-        let op = new SidebarModel();
+        let op = new DialogModel();
         op.FormModel = this.view.formModel;
         op.DataService = this.view.dataService;
-        op.Width = '800px';
-        let p = this.callfc.openSide(
+        let p = this.callfc.openForm(
           AddEditComponent,
-          'add',
-          op,
-          this.view.funcID
+          this.funcName + ' ' + this.moreFuncName,
+          null,
+          null,
+          this.view.funcID,
+          'add'
         );
       }
     });
