@@ -23,10 +23,11 @@
   <codx-card-img
     cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
     [imageObjType]="'BP_Processes'"
-    imageSrc="../assets/media/img/codx/default/card-default.svg"
     imgCss="w-100 h-140px p-1"
     [imageObjName]="data?.processName"
     [imageId]="data?.recID"
+    [imageReferType]="'Flowchart'"
+    [imgOn]="data?.modifiedOn"
     [rootData]="data"
     [dataItem]="data"
     [formModel]="view.formModel"
