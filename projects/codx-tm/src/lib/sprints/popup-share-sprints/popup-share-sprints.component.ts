@@ -99,7 +99,7 @@ export class PopupShareSprintsComponent implements OnInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      // if (obj.objectType && obj.id) {
+      if (obj.objectType && obj.id) {
         switch (obj.objectType) {
           case 'U':
             listUserID += obj.id + ';';
@@ -109,7 +109,7 @@ export class PopupShareSprintsComponent implements OnInit {
             listDepartmentID += obj.id + ';';
             break;
         }
-      // }
+      }
     });
     if (listUserID != '')
       listUserID = listUserID.substring(0, listUserID.length - 1);

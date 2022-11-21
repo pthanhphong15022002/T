@@ -857,7 +857,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     var listUserIDByOrg = '';
     var type = 'U';
     e?.data?.forEach((obj) => {
-      // if (obj.objectType && obj.id) {
+      if (obj.objectType && obj.id) {
         type = obj.objectType;
         switch (obj.objectType) {
           case 'U':
@@ -868,7 +868,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
             listDepartmentID += obj.id + ';';
             break;
         }
-      // }
+      }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
