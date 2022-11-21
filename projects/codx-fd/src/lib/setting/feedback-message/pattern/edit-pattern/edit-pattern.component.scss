@@ -2,11 +2,6 @@
 //     content: "\ec36" !important;
 // }
 
-.img-pat-edit {
-  object-fit: cover;
-  width: 100% !important;
-  height: 100% !important;
-}
 
 .color-check::after {
   position: fixed;
@@ -47,11 +42,29 @@
   min-width: 166px;
   height: 258px;
   max-height: 258px;
+  position: relative;
+  border-radius: 0.475rem;
+}
+
+
+.img-pat-edit {
+  width: 100% !important;
+  height: 100% !important;
+  // border-radius: 0.475rem;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .pic-edit img {
   width: 166px;
   height: 258px;
+  //border-radius: 0.475rem;
+}
+
+.pic-edit .symbol,
+.pic-edit .symbol img {
+  border-radius: 0 !important;
 }
 
 .pic-color {
@@ -59,7 +72,7 @@
   height: 14px;
   border-radius: 3px;
   display: inline-block;
-  border: 1px solid #c5cacb;
+  //border: 1px solid #c5cacb;
 }
 
 .pattern-teams {

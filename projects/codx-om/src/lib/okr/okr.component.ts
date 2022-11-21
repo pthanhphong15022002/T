@@ -74,6 +74,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.dataOKR.forEach(elm=>elm.child=[]);
       }
     });
+    this.view.formModel
   }
 
   //Hàm click
@@ -90,7 +91,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   add() {
     var dialogModel = new DialogModel();
     dialogModel.IsFull = true;
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       OkrAddComponent,
       '',
       null,
@@ -100,6 +101,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       '',
       dialogModel
     );
+    dialog.closed.subscribe(item=>{
+      if(item.event) this.dataOKR = this.dataOKR.concat(item.event);
+    })
   }
 
   //Lấy data danh sách mục tiêu
