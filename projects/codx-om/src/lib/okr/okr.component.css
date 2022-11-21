@@ -1,6 +1,16 @@
+#om-tab
+{
+    height: 100% !important;
+    max-width: 79rem;
+}
 #om-tab .e-tab-header
 {
     text-align: center;
+}
+#om-tab > .e-content
+{
+    height: calc(100% - 35px) !important;
+    overflow: auto;
 }
 #om-tab-child .e-tab-header
 {
@@ -13,6 +23,10 @@
 #om-tab-child .e-tab-header
 {
     border-bottom: solid 1px #C5C7D0;
+}
+#om-tab-child .e-content
+{
+    padding-bottom: 7px;
 }
 #om-tab .e-tab-text
 {
@@ -32,7 +46,7 @@
 }
 .p-om-okr
 {
-    padding: 0 70px;
+    height: calc(100% - 94px);
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -99,4 +113,24 @@
 {
     width: 26px;
     height: 26px;
+}
+.om-pt-1
+{
+    padding-top: 2px;
+}
+.ps-5rem
+{
+    padding-left: 85px;
+}
+.w-18px
+{
+    width: 18px;
+}
+.w-22px
+{
+    width: 22px;
+}
+.h-18px
+{
+    height: 18px;
 }

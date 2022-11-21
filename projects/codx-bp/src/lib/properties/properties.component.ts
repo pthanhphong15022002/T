@@ -45,6 +45,8 @@ export class PropertiesComponent implements OnInit {
   vlL1473: any;
   requestTitle: string;
   userName = '';
+  funcID: any;
+  entityName: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -57,6 +59,9 @@ export class PropertiesComponent implements OnInit {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(data.data));
     this.process = this.data;
+    this.funcID = this.dialog.formModel.funcID;
+    this.entityName = this.dialog.formModel.entityName;
+
     if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     this.totalRating = 0;
   }
@@ -184,7 +189,7 @@ export class PropertiesComponent implements OnInit {
 
   setComment() {
     this.bpSV
-      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext)
+      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext, this.funcID, this.entityName)
       .subscribe((res) => {
         if (res.rattings.length > 0) {
           this.currentRate = 1;

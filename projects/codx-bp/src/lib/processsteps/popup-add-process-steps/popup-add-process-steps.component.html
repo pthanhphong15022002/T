@@ -35,14 +35,14 @@
         </div>
       </div>
       <div class="form-group" *ngIf="stepType != 'P'">
-        <codx-label fiedName="ParentID" [formModel]="form.formModel" default="Bước công đoạn">
+        <codx-label fiedName="ParentID" [formModel]="form.formModel" [default]="stepType == 'A' ? 'Công đoạn' : 'Bước công việc' ">
         </codx-label>
         <codx-input field="parentID" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueChangeCbx($event)">
         </codx-input>
       </div>
-      <div class="form-group" *ngIf="stepType != 'P' && stepType != 'E' && stepType != 'M'">
-        <codx-label name="StepName" [formModel]="form.formModel" default="Tên bước công đoạn"></codx-label>
+      <div class="form-group" *ngIf="stepType != 'P' && stepType != 'E' && stepType != 'M' && stepType != 'Q'">
+        <codx-label name="StepName" [formModel]="form.formModel" [default]="stepType == 'A' ?'Tên bước công việc' : 'Tên công việc'"></codx-label>
         <codx-input field="stepName" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueChange($event)">
         </codx-input>
@@ -52,20 +52,6 @@
           mục thực hiện"></codx-label>
         <codx-input type="text" [crrValue]="textChange" (valueChange)="valueChangeRefrence($event)">
         </codx-input>
-      </div>
-
-      <div class="form-group" *ngIf="stepType == 'Q'" >
-        <div class="d-flex justify-content-between align-items-center mail">
-          <codx-label name="Reference" [formModel]="form.formModel" default="Bảng khảo sát"></codx-label>
-          <a class="d-flex justify-content-end align-items-center" *ngIf="stepType === 'Q'" (click)="viewDetailSurveys($event)">
-            <span class="">Nội dung khảo sát</span>
-            <span class="icon-assignment icon-20 text-primary-600 me-2 m-2"></span>
-          </a>
-        </div>
-
-        <a href="http://localhost:4200/tester/sv/surveys/SVT01"> http://localhost:4200/tester/sv/surveys/SVT01 (Đang đợi trang khảo sát)</a>
-        <!-- <codx-input type="text" [crrValue]="textChange" (valueChange)="valueChangeRefrence($event)">
-        </codx-input> -->
       </div>
 
       <ng-container *ngIf="referenceText?.length> 0">
@@ -78,29 +64,34 @@
           </div>
         </div>
       </ng-container>
-      <div class="form-group" *ngIf="stepType != 'M' && stepType != 'C' && stepType != 'Q'">
-        <div class="d-flex justify-content-between align-items-center mail">
-          <codx-label name="Memo" [formModel]="form.formModel" default="Mô tả"></codx-label>
-          <a class="d-flex justify-content-end align-items-center" *ngIf="stepType == 'E'" (click)="handelMail()">
-            <span class="">Nội dung gởi mail</span>
-            <span class="icon-email icon-20 text-primary-600 me-2 m-2"></span>
-          </a>
-        </div>
 
-        <codx-input field="memo" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-
-      <ng-container *ngIf="stepType == 'M'">
+      <ng-container *ngIf="stepType == 'M' || stepType == 'Q'">
         <div class="form-group">
-          <codx-label fiedName="" [formModel]="form.formModel" default="Sự kiện">
+          <codx-label fiedName="" [formModel]="form.formModel" [default]="stepType == 'M' ? 'Sự kiện' : 'Tiêu đề' ">
           </codx-label>
-          <codx-input field="note" [height]="'50'" [formModel]="form.formModel" [Group]="form.formGroup"
+          <codx-input field="stepName" [height]="'50'" [formModel]="form.formModel" [Group]="form.formGroup"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </ng-container>
+
+      <div class="form-group" *ngIf="stepType != 'C' && stepType != 'Q'">
+        <codx-label name="Memo" [formModel]="form.formModel" default="Mô tả"></codx-label>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div style="width: 100%;">
+            <codx-input [field]="stepType == 'E' ? 'stepName' : 'memo'" [formModel]="form.formModel" [Group]="form.formGroup"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+          
+          </div>
+          
+          <button class="button-mail" *ngIf="stepType == 'E'" (click)="handelMail()">
+            <span class="icon-email icon-20 text-primary-600 py-2"></span>
+          </button>
+        </div>
+       
+      </div>
 
       <div class="form-group row" *ngIf="stepType != 'P'">
         <div class="col-4 form-group">
@@ -126,6 +117,14 @@
         </div>
       </div>
 
+      <div class="form-group" *ngIf="stepType != 'E' && stepType != 'P'">
+        <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
+        </codx-label>
+        <codx-input field="location" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+
       <div class="form-group row" *ngIf="stepType == 'M'">
         <div class="col-4 form-group">
           <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở">
@@ -134,13 +133,13 @@
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-        <div class="col-4 form-group row">
+        <div class="col-6 form-group row">
           <div class="d-flex align-items-center col-6 mt-5">
             <codx-input type="switch" class="test-check" [checked]="this.processSteps?.isAlert" field="isAlert"
               (valueChange)="valueChangeAlert($event)">
             </codx-input>
-            <span>
-              <codx-label name="lblAlert" [formModel]="form.formModel" default="Alert">
+            <span class="m-3">
+              <codx-label name="lblAlert" [formModel]="form.formModel" default="isAlert">
               </codx-label>
             </span>
           </div>
@@ -148,20 +147,28 @@
             <codx-input type="switch" class="test-check" [checked]="this.processSteps?.isEmail" field="isEmail"
               (valueChange)="valueChangeAlert($event)">
             </codx-input>
-            <span>
-              <codx-label name="lblEmail" [formModel]="form.formModel" default="Email">
+            <span class="m-3">
+              <codx-label name="lblEmail" [formModel]="form.formModel" default="isEmail">
               </codx-label>
             </span>
+            <span class="icon-email icon-20 text-primary-600 py-2 mb-2"></span>
           </div>
         </div>
       </div>
-      <div class="form-group" *ngIf="stepType != 'E'">
-        <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
-        </codx-label>
-        <codx-input field="location" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
-        </codx-input>
+
+      <div class="form-group" *ngIf="stepType == 'Q'" >
+        <div class="d-flex justify-content-between align-items-center mail">
+          <codx-label name="Reference" [formModel]="form.formModel" default="Bảng khảo sát"></codx-label>
+          <a class="d-flex justify-content-end align-items-center" *ngIf="stepType === 'Q'" (click)="viewDetailSurveys($event)">
+            <span class="icon-insert_link icon-20 text-primary-600 me-2 m-2"></span>
+          </a>
+        </div>
+
+        <a href="http://localhost:4200/tester/sv/surveys/SVT01"> http://localhost:4200/tester/sv/surveys/SVT01 (Đang đợi trang khảo sát)</a>
+        <!-- <codx-input type="text" [crrValue]="textChange" (valueChange)="valueChangeRefrence($event)">
+        </codx-input> -->
       </div>
+      
       <ng-container>
         <div class="d-flex align-items-center justify-content-between mt-4">
           <div class="d-flex align-items-center mb-3">
@@ -190,10 +197,8 @@
         </div>
       </ng-container>
       <ng-container *ngIf="
-        stepType == 'M' ||
         stepType == 'C' ||
-        stepType == 'E' ||
-        stepType == 'Q'
+        stepType == 'E' 
         ">
         <div class="form-group">
           <div class="note">
@@ -227,7 +232,7 @@
   </ng-template>
   <ng-template #footer>
     <!-- <div class="d-flex justify-content-between mt-4" > -->
-    <button style="float: left" *ngIf="stepType != 'P'" type="button" class="btn btn-light-primary me-3"
+    <button style="float: left" type="button" class="btn btn-light-primary me-3"
       [disabled]="readOnly" (click)="addFile($event)">
       <i class="icon-cloud_upload fs-5"></i><span>
         <codx-label name="UploadFile" formName="Tasks" default="Upload File"></codx-label>

@@ -10,7 +10,8 @@
         <div class="d-flex justify-content-between border-bottom py-1">
           <div class="d-flex align-items-center flex-grow-1">
             <div class="w-50px">
-              <codx-label name="lblFromDate" [formModel]="form.formModel"  [default]="isShare ? 'Đến' : 'Cho'" class="fw-bold">
+              <codx-label name="lblFromDate" [formModel]="form.formModel" [default]="isShare ? 'Đến' : 'Cho'"
+                class="fw-bold">
               </codx-label>:
             </div>
             <div class="send-group">
@@ -148,7 +149,7 @@
         </div>
         <div class="d-flex">
           <span class="switch switch-sm mr-2">
-            <codx-input class="form-control test-datetime" type="switch" tyle="width:100%" [crrValue]="share"
+            <codx-input class="test-datetime" type="switch" tyle="width:100%" [crrValue]="share"
               (valueChange)="txtValue($event, 'share')"></codx-input>
           </span>
         </div>
@@ -160,16 +161,16 @@
         </div>
         <div class="d-flex">
           <span class="switch switch-sm mr-2">
-            <codx-input placeholder="download..." class="form-control test-datetime" type="switch" style="width:100%"
-              format="d" [crrValue]="download" (valueChange)="txtValue($event, 'download')"></codx-input>
+            <codx-input placeholder="download..." class="test-datetime" type="switch" style="width:100%" format="d"
+              [crrValue]="download" (valueChange)="txtValue($event, 'download')"></codx-input>
           </span>
         </div>
       </div>
-      <div  class="text-primary font-weight-bold mt-4">
+      <div class="text-primary font-weight-bold mt-4">
         <codx-label name="lblDownload" [formModel]="form.formModel" default="Giới hạn thời gian chia sẻ"
           class="ms-1 fw-bold"></codx-label>
       </div>
-      <div  class="row mt-5">
+      <div class="row mt-5">
         <div class="col-xl-6 col-lg-6 col-md-6">
           <div class="form-group row">
             <div class="col-4 pt-2">
@@ -223,8 +224,8 @@
     </div>
   </ng-template>
   <ng-template #footer>
-      <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
-          <codx-label name="lblSend" [formModel]="form.formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
-      </button>
+    <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
+      <codx-label name="lblSend" [formModel]="form.formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
+    </button>
   </ng-template>
 </codx-form>

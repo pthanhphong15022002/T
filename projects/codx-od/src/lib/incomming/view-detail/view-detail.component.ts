@@ -103,6 +103,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   ms023: any;
   vllStatus = 'TM004';
   vllStatusAssign = 'TM007';
+  funcList: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -198,6 +199,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   getGridViewSetup(funcID: any) {
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
+      this.funcList = fuc;
       this.formModels = {
         entityName: fuc?.entityName,
         formName: fuc?.formName,
@@ -454,7 +456,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText: 'Chỉnh sửa công văn đến',
+              headerText: 'Chỉnh sửa '+ (this.funcList?.defaultName).toLowerCase(),
               formModel: this.formModel,
               type: 'edit',
               data: datas,
@@ -523,7 +525,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText: 'Sao chép công văn đến',
+              headerText: 'Sao chép ' + (this.funcList?.defaultName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
             },

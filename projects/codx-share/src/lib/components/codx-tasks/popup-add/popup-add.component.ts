@@ -637,8 +637,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      if (obj.objectType && obj.id) {
-        switch (obj.objectType && obj.id) {
+       if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
           case 'U':
             listUserID += obj.id + ';';
             break;
