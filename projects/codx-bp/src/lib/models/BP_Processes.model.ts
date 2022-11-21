@@ -76,6 +76,7 @@ export class BP_ProcessSteps {
 }
 export class BP_ProcessRevisions {
   recID: string;
+  versionName: string;
   versionNo: string;
   activedOn: Date;
   comment: string;
