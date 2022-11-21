@@ -637,14 +637,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType && obj.id) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
       }
     });
     if (listUserID != '') {
@@ -748,7 +750,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (data.field == 'taskGroupID') {
       this.getParam();
     }
-    
   }
 
   checkLogicTime() {

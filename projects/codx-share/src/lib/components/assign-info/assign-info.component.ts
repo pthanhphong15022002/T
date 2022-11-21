@@ -461,8 +461,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      // if (obj?.data && obj?.data != '') {
-      switch (obj.objectType) {
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
         case 'U':
           listUserID += obj.id + ';';
           break;
@@ -471,7 +471,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           listDepartmentID += obj.id + ';';
           break;
       }
-      //  }
+       }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
