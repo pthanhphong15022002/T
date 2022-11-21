@@ -2,10 +2,10 @@
   <ng-template #body>
     <div class="flex-grow-1">
       <div class="d-flex align-items-start ph-card">
-        <div class="pic-edit">
-          <div class="row mt-2 justify-content-between" *ngIf="listFile">
+        <div class="pic-edit mt-2">
+          <div class="row justify-content-between" *ngIf="listFile">
             <ng-container *ngFor="let dt of listFile">
-              <div class="col-5 my-2">
+              <div class="col-5">
                 <div class="w-150 position-relative">
                   <ng-container *ngIf="dt.referType == REFER_TYPE.IMAGE">
                     <ng-container *ngIf="dt.recID; else imageSrc">

@@ -48,7 +48,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.dialog = dialog;
     this.getProcess = this.data;
-    // this.titleAction = dt.data;
+    this.titleAction = dt.data;
     // this.action = dt.data[0];
     // this.dateLanguage=dt.data[1].more;
     this.funcID = this.dialog.formModel.funcID;
@@ -61,32 +61,35 @@ export class PopupUpdateRevisionsComponent implements OnInit {
 
   ngOnInit(): void {
     // gán tạm label
-    this.titleAction='Cập nhật phiên bản';
+   // this.titleAction='Cập nhật phiên bản';
     console.log(this.revisions);
   }
 
-  onCreate() {
-    var obj = {
-      more: 'BPT103',
-      data: this.getProcess,
-    };
-    var dialogRevisions = this.callfc.openForm(
-      RevisionsComponent,
-      '',
-      500,
-      350,
-      '',
-      obj
-      );
-      dialogRevisions.closed.subscribe((e) => {
-        if (e?.event != null && e?.event.versions.length > 0) {
-          this.getProcess.versions = e.event?.versions;
-          this.getProcess.versionNo = e.event?.versionNo;
-           this.revisions = e?.event.versions.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
-          this.dialog.close(this.getProcess);
-          this.change.detectChanges();
-        }
-      });
+  // onCreate() {
+  //   var obj = {
+  //     more: 'BPT103',
+  //     data: this.getProcess,
+  //   };
+  //   var dialogRevisions = this.callfc.openForm(
+  //     RevisionsComponent,
+  //     '',
+  //     500,
+  //     350,
+  //     '',
+  //     obj
+  //     );
+  //     dialogRevisions.closed.subscribe((e) => {
+  //       if (e?.event != null && e?.event.versions.length > 0) {
+  //         this.getProcess.versions = e.event?.versions;
+  //         this.getProcess.versionNo = e.event?.versionNo;
+  //          this.revisions = e?.event.versions.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
+  //         this.dialog.close(this.getProcess);
+  //         this.change.detectChanges();
+  //       }
+  //     });
+  // }
+  onClose() {
+    this.dialog.close();
   }
   //#endregion event
 }

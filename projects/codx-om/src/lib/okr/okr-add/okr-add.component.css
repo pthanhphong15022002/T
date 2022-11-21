@@ -45,3 +45,7 @@
     height: calc(100% - 145px);
 }
 .om-select { font-family: 'FontAwesome', Verdana }
+.w-15
+{
+    width: 15%;
+}
