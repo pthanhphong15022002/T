@@ -33,14 +33,13 @@
     [footer]="footerbg"
     [typeMF]="'hover'"
     (clickMF)="clickMF($event, data)"
-    [statusVll]="'BP003'"
     [imageWidth]="600"
   >
   </codx-card-img>
 
   <ng-template #footerbg let-data>
-    <div class="d-flex bg-footer m-n3 mt-0" [style.color]="'1'
-    | vll: 'BP003':'textColor'
+    <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
+    | vll: 'BP003':'color'
     | async
 ">
       <div class="d-flex flex-column w-100 p-3">
