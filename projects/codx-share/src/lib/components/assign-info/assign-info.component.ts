@@ -461,8 +461,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      // if (obj?.data && obj?.data != '') {
-      switch (obj.objectType) {
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
         case 'U':
           listUserID += obj.id + ';';
           break;
@@ -471,7 +471,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           listDepartmentID += obj.id + ';';
           break;
       }
-      //  }
+       }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
@@ -617,6 +617,13 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
+          if (this.taskGroup?.planControl == '1') {
+            this.task.startDate = new Date();
+          } else {
+            this.task.startDate = null;
+            this.task.endDate = null;
+            this.task.estimated = 0;
+          }
           this.convertParameterByTaskGroup(this.taskGroup);
         }
       });
@@ -635,7 +642,13 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
-          //  this.paramModule = param;
+          if (this.param?.PlanControl == '1') {
+            this.task.startDate = new Date();
+          } else {
+            this.task.startDate = null;
+            this.task.endDate = null;
+            this.task.estimated = 0;
+          }
         }
       });
   }

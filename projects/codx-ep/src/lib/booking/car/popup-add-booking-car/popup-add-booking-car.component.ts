@@ -182,37 +182,43 @@ export class PopupAddBookingCarComponent extends UIComponent {
         });
       }
       if(this.isCopy){
-        this.data.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceCar.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        if(this.data.equipments){
+          this.data.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceCar.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
       }
       this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {
         this.data.resourceID = this.optionalData.resourceId;
-        this.detectorRef.detectChanges();
-        let equips = [];
-        equips = this.optionalData.resource?.equipments;
-        equips.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = false;
-          this.lstDeviceCar.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        this.detectorRef.detectChanges();        
+        let equips = this.optionalData.resource?.equipments;
+        if(equips){
+          equips.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = false;
+            this.lstDeviceCar.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }
+        else{
+          equips=[];
+        }        
         this.data.startDate = this.optionalData.startDate;
         this.data.endDate = this.optionalData.startDate;
         this.detectorRef.detectChanges();
@@ -453,6 +459,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
     option.data = [itemData, this.isAdd, this.attendeesList, null, null];
     return true;
   }
+  validatePhoneNumber(phone) {
+    var re = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+    return re.test(phone);
+  }
 
   onSaveForm(approval: boolean = false) {
     this.data.reminder=15;
@@ -466,6 +476,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
       );
       return;
     }
+
+    if(!this.validatePhoneNumber(this.data.phone)){
+      this.notificationsService.notify('','2',0,'Số điện thoại không hợp lệ');// EP_WAIT doi messcode tu BA
+      return;
+    };
+
     if (
       this.data.startDate != null &&
       this.data.endDate != null &&
