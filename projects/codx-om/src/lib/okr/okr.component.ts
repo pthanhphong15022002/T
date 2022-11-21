@@ -112,5 +112,5 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //   });
   }
 
-  
+
 }

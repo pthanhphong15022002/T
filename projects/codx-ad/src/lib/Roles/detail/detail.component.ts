@@ -65,6 +65,7 @@ export class RoleDetailComponent
   dataAdv: any = {};
   checkAll: any = {};
   selectIndex = 0;
+  objTemplate: any = {};
 
   @ViewChild('template') template: TemplateRef<any>;
 
@@ -140,6 +141,7 @@ export class RoleDetailComponent
     this.formName = item.formName;
     this.gridViewName = item.gridViewName;
     this.functionID = item.functionID;
+
     this.parent = item;
     this.tempService.roleName.next(item.customName);
     this.api

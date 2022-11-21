@@ -39,6 +39,7 @@ export class RevisionsComponent implements OnInit {
   user: any;
   disableTitle =true;
   testHeader:any;
+  versionDefault:string;
   version = new BP_ProcessRevisions();
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -55,17 +56,23 @@ export class RevisionsComponent implements OnInit {
     this.more = this.data?.more;
     this.funcID = this.more?.functionID;
     this.process = this.data?.data;
-    this.revisions = this.process?.versions;
+    this.revisions = this.data?.versions;
     this.headerText =dt?.data.more.defaultName;
     this.user = this.authStore.get();
   }
 
   ngOnInit(): void {
+    console.log(this.data);
    this.process.versionNo='';
+   //console.log(this.revisions.length);
+   //this.versionDefault ='V'+this.revisions.length.toString()+'.0';
+  // this.cache.message('SYS001').subscribe()
+   console.log(this.versionDefault)
    this.comment=''
    this.notiService
    .alertCode('BP001')
    .subscribe((x) => {
+    console.log(x);
      if (x.event.status == 'Y') {
        this.disableTitle =false;
      } else {
@@ -88,6 +95,15 @@ export class RevisionsComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
   //#endregion
+  checkExitName(nameVersion: string){
+    for(let i=0; i<this.revisions.length; i++) {
+      if(nameVersion.trim().toLocaleLowerCase() == this.revisions.values[i].nameVersion.trim().toLocaleLowerCase()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
 
   onSave() {
 

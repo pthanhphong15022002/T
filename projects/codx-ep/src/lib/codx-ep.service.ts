@@ -197,6 +197,7 @@ export class CodxEpService {
       []
     );
   }
+
   getResourceByID(resourceID) {
     return this.api.execSv(
       'EP',
@@ -204,6 +205,16 @@ export class CodxEpService {
       'ResourcesBusiness',
       'GetResourceAsync',
       [resourceID]
+    );
+  }
+
+  getWarehousesOwner(warehouseID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'WarehousesBusiness',
+      'GetWarehousesOwnerAsync',
+      [warehouseID]
     );
   }
 

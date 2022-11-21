@@ -36,13 +36,12 @@ export class InvoicesComponent extends UIComponent {
         console.log(this.moreFuncName);
       }
     });
-
-    this.cache.functionList(this.view.funcID).subscribe((res) => {
-      if (res) this.funcName = res.defaultName;
-    });
   }
 
   ngAfterViewInit() {
+    this.cache.functionList(this.view.funcID).subscribe((res) => {
+      if (res) this.funcName = res.defaultName;
+    });
     this.views = [
       {
         type: ViewType.list,
@@ -81,16 +80,20 @@ export class InvoicesComponent extends UIComponent {
         let op = new DialogModel();
         op.FormModel = this.view.formModel;
         op.DataService = this.view.dataService;
+        op.IsFull = true;
         let p = this.callfc.openForm(
           AddEditComponent,
           this.funcName + ' ' + this.moreFuncName,
           null,
           null,
           this.view.funcID,
-          'add'
+          'add',
+          '',
+          op
         );
       }
     });
   }
+
   //#endregion
 }

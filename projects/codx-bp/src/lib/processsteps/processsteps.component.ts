@@ -102,6 +102,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   kanban: any;
   checkList = [];
   isKanban = true;
+  dataHover: any;
 
   constructor(
     inject: Injector,
@@ -1030,5 +1031,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     });
     let check = this.checkList.length > 0;
     return check;
+  }
+
+  openMoreFunction(data, p) {
+    if (!data) {
+      p.close();
+      return;
+    }
+    if (p?.isOpen) p.close();
+    p.open();
   }
 }
