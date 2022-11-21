@@ -230,12 +230,27 @@ export class CodxEmailComponent implements OnInit {
                             }
                           });
                         }
-
                         this.formModel.currentData = this.data;
                         this.isAfterRender = true;
                       }
                       this.cr.detectChanges();
                     });
+                } else {
+                  this.codxService.getDataDefault().subscribe((res) => {
+                    if (res) {
+                      this.setViewBody();
+
+                      this.data = res;
+                      this.dialogETemplate.patchValue(this.data);
+                      this.dialogETemplate.addControl(
+                        'recID',
+                        new FormControl(this.data.recID)
+                      );
+                      this.formModel.currentData = this.data;
+                      this.isAfterRender = true;
+                      this.cr.detectChanges();
+                    }
+                  });
                 }
               }
             });
