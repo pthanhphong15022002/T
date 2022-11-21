@@ -13,8 +13,8 @@
       </div>
     </div>
   </div>
-  <div class="personal-container h-100">
-    <div class="pw-menu d-flex h-100 w-100">
+  <div class="personal-container">
+    <div class="pw-menu w-100">
       <ejs-tab id="tab_default" heightAdjustMode="Auto">
         <e-tabitems>
           <e-tabitem>
@@ -32,10 +32,10 @@
               </ng-template>
             </div>
             <ng-template #content>
-              <div class="pw-feed h-100 pw-md" *ngIf="!checkRefreshAvatar">
+              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y" *ngIf="!checkRefreshAvatar">
                 <app-posts></app-posts>
               </div>
-              <div class="pw-feed h-100 pw-md" *ngIf="checkRefreshAvatar">
+              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y" *ngIf="checkRefreshAvatar">
                 <app-posts></app-posts>
               </div>
             </ng-template>
@@ -129,7 +129,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="pw-feed h-100 pw-md scroll-y">
+              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y">
                 <app-information></app-information>
               </div>
             </ng-template>

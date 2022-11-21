@@ -13,7 +13,7 @@
                 <div #subtitle>
                 </div>
             </div>
-            <codx-dropdown-calendar cssPopup="h-500px w-800px " cssClass="w-100 om-calendar fs-6 fw-bold" class="me-20" (change)="changeCalendar($event)">
+            <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar fs-6 fw-bold" class="me-20" (change)="changeCalendar($event)">
             </codx-dropdown-calendar >
         </div>
         <div #body class="om-h-body">
@@ -30,8 +30,9 @@
                                     <label class="cursor-pointer mb-0">
                                         <input type="checkbox" class="check-with-label invisible" formControlName ='testcheckbox'/>
                                         <i class="icon-language ms-3 om-fs-3 "></i>
-                                    </label>
                                     
+                                    </label>
+                                    <codx-input [formModel]="formModel" [field]="'confidence'"></codx-input>
                                     <!-- <select class="om-select" formControlName ='confidence'>
                                         <option value="">&#xf119;</option>
                                         <option>Hi, &#xf043;</option>
@@ -49,11 +50,11 @@
                                             <span class="fw-bold me-1">KR{{(x+1)}}:</span>
                                             <input #commentInput type="text" class="om-input w-100" formControlName ='okrName' [placeholder]="'Kết quả chính ' +(x+1)"/>
                                         </div>
-                                        <div class="w-30">
+                                        <div class="w-15">
                                             <input #commentInput type="number" class="om-input w-10 ms-5" [min]="0" formControlName ='target' [placeholder]="'Chỉ tiêu ' +(x+1)"/>
                                         </div>
-                                        <div class="w-30">
-                                            <span>Thiếu combobox </span>
+                                        <div class="w-15">
+                                            <span>unit</span>
                                         </div>
                                     </div>
                                 </div>
