@@ -111,7 +111,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
-      this.adUser.employeeID = '';
+      this.adUser.employeeID = null;
       this.adUser.buid = null;
       this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
@@ -123,7 +123,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       }
     } else {
       this.adUser.buid = null;
-      this.adUser.employeeID = '';
+      this.adUser.employeeID = null;
     }
     this.dialog = dialog;
     this.user = auth.get();
@@ -316,6 +316,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
           dt.userID = this.adUser.userID;
         });
       }
+      this.adUser
+      debugger
       data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
@@ -455,6 +457,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
       shareControl: '9',
       listTag: [],
       createdOn: new Date(),
+      createdBy: 'CODXADMIN',
+      createdName: 'CoDX Administrator',
     };
   }
 

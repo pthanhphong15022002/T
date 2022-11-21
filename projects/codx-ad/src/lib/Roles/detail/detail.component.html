@@ -104,134 +104,153 @@
                         </thead>
                         <tbody>
                           <tr *ngFor="let item of dataAuthorize">
-                            <td>{{ item.customName || item.defaultName }}</td>
-                            <td class="text-center">
-                              <codx-input
-                                type="checkbox"
-                                [disabled]="!active"
-                                [checked]="
-                                  dataRole[item.functionID]?.DataPer?.run ||
-                                  false
-                                "
-                                field="run"
-                                (valueChange)="
-                                  valueChange($event, item.functionID)
-                                "
-                              >
-                              </codx-input>
-                            </td>
-                            <td class="text-center">
-                              <codx-input
-                                type="checkbox"
-                                [disabled]="!active"
-                                [checked]="
-                                  dataRole[item.functionID]?.DataPer?.create ||
-                                  false
-                                "
-                                field="create"
-                                (valueChange)="
-                                  valueChange($event, item.functionID)
-                                "
-                              >
-                              </codx-input>
-                            </td>
-                            <td>
-                              <codx-input
-                                type="valuelist"
-                                name="select"
-                                class="cotrol-vll"
-                                placeholder=""
-                                ngDefaultControl
-                                refValue="SYS026"
-                                [disabled]="!active"
-                                [crrValue]="
-                                  dataRole[item.functionID]?.DataPer?.read
-                                    ? dataRole[item.functionID]?.DataPer?.read
-                                    : 0
-                                "
-                                field="read"
-                                (valueChange)="
-                                  valueChange($event, item.functionID)
-                                "
-                              >
-                              </codx-input>
-                            </td>
-                            <td>
-                              <codx-input
-                                type="valuelist"
-                                name="select"
-                                class="cotrol-vll"
-                                placeholder=""
-                                [disabled]="!active"
-                                ngDefaultControl
-                                refValue="SYS026"
-                                field="delete"
-                                [crrValue]="
-                                  dataRole[item.functionID]?.DataPer?.delete
-                                    ? dataRole[item.functionID]?.DataPer?.delete
-                                    : 0
-                                "
-                                (valueChange)="
-                                  valueChange($event, item.functionID)
-                                "
-                              >
-                              </codx-input>
-                            </td>
-                            <td>
-                              <codx-input
-                                type="valuelist"
-                                name="select"
-                                class="cotrol-vll"
-                                placeholder=""
-                                [disabled]="!active"
-                                ngDefaultControl
-                                refValue="SYS026"
-                                field="write"
-                                [crrValue]="
-                                  dataRole[item.functionID]?.DataPer?.write
-                                    ? dataRole[item.functionID]?.DataPer?.write
-                                    : 0
-                                "
-                                (valueChange)="
-                                  valueChange($event, item.functionID)
-                                "
-                              >
-                              </codx-input>
-                            </td>
-                            <td>
-                              <codx-input
-                                type="valuelist"
-                                name="select"
-                                class="cotrol-vll"
-                                placeholder=""
-                                [disabled]="!active"
-                                ngDefaultControl
-                                refValue="SYS026"
-                                field="refer"
-                                [crrValue]="
-                                  dataRole[item.functionID]?.DataPer?.refer
-                                    ? dataRole[item.functionID]?.DataPer?.refer
-                                    : 0
-                                "
-                                (valueChange)="
-                                  valueChange($event, item.functionID)
-                                "
-                              >
-                              </codx-input>
-                            </td>
-                            <td class="text-center">
-                              <codx-input
-                                type="checkbox"
-                                [disabled]="!active"
-                                [checked]="
-                                  dataRole[item.functionID]?.Export || false
-                                "
-                                [attr.data-parent]="item.functionID"
-                                [attr.data-function]="'SYS002'"
-                                field="exp"
-                              >
-                              </codx-input>
-                            </td>
+                            <ng-container>
+                              <td>{{ item.customName || item.defaultName }}</td>
+                              <td class="text-center">
+                                <codx-input
+                                  type="checkbox"
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '0'
+                                  "
+                                  [checked]="
+                                    dataRole[item.functionID]?.DataPer?.run ||
+                                    false
+                                  "
+                                  field="run"
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td class="text-center">
+                                <codx-input
+                                  type="checkbox"
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '1'
+                                  "
+                                  [checked]="
+                                    dataRole[item.functionID]?.DataPer
+                                      ?.create || false
+                                  "
+                                  field="create"
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td>
+                                <codx-input
+                                  type="valuelist"
+                                  name="select"
+                                  class="cotrol-vll"
+                                  placeholder=""
+                                  ngDefaultControl
+                                  refValue="SYS026"
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '2'
+                                  "
+                                  [crrValue]="
+                                    dataRole[item.functionID]?.DataPer?.read
+                                      ? dataRole[item.functionID]?.DataPer?.read
+                                      : 0
+                                  "
+                                  field="read"
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td>
+                                <codx-input
+                                  type="valuelist"
+                                  name="select"
+                                  class="cotrol-vll"
+                                  placeholder=""
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '3'
+                                  "
+                                  ngDefaultControl
+                                  refValue="SYS026"
+                                  field="delete"
+                                  [crrValue]="
+                                    dataRole[item.functionID]?.DataPer?.delete
+                                      ? dataRole[item.functionID]?.DataPer
+                                          ?.delete
+                                      : 0
+                                  "
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td>
+                                <codx-input
+                                  type="valuelist"
+                                  name="select"
+                                  class="cotrol-vll"
+                                  placeholder=""
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '4'
+                                  "
+                                  ngDefaultControl
+                                  refValue="SYS026"
+                                  field="write"
+                                  [crrValue]="
+                                    dataRole[item.functionID]?.DataPer?.write
+                                      ? dataRole[item.functionID]?.DataPer
+                                          ?.write
+                                      : 0
+                                  "
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td>
+                                <codx-input
+                                  type="valuelist"
+                                  name="select"
+                                  class="cotrol-vll"
+                                  placeholder=""
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '5'
+                                  "
+                                  ngDefaultControl
+                                  refValue="SYS026"
+                                  field="refer"
+                                  [crrValue]="
+                                    dataRole[item.functionID]?.DataPer?.refer
+                                      ? dataRole[item.functionID]?.DataPer
+                                          ?.refer
+                                      : 0
+                                  "
+                                  (valueChange)="
+                                    valueChange($event, item.functionID)
+                                  "
+                                >
+                                </codx-input>
+                              </td>
+                              <td class="text-center">
+                                <codx-input
+                                  type="checkbox"
+                                  [disabled]="
+                                    !active || item.listTemplate | active: '6'
+                                  "
+                                  [checked]="
+                                    dataRole[item.functionID]?.Export || false
+                                  "
+                                  [attr.data-parent]="item.functionID"
+                                  [attr.data-function]="'SYS002'"
+                                  field="exp"
+                                >
+                                </codx-input>
+                              </td>
+                            </ng-container>
                           </tr>
                         </tbody>
                       </table>

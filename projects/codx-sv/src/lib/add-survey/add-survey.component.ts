@@ -608,27 +608,42 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
               option
             );
             dialog.closed.subscribe((res) => {
-              var data: any = new Array();
               if (res.event?.changeTemplate == true) {
                 // Choose other template
                 this.addQuestionOther();
               } else if (res.event?.changeTemplate == false) {
-                data = res.event?.data.filter((x) => x['check']);
-                if (data.length == 0) {
-                  var dataQuestionTemp: any = new Array();
-                  res.event?.data.forEach((y) => {
-                    y.children.forEach((z) => {
-                      if (z['check']) dataQuestionTemp.push(z);
+                if (res.event.dataSession && res.event.dataSession.length > 0) {
+                  res.event.dataSession.forEach((x) => {
+                    delete x.id;
+                    x.recID = this.generateGUID();
+                    x.children.forEach((y) => {
+                      delete y.id;
+                      y.recID = this.generateGUID();
                     });
                   });
-                  data = dataQuestionTemp;
-                } else {
-                  res.event?.data.forEach(x => {
+                  this.addTemplateCard(
+                    this.itemActive,
+                    this.indexSessionA,
+                    res.event.dataSession,
+                    'S'
+                  );
+                }
+                if (
+                  res.event.dataQuestion &&
+                  res.event.dataQuestion.length > 0
+                ) {
+                  res.event.dataQuestion.forEach((x) => {
+                    delete x.id;
+                    x.recID = this.generateGUID();
                   });
+                  this.addTemplateCard(
+                    this.itemActive,
+                    this.indexSessionA,
+                    res.event.dataQuestion,
+                    'Q'
+                  );
                 }
               }
-              debugger;
-              this.addTemplateCard(this.itemActive, this.indexSessionA, data);
             });
           }
         }, 200);
@@ -697,6 +712,32 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
   }
 
+  generateGUID() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    var GUID;
+    return (GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    ));
+  }
+
   addCard(itemActive, seqNoSession = null, category) {
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
@@ -705,13 +746,49 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
-  addTemplateCard(itemActive, seqNoSession, data) {
-    this.questions[seqNoSession].children =
-      this.questions[seqNoSession].children.concat(data);
+  addTemplateCard(itemActive, seqNoSession, data, category) {
+    if (category == 'S')
+      this.addTemplateSession(itemActive, seqNoSession, data);
+    else this.addTemplateQuestion(itemActive, seqNoSession, data);
+  }
+
+  addTemplateSession(itemActive, seqNoSession, data) {
+    var index = itemActive.seqNo;
+    data.forEach((x, index) => {
+      this.questions.splice(seqNoSession + index + 1, 0, x);
+    });
+    this.questions.forEach((x, index) => (x.seqNo = index));
+    this.questions[index].children.forEach((x) => {
+      x.active = false;
+    });
+    var indexLast = this.questions.length - 1;
+    this.questions[seqNoSession].active = false;
+    this.questions[indexLast].active = true;
+    this.itemActive = this.questions[indexLast];
+    this.clickToScroll(indexLast, this.questions[indexLast].recID, 'S');
+    console.log('check addTemplateSession', this.questions);
+    this.change.detectChanges();
+  }
+
+  addTemplateQuestion(itemActive, seqNoSession, data) {
+    data.forEach((x) => {
+      this.questions[seqNoSession].children.push(x);
+    });
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
-    console.log('check addTemplateCard', this.questions);
+    this.questions[seqNoSession].children[itemActive.seqNo].active = false;
+    this.questions[seqNoSession].children[
+      this.questions[seqNoSession].children.length - 1
+    ].active = true;
+    this.itemActive =
+      this.questions[seqNoSession].children[itemActive.seqNo + 1];
+    this.clickToScroll(
+      seqNoSession,
+      this.questions[seqNoSession].children[itemActive.seqNo + 1].recID,
+      'Q'
+    );
+    console.log('check addTemplateQuestion', this.questions);
     this.change.detectChanges();
   }
 
