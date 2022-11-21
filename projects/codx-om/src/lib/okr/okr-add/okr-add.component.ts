@@ -72,7 +72,7 @@ export class OkrAddComponent implements OnInit {
       if(item) 
       {
         this.notifySvr.notifyCode("SYS006");
-        this.dialog.close();
+        this.dialog.close(item);
       }
     });
   }

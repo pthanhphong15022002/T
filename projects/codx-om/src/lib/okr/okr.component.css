@@ -32,7 +32,7 @@
 }
 .p-om-okr
 {
-    padding: 0 15rem;
+    padding: 0 70px;
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -90,4 +90,13 @@
 .bg-2D3958
 {
     background-color: #2D3958;
+}
+.p-4px
+{
+    padding: 4px;
+}
+.w-h-circle
+{
+    width: 26px;
+    height: 26px;
 }
