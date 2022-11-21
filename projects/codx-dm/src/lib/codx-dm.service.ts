@@ -1133,12 +1133,22 @@ export class CodxDMService {
   }
 
   async getToken() {
-    lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
-    var retToken = await lvFileClientAPI.formPost('api/accounts/token', {
-      username: 'admin/root',
-      password: 'root',
-    });
-    window.localStorage.setItem('lv-file-api-token', retToken.access_token);
+    try
+    {
+      lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
+      var retToken = await lvFileClientAPI.formPost('api/accounts/token', {
+        username: 'admin/root',
+        password: 'root',
+      });
+      if(retToken?.access_token)
+        window.localStorage.setItem('lv-file-api-token', retToken.access_token);
+      else this.notificationsService.notify("Server lưu trữ tập tin không hoạt động");
+      
+    }
+    catch(ex)
+    {
+      this.notificationsService.notify("Server lưu trữ tập tin không hoạt động");
+    }
   }
 
   clickMF($event, data: any, view: any = null) {

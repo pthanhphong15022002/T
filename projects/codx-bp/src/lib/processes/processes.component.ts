@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
+import { FileService } from '@shared/services/file.service';
 import {
   AuthStore,
   ButtonModel,
@@ -26,6 +27,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { BP_ProcessesPageSize } from '../models/BP_Processes.modelPageSize';
@@ -44,8 +46,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -109,7 +110,8 @@ export class ProcessesComponent
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private fileService :FileService
   ) {
     super(inject);
 
@@ -401,13 +403,15 @@ export class ProcessesComponent
           [this.titleAction],
           option
         );
-        this.dialog.closed.subscribe((e) => {
-          if (e?.event && e?.event != null) {
-            this.view.dataService.clear();
-            this.view.dataService.update(e?.event).subscribe();
-            this.detectorRef.detectChanges();
-          }
-        });
+        this.dialog.closed.subscribe(
+          //(e) => {
+          // if (e?.event && e?.event != null) {
+          //   this.view.dataService.clear();
+          //   this.view.dataService.update(e?.event).subscribe();
+          //   this.detectorRef.detectChanges();
+          // }
+          //}
+        );
       });
   }
   revisions(more, data) {
@@ -419,12 +423,13 @@ export class ProcessesComponent
       RevisionsComponent,
       '',
       500,
-      200,
+      50,
       '',
       obj
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
@@ -543,6 +548,9 @@ export class ProcessesComponent
       case 'BPT108':
         this.roles(data);
         break;
+      case 'BPT107': // gán tạm cập nhật phiên bản
+        this.revisions(e.data, data);
+        break;
     }
   }
 
@@ -623,7 +631,17 @@ export class ProcessesComponent
     // );
   }
 
-  approval($event) {}
+  approval($event) { }
+//tesst
+  getFlowchart(data) {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe(dt=> {
+      if (dt) {
+         let link = environment.urlUpload+"/"+ dt?.pathDisk;
+         return link
+      }else  return "../assets/media/img/codx/default/card-default.svg"
+    });
+   
+  }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {
