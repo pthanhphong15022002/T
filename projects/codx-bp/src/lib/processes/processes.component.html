@@ -1,50 +1,24 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  service="BP"
-  assemblyName="ERM.Business.BP"
-  entityName="BP_Processes"
-  className="ProcessesBusiness"
-  [method]="method"
-  [views]="views"
-  [button]="showButtonAdd ? button : null"
-  (buttonClick)="click($event)"
-  [dataObj]="dataObj"
-  [moreFuncs]="moreFuncs"
-  [autoLoad]="true"
-  idField="recID"
-  (onDragDrop)="onDragDrop($event)"
-  [autoSearch]="false"
-  (searchChanged)="searchChange($event)"
->
+<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes"
+  className="ProcessesBusiness" [method]="method" [views]="views" [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="recID"
+  (onDragDrop)="onDragDrop($event)" [autoSearch]="false" (searchChanged)="searchChange($event)">
 </codx-views>
 
 <ng-template #templateListCard let-data>
-  <codx-card-img
-    cardCss="border border-primary rounded-0 h-100 w-225px card-no-body"
-    [imageObjType]="'BP_Processes'"
-    imageSrc="../assets/media/img/codx/default/card-default.svg"
-    imgCss="w-100 h-140px p-1"
-    [imageObjName]="data?.processName"
-    [imageId]="data?.recID"
-    [rootData]="data"
-    [dataItem]="data"
-    [formModel]="view.formModel"
-    [footer]="footerbg"
-    [typeMF]="'hover'"
-    (clickMF)="clickMF($event, data)"
-    [statusVll]="'BP003'"
-    [imageWidth]="600"
-  >
+  <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100 w-225px card-no-body"
+    [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
+    [imageReferType]="'Flowchart'" [imgOn]="data?.modifiedOn" [rootData]="data" [dataItem]="data"
+    [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
+    [imageWidth]="600">
   </codx-card-img>
 
   <ng-template #footerbg let-data>
-    <div class="d-flex bg-footer m-n3 mt-0" [style.color]="'1'
-    | vll: 'BP003':'textColor'
+    <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
+    | vll: 'BP003':'color'
     | async
 ">
       <div class="d-flex flex-column w-100 p-3">
-        <div #processName class="fs-4 fw-bold lh-base"> {{
+        <div #processName class="fs-6 fw-bold"> {{
           data?.processName | formatvalue
           : view.formModel
           : "processName"
@@ -53,51 +27,44 @@
           : "grvProcesses"
           | async
           }}</div>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
-            <span class="me-1 icon-16 icon-access_alarm"></span
-            ><span class="line-clamp" #activedOn>
+            <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" #activedOn>
               {{
-                data.activedOn | formatvalue
-                : view.formModel
-                : "activedOn"
-                : activedOn
-                : "Processes"
-                : "grvProcesses"
-                | async
-                }}
+              data.activedOn | formatvalue
+              : view.formModel
+              : "activedOn"
+              : activedOn
+              : "Processes"
+              : "grvProcesses"
+              | async
+              }}
             </span>
           </div>
         </div>
         <div class="d-flex flex-wrap justify-content-between my-1">
           <div class="d-flex align-items-center">
-            <div class="d-flex me-3">
-              <span class="icon-server text-dark icon-16 me-1"></span>
-                <span #phases class="">
-                  {{
-                    data.phases
-                    }}
-                </span>
+            <div class="d-flex me-3 align-items-center">
+              <span class="icon-server text-dark icon-14 me-1"></span>
+              <span #phases class="">
+                {{
+                data.phases
+                }}
+              </span>
             </div>
-            <div class="d-flex me-3">
-              <span
-                class="icon-format_list_numbered text-danger icon-16 me-1"
-              ></span>
+            <div class="d-flex me-3 align-items-center">
+              <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
               <span #activities class="">
                 {{data.activities}}
               </span>
             </div>
-            <div class="d-flex me-3">
+            <div class="d-flex me-3 align-items-center">
               <span class="icon-attach_file text-primary icon-16 me-1"></span>
               <span class=" ">{{ data.attachments }}</span>
             </div>
           </div>
-          <codx-img
-            [width]="25"
-            [objectId]="data?.owner"
-            objectType="AD_Users"
-          >
+          <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
           </codx-img>
         </div>
       </div>
@@ -109,107 +76,85 @@
 <ng-template #itemViewList let-data>
   <tr class="has-action-menu">
     <td class="rowphoto">
-      <div class="padding">
-        <div class="d-flex flex-column w-100 p-3">
-          <div #processName class="fw-bold lh-base">
-            {{
-              data.processName | formatvalue
-              : view.formModel
-              : "processName"
-              : processName
-              : "Processes"
-              : "grvProcesses"
-              | async
-              }}
-          </div>
-          <div class="d-flex flex-wrap justify-content-between">
-            <div class="d-flex align-items-center">
-              <div class="d-flex me-3">
-                <span class="icon-server text-dark icon-16 me-1"></span>
-                <span #phases class="">
-                  {{
-                    data.phases
-                    }}
-                </span>
-              </div>
-              <div class="d-flex me-3">
-                <span
-                  class="icon-format_list_numbered text-danger icon-16 me-1"
-                ></span>
-                <span #activities class="">
-                  {{data.activities}}
-                </span>
-              </div>
-              <div class="d-flex me-3">
-                <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                {{data.attachments}}
-              </div>
+      <div class="d-flex flex-column">
+        <div #processName class="fw-bold">
+          {{
+          data.processName | formatvalue
+          : view.formModel
+          : "processName"
+          : processName
+          : "Processes"
+          : "grvProcesses"
+          | async
+          }}
+        </div>
+        <div class="d-flex flex-wrap justify-content-between mt-2">
+          <div class="d-flex align-items-center">
+            <div class="d-flex me-3 align-items-center">
+              <span class="icon-server text-dark icon-14 me-1"></span>
+              <span #phases class="">
+                {{
+                data.phases
+                }}
+              </span>
+            </div>
+            <div class="d-flex me-3 align-items-center">
+              <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
+              <span #activities class="">
+                {{data.activities}}
+              </span>
+            </div>
+            <div class="d-flex me-3 align-items-center">
+              <span class="icon-attach_file text-primary icon-16 me-1"></span>
+              {{data.attachments}}
             </div>
           </div>
         </div>
       </div>
     </td>
     <td class="rowphoto" placement="left">
-      <div class="padding justify-content-start" style="margin-top: 10px">
-        <codx-temp-full
-          cardCss="card-template"
-          [imageId]="data.owner"
-          imageObjType="AD_Users"
-          [titleTmp]="titleTmp"
-          [desc]="convertHtmlAgency(data.positionName)"
-          [desc2]="data.groupID"
-          [dataItem]="data"
-        >
-        </codx-temp-full>
-      </div>
+      <codx-temp-full cardCss="card-template" [imageWidth]="30" [imageId]="data.owner" imageObjType="AD_Users"
+        [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [desc2]="data.groupID" [dataItem]="data">
+      </codx-temp-full>
     </td>
     <td class="rowphoto">
-      <div #versionNo class="padding">
+      <div #versionNo>
         {{
-          data.versionNo | formatvalue
-          : view.formModel
-          : "versionNo"
-          : versionNo
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
+        data.versionNo | formatvalue
+        : view.formModel
+        : "versionNo"
+        : versionNo
+        : "Processes"
+        : "grvProcesses"
+        | async
+        }}
       </div>
     </td>
     <td class="rowphoto">
-      <div #activedOn class="padding">
+      <div #activedOn>
         {{
-          data.activedOn | formatvalue
-          : view.formModel
-          : "activedOn"
-          : activedOn
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
+        data.activedOn | formatvalue
+        : view.formModel
+        : "activedOn"
+        : activedOn
+        : "Processes"
+        : "grvProcesses"
+        | async
+        }}
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding">
-        <div [innerHTML]="data.memo"></div>
-      </div>
+      <div [innerHTML]="data.memo"></div>
     </td>
-    <td class="rowphoto position-relative">
-      <div class="padding" *ngIf="funcID == 'BPT4'">
+    <td class="rowphoto">
+      <div *ngIf="funcID == 'BPT4'">
         <button class="btn btn-primary" (click)="approval(data)">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
       </div>
-      <div class="padding position-absolute top-0 end-0" >
-        <codx-mfunc
-          [formModel]="view.formModel"
-          (clickMF)="clickMF($event, data)"
-          [isBookMark]="true"
-          [dataItem]="data"
-          [type]="'hover'"
-        >
-        </codx-mfunc>
-      </div>
+      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
+        [type]="'hover'">
+      </codx-mfunc>
     </td>
     <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
       <div class="padding">
@@ -218,140 +163,73 @@
         </button>
       </div>
     </td> -->
-
   </tr>
 </ng-template>
 <!-- view-list -->
 
 <ng-template #titleTmp let-data>
-  <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
+  <div class="text-dark fw-bold line-clamp line-clamp-1 me-2">
     {{ data.userName }}
   </div>
 </ng-template>
-
 <ng-template #itemProcessName let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="ProcessName"
-      formName="Processes"
-      gridViewName="grvProcesses"
-      default="Tên qui trình"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="ProcessName" formName="Processes" gridViewName="grvProcesses" default="Tên qui trình">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemOwner let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="Owner"
-      formName="Processes"
-      gridViewName="grvProcesses"
-      default="Chủ qui trình"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses" default="Chủ qui trình">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemVersionNo let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="VersionNo"
-      formName="Processes"
-      gridViewName="grvProcesses"
-      default="Phiên bản"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="VersionNo" formName="Processes" gridViewName="grvProcesses" default="Phiên bản">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemActivedOn let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="ActivedOn"
-      formName="Processes"
-      gridViewName="grvProcesses"
-      default="Ngày hiệu lực"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="ActivedOn" formName="Processes" gridViewName="grvProcesses" default="Ngày hiệu lực">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemMemo let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="Memo"
-      formName="Processes"
-      gridViewName="grvProcesses"
-      default="Mô tả"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="Memo" formName="Processes" gridViewName="grvProcesses" default="Mô tả">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemPetitioner let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="Petitioner"
-      formName="AprPermissions"
-      gridViewName="grvAprPermissions"
-      default="Người yêu cầu"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="Petitioner" formName="AprPermissions" gridViewName="grvAprPermissions" default="Người yêu cầu">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemRequestDate let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="RequestDate"
-      formName="AprPermissions"
-      gridViewName="grvAprPermissions"
-      default="Ngày yêu cầu"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="RequestDate" formName="AprPermissions" gridViewName="grvAprPermissions" default="Ngày yêu cầu">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemPermission let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="Permission"
-      formName="AprPermissions"
-      gridViewName="grvAprPermissions"
-      default="Quyền"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="Permission" formName="AprPermissions" gridViewName="grvAprPermissions" default="Quyền">
+  </codx-label>
 </ng-template>
 
 <ng-template #itemDescription let-data>
-  <div class="padding">
-    <codx-label
-      fiedName="Description"
-      formName="AprPermissions"
-      gridViewName="grvAprPermissions"
-      default="Ghi chú"
-    >
-    </codx-label>
-  </div>
+  <codx-label fiedName="Description" formName="AprPermissions" gridViewName="grvAprPermissions" default="Ghi chú">
+  </codx-label>
 </ng-template>
 
 
 <!-- View Search -->
 <ng-template #templateSearch>
-  <ng-container *ngIf="listProcess !=null; else tmpEmpty" >
+  <ng-container *ngIf="listProcess !=null; else tmpEmpty">
     <div class="card rounded-0 p-10">
-      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} <codx-label default="kết quả được tìm thấy"></codx-label></div>
+      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} <codx-label
+          default="kết quả được tìm thấy"></codx-label>
+      </div>
       <div class="card-body" *ngFor="let item of listProcess">
         <div class="mt-6">
           <div class="d-flex align-items-center mb-2">
             <!--begin::Title-->
-            <a
-              href="#"
-              class="fs-5 fw-bold text-primary-darker text-hover-primary me-1"
-              >{{item.processName}}</a
-            >
+            <a href="#" class="fs-5 fw-bold text-primary-darker text-hover-primary me-1">{{item.processName}}</a>
             <!--end::Title-->
           </div>
           <!--end::Head-->
@@ -365,16 +243,14 @@
             <!--begin::Author-->
             <div class="d-flex align-items-center justify-content-center">
               <div class="d-flex align-items-center card-icon-nowrap me-3">
-                <span class="me-1 icon-16 icon-access_alarm"></span
-                ><span class="line-clamp" #activedOn>
+                <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" #activedOn>
                   {{ item?.activedOn | formatvalue: view.formModel:"activedOn":activedOn
                   | async }}
 
-               </span>
+                </span>
               </div>
               <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
-                <span class="me-1">{{item.views}}</span
-                ><span class="line-clamp">
+                <span class="me-1">{{item.views}}</span><span class="line-clamp">
                   <codx-label default="lượt xem"></codx-label>
                 </span>
               </div>
@@ -428,10 +304,11 @@
             </a>
           </li>
           <div *ngFor="let number of listNumberPage">
-              <li class="page-item m-1" [ngClass]="number==pageNumberCliked?'active':''" ><a class="page-link" (click)="PageClick($event,number)">{{number}}</a></li>
+            <li class="page-item m-1" [ngClass]="number==pageNumberCliked?'active':''"><a class="page-link"
+                (click)="PageClick($event,number)">{{number}}</a></li>
           </div>
-          <li class="page-item next m-1"[ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' : ''">
-            <a (click)="nextPage($event)" class="page-link px-0" >
+          <li class="page-item next m-1" [ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' : ''">
+            <a (click)="nextPage($event)" class="page-link px-0">
               <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
               <span class="icon-arrow_forward_ios"></span>
               <!--end::Svg Icon-->
@@ -454,10 +331,7 @@
   <div class="w-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-400px"
-        />
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-400px" />
         <div class="fs-5 text-dark fw-bold mt-2 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
@@ -467,23 +341,13 @@
 </ng-template>
 
 <ng-template #viewReName let-dialog="dialogPopupReName">
-  <codx-form
-    headerText="Thay đổi tên"
-    [body]="bodyFormReName"
-    [footer]="footerFormReName"
-    [dialog]="dialogPopupReName"
-  >
+  <codx-form headerText="Thay đổi tên" [body]="bodyFormReName" [footer]="footerFormReName" [dialog]="dialogPopupReName">
   </codx-form>
 </ng-template>
 
 <ng-template #bodyFormReName>
   <div class="form-group mt-3">
-    <codx-input
-      field="processName"
-      type="text"
-      [crrValue]="newName"
-      (valueChange)="valueChange($event)"
-    >
+    <codx-input field="processName" type="text" [crrValue]="newName" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 </ng-template>

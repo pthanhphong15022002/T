@@ -213,16 +213,21 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
         this.delete(evt);
         break;
       case 'btnEmail':
+        let isAddNewEmail = false;
         let data = {
           dialog: this.dialog,
           formGroup: null,
-          templateID: 'afc89b5d-ef88-4a02-a470-88843c4fa49e',
+          templateID: '',
           showIsTemplate: true,
           showIsPublish: true,
           showSendLater: true,
           files: null,
-          isAddNew: false,
+          isAddNew: true,
         };
+        if (!isAddNewEmail) {
+          data.templateID = 'ec122998-ec56-4028-982c-8850191d2bec';
+          data.isAddNew = false;
+        }
 
         let popEmail = this.callfunc.openForm(
           CodxEmailComponent,
@@ -235,7 +240,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
         popEmail.closed.subscribe((res) => {
           if (res.event) {
-            console.log(res.event);
+            console.log('email', res.event);
           }
         });
         break;

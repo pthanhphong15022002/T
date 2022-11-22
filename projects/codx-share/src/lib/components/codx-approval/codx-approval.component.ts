@@ -171,7 +171,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list[i].isbookmark = true;
         if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
-          if (value.status == '5') list[i].disabled = true;
+          if (value.status == '5' || value.status == '2' || value.status == '4')
+            list[i].disabled = true;
           else if (
             ((datas?.stepType == 'S1' ||
               datas?.stepType == 'S2' ||
@@ -187,7 +188,12 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           ) {
             list[i].disabled = false;
           }
-        } else if (value.status == '5') list[i].disabled = true;
+        } else if (
+          value.status == '5' ||
+          value.status == '2' ||
+          value.status == '4'
+        )
+          list[i].disabled = true;
       }
       //Ẩn thêm xóa sửa
       var list2 = data.filter(

@@ -26,17 +26,17 @@
         <div class="flex-grow-1 extend-main">
           <div class="h-100 extend-content">
             <div class="mb-5">
-              <h4 class="fw-bold text-gray-900 mb-104">
+              <h4 class="fw-bold text-dark mb-3">
                 <codx-label fiedName="Info" [formModel]="form.formModel" default="Thông tin">
                 </codx-label>
               </h4>
-              <div class="d-flex flex-wrap mb-2">
+              <div class="d-flex flex-wrap mb-1">
                 <div class="d-flex align-items-center me-4">
-                  <span class="fw-bolb w-100px">
+                  <span class="fw-bold text-dark">
                     <codx-label name="" default="Người tạo:"> </codx-label>
                   </span>
                   <span class="text-dark">
-                    <div >{{data.userNameCreatedBy}}</div>
+                    <div>{{data.userNameCreatedBy}}</div>
                   </span>
                 </div>
                 <div class="d-flex align-items-center">
@@ -51,9 +51,9 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-2">
+              <div class="d-flex flex-wrap mb-1">
                 <div class="d-flex align-items-center me-4">
-                  <span class="fw-bolb w-100px">
+                  <span class="fw-bold text-dark">
                     <codx-label name="" default="Phiên bản:"> </codx-label>
                   </span>
                   <span class="text-dark">{{ data.versionNo }}</span>
@@ -72,7 +72,7 @@
               </div>
               <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
-                  <span class="fw-bolb w-100px">
+                  <span class="fw-bold text-dark">
                     <codx-label name="" default="Chủ qui trình:"> </codx-label>
                   </span>
                   <span class="text-dark">{{ data.userName }}</span>
@@ -274,46 +274,47 @@
                   <div class="pt-5 extend-more-content pe-3">
                     <ng-container *ngIf="(process.versions && process.versions.length>0 ), else defaulEmpt">
                       <div *ngFor="let item of process.versions; index as i">
-                        <div class="d-flex flex-row py-5">
-                          <div class="d-flex flex-column">
-                            <div class="p-2"><span class="me-1 icon-28 icon-history"></span></div>
-                          </div>
+                        <div class="d-flex flex-row my-5 aqua">
+                          <span class="me-1 icon-18 icon-history"></span>
                           <div class="d-flex flex-column">
                             <div class="p-2">
                               <div *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
                                 <codx-label [formModel]="dialog.formModel" default="Phiên bản đầu tiên"></codx-label>
                               </div>
                               <ng-template #firstVersionNo>
-                                <h4>
+                                <div class="fw-bold fs-6 text-dark">
                                   Phiên bản:
                                   <span #versionNo>
                                     {{
-                                                            item?.versionNo
-                                                              | formatvalue
-                                                                : form.formModel
-                                                                : "versionNo"
-                                                                : versionNo
-                                                                : "Processes"
-                                                                : "grvProcesses"
-                                                              | async
-                                                          }}
+                                    item?.versionNo
+                                    | formatvalue
+                                    : form.formModel
+                                    : "versionNo"
+                                    : versionNo
+                                    : "Processes"
+                                    : "grvProcesses"
+                                    | async
+                                    }}
                                   </span>
-                                </h4>
+                                </div>
                               </ng-template>
                             </div>
                             <div class="p-2">
-                              <span class="text-primary"><codx-label [formModel]="dialog.formModel" default="Cập nhật bởi,"></codx-label> {{ data.userNameCreatedBy }} </span>
+                              <span class="text-primary">
+                                <codx-label [formModel]="dialog.formModel" default="Cập nhật bởi,"></codx-label>
+                                {{ data.userNameCreatedBy }}
+                              </span>
                               <span class="text-dark fw-bold"> |</span>
                               <span class="text-primary" #createdOn>
                                 {{
-                                  item?.createdOn
-                                    | formatvalue
-                                      : form.formModel
-                                      : "createdOn"
-                                      : createdOn
-                                      : "Processes"
-                                      : "grvProcesses"
-                                    | async
+                                item?.createdOn
+                                | formatvalue
+                                : form.formModel
+                                : "createdOn"
+                                : createdOn
+                                : "Processes"
+                                : "grvProcesses"
+                                | async
                                 }}
                               </span>
 
@@ -322,21 +323,22 @@
                           </div>
                           <div class="d-flex flex-column">
                             <div class="justify-content-end p-2">
-                              <codx-label name="lblActivedOn" fiedName="ActivedOn" [formModel]="dialog.formModel" default="Ngày hiệu lực">
+                              <codx-label name="lblActivedOn" fiedName="ActivedOn" [formModel]="dialog.formModel"
+                                default="Ngày hiệu lực">
                               </codx-label>
                             </div>
                             <div class="justify-content-end p-2">
                               <span #activedOn>
                                 {{
-                                                        item?.activedOn
-                                                          | formatvalue
-                                                            : form.formModel
-                                                            : "activedOn"
-                                                            : activedOn
-                                                            : "Processes"
-                                                            : "grvProcesses"
-                                                          | async
-                                                      }}
+                                item?.activedOn
+                                | formatvalue
+                                : form.formModel
+                                : "activedOn"
+                                : activedOn
+                                : "Processes"
+                                : "grvProcesses"
+                                | async
+                                }}
                               </span>
                             </div>
                           </div>
@@ -355,45 +357,9 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <div class="pt-5 extend-more-content pe-3">
-                    <ng-container *ngIf="
-                        process?.versions && process?.versions.length > 0;
-                        else defaulEmpt
-                      ">
-                      <div *ngFor="
-                          let history of process.versions;
-                          let i = index
-                        " class="history-item pb-6 line-hor">
-                        <div class="d-flex">
-                          <div class="me-3">
-                            <codx-temp-full [imageId]="history.createdBy" imageObjType="AD_Users" imgCss="w-35px"
-                              [imageWidth]="35" >
-                            </codx-temp-full>
-                          </div>
-                          <div class="d-flex flex-column flex-grow-1">
-                            <div class="task-date text-gray-500">
-                              <span #createdOn>
-                                {{
-                                  history?.createdOn
-                                                          | formatvalue
-                                                            : form.formModel
-                                                            : "createdOn"
-                                                            : createdOn
-                                                            : "Processes"
-                                                            : "grvProcesses"
-                                                          | async
-                                                      }}
-                              </span>
-                            </div>
-                            <div class="task-name">
-                              {{ history.versionNo }}
-                            </div>
-                            <div class="task-name">{{ history.comment }}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </ng-container>
-                  </div>
+                  <codx-tree-history [objectID]="data.recID" [objectType]="entityName" [viewIcon]="true"
+                    [funcID]="funcID">
+                  </codx-tree-history>
                 </ng-template>
               </e-tabitem>
             </e-tabitems>

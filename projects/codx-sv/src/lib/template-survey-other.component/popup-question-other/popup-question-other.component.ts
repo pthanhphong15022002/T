@@ -21,6 +21,7 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
   header = 'Nhập câu hỏi';
   disableSave = true;
   dataQuestion: any;
+  dataSelected: any;
   answerType = {
     A: 'Attachment',
     T: 'Text',
@@ -53,9 +54,44 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
+  resultQuestion: any = new Array();
   onSave() {
-    var obj = { data: this.dataQuestion, changeTemplate: false };
+    var dataSession = JSON.parse(JSON.stringify(this.dataQuestion));
+    var rsSession: any = new Array();
+    var rsQuestion: any = new Array();
+    //TH1 chọn session
+    rsSession = dataSession.filter((x) => x['check']);
+    if (rsSession.length > 0) {
+      rsSession.forEach((y) => {
+        y.children = y.children.filter((z) => z['check']);
+      });
+    }
+    //TH2 chọn question
+    rsQuestion = this.getUniqueListBy(this.resultQuestion, 'recID');
+    var dt = new Array();
+    rsSession.forEach((x) => {
+      x.children.forEach((y) => {
+        dt.push(y);
+      });
+    });
+    //Check xem list children trong session trùng với list question thì xóa bên list question
+    rsQuestion.forEach((x, index) => {
+      dt.forEach((y) => {
+        if (x.recID == y.recID) rsQuestion.splice(index, 1);
+      });
+    });
+    var obj = {
+      dataSession: rsSession,
+      dataQuestion: rsQuestion,
+      changeTemplate: false,
+    };
     this.dialog.close(obj);
+  }
+
+  private getUniqueListBy(arr: any, key: any) {
+    return [
+      ...new Map(arr.map((item: any) => [item[key], item])).values(),
+    ] as any;
   }
 
   valueChangeAll(e) {
@@ -89,6 +125,10 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
         if (e.data) this.disableSave = false;
         else this.disableSave = true;
       } else this.disableSave = false;
+      if (itemSession['check'] == false || !itemSession['check']) {
+        if (e.data) this.resultQuestion.push(itemQuestion);
+        else if (e.data == false) this.resultQuestion.filter((x) => x['check']);
+      }
     }
   }
 

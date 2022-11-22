@@ -165,8 +165,8 @@ export class CodxShareService {
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetViewEmailTemplateAsyncLogic',
-      templateID
+      'GetViewEmailTemplateAsync',
+      [templateID]
     );
   }
 
@@ -176,7 +176,16 @@ export class CodxShareService {
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
       'SendEmailAsync',
-      emailRecID
+      [emailRecID]
+    );
+  }
+
+  getDataDefault() {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'GetDataDefaultAsync'
     );
   }
 

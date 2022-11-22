@@ -225,6 +225,35 @@ export class CodxHrService {
     )
   }
 
+  saveEmployeeDegreeInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'AddEmployeeDegreeInfoAsync',
+      data
+    )
+  }
+  saveEmployeeSkillsInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ESkillsBusiness',
+      'AddEmployeeSkillInfoAsync',
+      data
+    )
+  }
+
+  saveEmployeeCertificatesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'AddEmployeeCertificateInfoAsync',
+      data
+    )
+  }
+
   getEmployeePassportInfo(data){
     return this.api.execSv<any>(
       'HR',
@@ -241,6 +270,36 @@ export class CodxHrService {
       'HR',
       'EmpVisasBusiness',
       'GetEmployeeVisasInfoAsync',
+      data
+    )
+  }
+
+  getEmployeeCertificatesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'GetEmployeeCertificateInfoAsync',
+      data
+    )
+  }
+
+  getEmployeeSkillsInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ESkillsBusiness',
+      'GetEmployeeSkillInfoAsync',
+      data
+    )
+  }
+
+  getEmployeeDregreesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'GetEmployeeDegreeInfoAsync',
       data
     )
   }

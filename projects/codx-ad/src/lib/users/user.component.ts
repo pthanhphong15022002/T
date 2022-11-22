@@ -157,7 +157,7 @@ export class UserComponent extends UIComponent {
       .delete([this.view.dataService.dataSelected])
       .subscribe((res: any) => {
         if (res.data) {
-          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
+          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true).subscribe();
         }
       });
   }

@@ -66,21 +66,18 @@ export class PopupAddPermissionComponent implements OnInit {
       this.per.toPermission[i].startDate = this.startDate;
       this.per.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
-        this.per.toPermission[i].create = true;
         this.per.toPermission[i].update = true;
-        this.per.toPermission[i].share = true;
-        this.per.toPermission[i].download = true;
-        this.per.toPermission[i].upload = true;
-        this.per.toPermission[i].read = true;
+        this.per.toPermission[i].delete = false;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
-        this.per.toPermission[i].autoCreat = false;
+        this.per.toPermission[i].autoCreate = false;
         this.per.toPermission[i].nemberType = '3';
       } else {
-        this.per.toPermission[i].read = true;
+        this.per.toPermission[i].update = true;
+        this.per.toPermission[i].delete = false;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
-        this.per.toPermission[i].autoCreat = false;
+        this.per.toPermission[i].autoCreate = false;
         this.per.toPermission[i].nemberType = '2';
       }
       if (!this.isShare) {
@@ -212,7 +209,7 @@ export class PopupAddPermissionComponent implements OnInit {
     if (index > -1) {
       url = window.location.href.substring(0, index);
     }
-    var url = `${url}?id=${this.id}&name=${this.fullName}`;
+    var url = `${url}?id=${this.id}`;
     return url;
   }
 
