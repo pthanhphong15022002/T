@@ -1273,6 +1273,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.popover.close();
 
   }
+  deleteAttender(attID:string){
+    var tempDelete;
+    this.attendeesList.forEach(item=>{
+      if(item.userID== attID){
+        tempDelete = item;
+      }
+    });
+    this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
+    this.changeDetectorRef.detectChanges();
+  }
   connectMeetingNow() {
     this.codxEpService
       .connectMeetingNow(

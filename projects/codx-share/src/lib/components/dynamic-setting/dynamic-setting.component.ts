@@ -93,7 +93,10 @@ export class DynamicSettingComponent implements OnInit {
           'animate__slideInRight'
         );
         componentRef.instance.category = this.catagory;
-        componentRef.instance.setting = this.dataSetting[this.catagory];
+        componentRef.instance.settingFull = this.dataSetting[this.catagory];
+        componentRef.instance.setting = this.dataSetting[this.catagory].filter(
+          (res) => res.isVisible == true
+        );
         componentRef.instance.function = this.view.function;
         componentRef.instance.valuelist = this.valuelist;
 
