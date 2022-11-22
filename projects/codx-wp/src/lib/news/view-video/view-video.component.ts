@@ -1,6 +1,8 @@
 import { R } from '@angular/cdk/keycodes';
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ApiHttpService, AuthService } from 'codx-core';
+import { timeStamp } from 'console';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -10,14 +12,16 @@ import { environment } from 'src/environments/environment';
 })
 export class ViewVideoComponent implements OnInit {
 
+  @Input() funcID: string | null = null;
   @Input() ObjectID: string | null = null;
   @Input() ObjectType:string | null = null;
+  @ViewChild("codxATM") codxATM: AttachmentComponent;
   FILE_REFERTYPE = {
     IMAGE: "image",
     VIDEO: "video",
     APPLICATION :'application'
   }
-  file:any;
+  file:any = null;
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -31,23 +35,34 @@ export class ViewVideoComponent implements OnInit {
   }
 
   getFileByObjectID(objectID:string){
-    if(!objectID) return;
-    this.api.execSv(
-      "DM",
-      "ERM.Business.DM",
-      "FileBussiness",
-      "GetFilesByObjectIDImageAsync",
-      [objectID])
-    .subscribe((files:any[]) => {
-      if(files.length > 0){
-        let fileVideo = files.find((f:any) => f.referType == this.FILE_REFERTYPE.VIDEO);
-        if(fileVideo){
-            fileVideo['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${fileVideo.recID}?access_token=${this.auth.userValue.token}`;
-            this.file = fileVideo;
-          this.dt.detectChanges();
+    if(objectID){
+      this.api.execSv(
+        "DM",
+        "ERM.Business.DM",
+        "FileBussiness",
+        "GetFilesByIbjectIDAsync",
+        [objectID])
+      .subscribe((files:any[]) => 
+      {
+        if(files.length > 0)
+        {
+          let fileVideo = files.find((f:any) => f.referType == this.FILE_REFERTYPE.VIDEO);
+          if(fileVideo){
+            fileVideo["source"] = `${environment.urlUpload}`+"/"+ fileVideo.url;
+              this.file = fileVideo;
+            this.dt.detectChanges();
+          }
         }
-      }
-    });
+      });
+    }
   }
+  fileUpload:any[] = [];
+  addVideo(files: any) {
 
+  }
+  clickUploadFile(){
+    if(this.codxATM){
+      this.codxATM.uploadFile();
+    }
+  }
 }

@@ -478,7 +478,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     }
 
     if(!this.validatePhoneNumber(this.data.phone)){
-      this.notificationsService.notify('','2',0,'Số điện thoại không hợp lệ');// EP_WAIT doi messcode tu BA
+      this.notificationsService.notify('Số điện thoại không hợp lệ','2',0);// EP_WAIT doi messcode tu BA
       return;
     };
 
@@ -620,6 +620,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
       this.detectorRef.detectChanges();
     }
+  }
+  deleteAttender(attID:string){
+    var tempDelete;
+    this.lstPeople.forEach(item=>{
+      if(item.userID== attID){
+        tempDelete = item;
+      }
+    });
+    this.lstPeople.splice(this.lstPeople.indexOf(tempDelete), 1);
+    this.detectorRef.detectChanges();
   }
   driverChangeWithCar(carID: string) {
     this.codxEpService.getGetDriverByCar(carID).subscribe((res) => {
