@@ -1,3 +1,5 @@
+import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
+import { EmployeeTraincoursesComponent } from './../../employee-profile/employee-traincourses/employee-traincourses.component';
 import { EmployeeSkillDetailComponent } from './../../employee-profile/employee-skill-detail/employee-skill-detail.component';
 import { EmployeeDegreeDetailComponent } from './../../employee-profile/employee-degree-detail/employee-degree-detail.component';
 import { EmployeeCertificateDetailComponent } from './../../employee-profile/employee-certificate-detail/employee-certificate-detail.component';
@@ -437,10 +439,11 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeWorkingLisenceComponent,
+      EmployeeWorkingLisenceDetailComponent,
       {
         isAdd: true,
         headerText: 'Giấy phép lao động',
+        employeeId: this.data.employeeID,
       },
       option
     );
@@ -581,6 +584,26 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         isAdd: true,
         headerText: "Kỹ năng",
+        employeeId: this.data.employeeID,
+      },
+      option
+      );
+      dialogAdd.closed.subscribe((res) => {
+        if(!res?.event) this.view.dataService.clear();
+      })
+  }
+
+  addEmployeeTrainCourseInfo(){
+    this.view.dataService.dataSelected = this.data
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService
+    option.FormModel = this.view.formModel
+    option.Width = '550px'
+    let dialogAdd = this.callfunc.openSide(
+      EmployeeTraincoursesComponent,
+      {
+        isAdd: true,
+        headerText: "Đào tạo",
         employeeId: this.data.employeeID,
       },
       option
