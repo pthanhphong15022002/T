@@ -268,7 +268,6 @@ export class PopupAddComponent implements OnInit {
     }
   }
   getValueShare(shareControl: string, data: any[] = null) {
-    debugger
     if (shareControl && data.length > 0) 
     {
       let permissions:any[] = [];
