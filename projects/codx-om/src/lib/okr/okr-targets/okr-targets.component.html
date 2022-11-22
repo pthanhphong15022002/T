@@ -108,7 +108,7 @@
                   </div>
                 </ng-template>
                 <ng-template #content> 
-                  <div class="mt-2 cursor-pointer" *ngFor="let item of data?.child">
+                  <div class="mt-2 cursor-pointer has-action-menu" *ngFor="let item of data?.child">
                     <div class="d-flex align-items-center justify-content-between">
                       <div class="d-flex align-items-center ">
                         <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center">
@@ -133,6 +133,9 @@
                       <span>{{item?.attachments}}</span>
                       <i class="icon-chat_bubble_outline text-primary ms-4"></i>
                       <span>{{item?.comments}}</span>
+                    </div>
+                    <div class="action-item">
+                      <codx-mfunc [formModel]="formModel" type="hover" [dataItem]="data" ></codx-mfunc>
                     </div>
                   </div>
                 </ng-template>
