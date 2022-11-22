@@ -31,7 +31,7 @@
       [objectType]="'EP_Resources'"
       [objectName]="data?.resourceData?.resourceName"
     ></codx-img>
-    <div class="ms-2 d-flex flex-column" style="width:160px;">
+    <div class="ms-2 d-flex flex-column" style="width: 160px">
       <span
         class="fw-bold text-truncate"
         [title]="data?.resourceData?.resourceName"
@@ -163,7 +163,7 @@
     </div>
   </div>
   <hr />
-  <div *ngIf="data?.bookingItems?.length > 0">
+  <div *ngIf="data?.bookingItems?.length > 0" style="max-height:150px;overflow:auto;">
     <div *ngFor="let item of data?.bookingItems">
       <div class="d-flex mb-4 justify-content-between">
         <div class="d-flex flex-row">
@@ -187,7 +187,7 @@
                 class="text-gray-600"
               ></codx-label>
               <span>:</span>
-              <span class="d-block ms-2 fw-bold">{{ item.umid }}</span>
+              <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
             </div>
           </div>
         </div>
@@ -202,6 +202,7 @@
           <span class="ms-2 fw-bold">{{ item.quantity }}</span>
         </div>
       </div>
+      
     </div>
   </div>
 </ng-template>

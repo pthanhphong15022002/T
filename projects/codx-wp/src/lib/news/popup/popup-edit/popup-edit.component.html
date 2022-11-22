@@ -5,22 +5,29 @@
             <div class="fw-bolder">
                 <span class="fs-2">{{headerText}}</span>
             </div>
-            <div class="ms-5" (click)="openFormShare(controlShare)">
-                <codx-vll
-                    [classList]="'bg-gray-200 rounded-1 p-2'" 
-                    [name]="'WP001'" 
-                    [formModel]="dialogRef.formModel"
-                    [value]="data.shareControl" 
-                    [showText]="true" 
-                    [showIcon]="true"
-                    [showBgColor]="true">
-                </codx-vll>
+            <div class="d-flex align-items-center justify-content-start ">
+                <ng-container *ngIf="data.shareControl">
+                    <div (click)="openFormShare(controlShare)" class="bg-gray-200 rounded-1 d-flex align-items-center ms-4 p-1">
+                        <codx-vll 
+                            [name]="'WP001'" 
+                            [value]="data.shareControl" 
+                            [showText]="true" 
+                            [showIcon]="true" 
+                            [path]="'assets/themes/sys/default/img/'"
+                            [icoCss]="'symbol-12px symbol-circle'"  
+                            [showBgColor]="true">
+                        </codx-vll>
+                        <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="data.shareName">
+                    <div class="ms-2">
+                        <ng-container
+                            *ngTemplateOutlet="templateShares; context: { $implicit: data }">
+                        </ng-container>
+                    </div>
+                </ng-container>
             </div>
-            <ng-container *ngIf="shareWith">
-                <div class="ms-2">
-                    <span class="fs-6" [innerHTML]="shareWith"></span>
-                </div>
-            </ng-container>
         </div>
         <div class="">
             <button class="btn btn-icon btn-white" (click)="clickClosePopup()">
@@ -136,31 +143,8 @@
                             [fiedName]="'Image'">
                         </codx-label>
                     </div>
-                    <div class="w-100" (click)="clickUploadFile()">
-                        <ng-container *ngIf="fileImage;else haveImage">
-                            <img class="w-100 h-200px" [src]="fileImage.avatar" alt="image">
-                        </ng-container>
-                        <ng-template #haveImage>
-                            <codx-img 
-                                [objectId]="data.recID"
-                                [objectType]="'WP_News'" 
-                                [width]="300"
-                                [isDefaulImg]="true"
-                                [imageType]="'square'">
-                            </codx-img>
-                        </ng-template>
-                    </div>
-                    <div class="d-none">
-                        <codx-attachment #codxAttm 
-                            [functionID]="dialogRef.formModel.funcID" 
-                            [objectId]="data.recID"
-                            [objectType]="'WP_News'" 
-                            [allowMultiFile]="0" 
-                            [showMessage]="0"
-                            [hideImageUpload]="'1'" 
-                            [hideUploadBtn]="'1'" 
-                            (fileCount)="addImage($event)">
-                        </codx-attachment>
+                    <div class="w-100" (click)="clickUploadFile('image')">
+                        <img class="w-100 h-200px" [src]="fileImage?.source || fileImage?.avatar || null" alt="">
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-2 mt-3">
@@ -226,18 +210,26 @@
                 </codx-input>
             </ng-container>
             <ng-template #templateVideo>
-                <div class="w-100 border h-500px" (click)="clickUploadFile()">
-                    <ng-container *ngIf="fileVideo;else haveVideo">
-                        <video controls class="w-100 h-450px">
-                            <source [src]="fileVideo.srcVideo" type="video/mp4">
+                <div class="w-100 h-100 p-2 border">
+                    <div class="d-flex align-items-end w-100 h-100" >
+                        <video [src]="fileVideo?.source || fileVideo?.data || null" controls class="w-100" (click)="clickUploadFile('video')">
                         </video>
-                    </ng-container>
-                    <ng-template #haveVideo>
-                        <wp-view-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
-                        </wp-view-video>
-                    </ng-template>
+                    </div>
                 </div>
             </ng-template>
+            <div class="d-none">
+                <codx-attachment #codxATM 
+                    [functionID]="dialogRef.formModel.funcID" 
+                    [objectId]="data.recID"
+                    [objectType]="'WP_News'" 
+                    [allowMultiFile]="0" 
+                    [showMessage]="0"
+                    [allowExtensions]="'.png,.mp4'"
+                    [hideImageUpload]="'1'" 
+                    [hideUploadBtn]="'1'" 
+                    (fileCount)="addFile($event)">
+                </codx-attachment>
+            </div>
         </div>
     </div>
     <!-- footer -->
@@ -269,4 +261,33 @@
         listName="WP001" 
         (eventApply)="eventApply($event)">
     </codx-share>
+</ng-template>
+
+<ng-template #templateShares let-post>
+    <div ngbDropdown class="symbol-more">
+        <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="cursor-pointer" [innerHTML]="post.shareName"></span>
+        </div>
+        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <div class="py-2">
+                <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
+            </div>
+            <div class="hr-list-employee">
+                <ng-container *ngFor="let permisison of post.permissions">
+                    <ng-container *ngIf="permisison.memberType == '2'">
+                    <div class="d-flex align-items-center mt-3">
+                        <codx-img 
+                            [objectId]="permisison.objectID" 
+                            [objectType]="'AD_Users'" 
+                            [cssClass]="'me-3'"
+                            [objectName]="permisison.objectName" 
+                            [width]="30">
+                        </codx-img>
+                        <span class="ms-2 fs-6">{{permisison.objectName}}</span>
+                    </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
 </ng-template>
