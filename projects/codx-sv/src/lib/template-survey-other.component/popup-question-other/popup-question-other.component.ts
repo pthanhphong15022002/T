@@ -7,6 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
+import { CodxSvService } from '../../codx-sv.service';
 
 @Component({
   selector: 'app-popup-question-other',
@@ -42,6 +43,7 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
+    private SVService: CodxSvService,
     @Optional() dialogRef: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -56,42 +58,13 @@ export class PopupQuestionOtherComponent extends UIComponent implements OnInit {
 
   resultQuestion: any = new Array();
   onSave() {
-    var dataSession = JSON.parse(JSON.stringify(this.dataQuestion));
-    var rsSession: any = new Array();
-    var rsQuestion: any = new Array();
-    //TH1 chọn session
-    rsSession = dataSession.filter((x) => x['check']);
-    if (rsSession.length > 0) {
-      rsSession.forEach((y) => {
-        y.children = y.children.filter((z) => z['check']);
-      });
-    }
-    //TH2 chọn question
-    rsQuestion = this.getUniqueListBy(this.resultQuestion, 'recID');
-    var dt = new Array();
-    rsSession.forEach((x) => {
-      x.children.forEach((y) => {
-        dt.push(y);
-      });
-    });
-    //Check xem list children trong session trùng với list question thì xóa bên list question
-    rsQuestion.forEach((x, index) => {
-      dt.forEach((y) => {
-        if (x.recID == y.recID) rsQuestion.splice(index, 1);
-      });
-    });
-    var obj = {
-      dataSession: rsSession,
-      dataQuestion: rsQuestion,
+    //Trả kết quả của 2 mảng session và question
+    var result = {
+      dataSession: JSON.parse(JSON.stringify(this.dataQuestion)),
+      dataQuestion: JSON.parse(JSON.stringify(this.resultQuestion)),
       changeTemplate: false,
     };
-    this.dialog.close(obj);
-  }
-
-  private getUniqueListBy(arr: any, key: any) {
-    return [
-      ...new Map(arr.map((item: any) => [item[key], item])).values(),
-    ] as any;
+    this.dialog.close(result);
   }
 
   valueChangeAll(e) {

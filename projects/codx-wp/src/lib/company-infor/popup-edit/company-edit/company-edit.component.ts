@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Permission } from '@shared/models/file.model';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { WP_News } from '../../../models/WP_News.model';
@@ -13,7 +14,7 @@ import { WP_News } from '../../../models/WP_News.model';
 })
 export class CompanyEditComponent implements OnInit {
 
-  data:any;
+  data:WP_News = null;
   dateStart: Date;
   dateEnd: Date;
   subContent: string;
@@ -29,47 +30,52 @@ export class CompanyEditComponent implements OnInit {
     private api:ApiHttpService,
     private auth: AuthService,
     private dt:ChangeDetectorRef,
-    private callFunc:CallFuncService,
     private notifySvr:NotificationsService,
-    private dmSV:CodxDMService,
     private sanitizer: DomSanitizer,
     @Optional() dialog?: DialogData,
     @Optional() dialogRef?: DialogRef
     ) 
   {
-    debugger
     this.dialogRef = dialogRef;
-    this.dataOld = dialog.data
+    this.dialogData = dialog.data;
     this.user = this.auth.userValue;
   }
 
   ngOnInit(): void {
-    this.data = this.dataOld;
-    this.dt.detectChanges();
+    if(this.dialogData){
+      this.data = this.dialogData;
+    }
+    else
+    {
+      this.data = new WP_News();
+    }
   }
 
   valueChange(event: any) {
-    this.data.contents = event.data;
-    this.dt.detectChanges();
+    if(event)
+    {
+      this.data.contents = event.data;
+      this.dt.detectChanges();
+    }
+    
   }
 
   clickInsertNews(){
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'NewsBusiness',
-        'InsertCompanyinfoAsync',
-        [this.data,this.dataOld.recID]
-      )
-      .subscribe((res) => {
-        if(res)
-        {
-          this.dataOld = res;
-          this.dataOld.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.notifySvr.notifyCode('SYS007');
-          this.dialogRef.close(this.dataOld);
-        }
-      });
+    if(this.data){
+        this.api
+        .execSv(
+          'WP',
+          'ERM.Business.WP',
+          'NewsBusiness',
+          'InsertCompanyinfoAsync',
+          [this.data]
+        ).subscribe((res:any) => {
+          if(res)
+          {
+            this.dataOld = {...res};
+            this.dialogRef.close(this.dataOld);
+          }
+        });
+      }
     }
 }
