@@ -304,6 +304,26 @@ export class CodxHrService {
     )
   }
 
+  getEmployeeTrainCourse(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'GetEmployeeTrainCoursesInfoAsync',
+      data
+    )
+  }
+
+  getEmployeeWorkingLisenceDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'GetEmployeeWorkPermitInfoAsync',
+      data
+    )
+  }
+
   updateEmployeePassportInfo(data){
     return this.api.execSv<any>(
       'HR',
@@ -324,4 +344,23 @@ export class CodxHrService {
     )
   }
 
+  updateEmployeeTrainCourseInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'EditEmployeeTraincourseInfoAsync',
+      data
+    )
+  }
+
+  updateEmployeeWorkingLisenceDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'AddEmployeeWorkPermitInfoAsync',
+      data
+    )
+  }
 }
