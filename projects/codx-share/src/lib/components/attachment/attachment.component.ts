@@ -25,6 +25,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -105,6 +106,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   isCopyRight = 0;
   dataFolder: any;
   lstRawFile = [];
+
+  dataRequest = new DataRequest();
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -134,6 +137,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() parentID: any = ''; // FolderID của Cấp cha chứa thư mục
   /////////////////////////////////////////////////////
   @Input() isSaveSelected = '0'; // Lưu khi chọn select file 0: false , 1 : true
+
+  @Input() pageSize = 5;
+  @Input() heightScroll = 100;
+
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -379,9 +386,15 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.objectId != '' && this.objectId != undefined) {
-      this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
+      this.dataRequest.page = 1;
+      this.dataRequest.pageSize = this.pageSize;
+      this.dataRequest.predicate = "ObjectID=@0 && IsDelete = false";
+      this.dataRequest.dataValue = this.objectId;
+      this.dataRequest.entityName = "DM_FileInfo";
+      this.dataRequest.funcID = "DMT02";
+      this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
         if (res) {
-          this.data = res;
+          this.data = res[0];
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
@@ -3005,5 +3018,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   handleDelete(e: any) {
     this.fileDelete.emit(e);
+  }
+  scrollFile()
+  {
+    this.dataRequest.page += 1;
+    this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
+      if (res) {
+        this.data = this.data.concat(res[0]);
+      }
+    });
   }
 }

@@ -57,9 +57,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe(item=>{
-      if(item) this.titleRoom = item.organizationName
-    })
+    // this.cache.getCompany(user.userID).subscribe(item=>{
+    //   if(item) this.titleRoom = item.organizationName
+    // })
     var dataRequest = new DataRequest();
     dataRequest.funcID = "OMT01"
     dataRequest.entityName = "OM_OKRs"

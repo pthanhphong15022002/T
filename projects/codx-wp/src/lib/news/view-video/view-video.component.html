@@ -1,10 +1,11 @@
-<div class="w-100" *ngIf="file;else templateLoad">
-    <video controls class="w-100 h-450px">
-        <source [src]="file.srcVideo" type="video/mp4">
+<div class="d-flex align-items-end w-100 h-100" >
+    <video controls class="w-100" (click)="clickUploadFile()">
+        <ng-container *ngIf="file?.source;else noVideo">
+            <source [src]="file.source" type="video/mp4">
+        </ng-container>    
+        <ng-template #noVideo>
+            <source [src]="null" type="video/mp4">
+        </ng-template>
     </video>
 </div>
-<ng-template #templateLoad>
-    <video controls class="w-100 h-450px">
-        <source  [src]="null" type="video/mp4">
-    </video>
-</ng-template>
+

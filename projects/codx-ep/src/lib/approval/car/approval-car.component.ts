@@ -295,7 +295,10 @@ export class ApprovalCarsComponent extends UIComponent {
     }
   }
   sameDayCheck(sDate:any, eDate:any){
-    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+    if(sDate && eDate){
+      return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+    }
+    return false;
   }
   showHour(date:any){
     let temp= new Date(date);

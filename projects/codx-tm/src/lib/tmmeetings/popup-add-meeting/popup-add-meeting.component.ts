@@ -502,7 +502,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.meeting.attachments = Array.isArray(res) ? res.length : 1;
+          var countAttack = 0;
+          countAttack = Array.isArray(res) ? res.length : 1;
+          if(this.action === 'edit'){
+            this.meeting.attachments += countAttack;
+          }else{
+            this.meeting.attachments = countAttack;
+          }
           if (this.action === 'add' || this.action === 'copy') this.onAdd();
           else this.onUpdate();
         }

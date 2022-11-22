@@ -468,9 +468,10 @@ export class PopupAddSignFileComponent implements OnInit {
               this.notify.alertCode('ES001').subscribe((x) => {
                 //open popup confirm
                 let oldValue = JSON.parse(JSON.stringify(this.data.categoryID));
+                let category = event.component?.itemsSelected[0];
                 if (x.event?.status == 'Y') {
                   this.esService
-                    .getAutoNumberByCategory(event.data)
+                    .getAutoNumberByCategory(category?.AutoNumber)
                     .subscribe((autoNum) => {
                       this.data.categoryID = event.data;
                       this.dialogSignFile.patchValue({
@@ -497,7 +498,7 @@ export class PopupAddSignFileComponent implements OnInit {
                       //this.dialogSignFile.patchValue({ catagoryID: event?.data });
 
                       //set info of category
-                      let category = event.component?.itemsSelected[0];
+
                       this.dialogSignFile.patchValue({
                         icon: category?.Icon,
                         color: category?.Color,
@@ -526,8 +527,10 @@ export class PopupAddSignFileComponent implements OnInit {
               this.dialogSignFile.patchValue({
                 categoryID: this.data.categoryID,
               });
+              //get info of category
+              let category = event.component?.itemsSelected[0];
               this.esService
-                .getAutoNumberByCategory(event.data)
+                .getAutoNumberByCategory(category?.AutoNumber)
                 .subscribe((autoNum) => {
                   console.log(this.data);
                   console.log(this.dialogSignFile.value);
@@ -551,8 +554,6 @@ export class PopupAddSignFileComponent implements OnInit {
                   this.dialogSignFile.patchValue({ refNo: this.data.refNo });
                   //this.dialogSignFile.patchValue({ catagoryID: event?.data });
 
-                  //get info of category
-                  let category = event.component?.itemsSelected[0];
                   this.dialogSignFile.patchValue({
                     icon: category?.Icon,
                     color: category?.Color,

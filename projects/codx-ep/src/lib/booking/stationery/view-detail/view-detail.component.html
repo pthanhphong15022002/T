@@ -131,7 +131,7 @@
                       name="lblQuantity"
                       class="text-gray-600"
                     ></codx-label>
-                    <span class="d-block ms-2 fw-bold">{{ item?.umid }}</span>
+                    <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
                   </div>
                 </div>
               </div>
@@ -150,10 +150,15 @@
       </div>
     </div>
   </ng-template>
-
 </codx-detail-tmp>
 <ng-template #footer>
-  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID" [dataTree]="data?.tasks?data.tasks: []" [TabControl]="tabControl"></codx-tabs>
+  <codx-tabs
+    [entityName]="formModel?.entityName"
+    [objectID]="itemDetail?.recID"
+    [funcID]="formModel?.funcID"
+    [dataTree]="data?.tasks ? data.tasks : []"
+    [TabControl]="tabControl"
+  ></codx-tabs>
 </ng-template>
 <ng-template #defaulEmpt>
   <div class="w-100 h-100 container">
