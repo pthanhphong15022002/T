@@ -7,10 +7,18 @@
 {
     text-align: center;
 }
-#om-tab > .e-content
+#om-tab > .e-content 
 {
     height: calc(100% - 35px) !important;
     overflow: auto;
+}
+#om-tab > .e-content .e-item
+{
+    height: calc(100% - 35px) !important;
+}
+.e-item > div
+{
+    height: 100%;
 }
 #om-tab-child .e-tab-header
 {

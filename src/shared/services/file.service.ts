@@ -96,7 +96,9 @@ export class FileService implements OnDestroy {
     getFileNyObjectID(objectID: string): Observable<any> {
         return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByObjectIDAsync", [objectID]);
     }
-
+    getFileByDataRequest(dataRequest: DataRequest): Observable<any> {
+        return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByGridModelAsync", dataRequest);
+    }
     downloadFile(id: string): Observable<any> {
         return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
     }

@@ -1,0 +1,26 @@
+import { Component, OnInit, Optional } from '@angular/core';
+import { DialogData, DialogRef } from 'codx-core';
+
+@Component({
+  selector: 'lib-okr-edit',
+  templateUrl: './okr-edit.component.html',
+  styleUrls: ['./okr-edit.component.css']
+})
+export class OkrEditComponent implements OnInit {
+
+  data : any;
+  dialog : any;
+  headerText = "Chỉnh sửa mục tiêu";
+  gridView: any;
+  constructor(
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
+    this.dialog = dialog;
+    if(dt?.data[0]) this.gridView = dt?.data[0];
+   }
+
+  ngOnInit(): void {
+  }
+
+}

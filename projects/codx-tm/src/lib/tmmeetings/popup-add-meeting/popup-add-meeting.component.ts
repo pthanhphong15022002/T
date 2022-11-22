@@ -313,7 +313,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close([res.save]);
           //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
-          this.bookingRoomEP(res.save);
+          if(this.meeting.location != null){
+            this.bookingRoomEP(res.save);
+          }
           this.tmSv
             .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
             .subscribe();
@@ -504,9 +506,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           var countAttack = 0;
           countAttack = Array.isArray(res) ? res.length : 1;
-          if(this.action === 'edit'){
+          if (this.action === 'edit') {
             this.meeting.attachments += countAttack;
-          }else{
+          } else {
             this.meeting.attachments = countAttack;
           }
           if (this.action === 'add' || this.action === 'copy') this.onAdd();
@@ -967,12 +969,26 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       });
   }
 
-  onDeleteUser(item) {
-    const index: number = this.resources.indexOf(item);
-    if (index !== -1) {
-      this.resources.splice(index, 1);
+  onDeleteUser(index, list: CO_Resources[] = null) {
+    if (list == null) {
+      if (
+        this.meeting &&
+        this.meeting.resources &&
+        this.meeting.resources.length > 0
+      ) {
+        this.meeting.resources.splice(index, 1);
+        this.listUserID.splice(index, 1);
+        this.changDetec.detectChanges();
+
+      } else {
+        if (list && list.length > 0) {
+          list.splice(index, 1);
+          this.listUserID.splice(index, 1);
+          //remove element from array
+          this.changDetec.detectChanges();
+        }
+      }
     }
-    this.changDetec.detectChanges();
   }
 
   showPopover(p, userID) {
@@ -1080,7 +1096,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   bookingRoomEP(data) {
     //chuyển model meeting sang booking
     let booking = new EP_Boooking();
-    booking.resourceID = data.location;
+    booking.resourceID = data?.location;
     booking.status = data.status;
     booking.startDate = data.startDate;
     booking.endDate = data.endDate;
