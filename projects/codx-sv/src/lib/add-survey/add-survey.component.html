@@ -1114,7 +1114,7 @@
                   </li>
                   <li>
                     <a
-                      (click)="uploadFile('image', 'change')"
+                      (click)="popupUploadFile('image', 'change')"
                       ngbDropdownItem
                       href="javascript:void(0)"
                     >
@@ -1127,7 +1127,7 @@
                   </li>
                   <li>
                     <a
-                      (click)="deleteFile()"
+                      (click)="deleteFile(data.objectID)"
                       ngbDropdownItem
                       href="javascript:void(0)"
                     >
