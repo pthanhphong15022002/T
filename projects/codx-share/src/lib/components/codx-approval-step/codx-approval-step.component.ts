@@ -40,6 +40,7 @@ export class CodxApprovalStepComponent
   @Input() approveStatus: string = '';
 
   formModel: FormModel;
+  fmApprovalTrans: FormModel;
   gridViewSetup: any = {};
 
   positionDefault: string;
@@ -101,6 +102,12 @@ export class CodxApprovalStepComponent
   }
 
   ngOnInit(): void {
+    this.fmApprovalTrans = new FormModel();
+    this.esService.getFormModel('EST021').then((fm) => {
+      if (fm) {
+        this.fmApprovalTrans = fm;
+      }
+    });
     this.formModel = new FormModel();
     this.formModel.formName = 'ApprovalSteps_Approvers';
     this.formModel.entityName = 'ES_ApprovalSteps_Approvers';
