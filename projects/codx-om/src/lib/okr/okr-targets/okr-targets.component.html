@@ -23,8 +23,10 @@
               <codx-label default="Lọc tình trạng" fiedName="lblFilter"></codx-label>
               <i class="fas fa-angle-down ms-3"></i>
           </div>
-          <div ngbDropdownMenu class="dropdown-menu p-5" aria-labelledby="dropdownMenuButton">
-            Tình trạng
+          <div ngbDropdownMenu class="dropdown-menu p-2" aria-labelledby="dropdownMenuButton">
+              <div class="dropdown-item py-2 px-4 cursor-pointer" *ngFor="let item of dtStatus">
+                <span>{{item?.text}}</span>
+              </div>
           </div>
         </div>
         <div class="ms-2 me-2" ngbDropdown [container]="'body'">
@@ -88,7 +90,7 @@
                   <span
                     class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{data?.notes ? data?.notes.length : 0}}</span>
                 </button>
-               <codx-mfunc [formModel]="formModel" type="view" [dataItem]="data" class="ms-4"></codx-mfunc>
+               <codx-mfunc [formModel]="formModel" type="view" [dataItem]="data" class="ms-4" (clickMF)="clickMF($event)"></codx-mfunc>
               </div>
             </div>
         </div>
@@ -108,7 +110,7 @@
                   </div>
                 </ng-template>
                 <ng-template #content> 
-                  <div class="mt-2 cursor-pointer" *ngFor="let item of data?.child">
+                  <div class="mt-2 cursor-pointer has-action-menu" *ngFor="let item of data?.child">
                     <div class="d-flex align-items-center justify-content-between">
                       <div class="d-flex align-items-center ">
                         <div class="rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center">
@@ -133,6 +135,9 @@
                       <span>{{item?.attachments}}</span>
                       <i class="icon-chat_bubble_outline text-primary ms-4"></i>
                       <span>{{item?.comments}}</span>
+                    </div>
+                    <div class="action-item">
+                      <codx-mfunc [formModel]="formModel" type="hover" [dataItem]="data" ></codx-mfunc>
                     </div>
                   </div>
                 </ng-template>

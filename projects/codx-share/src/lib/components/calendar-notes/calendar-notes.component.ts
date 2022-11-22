@@ -35,6 +35,7 @@ import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import { T } from '@angular/cdk/keycodes';
+import moment from 'moment';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -92,7 +93,8 @@ export class CalendarNotesComponent
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
-    this.getParam();
+    var date = new Date();
+    this.reloadParam(date);
     this.cache
       .moreFunction('PersonalNotes', 'grvPersonalNotes')
       .subscribe((res) => {
@@ -111,31 +113,6 @@ export class CalendarNotesComponent
   onInit(): void {
     this.getMaxPinNote();
     this.loadData();
-  }
-
-  setColor() {
-    // var colorWP: HTMLElement = document.querySelector('.note-content');
-    // this.dataPara;
-    //
-    // if (colorWP) {
-    //   colorWP.setAttribute(
-    //     'style',
-    //     `background-color: ${this.WP_NotesParam.ShowBackground};
-    //     border-left: 3px ${this.WP_NotesParam.ShowColor} solid;`
-    //   );
-    // }
-    // var colorTM: HTMLElement = document.querySelector('.task-content');
-    // colorTM.setAttribute(
-    //   'style',
-    //   `background-color: ${this.TM_TasksParam.ShowBackground};
-    //   border-left: 3px ${this.TM_TasksParam.ShowColor} solid;`
-    // );
-    // var colorCO: HTMLElement = document.querySelector('.meeting-content');
-    // colorCO.setAttribute(
-    //   'style',
-    //   `background-color: ${this.CO_MeetingsParam.ShowBackground};
-    //   border-left: 3px ${this.CO_MeetingsParam.ShowColor} solid;`
-    // );
   }
 
   loadData() {
@@ -229,11 +206,7 @@ export class CalendarNotesComponent
     });
   }
 
-  ngAfterViewInit() {
-    this.lstView.dataService.requestEnd = (t, data) => {
-      if (t == 'loaded') this.setColor();
-    };
-  }
+  ngAfterViewInit() {}
 
   requestEnded(evt: any) {
     this.view.currentView;
@@ -258,6 +231,7 @@ export class CalendarNotesComponent
   }
 
   onLoad(args): void {
+    debugger
     this.setEvent(args.element, args);
   }
 
@@ -265,7 +239,6 @@ export class CalendarNotesComponent
     this.toDate = new Date();
     var datePare = new Date(Date.parse(this.toDate));
     this.toDate = datePare.toLocaleDateString();
-
     var ele = document.querySelectorAll('.week-item[data-date]');
     for (var i = 0; i < ele.length; i++) {
       let htmlEle = ele[i] as HTMLElement;
@@ -307,9 +280,30 @@ export class CalendarNotesComponent
     this.setDate(data, lstView);
   }
 
+  onValueChangeMonth(args: any, lstView) {
+    var data = JSON.parse(JSON.stringify(args.date));
+    this.setDate(data, lstView);
+    this.reloadParam(args.date);
+  }
+
+  onChangeValueNewWeek(args: any) {
+    this.reloadParam(args.daySelected);
+    this.setEventWeek();
+    var today: any = document.querySelector(
+      ".e-footer-container button[aria-label='Today']"
+    );
+    if (today) {
+      today.click();
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
   FDdate: any;
   TDate: any;
-
+  fDayOfMonth: any;
+  lDayOfMonth: any;
+  fDayOfWeek: any;
+  lDayOfWeek: any;
   setDate(data, lstView) {
     var dateT = new Date(data);
     var fromDate = dateT.toISOString();
@@ -328,8 +322,21 @@ export class CalendarNotesComponent
     this.TDate = toDate;
   }
 
-  valueChangeTyCalendar(e) {
+  reloadParam(data) {
+    var dateT = new Date(data);
+    this.fDayOfMonth = moment(dateT).startOf('month').toISOString();
+    this.lDayOfMonth = moment(dateT).endOf('month').toISOString();
+    this.fDayOfWeek = moment(dateT).startOf('week').toISOString();
+    this.lDayOfWeek = moment(dateT).endOf('week').toISOString();
+    if (this.typeCalendar == 'week')
+      this.getParam(this.fDayOfWeek, this.lDayOfWeek);
+    else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
+  }
+
+  valueChangeTypeCalendar(e) {
     if (e) {
+      this.calendar;
+      debugger
       if (e.data == true) {
         this.typeCalendar = 'week';
         this.checkWeek = true;
@@ -340,14 +347,14 @@ export class CalendarNotesComponent
     }
   }
 
-  getParam() {
+  getParam(fromDate, toDate) {
     this.api
       .callSv(
         'SYS',
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetDataInCalendarAsync',
-        'WPCalendars'
+        ['WPCalendars', fromDate, toDate]
       )
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
@@ -368,6 +375,9 @@ export class CalendarNotesComponent
               }
             });
           }
+          console.log('check dataNote', this.WP_Notes);
+          console.log('check dataTask', this.TM_Tasks);
+          console.log('check dataMeeting', this.CO_Meetings);
         }
       });
   }
@@ -383,7 +393,7 @@ export class CalendarNotesComponent
       if (this.checkTM_TasksParam == true || this.checkTM_TasksParam == '1') {
         if (this.TM_TasksParam?.ShowEvent == '1') {
           for (let y = 0; y < this.TM_Tasks?.length; y++) {
-            var dateParse = new Date(this.TM_Tasks[y]?.createdOn);
+            var dateParse = new Date(this.TM_Tasks[y]?.dueDate);
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarTM++;
@@ -399,7 +409,7 @@ export class CalendarNotesComponent
       ) {
         if (this.CO_MeetingsParam?.ShowEvent == '1') {
           for (let y = 0; y < this.CO_Meetings?.length; y++) {
-            var dateParse = new Date(this.CO_Meetings[y]?.createdOn);
+            var dateParse = new Date(this.CO_Meetings[y]?.startDate);
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarCO++;
@@ -434,7 +444,6 @@ export class CalendarNotesComponent
     var flex: HTMLElement = document.createElement('span');
     flex.className = 'd-flex note-point';
     ele.append(flex);
-
     if (calendarWP >= 1 && countShowCalendar < 1) {
       if (this.typeCalendar == 'week') {
         spanWP.setAttribute(
@@ -665,7 +674,9 @@ export class CalendarNotesComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.getParam();
+          if (this.typeCalendar == 'week')
+            this.getParam(this.fDayOfWeek, this.lDayOfWeek);
+          else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
           (this.lstView.dataService as CRUDService).dataObj = `WPCalendars`;
           (this.lstView.dataService as CRUDService).predicates =
             'CreatedOn >= @0 && CreatedOn < @1';

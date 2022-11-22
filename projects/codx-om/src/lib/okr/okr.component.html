@@ -25,7 +25,7 @@
             </ng-template>
             <ng-template #content> 
               <ng-container *ngIf="dataOKR && dataOKR.length>0 , else elseOKR">
-                <lib-okr-targets [dataOKR]="dataOKR" [formModel]="view?.formModel"></lib-okr-targets>
+                <lib-okr-targets [dataOKR]="dataOKR" [formModel]="view?.formModel" [gridView]="gridView"></lib-okr-targets>
               </ng-container>
               <ng-template #elseOKR>
                 <div class="om-def text-center">

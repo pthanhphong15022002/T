@@ -34,7 +34,6 @@
               </span>
               <span class="text-gray-500 mx-1"> |</span>
               <span class="text-primary">
-                <!-- <lib-date-pipe-format [dateFormatSimple]="item.createdOn"></lib-date-pipe-format> -->
                 {{item.createdOn| timefrom}}
               </span>
             </div>
@@ -83,15 +82,3 @@
     </div>
   </div>
 </ng-template>
-
-<!-- <ng-template #controlShare let-dialogShare>
-  <codx-share
-    [listName]="listName"
-    [field]="fieldValue"
-    [dataShare]="[]"
-    [dialog]="dialogShare"
-    [multiple]="false"
-    (eventApply)="valueCbx($event, fieldValue)"
-  >
-  </codx-share>
-</ng-template> -->

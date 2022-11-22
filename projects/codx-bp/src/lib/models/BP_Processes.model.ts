@@ -1,6 +1,7 @@
 import { Permission } from '@shared/models/file.model';
 
 export class BP_Processes {
+  id:string;
   recID: string;
   category: string;
   processNo: string;
