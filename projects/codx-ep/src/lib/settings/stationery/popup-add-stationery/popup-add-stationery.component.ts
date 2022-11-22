@@ -67,6 +67,9 @@ export class PopupAddStationeryComponent extends UIComponent {
   tmpTitle = '';
   autoNumDisable = false;
   imgRecID: any;
+  warehouseOwner: string = '';
+  warehouseOwnerName: string = '';
+  defaultWarehouse: string = '';
 
   constructor(
     private injector: Injector,
@@ -85,6 +88,8 @@ export class PopupAddStationeryComponent extends UIComponent {
       this.imgRecID = null;
     } else {
       this.imgRecID = this.data.recID;
+      this.defaultWarehouse = this.data.location;
+      this.warehouseOwnerName = this.data.ownerName;
     }
   }
 
@@ -125,11 +130,32 @@ export class PopupAddStationeryComponent extends UIComponent {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item: any) => {
         this.dialogAddStationery = item;
+        if (this.isAdd) {
+          this.api
+            .exec('EP', 'WarehousesBusiness', 'GetDefaultWarehousesIDAsync', [])
+            .subscribe((res: string) => {
+              this.defaultWarehouse = res;
+              this.epService
+                .getWarehousesOwner(this.defaultWarehouse)
+                .subscribe((res: string) => {
+                  this.warehouseOwner = res[0];
+                  this.warehouseOwnerName = res[1];
+                  this.detectorRef.detectChanges();
+                });
+              this.dialogAddStationery.patchValue({
+                reservedQty: 0,
+                currentQty: 0,
+                availableQty: 0,
+                location: res,
+              });
+            });
+        }
         this.dialogAddStationery.patchValue({
           reservedQty: 0,
           currentQty: 0,
           availableQty: 0,
         });
+
         this.isAfterRender = true;
       });
   }
@@ -191,6 +217,19 @@ export class PopupAddStationeryComponent extends UIComponent {
       } else {
         this.data[event?.field] = event.data;
       }
+    }
+
+    if (event?.field == 'location') {
+      this.epService.getWarehousesOwner(event.data).subscribe((res: string) => {
+        this.warehouseOwner = res[0];
+        this.warehouseOwnerName = res[1];
+        this.detectorRef.detectChanges();
+      });
+    }
+
+    if (event?.field == 'owner') {
+      this.data.owner = this.warehouseOwner;
+      this.detectorRef.detectChanges();
     }
   }
 

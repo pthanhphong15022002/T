@@ -390,7 +390,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
-    if (tmpResource.availableQty == 0) {
+    //NagetivePhysical = 0: khong am kho
+    if (tmpResource.availableQty == 0) { //Check SettingValues dieu kien am kho hay khong?
       this.notificationsService.notifyCode('EP013');
       return;
     }
