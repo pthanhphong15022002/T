@@ -12,12 +12,21 @@
 <ng-template #panelLeftRef>
   <div class="container container-md h-100 bg-body rounded-4 scroll-y">
     <ng-container *ngIf="data;else empty">
-      <div class="w-larger p-9" [innerHTML]="data.contentHtml.changingThisBreaksApplicationSecurity"></div>
+      <div class="w-larger p-9">
+        <codx-input 
+          type="textarea" 
+          class="test-textarea" 
+          field="textarea" 
+          format="ed3"
+          [crrValue]="data?.contents"
+          ngDefaultControl>
+        </codx-input>
+      </div>
     </ng-container>
   </div>
 </ng-template>
 <ng-template #empty>
   <div class="text-center">
-    <img style="max-width:700px" src="../assets/media/img/EmptyData.svg" />
+    <img style="max-width:700px" src="assets/themes/sys/default/img/DataEmpty.svg" />
   </div>
 </ng-template>
