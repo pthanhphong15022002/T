@@ -20,13 +20,15 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
-  @Input() hideDelete = '1';
+  @Input() hideDelete = '0';
   @Input() isDeleteTemp = '0';
   @Input() hideMoreF = '1';
   @Input() hideHover = '1';
+  @Input() isScroll = '0';
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
+
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
   titleUpdateShare = "Chia sẻ";

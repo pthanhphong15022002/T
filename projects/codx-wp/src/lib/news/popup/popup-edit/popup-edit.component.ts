@@ -1,10 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DialogRef, ViewsComponent, ApiHttpService, AuthService, NotificationsService, CallFuncService, CacheService, DialogData, Util } from 'codx-core';
-import moment from 'moment';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { DialogRef, ApiHttpService, AuthService, NotificationsService, CallFuncService, CacheService, DialogData, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { WP_Comments } from '../../../models/WP_Comments.model';
 import { WP_News } from '../../../models/WP_News.model';
 
 @Component({
@@ -18,8 +15,7 @@ export class PopupEditComponent implements OnInit {
   objectID = '';
   dialogData: any;
   dialogRef: DialogRef;
-  data: any;
-  permissions:any[] = [];
+  data: WP_News;
   fileUpload: any[] = [];
   fileImage: any = null;
   fileVideo: any = null;
@@ -178,7 +174,7 @@ export class PopupEditComponent implements OnInit {
     post.allowShare = this.data.allowShare;
     post.createPost = this.data.createPost;
     post.contents = this.data.contents;
-    post.permissions = this.permissions;
+    post.permissions = this.data.permissions;
     this.api
       .execSv(
         'WP',
@@ -343,29 +339,34 @@ export class PopupEditComponent implements OnInit {
         case this.SHARECONTROLS.USER:
           data.forEach((x: any) => {
             let p = {
-              ObjectType : x.objectType,
-              ObjectID : x.id,
-              ObjectName : x.text,
-              MemberType : this.MEMBERTYPE.SHARE
+              memberType : this.MEMBERTYPE.SHARE,
+              objectType : x.objectType,
+              objectID : x.id,
+              objectName : x.text
             }
             permissions.push(p);
           });
           if (data.length > 1) {
             this.cache.message('WP002').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,data[0].objectName);
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,data[0].objectName);
+                this.data.permissions = permissions;  
+              }
             });
           }
           else {
             this.cache.message('WP001').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+                this.data.permissions = permissions;  
+              }
             });
           } 
           break;
         default: 
       }
-      this.permissions = permissions;  
       this.changedt.detectChanges();
     }
   }
