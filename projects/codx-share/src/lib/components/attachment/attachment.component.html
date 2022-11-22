@@ -190,7 +190,7 @@
                             <ng-template #simple>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
+                                    [subTitleTmp]="cardImgFooter" [descLine]="1" class="w-100">
                                 </codx-temp-full>
                                 <ng-template #cardImgFooter let-data>
                                     <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item w-100">
@@ -207,7 +207,7 @@
                             <ng-template #full>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
+                                    [subTitleTmp]="cardImgFooter" [descLine]="1" class="w-100">
                                 </codx-temp-full>
                             </ng-template>
                             <ng-template #cardImgFooter let-data>
