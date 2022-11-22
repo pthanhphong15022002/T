@@ -27,12 +27,8 @@
                                     <input #nameInput type="text" class="om-input w-100" formControlName ='okrName' [placeholder]="'Muc tiêu ' +(i+1)"/>
                                 </div>
                                 <div class="d-flex align-items-center w-30">
-                                    <label class="cursor-pointer mb-0">
-                                        <input type="checkbox" class="check-with-label invisible" formControlName ='testcheckbox'/>
-                                        <i class="icon-language ms-3 om-fs-3 "></i>
-                                    
-                                    </label>
-                                    <codx-input [formModel]="formModel" [field]="'confidence'"></codx-input>
+                                    <codx-input type="valuelist" [refValue]="'OM013'"></codx-input>
+                                    <codx-input type="valuelist" [refValue]="'OM012'"></codx-input>
                                     <!-- <select class="om-select" formControlName ='confidence'>
                                         <option value="">&#xf119;</option>
                                         <option>Hi, &#xf043;</option>

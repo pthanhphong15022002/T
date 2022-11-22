@@ -2,7 +2,7 @@
   #view
   [views]="views"
   (buttonClick)="click($event)"
-  [funcID]="funcID"
+  
   [service]="service"
   [assemblyName]="assemblyName"
   [className]="className"
@@ -140,7 +140,7 @@
     </div>
   </div>
   <hr />
-  <div *ngIf="data?.bookingItems?.length > 0">
+  <div *ngIf="data?.bookingItems?.length > 0"  style="max-height:150px;overflow:auto;">
     <div *ngFor="let item of data?.bookingItems">
       <div class="d-flex mb-4 justify-content-between">
         <div class="d-flex flex-row">

@@ -312,8 +312,30 @@ export class PopupAddSignFileComponent implements OnInit {
                     this.autoNo = JSON.parse(JSON.stringify(this.data.refNo));
                     this.formModelCustom.currentData = this.data;
                     this.dialogSignFile.patchValue(this.data);
-                    this.isAfterRender = true;
-                    this.cr.detectChanges();
+
+                    //get autoNumber by category
+                    this.esService
+                      .getCategoryByCateID(this.data.categoryID)
+                      .subscribe((res) => {
+                        if (res) {
+                          this.eSign = res.eSign;
+                          this.esService
+                            .getAutoNumberByCategory(res.autoNumber)
+                            .subscribe((numberRes) => {
+                              if (numberRes) {
+                                if (numberRes != null) {
+                                  this.data.refNo = numberRes;
+                                  this.dialogSignFile.patchValue({
+                                    refNo: this.data.refNo,
+                                  });
+                                  this.cr.detectChanges();
+                                }
+                              }
+                            });
+                          this.isAfterRender = true;
+                          this.cr.detectChanges();
+                        }
+                      });
                   }
                 });
             }
@@ -417,6 +439,7 @@ export class PopupAddSignFileComponent implements OnInit {
           file.createdOn = element.data.createdOn;
           file.createdBy = element.data.createdBy;
           file.comment = element.data.extension;
+          file.eSign = this.eSign;
 
           // let index = lstESign.indexOf(file.comment);
           // if (index >= 0) {
@@ -432,6 +455,7 @@ export class PopupAddSignFileComponent implements OnInit {
         file.createdOn = event.data.createdOn;
         file.createdBy = event.data.createdBy;
         file.comment = event.data.extension;
+        file.eSign = this.eSign;
         // let index = lstESign.indexOf(file.comment);
         // if (index >= 0) {
         //   file.eSign = true;

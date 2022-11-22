@@ -35,6 +35,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   /////////
   auth: AuthStore;
   okrService: CodxOmService;
+  gridView: any;
   constructor(inject: Injector) {
     super(inject);
     this.auth = inject.get(AuthStore);
@@ -53,6 +54,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         },
       },
     ];
+    this.getGridViewSetup();
   }
 
   onInit(): void {
@@ -69,6 +71,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.okrService.getOKR(dataRequest).subscribe((item:any)=>{
       if(item) this.dataOKR = this.dataOKR.concat(item);
     });
+    
   }
 
   //Hàm click
@@ -101,16 +104,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   //Lấy data danh sách mục tiêu
-
-  //Lấy danh sách kr của mục tiêu
-  getItemOKR(i:any,recID:any)
+  getGridViewSetup()
   {
-    this.openAccordion[i] = !this.openAccordion[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
-    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
-    //   });
+    this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
+      this.okrService.loadGridView(fuc?.formName, fuc?.gridViewName).subscribe(grd=>{
+        this.gridView = grd;
+      })
+    })
   }
+
 
 
 }

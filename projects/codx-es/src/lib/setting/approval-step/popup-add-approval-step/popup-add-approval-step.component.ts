@@ -196,6 +196,20 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             .subscribe((res: any) => {
               if (res) {
                 this.data = res.data;
+                if (this.data.stepName == '' || this.data.stepName == null) {
+                  let vllName = this.eSign == true ? 'ES002' : 'ES026';
+                  this.cache.valueList(vllName).subscribe((res) => {
+                    if (res?.datas) {
+                      let i = res.datas.findIndex(
+                        (p) => p.value == this.data.stepType
+                      );
+                      this.data.stepName = res.datas[i]?.text;
+                      this.dialogApprovalStep.patchValue({
+                        stepName: this.data.stepName,
+                      });
+                    }
+                  });
+                }
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
                 this.data.signatureType = this.defaultSignType;

@@ -67,7 +67,6 @@ export class EmployeeVisaFormComponent extends UIComponent implements OnInit {
           // this.dialog.dataService.dataSelected = this.data
           console.log('du lieu formmodel',this.formModel.currentData);
           this.formGroup.patchValue(this.data)
-          
           this.isAfterRender = true
       })
     });

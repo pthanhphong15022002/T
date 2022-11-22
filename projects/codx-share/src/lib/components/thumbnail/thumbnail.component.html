@@ -8,20 +8,20 @@
           <ng-template #simple>
             <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
               title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
-              [desc]="getSubTitle(item.data.recID)" [descLine]="1">
+               [descLine]="1">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
             <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
               title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
               subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}"
-              [desc]="getSubTitle(item.data.recID)" [descLine]="1">
+               [descLine]="1">
             </codx-temp-full>
           </ng-template>
         </div>
 
         <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="hideDelete=='1'"
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="hideDelete=='0'"
             (click)="deleteFile(item.data.recID)">
             <i class="icon-close text-danger icon-16"></i>
           </div>
@@ -101,7 +101,7 @@
           </ng-template>
         </div>
         <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex align-items-center cursor-pointer">
-          <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='1'"
+          <div class="btn btn-sm btn-icon btn-white cursor-pointer" *ngIf="hideDelete=='0'"
             (click)="deleteFile(item.recID)">
             <i class="icon-close text-danger icon-16"></i>
           </div>

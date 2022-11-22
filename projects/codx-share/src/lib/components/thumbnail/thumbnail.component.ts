@@ -260,17 +260,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     }
   }
 
-  getSubTitle(id) {
-    var html = `<div class='action-menu d-flex align-items-center cursor-pointer'>
-                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='openFile("${id}")'>
-                    <i class='icon-preview text-primary icon-18'></i>
-                  </div>
-                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='download("${id}")'>
-                    <i class='icon-cloud_download text-primary icon-18'></i>
-                  </div>
-                </div> `;
-    return html;
-  }
   dialogClosed(){
     this.visible = false;
     this.changeDetectorRef.detectChanges();
