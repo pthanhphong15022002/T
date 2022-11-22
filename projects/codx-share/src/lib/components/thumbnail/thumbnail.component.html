@@ -1,4 +1,4 @@
-<div style="max-height: 100px; overflow-y: auto;">
+<div [style]="isScroll == '0'?'max-height: 100px; overflow-y: auto;':null">
   <ng-container *ngIf="files != null && files.length > 0">
     <div *ngFor="let item of files" class="d-flex align-items-center has-action-menu-1 mb-3">
       <div *ngIf="(item.data != null) then data else nodata"></div>
