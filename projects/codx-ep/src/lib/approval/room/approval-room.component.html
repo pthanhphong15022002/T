@@ -25,7 +25,7 @@
       [objectType]="'EP_Resources'"
       [objectName]="data?.resourceData?.resourceName"
     ></codx-img>
-    <div class="ms-2 d-flex flex-column" style="width:160px;">
+    <div class="ms-2 d-flex flex-column" style="width: 160px">
       <span
         class="fw-bold text-truncate"
         [title]="data?.resourceData?.resourceName"
@@ -55,7 +55,9 @@
 
 <ng-template #contentTmp let-data>
   <div>
-    <span class="border-start fw-bold border-4 border-danger fs-3 ps-2">{{ data?.title }}</span>
+    <span class="border-start fw-bold border-4 border-danger fs-3 ps-2">{{
+      data?.title
+    }}</span>
   </div>
 
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -75,7 +77,7 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today me-1"></i>
       <span class="fw-bold">
-        {{ data?.bookingOn | fmDT:'dmy'}}
+        {{ data?.bookingOn | fmDT: "dmy" }}
       </span>
     </div>
     <div class="d-flex me-6">
@@ -83,9 +85,11 @@
       <span class="fw-bold">
         {{ showHour(data?.startDate) }}
       </span>
-      <span *ngIf="data?.startDate && data?.endDate" class="fw-bold ms-1 me-1">{{
-        "-"
-      }}</span>
+      <span
+        *ngIf="data?.startDate && data?.endDate"
+        class="fw-bold ms-1 me-1"
+        >{{ "-" }}</span
+      >
       <span class="fw-bold">
         {{ showHour(data?.endDate) }}
       </span>
@@ -94,14 +98,22 @@
 
   <hr />
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <codx-label name="lblReason" default="Lí do" class="text-gray-600"></codx-label>
+    <codx-label
+      name="lblReason"
+      default="Lí do"
+      class="text-gray-600"
+    ></codx-label>
     <span class="me-1 text-gray-600">:</span>
     <span class="fw-bold">
       {{ data?.reasonName }}
     </span>
   </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-    <codx-label default="Nội dung" name="lblMemo" class="text-gray-600"></codx-label>
+    <codx-label
+      default="Nội dung"
+      name="lblMemo"
+      class="text-gray-600"
+    ></codx-label>
     <span class="me-1 text-gray-600">:</span>
     <span class="fw-bold">
       {{ data?.memo }}
@@ -109,9 +121,14 @@
   </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
-      <codx-label name="lblAttendees" default="Người tham gia" class="text-gray-600"> </codx-label>
+      <codx-label
+        name="lblAttendees"
+        default="Người tham gia"
+        class="text-gray-600"
+      >
+      </codx-label>
       <span class="me-1 text-gray-600">:</span>
-      <div class=" ms-2 d-flex justify-content-end">
+      <div class="ms-2 d-flex justify-content-end">
         <codx-imgs
           [objectId]="data?.bookingAttendees"
           objectType="AD_Users"
@@ -123,32 +140,30 @@
     </div>
   </div>
   <hr />
-  <div *ngIf="data?.bookingItems?.length>0">
-    <div *ngFor="let item of data?.bookingItems">  
+  <div *ngIf="data?.bookingItems?.length > 0">
+    <div *ngFor="let item of data?.bookingItems">
       <div class="d-flex mb-4 justify-content-between">
         <div class="d-flex flex-row">
           <div class="me-2">
             <codx-img
               [objectId]="item.recID"
               [objectName]="item.itemName"
-              imageType="circle" 
+              imageType="circle"
               width="35"
               objectType="EP_Resources"
-              
             ></codx-img>
-          </div>  
+          </div>
           <div class="">
             <div class="">
-              <span href="#" class=" fw-bold">{{ item.itemName }}</span>
+              <span href="#" class="fw-bold">{{ item.itemName }}</span>
             </div>
             <div class="d-flex flex-row flex-grow-1">
               <codx-label
-                
                 default="Đơn vị tính:"
                 name="lblQuantity"
                 class="text-gray-600"
               ></codx-label>
-              <span class="d-block ms-2 fw-bold">{{item.umid}}</span>
+              <span class="d-block ms-2 fw-bold">{{ item.umName }}</span>
             </div>
           </div>
         </div>
@@ -159,11 +174,10 @@
             name="lblQuantity"
             class="text-gray-600"
           ></codx-label>
-          <span class="ms-2 fw-bold">{{item.quantity}}</span>
+          <span class="ms-2 fw-bold">{{ item.quantity }}</span>
         </div>
       </div>
     </div>
-    
   </div>
 </ng-template>
 
@@ -177,7 +191,7 @@
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today me-1"></i>
         <span class="text-gray-600">
-          {{ data?.bookingOn | fmDT}}
+          {{ data?.bookingOn | fmDT }}
         </span>
       </div>
       <div class="d-flex me-6">
@@ -193,33 +207,31 @@
         </span>
       </div>
     </div>
-    
   </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
   <codx-temp-full
-  cardCss="card-template border-bottom px-2 pt-4 pb-2"
-  (click)="click(data)"
-  [typeMF]="'hover'"
-  [title]="data?.requester"
-  [subTitleTmp]="subTitleTmp"
-  [icoCss]="
-    'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
-  "
-  [status]="data?.approveStatus"
-  [statusVll]="'EP022'"
-  [date]="data?.createdOn"
-  [imageId]="data?.createdBy"
-  imageObjType="AD_Users"
-  [titleLine]="2"
-  [dataItem]="data"
-  [formModel]="formModel"
-  [footer]="footerTmp"
-  (clickMF)="clickMF($event, data)"
-  (changeDataMF)="changeDataMF($event, data)"
-  typeMF="hover"
-  [dataItem]="data"
-    
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (click)="click(data)"
+    [typeMF]="'hover'"
+    [title]="data?.requester"
+    [subTitleTmp]="subTitleTmp"
+    [icoCss]="
+      'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+    "
+    [status]="data?.approveStatus"
+    [statusVll]="'EP022'"
+    [date]="data?.createdOn"
+    [imageId]="data?.createdBy"
+    imageObjType="AD_Users"
+    [titleLine]="2"
+    [dataItem]="data"
+    [formModel]="formModel"
+    [footer]="footerTmp"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    typeMF="hover"
+    [dataItem]="data"
   >
   </codx-temp-full>
 </ng-template>
@@ -245,11 +257,9 @@
     <codx-mfunc
       [dataItem]="data"
       [formModel]="formModel"
-      (clickMF)="clickMF($event, data)" 
-      (changeDataMF)="changeDataMF($event, data)"  
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="changeDataMF($event, data)"
       type="hover"
     ></codx-mfunc>
   </div>
 </ng-template>
-
-
