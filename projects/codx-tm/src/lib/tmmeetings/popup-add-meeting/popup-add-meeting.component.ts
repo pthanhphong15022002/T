@@ -313,7 +313,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close([res.save]);
           //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
-          this.bookingRoomEP(res.save);
+          if(this.meeting.location != null){
+            this.bookingRoomEP(res.save);
+          }
           this.tmSv
             .sendMailAlert(this.meeting.recID, 'TM_0023', this.functionID)
             .subscribe();
@@ -1094,7 +1096,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   bookingRoomEP(data) {
     //chuyển model meeting sang booking
     let booking = new EP_Boooking();
-    booking.resourceID = data.location;
+    booking.resourceID = data?.location;
     booking.status = data.status;
     booking.startDate = data.startDate;
     booking.endDate = data.endDate;
