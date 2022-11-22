@@ -231,7 +231,7 @@ export class CalendarNotesComponent
   }
 
   onLoad(args): void {
-    debugger
+    debugger;
     this.setEvent(args.element, args);
   }
 
@@ -271,31 +271,27 @@ export class CalendarNotesComponent
   }
 
   onChangeValueSelectedWeek(e, lstView) {
+    debugger;
     var data = JSON.parse(JSON.stringify(e.daySelected));
     this.setDate(data, lstView);
   }
 
   onValueChange(args: any, lstView) {
+    debugger;
     var data = JSON.parse(JSON.stringify(args.value));
     this.setDate(data, lstView);
   }
 
   onValueChangeMonth(args: any, lstView) {
+    debugger;
     var data = JSON.parse(JSON.stringify(args.date));
     this.setDate(data, lstView);
     this.reloadParam(args.date);
   }
 
   onChangeValueNewWeek(args: any) {
+    debugger;
     this.reloadParam(args.daySelected);
-    this.setEventWeek();
-    var today: any = document.querySelector(
-      ".e-footer-container button[aria-label='Today']"
-    );
-    if (today) {
-      today.click();
-    }
-    this.changeDetectorRef.detectChanges();
   }
 
   FDdate: any;
@@ -328,6 +324,7 @@ export class CalendarNotesComponent
     this.lDayOfMonth = moment(dateT).endOf('month').toISOString();
     this.fDayOfWeek = moment(dateT).startOf('week').toISOString();
     this.lDayOfWeek = moment(dateT).endOf('week').toISOString();
+    debugger;
     if (this.typeCalendar == 'week')
       this.getParam(this.fDayOfWeek, this.lDayOfWeek);
     else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
@@ -335,8 +332,6 @@ export class CalendarNotesComponent
 
   valueChangeTypeCalendar(e) {
     if (e) {
-      this.calendar;
-      debugger
       if (e.data == true) {
         this.typeCalendar = 'week';
         this.checkWeek = true;
@@ -378,6 +373,7 @@ export class CalendarNotesComponent
           console.log('check dataNote', this.WP_Notes);
           console.log('check dataTask', this.TM_Tasks);
           console.log('check dataMeeting', this.CO_Meetings);
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
