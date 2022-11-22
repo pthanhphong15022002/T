@@ -48,7 +48,7 @@
                   </div>
 
                 </div>
-                <ng-container>
+                <ng-container *ngIf="checkAssignRemove(i)">
                   <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
                     (click)="removeUser(i)">
                     <i class="icon-close text-danger icon-16"></i>

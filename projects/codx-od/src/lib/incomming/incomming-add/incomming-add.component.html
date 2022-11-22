@@ -26,8 +26,8 @@
       (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [objectId]="dispatch?.recID" [allowMultiFile]="0"
       [idBrowse]="'add'" [hideDelete]="
-        this.dispatch?.status == '1' || this.dispatch?.status == '2' ? '1' : '0'
-      " hideMoreF="0" [category]="'2'">
+        this.dispatch?.status == '1' || this.dispatch?.status == '2' ? '0' : '1'
+      " hideMoreF="0">
     </codx-attachment>
   </div>
   <div class="tab-horizone form-group">

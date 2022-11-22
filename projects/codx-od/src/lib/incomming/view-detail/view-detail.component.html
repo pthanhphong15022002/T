@@ -90,7 +90,7 @@
       </div>
     </div>
     <ng-container *ngIf="data && data?.files">
-      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
+      <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
         (viewFile)="handleViewFile($event)">
       </codx-thumbnail>
     </ng-container>
