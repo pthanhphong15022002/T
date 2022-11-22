@@ -20,7 +20,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
-  @Input() hideDelete = '1';
+  @Input() hideDelete = '0';
   @Input() isDeleteTemp = '0';
   @Input() hideMoreF = '1';
   @Input() hideHover = '1';
