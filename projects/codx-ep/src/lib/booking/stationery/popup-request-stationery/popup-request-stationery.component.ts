@@ -390,6 +390,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
+    if (tmpResource.availableQty == 0) {
+      this.notificationsService.notifyCode('EP013');
+      return;
+    }
+
     if (isPresent) {
       this.cart.filter((item: any) => {
         if (item.recID == tmpResource.recID) {
@@ -399,7 +404,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
-      //this.notificationsService.notifyCode('SYS006');
+      this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }

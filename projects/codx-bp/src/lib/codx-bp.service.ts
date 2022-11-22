@@ -128,6 +128,10 @@ export class CodxBpService {
       'GetProcessesByKeyAsync',
       [gridModel,searchKey]
     );
-    //.subscribe((res)=>{ console.log(res)});
+  }
+
+  updateRevision(funcID,recID,verNo, verName,comment ): Observable<any> {
+    return this.api
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,]);
   }
 }

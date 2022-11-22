@@ -89,7 +89,7 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-
+    
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
@@ -178,7 +178,7 @@ export class PopupAddProcessStepsComponent
 
   async saveData() {
     this.gridViewSetup
-    if(this.processSteps.parentID == '' || this.processSteps.parentID == null){
+    if(this.stepType != "P" && (this.processSteps.parentID == '' || this.processSteps.parentID == null)){
       let headerText = this.gridViewSetup['ParentID']?.headerText ?? 'IterationName';
       return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
     }
