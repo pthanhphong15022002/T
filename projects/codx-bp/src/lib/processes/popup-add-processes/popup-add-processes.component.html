@@ -43,7 +43,7 @@
     <div class="form-group">
       <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
       </codx-label>
-      <codx-input field="groupID" [crrValue]="process.groupID" [refValue]="gridViewSetup['GroupID']['referedValue']"
+      <codx-input field="groupID" [crrValue]="process.groupID" [formModel]="form.formModel" [refValue]="gridViewSetup['GroupID']['referedValue']"
         type="combobox" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
