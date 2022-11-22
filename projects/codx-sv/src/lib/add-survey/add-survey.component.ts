@@ -36,6 +36,7 @@ import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image
 import { environment } from 'src/environments/environment';
 import { TemplateSurveyOtherComponent } from '../template-survey-other.component/template-survey-other.component';
 import { PopupQuestionOtherComponent } from '../template-survey-other.component/popup-question-other/popup-question-other.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-add-survey',
@@ -98,6 +99,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   children: any = new Array();
   views: Array<ViewModel> = [];
   viewType = ViewType;
+  itemActive: any;
+  indexSessionA = 0;
+  indexQuestionA = 0;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -106,10 +110,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     inject: Injector,
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
-    private notification: NotificationsService
+    private notification: NotificationsService,
+    private sanitizer: DomSanitizer
   ) {
     super(inject);
-
     this.formats = {
       item: 'Title',
       fontStyle: 'Arial',
@@ -117,9 +121,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
-    // this.router.params.subscribe((params) => {
-    //   if (params) this.funcID = params['funcID'];
-    // });
     this.router.queryParams.subscribe((queryParams) => {
       if (queryParams?.funcID) this.funcID = queryParams.funcID;
       if (queryParams?.recID) {
@@ -127,7 +128,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         this.loadData();
       }
     });
-    this.cache.functionList('SVT01').subscribe((res) => {
+    this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
     });
   }
@@ -151,7 +152,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   onLoading(e) {
     if (this.view.formModel) {
-      var formModel = this.view.formModel;
       this.views = [
         {
           active: true,
@@ -307,17 +307,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         answer: `Tùy chọn 1`,
       },
     ];
-    this.questionAdd.transID = this.recID;
-    this.questionAdd.seqNo = 6;
-    this.questionAdd.category = 'S';
-    this.questionAdd.question = 'Câu hỏi session 3';
+    this.questionAdd.transID = '88079007-543c-11ed-a633-e454e8b52262';
+    this.questionAdd.seqNo = 0;
+    this.questionAdd.category = 'Q';
+    this.questionAdd.question = 'Ngày giờ buổi?';
     this.questionAdd.answers = dataAnswerTemp;
     this.questionAdd.answerType = 'O';
-    this.questionAdd.parentID = 'a32f2b10-5e76-11ed-a637-e454e8b52262';
+    this.questionAdd.parentID = '9c4c9095-6a06-11ed-a643-e454e8b52262';
 
     this.api
       .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-        this.recID,
+        '88079007-543c-11ed-a633-e454e8b52262',
         this.questionAdd,
         true,
       ])
@@ -327,7 +327,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       });
   }
 
-  itemActive: any;
   clickToScroll(seqNoSession = null, recIDQuestion = null, category = null) {
     let recID = 0;
     let id = 'card-survey';
@@ -344,8 +343,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.activeCard(seqNoSession, recIDQuestion, category);
   }
 
-  indexSessionA = 0;
-  indexQuestionA = 0;
   activeCard(seqNoSession, recIDQuestion, category) {
     this.indexSessionA = seqNoSession;
     this.questions.forEach((x) => {
@@ -525,10 +522,10 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           this.addCard(this.itemActive, this.indexSessionA, 'T');
           break;
         case 'LTN04':
-          this.uploadFile('image', 'upload');
+          this.popupUploadFile('image', 'upload');
           break;
         case 'LTN05':
-          this.uploadFile('video', 'upload');
+          this.popupUploadFile('video', 'upload');
           break;
         case 'LTN06':
           this.addCard(this.itemActive, this.indexSessionA, 'S');
@@ -608,40 +605,46 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
               option
             );
             dialog.closed.subscribe((res) => {
-              if (res.event?.changeTemplate == true) {
+              if (res.event.changeTemplate == true) {
                 // Choose other template
                 this.addQuestionOther();
-              } else if (res.event?.changeTemplate == false) {
-                if (res.event.dataSession && res.event.dataSession.length > 0) {
-                  res.event.dataSession.forEach((x) => {
-                    delete x.id;
-                    x.recID = this.generateGUID();
-                    x.children.forEach((y) => {
-                      delete y.id;
-                      y.recID = this.generateGUID();
+              } else if (res.event.changeTemplate == false) {
+                var result = this.SVServices.getDataQuestionOther(
+                  res.event.dataSession,
+                  res.event.dataQuestion
+                );
+                if (result) {
+                  if (result.dataSession && result.dataSession.length > 0) {
+                    result.dataSession.forEach((x) => {
+                      delete x.id;
+                      delete x?.check;
+                      x.recID = this.generateGUID();
+                      x.children.forEach((y) => {
+                        delete y.id;
+                        delete y?.check;
+                        y.recID = this.generateGUID();
+                      });
                     });
-                  });
-                  this.addTemplateCard(
-                    this.itemActive,
-                    this.indexSessionA,
-                    res.event.dataSession,
-                    'S'
-                  );
-                }
-                if (
-                  res.event.dataQuestion &&
-                  res.event.dataQuestion.length > 0
-                ) {
-                  res.event.dataQuestion.forEach((x) => {
-                    delete x.id;
-                    x.recID = this.generateGUID();
-                  });
-                  this.addTemplateCard(
-                    this.itemActive,
-                    this.indexSessionA,
-                    res.event.dataQuestion,
-                    'Q'
-                  );
+                    this.addTemplateCard(
+                      this.itemActive,
+                      this.indexSessionA,
+                      result.dataSession,
+                      'S'
+                    );
+                  }
+                  if (result.dataQuestion && result.dataQuestion.length > 0) {
+                    result.dataQuestion.forEach((x) => {
+                      delete x.id;
+                      delete x?.check;
+                      x.recID = this.generateGUID();
+                    });
+                    this.addTemplateCard(
+                      this.itemActive,
+                      this.indexSessionA,
+                      result.dataQuestion,
+                      'Q'
+                    );
+                  }
                 }
               }
             });
@@ -651,7 +654,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     });
   }
 
-  uploadFile(typeFile, modeFile) {
+  popupUploadFile(typeFile, modeFile) {
     var obj = {
       functionList: this.functionList,
       typeFile: typeFile,
@@ -669,19 +672,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        this.uploadImage(this.indexSessionA, this.itemActive, res.event);
+        this.uploadFile(
+          this.indexSessionA,
+          this.itemActive,
+          res.event.dataUpload,
+          res.event?.referType,
+          modeFile
+        );
       }
     });
   }
 
-  deleteFile() {
+  deleteFile(seqNoSession, objectID) {
     this.SVServices.deleteFile(
-      this.itemActive,
+      objectID,
       this.functionList.entityName
     ).subscribe((res) => {
       if (res) {
-        this.questions.splice(this.itemActive.seqNo, 1);
-        this.questions.forEach((x, index) => (x.seqNo = index));
+        this.questions[seqNoSession].children.splice(this.itemActive.seqNo, 1);
+        this.questions[seqNoSession].children.forEach(
+          (x, index) => (x.seqNo = index)
+        );
       }
     });
   }
@@ -747,45 +758,37 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   addTemplateCard(itemActive, seqNoSession, data, category) {
-    if (category == 'S')
-      this.addTemplateSession(itemActive, seqNoSession, data);
+    if (category == 'S') this.addTemplateSession(seqNoSession, data);
     else this.addTemplateQuestion(itemActive, seqNoSession, data);
   }
 
-  addTemplateSession(itemActive, seqNoSession, data) {
-    var index = itemActive.seqNo;
+  addTemplateSession(seqNoSession, data) {
     data.forEach((x, index) => {
       this.questions.splice(seqNoSession + index + 1, 0, x);
     });
     this.questions.forEach((x, index) => (x.seqNo = index));
-    this.questions[index].children.forEach((x) => {
-      x.active = false;
-    });
-    var indexLast = this.questions.length - 1;
-    this.questions[seqNoSession].active = false;
-    this.questions[indexLast].active = true;
-    this.itemActive = this.questions[indexLast];
-    this.clickToScroll(indexLast, this.questions[indexLast].recID, 'S');
     console.log('check addTemplateSession', this.questions);
     this.change.detectChanges();
   }
 
   addTemplateQuestion(itemActive, seqNoSession, data) {
-    data.forEach((x) => {
-      this.questions[seqNoSession].children.push(x);
+    data.forEach((x, index) => {
+      this.questions[seqNoSession].children.splice(
+        itemActive.seqNo + index + 1,
+        0,
+        x
+      );
     });
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
+    var indexLast = this.questions[seqNoSession].children.length - 1;
     this.questions[seqNoSession].children[itemActive.seqNo].active = false;
-    this.questions[seqNoSession].children[
-      this.questions[seqNoSession].children.length - 1
-    ].active = true;
-    this.itemActive =
-      this.questions[seqNoSession].children[itemActive.seqNo + 1];
+    this.questions[seqNoSession].children[indexLast].active = true;
+    this.itemActive = this.questions[seqNoSession].children[indexLast];
     this.clickToScroll(
       seqNoSession,
-      this.questions[seqNoSession].children[itemActive.seqNo + 1].recID,
+      this.questions[seqNoSession].children[indexLast].recID,
       'Q'
     );
     console.log('check addTemplateQuestion', this.questions);
@@ -863,13 +866,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadImage(seqNoSession, dataQuestion, data) {
-    if (dataQuestion) {
+  uploadFile(seqNoSession, dataQuestion, data, referType, modeFile) {
+    if (dataQuestion && modeFile == 'upload') {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
       tempQuestion.question = null;
-      tempQuestion.category = 'P';
+      tempQuestion.category = referType;
       tempQuestion.recID = data[0].objectID;
       this.questions[seqNoSession].children.splice(
         dataQuestion.seqNo + 1,
@@ -887,11 +890,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       // this.clickToScroll(dataQuestion.seqNo + 1);
     }
     data[0]['recID'] = data[0].objectID;
+    if (referType == 'V' && !data[0]?.srcVideo) {
+      var src = `${environment.urlUpload}/${data[0].urlPath}`;
+      data[0]['srcVideo'] = src;
+    }
     this.lstEditIV = data;
-    if (this.lstEditIV[0].referType == 'video')
-      this.lstEditIV[0][
-        'srcVideo'
-      ] = `${environment.urlUpload}/${this.lstEditIV[0].urlPath}`;
     this.change.detectChanges();
   }
 

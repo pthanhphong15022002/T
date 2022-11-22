@@ -130,8 +130,8 @@ export class CodxBpService {
     );
   }
 
-  updateRevision(funcID,recID,verNo, verName,comment ): Observable<any> {
+  updateRevision(funcID,recID,verNo, verName,comment, entityName ): Observable<any> {
     return this.api
-      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,]);
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName]);
   }
 }

@@ -30,18 +30,17 @@ export class SelectweekComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   user: any;
-  locale = "en";
+  locale = 'en';
   @Output() onChangeValue = new EventEmitter();
   @Output() onChangeWeek = new EventEmitter();
+  @Output() onChangeNewWeek = new EventEmitter();
   isGenerateWeek = false;
   constructor(private changdefect: ChangeDetectorRef, private auth: AuthStore) {
     this.user = this.auth.get();
 
-    if(this.user && this.user.language)
-    {
-      var lang =this.user.language;
-      if(lang === "VN")
-        this.locale = 'vi';
+    if (this.user && this.user.language) {
+      var lang = this.user.language;
+      if (lang === 'VN') this.locale = 'vi';
     }
   }
 
@@ -96,7 +95,11 @@ export class SelectweekComponent implements OnInit {
     this.isFinished = false;
     this.isChangeWeek = true;
     let day = moment(this.fromDate).add(numberDay, 'd').toDate();
-    this.generateDateInWeek(day, true);
+    var chooseDay = this.generateDateInWeek(day, true);
+    if (chooseDay)
+      this.onChangeNewWeek.emit({
+        daySelected: chooseDay,
+      });
   }
   generateDateInWeek(daySelected, changeWeek = false) {
     this.fromDate = moment(daySelected).locale('en').startOf('week').toDate();
@@ -114,6 +117,7 @@ export class SelectweekComponent implements OnInit {
       chooseDay = daySelected;
     }
     this.changeDaySelected(chooseDay, changeWeek);
+    return chooseDay;
   }
 
   renderEvent(date) {

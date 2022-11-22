@@ -47,6 +47,7 @@ export class RevisionsComponent implements OnInit {
   verName:string;
   verNameDefault:string
   verNo:string;
+  entityName:string;
   version = new BP_ProcessRevisions();
   msgErrorValidExit= 'msgErrorValidExit'; // Check name exist
   msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
@@ -65,6 +66,7 @@ export class RevisionsComponent implements OnInit {
     this.dialog = dialog;
     this.more = this.data?.more;
     this.funcID = this.more?.functionID;
+    this.entityName = this.more?.entityName;
     this.process = this.data?.data;
     this.revisions = this.process?.versions;
     this.headerText =dt?.data.more.defaultName;
@@ -134,10 +136,16 @@ export class RevisionsComponent implements OnInit {
       }
    }
    if(this.isUpdate) {
-      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment).subscribe((res) => {
+      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName).subscribe((res) => {
         if (res) {
+            console.log(this.process);
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;
+            this.process.recID = res.recID;
+            this.process.id = res.id;
+            this.process.revisionID = res.revisionID;
+            this.dialog.dataService.clear();
+            this.dialog.dataService.update(this.process).subscribe();
             this.dialog.close(this.process);
             this.notiService.notifyCode('SYS007');
         }
