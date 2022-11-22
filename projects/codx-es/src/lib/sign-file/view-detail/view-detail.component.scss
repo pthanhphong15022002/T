@@ -59,11 +59,16 @@ codx-view-list-detail .codx-detail-main {
 }
 
 .codx-detail-body {
-  height: 68%;
+  height: 100%;
+}
+
+.dt-es .codx-detail-body
+{
+  height: calc(100% - 250px) !important;
 }
 
 .h-od-tab .tab-content {
-  height: calc(100% - 30px) !important;
+  height: 100% !important;
   overflow: auto;
   margin-right: -18px;
   padding-right: 20px;

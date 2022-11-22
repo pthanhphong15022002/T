@@ -43,6 +43,7 @@ export class PopupRolesComponent implements OnInit {
   idUserSelected: any;
   popover: any;
   autoName: any;
+  isAssign: any;
   constructor(
     private auth: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -137,12 +138,7 @@ export class PopupRolesComponent implements OnInit {
     }
     if (type != 'full' && data == false) this.full = false;
 
-    if (
-      this.assign &&
-      this.read &&
-      this.share &&
-      this.download
-    )
+    if (this.assign && this.read && this.share && this.download)
       this.full = true;
 
     this.changeDetectorRef.detectChanges();
@@ -151,11 +147,6 @@ export class PopupRolesComponent implements OnInit {
   controlFocus(isFull) {
     this.isSetFull = isFull;
     this.changeDetectorRef.detectChanges();
-  }
-
-  checkAdminUpdate() {
-    if (this.user.administrator) return false;
-    else return true;
   }
 
   changePermission(index) {
@@ -195,6 +186,18 @@ export class PopupRolesComponent implements OnInit {
       this.currentPemission = index;
     }
 
+    if (
+      (this.permissions[index].autoCreate &&
+        this.permissions[index].nemberType == '1') ||
+      (!this.permissions[index].autoCreate &&
+        this.permissions[index].nemberType == '1') ||
+      (!this.permissions[index].autoCreate &&
+        this.permissions[index].nemberType == '2') ||
+      (!this.permissions[index].autoCreate &&
+        this.permissions[index].nemberType == '3')
+    )
+      this.isAssign = true;
+    else this.isAssign = false;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -295,6 +298,22 @@ export class PopupRolesComponent implements OnInit {
 
   //#endregion
 
+  //#region assign
+  checkAdminUpdate() {
+    if (this.isAssign) return false;
+    else return true;
+  }
+
+  checkAssignRemove(i) {
+    if (
+      !this.permissions[i].autoCreate &&
+      this.permissions[i].nemberType == '1'
+    )
+      return true;
+    else return false;
+  }
+  //#endregion
+
   //#region roles
   showPopover(p, userID) {
     if (this.popover) this.popover.close();
@@ -305,9 +324,8 @@ export class PopupRolesComponent implements OnInit {
 
   selectRoseType(idUserSelected, value) {
     this.process.permissions.forEach((res) => {
-      if(res.objectID != null && res.objectID != ''){
+      if (res.objectID != null && res.objectID != '') {
         if (res.objectID == idUserSelected) res.nemberType = value;
-
       }
     });
     this.changeDetectorRef.detectChanges();

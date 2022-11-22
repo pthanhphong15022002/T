@@ -710,15 +710,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if (this.returnData?.recID && this.returnData?.attachments > 0) {
-            this.attachment.objectId = this.returnData?.recID;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (item2: any) => {
-                if (item2?.status == 0) {
-                  this.fileAdded(item2);
+          if (this.returnData?.recID && this.returnData?.attachments > 0 ) {
+            if(this.attachment.fileUploadList && this.attachment.fileUploadList.length>0){
+              this.attachment.objectId = this.returnData?.recID;
+              (await this.attachment.saveFilesObservable()).subscribe(
+                (item2: any) => {
+                  if (item2?.status == 0) {
+                    this.fileAdded(item2);
+                  }
                 }
-              }
-            );
+              );
+            }            
           }
           if (approval) {
             (
@@ -993,7 +995,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   fileAdded(event: any) {
     this.data.attachments = event.data.length;
   }
-  fileCount(event: any) {}
+  fileCount(event: any) {
+
+  }
 
   //Popup Stationery and User
   closePopUpCbb() {
