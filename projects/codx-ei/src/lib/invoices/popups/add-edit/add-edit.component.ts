@@ -1,5 +1,5 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   EditSettingsModel,
   GridComponent,
@@ -9,6 +9,7 @@ import {
   ApiHttpService,
   CacheService,
   CallFuncService,
+  CodxFormComponent,
   DialogData,
   DialogRef,
   FormModel,
@@ -23,6 +24,7 @@ import {
 })
 export class AddEditComponent implements OnInit {
   //#region Contructor
+  @Input() headerText: string;
   dialog: DialogRef;
   invoices: any;
   action: string;
@@ -37,7 +39,8 @@ export class AddEditComponent implements OnInit {
     allowAdding: false,
     allowDeleting: true,
   };
-
+  selectedItem: any;
+  selectedIndex: number = 0;
   data = [
     {
       no: 1,
@@ -162,16 +165,18 @@ export class AddEditComponent implements OnInit {
   ];
 
   @ViewChild('grid') public grid: GridComponent;
-
+  @ViewChild('form') public form: CodxFormComponent;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
+    private api: ApiHttpService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
     this.dialog = dialog;
     this.invoices = dialog.dataService!.dataSelected;
     this.action = dialogData.data[0];
+    this.headerText = dialogData.data[1];
   }
   //#endregion
 
@@ -203,11 +208,25 @@ export class AddEditComponent implements OnInit {
   //#endregion
 
   //#region Event
+  actionComplete(e) {
+    return;
+    if (e.requestType === 'save' && e.action === 'edit') {
+      if (
+        e.previousData &&
+        JSON.stringify(e.data) === JSON.stringify(e.previousData)
+      ) {
+        e.cancel = true;
+        return;
+      }
+      this.grid.updateRow(e.rowIndex, e.data);
+    }
+  }
+
   keyPressed(e) {
     if (e.keyCode === 13) {
       e.cancel = true;
       if (this.grid.isEdit) {
-        this.grid.saveCell();
+        this.grid.updateRow(this.selectedIndex, this.selectedItem);
       }
       if ((e.target as HTMLElement).classList.contains('e-rowcell')) {
         const rIndex = Number((e.target as HTMLElement).getAttribute('Index'));
@@ -224,27 +243,65 @@ export class AddEditComponent implements OnInit {
     }
   }
 
-  onDataBound(args) {
-    (this.grid as any).keyConfigs.enter = 'tab';
-  }
-
   getSelected(e) {
     if (e && e.data) {
       this.fmGoods.currentData = e.data;
       this.bindData(e.data);
+      this.selectedItem = e.data;
+      this.selectedIndex = e.rowIndex;
     }
   }
 
-  onChangedValue(e, data) {
-    console.log('cbb', e);
-    console.log('data', data);
-    if (e && e.data) {
-      data[e.field] = e.data;
-    }
+  cellEdit(e) {
+    console.log('cell edit', e);
   }
 
   cellSelecting(e) {
-    console.log(e);
+    console.log('cell selecting', e);
+  }
+
+  cellSelected(e) {
+    console.log('cell selected', e);
+  }
+
+  onChangedValue(e, data) {
+    if (e && e.data) {
+      if (e.field === 'UMID') this.selectedItem[e.field.toLowerCase()] = e.data;
+      else this.selectedItem[e.field] = e.data;
+    }
+  }
+
+  mstChange(e) {
+    if (e && e.data) {
+      this.api
+        .exec<any>('EI', 'CustomersBusiness', 'GetByID', e.data)
+        .subscribe((res) => {
+          if (res) {
+            this.form.formGroup.controls['custName'] = res['custName'];
+            this.form.formGroup.controls['adddess'] = res['adddess'];
+            this.form.formGroup.controls['phone'] = res['phone'];
+            this.form.formGroup.controls['email'] = res['email'];
+            this.form.formGroup.controls['bankName'] = res['bankName'];
+            this.form.formGroup.controls['bankAccount'] = res['bankAccount'];
+          } else {
+            this.api
+              .get(`https://thongtindoanhnghiep.co/api/company/${e.data}`)
+              .subscribe((res) => {
+                let customers: any = null;
+                customers['custID'] = res['MaSoThue'];
+                customers['custName'] = res['Title'];
+                customers['taxCode'] = res['MaSoThue'];
+                customers['adddess'] = res['DiaChiCongTy'];
+                customers['contact'] = res['ChuSoHuu'];
+                // customers['email'] =  res['MaSoThue'];
+                // customers['phone'] = res['MaSoThue'];
+                // customers['pmtMethodID'] =  res['MaSoThue'];
+                // customers['bankAccount'] =  res['MaSoThue'];
+                // customers['bankName'] =  res['MaSoThue'];
+              });
+          }
+        });
+    }
   }
   //#endregion
 
