@@ -93,6 +93,7 @@ export class PopupAddComponent implements OnInit {
   ngOnInit(): void {
     this.data = new WP_News();
     this.data.newsType = this.newsType;
+    this.data.shareControl = "9";
     this.setDataDefault();
   }
 
@@ -106,14 +107,6 @@ export class PopupAddComponent implements OnInit {
     this.cache.message("SYS009").subscribe((mssg: any) => {
       if(mssg){
         this.mssgCodeNoty = mssg;
-      }
-    });
-    this.cache.valueList("WP001").subscribe((vll:any) => {
-      if(vll){
-        console.log(vll);
-        vll.datas.forEach(x => {
-          this.dVLL[x.value] = x;
-        });
       }
     });
   }
@@ -156,9 +149,6 @@ export class PopupAddComponent implements OnInit {
       this.notifSV.notify(mssgCode);
       return;
     }
-    this.data.recID = Util.uid();
-    this.data.shareControl = this.shareControl;
-    this.data.permissions = this.permissions;
     this.api
       .execSv(
         'WP',
@@ -186,9 +176,6 @@ export class PopupAddComponent implements OnInit {
       });
   }
   releaseNews() {
-    this.data.recID = Util.uid();
-    this.data.shareControl = this.shareControl;
-    this.data.permissions = this.permissions;
     this.api
       .execSv(
         'WP',
@@ -233,55 +220,59 @@ export class PopupAddComponent implements OnInit {
       });
   }
   valueChange(event: any) {
-    if (!event || !event.field || !event.data) {
-      return;
+    if(event)
+    {
+      let field = event.field;
+      let value = event.data;
+      switch(field)
+      {
+          case "Tags":
+            this.data.tags = value;
+            break;
+          case "Category":
+            this.data.category = value;
+            break;
+          case "StartDate":
+            this.data.startDate = new Date(value.fromDate);
+            break;
+          case "EndDate":
+            this.data.endDate = new Date(value.fromDate);
+            break;
+          case "Subject":
+            this.data.subject = value;
+            break;
+          case "SubContent":
+            this.data.subContent = value;
+            break;
+          case "AllowShare":
+            this.data.allowShare = value;
+            break;
+          case "CreatePost":
+            this.data.createPost = value;
+            break;
+          case "Contents":
+            this.data.contents = value;
+            break;
+          default:
+            break;  
+      }
+      this.changedt.detectChanges();
     }
-    let field = event.field;
-    let value = event.data;
-    switch(field){
-      case "Tags":
-        this.data.tags = value;
-        break;
-      case "Category":
-        this.data.category = value;
-        break;
-      case "StartDate":
-        this.data.startDate = new Date(value.fromDate);
-        break;
-      case "EndDate":
-        this.data.endDate = new Date(value.fromDate);
-        break;
-      case "Subject":
-        this.data.subject = value;
-        break;
-      case "SubContent":
-        this.data.subContent = value;
-        break;
-      case "AllowShare":
-        this.data.allowShare = value;
-        break;
-      case "CreatePost":
-        this.data.createPost = value;
-        break;
-      case "Contents":
-        this.data.contents = value;
-        break;
-      default:
-        break;  
-    }
-    this.changedt.detectChanges();
+    
   }
   eventApply(event: any) {
-    if (event && event[0]?.objectType) {
-      this.shareControl = event[0].objectType;
-      this.getValueShare(this.shareControl, event);
+    if (event) 
+    {
+      this.data.shareControl = event[0].objectType;
+      this.getValueShare(this.data.shareControl, event);
     }
   }
   getValueShare(shareControl: string, data: any[] = null) {
-    if (dataValidate.length > 0) {
-      this.permissions = []
-      this.shareWith = "";
-      switch (this.shareControl) {
+    debugger
+    if (shareControl && data.length > 0) 
+    {
+      let permissions:any[] = [];
+      switch (shareControl) {
         case this.SHARECONTROLS.OWNER:
         case this.SHARECONTROLS.EVERYONE:
         case this.SHARECONTROLS.MYGROUP:
@@ -298,22 +289,30 @@ export class PopupAddComponent implements OnInit {
         case this.SHARECONTROLS.USER:
           data.forEach((x: any) => {
             let p = new Permission();
+            p.memberType = this.MEMBERTYPE.SHARE;
             p.objectType = x.objectType;
             p.objectID = x.id;
             p.objectName = x.text;
-            p.memberType = this.MEMBERTYPE.SHARE;
-            this.permissions.push(p);
+            permissions.push(p);
           });
-          if (data.length > 1) {
+          if (data.length > 1) 
+          {
             this.cache.message('WP002').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,this.dVLL[shareControl].text);
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,data[0].objectName);
+                this.data.permissions = permissions;
+              }
             });
           }
-          else {
+          else 
+          {
             this.cache.message('WP001').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+                this.data.permissions = permissions;
+              }
             });
           }   
           break;
@@ -324,11 +323,10 @@ export class PopupAddComponent implements OnInit {
   }
   addFiles(files: any) {
     if (files && files.data.length > 0) {
-      files.data.map(f => {
+      files.data.forEach(f => {
         if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
           this.fileImage = f;
-          console.log(this.fileImage);
         }
         else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
@@ -355,17 +353,4 @@ export class PopupAddComponent implements OnInit {
     this.codxATM.uploadFile();
   }
 
-  isShowTemplateShare = false;
-  showListShare(shareControl) {
-    if(shareControl == 'U' ||
-      shareControl == 'G' || shareControl == 'R' ||
-      shareControl == 'P' || shareControl == 'D' ||
-      shareControl == 'O') 
-    {
-      this.isShowTemplateShare = !this.isShowTemplateShare;
-    }
-  }
-  closeListShare(){
-      this.isShowTemplateShare = false;;
-  }
 }

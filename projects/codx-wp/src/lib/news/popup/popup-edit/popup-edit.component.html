@@ -136,31 +136,8 @@
                             [fiedName]="'Image'">
                         </codx-label>
                     </div>
-                    <div class="w-100" (click)="clickUploadFile()">
-                        <ng-container *ngIf="fileImage;else haveImage">
-                            <img class="w-100 h-200px" [src]="fileImage.avatar" alt="image">
-                        </ng-container>
-                        <ng-template #haveImage>
-                            <codx-img 
-                                [objectId]="data.recID"
-                                [objectType]="'WP_News'" 
-                                [width]="300"
-                                [isDefaulImg]="true"
-                                [imageType]="'square'">
-                            </codx-img>
-                        </ng-template>
-                    </div>
-                    <div class="d-none">
-                        <codx-attachment #codxAttm 
-                            [functionID]="dialogRef.formModel.funcID" 
-                            [objectId]="data.recID"
-                            [objectType]="'WP_News'" 
-                            [allowMultiFile]="0" 
-                            [showMessage]="0"
-                            [hideImageUpload]="'1'" 
-                            [hideUploadBtn]="'1'" 
-                            (fileCount)="addImage($event)">
-                        </codx-attachment>
+                    <div class="w-100" (click)="clickUploadFile('image')">
+                        <img class="w-100 h-200px" [src]="fileImage?.source || fileImage?.avatar || null" alt="">
                     </div>
                 </div>
                 <div class="d-flex align-items-center mb-2 mt-3">
@@ -226,18 +203,31 @@
                 </codx-input>
             </ng-container>
             <ng-template #templateVideo>
-                <div class="w-100 border h-500px" (click)="clickUploadFile()">
-                    <ng-container *ngIf="fileVideo;else haveVideo">
-                        <video controls class="w-100 h-450px">
-                            <source [src]="fileVideo.srcVideo" type="video/mp4">
+                <div class="w-100 h-100 p-2 border">
+                    <!-- <wp-view-video #video
+                        [ObjectID]="data.recID" 
+                        [ObjectType]="'WP_News'" 
+                        [funcID]="dialogRef.formModel.funcID" >
+                    </wp-view-video> -->
+                    <div class="d-flex align-items-end w-100 h-100" >
+                        <video [src]="fileVideo?.source || fileVideo?.data || null" controls class="w-100" (click)="clickUploadFile('video')">
                         </video>
-                    </ng-container>
-                    <ng-template #haveVideo>
-                        <wp-view-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
-                        </wp-view-video>
-                    </ng-template>
+                    </div>
                 </div>
             </ng-template>
+            <div class="d-none">
+                <codx-attachment #codxATM 
+                    [functionID]="dialogRef.formModel.funcID" 
+                    [objectId]="data.recID"
+                    [objectType]="'WP_News'" 
+                    [allowMultiFile]="0" 
+                    [showMessage]="0"
+                    [allowExtensions]="'.png,.mp4'"
+                    [hideImageUpload]="'1'" 
+                    [hideUploadBtn]="'1'" 
+                    (fileCount)="addFile($event)">
+                </codx-attachment>
+            </div>
         </div>
     </div>
     <!-- footer -->
