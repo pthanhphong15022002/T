@@ -60,9 +60,6 @@ export class PopupUpdateRevisionsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    // gán tạm label
-   // this.titleAction='Cập nhật phiên bản';
-    console.log(this.revisions);
   }
 
   onClose() {
