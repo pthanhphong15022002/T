@@ -102,15 +102,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //Lấy data danh sách mục tiêu
 
-  //Lấy danh sách kr của mục tiêu
-  getItemOKR(i:any,recID:any)
-  {
-    this.openAccordion[i] = !this.openAccordion[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
-    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
-    //   });
-  }
+
 
 
 }
