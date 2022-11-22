@@ -244,7 +244,7 @@
         </div>
     </div>
     <div *ngIf="hideImageThumb == '0'">
-        <div style="overflow: auto" [style.height]="heightScroll + 'px'" (scroll)="scrollFile()">
+        <div style="overflow: auto" [style.maxHeight]="heightScroll + 'px'" (scroll)="scrollFile()">
             <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" [isScroll]="'1'"
                 (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
                 [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)">
