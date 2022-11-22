@@ -10,6 +10,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -34,6 +35,7 @@ import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatc
   selector: 'codx-approval',
   templateUrl: './codx-approval.component.html',
   styleUrls: ['./codx-approval.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('view') view!: ViewsComponent;
