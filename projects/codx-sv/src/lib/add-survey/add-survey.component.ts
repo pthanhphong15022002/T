@@ -676,20 +676,23 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           this.indexSessionA,
           this.itemActive,
           res.event.dataUpload,
-          res.event?.referType
+          res.event?.referType,
+          modeFile
         );
       }
     });
   }
 
-  deleteFile(objectID) {
+  deleteFile(seqNoSession, objectID) {
     this.SVServices.deleteFile(
       objectID,
       this.functionList.entityName
     ).subscribe((res) => {
       if (res) {
-        this.questions.splice(this.itemActive.seqNo, 1);
-        this.questions.forEach((x, index) => (x.seqNo = index));
+        this.questions[seqNoSession].children.splice(this.itemActive.seqNo, 1);
+        this.questions[seqNoSession].children.forEach(
+          (x, index) => (x.seqNo = index)
+        );
       }
     });
   }
@@ -863,8 +866,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadFile(seqNoSession, dataQuestion, data, referType) {
-    if (dataQuestion) {
+  uploadFile(seqNoSession, dataQuestion, data, referType, modeFile) {
+    if (dataQuestion && modeFile == 'upload') {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
@@ -887,22 +890,12 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       // this.clickToScroll(dataQuestion.seqNo + 1);
     }
     data[0]['recID'] = data[0].objectID;
-    if (referType == 'video') {
-      var src = `${environment.urlUpload}/${
-        data[0]?.pathDisk ? data[0]?.pathDisk : data[0]?.thumbnail
-      }`;
-      data[0]['srcVideo'] = this.sanitizer.bypassSecurityTrustResourceUrl(src);
+    if (referType == 'V' && !data[0]?.srcVideo) {
+      var src = `${environment.urlUpload}/${data[0].urlPath}`;
+      data[0]['srcVideo'] = src;
     }
-    console.log('check srcSafe video', data[0]);
     this.lstEditIV = data;
     this.change.detectChanges();
-  }
-
-  getSrcVideo(data) {
-    var src = `${environment.urlUpload}/${data.pathDisk}`;
-    var srcSafe = this.sanitizer.bypassSecurityTrustResourceUrl(src);
-    console.log('check srcSafe video', srcSafe);
-    return srcSafe;
   }
 
   uploadVideo(dataQuestion) {}

@@ -1073,7 +1073,7 @@
       <ng-container *ngFor="let data of lstEditIV">
         <div class="col-5 my-2 m-w-100">
           <div class="w-150 position-relative">
-            <div class="d-flex align-items-center icon-MF-image">
+            <div class="d-flex align-items-center icon-MF-image-outside">
               <div ngbDropdown class="dropdown" container="body">
                 <a
                   href="javascript:void(0)"
@@ -1127,7 +1127,7 @@
                   </li>
                   <li>
                     <a
-                      (click)="deleteFile(data.objectID)"
+                      (click)="deleteFile(seqNoSession, data.objectID)"
                       ngbDropdownItem
                       href="javascript:void(0)"
                     >
@@ -1161,7 +1161,7 @@
               </ng-template>
             </ng-container>
             <ng-container *ngIf="data.referType == REFER_TYPE.VIDEO">
-              <div>
+              <div class="test-videoooooo">
                 <video #video controls class="w-100 rounded h-auto">
                   <source [src]="data?.srcVideo" type="video/mp4" />
                 </video>

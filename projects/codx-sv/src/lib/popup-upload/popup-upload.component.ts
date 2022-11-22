@@ -85,7 +85,7 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.generateGuid();
     let recID = JSON.parse(JSON.stringify(this.guidID));
     var dataUpload: any;
-    if (referType == 'image') dataUpload = this.dataImg;
+    if (referType == 'P') dataUpload = this.dataImg;
     else dataUpload = this.dataVideo;
     delete dataUpload['recID'];
     delete dataUpload['id'];
@@ -101,6 +101,12 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', dataUpload)
       .subscribe((res) => {
         if (res) {
+          if (this.modeFile == 'change') {
+            this.SVServices.deleteFile(
+              this.data.recID,
+              this.functionList.entityName
+            ).subscribe();
+          }
           this.dialog.close(result);
         }
       });
@@ -162,12 +168,15 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       if (result.data) {
         if (this.modeFile == 'change') {
           this.SVServices.deleteFile(
-            this.data,
+            this.data.recID,
             this.functionList.entityName
           ).subscribe();
         }
+        var referType: any;
+        if (files[0]?.referType == 'video') referType = 'V';
+        else referType = 'P';
         var obj = {
-          referType: files[0]?.referType,
+          referType: referType,
           dataUpload: files,
         };
         this.dialog.close(obj);
