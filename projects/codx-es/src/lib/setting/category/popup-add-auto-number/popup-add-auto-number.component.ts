@@ -31,6 +31,8 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   formModel: FormModel;
   formModelData: FormModel;
   autoNoCode;
+  newAutoNoCode;
+  isSaveNew: string = '0';
   viewAutoNumber = '';
   description = '';
 
@@ -57,7 +59,12 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
     this.dialog = dialog;
     this.formModelData = data?.data?.formModel;
     this.autoNoCode = data?.data?.autoNoCode;
+
     this.description = data?.data?.description;
+
+    //tao moi autoNumber theo autoNumber mẫu
+    this.newAutoNoCode = data?.data?.newAutoNoCode;
+    this.isSaveNew = data?.data?.isSaveNew ?? '0';
   }
 
   ngAfterViewInit(): void {}
@@ -154,24 +161,35 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
       this.esService.notifyInvalid(this.dialogAutoNum, this.formModel);
       return;
     }
-
-    if (this.isAdd) {
-      this.data.lastNumber = 0;
-      this.data.step = 1;
-      this.data.description = 'description';
-      if (this.description) {
-        this.data.description = this.description;
-      }
-    }
-
-    this.esService
-      .addEditAutoNumbers(this.data, this.isAdd)
-      .subscribe((res) => {
+    if (this.isSaveNew == '1') {
+      delete this.data.id;
+      delete this.data.recID;
+      this.data.autoNoCode = this.newAutoNoCode;
+      this.esService.addEditAutoNumbers(this.data, true).subscribe((res) => {
         if (res) {
           this.dialogAutoNum.patchValue(this.data);
           this.dialog && this.dialog.close(res);
         }
       });
+    } else {
+      if (this.isAdd) {
+        this.data.lastNumber = 0;
+        this.data.step = 1;
+        this.data.description = 'description';
+        if (this.description) {
+          this.data.description = this.description;
+        }
+      }
+
+      this.esService
+        .addEditAutoNumbers(this.data, this.isAdd)
+        .subscribe((res) => {
+          if (res) {
+            this.dialogAutoNum.patchValue(this.data);
+            this.dialog && this.dialog.close(res);
+          }
+        });
+    }
   }
 
   setViewAutoNumber() {

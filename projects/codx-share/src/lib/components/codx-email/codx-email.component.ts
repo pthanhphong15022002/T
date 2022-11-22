@@ -10,7 +10,10 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
+import {
+  multiLevelLabelClick,
+  Thickness,
+} from '@syncfusion/ej2-angular-charts';
 import {
   NodeSelection,
   RichTextEditorComponent,
@@ -58,7 +61,7 @@ export class CodxEmailComponent implements OnInit {
   date: any;
   templateID: string = '';
 
-  isTemplate: boolean = false;
+  saveIsTemplate: boolean = false;
   // email: any;
   dialogETemplate: FormGroup;
   isAfterRender = false;
@@ -90,7 +93,6 @@ export class CodxEmailComponent implements OnInit {
 
   show = false;
   isAddNew: boolean = false;
-  viewBody: string = '';
 
   public cssClass: string = 'e-list-template';
 
@@ -196,9 +198,10 @@ export class CodxEmailComponent implements OnInit {
                     .getEmailTemplate(this.templateID)
                     .subscribe((res1) => {
                       if (res1 != null) {
+                        console.log('getEmailTemplate', res1);
+
                         this.data = res1[0];
                         this.dialogETemplate.patchValue(res1[0]);
-                        this.viewBody = res1[0]?.message ?? '';
                         this.setViewBody();
                         this.dialogETemplate.addControl(
                           'recID',
@@ -230,12 +233,27 @@ export class CodxEmailComponent implements OnInit {
                             }
                           });
                         }
-
                         this.formModel.currentData = this.data;
                         this.isAfterRender = true;
                       }
                       this.cr.detectChanges();
                     });
+                } else {
+                  this.codxService.getDataDefault().subscribe((res) => {
+                    if (res) {
+                      this.setViewBody();
+
+                      this.data = res;
+                      this.dialogETemplate.patchValue(this.data);
+                      this.dialogETemplate.addControl(
+                        'recID',
+                        new FormControl(this.data.recID)
+                      );
+                      this.formModel.currentData = this.data;
+                      this.isAfterRender = true;
+                      this.cr.detectChanges();
+                    }
+                  });
                 }
               }
             });
@@ -245,30 +263,31 @@ export class CodxEmailComponent implements OnInit {
 
   setViewBody() {
     if (this.dataSource) {
-      if (!this.viewBody) this.viewBody = '';
+      if (!this.data.message && this.data.message == null) {
+        this.data.message = '';
+        this.dialogETemplate.patchValue({ message: this.data.message });
+      }
       this.dataSource.forEach((element) => {
-        this.viewBody = this.viewBody.replace(
+        this.data.message = this.data.message.replace(
           '[' + element.fieldName + ']',
           '[' + element.headerText + ']'
         );
       });
+      this.dialogETemplate.patchValue({ message: this.data.message });
       this.cr.detectChanges();
     }
   }
 
-  setMessage() {
-    if (this.dataSource) {
-      let stringBody = this.viewBody;
-      if (!stringBody) stringBody = '';
+  setMessage(message: any) {
+    if (message) {
       this.dataSource.forEach((element) => {
-        stringBody = stringBody.replace(
+        message = message.replace(
           '[' + element.headerText + ']',
           '[' + element.fieldName + ']'
         );
       });
-      this.dialogETemplate.patchValue({ message: stringBody });
-      this.cr.detectChanges();
     }
+    return message;
   }
 
   ngOnInit(): void {
@@ -276,7 +295,7 @@ export class CodxEmailComponent implements OnInit {
   }
 
   onSaveWithTemplate(dialog: DialogRef) {
-    if (this.isTemplate) {
+    if (this.saveIsTemplate) {
       this.callFunc.openForm(this.addTemplateName, '', 400, 250);
     } else {
       this.onSaveForm(dialog);
@@ -288,7 +307,8 @@ export class CodxEmailComponent implements OnInit {
   }
 
   onSaveForm(dialog1: DialogRef) {
-    this.setMessage();
+    this.data.message = this.setMessage(this.data.message);
+    this.dialogETemplate.patchValue({ message: this.data.message });
     let lstSento = [
       ...this.lstFrom,
       ...this.lstTo,
@@ -297,7 +317,8 @@ export class CodxEmailComponent implements OnInit {
     ];
     console.log(lstSento);
 
-    if (this.isTemplate) {
+    if (this.saveIsTemplate) {
+      //luu thành template ==> save new emailTemplate
       this.codxService
         .addEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
@@ -326,9 +347,10 @@ export class CodxEmailComponent implements OnInit {
             this.dialog && this.dialog.close();
           }
         });
-    } else if (this.isAddNew == false && this.templateID) {
+    } else if (this.isAddNew) {
+      // lưu mới
       this.codxService
-        .editEmailTemplate(this.dialogETemplate.value, lstSento)
+        .addEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
           if (res) {
             if (this.formGroup) {
@@ -351,9 +373,10 @@ export class CodxEmailComponent implements OnInit {
             this.dialog && this.dialog.close(res);
           }
         });
-    } else if (this.isAddNew) {
+    } else if (this.isAddNew == false && this.templateID) {
+      //chỉnh sửa
       this.codxService
-        .addEmailTemplate(this.dialogETemplate.value, lstSento)
+        .editEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
           if (res) {
             if (this.formGroup) {
@@ -383,7 +406,7 @@ export class CodxEmailComponent implements OnInit {
     if (event?.field && event.component) {
       switch (event.field) {
         case 'isTemplate': {
-          this.isTemplate = event?.data;
+          this.saveIsTemplate = event?.data;
           break;
         }
         case 'sendTime': {
@@ -393,8 +416,6 @@ export class CodxEmailComponent implements OnInit {
           break;
         }
         case 'template': {
-          console.log(event);
-
           if (event?.data != '') {
             this.codxService.getEmailTemplate(event?.data).subscribe((res1) => {
               if (res1 != null) {
@@ -402,7 +423,6 @@ export class CodxEmailComponent implements OnInit {
                 res1[0].id = this.data?.id;
                 this.data = res1[0];
                 this.dialogETemplate.patchValue(res1[0]);
-                this.viewBody = res1[0]?.message ?? '';
                 this.setViewBody();
 
                 let lstUser = res1[1];
@@ -657,24 +677,26 @@ export class CodxEmailComponent implements OnInit {
     if (data && data != null) {
       this.saveSelection = this.selection.save(this.range, document);
       this.saveSelection.restore();
+      // let html =
+      //   '<span style="color: gray; text-decoration: inherit" id="' +
+      //   data?.fieldName +
+      //   '"> [' +
+      //   data?.headerText +
+      //   '] </span>';
+      // this.richtexteditor.control.executeCommand('insertHTML', html);
 
-      let html =
-        '<span style="color: gray; text-decoration: inherit" id="' +
-        data?.fieldName +
-        '"> [' +
-        data?.headerText +
-        '] </span>';
-      this.richtexteditor.control.executeCommand('insertHTML', html);
-
-      // this.richtexteditor.control.executeCommand('fontColor', 'gray');
-      // this.richtexteditor.control.executeCommand(
-      //   'insertText',
-      //   ' [' + data + '] '
-      // );
+      //this.richtexteditor.control.executeCommand('fontColor', 'gray');
+      this.richtexteditor.control.executeCommand(
+        'insertText',
+        ' [' + data?.headerText + '] '
+      );
       this.richtexteditor.control.executeCommand('fontColor', 'black');
 
       this.range = this.selection.getRange(document);
-      this.viewBody = this.richtexteditor.control.angularValue;
+      this.data.message = this.richtexteditor.control.angularValue;
+      this.dialogETemplate.patchValue({ message: this.data.message });
+
+      this.cr.detectChanges();
     }
   }
 
@@ -699,6 +721,8 @@ export class CodxEmailComponent implements OnInit {
   }
 
   clickItem(item) {
+    console.log('clickItem', item);
+
     if (item) {
       this.insert(item);
     }

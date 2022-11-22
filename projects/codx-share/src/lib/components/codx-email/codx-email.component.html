@@ -491,7 +491,7 @@
           type="textarea"
           field="message"
           format="ed"
-          [crrValue]="viewBody"
+          [crrValue]="data.message"
           height="250"
           (valueChange)="valueChange($event)"
           (keyup)="keyUp($event)"
@@ -546,7 +546,7 @@
             <div class="mt-1">
               <codx-input
                 type="switch"
-                [crrValue]="isTemplate"
+                [crrValue]="saveIsTemplate"
                 field="isTemplate"
                 (valueChange)="valueChange($event)"
               >
@@ -556,7 +556,7 @@
           <div
             class="d-flex align-items-top me-5"
             [style.visibility]="
-              showIsPublish && isTemplate == true ? 'visible' : 'hidden'
+              showIsPublish && saveIsTemplate == true ? 'visible' : 'hidden'
             "
           >
             <codx-label
