@@ -4,15 +4,15 @@
 </codx-views>
 
 <ng-template #itemViewList let-data>
-  <tr>
+  <tr class="has-action-menu">
     <td class="rowphoto">
       <div class="padding">
-        <div class="d-flex flex-column w-100 p-3">
-          <div class="fw-bold lh-base">{{ data.processName }}</div>
+        <div class="d-flex flex-column w-100">
+          <div class="fw-bold lh-base mb-2">{{ data.processName }}</div>
           <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center">
               <div class="d-flex me-3">
-                <span class="icon-server text-dark icon-16 me-1"></span>
+                <span class="icon-server text-dark icon-14 me-1"></span>
                 <span class="">{{ data.phases }}</span>
               </div>
               <div class="d-flex me-3">
@@ -29,7 +29,7 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div class="padding justify-content-start" style="margin-top: 10px">
+      <div class="padding justify-content-start">
         <codx-temp-full cardCss="card-template" [imageId]="data.objectID" imageObjType="AD_Users" [titleTmp]="titleTmp"
           [desc]="convertHtmlAgency(data.positionName)" [desc2]="data.groupID" [dataItem]="data">
         </codx-temp-full>
@@ -38,24 +38,23 @@
     <td class="rowphoto">
       <div #createdOn class="padding">
         {{
-          data.createdOn | formatvalue
-          : view.formModel
-          : "createdOn"
-          : createdOn
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
+        data.createdOn | formatvalue
+        : view.formModel
+        : "createdOn"
+        : createdOn
+        : "Processes"
+        : "grvProcesses"
+        | async
+        }}
       </div>
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div class="dropdown ms-2" [ngbPopover]="popDetail" placement="left" #empPopover="ngbPopover"
-          [openDelay]="500" (mouseenter)="toggleContent(empPopover, data)"
-          (mouseleave)="toggleContent(empPopover, null)">
-          <button class="btn" type="button" id="dropdownShowDescription"
-            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <div class="d-flex" >
+        <div class="dropdown ms-2" [ngbPopover]="popDetail" placement="left" #empPopover="ngbPopover" [openDelay]="500"
+          (mouseenter)="toggleContent(empPopover, data)" (mouseleave)="toggleContent(empPopover, null)">
+          <button class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            <div class="d-flex">
               <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
             </div>
           </button>
@@ -71,11 +70,9 @@
       <button class="btn btn-primary" (click)="permission(data)">
         <codx-label default="Xét duyệt"></codx-label>
       </button>
-      <div class="padding has-action-menu">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
-          [type]="'hover'">
-        </codx-mfunc>
-      </div>
+      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
+        [type]="'hover'">
+      </codx-mfunc>
     </td>
   </tr>
 </ng-template>
@@ -88,9 +85,7 @@
 
 <ng-template #popDetail>
   <ng-container *ngFor="let item of lstPermissions; index as i">
-    <div
-      class="d-flex justify-content-between align-items-center checkbox-item mb-4"
-    >
+    <div class="d-flex justify-content-between align-items-center checkbox-item mb-4">
       {{item}}
     </div>
   </ng-container>

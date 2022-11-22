@@ -18,6 +18,7 @@ import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
 import { PopupAlignKRComponent } from './popup/popup-align-kr/popup-align-kr.component';
+import { PopupDistributeKRComponent } from './popup/popup-distribute-kr/popup-distribute-kr.component';
 
 const routes: Routes = [
   {
@@ -66,6 +67,7 @@ const routes: Routes = [
     OkrToolbarComponent,
     PopupAddKRComponent,
     PopupAlignKRComponent,
+    PopupDistributeKRComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
