@@ -222,12 +222,10 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
           showIsPublish: true,
           showSendLater: true,
           files: null,
-          isAddNew: false,
+          isAddNew: true,
         };
-
         if (!isAddNewEmail) {
           data.templateID = 'ec122998-ec56-4028-982c-8850191d2bec';
-
           data.isAddNew = false;
         }
 
@@ -242,7 +240,7 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
 
         popEmail.closed.subscribe((res) => {
           if (res.event) {
-            console.log(res.event);
+            console.log('email', res.event);
           }
         });
         break;

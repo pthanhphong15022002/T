@@ -79,6 +79,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   title: '';
   dialogAddBookingStationery: FormGroup;
   returnData = [];
+  nagetivePhysical: string = '';
 
   constructor(
     private injector: Injector,
@@ -112,6 +113,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.epService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res;
     });
+
+    this.epService
+      .getParams('EPParameters', 'NagetivePhysical')
+      .subscribe((res: any) => {
+        let dataValue = res[0].dataValue;
+        let json = JSON.parse(dataValue);
+        this.nagetivePhysical = json.NagetivePhysical;
+      });
 
     this.cache.functionList('EPS24').subscribe((res) => {
       if (res) {
@@ -390,9 +399,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
+    //NagetivePhysical = 0: khong am kho
+
     if (tmpResource.availableQty == 0) {
-      this.notificationsService.notifyCode('EP013');
-      return;
+      if (this.nagetivePhysical == '0') {
+        //không add
+        this.notificationsService.notifyCode('EP013');
+        return;
+      }
     }
 
     if (isPresent) {

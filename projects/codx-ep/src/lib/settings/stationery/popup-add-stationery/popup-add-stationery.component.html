@@ -82,9 +82,11 @@
             >
             </codx-label>
             <codx-input
-              ControlName="location"
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
+              type="combobox"
+              refValue="EP_Warehouses"
+              field="location"
+              [crrValue]="this.defaultWarehouse"
+              (valueChange)="valueChange($event)"
             >
             </codx-input>
           </div>
@@ -99,9 +101,10 @@
             >
             </codx-label>
             <codx-input
-              ControlName="owner"
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
+              type="text"
+              field="owner"
+              [crrValue]="this.warehouseOwnerName"
+              (valueChange)="valueChange($event)"
               disabled="true"
             >
             </codx-input>

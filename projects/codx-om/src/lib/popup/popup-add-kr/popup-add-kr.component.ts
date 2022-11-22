@@ -54,25 +54,26 @@ export class PopupAddKRComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.data = dialogData?.data[0];
+    //this.data = dialogData?.data[0];
     this.isAdd = true//dialogData?.data[1];
     this.headerText= "Thêm kết quả chính"//dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.formModel = this.dialogRef?.formModel;    
+    this.formModel = dialogData.data[0]?.formModel;    
     
   }
 
   ngAfterViewInit(): void {}
 
   onInit(): void {
-    this.codxOmService.getFormModel('OMT03').then(res=>{
-      this.formModel=res;
-      this.initForm();
-    })
+    // this.codxOmService.getFormModel('OMT03').then(res=>{
+    //   this.formModel=res;
+    //   this.initForm();
+    // })
+    this.initForm();
   }
   initForm() {
     this.codxOmService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
       .then((item) => {
         this.fGroupAddKR = item;        
         this.isAfterRender = true;
@@ -81,7 +82,7 @@ export class PopupAddKRComponent extends UIComponent {
   
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 800);
     this.detectorRef.detectChanges();
   }
 

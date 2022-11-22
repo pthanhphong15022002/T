@@ -1,7 +1,8 @@
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, OnInit, Optional } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   EditSettingsModel,
+  GridComponent,
   VirtualScrollService,
 } from '@syncfusion/ej2-angular-grids';
 import {
@@ -21,13 +22,14 @@ import {
   providers: [VirtualScrollService],
 })
 export class AddEditComponent implements OnInit {
+  //#region Contructor
   dialog: DialogRef;
   invoices: any;
   action: string;
   fmGoods: FormModel = {
-    formName: 'Goods',
-    gridViewName: 'grvGoods',
-    entityName: 'EI_Goods',
+    formName: 'EIInvoiceLines',
+    gridViewName: 'grvEIInvoiceLines',
+    entityName: 'EI_InvoiceLines',
   };
   fgGoods: FormGroup;
   editSettings: EditSettingsModel = {
@@ -40,124 +42,127 @@ export class AddEditComponent implements OnInit {
     {
       no: 1,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 2,
       itemDesc: 'Sản phẩm B',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 3,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 4,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 5,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 6,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 7,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 8,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 9,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
     {
       no: 10,
       itemDesc: 'Sản phẩm A',
-      umid: 'Cái',
+      umid: 'CAI',
       quantity: 2,
       salesPrice: 40000,
       salesAmt: 80000,
-      vatID: 2,
+      vatid: 2,
       vatAmt: 1600,
-      rotalAmt: 78400,
+      totalAmt: 78400,
       lineType: 'Gia dụng',
     },
   ];
+
+  @ViewChild('grid') public grid: GridComponent;
+
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -168,33 +173,82 @@ export class AddEditComponent implements OnInit {
     this.invoices = dialog.dataService!.dataSelected;
     this.action = dialogData.data[0];
   }
+  //#endregion
 
+  //#region Init
   ngOnInit(): void {
-    this.cache.gridViewSetup('Goods', 'grvGoods').subscribe((res) => {
-      if (res) {
-        var arrgv = Object.values(res) as any[];
-        const group: any = {};
-        arrgv.forEach((element) => {
-          var keytmp = Util.camelize(element.fieldName);
-          var value = null;
-          var type = element.dataType.toLowerCase();
-          if (type === 'bool') value = false;
-          if (type === 'datetime') value = new Date();
-          if (type === 'int' || type === 'decimal') value = 0;
-          group[keytmp] = element.isRequire
-            ? new FormControl(value, Validators.required)
-            : new FormControl(value);
-        });
-        if (this.data) {
-          this.fmGoods.currentData = this.data;
-          this.bindData(this.data);
+    this.cache
+      .gridViewSetup('EIInvoiceLines', 'grvEIInvoiceLines')
+      .subscribe((res) => {
+        if (res) {
+          var arrgv = Object.values(res) as any[];
+          const group: any = {};
+          arrgv.forEach((element) => {
+            var keytmp = Util.camelize(element.fieldName);
+            var value = null;
+            var type = element.dataType.toLowerCase();
+            if (type === 'bool') value = false;
+            if (type === 'datetime') value = new Date();
+            if (type === 'int' || type === 'decimal') value = 0;
+            group[keytmp] = element.isRequire
+              ? new FormControl(value, Validators.required)
+              : new FormControl(value);
+          });
+
+          this.fgGoods = new FormGroup(group);
+          console.log(this.fgGoods);
         }
-        this.fgGoods = new FormGroup(group);
-        console.log(this.fgGoods);
+      });
+  }
+  //#endregion
+
+  //#region Event
+  keyPressed(e) {
+    if (e.keyCode === 13) {
+      e.cancel = true;
+      if (this.grid.isEdit) {
+        this.grid.saveCell();
       }
-    });
+      if ((e.target as HTMLElement).classList.contains('e-rowcell')) {
+        const rIndex = Number((e.target as HTMLElement).getAttribute('Index'));
+        const cIndex = Number(
+          (e.target as HTMLElement).getAttribute('aria-colindex')
+        );
+        const i = { rowIndex: rIndex, cellIndex: cIndex };
+        const field: string = this.grid.getColumns()[cIndex].field;
+        this.grid.editCell(rIndex, field);
+      }
+    }
+    if (e.key === 'Escape') {
+      this.grid.closeEdit();
+    }
   }
 
+  onDataBound(args) {
+    (this.grid as any).keyConfigs.enter = 'tab';
+  }
+
+  getSelected(e) {
+    if (e && e.data) {
+      this.fmGoods.currentData = e.data;
+      this.bindData(e.data);
+    }
+  }
+
+  onChangedValue(e, data) {
+    console.log('cbb', e);
+    console.log('data', data);
+    if (e && e.data) {
+      data[e.field] = e.data;
+    }
+  }
+
+  cellSelecting(e) {
+    console.log(e);
+  }
+  //#endregion
+
+  //#region Function
   bindData(obj: any) {
     var objValue: any = {};
     if (!this.fgGoods || !this.fgGoods.controls) return;
@@ -206,4 +260,5 @@ export class AddEditComponent implements OnInit {
     });
     this.fgGoods!.patchValue(objValue);
   }
+  //#endregion
 }
