@@ -53,6 +53,7 @@ export class RevisionsComponent implements OnInit {
   msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
   msgSucess = 'msgSucess'; //Condtion sucess
   isUpdate: boolean;
+  gridViewSetup:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -77,13 +78,30 @@ export class RevisionsComponent implements OnInit {
     })
     this.verNo ='V'+this.revisions.length.toString()+'.0';
     this.comment=''
+    this.cache.gridViewSetup('ProcessRevisions', 'grvProcessRevisions').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
 
     // // Message code
     // this.msgErrorValidExit= 'msgErrorValidExit'; // Check name exist
     // this.msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
     // this.msgSucess = 'msgSucess'; //Condtion sucess
   }
-
+  //this.cache
+  // .gridViewSetup(formModel.formName, formModel.gridViewName)
+  // .subscribe((res) => {
+  //   if (res) {
+  //     if (fieldName == 'Buid') fieldName = 'BUID';
+  //     gridViewSetup = res;
+  //     this.notificationsService.notifyCode(
+  //       'SYS009',
+  //       0,
+  //       '"' + gridViewSetup[fieldName]?.headerText + '"'
+  //     );
+  //   }
+  // });
 
   ngOnInit(): void {
   }
@@ -123,11 +141,13 @@ export class RevisionsComponent implements OnInit {
   onSave() {
     switch(this.checkValiName(this.verName)) {
       case this.msgErrorValidIsNull: {
-        this.notiService.notifyCode('Chưa nhập tên phiên bản kìa');
+
+        //
+        this.notiService.notifyCode('SYS009', 0, '"' + 'headerText' + '"');
          break;
       }
       case this.msgErrorValidExit: {
-        this.notiService.notifyCode('Tên phiên bản đã tồi tại rồi nha');
+     //   this.notiService.notifyCode('BP002', 0, '"' + 'headerText' + '"');
          break;
       }
       case this.msgSucess: {
@@ -141,12 +161,13 @@ export class RevisionsComponent implements OnInit {
             console.log(this.process);
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;
-            this.process.recID = res.recID;
             this.process.id = res.id;
             this.process.revisionID = res.revisionID;
-            this.dialog.dataService.clear();
-            this.dialog.dataService.update(this.process).subscribe();
-            this.dialog.close(this.process);
+            var obj = {
+              idNew: res.id.toString(),
+              data: this.process
+            };
+            this.dialog.close(obj);
             this.notiService.notifyCode('SYS007');
         }
       });
