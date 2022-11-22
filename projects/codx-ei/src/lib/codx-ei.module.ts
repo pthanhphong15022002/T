@@ -13,6 +13,7 @@ import { InvoicesComponent } from './invoices/invoices.component';
 import { AddEditComponent } from './invoices/popups/add-edit/add-edit.component';
 import { TabModule } from '@syncfusion/ej2-angular-navigations';
 import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { DialogModule } from '@syncfusion/ej2-angular-popups';
 
 const routes: Routes = [
   {

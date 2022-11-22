@@ -429,8 +429,10 @@ export class ProcessesComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        var obj =e?.event.data;
+        obj.recID =e?.event.idNew;
         this.view.dataService.clear();
-        this.view.dataService.update(e?.event).subscribe();
+        this.view.dataService.update(obj).subscribe();
         this.detectorRef.detectChanges();
       }
     });
@@ -640,7 +642,6 @@ export class ProcessesComponent
          return link
       }else  return "../assets/media/img/codx/default/card-default.svg"
     });
-   
   }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
