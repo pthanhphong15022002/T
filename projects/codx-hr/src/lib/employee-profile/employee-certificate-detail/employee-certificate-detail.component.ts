@@ -40,7 +40,7 @@ export class EmployeeCertificateDetailComponent extends UIComponent implements O
     this.headerText = data?.data?.headerText;
     // if(this.formModel){
     //   this.isAfterRender = true
-    // }
+  // }
     // this.data = dialog?.dataService?.dataSelected
     if(!this.formModel){
       this.formModel = new FormModel();
