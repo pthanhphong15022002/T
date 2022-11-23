@@ -14,7 +14,7 @@
 
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
-    | vll: 'BP003':'color'
+    | vll: gridViewSetup['Status'].referedValue:'color'
     | async
 ">
       <div class="d-flex flex-column w-100 p-3">
