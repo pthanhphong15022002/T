@@ -94,6 +94,7 @@ export class ProcessesComponent
   private searchKey = new Subject<any>();
   listProcess = new Array<BP_Processes>();
   totalRowCount: any;
+  totalRecordSearch: any;
   totalPages: number;
   gridModels = new DataRequest();
   listNumberPage = new Array();
@@ -163,21 +164,21 @@ export class ProcessesComponent
         type: ViewType.card,
         sameData: true,
         active: true,
-        hide: false,
         model: {
           template: this.templateListCard,
         },
       },
       {
         id: '4',
+        active: true,
         icon: 'icon-search',
         text: 'Search',
         type: ViewType.card,
-        active: true,
         sameData: false,
-        // request: this.requestSearch,
         model: {
           panelRightRef: this.templateSearch,
+          //       template2: this.templateSearch,
+          //   resizable: false,
         },
       },
     ];
@@ -209,9 +210,10 @@ export class ProcessesComponent
       .subscribe((res) => {
         if (res != null) {
           this.listProcess = res[0];
+          this.totalRecordSearch = this.listProcess.length;
           this.totalRowCount = res[1];
           // test phân trang
-          this.gridModels.pageSize = 1;
+          this.gridModels.pageSize = 3;
           this.totalPages = Math.ceil(
             this.totalRowCount / this.gridModels.pageSize
           );
@@ -265,6 +267,11 @@ export class ProcessesComponent
         });
         this.changeDetectorRef.detectChanges();
       } else {
+        // this.views.forEach((item) => {
+        //   item.hide = true;
+        //   if (item.text == 'Search') item.hide = false;
+        // });
+        this.changeDetectorRef.detectChanges();
         this.isSearch = true;
         //     this.pageNumberCliked= this.pageNumberDefault;
         this.getHomeProcessSearch();
@@ -403,7 +410,8 @@ export class ProcessesComponent
           [this.titleAction],
           option
         );
-        this.dialog.closed.subscribe(
+        this.dialog.closed
+          .subscribe
           //(e) => {
           // if (e?.event && e?.event != null) {
           //   this.view.dataService.clear();
@@ -411,7 +419,7 @@ export class ProcessesComponent
           //   this.detectorRef.detectChanges();
           // }
           //}
-        );
+          ();
       });
   }
   revisions(more, data) {
@@ -429,10 +437,8 @@ export class ProcessesComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        var obj =e?.event.data;
-        obj.recID =e?.event.idNew;
         this.view.dataService.clear();
-        this.view.dataService.update(obj).subscribe();
+        this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
     });
