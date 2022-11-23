@@ -14,7 +14,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   viewMode = '16';
   funcID="BPT11" //testsau klaay từ more ra
   name = 'ViewList';
-  offset = '0px';
+  offset = '59px';
   dialog!: DialogRef;
   data: any;
   moreFunc: any;
@@ -24,11 +24,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   dataFile : any
   formModel :any
   all: TabModel[] = [
-    { name: 'ViewList', textDefault: 'Viewlist', isActive: true,id:16 },
-    { name: 'Kanban', textDefault: 'Kanban', isActive: false,id:6  },
-    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id:16 },
+    { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
+    { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
+    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 1000 },
   ];
   formModelFlowChart :FormModel ;
+  listPhaseName = []
 
   constructor(
     private api: ApiHttpService,   
@@ -76,13 +77,11 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       }
     });
     item.isActive = true;
+    if( this.name=="Flowchart") this.offset = '0px' ;else this.offset ="59px"
     this.changeDetectorRef.detectChanges();
   }
 
   getFlowChart(process) {
-    // this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
-    //   if (data) this.dataFile = data;
-    // });
     let paras = [
       '',
       this.funcID,

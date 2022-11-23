@@ -635,18 +635,19 @@ export class ProcessesComponent
   //#endregion
 
   //tesst
-  viewDetailProcessSteps(e, data) {
-    this.bpService.viewProcesses.next(data);
+  viewDetailProcessSteps(moreFunc, data) {
+   
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
     //đoi view
+    this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
 
-    // view popup
+    //view popup
     let obj ={
-      moreFunc : e?.data,
+      moreFunc : moreFunc,
       data : data ,
       formModel : this.view.formModel
     }

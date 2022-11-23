@@ -3,6 +3,7 @@
     <div class="d-flex justify-content-between">
       <div class="d-flex align-items-center">
         <!-- ///noi dung -->
+        <h1>{{ title }}</h1>
       </div>
       <div>
         <button
@@ -20,6 +21,73 @@
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex flex-column">
           <!-- ///noi dung -->
+          <div class="mb-5">
+            <h4 class="fw-bold text-gray-900 mb-104">
+              {{ process?.processName }}
+            </h4>
+            <div class="d-flex flex-wrap mb-2">
+              <div class="d-flex align-items-center me-4">
+                <span class="fw-bolb">
+                  <codx-label
+                    name="lblVersionNo"
+                    [formName]="'ProcessRevisions'"
+                    [gridViewName]="'grvProcessRevisions'"
+                    default="Phiên bản:"
+                  >
+                  </codx-label>
+                </span>
+                <span class="text-dark" #versionNo>{{
+                  process?.versionNo
+                    | formatvalue
+                      : formModel
+                      : "versionNo"
+                      : versionNo
+                      : "ProcessRevisions"
+                      : "grvProcessRevisions"
+                    | async
+                }}</span>
+              </div>
+              <div class="d-flex align-items-center">
+                <span class="fw-bolb">
+                  <codx-label name="lblActivedOn" default="Ngày hiệu lực:">
+                  </codx-label>
+                </span>
+                <span class="text-dark" #activedOn>
+                  {{
+                    process?.activedOn
+                      | formatvalue
+                        : formModel
+                        : "activedOn"
+                        : activedOn
+                        : "Processes"
+                        : "grvProcesses"
+                      | async
+                  }}
+                </span>
+              </div>
+            </div>
+            <!-- <div class="d-flex flex-wrap mb-2" *ngIf="listPhaseName?.length > 0">
+              <div class="d-flex align-items-center me-4">
+                <span>
+                  <codx-label
+                    name="lblPhases"
+                    default="Theo dõi quá trình tuyển dụng từ khi "
+                  ></codx-label>
+                  &nbsp;
+                </span>
+                <ng-container *ngFor="let item of listPhaseName; let i = index">
+                  <span>{{ item }}</span
+                  ><span
+                    *ngIf="i < listPhaseName.length - 1"
+                    class="text-danger"
+                    style="font-size: 20px"
+                  >
+                    <codx-label name="lblIcon" default="->"></codx-label>
+                  </span>
+                </ng-container>
+              </div>
+            </div> -->
+          </div>
         </div>
       </div>
 
@@ -45,7 +113,7 @@
     </div>
     <div class="view-details-content rounded-3 bg-body scroll-y p-3 pb-0 mt-4">
       <div
-        class="sprints-task-detail"
+        class="card-body"
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
@@ -72,75 +140,65 @@
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Flowchart'">
-        
-              <div
-                data-kt-scroll="true"
-                data-kt-scroll-activate="{default: true}"
-                data-kt-scroll-height="auto"
-                data-kt-scroll-dependencies=".codx-wapper"
-                data-kt-scroll-wrappers=".codx-toolbar .no-header"
-                [attr.data-kt-scroll-offset]="'650px'"
-              >
-                <div class="d-flex justify-content-between mb-5">
-                  <h1 #processName>
-                    {{
-                      process?.processName
-                        | formatvalue
-                          :formModelFlowChart
-                          : "processName"
-                          : processName
-                          : "Processes"
-                          : "grvProcesses"
-                        | async
-                    }}
-                  </h1>
-                  <button
-                    type="button"
-                    class="btn btn-light-primary me-3"
-                    (click)="addFile($event)"
-                  >
-                    <i class="icon-cloud_upload fs-5"></i
-                    ><span
-                      ><codx-label
-                        name="UploadFile"
-                        formName="Processes"
-                        gridViewName="grvProcesses"
-                        default="Tải ảnh"
-                      ></codx-label>
-                    </span>
-                  </button>
-                </div>
-                <!-- chua co referedType -->
-                <ng-container>
-                  <codx-attachment
-                    #addFlowchart
-                    [objectType]="'BP_Processes'"
-                    [objectId]="process?.recID"
-                    [hideFolder]="1"
-                    [hideImageUpload]="1"
-                    [hideImageThumb]="1"
-                    [hideUploadBtn]="1"
-                    [hideDes]="1"
-                    [type]="'inline'"
-                    [allowMultiFile]="0"
-                    [formModel]="formModelFlowChart"
-                    [functionID]="funcID"
-                    [isSaveSelected]="1"
-                    allowExtensions=".jpg,.png"
-                    (fileAdded)="fileAdded($event)"
-                    (fileCount)="getfileCount($event)"
-                    displayThumb="full"
-                  >
-                  </codx-attachment>
-                </ng-container>
-                <ng-container *ngIf="dataFile">
-                  <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
-                </ng-container>
-                <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
-                </ng-container>
-              </div>
          
-          </ng-container>
+            <div class="d-flex justify-content-between mb-5">
+              <h1 #processName>
+                {{
+                  process?.processName
+                    | formatvalue
+                      : formModelFlowChart
+                      : "processName"
+                      : processName
+                      : "Processes"
+                      : "grvProcesses"
+                    | async
+                }}
+              </h1>
+              <button
+                type="button"
+                class="btn btn-light-primary me-3"
+                (click)="addFile($event)"
+              >
+                <i class="icon-cloud_upload fs-5"></i
+                ><span
+                  ><codx-label
+                    name="UploadFile"
+                    formName="Processes"
+                    gridViewName="grvProcesses"
+                    default="Tải ảnh"
+                  ></codx-label>
+                </span>
+              </button>
+            </div>
+            <!-- chua co referedType -->
+            <ng-container>
+              <codx-attachment
+                #addFlowchart
+                [objectType]="'BP_Processes'"
+                [objectId]="process?.recID"
+                [hideFolder]="1"
+                [hideImageUpload]="1"
+                [hideImageThumb]="1"
+                [hideUploadBtn]="1"
+                [hideDes]="1"
+                [type]="'inline'"
+                [allowMultiFile]="0"
+                [formModel]="formModelFlowChart"
+                [functionID]="funcID"
+                [isSaveSelected]="1"
+                allowExtensions=".jpg,.png"
+                (fileAdded)="fileAdded($event)"
+                (fileCount)="getfileCount($event)"
+                displayThumb="full"
+              >
+              </codx-attachment>
+            </ng-container>
+            <ng-container *ngIf="dataFile">
+              <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+            </ng-container>
+            <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
+            </ng-container>
+        </ng-container>
       </div>
     </div>
   </div>

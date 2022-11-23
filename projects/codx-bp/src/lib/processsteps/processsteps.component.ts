@@ -62,8 +62,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   @Input() process?: BP_Processes;
-  @Input() viewMode = '4';
-  @Input()funcID ='BPT11'
+  @Input() viewMode = '6';
+  @Input() funcID = 'BPT11';
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -117,12 +117,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.user = this.authStore.get();
+
+    // view trang
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
     // this.activedRouter.params.subscribe((res) => {
     //   this.funcID = res.funcID;
     //   this.processID = res.processID;
     // });
-
     this.bpService.viewProcesses.subscribe((res) => {
       this.process = res;
       this.processID = this.process?.recID ? this.process?.recID : '';
@@ -130,30 +131,50 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.dataObj = {
         processID: this.processID,
       };
-      this.layout.setUrl(this.urlBack);
-      this.layout.setLogo(null);
-      if (!this.processID) {
-        this.codxService.navigate('', this.urlBack);
-      }else{
-        this.getFlowChart(this.process);
-      }
-     
+      // this.layout.setUrl(this.urlBack);
+      // this.layout.setLogo(null);
+      // if (!this.processID) {
+      //   this.codxService.navigate('', this.urlBack);
+      // }else{
+      //   this.getFlowChart(this.process);
+      // }
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsWithKanbanAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj; ///de test
 
-      this.request = new ResourceModel();
-      this.request.service = 'BP';
-      this.request.assemblyName = 'BP';
-      this.request.className = 'ProcessStepsBusiness';
-      this.request.method = 'GetProcessStepsWithKanbanAsync';
-      this.request.idField = 'recID';
-      this.request.dataObj = this.dataObj; ///de test
-
-      this.resourceKanban = new ResourceModel();
-      this.resourceKanban.service = 'BP';
-      this.resourceKanban.assemblyName = 'BP';
-      this.resourceKanban.className = 'ProcessStepsBusiness';
-      this.resourceKanban.method = 'GetColumnsKanbanAsync';
-      this.resourceKanban.dataObj = this.dataObj;
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessStepsBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
     });
+
+    // //view popup
+    // if (this.process) {
+    //   this.processID = this.process.recID;
+    //   this.dataObj = {
+    //     processID: this.processID,
+    //   };
+    //   this.request = new ResourceModel();
+    //   this.request.service = 'BP';
+    //   this.request.assemblyName = 'BP';
+    //   this.request.className = 'ProcessStepsBusiness';
+    //   this.request.method = 'GetProcessStepsWithKanbanAsync';
+    //   this.request.idField = 'recID';
+    //   this.request.dataObj = this.dataObj; ///de test
+
+    //   this.resourceKanban = new ResourceModel();
+    //   this.resourceKanban.service = 'BP';
+    //   this.resourceKanban.assemblyName = 'BP';
+    //   this.resourceKanban.className = 'ProcessStepsBusiness';
+    //   this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    //   this.resourceKanban.dataObj = this.dataObj;
+    // }
   }
 
   onInit(): void {
@@ -185,8 +206,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         type: ViewType.content,
         active: false,
         sameData: false,
-        showSearchBar: false,
-        showFilter:false,
         model: {
           panelRightRef: this.itemViewList,
         },
@@ -197,8 +216,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
-        showSearchBar: false,
-        showFilter:false,
         model: {
           template: this.cardKanban,
         },
@@ -213,9 +230,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       //     panelRightRef: this.flowChart,
       //   },
       // },
-  
     ];
-  
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
@@ -1004,7 +1019,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
       .subscribe((res) => {
-        if (res&& res?.url) {
+        if (res && res?.url) {
           let obj = { pathDisk: res?.url, fileName: process?.processName };
           this.dataFile = obj;
         }
