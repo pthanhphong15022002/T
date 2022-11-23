@@ -75,6 +75,8 @@ export class ProcessesComponent
   values: any;
   searchAdvance: boolean;
   viewActive: any;
+  popoverList: any;
+  popoverDetail: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
   viewMode: any;
   views: Array<ViewModel> = [];
@@ -656,4 +658,12 @@ export class ProcessesComponent
   //   var strTime = hours + ':' + minutes + ' ' + ampm;
   //   return strTime;
   // }
+
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null || emp.memo2 != null) p.open();
+    } else p.close();
+  }
 }

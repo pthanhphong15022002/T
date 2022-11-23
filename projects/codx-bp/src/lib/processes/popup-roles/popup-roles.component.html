@@ -19,31 +19,28 @@
                       </codx-temp-full>
                     </ng-template>
                     <ng-template #elsethenAvatar1>
-                      <div class="me-3" style="position: relative" popoverClass="userPopoverClass"
-                        [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
+                      <div class="me-3 d-flex align-items-center" popoverClass="userPopoverClass"
+                        [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
                         (mouseenter)="showPopover(p, perm.objectID)" autoClose="outside">
-                        <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
-                        </codx-img>
-                        <!-- <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                      imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
-                      [title]="perm.objectName">
-                    </codx-temp-full> -->
-
-                        <div style="position: absolute; right: 0px; bottom: 0px">
-                          <ng-container *ngFor="let role of listRoles">
-                            <ng-container *ngIf="role.value == perm.nemberType">
-                              <span inlineSVG="./assets/themes/bp/default/img/{{ role.icon }}"></span>
+                        <div class="d-flex align-items-center" >
+                          <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
+                          </codx-img>
+                          <div  style="position: absolute; left: 58px;">
+                            <ng-container *ngFor="let role of listRoles">
+                              <ng-container *ngIf="role.value == perm.nemberType">
+                                <span inlineSVG="./assets/themes/bp/default/img/{{ role.icon }}"></span>
+                              </ng-container>
                             </ng-container>
-                          </ng-container>
+                          </div>
                         </div>
+                        <div style="margin-left: 20px;">
+                          <div class="text-dark fw-bold fs-6">
+                            {{ perm.objectName }}
+                          </div>
+                          <div *ngIf="perm.autoCreate" class="text-gray-700">{{ autoName }}</div>
+                        </div>
+                      </div>
 
-                      </div>
-                      <div class="me-2">
-                        <div class="text-dark fw-bold fs-6">
-                          {{ perm.objectName }}
-                        </div>
-                        <div *ngIf="perm.autoCreate" class="text-gray-700">{{ autoName }}</div>
-                      </div>
                     </ng-template>
                   </div>
 
