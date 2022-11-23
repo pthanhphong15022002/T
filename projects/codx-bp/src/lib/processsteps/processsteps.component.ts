@@ -134,7 +134,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       if (!this.processID) {
         this.codxService.navigate('', this.urlBack);
       }
-      this.getFlowChart(this.process?.recID);
+      this.getFlowChart(this.process);
 
       this.request = new ResourceModel();
       this.request.service = 'BP';
@@ -977,25 +977,29 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     return arrOwner.join(';');
   }
   //test data flow chart 636341e8e82afdc6f9a4ab54
-  getFlowChart(recID) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
-      if (data) this.dataFile = data;
-    });
-    // this.api.exec<any>("DM","FileBussiness","GetFileByObjectIDAsync",[this.process?.recID,"BP_Processes"]).subscribe(res=>{
-    //   let arrFlowChart = []
-    //   if(res&& res.length> 0){
-    //     arrFlowChart = res.map(x=>{if(x.referType="Flowchart") return x})
-    //   }
-    //   if(arrFlowChart.length>0){
-    //     if(arrFlowChart.length==1){
-    //       this.dataFile = arrFlowChart[0];
-    //       return
-    //     }
-    //     arrFlowChart = arrFlowChart.sort((a,b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf())
-    //     this.dataFile = arrFlowChart[0];
-    //     return
-    //   }
-    // })
+  getFlowChart(process) {
+    // this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
+    //   if (data) this.dataFile = data;
+    // });
+    let paras = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'Flowchart',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .subscribe((res) => {
+        if (res) {
+          let obj = { pathDisk: res?.url, fileName: process?.processName };
+          this.dataFile = obj;
+        }
+      });
   }
   async addFile(evt: any) {
     this.addFlowchart.referType = 'Flowchart';
@@ -1004,7 +1008,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   fileAdded(e) {
     if (e && e?.data?.length > 0) {
       this.dataFile = e.data[0];
-      let flowchart = this.dataFile.recID;
     }
     this.changeDetectorRef.detectChanges();
   }
