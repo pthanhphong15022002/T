@@ -91,7 +91,6 @@ export class ProcessesComponent
   crrRecID = '';
   dataSelected: any;
   gridViewSetup: any;
-  private searchKey = new Subject<any>();
   listProcess = new Array<BP_Processes>();
   totalRowCount: any;
   totalRecordSearch: any;
@@ -168,23 +167,25 @@ export class ProcessesComponent
           template: this.templateListCard,
         },
       },
-      {
-        id: '4',
-        active: true,
-        icon: 'icon-search',
-        text: 'Search',
-        type: ViewType.card,
-        sameData: false,
-        model: {
-          panelRightRef: this.templateSearch,
-          //       template2: this.templateSearch,
-          //   resizable: false,
-        },
-      },
+      // {
+      //   id: '4',
+      //   active: true,
+      //   icon: 'icon-search',
+      //   text: 'Search',
+      //   hide:true,
+      //   type: ViewType.card,
+      //   sameData: false,
+      //   model: {
+      //     panelRightRef: this.templateSearch,
+      //     //       template2: this.templateSearch,
+      //     //   resizable: false,
+      //   },
+      // },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
+    this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -254,31 +255,35 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    try {
-      this.textSearch = $event;
-      this.searchKey.next($event);
-      this.isSearch == true;
-      if (this.textSearch == null || this.textSearch == '') {
-        this.views.forEach((item) => {
-          item.active = false;
-          item.hide = false;
-          if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text) item.active = true;
-        });
-        this.changeDetectorRef.detectChanges();
-      } else {
+    // try {
+    //   this.textSearch = $event;
+    //   this.searchKey.next($event);
+    //   this.isSearch == true;
+    //   if (this.textSearch == null || this.textSearch == '') {
+    //     this.views.forEach((item) => {
+    //       item.active = false;
+    //       item.hide = false;
+    //       if (item.text == 'Search') item.hide = true;
+    //       if (item.text == this.viewActive.text) item.active = true;
+    //     });
+    //     this.changeDetectorRef.detectChanges();
+    //   } else {
         // this.views.forEach((item) => {
         //   item.hide = true;
         //   if (item.text == 'Search') item.hide = false;
         // });
-        this.changeDetectorRef.detectChanges();
-        this.isSearch = true;
+        // this.changeDetectorRef.detectChanges();
+        // this.isSearch = true;
         //     this.pageNumberCliked= this.pageNumberDefault;
-        this.getHomeProcessSearch();
-      }
-    } catch (ex) {
-      this.changeDetectorRef.detectChanges();
-    }
+    //     this.getHomeProcessSearch();
+    //   }
+    // } catch (ex) {
+    //   this.changeDetectorRef.detectChanges();
+    // }
+    let tesst =$event;
+   // this.view.dataService.searchText
+    this.view.dataService.search(tesst).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD
