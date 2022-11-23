@@ -149,7 +149,7 @@ export class BookingStationeryComponent
     if(event != null && data != null && data.issueStatus == 3){
       event.forEach((func) => {
         if (
-          func.functionID == 'EPT40303' /*MF sửa*/ 
+          func.functionID == 'EPT40303' /*MF cấp phát*/ 
         ) {
           func.disabled = true;
         }
