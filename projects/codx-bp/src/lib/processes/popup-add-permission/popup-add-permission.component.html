@@ -127,10 +127,19 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isShare" class="request-box mt-4">
+      <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom mt-4">
+        <div class="w-100">
+          <codx-input type="text" tyle="width:100%" class="borderless" [crrValue]="requestTitle"
+            [placeholder]="'Nhập lý do'" [class]="validate('requestTitle')"
+           >
+          </codx-input>
+        </div>
+        <div class="d-flex align-items-center mb-1">
+          <codx-input type="combobox" field="requestTitle" refValue="EmailTemplates"
+            placeholder="Mail mẫu" (valueChange)="txtValue($event, 'requestTitle')" [formModel]="form.formModel">
+          </codx-input>
+        </div>
 
-        <codx-input type="text" tyle="width:100%" [crrValue]="requestTitle" [placeholder]="'Nhập lý do'"
-          [class]="validate('requestTitle')" (valueChange)="txtValue($event, 'requestTitle')"></codx-input>
       </div>
 
       <div class="request-box mt-4">

@@ -46,7 +46,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -93,9 +94,9 @@ export class ProcessesComponent
   crrRecID = '';
   dataSelected: any;
   gridViewSetup: any;
-  private searchKey = new Subject<any>();
   listProcess = new Array<BP_Processes>();
   totalRowCount: any;
+  totalRecordSearch: any;
   totalPages: number;
   gridModels = new DataRequest();
   listNumberPage = new Array();
@@ -113,7 +114,7 @@ export class ProcessesComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private fileService :FileService
+    private fileService: FileService
   ) {
     super(inject);
 
@@ -165,27 +166,29 @@ export class ProcessesComponent
         type: ViewType.card,
         sameData: true,
         active: true,
-        hide: false,
         model: {
           template: this.templateListCard,
         },
       },
-      {
-        id: '4',
-        icon: 'icon-search',
-        text: 'Search',
-        type: ViewType.card,
-        active: true,
-        sameData: false,
-        // request: this.requestSearch,
-        model: {
-          panelRightRef: this.templateSearch,
-        },
-      },
+      // {
+      //   id: '4',
+      //   active: true,
+      //   icon: 'icon-search',
+      //   text: 'Search',
+      //   hide:true,
+      //   type: ViewType.card,
+      //   sameData: false,
+      //   model: {
+      //     panelRightRef: this.templateSearch,
+      //     //       template2: this.templateSearch,
+      //     //   resizable: false,
+      //   },
+      // },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
+ //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -211,9 +214,10 @@ export class ProcessesComponent
       .subscribe((res) => {
         if (res != null) {
           this.listProcess = res[0];
+          this.totalRecordSearch = this.listProcess.length;
           this.totalRowCount = res[1];
           // test phân trang
-          this.gridModels.pageSize = 1;
+          this.gridModels.pageSize = 3;
           this.totalPages = Math.ceil(
             this.totalRowCount / this.gridModels.pageSize
           );
@@ -254,26 +258,35 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    try {
-      this.textSearch = $event;
-      this.searchKey.next($event);
-      this.isSearch == true;
-      if (this.textSearch == null || this.textSearch == '') {
-        this.views.forEach((item) => {
-          item.active = false;
-          item.hide = false;
-          if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text) item.active = true;
-        });
-        this.changeDetectorRef.detectChanges();
-      } else {
-        this.isSearch = true;
+    // try {
+    //   this.textSearch = $event;
+    //   this.searchKey.next($event);
+    //   this.isSearch == true;
+    //   if (this.textSearch == null || this.textSearch == '') {
+    //     this.views.forEach((item) => {
+    //       item.active = false;
+    //       item.hide = false;
+    //       if (item.text == 'Search') item.hide = true;
+    //       if (item.text == this.viewActive.text) item.active = true;
+    //     });
+    //     this.changeDetectorRef.detectChanges();
+    //   } else {
+        // this.views.forEach((item) => {
+        //   item.hide = true;
+        //   if (item.text == 'Search') item.hide = false;
+        // });
+        // this.changeDetectorRef.detectChanges();
+        // this.isSearch = true;
         //     this.pageNumberCliked= this.pageNumberDefault;
-        this.getHomeProcessSearch();
-      }
-    } catch (ex) {
-      this.changeDetectorRef.detectChanges();
-    }
+    //     this.getHomeProcessSearch();
+    //   }
+    // } catch (ex) {
+    //   this.changeDetectorRef.detectChanges();
+    // }
+    let tesst =$event;
+   // this.view.dataService.searchText
+    this.view.dataService.search(tesst).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD
@@ -405,7 +418,8 @@ export class ProcessesComponent
           [this.titleAction],
           option
         );
-        this.dialog.closed.subscribe(
+        this.dialog.closed
+          .subscribe
           //(e) => {
           // if (e?.event && e?.event != null) {
           //   this.view.dataService.clear();
@@ -413,7 +427,7 @@ export class ProcessesComponent
           //   this.detectorRef.detectChanges();
           // }
           //}
-        );
+          ();
       });
   }
   revisions(more, data) {
@@ -431,10 +445,8 @@ export class ProcessesComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        var obj =e?.event.data;
-        obj.recID =e?.event.idNew;
         this.view.dataService.clear();
-        this.view.dataService.update(obj).subscribe();
+        this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
     });
@@ -591,6 +603,24 @@ export class ProcessesComponent
     console.log(e);
   }
 
+  changeDataMF(e, data) {
+    console.log(e);
+    console.log(e);
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        if (
+          res.functionID == 'SYS005' ||
+          res.functionID == 'SYS004' ||
+          res.functionID == 'SYS001' ||
+          res.functionID == 'SYS002' ||
+          res.functionID == 'SYS003'
+        ) {
+          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled = true;
+        }
+      });
+    }
+  }
+
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
@@ -636,14 +666,14 @@ export class ProcessesComponent
     );
   }
 
-  approval($event) { }
-//tesst
+  approval($event) {}
+  //tesst
   getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe(dt=> {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
       if (dt) {
-         let link = environment.urlUpload+"/"+ dt?.pathDisk;
-         return link
-      }else  return "../assets/media/img/codx/default/card-default.svg"
+        let link = environment.urlUpload + '/' + dt?.pathDisk;
+        return link;
+      } else return '../assets/media/img/codx/default/card-default.svg';
     });
   }
 
