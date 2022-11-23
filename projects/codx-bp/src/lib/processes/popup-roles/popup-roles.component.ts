@@ -25,7 +25,7 @@ export class PopupRolesComponent implements OnInit {
   data: any;
   title = '';
   //#region permissions
-  full: boolean;
+  full: boolean = true;
   create: boolean;
   read: boolean;
   updatePerm: boolean;
@@ -132,6 +132,15 @@ export class PopupRolesComponent implements OnInit {
       case 'assign':
         this.assign = data;
         break;
+      case 'read':
+        this.read = data;
+        break;
+      case 'share':
+        this.share = data;
+        break;
+      case 'download':
+        this.download = data;
+        break;
       default:
         this.isSetFull = false;
         this[type] = data;
@@ -190,14 +199,10 @@ export class PopupRolesComponent implements OnInit {
     }
 
     if (
-      (this.autoCreate &&
-        this.nemberType == '1') ||
-      (!this.autoCreate &&
-        this.nemberType == '1') ||
-      (!this.autoCreate &&
-        this.nemberType == '2') ||
-      (!this.autoCreate &&
-        this.nemberType == '3')
+      (this.autoCreate && this.nemberType == '1') ||
+      (!this.autoCreate && this.nemberType == '1') ||
+      (!this.autoCreate && this.nemberType == '2') ||
+      (!this.autoCreate && this.nemberType == '3')
     )
       this.isAssign = true;
     else this.isAssign = false;
@@ -311,15 +316,15 @@ export class PopupRolesComponent implements OnInit {
 
   checkAssignRemove(i) {
     if (
-      (!this.autoCreate &&
-        this.nemberType == '1')
-
+      !this.process.permissions[i].autoCreate &&
+      this.process.permissions[i].nemberType == '1'
     )
-    //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
+      //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
 
       return true;
     else return false;
   }
+
   //#endregion
 
   //#region roles

@@ -130,9 +130,14 @@ export class PopupAddPermissionComponent implements OnInit {
         case 'to':
           if ($event.data != undefined) {
             var data = $event.data;
+            var list = [];
+            if(this.toPermission != null)
+              list = this.toPermission;
+            else
+              list = [];
             for (var i = 0; i < data.length; i++) {
               var item = data[i];
-              if(item.id != null && item.objectType != "U"){
+              // if(item.id != null && item.objectType != "U"){
                 var perm = new BP_ProcessPermissions();
                 perm.startDate = this.startDate;
                 perm.endDate = this.endDate;
@@ -141,27 +146,33 @@ export class PopupAddPermissionComponent implements OnInit {
                 perm.isActive = true;
                 perm.objectType = item.objectType;
                 perm.read = true;
-                this.toPermission.push(Object.assign({}, perm));
-              }else if (item.id != null && item.objectType == "U"){
-                var perm = new BP_ProcessPermissions();
-                perm.startDate = this.startDate;
-                perm.endDate = this.endDate;
-                perm.objectName = item.text != null ? item.text : item.objectName;
-                perm.objectID = item.id;
-                perm.isActive = true;
-                perm.objectType = item.objectType;
-                perm.read = true;
-                this.toPermission.push(Object.assign({}, perm));
-              }
+                list.push(Object.assign({}, perm));
+              // }else if (item.id != null && item.objectType == "U"){
+              //   var perm = new BP_ProcessPermissions();
+              //   perm.startDate = this.startDate;
+              //   perm.endDate = this.endDate;
+              //   perm.objectName = item.text != null ? item.text : item.objectName;
+              //   perm.objectID = item.id;
+              //   perm.isActive = true;
+              //   perm.objectType = item.objectType;
+              //   perm.read = true;
+              //   this.toPermission.push(Object.assign({}, perm));
+              // }
             }
+            this.toPermission = list;
           }
           break;
         case 'cc':
           if ($event.data != undefined) {
             var data = $event.data;
+            var list = [];
+            if(this.ccPermission != null)
+              list = this.ccPermission;
+            else
+              list = [];
             for (var i = 0; i < data.length; i++) {
               var item = data[i];
-              if(item.id != null && item.objectType != "U"){
+              // if(item.id != null && item.objectType != "U"){
                 var perm = new BP_ProcessPermissions();
                 perm.startDate = this.startDate;
                 perm.endDate = this.endDate;
@@ -170,27 +181,23 @@ export class PopupAddPermissionComponent implements OnInit {
                 perm.isActive = true;
                 perm.objectType = item.objectType;
                 perm.read = true;
-                this.ccPermission.push(Object.assign({}, perm));
-              }else if (item.id != null && item.objectType == "U"){
-                var perm = new BP_ProcessPermissions();
-                perm.startDate = this.startDate;
-                perm.endDate = this.endDate;
-                perm.objectName = item.text != null ? item.text : item.objectName;
-                perm.objectID = item.id;
-                perm.isActive = true;
-                perm.objectType = item.objectType;
-                perm.read = true;
-                this.ccPermission.push(Object.assign({}, perm));
-              }
+                list.push(Object.assign({}, perm));
+            //
             }
+            this.ccPermission = list;
           }
           break;
         case 'by':
           if ($event.data != undefined) {
             var data = $event.data;
+            var list = [];
+            if(this.byPermission != null)
+              list = this.byPermission;
+            else
+              list = [];
             for (var i = 0; i < data.length; i++) {
               var item = data[i];
-              if(item.id != null && item.objectType != "U"){
+              // if(item.id != null && item.objectType != "U"){
                 var perm = new BP_ProcessPermissions();
                 perm.startDate = this.startDate;
                 perm.endDate = this.endDate;
@@ -199,19 +206,20 @@ export class PopupAddPermissionComponent implements OnInit {
                 perm.isActive = true;
                 perm.objectType = item.objectType;
                 perm.read = true;
-                this.byPermission.push(Object.assign({}, perm));
-              }else if (item.id != null && item.objectType == "U"){
-                var perm = new BP_ProcessPermissions();
-                perm.startDate = this.startDate;
-                perm.endDate = this.endDate;
-                perm.objectName = item.text != null ? item.text : item.objectName;
-                perm.objectID = item.id;
-                perm.isActive = true;
-                perm.objectType = item.objectType;
-                perm.read = true;
-                this.byPermission.push(Object.assign({}, perm));
-              }
+                list.push(Object.assign({}, perm));
+              // }else if (item.id != null && item.objectType == "U"){
+              //   var perm = new BP_ProcessPermissions();
+              //   perm.startDate = this.startDate;
+              //   perm.endDate = this.endDate;
+              //   perm.objectName = item.text != null ? item.text : item.objectName;
+              //   perm.objectID = item.id;
+              //   perm.isActive = true;
+              //   perm.objectType = item.objectType;
+              //   perm.read = true;
+              //   this.byPermission.push(Object.assign({}, perm));
+              // }
             }
+            this.byPermission = list;
           }
           break;
       }
