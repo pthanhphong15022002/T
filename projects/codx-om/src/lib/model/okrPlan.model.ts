@@ -1,0 +1,55 @@
+export class OKRPlans {
+    RecID:number;
+    Year:number;
+    PeriodID:string;
+    numbererval:string;
+    EmployeeID:string;
+    PositionID:string;
+    OrgUnitID:string;
+    DeptID:string;
+    DivisionID:string;
+    CompanyID:string;
+    OKRLevel:string;
+    Memo:string;
+    Status:string;
+    Progress:number;
+    Review:string;
+    Assessment:string;
+    Revision:boolean;
+    VersionID:string;
+    VersionNo:string;
+    VersionOn:Date;
+    LastNo:number;
+    Icon:string;
+    Color:string;
+    Stop:boolean;
+    Visibility:string;
+    Shares:Shares[];
+    Owner:string;
+    BUID:string;
+    CreatedOn:Date;
+    CreatedBy:string;
+    ModifiedOn:Date;
+    ModifiedBy:string;    
+}
+export class Shares{
+    RecID:string;
+    ObjectType:string;
+    ObjectID:string;
+    Read:number;
+    View:number;
+    Write:number;
+    Delete:number;
+    Download:number;
+    Upload:number;
+    Share:number;
+    ExpiredOn:Date;
+    Note:string;
+    AutoCreated:boolean;
+    CreatedOn:Date;
+    CreatedBy:string;
+    ModifiedOn:Date;
+    ModifiedBy:string;
+}
+    
+

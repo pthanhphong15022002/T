@@ -159,7 +159,7 @@ export class CardTransComponent
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {      
     this.dialog = this.callFuncService.openForm(
-      PopupAddCardTransComponent,'',550,420,this.funcID,
+      PopupAddCardTransComponent,'',550,450,this.funcID,
       [this.view.dataService.dataSelected,this.formModel,this.popupTitle,this.funcID,this.view.dataService]
         
     );

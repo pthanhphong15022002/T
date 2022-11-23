@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CacheService, CallFuncService } from 'codx-core';
+import { CacheService, CallFuncService, SidebarModel, FormModel } from 'codx-core';
+import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
 import { OkrEditComponent } from '../okr-edit/okr-edit.component';
 
 @Component({
@@ -47,6 +48,35 @@ export class OkrTargetsComponent implements OnInit {
             this.gridView
           ]
         );
+        break;
+      }
+    }
+  }
+
+  addKR(objectRecID:any) {
+
+    let formModel= new FormModel();
+    formModel.entityName="OM_OKRs";
+    formModel.gridViewName="grvOKRs";
+    formModel.formName="OKRs";
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.formModel;
+    let dialogKR= this.callfunc.openSide(
+      PopupAddKRComponent,
+      [objectRecID,formModel],
+      option
+    );
+  }
+
+  clickKRMF(e:any,data:any)
+  {
+    var funcID = e?.functionID;
+    switch(funcID)
+    {
+      case 'SYS03':
+      {
+        this.addKR(data.recID);
         break;
       }
     }
