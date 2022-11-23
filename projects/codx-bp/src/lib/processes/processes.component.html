@@ -9,7 +9,8 @@
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imageReferType]="'Flowchart'"  [rootData]="data" [dataItem]="data"
     [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-    [imageWidth]="600">
+    [imageWidth]="600" (changeDataMF)="changeDataMF($event, data)"
+    >
   </codx-card-img>
 
   <ng-template #footerbg let-data>
@@ -163,7 +164,7 @@
         </button>
       </div>
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
-        [type]="'hover'">
+        [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
     <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">

@@ -46,7 +46,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -113,7 +114,7 @@ export class ProcessesComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private fileService :FileService
+    private fileService: FileService
   ) {
     super(inject);
 
@@ -405,7 +406,8 @@ export class ProcessesComponent
           [this.titleAction],
           option
         );
-        this.dialog.closed.subscribe(
+        this.dialog.closed
+          .subscribe
           //(e) => {
           // if (e?.event && e?.event != null) {
           //   this.view.dataService.clear();
@@ -413,7 +415,7 @@ export class ProcessesComponent
           //   this.detectorRef.detectChanges();
           // }
           //}
-        );
+          ();
       });
   }
   revisions(more, data) {
@@ -431,8 +433,8 @@ export class ProcessesComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        var obj =e?.event.data;
-        obj.recID =e?.event.idNew;
+        var obj = e?.event.data;
+        obj.recID = e?.event.idNew;
         this.view.dataService.clear();
         this.view.dataService.update(obj).subscribe();
         this.detectorRef.detectChanges();
@@ -591,6 +593,24 @@ export class ProcessesComponent
     console.log(e);
   }
 
+  changeDataMF(e, data) {
+    console.log(e);
+    console.log(e);
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        if (
+          res.functionID == 'SYS005' ||
+          res.functionID == 'SYS004' ||
+          res.functionID == 'SYS001' ||
+          res.functionID == 'SYS002' ||
+          res.functionID == 'SYS003'
+        ) {
+          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled = true;
+        }
+      });
+    }
+  }
+
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
@@ -635,14 +655,14 @@ export class ProcessesComponent
     // );
   }
 
-  approval($event) { }
-//tesst
+  approval($event) {}
+  //tesst
   getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe(dt=> {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
       if (dt) {
-         let link = environment.urlUpload+"/"+ dt?.pathDisk;
-         return link
-      }else  return "../assets/media/img/codx/default/card-default.svg"
+        let link = environment.urlUpload + '/' + dt?.pathDisk;
+        return link;
+      } else return '../assets/media/img/codx/default/card-default.svg';
     });
   }
 
