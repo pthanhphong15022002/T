@@ -683,7 +683,7 @@ export class ProcessesComponent
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
-      if (emp.memo != null || emp.memo2 != null) p.open();
+      if (emp.memo != null ) p.open();
     } else p.close();
   }
 }
