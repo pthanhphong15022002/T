@@ -2078,7 +2078,11 @@
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
                 <div class="fs-4 fw-bold text-primary">
-                  <codx-label name="lblEmployeeCheckUp" [formModel]="view.formModel" default="KHÁM SỨC KHỎE">
+                  <codx-label
+                    name="lblEmployeeCheckUp"
+                    [formModel]="view.formModel"
+                    default="KHEN THƯỞNG"
+                  >
                   </codx-label>
                 </div>
                 <div class="user-status d-flex align-items-center ms-3">
@@ -2093,11 +2097,16 @@
             <div class="border mb-3">
               <div class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3">
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span class="icon-edit icon-18" (click)="addEmployeeSelfInfo()"></span>
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeAwardsInfo()"
+                  ></span>
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="healthColumnsGrid"></lib-tmp-grid-view>
+                <!-- <lib-tmp-grid-view
+                  [columnsGrid]="healthColumnsGrid"
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -2105,7 +2114,11 @@
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
                 <div class="fs-4 fw-bold text-primary">
-                  <codx-label name="lblEmployeeVaccine" [formModel]="view.formModel" default="TIÊM SỨC KHỎE">
+                  <codx-label
+                    name="lblEmployeeVaccine"
+                    [formModel]="view.formModel"
+                    default="KỶ LUẬT"
+                  >
                   </codx-label>
                 </div>
                 <div class="user-status d-flex align-items-center ms-3">
@@ -2120,11 +2133,16 @@
             <div class="border mb-3">
               <div class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3">
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span class="icon-edit icon-18" (click)="addEmployeeSelfInfo()"></span>
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeDisciplinesInfo()"
+                  ></span>
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="healthColumnsGrid"></lib-tmp-grid-view>
+                <!-- <lib-tmp-grid-view
+                  [columnsGrid]="healthColumnsGrid"
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -2151,7 +2169,9 @@
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="healthColumnsGrid"></lib-tmp-grid-view>
+                <!-- <lib-tmp-grid-view
+                  [columnsGrid]="healthColumnsGrid"
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
