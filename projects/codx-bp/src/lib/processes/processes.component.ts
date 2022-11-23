@@ -188,7 +188,7 @@ export class ProcessesComponent
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
-    this.view.dataService.searchText='GetProcessesByKeyAsync';
+ //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
 
