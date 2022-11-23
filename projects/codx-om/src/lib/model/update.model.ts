@@ -1,17 +1,17 @@
 export class Updates{
-    RecID:string;
-    ObjectType:string;
-    ObjectID:string;
-    ChildID:string;
-    ActionType:string;
-    OldValues:any;
-    NewValues:any;
-    Attachments:number;
-    Comment:string;
-    Deleted:boolean;
-    AutoCreated:boolean;
-    CreatedOn:Date;
-    CreatedBy:string;
-    IPConnection:string;
+    recID:string;
+    objectType:string;
+    objectID:string;
+    childID:string;
+    actionType:string;
+    oldValues:any;
+    newValues:any;
+    attachments:number;
+    comment:string;
+    deleted:boolean;
+    autoCreated:boolean;
+    createdOn:Date;
+    createdBy:string;
+    iPConnection:string;
     
 }

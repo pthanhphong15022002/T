@@ -1,16 +1,16 @@
 export class Reviews{
-    RecID:string;
-    TransID:string;
-    LineType:string;
+    recID:string;
+    transID:string;
+    lineType:string;
     numbererval:string;
-    PeriodID:string;
-    PlanDate:Date;
-    CheckIn:Date;
-    Status:string;
-    Comment:string;
-    CreatedOn:Date;
-    CreatedBy:string;
-    ModifiedOn:Date;
-    ModifiedBy:string;
+    periodID:string;
+    planDate:Date;
+    checkIn:Date;
+    status:string;
+    comment:string;
+    createdOn:Date;
+    createdBy:string;
+    modifiedOn:Date;
+    modifiedBy:string;
 }
     

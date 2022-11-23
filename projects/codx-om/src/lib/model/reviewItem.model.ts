@@ -1,18 +1,18 @@
 export class ReviewItems{
-    RecID:string;
-    TransID:string;
-    OKRID:string;
-    ItemType:string;
-    Memo:string;
-    Deadline:Date;
-    Status:string;
-    Attachments:number;
-    Comments:number;
-    Owner:string;
-    BUID:string;
-    CreatedOn:Date;
-    CreatedBy:string;
-    ModifiedOn:Date;
-    ModifiedBy:string;
+    recID:string;
+    transID:string;
+    oKRID:string;
+    itemType:string;
+    memo:string;
+    deadline:Date;
+    status:string;
+    attachments:number;
+    comments:number;
+    owner:string;
+    bUID:string;
+    createdOn:Date;
+    createdBy:string;
+    modifiedOn:Date;
+    modifiedBy:string;
 }
     
