@@ -75,6 +75,8 @@ export class ProcessesComponent
   values: any;
   searchAdvance: boolean;
   viewActive: any;
+  popoverList: any;
+  popoverDetail: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
   viewMode: any;
   views: Array<ViewModel> = [];
@@ -429,8 +431,10 @@ export class ProcessesComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        var obj =e?.event.data;
+        obj.recID =e?.event.idNew;
         this.view.dataService.clear();
-        this.view.dataService.update(e?.event).subscribe();
+        this.view.dataService.update(obj).subscribe();
         this.detectorRef.detectChanges();
       }
     });
@@ -610,7 +614,7 @@ export class ProcessesComponent
     let url = 'bp/processstep/BPT11';
     this.codxService.navigate('', url, { processID: data.recID });
 
-    //view popup
+    // view popup
     // let obj ={
     //   moreFunc : e?.data,
     //   data : data
@@ -640,7 +644,6 @@ export class ProcessesComponent
          return link
       }else  return "../assets/media/img/codx/default/card-default.svg"
     });
-   
   }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
@@ -655,4 +658,12 @@ export class ProcessesComponent
   //   var strTime = hours + ':' + minutes + ' ' + ampm;
   //   return strTime;
   // }
+
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null || emp.memo2 != null) p.open();
+    } else p.close();
+  }
 }

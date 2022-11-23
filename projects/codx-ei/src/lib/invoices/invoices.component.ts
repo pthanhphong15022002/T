@@ -59,6 +59,11 @@ export class InvoicesComponent extends UIComponent {
           template: this.itemTemplate,
         },
       },
+      {
+        type: ViewType.grid,
+        active: true,
+        sameData: true,
+      },
     ];
   }
   //#endregion
@@ -83,11 +88,11 @@ export class InvoicesComponent extends UIComponent {
         op.IsFull = true;
         let p = this.callfc.openForm(
           AddEditComponent,
-          this.funcName + ' ' + this.moreFuncName,
+          '',
           null,
           null,
           this.view.funcID,
-          'add',
+          ['add', this.moreFuncName + ' ' + this.funcName],
           '',
           op
         );

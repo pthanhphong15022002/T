@@ -67,14 +67,14 @@ export class PopupAddPermissionComponent implements OnInit {
       this.per.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
         this.per.toPermission[i].update = true;
-        this.per.toPermission[i].delete = false;
+        this.per.toPermission[i].delete = true;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
         this.per.toPermission[i].autoCreate = false;
         this.per.toPermission[i].nemberType = '3';
       } else {
         this.per.toPermission[i].update = true;
-        this.per.toPermission[i].delete = false;
+        this.per.toPermission[i].delete = true;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
         this.per.toPermission[i].autoCreate = false;
@@ -134,7 +134,7 @@ export class PopupAddPermissionComponent implements OnInit {
         var perm = new BP_ProcessPermissions();
         perm.startDate = this.startDate;
         perm.endDate = this.endDate;
-        perm.objectName = item.text;
+        perm.objectName = item.text != null ? item.text : item.objectName;
         perm.objectID = item.id;
         perm.isActive = true;
         perm.objectType = item.objectType;
