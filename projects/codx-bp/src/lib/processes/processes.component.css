@@ -80,7 +80,29 @@
 
 }
 
+
 .box:hover .line-clamp{
   -webkit-line-clamp: 40;
   max-height: 40em;
 }
+
+.line-clamp-card {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* ADDED */
+  max-height: 3em;
+
+}
+
+.card-no-body .card-body{
+  display: none;
+}
+
+.card-hover-shadow:hover,.codx_cardimg:hover,.codx_cardcenter:hover,
+    .card-hover-shadow:focus,.codx_cardimg:focus,.codx_cardcenter:focus {
+        -webkit-box-shadow: 0 0 35px rgba(0,0,0,0.07);
+        box-shadow: 0 0 35px rgba(0,0,0,0.07);
+        cursor: pointer;
+    }
