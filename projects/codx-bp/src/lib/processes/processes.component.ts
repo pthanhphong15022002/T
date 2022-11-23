@@ -46,7 +46,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -75,6 +76,8 @@ export class ProcessesComponent
   values: any;
   searchAdvance: boolean;
   viewActive: any;
+  popoverList: any;
+  popoverDetail: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
   viewMode: any;
   views: Array<ViewModel> = [];
@@ -111,7 +114,7 @@ export class ProcessesComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private fileService :FileService
+    private fileService: FileService
   ) {
     super(inject);
 
@@ -600,6 +603,24 @@ export class ProcessesComponent
     console.log(e);
   }
 
+  changeDataMF(e, data) {
+    console.log(e);
+    console.log(e);
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        if (
+          res.functionID == 'SYS005' ||
+          res.functionID == 'SYS004' ||
+          res.functionID == 'SYS001' ||
+          res.functionID == 'SYS002' ||
+          res.functionID == 'SYS003'
+        ) {
+          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled = true;
+        }
+      });
+    }
+  }
+
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
@@ -623,7 +644,7 @@ export class ProcessesComponent
     let url = 'bp/processstep/BPT11';
     this.codxService.navigate('', url, { processID: data.recID });
 
-    //view popup
+    // view popup
     // let obj ={
     //   moreFunc : e?.data,
     //   data : data
@@ -644,14 +665,14 @@ export class ProcessesComponent
     // );
   }
 
-  approval($event) { }
-//tesst
+  approval($event) {}
+  //tesst
   getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe(dt=> {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
       if (dt) {
-         let link = environment.urlUpload+"/"+ dt?.pathDisk;
-         return link
-      }else  return "../assets/media/img/codx/default/card-default.svg"
+        let link = environment.urlUpload + '/' + dt?.pathDisk;
+        return link;
+      } else return '../assets/media/img/codx/default/card-default.svg';
     });
   }
 
@@ -667,4 +688,12 @@ export class ProcessesComponent
   //   var strTime = hours + ':' + minutes + ' ' + ampm;
   //   return strTime;
   // }
+
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null || emp.memo2 != null) p.open();
+    } else p.close();
+  }
 }

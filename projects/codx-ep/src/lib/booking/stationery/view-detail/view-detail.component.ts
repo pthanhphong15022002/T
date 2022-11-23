@@ -145,7 +145,28 @@ export class BookingStationeryViewDetailComponent
     }
   }
 
-  changeDataMF(event, data: any) {}
+  changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID == 'EPT32') {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+        ) {
+          func.disabled = true;
+        }
+      });
+    }
+    if(event != null && data != null && data.issueStatus == 3){
+      event.forEach((func) => {
+        if (
+          func.functionID == 'EPT40303' /*MF cấp phát*/ 
+        ) {
+          func.disabled = true;
+        }
+      });
+    }
+  }
 
   clickChangeItemDetailDataStatus(stt) {
     this.itemDetailDataStt = stt;

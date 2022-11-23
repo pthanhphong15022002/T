@@ -7,18 +7,19 @@
 <ng-template #templateListCard let-data>
   <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100 w-225px card-no-body"
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
-    [imageReferType]="'Flowchart'" [imgOn]="data?.modifiedOn" [rootData]="data" [dataItem]="data"
+    [imageReferType]="'Flowchart'"  [rootData]="data" [dataItem]="data"
     [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-    [imageWidth]="600">
+    [imageWidth]="600" (changeDataMF)="changeDataMF($event, data)"
+    >
   </codx-card-img>
 
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
-    | vll: 'BP003':'color'
+    | vll: gridViewSetup['Status'].referedValue:'color'
     | async
 ">
       <div class="d-flex flex-column w-100 p-3">
-        <div #processName class="fs-6 fw-bold"> {{
+        <div #processName class="fs-6 fw-bold line-clamp-card" [ngbTooltip]="data.processName"> {{
           data?.processName | formatvalue
           : view.formModel
           : "processName"
@@ -76,8 +77,8 @@
 <ng-template #itemViewList let-data>
   <tr class="has-action-menu">
     <td class="rowphoto">
-      <div class="d-flex flex-column">
-        <div #processName class="fw-bold">
+      <div class="d-flex flex-column ">
+        <div #processName class="fw-bold line-clamp" [ngbTooltip]="data.processName">
           {{
           data.processName | formatvalue
           : view.formModel
@@ -144,7 +145,17 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div [innerHTML]="data.memo"></div>
+      <div *ngIf="data.memo" class="" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+        [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+        placement="bottom right top" autoClose="outside">
+        <div class="line-clamp " [innerHTML]="data.memo">
+        </div>
+      </div>
+      <!-- <div class="box">
+        <div class="action-menu-od">
+          <div class="line-clamp" [innerHTML]="data?.memo"></div>
+        </div>
+      </div> -->
     </td>
     <td class="rowphoto">
       <div *ngIf="funcID == 'BPT4'">
@@ -153,7 +164,7 @@
         </button>
       </div>
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
-        [type]="'hover'">
+        [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
     <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
@@ -166,6 +177,18 @@
   </tr>
 </ng-template>
 <!-- view-list -->
+
+<ng-template #popDetail>
+  <div>
+    <ng-container>
+      <div class="d-flex flex-column w-100">
+        <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+</ng-template>
 
 <ng-template #titleTmp let-data>
   <div class="text-dark fw-bold line-clamp line-clamp-1 me-2">

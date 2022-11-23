@@ -20,7 +20,6 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 
 //import { CodxEpService } from '../../../codx-ep.service';
@@ -33,7 +32,7 @@ import { CodxOmService } from '../../codx-om.service';
 export class PopupAddKRComponent extends UIComponent {
   @Input() editResources: any;
   @Input() isAdd = true;
-  @Input() data!: any;
+  @Input() kr: any;
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Output() loadData = new EventEmitter();
@@ -45,6 +44,8 @@ export class PopupAddKRComponent extends UIComponent {
   dialogRef: DialogRef;
   isAfterRender: boolean;
   fGroupAddKR: FormGroup;
+  o:any;
+  oParentID:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -54,12 +55,13 @@ export class PopupAddKRComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    //this.data = dialogData?.data[0];
-    this.isAdd = true//dialogData?.data[1];
-    this.headerText= "Thêm kết quả chính"//dialogData?.data[2];
+    this.kr = dialogData.data[0];      
+    this.o = dialogData.data[1]; 
+    this.formModel = dialogData.data[2];  
+    this.isAdd = dialogData?.data[3];
+    this.headerText= dialogData?.data[4];
     this.dialogRef = dialogRef;
-    this.formModel = dialogData.data[0]?.formModel;    
-    
+    //
   }
 
   ngAfterViewInit(): void {}
@@ -75,7 +77,11 @@ export class PopupAddKRComponent extends UIComponent {
     this.codxOmService
       .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
       .then((item) => {
-        this.fGroupAddKR = item;        
+        this.fGroupAddKR = item;  
+        if(this.isAdd){
+          this.kr=this.fGroupAddKR.value;  
+          this.kr.parentID=this.o?.recID;
+        }    
         this.isAfterRender = true;
       });    
   }
@@ -95,6 +101,8 @@ export class PopupAddKRComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm(){}
+  onSaveForm(){
+    this.fGroupAddKR.patchValue(this.kr);
+  }
 
 }
