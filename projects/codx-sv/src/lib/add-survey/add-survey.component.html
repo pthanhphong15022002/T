@@ -1295,6 +1295,18 @@
                     ></codx-label>
                   </a>
                 </li>
+                <li *ngIf="itemSession.seqNo >= 1">
+                  <a
+                    (click)="mergeSession(itemSession.seqNo)"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
+                    <codx-label
+                      fiedName="mergeSession"
+                      default="Hợp nhất với phần trên"
+                    ></codx-label>
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

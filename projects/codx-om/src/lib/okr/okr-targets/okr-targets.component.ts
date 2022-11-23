@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CacheService, CallFuncService } from 'codx-core';
+import { CacheService, CallFuncService, SidebarModel, FormModel } from 'codx-core';
+import { OKRs } from '../../model/okr.model';
+import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
 import { OkrEditComponent } from '../okr-edit/okr-edit.component';
 
 @Component({
@@ -14,6 +16,9 @@ export class OkrTargetsComponent implements OnInit {
   @Input() gridView:any;
   dtStatus = [];
   openAccordion = [];
+
+  formModelKR= new FormModel();
+
   constructor(
     private callfunc: CallFuncService,
     private cache : CacheService
@@ -23,6 +28,11 @@ export class OkrTargetsComponent implements OnInit {
     this.cache.valueList('OM002').subscribe(item=>{
       if(item?.datas) this.dtStatus = item?.datas;
     })
+    // Tạo FormModel cho OKRs
+    this.formModelKR.entityName="OM_OKRs";
+    this.formModelKR.gridViewName="grvOKRs";
+    this.formModelKR.formName="OKRs";
+    this.formModelKR.entityPer="OM_OKRs"
   }
   //Lấy danh sách kr của mục tiêu
   getItemOKR(i:any,recID:any)
@@ -49,6 +59,45 @@ export class OkrTargetsComponent implements OnInit {
         );
         break;
       }
+    }
+  }
+
+  addKR(o:any) {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.formModel;
+
+    let dialogKR= this.callfunc.openSide(
+      PopupAddKRComponent,
+      [null,o,this.formModelKR,true,'Thêm mới kết quả chính'],
+      option
+    );
+  }
+
+  editKR(kr:any,o:any,popupTitle:any) {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.formModel;
+
+    let dialogKR= this.callfunc.openSide(
+      PopupAddKRComponent,
+      [kr,o,this.formModelKR,false,popupTitle],
+      option
+    );
+  }
+
+  clickKRMF(e:any,kr:any,o:any)
+  {
+    let popupTitle= e.text + ' kết quả chính';
+    var funcID = e?.functionID;
+    switch(funcID)
+    {
+      case 'SYS03':
+      {
+        this.editKR(kr,o,popupTitle);
+        break;
+      }
+      
     }
   }
 }
