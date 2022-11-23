@@ -1,118 +1,54 @@
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (click)="click(data)"
-    [typeMF]="'hover'"
-    [title]="data.categoryName"
-    [desc]="data.title"
-    [icoCss]="
-      'w-40px symbol h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+  <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (click)="click(data)" [typeMF]="'hover'"
+    [title]="data.categoryName" [desc]="data.title" [icoCss]="
+      'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
       data?.icon
-    "
-    [status]="data?.approveStatus"
-    [icoStyle]="setStyles(data.color)"
-    [statusVll]="lstReferValue['ApproveStatus']"
-    [date]="data.createdOn"
-    [resources]="data.createdBy != undefined ? data.createdBy : ''"
-    [resourceObjType]="'AD_Users'"
-    [titleLine]="2"
-    [icoDateCss]="'icon-access_alarm'"
-    [dataItem]="data"
-    [formModel]="true ? view.formModel : null"
-    (clickMF)="clickMF($event, data)"
-    typeMF="hover"
-    [dataItem]="data"
-    (changeDataMF)="changeDataMF($event, data)"
-    [bookmark]="isBookmark(data)"
-  >
+    " [status]="data?.approveStatus" [icoStyle]="setStyles(data.color)" [statusVll]="lstReferValue['ApproveStatus']"
+    [date]="data.createdOn" [resources]="data.createdBy != undefined ? data.createdBy : ''"
+    [resourceObjType]="'AD_Users'" [titleLine]="2" [icoDateCss]="'icon-access_alarm'" [dataItem]="data"
+    [formModel]="true ? view.formModel : null" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data"
+    (changeDataMF)="changeDataMF($event, data)" [bookmark]="isBookmark(data)">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #paneRight>
-  <lib-view-detail
-    #viewdetail
-    [itemDetail]="itemDetail"
-    [funcID]="funcID"
-    [formModel]="view?.formModel"
-    [view]="view"
-    (uploaded)="getDetailSignFile($event)"
-  >
+  <lib-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="view?.formModel" [view]="view"
+    (uploaded)="getDetailSignFile($event)">
   </lib-view-detail>
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img
-    (clickMF)="openFormFuncID($event, data)"
-    cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (changeDataMF)="changeDataMF($event, data)"
-    [typeMF]="'hover'"
-    [icoStatus2]="data?.security"
-    [statusVll]="lstReferValue['ApproveStatus']"
-    [icoStatus]="data?.urgency"
-    [title]="data?.categoryName"
-    [status]="data?.approveStatus"
-    [date]="data?.createdOn"
-    [rootData]="data"
-    [formModel]="view.formModel"
-    [setting]="setting"
-    [footer]="cardImgFooter"
-    [dataItem]="data"
-    [showBgColorVll]="true"
-
-  >
+  <codx-card-img (clickMF)="openFormFuncID($event, data)" cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [icoStatus2]="data?.security"
+    [statusVll]="lstReferValue['ApproveStatus']" [icoStatus]="data?.urgency" [title]="data?.categoryName"
+    [status]="data?.approveStatus" [date]="data?.createdOn" [rootData]="data" [formModel]="view.formModel"
+    [setting]="setting" [footer]="cardImgFooter" [dataItem]="data" [showBgColorVll]="true">
   </codx-card-img>
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div class="d-flex flex-column flex-grow-1 mt-2">
-    <div
-      class="d-flex align-items-center mb-2"
-      [innerHTML]="
+    <div class="d-flex align-items-center mb-2" [innerHTML]="
         convertHtmlAgency(
           data.agencyName,
           this.grvSetup?.AgencyName?.headerText
         )
-      "
-    ></div>
+      "></div>
     <div class="d-flex justify-content-end">
-      <codx-imgs
-        [objectId]="data.createdBy != undefined ? data.createdBy : ''"
-        objectType="AD_Users"
-        [numberImages]="4"
-        [width]="30"
-      >
+      <codx-imgs [objectId]="data.createdBy != undefined ? data.createdBy : ''" objectType="AD_Users" [numberImages]="4"
+        [width]="30">
       </codx-imgs>
     </div>
   </div>
 </ng-template>
 
-<codx-views
-  #view
-  [views]="views"
-  (buttonClick)="click($event)"
-  [button]="button"
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entity"
-  [className]="className"
-  [predicate]="'IsTemplate=@0'"
-  [dataValue]="false"
-  (selectedChange)="changeItemDetail($event)"
-  [selectedFirst]="true"
-  [idField]="idField"
-  (requestEnded)="closeAddForm($event)"
-  (viewChanged)="viewChange($event)"
->
+<codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [funcID]="funcID" [service]="service"
+  [assemblyName]="assemblyName" [entityName]="entity" [className]="className" [predicate]="'IsTemplate=@0'"
+  [dataValue]="false" (selectedChange)="changeItemDetail($event)" [selectedFirst]="true" [idField]="idField"
+  (requestEnded)="closeAddForm($event)" (viewChanged)="viewChange($event)">
 </codx-views>
 
 <ng-template #baseHeaderRight let-data>
-  <codx-vll
-    class="badge"
-    [name]="'ES003'"
-    [value]="data?.approveStatus"
-    [showText]="true"
-    [showBgColor]="true"
-  >
+  <codx-vll class="badge" [name]="'ES003'" [value]="data?.approveStatus" [showText]="true" [showBgColor]="true">
   </codx-vll>
 </ng-template>

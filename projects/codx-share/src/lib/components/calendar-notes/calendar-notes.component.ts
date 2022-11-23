@@ -50,7 +50,7 @@ export class CalendarNotesComponent
   x;
   listNote: any[] = [];
   type: any;
-  typeCalendar = 'week';
+  typeCalendar = 'month';
   itemUpdate: any;
   recID: any;
   countNotePin = 0;
@@ -93,8 +93,6 @@ export class CalendarNotesComponent
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
-    var date = new Date();
-    this.reloadParam(date);
     this.cache
       .moreFunction('PersonalNotes', 'grvPersonalNotes')
       .subscribe((res) => {
@@ -108,12 +106,15 @@ export class CalendarNotesComponent
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
+    this.getFirstParam();
   }
 
   onInit(): void {
     this.getMaxPinNote();
     this.loadData();
   }
+
+  ngAfterViewInit() {}
 
   loadData() {
     this.noteService.data.subscribe((res) => {
@@ -206,7 +207,13 @@ export class CalendarNotesComponent
     });
   }
 
-  ngAfterViewInit() {}
+  getFirstParam() {
+    let date = new Date();
+    let fDayOfMonth = moment(date).startOf('month').toISOString();
+    let lDayOfMonth = moment(date).endOf('month').toISOString();
+    if (this.typeCalendar == 'month')
+      this.reloadParam(fDayOfMonth, lDayOfMonth);
+  }
 
   requestEnded(evt: any) {
     this.view.currentView;
@@ -231,7 +238,6 @@ export class CalendarNotesComponent
   }
 
   onLoad(args): void {
-    debugger;
     this.setEvent(args.element, args);
   }
 
@@ -286,12 +292,13 @@ export class CalendarNotesComponent
     debugger;
     var data = JSON.parse(JSON.stringify(args.date));
     this.setDate(data, lstView);
-    this.reloadParam(args.date);
+    // this.reloadParam(args.date);
   }
 
   onChangeValueNewWeek(args: any) {
+    // let date: any = moment(args.daySelected).add(1,'days');
     debugger;
-    this.reloadParam(args.daySelected);
+    this.reloadParam(args.fromDate, args.toDate);
   }
 
   FDdate: any;
@@ -318,16 +325,16 @@ export class CalendarNotesComponent
     this.TDate = toDate;
   }
 
-  reloadParam(data) {
-    var dateT = new Date(data);
-    this.fDayOfMonth = moment(dateT).startOf('month').toISOString();
-    this.lDayOfMonth = moment(dateT).endOf('month').toISOString();
-    this.fDayOfWeek = moment(dateT).startOf('week').toISOString();
-    this.lDayOfWeek = moment(dateT).endOf('week').toISOString();
+  reloadParam(fromDate, toDate) {
+    // var dateT = new Date(data);
+    // this.fDayOfMonth = moment(dateT).startOf('month').toISOString();
+    // this.lDayOfMonth = moment(dateT).endOf('month').toISOString();
+    // this.fDayOfWeek = moment(dateT).startOf('week').toISOString();
+    // this.lDayOfWeek = moment(dateT).endOf('week').toISOString();
     debugger;
-    if (this.typeCalendar == 'week')
-      this.getParam(this.fDayOfWeek, this.lDayOfWeek);
-    else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
+    // if (this.typeCalendar == 'week')
+    this.getParam(fromDate, toDate);
+    // else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
   }
 
   valueChangeTypeCalendar(e) {
@@ -363,19 +370,38 @@ export class CalendarNotesComponent
           this.WP_Notes = dt[0];
           this.TM_Tasks = dt[1];
           this.CO_Meetings = dt[2];
+
+          var dateWP = new Array();
+          var dateTM = new Array();
+          var dateCO = new Array();
           if (this.WP_Notes) {
             this.WP_Notes.forEach((res) => {
+              dateWP.push({createdOn: res.createdOn, memo: res.memo, recID: res.recID});
               if (res.isPin == true || res.isPin == '1') {
                 this.countNotePin++;
               }
             });
+            console.log('check dataNote', dateWP);
           }
-          console.log('check dataNote', this.WP_Notes);
-          console.log('check dataTask', this.TM_Tasks);
-          console.log('check dataMeeting', this.CO_Meetings);
+          if (this.TM_Tasks) {
+            this.TM_Tasks.forEach((res) => {
+              dateTM.push({dueDate: res.dueDate, memo: res.memo, recID: res.recID});
+            });
+            console.log('check dataTask', dateTM);
+          }
+          if (this.CO_Meetings) {
+            this.CO_Meetings.forEach((res) => {
+              dateCO.push({startDate: res.startDate, memo: res.memo, recID: res.recID});
+            });
+            console.log('check dataMeeting', dateCO);
+          }
           this.changeDetectorRef.detectChanges();
         }
       });
+  }
+
+  created(e, c){
+    debugger
   }
 
   setEvent(ele = null, args = null) {

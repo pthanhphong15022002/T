@@ -1000,10 +1000,6 @@ codx-tag .codx-tag:hover {
   padding: 15px;
 }
 
-.content-tree .menu-item {
-  line-height: 24px !important;
-}
-
 .content-tree .icon-node {
   display: inline-block;
   width: 20px;
@@ -1134,6 +1130,40 @@ button[type="button"]:focus {
   box-shadow: none !important;
 }
 
+div.user-mini-nav {
+  min-height: 28px;
+  height: auto !important;
+  padding: 3px 8px 3px 2px !important;
+  margin-right: 6px;
+}
+
+.w-30px.h-30px {
+  min-width: 30px;
+}
+
+.w-35px.h-35px {
+  min-width: 35px;
+}
+
+.e-grid .e-rowcell {
+  line-height: inherit;
+}
+
+.e-grid.e-responsive .e-rowcell,
+.e-grid.e-responsive .e-headercelldiv {
+  white-space: normal;
+}
+
+.e-frozen-left-header,
+.e-frozen-left-content {
+  min-width: 40px;
+}
+
+
+.personal-container .e-tab .e-content.e-lib {
+  padding-left: 0;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
@@ -1142,4 +1172,9 @@ button[type="button"]:focus {
 .codx-form .card-footer,
 .e-dialog .card-footer {
   padding-bottom: 10px !important;
+}
+
+codx-vll {
+  font-style: 12px !important;
+  border-radius: 20px !important;
 }

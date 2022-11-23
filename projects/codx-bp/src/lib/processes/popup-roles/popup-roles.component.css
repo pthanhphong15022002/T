@@ -1,6 +1,7 @@
 .add-user {
+  min-width: 298px;
   position: absolute;
-  right: 635px;
+  right: 624px;
   bottom: 0;
 }
 

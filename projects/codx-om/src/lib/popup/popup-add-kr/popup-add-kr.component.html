@@ -17,10 +17,12 @@
     </div>
 
     <div class="form-group">
-      <codx-label default="Tên KR" fiedName="" [formModel]="form.formModel">
+      <codx-label default="Tên KR" fiedName="OKRName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        type="text"
+        ControlName="oKRName"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddKR"
       >
       </codx-input>
     </div>
@@ -30,31 +32,31 @@
         <codx-label fiedName="Measurement" default="Thang đo" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          
-        >
-        </codx-input>
-        <!-- <codx-input
           ControlName="measurement"
           [formModel]="form.formModel"
           [Group]="fGroupAddKR"
         >
-        </codx-input> -->
+        </codx-input>
       </div>
 
       <div class="form-group col-4">
-        <codx-label default="Chỉ tiêu" fiedName="" [formModel]="form.formModel">
+        <codx-label default="Chỉ tiêu" fiedName="Target" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          type="text"
+          ControlName="target"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
         </codx-input>
       </div>
 
       <div class="form-group col-4">
-        <codx-label default="Đơn vị tính" fiedName="umid" [formModel]="form.formModel">
+        <codx-label default="Đơn vị tính" fiedName="UMID" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          
+          ControlName="uMID"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
         </codx-input>
       </div>
@@ -63,19 +65,23 @@
 
     <div class="row">
       <div class="form-group col-4">
-        <codx-label default="Loại chỉ tiêu" fiedName="" [formModel]="form.formModel">
+        <codx-label default="Loại chỉ tiêu" fiedName="Category" [formModel]="form.formModel">
         </codx-label>
-        <codx-combobox
-          
+        <codx-input
+          ControlName="category"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
-        </codx-combobox>
+        </codx-input>
       </div>
 
       <div class="form-group col-4">
-        <codx-label default="Phân bố chỉ tiêu" fiedName="" [formModel]="form.formModel">
+        <codx-label default="Phân bố chỉ tiêu" fiedName="Plan" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          type="text"
+          ControlName="plan"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
         </codx-input>
       </div>
@@ -101,16 +107,20 @@
         <codx-label default="Tần suất" fiedName="Frequence" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          
+          ControlName="frequence"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
         </codx-input>
       </div>
 
       <div class="form-group col-6">
-        <codx-label default="Qui định cập nhật dữ liệu" fiedName="" [formModel]="form.formModel">
+        <codx-label default="Qui định cập nhật dữ liệu" fiedName="CheckInMode" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          type="text"
+          ControlName="checkInMode"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
         </codx-input>
       </div>
@@ -121,17 +131,21 @@
       <div class="form-group col-4">
         <codx-label default="Nguồn dữ liệu" fiedName="" [formModel]="form.formModel">
         </codx-label>
-        <codx-combobox
-          
+        <codx-input
+          ControlName="oKRName"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
-        </codx-combobox>
+        </codx-input>
       </div>
 
       <div class="form-group col-6">
         <codx-label default="Cách thức cập nhật" fiedName="" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          type="text"
+          ControlName="oKRName"
+          [formModel]="form.formModel"
+          [Group]="fGroupAddKR"
         >
         </codx-input>
       </div>
@@ -142,10 +156,12 @@
     </div>
 
     <div class="form-group">
-      <codx-label default="Ghi chứ" fiedName="" [formModel]="form.formModel">
+      <codx-label default="Ghi chú" fiedName="Note" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        type="text"
+        ControlName="note"
+        [formModel]="form.formModel"
+        [Group]="fGroupAddKR"
       >
       </codx-input>
     </div>
@@ -155,7 +171,7 @@
         </codx-label>
       </div>
       <div class="form-group col-2 d-flex justify-content-end">
-        <span role="button" class="icon-settings text-primary "></span>
+        <span role="button" class="icon-i-signpost-2 text-primary "></span>
       </div>
     </div>
   </ng-template>
