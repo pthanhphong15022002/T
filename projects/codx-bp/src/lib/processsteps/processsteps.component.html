@@ -239,15 +239,10 @@
 <ng-template #itemViewList>
   <div class="card">
     <div
-      class="card-body"
-      data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".codx-wapper"
-      data-kt-scroll-wrappers=".codx-toolbar .no-header"
-      [attr.data-kt-scroll-offset]="'130px'"
+      
     >
-      <div class="mb-5">
+    <!-- <div> -->
+      <!-- <div class="mb-5">
         <h4 class="fw-bold text-gray-900 mb-104">
           {{ process?.processName }}
         </h4>
@@ -308,12 +303,13 @@
                 class="text-danger"
                 style="font-size: 20px"
               >
-                <codx-label name="lblIcon" default="-->"></codx-label>
+                <codx-label name="lblIcon" default="->"></codx-label>
               </span>
             </ng-container>
           </div>
         </div>
-      </div>
+      </div> -->
+      
       <ng-container
         *ngIf="view.dataService.data?.length == 0"
         [ngTemplateOutlet]="tmpEmpty"
