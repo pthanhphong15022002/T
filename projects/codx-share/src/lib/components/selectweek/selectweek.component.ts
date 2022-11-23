@@ -95,11 +95,7 @@ export class SelectweekComponent implements OnInit {
     this.isFinished = false;
     this.isChangeWeek = true;
     let day = moment(this.fromDate).add(numberDay, 'd').toDate();
-    var chooseDay = this.generateDateInWeek(day, true);
-    if (chooseDay)
-      this.onChangeNewWeek.emit({
-        daySelected: chooseDay,
-      });
+    this.generateDateInWeek(day, true);
   }
   generateDateInWeek(daySelected, changeWeek = false) {
     this.fromDate = moment(daySelected).locale('en').startOf('week').toDate();
@@ -117,7 +113,10 @@ export class SelectweekComponent implements OnInit {
       chooseDay = daySelected;
     }
     this.changeDaySelected(chooseDay, changeWeek);
-    return chooseDay;
+    this.onChangeNewWeek.emit({
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+    });
   }
 
   renderEvent(date) {
