@@ -421,6 +421,21 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     console.log('check delete card', this.questions);
   }
 
+  mergeSession(seqNoSession) {
+    if (this.questions[seqNoSession].children.length == 0)
+      this.questions.splice(seqNoSession, 1);
+    else {
+      var dataChildren = this.questions[seqNoSession].children;
+      this.questions[seqNoSession - 1].children =
+        this.questions[seqNoSession - 1].children.concat(dataChildren);
+      this.questions[seqNoSession - 1].children.forEach((x, index) => {
+        x.seqNo = index;
+      });
+      this.questions.splice(seqNoSession, 1);
+    }
+    console.log('check mergeSession', this.questions);
+  }
+
   deleteSession(seqNoSession) {
     this.notification
       .alert(
@@ -796,33 +811,33 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   addSession(itemActive, seqNoSession) {
-    var index = itemActive.seqNo;
     this.generateGuid();
     var tempQuestion = JSON.parse(JSON.stringify(itemActive));
     tempQuestion.answers = null;
     tempQuestion.answerType = null;
-    tempQuestion.question = null;
-    tempQuestion.seqNo = index + 1;
+    tempQuestion.question = 'Mục không có tiêu đề';
+    tempQuestion.seqNo = seqNoSession + 1;
     tempQuestion.category = 'S';
     tempQuestion.recID = this.GUID;
-    this.questions.splice(index + 1, 0, tempQuestion);
+    this.questions.splice(seqNoSession + 1, 0, tempQuestion);
     this.questions.forEach((x, index) => (x.seqNo = index));
-    this.questions[index].active = false;
-    this.questions[index + 1].active = true;
-    this.itemActive = this.questions[index + 1];
+    this.questions[seqNoSession].active = false;
+    this.questions[seqNoSession + 1].active = true;
+    this.itemActive = this.questions[seqNoSession + 1];
     var lstMain = this.questions[seqNoSession].children;
     if (itemActive.category == 'S') {
-      this.questions[index + 1].children = this.questions[index].children;
-      this.questions[index].children = [];
+      this.questions[seqNoSession + 1].children =
+        this.questions[seqNoSession].children;
+      this.questions[seqNoSession].children = [];
     } else {
       var lstUp = [];
       var lstDown = [];
-      lstUp = lstMain.slice(0, index + 1);
-      lstDown = lstMain.slice(index + 1, lstMain.length);
-      this.questions[index + 1]['children'] = lstDown;
-      this.questions[index]['children'] = lstUp;
+      lstUp = lstMain.slice(0, seqNoSession + 1);
+      lstDown = lstMain.slice(seqNoSession + 1, lstMain.length);
+      this.questions[seqNoSession + 1]['children'] = lstDown;
+      this.questions[seqNoSession]['children'] = lstUp;
     }
-    this.clickToScroll(index + 1, this.GUID, 'S');
+    this.clickToScroll(seqNoSession + 1, this.GUID, 'S');
   }
 
   addNoSession(itemActive, seqNoSession, category) {
@@ -844,21 +859,26 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       tempQuestion.answerType = 'O';
       tempQuestion.question = 'Câu hỏi';
     }
-    tempQuestion.seqNo = itemActive.seqNo + 1;
+    tempQuestion.seqNo = itemActive.category == 'S' ? 0 : itemActive.seqNo + 1;
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
     this.questions[seqNoSession].children.splice(
-      itemActive.seqNo + 1,
+      itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
       0,
       tempQuestion
     );
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
-    this.questions[seqNoSession].children[itemActive.seqNo].active = false;
-    this.questions[seqNoSession].children[itemActive.seqNo + 1].active = true;
+    if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
+    else this.questions[seqNoSession].children[itemActive.seqNo].active = false;
+    this.questions[seqNoSession].children[
+      itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
+    ].active = true;
     this.itemActive =
-      this.questions[seqNoSession].children[itemActive.seqNo + 1];
+      this.questions[seqNoSession].children[
+        itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
+      ];
     this.clickToScroll(seqNoSession, this.GUID, category);
   }
 
