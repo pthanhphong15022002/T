@@ -1,57 +1,163 @@
 <div class="stepper-body popup-task-detail no-header page-viewdetail">
-    <div class="my-3 mx-6 sprints-task-header">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-         <!-- ///noi dung -->
-        </div>
-        <div>
-          <button class="btn text-dark-75 text-hover-danger cursor-pointer px-0" (click)="dialog.close()">
-            <span class="icon-close icon-18"></span>
-          </button>
-        </div>
+  <div class="my-3 mx-6 sprints-task-header">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex align-items-center">
+        <!-- ///noi dung -->
+      </div>
+      <div>
+        <button
+          class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+          (click)="dialog.close()"
+        >
+          <span class="icon-close icon-18"></span>
+        </button>
       </div>
     </div>
-    <!-- </div> -->
-    <div class="w-100 bg-gray-100 pt-1 view-details-main">
-      <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
-        <div class="d-flex align-items-center justify-content-between mt-4">
-          <div class="d-flex flex-column">
-           <!-- ///noi dung -->
-          </div>
-        </div>
-  
-        <div class="d-flex tab-header">
-          <ng-container *ngFor="let item of tabControl; let i = index">
-            <a [class]="
-                'tab-item text-dark fw-bold' +
-                ' ' +
-                (item.isActive ? 'tab-active' : '')
-              ">
-              <codx-label [name]="'lbl' + item.name" [formName]="'SYS'" [default]="item.textDefault"
-                (click)="clickMenu(item)">
-              </codx-label>
-            </a>
-          </ng-container>
+  </div>
+  <!-- </div> -->
+  <div class="w-100 bg-gray-100 pt-1 view-details-main">
+    <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
+      <div class="d-flex align-items-center justify-content-between mt-4">
+        <div class="d-flex flex-column">
+          <!-- ///noi dung -->
         </div>
       </div>
-      <div class="view-details-content rounded-3 bg-body scroll-y p-3 pb-0 mt-4">
-        <div class="sprints-task-detail" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".sprints-task-header"
-          data-kt-scroll-wrappers=".stepper-body .no-header" [attr.data-kt-scroll-offset]="offset">
-          <ng-container *ngIf="name == 'ViewList'">        
-             <codx-processsteps [process]="process" [viewMode]="16"></codx-processsteps>
+
+      <div class="d-flex tab-header">
+        <ng-container *ngFor="let item of tabControl; let i = index">
+          <a
+            [class]="
+              ' text-dark fw-bold tab-item' +
+              ' ' +
+              (item.isActive ? 'tab-active' : '')
+            "
+          >
+            <codx-label
+              [name]="'lbl' + item.name"
+              [formName]="'SYS'"
+              [default]="item.textDefault"
+              (click)="clickMenu(item)"
+            >
+            </codx-label>
+          </a>
+        </ng-container>
+      </div>
+    </div>
+    <div class="view-details-content rounded-3 bg-body scroll-y p-3 pb-0 mt-4">
+      <div
+        class="sprints-task-detail"
+        data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies=".sprints-task-header"
+        data-kt-scroll-wrappers=".stepper-body .no-header"
+        [attr.data-kt-scroll-offset]="offset"
+      >
+        <ng-container *ngIf="name == 'ViewList'">
+          <ng-container *ngIf="process">
+            <codx-processsteps
+              [process]="process"
+              [viewMode]="16"
+              [funcID]="funcID"
+            ></codx-processsteps>
           </ng-container>
-  
-          <ng-container *ngIf="name == 'Kanban'">
-            <codx-processsteps [process]="process" [viewMode]="6"></codx-processsteps>
+        </ng-container>
+        <ng-container *ngIf="name == 'Kanban'">
+          <ng-container *ngIf="process">
+            <codx-processsteps
+              [process]="process"
+              [viewMode]="6"
+              [funcID]="funcID"
+            ></codx-processsteps>
           </ng-container>
-          <ng-container *ngIf="name == 'FlowChart'">
-            <div >
-                <codx-processsteps [process]="process" [viewMode]="16"></codx-processsteps>
-            </div>
+        </ng-container>
+        <ng-container *ngIf="name == 'Flowchart'">
+        
+              <div
+                data-kt-scroll="true"
+                data-kt-scroll-activate="{default: true}"
+                data-kt-scroll-height="auto"
+                data-kt-scroll-dependencies=".codx-wapper"
+                data-kt-scroll-wrappers=".codx-toolbar .no-header"
+                [attr.data-kt-scroll-offset]="'650px'"
+              >
+                <div class="d-flex justify-content-between mb-5">
+                  <h1 #processName>
+                    {{
+                      process?.processName
+                        | formatvalue
+                          :formModelFlowChart
+                          : "processName"
+                          : processName
+                          : "Processes"
+                          : "grvProcesses"
+                        | async
+                    }}
+                  </h1>
+                  <button
+                    type="button"
+                    class="btn btn-light-primary me-3"
+                    (click)="addFile($event)"
+                  >
+                    <i class="icon-cloud_upload fs-5"></i
+                    ><span
+                      ><codx-label
+                        name="UploadFile"
+                        formName="Processes"
+                        gridViewName="grvProcesses"
+                        default="Tải ảnh"
+                      ></codx-label>
+                    </span>
+                  </button>
+                </div>
+                <!-- chua co referedType -->
+                <ng-container>
+                  <codx-attachment
+                    #addFlowchart
+                    [objectType]="'BP_Processes'"
+                    [objectId]="process?.recID"
+                    [hideFolder]="1"
+                    [hideImageUpload]="1"
+                    [hideImageThumb]="1"
+                    [hideUploadBtn]="1"
+                    [hideDes]="1"
+                    [type]="'inline'"
+                    [allowMultiFile]="0"
+                    [formModel]="formModelFlowChart"
+                    [functionID]="funcID"
+                    [isSaveSelected]="1"
+                    allowExtensions=".jpg,.png"
+                    (fileAdded)="fileAdded($event)"
+                    (fileCount)="getfileCount($event)"
+                    displayThumb="full"
+                  >
+                  </codx-attachment>
+                </ng-container>
+                <ng-container *ngIf="dataFile">
+                  <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+                </ng-container>
+                <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
+                </ng-container>
+              </div>
+         
           </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #tmpEmpty>
+  <div class="w-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-400px"
+        />
+        <div class="fs-5 text-dark fw-bold mt-2 text-center">
+          {{ "SYS011" | mssg | async }}
         </div>
       </div>
     </div>
   </div>
-
+</ng-template>

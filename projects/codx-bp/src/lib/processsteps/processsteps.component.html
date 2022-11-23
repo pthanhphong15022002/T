@@ -14,6 +14,7 @@
   [autoLoad]="true"
   (onActions)="onActions($event)"
   (viewChanged)="viewChanged($event)"
+  [viewActiveType]="viewMode"
 >
 </codx-views>
 
@@ -49,14 +50,17 @@
         </label>
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
-            <div
+            <!-- <div
               class="d-flex"
               [ngbPopover]="hoverMoreFunction"
               #p="ngbPopover"
               [openDelay]="500"
               (mouseenter)="openMoreFunction(item,p)"
               placement="left bottom top"
-            >
+            > -->
+            <div
+            class="d-flex"
+          >
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
               ></i>
@@ -288,7 +292,7 @@
             </span>
           </div>
         </div>
-        <div class="d-flex flex-wrap mb-2" *ngIf="listPhaseName?.length > 0">
+        <div class="d-flex flex-wrap mb-2" *ngIf="view.dataService.data?.length > 0">
           <div class="d-flex align-items-center me-4">
             <span>
               <codx-label
@@ -664,12 +668,12 @@
 </ng-template>
 
 <ng-template #hoverMoreFunction>
-  <codx-mfunc
+  <!-- <codx-mfunc
     type="hover"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, dataHover)"
     [isBookMark]="false"
     [dataItem]="dataHover"
   >
-  </codx-mfunc>
+  </codx-mfunc> -->
 </ng-template>

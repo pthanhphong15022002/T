@@ -62,7 +62,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   @Input() process?: BP_Processes;
-  @Input() viewMode = '6';
+  @Input() viewMode = '4';
+  @Input()funcID ='BPT11'
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -75,7 +76,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   user: any;
-  funcID: any;
+  // funcID: any;
   titleAction = '';
   itemSelected: any;
   stepType: any;
@@ -117,10 +118,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     super(inject);
     this.user = this.authStore.get();
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.activedRouter.params.subscribe((res) => {
-      this.funcID = res.funcID;
-      this.processID = res.processID;
-    });
+    // this.activedRouter.params.subscribe((res) => {
+    //   this.funcID = res.funcID;
+    //   this.processID = res.processID;
+    // });
 
     this.bpService.viewProcesses.subscribe((res) => {
       this.process = res;
@@ -184,6 +185,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         type: ViewType.content,
         active: false,
         sameData: false,
+        showSearchBar: false,
+        showFilter:false,
         model: {
           panelRightRef: this.itemViewList,
         },
@@ -194,21 +197,25 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
+        showSearchBar: false,
+        showFilter:false,
         model: {
           template: this.cardKanban,
         },
       },
-      {
-        type: ViewType.content,
-        active: false,
-        sameData: false,
-        icon: 'icon-bubble_chart',
-        text: 'Flowchart',
-        model: {
-          panelRightRef: this.flowChart,
-        },
-      },
+      // {
+      //   type: ViewType.content,
+      //   active: false,
+      //   sameData: false,
+      //   icon: 'icon-bubble_chart',
+      //   text: 'Flowchart',
+      //   model: {
+      //     panelRightRef: this.flowChart,
+      //   },
+      // },
+  
     ];
+  
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';

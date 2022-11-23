@@ -94,9 +94,9 @@ export class ProcessesComponent
   crrRecID = '';
   dataSelected: any;
   gridViewSetup: any;
-  private searchKey = new Subject<any>();
   listProcess = new Array<BP_Processes>();
   totalRowCount: any;
+  totalRecordSearch: any;
   totalPages: number;
   gridModels = new DataRequest();
   listNumberPage = new Array();
@@ -166,27 +166,29 @@ export class ProcessesComponent
         type: ViewType.card,
         sameData: true,
         active: true,
-        hide: false,
         model: {
           template: this.templateListCard,
         },
       },
-      {
-        id: '4',
-        icon: 'icon-search',
-        text: 'Search',
-        type: ViewType.card,
-        active: true,
-        sameData: false,
-        // request: this.requestSearch,
-        model: {
-          panelRightRef: this.templateSearch,
-        },
-      },
+      // {
+      //   id: '4',
+      //   active: true,
+      //   icon: 'icon-search',
+      //   text: 'Search',
+      //   hide:true,
+      //   type: ViewType.card,
+      //   sameData: false,
+      //   model: {
+      //     panelRightRef: this.templateSearch,
+      //     //       template2: this.templateSearch,
+      //     //   resizable: false,
+      //   },
+      // },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
+ //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -212,9 +214,10 @@ export class ProcessesComponent
       .subscribe((res) => {
         if (res != null) {
           this.listProcess = res[0];
+          this.totalRecordSearch = this.listProcess.length;
           this.totalRowCount = res[1];
           // test phân trang
-          this.gridModels.pageSize = 1;
+          this.gridModels.pageSize = 3;
           this.totalPages = Math.ceil(
             this.totalRowCount / this.gridModels.pageSize
           );
@@ -255,26 +258,35 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    try {
-      this.textSearch = $event;
-      this.searchKey.next($event);
-      this.isSearch == true;
-      if (this.textSearch == null || this.textSearch == '') {
-        this.views.forEach((item) => {
-          item.active = false;
-          item.hide = false;
-          if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text) item.active = true;
-        });
-        this.changeDetectorRef.detectChanges();
-      } else {
-        this.isSearch = true;
+    // try {
+    //   this.textSearch = $event;
+    //   this.searchKey.next($event);
+    //   this.isSearch == true;
+    //   if (this.textSearch == null || this.textSearch == '') {
+    //     this.views.forEach((item) => {
+    //       item.active = false;
+    //       item.hide = false;
+    //       if (item.text == 'Search') item.hide = true;
+    //       if (item.text == this.viewActive.text) item.active = true;
+    //     });
+    //     this.changeDetectorRef.detectChanges();
+    //   } else {
+        // this.views.forEach((item) => {
+        //   item.hide = true;
+        //   if (item.text == 'Search') item.hide = false;
+        // });
+        // this.changeDetectorRef.detectChanges();
+        // this.isSearch = true;
         //     this.pageNumberCliked= this.pageNumberDefault;
-        this.getHomeProcessSearch();
-      }
-    } catch (ex) {
-      this.changeDetectorRef.detectChanges();
-    }
+    //     this.getHomeProcessSearch();
+    //   }
+    // } catch (ex) {
+    //   this.changeDetectorRef.detectChanges();
+    // }
+    let tesst =$event;
+   // this.view.dataService.searchText
+    this.view.dataService.search(tesst).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD
@@ -433,10 +445,8 @@ export class ProcessesComponent
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        var obj = e?.event.data;
-        obj.recID = e?.event.idNew;
         this.view.dataService.clear();
-        this.view.dataService.update(obj).subscribe();
+        this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
     });
@@ -631,28 +641,29 @@ export class ProcessesComponent
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
     //đoi view
-    let url = 'bp/processstep/BPT11';
-    this.codxService.navigate('', url, { processID: data.recID });
+    // let url = 'bp/processstep/BPT11';
+    // this.codxService.navigate('', url, { processID: data.recID });
 
     // view popup
-    // let obj ={
-    //   moreFunc : e?.data,
-    //   data : data
-    // }
+    let obj ={
+      moreFunc : e?.data,
+      data : data ,
+      formModel : this.view.formModel
+    }
 
-    // let dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-    // dialogModel.zIndex = 900;
-    // var dialog = this.callfc.openForm(
-    //   PopupViewDetailProcessesComponent,
-    //   '',
-    //   this.widthWin,
-    //   this.heightWin,
-    //   '',
-    //   obj,
-    //   '',
-    //   dialogModel
-    // );
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 900;
+    var dialog = this.callfc.openForm(
+      PopupViewDetailProcessesComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
   }
 
   approval($event) {}
