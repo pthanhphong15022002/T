@@ -1,4 +1,4 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 import { BP_Processes, TabModel } from '../models/BP_Processes.model';
 
@@ -12,25 +12,48 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   viewMode = '4';
   name = '';
   offset = '0px';
-  dialog: DialogRef;
-  data : any
-  moreFunc : any
-  title  =''
-  tabControl: TabModel[] = [
-    { name: 'ViewList', textDefault: 'Dashboard', isActive: true },
+  dialog!: DialogRef;
+  data: any;
+  moreFunc: any;
+  title = '';
+  tabControl: TabModel[] = [];
+  all: TabModel[] = [
+    { name: 'ViewList', textDefault: 'Viewlist', isActive: true },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false },
     { name: 'Flowchart', textDefault: 'Flowchart', isActive: false },
   ];
 
-  constructor(@Optional() dt?: DialogData, @Optional() dialog?: DialogRef) {
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    @Optional() dt?: DialogData,
+    @Optional() dialog?: DialogRef
+  ) {
     this.dialog = dialog;
-    this.data = dt?.data ;
-    this.process = this.data?.data ;
-    this.moreFunc =this.data?.moreFunc ;
-    this.title = this.moreFunc?.customName
+    this.data = dt?.data;
+    this.process = this.data?.data;
+    this.moreFunc = this.data?.moreFunc;
+    this.title = this.moreFunc?.customName;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.tabControl.length == 0) {
+      this.tabControl = this.all;
+    } 
+    //else {
+    //   this.active = this.tabControl.findIndex(
+    //     (x: TabModel) => x.isActive == true
+    //   );
+    // }
+    this.changeDetectorRef.detectChanges();
+  }
 
-  clickMenu(item) {}
+  clickMenu(item) {
+    this.name = item.name;
+    this.tabControl.forEach((obj) => {
+      if (obj.isActive == true) {
+        obj.isActive = false;
+        return;
+      }
+    });
+  }
 }

@@ -34,7 +34,6 @@ export class EmployeeDisciplinesDetailComponent extends UIComponent implements O
 
   onInit(): void {
     console.log('data', this.data);
-    
   }
   
   onSaveForm(){
@@ -43,5 +42,4 @@ export class EmployeeDisciplinesDetailComponent extends UIComponent implements O
       return;
     }
   }
-
 }

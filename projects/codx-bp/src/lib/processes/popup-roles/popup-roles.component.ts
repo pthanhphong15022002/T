@@ -306,8 +306,9 @@ export class PopupRolesComponent implements OnInit {
 
   checkAssignRemove(i) {
     if (
-      !this.permissions[i].autoCreate &&
-      this.permissions[i].nemberType == '1'
+      (!this.permissions[i].autoCreate &&
+      this.permissions[i].nemberType == '1') || (this.permissions[i].objectID == '' &&
+      this.permissions[i].objectID == null)
     )
       return true;
     else return false;
