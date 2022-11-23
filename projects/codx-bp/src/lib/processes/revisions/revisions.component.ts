@@ -17,6 +17,7 @@ import {
   AuthStore,
   UIComponent,
   CacheService,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
@@ -71,50 +72,29 @@ export class RevisionsComponent implements OnInit {
     this.process = this.data?.data;
     this.revisions = this.process?.versions;
     this.headerText =dt?.data.more.defaultName;
+    this.verNo ='V'+this.revisions.length.toString()+'.0';
     this.cache.message('BP001').subscribe((res) => {
       if (res) {
-       this.verNameDefault = res.customName;
+       this.verNameDefault = Util.stringFormat(res.defaultName, '' + this.verNo.toString() + '');
       }
     })
-    this.verNo ='V'+this.revisions.length.toString()+'.0';
     this.comment=''
     this.cache.gridViewSetup('ProcessRevisions', 'grvProcessRevisions').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
-
-    // // Message code
-    // this.msgErrorValidExit= 'msgErrorValidExit'; // Check name exist
-    // this.msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
-    // this.msgSucess = 'msgSucess'; //Condtion sucess
   }
-  //this.cache
-  // .gridViewSetup(formModel.formName, formModel.gridViewName)
-  // .subscribe((res) => {
-  //   if (res) {
-  //     if (fieldName == 'Buid') fieldName = 'BUID';
-  //     gridViewSetup = res;
-  //     this.notificationsService.notifyCode(
-  //       'SYS009',
-  //       0,
-  //       '"' + gridViewSetup[fieldName]?.headerText + '"'
-  //     );
-  //   }
-  // });
+
 
   ngOnInit(): void {
   }
 
   //#region event
   valueChange(e) {
-    console.log(e?.data);
     if(e?.data)  {
       this.verName =e?.data;
     }
-    // else {
-    //   this.verName = this.verNameDefault;
-    // }
     this.changeDetectorRef.detectChanges;
   }
 
@@ -141,13 +121,11 @@ export class RevisionsComponent implements OnInit {
   onSave() {
     switch(this.checkValiName(this.verName)) {
       case this.msgErrorValidIsNull: {
-
-        //
         this.notiService.notifyCode('SYS009', 0, '"' + 'headerText' + '"');
          break;
       }
       case this.msgErrorValidExit: {
-     //   this.notiService.notifyCode('BP002', 0, '"' + 'headerText' + '"');
+        this.notiService.notifyCode('BP002');
          break;
       }
       case this.msgSucess: {
@@ -158,16 +136,9 @@ export class RevisionsComponent implements OnInit {
    if(this.isUpdate) {
       this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName).subscribe((res) => {
         if (res) {
-            console.log(this.process);
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;
-            this.process.id = res.id;
-            this.process.revisionID = res.revisionID;
-            var obj = {
-              idNew: res.id.toString(),
-              data: this.process
-            };
-            this.dialog.close(obj);
+            this.dialog.close(this.process);
             this.notiService.notifyCode('SYS007');
         }
       });
