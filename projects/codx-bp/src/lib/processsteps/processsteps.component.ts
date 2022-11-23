@@ -133,8 +133,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.layout.setLogo(null);
       if (!this.processID) {
         this.codxService.navigate('', this.urlBack);
+      }else{
+        this.getFlowChart(this.process);
       }
-      this.getFlowChart(this.process);
+     
 
       this.request = new ResourceModel();
       this.request.service = 'BP';
@@ -995,7 +997,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
       .subscribe((res) => {
-        if (res) {
+        if (res&& res?.url) {
           let obj = { pathDisk: res?.url, fileName: process?.processName };
           this.dataFile = obj;
         }

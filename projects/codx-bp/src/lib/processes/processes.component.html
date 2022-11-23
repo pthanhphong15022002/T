@@ -7,7 +7,7 @@
 <ng-template #templateListCard let-data>
   <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100 w-225px card-no-body"
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
-    [imageReferType]="'Flowchart'" [imgOn]="data?.modifiedOn" [rootData]="data" [dataItem]="data"
+    [imageReferType]="'Flowchart'"  [rootData]="data" [dataItem]="data"
     [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
     [imageWidth]="600">
   </codx-card-img>
