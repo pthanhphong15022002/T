@@ -1145,6 +1145,15 @@ div.user-mini-nav {
   min-width: 35px;
 }
 
+.e-grid .e-rowcell {
+  line-height: inherit;
+}
+
+.e-grid.e-responsive .e-rowcell,
+.e-grid.e-responsive .e-headercelldiv {
+  white-space: normal;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
