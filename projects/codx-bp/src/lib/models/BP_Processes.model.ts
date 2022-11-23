@@ -182,4 +182,5 @@ export class TabModel {
   textDefault: string;
   template?: any;
   isActive: boolean = false;
+  id :number
 }

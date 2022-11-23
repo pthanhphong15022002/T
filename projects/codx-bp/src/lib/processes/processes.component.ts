@@ -611,28 +611,29 @@ export class ProcessesComponent
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
     //đoi view
-    let url = 'bp/processstep/BPT11';
-    this.codxService.navigate('', url, { processID: data.recID });
+    // let url = 'bp/processstep/BPT11';
+    // this.codxService.navigate('', url, { processID: data.recID });
 
     // view popup
-    // let obj ={
-    //   moreFunc : e?.data,
-    //   data : data
-    // }
+    let obj ={
+      moreFunc : e?.data,
+      data : data ,
+      formModel : this.view.formModel
+    }
 
-    // let dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-    // dialogModel.zIndex = 900;
-    // var dialog = this.callfc.openForm(
-    //   PopupViewDetailProcessesComponent,
-    //   '',
-    //   this.widthWin,
-    //   this.heightWin,
-    //   '',
-    //   obj,
-    //   '',
-    //   dialogModel
-    // );
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 900;
+    var dialog = this.callfc.openForm(
+      PopupViewDetailProcessesComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
   }
 
   approval($event) { }
