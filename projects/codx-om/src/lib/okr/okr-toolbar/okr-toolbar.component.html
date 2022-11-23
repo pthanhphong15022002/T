@@ -28,7 +28,7 @@
                 <i class="icon-vertical_align_center text-dark"></i>
             </span>
         </div>
-        <codx-dropdown-calendar cssPopup="h-500px w-800px" cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event)"
+        <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="date" [displayOption]="ops" cssClass="w-100 om-calendar" class="me-4" (change)="changeCalendar($event)"
         ></codx-dropdown-calendar >
         <div class="me-4">
             <codx-toolbar-button [button]="button" (buttonClick)="buttonClick('add')">

@@ -17,7 +17,9 @@ export class OkrAddComponent implements OnInit {
 
   dialog:any;
   formModel: any;
-  okrForm: FormGroup
+  okrForm: FormGroup;
+  date = new Date();
+  ops = ['m','q','y'];
   constructor(
     private api: ApiHttpService,
     private ref: ChangeDetectorRef,

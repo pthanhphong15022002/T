@@ -20,7 +20,6 @@ import {
   RequestOption,
   UIComponent,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 
 //import { CodxEpService } from '../../../codx-ep.service';
@@ -45,6 +44,8 @@ export class PopupAddKRComponent extends UIComponent {
   dialogRef: DialogRef;
   isAfterRender: boolean;
   fGroupAddKR: FormGroup;
+
+  parentID:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -58,7 +59,8 @@ export class PopupAddKRComponent extends UIComponent {
     this.isAdd = true//dialogData?.data[1];
     this.headerText= "Thêm kết quả chính"//dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.formModel = dialogData.data[0]?.formModel;    
+    this.formModel = dialogData.data[1];     
+    this.parentID = dialogData.data[0];    
     
   }
 
