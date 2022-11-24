@@ -66,6 +66,7 @@ export class RoleDetailComponent
   checkAll: any = {};
   selectIndex = 0;
   objTemplate: any = {};
+  allowMore: boolean = false;
 
   @ViewChild('template') template: TemplateRef<any>;
 
@@ -157,8 +158,12 @@ export class RoleDetailComponent
           this.active = true;
           var funtion = res[0] as any[];
           if (funtion.length > 0) {
-            this.dataAuthorize = funtion.filter((x) => x.functionType != 'R');
-            this.dataReport = funtion.filter((x) => x.functionType == 'R');
+            this.dataAuthorize = funtion.filter(
+              (x) => x.functionType != 'R' && x.functionType != 'D'
+            );
+            this.dataReport = funtion.filter(
+              (x) => x.functionType == 'R' || x.functionType == 'D'
+            );
           }
 
           this.dataRole = res[1];
@@ -199,6 +204,8 @@ export class RoleDetailComponent
           }
         });
       }
+    } else if (e.field === 'allow') {
+      this.allowMore = e.data;
     } else {
       if (e.field == 'sys' || e.field == 'exp' || e.field == 'more') {
         this.checkAndLock(e.field, e.data);
