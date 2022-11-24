@@ -72,7 +72,6 @@ export class PopupAddProcessesComponent implements OnInit {
       var versions = new BP_ProcessRevisions();
       this.process.versionNo = 'V0.0';
       versions.versionNo = this.process.versionNo;
-      versions.comment = 'Phiên bản đầu';
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       this.revisions.push(versions) ;
