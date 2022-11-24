@@ -6,7 +6,7 @@
     [title]="data.categoryName"
     [desc]="data.title"
     [icoCss]="
-      'w-40px symbol h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+      'w-35px symbol h-35px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
       data?.icon
     "
     [status]="data?.approveStatus"
@@ -58,7 +58,6 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
     [showBgColorVll]="true"
-
   >
   </codx-card-img>
 </ng-template>
@@ -103,6 +102,7 @@
   [idField]="idField"
   (requestEnded)="closeAddForm($event)"
   (viewChanged)="viewChange($event)"
+  [moreFuncs]="moreFunc"
 >
 </codx-views>
 

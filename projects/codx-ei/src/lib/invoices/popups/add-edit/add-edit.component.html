@@ -1,12 +1,44 @@
 <codx-form
   #form
+  [headerText]="headerText"
   [body]="body"
   [data]="invoices"
   [formModel]="dialog.formModel"
   [dialog]="dialog"
 >
+<!-- [subToolbar]="subToolbar" -->
   <ng-template #body>
     <div class="card-add">
+      <ejs-tab id="element">
+        <e-tabitems>
+          <!-- Tab thông tin hóa đơn -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="tabBasic"
+                default="Thông tin hóa đơn"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <!-- Tab thông tin mở rộng -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="tabBasic"
+                default="Thông tin mở rộng"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabExtend"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
       <ejs-tab id="element">
         <e-tabitems>
           <!-- Tab Hàng hóa/dịch vụ -->
@@ -24,7 +56,50 @@
           </e-tabitem>
         </e-tabitems>
       </ejs-tab>
+      <ejs-tab id="element">
+        <e-tabitems>
+          <!-- Diễn giải -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="good/services"
+                default="Hàng hóa/dịch vụ"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <div class="form-group mb-0 row">
+                <div class="col-10">
+                  <div class="form-group mb-0 row">
+                    <div class="col-3">
+                      <div class="form-group mb-0 pt-1">
+                        <codx-label
+                          fiedName="memo"
+                          [formModel]="form.formModel"
+                          default="Diễn giải"
+                        >
+                        </codx-label>
+                        <codx-input
+                          field="memo"
+                          [formModel]="form.formModel"
+                          [Group]="form.formGroup"
+                        >
+                        </codx-input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
     </div>
+  </ng-template>
+  <ng-template #subToolbar>
+    <button class="btn btn-md btn-warning">Lưu & đóng</button>
+
+    <button class="btn btn-md btn-danger">Lưu</button>
   </ng-template>
 </codx-form>
 
@@ -46,6 +121,7 @@
               field="taxCode"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (valueChange)="mstChange($event)"
             >
             </codx-input>
           </div>
@@ -448,6 +524,12 @@
     [editSettings]="editSettings"
     [dataSource]="data"
     [height]="300"
+    (rowSelected)="getSelected($event)"
+    (keyPressed)="keyPressed($event)"
+    (cellEdit)="cellEdit($event)"
+    (cellSelecting)="cellSelecting($event)"
+    (cellSelected)="cellSelected($event)"
+    (actionComplete)="actionComplete($event)"
   >
     <e-columns>
       <e-column
@@ -517,144 +599,25 @@
         textAlign="Right"
         width="200"
       ></e-column>
-      <e-column
+      <!-- <e-column
         field="action"
         headerText=""
         textAlign="Right"
         width="50"
         isPrimaryKey="true"
-      ></e-column>
+      ></e-column> -->
     </e-columns>
     <ng-template #editSettingsTemplate let-data>
-      <div [formGroup]="fgGoods">
-        <table class="e-table e-inline-edit" cellspacing="0.25">
-          <colgroup>
-            <col style="width: 50px" />
-            <col style="width: 200px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 100px" />
-            <col style="width: 200px" />
-            <col style="width: 50px" />
-          </colgroup>
-          <tbody>
-            <tr>
-              <td style="text-align: right" class="e-rowcell">
-                <div
-                  class="e-input-group"
-                  [ngClass]="{ 'e-disabled': !data.isAdd }"
-                >
-                  <label>{{ data.no }}</label>
-                </div>
-              </td>
-              <td class="e-rowcell">
-                <div class="e-input-group">
-                  <input
-                    class="e-input e-field"
-                    formControlName="itemDesc"
-                    name="itemDesc"
-                    type="text"
-                  />
-                </div>
-              </td>
-              <td style="text-align: right" class="e-rowcell">
-                <codx-input
-                  class="e-input e-field"
-                  name="umid"
-                  field="umid"
-                  [formModel]="fmGoods"
-                  [Group]="fgGoods"
-                  (valueChange)="onChangedValue($event, data)"
-                >
-                </codx-input>
-              </td>
-              <td style="text-align: right" class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="quantity"
-                  name="quantity"
-                  type="number"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="salesPrice"
-                  name="salesPrice"
-                  type="number"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="salesAmt"
-                  name="salesAmt"
-                  type="number"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="vatid"
-                  name="vatid"
-                  type="number"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="vatAmt"
-                  name="vatAmt"
-                  type="number"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="totalAmt"
-                  name="totalAmt"
-                  type="number"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="lineType"
-                  name="lineType"
-                  type="text"
-                />
-              </td>
-              <td class="e-rowcell">
-                <input
-                  class="e-input e-field"
-                  formControlName="note"
-                  name="note"
-                  type="text"
-                />
-              </td>
-              <td class="e-rowcell">
-                <button class="btn btn-sm">Xóa</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- <ng-container
+      <ng-container
         *ngTemplateOutlet="editTemplate; context: { $implicit: data }"
-      ></ng-container> -->
+      ></ng-container>
     </ng-template>
   </ejs-grid>
 </ng-template>
 
 <!-- UMID template -->
-<ng-template #umid> </ng-template>
 
-<!-- Editing template -->
+<!-- Edit Gird template -->
 <ng-template #editTemplate let-data>
   <div [formGroup]="fgGoods">
     <table class="e-table e-inline-edit" cellspacing="0.25">
@@ -670,26 +633,33 @@
         <col style="width: 100px" />
         <col style="width: 100px" />
         <col style="width: 200px" />
-        <col style="width: 50px" />
+        <!-- <col style="width: 50px" /> -->
       </colgroup>
       <tbody>
         <tr>
           <td style="text-align: right" class="e-rowcell">
-            <div
-              class="e-input-group"
-              [ngClass]="{ 'e-disabled': !data.isAdd }"
-            >
-              <label>{{ data.no }}</label>
+            <div class="e-input-group">
+              <input
+                class="e-input e-field"
+                [value]="data.no"
+                required
+                [attr.disabled]="!data.isAdd ? '' : null"
+                name="no"
+                type="text"
+                style="text-align: right"
+              />
             </div>
           </td>
           <td class="e-rowcell">
             <div class="e-input-group">
-              <input
-                class="e-input e-field"
+              <codx-input
+                field="itemDesc"
                 formControlName="itemDesc"
-                name="itemDesc"
-                type="text"
-              />
+                [formModel]="form.formModel"
+                [Group]="fgGoods"
+                (valueChange)="onChangedValue($event, data)"
+              >
+              </codx-input>
             </div>
           </td>
           <td style="text-align: right" class="e-rowcell">
@@ -699,6 +669,7 @@
               field="UMID"
               [formModel]="fmGoods"
               [Group]="fgGoods"
+              (valueChange)="onChangedValue($event, data)"
             >
             </codx-input>
           </td>
@@ -766,9 +737,9 @@
               type="text"
             />
           </td>
-          <td class="e-rowcell">
+          <!-- <td class="e-rowcell">
             <button class="btn btn-sm">Xóa</button>
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>

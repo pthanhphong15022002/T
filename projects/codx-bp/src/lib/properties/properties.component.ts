@@ -47,6 +47,7 @@ export class PropertiesComponent implements OnInit {
   userName = '';
   funcID: any;
   entityName: any;
+  flowChart: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -61,6 +62,7 @@ export class PropertiesComponent implements OnInit {
     this.process = this.data;
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
+    this.viewFlowChart();
 
     if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     this.totalRating = 0;
@@ -217,4 +219,26 @@ export class PropertiesComponent implements OnInit {
   //     return date1 - date2;
   //   });
 
+  viewFlowChart(){
+    let paras = [
+      '',
+      this.funcID,
+      this.process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      this.process?.processName,
+      'Flowchart',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .subscribe((res) => {
+        if (res&& res?.url) {
+          let obj = { pathDisk: res?.url, fileName: this.process?.processName };
+          this.flowChart = obj;
+        }
+      });
+
+  }
 }

@@ -19,6 +19,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
 import { CodxSvService } from '../codx-sv.service';
 
 @Component({
@@ -43,9 +44,11 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   data: any;
   typeFile: any;
   dataImg: any;
+  dataVideo: any;
   modeFile: any;
   urlVideo: any;
-  @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('listViewImage') listViewImage: CodxListviewComponent;
+  @ViewChild('listViewVideo') listViewVideo: CodxListviewComponent;
   @ViewChild('ATM_Choose_Image') ATM_Choose_Image: AttachmentComponent;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
 
@@ -78,45 +81,39 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
-  onSave() {
+  onSave(referType) {
     this.generateGuid();
     let recID = JSON.parse(JSON.stringify(this.guidID));
-    delete this.dataImg['recID'];
-    delete this.dataImg['id'];
-    delete this.dataImg['uploadId'];
-    this.dataImg.history = null;
-    this.dataImg.objectType = this.functionList.entityName;
-    this.dataImg.objectID = recID;
+    var dataUpload: any;
+    if (referType == 'P') dataUpload = this.dataImg;
+    else dataUpload = this.dataVideo;
+    delete dataUpload['recID'];
+    delete dataUpload['id'];
+    delete dataUpload['uploadId'];
+    dataUpload.history = null;
+    dataUpload.objectType = this.functionList.entityName;
+    dataUpload.objectID = recID;
+    var result = {
+      referType: referType,
+      dataUpload: [dataUpload],
+    };
     this.api
-      .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', this.dataImg)
+      .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', dataUpload)
       .subscribe((res) => {
         if (res) {
-          this.dialog.close([this.dataImg]);
+          if (this.modeFile == 'change') {
+            this.SVServices.deleteFile(
+              this.data.recID,
+              this.functionList.entityName
+            ).subscribe();
+          }
+          this.dialog.close(result);
         }
       });
   }
 
-  getFileByObjectID(recID) {
-    return this.api.execSv(
-      'DM',
-      'ERM.Business.DM',
-      'FileBussiness',
-      'GetFilesByIbjectIDAsync',
-      recID
-    );
-    // .subscribe((res: any[]) => {
-    //   if (res.length > 0) {
-    //     // let files = res;
-    //     // files.map((e: any) => {
-    //     //   if (e && e.referType == this.REFER_TYPE.VIDEO) {
-    //     //     e[
-    //     //       'srcVideo'
-    //     //     ] = `${environment.apiUrl}/api/dm/filevideo/${e.recID}?access_token=${this.user.token}`;
-    //     //   }
-    //     // });
-    //     this.dataImg = res;
-    //   }
-    // });
+  getSrcVideo(data) {
+    return (data['srcVideo'] = `${environment.urlUpload}/${data.pathDisk}`);
   }
 
   valueChangeURLVideo(e) {
@@ -126,18 +123,27 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   }
 
   chooseImage(item) {
-    var dataTemp = this.listView.dataService.data;
+    var dataTemp = this.listViewImage.dataService.data;
     var indexIC = dataTemp.findIndex((x) => x?.isChoose == true);
     if (indexIC >= 0) dataTemp[indexIC]['isChoose'] = false;
     if (dataTemp) {
       var index = dataTemp.findIndex((x) => x.recID == item.recID);
       dataTemp[index]['isChoose'] = !dataTemp[index]['isChoose'];
     }
-    this.listView.dataService.data = dataTemp;
+    this.listViewImage.dataService.data = dataTemp;
     this.dataImg = item;
-    // this.getFileByObjectID(item.objectID).subscribe((res) => {
-    //   if (res) this.dataImg = res;
-    // });
+  }
+
+  chooseVideo(item) {
+    var dataTemp = this.listViewVideo.dataService.data;
+    var indexIC = dataTemp.findIndex((x) => x?.isChoose == true);
+    if (indexIC >= 0) dataTemp[indexIC]['isChoose'] = false;
+    if (dataTemp) {
+      var index = dataTemp.findIndex((x) => x.recID == item.recID);
+      dataTemp[index]['isChoose'] = !dataTemp[index]['isChoose'];
+    }
+    this.listViewVideo.dataService.data = dataTemp;
+    this.dataVideo = item;
   }
 
   async selectedFile(e) {
@@ -152,8 +158,6 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
           dt['referType'] = this.REFER_TYPE.IMAGE;
         } else if (dt.mimeType.indexOf('video/mp4') >= 0) {
           dt['referType'] = this.REFER_TYPE.VIDEO;
-        } else if (dt.mimeType.indexOf('video/mp3') >= 0) {
-          dt['referType'] = this.REFER_TYPE.VIDEO;
         } else {
           dt['referType'] = this.REFER_TYPE.APPLICATION;
         }
@@ -164,11 +168,18 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       if (result.data) {
         if (this.modeFile == 'change') {
           this.SVServices.deleteFile(
-            this.data,
+            this.data.recID,
             this.functionList.entityName
           ).subscribe();
         }
-        this.dialog.close(files);
+        var referType: any;
+        if (files[0]?.referType == 'video') referType = 'V';
+        else referType = 'P';
+        var obj = {
+          referType: referType,
+          dataUpload: files,
+        };
+        this.dialog.close(obj);
       }
     });
   }
