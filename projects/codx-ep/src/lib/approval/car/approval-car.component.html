@@ -26,19 +26,19 @@
       
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.startDate | fmDT }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.startHour}}
         </span>
         <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
           "-"
         }}</span>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.endHour }}
         </span>
       </div>
@@ -52,13 +52,13 @@
     <div class="d-flex mt-1 mb-1" >
       <div class="d-flex me-6">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.startDate | fmDT:'dmy':true  }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.endDate | fmDT:'dmy':true}}
         </span>
       </div>
@@ -142,9 +142,9 @@
         <codx-label
           name="lblRanking"
           default="Phân loại"
-          class="text-gray-600"
+          class="text-gray-800"
         ></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 text-gray-800">:</span>
         <span class="fw-bold">{{
           data?.resourceData?.ranking | vll: "EP005":"text" | async
         }}</span>
@@ -153,9 +153,9 @@
         <codx-label
           name="lblCapacity"
           default="Chỗ ngồi"
-          class="text-gray-600"
+          class="text-gray-800"
         ></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 text-gray-800">:</span>
         <span class="fw-bold">{{ data?.resourceData?.capacity }}</span>
       </div>
     </div>
@@ -202,16 +202,16 @@
   </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-directions_car me-1"></i>
-    <codx-label name="lblCar" default="Loại xe" class="text-gray-600"></codx-label>
-    <span class="me-1 text-gray-600">:</span>
+    <codx-label name="lblCar" default="Loại xe" class="text-gray-800"></codx-label>
+    <span class="me-1 text-gray-800">:</span>
     <span class="fw-bold">
       {{data?.resourceName}}
     </span>
   </div>   
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-contact_mail me-1"></i>
-    <codx-label name="lblDriver" default="Tài xế" class="text-gray-600"></codx-label>
-    <span class="me-1 text-gray-600">:</span>
+    <codx-label name="lblDriver" default="Tài xế" class="text-gray-800"></codx-label>
+    <span class="me-1 text-gray-800">:</span>
     <span *ngIf="data?.driverName !=null">
       <span class="fw-bold">
         {{data?.driverName}}
@@ -273,13 +273,13 @@
   
   <hr>
   <div>
-    <codx-label name="lblReason" default="Mục tiêu sử dụng" class="text-gray-600"></codx-label>
-    <span class="me-1 text-gray-600">:</span>
+    <codx-label name="lblReason" default="Mục tiêu sử dụng" class="text-gray-800"></codx-label>
+    <span class="me-1 text-gray-800">:</span>
     <span class="ms-1 fw-bold">{{data?.reasonName}} </span>
   </div>
   <div>
-    <codx-label name="lblNote" default="Tiêu đề" class="text-gray-600"></codx-label>
-    <span class="me-1 text-gray-600">:</span>
+    <codx-label name="lblNote" default="Tiêu đề" class="text-gray-800"></codx-label>
+    <span class="me-1 text-gray-800">:</span>
     <span class="ms-1 fw-bold">{{data?.note}} </span>
   </div>
  

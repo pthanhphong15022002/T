@@ -29,19 +29,19 @@
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="">
           {{ data?.startDate | fmDT }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
-        <span class="text-gray-600">
+        <span class="">
           {{ showHour(data?.startDate) }}
         </span>
         <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
           "-"
         }}</span>
-        <span class="text-gray-600">
+        <span class="">
           {{ showHour(data?.endDate) }}
         </span>
       </div>
@@ -55,13 +55,13 @@
     <div class="d-flex mt-1 mb-1">
       <div class="d-flex me-6">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="">
           {{ data?.startDate | fmDT: "dmy":true }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="">
           {{ data?.endDate | fmDT: "dmy":true }}
         </span>
       </div>
@@ -142,9 +142,9 @@
         <codx-label
           name="lblRanking"
           default="Phân loại"
-          class="text-gray-600"
+          class="text-gray-800"
         ></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 fw-bold">:</span>
         <span class="fw-bold">{{
           data?.resourceData?.ranking | vll: "EP005":"text" | async
         }}</span>
@@ -153,9 +153,9 @@
         <codx-label
           name="lblCapacity"
           default="Chỗ ngồi"
-          class="text-gray-600"
+          class="text-gray-800"
         ></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 fw-bold">:</span>
         <span class="fw-bold">{{ data?.resourceData?.capacity }}</span>
       </div>
     </div>
@@ -207,10 +207,10 @@
     <codx-label
       name="lblCar"
       default="Loại xe"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
-    <span class="fw-bold">
+    <span class="me-1 fw-bold">:</span>
+    <span class="">
       {{ data?.resourceName }}
     </span>
   </div>
@@ -219,18 +219,18 @@
     <codx-label
       name="lblDriver"
       default="Tài xế"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
+    <span class="me-1 fw-bold">:</span>
     <span *ngIf="data?.driverName != null">
-      <span class="fw-bold">
+      <span class="">
         {{ data?.driverName }}
       </span>
     </span>
     <span *ngIf="data?.driverName == null">
       <codx-label
         default="Không có tài xế"
-        class="fw-bold"
+        class=""
         name="lblUnavailableDriver"
       ></codx-label>
     </span>
@@ -290,28 +290,28 @@
     <codx-label
       name="lblReason"
       default="Mục tiêu sử dụng"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
-    <span class="ms-1 fw-bold">{{ data?.reasonName }} </span>
+    <span class="me-1 fw-bold">:</span>
+    <span class="ms-1">{{ data?.reasonName }} </span>
   </div>
   <div class="mb-2">
     <codx-label
       name="lblAgencyName"
       default="Tên đơn vị"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
-    <span class="ms-1 fw-bold">{{ data?.agencyName }} </span>
+    <span class="me-1 fw-bold">:</span>
+    <span class="ms-1">{{ data?.agencyName }} </span>
   </div>
   <div class="mb-2">
     <codx-label
       name="lblAddress"
       default="Địa chỉ"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
-    <span class="ms-1 fw-bold">{{ data?.address }} </span>
+    <span class="me-1 fw-bold">:</span>
+    <span class="ms-1 ">{{ data?.address }} </span>
   </div>
 
   <div>

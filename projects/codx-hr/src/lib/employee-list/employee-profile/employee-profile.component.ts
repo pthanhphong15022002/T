@@ -1,3 +1,4 @@
+import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
 import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
 import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
 import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
@@ -615,9 +616,10 @@ export class EmployeeProfileComponent extends UIComponent {
 
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAllocatedPropertyComponent,
+      EmployeeAllocatedPropertyDetailComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
         headerText: 'Tài sản cấp phát',
       },
       option
@@ -709,14 +711,12 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  collapse(id) {
-    this.objCollapes[id] = !this.objCollapes[id];
-    // if (e) {
-    //   if (e.classList.contains('show')) {
-    //     e.classList.remove('show');
-    //   } else {
-    //     e.classList.add('show');
-    //   }
-    // }
+  collapse(id: string, isCollapse: string = '-1') {
+    if (isCollapse != '-1') {
+      let value = isCollapse == '0' ? false : true;
+      this.objCollapes[id] = value;
+    } else {
+      this.objCollapes[id] = !this.objCollapes[id];
+    }
   }
 }
