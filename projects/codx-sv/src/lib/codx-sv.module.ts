@@ -27,6 +27,7 @@ import { SortSessionComponent } from './add-survey/questions/sort-session/sort-s
 import { PopupUploadComponent } from './add-survey/questions/popup-upload/popup-upload.component';
 import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { QuestionsComponent } from './add-survey/questions/questions.component';
+import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
 
 export const routes: Routes = [
   {
@@ -78,6 +79,7 @@ const Component: Type<any>[] = [
     InPlaceEditorModule,
     DragDropModule,
     FormsModule,
+    ChartAllModule,
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
