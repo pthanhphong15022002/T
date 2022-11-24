@@ -177,7 +177,7 @@ export class SignFileComponent extends UIComponent {
       {
         id: 'btnOverdue',
         icon: 'icon-list-chechbox',
-        text: 'Duyệt tự động',
+        text: 'Duyệt quá hạn',
       },
     ];
     this.df.detectChanges();
