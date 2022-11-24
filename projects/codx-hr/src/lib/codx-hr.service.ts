@@ -334,6 +334,16 @@ export class CodxHrService {
     )
   }
 
+  getEmployeeDesciplinesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDisciplinesBusiness',
+      'GetEmployeeDisciplinesInfoAsync',
+      data
+    )
+  }
+
   updateEmployeePassportInfo(data){
     return this.api.execSv<any>(
       'HR',
@@ -380,6 +390,16 @@ export class CodxHrService {
       'HR',
       'EAwardsBusiness',
       'AddEmployeeAwardInfoAsync',
+      data
+    )
+  }
+
+  updateEmployeeDisciplinesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDisciplinesBusiness',
+      'AddEmployeeDisciplinesInfoAsync',
       data
     )
   }
