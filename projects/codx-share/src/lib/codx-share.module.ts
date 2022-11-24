@@ -129,6 +129,9 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { CodxEmailComponent } from './components/codx-email/codx-email.component';
 import { CoreModule } from '@core/core.module';
 import { LayoutListDetailComponent } from './layout/components/layout-list-detail/layout-list-detail.component';
+import { CodxApproveStepsComponent } from './components/codx-approve-steps/codx-approve-steps.component';
+import { AddEditApprovalStepComponent } from './components/codx-approve-steps/add-edit-approval-step/add-edit-approval-step.component';
+import { PopupAddApproverComponent } from './components/codx-approve-steps/popup-add-approver/popup-add-approver.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -231,6 +234,9 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     DialogthumbComponent,
     CodxEmailComponent,
     LayoutListDetailComponent,
+    CodxApproveStepsComponent,
+    AddEditApprovalStepComponent,
+    PopupAddApproverComponent,
   ],
   imports: [
     CommonModule,

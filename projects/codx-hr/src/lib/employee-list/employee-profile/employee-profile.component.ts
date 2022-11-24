@@ -30,6 +30,7 @@ import {
   CallFuncService,
   DialogData,
   DialogRef,
+  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -65,7 +66,6 @@ export class EmployeeProfileComponent extends UIComponent {
     super(inject);
     this.user = this.auth.get();
     console.log('dtttt', dialog);
-    
   }
 
   @ViewChild('itemTemplate') template: TemplateRef<any>;
@@ -74,6 +74,10 @@ export class EmployeeProfileComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
 
   infoPersonal: any = {};
+
+  formModelVisa: FormModel;
+  formModelPassport: FormModel;
+  formModelWPermit: FormModel;
 
   statusVll = 'L0225';
   funcID = '';
@@ -84,6 +88,17 @@ export class EmployeeProfileComponent extends UIComponent {
   idField = 'recID';
   functionID: string;
   data: any = {};
+  //family
+  lstFamily: any;
+  //passport
+  lstPassport: any;
+  crrPassport: any = {};
+  //visa
+  lstVisa: any;
+  crrVisa: any = {};
+  //work permit
+  lstWorkPermit: any;
+
   formModel;
   itemDetail;
 
@@ -109,6 +124,39 @@ export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('healthPeriodResult', { static: true })
   healthPeriodResult: TemplateRef<any>;
 
+  objCollapes = {
+    '1': false,
+    '1.1': false,
+    '1.2': false,
+    '2': false,
+    '2.1': false,
+    '2.2': false,
+    '3': false,
+    '3.1': false,
+    '3.2': false,
+    '3.3': false,
+    '3.4': false,
+    '4': false,
+    '4.1': false,
+    '4.2': false,
+    '4.3': false,
+    '4.4': false,
+    '4.5': false,
+    '5': false,
+    '5.1': false,
+    '5.2': false,
+    '5.3': false,
+    '5.4': false,
+    '6': false,
+    '6.1': false,
+    '6.2': false,
+    '7': false,
+    '7.1': false,
+    '7.2': false,
+    '7.3': false,
+    '7.4': false,
+  };
+
   vllTabs = [
     { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
     { icon: 'icon-apartment', text: 'Thông tin công việc' },
@@ -122,22 +170,57 @@ export class EmployeeProfileComponent extends UIComponent {
   ];
 
   onInit(): void {
+    this.formModelVisa = new FormModel();
+
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
-        this.codxMwpService
-          .LoadData(params.employeeID, this.user.userID, '0')
-          .subscribe((response: any) => {
-            if (response) {
-              console.log(response);
-              this.infoPersonal = response.InfoPersonal;
-              this.data = response.Employee;
-              console.log(this.data);
+        // Thong tin ca nhan
+        this.hrService.getEmployeeInfo(params.employeeID).subscribe((emp) => {
+          if (emp) {
+            this.data = emp;
+            this.infoPersonal = emp;
+            console.log('data', this.data);
+          }
+        });
 
-              // this.dataEmployee.employeeInfo = response.InfoPersonal;
-              // this.codxMwpService.appendID(params.employeeID);
-              // this.codxMwpService.empInfo.next(response);
-              this.df.detectChanges();
+        //Quan he gia dinh
+        this.hrService
+          .getFamilyByEmployeeID(params.employeeID)
+          .subscribe((res) => {
+            console.log('family', res);
+            this.lstFamily = res;
+          });
+
+        //Passport
+        this.hrService
+          .GetListPassportByEmpID(params.employeeID)
+          .subscribe((res) => {
+            console.log('passport', res);
+
+            this.lstPassport = res;
+            if (this.lstPassport.length > 0) {
+              this.crrPassport = this.lstPassport[0];
             }
+          });
+
+        //Vissa
+        this.hrService
+          .getListVisaByEmployeeID(params.employeeID)
+          .subscribe((res) => {
+            console.log('visa', res);
+
+            this.lstVisa = res;
+            if (this.lstVisa.length > 0) {
+              this.crrVisa = this.lstVisa[0];
+            }
+          });
+
+        //work permit
+        this.hrService
+          .getListWorkPermitByEmployeeID(params.employeeID)
+          .subscribe((res) => {
+            console.log('w permit', res);
+            this.lstWorkPermit = res;
           });
       }
     });
@@ -152,6 +235,15 @@ export class EmployeeProfileComponent extends UIComponent {
         });
       }
     });
+  }
+
+  clickMF(event: any, data) {
+    switch (event.functionID) {
+      case 'SYS03':
+        break;
+      case 'SYS02':
+        break;
+    }
   }
 
   getDataAsync(funcID: string) {
@@ -416,7 +508,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     console.log('datas', option.DataService);
-    
+
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
@@ -428,7 +520,7 @@ export class EmployeeProfileComponent extends UIComponent {
       },
       option
     );
-    
+
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
     });
@@ -475,12 +567,12 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeDisciplinesInfo(){
+  addEmployeeDisciplinesInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeDisciplinesDetailComponent,
       {
@@ -489,53 +581,53 @@ export class EmployeeProfileComponent extends UIComponent {
         headerText: 'Kỷ luật',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeAwardsInfo(){
+  addEmployeeAwardsInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeAwardsDetailComponent,
       {
         isAdd: true,
         employeeId: this.data.employeeID,
-        headerText: 'Khen thưởng'
+        headerText: 'Khen thưởng',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeAllocatedPropertyInfo(){
+  addEmployeeAllocatedPropertyInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    
-    option.Width = '800px'
+
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeAllocatedPropertyComponent,
       {
         isAdd: true,
-        headerText: 'Tài sản cấp phát'
+        headerText: 'Tài sản cấp phát',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeCertificateInfo(){
+  addEmployeeCertificateInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -556,7 +648,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeDegreeInfo(){
+  addEmployeeDegreeInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -577,43 +669,54 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeSkillsInfo(){
-    this.view.dataService.dataSelected = this.data
+  addEmployeeSkillsInfo() {
+    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService
-    option.FormModel = this.view.formModel
-    option.Width = '550px'
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeSkillDetailComponent,
       {
         isAdd: true,
-        headerText: "Kỹ năng",
+        headerText: 'Kỹ năng',
         employeeId: this.data.employeeID,
       },
       option
-      );
-      dialogAdd.closed.subscribe((res) => {
-        if(!res?.event) this.view.dataService.clear();
-      })
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
   }
 
-  addEmployeeTrainCourseInfo(){
-    this.view.dataService.dataSelected = this.data
+  addEmployeeTrainCourseInfo() {
+    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService
-    option.FormModel = this.view.formModel
-    option.Width = '550px'
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeTraincoursesComponent,
       {
         isAdd: true,
-        headerText: "Đào tạo",
+        headerText: 'Đào tạo',
         employeeId: this.data.employeeID,
       },
       option
-      );
-      dialogAdd.closed.subscribe((res) => {
-        if(!res?.event) this.view.dataService.clear();
-      })
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  collapse(id) {
+    this.objCollapes[id] = !this.objCollapes[id];
+    // if (e) {
+    //   if (e.classList.contains('show')) {
+    //     e.classList.remove('show');
+    //   } else {
+    //     e.classList.add('show');
+    //   }
+    // }
   }
 }

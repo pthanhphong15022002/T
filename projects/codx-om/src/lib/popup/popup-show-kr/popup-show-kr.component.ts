@@ -29,11 +29,11 @@ import { CodxOmService } from '../../codx-om.service';
 
 
 @Component({
-  selector: 'popup-align-kr',
-  templateUrl: 'popup-align-kr.component.html',
-  styleUrls: ['popup-align-kr.component.scss'],
+  selector: 'popup-show-kr',
+  templateUrl: 'popup-show-kr.component.html',
+  styleUrls: ['popup-show-kr.component.scss'],
 })
-export class PopupAlignKRComponent extends UIComponent implements AfterViewInit {
+export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   
   views: Array<ViewModel> | any = [];
   @ViewChild('alignKR') alignKR: TemplateRef<any>;

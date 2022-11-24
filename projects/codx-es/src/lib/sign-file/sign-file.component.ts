@@ -92,6 +92,7 @@ export class SignFileComponent extends UIComponent {
   dialog: DialogRef;
 
   buttons: Array<ButtonModel> = [];
+  moreFunc: Array<ButtonModel> = [];
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
 
   lstReferValue;
@@ -172,6 +173,13 @@ export class SignFileComponent extends UIComponent {
         },
       },
     ];
+    this.moreFunc = [
+      {
+        id: 'btnOverdue',
+        icon: 'icon-list-chechbox',
+        text: 'Duyệt quá hạn',
+      },
+    ];
     this.df.detectChanges();
   }
 
@@ -214,11 +222,13 @@ export class SignFileComponent extends UIComponent {
       case 'btnAdd':
         this.addNew();
         break;
+      case 'btnOverdue':
+        this.esService.overdue().subscribe();
+        break;
     }
   }
 
   addNew(evt?) {
-    this.esService.overdue().subscribe();
     this.view.dataService.addNew().subscribe((res) => {
       let option = new SidebarModel();
       option.Width = '800px';

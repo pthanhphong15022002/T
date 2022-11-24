@@ -105,10 +105,16 @@
                 {{data.activities}}
               </span>
             </div>
-            <div class="d-flex me-3 align-items-center">
+            <div class="d-flex me-3 align-items-center" >
+              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500"
+              (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
+              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
+              ></codx-attachment-temp></span>
+            </div>
+            <!-- <div class="d-flex me-3 align-items-center" *ngIf="data.attachments == 0">
               <span class="icon-attach_file text-primary icon-16 me-1"></span>
               {{data.attachments}}
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -177,6 +183,11 @@
   </tr>
 </ng-template>
 <!-- view-list -->
+<ng-template #popperAttachment>
+  <span>
+    <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
+  </span>
+</ng-template>
 
 <ng-template #popDetail>
   <div>
