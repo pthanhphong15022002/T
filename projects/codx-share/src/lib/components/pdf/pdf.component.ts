@@ -1117,7 +1117,7 @@ export class PdfComponent
 
   */
   saveQueue = new Map();
-  saveAfterX = 1000;
+  saveAfterX = 500;
 
   resetTime(tmpArea: tmpSignArea) {
     clearTimeout(this.saveQueue?.get(tmpArea.recID));
@@ -1476,7 +1476,7 @@ export class PdfComponent
             draggable: true,
             name: this.curSelectedArea.name(),
           });
-          imgArea?.scale({ x: this.xScale, y: this.yScale });
+          imgArea?.scale(this.curSelectedArea.scale());
           this.curSelectedArea.destroy();
           this.curSelectedArea = imgArea;
 
@@ -1524,6 +1524,7 @@ export class PdfComponent
         id: recID,
         align: 'left',
       });
+      textArea.scale(this.curSelectedArea.scale());
       this.curSelectedArea.destroy();
       this.curSelectedArea = textArea;
       let curLayer = this.lstLayer.get(tmpName.PageNumber + 1);
@@ -1540,8 +1541,8 @@ export class PdfComponent
     //save to db
     let y = this.curSelectedArea.position().y;
     let x = this.curSelectedArea.position().x;
-    let w = this.xScale;
-    let h = this.yScale;
+    let w = this.curSelectedArea.scale().x / this.xScale;
+    let h = this.curSelectedArea.scale().y / this.yScale;
 
     let tmpArea: tmpSignArea = {
       signer: tmpName.Signer,

@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -36,24 +37,18 @@ export class TmpGridViewComponent extends UIComponent {
   }
 
   @Input() columnsGrid: Array<any>;
-  @Input() rowTemplate;
-
-  @ViewChild('views', { static: true })
-  views: Array<ViewModel> | any = [];
+  @Input() service = 'HR';
+  @Input() assemblyName = 'HR';
+  @Input() entity = 'HR_EAppointions';
+  @Input() className = 'EAppointionsBusiness';
+  @Input() method = 'GetLstAppointionByEIDAsync';
+  @Input() idField = 'employeeID';
+  @Input() predicate = '@EmployeeID=@0';
+  @Input() dataValue;
+  @Input() rowTemplate: TemplateRef<any>;
 
   onInit(): void {
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          panelLeftRef: null,
-          resources: this.columnsGrid,
-        },
-      },
-    ];
+    console.log('datavalues', this.dataValue);
     this.df.detectChanges();
   }
 }

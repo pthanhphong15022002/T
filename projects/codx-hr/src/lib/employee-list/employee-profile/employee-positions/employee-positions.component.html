@@ -1,0 +1,322 @@
+<ng-template #panelRight> abc </ng-template>
+<ng-template #itemsTempl let-data>
+  {{ data.appoint }}
+  <codx-temp-full
+    [title]="data.appoint | vll: 'HR014':'text' | async"
+    [subTitle]="data.effectedDate - data.expiredDate"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<div class="container">
+  <div class="row">
+    <div class="header d-flex justify-content-end">
+      <button (click)="closePopup()">X</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-3">
+      <codx-listview
+        #listviewCoins
+        [itemTemplate]="itemsTempl"
+        [service]="service"
+        [assemblyName]="assemblyName"
+        [className]="className"
+        [method]="method"
+        [predicate]="predicate"
+        [dataValue]="employeeID"
+        [entityName]="entity"
+        (onSelectionChanged)="changeAppointion($event)"
+      >
+      </codx-listview>
+    </div>
+    <div class="col-9">
+      <div class="detail" *ngIf="formModel && formGroup">
+        <!-- DecisionNo-signedDate -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="decisionNo"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="decisionNo"
+            >
+            </codx-input>
+          </div>
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="signedDate"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="signedDate"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- appoint -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="appoint"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="appoint"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- effectedDate-ExpiredDate -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="effectedDate"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="effectedDate"
+            >
+            </codx-input>
+          </div>
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="expiredDate"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="expiredDate"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- orgUnitID-OldOrgUnitID -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="orgUnitID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="orgUnitID"
+            >
+            </codx-input>
+          </div>
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="oldOrgUnitID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="oldOrgUnitID"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- jobLevel-oldJobLevel -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="jobLevel"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="jobLevel"
+            >
+            </codx-input>
+          </div>
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="oldJobLevel"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="oldJobLevel"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- positionID-oldPositionID -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="positionID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="positionID"
+            >
+            </codx-input>
+          </div>
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="oldPositionID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="oldPositionID"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- locationID-oldLocationID -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="locationID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="locationID"
+            >
+            </codx-input>
+          </div>
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="oldLocationID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="oldLocationID"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- signerID -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="signerID"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="signerID"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- signerPosition -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="signerPosition"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="signerPosition"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <!-- note -->
+        <div class="d-flex form-group row">
+          <div class="col">
+            <span class="icon-person icon-14 text-gray-600 me-1"></span>
+            <codx-label
+              class="text-gray-600 me-2"
+              fiedName="note"
+              [formModel]="formModel"
+            >
+            </codx-label>
+            <codx-input
+              [formModel]="formModel"
+              [Group]="formGroup"
+              field="note"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row d-flex">
+    <div class="footer d-flex justify-content-end">
+      <button (click)="saveAppointions()">Lưu</button>
+    </div>
+  </div>
+</div>

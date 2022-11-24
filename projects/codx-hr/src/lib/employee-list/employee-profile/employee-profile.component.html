@@ -169,7 +169,7 @@
                     <codx-label
                       name="lblHRProcess"
                       [formModel]="view.formModel"
-                      default="KIẾN THỨC"
+                      default="Quá trình nhân sự"
                     >
                     </codx-label>
                   </div>
@@ -2887,7 +2887,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="popupEmployeePositions()"
                   ></span>
                 </a>
               </div>
@@ -2921,13 +2921,37 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="popupEmployeePositions()"
                   ></span>
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="positionColumnsGrid">
+                <lib-tmp-grid-view
+                  [columnsGrid]="positionColumnsGrid"
+                  [dataValue]="employeeID"
+                  [rowTemplate]="rowTmp"
+                >
                 </lib-tmp-grid-view>
+
+                <ng-template #rowTmp let-data>
+                  <tr class="tr-ip-add-tmp has-action-menu">
+                    <td class="w-25">
+                      <span>{{ data?.decisionNo }}</span>
+                    </td>
+                    <td class="w-25">
+                      <span>{{ data?.effectedDate }}</span>
+                    </td>
+                    <td class="w-25">
+                      <span>{{ data?.expiredDate }}</span>
+                    </td>
+                    <td class="w-25">
+                      <span>{{ data?.jobLevel }}</span>
+                    </td>
+                    <td class="w-25">
+                      <span>{{ data?.orgUnitID }}</span>
+                    </td>
+                  </tr>
+                </ng-template>
               </div>
             </div>
           </div>
@@ -2964,8 +2988,8 @@
               </div>
               <!-- documentNo-status -->
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="holidayColumnsGrid">
-                </lib-tmp-grid-view>
+                <!-- <lib-tmp-grid-view [columnsGrid]="holidayColumnsGrid"> -->
+                <!-- </lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3002,8 +3026,8 @@
               </div>
               <!-- documentNo-status -->
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="workDiaryColumnGrid">
-                </lib-tmp-grid-view>
+                <!-- <lib-tmp-grid-view [columnsGrid]="workDiaryColumnGrid"> -->
+                <!-- </lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3040,8 +3064,8 @@
               </div>
               <!-- documentNo-status -->
               <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="expColumnGrid">
-                </lib-tmp-grid-view>
+                <!-- <lib-tmp-grid-view [columnsGrid]="expColumnGrid">
+                </lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3114,9 +3138,9 @@
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view
+                <!-- <lib-tmp-grid-view
                   [columnsGrid]="healthColumnsGrid"
-                ></lib-tmp-grid-view>
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3152,9 +3176,9 @@
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view
+                <!-- <lib-tmp-grid-view
                   [columnsGrid]="healthColumnsGrid"
-                ></lib-tmp-grid-view>
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3190,9 +3214,9 @@
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view
+                <!-- <lib-tmp-grid-view
                   [columnsGrid]="healthColumnsGrid"
-                ></lib-tmp-grid-view>
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3228,9 +3252,9 @@
                 </a>
               </div>
               <div class="row form-group">
-                <lib-tmp-grid-view
+                <!-- <lib-tmp-grid-view
                   [columnsGrid]="accidentColumnsGrid"
-                ></lib-tmp-grid-view>
+                ></lib-tmp-grid-view> -->
               </div>
             </div>
           </div>
@@ -3241,7 +3265,7 @@
 </ng-template>
 
 <ng-template #healthPeriodID let-data>
-  {{ data.healthPeriodName }}
+  {{ data }}
 </ng-template>
 <ng-template #healthPeriodDate let-data>
   <div>

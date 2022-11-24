@@ -32,6 +32,7 @@ import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-
 import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
+import { EmployeePositionsComponent } from './employee-positions/employee-positions.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -77,8 +78,9 @@ export class EmployeeProfileComponent extends UIComponent {
   formModel;
   itemDetail;
 
+  employeeID;
   hrEContract;
-  crrTab: number = 2;
+  crrTab: number = 3;
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -114,6 +116,7 @@ export class EmployeeProfileComponent extends UIComponent {
   onInit(): void {
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
+        this.employeeID = params?.employeeID;
         this.codxMwpService
           .LoadData(params.employeeID, this.user.userID, '0')
           .subscribe((response: any) => {
@@ -184,34 +187,29 @@ export class EmployeeProfileComponent extends UIComponent {
     //processingInfo
     this.positionColumnsGrid = [
       {
-        field: 'healthPeriodName',
+        field: 'decisionNo',
         headerText: 'Loại quyết định',
         width: 250,
-        template: this.healthPeriodID,
       },
       {
-        field: 'healthPeriodName',
+        field: 'effectedDate',
         headerText: 'Ngày hiệu lực',
         width: 250,
-        template: this.healthPeriodID,
       },
       {
-        field: 'healthPeriodName',
+        field: 'expiredDate',
         headerText: 'Ngày hết hạn',
         width: 250,
-        template: this.healthPeriodID,
       },
       {
-        field: 'healthPeriodName',
+        field: 'jobLevel',
         headerText: 'Chức danh',
         width: 250,
-        template: this.healthPeriodID,
       },
       {
-        field: 'healthPeriodName',
+        field: 'orgUnitID',
         headerText: 'Phòng ban',
         width: 250,
-        template: this.healthPeriodID,
       },
     ];
     this.holidayColumnsGrid = [
@@ -459,62 +457,77 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeDisciplinesInfo(){
+  addEmployeeDisciplinesInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeDisciplinesInfoComponent,
       {
         isAdd: true,
-        headerText: 'Kỷ luật'
+        headerText: 'Kỷ luật',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeAwardsInfo(){
+  addEmployeeAwardsInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeAwardsInfoComponent,
       {
         isAdd: true,
-        headerText: 'Khen thưởng'
+        headerText: 'Khen thưởng',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeAllocatedPropertyInfo(){
+  addEmployeeAllocatedPropertyInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px'
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeAllocatedPropertyComponent,
       {
         isAdd: true,
-        headerText: 'Tài sản cấp phát'
+        headerText: 'Tài sản cấp phát',
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
+      if (!res?.event) this.view.dataService.clear();
     });
   }
 
-
+  popupEmployeePositions() {
+    let eData = {
+      data: this.data,
+    };
+    let ePositionsDialog = this.callfc.openForm(
+      EmployeePositionsComponent,
+      '',
+      900,
+      800,
+      '',
+      eData
+    );
+    ePositionsDialog.closed.subscribe((ret) => {
+      console.log('dong pop up', ret);
+    });
+  }
 }

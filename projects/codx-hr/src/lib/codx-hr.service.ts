@@ -93,7 +93,7 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
-        
+
         'OrganizationUnitsBusiness',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
@@ -116,7 +116,7 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeSelfInfo(data){
+  saveEmployeeSelfInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -126,34 +126,45 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeContactInfo(data){
+  saveEmployeeContactInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'UpdateEmployeeContactInfoAsync',
       data
-    )
+    );
   }
 
-  saveEmployeeUnionAndPartyInfo(data){
+  saveEmployeeUnionAndPartyInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'UpdateEmployeeUnionAndPartyInfoAsync',
       data
-    )
+    );
   }
 
-  saveEmployeeAssurTaxBankAccountInfo(data){
+  saveEmployeeAssurTaxBankAccountInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'UpdateEmployeeAssurTaxBankInfoAsync',
       data
-    )
+    );
   }
 
+  //region new hr module
+  addOrEditEAppointion(appointion) {
+    return this.api.execSv(
+      'HR',
+      'Hr',
+      'EAppointionsBusiness',
+      'AddOrEditEAppointionByEmployeeIDAsync',
+      appointion
+    );
+  }
+  //endregion
 }
