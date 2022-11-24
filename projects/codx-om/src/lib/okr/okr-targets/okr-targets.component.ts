@@ -44,7 +44,8 @@ export class OkrTargetsComponent implements OnInit {
         let dialog = this.callfunc.openSide(
           OkrEditComponent,
           [
-            this.gridView
+            this.gridView,
+            this.formModel
           ]
         );
         break;
