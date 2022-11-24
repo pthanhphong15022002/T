@@ -105,8 +105,6 @@
   $primary-lighter: #f7e7df;
   $primary-lightest: #fffcf4;
 
-
-  $title-color: #fd492a;
   $link-hover-color: #fd492a;
   $link-hover-decoration: #fd492a;
 
@@ -139,6 +137,10 @@
       color: $title-color !important;
     }
 
+    .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+      color: $title-color !important;
+    }
+
     .menu-item .menu-link.active .menu-bullet .bullet {
       background-color: $title-color !important;
     }
@@ -157,6 +159,10 @@
   .btn.btn-primary {
     border-color: $primary-dark;
     background-color: $primary-dark;
+  }
+
+  .text-primary {
+    color: var(--text-primary) !important;
   }
 
   a {
