@@ -16,6 +16,7 @@ import {
 //import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -26,7 +27,7 @@ export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
     cpnAlertRules: PopupAddEmailTemplateComponent,
-    // cpnApprovals: ApprovalStepComponent,
+    cpnApprovals: CodxApproveStepsComponent,
   };
   category = '';
   title = '';

@@ -264,6 +264,8 @@ export class CodxHrService {
     );
   }
 
+  //#region EPassportsBusiness
+
   getEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -274,6 +276,19 @@ export class CodxHrService {
     );
   }
 
+  GetListPassportByEmpID(empID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'GetListPassportByEmpIDAsync',
+      [empID]
+    );
+  }
+
+  //#endregion
+
+  //#region EmpVisasBusiness
   getEmployeeVisasInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -283,6 +298,18 @@ export class CodxHrService {
       data
     );
   }
+
+  getListVisaByEmployeeID(employeeID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'GetListByEmployeeIDAsync',
+      [employeeID]
+    );
+  }
+
+  //#endregion
 
   getEmployeeCertificatesInfo(data) {
     return this.api.execSv<any>(
@@ -323,6 +350,16 @@ export class CodxHrService {
       data
     );
   }
+  //#region EWorkPermitsBusiness
+  getListWorkPermitByEmployeeID(employeeID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'GetListByEmployeeIDAsync',
+      [employeeID]
+    );
+  }
 
   getEmployeeWorkingLisenceDetail(data) {
     return this.api.execSv<any>(
@@ -333,6 +370,18 @@ export class CodxHrService {
       data
     );
   }
+
+  updateEmployeeWorkingLisenceDetail(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'AddEmployeeWorkPermitInfoAsync',
+      data
+    );
+  }
+
+  //#endregion
 
   updateEmployeePassportInfo(data) {
     return this.api.execSv<any>(
@@ -360,16 +409,6 @@ export class CodxHrService {
       'HR',
       'ETrainCoursesBusiness',
       'EditEmployeeTraincourseInfoAsync',
-      data
-    );
-  }
-
-  updateEmployeeWorkingLisenceDetail(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EWorkPermitsBusiness',
-      'AddEmployeeWorkPermitInfoAsync',
       data
     );
   }
