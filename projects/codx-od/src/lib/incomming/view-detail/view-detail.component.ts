@@ -1035,8 +1035,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
     if (
       this.formModel.funcID == 'ODT41' &&
-      data?.status != '1' &&
-      data?.status != '2'
+      data?.approveStatus != '1' &&
+      data?.approveStatus != '2'
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'

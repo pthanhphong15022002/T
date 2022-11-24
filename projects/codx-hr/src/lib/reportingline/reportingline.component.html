@@ -18,10 +18,10 @@
             <!-- HR_Positions infor -->
             <div class="reportingline-cell-positioninfo">
                 <div class="text-start w-100">
-                    <div class="fw-bold">
+                    <div class="fw-bold fs-6">
                         {{data.positionName}}
                     </div>
-                    <div class="text-dark mt-2">
+                    <div class="text-gray-600 mt-2">
                         {{(data.orgUnitID||'') +
                         (data.departmentID ? ' | ' + data.departmentID: '') +
                         (data.divisionID ? ' | ' + data.divisionID: '')}}
@@ -51,23 +51,23 @@
             </div>
         </div>
         <!-- HR_Positions job -->
-        <div class="reportingline-cell-job w-200px mw-200px min-w-200px mx-6">
+        <div class="reportingline-cell-job w-250px min-w-250px ms-6">
             <div class="text-start w-100">
-                <div class="align-items-center1 fs-7">
+                <div class="text-gray-700">
                     <span class="me-1">
                         <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
                         </codx-label>
                     </span>
-                    <span class="text-dark fw-bolder">
+                    <span class="text-dark">
                         <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
                     </span>
                 </div>
-                <div class="align-items-center1 fs-7">
-                    <span class="me-2">
+                <div class="text-gray-700 mt-1">
+                    <span class="me-1">
                         <codx-label [formModel]="view.formModel" name="lbljobGroup" default="Chức vụ:">
                         </codx-label>
                     </span>
-                    <span class="text-dark fw-bold">
+                    <span class="text-dark">
                         <span #jobGroupID>
                             {{ data.jobGroupID | formatvalue: view.formModel: "jobGroupID": jobGroupID | async }}
                         </span>
@@ -173,7 +173,7 @@
                         </codx-img>
                         <div class="d-flex flex-column w-300px">
                             <span class="fs-6">{{emp.employeeName}}</span>
-                            <span class="text-gray-600 fs-7">{{emp.positionName}}</span>
+                            <span class="text-gray-600">{{emp.positionName}}</span>
                         </div>
                     </div>
                 </ng-container>
