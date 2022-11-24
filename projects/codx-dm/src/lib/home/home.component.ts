@@ -362,14 +362,13 @@ export class HomeComponent extends UIComponent {
         if (tree) tree.setNodeTree(item);
         this.changeDetectorRef.detectChanges();
         this.data = [];
-        var a = { data: item };
         if(this.view.dataService.data.length == 0)
           this.view.dataService.data.push(item);
         var ele = document.getElementsByClassName('item-selected');
         if (ele.length > 0) ele[0].classList.remove('item-selected');
         var ele2 = document.getElementsByClassName(item?.recID);
         if (ele2.length > 0) ele2[0].classList.add('item-selected');
-        this.onSelectionChanged(a);
+        //this.onSelectionChanged(a);
       }
       this._beginDrapDrop();
     });
@@ -687,6 +686,7 @@ export class HomeComponent extends UIComponent {
         type: ViewType.tree_card,
         active: true,
         sameData: true,
+        showFilter: false,
         /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
@@ -809,7 +809,6 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.favoriteID = "2";
       this.fileService.options.favoriteID = "2";
     }
-    this.getDataFile('');
     //   console.log(this.button);
   }
 
@@ -984,8 +983,7 @@ export class HomeComponent extends UIComponent {
   filterChange($event) {
     if (!$event) {
       this.dmSV.page = 1;
-      this.getDataFolder(this.dmSV.folderID);
-      this.getDataFile(this.dmSV.folderID);
+     
     } else {
       try {
         this.data = [];
@@ -1065,7 +1063,9 @@ export class HomeComponent extends UIComponent {
           item.active = false;
           item.hide = false;
           if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text) item.active = true;
+          if (item.text == this.viewActive.text && (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03')) item.active = true;
+          else if(item.text == "Thẻ") item.active = true;
+          this.changeDetectorRef.detectChanges();
         });
         if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
           this.view.viewChange(this.viewActive);
@@ -1179,6 +1179,7 @@ export class HomeComponent extends UIComponent {
         this.button.disabled = false;
         this.dmSV.disableInput.next(false);
       }
+      if(this.view.funcID == "DMT02") this.getDataFile("");
     }
   }
   getDataFile(id: any) {

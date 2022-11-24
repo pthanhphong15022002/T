@@ -264,7 +264,7 @@
         </div>
         <div class="d-flex flex-column-fluid">
           <div class="container p-0">
-            <div class="w-100 user-right pt-3">
+            <div class="w-100 user-right">
               <div class="tab-content py-5">
                 <div
                   class="tab-pane fade show"
@@ -285,16 +285,14 @@
                   id="pane_2"
                   [class]="crrTab == 2 ? 'active' : ''"
                 >
-                  <ng-container [ngTemplateOutlet]="info"></ng-container>
+                  <ng-container [ngTemplateOutlet]="benefit"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_3"
                   [class]="crrTab == 3 ? 'active' : ''"
                 >
-                  <ng-container
-                    [ngTemplateOutlet]="processingInfo"
-                  ></ng-container>
+                  <ng-container [ngTemplateOutlet]="benefit"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
@@ -349,124 +347,163 @@
               >
               </codx-label>
             </div>
-            <!-- <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a> -->
-          </div>
-          <ngx-skeleton-loader
-            count="5"
-            animation="progress"
-          ></ngx-skeleton-loader>
-
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">SƠ YẾU LÝ LỊCH</div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
+            <div class="d-flex">
               <a
-                class="btn btn-xs btn-icon btn-hover-primary"
-                (click)="collapse(personalInfo)"
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('1', '0')"
+                [attr.aria-expanded]="!objCollapes['1']"
               >
-                <span class="icon-arrow_drop_down icon-24"></span>
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('1', '1')"
+                [attr.aria-expanded]="!objCollapes['1']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
               </a>
             </div>
-            <div
-              #personalInfo
-              id="personalInfo"
-              class="collapse multi-collapse show"
-            >
-              <div #info class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Thông tin bản thân"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-edit icon-18"
-                      (click)="addEmployeeSelfInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <div class="d-flex form-group">
-                  <span class="icon-person icon-14 text-gray-600 me-1"></span>
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="EmployeeName"
-                    [formModel]="view.formModel"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    : {{ infoPersonal.employeeName }}</span
-                  >
-                </div>
-                <div class="row form-group">
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="EmployeeName2"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span class="text-dark">
-                        : {{ infoPersonal.employeeName2 }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Giới tính -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="Gender"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #gender>
-                        <codx-vll
-                          [showText]="true"
-                          [showBgColor]="true"
-                          [showIcon]="true"
-                          [formModel]="view.formModel"
-                          [field]="'Gender'"
-                          [value]="data?.gender"
-                          class="badge badge-light badge-square badge-md fs-7"
-                        >
-                        </codx-vll>
-                      </span>
-                    </div>
-                  </div>
-                  <!-- Tình trạng hôn nhân -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="MaritalStatus"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
+          </div>
 
-                      <span #maritalStatus>
-                        : {{ infoPersonal.maritalStatus }}
-                        <!-- <codx-vll
+          <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span
+                      class="icon-person icon-18 me-1"
+                      [class]="
+                        objCollapes['1.1'] ? 'text-danger' : 'text-primary'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    class="fs-4 fw-bold text-uppercase"
+                    [class]="
+                      objCollapes['1.1'] ? 'text-danger' : 'text-primary '
+                    "
+                  >
+                    <codx-label
+                      [formModel]="view.formModel"
+                      name="lblPersonalInfo"
+                      default="Sơ yếu lý lịch"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('1.1')"
+                  [attr.aria-expanded]="!objCollapes['1.1']"
+                  aria-controls="personalInfo"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['1.1']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                #personalInfo="ngbCollapse"
+                id="personalInfo"
+                [(ngbCollapse)]="objCollapes['1.1']"
+              >
+                <div #info class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Thông tin bản thân"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="d-flex form-group">
+                    <span class="icon-person icon-14 text-gray-600 me-1"></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="EmployeeName"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      : {{ infoPersonal.employeeName }}</span
+                    >
+                  </div>
+                  <div class="row form-group">
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="EmployeeName2"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span class="text-dark">
+                          : {{ infoPersonal.employeeName2 }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Giới tính -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="Gender"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #gender>
+                          <codx-vll
+                            [showText]="true"
+                            [showBgColor]="true"
+                            [showIcon]="true"
+                            [formModel]="view.formModel"
+                            [field]="'Gender'"
+                            [value]="data?.gender"
+                            class="badge badge-light badge-square badge-md fs-7"
+                          >
+                          </codx-vll>
+                        </span>
+                      </div>
+                    </div>
+                    <!-- Tình trạng hôn nhân -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="MaritalStatus"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+
+                        <span #maritalStatus>
+                          : {{ infoPersonal.maritalStatus }}
+                          <!-- <codx-vll
                         [showText]="true"
                         [showBgColor]="false"
                         [showIcon]="false"
@@ -476,752 +513,272 @@
                         class="text-dark"
                       >
                       </codx-vll> -->
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <!-- Ngày sinh -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="Birthday"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #birthday
-                        >: {{ infoPersonal.birthday | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Nơi sinh -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="BirthPlace"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-
-                      <span #birthPlace
-                        >: {{ infoPersonal.birthPlaceName }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="col"></div>
-                </div>
-                <div class="row form-group">
-                  <!-- Quốc tịch -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="Nationality"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #nationality
-                        >: {{ infoPersonal.nationalityName }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Dân tộc -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="EthnicGroup"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #ethnicGroup
-                        >: {{ infoPersonal.ethnicGroupName }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Tôn giáo -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="Religion"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #religion>: {{ infoPersonal.religionName }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <!-- CMND/CCCD -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="IDCardNo"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
-                    </div>
-                  </div>
-                  <!-- Ngày cấp -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="IssuedOn"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #issuedOn
-                        >: {{ infoPersonal.issuedOn | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Nơi cấp -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="IssuedBy"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #issuedBy>: {{ infoPersonal.issuedByName }} </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <!-- Trình độ -->
-                  <div class="col-4">
-                    <div class="d-flex">
-                      <span
-                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="Education"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #education
-                        >:
-                        <codx-vll
-                          [showText]="true"
-                          [showBgColor]="false"
-                          [showIcon]="false"
-                          [formModel]="view.formModel"
-                          [field]="'Education'"
-                          [value]="data?.education"
-                          class="text-dark"
-                        >
-                        </codx-vll
-                      ></span>
-                    </div>
-                  </div>
-                  <!--  -->
-                  <div class="col-8">
-                    <div class="d-flex">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="DegreeName"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #degreeName>: {{ infoPersonal.degreeName }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Street"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #street>: {{ infoPersonal.street }}</span>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="FullAddress"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #pitNumber>: {{ infoPersonal.fullAddress }}</span>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="d-flex">
-                    <span class="icon-mood icon-14 text-gray-600 me-1"></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Achievement"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #Achievement>: {{ infoPersonal.achievement }}</span>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Forte"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #Forte>: {{ infoPersonal.forte }}</span>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Hobby"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #Hobby>: {{ infoPersonal.hobby }}</span>
-                  </div>
-                </div>
-              </div>
-              <div #DangDoan class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Thông tin đảng - đoàn"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-edit icon-18"
-                      (click)="addEmployeePartyInfo()"
-                    ></span>
-                  </a>
-                </div>
-
-                <div class="row form-group">
-                  <div class="col-4">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="yUnionDate"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span class="text-dark">
-                        : {{ infoPersonal.yUnionDate | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="col-8">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="yUnionAt"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #yUnionAt>: {{ infoPersonal.yUnionAt }} </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="col-4">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="partyDate"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #partyDate
-                        >: {{ infoPersonal.partyDate | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                  <div class="col-8">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="partyAt"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #partyAt>: {{ infoPersonal.partyAt }} </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div #family class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Quan hệ gia đình"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-add icon-18"
-                      (click)="addFamilyRelationshipInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <div class="d-flex flex-wrap py-3 px-4">
-                  <ng-container *ngFor="let item of lstFamily">
-                    <div
-                      class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
-                    >
-                      <codx-temp-full
-                        cardCss="card-template px-2 pt-4 pb-2"
-                        [imageId]="'ADMIN'"
-                        imageObjType="AD_Users"
-                        [imageWidth]="40"
-                        [formModel]="view.formModel"
-                        [title]="'experences.companyName'"
-                        [dataItem]="'experences'"
-                        [desc]="'relationType' + ' | ' + 'Năm sinh: '"
-                        [typeMF]="'hover'"
-                      >
-                      </codx-temp-full>
-                    </div>
-                  </ng-container>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary text-uppercase">
-                  Thông tin pháp lí
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a
-                class="btn btn-xs btn-icon btn-hover-primary"
-                (click)="collapse(legalInformation)"
-              >
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div
-              #legalInformation
-              id="legalInformation"
-              class="collapse multi-collapse show"
-            >
-              <div #info class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Bảo hiểm - mã số thuế - tài khoản cá nhân"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-edit icon-18"
-                      (click)="addAssuranceTaxBankAccountInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <div class="row form-group">
-                  <!-- Ma so BHXH -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="SIRegisterNo"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span class="text-dark">
-                        : {{ infoPersonal.siRegisterNo }}</span
-                      >
-                    </div>
-                  </div>
-                  <!-- Tình trạng hôn nhân -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="SIRegisterOn"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-
-                      <span #SIRegisterOn>
-                        : {{ infoPersonal.siRegisterOn | fmDT }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="HICardNo"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #HICardNo>: {{ infoPersonal.hiCardNo }}</span>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="HIHospitalID"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-
-                      <span #birthPlace>: {{ infoPersonal.hIHospitalID }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="PITNumber"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #PITNumber>: {{ infoPersonal.pitNumber }}</span>
-                    </div>
-                  </div>
-                  <!-- Ngày cấp -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="PITIssuedOn"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #PITIssuedOn
-                        >: {{ infoPersonal.pitIssuedOn | fmDT }}</span
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="row form-group">
-                  <!-- CMND/CCCD -->
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="AccountNo"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
-                    </div>
-                  </div>
-                  <div class="col">
-                    <div class="d-flex">
-                      <span
-                        class="icon-connection-point icon-14 text-gray-600 me-1"
-                      ></span>
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        fiedName="AccountBankID"
-                        [formModel]="view.formModel"
-                      >
-                      </codx-label>
-                      <span #issuedOn>: {{ infoPersonal.accountBankID }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div #DangDoan class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Hộ chiếu (Passport)"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-add icon-18"
-                      (click)="addEmployeePassportInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <div [class]="lstPassport?.length > 0 ? 'has-action-menu' : ''">
-                  <div class="row form-group">
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="PassportNo"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span class="text-dark">
-                          : {{ crrPassport?.passportNo }}</span
-                        >
-                      </div>
-                    </div>
-                    <div class="col-8">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="IssuedPlace"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span #IssuedPlace
-                          >: {{ crrPassport?.issuedPlace }}</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row form-group">
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="IssuedDate"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span #issuedDate
-                          >: {{ crrPassport?.issuedDate | fmDT }}</span
-                        >
-                      </div>
-                    </div>
-                    <div class="col-8">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="ExpiredDate"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span #ExpiredDate
-                          >: {{ crrPassport?.expiredDate | fmDT }}</span
-                        >
-                      </div>
-                    </div>
-                  </div>
-                  <codx-mfunc
-                    *ngIf="lstPassport?.length > 0"
-                    [formModel]="view.formModel"
-                    (clickMF)="clickMF($event, crrPassport)"
-                    type="hover"
-                    [dataItem]="crrPassport"
-                  >
-                  </codx-mfunc>
-                </div>
-              </div>
-              <div #Visa class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Thị thực (visa)"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-add icon-18"
-                      (click)="addEmployeeVisaInfo()"
-                    ></span>
-                  </a>
-                </div>
-
-                <div [class]="lstVisa?.length > 0 ? 'has-action-menu' : ''">
-                  <div class="row form-group">
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="VisaNo"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span class="text-dark"> : {{ crrVisa?.visaNo }}</span>
-                      </div>
-                    </div>
-                    <div class="col-8">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="IssuedPlace"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span>: {{ crrVisa?.issuedPlace }} </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row form-group">
-                    <div class="col-4">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="IssuedDate"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span #issuedDate
-                          >: {{ crrVisa?.issuedDate | fmDT }}</span
-                        >
-                      </div>
-                    </div>
-                    <div class="col-8">
-                      <div class="d-flex">
-                        <span
-                          class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
-                        <codx-label
-                          class="text-gray-600 me-2"
-                          fiedName="EffectedDate"
-                          [formModel]="view.formModel"
-                        >
-                        </codx-label>
-                        <span #issuedOn
-                          >: {{ crrVisa?.effectedDate | fmDT }} -
-                          {{ crrVisa?.expiredDate | fmDT }}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <codx-mfunc
-                    *ngIf="lstVisa?.length > 0"
-                    [formModel]="view.formModel"
-                    (clickMF)="clickMF($event, crrVisa)"
-                    type="hover"
-                    [dataItem]="crrVisa"
-                  >
-                  </codx-mfunc>
+                  <div class="row form-group">
+                    <!-- Ngày sinh -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="Birthday"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #birthday
+                          >: {{ infoPersonal.birthday | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Nơi sinh -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="BirthPlace"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+
+                        <span #birthPlace
+                          >: {{ infoPersonal.birthPlaceName }}</span
+                        >
+                      </div>
+                    </div>
+                    <div class="col"></div>
+                  </div>
+                  <div class="row form-group">
+                    <!-- Quốc tịch -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="Nationality"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #nationality
+                          >: {{ infoPersonal.nationalityName }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Dân tộc -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="EthnicGroup"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #ethnicGroup
+                          >: {{ infoPersonal.ethnicGroupName }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Tôn giáo -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="Religion"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #religion>: {{ infoPersonal.religionName }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <!-- CMND/CCCD -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IDCardNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
+                      </div>
+                    </div>
+                    <!-- Ngày cấp -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedOn"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #issuedOn
+                          >: {{ infoPersonal.issuedOn | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Nơi cấp -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedBy"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #issuedBy
+                          >: {{ infoPersonal.issuedByName }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <!-- Trình độ -->
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="Education"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #education
+                          >:
+                          <codx-vll
+                            [showText]="true"
+                            [showBgColor]="false"
+                            [showIcon]="false"
+                            [formModel]="view.formModel"
+                            [field]="'Education'"
+                            [value]="data?.education"
+                            class="text-dark"
+                          >
+                          </codx-vll>
+                        </span>
+                      </div>
+                    </div>
+                    <!--  -->
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="DegreeName"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #degreeName>: {{ infoPersonal.degreeName }}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="d-flex">
+                      <span
+                        class="icon-place icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Street"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #street>: {{ infoPersonal.street }}</span>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="d-flex">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="FullAddress"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #pitNumber>: {{ infoPersonal.fullAddress }}</span>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="d-flex">
+                      <span class="icon-mood icon-14 text-gray-600 me-1"></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Achievement"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #Achievement>: {{ infoPersonal.achievement }}</span>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="d-flex">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Forte"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #Forte>: {{ infoPersonal.forte }}</span>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="d-flex">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Hobby"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #Hobby>: {{ infoPersonal.hobby }}</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
-              <div #WorkPermit class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeInfo"
-                    [formModel]="view.formModel"
-                    default="Giấy phép lao động"
+                <div #DangDoan class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-add icon-18"
-                      (click)="addEmployeeWorkingLisenceInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <div
-                  [class]="lstWorkPermit?.length > 0 ? 'has-action-menu' : ''"
-                >
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Thông tin đảng - đoàn"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeePartyInfo()"
+                      ></span>
+                    </a>
+                  </div>
+
                   <div class="row form-group">
                     <div class="col-4">
                       <div class="d-flex">
@@ -1230,12 +787,12 @@
                         ></span>
                         <codx-label
                           class="text-gray-600 me-2"
-                          fiedName="WorkPermitNo"
+                          fiedName="yUnionDate"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
                         <span class="text-dark">
-                          : {{ lstWorkPermit[0]?.workPermitNo }}</span
+                          : {{ infoPersonal.yUnionDate | fmDT }}</span
                         >
                       </div>
                     </div>
@@ -1246,11 +803,11 @@
                         ></span>
                         <codx-label
                           class="text-gray-600 me-2"
-                          fiedName="IssuedPlace"
+                          fiedName="yUnionAt"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span>: {{ lstWorkPermit[0]?.issuedPlace }} </span>
+                        <span #yUnionAt>: {{ infoPersonal.yUnionAt }} </span>
                       </div>
                     </div>
                   </div>
@@ -1262,11 +819,13 @@
                         ></span>
                         <codx-label
                           class="text-gray-600 me-2"
-                          fiedName="IssuedDate"
+                          fiedName="partyDate"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span>: {{ lstWorkPermit[0]?.issuedDate | fmDT }}</span>
+                        <span #partyDate
+                          >: {{ infoPersonal.partyDate | fmDT }}</span
+                        >
                       </div>
                     </div>
                     <div class="col-8">
@@ -1276,25 +835,545 @@
                         ></span>
                         <codx-label
                           class="text-gray-600 me-2"
-                          fiedName="FromDate"
+                          fiedName="partyAt"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
+                        <span #partyAt>: {{ infoPersonal.partyAt }} </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div #family class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Quan hệ gia đình"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-add icon-18"
+                        (click)="addFamilyRelationshipInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="d-flex flex-wrap py-3 px-4">
+                    <ng-container *ngFor="let item of lstFamily">
+                      <div
+                        class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                      >
+                        <codx-temp-full
+                          cardCss="card-template px-2 pt-4 pb-2"
+                          [imageId]="'ADMIN'"
+                          imageObjType="AD_Users"
+                          [imageWidth]="40"
+                          [formModel]="view.formModel"
+                          [title]="'experences.companyName'"
+                          [dataItem]="'experences'"
+                          [desc]="'relationType' + ' | ' + 'Năm sinh: '"
+                          [typeMF]="'hover'"
+                        >
+                        </codx-temp-full>
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span
+                      class="icon-folder_special icon-18 me-1"
+                      [class]="
+                        objCollapes['1.2'] ? 'text-danger' : 'text-primary'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    class="fs-4 fw-bold text-uppercase"
+                    [class]="
+                      objCollapes['1.2'] ? 'text-danger' : 'text-primary '
+                    "
+                  >
+                    <codx-label
+                      [formModel]="view.formModel"
+                      name="lblLegalInfo"
+                      default="Thông tin pháp lí"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('1.2')"
+                  [attr.aria-expanded]="!objCollapes['1.2']"
+                  aria-controls="legalInformation"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['1.2']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="legalInformation"
+                #legalInformation="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['1.2']"
+              >
+                <div #info class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Bảo hiểm - mã số thuế - tài khoản cá nhân"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addAssuranceTaxBankAccountInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- Ma so BHXH -->
+                    <div class="col">
+                      <div class="d-flex">
                         <span
-                          >: {{ lstWorkPermit[0]?.fromDate | fmDT }} -
-                          {{ lstWorkPermit[0]?.toDate | fmDT }}</span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="SIRegisterNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span class="text-dark">
+                          : {{ infoPersonal.siRegisterNo }}</span
+                        >
+                      </div>
+                    </div>
+                    <!-- Tình trạng hôn nhân -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="SIRegisterOn"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+
+                        <span #SIRegisterOn>
+                          : {{ infoPersonal.siRegisterOn | fmDT }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="HICardNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #HICardNo>: {{ infoPersonal.hiCardNo }}</span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="HIHospitalID"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+
+                        <span #birthPlace
+                          >: {{ infoPersonal.hIHospitalID }}</span
                         >
                       </div>
                     </div>
                   </div>
-                  <codx-mfunc
-                    *ngIf="lstWorkPermit?.length > 0"
-                    [formModel]="view.formModel"
-                    (clickMF)="clickMF($event, lstWorkPermit[0])"
-                    type="hover"
-                    [dataItem]="lstWorkPermit[0]"
+                  <div class="row form-group">
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="PITNumber"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #PITNumber>: {{ infoPersonal.pitNumber }}</span>
+                      </div>
+                    </div>
+                    <!-- Ngày cấp -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="PITIssuedOn"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #PITIssuedOn
+                          >: {{ infoPersonal.pitIssuedOn | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <!-- CMND/CCCD -->
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="AccountNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="AccountBankID"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #issuedOn
+                          >: {{ infoPersonal.accountBankID }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div #DangDoan class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-mfunc>
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Hộ chiếu (Passport)"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-add icon-18"
+                        (click)="addEmployeePassportInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div
+                    [class]="lstPassport?.length > 0 ? 'has-action-menu' : ''"
+                  >
+                    <div class="row form-group">
+                      <div class="col-4">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="PassportNo"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span class="text-dark">
+                            : {{ crrPassport?.passportNo }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="IssuedPlace"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #IssuedPlace
+                            >: {{ crrPassport?.issuedPlace }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col-4">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="IssuedDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #issuedDate
+                            >: {{ crrPassport?.issuedDate | fmDT }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="ExpiredDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #ExpiredDate
+                            >: {{ crrPassport?.expiredDate | fmDT }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <codx-mfunc
+                      *ngIf="lstPassport?.length > 0"
+                      [formModel]="view.formModel"
+                      (clickMF)="clickMF($event, crrPassport)"
+                      type="hover"
+                      [dataItem]="crrPassport"
+                    >
+                    </codx-mfunc>
+                  </div>
+                </div>
+                <div #Visa class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Thị thực (visa)"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-add icon-18"
+                        (click)="addEmployeeVisaInfo()"
+                      ></span>
+                    </a>
+                  </div>
+
+                  <div [class]="lstVisa?.length > 0 ? 'has-action-menu' : ''">
+                    <div class="row form-group">
+                      <div class="col-4">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="VisaNo"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span class="text-dark">
+                            : {{ crrVisa?.visaNo }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="IssuedPlace"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span>: {{ crrVisa?.issuedPlace }} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col-4">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="IssuedDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #issuedDate
+                            >: {{ crrVisa?.issuedDate | fmDT }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="EffectedDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span #issuedOn
+                            >: {{ crrVisa?.effectedDate | fmDT }} -
+                            {{ crrVisa?.expiredDate | fmDT }}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <codx-mfunc
+                      *ngIf="lstVisa?.length > 0"
+                      [formModel]="view.formModel"
+                      (clickMF)="clickMF($event, crrVisa)"
+                      type="hover"
+                      [dataItem]="crrVisa"
+                    >
+                    </codx-mfunc>
+                  </div>
+                </div>
+                <div #WorkPermit class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblEmployeeInfo"
+                      [formModel]="view.formModel"
+                      default="Giấy phép lao động"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-add icon-18"
+                        (click)="addEmployeeWorkingLisenceInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div
+                    [class]="lstWorkPermit?.length > 0 ? 'has-action-menu' : ''"
+                  >
+                    <div class="row form-group">
+                      <div class="col-4">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="WorkPermitNo"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span class="text-dark">
+                            : {{ lstWorkPermit[0]?.workPermitNo }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="IssuedPlace"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span>: {{ lstWorkPermit[0]?.issuedPlace }} </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row form-group">
+                      <div class="col-4">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="IssuedDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span
+                            >: {{ lstWorkPermit[0]?.issuedDate | fmDT }}</span
+                          >
+                        </div>
+                      </div>
+                      <div class="col-8">
+                        <div class="d-flex">
+                          <span
+                            class="icon-connection-point icon-14 text-gray-600 me-1"
+                          ></span>
+                          <codx-label
+                            class="text-gray-600 me-2"
+                            fiedName="FromDate"
+                            [formModel]="view.formModel"
+                          >
+                          </codx-label>
+                          <span
+                            >: {{ lstWorkPermit[0]?.fromDate | fmDT }} -
+                            {{ lstWorkPermit[0]?.toDate | fmDT }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                    <codx-mfunc
+                      *ngIf="lstWorkPermit?.length > 0"
+                      [formModel]="view.formModel"
+                      (clickMF)="clickMF($event, lstWorkPermit[0])"
+                      type="hover"
+                      [dataItem]="lstWorkPermit[0]"
+                    >
+                    </codx-mfunc>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1607,958 +1686,999 @@
               >
               </codx-label>
             </div>
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a>
-          </div>
-          <ngx-skeleton-loader
-            count="5"
-            animation="progress"
-          ></ngx-skeleton-loader>
-
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    name="lblEmployeeJobGeneralTitle"
-                    default="THÔNG TIN CÔNG VIỆC"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
+            <div class="d-flex">
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('2', '0')"
+                [attr.aria-expanded]="!objCollapes['2']"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('2', '1')"
+                [attr.aria-expanded]="!objCollapes['2']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
               </a>
             </div>
-            <div #generalJobInfo class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeJobDetail"
-                  [formModel]="view.formModel"
-                  default="Thông tin chung"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- documentNo-status -->
-              <div class="row form-group">
-                <div class="col d-flex" id="documentNo">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="documentNo"
-                  >
-                  </codx-label>
+          </div>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.documentNo }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="status">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="status"
+          <div #2="ngbCollapse" [(ngbCollapse)]="objCollapes['2']">
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span
+                      class="icon-check icon-18 me-1"
+                      [class]="
+                        objCollapes['2.1'] ? 'text-danger' : 'text-primary'
+                      "
+                    ></span>
+                  </div>
+                  <div
+                    class="fs-4 fw-bold"
+                    [class]="
+                      objCollapes['2.1'] ? 'text-danger' : 'text-primary'
+                    "
                   >
-                  </codx-label>
-                  <span #status>
-                    <codx-vll
-                      [showText]="true"
-                      [showBgColor]="true"
-                      [showIcon]="true"
+                    <codx-label
                       [formModel]="view.formModel"
-                      [field]="'status'"
-                      [value]="data?.status"
-                      class="text-dark"
+                      name="lblEmployeeJobGeneralTitle"
+                      default="THÔNG TIN CÔNG VIỆC"
                     >
-                    </codx-vll>
-                  </span>
+                    </codx-label>
+                  </div>
                 </div>
-              </div>
-              <!-- joinedOn-hiredOn -->
-              <div class="row form-group">
-                <div class="col d-flex" id="joinedOn">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="joinedOn"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.joinedOn }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="hiredOn">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="hiredOn"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.hiredOn }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- userID-employeeID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="userID">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    fiedName="userID"
-                    class="text-gray-600 me-2"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.userID }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="employeeID">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    class="text-gray-600 me-2"
-                    fiedName="employeeID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.employeeID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- positionID-jobLevel -->
-              <div class="row form-group">
-                <div class="col d-flex" id="positionID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="positionID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.positionID }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="jobLevel">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="jobLevel"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.jobLevel }}</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- orgUnitID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="orgUnitID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="orgUnitID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.orgUnitID }}</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- lineManager-indirectManager -->
-              <div class="row form-group">
-                <div class="col d-flex" id="lineManager">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="lineManager"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.lineManager }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="indirectManager">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="indirectManager"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.indirectManager }}</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- locationID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="locationID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName=""
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.locationID }}</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- labourType-labourConditions -->
-              <div class="row form-group">
-                <div class="col d-flex" id="labourType">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="labourType"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.labourType }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="labourConditions">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    fiedName="labourConditions"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.labourConditions }}</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- isTUnion-tUnionDate -->
-              <div class="row form-group">
-                <div class="col d-flex" id="isTUnion">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isTUnion"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isTUnion }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="tUnionDate">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="tUnionDate"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.tUnionDate }}</span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- isExpertRecruit-isExpertTrain -->
-              <div class="row form-group">
-                <div class="col d-flex" id="isExpertRecruit">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isExpertRecruit"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isExpertRecruit }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="isExpertTrain">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isExpertTrain"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isExpertTrain }}</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div #timeKeepingInfo class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeTimeKeepingDetail"
-                  [formModel]="view.formModel"
-                  default="THÔNG TIN CHẤM CÔNG"
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('2.1')"
+                  [attr.aria-expanded]="!objCollapes['2.1']"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    class="icon-24"
+                    [class]="
+                      objCollapes['2.1']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
                   ></span>
                 </a>
               </div>
-              <!-- timeCardNo-shiftCalendarID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="timeCardNo">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="timeCardNo"
+              <div #21="ngbCollapse" [(ngbCollapse)]="objCollapes['2.1']">
+                <div id="generalJobInfo" class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-label>
+                    <codx-label
+                      name="lblEmployeeJobDetail"
+                      [formModel]="view.formModel"
+                      default="Thông tin chung"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- documentNo-status -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="documentNo">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="documentNo"
+                      >
+                      </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.timeCardNo }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="shiftCalendarID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="shiftCalendarID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.shiftCalendarID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- aLObjectID-->
-              <div class="row form-group">
-                <div class="col d-flex" id="aLObjectID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="aLObjectID"
-                  >
-                  </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.documentNo }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="status">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="status"
+                      >
+                      </codx-label>
+                      <span #status>
+                        <codx-vll
+                          [showText]="true"
+                          [showBgColor]="true"
+                          [showIcon]="true"
+                          [formModel]="view.formModel"
+                          [field]="'status'"
+                          [value]="data?.status"
+                          class="text-dark"
+                        >
+                        </codx-vll>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- joinedOn-hiredOn -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="joinedOn">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="joinedOn"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.joinedOn }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="hiredOn">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="hiredOn"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.hiredOn }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- userID-employeeID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="userID">
+                      <codx-label
+                        [formModel]="view.formModel"
+                        fiedName="userID"
+                        class="text-gray-600 me-2"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.userID }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="employeeID">
+                      <codx-label
+                        [formModel]="view.formModel"
+                        class="text-gray-600 me-2"
+                        fiedName="employeeID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.employeeID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- positionID-jobLevel -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="positionID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="positionID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.positionID }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="jobLevel">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="jobLevel"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.jobLevel }}</span>
+                      </span>
+                    </div>
+                  </div>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.aLObjectID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- isNotScan-isNotOTKow -->
-              <div class="row form-group">
-                <div class="col d-flex" id="isNotScan">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotScan"
-                  >
-                  </codx-label>
+                  <!-- orgUnitID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="orgUnitID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="orgUnitID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.orgUnitID }}</span>
+                      </span>
+                    </div>
+                  </div>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotScan }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="isNotOTKow">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotOTKow"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotOTKow }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- isNotLateEarly-isNotCLeaveKow-->
-              <div class="row form-group">
-                <div class="col d-flex" id="isNotLateEarly">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotLateEarly"
-                  >
-                  </codx-label>
+                  <!-- lineManager-indirectManager -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="lineManager">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="lineManager"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.lineManager }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="indirectManager">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="indirectManager"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.indirectManager }}</span>
+                      </span>
+                    </div>
+                  </div>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotScan }}</span>
-                  </span>
+                  <!-- locationID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="locationID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName=""
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.locationID }}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- labourType-labourConditions -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="labourType">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="labourType"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.labourType }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="labourConditions">
+                      <codx-label
+                        [formModel]="view.formModel"
+                        fiedName="labourConditions"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.labourConditions }}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- isTUnion-tUnionDate -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isTUnion">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isTUnion"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isTUnion }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="tUnionDate">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="tUnionDate"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.tUnionDate }}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- isExpertRecruit-isExpertTrain -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isExpertRecruit">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isExpertRecruit"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isExpertRecruit }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isExpertTrain">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isExpertTrain"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isExpertTrain }}</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div class="col d-flex" id="isNotCLeaveKow">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotCLeaveKow"
+                <div #timeKeepingInfo class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotCLeaveKow }}</span>
-                  </span>
+                    <codx-label
+                      name="lblEmployeeTimeKeepingDetail"
+                      [formModel]="view.formModel"
+                      default="THÔNG TIN CHẤM CÔNG"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- timeCardNo-shiftCalendarID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="timeCardNo">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="timeCardNo"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.timeCardNo }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="shiftCalendarID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="shiftCalendarID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.shiftCalendarID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- aLObjectID-->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="aLObjectID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="aLObjectID"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.aLObjectID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- isNotScan-isNotOTKow -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isNotScan">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotScan"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotScan }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isNotOTKow">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotOTKow"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotOTKow }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- isNotLateEarly-isNotCLeaveKow-->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isNotLateEarly">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotLateEarly"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotScan }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isNotCLeaveKow">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotCLeaveKow"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotCLeaveKow }}</span>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div #salaryInfo class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblEmployeeSalaryDetail"
+                      [formModel]="view.formModel"
+                      default="THÔNG TIN TÍNH LƯƠNG"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- payrollGroupID-currencyID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="payrollGroupID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="payrollGroupID"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.timeCardNo }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="currencyID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="currencyID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.currencyID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- taxTableID-isSettleTax -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="taxTableID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="taxTableID"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.taxTableID }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isSettleTax">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isSettleTax"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isSettleTax }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- advanceAmount -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="advanceAmount">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="advanceAmount"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.advanceAmount }}</span>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-            <div #salaryInfo class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeSalaryDetail"
-                  [formModel]="view.formModel"
-                  default="THÔNG TIN TÍNH LƯƠNG"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div
+                    class="fs-4 fw-bold"
+                    [class]="
+                      objCollapes['2.1'] ? 'text-danger' : 'text-primary'
+                    "
+                  >
+                    <div class="user-status d-flex align-items-center ms-3">
+                      <span class="icon-check icon-18 me-1"></span>
+                    </div>
+                    <codx-label
+                      [formModel]="view.formModel"
+                      name="lblEmployeeSavedProfile"
+                      default="HỒ SƠ LƯU TRỮ"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a class="btn btn-xs btn-icon btn-hover-primary">
+                  <span class="icon-arrow_drop_down icon-24"></span>
                 </a>
               </div>
-              <!-- payrollGroupID-currencyID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="payrollGroupID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="payrollGroupID"
-                  >
-                  </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.timeCardNo }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="currencyID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="currencyID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.currencyID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- taxTableID-isSettleTax -->
-              <div class="row form-group">
-                <div class="col d-flex" id="taxTableID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="taxTableID"
-                  >
-                  </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.taxTableID }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="isSettleTax">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isSettleTax"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isSettleTax }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- advanceAmount -->
-              <div class="row form-group">
-                <div class="col d-flex" id="advanceAmount">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="advanceAmount"
-                  >
-                  </codx-label>
-
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.advanceAmount }}</span>
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    name="lblEmployeeSavedProfile"
-                    default="HỒ SƠ LƯU TRỮ"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div #generalJobInfo class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeBackground"
-                  [formModel]="view.formModel"
-                  default="Lý lịch cá nhân"
+              <div #generalJobInfo class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- documentNo-status -->
-              <div class="row form-group">
-                <div class="col d-flex" id="documentNo">
                   <codx-label
-                    class="text-gray-600 me-2"
+                    name="lblEmployeeBackground"
                     [formModel]="view.formModel"
-                    fiedName="documentNo"
+                    default="Lý lịch cá nhân"
                   >
                   </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-edit icon-18"
+                      (click)="addEmployeeSelfInfo()"
+                    ></span>
+                  </a>
+                </div>
+                <!-- documentNo-status -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="documentNo">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="documentNo"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.documentNo }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.documentNo }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="status">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="status"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.status }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="status">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="status"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.status }}</span>
-                  </span>
+                <!-- joinedOn-hiredOn -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="joinedOn">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="joinedOn"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.joinedOn }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="hiredOn">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="hiredOn"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.hiredOn }}</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <!-- joinedOn-hiredOn -->
-              <div class="row form-group">
-                <div class="col d-flex" id="joinedOn">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="joinedOn"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.joinedOn }}</span>
-                  </span>
+                <!-- userID-employeeID -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="userID">
+                    <codx-label
+                      [formModel]="view.formModel"
+                      fiedName="userID"
+                      class="text-gray-600 me-2"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.userID }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="employeeID">
+                    <codx-label
+                      [formModel]="view.formModel"
+                      class="text-gray-600 me-2"
+                      fiedName="employeeID"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.employeeID }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="hiredOn">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="hiredOn"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.hiredOn }}</span>
-                  </span>
+                <!-- positionID-jobLevel -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="positionID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="positionID"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.positionID }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="jobLevel">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="jobLevel"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.jobLevel }}</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <!-- userID-employeeID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="userID">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    fiedName="userID"
-                    class="text-gray-600 me-2"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.userID }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="employeeID">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    class="text-gray-600 me-2"
-                    fiedName="employeeID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.employeeID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- positionID-jobLevel -->
-              <div class="row form-group">
-                <div class="col d-flex" id="positionID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="positionID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.positionID }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="jobLevel">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="jobLevel"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.jobLevel }}</span>
-                  </span>
-                </div>
-              </div>
 
-              <!-- orgUnitID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="orgUnitID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="orgUnitID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.orgUnitID }}</span>
-                  </span>
+                <!-- orgUnitID -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="orgUnitID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="orgUnitID"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.orgUnitID }}</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <!-- lineManager-indirectManager -->
-              <div class="row form-group">
-                <div class="col d-flex" id="lineManager">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="lineManager"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.lineManager }}</span>
-                  </span>
+                <!-- lineManager-indirectManager -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="lineManager">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="lineManager"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.lineManager }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="indirectManager">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="indirectManager"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.indirectManager }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="indirectManager">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="indirectManager"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.indirectManager }}</span>
-                  </span>
-                </div>
-              </div>
 
-              <!-- locationID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="locationID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName=""
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.locationID }}</span>
-                  </span>
+                <!-- locationID -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="locationID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName=""
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.locationID }}</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
 
-              <!-- labourType-labourConditions -->
-              <div class="row form-group">
-                <div class="col d-flex" id="labourType">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="labourType"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.labourType }}</span>
-                  </span>
+                <!-- labourType-labourConditions -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="labourType">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="labourType"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.labourType }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="labourConditions">
+                    <codx-label
+                      [formModel]="view.formModel"
+                      fiedName="labourConditions"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.labourConditions }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="labourConditions">
-                  <codx-label
-                    [formModel]="view.formModel"
-                    fiedName="labourConditions"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.labourConditions }}</span>
-                  </span>
-                </div>
-              </div>
 
-              <!-- isTUnion-tUnionDate -->
-              <div class="row form-group">
-                <div class="col d-flex" id="isTUnion">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isTUnion"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isTUnion }}</span>
-                  </span>
+                <!-- isTUnion-tUnionDate -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="isTUnion">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isTUnion"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isTUnion }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="tUnionDate">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="tUnionDate"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.tUnionDate }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="tUnionDate">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="tUnionDate"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.tUnionDate }}</span>
-                  </span>
-                </div>
-              </div>
 
-              <!-- isExpertRecruit-isExpertTrain -->
-              <div class="row form-group">
-                <div class="col d-flex" id="isExpertRecruit">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isExpertRecruit"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isExpertRecruit }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="isExpertTrain">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isExpertTrain"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isExpertTrain }}</span>
-                  </span>
+                <!-- isExpertRecruit-isExpertTrain -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="isExpertRecruit">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isExpertRecruit"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isExpertRecruit }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="isExpertTrain">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isExpertTrain"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isExpertTrain }}</span>
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div #timeKeepingInfo class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeTimeKeepingDetail"
-                  [formModel]="view.formModel"
-                  default="THÔNG TIN CHẤM CÔNG"
+              <div #timeKeepingInfo class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- timeCardNo-shiftCalendarID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="timeCardNo">
                   <codx-label
-                    class="text-gray-600 me-2"
+                    name="lblEmployeeTimeKeepingDetail"
                     [formModel]="view.formModel"
-                    fiedName="timeCardNo"
+                    default="THÔNG TIN CHẤM CÔNG"
                   >
                   </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-edit icon-18"
+                      (click)="addEmployeeSelfInfo()"
+                    ></span>
+                  </a>
+                </div>
+                <!-- timeCardNo-shiftCalendarID -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="timeCardNo">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="timeCardNo"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.timeCardNo }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.timeCardNo }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="shiftCalendarID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="shiftCalendarID"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.shiftCalendarID }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="shiftCalendarID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="shiftCalendarID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.shiftCalendarID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- aLObjectID-->
-              <div class="row form-group">
-                <div class="col d-flex" id="aLObjectID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="aLObjectID"
-                  >
-                  </codx-label>
+                <!-- aLObjectID-->
+                <div class="row form-group">
+                  <div class="col d-flex" id="aLObjectID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="aLObjectID"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.aLObjectID }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.aLObjectID }}</span>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <!-- isNotScan-isNotOTKow -->
-              <div class="row form-group">
-                <div class="col d-flex" id="isNotScan">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotScan"
-                  >
-                  </codx-label>
+                <!-- isNotScan-isNotOTKow -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="isNotScan">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isNotScan"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotScan }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isNotScan }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="isNotOTKow">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isNotOTKow"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isNotOTKow }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="isNotOTKow">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotOTKow"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotOTKow }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- isNotLateEarly-isNotCLeaveKow-->
-              <div class="row form-group">
-                <div class="col d-flex" id="isNotLateEarly">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotLateEarly"
-                  >
-                  </codx-label>
+                <!-- isNotLateEarly-isNotCLeaveKow-->
+                <div class="row form-group">
+                  <div class="col d-flex" id="isNotLateEarly">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isNotLateEarly"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotScan }}</span>
-                  </span>
-                </div>
-                <div class="col d-flex" id="isNotCLeaveKow">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isNotCLeaveKow"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isNotCLeaveKow }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isNotScan }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="isNotCLeaveKow">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isNotCLeaveKow"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isNotCLeaveKow }}</span>
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div #salaryInfo class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeSalaryDetail"
-                  [formModel]="view.formModel"
-                  default="THÔNG TIN TÍNH LƯƠNG"
+              <div #salaryInfo class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- payrollGroupID-currencyID -->
-              <div class="row form-group">
-                <div class="col d-flex" id="payrollGroupID">
                   <codx-label
-                    class="text-gray-600 me-2"
+                    name="lblEmployeeSalaryDetail"
                     [formModel]="view.formModel"
-                    fiedName="payrollGroupID"
+                    default="THÔNG TIN TÍNH LƯƠNG"
                   >
                   </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-edit icon-18"
+                      (click)="addEmployeeSelfInfo()"
+                    ></span>
+                  </a>
+                </div>
+                <!-- payrollGroupID-currencyID -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="payrollGroupID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="payrollGroupID"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.timeCardNo }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.timeCardNo }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="currencyID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="currencyID"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.currencyID }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="currencyID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="currencyID"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.currencyID }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- taxTableID-isSettleTax -->
-              <div class="row form-group">
-                <div class="col d-flex" id="taxTableID">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="taxTableID"
-                  >
-                  </codx-label>
+                <!-- taxTableID-isSettleTax -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="taxTableID">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="taxTableID"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.taxTableID }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.taxTableID }}</span>
+                    </span>
+                  </div>
+                  <div class="col d-flex" id="isSettleTax">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="isSettleTax"
+                    >
+                    </codx-label>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.isSettleTax }}</span>
+                    </span>
+                  </div>
                 </div>
-                <div class="col d-flex" id="isSettleTax">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="isSettleTax"
-                  >
-                  </codx-label>
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.isSettleTax }}</span>
-                  </span>
-                </div>
-              </div>
-              <!-- advanceAmount -->
-              <div class="row form-group">
-                <div class="col d-flex" id="advanceAmount">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    [formModel]="view.formModel"
-                    fiedName="advanceAmount"
-                  >
-                  </codx-label>
+                <!-- advanceAmount -->
+                <div class="row form-group">
+                  <div class="col d-flex" id="advanceAmount">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      [formModel]="view.formModel"
+                      fiedName="advanceAmount"
+                    >
+                    </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ infoPersonal.advanceAmount }}</span>
-                  </span>
+                    <span class="text-dark fw-bold">
+                      <span>{{ infoPersonal.advanceAmount }}</span>
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3164,6 +3284,188 @@
                   [columnsGrid]="accidentColumnsGrid"
                 ></lib-tmp-grid-view>
               </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #benefit>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblEmployeeProcessing"
+                [formModel]="view.formModel"
+                default="Qúa trình nhân sự"
+              >
+              </codx-label>
+            </div>
+            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+              <span class="icon-edit icon-18"></span>
+            </a>
+          </div>
+          <ngx-skeleton-loader
+            count="5"
+            animation="progress"
+          ></ngx-skeleton-loader>
+
+          <!-- Degree -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeDegree"
+                    [formModel]="view.formModel"
+                    default="Bằng cấp"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeDegreeInfo()"
+                  ></span>
+                </a>
+              </div>
+              <div class="row form-group"></div>
+            </div>
+          </div>
+
+          <!-- cer -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeCertificate"
+                    [formModel]="view.formModel"
+                    default="CHỨNG CHỈ"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeCertificateInfo()"
+                  ></span>
+                </a>
+              </div>
+              <div class="row form-group"></div>
+            </div>
+          </div>
+
+          <!-- skill -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeSkill"
+                    [formModel]="view.formModel"
+                    default="KỸ NĂNG"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeSkillsInfo()"
+                  ></span>
+                </a>
+              </div>
+
+              <div class="row form-group"></div>
+            </div>
+          </div>
+
+          <!-- training -->
+          <div class="border rounded-2 p-6">
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center">
+                <div class="fs-4 fw-bold text-primary">
+                  <codx-label
+                    name="lblEmployeeTraining"
+                    [formModel]="view.formModel"
+                    default="Tài sản cấp phát"
+                  >
+                  </codx-label>
+                </div>
+                <div class="user-status d-flex align-items-center ms-3">
+                  <span class="icon-check text-primary icon-18 me-1"></span>
+                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+              </div>
+              <a class="btn btn-xs btn-icon btn-hover-primary">
+                <span class="icon-arrow_drop_down icon-24"></span>
+              </a>
+            </div>
+            <div class="border mb-3">
+              <div
+                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+              >
+                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                  <span
+                    class="icon-edit icon-18"
+                    (click)="addEmployeeTrainCourseInfo()"
+                  ></span>
+                </a>
+              </div>
+              <!-- documentNo-status -->
+              <div class="row form-group"></div>
             </div>
           </div>
         </div>

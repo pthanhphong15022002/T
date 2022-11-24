@@ -62,6 +62,7 @@ export class PropertiesComponent implements OnInit {
     this.process = this.data;
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
+    this.viewFlowChart();
 
     if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     this.totalRating = 0;
@@ -69,7 +70,6 @@ export class PropertiesComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.viewFlowChart();
     this.openProperties(this.data.recID);
     this.changeDetectorRef.detectChanges();
   }
