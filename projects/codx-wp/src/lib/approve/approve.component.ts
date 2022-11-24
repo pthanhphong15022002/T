@@ -154,6 +154,7 @@ export class ApproveComponent extends UIComponent {
     this.loadDataTab(this.view.funcID);
   }
   clickTabApprove(item, predicate: string, dataValue: string) {
+    debugger
     this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
     this.tabAsside.forEach(e => {
       if(e.value == item.value){
@@ -188,6 +189,7 @@ export class ApproveComponent extends UIComponent {
             }
             let popup = this.callFuc.openForm(PopupEditComponent,"", 0, 0, this.view.funcID, object, '', option);
             popup.closed.subscribe((res: any) => {
+              debugger
               if (res?.event) 
               {
                 this.view.dataService.update(res.event).subscribe();

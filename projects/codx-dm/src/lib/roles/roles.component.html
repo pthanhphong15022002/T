@@ -1,179 +1,222 @@
 <codx-form headerText="{{titleDialog}}" [body]="body" [footer]="footer" [dialog]="dialog">
-    <ng-template #body>
-        <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
-                <div class="user-mini-nav">
-                    <div *ngIf="fileEditing != null && fileEditing?.permissions != null">
-                        <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
-                            <ng-container
-                                *ngIf="perm.isActive != false && ((modeSharing == null) || (!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
-                                <div (click)="changePermission(i)"
-                                    [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
-                                    class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
-                                    <div class="d-flex align-items-center w-100">
-                                        <div class="symbol symbol-30 symbol-circle me-3">
-                                            <div
-                                                *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
-                                            </div>
-                                            <ng-template #thenAvatar1>
-                                                <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg"
-                                                    [imageWidth]="25"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                    [title]="perm.objectName" [descLine]="1">
-                                                </codx-temp-full>
-                                            </ng-template>
-                                            <ng-template #elsethenAvatar1>
-                                                <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                                                    imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle"
-                                                    [imageWidth]="25" [title]="perm.objectName">
-                                                </codx-temp-full>
-                                            </ng-template>
-                                        </div>
-                                    </div>
-                                    <ng-container
-                                        *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && fileEditing?.assign">
-                                        <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
-                                            (click)="removeUserRight(i)">
-                                            <i class="icon-close text-danger icon-16"></i>
-                                        </div>
-                                    </ng-container>
-                                    <div>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </ng-container>
+  <ng-template #body>
+    <div class="row">
+      <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
+        <div class="user-mini-nav">
+          <div *ngIf="fileEditing != null && fileEditing?.permissions != null">
+            <ng-container *ngFor="let perm of fileEditing?.permissions; index as i;">
+              <ng-container
+                *ngIf="perm.isActive != false && ((modeSharing == null) || (!modeSharing && (!perm.isSharing  || perm.isSharing == null)) || (modeSharing && perm.isSharing))">
+                <div (click)="changePermission(i)"
+                  [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+                  class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
+                  <div class="d-flex align-items-center w-100">
+                    <div class="symbol symbol-30 symbol-circle me-3">
+                      <div *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                      </div>
+                      <ng-template #thenAvatar1>
+                        <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="25"
+                          imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [title]="perm.objectName"
+                          [descLine]="1">
+                        </codx-temp-full>
+                      </ng-template>
+                      <ng-template #elsethenAvatar1>
+                        <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
+                          imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
+                          [title]="perm.objectName">
+                        </codx-temp-full>
+                      </ng-template>
                     </div>
-                </div>
-                <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!fileEditing?.assign?'dm-div-disable':null">
-                    <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-                        (valueChange)="onSaveRole($event)">
-                    </codx-input>
-                </div>
-            </div>
-            <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
-                <div class="role-right">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col"><codx-label [default]="titleFunction" [fiedName]="'titleFunction'"></codx-label></th>
-                                <th scope="col"><codx-label [default]="titleDescription" [fiedName]="'titleDescription'"></codx-label></th>
-                                <th scope="col"><codx-label [default]="titleAllow" [fiedName]="'titleAllow'"></codx-label></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleFunction" [fiedName]="'titleFunction'"></codx-label></td>
-                                <td><codx-label [default]="titleRightDescription" [fiedName]="'titleRightDescription'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" [checked]="full"
-                                        field="full" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'full')" (focus)="controlFocus(true)">
-                                    </codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleCreateFolder" [fiedName]="'titleCreateFolder'"></codx-label></td>
-                                <td><codx-label [default]="titleAllowCreateFolder" [fiedName]="'titleAllowCreateFolder'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" [checked]="create"
-                                        field="create" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'create')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleView" [fiedName]="'titleView'"></codx-label></td>
-                                <td><codx-label [default]="titleViewDescription" [fiedName]="'titleViewDescription'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" field="read"
-                                        [checked]="read" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'read')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleUpdate" [fiedName]="'titleUpdate'"></codx-label></td>
-                                <td><codx-label [default]="titleUpdateDescription" [fiedName]="'titleUpdateDescription'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" field="update"
-                                        [checked]="update" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'update')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleDelete" [fiedName]="'titleDelete'"></codx-label></td>
-                                <td><codx-label [default]="titleDeleteDesc" [fiedName]="'titleDeleteDesc'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete"
-                                        field="delete" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'delete')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleShare" [fiedName]="'titleShare'"></codx-label></td>
-                                <td><codx-label [default]="titleShareDesc" [fiedName]="'titleShareDesc'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" [checked]="share"
-                                        field="share" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'share')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleAssign" [fiedName]="'titleAssign'"></codx-label></td>
-                                <td><codx-label [default]="titleAssignDesc" [fiedName]="'titleAssignDesc'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" field="assign"
-                                        [checked]="assign" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'assign')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleUpload" [fiedName]="'titleUpload'"></codx-label></td>
-                                <td><codx-label [default]="titleUploadDesc" [fiedName]="'titleUploadDesc'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload"
-                                        field="upload" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'upload')"></codx-input>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="font-size-lg text-dark"><codx-label [default]="titleDownload" [fiedName]="'titleDownload'"></codx-label></td>
-                                <td><codx-label [default]="titleDownloadDesc" [fiedName]="'titleDownloadDesc'"></codx-label></td>
-                                <td class="text-center">
-                                    <codx-input class="test-check" type="switch" style="width:100%" [checked]="download"
-                                        field="download" [disabled]="this.checkCurrentRightUpdate()"
-                                        (valueChange)="onSaveRightChanged($event, 'download')"></codx-input>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-xl-4 col-lg-6 col-md-6">
-                        <div class="form-group row mb-0 pl-3">
-                            <label class="col-12 pr-0 col-form-label"><codx-label [default]="titleFromDate" [fiedName]="'titleFromDate'"></codx-label></label>
-                            <div class="col-12">
-                                <codx-input class="form-control test-datetime" type="dateTime" style="width:100%"
-                                    format="d" [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
-                                    (valueChange)="onSaveRightChanged($event, 'fromdate')"></codx-input>
-                            </div>
-                        </div>
+                  </div>
+                  <ng-container *ngIf="!this.checkItemRight(i) && !this.propertiesFolder && fileEditing?.assign">
+                    <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+                      (click)="removeUserRight(i)">
+                      <i class="icon-close text-danger icon-16"></i>
                     </div>
-                    <div class="col-xl-4 col-lg-6 col-md-6">
-                        <div class="form-group row mb-0">
-                            <label class="col-12 pr-0 col-form-label"><codx-label [default]="titleToDate" [fiedName]="'titleToDate'"></codx-label></label>
-                            <div class="col-12">
-                                <codx-input class="form-control test-datetime" type="dateTime" style="width:100%"
-                                    format="d" [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"
-                                    (valueChange)="onSaveRightChanged($event, 'todate')">
-                                </codx-input>
-                            </div>
-                        </div>
-                    </div>
+                  </ng-container>
+                  <div>
+                  </div>
                 </div>
-            </div>
+              </ng-container>
+            </ng-container>
+          </div>
         </div>
-    </ng-template>
-    <ng-template #footer>
-        <button type="button" [disabled]="checkCurrentRightUpdate()" (click)="onSaveRight()"
-            class="btn btn-primary">{{titleSave}}</button>
-    </ng-template>
+        <div *ngIf="allowSetRight()" class="add-user" [ngClass]="!fileEditing?.assign?'dm-div-disable':null">
+          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+            (valueChange)="onSaveRole($event)">
+          </codx-input>
+        </div>
+      </div>
+      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
+        <div class="role-right">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <codx-label [default]="titleFunction" [fiedName]="'titleFunction'"></codx-label>
+                </th>
+                <th scope="col">
+                  <codx-label [default]="titleDescription" [fiedName]="'titleDescription'"></codx-label>
+                </th>
+                <th scope="col">
+                  <codx-label [default]="titleAllow" [fiedName]="'titleAllow'"></codx-label>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleFunction" [fiedName]="'titleFunction'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleRightDescription" [fiedName]="'titleRightDescription'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'full')"
+                    (focus)="controlFocus(true)">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleCreateFolder" [fiedName]="'titleCreateFolder'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleAllowCreateFolder" [fiedName]="'titleAllowCreateFolder'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'create')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleView" [fiedName]="'titleView'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleViewDescription" [fiedName]="'titleViewDescription'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="read" [checked]="read"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'read')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleUpdate" [fiedName]="'titleUpdate'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleUpdateDescription" [fiedName]="'titleUpdateDescription'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="update" [checked]="update"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'update')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleDelete" [fiedName]="'titleDelete'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleDeleteDesc" [fiedName]="'titleDeleteDesc'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="delete" field="delete"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'delete')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleShare" [fiedName]="'titleShare'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleShareDesc" [fiedName]="'titleShareDesc'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'share')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleAssign" [fiedName]="'titleAssign'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleAssignDesc" [fiedName]="'titleAssignDesc'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" field="assign" [checked]="assign"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'assign')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleUpload" [fiedName]="'titleUpload'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleUploadDesc" [fiedName]="'titleUploadDesc'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload" field="upload"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'upload')">
+                  </codx-input>
+                </td>
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="titleDownload" [fiedName]="'titleDownload'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="titleDownloadDesc" [fiedName]="'titleDownloadDesc'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
+                    [disabled]="this.checkCurrentRightUpdate()" (valueChange)="onSaveRightChanged($event, 'download')">
+                  </codx-input>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="row mt-2">
+          <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="form-group row mb-0 pl-3">
+              <label class="col-12 pr-0 col-form-label">
+                <codx-label [default]="titleFromDate" [fiedName]="'titleFromDate'"></codx-label>
+              </label>
+              <div class="col-12">
+                <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
+                  [crrValue]="startDate" [disabled]="this.checkCurrentRightUpdate()"
+                  (valueChange)="onSaveRightChanged($event, 'fromdate')"></codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-lg-6 col-md-6">
+            <div class="form-group row mb-0">
+              <label class="col-12 pr-0 col-form-label">
+                <codx-label [default]="titleToDate" [fiedName]="'titleToDate'"></codx-label>
+              </label>
+              <div class="col-12">
+                <codx-input class="form-control test-datetime" type="dateTime" style="width:100%" format="d"
+                  [crrValue]="endDate" [disabled]="this.checkCurrentRightUpdate()"
+                  (valueChange)="onSaveRightChanged($event, 'todate')">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <button type="button" [disabled]="checkCurrentRightUpdate()" (click)="onSaveRight()"
+      class="btn btn-primary">{{titleSave}}</button>
+  </ng-template>
 </codx-form>

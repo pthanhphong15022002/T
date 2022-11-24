@@ -127,6 +127,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       text: 'Thông tin khác',
       name: 'tabMoreInfo',
     },
+    { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'tabReminder' },
   ];
   lstEquipment = [];
 
@@ -168,6 +169,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.data.bookingOn = new Date();
       }
       this.data.attendees = 1;
+      this.data.reminder = 0;
     } else if (!this.isAdd) {
       let tmpStartTime = new Date(this.data?.startDate);
       let tmpEndTime = new Date(this.data?.endDate);
@@ -286,51 +288,57 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.optionalData == null
         
       ) {
-        this.data?.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        if(this.data?.equipments)
+        {
+          this.data?.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceRoom.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
         this.data.resourceID=this.data.resourceID;
       }
       if(this.isCopy){
-        this.data.equipments.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = equip.isPicked;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        if(this.data?.equipments){
+          this.data?.equipments.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = equip.isPicked;
+            this.lstDeviceRoom.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
       }
       this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {        
-        let equips = [];
         this.data.resourceID = this.optionalData.resourceId;
-        equips = this.optionalData.resource.equipments;
-        equips.forEach((equip) => {
-          let tmpDevice = new Device();
-          tmpDevice.id = equip.equipmentID;
-          tmpDevice.isSelected = false;
-          this.lstDeviceRoom.forEach((vlDevice) => {
-            if (tmpDevice.id == vlDevice.id) {
-              tmpDevice.text = vlDevice.text;
-              tmpDevice.icon = vlDevice.icon;
-            }
+        let equips = this.optionalData.resource.equipments;
+        if(equips){
+          equips.forEach((equip) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = equip.equipmentID;
+            tmpDevice.isSelected = false;
+            this.lstDeviceRoom.forEach((vlDevice) => {
+              if (tmpDevice.id == vlDevice.id) {
+                tmpDevice.text = vlDevice.text;
+                tmpDevice.icon = vlDevice.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
           });
-          this.tmplstDevice.push(tmpDevice);
-        });
+        }        
         this.data.bookingOn = this.optionalData.startDate;
         let tmpStartTime = this.optionalData.startDate;
         let tmpEndTime = this.optionalData.endDate;
@@ -542,7 +550,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // }
     return '';
   }
-
+  reminderChange(evt:any){
+    if(evt!=null){
+      this.data.reminder=evt.data;
+    }
+  }
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -569,7 +581,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     //     return;
     //   }
     // }
-    this.data.reminder=15;
+    //this.data.reminder=15;
     this.data.requester = this.authService?.userValue?.userName;
     this.fGroupAddBookingRoom.patchValue(this.data);
     if (this.fGroupAddBookingRoom.invalid == true) {
@@ -698,15 +710,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if (this.returnData?.recID && this.returnData?.attachments > 0) {
-            this.attachment.objectId = this.returnData?.recID;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (item2: any) => {
-                if (item2?.status == 0) {
-                  this.fileAdded(item2);
+          if (this.returnData?.recID && this.returnData?.attachments > 0 ) {
+            if(this.attachment.fileUploadList && this.attachment.fileUploadList.length>0){
+              this.attachment.objectId = this.returnData?.recID;
+              (await this.attachment.saveFilesObservable()).subscribe(
+                (item2: any) => {
+                  if (item2?.status == 0) {
+                    this.fileAdded(item2);
+                  }
                 }
-              }
-            );
+              );
+            }            
           }
           if (approval) {
             (
@@ -981,7 +995,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   fileAdded(event: any) {
     this.data.attachments = event.data.length;
   }
-  fileCount(event: any) {}
+  fileCount(event: any) {
+
+  }
 
   //Popup Stationery and User
   closePopUpCbb() {
@@ -1260,6 +1276,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.changeDetectorRef.detectChanges();
     this.popover.close();
 
+  }
+  deleteAttender(attID:string){
+    var tempDelete;
+    this.attendeesList.forEach(item=>{
+      if(item.userID== attID){
+        tempDelete = item;
+      }
+    });
+    this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
+    this.changeDetectorRef.detectChanges();
   }
   connectMeetingNow() {
     this.codxEpService

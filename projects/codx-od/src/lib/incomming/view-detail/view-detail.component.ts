@@ -103,6 +103,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   ms023: any;
   vllStatus = 'TM004';
   vllStatusAssign = 'TM007';
+  funcList: any;
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
@@ -198,6 +199,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
   getGridViewSetup(funcID: any) {
     this.codxODService.loadFunctionList(funcID).subscribe((fuc) => {
+      this.funcList = fuc;
       this.formModels = {
         entityName: fuc?.entityName,
         formName: fuc?.formName,
@@ -454,7 +456,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText: 'Chỉnh sửa công văn đến',
+              headerText: 'Chỉnh sửa '+ (this.funcList?.defaultName).toLowerCase(),
               formModel: this.formModel,
               type: 'edit',
               data: datas,
@@ -515,13 +517,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.view.dataService.copy(0).subscribe((res: any) => {
           this.view.dataService.dataSelected.recID = res?.recID;
           this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo
+          this.view.dataService.dataSelected.owner = res?.owner;
+          this.view.dataService.dataSelected.departmentID = res?.departmentID;
           let option = new SidebarModel();
           option.DataService = this.view?.currentView?.dataService;
           this.dialog = this.callfunc.openSide(
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText: 'Sao chép công văn đến',
+              headerText: 'Sao chép ' + (this.funcList?.defaultName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
             },
@@ -1031,8 +1035,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
     if (
       this.formModel.funcID == 'ODT41' &&
-      data?.status != '1' &&
-      data?.status != '2'
+      data?.approveStatus != '1' &&
+      data?.approveStatus != '2'
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
@@ -1047,7 +1051,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           x.functionID == 'SYS02' ||
           x.functionID == 'SYS03' ||
           x.functionID == 'ODT103' ||
-          x.functionID == 'ODT202'
+          x.functionID == 'ODT202' ||
+          x.functionID == "ODT101" ||
+          x.functionID == 'ODT113'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;
@@ -1056,7 +1062,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) =>
-          x.functionID == 'SYS02' || x.functionID == 'ODT101'
+          x.functionID == 'SYS02'
       );
       completed.forEach((elm) => {
         elm.disabled = true;

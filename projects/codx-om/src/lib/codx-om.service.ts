@@ -1,14 +1,16 @@
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, DataRequest, FormModel, NotificationsService } from 'codx-core';
 import { ModelPage } from 'projects/codx-ep/src/public-api';
+import { finalize, map, Observable, share } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CodxOmService {
-
+  public caches = new Map<string, Map<string, any>>();
+  private cachedObservables = new Map<string, Observable<any>>();
   constructor(
     private cache: CacheService,
     private auth: AuthStore,
@@ -166,5 +168,78 @@ export class CodxOmService {
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
     }
+  }
+
+  //Lấy danh sách mục tiêu
+  getOKR(dataRequest: DataRequest)
+  {
+    return this.api.execSv("OM","OM","OKRBusiness","GetAsync",dataRequest);
+  }
+
+  //Lấy danh sách chi tiết KR từ recID OKR
+  getKRByOKR(recID : any)
+  {
+    return this.api.execSv("OM","OM","OKRBusiness","GetChildByIDAsync",recID);
+  }
+  loadFunctionList(funcID:any): Observable<any>
+  {
+    let paras = ["FuncID",funcID];
+    let keyRoot = "FuncID" + funcID;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.functionList(funcID)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
+  }
+
+  loadGridView(formName:any, gridViewName:any): Observable<any>
+  {
+    let paras = [formName,gridViewName];
+    let keyRoot = formName + gridViewName;
+    let key = JSON.stringify(paras).toLowerCase();
+    if (this.caches.has(keyRoot)) {
+      var c = this.caches.get(keyRoot);
+      if (c && c.has(key)) {
+        return c.get(key);
+      }
+    }
+    if (this.cachedObservables.has(key)) {
+      this.cachedObservables.get(key)
+    }
+    let observable = this.cache.gridViewSetup(formName,gridViewName)
+    .pipe(
+      map((res) => {
+        if (res) {
+          let c = this.caches.get(keyRoot);
+          c?.set(key, res);
+          return res;
+        }
+        return null
+      }),
+      share(),
+      finalize(() => this.cachedObservables.delete(key))
+    );
+    this.cachedObservables.set(key, observable);
+    return observable;
   }
 }

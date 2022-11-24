@@ -185,20 +185,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     //   if(this.showAssignTo ) this.functionID = 'TMT0203'  ;else this.functionID = 'TMT0201'  //truong hop xu ly assign\
     // }
 
-    this.cache.functionList(this.functionID).subscribe(f => {
+    this.cache.functionList(this.functionID).subscribe((f) => {
       if (f) {
         this.cache
-          .gridViewSetup(
-            f.formName,
-            f.gridViewName
-          )
+          .gridViewSetup(f.formName, f.gridViewName)
           .subscribe((res) => {
             if (res) {
               this.gridViewSetup = res;
             }
           });
       }
-    })
+    });
     // this.functionID = this.dialog.formModel.funcID;
     // this.cache
     //   .gridViewSetup(
@@ -306,7 +303,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
-          //  this.paramModule = param;
+          if (this.param?.PlanControl == '1') this.task.startDate = new Date();
         }
       });
   }
@@ -390,7 +387,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.listTodo = res[2];
         this.listTaskResources = res[3];
         this.listUser = this.task.assignTo?.split(';') || [];
-        this.showLabelAttachment = this.task.attachments > 0? true : false ;
+        this.showLabelAttachment = this.task.attachments > 0 ? true : false;
         if (this.action == 'edit' && this.task.category == '2') {
           this.disableDueDate = true;
           if (this.param?.EditControl == '0') this.readOnly = true;
@@ -524,9 +521,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.task.attachments = Array.isArray(res) ? res.length : 1;
-          if (this.action == 'edit') this.updateTask();
-          else this.addTask();
+          let attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') {
+            this.task.attachments += attachments;
+            this.updateTask();
+          } else {
+            this.task.attachments = attachments;
+            this.addTask();
+          }
         }
       });
     else {
@@ -577,11 +579,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.attachment?.clearData();
         if (res && res.save) {
           var task = res.save[0];
-          if (this.param?.ConfirmControl == "1") {
-            this.tmSv.sendAlertMail(task?.recID, "TM_0008", this.functionID).subscribe();
+          if (this.param?.ConfirmControl == '1') {
+            this.tmSv
+              .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
+              .subscribe();
           }
-          
-          if (task?.category == '1' && task.verifyControl == '1') this.tmSv.sendAlertMail(task?.recID, "TM_0018", this.functionID).subscribe();
+
+          if (task?.category == '1' && task.verifyControl == '1')
+            this.tmSv
+              .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
+              .subscribe();
         }
       });
   }
@@ -598,8 +605,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                 if (res.update) {
                   this.dialog.close(res.update);
                   this.attachment?.clearData();
-                  this.tmSv.sendAlertMail(this.task.recID, 'TM_0002', this.functionID).subscribe();   //mai test laji vi sao khong vao
-
+                  this.tmSv
+                    .sendAlertMail(this.task.recID, 'TM_0002', this.functionID)
+                    .subscribe(); //mai test laji vi sao khong vao
                 }
               }
               this.dialog.close();
@@ -624,11 +632,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             this.dialog.close();
             this.attachment?.clearData();
           }
-
         });
     }
   }
-
 
   eventApply(e: any) {
     var assignTo = '';
@@ -636,14 +642,16 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
       }
     });
     if (listUserID != '') {
@@ -792,7 +800,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.taskGroup = res;
           if (res.checkList != null && res.checkList.trim() != '') {
             var toDo = res.checkList.split(';');
-            // this.countTodoByGroup = toDo.length ;
             this.listTodo = [];
             toDo.forEach((tx) => {
               var taskG = new TaskGoal();
@@ -800,6 +807,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               taskG.text = tx;
               this.listTodo.push(taskG);
             });
+          }
+          if (this.taskGroup?.planControl == '1') {
+            this.task.startDate = new Date();
+          } else {
+            this.task.startDate = null;
+            this.task.endDate = null;
+            this.task.estimated = 0;
           }
           this.convertParameterByTaskGroup(this.taskGroup);
         }
@@ -903,7 +917,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    if (
+      this.action != 'edit' ||
+      (this.action == 'edit' && !this.showLabelAttachment)
+    )
+      this.showLabelAttachment = this.isHaveFile;
   }
   showPoppoverDelete(p, i) {
     if (i == null) return;
@@ -999,12 +1017,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     switch (task.refType) {
       case 'OD_Dispatches':
         this.api
-          .exec<any>(
-            'OD',
-            'DispatchesBusiness',
-            'GetListByIDAsync',
-            task.refID
-          )
+          .exec<any>('OD', 'DispatchesBusiness', 'GetListByIDAsync', task.refID)
           .subscribe((item) => {
             if (item) {
               item.forEach((x) => {

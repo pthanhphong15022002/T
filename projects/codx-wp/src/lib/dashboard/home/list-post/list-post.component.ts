@@ -162,19 +162,26 @@ export class ListPostComponent implements OnInit, AfterViewInit {
             .gridViewSetup(func.formName, func.gridViewName)
             .subscribe((grd: any) => {
               if (grd) {
-                console.log('gridViewSetup', grd);
                 this.gridViewSetup = grd;
               }
             });
           // get more function
-          this.cache
-            .moreFunction(func.formName, func.gridViewName)
-            .subscribe((mFC: any) => {
-              if (mFC) {
-                console.log(mFC);
-                this.defaultMoreFC = mFC;
-              }
-            });
+          // this.cache
+          //   .moreFunction(func.formName, func.gridViewName)
+          //   .subscribe((mFC: any) => {
+          //     if (mFC) {
+          //       //this.defaultMoreFC = mFC;
+          //       if (typeof mFC == 'object' && !Array.isArray(mFC)) {
+          //         for (let i of Object.keys(mFC)) {
+          //           this.defaultMoreFC.push(mFC[i]);
+          //         }
+          //       }
+          //       else if(Array.isArray(mFC))
+          //       {
+          //         this.defaultMoreFC = mFC;
+          //       }
+          //     }
+          //   });
         }
       });
     }
@@ -183,10 +190,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     // set moreFucntion
     if (arrMoreFc) {
       arrMoreFc.forEach((x: any) => {
-        if (
-          x.functionID == 'WP000' ||
-          !this.defaultMoreFC.some((e) => e.functionID == x.functionID)
-        ) {
+        if(x.functionID == 'WP000' || !this.defaultMoreFC.some((e) => e.functionID == x.functionID)) 
+        {
           x.disabled = true;
         }
       });
@@ -194,6 +199,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   clickMF(event: any, post: any) {
     if (event && post) {
+      debugger
       switch (event.functionID) {
         case 'WP001': // cập nhật
           this.openPopupEdit(post);
@@ -258,11 +264,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     data.refType = 'WP_Comments';
     data.createdBy = this.user.userID;
     data.createdName = this.user.userName;
-    let moreFcAdd = this.defaultMoreFC.find((x) => x.functionID == 'WP000');
+    let headerText = "Tạo bài viết";
     var obj = {
       data: data,
       status: 'create',
-      headerText: moreFcAdd.customName + ' ' + this.function.description,
+      headerText: headerText
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -285,12 +291,12 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
   openPopupEdit(post: any) {
-    let moreFcEdit = this.defaultMoreFC.find((x) => x.functionID == 'WP001');
+    let headerText = "Chỉnh sửa bài viết";
     let data = JSON.parse(JSON.stringify(post));
     let obj = {
       data: data,
       status: 'edit',
-      headerText: moreFcEdit.customName + ' ' + this.function.description,
+      headerText: headerText,
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -314,7 +320,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   openPopupShare(post: any) {
     if (post) {
-      let moreFcShare = this.defaultMoreFC.find((x) => x.functionID == 'WP003');
       let data = new WP_Comments();
       data.shareControl = '9';
       data.refType = 'WP_Comments';
@@ -322,10 +327,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       data.createdBy = this.user.userID;
       data.createdName = this.user.userName;
       data.shares = JSON.parse(JSON.stringify(post));
+      let headerText = "Chia sẻ bài viết"
       var obj = {
         data: data,
         status: 'share',
-        headerText: moreFcShare.customName + ' ' + this.function.description,
+        headerText: headerText
       };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
@@ -350,11 +356,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   openPopupSave(post: any) {
     if (post) {
-      let moreFcSave = this.defaultMoreFC.find((x) => x.functionID == 'WP003');
       let data = JSON.parse(JSON.stringify(post));
+      let headerText = "Thêm vào kho lưu trữ";
       var obj = {
         data: data,
-        headerText: moreFcSave.customName,
+        headerText: headerText,
       };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
@@ -398,7 +404,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   {
     if (file)
     {
-      debugger
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;

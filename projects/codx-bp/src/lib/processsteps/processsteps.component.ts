@@ -3,7 +3,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { I, V } from '@angular/cdk/keycodes';
+import { D, I, V } from '@angular/cdk/keycodes';
 import {
   Component,
   Input,
@@ -36,6 +36,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { debug } from 'console';
+import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 import { CodxBpService } from '../codx-bp.service';
@@ -48,7 +49,7 @@ import {
 import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-add-process-steps.component';
 
 @Component({
-  selector: 'lib-processsteps',
+  selector: 'codx-processsteps',
   templateUrl: './processsteps.component.html',
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
@@ -60,7 +61,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
-  process?: BP_Processes;
+  @Input() process?: BP_Processes;
+  @Input() viewMode = '6';
+  @Input() funcID = 'BPT11';
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -73,7 +76,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   moreFuncs: Array<ButtonModel> = [];
   dialog!: DialogRef;
   user: any;
-  funcID: any;
+  // funcID: any;
   titleAction = '';
   itemSelected: any;
   stepType: any;
@@ -99,6 +102,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   crrParentID = '';
   kanban: any;
   checkList = [];
+  isKanban = true;
+  dataHover: any;
 
   constructor(
     inject: Injector,
@@ -112,12 +117,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.user = this.authStore.get();
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.activedRouter.params.subscribe((res) => {
-      this.funcID = res.funcID;
-      this.processID = res.processID;
-    });
 
+    // view trang
+    // this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.activedRouter.params.subscribe((res) => {
+    //   this.funcID = res.funcID;
+    //   this.processID = res.processID;
+    // });
     this.bpService.viewProcesses.subscribe((res) => {
       this.process = res;
       this.processID = this.process?.recID ? this.process?.recID : '';
@@ -125,28 +131,50 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.dataObj = {
         processID: this.processID,
       };
-      this.layout.setUrl(this.urlBack);
-      this.layout.setLogo(null);
-      if (!this.processID) {
-        this.codxService.navigate('', this.urlBack);
-      }
-      this.getFlowChart(this.process?.recID);
+      // this.layout.setUrl(this.urlBack);
+      // this.layout.setLogo(null);
+      // if (!this.processID) {
+      //   this.codxService.navigate('', this.urlBack);
+      // }else{
+      //   this.getFlowChart(this.process);
+      // }
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsWithKanbanAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj; ///de test
 
-      this.request = new ResourceModel();
-      this.request.service = 'BP';
-      this.request.assemblyName = 'BP';
-      this.request.className = 'ProcessStepsBusiness';
-      this.request.method = 'GetProcessStepsWithKanbanAsync';
-      this.request.idField = 'recID';
-      this.request.dataObj = this.dataObj; ///de test
-
-      this.resourceKanban = new ResourceModel();
-      this.resourceKanban.service = 'BP';
-      this.resourceKanban.assemblyName = 'BP';
-      this.resourceKanban.className = 'ProcessStepsBusiness';
-      this.resourceKanban.method = 'GetColumnsKanbanAsync';
-      this.resourceKanban.dataObj = this.dataObj;
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessStepsBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
     });
+
+    // //view popup
+    // if (this.process) {
+    //   this.processID = this.process.recID;
+    //   this.dataObj = {
+    //     processID: this.processID,
+    //   };
+    //   this.request = new ResourceModel();
+    //   this.request.service = 'BP';
+    //   this.request.assemblyName = 'BP';
+    //   this.request.className = 'ProcessStepsBusiness';
+    //   this.request.method = 'GetProcessStepsWithKanbanAsync';
+    //   this.request.idField = 'recID';
+    //   this.request.dataObj = this.dataObj; ///de test
+
+    //   this.resourceKanban = new ResourceModel();
+    //   this.resourceKanban.service = 'BP';
+    //   this.resourceKanban.assemblyName = 'BP';
+    //   this.resourceKanban.className = 'ProcessStepsBusiness';
+    //   this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    //   this.resourceKanban.dataObj = this.dataObj;
+    // }
   }
 
   onInit(): void {
@@ -192,23 +220,23 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           template: this.cardKanban,
         },
       },
-      {
-        type: ViewType.content,
-        active: false,
-        sameData: false,
-        icon: 'icon-bubble_chart',
-        text: 'Flowchart',
-        model: {
-          panelRightRef: this.flowChart,
-        },
-      },
+      // {
+      //   type: ViewType.content,
+      //   active: false,
+      //   sameData: false,
+      //   icon: 'icon-bubble_chart',
+      //   text: 'Flowchart',
+      //   model: {
+      //     panelRightRef: this.flowChart,
+      //   },
+      // },
     ];
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
 
-    this.changeDetectorRef.detectChanges();
+    // this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD bước công việc
@@ -252,6 +280,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                   obj.items.forEach((dt) => {
                     if (dt.recID == processStep?.parentID) {
                       dt.items.push(processStep);
+                      if (processStep?.ownersOfParent)
+                        dt.owners = processStep?.ownersOfParent;
                       if (this.kanban) this.kanban.updateCard(dt);
                     }
                   });
@@ -403,28 +433,57 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   editStepChild(data, processStep) {
-    //khong doi parent
-    if ((this.view.currentView as any)?.kanban)
-      this.kanban = (this.view.currentView as any).kanban;
-    this.view.dataService.data.forEach((obj) => {
-      var index = -1;
-      index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
-      if (index != -1) {
-        var dataParents = obj.items[index];
-        var indexChild = dataParents.items.findIndex(
-          (dt) => dt.recID == processStep.recID
-        );
-        if (indexChild != -1) {
-          dataParents.items[indexChild] = processStep;
-          if (this.kanban) this.kanban.updateCard(dataParents);
+    if (data.parentID == processStep.parentID) {
+      //khong doi parent
+      if ((this.view.currentView as any)?.kanban)
+        this.kanban = (this.view.currentView as any).kanban;
+      this.view.dataService.data.forEach((obj) => {
+        var index = -1;
+        index = obj.items?.findIndex((x) => x.recID == processStep.parentID);
+        if (index != -1) {
+          var dataParents = obj.items[index];
+          var indexChild = dataParents.items.findIndex(
+            (dt) => dt.recID == processStep.recID
+          );
+          if (indexChild != -1) {
+            dataParents.items[indexChild] = processStep;
+            if (processStep?.ownersOfParent)
+              dataParents.owners = processStep?.ownersOfParent;
+            if (this.kanban) this.kanban.updateCard(dataParents);
+            obj.items[index] = dataParents;
+          }
         }
-        obj.items[index] = dataParents;
-      }
-    });
+      });
+    } else {
+      // doi parent
+      this.view.dataService.data.forEach((obj) => {
+        var indexParentNew = -1;
+        var indexParentOld = -1;
+        indexParentOld = obj.items?.findIndex((x) => x.recID == data.parentID);
+        indexParentNew = obj.items?.findIndex(
+          (x) => x.recID == processStep.parentID
+        );
+        if (indexParentOld != -1 && indexParentNew != -1) {
+          var dataParentsOld = obj.items[indexParentOld];
+          var dataParentsNew = obj.items[indexParentNew];
+          dataParentsOld.splice(data.stepNo - 1, 1); ///xu ly xoa nhuw the nao
+          dataParentsOld.forEach((dt) => {
+            if (dt.stepNo > data.stepNo) dt.stepNo--;
+          });
+          dataParentsNew.push(processStep);
+          if (processStep?.ownersOfParent)
+            dataParentsNew.owners = processStep?.ownersOfParent;
 
-    // doi parent hoir laji thuong
+          if (this.kanban) {
+            this.kanban.updateCard(dataParentsOld);
+            this.kanban.updateCard(dataParentsNew);
+          }
+          obj.items[indexParentOld] = dataParentsOld;
+          obj.items[indexParentNew] = dataParentsNew;
+        }
+      });
+    }
   }
-
   copy(data) {
     this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res) => {
@@ -522,7 +581,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
                 if (obj.items.length > 0)
                   index = obj.items?.findIndex((x) => x.recID == data.recID);
                 if (index != -1) {
-                  if (this.kanban) this.kanban.removeCard(obj.items[index]);
                   obj.items.splice(index, 1);
                   obj.items.forEach((dt) => {
                     if (dt.stepNo > data.stepNo) dt.stepNo--;
@@ -532,22 +590,26 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               break;
             default:
               this.view.dataService.data.forEach((obj) => {
-                var index = -1;
-                if (obj.items.length > 0)
-                  obj.items.forEach((child) => {
+                var indexParent = -1;
+                if (obj.items.length > 0) {
+                  obj.items.forEach((child, crrIndex) => {
+                    var index = -1;
                     if (child.items.length > 0)
                       index = child.items?.findIndex(
                         (x) => x.recID == data.recID
                       );
                     if (index != -1) {
                       child.items.splice(index, 1);
-                      if (this.kanban) this.kanban.updateCard(obj.items[index]);
                       child.items.forEach((dt) => {
                         if (dt.stepNo > data.stepNo) dt.stepNo--;
                       });
-                      index = -1;
+                      indexParent = crrIndex;
                     }
                   });
+                }
+                if (indexParent != -1)
+                  if (this.kanban)
+                    this.kanban.updateCard(obj.items[indexParent]);
               });
               break;
           }
@@ -597,10 +659,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     // test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
+
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
   }
 
@@ -673,6 +742,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   viewChanged(e) {
     // test
     if (e?.view.type == 16) {
+      this.isKanban = false;
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
       this.dataTreeProcessStep.forEach((obj) => {
@@ -681,6 +751,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
     }
     if (e?.view.type == 6) {
+      this.isKanban = true;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
@@ -930,16 +1001,38 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     return arrOwner.join(';');
   }
   //test data flow chart 636341e8e82afdc6f9a4ab54
-  getFlowChart(recID) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
-      if (data) this.dataFile = data;
-    });
+  getFlowChart(process) {
+    // this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
+    //   if (data) this.dataFile = data;
+    // });
+    let paras = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'Flowchart',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .subscribe((res) => {
+        if (res && res?.url) {
+          let obj = { pathDisk: res?.url, fileName: process?.processName };
+          this.dataFile = obj;
+        }
+      });
   }
   async addFile(evt: any) {
+    this.addFlowchart.referType = 'Flowchart';
     this.addFlowchart.uploadFile();
   }
   fileAdded(e) {
-    if (e && e?.data?.length > 0) this.dataFile = e.data[0];
+    if (e && e?.data?.length > 0) {
+      this.dataFile = e.data[0];
+    }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -949,14 +1042,30 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     var type = this.button?.items.find((x) => x.id == stepType);
     return type?.icon;
   }
-  checkReferencesByCheck(data,stepType) :boolean {
-    if(!data?.items || data?.items?.length ==0) return false
+  checkReferencesByStepType(data, stepType): boolean {
+    if (!data?.items || data?.items?.length == 0) return false;
     this.checkList = data?.items.map((x) => {
       if (x.stepType == stepType) return x;
     });
-    let check =this.checkList.length > 0
+    let check = this.checkList.length > 0;
     return check;
   }
 
- 
+  checkAction(data): boolean {
+    if (!data?.items || data?.items?.length == 0) return false;
+    this.checkList = data?.items.map((x) => {
+      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') return x;
+    });
+    let check = this.checkList.length > 0;
+    return check;
+  }
+
+  openMoreFunction(data, p) {
+    if (!data) {
+      p.close();
+      return;
+    }
+    if (p?.isOpen) p.close();
+    p.open();
+  }
 }

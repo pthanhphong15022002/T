@@ -13,12 +13,16 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
+import { B } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-properties',
   templateUrl: './properties.component.html',
   styleUrls: ['./properties.component.css'],
 })
+
+
+
 export class PropertiesComponent implements OnInit {
   process = new BP_Processes();
   rattings: BP_ProcessesRating[] = [];
@@ -40,7 +44,10 @@ export class PropertiesComponent implements OnInit {
   id: string;
   vlL1473: any;
   requestTitle: string;
-  userName = "";
+  userName = '';
+  funcID: any;
+  entityName: any;
+  flowChart: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -53,16 +60,21 @@ export class PropertiesComponent implements OnInit {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(data.data));
     this.process = this.data;
-    if (this.process.rattings.length > 0) this.rattings = this.process.rattings;
+    this.funcID = this.dialog.formModel.funcID;
+    this.entityName = this.dialog.formModel.entityName;
+
+    if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
     this.totalRating = 0;
   }
 
+
   ngOnInit(): void {
+    this.viewFlowChart();
     this.openProperties(this.data.recID);
     this.changeDetectorRef.detectChanges();
   }
 
-  loadUserName(id){
+  loadUserName(id) {
     // this.api.callSv('SYS','AD','UsersBusiness','GetAsync', id).subscribe(res=>{
     //   if(res.msgBodyData[0]){
     //     this.userName = res.msgBodyData[0].userName;
@@ -179,16 +191,18 @@ export class PropertiesComponent implements OnInit {
 
   setComment() {
     this.bpSV
-      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext)
+      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext, this.funcID, this.entityName)
       .subscribe((res) => {
         if (res.rattings.length > 0) {
           this.currentRate = 1;
           this.readonly = false;
           this.commenttext = '';
-          this.rattings = res.rattings;
+          this.process = res;
+          this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
           this.getRating(res.rattings);
           this.changeDetectorRef.detectChanges();
-          this.notificationsService.notify('Rating thành công');
+          this.notificationsService.notify('Đánh giá thành công');
+          this.dialog.dataService.update(this.process).subscribe();
         }
       });
   }
@@ -196,5 +210,35 @@ export class PropertiesComponent implements OnInit {
   setClassRating(i, rating) {
     if (i <= rating) return 'icon-star text-warning icon-16 mr-1';
     else return 'icon-star text-muted icon-16 mr-1';
+  }
+
+  // sortRattings(data: BP_ProcessesRating[]) {
+  //   data.sort((a, b) => {
+  //     var date1 = a.createdOn.getTime();
+  //     var date2 = b.createdOn.getTime();
+  //     return date1 - date2;
+  //   });
+
+  viewFlowChart(){
+    let paras = [
+      '',
+      this.funcID,
+      this.process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      this.process?.processName,
+      'Flowchart',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .subscribe((res) => {
+        if (res&& res?.url) {
+          let obj = { pathDisk: res?.url, fileName: this.process?.processName };
+          this.flowChart = obj;
+        }
+      });
+
   }
 }

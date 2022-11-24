@@ -1,4 +1,3 @@
-import { I } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -12,22 +11,27 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
+import { FileService } from '@shared/services/file.service';
 import {
   AuthStore,
   ButtonModel,
+  DialogModel,
   DialogRef,
   NotificationsService,
   RequestOption,
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { Subject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { CodxBpService } from '../codx-bp.service';
 import { BP_Processes } from '../models/BP_Processes.model';
 import { BP_ProcessesPageSize } from '../models/BP_Processes.modelPageSize';
+import { PopupViewDetailProcessesComponent } from '../popup-view-detail-processes/popup-view-detail-processes.component';
 import { PropertiesComponent } from '../properties/properties.component';
 import { PopupAddPermissionComponent } from './popup-add-permission/popup-add-permission.component';
 import { PopupAddProcessesComponent } from './popup-add-processes/popup-add-processes.component';
@@ -72,13 +76,16 @@ export class ProcessesComponent
   values: any;
   searchAdvance: boolean;
   viewActive: any;
+  popoverList: any;
+  popoverDetail: any;
   // titleUpdateFolder = 'Cập nhật thư mục';
   viewMode: any;
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
   user: any;
-  funcID: any;
+  funcID = 'BPT1';
+  method = 'GetListProcessesAsync';
   itemSelected: any;
   dialogPopupReName: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
@@ -87,9 +94,9 @@ export class ProcessesComponent
   crrRecID = '';
   dataSelected: any;
   gridViewSetup: any;
-  private searchKey = new Subject<any>();
   listProcess = new Array<BP_Processes>();
   totalRowCount: any;
+  totalRecordSearch: any;
   totalPages: number;
   gridModels = new DataRequest();
   listNumberPage = new Array();
@@ -97,23 +104,36 @@ export class ProcessesComponent
   pageNumberCliked: number;
   pageNumberSearch: number;
   clickDisable: string;
+  moreFunc: any;
+  heightWin: any;
+  widthWin: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
     private notification: NotificationsService,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private fileService: FileService
   ) {
     super(inject);
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    if (this.funcID == 'BPT3') {
+      this.method = 'GetListShareByProcessAsync';
+    }
+    if (this.funcID == 'BPT2') {
+      this.method = 'GetListMyProcessesAsync';
+    }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
+
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   onInit(): void {
@@ -126,7 +146,6 @@ export class ProcessesComponent
       { headerTemplate: this.itemVersionNo, width: 100 },
       { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
-      { field: '', headerText: '', width: 100 },
       { field: '', headerText: '', width: 100 },
     ];
   }
@@ -147,27 +166,29 @@ export class ProcessesComponent
         type: ViewType.card,
         sameData: true,
         active: true,
-        hide: false,
         model: {
           template: this.templateListCard,
         },
       },
-      {
-        id: '4',
-        icon: 'icon-search',
-        text: 'Search',
-        type: ViewType.card,
-        active: true,
-        sameData: false,
-        // request: this.requestSearch,
-        model: {
-          panelRightRef: this.templateSearch,
-        },
-      },
+      // {
+      //   id: '4',
+      //   active: true,
+      //   icon: 'icon-search',
+      //   text: 'Search',
+      //   hide:true,
+      //   type: ViewType.card,
+      //   sameData: false,
+      //   model: {
+      //     panelRightRef: this.templateSearch,
+      //     //       template2: this.templateSearch,
+      //     //   resizable: false,
+      //   },
+      // },
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
+ //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
 
@@ -193,9 +214,10 @@ export class ProcessesComponent
       .subscribe((res) => {
         if (res != null) {
           this.listProcess = res[0];
+          this.totalRecordSearch = this.listProcess.length;
           this.totalRowCount = res[1];
           // test phân trang
-          this.gridModels.pageSize = 1;
+          this.gridModels.pageSize = 3;
           this.totalPages = Math.ceil(
             this.totalRowCount / this.gridModels.pageSize
           );
@@ -236,26 +258,34 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    try {
-      this.textSearch = $event;
-      this.searchKey.next($event);
-      this.isSearch == true;
-      if (this.textSearch == null || this.textSearch == '') {
-        this.views.forEach((item) => {
-          item.active = false;
-          item.hide = false;
-          if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text) item.active = true;
-        });
-        this.changeDetectorRef.detectChanges();
-      } else {
-        this.isSearch = true;
+    // try {
+    //   this.textSearch = $event;
+    //   this.searchKey.next($event);
+    //   this.isSearch == true;
+    //   if (this.textSearch == null || this.textSearch == '') {
+    //     this.views.forEach((item) => {
+    //       item.active = false;
+    //       item.hide = false;
+    //       if (item.text == 'Search') item.hide = true;
+    //       if (item.text == this.viewActive.text) item.active = true;
+    //     });
+    //     this.changeDetectorRef.detectChanges();
+    //   } else {
+        // this.views.forEach((item) => {
+        //   item.hide = true;
+        //   if (item.text == 'Search') item.hide = false;
+        // });
+        // this.changeDetectorRef.detectChanges();
+        // this.isSearch = true;
         //     this.pageNumberCliked= this.pageNumberDefault;
-        this.getHomeProcessSearch();
-      }
-    } catch (ex) {
-      this.changeDetectorRef.detectChanges();
-    }
+    //     this.getHomeProcessSearch();
+    //   }
+    // } catch (ex) {
+    //   this.changeDetectorRef.detectChanges();
+    // }
+   // this.view.dataService.searchText
+    this.view.dataService.search($event).subscribe();
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD
@@ -297,12 +327,8 @@ export class ProcessesComponent
           option
         );
         this.dialog.closed.subscribe((e) => {
-          console.log(e);
           if (e && e.event != null) {
-            e?.event.forEach((obj) => {
-              this.view.dataService.update(obj).subscribe();
-            });
-
+            this.view.dataService.update(e).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -351,58 +377,6 @@ export class ProcessesComponent
     opt.data = itemSelected.recID;
     return true;
   }
-  //#endregion
-
-  //#region event
-  click(evt: ButtonModel) {
-    this.titleAction = evt.text;
-    switch (evt.id) {
-      case 'btnAdd':
-        this.add();
-        break;
-    }
-  }
-
-  receiveMF(e: any) {
-    this.clickMF(e.e, e.data);
-  }
-
-  clickMF(e: any, data?: any) {
-    this.itemSelected = data;
-    this.titleAction = e.text;
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-      case 'BPT106':
-        this.properties(data);
-        break;
-      case 'BPT101':
-        this.viewDetailProcessSteps(e?.data, data);
-        break;
-      case 'BPT102':
-        this.reName(data);
-        break;
-      case 'BPT103': // gán tạm cập nhật phiên bản
-        //this.revisions(e.data, data);
-        this.Updaterevisions(data);
-        break;
-      case 'BPT104':
-        this.permission(data);
-        break;
-      case 'BPT105':
-        this.share(data);
-    }
-  }
 
   properties(data?: any) {
     let option = new SidebarModel();
@@ -411,8 +385,11 @@ export class ProcessesComponent
     option.Width = '550px';
     // let data = {} as any;
     // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(PropertiesComponent, data, option);
+    // data.id = data.recID;
+    this.dialog = this.callfc.openSide(PropertiesComponent, data, option);
+    this.dialog.closed.subscribe((e) => {
+      if (!e.event) this.view.dataService.clear();
+    });
   }
 
   reName(data) {
@@ -437,17 +414,18 @@ export class ProcessesComponent
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
           [this.titleAction],
-          option,
+          option
         );
-       this.dialog.closed.subscribe(e=>{
-          if(e?.event && e?.event != null){
-            this.view.dataService.clear();
-            this.view.dataService.update(e?.event).subscribe();
-            this.detectorRef.detectChanges();
-          }
-       }
-
-       );
+        this.dialog.closed
+          .subscribe
+          //(e) => {
+          // if (e?.event && e?.event != null) {
+          //   this.view.dataService.clear();
+          //   this.view.dataService.update(e?.event).subscribe();
+          //   this.detectorRef.detectChanges();
+          // }
+          //}
+          ();
       });
   }
   revisions(more, data) {
@@ -459,12 +437,13 @@ export class ProcessesComponent
       RevisionsComponent,
       '',
       500,
-      350,
+      400,
       '',
       obj
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
         this.detectorRef.detectChanges();
       }
@@ -472,16 +451,41 @@ export class ProcessesComponent
   }
 
   permission(data) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    data.id = data.recID;
-    this.callfc.openSide(
-      PopupAddPermissionComponent,
-      [this.titleAction, data, false],
-      option
-    );
+    if (this.moreFunc == 'BPT104') {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, false],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    } else if (this.moreFunc == 'BPT105') {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfc.openSide(
+        PopupAddPermissionComponent,
+        [this.titleAction, data, true],
+        option
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (e?.event && e?.event != null) {
+          this.view.dataService.clear();
+          this.view.dataService.update(e?.event).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
+    }
   }
 
   roles(e: any) {
@@ -503,20 +507,65 @@ export class ProcessesComponent
         }
       });
   }
+  //#endregion
 
-  share(data) {
-    let option = new SidebarModel();
-    option.DataService = this.view?.dataService;
-    option.FormModel = this.view?.formModel;
-    option.Width = '550px';
-    // let data = {} as any;
-    // data.title = this.titleUpdateFolder;
-    data.id = data.recID;
-    this.callfc.openSide(
-      PopupAddPermissionComponent,
-      [this.titleAction, data, true],
-      option
-    );
+  //#region event
+  click(evt: ButtonModel) {
+    this.titleAction = evt.text;
+    switch (evt.id) {
+      case 'btnAdd':
+        this.add();
+        break;
+    }
+  }
+
+  receiveMF(e: any) {
+    this.clickMF(e.e, e.data);
+  }
+
+  clickMF(e: any, data?: any) {
+    this.itemSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    switch (e.functionID) {
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+      case 'BPT106':
+        this.properties(data);
+        break;
+      case 'BPT101':
+        this.viewDetailProcessSteps(e?.data, data);
+        break;
+      case 'BPT102':
+        this.reName(data);
+        break;
+      case 'BPT107':
+        //this.revisions(e.data, data);
+        this.Updaterevisions(data);
+        break;
+      case 'BPT104':
+        this.permission(data);
+        break;
+      case 'BPT105':
+        this.permission(data);
+        break;
+      case 'BPT108':
+        this.roles(data);
+        break;
+      case 'BPT103':
+        this.revisions(e.data, data);
+        break;
+    }
   }
 
   valueChange(e) {
@@ -552,6 +601,24 @@ export class ProcessesComponent
     console.log(e);
   }
 
+  changeDataMF(e, data) {
+    console.log(e);
+    console.log(e);
+    if (e != null && data != null) {
+      e.forEach((res) => {
+        if (
+          res.functionID == 'SYS005' ||
+          res.functionID == 'SYS004' ||
+          res.functionID == 'SYS001' ||
+          res.functionID == 'SYS002' ||
+          res.functionID == 'SYS003'
+        ) {
+          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled = true;
+        }
+      });
+    }
+  }
+
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
@@ -566,16 +633,48 @@ export class ProcessesComponent
   //#endregion
 
   //tesst
-  viewDetailProcessSteps(e, data) {
-    this.bpService.viewProcesses.next(data);
+  viewDetailProcessSteps(moreFunc, data) {
+
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
-    let url = 'bp/processstep/BPT11';
-    this.codxService.navigate('', url, { processID: data.recID });
+    //đoi view
+    this.bpService.viewProcesses.next(data);
+    // let url = 'bp/processstep/BPT11';
+    // this.codxService.navigate('', url, { processID: data.recID });
+
+    //view popup
+    let obj ={
+      moreFunc : moreFunc,
+      data : data ,
+      formModel : this.view.formModel
+    }
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 900;
+    var dialog = this.callfc.openForm(
+      PopupViewDetailProcessesComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
   }
 
   approval($event) {}
+  //tesst
+  getFlowchart(data) {
+    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
+      if (dt) {
+        let link = environment.urlUpload + '/' + dt?.pathDisk;
+        return link;
+      } else return '../assets/media/img/codx/default/card-default.svg';
+    });
+  }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {
@@ -589,4 +688,12 @@ export class ProcessesComponent
   //   var strTime = hours + ':' + minutes + ' ' + ampm;
   //   return strTime;
   // }
+
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null ) p.open();
+    } else p.close();
+  }
 }

@@ -1,6 +1,6 @@
 import { BP_Processes, BP_ProcessRevisions } from './../../models/BP_Processes.model';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef, CacheService, CallFuncService, AuthStore } from 'codx-core';
+import { DialogData, DialogRef, CacheService, CallFuncService, AuthStore, NotificationsService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -30,6 +30,7 @@ export class PopupAddProcessesComponent implements OnInit {
     private cache: CacheService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -71,9 +72,9 @@ export class PopupAddProcessesComponent implements OnInit {
       var versions = new BP_ProcessRevisions();
       this.process.versionNo = 'V0.0';
       versions.versionNo = this.process.versionNo;
-      versions.comment = 'Phiên bản đầu';
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
+      versions.activedOn = this.process.activedOn;
       this.revisions.push(versions) ;
       this.process.versions = this.revisions;
       data = [this.process];
@@ -109,6 +110,29 @@ export class PopupAddProcessesComponent implements OnInit {
     });
   }
   async onSave() {
+    if (
+      this.process.processName == null ||
+      this.process.processName.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ProcessName']?.headerText + '"'
+      );
+      return;
+    }
+    if (
+      this.process.owner == null ||
+      this.process.owner.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
+
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -163,18 +187,9 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
   }
   fileAdded(e) {}
-  openShare(share: any, isOpen) {
-    if (isOpen == true) {
-      // this.listCombobox = {
-      //   U: 'Users',
-      // };
-      this.listName = 'Users';
-      this.fieldValue = 'owner';
-      this.callfc.openForm(share, '', 420, window.innerHeight);
-    }
-  }
 
-  valueCbx(e, fieldValue) {
+
+  valueCbx(e) {
   }
   //#endregion event
 }

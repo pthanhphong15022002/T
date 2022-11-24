@@ -43,7 +43,7 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
   pagedistance: any = 0;
   activePage = 1;
   arrayPaging = [];
-  hideN = false;
+  hideN = true;
   page = 1;
 
   //template
@@ -77,7 +77,6 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         if (this.funcID) this.getGridViewSetup();
       });
     if (!this.tempMenu) this.getGridViewSetup();
-    this.searchText();
   }
   ngOnChanges(changes: SimpleChanges): void {}
   getGridViewSetup() {

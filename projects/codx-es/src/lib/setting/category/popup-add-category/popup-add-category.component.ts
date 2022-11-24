@@ -184,6 +184,17 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                 });
               }
               console.log(this.data);
+              this.esService
+                .getAutoNumber(this.data.autoNumber)
+                .subscribe((res) => {
+                  if (res != null) {
+                    this.autoNumber = res;
+                    if (res.autoNoCode != null) {
+                      this.setViewAutoNumber(this.autoNumber);
+                      this.isAddAutoNumber = false;
+                    }
+                  }
+                });
               this.cr.detectChanges();
             }
           }
@@ -211,7 +222,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       });
 
       //get Autonumber
-      this.esService.getAutoNumber(this.data.categoryID).subscribe((res) => {
+      this.esService.getAutoNumber(this.data.autoNumber).subscribe((res) => {
         if (res != null) {
           this.autoNumber = res;
           if (res.autoNoCode != null) {
@@ -385,23 +396,52 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;
     }
-    let popupAutoNum = this.cfService.openForm(
-      PopupAddAutoNumberComponent,
-      '',
-      550,
-      (screen.width * 40) / 100,
-      '',
-      {
-        formModel: this.dialog.formModel,
-        autoNoCode: this.data.categoryID,
-        description: this.formModel?.entityName,
-      }
-    );
-    popupAutoNum.closed.subscribe((res) => {
-      if (res?.event) {
-        this.setViewAutoNumber(res.event);
-      }
-    });
+    if (this.data.autoNumber != this.data.categoryID) {
+      //save new autoNumber
+      let popupAutoNum = this.cfService.openForm(
+        PopupAddAutoNumberComponent,
+        '',
+        550,
+        (screen.width * 40) / 100,
+        '',
+        {
+          formModel: this.dialog.formModel,
+          autoNoCode: this.data.autoNumber,
+          description: this.formModel?.entityName,
+          newAutoNoCode: this.data.categoryID,
+          isSaveNew: '1',
+        }
+      );
+      popupAutoNum.closed.subscribe((res) => {
+        if (res?.event) {
+          this.setViewAutoNumber(res.event);
+          this.data.autoNumber = this.data.categoryID;
+          this.form.formGroup.patchValue({ autoNumber: this.data.autoNumber });
+        }
+      });
+    } else {
+      //cap
+      let popupAutoNum = this.cfService.openForm(
+        PopupAddAutoNumberComponent,
+        '',
+        550,
+        (screen.width * 40) / 100,
+        '',
+        {
+          formModel: this.dialog.formModel,
+          autoNoCode: this.data.categoryID,
+
+          description: this.formModel?.entityName,
+        }
+      );
+      popupAutoNum.closed.subscribe((res) => {
+        if (res?.event) {
+          this.setViewAutoNumber(res.event);
+          this.data.autoNumber = this.data.categoryID;
+          this.form.formGroup.patchValue({ autoNumber: this.data.autoNumber });
+        }
+      });
+    }
   }
 
   openPopupApproval() {

@@ -34,8 +34,7 @@
         </codx-label>
       </div>
       <codx-input type="datetime" [crrValue]="startTime" format="t" placeholder="timefrom"
-        (valueChange)="valueStartTimeChange($event)"
-        >
+        (valueChange)="valueStartTimeChange($event)">
       </codx-input>
     </div>
     <div class="col-3">
@@ -44,12 +43,12 @@
         </codx-label>
       </div>
       <codx-input type="datetime" [crrValue]="endTime" format="t" placeholder="timefrom"
-        (valueChange)="valueEndTimeChange($event)" >
+        (valueChange)="valueEndTimeChange($event)">
       </codx-input>
     </div>
     <div class="col-2 mt-6">
       <codx-input #checkbox type="checkbox" name="checkbox" label="Cả ngày" labelPosition="After"
-        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay" >
+        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
       </codx-input>
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
@@ -71,7 +70,8 @@
         data?.status | vll: "VL003":"text" | async
         }}</span> -->
     </div>
-    <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields' [placeholder]="'Địa điểm'" (valueChange)="cbxChange($event)"></ejs-combobox>
+    <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields'
+      [placeholder]="'Địa điểm'" (valueChange)="cbxChange($event)"></ejs-combobox>
 
   </div>
   <div class="form-group">
@@ -194,13 +194,13 @@
 <ng-template #tabResources>
   <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
     <div class="d-flex align-items-center">
-    <ng-container *ngFor="let item of listRoles">
-      <div class="d-flex align-items-center ms-2">
-        <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
-        <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
-      </div>
-    </ng-container>
-  </div>
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center ms-2">
+          <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+          <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+        </div>
+      </ng-container>
+    </div>
 
     <codx-input type="Share" refValue="TM003" field="resources" (valueChange)="eventApply($event)" [dataShared]="[]"
       multiple="true" [showInput]="false">
@@ -218,37 +218,44 @@
       </codx-label>
     </div>
   </div>
-  <ng-container *ngFor="let item of resources">
-    <div class="d-flex py-2 border-bottom justify-content-between list-title">
-      <div class="d-flex align-items-top">
-        <div class="me-3" style="position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
-          placement="right" #p="ngbPopover" (mouseenter)="showPopover(p, item.resourceID)" autoClose="outside">
-          <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
-          </codx-img>
-          <div style="position: absolute; right: 0px; bottom: 0px">
-            <ng-container *ngFor="let role of listRoles">
-              <ng-container *ngIf="role.value == item.roleType">
-                <span inlineSVG="./assets/themes/co/default/img/{{ role.icon }}"></span>
+  <ng-container *ngFor="let item of resources; index as i;">
+    <div class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
+      <div class="d-flex py-2 border-bottom justify-content-between list-title ">
+        <div class="d-flex align-items-top">
+          <div class="me-3" style="position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
+            placement="right" #p="ngbPopover" (mouseenter)="showPopover(p, item.resourceID)" autoClose="outside">
+            <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
+            </codx-img>
+            <div style="position: absolute; right: 0px; bottom: 0px">
+              <ng-container *ngFor="let role of listRoles">
+                <ng-container *ngIf="role.value == item.roleType">
+                  <span inlineSVG="./assets/themes/co/default/img/{{ role.icon }}"></span>
+                </ng-container>
               </ng-container>
-            </ng-container>
+            </div>
           </div>
-        </div>
-        <div class="d-flex flex-column me-2">
-          <div class="text-dark fw-bold fs-6">
-            {{ item.resourceName }}
+          <div class="d-flex flex-column me-2">
+            <div class="text-dark fw-bold fs-6">
+              {{ item.resourceName }}
+            </div>
+            <div class="text-gray-700">{{ item.positionName }}</div>
           </div>
-          <div class="text-gray-700">{{ item.positionName }}</div>
         </div>
       </div>
-      <div>
-        <a style="cursor: pointer">
+
+      <ng-container>
+        <div class="d-flex align-items-start">
           <div class="d-flex align-item-center">
             <codx-input type="checkbox" name="taskControl" class="check-sys d-block text-right" ngDefaultControl
               field="taskControl" (valueChange)="valueCbx(item.resourceID, $event)" [crrValue]="item.taskControl">
             </codx-input>
           </div>
-        </a>
-      </div>
+          <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+            (click)="onDeleteUser(i)">
+            <i class="icon-close text-danger icon-16"></i>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-template>
@@ -261,7 +268,8 @@
           <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở trước cuộc họp(phút)">
           </codx-label>
         </div>
-        <codx-input type="text" name="reminder" field="reminder" (valueChange)="valueChange($event)" [crrValue]="meeting.reminder"></codx-input>
+        <codx-input type="text" name="reminder" field="reminder" (valueChange)="valueChange($event)"
+          [crrValue]="meeting.reminder"></codx-input>
       </div>
 
     </div>

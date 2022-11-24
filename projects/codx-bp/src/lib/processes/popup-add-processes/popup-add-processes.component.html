@@ -1,5 +1,5 @@
-<codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer" [data]="process"
-  [dialog]="dialog" #form>
+<codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer"
+  [data]="process" [dialog]="dialog" [openMore]="true" #form>
   <ng-template #body>
     <div class="form-group">
       <div>
@@ -29,27 +29,23 @@
           </div>
         </div>
         <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="owner" [dataShared]="[]"
-          [showInput]="false">
+          [showInput]="false" multiple="false">
         </codx-input>
       </div>
       <div class="d-flex flex-wrap">
         <div class="">
-            <codx-img class="flex symbol-40px" [objectId]="process.owner" objectType="AD_Users">
-            </codx-img>
+          <codx-img class="flex symbol-40px" [objectId]="process.owner" objectType="AD_Users">
+          </codx-img>
         </div>
 
       </div>
     </div>
-    <div class="form-group">
-      <div class="col-md-6">
-        <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
-        </codx-label>
-
-      <codx-input type="combobox" refValue="ProcessGroups" field="groupID" [crrValue]="process.groupID"
-        (valueChange)="valueChange($event)" [multiple]="false" loadFull="true"
-        [placeholder]="gridViewSetup?.GroupID?.headerText">
+    <div class="form-group col-md-4">
+      <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
+      </codx-label>
+      <codx-input field="groupID" [crrValue]="process.groupID" [formModel]="form.formModel" [refValue]="gridViewSetup['GroupID']['referedValue']"
+        type="combobox" (valueChange)="valueChange($event)">
       </codx-input>
-    </div>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -91,6 +87,8 @@
         </codx-attachment>
       </div>
     </ng-container>
+
+
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
@@ -108,10 +106,4 @@
 
 <ng-template #subHeader>
   <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"></codx-tag>
-</ng-template>
-
-<ng-template #controlShare let-dialogShare>
-  <codx-share [listName]="listName" [field]="fieldValue" [dataShare]="[]" [dialog]="dialogShare" [multiple]="false"
-    (eventApply)="valueCbx($event, fieldValue)">
-  </codx-share>
 </ng-template>

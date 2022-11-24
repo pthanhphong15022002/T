@@ -11,7 +11,8 @@ export class OkrToolbarComponent implements OnInit {
 
   button?: ButtonModel;
   @Output() click = new EventEmitter<string>();
-
+  date = new Date();
+  ops = ['m','q','y'];
   constructor() { }
 
   ngOnInit(): void {
@@ -22,5 +23,9 @@ export class OkrToolbarComponent implements OnInit {
   buttonClick(event:any)
   {
     this.click.emit(event);
+  }
+  changeCalendar(event:any)
+  {
+    debugger;
   }
 }

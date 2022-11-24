@@ -76,6 +76,7 @@ export class ViewDetailComponent implements OnInit {
   dataReferences: any = [];
   vllRefType: string = 'TM018';
   isAfterRender: boolean = false;
+  gridViewSetup: any = {};
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
@@ -84,11 +85,27 @@ export class ViewDetailComponent implements OnInit {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
-      this.initForm();
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gv) => {
+          if (gv) this.gridViewSetup = gv;
+          console.log(this.gridViewSetup);
+
+          this.initForm();
+        });
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) this.formModel = formModel;
-        this.initForm();
+        if (formModel) {
+          this.formModel = formModel;
+          this.cache
+            .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+            .subscribe((gv) => {
+              if (gv) this.gridViewSetup = gv;
+              console.log(this.gridViewSetup);
+
+              this.initForm();
+            });
+        }
       });
     }
   }
@@ -409,9 +426,15 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
-      dialogAdd.closed.subscribe((res) => {
-        if (!res.event) {
-          this.esService.deleteStepByTransID(res.recID).subscribe();
+      dialogAdd.closed.subscribe((x) => {
+        if (x.event) {
+          if (x.event?.approved) {
+            this.view.dataService.add(x.event.data, 0).subscribe();
+          } else {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
         }
       });
     });

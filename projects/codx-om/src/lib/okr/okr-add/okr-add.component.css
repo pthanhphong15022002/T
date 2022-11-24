@@ -45,3 +45,24 @@
     height: calc(100% - 145px);
 }
 .om-select { font-family: 'FontAwesome', Verdana }
+.w-15
+{
+    width: 15%;
+}
+.om-input-vll
+{
+    margin-bottom: 2px;
+}
+.om-input-vll .e-input-group , .om-input-vll .e-input-group:active
+{
+    border: none;
+    border-bottom: 1px solid #d8dbdd ;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    
+}
+.om-input-vll .e-input-group:active
+{
+    border-bottom: 1px solid #9ACCFF !important;
+}
+

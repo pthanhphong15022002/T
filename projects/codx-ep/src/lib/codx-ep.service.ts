@@ -178,6 +178,16 @@ export class CodxEpService {
       .subscribe();
   }
 
+  getParams(formName, fieldName) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetOneField',
+      [formName, null, fieldName]
+    );
+  }
+
   getStationeryGroup() {
     return this.api.execSv(
       'EP',
@@ -187,6 +197,7 @@ export class CodxEpService {
       []
     );
   }
+
   getResourceByID(resourceID) {
     return this.api.execSv(
       'EP',
@@ -194,6 +205,16 @@ export class CodxEpService {
       'ResourcesBusiness',
       'GetResourceAsync',
       [resourceID]
+    );
+  }
+
+  getWarehousesOwner(warehouseID: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'WarehousesBusiness',
+      'GetWarehousesOwnerAsync',
+      [warehouseID]
     );
   }
 
@@ -252,6 +273,15 @@ export class CodxEpService {
       'EP',
       'BookingsBusiness',
       'GetBookingByIDAsync',
+      recID
+    );
+  }
+
+  getBookingByRefID(recID: string) {
+    return this.api.exec(
+      'EP',
+      'BookingsBusiness',
+      'GetBookingByRefIDAsync',
       recID
     );
   }
@@ -316,20 +346,6 @@ export class CodxEpService {
         '"' + gridViewSetup[fieldName].headerText + '"'
       );
     }
-  }
-
-  execEP(
-    className: string,
-    methodName: string,
-    data: any = null,
-    uploadFiles: UploadFile[] = null
-  ) {
-    return this.api.exec<any>(
-      APICONSTANT.ASSEMBLY.EP,
-      className,
-      methodName,
-      data
-    );
   }
 
   //#region File
@@ -405,6 +421,17 @@ export class CodxEpService {
       [entityName]
     );
   }
+
+  getApprovalTransByTransID(booking: any) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetApprovalTransByTransIDAsync',
+      [booking.recID]
+    );
+  }
+
   getAvailableResources(
     resourceType: string,
     startDate: string,
@@ -439,47 +466,6 @@ export class CodxEpService {
   //#endregion
 
   //#region EmailTemplate
-  public lstTmpEmail = [];
-  deleteEmailTemplate(): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'DeleteEmailTemplateAsync',
-      [this.lstTmpEmail]
-    );
-  }
-
-  getEmailTemplate(templateID: string): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'GetViewEmailTemplateAsyncLogic',
-      templateID
-    );
-  }
-
-  addEmailTemplate(data: any, sendTo: any): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'AddEmaiTemplateAsync',
-      [data, sendTo]
-    );
-  }
-
-  editEmailTemplate(data: any, sendTo: any): Observable<any> {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.AD',
-      'EmailTemplatesBusiness',
-      'EditEmaiTemplateAsync',
-      [data, sendTo]
-    );
-  }
-
   createMeeting(
     meetingUrl,
     meetingTitle,

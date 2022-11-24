@@ -9,42 +9,27 @@
                     default="Soạn thảo văn bản">
                 </codx-label>
             </div>
-            <div class="bg-gray-200 rounded-1 p-1 d-flex align-items-center" 
-                (click)="openFormShare(controlShare)">
-                <img *ngIf="shareIcon" class="w-15px ms-1" 
-                    src="assets/themes/sys/default/img/{{dVLL[shareControl]?.icon}}" />
-                <span class="fw-bold text-gray-700 fs-7 ms-2">{{dVLL[shareControl]?.text}}</span>
-                <i class="icon-arrow_drop_down icon-16 text-dark"></i>
-            </div>
-            <div class="ms-2 position-relative">
-                <span class="fs-6" [innerHTML]="shareWith" (click)="showListShare(shareControl)"></span>
-                <ng-container *ngIf="isShowTemplateShare">
-                      <div class="position-absolute tmpshare w-250px">
-                        <div class="d-flex justify-content-between">
-                          <codx-label class="fw-bolder text-dark" 
-                            [formModel]="dialogRef.formModel" 
-                            name="lblListShare"
-                            default="Danh sách người được chia sẻ">
-                          </codx-label>
-                          <span class="ms-2" (click)="closeListShare()">
-                            <i class="icon-close"></i>
-                          </span>
-                        </div>
-                        <div class="tmpshare-body">
-                            <ng-container *ngFor="let item of permissions">
-                                <div class="d-flex align-items-center mb-3">
-                                    <codx-img 
-                                        class="me-3" 
-                                        [width]="30" 
-                                        [imageType]="'circle'" 
-                                        [objectId]="item.objectID"
-                                        objectType="AD_Users">
-                                    </codx-img>
-                                    <span class="fw-bolder">{{ item.objectName }}</span>
-                                </div>
-                            </ng-container>
-                        </div>
-                      </div>
+            <div class="d-flex align-items-center justify-content-start ">
+                <ng-container *ngIf="data.shareControl">
+                    <div (click)="openFormShare(controlShare)" class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                        <codx-vll 
+                            [name]="'WP001'" 
+                            [value]="data.shareControl" 
+                            [showText]="true" 
+                            [showIcon]="true" 
+                            [path]="'assets/themes/sys/default/img/'"
+                            [icoCss]="'symbol-12px symbol-circle'"  
+                            [showBgColor]="true">
+                        </codx-vll>
+                        <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="data.shareName">
+                    <div class="ms-2">
+                        <ng-container
+                            *ngTemplateOutlet="templateShares; context: { $implicit: data }">
+                        </ng-container>
+                    </div>
                 </ng-container>
             </div>
         </div>
@@ -269,7 +254,7 @@
                         <div class="w-100">
                             <ng-container *ngIf="fileVideo; else defaultVideo ">
                                 <video controls class="w-100 h-300px">
-                                    <source [src]="fileVideo.srcVideo" alt="" />
+                                    <source [src]="fileVideo.data" alt="" />
                                 </video>
                             </ng-container>
                         </div>
@@ -311,3 +296,33 @@
         </button>
     </div>
 </ng-template>
+<ng-template #templateShares let-post>
+    <div ngbDropdown class="symbol-more">
+        <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="cursor-pointer" [innerHTML]="post.shareName"></span>
+        </div>
+        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <div class="py-2">
+                <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
+            </div>
+            <div class="hr-list-employee">
+                <ng-container *ngFor="let permisison of post.permissions">
+                    <ng-container *ngIf="permisison.memberType == '2'">
+                    <div class="d-flex align-items-center mt-3">
+                        <codx-img 
+                            [objectId]="permisison.objectID" 
+                            [objectType]="'AD_Users'" 
+                            [cssClass]="'me-3'"
+                            [objectName]="permisison.objectName" 
+                            [width]="30">
+                        </codx-img>
+                        <span class="ms-2 fs-6">{{permisison.objectName}}</span>
+                    </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+

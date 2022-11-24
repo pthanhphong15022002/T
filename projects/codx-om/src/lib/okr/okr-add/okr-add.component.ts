@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, Optional, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { DialogRef , DialogData, ApiHttpService} from 'codx-core';
+import { DialogRef , DialogData, ApiHttpService, NotificationsService} from 'codx-core';
 import { take } from 'rxjs';
 
 @Component({
@@ -17,11 +17,14 @@ export class OkrAddComponent implements OnInit {
 
   dialog:any;
   formModel: any;
-  okrForm: FormGroup
+  okrForm: FormGroup;
+  date = new Date();
+  ops = ['m','q','y'];
   constructor(
     private api: ApiHttpService,
     private ref: ChangeDetectorRef,
     private fb: FormBuilder,
+    private notifySvr: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) 
@@ -61,30 +64,44 @@ export class OkrAddComponent implements OnInit {
   }
   addKRForm(i:any)
   {
-    var text = "okrFormArray."+i+".targets";
+    var text = "okrFormArray."+i+".child";
     const repocontributors = this.okrForm.get(text);
     (repocontributors as FormArray).push(this.newKRs());
   }
   save()
   {
-    this.api.execSv("OM","OM","OKRBusiness","SaveOMAsync",this.okrForm.value.okrFormArray).subscribe();
-    var a = this.okrForm.value
-
+    this.api.execSv("OM","OM","OKRBusiness","SaveOMAsync",[this.okrForm.value.okrFormArray]).subscribe(item=>{
+      if(item) 
+      {
+        this.notifySvr.notifyCode("SYS006");
+        this.dialog.close(item);
+      }
+    });
   }
   newOKRs(): FormGroup {
     return this.fb.group({
       okrName: '',
       confidence:'',
-      targets: this.fb.array([]) ,
+      okrLevel : "1",
+      okrType: "O",
+      child: this.fb.array([]) ,
     })
   }
   newKRs(): FormGroup {
     return this.fb.group({
-      comment: '',
-      target: null ,
+      okrName: '',
+      target: 0 ,
+      okrLevel : "1",
+      okrType: "R",
+      umid:''
     })
   }
   getTargets(form:any){
-    return form.controls.targets.controls;
+    return form.controls.child.controls;
+  }
+
+  changeCalendar(event:any)
+  {
+    debugger;
   }
 }

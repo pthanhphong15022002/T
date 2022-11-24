@@ -1,4 +1,12 @@
-<ng-container #itemTemplate>
+<codx-views
+  #view
+  [funcID]="funcID"
+  [views]="views"
+  [autoLoad]="false"
+  [viewActiveType]="viewType.content"
+  (onLoading)="onLoading($event)"
+></codx-views>
+<ng-template #itemTemplate>
   <div class="page-add-survey" style="overflow: none">
     <div class="d-flex w-100">
       <div class="d-flex flex-column">
@@ -212,29 +220,65 @@
         <ng-container #moreFC *ngIf="questions && questions.length > 0">
           <div class="moreFC rounded-4">
             <div class="icon-MF" (click)="clickMF('LTN01')">
-              <span class="icon-add_circle_outline icon-24"></span>
+              <span
+                class="icon-add_circle_outline icon-24"
+                ngbPopover="Thêm câu hỏi"
+                triggers="mouseenter:mouseleave"
+                placement="right"
+                [autoClose]="'outside'"
+              ></span>
             </div>
             <div class="icon-MF" (click)="clickMF('LTN02')">
-              <span class="icon-input icon-24"></span>
+              <span
+                class="icon-input icon-24"
+                ngbPopover="Nhập câu hỏi"
+                triggers="mouseenter:mouseleave"
+                placement="right"
+                [autoClose]="'outside'"
+              ></span>
             </div>
             <div class="icon-MF" (click)="clickMF('LTN03')">
-              <span class="icon-format_size icon-24"></span>
+              <span
+                class="icon-format_size icon-24"
+                ngbPopover="Thêm tiêu đề và mô tả"
+                triggers="mouseenter:mouseleave"
+                placement="right"
+                [autoClose]="'outside'"
+              ></span>
             </div>
             <div class="icon-MF" (click)="clickMF('LTN04', ATM_Image)">
-              <span class="icon-image icon-24"> </span>
+              <span
+                class="icon-image icon-24"
+                ngbPopover="Thêm hình ảnh"
+                triggers="mouseenter:mouseleave"
+                placement="right"
+                [autoClose]="'outside'"
+              ></span>
             </div>
             <div class="icon-MF" (click)="clickMF('LTN05')">
-              <span class="icon-video_library icon-24"></span>
+              <span
+                class="icon-video_library icon-24"
+                ngbPopover="Thêm video"
+                triggers="mouseenter:mouseleave"
+                placement="right"
+                [autoClose]="'outside'"
+              ></span>
             </div>
             <div class="icon-MF" (click)="clickMF('LTN06')">
-              <span class="icon-calendar_today icon-dns icon-24"></span>
+              <span
+                class="icon-calendar_today icon-dns icon-24"
+                ngbPopover="Thêm phần"
+                triggers="mouseenter:mouseleave"
+                placement="right"
+                [autoClose]="'outside'"
+              ></span>
             </div>
           </div>
         </ng-container>
       </div>
     </div>
   </div>
-</ng-container>
+</ng-template>
 <ng-template
   #templateQuestionMF
   let-seqNoSession="seqNoSession"
@@ -661,7 +705,7 @@
           </ejs-inplaceeditor>
         </div>
       </div>
-      <div class="form-group question">
+      <div class="form-group question" *ngIf="itemQuestion.hideComment">
         <div class="title-des">
           <ejs-inplaceeditor
             #inplaceCommentEditor
@@ -1029,7 +1073,7 @@
       <ng-container *ngFor="let data of lstEditIV">
         <div class="col-5 my-2 m-w-100">
           <div class="w-150 position-relative">
-            <div class="d-flex align-items-center icon-MF-image">
+            <div class="d-flex align-items-center icon-MF-image-outside">
               <div ngbDropdown class="dropdown" container="body">
                 <a
                   href="javascript:void(0)"
@@ -1070,7 +1114,7 @@
                   </li>
                   <li>
                     <a
-                      (click)="uploadFile('image', 'change')"
+                      (click)="popupUploadFile('image', 'change')"
                       ngbDropdownItem
                       href="javascript:void(0)"
                     >
@@ -1083,7 +1127,7 @@
                   </li>
                   <li>
                     <a
-                      (click)="deleteFile()"
+                      (click)="deleteFile(seqNoSession, data.objectID)"
                       ngbDropdownItem
                       href="javascript:void(0)"
                     >
@@ -1117,7 +1161,7 @@
               </ng-template>
             </ng-container>
             <ng-container *ngIf="data.referType == REFER_TYPE.VIDEO">
-              <div>
+              <div class="test-videoooooo">
                 <video #video controls class="w-100 rounded h-auto">
                   <source [src]="data?.srcVideo" type="video/mp4" />
                 </video>
@@ -1248,6 +1292,18 @@
                     <codx-label
                       fiedName="deleteSession"
                       default="Xóa phần"
+                    ></codx-label>
+                  </a>
+                </li>
+                <li *ngIf="itemSession.seqNo >= 1">
+                  <a
+                    (click)="mergeSession(itemSession.seqNo)"
+                    ngbDropdownItem
+                    href="javascript:void(0)"
+                  >
+                    <codx-label
+                      fiedName="mergeSession"
+                      default="Hợp nhất với phần trên"
                     ></codx-label>
                   </a>
                 </li>

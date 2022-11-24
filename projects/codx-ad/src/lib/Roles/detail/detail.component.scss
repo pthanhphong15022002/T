@@ -16,8 +16,23 @@
   padding-right: 13rem !important;
 }
 
-a.align-items-center.active {
-  background-color: #3699ff;
+.roledetail a.menu-item {
+  padding: 5px;
+  border-radius: 4px !important;
+}
+
+.roledetail a.menu-item:hover {
+  cursor: pointer;
+  background-color: var(--gray-100);
+}
+
+.roledetail a.menu-item.active {
+  background-color: var(--gray-200);
+}
+
+.rounded-top-ad {
+  border-top-left-radius: 0.475rem !important;
+  border-top-right-radius: 0.475rem !important;
 }
 
 // thead,
@@ -30,3 +45,18 @@ a.align-items-center.active {
 //   overflow-y: auto; /* Trigger vertical scroll    */
 //   overflow-x: hidden; /* Hide the horizontal scroll */
 // }
+
+.detail-scroll {
+  height: calc(100vh - 185px);
+  overflow: auto;
+}
+
+.roledetail .nav-tabs .nav-link {
+  border: 0 !important;
+  border-bottom: 2px transparent solid !important;
+  padding-bottom: 8px !important;
+}
+
+.roledetail .nav-tabs .nav-link.active {
+  border-bottom-color: var(--primary) !important;
+}

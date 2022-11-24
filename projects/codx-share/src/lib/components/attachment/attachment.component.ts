@@ -25,6 +25,7 @@ import {
   AuthStore,
   CacheService,
   CallFuncService,
+  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -105,6 +106,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   isCopyRight = 0;
   dataFolder: any;
   lstRawFile = [];
+
+  dataRequest = new DataRequest();
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;
@@ -127,12 +130,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() showMessage = '1';
   @Input() hideMoreF = '1';
   @Input() displayThumb: string;
+  @Input() category: string;
   ////////////////////////////////////////////////////
   @Input() fdID: any = ''; //Folder ID truyền vào
   @Input() fdName: any = ''; //Folder Name truyền vào
   @Input() parentID: any = ''; // FolderID của Cấp cha chứa thư mục
   /////////////////////////////////////////////////////
   @Input() isSaveSelected = '0'; // Lưu khi chọn select file 0: false , 1 : true
+
+  @Input() pageSize = 5;
+  @Input() heightScroll = 100;
+
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -378,9 +386,15 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.objectId != '' && this.objectId != undefined) {
-      this.fileService.getFileNyObjectID(this.objectId).subscribe((res) => {
+      this.dataRequest.page = 1;
+      this.dataRequest.pageSize = this.pageSize;
+      this.dataRequest.predicate = "ObjectID=@0 && IsDelete = false";
+      this.dataRequest.dataValue = this.objectId;
+      this.dataRequest.entityName = "DM_FileInfo";
+      this.dataRequest.funcID = "DMT02";
+      this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
         if (res) {
-          this.data = res;
+          this.data = res[0];
           this.fileGet.emit(this.data);
           this.changeDetectorRef.detectChanges();
         }
@@ -610,164 +624,172 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-    if (this.data == undefined) this.data = [];
+    try
+    {
+      if (this.data == undefined) this.data = [];
 
-    let total = this.fileUploadList.length;
-    //  var that = this;
-    await this.dmSV.getToken();
-    let ret = new Observable<any[]>();
-    for (var i = 0; i < total; i++) {
-      if (this.objectId) this.fileUploadList[i].objectID = this.objectId;
-      // await this.serviceAddFile(fileItem);
-      this.fileUploadList[i].avatar = null;
-      this.fileUploadList[i].data = '';
-      if (total > 1)
-        this.fileUploadList[i] = await this.addFileLargeLong(
-          this.fileUploadList[i],
-          false
-        );
-      // if (total > 1) {
-      //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
-      //     if (i == total -1)
-
-      //   });
-      // }
-    }
-
-    if (total > 1) {
-      return this.fileService
-        .addMultiFileObservable(
-          this.fileUploadList,
-          this.isDM,
-          this.fdID,
-          this.fdName,
-          this.parentID
-        )
-        .pipe(
-          map((res) => {
-            if (res != null) {
-              var newlist = res.filter((x) => x.status == 6);
-              var newlistNot = res.filter((x) => x.status == -1);
-              var addList = res.filter((x) => x.status == 0 || x.status == 9);
-
-              for (var i = 0; i < addList.length; i++) {
-                this.data.push(Object.assign({}, addList[i]));
-                this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
-              }
-
-              if (addList.length == this.fileUploadList.length) {
-                this.atSV.fileList.next(this.fileUploadList);
-                this.atSV.fileListAdded = addList;
-                if (this.showMessage == '1')
-                  this.notificationsService.notifyCode(
-                    'DM061',
-                    null,
-                    addList.length
-                  );
-                //this.closePopup();
-                this.fileUploadList = [];
-                return this.atSV.fileListAdded;
-              } else {
-                var item = newlist[0];
-                var newUploadList = [];
-                // copy list
-                for (var i = 0; i < this.fileUploadList.length; i++) {
-                  var file = this.fileUploadList[i];
-                  var index = newlist.findIndex(
-                    (x) => x.data.fileName == file.fileName
-                  );
-                  if (index > -1) {
-                    newUploadList.push(Object.assign({}, file));
+      let total = this.fileUploadList.length;
+      //  var that = this;
+      await this.dmSV.getToken();
+      let ret = new Observable<any[]>();
+      for (var i = 0; i < total; i++) {
+        if (this.objectId) this.fileUploadList[i].objectID = this.objectId;
+        // await this.serviceAddFile(fileItem);
+        this.fileUploadList[i].avatar = null;
+        this.fileUploadList[i].data = '';
+        if (total > 1)
+          this.fileUploadList[i] = await this.addFileLargeLong(
+            this.fileUploadList[i],
+            false
+          );
+        // if (total > 1) {
+        //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
+        //     if (i == total -1)
+  
+        //   });
+        // }
+      }
+  
+      if (total > 1) {
+        return this.fileService
+          .addMultiFileObservable(
+            this.fileUploadList,
+            this.isDM,
+            this.fdID,
+            this.fdName,
+            this.parentID
+          )
+          .pipe(
+            map((res) => {
+              if (res != null) {
+                var newlist = res.filter((x) => x.status == 6);
+                var newlistNot = res.filter((x) => x.status == -1);
+                var addList = res.filter((x) => x.status == 0 || x.status == 9);
+  
+                for (var i = 0; i < addList.length; i++) {
+                  this.data.push(Object.assign({}, addList[i]));
+                  this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
+                }
+  
+                if (addList.length == this.fileUploadList.length) {
+                  this.atSV.fileList.next(this.fileUploadList);
+                  this.atSV.fileListAdded = addList;
+                  if (this.showMessage == '1')
+                    this.notificationsService.notifyCode(
+                      'DM061',
+                      null,
+                      addList.length
+                    );
+                  //this.closePopup();
+                  this.fileUploadList = [];
+                  return this.atSV.fileListAdded;
+                } else {
+                  var item = newlist[0];
+                  var newUploadList = [];
+                  // copy list
+                  for (var i = 0; i < this.fileUploadList.length; i++) {
+                    var file = this.fileUploadList[i];
+                    var index = newlist.findIndex(
+                      (x) => x.data.fileName == file.fileName
+                    );
+                    if (index > -1) {
+                      newUploadList.push(Object.assign({}, file));
+                    }
+                  }
+                  if (newlistNot.length > 0) {
+                    this.notificationsService.notify(newlistNot[0].message);
+                    //this.closePopup();
+                    return this.atSV.fileListAdded; //this.data;
+                  } else {
+                    this.fileUploadList = newUploadList;
+                    var config = new AlertConfirmInputConfig();
+                    config.type = 'checkBox';
+                    return this.notificationsService
+                      .alert(this.titlemessage, item?.message, config)
+                      .closed.pipe(
+                        map((x) => {
+                          if (x.event.status == 'Y') {
+                            // save all
+                            if (x.event.data) {
+                              for (
+                                var i = 0;
+                                i < this.fileUploadList.length;
+                                i++
+                              ) {
+                                this.fileUploadList[i].reWrite = true;
+                              }
+                              this.fileService
+                                .addMultiFileObservable(
+                                  this.fileUploadList,
+                                  this.isDM,
+                                  this.fdID,
+                                  this.fdName,
+                                  this.parentID
+                                )
+                                .pipe()
+                                .subscribe((result) => {
+                                  var mess = '';
+                                  for (var i = 0; i < result.length; i++) {
+                                    var f = result[i];
+                                    mess =
+                                      mess +
+                                      (mess != '' ? '<br/>' : '') +
+                                      f.message;
+                                    this.atSV.fileListAdded.push(
+                                      Object.assign({}, result[i])
+                                    );
+                                  }
+                                  if (this.showMessage == '1')
+                                    this.notificationsService.notify(mess);
+                                  this.fileUploadList = [];
+                                  return this.atSV.fileListAdded; //this.data;
+                                  //this.closePopup();
+                                });
+                            } else {
+                              // save 1
+                              var index = this.fileUploadList.findIndex(
+                                (x) => x.fileName == item.data.fileName
+                              );
+                              this.fileUploadList[index].reWrite = true;
+                              this.onMultiFileSaveObservable();
+                            }
+                          } else if (x.event.status == 'N') {
+                            // cancel all
+                            if (x.event.data) {
+                              this.fileUploadList = [];
+                              return this.atSV.fileListAdded; //this.data;
+                              //this.closePopup();
+                            } else {
+                              // cancel 1
+                              var index = this.fileUploadList.findIndex(
+                                (x) => x.fileName == item.data.fileName
+                              );
+                              this.fileUploadList.splice(index, 1); //remove element from array
+                              if (this.fileUploadList.length > 0)
+                                this.onMultiFileSaveObservable();
+                            }
+                          }
+                        })
+                      );
                   }
                 }
-                if (newlistNot.length > 0) {
-                  this.notificationsService.notify(newlistNot[0].message);
-                  //this.closePopup();
-                  return this.atSV.fileListAdded; //this.data;
-                } else {
-                  this.fileUploadList = newUploadList;
-                  var config = new AlertConfirmInputConfig();
-                  config.type = 'checkBox';
-                  return this.notificationsService
-                    .alert(this.titlemessage, item?.message, config)
-                    .closed.pipe(
-                      map((x) => {
-                        if (x.event.status == 'Y') {
-                          // save all
-                          if (x.event.data) {
-                            for (
-                              var i = 0;
-                              i < this.fileUploadList.length;
-                              i++
-                            ) {
-                              this.fileUploadList[i].reWrite = true;
-                            }
-                            this.fileService
-                              .addMultiFileObservable(
-                                this.fileUploadList,
-                                this.isDM,
-                                this.fdID,
-                                this.fdName,
-                                this.parentID
-                              )
-                              .pipe()
-                              .subscribe((result) => {
-                                var mess = '';
-                                for (var i = 0; i < result.length; i++) {
-                                  var f = result[i];
-                                  mess =
-                                    mess +
-                                    (mess != '' ? '<br/>' : '') +
-                                    f.message;
-                                  this.atSV.fileListAdded.push(
-                                    Object.assign({}, result[i])
-                                  );
-                                }
-                                if (this.showMessage == '1')
-                                  this.notificationsService.notify(mess);
-                                this.fileUploadList = [];
-                                return this.atSV.fileListAdded; //this.data;
-                                //this.closePopup();
-                              });
-                          } else {
-                            // save 1
-                            var index = this.fileUploadList.findIndex(
-                              (x) => x.fileName == item.data.fileName
-                            );
-                            this.fileUploadList[index].reWrite = true;
-                            this.onMultiFileSaveObservable();
-                          }
-                        } else if (x.event.status == 'N') {
-                          // cancel all
-                          if (x.event.data) {
-                            this.fileUploadList = [];
-                            return this.atSV.fileListAdded; //this.data;
-                            //this.closePopup();
-                          } else {
-                            // cancel 1
-                            var index = this.fileUploadList.findIndex(
-                              (x) => x.fileName == item.data.fileName
-                            );
-                            this.fileUploadList.splice(index, 1); //remove element from array
-                            if (this.fileUploadList.length > 0)
-                              this.onMultiFileSaveObservable();
-                          }
-                        }
-                      })
-                    );
-                }
               }
-            }
-          })
-        );
-    } else if (total == 1) {
-      //return this.addFileLargeLong(this.fileUploadList[0]);
-      return this.addFileObservable(this.fileUploadList[0]);
-      // this.atSV.fileList.next(this.fileUploadList);
-    } else {
-      this.notificationsService.notify(this.title2);
+            })
+          );
+      } else if (total == 1) {
+        //return this.addFileLargeLong(this.fileUploadList[0]);
+        return this.addFileObservable(this.fileUploadList[0]);
+        // this.atSV.fileList.next(this.fileUploadList);
+      } else {
+        this.notificationsService.notify(this.title2);
+        return null;
+      }
+    }
+    catch(ex)
+    {
       return null;
     }
+    
   }
 
   testObservable() {
@@ -986,6 +1008,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
+      debugger;
       fileItem.uploadId = '';
       fileItem.objectID = this.objectId;
       var appName = environment.appName; // Tam thoi de hard
@@ -1025,106 +1048,115 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any[]> {
-    fileItem.uploadId = '';
-    fileItem.objectId = this.objectId;
-    fileItem.data = '';
-    var appName = environment.appName;
-    var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
-    var uploadFile = null;
-    if (!fileItem.item?.rawFile?.name)
-      uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
-    else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
-    var obj = from(
-      lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
-        Data: {
-          FileName: uploadFile?.name,
-          ChunkSizeInKB: ChunkSizeInKB,
-          FileSize: uploadFile?.size,
-          thumbSize: {
-            width: 200, //Kích thước của file ảnh Thum bề ngang
-            height: 200, //Kích thước của file ảnh Thum bề dọc
+    try
+    {
+      fileItem.uploadId = '';
+      fileItem.objectId = this.objectId;
+      fileItem.data = '';
+      var appName = environment.appName;
+      var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
+      var uploadFile = null;
+      if (!fileItem.item?.rawFile?.name)
+        uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
+      else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
+      var obj = from(
+        lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
+          Data: {
+            FileName: uploadFile?.name,
+            ChunkSizeInKB: ChunkSizeInKB,
+            FileSize: uploadFile?.size,
+            thumbSize: {
+              width: 200, //Kích thước của file ảnh Thum bề ngang
+              height: 200, //Kích thước của file ảnh Thum bề dọc
+            },
+            IsPublic: true,
+            ThumbConstraints: '30,60,120,300,500,600',
           },
-          IsPublic: true,
-          ThumbConstraints: '30,60,120,300,500,600',
-        },
-      })
-    );
-
-    var chunSizeInfBytes = ChunkSizeInKB * 1024;
-    var sizeInBytes = 0;
-    return obj.pipe(
-      mergeMap((retUpload, i) => {
-        // update len server urs và thumbnail
-        fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
-        fileItem.uploadId = retUpload.Data?.UploadId; //"";
-        fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
-
-        //this.displayThumbnail(res.recID, res.pathDisk);
-        var sizeInBytes = uploadFile?.size;
-        var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
-        if (uploadFile?.size % chunSizeInfBytes > 0) {
-          numOfChunks++;
-        }
-        //api/lv-docs/files/upload
-        for (var i = 0; i < numOfChunks; i++) {
-          var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
-          var end = start + chunSizeInfBytes; //Vị trí cuối
-          if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
-          var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
-          var fileChunk = new File([blogPart], uploadFile.name, {
-            type: uploadFile.type,
-          }); //Gói lại thành 1 file chunk để upload
-          try {
-            var uploadChunk = lvFileClientAPI.formPostWithToken(
-              `api/${appName}/files/upload`,
-              {
-                FilePart: fileChunk,
-                UploadId: retUpload.Data?.UploadId,
-                Index: i,
-              }
-            );
-            console.log(uploadChunk);
-          } catch (ex) {}
-        }
-        if (isAddFile)
-          return this.fileService
-            .addFileObservable(
-              fileItem,
-              this.isDM,
-              this.fdID,
-              this.fdName,
-              this.parentID
-            )
-            .pipe(
-              map((item) => {
-                if (item.status == 0) {
-                  if (this.showMessage == '1')
-                    this.notificationsService.notify(item.message);
-                  this.fileUploadList[0].recID = item.data.recID;
-                  this.atSV.fileListAdded.push(Object.assign({}, item));
-                  this.data.push(Object.assign({}, item));
-                  this.fileUploadList = [];
-                  return item;
-                } else if (item.status == 6) {
-                  // ghi đè
-                  fileItem.recID = item.data.recID;
-                  return this.rewriteFileObservable(
-                    this.titlemessage,
-                    item.message,
-                    fileItem
-                  );
-                } else {
-                  this.notificationsService.notify(item.message);
+        })
+      );
+  
+      var chunSizeInfBytes = ChunkSizeInKB * 1024;
+      var sizeInBytes = 0;
+      return obj.pipe(
+        mergeMap((retUpload, i) => {
+          if(!retUpload) return null;
+          // update len server urs và thumbnail
+          fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+          fileItem.uploadId = retUpload.Data?.UploadId; //"";
+          fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
+  
+          //this.displayThumbnail(res.recID, res.pathDisk);
+          var sizeInBytes = uploadFile?.size;
+          var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
+          if (uploadFile?.size % chunSizeInfBytes > 0) {
+            numOfChunks++;
+          }
+          //api/lv-docs/files/upload
+          for (var i = 0; i < numOfChunks; i++) {
+            var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
+            var end = start + chunSizeInfBytes; //Vị trí cuối
+            if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+            var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
+            var fileChunk = new File([blogPart], uploadFile.name, {
+              type: uploadFile.type,
+            }); //Gói lại thành 1 file chunk để upload
+            try {
+              var uploadChunk = lvFileClientAPI.formPostWithToken(
+                `api/${appName}/files/upload`,
+                {
+                  FilePart: fileChunk,
+                  UploadId: retUpload.Data?.UploadId,
+                  Index: i,
                 }
-                return null;
-              })
-            );
-        else {
-          if (index != -1) this.fileUploadList[index] = fileItem;
-          return null;
-        }
-      })
-    );
+              );
+              console.log(uploadChunk);
+            } catch (ex) {}
+          }
+          if (isAddFile)
+            return this.fileService
+              .addFileObservable(
+                fileItem,
+                this.isDM,
+                this.fdID,
+                this.fdName,
+                this.parentID
+              )
+              .pipe(
+                map((item) => {
+                  if (item.status == 0) {
+                    if (this.showMessage == '1')
+                      this.notificationsService.notify(item.message);
+                    this.fileUploadList[0].recID = item.data.recID;
+                    this.atSV.fileListAdded.push(Object.assign({}, item));
+                    this.data.push(Object.assign({}, item));
+                    this.fileUploadList = [];
+                    return item;
+                  } else if (item.status == 6) {
+                    // ghi đè
+                    fileItem.recID = item.data.recID;
+                    return this.rewriteFileObservable(
+                      this.titlemessage,
+                      item.message,
+                      fileItem
+                    );
+                  } else {
+                    this.notificationsService.notify(item.message);
+                  }
+                  return null;
+                })
+              );
+          else {
+            if (index != -1) this.fileUploadList[index] = fileItem;
+            return null;
+          }
+        })
+      );
+    }
+    catch(ex)
+    {
+      return null;
+    }
+    
   }
 
   rewriteFileObservable(
@@ -1422,7 +1454,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
       ''
     );
     dialog.closed.subscribe((item) => {
-      if (item.event) this.isCopyRight--;
+      if (item.event) 
+      {
+        var index = this.fileUploadList.findIndex(x=>x.recID == item.event.recID);
+        if(index >= 0) this.fileUploadList[index]=item.event;
+        this.isCopyRight--;
+      }
     });
   }
 
@@ -2936,25 +2973,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
         fileUpload.item = files[i];
         //fileUpload.folderId = this.folderId;
         fileUpload.folderID = this.dmSV.folderId.getValue();
-        //fileUpload.permissions = this.remotePermission;
-        //  if (this.parentFolder != null && this.parentFolder.permissions != null)
-        //    fileUpload.permissions = JSON.parse(JSON.stringify(this.parentFolder.permissions));//Object.assign({}, this.parentFolder.permissions);
-        // fileUpload = this.addEveryOnePermission(fileUpload);
+
+        if(this.category) fileUpload.category = this.category
+    
         fileUpload.permissions = this.addPermissionForRoot(
           fileUpload.permissions
         );
-        // if (this.remote) {
-        //   fileUpload.permissions = this.remotePermission;
-        // }
+     
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
     }
+
     this.fileAdded.emit({ data: this.fileUploadList });
-    //  this.fileCount.emit(data: addedList);
-    //tbchung thêm vào để xử lý bên import template
     this.filePrimitive.emit(files);
-    //////////////////////////////////
     this.fileCount.emit({ data: addedList });
     files = null;
 
@@ -2967,8 +2999,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
       }
     }
     this.isCopyRight = this.fileUploadList.length;
-    //  this.fileUploadList.next(this.fileUploadList);
-    // this.fileAdded.emit({ data: this.fileUploadList });
     this.changeDetectorRef.detectChanges();
     if (this.isSaveSelected == '1') {
       this.onMultiFileSave();
@@ -2988,5 +3018,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
   handleDelete(e: any) {
     this.fileDelete.emit(e);
+  }
+  scrollFile()
+  {
+    this.dataRequest.page += 1;
+    this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
+      if (res) {
+        this.data = this.data.concat(res[0]);
+      }
+    });
   }
 }

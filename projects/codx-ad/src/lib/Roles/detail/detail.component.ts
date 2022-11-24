@@ -65,6 +65,7 @@ export class RoleDetailComponent
   dataAdv: any = {};
   checkAll: any = {};
   selectIndex = 0;
+  objTemplate: any = {};
 
   @ViewChild('template') template: TemplateRef<any>;
 
@@ -121,13 +122,9 @@ export class RoleDetailComponent
 
   LoadAsside() {
     this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'FunctionListBusiness',
-        'GetModuleFunctionAsync',
-        [this.recid]
-      )
+      .execSv('SYS', 'SYS', 'FunctionListBusiness', 'GetModuleFunctionAsync', [
+        this.recid,
+      ])
       .subscribe((res: any) => {
         if (res) {
           var data = res;
@@ -144,6 +141,7 @@ export class RoleDetailComponent
     this.formName = item.formName;
     this.gridViewName = item.gridViewName;
     this.functionID = item.functionID;
+
     this.parent = item;
     this.tempService.roleName.next(item.customName);
     this.api
@@ -177,7 +175,7 @@ export class RoleDetailComponent
   valueChange(e, funcID) {
     if (e.field === 'selectAll') {
       var codxinput = document.querySelectorAll(
-        'codx-input[data-parent="' + funcID + '"]'
+        '.more codx-input[data-parent="' + funcID + '"]'
       );
       if (codxinput && codxinput.length > 0) {
         codxinput.forEach((element) => {

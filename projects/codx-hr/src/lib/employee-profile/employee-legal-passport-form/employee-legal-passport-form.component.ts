@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service'
 import { Injector } from '@angular/core';
 import { 
@@ -23,13 +24,17 @@ import {
 })
 export class EmployeeLegalPassportFormComponent extends UIComponent implements OnInit {
   formModel: FormModel;
+  formGroup: FormGroup;
   dialog: DialogRef;
   data;
   headerText;
   funcID;
   isAfterRender = false;
+
+  employId;
   @ViewChild('form') form: CodxFormComponent;
   onInit(): void {
+    this.initForm();
   }
 
   constructor(
@@ -41,15 +46,61 @@ export class EmployeeLegalPassportFormComponent extends UIComponent implements O
   ) {
     super(injector);
     this.dialog = dialog;
-    this.formModel = dialog?.formModel
+    // this.formModel = dialog?.formModel
     this.headerText = data?.data?.headerText;
-    if(this.formModel){
-      this.isAfterRender = true
+    if(!this.formModel){
+      this.formModel = new FormModel();
+      this.formModel.formName = 'EPassports';
+      this.formModel.entityName = 'HR_EPassports';
+      this.formModel.gridViewName = 'grvEPassports';
     }
+    
     this.funcID = this.dialog.formModel.funcID;
+    this.employId = data?.data?.employeeId;
+    console.log('employid', this.employId)
+    console.log('formmdel', this.formModel);
+    // this.data = dialog?.dataService?.dataSelected
    }
+   initForm() {
+    this.hrService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((item) => {
+        // this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
+        //   this.cache.setGridView(this.formModel.gridViewName, gridView);
+        //   this.cache
+        //     .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        //     .subscribe((gridViewSetup) => {
+        //       this.cache.setGridViewSetup(
+        //         this.formModel.formName,
+        //         this.formModel.gridViewName,
+        //         gridViewSetup
+        //       );
+        //     });
+        // });
+        this.formGroup = item;  
+        console.log('formgr test:', this.formGroup)  
+        this.hrService.getEmployeePassportInfo(this.employId).subscribe(p => {
+          console.log('thong tin ho chieu', p);
+          this.data = p;
+          this.formModel.currentData = this.data
+          // this.dialog.dataService.dataSelected = this.data
+          console.log('du lieu formmodel',this.formModel.currentData);
+          this.formGroup.patchValue(this.data)
+          
+          this.isAfterRender = true
+        })    
+      }); 
+  }
 
     onSaveForm(){
-
+      console.log('du lieu form', this.formGroup.value);
+      
+      this.hrService.updateEmployeePassportInfo(this.data).subscribe(p => {
+        if(p === "True"){
+          this.notify.notifyCode('SYS007')
+          this.dialog.close()
+        }
+        else this.notify.notifyCode('DM034')
+      });
    }
 }

@@ -1,0 +1,747 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [data]="invoices"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+>
+<!-- [subToolbar]="subToolbar" -->
+  <ng-template #body>
+    <div class="card-add">
+      <ejs-tab id="element">
+        <e-tabitems>
+          <!-- Tab thông tin hóa đơn -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="tabBasic"
+                default="Thông tin hóa đơn"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+            </ng-template>
+          </e-tabitem>
+          <!-- Tab thông tin mở rộng -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="tabBasic"
+                default="Thông tin mở rộng"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabExtend"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+      <ejs-tab id="element">
+        <e-tabitems>
+          <!-- Tab Hàng hóa/dịch vụ -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="good/services"
+                default="Hàng hóa/dịch vụ"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <ng-container *ngTemplateOutlet="tabGood"></ng-container>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+      <ejs-tab id="element">
+        <e-tabitems>
+          <!-- Diễn giải -->
+          <e-tabitem>
+            <ng-template #headerText>
+              <codx-label
+                [formModel]="form.formModel"
+                fiedName="good/services"
+                default="Hàng hóa/dịch vụ"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <div class="form-group mb-0 row">
+                <div class="col-10">
+                  <div class="form-group mb-0 row">
+                    <div class="col-3">
+                      <div class="form-group mb-0 pt-1">
+                        <codx-label
+                          fiedName="memo"
+                          [formModel]="form.formModel"
+                          default="Diễn giải"
+                        >
+                        </codx-label>
+                        <codx-input
+                          field="memo"
+                          [formModel]="form.formModel"
+                          [Group]="form.formGroup"
+                        >
+                        </codx-input>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </ng-template>
+  <ng-template #subToolbar>
+    <button class="btn btn-md btn-warning">Lưu & đóng</button>
+
+    <button class="btn btn-md btn-danger">Lưu</button>
+  </ng-template>
+</codx-form>
+
+<!--Template Tab thông tin hóa đơn -->
+<ng-template #tabBasic>
+  <div class="form-group mb-0 row">
+    <div class="col-10">
+      <div class="form-group mb-0 row">
+        <!-- Mã số thuế -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="taxCode"
+              [formModel]="form.formModel"
+              default="Mã số thuế"
+            >
+            </codx-label>
+            <codx-input
+              field="taxCode"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="mstChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Tên khách hàng -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="custName"
+              [formModel]="form.formModel"
+              default="Tên khách hàng"
+            >
+            </codx-label>
+            <codx-input
+              field="custName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Địa chỉ -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="adddess"
+              [formModel]="form.formModel"
+              default="Địa chỉ"
+            >
+            </codx-label>
+            <codx-input
+              field="adddess"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-group mb-0 row justify-content-end">
+        <!-- Mẫu số -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="invoiceForm"
+              [formModel]="form.formModel"
+              default="Mẫu số"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceForm"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Số seri -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="invoiceSeriNo"
+              [formModel]="form.formModel"
+              default="Số seri"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceSeriNo"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group mb-0 row">
+    <div class="col-10">
+      <div class="form-group mb-0 row">
+        <!-- Tên người mua hàng -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="contact"
+              [formModel]="form.formModel"
+              default="Tên người mua hàng"
+            >
+            </codx-label>
+            <codx-input
+              field="contact"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Điện thoại -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="phone"
+              [formModel]="form.formModel"
+              default="Điện thoại"
+            >
+            </codx-label>
+            <codx-input
+              field="phone"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- email -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="email"
+              [formModel]="form.formModel"
+              default="Email"
+            >
+            </codx-label>
+            <codx-input
+              field="email"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-group mb-0 row justify-content-end">
+        <!-- Số hóa đơn -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="invoiceNo"
+              [formModel]="form.formModel"
+              default="Số hóa đơn"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceNo"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Ngày hóa đơn -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="invoiceDate"
+              [formModel]="form.formModel"
+              default="Ngày hóa đơn"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceDate"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group mb-0 row">
+    <div class="col-10">
+      <div class="form-group mb-0 row">
+        <!-- Hình thức thanh toán -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="pmtMethodID"
+              [formModel]="form.formModel"
+              default="Hình thức thanh toán"
+            >
+            </codx-label>
+            <codx-input
+              field="pmtMethodID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Số tài khoản -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="bankAccount"
+              [formModel]="form.formModel"
+              default="Số tài khoản"
+            >
+            </codx-label>
+            <codx-input
+              field="bankAccount"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Tên ngân hàng -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="bankName"
+              [formModel]="form.formModel"
+              default="Tên ngân hàng"
+            >
+            </codx-label>
+            <codx-input
+              field="bankName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-2">
+      <div class="form-group mb-0 row justify-content-end">
+        <!-- Tiền tệ -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="currencyID"
+              [formModel]="form.formModel"
+              default="Tiền tệ"
+            >
+            </codx-label>
+            <codx-input
+              field="currencyID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Tỷ giá -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="exchangeRate"
+              [formModel]="form.formModel"
+              default="Tỷ giá"
+            >
+            </codx-label>
+            <codx-input
+              field="exchangeRate"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!--Template Tab thông tin mở rộng -->
+<ng-template #tabExtend>
+  <div class="form-group mb-0 row">
+    <div class="col-10">
+      <div class="form-group mb-0 row">
+        <!-- Loại hóa đơn -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="invoiceType"
+              [formModel]="form.formModel"
+              default="Loại hóa đơn"
+            >
+            </codx-label>
+            <codx-input
+              field="invoiceType"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Mã tra cứu -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="eInvoiceNo"
+              [formModel]="form.formModel"
+              default="Mã tra cứu"
+            >
+            </codx-label>
+            <codx-input
+              field="eInvoiceNo"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Mã cơ quan thuế -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="eInvoiceID"
+              [formModel]="form.formModel"
+              default="Địa chỉ"
+            >
+            </codx-label>
+            <codx-input
+              field="eInvoiceID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group mb-0 row">
+    <div class="col-10">
+      <div class="form-group mb-0 row">
+        <!--Số tham chiếu -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="refNo"
+              [formModel]="form.formModel"
+              default="Số tham chiếu"
+            >
+            </codx-label>
+            <codx-input
+              field="refNo"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <!-- Ngày tham chiếu -->
+        <div class="col-3">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="refDate"
+              [formModel]="form.formModel"
+              default="Ngày tham chiếu"
+            >
+            </codx-label>
+            <codx-input
+              field="refDate"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group mb-0 row">
+    <div class="col-10">
+      <div class="form-group mb-0 row">
+        <!-- Ghi chú -->
+        <div class="col-6">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="refNote"
+              [formModel]="form.formModel"
+              default="Ghi chú"
+            >
+            </codx-label>
+            <codx-input
+              field="refNote"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Template Tab Hàng hóa/dịch vụ -->
+<ng-template #tabGood>
+  <ejs-grid
+    #grid
+    [editSettings]="editSettings"
+    [dataSource]="data"
+    [height]="300"
+    (rowSelected)="getSelected($event)"
+    (keyPressed)="keyPressed($event)"
+    (cellEdit)="cellEdit($event)"
+    (cellSelecting)="cellSelecting($event)"
+    (cellSelected)="cellSelected($event)"
+    (actionComplete)="actionComplete($event)"
+  >
+    <e-columns>
+      <e-column
+        field="no"
+        headerText="STT"
+        textAlign="Right"
+        width="50"
+        [isPrimaryKey]="true"
+      ></e-column>
+      <e-column
+        field="itemDesc"
+        headerText="Tên sản phẩm"
+        width="200"
+      ></e-column>
+      <e-column
+        field="umid"
+        headerText="Đơn vị tính"
+        textAlign="Right"
+        width="100"
+      >
+      </e-column>
+      <e-column
+        field="quantity"
+        headerText="Số lượng"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="salesPrice"
+        headerText="Đơn giá"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="salesAmt"
+        headerText="Thành tiền"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="vatid"
+        headerText="Thuế suất (%)"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="vatAmt"
+        headerText="Thuế GTGT"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="totalAmt"
+        headerText="Thành tiền sau thuế"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="lineType"
+        headerText="Loại mặt hàng"
+        textAlign="Right"
+        width="100"
+      ></e-column>
+      <e-column
+        field="note"
+        headerText="Ghi chú"
+        textAlign="Right"
+        width="200"
+      ></e-column>
+      <!-- <e-column
+        field="action"
+        headerText=""
+        textAlign="Right"
+        width="50"
+        isPrimaryKey="true"
+      ></e-column> -->
+    </e-columns>
+    <ng-template #editSettingsTemplate let-data>
+      <ng-container
+        *ngTemplateOutlet="editTemplate; context: { $implicit: data }"
+      ></ng-container>
+    </ng-template>
+  </ejs-grid>
+</ng-template>
+
+<!-- UMID template -->
+
+<!-- Edit Gird template -->
+<ng-template #editTemplate let-data>
+  <div [formGroup]="fgGoods">
+    <table class="e-table e-inline-edit" cellspacing="0.25">
+      <colgroup>
+        <col style="width: 50px" />
+        <col style="width: 200px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 100px" />
+        <col style="width: 200px" />
+        <!-- <col style="width: 50px" /> -->
+      </colgroup>
+      <tbody>
+        <tr>
+          <td style="text-align: right" class="e-rowcell">
+            <div class="e-input-group">
+              <input
+                class="e-input e-field"
+                [value]="data.no"
+                required
+                [attr.disabled]="!data.isAdd ? '' : null"
+                name="no"
+                type="text"
+                style="text-align: right"
+              />
+            </div>
+          </td>
+          <td class="e-rowcell">
+            <div class="e-input-group">
+              <codx-input
+                field="itemDesc"
+                formControlName="itemDesc"
+                [formModel]="form.formModel"
+                [Group]="fgGoods"
+                (valueChange)="onChangedValue($event, data)"
+              >
+              </codx-input>
+            </div>
+          </td>
+          <td style="text-align: right" class="e-rowcell">
+            <codx-input
+              class="e-input e-field"
+              name="umid"
+              field="UMID"
+              [formModel]="fmGoods"
+              [Group]="fgGoods"
+              (valueChange)="onChangedValue($event, data)"
+            >
+            </codx-input>
+          </td>
+          <td style="text-align: right" class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="quantity"
+              name="quantity"
+              type="number"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="salesPrice"
+              name="salesPrice"
+              type="number"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="salesAmt"
+              name="salesAmt"
+              type="number"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="vatid"
+              name="vatid"
+              type="number"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="vatAmt"
+              name="vatAmt"
+              type="number"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="totalAmt"
+              name="totalAmt"
+              type="number"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="lineType"
+              name="lineType"
+              type="text"
+            />
+          </td>
+          <td class="e-rowcell">
+            <input
+              class="e-input e-field"
+              formControlName="note"
+              name="note"
+              type="text"
+            />
+          </td>
+          <!-- <td class="e-rowcell">
+            <button class="btn btn-sm">Xóa</button>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</ng-template>

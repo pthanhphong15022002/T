@@ -1,14 +1,15 @@
 <codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
-    <div class="row">
+    <div class="row" style="height: 100% !important;">
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
         <div class="user-mini-nav">
-          <div *ngIf="process.permissions != null && process.permissions.length != null">
+          <div *ngIf="process != null && process?.permissions != null">
             <ng-container *ngFor="let perm of process?.permissions; index as i;">
-              <div (click)="changePermission(i)"  [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
+              <div (click)="changePermission(i)"
+                [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
-                <div class="d-flex align-items-center w-100">
-                  <div class="symbol symbol-30 symbol-circle me-3">
+                <div class="d-flex py-2 border-bottom justify-content-between list-title">
+                  <div class="d-flex align-items-top">
                     <div *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
                     </div>
                     <ng-template #thenAvatar1>
@@ -18,14 +19,33 @@
                       </codx-temp-full>
                     </ng-template>
                     <ng-template #elsethenAvatar1>
-                      <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                        imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
-                        [title]="perm.objectName">
-                      </codx-temp-full>
+                      <div class="me-3 d-flex align-items-center" popoverClass="userPopoverClass"
+                        [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
+                        (mouseenter)="showPopover(p, perm.objectID)" autoClose="outside">
+                        <div class="d-flex align-items-center" >
+                          <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
+                          </codx-img>
+                          <div  style="position: absolute; left: 58px;">
+                            <ng-container *ngFor="let role of listRoles">
+                              <ng-container *ngIf="role.value == perm.nemberType">
+                                <span inlineSVG="./assets/themes/bp/default/img/{{ role.icon }}"></span>
+                              </ng-container>
+                            </ng-container>
+                          </div>
+                        </div>
+                        <div style="margin-left: 20px;">
+                          <div class="text-dark fw-bold fs-6">
+                            {{ perm.objectName }}
+                          </div>
+                          <div *ngIf="perm.autoCreate" class="text-gray-700">{{ autoName }}</div>
+                        </div>
+                      </div>
+
                     </ng-template>
                   </div>
+
                 </div>
-                <ng-container>
+                <ng-container *ngIf="checkAssignRemove(i)">
                   <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
                     (click)="removeUser(i)">
                     <i class="icon-close text-danger icon-16"></i>
@@ -35,11 +55,20 @@
             </ng-container>
           </div>
         </div>
-        <div class="add-user" >
+        <div class="add-user d-flex justify-content-between">
+          <div class="d-flex justify-content-between">
+            <ng-container *ngFor="let item of listRoles">
+              <div class="d-flex align-items-center ms-3">
+                <span inlineSVG="./assets/themes/bp/default/img/{{ item.icon }}"></span>
+                <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+              </div>
+            </ng-container>
+          </div>
+
           <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-              (valueChange)="changUsers($event)">
+            (valueChange)="changUsers($event)">
           </codx-input>
-      </div>
+        </div>
       </div>
       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
         <div class="role-right">
@@ -53,17 +82,17 @@
                   <codx-label [default]="'Mô tả'" [fiedName]="'titleDescription'"></codx-label>
                 </th>
                 <th scope="col">
-                  <codx-label [default]="'Allow'" [fiedName]="'titleAllow'"></codx-label>
+                  <codx-label [default]="'Cho phép'" [fiedName]="'titleAllow'"></codx-label>
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Full Control'" [fiedName]="'Full'"></codx-label>
+                  <codx-label [default]="'Toàn quyền'" [fiedName]="'Full'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Người dùng có tất cả quyền trên folder/file'" [fiedName]="'DescriptionFull'">
+                  <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [fiedName]="'DescriptionFull'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -73,7 +102,7 @@
                   </codx-input>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Tạo thư mục'" [fiedName]="'Create'"></codx-label>
                 </td>
@@ -85,22 +114,24 @@
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
                   </codx-input>
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'View'" [fiedName]="'Read'"></codx-label>
+                  <codx-label [default]="'Xem'" [fiedName]="'Read'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xem chi tiết folder/file'" [fiedName]="'DescriptionRead'">
+                  <codx-label [default]="'Cho phép xem chi tiết quy trình'" [fiedName]="'DescriptionRead'">
                   </codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="read" field="read"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')">
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')"
+                    >
                   </codx-input>
+
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Chỉnh sửa'" [fiedName]="'Update'"></codx-label>
                 </td>
@@ -113,8 +144,8 @@
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'update')">
                   </codx-input>
                 </td>
-              </tr>
-              <tr>
+              </tr> -->
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Xóa'" [fiedName]="'Delete'"></codx-label>
                 </td>
@@ -126,13 +157,13 @@
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'delete')">
                   </codx-input>
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Chia sẻ'" [fiedName]="'Share'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chia sẻ folder/file'" [fiedName]="'DescriptionShare'"></codx-label>
+                  <codx-label [default]="'Cho phép chia sẻ qui trình'" [fiedName]="'DescriptionShare'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
@@ -142,7 +173,7 @@
               </tr>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Chia sẻ quyền'" [fiedName]="'Assign'"></codx-label>
+                  <codx-label [default]="'Phân quyền'" [fiedName]="'Assign'"></codx-label>
                 </td>
                 <td>
                   <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [fiedName]="'DescriptionAssign'">
@@ -154,7 +185,7 @@
                   </codx-input>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Upload'" [fiedName]="'Upload'"></codx-label>
                 </td>
@@ -166,13 +197,13 @@
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'upload')">
                   </codx-input>
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Download'" [fiedName]="'Download'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép upload file'" [fiedName]="'DescriptionDownload'"></codx-label>
+                  <codx-label [default]="'Cho phép download file'" [fiedName]="'DescriptionDownload'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
@@ -191,3 +222,16 @@
   </ng-template>
 
 </codx-form>
+
+
+<ng-template #popoverSelectRoles>
+  <div class="d-flex flex-column">
+    <ng-container *ngFor="let item of listRoles">
+      <div class="d-flex align-items-center btn btn-sm btn-white mb-1"
+        (click)="selectRoseType(idUserSelected, item.value)" style="cursor: pointer">
+        <span inlineSVG="./assets/themes/bp/default/img/{{ item.icon }}"></span>
+        <div class="fs-7 text-gray-800 ms-2">{{ item.text }}</div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

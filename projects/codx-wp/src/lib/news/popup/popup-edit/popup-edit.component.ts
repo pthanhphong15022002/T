@@ -1,9 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DialogRef, ViewsComponent, ApiHttpService, AuthService, NotificationsService, CallFuncService, CacheService, DialogData, Util } from 'codx-core';
-import moment from 'moment';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
+import { DialogRef, ApiHttpService, AuthService, NotificationsService, CallFuncService, CacheService, DialogData, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { WP_Comments } from '../../../models/WP_Comments.model';
+import { environment } from 'src/environments/environment';
 import { WP_News } from '../../../models/WP_News.model';
 
 @Component({
@@ -17,14 +15,16 @@ export class PopupEditComponent implements OnInit {
   objectID = '';
   dialogData: any;
   dialogRef: DialogRef;
-  data: any;
-  permissions:any[] = [];
+  data: WP_News;
   fileUpload: any[] = [];
   fileImage: any = null;
   fileVideo: any = null;
   shareWith: String = "";
   mssgCodeNoty:any = null;
   headerText:string ="";
+  files:any[] = [];
+  fileDelete:any[] = [];
+  extensions: "image" | "video" = "video";
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -64,7 +64,8 @@ export class PopupEditComponent implements OnInit {
     CANCELLED:"6"
   }
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
-  @ViewChild('codxAttm') codxAttm: AttachmentComponent;
+  @ViewChild('codxATM') codxATM: AttachmentComponent;
+  @ViewChild('viewVideo') video: AttachmentComponent;
 
   constructor(
     private api: ApiHttpService,
@@ -85,10 +86,44 @@ export class PopupEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getFileByObjectID(this.data.recID);
   }
 
   ngAfterViewInit(): void {
   }
+
+  getFileByObjectID(objectID:string) {
+    if(objectID)
+    {
+      this.api
+      .execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesByIbjectIDAsync',
+        [objectID])
+        .subscribe((files: any[]) => 
+        {
+          if (files.length > 0) 
+          {
+            files.forEach((f: any) => {
+              f["source"] = `${environment.urlUpload}`+"/"+f.url; 
+              if(f.referType == this.FILE_REFERTYPE.IMAGE )
+              {
+                  this.fileImage = f; 
+              }
+              if(f.referType == this.FILE_REFERTYPE.VIDEO )
+              {
+                  this.fileVideo = f;
+              }
+            });
+            this.files = JSON.parse(JSON.stringify(files));
+            this.changedt.detectChanges();
+          }
+      });
+    }
+  }
+
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
@@ -139,7 +174,7 @@ export class PopupEditComponent implements OnInit {
     post.allowShare = this.data.allowShare;
     post.createPost = this.data.createPost;
     post.contents = this.data.contents;
-    post.permissions = this.permissions;
+    post.permissions = this.data.permissions;
     this.api
       .execSv(
         'WP',
@@ -148,17 +183,19 @@ export class PopupEditComponent implements OnInit {
         'UpdatePostAsync',
         [post]
       )
-      .subscribe(async (res: any) => {
-        if (res) {
+      .subscribe(async (res: any) => 
+      {
+        if (res) 
+        {
           this.data = res;
-          if (this.fileUpload.length > 0) { //check thay đổi file
-            this.deleteFileByObjectID(this.data.recID);
-            this.codxAttm.objectId = this.data.recID;
-            this.codxAttm.fileUploadList = this.fileUpload;
-            (await (this.codxAttm.saveFilesObservable())).subscribe((res2: any) => {
+          if (this.fileUpload.length > 0) //check thay đổi file
+          { 
+            this.deleteFileByObjectID(this.fileDelete);
+            this.codxATM.objectId = this.data.recID;
+            this.codxATM.fileUploadList = this.fileUpload;
+            (await (this.codxATM.saveFilesObservable())).subscribe((res2: any) => {
               if (res2) 
               {
-                this.notifSV.notifyCode('SYS007');
                 this.dialogRef.close(this.data);
               }
             });
@@ -167,6 +204,10 @@ export class PopupEditComponent implements OnInit {
           {
             this.dialogRef.close(this.data);
           }
+        }
+        else
+        {
+          this.notifSV.notifyCode("SYS021");
         }
       });
   }
@@ -220,19 +261,22 @@ export class PopupEditComponent implements OnInit {
       });
     
   }
-  deleteFileByObjectID(recID: string) {
-    if (recID) {
+  deleteFileByObjectID(lstFileID: string[]) {
+    if (lstFileID.length > 0) 
+    {
+      debugger
       this.api.execSv(
         "DM",
         "ERM.Business.DM",
         "FileBussiness",
-        "DeleteByObjectIDAsync",
-        [recID, 'WP_Comments', true]).subscribe();
+        "DeleteFilesAsync",
+        [lstFileID])
+        .subscribe();
     }
   }
 
   valueChange(event: any) {
-    if(event?.field && event?.data){
+    if(event?.field){
       let field = event.field;
       let value = event.data;
       switch(field){
@@ -251,7 +295,7 @@ export class PopupEditComponent implements OnInit {
         case "Subject":
           this.data.subject = value;
           break;
-        case "subContent":
+        case "SubContent":
           this.data.subContent = value;
           break;
         case "AllowShare":
@@ -295,82 +339,74 @@ export class PopupEditComponent implements OnInit {
         case this.SHARECONTROLS.USER:
           data.forEach((x: any) => {
             let p = {
-              ObjectType : x.objectType,
-              ObjectID : x.id,
-              ObjectName : x.text,
-              MemberType : this.MEMBERTYPE.SHARE
+              memberType : this.MEMBERTYPE.SHARE,
+              objectType : x.objectType,
+              objectID : x.id,
+              objectName : x.text
             }
             permissions.push(p);
           });
           if (data.length > 1) {
             this.cache.message('WP002').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,data[0].objectName);
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1,data[0].objectName);
+                this.data.permissions = permissions;  
+              }
             });
           }
           else {
             this.cache.message('WP001').subscribe((mssg: any) => {
               if (mssg)
-                this.shareWith = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+              {
+                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+                this.data.permissions = permissions;  
+              }
             });
           } 
           break;
         default: 
       }
-      this.permissions = permissions;  
       this.changedt.detectChanges();
     }
   }
-  addFiles(file: any) {
-    if (file && file.data.length > 0) {
-      file.data.map(f => {
-        if (f.mimeType.indexOf("image") >= 0) {
-          f['referType'] = this.FILE_REFERTYPE.IMAGE;
-        }
-        else if (f.mimeType.indexOf("video") >= 0) {
-          f['referType'] = this.FILE_REFERTYPE.VIDEO;
-        }
-        else {
-          f['referType'] = this.FILE_REFERTYPE.APPLICATION;
-        }
-      });
-      this.fileUpload = file.data;
-      this.changedt.detectChanges();
-    }
-  }
-  addImage(files: any) {
+  addFile(files: any) 
+  {
     if (files && files.data.length > 0) {
       let file = files.data[0];
-      if (file.mimeType.indexOf("image") >= 0) {
-        file['referType'] = this.FILE_REFERTYPE.IMAGE;
-        this.fileImage = file;
-        this.fileUpload.push(file);
-        this.changedt.detectChanges();
+      if(this.extensions === 'image') // file image
+      {
+        if (file.mimeType.includes("image")) 
+        {
+          file['referType'] = this.FILE_REFERTYPE.IMAGE;
+          this.fileUpload.push(file);
+          this.fileDelete.push(this.fileImage.recID);
+          this.fileImage = {...file};
+          this.changedt.detectChanges();
+        }
+        else this.notifSV.notify("Vui lòng chọn file image.");
       }
-      else this.notifSV.notify("Vui lòng chọn file image.");
+      else if(this.extensions === "video") // file video
+      {
+        if(file.mimeType.includes("video")) 
+        {
+          file['referType'] = this.FILE_REFERTYPE.VIDEO;
+          this.fileUpload.push(file);
+          this.fileDelete.push(this.fileVideo.recID);
+          this.fileVideo = {...file};
+          this.changedt.detectChanges();
+        }
+        else this.notifSV.notify("Vui lòng chọn file video.");
+      }
     }
   }
-  addVideo(files: any) {
-    if (files && files.data.length > 0) {
-      let file = files.data[0];
-      if (file.mimeType.indexOf("video") >= 0) {
-        file['referType'] = this.FILE_REFERTYPE.VIDEO;
-        this.fileVideo = file;
-        this.fileUpload.push(file);
-        this.changedt.detectChanges();
-      }
-      else {
-        this.notifSV.notify("Vui lòng chọn file video.");
-      }
-    }
+  clickUploadFile(extensions:string = "image") 
+  {
+    this.extensions = extensions === "image" ? "image" : "video";  
+    this.codxATM.uploadFile();
   }
+
   clickClosePopup() {
     this.dialogRef.close();
   }
-
-
-  clickUploadFile() {
-    this.codxAttm.uploadFile();
-  }
-
 }

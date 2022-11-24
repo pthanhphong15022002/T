@@ -22,6 +22,7 @@ import {
   CallFuncService,
   DialogModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -33,6 +34,9 @@ import { PopupUploadComponent } from '../popup-upload/popup-upload.component';
 import { Observable, Subscription } from 'rxjs';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { environment } from 'src/environments/environment';
+import { TemplateSurveyOtherComponent } from '../template-survey-other.component/template-survey-other.component';
+import { PopupQuestionOtherComponent } from '../template-survey-other.component/popup-question-other/popup-question-other.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-add-survey',
@@ -93,18 +97,23 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   lstEditIV: any = new Array();
   recID: any;
   children: any = new Array();
+  views: Array<ViewModel> = [];
+  viewType = ViewType;
+  itemActive: any;
+  indexSessionA = 0;
+  indexQuestionA = 0;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
+  @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   src: any;
   constructor(
     inject: Injector,
     private change: ChangeDetectorRef,
     private SVServices: CodxSvService,
     private notification: NotificationsService,
-    private call: CallFuncService
+    private sanitizer: DomSanitizer
   ) {
     super(inject);
-
     this.formats = {
       item: 'Title',
       fontStyle: 'Arial',
@@ -112,16 +121,14 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       fontColor: 'black',
       fontFormat: 'B',
     };
-    this.router.params.subscribe((params) => {
-      if (params) this.funcID = params['funcID'];
-    });
     this.router.queryParams.subscribe((queryParams) => {
+      if (queryParams?.funcID) this.funcID = queryParams.funcID;
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
         this.loadData();
       }
     });
-    this.cache.functionList('SVT01').subscribe((res) => {
+    this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
     });
   }
@@ -143,15 +150,30 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     // });
   }
 
-  ngAfterViewInit() {
-    var html = document.querySelector('codx-wrapper');
-    if (html) {
-      html.addEventListener('scroll', (e) => {
-        var htmlMF = document.querySelector('.moreFC');
-        if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
-      });
+  onLoading(e) {
+    if (this.view.formModel) {
+      this.views = [
+        {
+          active: true,
+          type: ViewType.content,
+          sameData: true,
+          model: {
+            panelLeftRef: this.panelLeftRef,
+          },
+        },
+      ];
+      this.change.detectChanges();
+      var html = document.querySelector('codx-wrapper');
+      if (html) {
+        html.addEventListener('scroll', (e) => {
+          var htmlMF = document.querySelector('.moreFC');
+          if (htmlMF) htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
+        });
+      }
     }
   }
+
+  ngAfterViewInit() {}
 
   loadData() {
     this.questions = null;
@@ -285,17 +307,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
         answer: `Tùy chọn 1`,
       },
     ];
-    this.questionAdd.transID = this.recID;
-    this.questionAdd.seqNo = 6;
-    this.questionAdd.category = 'S';
-    this.questionAdd.question = 'Câu hỏi session 3';
+    this.questionAdd.transID = '88079007-543c-11ed-a633-e454e8b52262';
+    this.questionAdd.seqNo = 0;
+    this.questionAdd.category = 'Q';
+    this.questionAdd.question = 'Ngày giờ buổi?';
     this.questionAdd.answers = dataAnswerTemp;
     this.questionAdd.answerType = 'O';
-    this.questionAdd.parentID = 'a32f2b10-5e76-11ed-a637-e454e8b52262';
+    this.questionAdd.parentID = '9c4c9095-6a06-11ed-a643-e454e8b52262';
 
     this.api
       .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
-        this.recID,
+        '88079007-543c-11ed-a633-e454e8b52262',
         this.questionAdd,
         true,
       ])
@@ -305,7 +327,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       });
   }
 
-  itemActive: any;
   clickToScroll(seqNoSession = null, recIDQuestion = null, category = null) {
     let recID = 0;
     let id = 'card-survey';
@@ -322,8 +343,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     this.activeCard(seqNoSession, recIDQuestion, category);
   }
 
-  indexSessionA = 0;
-  indexQuestionA = 0;
   activeCard(seqNoSession, recIDQuestion, category) {
     this.indexSessionA = seqNoSession;
     this.questions.forEach((x) => {
@@ -400,6 +419,21 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     if (category == 'S') this.deleteSession(seqNoSession);
     else this.deleteNoSession(seqNoSession, seqNoQuestion);
     console.log('check delete card', this.questions);
+  }
+
+  mergeSession(seqNoSession) {
+    if (this.questions[seqNoSession].children.length == 0)
+      this.questions.splice(seqNoSession, 1);
+    else {
+      var dataChildren = this.questions[seqNoSession].children;
+      this.questions[seqNoSession - 1].children =
+        this.questions[seqNoSession - 1].children.concat(dataChildren);
+      this.questions[seqNoSession - 1].children.forEach((x, index) => {
+        x.seqNo = index;
+      });
+      this.questions.splice(seqNoSession, 1);
+    }
+    console.log('check mergeSession', this.questions);
   }
 
   deleteSession(seqNoSession) {
@@ -497,15 +531,16 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
           this.addCard(this.itemActive, this.indexSessionA, 'Q');
           break;
         case 'LTN02':
+          this.addQuestionOther();
           break;
         case 'LTN03':
           this.addCard(this.itemActive, this.indexSessionA, 'T');
           break;
         case 'LTN04':
-          this.uploadFile('image', 'upload');
+          this.popupUploadFile('image', 'upload');
           break;
         case 'LTN05':
-          this.uploadFile('video', 'upload');
+          this.popupUploadFile('video', 'upload');
           break;
         case 'LTN06':
           this.addCard(this.itemActive, this.indexSessionA, 'S');
@@ -514,7 +549,127 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
-  uploadFile(typeFile, modeFile) {
+  addQuestionOther() {
+    var option = new DialogModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    var dialog = this.callfc.openForm(
+      TemplateSurveyOtherComponent,
+      '',
+      1000,
+      700,
+      '',
+      '',
+      '',
+      option
+    );
+    dialog.closed.subscribe((res) => {
+      if (res.event) {
+        var dataQuestion = new Array();
+        if (res.event.recID == this.recID) dataQuestion = this.questions;
+        else {
+          this.SVServices.loadTemplateData(res.event.recID).subscribe(
+            (res: any) => {
+              if (res[0] && res[0].length > 0) {
+                dataQuestion = this.getHierarchy(res[0], res[1]);
+              } else {
+                dataQuestion = [
+                  {
+                    seqNo: 0,
+                    question: 'Mẫu không có tiêu đề',
+                    answers: null,
+                    other: false,
+                    mandatory: false,
+                    answerType: null,
+                    category: 'S',
+                    children: [
+                      {
+                        seqNo: 0,
+                        question: 'Câu hỏi 1',
+                        answers: [
+                          {
+                            seqNo: 0,
+                            answer: 'Tùy chọn 1',
+                            other: false,
+                            isColumn: false,
+                            hasPicture: false,
+                          },
+                        ],
+                        other: true,
+                        mandatory: false,
+                        answerType: 'O',
+                        category: 'Q',
+                      },
+                    ],
+                  },
+                ];
+              }
+            }
+          );
+        }
+        let myInterval = setInterval(() => {
+          if (dataQuestion && dataQuestion.length > 0) {
+            clearInterval(myInterval);
+            var obj = { dataSurvey: res.event, dataQuestion: dataQuestion };
+            var option = new SidebarModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = this.view.formModel;
+            var dialog = this.callfc.openSide(
+              PopupQuestionOtherComponent,
+              obj,
+              option
+            );
+            dialog.closed.subscribe((res) => {
+              if (res.event.changeTemplate == true) {
+                // Choose other template
+                this.addQuestionOther();
+              } else if (res.event.changeTemplate == false) {
+                var result = this.SVServices.getDataQuestionOther(
+                  res.event.dataSession,
+                  res.event.dataQuestion
+                );
+                if (result) {
+                  if (result.dataSession && result.dataSession.length > 0) {
+                    result.dataSession.forEach((x) => {
+                      delete x.id;
+                      delete x?.check;
+                      x.recID = this.generateGUID();
+                      x.children.forEach((y) => {
+                        delete y.id;
+                        delete y?.check;
+                        y.recID = this.generateGUID();
+                      });
+                    });
+                    this.addTemplateCard(
+                      this.itemActive,
+                      this.indexSessionA,
+                      result.dataSession,
+                      'S'
+                    );
+                  }
+                  if (result.dataQuestion && result.dataQuestion.length > 0) {
+                    result.dataQuestion.forEach((x) => {
+                      delete x.id;
+                      delete x?.check;
+                      x.recID = this.generateGUID();
+                    });
+                    this.addTemplateCard(
+                      this.itemActive,
+                      this.indexSessionA,
+                      result.dataQuestion,
+                      'Q'
+                    );
+                  }
+                }
+              }
+            });
+          }
+        }, 200);
+      }
+    });
+  }
+
+  popupUploadFile(typeFile, modeFile) {
     var obj = {
       functionList: this.functionList,
       typeFile: typeFile,
@@ -532,19 +687,27 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        this.uploadImage(this.indexSessionA, this.itemActive, res.event);
+        this.uploadFile(
+          this.indexSessionA,
+          this.itemActive,
+          res.event.dataUpload,
+          res.event?.referType,
+          modeFile
+        );
       }
     });
   }
 
-  deleteFile() {
+  deleteFile(seqNoSession, objectID) {
     this.SVServices.deleteFile(
-      this.itemActive,
+      objectID,
       this.functionList.entityName
     ).subscribe((res) => {
       if (res) {
-        this.questions.splice(this.itemActive.seqNo, 1);
-        this.questions.forEach((x, index) => (x.seqNo = index));
+        this.questions[seqNoSession].children.splice(this.itemActive.seqNo, 1);
+        this.questions[seqNoSession].children.forEach(
+          (x, index) => (x.seqNo = index)
+        );
       }
     });
   }
@@ -575,6 +738,32 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
   }
 
+  generateGUID() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    var GUID;
+    return (GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    ));
+  }
+
   addCard(itemActive, seqNoSession = null, category) {
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
@@ -583,34 +772,72 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     }
   }
 
+  addTemplateCard(itemActive, seqNoSession, data, category) {
+    if (category == 'S') this.addTemplateSession(seqNoSession, data);
+    else this.addTemplateQuestion(itemActive, seqNoSession, data);
+  }
+
+  addTemplateSession(seqNoSession, data) {
+    data.forEach((x, index) => {
+      this.questions.splice(seqNoSession + index + 1, 0, x);
+    });
+    this.questions.forEach((x, index) => (x.seqNo = index));
+    console.log('check addTemplateSession', this.questions);
+    this.change.detectChanges();
+  }
+
+  addTemplateQuestion(itemActive, seqNoSession, data) {
+    data.forEach((x, index) => {
+      this.questions[seqNoSession].children.splice(
+        itemActive.seqNo + index + 1,
+        0,
+        x
+      );
+    });
+    this.questions[seqNoSession].children.forEach(
+      (x, index) => (x.seqNo = index)
+    );
+    var indexLast = this.questions[seqNoSession].children.length - 1;
+    this.questions[seqNoSession].children[itemActive.seqNo].active = false;
+    this.questions[seqNoSession].children[indexLast].active = true;
+    this.itemActive = this.questions[seqNoSession].children[indexLast];
+    this.clickToScroll(
+      seqNoSession,
+      this.questions[seqNoSession].children[indexLast].recID,
+      'Q'
+    );
+    console.log('check addTemplateQuestion', this.questions);
+    this.change.detectChanges();
+  }
+
   addSession(itemActive, seqNoSession) {
-    var index = itemActive.seqNo;
     this.generateGuid();
     var tempQuestion = JSON.parse(JSON.stringify(itemActive));
     tempQuestion.answers = null;
     tempQuestion.answerType = null;
-    tempQuestion.question = null;
-    tempQuestion.seqNo = index + 1;
+    tempQuestion.question = 'Mục không có tiêu đề';
+    tempQuestion.seqNo = seqNoSession + 1;
     tempQuestion.category = 'S';
     tempQuestion.recID = this.GUID;
-    this.questions.splice(index + 1, 0, tempQuestion);
+    this.questions.splice(seqNoSession + 1, 0, tempQuestion);
     this.questions.forEach((x, index) => (x.seqNo = index));
-    this.questions[index].active = false;
-    this.questions[index + 1].active = true;
-    this.itemActive = this.questions[index + 1];
+    this.questions[seqNoSession].active = false;
+    this.questions[seqNoSession + 1].active = true;
+    this.itemActive = this.questions[seqNoSession + 1];
     var lstMain = this.questions[seqNoSession].children;
     if (itemActive.category == 'S') {
-      this.questions[index + 1].children = this.questions[index].children;
-      this.questions[index].children = [];
+      this.questions[seqNoSession + 1].children =
+        this.questions[seqNoSession].children;
+      this.questions[seqNoSession].children = [];
     } else {
       var lstUp = [];
       var lstDown = [];
-      lstUp = lstMain.slice(0, index + 1);
-      lstDown = lstMain.slice(index + 1, lstMain.length);
-      this.questions[index + 1]['children'] = lstDown;
-      this.questions[index]['children'] = lstUp;
+      lstUp = lstMain.slice(0, seqNoSession + 1);
+      lstDown = lstMain.slice(seqNoSession + 1, lstMain.length);
+      this.questions[seqNoSession + 1]['children'] = lstDown;
+      this.questions[seqNoSession]['children'] = lstUp;
     }
-    this.clickToScroll(index + 1, this.GUID, 'S');
+    this.clickToScroll(seqNoSession + 1, this.GUID, 'S');
   }
 
   addNoSession(itemActive, seqNoSession, category) {
@@ -632,21 +859,26 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       tempQuestion.answerType = 'O';
       tempQuestion.question = 'Câu hỏi';
     }
-    tempQuestion.seqNo = itemActive.seqNo + 1;
+    tempQuestion.seqNo = itemActive.category == 'S' ? 0 : itemActive.seqNo + 1;
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
     this.questions[seqNoSession].children.splice(
-      itemActive.seqNo + 1,
+      itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
       0,
       tempQuestion
     );
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
     );
-    this.questions[seqNoSession].children[itemActive.seqNo].active = false;
-    this.questions[seqNoSession].children[itemActive.seqNo + 1].active = true;
+    if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
+    else this.questions[seqNoSession].children[itemActive.seqNo].active = false;
+    this.questions[seqNoSession].children[
+      itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
+    ].active = true;
     this.itemActive =
-      this.questions[seqNoSession].children[itemActive.seqNo + 1];
+      this.questions[seqNoSession].children[
+        itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
+      ];
     this.clickToScroll(seqNoSession, this.GUID, category);
   }
 
@@ -654,13 +886,13 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   addTitle(dataQuestion) {}
 
-  uploadImage(seqNoSession, dataQuestion, data) {
-    if (dataQuestion) {
+  uploadFile(seqNoSession, dataQuestion, data, referType, modeFile) {
+    if (dataQuestion && modeFile == 'upload') {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
       tempQuestion.question = null;
-      tempQuestion.category = 'P';
+      tempQuestion.category = referType;
       tempQuestion.recID = data[0].objectID;
       this.questions[seqNoSession].children.splice(
         dataQuestion.seqNo + 1,
@@ -678,11 +910,11 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       // this.clickToScroll(dataQuestion.seqNo + 1);
     }
     data[0]['recID'] = data[0].objectID;
+    if (referType == 'V' && !data[0]?.srcVideo) {
+      var src = `${environment.urlUpload}/${data[0].urlPath}`;
+      data[0]['srcVideo'] = src;
+    }
     this.lstEditIV = data;
-    if (this.lstEditIV[0].referType == 'video')
-      this.lstEditIV[0][
-        'srcVideo'
-      ] = `${environment.urlUpload}/${this.lstEditIV[0].urlPath}`;
     this.change.detectChanges();
   }
 
@@ -829,7 +1061,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     var obj = {
       data: this.questions,
     };
-    var dialog = this.call.openForm(
+    var dialog = this.callfc.openForm(
       SortSessionComponent,
       '',
       500,
@@ -839,7 +1071,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        debugger;
         this.questions = res.event;
       }
     });
@@ -856,7 +1087,6 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   hideComment(seqNoSession, seqNoQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(this.questions))
-    dataTemp[seqNoQuestion]
+    this.questions[seqNoSession].children[seqNoQuestion].hideComment = true;
   }
 }

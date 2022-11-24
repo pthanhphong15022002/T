@@ -2,47 +2,56 @@
   [dialog]="dialog">
 </codx-form>
 <ng-template #subheader>
-  <div class="d-flex justify-content-end w-100">
-    <div class="rounded-pill p-2">
+  <div class="d-flex align-items-center justify-content-end w-100">
+    <div class="border rounded-pill p-2">
       <span>
         <i class="icon-filter_alt"></i>
       </span>
       <span class="mx-1">
         <codx-label [formModel]="dialog.formModel" name="" default="Loại xét duyệt"></codx-label>
       </span>
-      <span><i class="fas fa-ellipsis-h"></i></span>
     </div>
+    <span class="ms-2"><i class="fas fa-ellipsis-h"></i></span>
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="p-2">
-    <ng-container *ngFor="let item of lstApproval">
-      <div class="d-flex p-4 my-2">
-        <div class="">
-          <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
-        </div>
-        <div class="ms-4">
-          <div class="fw-bolder">{{item.textValue}}</div>
-          <div>{{item.title}}</div>
-          <div>
-            <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+  <div class="container">
+    <ng-container *ngIf="lstApproval; else templateEmpty">
+      <ng-container *ngFor="let item of lstApproval">
+        <div class="row p-2">
+          <div [style]="setStyles(item.title | vll:'ES022':'color'|async)" class="col-1 w-30px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle">
+            <codx-vll [name]="'ES022'" [value]="item.title" [showIcon]="true"></codx-vll>
           </div>
-          <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
+          <div class="col-10">
             <div>
-              <button type="button" class="btn btn-sm btn-light-primary">
-                <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
-              </button>
-              <button type="button" class="btn btn-outline-danger min-w-90px ms-4">
-                <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
-              </button>
+              <codx-vll [classList]="'fw-bolder text-dark'" [name]="'ES022'" [value]="item.title" [showText]="true"></codx-vll>
             </div>
-            <div>
-              <codx-label [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
+            <div class="" [innerHTML]="item.textValue"></div>
+            <div class="d-flex align-items-center justify-content-between ">
+              <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
+              <codx-img 
+                [width]="30" 
+                [isDefaulImg]="true" 
+                [objectId]="item.userID" 
+                [objectType]="'AD_Users'">
+              </codx-img>
+            </div>
+            <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
+              <div class="">
+                <button type="button" class="btn btn-outline-success w-100px" (click)="approvalAsync(item.recID,item.transID,'5')">
+                  <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
+                </button>
+                <button type="button" class="btn btn-outline-danger w-100px ms-6" (click)="approvalAsync(item.recID,item.transID,'4')">
+                  <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
+                </button>
+              </div>
+              <div class="cursor-pointer">
+                <codx-label [classList]="'fst-italic'" [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-
+      </ng-container>
     </ng-container>
   </div>
 </ng-template>
@@ -61,5 +70,10 @@
     <div class="col-1" *ngIf="!item.isRead">
       <span class="dots"></span>
     </div>
+  </div>
+</ng-template>
+<ng-template #templateEmpty>
+  <div class="d-flex align-items-center justify-content-center">
+    <img class="" src="assets/themes/sys/default/img/DataEmpty">
   </div>
 </ng-template>

@@ -1,6 +1,7 @@
 import { Permission } from '@shared/models/file.model';
 
 export class BP_Processes {
+  id:string;
   recID: string;
   category: string;
   processNo: string;
@@ -76,6 +77,7 @@ export class BP_ProcessSteps {
 }
 export class BP_ProcessRevisions {
   recID: string;
+  versionName: string;
   versionNo: string;
   activedOn: Date;
   comment: string;
@@ -131,7 +133,7 @@ export class BP_ProcessPermissions {
   approvalRule: string;
   approvedBy: string;
   approvedOn: Date;
-  autoCreat: boolean;
+  autoCreate: boolean;
   createdOn: Date;
   createdBy: string;
   modifiedOn: Date;
@@ -147,11 +149,11 @@ export class BP_ProcessesRating{
   positionName: string;
   comment: string;
   ratting: number;
-  createOn: Date;
+  createdOn: Date;
 }
 
 export class tmpPermission{
-  recID: string;
+  recIDProcess: string;
   form: string;
   titleEmail: string;
   contentEmail: string;
@@ -173,4 +175,12 @@ export class ColumnsModel{
    showItemCount :boolean =true ;
    allowDrag :boolean = true;
    allowDrop :boolean = true;
+}
+
+export class TabModel {
+  name: 'ViewList' | 'Kanban' | 'FlowChart' | string;
+  textDefault: string;
+  template?: any;
+  isActive: boolean = false;
+  id :number
 }

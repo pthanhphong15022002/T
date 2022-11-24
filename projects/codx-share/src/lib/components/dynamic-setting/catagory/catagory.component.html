@@ -279,10 +279,12 @@
           [attr.data-recid]="data.recID"
         >
           {{
-            (data.recID | shareSetting: setting:dataValue)?.objectName == "null"
+            (data.recID | shareSetting: settingFull:dataValue)?.objectName ==
+            "null"
               ? ""
-              : (data.recID | shareSetting: setting:dataValue)?.objectName ||
-                (data.recID | shareSetting: setting:dataValue)?.objectID
+              : (data.recID | shareSetting: settingFull:dataValue)
+                  ?.objectName ||
+                (data.recID | shareSetting: settingFull:dataValue)?.objectID
           }}
         </div>
       </div>

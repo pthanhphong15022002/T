@@ -1,4 +1,3 @@
-
 <form [formGroup]="forwardForm" (ngSubmit)="onSave()" class="h-100">
     <codx-form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog">
         <ng-template popup adde #body>
@@ -6,47 +5,34 @@
                 <div class="d-flex align-items-center flex-grow-1 mb-2">
                     <div class="w-50px">From:</div>
                     <div class="d-flex align-items-center me-2 mail-user">
-                        <codx-temp-full [imageId]="user?.userID" [imageWidth]="25" [content]="user?.userName" [imgCss]="'me-2'"></codx-temp-full>
+                        <codx-temp-full [imageId]="user?.userID" [imageWidth]="25" [content]="user?.userName"
+                            [imgCss]="'me-2'"></codx-temp-full>
                     </div>
                 </div>
-                <div class="d-flex align-items-center flex-grow-1">
+                <div class="d-flex align-items-center flex-grow-1 pb-2 border-bottom">
                     <div class="w-50px">To:</div>
-                    <codx-input
-                        type="Combobox"
-                        name="combobox"
-                        [refValue]="gridViewSetup['Owner']['referedValue']"
-                        [showInput]="true"
-                        refType="P"
-                        field="popup"
-                        [ngClass]="'w-100'"
-                        (valueChange)="changeValueUserID($event)"
-                    >
-                  </codx-input>
+                    <codx-input type="Combobox" name="combobox" [refValue]="gridViewSetup['Owner']['referedValue']"
+                        [showInput]="true" refType="P" field="popup" [ngClass]="'w-100'"
+                        (valueChange)="changeValueUserID($event)">
+                    </codx-input>
                 </div>
             </div>
             <div class="mx-2">
                 <ng-container *ngIf="files">
-                    <codx-thumbnail
-                      [files]="files"
-                    ></codx-thumbnail>
-                  </ng-container>
+                    <codx-thumbnail [files]="files"></codx-thumbnail>
+                </ng-container>
             </div>
             <div class="form-group mt-4">
                 <codx-label default="Mô tả chi tiết" class="text-primary"></codx-label>
-                <codx-input 
-                    type="textarea" 
-                    class="w-100" 
-                    [Group]="forwardForm"
-                    ControlName="comment"
-                >
+                <codx-input type="textarea" class="w-100" [Group]="forwardForm" ControlName="comment">
                 </codx-input>
             </div>
         </ng-template>
         <ng-template #footer>
             <div class="d-flex justify-content-end">
-            <button class="btn btn-primary" type="submit">
-                Gửi
-            </button>
+                <button class="btn btn-primary" type="submit">
+                    Gửi
+                </button>
             </div>
         </ng-template>
     </codx-form>

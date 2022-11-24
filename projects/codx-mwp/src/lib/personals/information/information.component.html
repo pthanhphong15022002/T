@@ -1,96 +1,48 @@
 <div class="card mb-5 mb-xl-10">
-  <div
-    class="card-header border-0 cursor-pointer"
-    role="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#kt_account_profile_details"
-    aria-expanded="true"
-    aria-controls="kt_account_profile_details"
-  >
+  <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+    data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
     <div class="card-title m-0">
-      <h3 class="fw-bold m-0">
-        <codx-label
-          fiedName="Information"
-          [formModel]="formModel"
-          default="Thông tin"
-        ></codx-label>
+      <h3 class="fw-bold mb-2 mt-5">
+        <codx-label fiedName="Information" [formModel]="formModel" default="Thông tin"></codx-label>
       </h3>
     </div>
   </div>
   <div id="kt_account_settings_profile_details" class="collapse show">
-    <form
-      id="kt_account_profile_details_form"
-      class="form fv-plugins-bootstrap5 fv-plugins-framework"
-      novalidate="novalidate"
-    >
+    <form id="kt_account_profile_details_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+      novalidate="novalidate">
       <div class="card-body border-top p-9">
         <div class="row mb-6">
           <label class="col-lg-4 col-form-label fw-semibold fs-6">
-            <codx-label
-              fiedName="Avatar"
-              [formModel]="formModel"
-              default="Avatar"
-            ></codx-label
-          ></label>
+            <codx-label fiedName="Avatar" [formModel]="formModel" default="Avatar"></codx-label>
+          </label>
           <div class="col-lg-8">
-            <codx-img
-              #imageUpLoad
-              [width]="100"
-              [objectType]="'AD_Users'"
-              aria-disabled="true"
-              [funcId]="funcID"
-              [isAllowEdit]="true"
-              [objectId]="employeeInfo.userID"
-              [objectName]="employeeInfo.userName"
-              [updateDirect]="true"
-              [imgOn]="employeeInfo?.modifiedOn"
-              (dataChanged)="changeAvatar($event)"
-            >
+            <codx-img #imageUpLoad [width]="100" [objectType]="'AD_Users'" aria-disabled="true" [funcId]="funcID"
+              [isAllowEdit]="true" [objectId]="employeeInfo.userID" [objectName]="employeeInfo.userName"
+              [updateDirect]="true" [imgOn]="employeeInfo?.modifiedOn" (dataChanged)="changeAvatar($event)">
             </codx-img>
           </div>
         </div>
         <div class="row mb-6">
           <label class="col-lg-4 col-form-label fw-semibold fs-6">
-            <codx-label
-              fiedName="UserName"
-              [formModel]="formModel"
-              default="Họ và tên"
-            ></codx-label
-          ></label>
+            <codx-label fiedName="UserName" [formModel]="formModel" default="Họ và tên"></codx-label>
+          </label>
           <div class="col-lg-8">
-            <codx-input
-              type="text"
-              field="userName"
-              (valueChange)="valueChange($event)"
-              ngDefaultControl
-              [crrValue]="employeeInfo.userName"
-              [disabled]="true"
-            >
+            <codx-input type="text" field="userName" (valueChange)="valueChange($event)" ngDefaultControl
+              [crrValue]="employeeInfo.userName" [disabled]="true">
             </codx-input>
           </div>
         </div>
         <div class="row mb-6">
           <label class="col-lg-4 col-form-label fw-semibold fs-6">
-            <codx-label
-              fiedName="Theme"
-              [formModel]="formModel"
-              default="Theme"
-            ></codx-label
-          ></label>
+            <codx-label fiedName="Theme" [formModel]="formModel" default="Theme"></codx-label>
+          </label>
           <div class="col-lg-8 fv-row fv-plugins-icon-container">
             <div class="theme-color">
               <div class="symbol-list d-flex flex-wrap mb-4">
-                <div
-                  *ngFor="let t of themes"
-                  class="symbol symbol-40px symbol-circle me-4 cursor-pointer"
-                  [ngbTooltip]="t.enable ? '' : 'Coming soon'"
-                >
+                <div *ngFor="let t of themes" class="symbol symbol-40px symbol-circle me-4 cursor-pointer"
+                  [ngbTooltip]="t.enable ? '' : 'Coming soon'">
                   <span class="symbol-label" [style.background-color]="t.color">
-                    <i
-                      *ngIf="t.id === theme.id"
-                      class="fa-solid fa-check text-seconary fs-1"
-                      style="z-index: 10"
-                    ></i>
+                    <i *ngIf="t.id === theme.id" class="fa-solid fa-check text-seconary fs-1" style="z-index: 10"></i>
                   </span>
                 </div>
               </div>
@@ -98,39 +50,19 @@
           </div>
         </div>
         <div class="row mb-6">
-          <label class="col-lg-4 col-form-label fw-semibold fs-6">
-            <codx-label
-              fiedName="lblLanguage"
-              [formModel]="formModel"
-              default="Language"
-            ></codx-label>
+          <label class="col-4 col-form-label fw-semibold fs-6">
+            <codx-label fiedName="lblLanguage" [formModel]="formModel" default="Language"></codx-label>
           </label>
-          <div class="col-lg-1 fv-row fv-plugins-icon-container btn btn-outline-primary">
-            <span
-              [ngbPopover]="tempLanguage"
-              placement="end"
-              [autoClose]="'outside'"
-            >
+          <div class="col-3 fv-row fv-plugins-icon-container btn btn-outline-primary">
+            <span [ngbPopover]="tempLanguage" placement="end" [autoClose]="'outside'">
               {{ language.name }}{{ " " }}
-              <img
-                class="w-15px h-15px rounded-1 ms-2"
-                [src]="language.flag"
-                alt="metronic"
-              />
+              <img class="w-15px h-15px rounded-1 ms-2" [src]="language.flag" alt="metronic" />
             </span>
           </div>
           <ng-template #tempLanguage>
-            <div
-              *ngFor="let l of langs"
-              class="menu-item px-3 cursor-pointer"
-              (click)="selectLanguage(l.lang)"
-              data-toggle="tooltip"
-              [title]="l.enable ? '' : 'Coming soon'"
-            >
-              <a
-                class="menu-link d-flex px-5"
-                [ngClass]="l.lang === language.lang ? 'active' : ''"
-              >
+            <div *ngFor="let l of langs" class="menu-item px-3 cursor-pointer" (click)="selectLanguage(l.lang)"
+              data-toggle="tooltip" [title]="l.enable ? '' : 'Coming soon'">
+              <a class="menu-link d-flex px-5" [ngClass]="l.lang === language.lang ? 'active' : ''">
                 <span class="symbol symbol-20px me-4">
                   <img class="rounded-1" [src]="l.flag" alt="metronic" />
                 </span>
@@ -142,30 +74,17 @@
       </div>
     </form>
   </div>
-  <div
-    class="card-header border-0 cursor-pointer"
-    role="button"
-    data-bs-toggle="collapse"
-    data-bs-target="#kt_account_profile_details"
-    aria-expanded="true"
-    aria-controls="kt_account_profile_details"
-  >
+  <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
+    data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
     <div class="card-title m-0">
-      <h3 class="fw-bold m-0">
-        <codx-label
-          fiedName="Signature"
-          [formModel]="formModelES"
-          default="Chữ kí / con dấu"
-        ></codx-label>
+      <h3 class="fw-bold mb-2 ">
+        <codx-label fiedName="Signature" [formModel]="formModelES" default="Chữ kí / con dấu"></codx-label>
       </h3>
     </div>
   </div>
   <div id="kt_account_settings_profile_details" class="collapse show">
-    <form
-      id="kt_account_profile_details_form"
-      class="form fv-plugins-bootstrap5 fv-plugins-framework"
-      novalidate="novalidate"
-    >
+    <form id="kt_account_profile_details_form" class="form fv-plugins-bootstrap5 fv-plugins-framework"
+      novalidate="novalidate">
       <div class="card-body border-top p-9">
         <div class="row mb-6">
           <label class="col-lg-4 col-form-label fw-semibold fs-6"> </label>
@@ -175,81 +94,41 @@
                 <div class="text-center me-6 mb-3">
                   <div class="mb-5 d-flex align-items-center">
                     <div class="m-auto">
-                      <codx-img
-                        #imgSignature1
-                        class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                        [imageType]="'square'"
-                        [width]="80"
-                        referType="S1"
-                        [objectId]="data?.recID"
-                        [objectType]="formModelES?.entityName"
-                        data-kt-menu-trigger="click"
-                        data-kt-menu-attach="parent"
-                        data-kt-menu-placement="bottom-end"
-                        data-kt-menu-flip="bottom"
-                        [isAllowEdit]="true"
-                        [updateDirect]="true"
-                        (dataChanged)="dataImageChanged($event, 'S1')"
-                        [funcId]="formModelES?.funcID"
-                      >
+                      <codx-img #imgSignature1 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                        [imageType]="'square'" [width]="80" referType="S1" [objectId]="data?.recID"
+                        [objectType]="formModelES?.entityName" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
+                        data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true"
+                        [updateDirect]="true" (dataChanged)="dataImageChanged($event, 'S1')"
+                        [funcId]="formModelES?.funcID">
                       </codx-img>
                     </div>
                   </div>
-                  <codx-label
-                    fiedName="Signature1"
-                    [formModel]="formModelES"
-                  ></codx-label>
+                  <codx-label fiedName="Signature1" [formModel]="formModelES"></codx-label>
                 </div>
                 <div class="text-center me-6 mb-3">
                   <div class="mb-5 d-flex align-items-center">
                     <div class="m-auto">
-                      <codx-img
-                        #imgSignature2
-                        referType="S2"
-                        [imageType]="'square'"
-                        class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                        [width]="80"
-                        [objectId]="data?.recID"
-                        [objectType]="formModelES?.entityName"
-                        data-kt-menu-trigger="click"
-                        data-kt-menu-attach="parent"
-                        data-kt-menu-placement="bottom-end"
-                        data-kt-menu-flip="bottom"
-                        [isAllowEdit]="true"
-                        [updateDirect]="true"
-                        (dataChanged)="dataImageChanged($event, 'S2')"
-                        [funcId]="formModelES?.funcID"
-                      >
+                      <codx-img #imgSignature2 referType="S2" [imageType]="'square'"
+                        class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage" [width]="80"
+                        [objectId]="data?.recID" [objectType]="formModelES?.entityName" data-kt-menu-trigger="click"
+                        data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom"
+                        [isAllowEdit]="true" [updateDirect]="true" (dataChanged)="dataImageChanged($event, 'S2')"
+                        [funcId]="formModelES?.funcID">
                       </codx-img>
                     </div>
                   </div>
-                  <codx-label
-                    class=""
-                    fiedName="Signature2"
-                    [formModel]="formModelES"
-                  >
+                  <codx-label class="" fiedName="Signature2" [formModel]="formModelES">
                   </codx-label>
                 </div>
                 <div class="text-center me-6 mb-3">
                   <div class="mb-5 d-flex align-items-center">
                     <div class="m-auto">
-                      <codx-img
-                        #imgStamp
-                        referType="S3"
-                        class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                        [imageType]="'square'"
-                        [width]="80"
-                        [objectId]="data?.recID"
-                        [objectType]="formModelES?.entityName"
-                        data-kt-menu-trigger="click"
-                        data-kt-menu-attach="parent"
-                        data-kt-menu-placement="bottom-end"
-                        data-kt-menu-flip="bottom"
-                        [isAllowEdit]="true"
-                        [updateDirect]="true"
-                        (dataChanged)="dataImageChanged($event, 'S3')"
-                        [funcId]="formModelES?.funcID"
-                      >
+                      <codx-img #imgStamp referType="S3"
+                        class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage" [imageType]="'square'"
+                        [width]="80" [objectId]="data?.recID" [objectType]="formModelES?.entityName"
+                        data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
+                        data-kt-menu-flip="bottom" [isAllowEdit]="true" [updateDirect]="true"
+                        (dataChanged)="dataImageChanged($event, 'S3')" [funcId]="formModelES?.funcID">
                       </codx-img>
                     </div>
                   </div>

@@ -31,7 +31,7 @@ import { PopupRolesComponent } from './processes/popup-roles/popup-roles.compone
 // import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupUpdateRevisionsComponent } from './processes/popup-update-revisions/popup-update-revisions.component';
-import { DatePipeFormatComponent } from './processes/popup-update-revisions/date-pipe-format/date-pipe-format.component';
+import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes/popup-view-detail-processes.component';
 
 export const routes: Routes = [
   {
@@ -87,7 +87,7 @@ export const routes: Routes = [
     ViewFlowchartComponent,
     PopupRolesComponent,
     PopupUpdateRevisionsComponent,
-    DatePipeFormatComponent,
+    PopupViewDetailProcessesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -103,7 +103,7 @@ export const routes: Routes = [
     TabModule,
     CommonModule,
     DragDropModule,
-    PinchZoomModule
+    PinchZoomModule,
     // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],

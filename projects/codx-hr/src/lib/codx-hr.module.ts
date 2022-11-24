@@ -77,6 +77,7 @@ import { EmployeeCertificateInfoComponent } from './employee-profile/employee-ce
 import { EmployeeDegreeDetailComponent } from './employee-profile/employee-degree-detail/employee-degree-detail.component';
 import { EmployeeDegreeInfoComponent } from './employee-profile/employee-degree-info/employee-degree-info.component';
 import { EmployeePositionsComponent } from './employee-list/employee-profile/employee-positions/employee-positions.component';
+import { EmployeeTraincoursesComponent } from './employee-profile/employee-traincourses/employee-traincourses.component';
 
 export const routes: Routes = [
   {
@@ -89,6 +90,10 @@ export const routes: Routes = [
           {
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
+          },
+          {
+            path: 'employeelist/:funcID',
+            component: EmployeeListComponent,
           },
         ],
       },
@@ -109,10 +114,6 @@ export const routes: Routes = [
           {
             path: 'employeedetail/:funcID',
             component: EmployeeProfileComponent,
-          },
-          {
-            path: 'employeelist/:funcID',
-            component: EmployeeListComponent,
           },
         ],
       },
@@ -149,6 +150,7 @@ export const routes: Routes = [
           //   path: 'employeeinfomation/:funcID',
           //   component: EmployeeInfomationComponent,
           // },
+
           {
             path: 'setting',
             component: HRParametersComponent,
@@ -264,6 +266,7 @@ const T_Component: Type<any>[] = [
   EmployeeDegreeDetailComponent,
   EmployeeDegreeInfoComponent,
   EmployeePositionsComponent,
+  EmployeeTraincoursesComponent,
 ];
 @NgModule({
   imports: [

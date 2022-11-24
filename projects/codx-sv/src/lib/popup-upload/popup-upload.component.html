@@ -50,7 +50,7 @@
             </ng-template>
             <ng-template #content class="pd-t-20">
               <codx-listview
-                #listView
+                #listViewImage
                 [dataService]="dtService"
                 [predicate]="predicate"
                 [dataValue]="dataValueImage"
@@ -76,7 +76,7 @@
                 <button
                   type="button"
                   class="btn btn-primary"
-                  (click)="onSave()"
+                  (click)="onSave('P')"
                 >
                   <codx-label fiedName="Save" default="Chèn ảnh"></codx-label>
                 </button>
@@ -103,7 +103,7 @@
     </ng-container>
     <ng-container #image *ngIf="typeFile == 'video'">
       <ejs-tab headerPlacement="Top">
-        <e-tabitems >
+        <e-tabitems>
           <e-tabitem>
             <ng-template #headerText class="">
               <div class="nav-item">
@@ -185,7 +185,7 @@
             </ng-template>
             <ng-template #content class="pd-t-20">
               <codx-listview
-                #listView
+                #listViewVideo
                 entityName="DM_FileInfo"
                 gridViewName="grvFileInfo"
                 [predicate]="predicate"
@@ -197,17 +197,37 @@
                 service="DM"
               >
               </codx-listview>
+              <div class="d-flex justify-content-end" #footer>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="onSave('V')"
+                >
+                  <codx-label fiedName="Save" default="Chèn video"></codx-label>
+                </button>
+              </div>
 
               <ng-template #templateListCard let-item>
-                <div class="pw-listcard" *ngIf="item.srcVideo">
+                <div
+                  class="pw-listcard"
+                  *ngIf="item.referType == REFER_TYPE.VIDEO"
+                >
                   <div class="pw-card">
-                    <ng-container *ngIf="item.referType == REFER_TYPE.VIDEO">
+                    <ng-container>
+                      <span
+                        [ngClass]="
+                          item?.isChoose
+                            ? 'icon-check text-white default icon-16 icon-checked-video'
+                            : 'icon-check text-white default icon-16 icon-not-checked'
+                        "
+                        (click)="chooseVideo(item)"
+                      ></span>
                       <video
                         #video
                         controls
                         class="w-100 rounded bg-secondary h-150px mh-150px"
                       >
-                        <source [src]="item.srcVideo" type="video/mp4" />
+                        <source [src]="getSrcVideo(item)" type="video/mp4" />
                       </video>
                     </ng-container>
                   </div>

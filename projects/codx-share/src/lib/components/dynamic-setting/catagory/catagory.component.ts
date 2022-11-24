@@ -16,6 +16,7 @@ import {
 //import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -26,11 +27,12 @@ export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
     cpnAlertRules: PopupAddEmailTemplateComponent,
-    // cpnApprovals: ApprovalStepComponent,
+    cpnApprovals: CodxApproveStepsComponent,
   };
   category = '';
   title = '';
   //listName = 'SYS001';
+  settingFull = [];
   setting = [];
   settingValue = [];
   groupSetting = [];
@@ -56,8 +58,8 @@ export class CatagoryComponent implements OnInit {
   ) {
     this.dialog = dialog;
     if (data) {
-      this.setting = data.data?.setting;
-
+      this.settingFull = data.data?.settingFull as [];
+      this.setting = this.settingFull.filter((res) => res.isVisible == true);
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
@@ -130,10 +132,10 @@ export class CatagoryComponent implements OnInit {
       cssClass = '',
       dialogModel = new DialogModel();
     if (!reference) {
-      var itemChild = this.setting.filter(
+      var itemChild = this.settingFull.filter(
         (x) => x.refLineID === recID && x.lineType === '2'
       );
-      data['setting'] = itemChild;
+      data['settingFull'] = itemChild;
       data['valuelist'] = this.valuelist;
       data['category'] = this.category;
       data['function'] = this.function;
@@ -373,13 +375,14 @@ export class CatagoryComponent implements OnInit {
           if (data.displayMode !== '4' && data.displayMode !== '5') {
             this.dataValue[field] = value;
           } else {
+            if (!Array.isArray(value)) this.dataValue[field] = value;
             let fID = '',
               id = '',
               fName = '',
               name = '',
               fType = '',
               type = '';
-            var settingChild = this.setting.filter((item: any) => {
+            var settingChild = this.settingFull.filter((item: any) => {
               if (item.refLineID === data.recID) {
                 if (item.dataFormat === 'ID') fID = item.fieldName;
                 if (item.dataFormat === 'Name') fName = item.fieldName;

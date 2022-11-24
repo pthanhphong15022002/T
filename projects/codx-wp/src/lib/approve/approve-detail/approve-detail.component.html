@@ -107,9 +107,14 @@
                     <codx-label [formModel]="formModel" [fiedName]="'ShareControl'"></codx-label>
                 </div>
                 <div *ngIf="data?.shareControl" class="col-10">
-                    <codx-vll [name]="'WP001'" [value]="data.shareControl"
-                        [classList]="'bg-secondary rounded-pill t-dark p-2'" [showText]="true" [showBgColor]="true"
-                        [showIcon]="true" [icoCss]="'text-dark'">
+                    <codx-vll [name]="'WP001'" 
+                        [value]="data.shareControl"
+                        [classList]="'bg-secondary rounded-pill t-dark p-2'" 
+                        [showText]="true" 
+                        [showBgColor]="true"
+                        [showIcon]="true"
+                        [path]="'assets/themes/sys/default/img/'"
+                        [icoCss]="'w-13px h-13px'" >
                     </codx-vll>
                 </div>
             </div>

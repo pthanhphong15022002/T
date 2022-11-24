@@ -22,6 +22,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() funcID!: string;
   @Input() entityName!: string;
   @Input() objectID!: any;
+  @Input() id!: any;
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
   //tree task

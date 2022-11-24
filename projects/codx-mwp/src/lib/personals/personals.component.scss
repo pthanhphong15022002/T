@@ -13,7 +13,7 @@
 }
 
 .personal-container .e-tab-header {
-  max-width: 720px;
+  max-width: 750px;
 }
 
 .personal-container>div.pw-lg {
@@ -21,14 +21,14 @@
 }
 
 .personal-container>div.pw-md {
-  max-width: 720px;
+  max-width: 760px;
   margin-left: auto;
   margin-right: auto;
   padding: 0;
 }
 
 .pw-feed {
-  width: 720px;
+  width: 760px;
   margin-left: auto;
   margin-right: auto;
   padding: 0;
@@ -44,7 +44,7 @@
   background-color: #fff;
 }
 
-.pw-menu .e-tab-header {
+.personal-menu .e-tab-header {
   height: 48px;
   line-height: 48px;
   border-radius: 6px !important;
@@ -55,27 +55,45 @@
   position: relative;
   z-index: 99;
   justify-content: space-around;
+  padding-left: 10px;
 }
 
-.e-tab-header .pw-menu a {
+
+.personal-menu .e-tab-header .e-toolbar-items {
+  height: 48px;
+  min-height: 48px;
+}
+
+.personal-menu .e-tab .e-tab-header .e-toolbar-item.e-active {
+  border: 0 !important;
+  border-bottom-color: transparent !important
+}
+
+.personal-menu .e-tab .e-tab-header::before {
+  border-color: transparent;
+}
+
+.e-tab-header .personal-menu a {
   cursor: pointer;
 }
 
 app-personals .pw-content {
-  margin-top: 16px;
-  padding: 15px 20px;
-  min-width: 720px;
+  margin-top: 15px;
+  padding: 15px 15px 0;
+  min-width: 760px;
+  height: calc(100vh - 250px) !important;
+  overflow: auto;
   background-color: white;
   box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }
 
-// .pw-menu div.active a,
-// .pw-menu div:hover a {
+// .personal-menu div.active a,
+// .personal-menu div:hover a {
 //     color: #0078ff;
 // }
 
-// .pw-menu div.active span,
-// .pw-menu div:hover span {
+// .personal-menu div.active span,
+// .personal-menu div:hover span {
 //     color: #0078ff;
 // }
 
@@ -91,7 +109,7 @@ app-personals .pw-content {
   }
 }
 
-.pw-menu div a .mn-icon {
+.personal-menu div a .mn-icon {
   margin-right: 5px;
 }
 
@@ -160,7 +178,7 @@ codx-card-img .card-icon-nowrap {
 
 .pw-storgae .home-notebooks,
 .pw-storgae .home-storage {
-  height: calc(100vh - 350px) !important;
+  height: calc(100vh - 310px) !important;
 }
 
 .pw-storgae .home-img {
@@ -177,7 +195,6 @@ codx-card-img .card-icon-nowrap {
 
 .pw-storgae .container-fluid {
   padding: 0 !important;
-  margin-top: 10px;
 }
 
 .e-listview .e-content {
@@ -196,4 +213,9 @@ codx-card-img .card-icon-nowrap {
   align-self: center;
   align-items: stretch;
   height: 100%;
+}
+
+.w-25px.h-25px {
+  width: 24px !important;
+  height: 24px !important;
 }

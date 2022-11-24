@@ -64,18 +64,18 @@ app-notes-home {
 }
 
 .note-content {
-  background-color: #FFF4DE;
-  border-left: 3px #FFA800 solid;
+  background-color: #fff4de;
+  border-left: 3px #ffa800 solid;
 }
 
 .task-content {
-  background-color: #FFE2E5;
-  border-left: 3px #FF1F00 solid;
+  background-color: #ffe2e5;
+  border-left: 3px #ff1f00 solid;
 }
 
 .meeting-content {
-  background-color: #C9F7F5;
-  border-left: 3px #1BC5BD solid;
+  background-color: #c9f7f5;
+  border-left: 3px #1bc5bd solid;
 }
 
 .pd-left-10 {
@@ -103,8 +103,10 @@ app-notes-home {
   width: 136px;
 }
 
-.w-5px {
-  width: 5px;
+.w-5px,
+.w-5px li {
+  width: 4px;
+  height: 18px;
 }
 
 .show-event {
@@ -124,6 +126,10 @@ app-notes-home {
 //     height: 350px !important;
 // }
 
-ejs-listview .e-ul>li {
+ejs-listview .e-ul > li {
   margin-bottom: 5px;
+}
+
+.dropup .dropdown-toggle::after {
+  display: none !important;
 }

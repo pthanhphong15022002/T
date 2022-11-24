@@ -29,7 +29,7 @@
                 </codx-img>
               </div>
               <div class="font-weight-bold font-size-h5 mb-2">
-                {{ data.employeeName }}
+                {{ infoPersonal.employeeName }}
               </div>
               <div class="text-muted">{{ infoPersonal.email }}</div>
               <div class="text-dark-75">Busssiness Solution Center</div>
@@ -48,7 +48,7 @@
                 class="icon-date_range icon-16 text-gray-800 me-1 ms-2"
               ></span>
               <span class="text-dark fw-bold">
-                <span #joinedOn>{{ data.joinedOn | fmDT }}</span>
+                <span #joinedOn>{{ infoPersonal.joinedOn | fmDT }}</span>
               </span>
             </div>
             <codx-vll
@@ -349,9 +349,9 @@
               >
               </codx-label>
             </div>
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+            <!-- <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
               <span class="icon-edit icon-18"></span>
-            </a>
+            </a> -->
           </div>
           <ngx-skeleton-loader
             count="5"
@@ -361,99 +361,118 @@
           <div class="border rounded-2 p-6">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">SƠ YẾU LÝ LỊCH</div>
                 <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                  <span class="icon-person text-primary icon-18 me-1"></span>
+                </div>
+                <div class="fs-4 fw-bold text-primary text-uppercase">
+                  <codx-label
+                    [formModel]="view.formModel"
+                    name="lblEmployeeSavedProfile"
+                    default="Sơ yếu lý lịch"
+                  >
+                  </codx-label>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
+              <a
+                class="btn btn-xs btn-icon btn-hover-primary"
+                (click)="collapse('1.1')"
+              >
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #info class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Thông tin bản thân"
+            <div
+              #personalInfo
+              id="personalInfo"
+              class="collapse multi-collapse show"
+            >
+              <div #info class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="d-flex form-group">
-                <span class="icon-person icon-14 text-gray-600 me-1"></span>
-                <codx-label
-                  class="text-gray-600 me-2"
-                  fiedName="EmployeeName"
-                  [formModel]="view.formModel"
-                >
-                </codx-label>
-                <span class="text-dark fw-bold"> {{ data.employeeName }}</span>
-              </div>
-              <div class="row form-group">
-                <div class="col">
-                  <div class="d-flex">
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Thông tin bản thân"
+                  >
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                     <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                      class="icon-edit icon-18"
+                      (click)="addEmployeeSelfInfo()"
                     ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="EmployeeName2"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span class="text-dark"> {{ data.employeeName2 }}</span>
-                  </div>
+                  </a>
                 </div>
-                <!-- Giới tính -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Gender"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #gender>
-                      <codx-vll
-                        [showText]="true"
-                        [showBgColor]="true"
-                        [showIcon]="true"
+                <div class="d-flex form-group">
+                  <span class="icon-person icon-14 text-gray-600 me-1"></span>
+                  <codx-label
+                    class="text-gray-600 me-2"
+                    fiedName="EmployeeName"
+                    [formModel]="view.formModel"
+                  >
+                  </codx-label>
+                  <span class="text-dark fw-bold">
+                    : {{ infoPersonal.employeeName }}</span
+                  >
+                </div>
+                <div class="row form-group">
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="EmployeeName2"
                         [formModel]="view.formModel"
-                        [field]="'Gender'"
-                        [value]="data?.gender"
-                        class="badge badge-light badge-square badge-md fs-7"
                       >
-                      </codx-vll>
-                    </span>
+                      </codx-label>
+                      <span class="text-dark">
+                        : {{ infoPersonal.employeeName2 }}</span
+                      >
+                    </div>
                   </div>
-                </div>
-                <!-- Tình trạng hôn nhân -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="MaritalStatus"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
+                  <!-- Giới tính -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Gender"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #gender>
+                        <codx-vll
+                          [showText]="true"
+                          [showBgColor]="true"
+                          [showIcon]="true"
+                          [formModel]="view.formModel"
+                          [field]="'Gender'"
+                          [value]="data?.gender"
+                          class="badge badge-light badge-square badge-md fs-7"
+                        >
+                        </codx-vll>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- Tình trạng hôn nhân -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="MaritalStatus"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
 
-                    <span #maritalStatus>
-                      <codx-vll
+                      <span #maritalStatus>
+                        : {{ infoPersonal.maritalStatus }}
+                        <!-- <codx-vll
                         [showText]="true"
                         [showBgColor]="false"
                         [showIcon]="false"
@@ -462,362 +481,366 @@
                         [value]="data?.maritalStatus"
                         class="text-dark"
                       >
-                      </codx-vll>
-                    </span>
+                      </codx-vll> -->
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="row form-group">
-                <!-- Ngày sinh -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Birthday"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #birthday> {{ data.birthday | fmDT }}</span>
-                  </div>
-                </div>
-                <!-- Nơi sinh -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="BirthPlace"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-
-                    <span #birthPlace>{{ data.birthPlaceName }}</span>
-                  </div>
-                </div>
-                <div class="col"></div>
-              </div>
-              <div class="row form-group">
-                <!-- Quốc tịch -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Nationality"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #nationality> {{ data.nationality }}</span>
-                  </div>
-                </div>
-                <!-- Dân tộc -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="EthnicGroup"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #ethnicGroup>{{ data.ethnicGroup }}</span>
-                  </div>
-                </div>
-                <!-- Tôn giáo -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Religion"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #religion>{{ data.religion }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <!-- CMND/CCCD -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IDCardNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #idCardNo>{{ data.idCardNo }}</span>
-                  </div>
-                </div>
-                <!-- Ngày cấp -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IssuedOn"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #issuedOn>{{ data.issuedOn | fmDT }}</span>
-                  </div>
-                </div>
-                <!-- Nơi cấp -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IssuedBy"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #issuedBy
-                      >{{ data.issuedBy }}
-                      <codx-vll
+                <div class="row form-group">
+                  <!-- Ngày sinh -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Birthday"
                         [formModel]="view.formModel"
-                        [value]="data.issuedBy"
-                        [showText]="true"
-                        field="IssuedBy"
-                      ></codx-vll>
-                    </span>
+                      >
+                      </codx-label>
+                      <span #birthday
+                        >: {{ infoPersonal.birthday | fmDT }}</span
+                      >
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <!-- Trình độ -->
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="Education"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #education>{{ data.education }}</span>
-                  </div>
-                </div>
-                <!--  -->
-                <div class="col-8">
-                  <div class="d-flex">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="DegreeName"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #degreeName>{{ data.degreeName }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="Street"
-                    [formModel]="view.formModel"
-                  >
-                  </codx-label>
-                  <span #street> {{ data.street }}</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="FullAddress"
-                    [formModel]="view.formModel"
-                  >
-                  </codx-label>
-                  <span #pitNumber> {{ data.fullAddress }}</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <span class="icon-mood icon-14 text-gray-600 me-1"></span>
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="pITNumber"
-                    [formModel]="view.formModel"
-                    default="Thành tích:"
-                  >
-                  </codx-label>
-                  <span #pitNumber> {{ data.pitNumber }}</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="pITNumber"
-                    [formModel]="view.formModel"
-                    default="Sở trường:"
-                  >
-                  </codx-label>
-                  <span #pitNumber>Chăm chỉ, có trách nhiệm trong học tập</span>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="d-flex">
-                  <codx-label
-                    class="text-gray-600 me-2"
-                    fiedName="pITNumber"
-                    [formModel]="view.formModel"
-                    default="Sở thích:"
-                  >
-                  </codx-label>
-                  <span #pitNumber>Đóng đá, đọc sách, du lịch</span>
-                </div>
-              </div>
-            </div>
-            <div #DangDoan class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Thông tin đảng - đoàn"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeePartyInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="yUnionDate"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span class="text-dark">
-                      <codx-vll
+                  <!-- Nơi sinh -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="BirthPlace"
                         [formModel]="view.formModel"
-                        field="gender"
-                      ></codx-vll>
-                      {{ "0" | vll: "L0068":"text" | async }}</span
-                    >
-                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                        }}</span> -->
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="yUnionAt"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
-                    <span #birthday> employeeInfo.birthday </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="partyDate"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
+                      >
+                      </codx-label>
 
-                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
-                          null}}</span> -->
-                    <span #idCardNo> {{ data.idCardNo }}</span>
+                      <span #birthPlace
+                        >: {{ infoPersonal.birthPlaceName }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="col"></div>
+                </div>
+                <div class="row form-group">
+                  <!-- Quốc tịch -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Nationality"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #nationality
+                        >: {{ infoPersonal.nationalityName }}</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Dân tộc -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="EthnicGroup"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #ethnicGroup
+                        >: {{ infoPersonal.ethnicGroupName }}</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Tôn giáo -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Religion"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #religion>: {{ infoPersonal.religionName }}</span>
+                    </div>
                   </div>
                 </div>
-                <div class="col-8">
+                <div class="row form-group">
+                  <!-- CMND/CCCD -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="IDCardNo"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
+                    </div>
+                  </div>
+                  <!-- Ngày cấp -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="IssuedOn"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #issuedOn
+                        >: {{ infoPersonal.issuedOn | fmDT }}</span
+                      >
+                    </div>
+                  </div>
+                  <!-- Nơi cấp -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="IssuedBy"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #issuedBy>: {{ infoPersonal.issuedByName }} </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <!-- Trình độ -->
+                  <div class="col-4">
+                    <div class="d-flex">
+                      <span
+                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="Education"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #education
+                        >:
+                        <codx-vll
+                          [showText]="true"
+                          [showBgColor]="false"
+                          [showIcon]="false"
+                          [formModel]="view.formModel"
+                          [field]="'Education'"
+                          [value]="data?.education"
+                          class="text-dark"
+                        >
+                        </codx-vll
+                      ></span>
+                    </div>
+                  </div>
+                  <!--  -->
+                  <div class="col-8">
+                    <div class="d-flex">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="DegreeName"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #degreeName>: {{ infoPersonal.degreeName }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row form-group">
                   <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
                     <codx-label
                       class="text-gray-600 me-2"
-                      fiedName="partyAt"
+                      fiedName="Street"
                       [formModel]="view.formModel"
                     >
                     </codx-label>
-                    <span #issuedOn> employeeInfo.issuedOn</span>
+                    <span #street>: {{ infoPersonal.street }}</span>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="FullAddress"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <span #pitNumber>: {{ infoPersonal.fullAddress }}</span>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="d-flex">
+                    <span class="icon-mood icon-14 text-gray-600 me-1"></span>
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="Achievement"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <span #Achievement>: {{ infoPersonal.achievement }}</span>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="Forte"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <span #Forte>: {{ infoPersonal.forte }}</span>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="d-flex">
+                    <codx-label
+                      class="text-gray-600 me-2"
+                      fiedName="Hobby"
+                      [formModel]="view.formModel"
+                    >
+                    </codx-label>
+                    <span #Hobby>: {{ infoPersonal.hobby }}</span>
                   </div>
                 </div>
               </div>
-            </div>
-            <div #family class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Quan hệ gia đình"
+              <div #DangDoan class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addFamilyRelationshipInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="d-flex flex-column py-3 px-4 process-r">
-                <div class="d-flex flex-column">
-                  <div
-                    class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Thông tin đảng - đoàn"
                   >
-                    <codx-temp-full
-                      cardCss="card-template px-2 pt-4 pb-2"
-                      [imageId]="'ADMIN'"
-                      imageObjType="AD_Users"
-                      [imageWidth]="40"
-                      [formModel]="view.formModel"
-                      [title]="'experences.companyName'"
-                      [dataItem]="'experences'"
-                      [desc]="'relationType' + ' | ' + 'Năm sinh: '"
-                      [typeMF]="'hover'"
-                    >
-                    </codx-temp-full>
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-edit icon-18"
+                      (click)="addEmployeePartyInfo()"
+                    ></span>
+                  </a>
+                </div>
+
+                <div class="row form-group">
+                  <div class="col-4">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="yUnionDate"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span class="text-dark">
+                        : {{ infoPersonal.yUnionDate | fmDT }}</span
+                      >
+                    </div>
                   </div>
+                  <div class="col-8">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="yUnionAt"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #yUnionAt>: {{ infoPersonal.yUnionAt }} </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row form-group">
+                  <div class="col-4">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="partyDate"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #partyDate
+                        >: {{ infoPersonal.partyDate | fmDT }}</span
+                      >
+                    </div>
+                  </div>
+                  <div class="col-8">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="partyAt"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #partyAt>: {{ infoPersonal.partyAt }} </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div #family class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                >
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Quan hệ gia đình"
+                  >
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-add icon-18"
+                      (click)="addFamilyRelationshipInfo()"
+                    ></span>
+                  </a>
+                </div>
+                <div class="d-flex flex-wrap py-3 px-4">
+                  <ng-container *ngFor="let item of lstFamily">
+                    <div
+                      class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                    >
+                      <codx-temp-full
+                        cardCss="card-template px-2 pt-4 pb-2"
+                        [imageId]="'ADMIN'"
+                        imageObjType="AD_Users"
+                        [imageWidth]="40"
+                        [formModel]="view.formModel"
+                        [title]="'experences.companyName'"
+                        [dataItem]="'experences'"
+                        [desc]="'relationType' + ' | ' + 'Năm sinh: '"
+                        [typeMF]="'hover'"
+                      >
+                      </codx-temp-full>
+                    </div>
+                  </ng-container>
                 </div>
               </div>
             </div>
@@ -825,554 +848,463 @@
           <div class="border rounded-2 p-6">
             <div class="d-flex align-items-center justify-content-between">
               <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary text-uppercase">
-                  Thông tin pháp lí
-                </div>
                 <div class="user-status d-flex align-items-center ms-3">
                   <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                </div>
+                <div class="fs-4 fw-bold text-primary text-uppercase">
+                  <codx-label
+                    [formModel]="view.formModel"
+                    name="lblEmployeeSavedProfile"
+                    default="Sơ yếu lý lịch"
+                  >
+                  </codx-label>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
+              <a
+                class="btn btn-xs btn-icon btn-hover-primary"
+                (click)="collapse(legalInformation)"
+              >
                 <span class="icon-arrow_drop_down icon-24"></span>
               </a>
             </div>
-            <div #info class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Bảo hiểm - mã số thuế - tài khoản cá nhân"
+            <div
+              #legalInformation
+              id="legalInformation"
+              class="collapse multi-collapse show"
+            >
+              <div #info class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                 >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addAssuranceTaxBankAccountInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group">
-                <div class="col">
-                  <div class="d-flex">
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Bảo hiểm - mã số thuế - tài khoản cá nhân"
+                  >
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                     <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                      class="icon-edit icon-18"
+                      (click)="addAssuranceTaxBankAccountInfo()"
                     ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="SIRegisterNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span class="text-dark"> {{ data.employeeName2 }}</span>
-                  </div>
+                  </a>
                 </div>
-                <!-- Tình trạng hôn nhân -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="SIRegisterOn"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-
-                    <span #maritalStatus>
-                      <codx-vll
-                        [showText]="true"
-                        [showBgColor]="false"
-                        [showIcon]="false"
+                <div class="row form-group">
+                  <!-- Ma so BHXH -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="SIRegisterNo"
                         [formModel]="view.formModel"
-                        [field]="'MaritalStatus'"
-                        [value]="data?.maritalStatus"
-                        class="text-dark"
                       >
-                      </codx-vll>
-                    </span>
+                      </codx-label>
+                      <span class="text-dark">
+                        : {{ infoPersonal.siRegisterNo }}</span
+                      >
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <!-- Ngày sinh -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="HICardNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #birthday> {{ data.birthday | fmDT }}</span>
-                  </div>
-                </div>
-                <!-- Nơi sinh -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="HIHospitalID"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-
-                    <span #birthPlace>{{ data.birthPlaceName }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <!-- Quốc tịch -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="PITNumber"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #nationality> {{ data.nationality }}</span>
-                  </div>
-                </div>
-                <!-- Dân tộc -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="PITIssuedOn"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #ethnicGroup>{{ data.ethnicGroup }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <!-- CMND/CCCD -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="AccountNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #idCardNo>{{ data.idCardNo }}</span>
-                  </div>
-                </div>
-                <!-- Ngày cấp -->
-                <div class="col">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="AccountBankID"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span #issuedOn>{{ data.issuedOn | fmDT }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div #DangDoan class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Hộ chiếu (Passport)"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeePassportInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="PassportNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span class="text-dark">
-                      <codx-vll
+                  <!-- Tình trạng hôn nhân -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="SIRegisterOn"
                         [formModel]="view.formModel"
-                        field="gender"
-                      ></codx-vll>
-                      {{ "0" | vll: "L0068":"text" | async }}</span
-                    >
-                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                        }}</span> -->
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IssuedPlace"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
-                    <span #birthday> {{ data.birthday }}</span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IssuedDate"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
+                      >
+                      </codx-label>
 
-                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
-                          null}}</span> -->
-                    <span #idCardNo> employeeInfo.idCardNo</span>
+                      <span #SIRegisterOn>
+                        : {{ infoPersonal.siRegisterOn | fmDT }}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="ExpiredDate"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
-
-                    <span #issuedOn> employeeInfo.issuedOn</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div #DangDoan class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Thị thực (visa)"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeVisaInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="VisaNo"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <span class="text-dark">
-                      <codx-vll
+                <div class="row form-group">
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="HICardNo"
                         [formModel]="view.formModel"
-                        field="gender"
-                      ></codx-vll>
-                      {{ "0" | vll: "L0068":"text" | async }}</span
-                    >
-                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                        }}</span> -->
+                      >
+                      </codx-label>
+                      <span #HICardNo>: {{ infoPersonal.hiCardNo }}</span>
+                    </div>
                   </div>
-                </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IssuedPlace"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
-                    <span #birthday> employeeInfo.birthday </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="IssuedDate"
-                      [formModel]="view.formModel"
-                    >
-                    </codx-label>
-
-                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
-                          null}}</span> -->
-                    <span #idCardNo>{{ data.idCardNo }}</span>
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="issuedOn"
-                      [formModel]="view.formModel"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
-
-                    <span #issuedOn> {{ data.issuedOn }} </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div #DangDoan class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Giấy phép lao động"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeWorkingLisenceInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="gender"
-                      [formModel]="view.formModel"
-                      default="Giới tính:"
-                    >
-                    </codx-label>
-                    <span class="text-dark">
-                      <codx-vll
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="HIHospitalID"
                         [formModel]="view.formModel"
-                        field="gender"
-                      ></codx-vll>
-                      {{ "0" | vll: "L0068":"text" | async }}</span
-                    >
-                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                        }}</span> -->
-                  </div>
-                </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="birthday"
-                      [formModel]="view.formModel"
-                      default="Sinh ngày:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
-                    <span #birthday> {{ data.birthday }} </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="idCardNo"
-                      [formModel]="view.formModel"
-                      default="CMND/CCCD:"
-                    >
-                    </codx-label>
+                      >
+                      </codx-label>
 
-                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
-                          null}}</span> -->
-                    <span #idCardNo> {{ data.idCardNo }}</span>
+                      <span #birthPlace>: {{ infoPersonal.hIHospitalID }}</span>
+                    </div>
                   </div>
                 </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="issuedOn"
-                      [formModel]="view.formModel"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
-
-                    <span #issuedOn> {{ data.issuedOn }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div #DangDoan class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <codx-label
-                  name="lblEmployeeInfo"
-                  [formModel]="view.formModel"
-                  default="Thị thực"
-                >
-                </codx-label>
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeVisaInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="gender"
-                      [formModel]="view.formModel"
-                      default="Giới tính:"
-                    >
-                    </codx-label>
-                    <span class="text-dark">
-                      <codx-vll
+                <div class="row form-group">
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="PITNumber"
                         [formModel]="view.formModel"
-                        field="gender"
-                      ></codx-vll>
-                      {{ "0" | vll: "L0068":"text" | async }}</span
-                    >
-                    <!-- <span #gender> employeeInfo.gender | formatvalue: view.formModel:"gender":gender | async
-                        }}</span> -->
+                      >
+                      </codx-label>
+                      <span #PITNumber>: {{ infoPersonal.pitNumber }}</span>
+                    </div>
+                  </div>
+                  <!-- Ngày cấp -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="PITIssuedOn"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #PITIssuedOn
+                        >: {{ infoPersonal.pitIssuedOn | fmDT }}</span
+                      >
+                    </div>
                   </div>
                 </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="birthday"
-                      [formModel]="view.formModel"
-                      default="Sinh ngày:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark">employeeInfo.birthday | date: "dd/MM/yyyy"}}</span> -->
-                    <span #birthday> {{ data.birthday }} </span>
+                <div class="row form-group">
+                  <!-- CMND/CCCD -->
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="AccountNo"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <div class="d-flex">
+                      <span
+                        class="icon-connection-point icon-14 text-gray-600 me-1"
+                      ></span>
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        fiedName="AccountBankID"
+                        [formModel]="view.formModel"
+                      >
+                      </codx-label>
+                      <span #issuedOn>: {{ infoPersonal.accountBankID }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div class="row form-group">
-                <div class="col-4">
-                  <div class="d-flex">
+              <div #DangDoan class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                >
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Hộ chiếu (Passport)"
+                  >
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                     <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
+                      class="icon-add icon-18"
+                      (click)="addEmployeePassportInfo()"
                     ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="idCardNo"
-                      [formModel]="view.formModel"
-                      default="CMND/CCCD:"
-                    >
-                    </codx-label>
-
-                    <!-- <span class="text-dark">employeeInfo?.idCardNo != ""? employeeInfo?.idCardNo :
-                          null}}</span> -->
-                    <span #idCardNo> {{ data.idCardNo }}</span>
-                  </div>
+                  </a>
                 </div>
-                <div class="col-8">
-                  <div class="d-flex">
-                    <span
-                      class="icon-connection-point icon-14 text-gray-600 me-1"
-                    ></span>
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      fiedName="issuedOn"
-                      [formModel]="view.formModel"
-                      default="Cấp ngày:"
-                    >
-                    </codx-label>
-                    <!-- <span class="text-dark me-15">employeeInfo?.issuedOn | date: "dd/MM/yyyy"}}</span> -->
-
-                    <span #issuedOn> {{ data.issuedOn }}</span>
+                <div [class]="lstPassport?.length > 0 ? 'has-action-menu' : ''">
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="PassportNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span class="text-dark">
+                          : {{ crrPassport?.passportNo }}</span
+                        >
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedPlace"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #IssuedPlace
+                          >: {{ crrPassport?.issuedPlace }}</span
+                        >
+                      </div>
+                    </div>
                   </div>
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedDate"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #issuedDate
+                          >: {{ crrPassport?.issuedDate | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="ExpiredDate"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #ExpiredDate
+                          >: {{ crrPassport?.expiredDate | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <codx-mfunc
+                    *ngIf="lstPassport?.length > 0"
+                    [formModel]="view.formModel"
+                    (clickMF)="clickMF($event, crrPassport)"
+                    type="hover"
+                    [dataItem]="crrPassport"
+                  >
+                  </codx-mfunc>
+                </div>
+              </div>
+              <div #Visa class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                >
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Thị thực (visa)"
+                  >
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-add icon-18"
+                      (click)="addEmployeeVisaInfo()"
+                    ></span>
+                  </a>
+                </div>
+
+                <div [class]="lstVisa?.length > 0 ? 'has-action-menu' : ''">
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="VisaNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span class="text-dark"> : {{ crrVisa?.visaNo }}</span>
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedPlace"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span>: {{ crrVisa?.issuedPlace }} </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedDate"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #issuedDate
+                          >: {{ crrVisa?.issuedDate | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="EffectedDate"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span #issuedOn
+                          >: {{ crrVisa?.effectedDate | fmDT }} -
+                          {{ crrVisa?.expiredDate | fmDT }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <codx-mfunc
+                    *ngIf="lstVisa?.length > 0"
+                    [formModel]="view.formModel"
+                    (clickMF)="clickMF($event, crrVisa)"
+                    type="hover"
+                    [dataItem]="crrVisa"
+                  >
+                  </codx-mfunc>
+                </div>
+              </div>
+              <div #WorkPermit class="border mb-3">
+                <div
+                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                >
+                  <codx-label
+                    name="lblEmployeeInfo"
+                    [formModel]="view.formModel"
+                    default="Giấy phép lao động"
+                  >
+                  </codx-label>
+                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <span
+                      class="icon-add icon-18"
+                      (click)="addEmployeeWorkingLisenceInfo()"
+                    ></span>
+                  </a>
+                </div>
+                <div
+                  [class]="lstWorkPermit?.length > 0 ? 'has-action-menu' : ''"
+                >
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="WorkPermitNo"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span class="text-dark">
+                          : {{ lstWorkPermit[0]?.workPermitNo }}</span
+                        >
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedPlace"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span>: {{ lstWorkPermit[0]?.issuedPlace }} </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row form-group">
+                    <div class="col-4">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="IssuedDate"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span>: {{ lstWorkPermit[0]?.issuedDate | fmDT }}</span>
+                      </div>
+                    </div>
+                    <div class="col-8">
+                      <div class="d-flex">
+                        <span
+                          class="icon-connection-point icon-14 text-gray-600 me-1"
+                        ></span>
+                        <codx-label
+                          class="text-gray-600 me-2"
+                          fiedName="FromDate"
+                          [formModel]="view.formModel"
+                        >
+                        </codx-label>
+                        <span
+                          >: {{ lstWorkPermit[0]?.fromDate | fmDT }} -
+                          {{ lstWorkPermit[0]?.toDate | fmDT }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <codx-mfunc
+                    *ngIf="lstWorkPermit?.length > 0"
+                    [formModel]="view.formModel"
+                    (clickMF)="clickMF($event, lstWorkPermit[0])"
+                    type="hover"
+                    [dataItem]="lstWorkPermit[0]"
+                  >
+                  </codx-mfunc>
                 </div>
               </div>
             </div>
@@ -1455,9 +1387,9 @@
                     <div class="col-6">
                       <ng-container >
                         <div class="row mb-4">
-                          <div class="fw-bold text-dark"> data.competenceName }}</div>
+                          <div class="fw-bold text-dark"> infoPersonal.competenceName }}</div>
                           <ejs-slider [width]="300" [type]="minType" [min]="0"
-                            [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="data.rating"
+                            [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="infoPersonal.rating"
                             [readonly]="true">
                           </ejs-slider>
                         </div>
@@ -1668,7 +1600,7 @@
     data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-dependencies=".pw-profile,."
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
   >
@@ -1742,7 +1674,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.documentNo }}</span>
+                    <span>{{ infoPersonal.documentNo }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="status">
@@ -1776,7 +1708,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.joinedOn }}</span>
+                    <span>{{ infoPersonal.joinedOn }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="hiredOn">
@@ -1787,7 +1719,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.hiredOn }}</span>
+                    <span>{{ infoPersonal.hiredOn }}</span>
                   </span>
                 </div>
               </div>
@@ -1801,7 +1733,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.userID }}</span>
+                    <span>{{ infoPersonal.userID }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="employeeID">
@@ -1812,7 +1744,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.employeeID }}</span>
+                    <span>{{ infoPersonal.employeeID }}</span>
                   </span>
                 </div>
               </div>
@@ -1826,7 +1758,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.positionID }}</span>
+                    <span>{{ infoPersonal.positionID }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="jobLevel">
@@ -1837,7 +1769,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.jobLevel }}</span>
+                    <span>{{ infoPersonal.jobLevel }}</span>
                   </span>
                 </div>
               </div>
@@ -1852,7 +1784,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.orgUnitID }}</span>
+                    <span>{{ infoPersonal.orgUnitID }}</span>
                   </span>
                 </div>
               </div>
@@ -1867,7 +1799,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.lineManager }}</span>
+                    <span>{{ infoPersonal.lineManager }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="indirectManager">
@@ -1878,7 +1810,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.indirectManager }}</span>
+                    <span>{{ infoPersonal.indirectManager }}</span>
                   </span>
                 </div>
               </div>
@@ -1893,7 +1825,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.locationID }}</span>
+                    <span>{{ infoPersonal.locationID }}</span>
                   </span>
                 </div>
               </div>
@@ -1908,7 +1840,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.labourType }}</span>
+                    <span>{{ infoPersonal.labourType }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="labourConditions">
@@ -1918,7 +1850,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.labourConditions }}</span>
+                    <span>{{ infoPersonal.labourConditions }}</span>
                   </span>
                 </div>
               </div>
@@ -1933,7 +1865,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isTUnion }}</span>
+                    <span>{{ infoPersonal.isTUnion }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="tUnionDate">
@@ -1944,7 +1876,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.tUnionDate }}</span>
+                    <span>{{ infoPersonal.tUnionDate }}</span>
                   </span>
                 </div>
               </div>
@@ -1959,7 +1891,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isExpertRecruit }}</span>
+                    <span>{{ infoPersonal.isExpertRecruit }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isExpertTrain">
@@ -1970,7 +1902,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isExpertTrain }}</span>
+                    <span>{{ infoPersonal.isExpertTrain }}</span>
                   </span>
                 </div>
               </div>
@@ -2003,7 +1935,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.timeCardNo }}</span>
+                    <span>{{ infoPersonal.timeCardNo }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="shiftCalendarID">
@@ -2014,7 +1946,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.shiftCalendarID }}</span>
+                    <span>{{ infoPersonal.shiftCalendarID }}</span>
                   </span>
                 </div>
               </div>
@@ -2029,7 +1961,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.aLObjectID }}</span>
+                    <span>{{ infoPersonal.aLObjectID }}</span>
                   </span>
                 </div>
               </div>
@@ -2044,7 +1976,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotScan }}</span>
+                    <span>{{ infoPersonal.isNotScan }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isNotOTKow">
@@ -2055,7 +1987,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotOTKow }}</span>
+                    <span>{{ infoPersonal.isNotOTKow }}</span>
                   </span>
                 </div>
               </div>
@@ -2070,7 +2002,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotScan }}</span>
+                    <span>{{ infoPersonal.isNotScan }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isNotCLeaveKow">
@@ -2081,7 +2013,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotCLeaveKow }}</span>
+                    <span>{{ infoPersonal.isNotCLeaveKow }}</span>
                   </span>
                 </div>
               </div>
@@ -2114,7 +2046,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.timeCardNo }}</span>
+                    <span>{{ infoPersonal.timeCardNo }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="currencyID">
@@ -2125,7 +2057,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.currencyID }}</span>
+                    <span>{{ infoPersonal.currencyID }}</span>
                   </span>
                 </div>
               </div>
@@ -2140,7 +2072,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.taxTableID }}</span>
+                    <span>{{ infoPersonal.taxTableID }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isSettleTax">
@@ -2151,7 +2083,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isSettleTax }}</span>
+                    <span>{{ infoPersonal.isSettleTax }}</span>
                   </span>
                 </div>
               </div>
@@ -2165,8 +2097,9 @@
                   >
                   </codx-label>
 
-                  <span class="text-dark fw-bold">
-                    <span>{{ data.advanceAmount }}</span>
+                  <span class="text-dark fw-bold"
+                    >ơ uê
+                    <span>{{ infoPersonal.advanceAmount }}</span>
                   </span>
                 </div>
               </div>
@@ -2220,7 +2153,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.documentNo }}</span>
+                    <span>{{ infoPersonal.documentNo }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="status">
@@ -2231,7 +2164,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.status }}</span>
+                    <span>{{ infoPersonal.status }}</span>
                   </span>
                 </div>
               </div>
@@ -2245,7 +2178,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.joinedOn }}</span>
+                    <span>{{ infoPersonal.joinedOn }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="hiredOn">
@@ -2256,7 +2189,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.hiredOn }}</span>
+                    <span>{{ infoPersonal.hiredOn }}</span>
                   </span>
                 </div>
               </div>
@@ -2270,7 +2203,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.userID }}</span>
+                    <span>{{ infoPersonal.userID }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="employeeID">
@@ -2281,7 +2214,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.employeeID }}</span>
+                    <span>{{ infoPersonal.employeeID }}</span>
                   </span>
                 </div>
               </div>
@@ -2295,7 +2228,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.positionID }}</span>
+                    <span>{{ infoPersonal.positionID }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="jobLevel">
@@ -2306,7 +2239,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.jobLevel }}</span>
+                    <span>{{ infoPersonal.jobLevel }}</span>
                   </span>
                 </div>
               </div>
@@ -2321,7 +2254,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.orgUnitID }}</span>
+                    <span>{{ infoPersonal.orgUnitID }}</span>
                   </span>
                 </div>
               </div>
@@ -2336,7 +2269,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.lineManager }}</span>
+                    <span>{{ infoPersonal.lineManager }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="indirectManager">
@@ -2347,7 +2280,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.indirectManager }}</span>
+                    <span>{{ infoPersonal.indirectManager }}</span>
                   </span>
                 </div>
               </div>
@@ -2362,7 +2295,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.locationID }}</span>
+                    <span>{{ infoPersonal.locationID }}</span>
                   </span>
                 </div>
               </div>
@@ -2377,7 +2310,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.labourType }}</span>
+                    <span>{{ infoPersonal.labourType }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="labourConditions">
@@ -2387,7 +2320,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.labourConditions }}</span>
+                    <span>{{ infoPersonal.labourConditions }}</span>
                   </span>
                 </div>
               </div>
@@ -2402,7 +2335,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isTUnion }}</span>
+                    <span>{{ infoPersonal.isTUnion }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="tUnionDate">
@@ -2413,7 +2346,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.tUnionDate }}</span>
+                    <span>{{ infoPersonal.tUnionDate }}</span>
                   </span>
                 </div>
               </div>
@@ -2428,7 +2361,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isExpertRecruit }}</span>
+                    <span>{{ infoPersonal.isExpertRecruit }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isExpertTrain">
@@ -2439,7 +2372,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isExpertTrain }}</span>
+                    <span>{{ infoPersonal.isExpertTrain }}</span>
                   </span>
                 </div>
               </div>
@@ -2472,7 +2405,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.timeCardNo }}</span>
+                    <span>{{ infoPersonal.timeCardNo }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="shiftCalendarID">
@@ -2483,7 +2416,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.shiftCalendarID }}</span>
+                    <span>{{ infoPersonal.shiftCalendarID }}</span>
                   </span>
                 </div>
               </div>
@@ -2498,7 +2431,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.aLObjectID }}</span>
+                    <span>{{ infoPersonal.aLObjectID }}</span>
                   </span>
                 </div>
               </div>
@@ -2513,7 +2446,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotScan }}</span>
+                    <span>{{ infoPersonal.isNotScan }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isNotOTKow">
@@ -2524,7 +2457,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotOTKow }}</span>
+                    <span>{{ infoPersonal.isNotOTKow }}</span>
                   </span>
                 </div>
               </div>
@@ -2539,7 +2472,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotScan }}</span>
+                    <span>{{ infoPersonal.isNotScan }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isNotCLeaveKow">
@@ -2550,7 +2483,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isNotCLeaveKow }}</span>
+                    <span>{{ infoPersonal.isNotCLeaveKow }}</span>
                   </span>
                 </div>
               </div>
@@ -2583,7 +2516,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.timeCardNo }}</span>
+                    <span>{{ infoPersonal.timeCardNo }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="currencyID">
@@ -2594,7 +2527,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.currencyID }}</span>
+                    <span>{{ infoPersonal.currencyID }}</span>
                   </span>
                 </div>
               </div>
@@ -2609,7 +2542,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.taxTableID }}</span>
+                    <span>{{ infoPersonal.taxTableID }}</span>
                   </span>
                 </div>
                 <div class="col d-flex" id="isSettleTax">
@@ -2620,7 +2553,7 @@
                   >
                   </codx-label>
                   <span class="text-dark fw-bold">
-                    <span>{{ data.isSettleTax }}</span>
+                    <span>{{ infoPersonal.isSettleTax }}</span>
                   </span>
                 </div>
               </div>
@@ -2635,7 +2568,7 @@
                   </codx-label>
 
                   <span class="text-dark fw-bold">
-                    <span>{{ data.advanceAmount }}</span>
+                    <span>{{ infoPersonal.advanceAmount }}</span>
                   </span>
                 </div>
               </div>
@@ -2706,7 +2639,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="addEmployeeDegreeInfo()"
                   ></span>
                 </a>
               </div>
@@ -2742,7 +2675,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="addEmployeeCertificateInfo()"
                   ></span>
                 </a>
               </div>
@@ -2778,7 +2711,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="addEmployeeSkillsInfo()"
                   ></span>
                 </a>
               </div>
@@ -2815,7 +2748,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="addEmployeeTrainCourseInfo()"
                   ></span>
                 </a>
               </div>
@@ -3113,7 +3046,7 @@
                   <codx-label
                     name="lblEmployeeCheckUp"
                     [formModel]="view.formModel"
-                    default="KHÁM SỨC KHỎE"
+                    default="KHEN THƯỞNG"
                   >
                   </codx-label>
                 </div>
@@ -3122,9 +3055,14 @@
                   <span> {{ "1" | vll: "L0225":"text" | async }}</span>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
+              <div class="d-flex">
+                <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                  <span class="icon-add icon-24"></span>
+                </a>
+                <a class="btn btn-xs btn-icon btn-hover-primary">
+                  <span class="icon-arrow_drop_down icon-24"></span>
+                </a>
+              </div>
             </div>
             <div class="border mb-3">
               <div
@@ -3133,7 +3071,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="addEmployeeAwardsInfo()"
                   ></span>
                 </a>
               </div>
@@ -3151,7 +3089,7 @@
                   <codx-label
                     name="lblEmployeeVaccine"
                     [formModel]="view.formModel"
-                    default="TIÊM SỨC KHỎE"
+                    default="KỶ LUẬT"
                   >
                   </codx-label>
                 </div>
@@ -3160,9 +3098,14 @@
                   <span> {{ "1" | vll: "L0225":"text" | async }}</span>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
+              <div class="d-flex">
+                <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                  <span class="icon-add icon-24"></span>
+                </a>
+                <a class="btn btn-xs btn-icon btn-hover-primary">
+                  <span class="icon-arrow_drop_down icon-24"></span>
+                </a>
+              </div>
             </div>
             <div class="border mb-3">
               <div
@@ -3171,7 +3114,7 @@
                 <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                   <span
                     class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
+                    (click)="addEmployeeDisciplinesInfo()"
                   ></span>
                 </a>
               </div>
@@ -3266,20 +3209,21 @@
 
 <ng-template #healthPeriodID let-data>
   {{ data }}
+  {{ infoPersonal.healthPeriodName }}
 </ng-template>
 <ng-template #healthPeriodDate let-data>
   <div>
-    {{ data.fromDate }}
+    {{ infoPersonal.fromDate }}
   </div>
 </ng-template>
 <ng-template #healthPeriodPlace let-data>
   <div>
-    {{ data.hospitalID }}
+    {{ infoPersonal.hospitalID }}
   </div>
 </ng-template>
 <ng-template #healthType let-data>
-  {{ data.healthType }}
+  {{ infoPersonal.healthType }}
 </ng-template>
 <ng-template #healthPeriodResult let-data>
-  {{ data.healthPeriodResult }}
+  {{ infoPersonal.healthPeriodResult }}
 </ng-template>

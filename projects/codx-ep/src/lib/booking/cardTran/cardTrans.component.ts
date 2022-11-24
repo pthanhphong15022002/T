@@ -62,7 +62,20 @@ export class CardTransComponent
       id:'btnAdd',
     }
   }
-  
+  viewChanged(evt: any) {
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.popupTitle = res.defaultName.toString();
+      }
+    });
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;        
+        
+      }
+    });
+  }
   initForm() {
     this.codxEpService
       .getFormGroup(
@@ -146,7 +159,7 @@ export class CardTransComponent
   addNew() {
     this.view.dataService.addNew().subscribe((res) => {      
     this.dialog = this.callFuncService.openForm(
-      PopupAddCardTransComponent,'',550,null,this.funcID,
+      PopupAddCardTransComponent,'',550,450,this.funcID,
       [this.view.dataService.dataSelected,this.formModel,this.popupTitle,this.funcID,this.view.dataService]
         
     );

@@ -1,19 +1,10 @@
 <div class="page-pw h-100">
-  <div
-    class="pw-profile"
-    style="
+  <div class="pw-profile" style="
       background-image: url('../assets/themes/mwp/default/light/img/EmpProfile_Background.PNG');
-    "
-  >
+    ">
     <div class="d-flex align-items-center avatar">
-      <codx-img
-        class="me-4"
-        [objectType]="'AD_Users'"
-        [objectId]="employeeInfo.userID"
-        [objectName]="employeeInfo.userName"
-        [width]="60"
-        [imgOn]="employeeInfo?.modifiedOn"
-      >
+      <codx-img class="me-4" [objectType]="'AD_Users'" [objectId]="employeeInfo.userID"
+        [objectName]="employeeInfo.userName" [width]="60" [imgOn]="employeeInfo?.modifiedOn">
       </codx-img>
       <div class="d-flex flex-column">
         <div class="fs-6 fw-bold text-dark">{{ employeeInfo?.userName }}</div>
@@ -22,61 +13,41 @@
       </div>
     </div>
   </div>
-  <div class="personal-container h-100">
-    <div class="pw-menu d-flex h-100 w-100">
+  <div class="personal-container">
+    <div class="personal-menu w-100">
       <ejs-tab id="tab_default" heightAdjustMode="Auto">
         <e-tabitems>
           <e-tabitem>
             <div class="pw-md">
               <ng-template #headerText>
-                <div
-                  class="d-flex align-items-center"
-                  (click)="activeMF('POST')"
-                >
-                  <img
-                    src="../assets/themes/mwp/default/light/img/{{
+                <div class="d-flex align-items-center me-3" (click)="activeMF('POST')">
+                  <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/{{
                       !headerMF.POST ? 'mwp_post' : 'mwp_post_active'
-                    }}.svg"
-                    alt=""
-                  />
-                  <span class="fw-bolder ms-2">
-                    <codx-label
-                      fiedName="Comment"
-                      formName="Comments"
-                      default="Bài viết"
-                    >
+                    }}.svg" alt="" />
+                  <span class="fw-bold ms-2">
+                    <codx-label fiedName="Comment" formName="Comments" default="Bài viết">
                     </codx-label>
                   </span>
                 </div>
               </ng-template>
             </div>
             <ng-template #content>
-              <div class="pw-feed h-100 pw-md" *ngIf="!checkRefreshAvatar">
+              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y" *ngIf="!checkRefreshAvatar">
                 <app-posts></app-posts>
               </div>
-              <div class="pw-feed h-100 pw-md" *ngIf="checkRefreshAvatar">
+              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y" *ngIf="checkRefreshAvatar">
                 <app-posts></app-posts>
               </div>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <div
-                class="d-flex align-items-center"
-                (click)="activeMF('IMAGE')"
-              >
-                <img
-                  src="../assets/themes/mwp/default/light/img/{{
+              <div class="d-flex align-items-center me-3" (click)="activeMF('IMAGE')">
+                <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/{{
                     !headerMF.IMAGE ? 'mwp_image' : 'mwp_image_active'
-                  }}.svg"
-                  alt=""
-                />
-                <span class="fw-bolder ms-2">
-                  <codx-label
-                    fiedName="Image"
-                    formName="Comments"
-                    default="Hình ảnh"
-                  >
+                  }}.svg" alt="" />
+                <span class="fw-bold ms-2">
+                  <codx-label fiedName="Image" formName="Comments" default="Hình ảnh">
                   </codx-label>
                 </span>
               </div>
@@ -89,22 +60,12 @@
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <div
-                class="d-flex align-items-center"
-                (click)="activeMF('VIDEO')"
-              >
-                <img
-                  src="../assets/themes/mwp/default/light/img/{{
+              <div class="d-flex align-items-center me-3" (click)="activeMF('VIDEO')">
+                <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/{{
                     !headerMF.VIDEO ? 'mwp_video' : 'mwp_video_active'
-                  }}.svg"
-                  alt=""
-                />
-                <span class="fw-bolder ms-2">
-                  <codx-label
-                    fiedName="Video"
-                    formName="Comments"
-                    default="Video"
-                  >
+                  }}.svg" alt="" />
+                <span class="fw-bold ms-2">
+                  <codx-label fiedName="Video" formName="Comments" default="Video">
                   </codx-label>
                 </span>
               </div>
@@ -119,24 +80,14 @@
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <div
-                class="d-flex align-items-center"
-                (click)="activeMF('NOTEBOOK')"
-              >
-                <img
-                  src="../assets/themes/mwp/default/light/img/{{
+              <div class="d-flex align-items-center me-3" (click)="activeMF('NOTEBOOK')">
+                <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/{{
                     !headerMF.NOTEBOOK
                       ? 'mwp_notebooks'
                       : 'mwp_notebooks_active'
-                  }}.svg"
-                  alt=""
-                />
-                <span class="fw-bolder ms-2">
-                  <codx-label
-                    fiedName="NoteBook"
-                    formName="Comments"
-                    default="Sổ tay"
-                  >
+                  }}.svg" alt="" />
+                <span class="fw-bold ms-2">
+                  <codx-label fiedName="NoteBook" formName="Comments" default="Sổ tay">
                   </codx-label>
                 </span>
               </div>
@@ -149,60 +100,36 @@
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <div
-                class="d-flex align-items-center"
-                (click)="activeMF('STORAGE')"
-              >
-                <img
-                  src="../assets/themes/mwp/default/light/img/{{
+              <div class="d-flex align-items-center me-3" (click)="activeMF('STORAGE')">
+                <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/{{
                     !headerMF.STORAGE ? 'mwp_storage' : 'mwp_storage_active'
-                  }}.svg"
-                  alt=""
-                />
-                <span class="fw-bolder ms-2">
-                  <codx-label
-                    fiedName="Storage"
-                    formName="Comments"
-                    default="Kho lưu trữ"
-                  >
+                  }}.svg" alt="" />
+                <span class="fw-bold ms-2">
+                  <codx-label fiedName="Storage" formName="Comments" default="Kho lưu trữ">
                   </codx-label>
                 </span>
               </div>
             </ng-template>
             <ng-template #content>
-              <div
-                class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
-              >
+              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y">
                 <app-storage></app-storage>
               </div>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <div
-                class="d-flex align-items-center"
-                (click)="activeMF('INFORMATION')"
-              >
-                <img
-                  src="../assets/themes/mwp/default/light/img/{{
-                    !headerMF.STORAGE ? 'mwp_info' : 'mwp_info_active'
-                  }}.svg"
-                  alt=""
-                />
-                <span class="fw-bolder ms-2">
-                  <codx-label
-                    fiedName="Information"
-                    formName="Comments"
-                    default="Thông tin cá nhân"
-                  >
+              <div class="d-flex align-items-center" (click)="activeMF('INFORMATION')">
+                <img class="w-25px h-25px" src="../assets/themes/mwp/default/light/img/{{
+                    !headerMF.INFORMATION ? 'mwp_info' : 'mwp_info_active'
+                  }}.svg" alt="" />
+                <span class="fw-bold ms-2">
+                  <codx-label fiedName="Information" formName="Comments" default="Thông tin cá nhân">
                   </codx-label>
                 </span>
               </div>
             </ng-template>
             <ng-template #content>
-              <div
-                class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
-              >
+              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y">
                 <app-information></app-information>
               </div>
             </ng-template>
@@ -210,40 +137,5 @@
         </e-tabitems>
       </ejs-tab>
     </div>
-    <!-- <div class="pw-feed h-100 pw-md" *ngIf="funcID == 'MWP009'">
-      <app-posts></app-posts>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-md rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0091'"
-    >
-      <app-posts></app-posts>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0092'"
-    >
-      <app-img></app-img>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0093'"
-    >
-      <div class="px-5">
-        <app-video></app-video>
-      </div>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body"
-      *ngIf="funcID == 'MWP0094'"
-    >
-      <app-note-books></app-note-books>
-    </div>
-    <div
-      class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y"
-      *ngIf="funcID == 'MWP0095'"
-    >
-      <app-storage></app-storage>
-    </div> -->
   </div>
 </div>

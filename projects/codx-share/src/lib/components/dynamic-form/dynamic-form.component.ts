@@ -12,6 +12,7 @@ import {
   DataRequest,
   CallFuncService,
   LayoutService,
+  NotificationsService,
 } from 'codx-core';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
@@ -43,7 +44,8 @@ export class DynamicFormComponent extends UIComponent {
     private inject: Injector,
     private callfunc: CallFuncService,
     private route: ActivatedRoute,
-    private layout: LayoutService
+    private layout: LayoutService,
+    private notifySvr: NotificationsService
   ) {
     super(inject);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -77,6 +79,7 @@ export class DynamicFormComponent extends UIComponent {
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
@@ -141,7 +144,10 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt?.data,'ODS21'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [
+                dt?.data,
+                'ODS21',
+              ])
               .subscribe();
           }
         });
@@ -174,7 +180,10 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && dt?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt,'ODS21'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [
+                dt,
+                'ODS21',
+              ])
               .subscribe();
           }
         });
@@ -209,15 +218,33 @@ export class DynamicFormComponent extends UIComponent {
   private delete(evt?) {
     let delItem = this.viewBase.dataService.dataSelected;
     if (evt) delItem = evt;
-    this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-      this.dataSelected = res;
-    });
     //Xử lý riêng OD
-    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
+    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21') {
       this.api
-          .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [delItem?.categoryID])
-          .subscribe();
-    
+        .execSv(
+          'OD',
+          'OD',
+          'DispatchesBusiness',
+          'GetItemByCategoryIDAsync',
+          delItem.categoryID
+        )
+        .subscribe((item) => {
+          if (!item) {
+            this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+              this.dataSelected = res;
+            });
+            this.api
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [
+                delItem?.categoryID,
+              ])
+              .subscribe();
+          } else this.notifySvr.notifyCode('SYS002');
+        });
+    } else {
+      this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+        this.dataSelected = res;
+      });
+    }
   }
 
   private export(evt: any) {

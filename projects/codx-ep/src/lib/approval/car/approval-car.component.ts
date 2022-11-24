@@ -86,8 +86,6 @@ export class ApprovalCarsComponent extends UIComponent {
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
-    this.request.predicate = 'ResourceType=@0';
-    this.request.dataValue = '2';
     this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
@@ -136,6 +134,7 @@ export class ApprovalCarsComponent extends UIComponent {
         request: this.request,
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
+        showFilter:false,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
@@ -296,7 +295,10 @@ export class ApprovalCarsComponent extends UIComponent {
     }
   }
   sameDayCheck(sDate:any, eDate:any){
-    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+    if(sDate && eDate){
+      return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+    }
+    return false;
   }
   showHour(date:any){
     let temp= new Date(date);

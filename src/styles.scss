@@ -66,7 +66,7 @@ $primary-lightest: if(isDarkMode(), #F4F7FE, #F4F7FF);
   --gray-500: #8f9596;
   --gray-400: #a4a9ac;
   --gray-300: #c2c8ca;
-  --gray-200: #ebf0f1;
+  --gray-200: #cad0d3;
   --gray-100: #f5f9fa;
 
   --white: #ffffff;
@@ -1000,10 +1000,6 @@ codx-tag .codx-tag:hover {
   padding: 15px;
 }
 
-.content-tree .menu-item {
-  line-height: 24px !important;
-}
-
 .content-tree .icon-node {
   display: inline-block;
   width: 20px;
@@ -1056,13 +1052,129 @@ codx-tag .codx-tag:hover {
 
 }
 
+.badge-secondary {
+  background-color: var(--gray-200);
+}
+
+.img-14 img {
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 4px;
+}
+
+.home-right .list-empty.card img {
+  max-width: 140px !important;
+}
+
+
+.e-colorpicker-wrapper .e-btn.e-icon-btn:hover {
+  background-color: transparent;
+  color: var(--primary);
+}
+
+.e-colorpicker-wrapper .e-btn.e-icon-btn .e-icons {
+  font-family: 'icomoon' !important;
+  font-size: 18px !important;
+}
+
+.e-colorpicker-wrapper .e-btn.e-icon-btn .e-icons::before {
+  content: "\ea00";
+}
+
+.symbol-50 .e-colorpicker-wrapper {
+  width: 50px !important;
+  height: 50px !important;
+  overflow: hidden;
+
+  position: relative;
+}
+
+.symbol-50 .e-colorpicker-wrapper button {
+  width: 50px !important;
+  height: 50px !important;
+  position: absolute;
+  padding: 0 !important;
+  margin: 0 !important;
+  top: 0;
+  left: 0;
+  border-radius: 50% !important;
+  border: 0 !important;
+
+
+}
+
+.symbol-50 .e-colorpicker-wrapper button span {
+  width: 50px !important;
+  height: 50px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+}
+
+.symbol-50 .e-colorpicker-wrapper button.e-btn.e-icon-btn span.e-icons {
+  font-size: 21px !important;
+  color: var(--gray-700);
+}
+
+.pattern-teams .symbol-50 {
+  float: left;
+}
+
+button[type="button"],
+button[type="button"]:hover,
+button[type="button"]:focus {
+  box-shadow: none !important;
+}
+
+div.user-mini-nav {
+  min-height: 28px;
+  height: auto !important;
+  padding: 3px 8px 3px 2px !important;
+  margin-right: 6px;
+}
+
+.w-30px.h-30px {
+  min-width: 30px;
+}
+
+.w-35px.h-35px {
+  min-width: 35px;
+}
+
+.e-grid .e-rowcell {
+  line-height: inherit;
+}
+
+.e-grid.e-responsive .e-rowcell,
+.e-grid.e-responsive .e-headercelldiv {
+  white-space: normal;
+}
+
+.e-frozen-left-header,
+.e-frozen-left-content {
+  min-width: 40px;
+}
+
+
+.personal-container .e-tab .e-content.e-lib {
+  padding-left: 0;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
-
 
 /******* tam ***/
 .codx-form .card-footer,
 .e-dialog .card-footer {
   padding-bottom: 10px !important;
+}
+
+codx-vll {
+  font-style: 12px !important;
+  border-radius: 20px !important;
 }
