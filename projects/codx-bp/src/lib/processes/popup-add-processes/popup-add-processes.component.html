@@ -43,8 +43,8 @@
     <div class="form-group col-md-4">
       <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
       </codx-label>
-      <codx-input field="groupID" [crrValue]="process.groupID" [formModel]="form.formModel" [refValue]="gridViewSetup['GroupID']['referedValue']"
-        type="combobox" (valueChange)="valueChange($event)">
+      <codx-input field="groupID" [crrValue]="process.groupID" [formModel]="form.formModel"
+        [refValue]="gridViewSetup['GroupID']['referedValue']" type="combobox" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="row">
@@ -104,6 +104,8 @@
   </ng-template>
 </codx-form>
 
+
 <ng-template #subHeader>
-  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false"></codx-tag>
+  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="process?.tags || ''"
+    (valueChange)="valueChangeTag($event)"></codx-tag>
 </ng-template>
