@@ -94,5 +94,6 @@ export class WP_Comments{
         this.tagName = "";
         this.tag = 0;
         this.files = null;
+        this.permissions = [];
     }
 }

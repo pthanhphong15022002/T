@@ -221,9 +221,7 @@ export class PopupRolesComponent implements OnInit {
         perm.nemberType = '1';
         perm.autoCreate = false;
         perm.isActive = true;
-        perm.update = true;
-        perm.delete = true;
-        perm.read = true;
+        // perm.read = true;
         perm.objectType = data.objectType;
         this.process.permissions = this.checkUserPermission(
           this.process.permissions,
@@ -257,19 +255,19 @@ export class PopupRolesComponent implements OnInit {
       perm.share = false;
       perm.assign = false;
 
-      if (perm.objectType.toLowerCase() == '9') {
-        perm.download = true;
-      }
+      // if (perm.objectType.toLowerCase() == '9') {
+      //   perm.download = true;
+      // }
 
-      if (perm.objectType.toLowerCase() == '7') {
-        perm.download = true;
-        perm.full = true;
-        perm.share = true;
-        perm.update = true;
-        perm.create = true;
-        perm.delete = true;
-        perm.upload = true;
-      }
+      // if (perm.objectType.toLowerCase() == '7') {
+      //   perm.download = true;
+      //   perm.full = true;
+      //   perm.share = true;
+      //   perm.update = true;
+      //   perm.read = true;
+      //   perm.delete = true;
+      //   perm.upload = true;
+      // }
 
       list.push(Object.assign({}, perm));
       this.currentPemission = list.length - 1;
