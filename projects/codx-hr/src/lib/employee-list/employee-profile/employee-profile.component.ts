@@ -124,6 +124,39 @@ export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('healthPeriodResult', { static: true })
   healthPeriodResult: TemplateRef<any>;
 
+  objCollapes = {
+    '1': false,
+    '1.1': false,
+    '1.2': false,
+    '2': false,
+    '2.1': false,
+    '2.2': false,
+    '3': false,
+    '3.1': false,
+    '3.2': false,
+    '3.3': false,
+    '3.4': false,
+    '4': false,
+    '4.1': false,
+    '4.2': false,
+    '4.3': false,
+    '4.4': false,
+    '4.5': false,
+    '5': false,
+    '5.1': false,
+    '5.2': false,
+    '5.3': false,
+    '5.4': false,
+    '6': false,
+    '6.1': false,
+    '6.2': false,
+    '7': false,
+    '7.1': false,
+    '7.2': false,
+    '7.3': false,
+    '7.4': false,
+  };
+
   vllTabs = [
     { icon: 'icon-apartment', text: 'Thông tin cá nhân' },
     { icon: 'icon-apartment', text: 'Thông tin công việc' },
@@ -141,21 +174,6 @@ export class EmployeeProfileComponent extends UIComponent {
 
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
-        // this.codxMwpService
-        //   .LoadData(params.employeeID, this.user.userID, '0')
-        //   .subscribe((response: any) => {
-        //     if (response) {
-        //       // console.log(response);
-        //       // this.infoPersonal = response.InfoPersonal;
-        //       //this.data = response.Employee;
-
-        //       // this.dataEmployee.employeeInfo = response.InfoPersonal;
-        //       // this.codxMwpService.appendID(params.employeeID);
-        //       // this.codxMwpService.empInfo.next(response);
-        //       this.df.detectChanges();
-        //     }
-        //   });
-
         // Thong tin ca nhan
         this.hrService.getEmployeeInfo(params.employeeID).subscribe((emp) => {
           if (emp) {
@@ -691,13 +709,14 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  collapse(e: HTMLElement) {
-    if (e) {
-      if (e.classList.contains('show')) {
-        e.classList.remove('show');
-      } else {
-        e.classList.add('show');
-      }
-    }
+  collapse(id) {
+    this.objCollapes[id] = !this.objCollapes[id];
+    // if (e) {
+    //   if (e.classList.contains('show')) {
+    //     e.classList.remove('show');
+    //   } else {
+    //     e.classList.add('show');
+    //   }
+    // }
   }
 }
