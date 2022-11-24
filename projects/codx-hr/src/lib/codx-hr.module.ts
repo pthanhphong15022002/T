@@ -90,6 +90,10 @@ export const routes: Routes = [
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
           },
+          {
+            path: 'employeelist/:funcID',
+            component: EmployeeListComponent,
+          },
         ],
       },
       {
@@ -109,10 +113,6 @@ export const routes: Routes = [
           {
             path: 'employeedetail/:funcID',
             component: EmployeeProfileComponent,
-          },
-          {
-            path: 'employeelist/:funcID',
-            component: EmployeeListComponent,
           },
         ],
       },
@@ -149,6 +149,7 @@ export const routes: Routes = [
           //   path: 'employeeinfomation/:funcID',
           //   component: EmployeeInfomationComponent,
           // },
+
           {
             path: 'setting',
             component: HRParametersComponent,

@@ -29,11 +29,11 @@ import { CodxOmService } from '../../codx-om.service';
 
 
 @Component({
-  selector: 'popup-align-kr',
-  templateUrl: 'popup-align-kr.component.html',
-  styleUrls: ['popup-align-kr.component.scss'],
+  selector: 'popup-show-kr',
+  templateUrl: 'popup-show-kr.component.html',
+  styleUrls: ['popup-show-kr.component.scss'],
 })
-export class PopupAlignKRComponent extends UIComponent implements AfterViewInit {
+export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   
   views: Array<ViewModel> | any = [];
   @ViewChild('alignKR') alignKR: TemplateRef<any>;
@@ -41,6 +41,9 @@ export class PopupAlignKRComponent extends UIComponent implements AfterViewInit 
   dialogRef: DialogRef;
   formModel: FormModel;
   headerText: string;
+  dtStatus:any;
+  dataOKR=[];
+  openAccordion = [];
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -52,10 +55,18 @@ export class PopupAlignKRComponent extends UIComponent implements AfterViewInit 
     super(injector);
     this.headerText= "Xem chi tiết - Kết quả chính"//dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.formModel = this.dialogRef?.formModel;    
+    this.formModel = dialogData.data[2];    
+    this.dataOKR.push(dialogData.data[1]);
     
   }
-
+  getItemOKR(i:any,recID:any)
+  {
+    this.openAccordion[i] = !this.openAccordion[i];
+    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
+    //     if(item) this.dataOKR[i].child = item
+    //   });
+  }
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -72,7 +83,9 @@ export class PopupAlignKRComponent extends UIComponent implements AfterViewInit 
   }
 
   onInit(): void {
-    
+    this.cache.valueList('OM002').subscribe(item=>{
+      if(item?.datas) this.dtStatus = item?.datas;
+    })
   }
   click(event: any) {
     switch (event) {

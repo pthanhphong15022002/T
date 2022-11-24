@@ -402,7 +402,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showFrom: true,
       };
 
-      this.callfc.openForm(
+      let dialogEmail = this.callfc.openForm(
         CodxEmailComponent,
         '',
         800,
@@ -410,6 +410,26 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         '',
         data
       );
+      dialogEmail.closed.subscribe((res) => {
+        if (res.event) {
+          let emailTemplates = this.dialogApprovalStep?.value.emailTemplatess;
+          let i = emailTemplates?.findIndex(
+            (p) => p.emailType == res.templateType
+          );
+          if (i >= 0) {
+            emailTemplates[i].templateID = res.event.recID;
+
+            // if (this.attachment.fileUploadList.length > 0) {
+            //   this.attachment.objectId = res.recID;
+            //   this.attachment.saveFiles();
+            // }
+
+            this.dialogApprovalStep.patchValue({
+              emailTemplates: emailTemplates,
+            });
+          }
+        }
+      });
     }
   }
 
@@ -506,12 +526,4 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       console.log(this.lstStep);
     }
   }
-}
-
-export class Files {
-  recID: string;
-  fileID: string;
-  fileName: string;
-  eSign: boolean = true;
-  comment: string;
 }

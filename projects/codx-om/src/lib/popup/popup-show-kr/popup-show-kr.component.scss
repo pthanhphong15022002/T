@@ -1,0 +1,176 @@
+#om-tab .e-tab-header
+{
+    text-align: center;
+}
+#om-tab .e-tab-text
+{
+    color: black;
+}
+#om-tab .e-tab-header::before
+{
+    border-style: none;
+}
+#om-tab .e-tab-header .e-toolbar-item.e-active
+{
+    border-bottom: solid 2px #0379FF !important;
+}
+
+.bgEDEDED
+{
+    background-color: #EDEDED;
+}
+.okr-add-body
+{
+    padding: 30px 20rem 0 20rem !important;
+}
+.om-input
+{
+    border : solid 1px white !important;
+}
+.om-input:focus
+{
+    border:solid 1px white;
+    border-bottom-color: #9ACCFF !important;
+}
+.om-border-bottom-add
+{
+    border-bottom: solid 1px #9ACCFF;
+}
+.w-50
+{
+    width: 50%;
+}
+.w-60
+{
+    width: 60%;
+}
+.w-70
+{
+    width: 70%;
+}
+.w-80
+{
+    width: 80%;
+}
+.w-90
+{
+    width: 90%;
+}
+.w-95
+{
+    width: 95%;
+}
+
+.om-add-btn i , .check-with-label:checked + .icon-language
+{
+    color: #3699FF;
+}
+.om-add-btn span
+{
+    color: #5EADFF;
+}
+.om-fs-3
+{
+    font-size: 1.5rem !important;
+}
+.om-h-header
+{
+    height: 100px;
+}
+.om-h-body
+{
+    overflow: auto;
+    height: calc(100% - 145px);
+}
+.om-select { font-family: 'FontAwesome', Verdana }
+
+.p-om-okr
+{
+    height: calc(100% - 94px);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.p-om-okr:focus {
+    outline: none !important;
+}
+.h-100vh {
+    border: 1px aqua solid;
+    height: calc(100vh - 40px);
+}
+
+.icon-with-number {
+    position: relative;
+    min-width: 30px;
+    width: 30px;
+    height: 30px;
+    border: 1px aqua solid;
+}
+
+.icon-with-number .number {
+    background-color: var(--primary);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 10px;
+    color: var(--primary-inverse);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kr-process {
+    position: relative;
+}
+
+.process-per {
+    margin-left: -40px;
+    color: var(--primary-inverse);
+}
+
+.pic-face,
+.pic-local {
+    position: absolute;
+    top: -3px;
+}
+.txt-color-0E4C55
+{
+    color: #0E4C55;
+}
+.bg-2D3958
+{
+    background-color: #2D3958;
+}
+.p-4px
+{
+    padding: 4px;
+}
+.w-h-circle
+{
+    width: 26px;
+    height: 26px;
+}
+.om-pt-1
+{
+    padding-top: 2px;
+}
+.ps-5rem
+{
+    padding-left: 85px;
+}
+.w-18px
+{
+    width: 18px;
+}
+.w-22px
+{
+    width: 22px;
+}
+.h-18px
+{
+    height: 18px;
+}

@@ -16,6 +16,7 @@ export class EmployeeAwardsDetailComponent extends UIComponent implements OnInit
   headerText: ''
   funcID;
   employId;
+  valueYear;
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
 
@@ -78,10 +79,14 @@ export class EmployeeAwardsDetailComponent extends UIComponent implements OnInit
     })
   }
 
-  handleSelectAwardDate(value){
-    this.data.inYear = new Date(value).getFullYear();
-    this.form?.formGroup.patchValue({inYear: this.data.inYear})
+  handleSelectAwardDate(event){
+    this.data.inYear = new Date(event.data).getFullYear();
+    this.valueYear = this.data.inYear
+  }
 
+  inYearSelect(event){
+    this.data.inYear = new Date(event.value).getFullYear()
+    console.log('cap nhat inyear', this.data.inYear);
   }
 
 }

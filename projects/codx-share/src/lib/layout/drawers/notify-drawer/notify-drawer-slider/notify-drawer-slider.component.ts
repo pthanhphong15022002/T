@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { MODEL_CHANGED } from '@syncfusion/ej2-angular-richtexteditor';
 import { DateTime } from '@syncfusion/ej2-charts';
-import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest } from 'codx-core';
+import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest, CacheService } from 'codx-core';
 
 @Component({
   selector: 'lib-notify-drawer-slider',
@@ -26,10 +26,12 @@ export class NotifyDrawerSliderComponent implements OnInit {
   user:any = null;
   totalPage:number = 0;
   isScroll = true;
+  messageNoData:string ="";
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
     private auth:AuthService,
+    private cache:CacheService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) 
@@ -40,6 +42,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
 
   ngOnInit(): void {
     this.getNotifyAsync();
+    this.getMessage("SYS010");
   }
 
   ngAfterViewInit(){
@@ -56,13 +59,13 @@ export class NotifyDrawerSliderComponent implements OnInit {
       'GetAsync',
       [this.model]
     ).subscribe((res:any[]) => {
-      if(res){
+      if(res)
+      {
         this.lstNotify = res[0];
         let totalRecord = res[1];
         this.totalPage = totalRecord / this.model.pageSize;
         this.isScroll = false;
         this.dt.detectChanges();
-        console.log(totalRecord,this.totalPage);
       }
     });
   }
@@ -102,6 +105,16 @@ export class NotifyDrawerSliderComponent implements OnInit {
         this.dt.detectChanges();
       }
     })
+  }
+
+  getMessage(mssgCode:string){
+    if(mssgCode){
+      this.cache.message(mssgCode).subscribe((mssg:any) => {
+        if(mssg){
+          this.messageNoData = mssg.defaultName;
+        }
+      });
+    }
   }
 
 }
