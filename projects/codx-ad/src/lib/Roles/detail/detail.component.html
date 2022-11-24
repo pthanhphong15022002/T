@@ -364,7 +364,10 @@
                                 <codx-input
                                   type="checkbox"
                                   [disabled]="!active"
-                                  [checked]="false"
+                                  [checked]="
+                                    item.activeSysFuction &&
+                                    item.activeMoreFunction
+                                  "
                                   field="allow"
                                   (valueChange)="
                                     valueChange($event, item.functionID)
@@ -375,7 +378,13 @@
                               <td>
                                 <codx-input
                                   type="checkbox"
-                                  [disabled]="!active || !allowMore"
+                                  [disabled]="
+                                    !active ||
+                                    !(
+                                      item.activeSysFuction &&
+                                      item.activeMoreFunction
+                                    )
+                                  "
                                   [checked]="false"
                                   field="selectAll"
                                   (valueChange)="
@@ -396,7 +405,13 @@
                                       <codx-input
                                         type="checkbox"
                                         class="check-circle"
-                                        [disabled]="!active || !allowMore"
+                                        [disabled]="
+                                          !active ||
+                                          !(
+                                            item.activeSysFuction &&
+                                            item.activeMoreFunction
+                                          )
+                                        "
                                         [checked]="
                                           itemMore.functionID
                                             | bind: item.functionID:dataAdv

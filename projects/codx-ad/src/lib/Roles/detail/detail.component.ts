@@ -206,6 +206,16 @@ export class RoleDetailComponent
       }
     } else if (e.field === 'allow') {
       this.allowMore = e.data;
+      var f = this.dataAuthorize.find((x) => x.functionID === funcID);
+      if (
+        f &&
+        (f.activeSysFuction != e.data || f.activeMoreFunction != e.data)
+      ) {
+        f.activeSysFuction = f.activeMoreFunction = e.data;
+        this.api
+          .execAction('SYS_FunctionList', [f], 'UpdateAsync')
+          .subscribe((res) => {});
+      }
     } else {
       if (e.field == 'sys' || e.field == 'exp' || e.field == 'more') {
         this.checkAndLock(e.field, e.data);
