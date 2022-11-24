@@ -20,7 +20,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { CodxSvService } from '../codx-sv.service';
+import { CodxSvService } from '../../../codx-sv.service';
 
 @Component({
   selector: 'app-popup-upload',

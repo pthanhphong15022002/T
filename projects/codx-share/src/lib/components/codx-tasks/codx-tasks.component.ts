@@ -1213,7 +1213,7 @@ export class CodxTasksComponent
     this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
     this.taskExtend.reason = '';
     this.taskExtend.taskID = data?.taskID;
-    this.taskExtend.extendDate = moment(new Date()).toDate();
+    this.taskExtend.extendDate = moment(new Date(data.dueDate)).toDate();
     this.api
       .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
         this.taskExtend.extendApprover,
