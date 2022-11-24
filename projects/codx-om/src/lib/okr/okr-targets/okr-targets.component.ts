@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CacheService, CallFuncService, SidebarModel, FormModel } from 'codx-core';
+import { CacheService, CallFuncService, SidebarModel, FormModel, DialogModel } from 'codx-core';
 import { OKRs } from '../../model/okr.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
+import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrEditComponent } from '../okr-edit/okr-edit.component';
 
 @Component({
@@ -61,7 +62,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
-
+  // Thêm/sửa  KR
   addKR(o:any) {
     let option = new SidebarModel();
     option.Width = '550px';
@@ -99,5 +100,22 @@ export class OkrTargetsComponent implements OnInit {
       }
       
     }
+  }
+
+  //Xem chi tiết KR
+  showKR(kr:any, o:any){
+    var dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    let dialog = this.callfunc.openForm(
+      PopupShowKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [],
+      '',
+      dialogModel
+    );
+    
   }
 }
