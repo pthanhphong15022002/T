@@ -346,11 +346,19 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
 
     if (this.meeting.meetingType == '1') {
-      if (!this.meeting.fromDate || !this.meeting.toDate) {
+      if (!this.meeting.fromDate ) {
         this.notiService.notifyCode(
           'SYS009',
           0,
           '"' + this.gridViewSetup['FromDate']?.headerText + '"'
+        );
+        return;
+      }
+      if (!this.meeting.toDate) {
+        this.notiService.notifyCode(
+          'SYS009',
+          0,
+          '"' + this.gridViewSetup['ToDate']?.headerText + '"'
         );
         return;
       }
