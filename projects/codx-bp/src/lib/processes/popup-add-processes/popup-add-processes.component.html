@@ -1,5 +1,5 @@
 <codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer"
-  [data]="process" [dialog]="dialog" #form>
+  [data]="process" [dialog]="dialog" [openMore]="true" #form>
   <ng-template #body>
     <div class="form-group">
       <div>
@@ -29,7 +29,7 @@
           </div>
         </div>
         <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="owner" [dataShared]="[]"
-          [showInput]="false">
+          [showInput]="false" multiple="false">
         </codx-input>
       </div>
       <div class="d-flex flex-wrap">
@@ -87,6 +87,8 @@
         </codx-attachment>
       </div>
     </ng-container>
+
+
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">

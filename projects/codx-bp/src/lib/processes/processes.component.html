@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes"
   className="ProcessesBusiness" [method]="method" [views]="views" [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="recID"
-  (onDragDrop)="onDragDrop($event)" [autoSearch]="false" (searchChanged)="searchChange($event)">
+  (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch" (searchChanged)="searchChange($event)">
 </codx-views>
 
 <ng-template #templateListCard let-data>
@@ -9,7 +9,8 @@
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imageReferType]="'Flowchart'"  [rootData]="data" [dataItem]="data"
     [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-    [imageWidth]="600">
+    [imageWidth]="600" (changeDataMF)="changeDataMF($event, data)"
+    >
   </codx-card-img>
 
   <ng-template #footerbg let-data>
@@ -104,17 +105,23 @@
                 {{data.activities}}
               </span>
             </div>
-            <div class="d-flex me-3 align-items-center">
+            <div class="d-flex me-3 align-items-center" >
+              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500"
+              (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
+              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
+              ></codx-attachment-temp></span>
+            </div>
+            <!-- <div class="d-flex me-3 align-items-center" *ngIf="data.attachments == 0">
               <span class="icon-attach_file text-primary icon-16 me-1"></span>
               {{data.attachments}}
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
     </td>
     <td class="rowphoto" placement="left">
       <codx-temp-full cardCss="card-template" [imageWidth]="30" [imageId]="data.owner" imageObjType="AD_Users"
-        [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [desc2]="data.groupID" [dataItem]="data">
+        [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
       </codx-temp-full>
     </td>
     <td class="rowphoto">
@@ -163,7 +170,7 @@
         </button>
       </div>
       <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
-        [type]="'hover'">
+        [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
     <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
@@ -176,6 +183,11 @@
   </tr>
 </ng-template>
 <!-- view-list -->
+<ng-template #popperAttachment>
+  <span>
+    <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
+  </span>
+</ng-template>
 
 <ng-template #popDetail>
   <div>
@@ -244,7 +256,7 @@
 <ng-template #templateSearch>
   <ng-container *ngIf="listProcess !=null; else tmpEmpty">
     <div class="card rounded-0 p-10">
-      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRowCount>0">{{totalRowCount}} <codx-label
+      <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRecordSearch>0">{{totalRecordSearch}} <codx-label
           default="kết quả được tìm thấy"></codx-label>
       </div>
       <div class="card-body" *ngFor="let item of listProcess">

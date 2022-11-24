@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Injector, Optional, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { AuthService , CRUDService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
+import { AuthService, CRUDService, DialogData, DialogModel, DialogRef, FormModel, NotificationsService, RequestOption, SidebarModel, UIComponent, Util, ViewModel, ViewType } from 'codx-core';
 import { CodxMwpService } from '../codx-mwp.service';
 import { EditExperenceComponent } from './edit-experence/edit-experence.component';
 import { EditHobbyComponent } from './edit-hobby/edit-hobby.component';
@@ -11,7 +11,7 @@ import { EditSkillComponent } from './edit-skill/edit-skill.component';
   selector: 'lib-employee-infomation',
   templateUrl: './employee-infomation.component.html',
   styleUrls: ['./employee-infomation.component.css'],
-  encapsulation: ViewEncapsulation.None
+  //encapsulation: ViewEncapsulation.None
 
 })
 export class EmployeeInfomationComponent extends UIComponent {
@@ -70,25 +70,23 @@ export class EmployeeInfomationComponent extends UIComponent {
   itemSelected: any;
   employeeID: any;
 
-  width:number = 720;
-  height:number = window.innerHeight;
+  width: number = 720;
+  height: number = window.innerHeight;
   constructor(
-    private injector:Injector,
+    private injector: Injector,
     private codxMwpService: CodxMwpService,
     private notifiSV: NotificationsService,
     private auth: AuthService,
-  ) 
-  {
+  ) {
     super(injector);
     this.user = this.auth.userValue;
   }
 
-  
+
 
   onInit(): void {
-    this.router.params.subscribe((param:any) => {
-      if(param)
-      {
+    this.router.params.subscribe((param: any) => {
+      if (param) {
         this.functionID = param['funcID'];
         this.getDataAsync(this.functionID);
         this.codxMwpService.modeEdit.subscribe(res => {
@@ -98,7 +96,7 @@ export class EmployeeInfomationComponent extends UIComponent {
         this.codxMwpService.empInfo.subscribe((res: string) => {
           if (res) {
             console.log(res);
-            
+
             this.employeeInfo = null;
             this.employeeHobbie = null;
             this.employeeContracts = null;
@@ -112,7 +110,7 @@ export class EmployeeInfomationComponent extends UIComponent {
             this.trainingInterUnObl = null;
             this.trainingPersonal = null;
             this.dataPolicy = null;
-    
+
             this.LoadData(res);
           }
         });
@@ -129,7 +127,7 @@ export class EmployeeInfomationComponent extends UIComponent {
         this.primaryXAxis = {
           valueType: 'Category',
           labelPlacement: 'OnTicks',
-    
+
         };
         this.primaryYAxis = {
           minimum: 0, maximum: 10, interval: 2,
@@ -138,7 +136,7 @@ export class EmployeeInfomationComponent extends UIComponent {
         };
       }
     });
-    this.getParameterAsync("HRParameters","1");
+    this.getParameterAsync("HRParameters", "1");
 
   }
 
@@ -155,37 +153,36 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  geteEmployeeInfor(employeeID:string){
-    if(employeeID){
+  geteEmployeeInfor(employeeID: string) {
+    if (employeeID) {
       this.api
-      .execSv("HR","ERM.Business.HR", "EmployeesBusiness", "GetByUserAsync", [employeeID])
-      .subscribe((res:any) => {
-        if(res){
-          
-        }
-      });
+        .execSv("HR", "ERM.Business.HR", "EmployeesBusiness", "GetByUserAsync", [employeeID])
+        .subscribe((res: any) => {
+          if (res) {
+
+          }
+        });
     }
   }
-  getDataAsync(funcID:string){
+  getDataAsync(funcID: string) {
     this.getDataFromFunction(funcID);
   }
-  getDataFromFunction(functionID:string){
-    if(functionID)
-    {
+  getDataFromFunction(functionID: string) {
+    if (functionID) {
       this.api.execSv
-      (
-        'SYS',
-        'ERM.Business.SYS',
-        'MoreFunctionsBusiness',
-        'GetMoreFunctionByHRAsync',
-        [this.functionID]
-      ).subscribe((res:any[]) => {
-        if(res && res.length > 0){
-          this.moreFunc = res;
-          this.defautFunc = res[0];
-          this.detectorRef.detectChanges();
-        }
-      });
+        (
+          'SYS',
+          'ERM.Business.SYS',
+          'MoreFunctionsBusiness',
+          'GetMoreFunctionByHRAsync',
+          [this.functionID]
+        ).subscribe((res: any[]) => {
+          if (res && res.length > 0) {
+            this.moreFunc = res;
+            this.defautFunc = res[0];
+            this.detectorRef.detectChanges();
+          }
+        });
     }
   }
   getContrastYIQ(item) {
@@ -197,28 +194,27 @@ export class EmployeeInfomationComponent extends UIComponent {
     return (yiq >= 128) ? 'black' : 'white';
   }
   editSkill() {
-    if(this.view){
+    if (this.view) {
       this.editSkillMode = true;
       var model = new DialogModel();
       model.DataService = this.view.dataService;
       model.FormModel = this.view.formModel;
       var data = {
-        employeeID:this.employee.employeeID,
+        employeeID: this.employee.employeeID,
         skill: this.skillEmployee,
       }
       let popup = this.callfc.openForm(EditSkillComponent, '', 450, 600, '', data, "", model);
-      popup.closed.subscribe((res:any) =>{
-        if(res?.event)
-        {
+      popup.closed.subscribe((res: any) => {
+        if (res?.event) {
           this.skillEmployee = JSON.parse(JSON.stringify(res.event));
         }
       });
     }
   }
-  scrollToElement(idElement:any): void {
-    if(!idElement) return;
+  scrollToElement(idElement: any): void {
+    if (!idElement) return;
     let element = document.getElementById(idElement);
-    element.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+    element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
   }
   getQueryParams() {
     this.router.queryParams.subscribe((params) => {
@@ -249,13 +245,13 @@ export class EmployeeInfomationComponent extends UIComponent {
   }
   LoadData(employee) {
     console.log(this.view)
-    this.loadEmployee(employee, e => {});
+    this.loadEmployee(employee, e => { });
     this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2")
-    .subscribe((response: any) => {
-      if (response) {
-        this.updateExperiences(response);
-      }
-    });
+      .subscribe((response: any) => {
+        if (response) {
+          this.updateExperiences(response);
+        }
+      });
 
     this.codxMwpService.LoadData(employee.Employee.employeeID, "", "4").subscribe((response: any) => {
       if (response) {
@@ -277,7 +273,7 @@ export class EmployeeInfomationComponent extends UIComponent {
       }
     });
     // setTimeout(() => {
-     
+
     // }, 100);
 
   }
@@ -335,7 +331,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.skillRequest = [];
     this.skillEmployee = [];
     this.skillChartEmployee = [];
-    if (response.Skill) { 
+    if (response.Skill) {
       var skill = response.Skill;
       if (skill.Request)
         this.skillRequest = skill.Request;
@@ -350,7 +346,7 @@ export class EmployeeInfomationComponent extends UIComponent {
     }
   }
 
-  
+
 
   ngOnChanges() {
 
@@ -473,7 +469,7 @@ export class EmployeeInfomationComponent extends UIComponent {
   }
 
   editDataEdu(data) {
-   
+
   }
 
   addRelation() {
@@ -653,38 +649,34 @@ export class EmployeeInfomationComponent extends UIComponent {
       });
   }
 
-  parameter:any = 
-  {
-    maxLevelSkill: 0
-  };
-  getParameterAsync(formName:string,category:string)
-  {
-    if(!formName || !category) return;
+  parameter: any =
+    {
+      maxLevelSkill: 0
+    };
+  getParameterAsync(formName: string, category: string) {
+    if (!formName || !category) return;
     this.api.execSv("SYS",
-    "ERM.Business.SYS",
-    "SettingValuesBusiness",
-    "GetParameterAsync",
-    [formName,category]).subscribe((res:any) => {
-      if(res)
-      {
-        let jsParameter = JSON.parse(res); 
-        this.parameter.maxLevelSkill = jsParameter.MaxLevelSkills;
-      }
-    });
+      "ERM.Business.SYS",
+      "SettingValuesBusiness",
+      "GetParameterAsync",
+      [formName, category]).subscribe((res: any) => {
+        if (res) {
+          let jsParameter = JSON.parse(res);
+          this.parameter.maxLevelSkill = jsParameter.MaxLevelSkills;
+        }
+      });
   }
 
 
-  saveAddSkill(event:any)
-  {
-    if(!event || !event?.dataSelected) return;
+  saveAddSkill(event: any) {
+    if (!event || !event?.dataSelected) return;
     let data = event.dataSelected;
     let skills = [];
-    if(data && data.length > 0 ){
-      data.map((element:any) =>  {
+    if (data && data.length > 0) {
+      data.map((element: any) => {
         let isExsitElement = this.skillEmployee
-        .some((x:any) => x.competenceID == element.CompetenceID)
-         if(!isExsitElement)
-         {
+          .some((x: any) => x.competenceID == element.CompetenceID)
+        if (!isExsitElement) {
           let skill = {
             RecID: Util.uid(),
             CompetenceID: element.CompetenceID,
@@ -693,40 +685,36 @@ export class EmployeeInfomationComponent extends UIComponent {
             Rating: "0"
           }
           skills.push(skill);
-         }
+        }
       });
-      if(skills.length > 0)
-      {
-      this.api.execSv(
-        "HR",
-        "ERM.Business.HR",
-        "EmployeesBusiness",
-        "AddSkillsEmployeeAsync",
-        [this.employee.employeeID, skills]
-        ).subscribe((res:any) => {
-          if(res && res.length > 0)
-          {
+      if (skills.length > 0) {
+        this.api.execSv(
+          "HR",
+          "ERM.Business.HR",
+          "EmployeesBusiness",
+          "AddSkillsEmployeeAsync",
+          [this.employee.employeeID, skills]
+        ).subscribe((res: any) => {
+          if (res && res.length > 0) {
             res.forEach((e) => {
               this.skillEmployee.push(e);
             });
             this.detectorRef.detectChanges();
             this.notifiSV.notifyCode("SYS006");
           }
-          else{
+          else {
             this.notifiSV.notifyCode("SYS023");
           }
         });
       }
-      else
-      {
+      else {
         this.notifiSV.notifyCode("SYS031");
       }
-    }                                   
-  
+    }
+
   }
 
-  clickOpenPopupAddSkill()
-  {
+  clickOpenPopupAddSkill() {
     this.showCBB = !this.showCBB;
   }
 

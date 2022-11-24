@@ -7,6 +7,8 @@ import {
   CacheService,
   CallFuncService,
   DataRequest,
+  FormModel,
+  NotificationsService,
   SidebarModel,
 } from 'codx-core';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
@@ -19,6 +21,7 @@ export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
   dataRefreshImage = new BehaviorSubject<any>(null);
   constructor(
+    private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
     private api: ApiHttpService,
     private auth: AuthStore,
@@ -64,6 +67,106 @@ export class CodxShareService {
         break;
       }
     }
+  }
+
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+            this.cache.setGridView(formModel.gridViewName, gridView);
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((gridViewSetup) => {
+                this.cache.setGridViewSetup(
+                  formModel.formName,
+                  formModel.gridViewName,
+                  gridViewSetup
+                );
+                resolve(formModel);
+              });
+          });
+        }
+      });
+    });
+  }
+
+  getESDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
+  }
+
+  setCacheFormModel(formModel: FormModel) {
+    this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+      this.cache.setGridView(formModel.gridViewName, gridView);
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((gridViewSetup) => {
+          this.cache.setGridViewSetup(
+            formModel.formName,
+            formModel.gridViewName,
+            gridViewSetup
+          );
+        });
+    });
+  }
+
+  notifyInvalid(formGroup: FormGroup, formModel: FormModel) {
+    let gridViewSetup;
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          let headerText = gridViewSetup[fieldName]?.headerText ?? fieldName;
+
+          if (fieldName == 'Email' && formGroup.value.email != null) {
+            this.notificationsService.notifyCode(
+              'E0003',
+              0,
+              '"' + headerText + '"'
+            );
+          } else {
+            this.notificationsService.notifyCode(
+              'SYS009',
+              0,
+              '"' + headerText + '"'
+            );
+          }
+        }
+      });
+  }
+
+  getDetailApprover(approver: Approvers) {
+    let lstAprrover = [approver];
+
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'HRBusiness',
+      'GetInfoApproverAsync',
+      [lstAprrover]
+    );
   }
 
   //#region EmailTemplate
@@ -208,5 +311,36 @@ export class CodxShareService {
       [data, sendTo]
     );
   }
+
+  getNewDefaultEmail() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'EmailTemplatesBusiness',
+      'GetEmailDefaultAsync',
+      []
+    );
+  }
   //#endregion
+
+  //#region Model
 }
+
+export class Approvers {
+  recID: string;
+  roleType: string;
+  approver: string;
+  name: string = null;
+  position: string = null;
+  email: string = null;
+  phone: string = null;
+  leadTime: any = 0;
+  allowEditAreas: boolean;
+  confirmControl: string;
+  comment: string = null;
+  icon: string = null;
+  createdOn: any = new Date();
+  delete: boolean = true;
+  write: boolean = false;
+}
+//#endregion

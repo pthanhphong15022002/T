@@ -8,6 +8,7 @@
       ngbDropdown
       class="dropdown"
       container="body"
+      placement="top"
       style="margin-top: -29px; margin-left: 30px; width: 30px"
     >
       <a
@@ -146,8 +147,8 @@
       <div *ngIf="typeCalendar == 'week'">
         <selectweek
           (onChangeWeek)="setEventWeek()"
-          (onChangeValue)="onChangeValueSelectedWeek($event, listview)"
-          (onChangeNewWeek)="onChangeValueNewWeek($event)"
+          (onChangeValue)="changeDayOfWeek($event, listview)"
+          (onChangeNewWeek)="changeNewWeek($event)"
         >
         </selectweek>
       </div>
@@ -155,12 +156,11 @@
         <ejs-calendar
           #calendar
           (renderDayCell)="onLoad($event)"
-          (change)="onValueChange($event, listview)"
+          (change)="changeDayOfMonth($event, listview)"
           cssClass="width-calendar"
           class="e-customStyle"
           title="Lịch các nhân"
-          (navigated)="onValueChangeMonth($event, listview)"
-          (created)="created($event, calendar)"
+          (navigated)="changeNewMonth($event)"
         >
         </ejs-calendar>
       </div>

@@ -6,7 +6,8 @@
 </codx-form>
 <ng-template #body>
   <div class="p-2">
-    <ng-container *ngFor="let item of lstNotify;index as i">
+    <ng-container *ngIf="lstNotify.length > 0; else noData">
+      <ng-container *ngFor="let item of lstNotify;index as i">
       <div>
         <ng-container *ngIf="i==0">
           <div class="d-flex justify-content-between">
@@ -27,7 +28,7 @@
         </ng-container>  
         <div class="row p-4 my-2 cursor-pointer " (click)="clickNotification(item)">
           <div class="col-1">
-            <codx-img [width]="35" [objectId]="item.createdBy" [isDefaulImg]="true" [objectType]="'AD_Users'"></codx-img>
+            <codx-img [width]="35" [objectId]="item.createdBy" [objectName]="item.createdName" [objectType]="'AD_Users'"></codx-img>
           </div>
           <div class="col-10">
             <div [innerHTML]="item.textValue">        
@@ -41,7 +42,14 @@
           </div>
         </div>
       </div>
+      </ng-container>
     </ng-container>
   </div>
+  <ng-template #noData>
+    <div class="text-center">
+      <img style="max-width:300px" src="assets/themes/sys/default/img/DataEmpty.svg" />
+      <p>{{messageNoData}}</p>
+    </div>
+  </ng-template>
 </ng-template>
 

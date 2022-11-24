@@ -1154,6 +1154,16 @@ div.user-mini-nav {
   white-space: normal;
 }
 
+.e-frozen-left-header,
+.e-frozen-left-content {
+  min-width: 40px;
+}
+
+
+.personal-container .e-tab .e-content.e-lib {
+  padding-left: 0;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }

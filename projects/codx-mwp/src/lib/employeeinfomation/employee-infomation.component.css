@@ -103,9 +103,10 @@ ngx-skeleton-loader {
     max-width: 1000px;
 }
 
-.pw-menu {
+.employee-info-main .pw-menu {
     height: 42px;
     line-height: 42px;
+
     border-radius: 6px !important;
     background-color: var(--bs-body-bg);
     width: 100%;
