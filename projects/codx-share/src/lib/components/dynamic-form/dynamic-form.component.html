@@ -1,26 +1,13 @@
-<codx-views
-  #view
-  [views]="views"
-  [service]="service"
-  [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [idField]="idField"
-  [button]="buttons"
-  (buttonClick)="click($event)"
-  (viewChanged)="viewChanged($event, view)"
->
+<codx-views #view [views]="views" [service]="service" [entityName]="entityName" [predicate]="predicate"
+  [dataValue]="dataValue" [idField]="idField" [button]="buttons" (buttonClick)="click($event)"
+  (viewChanged)="viewChanged($event, view)">
 </codx-views>
 
 <ng-template #morefunction let-data>
-  <div class="" style="height: 30px">
+  <div class="d-flex align-items-center" style="height: 30px">
     <!-- <div class="action-menu"> -->
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="viewBase.formModel"
-      (clickMF)="clickMF($event, data)"
-      type="view"
-    ></codx-mfunc>
+    <codx-mfunc [dataItem]="data" [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="view">
+    </codx-mfunc>
     <!-- </div> -->
   </div>
 

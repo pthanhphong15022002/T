@@ -24,10 +24,10 @@ import {
   OnInit,
   Input,
   ViewChild,
-  ChangeDetectorRef,
   AfterViewInit,
   Injector,
   TemplateRef,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
@@ -86,15 +86,12 @@ export class CalendarNotesComponent
   @ViewChild('calendar') calendar: any;
   constructor(
     private injector: Injector,
-    private changeDetectorRef: ChangeDetectorRef,
+    private change: ChangeDetectorRef,
     private auth: AuthStore,
-    private noteService: NoteServices,
-    private notification: NotificationsService
+    private noteService: NoteServices
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
-    var date = new Date();
-    this.reloadParam(date);
     this.cache
       .moreFunction('PersonalNotes', 'grvPersonalNotes')
       .subscribe((res) => {
@@ -108,12 +105,15 @@ export class CalendarNotesComponent
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
+    if (this.typeCalendar == 'month') this.getFirstParam();
   }
 
   onInit(): void {
     this.getMaxPinNote();
     this.loadData();
   }
+
+  ngAfterViewInit() {}
 
   loadData() {
     this.noteService.data.subscribe((res) => {
@@ -201,12 +201,17 @@ export class CalendarNotesComponent
             today.click();
           }
         }
-        this.changeDetectorRef.detectChanges();
+        this.change.detectChanges();
       }
     });
   }
 
-  ngAfterViewInit() {}
+  getFirstParam() {
+    let date = new Date();
+    let fDayOfMonth = moment(date).startOf('month').toISOString();
+    let lDayOfMonth = moment(date).endOf('month').toISOString();
+    this.getParam(fDayOfMonth, lDayOfMonth);
+  }
 
   requestEnded(evt: any) {
     this.view.currentView;
@@ -231,7 +236,6 @@ export class CalendarNotesComponent
   }
 
   onLoad(args): void {
-    debugger
     this.setEvent(args.element, args);
   }
 
@@ -240,14 +244,19 @@ export class CalendarNotesComponent
     var datePare = new Date(Date.parse(this.toDate));
     this.toDate = datePare.toLocaleDateString();
     var ele = document.querySelectorAll('.week-item[data-date]');
-    for (var i = 0; i < ele.length; i++) {
-      let htmlEle = ele[i] as HTMLElement;
-      var date = htmlEle?.dataset?.date;
-      let obj = { date: date };
-      var eleEvent = htmlEle.querySelector('.week-item-event');
-      eleEvent.innerHTML = '';
-      this.setEvent(eleEvent, obj);
-    }
+    let myInterval = setInterval(() => {
+      if (ele && ele.length > 0) {
+        clearInterval(myInterval);
+        for (var i = 0; i < ele.length; i++) {
+          let htmlEle = ele[i] as HTMLElement;
+          var date = htmlEle?.dataset?.date;
+          let obj = { date: date };
+          var eleEvent = htmlEle.querySelector('.week-item-event');
+          eleEvent.innerHTML = '';
+          this.setEvent(eleEvent, obj);
+        }
+      }
+    }, 500);
   }
 
   compareDate(createdOn, daySelected) {
@@ -270,38 +279,34 @@ export class CalendarNotesComponent
     }
   }
 
-  onChangeValueSelectedWeek(e, lstView) {
+  changeDayOfWeek(e, lstView) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
     this.setDate(data, lstView);
   }
 
-  onValueChange(args: any, lstView) {
+  dateOfMonth: any;
+  changeDayOfMonth(args: any, lstView) {
+    this.dateOfMonth = args.value;
     var data = JSON.parse(JSON.stringify(args.value));
     this.setDate(data, lstView);
+    this.change.detectChanges();
   }
 
-  onValueChangeMonth(args: any, lstView) {
-    var data = JSON.parse(JSON.stringify(args.date));
-    this.setDate(data, lstView);
-    this.reloadParam(args.date);
+  changeNewMonth(args: any) {
+    var fDayOfMonth = moment(args.date).startOf('month').toISOString();
+    var lDayOfMonth = moment(args.date).endOf('month').toISOString();
+    this.getParam(fDayOfMonth, lDayOfMonth);
   }
 
-  onChangeValueNewWeek(args: any) {
-    this.reloadParam(args.daySelected);
-    this.setEventWeek();
-    var today: any = document.querySelector(
-      ".e-footer-container button[aria-label='Today']"
-    );
-    if (today) {
-      today.click();
-    }
-    this.changeDetectorRef.detectChanges();
+  changeNewWeek(args: any) {
+    this.getParam(args.fromDate, args.toDate);
+    this.fDayOfWeek = args.fromDate;
+    this.lDayOfWeek = args.toDate;
+    this.change.detectChanges();
   }
 
   FDdate: any;
   TDate: any;
-  fDayOfMonth: any;
-  lDayOfMonth: any;
   fDayOfWeek: any;
   lDayOfWeek: any;
   setDate(data, lstView) {
@@ -316,38 +321,30 @@ export class CalendarNotesComponent
     lstView.dataService
       .setPredicate(this.predicate, [this.dataValue])
       .subscribe((res) => {
-        this.changeDetectorRef.detectChanges();
+        this.change.detectChanges();
       });
     this.FDdate = fromDate;
     this.TDate = toDate;
   }
 
-  reloadParam(data) {
-    var dateT = new Date(data);
-    this.fDayOfMonth = moment(dateT).startOf('month').toISOString();
-    this.lDayOfMonth = moment(dateT).endOf('month').toISOString();
-    this.fDayOfWeek = moment(dateT).startOf('week').toISOString();
-    this.lDayOfWeek = moment(dateT).endOf('week').toISOString();
-    if (this.typeCalendar == 'week')
-      this.getParam(this.fDayOfWeek, this.lDayOfWeek);
-    else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
-  }
-
   valueChangeTypeCalendar(e) {
     if (e) {
-      this.calendar;
-      debugger
       if (e.data == true) {
         this.typeCalendar = 'week';
         this.checkWeek = true;
       } else {
         this.typeCalendar = 'month';
         this.checkWeek = false;
+        var date = new Date();
+        if (this.dateOfMonth) date = this.dateOfMonth;
+        var fDayOfMonth = moment(date).startOf('month').toISOString();
+        var lDayOfMonth = moment(date).endOf('month').toISOString();
+        this.getParam(fDayOfMonth, lDayOfMonth);
       }
     }
   }
 
-  getParam(fromDate, toDate) {
+  getParam(fromDate, toDate, updateCheck = true) {
     this.api
       .callSv(
         'SYS',
@@ -362,22 +359,21 @@ export class CalendarNotesComponent
           this.TM_TasksParam = JSON.parse(dt[3].TM_Tasks);
           this.WP_NotesParam = JSON.parse(dt[3].WP_Notes);
           this.CO_MeetingsParam = JSON.parse(dt[3].CO_Meetings);
-          this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
-          this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
-          this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
+          if (updateCheck == true) {
+            this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
+            this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
+            this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
+          }
           this.WP_Notes = dt[0];
           this.TM_Tasks = dt[1];
           this.CO_Meetings = dt[2];
-          if (this.WP_Notes) {
+          if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
               if (res.isPin == true || res.isPin == '1') {
                 this.countNotePin++;
               }
             });
           }
-          console.log('check dataNote', this.WP_Notes);
-          console.log('check dataTask', this.TM_Tasks);
-          console.log('check dataMeeting', this.CO_Meetings);
         }
       });
   }
@@ -390,141 +386,160 @@ export class CalendarNotesComponent
     if (args) {
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
-      if (this.checkTM_TasksParam == true || this.checkTM_TasksParam == '1') {
-        if (this.TM_TasksParam?.ShowEvent == '1') {
-          for (let y = 0; y < this.TM_Tasks?.length; y++) {
-            var dateParse = new Date(this.TM_Tasks[y]?.dueDate);
-            var dataLocal = dateParse.toLocaleDateString();
-            if (date == dataLocal) {
-              calendarTM++;
-              break;
-            }
-          }
-        }
-      }
-
-      if (
-        this.checkCO_MeetingsParam == true ||
-        this.checkCO_MeetingsParam == '1'
-      ) {
-        if (this.CO_MeetingsParam?.ShowEvent == '1') {
-          for (let y = 0; y < this.CO_Meetings?.length; y++) {
-            var dateParse = new Date(this.CO_Meetings[y]?.startDate);
-            var dataLocal = dateParse.toLocaleDateString();
-            if (date == dataLocal) {
-              calendarCO++;
-              break;
-            }
-          }
-        }
-      }
-
-      if (this.checkWP_NotesParam == true || this.checkWP_NotesParam == '1') {
-        if (this.WP_NotesParam?.ShowEvent == '1') {
-          for (let y = 0; y < this.WP_Notes?.length; y++) {
-            var dateParse = new Date(Date.parse(this.WP_Notes[y]?.createdOn));
-            if (date == dateParse.toLocaleDateString()) {
-              if (this.WP_Notes[y]?.showCalendar == true) {
-                calendarWP++;
-                if (this.WP_Notes[y]?.showCalendar == false) {
-                  countShowCalendar += 1;
-                } else {
-                  countShowCalendar = 0;
+      let myInterval = setInterval(() => {
+        if (
+          (this.checkTM_TasksParam && this.TM_TasksParam && this.TM_Tasks) ||
+          (this.checkCO_MeetingsParam &&
+            this.CO_MeetingsParam &&
+            this.CO_Meetings) ||
+          (this.checkWP_NotesParam && this.WP_NotesParam && this.WP_Notes)
+        ) {
+          clearInterval(myInterval);
+          if (
+            this.checkTM_TasksParam == true ||
+            this.checkTM_TasksParam == '1'
+          ) {
+            if (this.TM_TasksParam?.ShowEvent == '1') {
+              for (let y = 0; y < this.TM_Tasks?.length; y++) {
+                var dateParse = new Date(this.TM_Tasks[y]?.dueDate);
+                var dataLocal = dateParse.toLocaleDateString();
+                if (date == dataLocal) {
+                  calendarTM++;
+                  break;
                 }
-                break;
               }
             }
           }
+          if (
+            this.checkCO_MeetingsParam == true ||
+            this.checkCO_MeetingsParam == '1'
+          ) {
+            if (this.CO_MeetingsParam?.ShowEvent == '1') {
+              for (let y = 0; y < this.CO_Meetings?.length; y++) {
+                var dateParse = new Date(this.CO_Meetings[y]?.startDate);
+                var dataLocal = dateParse.toLocaleDateString();
+                if (date == dataLocal) {
+                  calendarCO++;
+                  break;
+                }
+              }
+            }
+          }
+
+          if (
+            this.checkWP_NotesParam == true ||
+            this.checkWP_NotesParam == '1'
+          ) {
+            if (this.WP_NotesParam?.ShowEvent == '1') {
+              for (let y = 0; y < this.WP_Notes?.length; y++) {
+                var dateParse = new Date(
+                  Date.parse(this.WP_Notes[y]?.createdOn)
+                );
+                if (date == dateParse.toLocaleDateString()) {
+                  if (this.WP_Notes[y]?.showCalendar == true) {
+                    calendarWP++;
+                    if (this.WP_Notes[y]?.showCalendar == false) {
+                      countShowCalendar += 1;
+                    } else {
+                      countShowCalendar = 0;
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+          }
+
+          var spanWP: HTMLElement = document.createElement('span');
+          var spanTM: HTMLElement = document.createElement('span');
+          var spanCO: HTMLElement = document.createElement('span');
+          var flex: HTMLElement = document.createElement('span');
+          flex.className = 'd-flex note-point';
+          ele.append(flex);
+          if (calendarWP >= 1 && countShowCalendar < 1) {
+            if (this.typeCalendar == 'week') {
+              spanWP.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            } else {
+              spanWP.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
+              );
+            }
+            flex.append(spanWP);
+          }
+
+          if (calendarTM >= 1) {
+            if (this.typeCalendar == 'week') {
+              spanTM.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            } else {
+              spanTM.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;`
+              );
+            }
+            flex.append(spanTM);
+          }
+
+          if (calendarCO >= 1) {
+            if (this.typeCalendar == 'week') {
+              spanCO.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            } else {
+              spanCO.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;`
+              );
+            }
+            flex.append(spanCO);
+          }
+
+          if (
+            calendarWP >= 1 &&
+            calendarTM >= 1 &&
+            calendarCO >= 1 &&
+            countShowCalendar < 1
+          ) {
+            if (this.typeCalendar == 'week') {
+              spanWP.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
+              );
+              spanTM.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+              spanCO.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            } else {
+              spanWP.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
+              );
+              spanTM.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px`
+              );
+              spanCO.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            }
+            flex.append(spanWP);
+            flex.append(spanTM);
+            flex.append(spanCO);
+          }
         }
-      }
-    }
-    var spanWP: HTMLElement = document.createElement('span');
-    var spanTM: HTMLElement = document.createElement('span');
-    var spanCO: HTMLElement = document.createElement('span');
-    var flex: HTMLElement = document.createElement('span');
-    flex.className = 'd-flex note-point';
-    ele.append(flex);
-    if (calendarWP >= 1 && countShowCalendar < 1) {
-      if (this.typeCalendar == 'week') {
-        spanWP.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-        );
-      } else {
-        spanWP.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-        );
-      }
-      flex.append(spanWP);
-    }
-
-    if (calendarTM >= 1) {
-      if (this.typeCalendar == 'week') {
-        spanTM.setAttribute(
-          'style',
-          `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-        );
-      } else {
-        spanTM.setAttribute(
-          'style',
-          `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;`
-        );
-      }
-      flex.append(spanTM);
-    }
-
-    if (calendarCO >= 1) {
-      if (this.typeCalendar == 'week') {
-        spanCO.setAttribute(
-          'style',
-          `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-        );
-      } else {
-        spanCO.setAttribute(
-          'style',
-          `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;`
-        );
-      }
-      flex.append(spanCO);
-    }
-
-    if (
-      calendarWP >= 1 &&
-      calendarTM >= 1 &&
-      calendarCO >= 1 &&
-      countShowCalendar < 1
-    ) {
-      if (this.typeCalendar == 'week') {
-        spanWP.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-        );
-        spanTM.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-        );
-        spanCO.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-        );
-      } else {
-        spanWP.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
-        );
-        spanTM.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.TM_TasksParam?.ShowColor};border-radius: 50%;margin-left: 2px`
-        );
-        spanCO.setAttribute(
-          'style',
-          `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
-        );
-      }
-      flex.append(spanWP);
-      flex.append(spanTM);
-      flex.append(spanCO);
+      }, 500);
     }
   }
 
@@ -631,35 +646,13 @@ export class CalendarNotesComponent
     if (e) {
       var field = e.field;
       if (field == 'WP_Notes_ShowEvent') {
-        var today: any = document.querySelector(
-          ".e-footer-container button[aria-label='Today']"
-        );
-        if (today) {
-          today.click();
-        }
-        this.setEventWeek();
         this.updateSettingValue('WP_Notes', e.data);
       } else if (field == 'TM_Tasks_ShowEvent') {
-        var today: any = document.querySelector(
-          ".e-footer-container button[aria-label='Today']"
-        );
-        if (today) {
-          today.click();
-        }
-        this.setEventWeek();
         this.updateSettingValue('TM_Tasks', e.data);
       } else if (field == 'CO_Meetings_ShowEvent') {
-        var today: any = document.querySelector(
-          ".e-footer-container button[aria-label='Today']"
-        );
-        if (today) {
-          today.click();
-        }
-        this.setEventWeek();
         this.updateSettingValue('CO_Meetings', e.data);
       }
     }
-    this.changeDetectorRef.detectChanges();
   }
 
   updateSettingValue(transType, value) {
@@ -674,20 +667,35 @@ export class CalendarNotesComponent
       )
       .subscribe((res) => {
         if (res) {
-          if (this.typeCalendar == 'week')
-            this.getParam(this.fDayOfWeek, this.lDayOfWeek);
-          else this.getParam(this.fDayOfMonth, this.lDayOfMonth);
-          (this.lstView.dataService as CRUDService).dataObj = `WPCalendars`;
-          (this.lstView.dataService as CRUDService).predicates =
-            'CreatedOn >= @0 && CreatedOn < @1';
-          (
-            this.lstView.dataService as CRUDService
-          ).dataValues = `${this.FDdate};${this.TDate}`;
-          this.lstView.dataService
-            .setPredicate(this.predicate, [this.dataValue])
-            .subscribe((res) => {
-              this.changeDetectorRef.detectChanges();
-            });
+          if (this.typeCalendar == 'week') {
+            this.getParam(this.fDayOfWeek, this.lDayOfWeek, false);
+          } else {
+            var date = new Date();
+            if (this.dateOfMonth) date = this.dateOfMonth;
+            var fDayOfMonth = moment(date).startOf('month').toISOString();
+            var lDayOfMonth = moment(date).endOf('month').toISOString();
+            this.getParam(fDayOfMonth, lDayOfMonth);
+            var today: any = document.querySelector(
+              ".e-footer-container button[aria-label='Today']"
+            );
+            if (today) {
+              today.click();
+            }
+          }
+          this.setEventWeek();
+          if (value == true) {
+            (this.lstView.dataService as CRUDService).dataObj = `WPCalendars`;
+            (this.lstView.dataService as CRUDService).predicates =
+              'CreatedOn >= @0 && CreatedOn < @1';
+            (
+              this.lstView.dataService as CRUDService
+            ).dataValues = `${this.FDdate};${this.TDate}`;
+            this.lstView.dataService
+              .setPredicate(this.predicate, [this.dataValue])
+              .subscribe((res) => {
+                this.change.detectChanges();
+              });
+          }
         }
       });
   }
@@ -711,7 +719,7 @@ export class CalendarNotesComponent
             }
           }
         }
-        this.changeDetectorRef.detectChanges();
+        this.change.detectChanges();
       });
   }
 

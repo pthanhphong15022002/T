@@ -25,6 +25,15 @@
       <div class="d-flex">
         <div class="flex-grow-1 extend-main">
           <div class="h-100 extend-content">
+            <div class="dms-info">
+              <div class="d-flex align-items-center">
+                <div *ngIf="process != null && flowChart != null">
+                  <img alt="{{flowChart.fileName}}" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
+                    src="{{flowChart.pathDisk}}">
+                </div>
+
+              </div>
+            </div>
             <div class="mb-5">
               <h4 class="fw-bold text-dark mb-3">
                 <codx-label fiedName="Info" [formModel]="form.formModel" default="Thông tin">

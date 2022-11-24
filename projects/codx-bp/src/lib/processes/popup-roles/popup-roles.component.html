@@ -1,9 +1,9 @@
 <codx-form headerText="{{title}}" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
-    <div class="row">
+    <div class="row" style="height: 100% !important;">
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
         <div class="user-mini-nav">
-          <div *ngIf="process.permissions != null && process.permissions.length != null">
+          <div *ngIf="process != null && process?.permissions != null">
             <ng-container *ngFor="let perm of process?.permissions; index as i;">
               <div (click)="changePermission(i)"
                 [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
@@ -19,31 +19,28 @@
                       </codx-temp-full>
                     </ng-template>
                     <ng-template #elsethenAvatar1>
-                      <div class="me-3" style="position: relative" popoverClass="userPopoverClass"
-                        [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
+                      <div class="me-3 d-flex align-items-center" popoverClass="userPopoverClass"
+                        [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
                         (mouseenter)="showPopover(p, perm.objectID)" autoClose="outside">
-                        <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
-                        </codx-img>
-                        <!-- <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                      imgCss="w-25px me-3 cursor-pointer symbol symbol-25 symbol-circle" [imageWidth]="25"
-                      [title]="perm.objectName">
-                    </codx-temp-full> -->
-
-                        <div style="position: absolute; right: 0px; bottom: 0px">
-                          <ng-container *ngFor="let role of listRoles">
-                            <ng-container *ngIf="role.value == perm.nemberType">
-                              <span inlineSVG="./assets/themes/bp/default/img/{{ role.icon }}"></span>
+                        <div class="d-flex align-items-center" >
+                          <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
+                          </codx-img>
+                          <div  style="position: absolute; left: 58px;">
+                            <ng-container *ngFor="let role of listRoles">
+                              <ng-container *ngIf="role.value == perm.nemberType">
+                                <span inlineSVG="./assets/themes/bp/default/img/{{ role.icon }}"></span>
+                              </ng-container>
                             </ng-container>
-                          </ng-container>
+                          </div>
                         </div>
+                        <div style="margin-left: 20px;">
+                          <div class="text-dark fw-bold fs-6">
+                            {{ perm.objectName }}
+                          </div>
+                          <div *ngIf="perm.autoCreate" class="text-gray-700">{{ autoName }}</div>
+                        </div>
+                      </div>
 
-                      </div>
-                      <div class="me-2">
-                        <div class="text-dark fw-bold fs-6">
-                          {{ perm.objectName }}
-                        </div>
-                        <div *ngIf="perm.autoCreate" class="text-gray-700" >{{ autoName }}</div>
-                      </div>
                     </ng-template>
                   </div>
 
@@ -58,18 +55,19 @@
             </ng-container>
           </div>
         </div>
-        <div class="add-user">
+        <div class="add-user d-flex justify-content-between">
           <div class="d-flex justify-content-between">
-              <ng-container *ngFor="let item of listRoles">
-                <div class="d-flex align-items-center ms-2">
-                  <span inlineSVG="./assets/themes/bp/default/img/{{ item.icon }}"></span>
-                  <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
-                </div>
-              </ng-container>
-            <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-              (valueChange)="changUsers($event)">
-            </codx-input>
+            <ng-container *ngFor="let item of listRoles">
+              <div class="d-flex align-items-center ms-3">
+                <span inlineSVG="./assets/themes/bp/default/img/{{ item.icon }}"></span>
+                <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+              </div>
+            </ng-container>
           </div>
+
+          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+            (valueChange)="changUsers($event)">
+          </codx-input>
         </div>
       </div>
       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
@@ -127,8 +125,10 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="read" field="read"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')">
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')"
+                    >
                   </codx-input>
+
                 </td>
               </tr>
               <!-- <tr>

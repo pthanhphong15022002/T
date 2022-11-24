@@ -14,6 +14,7 @@
   [autoLoad]="true"
   (onActions)="onActions($event)"
   (viewChanged)="viewChanged($event)"
+  [viewActiveType]="viewMode"
 >
 </codx-views>
 
@@ -49,14 +50,17 @@
         </label>
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
-            <div
+            <!-- <div
               class="d-flex"
               [ngbPopover]="hoverMoreFunction"
               #p="ngbPopover"
               [openDelay]="500"
               (mouseenter)="openMoreFunction(item,p)"
               placement="left bottom top"
-            >
+            > -->
+            <div
+            class="d-flex"
+          >
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
               ></i>
@@ -152,6 +156,8 @@
           [formModel]="view.formModel"
           [functionID]="funcID"
           displayThumb="full"
+          pageSize="2"
+          heightScroll="100"
         >
         </codx-attachment>
         <!-- <ng-container *ngFor="let item of data?.items">
@@ -233,15 +239,10 @@
 <ng-template #itemViewList>
   <div class="card">
     <div
-      class="card-body"
-      data-kt-scroll="true"
-      data-kt-scroll-activate="{default: true}"
-      data-kt-scroll-height="auto"
-      data-kt-scroll-dependencies=".codx-wapper"
-      data-kt-scroll-wrappers=".codx-toolbar .no-header"
-      [attr.data-kt-scroll-offset]="'130px'"
+      
     >
-      <div class="mb-5">
+    <!-- <div> -->
+      <!-- <div class="mb-5">
         <h4 class="fw-bold text-gray-900 mb-104">
           {{ process?.processName }}
         </h4>
@@ -286,7 +287,7 @@
             </span>
           </div>
         </div>
-        <div class="d-flex flex-wrap mb-2" *ngIf="listPhaseName?.length > 0">
+        <div class="d-flex flex-wrap mb-2" *ngIf="view.dataService.data?.length > 0">
           <div class="d-flex align-items-center me-4">
             <span>
               <codx-label
@@ -302,12 +303,13 @@
                 class="text-danger"
                 style="font-size: 20px"
               >
-                <codx-label name="lblIcon" default="-->"></codx-label>
+                <codx-label name="lblIcon" default="->"></codx-label>
               </span>
             </ng-container>
           </div>
         </div>
-      </div>
+      </div> -->
+      
       <ng-container
         *ngIf="view.dataService.data?.length == 0"
         [ngTemplateOutlet]="tmpEmpty"
@@ -662,12 +664,12 @@
 </ng-template>
 
 <ng-template #hoverMoreFunction>
-  <codx-mfunc
+  <!-- <codx-mfunc
     type="hover"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, dataHover)"
     [isBookMark]="false"
     [dataItem]="dataHover"
   >
-  </codx-mfunc>
+  </codx-mfunc> -->
 </ng-template>

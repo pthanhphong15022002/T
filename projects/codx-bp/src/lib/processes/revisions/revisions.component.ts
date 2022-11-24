@@ -17,6 +17,7 @@ import {
   AuthStore,
   UIComponent,
   CacheService,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
@@ -53,6 +54,7 @@ export class RevisionsComponent implements OnInit {
   msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
   msgSucess = 'msgSucess'; //Condtion sucess
   isUpdate: boolean;
+  gridViewSetup:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -70,18 +72,18 @@ export class RevisionsComponent implements OnInit {
     this.process = this.data?.data;
     this.revisions = this.process?.versions;
     this.headerText =dt?.data.more.defaultName;
+    this.verNo ='V'+this.revisions.length.toString()+'.0';
     this.cache.message('BP001').subscribe((res) => {
       if (res) {
-       this.verNameDefault = res.customName;
+       this.verNameDefault = Util.stringFormat(res.defaultName, '' + this.verNo.toString() + '');
       }
     })
-    this.verNo ='V'+this.revisions.length.toString()+'.0';
     this.comment=''
-
-    // // Message code
-    // this.msgErrorValidExit= 'msgErrorValidExit'; // Check name exist
-    // this.msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
-    // this.msgSucess = 'msgSucess'; //Condtion sucess
+    this.cache.gridViewSetup('ProcessRevisions', 'grvProcessRevisions').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
 
 
@@ -90,13 +92,9 @@ export class RevisionsComponent implements OnInit {
 
   //#region event
   valueChange(e) {
-    console.log(e?.data);
     if(e?.data)  {
       this.verName =e?.data;
     }
-    // else {
-    //   this.verName = this.verNameDefault;
-    // }
     this.changeDetectorRef.detectChanges;
   }
 
@@ -123,11 +121,11 @@ export class RevisionsComponent implements OnInit {
   onSave() {
     switch(this.checkValiName(this.verName)) {
       case this.msgErrorValidIsNull: {
-        this.notiService.notifyCode('Chưa nhập tên phiên bản kìa');
+        this.notiService.notifyCode('SYS009', 0, '"' + 'headerText' + '"');
          break;
       }
       case this.msgErrorValidExit: {
-        this.notiService.notifyCode('Tên phiên bản đã tồi tại rồi nha');
+        this.notiService.notifyCode('BP002');
          break;
       }
       case this.msgSucess: {
@@ -138,14 +136,8 @@ export class RevisionsComponent implements OnInit {
    if(this.isUpdate) {
       this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName).subscribe((res) => {
         if (res) {
-            console.log(this.process);
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;
-            this.process.recID = res.recID;
-            this.process.id = res.id;
-            this.process.revisionID = res.revisionID;
-            this.dialog.dataService.clear();
-            this.dialog.dataService.update(this.process).subscribe();
             this.dialog.close(this.process);
             this.notiService.notifyCode('SYS007');
         }

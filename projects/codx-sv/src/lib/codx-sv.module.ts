@@ -15,15 +15,18 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { LayoutComponent } from './_layout/layout.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
-import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { InPlaceEditorModule } from '@syncfusion/ej2-angular-inplace-editor';
 import { LayoutHomeComponent } from './_layout-home/layout-home.component';
-import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { FormsModule } from '@angular/forms';
-import { SortSessionComponent } from './add-survey/sort-session/sort-session.component';
-import { TemplateSurveyOtherComponent } from './template-survey-other.component/template-survey-other.component';
-import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
+import { AnswersComponent } from './add-survey/answers/answers.component';
+import { SettingComponent } from './add-survey/setting/setting.component';
+import { PopupQuestionOtherComponent } from './add-survey/questions/template-survey-other.component/popup-question-other/popup-question-other.component';
+import { TemplateSurveyOtherComponent } from './add-survey/questions/template-survey-other.component/template-survey-other.component';
+import { SortSessionComponent } from './add-survey/questions/sort-session/sort-session.component';
+import { PopupUploadComponent } from './add-survey/questions/popup-upload/popup-upload.component';
+import { AddSurveyComponent } from './add-survey/add-survey.component';
+import { QuestionsComponent } from './add-survey/questions/questions.component';
 
 export const routes: Routes = [
   {
@@ -57,6 +60,9 @@ const Component: Type<any>[] = [
   SortSessionComponent,
   TemplateSurveyOtherComponent,
   PopupQuestionOtherComponent,
+  SettingComponent,
+  AnswersComponent,
+  QuestionsComponent,
 ];
 
 @NgModule({

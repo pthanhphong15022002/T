@@ -25,8 +25,8 @@
             ></codx-label>
             <codx-input
                 field="awardID"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
             ></codx-input>
         </div>
 
@@ -38,9 +38,9 @@
                 ></codx-label>
                 <codx-input
                     field="awardDate"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                    (valueChange)="handleSelectAwardDate($event.target.value)"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                    (valueChange)="handleSelectAwardDate($event)"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -48,11 +48,15 @@
                     fiedName="InYear"
                     [formModel]="formModel"
                 ></codx-label>
-                <codx-input
-                    field="inYear"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
-                ></codx-input>
+                 <ejs-datepicker 
+                #picker start="Decade" 
+                depth="Decade" 
+                [value]="valueYear"
+                [format]="'y'"
+                locale="vi"
+                (change)="inYearSelect($event)"
+                >
+                </ejs-datepicker>
             </div>
         </div>
 
@@ -64,8 +68,8 @@
                 ></codx-label>
                 <codx-input
                     field="awardFormCategory"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -75,8 +79,8 @@
                 ></codx-label>
                 <codx-input
                     field="awardLevelCategory"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
                 ></codx-input>
             </div>
         </div>
@@ -88,8 +92,8 @@
             ></codx-label>
             <codx-input
                 field="awardPlace"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
             ></codx-input>
         </div>
 
@@ -100,8 +104,8 @@
             ></codx-label>
             <codx-input
                 field="reason"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
             ></codx-input>
         </div>
 
@@ -113,8 +117,8 @@
                 ></codx-label>
                 <codx-input
                     field="decisionNo"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -124,8 +128,8 @@
                 ></codx-label>
                 <codx-input
                     field="signedDate"
-                    [formModel]="form.formModel"
-                    [Group]="form.formGroup"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
                 ></codx-input>
             </div>
         </div>
@@ -137,8 +141,8 @@
             ></codx-label>
             <codx-input
                 field="signer"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
             ></codx-input>
         </div>
 
@@ -149,8 +153,8 @@
             ></codx-label>
             <codx-input
                 field="signerPosition"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
             ></codx-input>
         </div>
 
@@ -161,8 +165,8 @@
             ></codx-label>
             <codx-input
                 field="note"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
             ></codx-input>
         </div>
     </ng-template>
