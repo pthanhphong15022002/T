@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef,
   Optional,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
 import { FileService } from '@shared/services/file.service';
 import {
@@ -114,12 +114,14 @@ export class ProcessesComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
-    private fileService: FileService
+    private fileService: FileService,
+    private routers : Router,
   ) {
     super(inject);
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    console.log(routers.url);
     if (this.funcID == 'BPT3') {
       this.method = 'GetListShareByProcessAsync';
     }
@@ -190,6 +192,8 @@ export class ProcessesComponent
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
  //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
+    console.log('----------------',this.view.dataService);
+    
   }
 
   getGridModel() {
