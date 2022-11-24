@@ -1196,7 +1196,7 @@ export class CodxTasksComponent
       return;
     }
 
-    if (data.extendStatus == '1') {
+    if (data.extendStatus == '3') {
       this.notiService.alertCode('TM055').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
           this.confirmExtend(data, moreFunc);
