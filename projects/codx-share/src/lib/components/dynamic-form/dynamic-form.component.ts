@@ -79,6 +79,7 @@ export class DynamicFormComponent extends UIComponent {
         },
       },
     ];
+    this.detectorRef.detectChanges();
   }
 
   viewChanged(evt: any, view: ViewsComponent) {
@@ -107,7 +108,7 @@ export class DynamicFormComponent extends UIComponent {
         break;
     }
   }
-  
+
   click(evt: ButtonModel) {
     this.function = evt;
     switch (evt.id) {
@@ -143,7 +144,10 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && !dt?.error && dt?.data && dt?.data?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt?.data,'ODS21'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [
+                dt?.data,
+                'ODS21',
+              ])
               .subscribe();
           }
         });
@@ -176,7 +180,10 @@ export class DynamicFormComponent extends UIComponent {
           if (dt && dt?.approval) {
             //Kiểm tra xem tồn tại hay không ? Nếu không có thì lưu ES_Category
             this.api
-              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [dt,'ODS21'])
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'ExistAsync', [
+                dt,
+                'ODS21',
+              ])
               .subscribe();
           }
         });
@@ -212,23 +219,28 @@ export class DynamicFormComponent extends UIComponent {
     let delItem = this.viewBase.dataService.dataSelected;
     if (evt) delItem = evt;
     //Xử lý riêng OD
-    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21')
-    {
-      this.api.execSv("OD","OD","DispatchesBusiness","GetItemByCategoryIDAsync",delItem.categoryID).subscribe(item=>{
-        if(!item)
-        {
-          this.viewBase.dataService.delete([delItem]).subscribe((res) => {
-            this.dataSelected = res;
-          });
-          this.api
-          .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [delItem?.categoryID])
-          .subscribe();
-        }
-        else this.notifySvr.notifyCode("SYS002")
-      })
-    }
-    else
-    {
+    if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21') {
+      this.api
+        .execSv(
+          'OD',
+          'OD',
+          'DispatchesBusiness',
+          'GetItemByCategoryIDAsync',
+          delItem.categoryID
+        )
+        .subscribe((item) => {
+          if (!item) {
+            this.viewBase.dataService.delete([delItem]).subscribe((res) => {
+              this.dataSelected = res;
+            });
+            this.api
+              .execSv('ES', 'ES', 'CategoriesBusiness', 'DeleteCategoyAsync', [
+                delItem?.categoryID,
+              ])
+              .subscribe();
+          } else this.notifySvr.notifyCode('SYS002');
+        });
+    } else {
       this.viewBase.dataService.delete([delItem]).subscribe((res) => {
         this.dataSelected = res;
       });

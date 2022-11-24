@@ -1,4 +1,3 @@
-import { E } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -12,8 +11,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { iframeMouseDown } from '@syncfusion/ej2-angular-richtexteditor';
 import {
   AlertConfirmInputConfig,
   ApiHttpService,
@@ -25,18 +22,18 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
-import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
-import { Approvers } from '../../../codx-es.model';
-import { CodxEsService } from '../../../codx-es.service';
+// import { Approvers } from 'projects/codx-es/src/lib/codx-es.model';
+// import { CodxEsService } from 'projects/codx-es/src/public-api';
+import { Approvers, CodxShareService } from '../../../codx-share.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
-import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
-  selector: 'popup-add-approval-step',
-  templateUrl: './popup-add-approval-step.component.html',
-  styleUrls: ['./popup-add-approval-step.component.scss'],
+  selector: 'lib-add-edit-approval-step',
+  templateUrl: './add-edit-approval-step.component.html',
+  styleUrls: ['./add-edit-approval-step.component.css'],
 })
-export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
+export class AddEditApprovalStepComponent implements OnInit, AfterViewInit {
   @ViewChild('tabInfo0', { static: true }) tabInfo0: TemplateRef<any>;
   @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
   @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
@@ -101,7 +98,8 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   constructor(
-    private esService: CodxEsService,
+    // private esService: CodxEsService,
+    private codxService: CodxShareService,
     private cr: ChangeDetectorRef,
     private notifySvr: NotificationsService,
     private cache: CacheService,
@@ -163,7 +161,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.formModelCustom = new FormModel();
     this.formModelCustom.formName = 'ApprovalSteps_Approvers';
     this.formModelCustom.gridViewName = 'grvApprovalSteps_Approvers';
-    this.esService.getFormModel('EST04').then((res) => {
+    this.codxService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
         this.dialog.formModel = this.formModel;
@@ -185,14 +183,14 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           this.positionDefault = grv['Position']['headerText'];
         }
       });
-    this.esService
+    this.codxService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.dialogApprovalStep = item;
 
         if (this.isAdd) {
-          this.esService
-            .getDataDefault('EST04', this.formModel.entityName, 'recID')
+          this.codxService
+            .getESDataDefault('EST04', this.formModel.entityName, 'recID')
             .subscribe((res: any) => {
               if (res) {
                 this.data = res.data;
@@ -215,7 +213,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
                 this.data.signatureType = this.defaultSignType;
                 this.dialogApprovalStep.patchValue(this.data);
 
-                this.esService.getNewDefaultEmail().subscribe((emailTmp) => {
+                this.codxService.getNewDefaultEmail().subscribe((emailTmp) => {
                   this.data.emailTemplates = emailTmp;
                   this.dialogApprovalStep.patchValue({
                     emailTemplates: emailTmp,
@@ -249,7 +247,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
           this.isAfterRender = true;
 
           if (!this.dialogApprovalStep.value.emailTemplates) {
-            this.esService.getNewDefaultEmail().subscribe((res) => {
+            this.codxService.getNewDefaultEmail().subscribe((res) => {
               this.dialogApprovalStep.patchValue({ emailTemplates: res });
             });
           }
@@ -348,7 +346,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   onSaveForm() {
     this.isSaved = true;
     if (this.dialogApprovalStep.invalid == true) {
-      this.esService.notifyInvalid(this.dialogApprovalStep, this.formModel);
+      this.codxService.notifyInvalid(this.dialogApprovalStep, this.formModel);
       return;
     }
     if (this.lstApprover.length == 0) {
@@ -470,7 +468,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
               appr.roleType = element.objectType;
               appr.name = lstUserName[i];
               appr.approver = lstID[i];
-              this.esService.getDetailApprover(appr).subscribe((oRes) => {
+              this.codxService.getDetailApprover(appr).subscribe((oRes) => {
                 if (oRes?.length > 0) {
                   appr.position = oRes[0].position;
                   appr.phone = oRes[0].phone;

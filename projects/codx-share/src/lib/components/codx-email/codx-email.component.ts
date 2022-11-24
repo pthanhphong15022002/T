@@ -100,7 +100,7 @@ export class CodxEmailComponent implements OnInit {
     private api: ApiHttpService,
     private cache: CacheService,
     private codxService: CodxShareService,
-    private esService: CodxEsService,
+    // private esService: CodxEsService,
 
     private callFunc: CallFuncService,
     private auth: AuthStore,
@@ -111,7 +111,7 @@ export class CodxEmailComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
-    this.formGroup = data?.data?.formGroup;
+    //this.formGroup = data?.data?.formGroup;
     this.templateID = data?.data?.templateID;
     this.isAddNew = data?.data?.isAddNew ?? true;
     console.log(this.templateID);
@@ -325,26 +325,31 @@ export class CodxEmailComponent implements OnInit {
           console.log(res);
           if (res) {
             console.log(res);
-            if (this.formGroup) {
-              let emailTemplates = this.formGroup.value.emailTemplates;
-              this.esService.lstTmpEmail.push(res);
-              let i = emailTemplates.findIndex(
-                (p) => p.emailType == res.templateType
-              );
-              if (i >= 0) {
-                emailTemplates[i].templateID = res.recID;
+            // if (this.formGroup) {
+            //   let emailTemplates = this.formGroup.value.emailTemplates;
+            //   this.esService.lstTmpEmail.push(res);
+            //   let i = emailTemplates.findIndex(
+            //     (p) => p.emailType == res.templateType
+            //   );
+            //   if (i >= 0) {
+            //     emailTemplates[i].templateID = res.recID;
 
-                if (this.attachment.fileUploadList.length > 0) {
-                  this.attachment.objectId = res.recID;
-                  console.log(this.dmSV.fileUploadList);
-                  this.attachment.saveFiles();
-                }
+            //     if (this.attachment.fileUploadList.length > 0) {
+            //       this.attachment.objectId = res.recID;
+            //       console.log(this.dmSV.fileUploadList);
+            //       this.attachment.saveFiles();
+            //     }
 
-                this.formGroup.patchValue({ emailTemplates: emailTemplates });
-              }
+            //     this.formGroup.patchValue({ emailTemplates: emailTemplates });
+            //   }
+            // }
+            if (this.attachment.fileUploadList.length > 0) {
+              this.attachment.objectId = res.recID;
+              console.log(this.dmSV.fileUploadList);
+              this.attachment.saveFiles();
             }
             dialog1 && dialog1.close();
-            this.dialog && this.dialog.close();
+            this.dialog && this.dialog.close(res);
           }
         });
     } else if (this.isAddNew) {
@@ -353,22 +358,21 @@ export class CodxEmailComponent implements OnInit {
         .addEmailTemplate(this.dialogETemplate.value, lstSento)
         .subscribe((res) => {
           if (res) {
-            if (this.formGroup) {
-              let emailTemplates = this.formGroup.value.emailTemplates;
-              this.esService.lstTmpEmail.push(res);
-              let i = emailTemplates.findIndex(
-                (p) => p.emailType == res.templateType
-              );
-              if (i >= 0) {
-                emailTemplates[i].templateID = res.recID;
+            // if (this.formGroup) {
+            //   let emailTemplates = this.formGroup.value.emailTemplates;
+            //   this.esService.lstTmpEmail.push(res);
+            //   let i = emailTemplates.findIndex(
+            //     (p) => p.emailType == res.templateType
+            //   );
+            //   if (i >= 0) {
+            //     emailTemplates[i].templateID = res.recID;
 
-                if (this.attachment.fileUploadList.length > 0) {
-                  this.attachment.objectId = res.recID;
-                  this.attachment.saveFiles();
-                }
-
-                this.formGroup.patchValue({ emailTemplates: emailTemplates });
-              }
+            //     this.formGroup.patchValue({ emailTemplates: emailTemplates });
+            //   }
+            // }
+            if (this.attachment.fileUploadList.length > 0) {
+              this.attachment.objectId = res.recID;
+              this.attachment.saveFiles();
             }
             this.dialog && this.dialog.close(res);
           }
@@ -381,7 +385,7 @@ export class CodxEmailComponent implements OnInit {
           if (res) {
             if (this.formGroup) {
               let emailTemplates = this.formGroup.value.emailTemplates;
-              this.esService.lstTmpEmail.push(res);
+              //this.esService.lstTmpEmail.push(res);
               let i = emailTemplates.findIndex(
                 (p) => p.emailType == res.templateType
               );
@@ -422,6 +426,7 @@ export class CodxEmailComponent implements OnInit {
                 res1[0].recID = this.data?.recID;
                 res1[0].id = this.data?.id;
                 this.data = res1[0];
+                this.setViewBody();
                 this.dialogETemplate.patchValue(res1[0]);
                 this.setViewBody();
 

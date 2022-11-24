@@ -66,15 +66,11 @@ export class PopupAddPermissionComponent implements OnInit {
       this.per.toPermission[i].startDate = this.startDate;
       this.per.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
-        this.per.toPermission[i].update = true;
-        this.per.toPermission[i].delete = true;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
         this.per.toPermission[i].autoCreate = false;
         this.per.toPermission[i].nemberType = '3';
       } else {
-        this.per.toPermission[i].update = true;
-        this.per.toPermission[i].delete = true;
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
         this.per.toPermission[i].autoCreate = false;
@@ -145,7 +141,6 @@ export class PopupAddPermissionComponent implements OnInit {
                 perm.objectID = item.id;
                 perm.isActive = true;
                 perm.objectType = item.objectType;
-                perm.read = true;
                 list.push(Object.assign({}, perm));
               // }else if (item.id != null && item.objectType == "U"){
               //   var perm = new BP_ProcessPermissions();
@@ -180,7 +175,6 @@ export class PopupAddPermissionComponent implements OnInit {
                 perm.objectID = item.id;
                 perm.isActive = true;
                 perm.objectType = item.objectType;
-                perm.read = true;
                 list.push(Object.assign({}, perm));
             //
             }
@@ -205,7 +199,6 @@ export class PopupAddPermissionComponent implements OnInit {
                 perm.objectID = item.id;
                 perm.isActive = true;
                 perm.objectType = item.objectType;
-                perm.read = true;
                 list.push(Object.assign({}, perm));
               // }else if (item.id != null && item.objectType == "U"){
               //   var perm = new BP_ProcessPermissions();
