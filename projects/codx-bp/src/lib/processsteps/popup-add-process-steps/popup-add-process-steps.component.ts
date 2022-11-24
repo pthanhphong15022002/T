@@ -20,7 +20,10 @@ import {
 } from 'codx-core';
 import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
-import { BP_ProcessOwners, BP_ProcessSteps } from '../../models/BP_Processes.model';
+import {
+  BP_ProcessOwners,
+  BP_ProcessSteps,
+} from '../../models/BP_Processes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
@@ -89,7 +92,7 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-    
+
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
@@ -114,15 +117,15 @@ export class PopupAddProcessStepsComponent
       }
     }
     this.cache
-    .gridViewSetup(
-      this.dialog.formModel.formName,
-      this.dialog.formModel.gridViewName
-    )
-    .subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   onInit(): void {
@@ -177,9 +180,13 @@ export class PopupAddProcessStepsComponent
   }
 
   async saveData() {
-    this.gridViewSetup
-    if(this.stepType != "P" && (this.processSteps.parentID == '' || this.processSteps.parentID == null)){
-      let headerText = this.gridViewSetup['ParentID']?.headerText ?? 'IterationName';
+    this.gridViewSetup;
+    if (
+      this.stepType != 'P' &&
+      (this.processSteps.parentID == '' || this.processSteps.parentID == null)
+    ) {
+      let headerText =
+        this.gridViewSetup['ParentID']?.headerText ?? 'IterationName';
       return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
     }
     this.processSteps.owners = this.owners;
@@ -187,9 +194,14 @@ export class PopupAddProcessStepsComponent
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.processSteps.attachments = Array.isArray(res) ? res.length : 1;
-          if (this.action == 'edit') this.updateProcessStep();
-          else this.addProcessStep();
+         var attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') {
+            this.processSteps.attachments +=attachments
+            this.updateProcessStep();
+          } else {
+            this.processSteps.attachments =attachments
+            this.addProcessStep();
+          }
         }
       });
     else {
@@ -252,8 +264,8 @@ export class PopupAddProcessStepsComponent
   valueChangeCbx(e) {
     this.processSteps.parentID = e?.data;
     let parentID = e?.data;
-    // Get owners  
-    if (this.stepType !== "A" && this.stepType !== "P") {
+    // Get owners
+    if (this.stepType !== 'A' && this.stepType !== 'P') {
       this.getOwnerByParentID(parentID, true);
     }
   }
@@ -294,7 +306,11 @@ export class PopupAddProcessStepsComponent
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit' || (this.action == 'edit' &&  !this.showLabelAttachment)) this.showLabelAttachment = this.isHaveFile;
+    if (
+      this.action != 'edit' ||
+      (this.action == 'edit' && !this.showLabelAttachment)
+    )
+      this.showLabelAttachment = this.isHaveFile;
   }
   valueChangeAlert(e) {
     this.processSteps[e?.field] = e.data;
@@ -351,38 +367,42 @@ export class PopupAddProcessStepsComponent
         JSON.stringify(this.listOwnerID)
       )
       .subscribe((res) => {
-        this.listOwnerDetails = res.map(user => {
-          return { id: user.userID, name: user.userName }
-        })
+        this.listOwnerDetails = res.map((user) => {
+          return { id: user.userID, name: user.userName };
+        });
       });
   }
   getOwnerByParentID(id, isChange = false) {
-    this.bpService
-      .getOwnersByParentID([id])
-      .subscribe((data) => {
-        let ownerIDs = [];
-        let owenrs = [];
-        data.forEach((item) => {
-          if (item.objectID) {
-            ownerIDs.push(item.objectID);
-            var owner = new BP_ProcessOwners();
-            owner.objectType = item.objectType;
-            owner.objectID = item.objectID;
-            owner.rAIC = item.raic;
-            owenrs.push(owner);
-          }
-        })
-
-        if (this.action == 'edit' && isChange) {
-          this.owners = [...owenrs, ...this.ownersClone].filter((item, pos, self) => {
-            return self.findIndex(i => i['objectID'] == item['objectID']) == pos;
-          })
-          this.listOwnerID = this.owners.map(item => {return item['objectID']})
-        } else {
-          this.listOwnerID = [...ownerIDs];
-          this.owners = [...owenrs];
+    this.bpService.getOwnersByParentID([id]).subscribe((data) => {
+      let ownerIDs = [];
+      let owenrs = [];
+      data.forEach((item) => {
+        if (item.objectID) {
+          ownerIDs.push(item.objectID);
+          var owner = new BP_ProcessOwners();
+          owner.objectType = item.objectType;
+          owner.objectID = item.objectID;
+          owner.rAIC = item.raic;
+          owenrs.push(owner);
         }
-        this.getListUser();
       });
+
+      if (this.action == 'edit' && isChange) {
+        this.owners = [...owenrs, ...this.ownersClone].filter(
+          (item, pos, self) => {
+            return (
+              self.findIndex((i) => i['objectID'] == item['objectID']) == pos
+            );
+          }
+        );
+        this.listOwnerID = this.owners.map((item) => {
+          return item['objectID'];
+        });
+      } else {
+        this.listOwnerID = [...ownerIDs];
+        this.owners = [...owenrs];
+      }
+      this.getListUser();
+    });
   }
 }

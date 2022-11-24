@@ -44,7 +44,7 @@
   background-color: #fff;
 }
 
-.pw-menu .e-tab-header {
+.personal-menu .e-tab-header {
   height: 48px;
   line-height: 48px;
   border-radius: 6px !important;
@@ -59,21 +59,21 @@
 }
 
 
-.pw-menu .e-tab-header .e-toolbar-items {
+.personal-menu .e-tab-header .e-toolbar-items {
   height: 48px;
   min-height: 48px;
 }
 
-.pw-menu .e-tab .e-tab-header .e-toolbar-item.e-active {
+.personal-menu .e-tab .e-tab-header .e-toolbar-item.e-active {
   border: 0 !important;
   border-bottom-color: transparent !important
 }
 
-.pw-menu .e-tab .e-tab-header::before {
+.personal-menu .e-tab .e-tab-header::before {
   border-color: transparent;
 }
 
-.e-tab-header .pw-menu a {
+.e-tab-header .personal-menu a {
   cursor: pointer;
 }
 
@@ -87,13 +87,13 @@ app-personals .pw-content {
   box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }
 
-// .pw-menu div.active a,
-// .pw-menu div:hover a {
+// .personal-menu div.active a,
+// .personal-menu div:hover a {
 //     color: #0078ff;
 // }
 
-// .pw-menu div.active span,
-// .pw-menu div:hover span {
+// .personal-menu div.active span,
+// .personal-menu div:hover span {
 //     color: #0078ff;
 // }
 
@@ -109,7 +109,7 @@ app-personals .pw-content {
   }
 }
 
-.pw-menu div a .mn-icon {
+.personal-menu div a .mn-icon {
   margin-right: 5px;
 }
 

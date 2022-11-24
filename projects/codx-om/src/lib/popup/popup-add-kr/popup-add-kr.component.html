@@ -6,23 +6,24 @@
   [footer]="footer"
   [dialog]="dialogRef"
   [formModel]="formModel"
-  [data]="data"
+  [data]="kr"
   *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="form-group">
       <codx-label default="Mục tiêu" fiedName="" [formModel]="form.formModel">
       </codx-label>
-      <codx-input></codx-input>
+      <codx-input [crrValue]="kr.parentID" type="text">
+        
+      </codx-input>
     </div>
 
     <div class="form-group">
       <codx-label default="Tên KR" fiedName="OKRName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        ControlName="oKRName"
-        [formModel]="form.formModel"
-        [Group]="fGroupAddKR"
+        type="text"
+        [crrValue]="kr.okrName"
       >
       </codx-input>
     </div>
@@ -34,7 +35,7 @@
         <codx-input
           ControlName="measurement"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -45,7 +46,7 @@
         <codx-input
           ControlName="target"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -56,7 +57,7 @@
         <codx-input
           ControlName="uMID"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -70,7 +71,7 @@
         <codx-input
           ControlName="category"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -81,14 +82,12 @@
         <codx-input
           ControlName="plan"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
 
-      <div class="form-group col-4">
-        <codx-label default="Phân bố btn" fiedName="" [formModel]="form.formModel">
-        </codx-label>
+      <div class="form-group col-4">        
         <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="openPopupDevice(popupDevice)">
           <span class="icon-airplay btn-text-primary me-2"></span>
           <codx-label
@@ -109,7 +108,7 @@
         <codx-input
           ControlName="frequence"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -120,7 +119,7 @@
         <codx-input
           ControlName="checkInMode"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -134,7 +133,7 @@
         <codx-input
           ControlName="oKRName"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -145,7 +144,7 @@
         <codx-input
           ControlName="oKRName"
           [formModel]="form.formModel"
-          [Group]="fGroupAddKR"
+          [Group]="form.formGroup"
         >
         </codx-input>
       </div>
@@ -161,7 +160,7 @@
       <codx-input
         ControlName="note"
         [formModel]="form.formModel"
-        [Group]="fGroupAddKR"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>

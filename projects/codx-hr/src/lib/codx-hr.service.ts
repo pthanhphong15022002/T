@@ -23,12 +23,12 @@ export class CodxHrService {
   positionsComponent: any;
   orgchart: any;
 
-
-  constructor(private api: ApiHttpService, 
+  constructor(
+    private api: ApiHttpService,
     private cache: CacheService,
     private auth: AuthStore,
-    private fb: FormBuilder,
-    ) {}
+    private fb: FormBuilder
+  ) {}
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
       .call(
@@ -162,7 +162,7 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
-        
+
         'OrganizationUnitsBusiness',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
@@ -185,7 +185,17 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeSelfInfo(data){
+  getEmployeeInfo(employeeID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetEmployeeByEmployeeIDAsync',
+      [employeeID]
+    );
+  }
+
+  saveEmployeeSelfInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -195,143 +205,180 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeContactInfo(data){
+  saveEmployeeContactInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'UpdateEmployeeContactInfoAsync',
       data
-    )
+    );
   }
 
-  saveEmployeeUnionAndPartyInfo(data){
+  saveEmployeeUnionAndPartyInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'UpdateEmployeeUnionAndPartyInfoAsync',
       data
-    )
+    );
   }
 
-  saveEmployeeAssurTaxBankAccountInfo(data){
+  saveEmployeeAssurTaxBankAccountInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'UpdateEmployeeAssurTaxBankInfoAsync',
       data
-    )
+    );
   }
 
-  saveEmployeeDegreeInfo(data){
+  saveEmployeeDegreeInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EDegreesBusiness',
       'AddEmployeeDegreeInfoAsync',
       data
-    )
+    );
   }
-  saveEmployeeSkillsInfo(data){
+  saveEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ESkillsBusiness',
       'AddEmployeeSkillInfoAsync',
       data
-    )
+    );
   }
 
-  saveEmployeeCertificatesInfo(data){
+  saveEmployeeCertificatesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ECertificatesBusiness',
       'AddEmployeeCertificateInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeePassportInfo(data){
+  //#region EPassportsBusiness
+
+  getEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
       'GetEmployeePassportInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeVisasInfo(data){
+  GetListPassportByEmpID(empID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'GetListPassportByEmpIDAsync',
+      [empID]
+    );
+  }
+
+  //#endregion
+
+  //#region EmpVisasBusiness
+  getEmployeeVisasInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmpVisasBusiness',
       'GetEmployeeVisasInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeCertificatesInfo(data){
+  getListVisaByEmployeeID(employeeID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'GetListByEmployeeIDAsync',
+      [employeeID]
+    );
+  }
+
+  //#endregion
+
+  getEmployeeCertificatesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ECertificatesBusiness',
       'GetEmployeeCertificateInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeSkillsInfo(data){
+  getEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ESkillsBusiness',
       'GetEmployeeSkillInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeDregreesInfo(data){
+  getEmployeeDregreesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EDegreesBusiness',
       'GetEmployeeDegreeInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeTrainCourse(data){
+  getEmployeeTrainCourse(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'GetEmployeeTrainCoursesInfoAsync',
       data
-    )
+    );
+  }
+  //#region EWorkPermitsBusiness
+  getListWorkPermitByEmployeeID(employeeID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'GetListByEmployeeIDAsync',
+      [employeeID]
+    );
   }
 
-  getEmployeeWorkingLisenceDetail(data){
+  getEmployeeWorkingLisenceDetail(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
       'GetEmployeeWorkPermitInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeAwardInfo(data){
+  getEmployeeAwardInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAwardsBusiness',
       'GetEmployeeAwardInfoAsync',
       data
-    )
+    );
   }
 
   getEmployeeDesciplinesInfo(data){
@@ -391,7 +438,7 @@ export class CodxHrService {
       'EAwardsBusiness',
       'AddEmployeeAwardInfoAsync',
       data
-    )
+    );
   }
 
   updateEmployeeDisciplinesInfo(data){
@@ -403,4 +450,20 @@ export class CodxHrService {
       data
     )
   }
+
+
+  //#endregion
+
+  //#region EFamiliesBusiness
+  getFamilyByEmployeeID(empID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'GetByEmployeeIDAsync',
+      [empID]
+    );
+  }
+
+  //#endregion
 }
