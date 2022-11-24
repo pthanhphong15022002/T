@@ -603,15 +603,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               if (res) {
                 this.dialog.dataService.addDatas.clear();
                 if (res.update) {
+                  var task = res.update[0];
                   this.dialog.close(res.update);
                   this.attachment?.clearData();
                   this.tmSv
-                    .sendAlertMail(this.task.recID, 'TM_0002', this.functionID)
-                    .subscribe(); //mai test laji vi sao khong vao
+                  .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
+                  .subscribe();
                 }
-              }
-              this.dialog.close();
-              this.attachment?.clearData();
+              }else {
+                this.dialog.close();
+                this.attachment?.clearData();
+              }             
             });
         } else {
           this.dialog.close();

@@ -61,11 +61,11 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
       fieldDefault.charAt(0).toLocaleLowerCase() + fieldDefault.slice(1);
     this.valueDefault = UrlUtil.getUrl('defaultValue', this.url);
     if (this.action == 'extend') {
-      this.taskExtends = this.data?.data;
+      this.taskExtends = JSON.parse(JSON.stringify(this.data?.data));
       this.task[this.fieldDefault] = this.valueDefault;
       this.taskExtends.status = this.task[this.fieldDefault];
     } else {
-      this.task = this.data?.data;
+      this.task = JSON.parse(JSON.stringify(this.data?.data));
       this.task[this.fieldDefault] = this.valueDefault;
     }
   }
@@ -132,8 +132,6 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
           } else if (this.task.confirmStatus == '3') {
             this.tmSv.sendAlertMail(this.task?.recID, 'TM_0007', this.funcID).subscribe();
           }
-          // this.notiService.notify('Xác nhận công việc thành công !');
-          // this.notiService.notifyCode(" 20K của Hảo :))") ;
         } else this.dialog.close();
       });
   }
@@ -203,8 +201,8 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         this.comment,
       ])
       .subscribe((res) => {
-        if (res) {
-          this.dialog.close(res);
+        if (res && res?.length > 0) {
+          this.dialog.close(res[0]);
           this.notiService.notifyCode('SYS007');
           if (this.task.approveStatus == '5') {
             this.tmSv.sendAlertMail(this.task.recID, 'TM_0009', this.funcID).subscribe();
