@@ -283,9 +283,8 @@ export class ProcessesComponent
     // } catch (ex) {
     //   this.changeDetectorRef.detectChanges();
     // }
-    let tesst =$event;
    // this.view.dataService.searchText
-    this.view.dataService.search(tesst).subscribe();
+    this.view.dataService.search($event).subscribe();
     this.changeDetectorRef.detectChanges();
   }
 
@@ -328,7 +327,6 @@ export class ProcessesComponent
           option
         );
         this.dialog.closed.subscribe((e) => {
-          console.log(e);
           if (e && e.event != null) {
             this.view.dataService.update(e).subscribe();
             this.detectorRef.detectChanges();
@@ -636,7 +634,7 @@ export class ProcessesComponent
 
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
-   
+
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
