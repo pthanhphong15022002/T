@@ -88,17 +88,77 @@
                       <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
                           <tr class="fw-bold text-dark bg-gray-100">
-                            <th scope="col" class="w-150px">Tên chức năng</th>
-                            <th scope="col" class="w-80px">Cho phép sử dụng</th>
-                            <th scope="col" class="w-50px">Thêm</th>
-                            <th scope="col" class="w-170px">Xem</th>
-                            <th scope="col" class="w-170px">Xóa</th>
-                            <th scope="col" class="w-170px">Sửa</th>
+                            <th scope="col" class="w-150px">
+                              <codx-label
+                                name="lblNameFunction"
+                                formName="Roles"
+                                default="
+                              Tên chức năng"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-80px">
+                              <codx-label
+                                name="lblAllowUse"
+                                formName="Roles"
+                                default="
+                              Cho phép sử dụng"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-50px">
+                              <codx-label
+                                name="lblWrite"
+                                formName="Roles"
+                                default="
+                              Thêm"
+                              >
+                              </codx-label>
+                            </th>
                             <th scope="col" class="w-170px">
-                              Xem dữ liệu trên danh sách
+                              <codx-label
+                                name="lblRead"
+                                formName="Roles"
+                                default="
+                              Xem"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-170px">
+                              <codx-label
+                                name="lblDelete"
+                                formName="Roles"
+                                default="
+                              Xóa"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-170px">
+                              <codx-label
+                                name="lblEdit"
+                                formName="Roles"
+                                default="
+                              Sửa"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-170px">
+                              <codx-label
+                                name="lblIsRun"
+                                formName="Roles"
+                                default="
+                              Xem dữ liệu trên danh sách"
+                              >
+                              </codx-label>
                             </th>
                             <th scope="col" class="w-100px">
-                              Xuất khẩu dữ liệu
+                              <codx-label
+                                name="lblExport"
+                                formName="Roles"
+                                default="
+                              Xuất khẩu dữ liệu"
+                              >
+                              </codx-label>
                             </th>
                           </tr>
                         </thead>
@@ -273,10 +333,32 @@
                       <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
                           <tr class="fw-bold text-dark bg-gray-100">
-                            <th scope="col" class="w-500px">Tên báo cáo</th>
-                            <th scope="col" class="w-80px">Cho phép xem</th>
+                            <th scope="col" class="w-500px">
+                              <codx-label
+                                name="lblNameReport"
+                                formName="Roles"
+                                default="
+                              Tên báo cáo"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-80px">
+                              <codx-label
+                                name="lblAllowView"
+                                formName="Roles"
+                                default="
+                              Cho phép xem"
+                              >
+                              </codx-label>
+                            </th>
                             <th scope="col" class="w-200px">
-                              Dữ liệu xem theo
+                              <codx-label
+                                name="lblDataView"
+                                formName="Roles"
+                                default="
+                              Dữ liệu xem theo"
+                              >
+                              </codx-label>
                             </th>
                           </tr>
                         </thead>
@@ -341,12 +423,40 @@
                       <table class="w-100 table table-row-bordered gs-3 gy-3">
                         <thead>
                           <tr class="fw-bold text-dark bg-gray-100">
-                            <th scope="col" class="w-250px">Tên chức năng</th>
-                            <th scope="col" class="w-150px">
-                              Cho phép phân quyền
+                            <th scope="col" class="w-250px">
+                              <codx-label
+                                name="lblMoreName"
+                                formName="Roles"
+                                default="
+                              Tên chức năng"
+                              >
+                              </codx-label>
                             </th>
-                            <th scope="col" class="w-150px">Chọn tất cả</th>
-                            <th scope="col">Chức năng mở rộng</th>
+                            <th scope="col" class="w-150px">
+                              <codx-label
+                                name="lblAllowMore"
+                                formName="Roles"
+                                default="
+                              Cho phép phân quyền"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col" class="w-150px">
+                              <codx-label
+                                name="lblSelectAll"
+                                formName="Roles"
+                                default="Chọn tất cả"
+                              >
+                              </codx-label>
+                            </th>
+                            <th scope="col">
+                              <codx-label
+                                name="lblMoreFunctions"
+                                formName="Roles"
+                                default="Chức năng mở rộng"
+                              >
+                              </codx-label>
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
