@@ -144,7 +144,7 @@ export class RoleDetailComponent
     this.functionID = item.functionID;
 
     this.parent = item;
-    this.tempService.roleName.next(item.customName);
+    //this.tempService.roleName.next(item.customName);
     this.api
       .execSv(
         'SYS',
