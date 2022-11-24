@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { DialogData, DialogRef, UIComponent } from 'codx-core';
-import { CodxSvService } from '../../codx-sv.service';
+import { CodxSvService } from 'projects/codx-sv/src/public-api';
 
 @Component({
   selector: 'app-popup-question-other',

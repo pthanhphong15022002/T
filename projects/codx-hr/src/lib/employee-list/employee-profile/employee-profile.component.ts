@@ -709,14 +709,12 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  collapse(id) {
-    this.objCollapes[id] = !this.objCollapes[id];
-    // if (e) {
-    //   if (e.classList.contains('show')) {
-    //     e.classList.remove('show');
-    //   } else {
-    //     e.classList.add('show');
-    //   }
-    // }
+  collapse(id: string, isCollapse: string = '-1') {
+    if (isCollapse != '-1') {
+      let value = isCollapse == '0' ? false : true;
+      this.objCollapes[id] = value;
+    } else {
+      this.objCollapes[id] = !this.objCollapes[id];
+    }
   }
 }

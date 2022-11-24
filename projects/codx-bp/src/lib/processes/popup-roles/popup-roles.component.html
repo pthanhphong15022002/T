@@ -7,8 +7,8 @@
             <ng-container *ngFor="let perm of process?.permissions; index as i;">
               <div (click)="changePermission(i)"
                 [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
-                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
-                <div class="d-flex py-2 border-bottom justify-content-between list-title">
+                class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
+                <div class="d-flex justify-content-between list-title w-100">
                   <div class="d-flex align-items-top">
                     <div *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
                     </div>
@@ -22,10 +22,10 @@
                       <div class="me-3 d-flex align-items-center" popoverClass="userPopoverClass"
                         [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
                         (mouseenter)="showPopover(p, perm.objectID)" autoClose="outside">
-                        <div class="d-flex align-items-center" >
+                        <div class="d-flex align-items-center position-relative">
                           <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
                           </codx-img>
-                          <div  style="position: absolute; left: 58px;">
+                          <div style="position: absolute; right: 0;bottom:-5px">
                             <ng-container *ngFor="let role of listRoles">
                               <ng-container *ngIf="role.value == perm.nemberType">
                                 <span inlineSVG="./assets/themes/bp/default/img/{{ role.icon }}"></span>
@@ -33,8 +33,8 @@
                             </ng-container>
                           </div>
                         </div>
-                        <div style="margin-left: 20px;">
-                          <div class="text-dark fw-bold fs-6">
+                        <div class="ms-3">
+                          <div class="text-dark fw-bold">
                             {{ perm.objectName }}
                           </div>
                           <div *ngIf="perm.autoCreate" class="text-gray-700">{{ autoName }}</div>
@@ -46,7 +46,7 @@
 
                 </div>
                 <ng-container *ngIf="checkAssignRemove(i)">
-                  <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+                  <div class="action-menu-od ms-0 d-flex justify-content-center align-items-center cursor-pointer"
                     (click)="removeUser(i)">
                     <i class="icon-close text-danger icon-16"></i>
                   </div>
@@ -125,8 +125,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="read" field="read"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')">
                   </codx-input>
 
                 </td>
