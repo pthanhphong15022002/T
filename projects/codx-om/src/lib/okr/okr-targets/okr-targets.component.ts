@@ -112,7 +112,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [],
+      [kr,o,this.formModel],
       '',
       dialogModel
     );
