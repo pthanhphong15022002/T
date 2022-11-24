@@ -92,6 +92,7 @@ export class BP_ProcessOwners {
   recID: string;
   objectType: string;
   objectID: string;
+  objectName: string;
   rAIC: string;
   note: string;
   createdOn: Date;

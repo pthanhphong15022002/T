@@ -10,6 +10,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Permission } from '@shared/models/file.model';
 
 import {
   CodxListviewComponent,
@@ -260,11 +261,17 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   openPopupAdd() {
     let data = new WP_Comments();
+    let permission = new Permission();
+    let headerText = "Tạo bài viết";
+    permission.memberType = "2"; //share
+    permission.objectType = "9";
+    permission.createdBy = this.user.userID;
+    permission.createdOn = new Date();
     data.shareControl = '9';
     data.refType = 'WP_Comments';
     data.createdBy = this.user.userID;
     data.createdName = this.user.userName;
-    let headerText = "Tạo bài viết";
+    data.permissions.push(permission);
     var obj = {
       data: data,
       status: 'create',

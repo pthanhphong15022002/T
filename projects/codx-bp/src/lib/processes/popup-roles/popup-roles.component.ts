@@ -25,7 +25,7 @@ export class PopupRolesComponent implements OnInit {
   data: any;
   title = '';
   //#region permissions
-  full: boolean = true;
+  full: boolean = false;
   create: boolean;
   read: boolean;
   updatePerm: boolean;
@@ -249,7 +249,7 @@ export class PopupRolesComponent implements OnInit {
       list = [];
     }
     if (index == -1) {
-      perm.read = true;
+      perm.read = false;
       perm.download = false;
       perm.full = false;
       perm.share = false;
