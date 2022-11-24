@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { OKRTasksComponent } from './okr/tasks/tasks.component';
+import { OKRTasksComponent } from './okr/okr-tasks/okr-tasks.component';
 import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
@@ -21,6 +21,7 @@ import { PopupAlignKRComponent } from './popup/popup-align-kr/popup-align-kr.com
 import { PopupDistributeKRComponent } from './popup/popup-distribute-kr/popup-distribute-kr.component';
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
 import { OkrEditComponent } from './okr/okr-edit/okr-edit.component';
+import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
 
 const routes: Routes = [
   {
@@ -72,6 +73,8 @@ const routes: Routes = [
     PopupDistributeKRComponent,
     OkrTargetsComponent,
     OkrEditComponent,
+    OkrReviewsComponent,
+    OKRTasksComponent
   ],
   imports: [
     RouterModule.forChild(routes),

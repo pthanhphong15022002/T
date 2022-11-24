@@ -23,7 +23,7 @@ export class PopupRolesComponent implements OnInit {
   permissions: BP_ProcessPermissions[];
   dialog: any;
   data: any;
-  title = 'Chia sẻ';
+  title = '';
   //#region permissions
   full: boolean = true;
   create: boolean;
@@ -44,6 +44,8 @@ export class PopupRolesComponent implements OnInit {
   popover: any;
   autoName: any;
   isAssign: any;
+  autoCreate: any;
+  nemberType = '';
   constructor(
     private auth: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -56,9 +58,11 @@ export class PopupRolesComponent implements OnInit {
     this.dialog = dialog;
     this.user = this.auth.get();
     this.data = JSON.parse(JSON.stringify(dt?.data[1]));
+    this.title = dt.data[0];
     console.log(dt.data[1]);
     this.process = this.data;
-    this.permissions = this.process?.permissions;
+    if (this.process.permissions.length > 0 && this.process.permissions != null)
+      this.permissions = this.process?.permissions;
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -74,11 +78,8 @@ export class PopupRolesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.changePermission(0);
-    if (this.permissions && this.permissions.length > 0) {
-      this.permissions.forEach((e) => {
-        console.log(e);
-      });
+    if (this.process.permissions.length > 0) {
+      this.changePermission(0);
     }
   }
   //#region save
@@ -131,6 +132,15 @@ export class PopupRolesComponent implements OnInit {
       case 'assign':
         this.assign = data;
         break;
+      case 'read':
+        this.read = data;
+        break;
+      case 'share':
+        this.share = data;
+        break;
+      case 'download':
+        this.download = data;
+        break;
       default:
         this.isSetFull = false;
         this[type] = data;
@@ -176,6 +186,8 @@ export class PopupRolesComponent implements OnInit {
       this.assign = this.process.permissions[index].assign;
       this.download = this.process.permissions[index].download;
       this.currentPemission = index;
+      this.autoCreate = this.process.permissions[index].autoCreate;
+      this.nemberType = this.process.permissions[index].nemberType;
       this.userID = this.process.permissions[index].objectID;
     } else {
       this.full = false;
@@ -187,17 +199,14 @@ export class PopupRolesComponent implements OnInit {
     }
 
     if (
-      (this.permissions[index].autoCreate &&
-        this.permissions[index].nemberType == '1') ||
-      (!this.permissions[index].autoCreate &&
-        this.permissions[index].nemberType == '1') ||
-      (!this.permissions[index].autoCreate &&
-        this.permissions[index].nemberType == '2') ||
-      (!this.permissions[index].autoCreate &&
-        this.permissions[index].nemberType == '3')
+      (this.autoCreate && this.nemberType == '1') ||
+      (!this.autoCreate && this.nemberType == '1') ||
+      (!this.autoCreate && this.nemberType == '2') ||
+      (!this.autoCreate && this.nemberType == '3')
     )
       this.isAssign = true;
     else this.isAssign = false;
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -214,6 +223,7 @@ export class PopupRolesComponent implements OnInit {
         perm.isActive = true;
         perm.update = true;
         perm.delete = true;
+        perm.read = true;
         perm.objectType = data.objectType;
         this.process.permissions = this.checkUserPermission(
           this.process.permissions,
@@ -306,13 +316,15 @@ export class PopupRolesComponent implements OnInit {
 
   checkAssignRemove(i) {
     if (
-      (!this.permissions[i].autoCreate &&
-      this.permissions[i].nemberType == '1') || (this.permissions[i].objectID == '' &&
-      this.permissions[i].objectID == null)
+      !this.process.permissions[i].autoCreate &&
+      this.process.permissions[i].nemberType == '1'
     )
+      //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
+
       return true;
     else return false;
   }
+
   //#endregion
 
   //#region roles

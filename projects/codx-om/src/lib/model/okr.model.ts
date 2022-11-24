@@ -4,9 +4,9 @@ export class OKRs {
     periodID:string;
     numbererval:string;
     sorting:number;
-    oKRLevel:string;
-    oKRType:string;
-    oKRName:string;
+    okrLevel:string;
+    okrType:string;
+    okrName:string;
     category:string;
     confidence:string;
     tags:string;

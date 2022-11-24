@@ -521,9 +521,14 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.task.attachments = Array.isArray(res) ? res.length : 1;
-          if (this.action == 'edit') this.updateTask();
-          else this.addTask();
+          let attachments = Array.isArray(res) ? res.length : 1;
+          if (this.action == 'edit') {
+            this.task.attachments += attachments;
+            this.updateTask();
+          } else {
+            this.task.attachments = attachments;
+            this.addTask();
+          }
         }
       });
     else {
@@ -637,7 +642,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var listUserID = '';
 
     e?.data?.forEach((obj) => {
-       if (obj.objectType && obj.id) {
+      if (obj.objectType && obj.id) {
         switch (obj.objectType) {
           case 'U':
             listUserID += obj.id + ';';

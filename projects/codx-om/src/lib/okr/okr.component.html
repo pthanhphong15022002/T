@@ -23,25 +23,36 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> 
-              <ng-container *ngIf="dataOKR && dataOKR.length>0 , else elseOKR">
-                <lib-okr-targets [dataOKR]="dataOKR" [formModel]="view?.formModel" [gridView]="gridView"></lib-okr-targets>
+            <ng-template #content>
+              <ng-container *ngIf="dataOKR && dataOKR.length > 0; else elseOKR">
+                <lib-okr-targets
+                  [dataOKR]="dataOKR"
+                  [formModel]="view?.formModel"
+                  [gridView]="gridView"
+                ></lib-okr-targets>
               </ng-container>
               <ng-template #elseOKR>
                 <div class="om-def text-center d-flex flex-column">
                   <div class="my-2">
-                    <span>{{titleRoom}} chưa thiết lập mục tiêu cho Q2/2022</span>
+                    <span
+                      >{{ titleRoom }} chưa thiết lập mục tiêu cho Q2/2022</span
+                    >
                   </div>
                   <div class="my-2">
-                    <span>Vui lòng chọn nút < </span><span>Tạo bộ mục tiêu</span><span> > để thiết lập bộ mục tiêu cho công ty</span>
+                    <span>Vui lòng chọn nút < </span><span>Tạo bộ mục tiêu</span
+                    ><span> > để thiết lập bộ mục tiêu cho công ty</span>
                   </div>
                   <div class="d-flex justify-content-center">
-                    <div class="d-flex align-items-center cursor-pointer border rounded  p-2">
+                    <div
+                      class="d-flex align-items-center cursor-pointer border rounded p-2"
+                    >
                       <i class="fa-solid fa-bullseye me-3 ms-1"></i>
-                      <codx-label default="Tạo bộ mục tiêu" fiedName="lblTargets"></codx-label>
+                      <codx-label
+                        default="Tạo bộ mục tiêu"
+                        fiedName="lblTargets"
+                      ></codx-label>
                     </div>
                   </div>
-                 
                 </div>
               </ng-template>
             </ng-template>
@@ -71,8 +82,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              Công việc
-              <!-- <lib-okr-tasks></lib-okr-tasks> -->
+              <lib-okr-tasks></lib-okr-tasks>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -99,7 +109,9 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Đánh giá </ng-template>
+            <ng-template #content>
+              <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+            </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>

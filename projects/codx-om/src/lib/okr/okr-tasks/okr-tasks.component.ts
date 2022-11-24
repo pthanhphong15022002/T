@@ -3,8 +3,8 @@ import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 
 @Component({
   selector: 'lib-okr-tasks',
-  templateUrl: './tasks.component.html',
-  styleUrls: ['./tasks.component.scss'],
+  templateUrl: './okr-tasks.component.html',
+  styleUrls: ['./okr-tasks.component.scss'],
 })
 export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   button?: ButtonModel;
