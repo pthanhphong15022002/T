@@ -191,9 +191,7 @@ export class ProcessesComponent
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
  //   this.view.dataService.searchText='GetProcessesByKeyAsync';
-    this.changeDetectorRef.detectChanges();
-    console.log('----------------',this.view.dataService);
-    
+    this.changeDetectorRef.detectChanges();    
   }
 
   getGridModel() {

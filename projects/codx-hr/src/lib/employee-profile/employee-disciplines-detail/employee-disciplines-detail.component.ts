@@ -13,6 +13,7 @@ export class EmployeeDisciplinesDetailComponent extends UIComponent implements O
   formGroup: FormGroup;
   dialog: DialogRef;
   data;
+  notitfy: NotificationsService;
   funcID;
   employeeId;
   isAfterRender = false;
@@ -69,9 +70,16 @@ export class EmployeeDisciplinesDetailComponent extends UIComponent implements O
   }
   
   onSaveForm(){
+    console.log(new Date(this.data.fromDate));
+    console.log(new Date(this.data.toDate));
+    
+    if( new Date(this.data.fromDate) > new Date(this.data.toDate)){
+      this.notify.notifyCode('TM034')
+      return
+    }
     this.hrService.updateEmployeeDisciplinesInfo(this.data).subscribe( p=> {
       if(p === "True"){
-        this.notify.notifyCode('SYS007')
+        this.notify.notifyCode('TM034')
         this.dialog.close();
       }
     })
