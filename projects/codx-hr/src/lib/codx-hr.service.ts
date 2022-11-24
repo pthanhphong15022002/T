@@ -371,6 +371,26 @@ export class CodxHrService {
     );
   }
 
+  getEmployeeAwardInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAwardsBusiness',
+      'GetEmployeeAwardInfoAsync',
+      data
+    );
+  }
+
+  updateEmployeeAwardInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAwardsBusiness',
+      'AddEmployeeAwardInfoAsync',
+      data
+    );
+  }
+
   updateEmployeeWorkingLisenceDetail(data) {
     return this.api.execSv<any>(
       'HR',

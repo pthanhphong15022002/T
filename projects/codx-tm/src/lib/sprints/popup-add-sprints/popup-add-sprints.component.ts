@@ -145,7 +145,9 @@ export class PopupAddSprintsComponent implements OnInit {
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.master.attachments = Array.isArray(res) ? res.length : 1;
+          let attachments = Array.isArray(res) ? res.length : 1;
+          if (isAdd) this.master.attachments = attachments;
+          else this.master.attachments += attachments;
           this.saveMaster(isAdd);
         }
       });
@@ -314,6 +316,10 @@ export class PopupAddSprintsComponent implements OnInit {
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit' || (this.action == 'edit' &&  !this.showLabelAttachment)) this.showLabelAttachment = this.isHaveFile;
+    if (
+      this.action != 'edit' ||
+      (this.action == 'edit' && !this.showLabelAttachment)
+    )
+      this.showLabelAttachment = this.isHaveFile;
   }
 }

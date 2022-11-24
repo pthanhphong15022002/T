@@ -1,3 +1,5 @@
+import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
+import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
 import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
 import { EmployeeTraincoursesComponent } from './../../employee-profile/employee-traincourses/employee-traincourses.component';
 import { EmployeeSkillDetailComponent } from './../../employee-profile/employee-skill-detail/employee-skill-detail.component';
@@ -554,9 +556,10 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeDisciplinesInfoComponent,
+      EmployeeDisciplinesDetailComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
         headerText: 'Kỷ luật',
       },
       option
@@ -573,9 +576,10 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAwardsInfoComponent,
+      EmployeeAwardsDetailComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
       },
       option

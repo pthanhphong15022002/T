@@ -1,6 +1,6 @@
 import { BP_Processes, BP_ProcessRevisions } from './../../models/BP_Processes.model';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef, CacheService, CallFuncService, AuthStore } from 'codx-core';
+import { DialogData, DialogRef, CacheService, CallFuncService, AuthStore, NotificationsService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -30,6 +30,7 @@ export class PopupAddProcessesComponent implements OnInit {
     private cache: CacheService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
+    private notiService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -109,6 +110,29 @@ export class PopupAddProcessesComponent implements OnInit {
     });
   }
   async onSave() {
+    if (
+      this.process.processName == null ||
+      this.process.processName.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ProcessName']?.headerText + '"'
+      );
+      return;
+    }
+    if (
+      this.process.owner == null ||
+      this.process.owner.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
+
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
