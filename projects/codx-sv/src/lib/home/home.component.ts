@@ -62,10 +62,10 @@ export class HomeComponent extends UIComponent implements OnInit {
   clickMF(e, data) {}
 
   add() {
-    this.codxService.navigate('', 'sv/pop-add-survey');
+    this.codxService.navigate('', 'sv/add-survey');
   }
 
   update(item) {
-    this.codxService.navigate('', 'sv/pop-add-survey', { funcID: this.funcID, recID: item.recID });
+    this.codxService.navigate('', 'sv/add-survey', { funcID: this.funcID, recID: item.recID });
   }
 }

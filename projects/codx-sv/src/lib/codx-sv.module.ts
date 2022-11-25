@@ -35,7 +35,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'pop-add-survey',
+        path: 'add-survey',
         component: AddSurveyComponent,
       },
     ],
