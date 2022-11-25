@@ -91,8 +91,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     //this.view.dataService.methodDelete = 'DeleteResourceAsync';
-    this.cache.functionList('EPS22').subscribe(res=>{
-      var x= res;
+    this.cache.functionList('EPS22').subscribe(res => {
+      var x = res;
     })
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
@@ -132,19 +132,19 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               width: '15%',
               field: 'companyID',
               template: this.locationCol,
-              
+
             },
             {
               headerText: gv['Equipments'].headerText,
               width: '10%', //gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
+              //headerTextAlign: 'Center',
+              // textAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
-              textAlign: 'center',
+              //textAlign: 'center',
               width: '20%',
               field: 'note',
             },
@@ -273,7 +273,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
+                this.view.dataService.update(x.event).subscribe((res) => { });
               }
             });
           });
@@ -304,7 +304,7 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
+                this.view.dataService.update(x.event).subscribe((res) => { });
               }
             });
           });

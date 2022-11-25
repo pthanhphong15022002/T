@@ -1,49 +1,37 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [views]="views"
-  [idField]="idField"
-  [button]="button"
-  [className]="className"
-  [method]="method"
-  (onLoading)="onLoading($event)" 
-  [viewActiveType]="viewType.grid"  
-  (buttonClick)="click($event)"
-  (viewChanged)="viewChanged($event)"
->
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [views]="views" [idField]="idField" [button]="button" [className]="className" [method]="method"
+  (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid" (buttonClick)="click($event)"
+  (viewChanged)="viewChanged($event)">
 
 </codx-views>
 <ng-template #tranTypeCol let-data>
-  <div class="">
+  <div class="ms-3">
     <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP019'" [value]="data?.transType"
       class="badge badge-light badge-md fs-7">
     </codx-vll>
-  </div>    
+  </div>
 </ng-template>
 <ng-template #transDateCol let-data>
   <div class="">
     {{data?.transDate|fmDT}}
-  </div>    
+  </div>
 </ng-template>
 <ng-template #userIDCol let-data>
-  
+
   <div class="h-50px d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data?.userID" objectType="AD_Users"></codx-img>
+    <codx-img [width]="25" [objectId]="data?.userID" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.userName }}</div>
-    </div>    
+    </div>
   </div>
-  
+
 </ng-template>
 
 <ng-template #createByCol let-data>
   <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data?.createdBy" objectType="AD_Users"></codx-img>
+    <codx-img [width]="25" [objectId]="data?.createdBy" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.createdName }}</div>
-    </div>    
+    </div>
   </div>
 </ng-template>
