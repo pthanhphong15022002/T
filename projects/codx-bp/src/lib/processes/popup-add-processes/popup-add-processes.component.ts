@@ -43,7 +43,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.user = this.authStore.get();
     this.cache.functionList(this.funcID).subscribe(res=>{
       if(res){
-        this.title = this.titleAction + ' ' + res.customName;
+        this.title = this.titleAction + ' ' + res.customName.charAt(0).toLocaleLowerCase() + res.customName.slice(1);;
       }
     })
     this.cache
