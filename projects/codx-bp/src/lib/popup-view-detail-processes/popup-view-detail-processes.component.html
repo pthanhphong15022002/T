@@ -122,20 +122,23 @@
         [attr.data-kt-scroll-offset]="offset"
       >
         <ng-container *ngIf="name == 'ViewList'">
-          <ng-container *ngIf="process">
+          <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
               [process]="process"
               [viewMode]="16"
               [funcID]="funcID"
+              [childFunc]='childFunc'
             ></codx-processsteps>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Kanban'">
-          <ng-container *ngIf="process">
+          <ng-container  *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
               [process]="process"
               [viewMode]="6"
               [funcID]="funcID"
+              [childFunc]='childFunc'
+
             ></codx-processsteps>
           </ng-container>
         </ng-container>
