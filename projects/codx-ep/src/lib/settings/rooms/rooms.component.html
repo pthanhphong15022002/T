@@ -1,64 +1,29 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [views]="views"
-  [button]="buttons"
-  (buttonClick)="click($event)"
-  [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (onLoading)="onLoading($event)"
-  [viewActiveType]="viewType.grid"
-></codx-views>
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [views]="views" [button]="buttons" (buttonClick)="click($event)" [idField]="idField" [className]="className"
+  [method]="method" (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid"></codx-views>
 
 <ng-template #resourceNameCol let-data>
   <div class="d-flex flex-row align-items-center">
-    <codx-img
-      #avatar
-      [objectId]="data?.recID"
-      [funcId]="funcID"
-      [objectType]="'EP_Resources'"
-      imageType="circle"
-      width="80"
-      [imgOn]="data.modifiedOn"
-      [objectName]="data.resourceName"
-    ></codx-img>
-    <div class="ms-2 d-flex flex-column">
+    <codx-img #avatar [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle"
+      width="60" [imgOn]="data.modifiedOn" [objectName]="data.resourceName"></codx-img>
+    <div class="ms-4 d-flex flex-column">
       <span class="fw-bold">{{ data?.resourceName }}</span>
-      <div class="d-flex flex-row">
-        <codx-label
-          [default]="grvRooms?.Ranking?.headerText"
-          [formModel]="formModel"
-          name="lblRanking"
-          class="text-gray-600"
-        ></codx-label>
+      <div class="float-left fs-7">
+        <codx-label [default]="grvRooms?.Ranking?.headerText" [formModel]="formModel" name="lblRanking"></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1">{{
           data?.ranking | vll: "EP005":"text" | async
-        }}</span>
+          }}</span>
       </div>
-      <div class="d-flex flex-column">
-        <div>
-          <codx-label
-            [default]="grvRooms?.Area?.headerText"
-            name="lblArea"
-            class="text-gray-600"
-          ></codx-label>
-          <span>:</span>
-          <span class="fw-bold ms-1">{{ data?.area }}</span>
-        </div>
-        <div>
-          <codx-label
-            [default]="grvRooms?.Capacity?.headerText"
-            name="lblCapacity"
-            class="text-gray-600"
-          ></codx-label>
-          <span>:</span>
-          <span class="fw-bold ms-1">{{ data?.capacity }}</span>
-        </div>
+      <div class="float-left fs-7">
+        <codx-label [default]="grvRooms?.Area?.headerText" name="lblArea" class="text-gray-600"></codx-label>
+        <span>:</span>
+        <span class="fw-bold ms-1">{{ data?.area }}</span>
+      </div>
+      <div class="float-left fs-7">
+        <codx-label [default]="grvRooms?.Capacity?.headerText" name="lblCapacity" class="text-gray-600"></codx-label>
+        <span>:</span>
+        <span class="fw-bold ms-1">{{ data?.capacity }}</span>
       </div>
     </div>
   </div>
@@ -68,7 +33,7 @@
     <span>{{ data?.location }}</span>
     <span class="text-truncate" [title]="data?.companyName">{{
       data?.companyName
-    }}</span>
+      }}</span>
   </div>
 </ng-template>
 <ng-template #popupDevice let-dialog>
@@ -76,57 +41,35 @@
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
-          <codx-label
-            default="Cài đặt thiết bị"
-            name="lblEquipment"
-            [default]="grvRooms.Equipments.headerText"
-            [formModel]="dialog.formModel"
-          ></codx-label>
+          <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="grvRooms.Equipments.headerText"
+            [formModel]="dialog.formModel"></codx-label>
         </h2>
-        <button
-          type="button"
-          class="btn btn-xs btn-icon btn-light btn-hover-primary"
-          aria-label="Close"
-          (click)="dialog.close()"
-        >
+        <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+          (click)="dialog.close()">
           <span class="icon-close icon-20 text-dark text-hover-primary"></span>
         </button>
       </div>
       <div class="text-dark-50">
-        <codx-label
-          name="lblChooseRoomEquipments"
-          default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
-          [formModel]="dialog.formModel"
-        ></codx-label>
+        <codx-label name="lblChooseRoomEquipments" default="Chọn các thiết bị đã tích hợp sẵn trong phòng"
+          [formModel]="dialog.formModel"></codx-label>
       </div>
     </div>
   </div>
-  <div
-    class="modal-body"
-    *ngIf="roomEquipments != null && roomEquipments?.length > 0"
-  >
+  <div class="modal-body" *ngIf="roomEquipments != null && roomEquipments?.length > 0">
     <div class="py-2" *ngFor="let item of roomEquipments">
       <div class="d-flex flex-stack">
         <div class="d-flex">
-          <span
-            class="text-dark me-2 p-1"
-            [className]="item.icon"
-            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"
-          >
+          <span class="text-dark me-2 p-1" [className]="item.icon"
+            [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']">
           </span>
           <div class="d-flex flex-column justify-content-center">
-            <span href="#" class="text-dark fw-bolder">{{ item.text }}</span>
+            <span href="#" class="text-dark fw-bold">{{ item.text }}</span>
           </div>
         </div>
         <div class="d-flex justify-content-end">
           <div class="form-check form-check-solid form-switch">
-            <codx-input
-              class="form-check-input w-35px h-20px"
-              type="switch"
-              id="googleswitch"
-              [checked]="item?.isSelected"
-              [disabled]="true"
-            ></codx-input>
+            <codx-input class="form-check-input w-35px h-20px" type="switch" id="googleswitch"
+              [checked]="item?.isSelected" [disabled]="true"></codx-input>
             <label class="form-check-label" for="googleswitch"></label>
           </div>
         </div>
@@ -135,22 +78,15 @@
   </div>
 </ng-template>
 <ng-template #equipmentsCol let-data>
-  <div
-    (click)="openPopupDevice(popupDevice, data?.equipments)"
-    class="btn d-flex justify-content-center align-items-center"
-  >
-    <i class="icon-devices"></i>
-    <span class="ms-1 fw-bold">{{ data?.equipmentQty }}</span>
-    <codx-label
-      [default]="grvRooms.Equipments.headerText"
-      class="ms-1 fw-bold"
-      name="lblDevice"
-    ></codx-label>
+  <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="d-flex align-items-center">
+    <i class="icon-devices me-2"></i>
+    <span class="fw-bold me-1">{{ data?.equipmentQty }}</span>
+    <codx-label [default]="grvRooms.Equipments.headerText" class="text-dark fs-7" name="lblDevice"></codx-label>
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>
   <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data?.owner" objectType="AD_Users"></codx-img>
+    <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.ownerName }}</div>
     </div>
@@ -159,15 +95,10 @@
 
 <ng-template #preparatorCol let-data>
   <div class="d-flex has-action-menu align-items-center">
-    <codx-img [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
+    <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.preparatorName }}</div>
     </div>
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      (clickMF)="clickMF($event, data)"
-      type="hover"
-    ></codx-mfunc>
+    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
   </div>
 </ng-template>
