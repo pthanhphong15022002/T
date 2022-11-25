@@ -14,7 +14,10 @@
         <div class="user-left me-7">
           <div class="d-flex flex-column mt-9">
             <div class="d-flex flex-column text-center mb-4">
-              <div class="mb-2 d-flex justify-content-center">
+              <div class="mb-2 d-flex justify-content-between">
+                <span
+                  class="icon-arrow_back_ios icon-16 text-hover-primary t-gray-800 me-1"
+                ></span>
                 <codx-img
                   class="me-4 pic-emloyee"
                   [funcId]="'HRT03a1'"
@@ -27,6 +30,9 @@
                   [updateDirect]="true"
                 >
                 </codx-img>
+                <span
+                  class="icon-arrow_forward_ios icon-16 text-hover-primary text-gray-800 ms-1"
+                ></span>
               </div>
               <div class="font-weight-bold font-size-h5 mb-2">
                 {{ infoPersonal.employeeName }}
@@ -41,7 +47,7 @@
                 class="icon-qr_code_scanner icon-16 text-danger me-1"
               ></span>
               <span class="text-danger w-bold">
-                <span #email>012.MPD</span>
+                <span #id>{{ infoPersonal.employeeID }}</span>
               </span>
 
               <span
@@ -169,7 +175,7 @@
                     <codx-label
                       name="lblHRProcess"
                       [formModel]="view.formModel"
-                      default="KIẾN THỨC"
+                      default="Quá trình nhân sự"
                     >
                     </codx-label>
                   </div>
@@ -292,7 +298,9 @@
                   id="pane_3"
                   [class]="crrTab == 3 ? 'active' : ''"
                 >
-                  <ng-container [ngTemplateOutlet]="benefit"></ng-container>
+                  <ng-container
+                    [ngTemplateOutlet]="processingInfo"
+                  ></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
@@ -306,7 +314,9 @@
                   id="pane_5"
                   [class]="crrTab == 5 ? 'active' : ''"
                 >
-                  <ng-container [ngTemplateOutlet]="healthInfo"></ng-container>
+                  <ng-container
+                    [ngTemplateOutlet]="rewardDiscipline"
+                  ></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
@@ -324,6 +334,7 @@
   </div>
 </ng-template>
 
+<!-- pane_0 -->
 <ng-template #info>
   <div
     class="pw-content w-100 pw-lg scroll-y"
@@ -913,7 +924,6 @@
                   class="btn btn-xs btn-icon btn-hover-primary"
                   (click)="collapse('1.2')"
                   [attr.aria-expanded]="!objCollapes['1.2']"
-                  aria-controls="legalInformation"
                 >
                   <span
                     class="icon-24"
@@ -1011,9 +1021,7 @@
                         >
                         </codx-label>
 
-                        <span #birthPlace
-                          >: {{ infoPersonal.hIHospitalID }}</span
-                        >
+                        <span>: {{ infoPersonal.hiHospitalID }}</span>
                       </div>
                     </div>
                   </div>
@@ -1438,139 +1446,6 @@
           </div>
         </div>
       </div>
-
-      <!-- skills -->
-      <!-- <div class="col d-flex" id="MWP00203" #MWP00203 class="d-block">
-              <div class="user-profile overview">
-                <div class="d-flex justify-content-between mb-2 mt-6">
-                  <div class="fw-bold fs-4 text-primary">
-                    <codx-label class="text-gray-600 me-2"  [formModel]="view.formModel" [formModel]="view.formModel" default="Kỹ năng ">
-                    </codx-label>
-                  </div>
-                  <a class="btn btn-sm btn-icon btn-light">
-                    <span class="icon-edit icon-16"></span>
-                  </a>
-                </div>
-                <div class="border rounded-2 p-6">
-                  <div class="row" >
-                    <div class="col-6">
-                      <ng-container >
-                        <div class="row mb-4">
-                          <div class="fw-bold text-dark"> infoPersonal.competenceName }}</div>
-                          <ejs-slider [width]="300" [type]="minType" [min]="0"
-                            [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="infoPersonal.rating"
-                            [readonly]="true">
-                          </ejs-slider>
-                        </div>
-                      </ng-container>
-                    </div>
-                    <div class="col-6">
-                      <ejs-chart [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis">
-                        <e-series-collection>
-                          <e-series [dataSource]="skillEmployee" type="Radar" xName="competenceName" yName="rating">
-                          </e-series>
-                        </e-series-collection>
-                      </ejs-chart>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <ng-container *ngIf="editMode">
-                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                        <button class="btn btn-sm bg-light" (click)="clickOpenPopupAddSkill()">
-                          <i class="icon-add icon-16 ms-n2"></i>
-                          <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
-                          </codx-label>
-                        </button>
-                      </div>
-                      <ng-container *ngIf="showCBB">
-                        <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
-                          [height]="height" (clickSave)="saveAddSkill($event)" title="Kỹ năng">
-                        </codx-combobox-popup>
-                      </ng-container>
-                    </ng-container>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-
-      <!-- đào tạo -->
-      <!-- <div class="col d-flex" id="MWP00204" class="d-block mb-3">
-              <div class="user-profile overview">
-                <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblTraining" [formModel]="view.formModel" default="Đào tạo cá nhân">
-                  </codx-label>
-                </div>
-                <ngx-skeleton-loader *ngIf="
-                    !trainingInterObl &&
-                    !trainingInterUnObl &&
-                    !trainingPersonal
-                  " count="5" animation="progress"></ngx-skeleton-loader>
-                <div class="border rounded-2 p-6" *ngIf="
-                    trainingInterObl || trainingInterUnObl || trainingPersonal
-                  ">
-                  <div *ngIf="trainingPersonal && trainingPersonal.length > 0"
-                    class="text-dark fw-bold text-uppercase mt-8 mb-4">
-                    <codx-label class="text-gray-600 me-2"  [formModel]="view.formModel" default="Bên ngoài công ty">
-                    </codx-label>
-                  </div>
-                  <div class="user-process process-v swiper-wrapper">
-                    <ng-container swiperSlide *ngIf="editMode">
-                      <ng-container>
-                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                          <div class="d-flex">
-                            <div class="add-process">
-                              <button class="btn btn-sm btn-light" (click)="editDataEdu(null)">
-                                <i class="icon-add icon-16 ms-n2"></i>
-                                <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
-                                </codx-label>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>
-                    </ng-container>
-
-                    <ng-container swiperSlide *ngFor="let item of trainingPersonal">
-                      <ng-container>
-                        <div class="process-item swiper-slide">
-                          <div class="line"></div>
-                          <span class="yeartoyear btn btn-sm">
-                            item.completeOn
-                            }}</span>
-                          <div class="d-flex flex-column mt-4">
-                            <div class="text-dark mb-1">
-                               item.organizationName }}
-                            </div>
-                            <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-check_circle icon-16 me-2"></span>
-                              <span class="text-dark-50">
-                                item.certificateName
-                                }}</span>
-                            </div>
-                            <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-class icon-16 me-2"></span>
-                              <span class="text-dark-50"> item.memo }}</span>
-                            </div>
-                            <div class="d-flex mt-4">
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-2" *ngIf="editMode"
-                                (click)="editDataEdu(item)">
-                                <span class="icon-edit icon-18"></span>
-                              </a>
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
-                                (click)="deleteEducation(item)">
-                                <span class="icon-close icon-18"></span>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>
-                    </ng-container>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-
-      <!-- quan hệ gia đình -->
       <div class="col d-flex" id="MWP00205" class="d-block mb-3">
         <div class="user-profile overview">
           <div class="fw-bold fs-4 text-primary mb-2 mt-6">
@@ -1663,13 +1538,14 @@
   </div>
 </ng-template>
 
+<!-- pane_1 -->
 <ng-template #jobInfo>
   <div
     class="pw-content w-100 pw-lg scroll-y"
     data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,."
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container"
     data-kt-scroll-offset="0px"
   >
@@ -2213,9 +2089,9 @@
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div
-                    class="fs-4 fw-bold"
+                    class="d-flex fs-4 fw-bold"
                     [class]="
-                      objCollapes['2.1'] ? 'text-danger' : 'text-primary'
+                      objCollapes['2.2'] ? 'text-danger' : 'text-primary'
                     "
                   >
                     <div class="user-status d-flex align-items-center ms-3">
@@ -2229,455 +2105,472 @@
                     </codx-label>
                   </div>
                 </div>
-                <a class="btn btn-xs btn-icon btn-hover-primary">
-                  <span class="icon-arrow_drop_down icon-24"></span>
-                </a>
-              </div>
-              <div #generalJobInfo class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('2.2')"
+                  [attr.aria-expanded]="!objCollapes['2.2']"
                 >
-                  <codx-label
-                    name="lblEmployeeBackground"
-                    [formModel]="view.formModel"
-                    default="Lý lịch cá nhân"
-                  >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-edit icon-18"
-                      (click)="addEmployeeSelfInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <!-- documentNo-status -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="documentNo">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="documentNo"
-                    >
-                    </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.documentNo }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="status">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="status"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.status }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- joinedOn-hiredOn -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="joinedOn">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="joinedOn"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.joinedOn }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="hiredOn">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="hiredOn"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.hiredOn }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- userID-employeeID -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="userID">
-                    <codx-label
-                      [formModel]="view.formModel"
-                      fiedName="userID"
-                      class="text-gray-600 me-2"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.userID }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="employeeID">
-                    <codx-label
-                      [formModel]="view.formModel"
-                      class="text-gray-600 me-2"
-                      fiedName="employeeID"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.employeeID }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- positionID-jobLevel -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="positionID">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="positionID"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.positionID }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="jobLevel">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="jobLevel"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.jobLevel }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- orgUnitID -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="orgUnitID">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="orgUnitID"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.orgUnitID }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- lineManager-indirectManager -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="lineManager">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="lineManager"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.lineManager }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="indirectManager">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="indirectManager"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.indirectManager }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- locationID -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="locationID">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName=""
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.locationID }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- labourType-labourConditions -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="labourType">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="labourType"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.labourType }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="labourConditions">
-                    <codx-label
-                      [formModel]="view.formModel"
-                      fiedName="labourConditions"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.labourConditions }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- isTUnion-tUnionDate -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="isTUnion">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isTUnion"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isTUnion }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="tUnionDate">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="tUnionDate"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.tUnionDate }}</span>
-                    </span>
-                  </div>
-                </div>
-
-                <!-- isExpertRecruit-isExpertTrain -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="isExpertRecruit">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isExpertRecruit"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isExpertRecruit }}</span>
-                    </span>
-                  </div>
-                  <div class="col d-flex" id="isExpertTrain">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isExpertTrain"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isExpertTrain }}</span>
-                    </span>
-                  </div>
-                </div>
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['2.2']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
               </div>
-              <div #timeKeepingInfo class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeTimeKeepingDetail"
-                    [formModel]="view.formModel"
-                    default="THÔNG TIN CHẤM CÔNG"
+              <div
+                id="22"
+                #22="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['2.2']"
+              >
+                <div #generalJobInfo class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-edit icon-18"
-                      (click)="addEmployeeSelfInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <!-- timeCardNo-shiftCalendarID -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="timeCardNo">
                     <codx-label
-                      class="text-gray-600 me-2"
+                      name="lblEmployeeBackground"
                       [formModel]="view.formModel"
-                      fiedName="timeCardNo"
+                      default="Lý lịch cá nhân"
                     >
                     </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- documentNo-status -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="documentNo">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="documentNo"
+                      >
+                      </codx-label>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.timeCardNo }}</span>
-                    </span>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.documentNo }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="status">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="status"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.status }}</span>
+                      </span>
+                    </div>
                   </div>
-                  <div class="col d-flex" id="shiftCalendarID">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="shiftCalendarID"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.shiftCalendarID }}</span>
-                    </span>
+                  <!-- joinedOn-hiredOn -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="joinedOn">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="joinedOn"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.joinedOn }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="hiredOn">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="hiredOn"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.hiredOn }}</span>
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <!-- aLObjectID-->
-                <div class="row form-group">
-                  <div class="col d-flex" id="aLObjectID">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="aLObjectID"
-                    >
-                    </codx-label>
+                  <!-- userID-employeeID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="userID">
+                      <codx-label
+                        [formModel]="view.formModel"
+                        fiedName="userID"
+                        class="text-gray-600 me-2"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.userID }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="employeeID">
+                      <codx-label
+                        [formModel]="view.formModel"
+                        class="text-gray-600 me-2"
+                        fiedName="employeeID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.employeeID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- positionID-jobLevel -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="positionID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="positionID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.positionID }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="jobLevel">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="jobLevel"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.jobLevel }}</span>
+                      </span>
+                    </div>
+                  </div>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.aLObjectID }}</span>
-                    </span>
+                  <!-- orgUnitID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="orgUnitID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="orgUnitID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.orgUnitID }}</span>
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <!-- isNotScan-isNotOTKow -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="isNotScan">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isNotScan"
-                    >
-                    </codx-label>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isNotScan }}</span>
-                    </span>
+                  <!-- lineManager-indirectManager -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="lineManager">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="lineManager"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.lineManager }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="indirectManager">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="indirectManager"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.indirectManager }}</span>
+                      </span>
+                    </div>
                   </div>
-                  <div class="col d-flex" id="isNotOTKow">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isNotOTKow"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isNotOTKow }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- isNotLateEarly-isNotCLeaveKow-->
-                <div class="row form-group">
-                  <div class="col d-flex" id="isNotLateEarly">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isNotLateEarly"
-                    >
-                    </codx-label>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isNotScan }}</span>
-                    </span>
+                  <!-- locationID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="locationID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName=""
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.locationID }}</span>
+                      </span>
+                    </div>
                   </div>
-                  <div class="col d-flex" id="isNotCLeaveKow">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isNotCLeaveKow"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isNotCLeaveKow }}</span>
-                    </span>
+
+                  <!-- labourType-labourConditions -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="labourType">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="labourType"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.labourType }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="labourConditions">
+                      <codx-label
+                        [formModel]="view.formModel"
+                        fiedName="labourConditions"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.labourConditions }}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- isTUnion-tUnionDate -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isTUnion">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isTUnion"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isTUnion }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="tUnionDate">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="tUnionDate"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.tUnionDate }}</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- isExpertRecruit-isExpertTrain -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isExpertRecruit">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isExpertRecruit"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isExpertRecruit }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isExpertTrain">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isExpertTrain"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isExpertTrain }}</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div #salaryInfo class="border mb-3">
-                <div
-                  class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                >
-                  <codx-label
-                    name="lblEmployeeSalaryDetail"
-                    [formModel]="view.formModel"
-                    default="THÔNG TIN TÍNH LƯƠNG"
+                <div #timeKeepingInfo class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-label>
-                  <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                    <span
-                      class="icon-edit icon-18"
-                      (click)="addEmployeeSelfInfo()"
-                    ></span>
-                  </a>
-                </div>
-                <!-- payrollGroupID-currencyID -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="payrollGroupID">
                     <codx-label
-                      class="text-gray-600 me-2"
+                      name="lblEmployeeTimeKeepingDetail"
                       [formModel]="view.formModel"
-                      fiedName="payrollGroupID"
+                      default="THÔNG TIN CHẤM CÔNG"
                     >
                     </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- timeCardNo-shiftCalendarID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="timeCardNo">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="timeCardNo"
+                      >
+                      </codx-label>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.timeCardNo }}</span>
-                    </span>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.timeCardNo }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="shiftCalendarID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="shiftCalendarID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.shiftCalendarID }}</span>
+                      </span>
+                    </div>
                   </div>
-                  <div class="col d-flex" id="currencyID">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="currencyID"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.currencyID }}</span>
-                    </span>
+                  <!-- aLObjectID-->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="aLObjectID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="aLObjectID"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.aLObjectID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- isNotScan-isNotOTKow -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isNotScan">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotScan"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotScan }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isNotOTKow">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotOTKow"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotOTKow }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- isNotLateEarly-isNotCLeaveKow-->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="isNotLateEarly">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotLateEarly"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotScan }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isNotCLeaveKow">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isNotCLeaveKow"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isNotCLeaveKow }}</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <!-- taxTableID-isSettleTax -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="taxTableID">
+                <div #salaryInfo class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
                     <codx-label
-                      class="text-gray-600 me-2"
+                      name="lblEmployeeSalaryDetail"
                       [formModel]="view.formModel"
-                      fiedName="taxTableID"
+                      default="THÔNG TIN TÍNH LƯƠNG"
                     >
                     </codx-label>
-
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.taxTableID }}</span>
-                    </span>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
                   </div>
-                  <div class="col d-flex" id="isSettleTax">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="isSettleTax"
-                    >
-                    </codx-label>
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.isSettleTax }}</span>
-                    </span>
-                  </div>
-                </div>
-                <!-- advanceAmount -->
-                <div class="row form-group">
-                  <div class="col d-flex" id="advanceAmount">
-                    <codx-label
-                      class="text-gray-600 me-2"
-                      [formModel]="view.formModel"
-                      fiedName="advanceAmount"
-                    >
-                    </codx-label>
+                  <!-- payrollGroupID-currencyID -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="payrollGroupID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="payrollGroupID"
+                      >
+                      </codx-label>
 
-                    <span class="text-dark fw-bold">
-                      <span>{{ infoPersonal.advanceAmount }}</span>
-                    </span>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.timeCardNo }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="currencyID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="currencyID"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.currencyID }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- taxTableID-isSettleTax -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="taxTableID">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="taxTableID"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.taxTableID }}</span>
+                      </span>
+                    </div>
+                    <div class="col d-flex" id="isSettleTax">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="isSettleTax"
+                      >
+                      </codx-label>
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.isSettleTax }}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- advanceAmount -->
+                  <div class="row form-group">
+                    <div class="col d-flex" id="advanceAmount">
+                      <codx-label
+                        class="text-gray-600 me-2"
+                        [formModel]="view.formModel"
+                        fiedName="advanceAmount"
+                      >
+                      </codx-label>
+
+                      <span class="text-dark fw-bold">
+                        <span>{{ infoPersonal.advanceAmount }}</span>
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2689,609 +2582,7 @@
   </div>
 </ng-template>
 
-<ng-template #knowledge>
-  <div
-    class="pw-content w-100 pw-lg scroll-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-    data-kt-scroll-wrappers=".employee-container"
-    data-kt-scroll-offset="0px"
-  >
-    <div class="user-content flex-row-fluid">
-      <ng-container>
-        <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblEmployeeProcessing"
-                [formModel]="view.formModel"
-                default="Qúa trình nhân sự"
-              >
-              </codx-label>
-            </div>
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a>
-          </div>
-          <ngx-skeleton-loader
-            count="5"
-            animation="progress"
-          ></ngx-skeleton-loader>
-
-          <!-- Degree -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeDegree"
-                    [formModel]="view.formModel"
-                    default="Bằng cấp"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeDegreeInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group"></div>
-            </div>
-          </div>
-
-          <!-- cer -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeCertificate"
-                    [formModel]="view.formModel"
-                    default="CHỨNG CHỈ"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeCertificateInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group"></div>
-            </div>
-          </div>
-
-          <!-- skill -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeSkill"
-                    [formModel]="view.formModel"
-                    default="KỸ NĂNG"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSkillsInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group"></div>
-            </div>
-          </div>
-
-          <!-- training -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeTraining"
-                    [formModel]="view.formModel"
-                    default="Đào tạo"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeTrainCourseInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- documentNo-status -->
-              <div class="row form-group"></div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #processingInfo>
-  <div
-    class="pw-content w-100 pw-lg scroll-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-    data-kt-scroll-wrappers=".employee-container"
-    data-kt-scroll-offset="0px"
-  >
-    <div class="user-content flex-row-fluid">
-      <ng-container>
-        <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblEmployeeKnowledge"
-                [formModel]="view.formModel"
-                default="Quá trình nhân sự"
-              >
-              </codx-label>
-            </div>
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a>
-          </div>
-          <ngx-skeleton-loader
-            count="5"
-            animation="progress"
-          ></ngx-skeleton-loader>
-
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeCurContract"
-                    [formModel]="view.formModel"
-                    default="HỢP ĐỒNG LAO ĐỘNG HIỆN TẠI"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group"></div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeePosition"
-                    [formModel]="view.formModel"
-                    default="BỔ NHIỆM - ĐIỀU CHUYỂN"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="positionColumnsGrid">
-                </lib-tmp-grid-view>
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeHolidays"
-                    [formModel]="view.formModel"
-                    default="NGHỈ PHÉP"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- documentNo-status -->
-              <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="holidayColumnsGrid">
-                </lib-tmp-grid-view>
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeCurContract"
-                    [formModel]="view.formModel"
-                    default="HỢP ĐỒNG LAO ĐỘNG HIỆN TẠI"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- documentNo-status -->
-              <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="workDiaryColumnGrid">
-                </lib-tmp-grid-view>
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeCurContract"
-                    [formModel]="view.formModel"
-                    default="HỢP ĐỒNG LAO ĐỘNG HIỆN TẠI"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <!-- documentNo-status -->
-              <div class="row form-group">
-                <lib-tmp-grid-view [columnsGrid]="expColumnGrid">
-                </lib-tmp-grid-view>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-</ng-template>
-
-<ng-template #healthInfo>
-  <div
-    class="pw-content w-100 pw-lg scroll-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-    data-kt-scroll-wrappers=".employee-container"
-    data-kt-scroll-offset="0px"
-  >
-    <div class="user-content flex-row-fluid">
-      <ng-container>
-        <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblEmployeeHealthInfo"
-                [formModel]="view.formModel"
-                default="Thông tin sức khỏe"
-              >
-              </codx-label>
-            </div>
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a>
-          </div>
-          <ngx-skeleton-loader
-            count="5"
-            animation="progress"
-          ></ngx-skeleton-loader>
-
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeCheckUp"
-                    [formModel]="view.formModel"
-                    default="KHEN THƯỞNG"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <div class="d-flex">
-                <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                  <span class="icon-add icon-24"></span>
-                </a>
-                <a class="btn btn-xs btn-icon btn-hover-primary">
-                  <span class="icon-arrow_drop_down icon-24"></span>
-                </a>
-              </div>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeAwardsInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group">
-                <!-- <lib-tmp-grid-view
-                  [columnsGrid]="healthColumnsGrid"
-                ></lib-tmp-grid-view> -->
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeVaccine"
-                    [formModel]="view.formModel"
-                    default="KỶ LUẬT"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <div class="d-flex">
-                <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                  <span class="icon-add icon-24"></span>
-                </a>
-                <a class="btn btn-xs btn-icon btn-hover-primary">
-                  <span class="icon-arrow_drop_down icon-24"></span>
-                </a>
-              </div>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeDisciplinesInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group">
-                <!-- <lib-tmp-grid-view
-                  [columnsGrid]="healthColumnsGrid"
-                ></lib-tmp-grid-view> -->
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeDisease"
-                    [formModel]="view.formModel"
-                    default="BỆNH NGHỀ NGHIỆP"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group">
-                <!-- <lib-tmp-grid-view
-                  [columnsGrid]="healthColumnsGrid"
-                ></lib-tmp-grid-view> -->
-              </div>
-            </div>
-          </div>
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeAccident"
-                    [formModel]="view.formModel"
-                    default="TAI NẠN LAO ĐỘNG"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSelfInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group">
-                <lib-tmp-grid-view
-                  [columnsGrid]="accidentColumnsGrid"
-                ></lib-tmp-grid-view>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-</ng-template>
-
+<!-- pane_2 -->
 <ng-template #benefit>
   <div
     class="pw-content w-100 pw-lg scroll-y"
@@ -3308,164 +2599,1359 @@
           <div class="d-flex justify-content-between mb-2 mt-6">
             <div class="fw-bold fs-4 text-primary">
               <codx-label
-                name="lblEmployeeProcessing"
+                name="lblBenefit"
                 [formModel]="view.formModel"
-                default="Qúa trình nhân sự"
+                default="Phúc lợi"
               >
               </codx-label>
             </div>
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a>
+            <div class="d-flex">
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('3', '0')"
+                [attr.aria-expanded]="!objCollapes['3']"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('3', '1')"
+                [attr.aria-expanded]="!objCollapes['3']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
+              </a>
+            </div>
+          </div>
+          <div id="3" #3="ngbCollapse" [(ngbCollapse)]="objCollapes['3']">
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['3.1'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeDegree"
+                      [formModel]="view.formModel"
+                      default="Mức lương & phụ cấp"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('3.1')"
+                  [attr.aria-expanded]="!objCollapes['3.1']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['3.1']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="31"
+                #legalInformation="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['3.1']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDegreeInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group"></div>
+                </div>
+
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDegreeInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['3.2'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-add_circle_outline icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblOtherIncome"
+                      [formModel]="view.formModel"
+                      default="Thu nhập khác"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('3.2')"
+                  [attr.aria-expanded]="!objCollapes['3.2']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['3.2']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="32"
+                #legalInformation="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['3.2']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeCertificateInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['3.3'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span
+                      class="icon-remove_circle_outline icon-18 me-1"
+                    ></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblOtherDeduction"
+                      [formModel]="view.formModel"
+                      default="Khấu trừ khác"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('3.3')"
+                  [attr.aria-expanded]="!objCollapes['3.3']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['3.3']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="33"
+                #legalInformation="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['3.3']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSkillsInfo()"
+                      ></span>
+                    </a>
+                  </div>
+
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['3.4'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span
+                      class="icon-remove_circle_outline icon-18 me-1"
+                    ></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblDistributedAssets"
+                      [formModel]="view.formModel"
+                      default="Tài sản cấp phát"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('3.4')"
+                  [attr.aria-expanded]="!objCollapes['3.4']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['3.4']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="34"
+                #34="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['3.4']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSkillsInfo()"
+                      ></span>
+                    </a>
+                  </div>
+
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<!-- pane_3 -->
+<ng-template #processingInfo>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblProcessingInfo"
+                [formModel]="view.formModel"
+                default="Quá trình nhân sự"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex">
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('4', '0')"
+                [attr.aria-expanded]="!objCollapes['4']"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('4', '1')"
+                [attr.aria-expanded]="!objCollapes['4']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
+              </a>
+            </div>
+          </div>
+          <div id="4" #4="ngbCollapse" [(ngbCollapse)]="objCollapes['4']">
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['4.1'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeCurContract"
+                      [formModel]="view.formModel"
+                      default="Hợp đồng lao động hiện tại"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('4.1')"
+                  [attr.aria-expanded]="!objCollapes['4.1']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['4.1']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="41"
+                #41="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['4.1']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['4.2'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeePosition"
+                      [formModel]="view.formModel"
+                      default="Bổ nhiệm - Điều chuyển"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('4.2')"
+                  [attr.aria-expanded]="!objCollapes['4.2']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['4.2']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="42"
+                #42="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['4.2']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <lib-tmp-grid-view [columnsGrid]="positionColumnsGrid">
+                    </lib-tmp-grid-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['4.3'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeHolidays"
+                      [formModel]="view.formModel"
+                      default="Nghỉ phép"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('4.3')"
+                  [attr.aria-expanded]="!objCollapes['4.3']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['4.3']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="43"
+                #43="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['4.3']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- documentNo-status -->
+                  <div class="row form-group">
+                    <lib-tmp-grid-view [columnsGrid]="holidayColumnsGrid">
+                    </lib-tmp-grid-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['4.4'] ? 'text-danger' : 'text-primary '"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblWorkDiary"
+                      [formModel]="view.formModel"
+                      default="Nhật kí công tác"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('4.4')"
+                  [attr.aria-expanded]="!objCollapes['4.4']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['4.4']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="44"
+                #44="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['4.4']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <lib-tmp-grid-view [columnsGrid]="workDiaryColumnGrid">
+                    </lib-tmp-grid-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['4.5'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblExperience"
+                      [formModel]="view.formModel"
+                      default="Kinh nghiệm trước đây"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('4.5')"
+                  [attr.aria-expanded]="!objCollapes['4.5']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['4.5']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="45"
+                #45="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['4.5']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSelfInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- documentNo-status -->
+                  <div class="row form-group">
+                    <lib-tmp-grid-view [columnsGrid]="expColumnGrid">
+                    </lib-tmp-grid-view>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<!-- pane_4 -->
+<ng-template #knowledge>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblKnowledge"
+                [formModel]="view.formModel"
+                default="Kiến thức"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex">
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('5', '0')"
+                [attr.aria-expanded]="!objCollapes['5']"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('5', '1')"
+                [attr.aria-expanded]="!objCollapes['5']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
+              </a>
+            </div>
+          </div>
+          <div id="5" #5="ngbCollapse" [(ngbCollapse)]="objCollapes['5']">
+            <!-- Degree -->
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['5.1'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeDegree"
+                      [formModel]="view.formModel"
+                      default="Bằng cấp"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('5.1')"
+                  [attr.aria-expanded]="!objCollapes['5.1']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['5.1']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="51"
+                #51="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['5.1']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDegreeInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- cer -->
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['5.2'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeCertificate"
+                      [formModel]="view.formModel"
+                      default="Chứng chỉ"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('5.2')"
+                  [attr.aria-expanded]="!objCollapes['5.2']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['5.2']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="52"
+                #52="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['5.2']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeCertificateInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- skill -->
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['5.3'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeSkill"
+                      [formModel]="view.formModel"
+                      default="Kỹ năng"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('5.3')"
+                  [attr.aria-expanded]="!objCollapes['5.3']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['5.3']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="53"
+                #53="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['5.3']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeSkillsInfo()"
+                      ></span>
+                    </a>
+                  </div>
+
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- training -->
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['5.4'] ? 'text-danger' : 'text-primary '"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblEmployeeTraining"
+                      [formModel]="view.formModel"
+                      default="Đào tạo"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <a
+                  class="btn btn-xs btn-icon btn-hover-primary"
+                  (click)="collapse('5.4')"
+                  [attr.aria-expanded]="!objCollapes['5.4']"
+                >
+                  <span
+                    class="icon-24"
+                    [class]="
+                      objCollapes['5.4']
+                        ? 'icon-arrow_drop_down text-danger'
+                        : 'icon-arrow_drop_up'
+                    "
+                  ></span>
+                </a>
+              </div>
+              <div
+                id="54"
+                #54="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['5.4']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeTrainCourseInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <!-- documentNo-status -->
+                  <div class="row form-group"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<!-- pane_5 -->
+<ng-template #rewardDiscipline>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblRewardDiscipline"
+                [formModel]="view.formModel"
+                default="Khen thưởng - Kỷ luật"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex">
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('6', '0')"
+                [attr.aria-expanded]="!objCollapes['6']"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('6', '1')"
+                [attr.aria-expanded]="!objCollapes['6']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
+              </a>
+            </div>
           </div>
           <ngx-skeleton-loader
             count="5"
             animation="progress"
           ></ngx-skeleton-loader>
 
-          <!-- Degree -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeDegree"
-                    [formModel]="view.formModel"
-                    default="Bằng cấp"
+          <div id="6" #6="ngbCollapse" [(ngbCollapse)]="objCollapes['6']">
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['6.1'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblReward"
+                      [formModel]="view.formModel"
+                      default="Khen thưởng"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                    <span class="icon-add icon-24"></span>
+                  </a>
+                  <a
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('6.1')"
+                    [attr.aria-expanded]="!objCollapes['6.1']"
                   >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                    <span
+                      class="icon-24"
+                      [class]="
+                        objCollapes['6.1']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up'
+                      "
+                    ></span>
+                  </a>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
               <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                id="61"
+                #61="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['6.1']"
               >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeDegreeInfo()"
-                  ></span>
-                </a>
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeAwardsInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- <lib-tmp-grid-view
+                    [columnsGrid]="healthColumnsGrid"
+                  ></lib-tmp-grid-view> -->
+                  </div>
+                </div>
               </div>
-              <div class="row form-group"></div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['6.2'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblDiscipline"
+                      [formModel]="view.formModel"
+                      default="Kỷ luật"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                    <span class="icon-add icon-24"></span>
+                  </a>
+                  <a
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('6.2')"
+                    [attr.aria-expanded]="!objCollapes['6.2']"
+                  >
+                    <span
+                      class="icon-24"
+                      [class]="
+                        objCollapes['6.2']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up'
+                      "
+                    ></span>
+                  </a>
+                </div>
+              </div>
+              <div
+                id="legalInformation"
+                #legalInformation="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['6.2']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDisciplinesInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- <lib-tmp-grid-view
+                    [columnsGrid]="healthColumnsGrid"
+                  ></lib-tmp-grid-view> -->
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
 
-          <!-- cer -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeCertificate"
-                    [formModel]="view.formModel"
-                    default="CHỨNG CHỈ"
-                  >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
-                </div>
-              </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+<!-- pane_6 -->
+<ng-template #healthInfo>
+  <div
+    class="pw-content w-100 pw-lg scroll-y"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container"
+    data-kt-scroll-offset="0px"
+  >
+    <div class="user-content flex-row-fluid">
+      <ng-container>
+        <div class="user-profile overview d-block mb-3" id="MWP00201">
+          <div class="d-flex justify-content-between mb-2 mt-6">
+            <div class="fw-bold fs-4 text-primary">
+              <codx-label
+                name="lblHealthInfo"
+                [formModel]="view.formModel"
+                default="Thông tin sức khỏe"
               >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeCertificateInfo()"
-                  ></span>
-                </a>
-              </div>
-              <div class="row form-group"></div>
+              </codx-label>
+            </div>
+            <div class="d-flex">
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+                (click)="collapse('7', '0')"
+                [attr.aria-expanded]="!objCollapes['7']"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                ></span>
+              </a>
+              <a
+                class="btn btn-xs btn-icon btn-light btn-hover-primary"
+                (click)="collapse('7', '1')"
+                [attr.aria-expanded]="!objCollapes['7']"
+              >
+                <span
+                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                ></span>
+              </a>
             </div>
           </div>
+          <ngx-skeleton-loader
+            count="5"
+            animation="progress"
+          ></ngx-skeleton-loader>
 
-          <!-- skill -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeSkill"
-                    [formModel]="view.formModel"
-                    default="KỸ NĂNG"
+          <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['7.1'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblPhysicalExamination"
+                      [formModel]="view.formModel"
+                      default="Khám sức khỏe"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                    <span class="icon-add icon-24"></span>
+                  </a>
+                  <a
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('7.1')"
+                    [attr.aria-expanded]="!objCollapes['7.1']"
                   >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                    <span
+                      class="icon-24"
+                      [class]="
+                        objCollapes['7.1']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up'
+                      "
+                    ></span>
+                  </a>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
-            </div>
-            <div class="border mb-3">
               <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                id="71"
+                #71="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['7.1']"
               >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeSkillsInfo()"
-                  ></span>
-                </a>
-              </div>
-
-              <div class="row form-group"></div>
-            </div>
-          </div>
-
-          <!-- training -->
-          <div class="border rounded-2 p-6">
-            <div class="d-flex align-items-center justify-content-between">
-              <div class="d-flex align-items-center">
-                <div class="fs-4 fw-bold text-primary">
-                  <codx-label
-                    name="lblEmployeeTraining"
-                    [formModel]="view.formModel"
-                    default="Tài sản cấp phát"
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                  </codx-label>
-                </div>
-                <div class="user-status d-flex align-items-center ms-3">
-                  <span class="icon-check text-primary icon-18 me-1"></span>
-                  <span> {{ "1" | vll: "L0225":"text" | async }}</span>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeAwardsInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- <lib-tmp-grid-view
+                    [columnsGrid]="healthColumnsGrid"
+                  ></lib-tmp-grid-view> -->
+                  </div>
                 </div>
               </div>
-              <a class="btn btn-xs btn-icon btn-hover-primary">
-                <span class="icon-arrow_drop_down icon-24"></span>
-              </a>
             </div>
-            <div class="border mb-3">
-              <div
-                class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-              >
-                <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                  <span
-                    class="icon-edit icon-18"
-                    (click)="addEmployeeTrainCourseInfo()"
-                  ></span>
-                </a>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['7.2'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lbl
+                      Vaccination"
+                      [formModel]="view.formModel"
+                      default="Tiêm Vaccine"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                    <span class="icon-add icon-24"></span>
+                  </a>
+                  <a
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('7.2')"
+                    [attr.aria-expanded]="!objCollapes['7.2']"
+                  >
+                    <span
+                      class="icon-24"
+                      [class]="
+                        objCollapes['7.2']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up'
+                      "
+                    ></span>
+                  </a>
+                </div>
               </div>
-              <!-- documentNo-status -->
-              <div class="row form-group"></div>
+              <div
+                id="72"
+                #72="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['7.2']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDisciplinesInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- <lib-tmp-grid-view
+                    [columnsGrid]="healthColumnsGrid"
+                  ></lib-tmp-grid-view> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['7.3'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblOccupationalDisease"
+                      [formModel]="view.formModel"
+                      default="Bệnh nghề nghiệp"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                    <span class="icon-add icon-24"></span>
+                  </a>
+                  <a
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('7.3')"
+                    [attr.aria-expanded]="!objCollapes['7.3']"
+                  >
+                    <span
+                      class="icon-24"
+                      [class]="
+                        objCollapes['7.3']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up'
+                      "
+                    ></span>
+                  </a>
+                </div>
+              </div>
+              <div
+                id="73"
+                #73="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['7.3']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDisciplinesInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- <lib-tmp-grid-view
+                    [columnsGrid]="healthColumnsGrid"
+                  ></lib-tmp-grid-view> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="border rounded-2 p-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <div
+                  class="d-flex align-items-center"
+                  [class]="objCollapes['7.4'] ? 'text-danger' : 'text-primary'"
+                >
+                  <div class="user-status d-flex align-items-center ms-3">
+                    <span class="icon-check icon-18 me-1"></span>
+                  </div>
+                  <div class="fs-4 fw-bold text-uppercase">
+                    <codx-label
+                      name="lblLaborAccident"
+                      [formModel]="view.formModel"
+                      default="Tai nạn lao động"
+                    >
+                    </codx-label>
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
+                    <span class="icon-add icon-24"></span>
+                  </a>
+                  <a
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('7.4')"
+                    [attr.aria-expanded]="!objCollapes['7.4']"
+                  >
+                    <span
+                      class="icon-24"
+                      [class]="
+                        objCollapes['7.4']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up'
+                      "
+                    ></span>
+                  </a>
+                </div>
+              </div>
+              <div
+                id="74"
+                #74="ngbCollapse"
+                [(ngbCollapse)]="objCollapes['7.4']"
+              >
+                <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="addEmployeeDisciplinesInfo()"
+                      ></span>
+                    </a>
+                  </div>
+                  <div class="row form-group">
+                    <!-- <lib-tmp-grid-view
+                    [columnsGrid]="healthColumnsGrid"
+                  ></lib-tmp-grid-view> -->
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
