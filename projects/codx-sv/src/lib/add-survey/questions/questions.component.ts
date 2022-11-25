@@ -78,6 +78,21 @@ export class QuestionsComponent
       ],
     },
   };
+  fieldName = {
+    question: 'question',
+    transID: 'transID',
+    seqNo: 'seqNo',
+    category: 'category',
+    answerType: 'answerType',
+    answers: 'answers',
+    parentID: 'parentID',
+    mandatory: 'mandatory',
+    random: 'random',
+    hideComment: 'hideComment',
+    qPicture: 'qPicture',
+    aPicture: 'aPicture',
+    url: 'url',
+  };
   public titleRule: { [name: string]: { [rule: string]: Object } } = {
     Title: { required: [true, 'Enter valid title'] },
   };
@@ -98,7 +113,7 @@ export class QuestionsComponent
   dataAnswer: any = new Array();
   active = false;
   MODE_IMAGE_VIDEO = 'EDIT';
-  lstEditIV: any = new Array();
+  lstEditIV: any = [];
   recID: any;
   children: any = new Array();
   itemActive: any;
@@ -425,7 +440,7 @@ export class QuestionsComponent
         'Việc xóa một mục cũng sẽ xóa các câu hỏi và câu trả lời trong mục đó.'
       )
       .closed.subscribe((x) => {
-        if (x.event.status == 'Y') {
+        if (x.event?.status == 'Y') {
           var data = JSON.parse(JSON.stringify(this.questions));
           data = data.filter((x) => x.seqNo != seqNoSession);
           data.forEach((x, index) => {
@@ -651,7 +666,14 @@ export class QuestionsComponent
     });
   }
 
-  popupUploadFile(typeFile, modeFile) {
+  popupUploadFile(
+    typeFile,
+    modeFile,
+    inline = false,
+    seqNoSession = null,
+    seqNoQuestion = null,
+    itemAnswer = null
+  ) {
     var obj = {
       functionList: this.functionList,
       typeFile: typeFile,
@@ -669,17 +691,55 @@ export class QuestionsComponent
     );
     dialog.closed.subscribe((res) => {
       if (res.event) {
-        this.uploadFile(
-          this.indexSessionA,
-          this.itemActive,
-          res.event?.dataUpload,
-          res.event?.referType,
-          modeFile,
-          res.event?.youtube,
-          res.event?.videoID
-        );
+        if (inline) {
+          let myInterval = setInterval(() => {
+            if (this.questions && this.questions.length > 0) {
+              clearInterval(myInterval);
+              const t = this;
+              if (itemAnswer) {
+                t.questions[seqNoQuestion].children[seqNoQuestion].answers[
+                  itemAnswer.seqNo
+                ].hasPicture = true;
+                t.questions[seqNoQuestion].children[seqNoQuestion].answers[
+                  itemAnswer.seqNo
+                ].recID = res.event?.dataUpload[0].objectID;
+              } else {
+                if (modeFile == 'change') {
+                  t.lstEditIV.filter(
+                    (x) =>
+                      x.objectID !=
+                      t.questions[seqNoSession]?.children[seqNoQuestion].recID
+                  );
+                }
+                this.questions[seqNoSession].children[seqNoQuestion].qPicture =
+                  true;
+                this.questions[seqNoSession].children[seqNoQuestion].recID =
+                  res.event?.dataUpload[0].objectID;
+              }
+              this.lstEditIV.push(res.event?.dataUpload[0]);
+              this.change.detectChanges();
+              console.log('check data file', this.lstEditIV);
+            }
+          }, 200);
+        } else {
+          this.uploadFile(
+            this.indexSessionA,
+            this.itemActive,
+            res.event?.dataUpload,
+            res.event?.referType,
+            modeFile,
+            res.event?.youtube,
+            res.event?.videoID
+          );
+        }
       }
     });
+  }
+
+  updateOneFieldA(seqNoSession, seqNoQuestion, seqNoAnswer, fieldName, data) {
+    this.questions[seqNoSession].children[seqNoQuestion].answers[seqNoAnswer][
+      fieldName
+    ] = data;
   }
 
   deleteFile(seqNoSession, itemQuestion, objectID) {
@@ -691,8 +751,22 @@ export class QuestionsComponent
       this.SVServices.deleteFile(
         objectID,
         this.functionList.entityName
-      ).subscribe();
+      ).subscribe((res) => {
+        if (res)
+          this.lstEditIV = this.lstEditIV.filter((x) => x.objectID != objectID);
+      });
     }
+  }
+
+  deleteFileInlineQ(objectID) {
+    this.SVServices.deleteFile(
+      objectID,
+      this.functionList.entityName
+    ).subscribe((res) => {
+      if (res) {
+        this.lstEditIV = this.lstEditIV.filter((x) => x.objectID != objectID);
+      }
+    });
   }
 
   GUID: any;
@@ -907,6 +981,14 @@ export class QuestionsComponent
       this.questions[seqNoSession].children[dataQuestion.seqNo + 1].videoID =
         videoID;
       this.questions[seqNoSession].children[dataQuestion.seqNo + 1].url = data;
+    } else if (modeFile == 'change') {
+      this.lstEditIV = this.lstEditIV.filter(
+        (x) =>
+          x.objectID !=
+          this.questions[seqNoSession].children[dataQuestion.seqNo].recID
+      );
+      this.questions[seqNoSession].children[dataQuestion.seqNo].recID =
+        data[0].objectID;
     }
     if (!youtube) {
       data[0]['recID'] = data[0].objectID;
@@ -914,8 +996,9 @@ export class QuestionsComponent
         var src = `${environment.urlUpload}/${data[0].urlPath}`;
         data[0]['srcVideo'] = src;
       }
-      this.lstEditIV = data;
+      this.lstEditIV.push(data[0]);
     }
+    console.log('check data file', this.lstEditIV);
     console.log('check data after uploadFile', this.questions);
     this.change.detectChanges();
   }
@@ -1094,6 +1177,11 @@ export class QuestionsComponent
   }
 
   hideComment(seqNoSession, seqNoQuestion) {
-    this.questions[seqNoSession].children[seqNoQuestion].hideComment = true;
+    this.questions[seqNoSession].children[seqNoQuestion].hideComment =
+      !this.questions[seqNoSession].children[seqNoQuestion].hideComment;
+  }
+
+  getSrcImage(data) {
+    return (data['srcImage'] = `${environment.urlUpload}/${data.urlPath}`);
   }
 }
