@@ -12,4 +12,5 @@ export class SV_Questions {
   hideComment: boolean;
   qPicture: boolean;
   aPicture: boolean;
+  url: any;
 }

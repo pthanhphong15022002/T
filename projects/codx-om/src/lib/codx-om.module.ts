@@ -1,8 +1,9 @@
+import { PopupAddTaskComponent } from './popup/popup-add-task/popup-add-task.component';
+import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CodxOmComponent } from './codx-om.component';
 import { LayoutComponent } from './_layout/layout.component';
-
 import { OKRComponent } from './okr/okr.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportsComponent } from './reports/reports.component';
@@ -21,6 +22,7 @@ import { PopupDistributeKRComponent } from './popup/popup-distribute-kr/popup-di
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
 import { OkrEditComponent } from './okr/okr-edit/okr-edit.component';
 import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
+import { PopupSaveVersionComponent } from './popup/popup-save-version/popup-save-version.component';
 import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
 
 const routes: Routes = [
@@ -66,6 +68,7 @@ const routes: Routes = [
     ReportsComponent,
     ReviewsComponent,
     OKRTasksComponent,
+    PopupAddTaskComponent,
     OkrAddComponent,
     OkrToolbarComponent,
     PopupAddKRComponent,
@@ -74,7 +77,9 @@ const routes: Routes = [
     OkrTargetsComponent,
     OkrEditComponent,
     OkrReviewsComponent,
-    OKRTasksComponent
+    PopupSaveVersionComponent,
+    PopupViewVersionComponent,
+    OKRTasksComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -41,18 +41,18 @@
         <codx-label
           name="lblArea"
           default="Diện tích (m2)"
-          class="text-gray-600"
+          class="text-gray-800"
         ></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 text-gray-800">:</span>
         <span class="fw-bold ms-1">{{ data?.resourceData?.area }}</span>
       </div>
       <div class="d-flex flex-row">
         <codx-label
           name="lblCapacity"
           default="Sức chứa (người)"
-          class="text-gray-600"
+          class="text-gray-800"
         ></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 text-gray-800">:</span>
         <span class="fw-bold ms-1">{{ data?.resourceData?.capacity }}</span>
       </div>
     </div>
@@ -124,10 +124,10 @@
     <codx-label
       name="lblReason"
       default="Lí do"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
-    <span class="fw-bold">
+    <span class="me-1 fw-bold">:</span>
+    <span class="text-gray-800">
       {{ data?.reasonName }}
     </span>
   </div>
@@ -135,10 +135,10 @@
     <codx-label
       default="Nội dung"
       name="lblMemo"
-      class="text-gray-600"
+      class="fw-bold"
     ></codx-label>
-    <span class="me-1 text-gray-600">:</span>
-    <span class="fw-bold">
+    <span class="me-1 fw-bold">:</span>
+    <span class="text-gray-800">
       {{ data?.memo }}
     </span>
   </div>
@@ -147,10 +147,10 @@
       <codx-label
         name="lblAttendees"
         default="Người tham gia"
-        class="text-gray-600"
+        class="fw-bold"
       >
       </codx-label>
-      <span class="me-1 text-gray-600">:</span>
+      <span class="me-1 fw-bold">:</span>
       <div class="ms-2 d-flex justify-content-end">
         <codx-imgs
           [objectId]="data?.bookingAttendees"
@@ -184,7 +184,7 @@
               <codx-label
                 default="Đơn vị tính"
                 name="lblQuantity"
-                class="text-gray-600"
+                class="text-gray-800"
               ></codx-label>
               <span>:</span>
               <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
@@ -196,7 +196,7 @@
           <codx-label
             default="Số lượng"
             name="lblQuantity"
-            class="text-gray-600"
+            class="text-gray-800"
           ></codx-label>
           <span>:</span>
           <span class="ms-2 fw-bold">{{ item.quantity }}</span>
@@ -216,19 +216,19 @@
     <div class="d-flex mt-1 flex-grow-1 mb-2">
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ data?.bookingOn | fmDT }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ showHour(data?.startDate) }}
         </span>
         <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
           "-"
         }}</span>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ showHour(data?.endDate) }}
         </span>
       </div>
