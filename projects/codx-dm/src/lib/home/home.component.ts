@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   Injector,
+  OnDestroy,
 } from '@angular/core';
 import {
   AuthStore,
@@ -36,13 +37,14 @@ import {
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
 import { mode } from 'crypto-js';
+import { A } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent extends UIComponent {
+export class HomeComponent extends UIComponent implements  OnDestroy {
   @ViewChild('templateMain') templateMain: TemplateRef<any>;
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
@@ -352,7 +354,7 @@ export class HomeComponent extends UIComponent {
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
           result = result.concat(this.dmSV.listFiles);
         this.data = result;
-        this.data = [...this.data];
+        //this.data = [...this.data];
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -686,7 +688,6 @@ export class HomeComponent extends UIComponent {
         type: ViewType.tree_card,
         active: true,
         sameData: true,
-        showFilter: false,
         /*  toolbarTemplate: this.templateSearch,*/
         model: {
           template: this.templateMain,
@@ -809,12 +810,14 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.favoriteID = "2";
       this.fileService.options.favoriteID = "2";
     }
+    this.getDataFile("");
     //   console.log(this.button);
   }
 
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
+    this.getDataFile("");
     //  this.data = [];
   }
   viewChanging(event) {
@@ -833,14 +836,7 @@ export class HomeComponent extends UIComponent {
     }
   }
   ngOnDestroy() {
-    console.log('detroy');
-    //   this.atSV.openForm.unsubscribe();
-    //this.clearWaitingThumbnail();
-    // if (this.interval?.length > 0) {
-    //   this.interval.forEach((element) => {
-    //     clearInterval(element.instant);
-    //   });
-    // }
+    //this.dmSV.isAddFolder
   }
 
   clearWaitingThumbnail() {
@@ -983,7 +979,6 @@ export class HomeComponent extends UIComponent {
   filterChange($event) {
     if (!$event) {
       this.dmSV.page = 1;
-     
     } else {
       try {
         this.data = [];
@@ -1179,8 +1174,9 @@ export class HomeComponent extends UIComponent {
         this.button.disabled = false;
         this.dmSV.disableInput.next(false);
       }
-      if(this.view.funcID == "DMT02") this.getDataFile("");
     }
+
+
   }
   getDataFile(id: any) {
     this.fileService.options.funcID = this.view.funcID;
