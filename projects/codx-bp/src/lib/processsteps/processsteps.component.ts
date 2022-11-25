@@ -663,6 +663,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    this.parentID='';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
       var p = this.button.items.find((x) => (x.id = this.stepType));
@@ -736,9 +737,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
     switch (e.functionID) {
       case 'SYS01':
