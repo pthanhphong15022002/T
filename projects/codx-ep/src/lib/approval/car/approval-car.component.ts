@@ -33,11 +33,8 @@ export class ApprovalCarsComponent extends UIComponent {
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
-  entity = 'EP_Bookings';
   className = 'BookingsBusiness';
   method = 'GetListApprovalAsync';
-  predicate = 'ResourceType=@0';
-  datavalue = '2';
   cbbDriver: DriverModel[]=[];
   idField = 'recID';
 
@@ -134,7 +131,7 @@ export class ApprovalCarsComponent extends UIComponent {
         request: this.request,
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
-        showFilter:false,
+        showFilter:true,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,

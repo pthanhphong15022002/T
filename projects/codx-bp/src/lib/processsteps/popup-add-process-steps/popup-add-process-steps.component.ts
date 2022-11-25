@@ -179,16 +179,31 @@ export class PopupAddProcessStepsComponent
     this.codxService.navigate('', url);
   }
 
-  async saveData() {
-    this.gridViewSetup;
-    if (
-      this.stepType != 'P' &&
-      (this.processSteps.parentID == '' || this.processSteps.parentID == null)
-    ) {
-      let headerText =
-        this.gridViewSetup['ParentID']?.headerText ?? 'IterationName';
-      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+  checkValidate() {
+    let headerText = [];
+    if (this.stepType != 'P' && (this.processSteps.parentID == '' || this.processSteps.parentID == null)) {
+      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'ParentID');            
     }
+    if(!this.processSteps.stepName?.trim()){
+      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'StepName');         
+    }
+    if(this.processSteps.duration <=0){
+      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'Duration');    
+    }
+    if(this.owners.length === 0){
+      headerText.push(this.gridViewSetup['Owners']?.headerText ?? 'Owners');
+    }
+    return headerText;
+  }
+
+  async saveData() {
+    this.gridViewSetup;  
+    let headerText =  this.checkValidate();
+    if(headerText.length > 0){
+      this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');
+      return ;
+    }
+
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)

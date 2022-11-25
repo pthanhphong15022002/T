@@ -62,7 +62,7 @@
         </ng-container> -->
         <codx-label name="lblRoom" default="Phòng" class="fw-bold"></codx-label>
         <span class="me-1 fw-bold">:</span>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ itemDetail?.resourceName }}
         </span>
       </div>
@@ -72,7 +72,7 @@
       <div class="d-flex me-6">
         <codx-label name="lblDate" default="Ngày" class="fw-bold"></codx-label>
         <span class="me-1 fw-bold">:</span>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ itemDetail?.bookingOn | fmDT }}
         </span>
       </div>
@@ -83,15 +83,15 @@
           class="fw-bold"
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ showHour(itemDetail?.startDate) }}
         </span>
         <span
           *ngIf="itemDetail?.startDate && itemDetail?.endDate"
-          class="ms-1 me-1 text-gray-600"
+          class="ms-1 me-1 text-gray-800"
           >{{ "-" }}</span
         >
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ showHour(itemDetail?.endDate) }}
         </span>
       </div>
@@ -105,7 +105,7 @@
           class="fw-bold"
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
-        <span class="text-gray-600">
+        <span class="text-gray-800">
           {{ itemDetail?.reasonName }}
         </span>
       </div>
@@ -204,7 +204,7 @@
                         <codx-label
                           default="Đơn vị tính:"
                           name="lblQuantity"
-                          class="text-gray-600"
+                          class="text-gray-800"
                         ></codx-label>
                         <span class="d-block ms-2 fw-bold">{{
                           item?.umName
@@ -217,7 +217,7 @@
                     <codx-label
                       default="Số lượng:"
                       name="lblQuantity"
-                      class="text-gray-600"
+                      class="text-gray-800"
                     ></codx-label>
                     <span class="ms-2 fw-bold">{{ item.quantity }}</span>
                   </div>
@@ -328,7 +328,7 @@
         ></div>
       </div>
       <div class="d-flex mt-2">
-        <span class="icon-schedule icon-16 text-gray-600"></span>
+        <span class="icon-schedule icon-16 text-gray-800"></span>
         <span class="ms-2 text-dark">{{
           data?.dueDate | fmDT: "dmy":true
         }}</span>

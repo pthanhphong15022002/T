@@ -105,6 +105,8 @@ export class QuestionsComponent
   indexSessionA = 0;
   indexQuestionA = 0;
   @Input() changeModeQ: any;
+  @Input() formModel: any;
+  @Input() dataService: any;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -517,10 +519,10 @@ export class QuestionsComponent
           this.addCard(this.itemActive, this.indexSessionA, 'T');
           break;
         case 'LTN04':
-          this.popupUploadFile('image', 'upload');
+          this.popupUploadFile('P', 'upload');
           break;
         case 'LTN05':
-          this.popupUploadFile('video', 'upload');
+          this.popupUploadFile('V', 'upload');
           break;
         case 'LTN06':
           this.addCard(this.itemActive, this.indexSessionA, 'S');
@@ -531,8 +533,8 @@ export class QuestionsComponent
 
   addQuestionOther() {
     var option = new DialogModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    option.DataService = this.dataService;
+    option.FormModel = this.formModel;
     var dialog = this.callfc.openForm(
       TemplateSurveyOtherComponent,
       '',
@@ -592,8 +594,8 @@ export class QuestionsComponent
             clearInterval(myInterval);
             var obj = { dataSurvey: res.event, dataQuestion: dataQuestion };
             var option = new SidebarModel();
-            option.DataService = this.view.dataService;
-            option.FormModel = this.view.formModel;
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
             var dialog = this.callfc.openSide(
               PopupQuestionOtherComponent,
               obj,
@@ -670,26 +672,27 @@ export class QuestionsComponent
         this.uploadFile(
           this.indexSessionA,
           this.itemActive,
-          res.event.dataUpload,
+          res.event?.dataUpload,
           res.event?.referType,
-          modeFile
+          modeFile,
+          res.event?.youtube,
+          res.event?.videoID
         );
       }
     });
   }
 
-  deleteFile(seqNoSession, objectID) {
-    this.SVServices.deleteFile(
-      objectID,
-      this.functionList.entityName
-    ).subscribe((res) => {
-      if (res) {
-        this.questions[seqNoSession].children.splice(this.itemActive.seqNo, 1);
-        this.questions[seqNoSession].children.forEach(
-          (x, index) => (x.seqNo = index)
-        );
-      }
-    });
+  deleteFile(seqNoSession, itemQuestion, objectID) {
+    this.questions[seqNoSession].children.splice(this.itemActive.seqNo, 1);
+    this.questions[seqNoSession].children.forEach(
+      (x, index) => (x.seqNo = index)
+    );
+    if (!itemQuestion?.url || !itemQuestion?.videoID) {
+      this.SVServices.deleteFile(
+        objectID,
+        this.functionList.entityName
+      ).subscribe();
+    }
   }
 
   GUID: any;
@@ -866,14 +869,26 @@ export class QuestionsComponent
 
   addTitle(dataQuestion) {}
 
-  uploadFile(seqNoSession, dataQuestion, data, referType, modeFile) {
+  uploadFile(
+    seqNoSession,
+    dataQuestion,
+    data,
+    referType,
+    modeFile,
+    youtube,
+    videoID
+  ) {
     if (dataQuestion && modeFile == 'upload') {
       var tempQuestion = JSON.parse(JSON.stringify(dataQuestion));
       tempQuestion.seqNo = dataQuestion.seqNo + 1;
       tempQuestion.answerType = null;
+      tempQuestion.answers = null;
       tempQuestion.question = null;
       tempQuestion.category = referType;
-      tempQuestion.recID = data[0].objectID;
+      tempQuestion.qPicture = referType == 'image' ? true : false;
+      tempQuestion.recID = !youtube ? data[0].objectID : this.generateGUID();
+      tempQuestion.url = youtube ? data : null;
+      tempQuestion.videoID = videoID;
       this.questions[seqNoSession].children.splice(
         dataQuestion.seqNo + 1,
         0,
@@ -888,14 +903,26 @@ export class QuestionsComponent
       this.itemActive =
         this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
       // this.clickToScroll(dataQuestion.seqNo + 1);
+    } else if (modeFile == 'change' && youtube) {
+      this.questions[seqNoSession].children[dataQuestion.seqNo + 1].videoID =
+        videoID;
+      this.questions[seqNoSession].children[dataQuestion.seqNo + 1].url = data;
     }
-    data[0]['recID'] = data[0].objectID;
-    if (referType == 'V' && !data[0]?.srcVideo) {
-      var src = `${environment.urlUpload}/${data[0].urlPath}`;
-      data[0]['srcVideo'] = src;
+    if (!youtube) {
+      data[0]['recID'] = data[0].objectID;
+      if (referType == 'V' && !data[0]?.srcVideo) {
+        var src = `${environment.urlUpload}/${data[0].urlPath}`;
+        data[0]['srcVideo'] = src;
+      }
+      this.lstEditIV = data;
     }
-    this.lstEditIV = data;
+    console.log('check data after uploadFile', this.questions);
     this.change.detectChanges();
+  }
+
+  getUrlImageOfVideo(ID) {
+    var url = `https://img.youtube.com/vi/${ID}/hqdefault.jpg`;
+    return url;
   }
 
   uploadVideo(dataQuestion) {}

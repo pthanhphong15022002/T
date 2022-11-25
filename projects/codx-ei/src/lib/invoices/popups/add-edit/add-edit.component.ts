@@ -1,3 +1,5 @@
+import { InvoicesLine } from '../../../models/invoice.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import {
@@ -28,6 +30,7 @@ export class AddEditComponent implements OnInit {
   dialog: DialogRef;
   invoices: any;
   action: string;
+  active = true;
   fmGoods: FormModel = {
     formName: 'EIInvoiceLines',
     gridViewName: 'grvEIInvoiceLines',
@@ -36,12 +39,12 @@ export class AddEditComponent implements OnInit {
   fgGoods: FormGroup;
   editSettings: EditSettingsModel = {
     allowEditing: true,
-    allowAdding: false,
+    allowAdding: true,
     allowDeleting: true,
   };
   selectedItem: any;
   selectedIndex: number = 0;
-  data = [
+  data: Array<InvoicesLine> = [
     {
       no: 1,
       itemDesc: 'Sản phẩm A',
@@ -90,78 +93,6 @@ export class AddEditComponent implements OnInit {
       totalAmt: 78400,
       lineType: 'Gia dụng',
     },
-    {
-      no: 5,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 6,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 7,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 8,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 9,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 10,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
   ];
 
   @ViewChild('grid') public grid: GridComponent;
@@ -170,6 +101,7 @@ export class AddEditComponent implements OnInit {
     private cache: CacheService,
     private callfc: CallFuncService,
     private api: ApiHttpService,
+    private apiv2: HttpClient,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
@@ -201,15 +133,22 @@ export class AddEditComponent implements OnInit {
           });
 
           this.fgGoods = new FormGroup(group);
-          console.log(this.fgGoods);
         }
       });
+  }
+  ngAfterViewInit() {
+    this.form.formGroup.patchValue({ invoiceDate: new Date() });
   }
   //#endregion
 
   //#region Event
   actionComplete(e) {
+    if (e.requestType === 'save' && e.action === 'add') {
+      this.grid.selectRow(e.index);
+      this.grid.startEdit();
+    }
     return;
+
     if (e.requestType === 'save' && e.action === 'edit') {
       if (
         e.previousData &&
@@ -249,19 +188,8 @@ export class AddEditComponent implements OnInit {
       this.bindData(e.data);
       this.selectedItem = e.data;
       this.selectedIndex = e.rowIndex;
+      console.log(this.selectedIndex, this.selectedItem);
     }
-  }
-
-  cellEdit(e) {
-    console.log('cell edit', e);
-  }
-
-  cellSelecting(e) {
-    console.log('cell selecting', e);
-  }
-
-  cellSelected(e) {
-    console.log('cell selected', e);
   }
 
   onChangedValue(e, data) {
@@ -274,35 +202,23 @@ export class AddEditComponent implements OnInit {
   mstChange(e) {
     if (e && e.data) {
       this.api
-        .exec<any>('EI', 'CustomersBusiness', 'GetByID', e.data)
+        .exec<any>('EI', 'CustomersBusiness', 'GetCustomerAsync', e.data)
         .subscribe((res) => {
           if (res) {
-            this.form.formGroup.controls['custName'] = res['custName'];
-            this.form.formGroup.controls['adddess'] = res['adddess'];
-            this.form.formGroup.controls['phone'] = res['phone'];
-            this.form.formGroup.controls['email'] = res['email'];
-            this.form.formGroup.controls['bankName'] = res['bankName'];
-            this.form.formGroup.controls['bankAccount'] = res['bankAccount'];
-          } else {
-            this.api
-              .get(`https://thongtindoanhnghiep.co/api/company/${e.data}`)
-              .subscribe((res) => {
-                let customers: any = null;
-                customers['custID'] = res['MaSoThue'];
-                customers['custName'] = res['Title'];
-                customers['taxCode'] = res['MaSoThue'];
-                customers['adddess'] = res['DiaChiCongTy'];
-                customers['contact'] = res['ChuSoHuu'];
-                // customers['email'] =  res['MaSoThue'];
-                // customers['phone'] = res['MaSoThue'];
-                // customers['pmtMethodID'] =  res['MaSoThue'];
-                // customers['bankAccount'] =  res['MaSoThue'];
-                // customers['bankName'] =  res['MaSoThue'];
-              });
+            this.bindingTaxInfor(res);
           }
         });
     }
   }
+
+  addRow() {
+    let line = {};
+    let idx = this.data.length;
+    line['no'] = idx + 1;
+    this.grid.addRecord(line, idx);
+  }
+
+  navChange(e) {}
   //#endregion
 
   //#region Function
@@ -316,6 +232,14 @@ export class AddEditComponent implements OnInit {
       }
     });
     this.fgGoods!.patchValue(objValue);
+  }
+
+  bindingTaxInfor(data) {
+    this.form.formGroup.patchValue({ custName: data['custName'] });
+    this.form.formGroup.patchValue({ adddess: data['address'] });
+    this.form.formGroup.patchValue({ phone: data['phone'] });
+    this.form.formGroup.patchValue({ bankName: data['bankName'] });
+    this.form.formGroup.patchValue({ bankAccount: data['bankAccount'] });
   }
   //#endregion
 }
