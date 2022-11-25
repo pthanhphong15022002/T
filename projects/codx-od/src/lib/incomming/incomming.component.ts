@@ -10,6 +10,7 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
   AlertConfirmInputConfig,
+  AuthStore,
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
@@ -115,6 +116,7 @@ export class IncommingComponent
   showAgency = false;
   dataItem: any;
   funcList: any;
+  userID:any;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -128,6 +130,7 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
+  authStore: AuthStore;
   constructor(inject: Injector, private route: ActivatedRoute ,  private codxODService : CodxOdService,) {
     super(inject);
     this.odService = inject.get(DispatchService);
@@ -135,6 +138,7 @@ export class IncommingComponent
     this.callfunc = inject.get(CallFuncService);
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
+    this.authStore = inject.get(AuthStore);
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
   }
@@ -152,6 +156,7 @@ export class IncommingComponent
     this.request.className = 'DispatchesBusiness';
     this.request.method = 'GetListByStatusAsync';
     this.request.idField = 'recID';
+    this.userID = this.authStore.get().userID;
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -252,6 +257,25 @@ export class IncommingComponent
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
       approvel[0].disabled = true;
+    }
+
+    if(this.view.formModel.funcID == 'ODT41')
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT212'
+      );
+      approvel[0].disabled = true;
+    }
+   
+    if (
+      this.view.formModel.funcID == 'ODT41' &&
+      (data?.approveStatus == '2' ||
+      data?.approveStatus == '3' || data?.approveStatus == '4') && data?.createdBy == this.userID
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT212'
+      );
+      approvel[0].disabled = false;
     }
     //Hoàn tất
     if (data?.status == '7') {

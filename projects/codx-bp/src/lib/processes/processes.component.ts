@@ -665,6 +665,21 @@ export class ProcessesComponent
       '',
       dialogModel
     );
+
+    dialog.closed.subscribe((e) => {
+      if(e && data.recID){
+        this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
+          // this.view.dataService.data.forEach(element => {
+          //   if(element.recID == process.recID){
+          //     element = process
+          //   }
+          // });
+          e.event = process;
+          this.view.dataService.update(e).subscribe();
+          this.detectorRef.detectChanges();
+          })
+      }
+    })
   }
 
   approval($event) {}

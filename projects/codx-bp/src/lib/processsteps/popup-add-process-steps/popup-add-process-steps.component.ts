@@ -61,8 +61,6 @@ export class PopupAddProcessStepsComponent
   isNewEmails = true;
   showLabelAttachment = false;
   listUser = [];
-  listOwnerID = [];
-  listOwnerIDClone = [];
   referenceText = [];
   listOwnerDetails = [];
   popover: any;
@@ -106,10 +104,6 @@ export class PopupAddProcessStepsComponent
       this.processSteps.owners;
       if (this.stepType === 'A') {
         this.getOwnerByParentID(this.processSteps['recID']);
-      } else {
-        this.listOwnerID = this.processSteps.owners.map((item) => {
-          return item?.objectID ? item.objectID : null;
-        });
       }
       if (this.stepType === 'E' && this.processSteps.reference) {
         this.isNewEmails = false;
@@ -129,13 +123,11 @@ export class PopupAddProcessStepsComponent
   }
 
   onInit(): void {
-    this.loadData();
-    if (this.listOwnerID.length > 0) {
-      this.getListUser();
-    }
+    this.loadData();   
+    this.getListUser();
+
     if (this.action == 'edit') {
       this.ownersClone = JSON.parse(JSON.stringify(this.owners));
-      this.listOwnerIDClone = JSON.parse(JSON.stringify(this.listOwnerID));
     }
   }
 
@@ -179,16 +171,31 @@ export class PopupAddProcessStepsComponent
     this.codxService.navigate('', url);
   }
 
-  async saveData() {
-    this.gridViewSetup;
-    if (
-      this.stepType != 'P' &&
-      (this.processSteps.parentID == '' || this.processSteps.parentID == null)
-    ) {
-      let headerText =
-        this.gridViewSetup['ParentID']?.headerText ?? 'IterationName';
-      return this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+  checkValidate() {
+    let headerText = [];
+    if (this.stepType != 'P' && (this.processSteps.parentID == '' || this.processSteps.parentID == null)) {
+      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'ParentID');            
     }
+    if(!this.processSteps.stepName?.trim()){
+      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'StepName');         
+    }
+    if(this.processSteps.duration <=0){
+      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'Duration');    
+    }
+    if(this.owners.length === 0){
+      headerText.push(this.gridViewSetup['Owners']?.headerText ?? 'Owners');
+    }
+    return headerText;
+  }
+
+  async saveData() {
+    this.gridViewSetup;  
+    let headerText =  this.checkValidate();
+    if(headerText.length > 0){
+      this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');
+      return ;
+    }
+
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)
@@ -341,6 +348,7 @@ export class PopupAddProcessStepsComponent
         var owner = new BP_ProcessOwners();
         owner.objectType = dt.objectType;
         owner.objectID = dt.id;
+        owner.objectName = dt.text;
         owner.rAIC = 'R';
         this.owners.push(owner);
         this.listOwnerDetails.push({
@@ -356,21 +364,11 @@ export class PopupAddProcessStepsComponent
     if (i != -1) this.owners.splice(i, 1);
   }
 
-  // get list user by userID
+  // get list user 
   getListUser() {
-    this.api
-      .execSv<any>(
-        'HR',
-        'ERM.Business.HR',
-        'EmployeesBusiness',
-        'GetListEmployeesByUserIDAsync',
-        JSON.stringify(this.listOwnerID)
-      )
-      .subscribe((res) => {
-        this.listOwnerDetails = res.map((user) => {
-          return { id: user.userID, name: user.userName };
-        });
-      });
+    this.listOwnerDetails = this.owners.map((user) => {
+      return { id: user.objectID, name: user.objectName };
+    });   
   }
   getOwnerByParentID(id, isChange = false) {
     this.bpService.getOwnersByParentID([id]).subscribe((data) => {
@@ -382,11 +380,12 @@ export class PopupAddProcessStepsComponent
           var owner = new BP_ProcessOwners();
           owner.objectType = item.objectType;
           owner.objectID = item.objectID;
+          owner.objectName = item.objectName;
           owner.rAIC = item.raic;
           owenrs.push(owner);
         }
       });
-
+      // thêm owners mới của cha cho con khi sửa
       if (this.action == 'edit' && isChange) {
         this.owners = [...owenrs, ...this.ownersClone].filter(
           (item, pos, self) => {
@@ -395,11 +394,7 @@ export class PopupAddProcessStepsComponent
             );
           }
         );
-        this.listOwnerID = this.owners.map((item) => {
-          return item['objectID'];
-        });
       } else {
-        this.listOwnerID = [...ownerIDs];
         this.owners = [...owenrs];
       }
       this.getListUser();

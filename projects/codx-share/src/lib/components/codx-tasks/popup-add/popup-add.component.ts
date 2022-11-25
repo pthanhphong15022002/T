@@ -303,7 +303,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
-          if (this.param?.PlanControl == '1') this.task.startDate = new Date();
+          if (this.param?.PlanControl == '1' && this.task.startDate == null)
+            this.task.startDate = new Date();   
         }
       });
   }
@@ -607,13 +608,13 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                   this.dialog.close(res.update);
                   this.attachment?.clearData();
                   this.tmSv
-                  .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
-                  .subscribe();
+                    .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
+                    .subscribe();
                 }
-              }else {
+              } else {
                 this.dialog.close();
                 this.attachment?.clearData();
-              }             
+              }
             });
         } else {
           this.dialog.close();
@@ -771,7 +772,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.isCheckTime = true;
     }
   }
-
   logicTaskGroup(idTaskGroup) {
     this.api
       .execSv<any>(
@@ -810,13 +810,17 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
-          if (this.taskGroup?.planControl == '1') {
+          if (
+            this.taskGroup?.planControl == '1' &&
+            this.task.startDate == null
+          ) {
             this.task.startDate = new Date();
-          } else {
-            this.task.startDate = null;
-            this.task.endDate = null;
-            this.task.estimated = 0;
           }
+          //  else {
+          //   this.task.startDate = null;
+          //   this.task.endDate = null;
+          //   this.task.estimated = 0;
+          // }
           this.convertParameterByTaskGroup(this.taskGroup);
         }
       });

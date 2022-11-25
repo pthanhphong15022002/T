@@ -186,10 +186,15 @@
                                   href="javascript:void(0)"
                                   class="mt-30px"
                                 >
-                                  <codx-label
-                                    fiedName="formatAlignLeft"
-                                    default="Mô tả"
-                                  ></codx-label>
+                                  <div class="d-flex">
+                                    <span *ngIf="itemQuestion?.hideComment"
+                                      class="icon-check icon-24 ps-6 pe-6"
+                                    ></span>
+                                    <codx-label
+                                      fiedName="formatAlignLeft"
+                                      default="Mô tả"
+                                    ></codx-label>
+                                  </div>
                                 </a>
                               </li>
                             </ul>

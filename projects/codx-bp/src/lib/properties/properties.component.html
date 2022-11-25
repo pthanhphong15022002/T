@@ -26,12 +26,12 @@
         <div class="flex-grow-1 extend-main">
           <div class="h-100 extend-content">
             <div class="dms-info">
-              <div class="d-flex align-items-center" >
+              <div class="d-flex align-items-center">
                 <div *ngIf="process != null && flowChart != null">
                   <img alt="{{flowChart.fileName}}" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
                     src="{{flowChart.pathDisk}}">
                 </div>
-                  <!-- <ng-template #elsethenAvatar1>
+                <!-- <ng-template #elsethenAvatar1>
                     <div class="mh-150px me-2" [style.background]="flowChart.backGround" style="width: 500px; margin-bottom: 5px;">
                       {{flowChart.fileName}}
                     </div>
@@ -238,7 +238,7 @@
               <!--begin::Foot-->
               <ng-container *ngIf="process.rattings.length>0">
                 <ng-container *ngFor="let view of rattings; let i = index">
-                  <div *ngIf="view.ratting > 0" class="d-flex flex-column py-3 w-100 border-bottom user-rating">
+                  <div *ngIf="view.ratting > 0" class="d-flex flex-column py-4 w-100 border-bottom user-rating">
                     <div class="d-flex justify-content-between align-items-center">
                       <div class="me-3">
                         <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users" imgCss="w-30px me-3"
@@ -261,7 +261,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="rating-comment mt-1">
+                    <div class="rating-comment mt-3">
                       {{view.comment}}
                     </div>
                   </div>
@@ -285,13 +285,13 @@
             <e-tabitems>
               <e-tabitem>
                 <ng-template #headerText>
-                  <div>
+                  <div class="ms-2">
                     <codx-label name="Version" default="Phiên bản">
                     </codx-label>
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <div class="pt-5 extend-more-content pe-3">
+                  <div class="pt-5 extend-more-content px-3 ms-2">
                     <ng-container *ngIf="(process.versions && process.versions.length>0 ), else defaulEmpt">
                       <div *ngFor="let item of process.versions; index as i">
                         <div class="d-flex flex-row my-5 aqua">

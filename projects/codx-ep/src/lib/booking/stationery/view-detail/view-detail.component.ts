@@ -79,14 +79,7 @@ export class BookingStationeryViewDetailComponent
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      {
-        name: 'ReferencesOD',
-        textDefault: 'Tham chiếu',
-        isActive: false,
-        template: this.reference,
-      },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },      
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
