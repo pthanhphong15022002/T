@@ -7,6 +7,59 @@
   (onLoading)="onLoading($event)"
 ></codx-views>
 <ng-template #itemTemplate>
+  <div class="bg-white d-flex justify-content-end subheader">
+    <span
+      class="icon icon-color_lens icon-24 pe-6 pt-2"
+      [ngbPopover]="customUI"
+      triggers="mouseenter:mouseleave"
+      placement="bottom"
+      [autoClose]="'outside'"
+    ></span>
+    <ng-template #customUI>
+      <codx-label
+        fiedName="CustomUI"
+        default="Tùy chỉnh giao diện"
+      ></codx-label>
+    </ng-template>
+    <span
+      class="icon icon-remove_red_eye icon-24 pe-6 pt-2"
+      [ngbPopover]="show"
+      triggers="mouseenter:mouseleave"
+      placement="bottom"
+      [autoClose]="'outside'"
+    ></span>
+    <ng-template #show>
+      <codx-label fiedName="Show" default="Xem trước"></codx-label>
+    </ng-template>
+    <span
+      class="icon icon-undo icon-24 pe-6 pt-2"
+      [ngbPopover]="undo"
+      triggers="mouseenter:mouseleave"
+      placement="bottom"
+      [autoClose]="'outside'"
+    ></span>
+    <ng-template #undo>
+      <codx-label fiedName="Undo" default="Hủy"></codx-label>
+    </ng-template>
+    <span
+      class="icon icon-redo icon-24 pe-6 pt-2"
+      [ngbPopover]="redo"
+      triggers="mouseenter:mouseleave"
+      placement="bottom"
+      [autoClose]="'outside'"
+    ></span>
+    <ng-template #redo>
+      <codx-label fiedName="Redo" default="Làm lại"></codx-label>
+    </ng-template>
+    <button
+      type="button"
+      class="btn btn-primary btn-submit pe-6"
+      (click)="onSubmit()"
+    >
+      <codx-label fiedName="Submit" default="Gửi"></codx-label>
+    </button>
+    <span class="icon icon-more_vert icon-24 pe-6 pt-2 ps-6"></span>
+  </div>
   <ejs-tab headerPlacement="Top" (selected)="onSelected($event)">
     <e-tabitems>
       <e-tabitem>
@@ -27,6 +80,8 @@
         <ng-template #content class="pd-t-20">
           <app-questions
             [changeModeQ]="changeMode"
+            [formModel]="view.formModel"
+            [dataService]="view.dataService"
             *ngIf="mode == 'Q'"
           ></app-questions>
         </ng-template>

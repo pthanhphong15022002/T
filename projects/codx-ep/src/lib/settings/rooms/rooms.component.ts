@@ -63,7 +63,7 @@ export class RoomsComponent extends UIComponent {
   afterViewInit = false;
   popupTitle = '';
   grvRooms: any;
-  popupClosed =true;
+  popupClosed = true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -131,12 +131,12 @@ export class RoomsComponent extends UIComponent {
               width: '10%', //gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
+              // headerTextAlign: 'Center',
+              // textAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
-              textAlign: 'center',
+              //textAlign: 'center',
               width: '20%', //width: gv['Note'].width,
               field: 'note',
             },
@@ -266,7 +266,7 @@ export class RoomsComponent extends UIComponent {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
+                this.view.dataService.update(x.event).subscribe((res) => { });
               }
             });
           });
@@ -297,7 +297,7 @@ export class RoomsComponent extends UIComponent {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
+                this.view.dataService.update(x.event).subscribe((res) => { });
               }
             });
           });

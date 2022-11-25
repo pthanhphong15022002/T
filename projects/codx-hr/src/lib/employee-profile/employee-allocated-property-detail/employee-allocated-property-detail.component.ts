@@ -1,3 +1,4 @@
+import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
 import { Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
@@ -16,15 +17,17 @@ import{
 })
 export class EmployeeAllocatedPropertyDetailComponent extends UIComponent implements OnInit {
   formModel: FormModel
+  formGroup: FormGroup
   grvSetup
   dialog: DialogRef
   data
+  employeeId
   isAfterRender = false
   headerText: ''
   @ViewChild('form') form: CodxFormComponent;
   
   onInit(): void {
-    throw new Error('Method not implemented.');
+    this.InitForm()
   }
 
   constructor(
@@ -36,14 +39,42 @@ export class EmployeeAllocatedPropertyDetailComponent extends UIComponent implem
   ) {
     super(injector)
     this.dialog = dialog;
-    this.formModel = dialog?.formModel;
+    // this.formModel = dialog?.formModel;
     this.headerText = data?.data?.headerText;
-    if(this.formModel){
-      this.isAfterRender = true
+    // if(this.formModel){
+    //   this.isAfterRender = true
+    // }
+    // this.data = dialog?.dataService?.dataSelected
+    if(!this.formModel){
+      this.formModel = new FormModel();
+      this.formModel.formName = 'EAssets'
+      this.formModel.entityName = 'HR_EAssets'
+      this.formModel.gridViewName = 'grvEAssets'
     }
-    this.data = dialog?.dataService?.dataSelected
-   }
+    this.employeeId = data?.data?.employeeId
+  }
 
+  InitForm(){
+    this.hrService.getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    .then((item) => {
+      this.formGroup = item;
+      console.log('formGroup', this.formGroup)
+      this.hrService.getEmployeeAssetsInfo(this.employeeId).subscribe(p => {
+        console.log('thong tin tai san', p)
+        this.data = p
+        this.formModel.currentData = this.data
+        console.log('du lieu formmodel', this.formModel.currentData);
+        this.formGroup.patchValue(this.data)
+        this.isAfterRender = true
+      })
+    })
+  }
 
-
+  onSaveForm(){
+    this.hrService.updateEmployeeAssetsInfo(this.data).subscribe(p => {
+      if(p === "True"){
+        this.notify.notifyCode('SYS007')
+      }
+    })
+  }
 }

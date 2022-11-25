@@ -96,7 +96,9 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content> Họp định kỳ </ng-template>
+            <ng-template #content
+              ><lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
+            </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
@@ -109,9 +111,7 @@
                 ></codx-label>
               </div>
             </ng-template>
-            <ng-template #content>
-              <lib-okr-reviews [formModel]="view?.formModel"></lib-okr-reviews>
-            </ng-template>
+            <ng-template #content> Đánh giá </ng-template>
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
