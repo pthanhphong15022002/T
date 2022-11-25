@@ -95,6 +95,9 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    console.log('formGroup', this.form?.formGroup);
+    console.log('data', this.data);
+    
     if (this.dialog) {
       if (!this.isSaveSuccess) {
         this.dialog.closed.subscribe((res: any) => {
