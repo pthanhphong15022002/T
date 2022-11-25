@@ -1,57 +1,28 @@
-<codx-form
-  #form
-  [headerText]="headerText"
-  [subHeaderText]="subHeaderText"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialogRef"
-  [formModel]="formModel"
-  [data]="data"
-  *ngIf="isAfterRender"
->
+<codx-form #form [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
+  [dialog]="dialogRef" [formModel]="formModel" [data]="data" *ngIf="isAfterRender">
   <ng-template #body>
-    <div class="row">
+    <div class="row mt-5">
       <div class="col-6 form-group">
-        <codx-label
-          fiedName="ResourceID"
-          [formModel]="form.formModel"
-          default="Mã số thẻ"
-        >
+        <codx-label fiedName="ResourceID" [formModel]="form.formModel" default="Mã số thẻ">
         </codx-label>
-        <codx-input
-          ControlName="resourceID"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-          [disabled]="autoNumDisable"
-        >
+        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+          [disabled]="autoNumDisable">
         </codx-input>
       </div>
 
       <div class="col-6 form-group">
         <codx-label fiedName="Status" [formModel]="form.formModel">
         </codx-label>
-        <codx-input
-          ControlName="status"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
 
     <div class="row">
       <div class="col-12 form-group">
-        <codx-label
-          fiedName="ResourceName"
-          [formModel]="form.formModel"
-          default="Tên thẻ xe"
-        >
+        <codx-label fiedName="ResourceName" [formModel]="form.formModel" default="Tên thẻ xe">
         </codx-label>
-        <codx-input
-          ControlName="resourceName"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="resourceName" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
@@ -59,11 +30,7 @@
     <div class="row">
       <div class="form-group">
         <codx-label fiedName="Owner" [formModel]="form.formModel"> </codx-label>
-        <codx-input
-          ControlName="owner"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="owner" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
@@ -71,27 +38,14 @@
     <div class="row">
       <div class="form-group">
         <codx-label fiedName="Note" [formModel]="form.formModel"></codx-label>
-        <codx-input
-          ControlName="note"
-          [formModel]="form.formModel"
-          [Group]="form.formGroup"
-        >
+        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
       </div>
     </div>
 
     <div *ngIf="data?.recID" class="form-group upload-img">
-      <codx-img
-        #imageUpLoad
-        [width]="100"
-        imageType="circle"
-        [objectType]="'EP_Resources'"
-        aria-disabled="false"
-        [funcId]="formModel?.funcID"
-        [isAllowEdit]="true"
-        [objectId]="imgRecID"
-        [objectName]="data.resourceName"
-      >
+      <codx-img #imageUpLoad [width]="100" imageType="circle" [objectType]="'EP_Resources'" aria-disabled="false"
+        [funcId]="formModel?.funcID" [isAllowEdit]="true" [objectId]="imgRecID" [objectName]="data.resourceName">
       </codx-img>
     </div>
   </ng-template>
@@ -99,11 +53,7 @@
   <ng-template #footer>
     <div class="d-flex justify-content-end">
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label
-          name="lblSave"
-          default="Lưu"
-          [formModel]="form.formModel"
-        ></codx-label>
+        <codx-label name="lblSave" default="Lưu" [formModel]="form.formModel"></codx-label>
       </button>
     </div>
   </ng-template>
