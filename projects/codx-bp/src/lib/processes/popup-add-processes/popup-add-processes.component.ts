@@ -52,7 +52,6 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.title = this.titleAction;
   }
 
   ngOnInit(): void {

@@ -1,0 +1,36 @@
+<div *ngIf="type=='P'">
+  <div class="d-flex align-items-center {{countData>0 ? 'text-success' : 'text-gray-600'}}">
+    <div class="me-1" (click)="openPopup()"><i
+        class="text-hover-primary icon-server icon-16 text-dark cursor-pointer"></i></div>
+    <div>{{countData}}</div>
+  </div>
+</div>
+<div *ngIf="type=='A'">
+  <div class="d-flex align-items-center {{countData>0 ? 'text-success' : 'text-gray-600'}}">
+    <div class="me-1" (click)="openPopup()"><i
+        class="text-hover-primary icon-format_list_numbered icon-16 text-dark cursor-pointer"></i></div>
+    <div>{{countData}}</div>
+  </div>
+</div>
+
+<ng-template #templateSteps let-dialog>
+  <div *ngIf="type == 'P'">
+    <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách Phases">
+    </codx-form>
+  </div>
+  <div *ngIf="type == 'A'">
+    <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách Activies">
+    </codx-form>
+  </div>
+  <ng-template #body>
+    <div *ngIf="lstSteps && lstSteps.length > 0">
+      <ng-container *ngFor="let item of lstSteps; ">
+        <div class="d-flex align-items-center mb-4">
+          <div class="d-flex fw-bold text-dark">
+            {{item.stepName}}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+</ng-template>
