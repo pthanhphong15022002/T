@@ -75,18 +75,21 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     this.getValueIcon();
   }
   getTrackLogAsync(objectID:string,id:string){
-    if(!objectID) return;
-    this.api.execSv(
-      this.service,
-      this.assemply,
-      this.className,
-      "GetTrackLogsByObjectIDAsync",
-      [objectID,id]).
-    subscribe((res:any[]) =>{
-      if(res) {
-        this.root.listSubComment = res;
-      }
-    });
+    if(objectID && id)
+    {
+      this.api.execSv(
+        this.service,
+        this.assemply,
+        this.className,
+        "GetTrackLogsByObjectIDAsync",
+        [objectID,id]).
+      subscribe((res:any[]) =>{
+        if(res) {
+          this.root.listSubComment = res;
+        }
+      });
+    }
+    
   }
 
   GetCommentTrackLogByObjectIDAsync(objectID:string,id:string){
