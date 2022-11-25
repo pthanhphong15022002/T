@@ -1,3 +1,4 @@
+import { PopupEmployeePartyInfoComponent } from './employee-profile/popup-employee-party-info/popup-employee-party-info.component';
 import { EmployeeAssurTaxBankaccInfoComponent } from './employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { EmployeeFamilyRelationshipDetailComponent } from './employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
 import { EmployeeFamilyRelationshipComponent } from './employee-profile/employee-family-relationship/employee-family-relationship.component';
@@ -53,7 +54,6 @@ import { ReportinglineOrgChartComponent } from './reportingline/reportingline-or
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
-import { PopupAddEmployeesPartyInfoComponent } from './employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
 import { EmployeeSelfInfoComponent } from './employee-profile/employee-self-info/employee-self-info.component';
@@ -240,7 +240,6 @@ const T_Component: Type<any>[] = [
   EmployeeListComponent,
   EmployeeProfileComponent,
   PopupAddNewHRComponent,
-  PopupAddEmployeesPartyInfoComponent,
   EmployeeSelfInfoComponent,
   EmployeeFamilyRelationshipComponent,
   EmployeeFamilyRelationshipDetailComponent,
@@ -265,6 +264,7 @@ const T_Component: Type<any>[] = [
   EmployeeDegreeDetailComponent,
   EmployeeDegreeInfoComponent,
   EmployeeTraincoursesComponent,
+  PopupEmployeePartyInfoComponent,
 ];
 @NgModule({
   imports: [
