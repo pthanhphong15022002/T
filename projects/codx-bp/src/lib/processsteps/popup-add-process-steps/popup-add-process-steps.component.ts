@@ -182,13 +182,16 @@ export class PopupAddProcessStepsComponent
   checkValidate() {
     let headerText = [];
     if (this.stepType != 'P' && (this.processSteps.parentID == '' || this.processSteps.parentID == null)) {
-      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'IterationName');            
+      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'ParentID');            
     }
-    if(this.stepType == 'P' && !this.processSteps.stepName){
-      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'IterationName');         
+    if(!this.processSteps.stepName?.trim()){
+      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'StepName');         
     }
     if(this.processSteps.duration <=0){
-      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'IterationName');    
+      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'Duration');    
+    }
+    if(this.owners.length === 0){
+      headerText.push(this.gridViewSetup['Owners']?.headerText ?? 'Owners');
     }
     return headerText;
   }
