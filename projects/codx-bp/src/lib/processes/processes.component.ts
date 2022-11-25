@@ -669,13 +669,8 @@ export class ProcessesComponent
     dialog.closed.subscribe((e) => {
       if(e && data.recID){
         this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          // this.view.dataService.data.forEach(element => {
-          //   if(element.recID == process.recID){
-          //     element = process
-          //   }
-          // });
-          e.event = process;
-          this.view.dataService.update(e).subscribe();
+          if(process)
+          this.view.dataService.update(process).subscribe();
           this.detectorRef.detectChanges();
           })
       }
