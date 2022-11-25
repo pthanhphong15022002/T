@@ -69,4 +69,8 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     else if (e.selectedIndex == 2) this.mode = 'S';
     this.changeMode = Math.random();
   }
+
+  onSubmit() {
+    
+  }
 }
