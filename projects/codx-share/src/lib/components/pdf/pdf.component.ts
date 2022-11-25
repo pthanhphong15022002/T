@@ -24,8 +24,13 @@ import {
 } from 'codx-core';
 import Konva from 'konva';
 import { qr } from './model/mode';
-import { tmpAreaName, tmpSignArea } from './model/tmpSignArea.model';
 import {
+  highLightTextArea,
+  tmpAreaName,
+  tmpSignArea,
+} from './model/tmpSignArea.model';
+import {
+  IPDFViewerApplication,
   NgxExtendedPdfViewerComponent,
   NgxExtendedPdfViewerService,
   pdfDefaultOptions,
@@ -42,7 +47,7 @@ import {
   ES_SignFile,
   SetupShowSignature,
 } from 'projects/codx-es/src/lib/codx-es.model';
-import { text } from 'stream/consumers';
+import { FindState, FindResultMatchesCount } from 'ngx-extended-pdf-viewer';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -110,6 +115,8 @@ export class PdfComponent
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
+  isInteractPDF = true;
+  lstHighlightTextArea: Array<highLightTextArea> = [];
 
   //vll
   vllActions;
@@ -722,7 +729,8 @@ export class PdfComponent
       let virtual = document.createElement('div');
       let id = 'layer' + e.pageNumber.toString();
       virtual.id = id;
-      virtual.style.zIndex = '2';
+      virtual.className = 'manualCanvasLayer';
+      virtual.style.zIndex = this.isInteractPDF ? '-1' : '2';
       virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
@@ -2167,8 +2175,10 @@ export class PdfComponent
     });
   }
 
-  show(area) {
-    let doc = document.getElementById(area.recID);
+  show(e) {
+    const PDFViewerApplication: IPDFViewerApplication = (window as any)
+      .PDFViewerApplication;
+    console.log('pdf', PDFViewerApplication.pdfViewer._pages[this.curPage - 1]);
   }
 
   //pop up
@@ -2200,6 +2210,78 @@ export class PdfComponent
   changeTab(currTab) {
     this.currentTab = currTab;
   }
+
+  changeEditMode() {
+    this.isInteractPDF = !this.isInteractPDF;
+    let lstLayer = document.getElementsByClassName('manualCanvasLayer');
+    Array.from(lstLayer).forEach((ele: HTMLElement) => {
+      ele.style.zIndex = this.isInteractPDF ? '-1' : '2';
+    });
+    this.detectorRef.detectChanges();
+  }
+
+  findText() {
+    var selection = window.getSelection().getRangeAt(0);
+    var selectedText = selection.extractContents();
+    // Array.from(selectedText.children).forEach((element: HTMLElement) => {
+    //   element.style.cssText = element.style.cssText + `color: red;`;
+    // });
+
+    let selectedChildren = Array.from(selectedText.children).sort(
+      (a: HTMLElement, b: HTMLElement) => {
+        return a.style.top < b.style.top ? 1 : -1;
+      }
+    );
+    selectedChildren.forEach((ele: HTMLSpanElement) => {
+      if (ele.classList.contains('main-center')) {
+        let textLayer = ele.querySelector('.textLayer');
+        let lstSpan = ele.querySelectorAll(
+          '.textLayer span[role="presentation"]'
+        );
+
+        let subSelectedChildren = Array.from(lstSpan).sort(
+          (a: HTMLElement, b: HTMLElement) => {
+            return a.style.top < b.style.top ? 1 : -1;
+          }
+        );
+        subSelectedChildren.forEach((subEle: HTMLElement) => {
+          subEle.style.cssText += `background-color: red;`;
+          // selection.insertNode(subEle);
+          textLayer.appendChild(subEle);
+        });
+      } else if (ele.tagName == 'SPAN') {
+        ele.style.cssText += `background-color: red;`;
+        selection.insertNode(ele);
+      }
+    });
+
+    // var span = document.createElement('span');
+    // span.style.backgroundColor = 'red';
+    // span.style.display = 'flex';
+    // span.style.position = 'inherit';
+    // span.appendChild(selectedText);
+    // selection.insertNode(span);
+  }
+
+  highlightText() {
+    // this.changeEditMode();
+    // let curLayer = document.getElementById('layer2') as Element;
+    // let curLayerBounding = curLayer.getBoundingClientRect();
+    // let range = window.getSelection().getRangeAt(0).getBoundingClientRect();
+    // let highlight = document.createElement('span');
+    // highlight.style.top = range.top - curLayerBounding.top + 'px';
+    // highlight.style.left = range.left - curLayerBounding.left + 'px';
+    // highlight.style.width = range.width + 'px';
+    // highlight.style.height = range.height + 'px';
+    // highlight.style.backgroundColor = 'yellow';
+    // highlight.style.position = 'absolute';
+    // highlight.style.opacity = '0.2';
+    // curLayer?.appendChild(highlight);
+    this.findText();
+  }
+
+  addComment() {}
+
   //#endregion
 }
 //create new guid

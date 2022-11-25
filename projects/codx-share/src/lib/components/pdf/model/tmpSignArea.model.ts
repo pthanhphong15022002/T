@@ -35,3 +35,14 @@ export class tmpAreaName {
   LabelType: string;
   LabelValue: string;
 }
+
+export class highLightTextArea {
+  location: {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
+    pageNumber: number;
+  };
+  color: string;
+}

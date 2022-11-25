@@ -268,7 +268,6 @@
               >
               </e-item>
               <e-item
-                *ngIf="hasPermission"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -282,6 +281,15 @@
                 "
                 (click)="changeShowActionsState()"
               ></e-item>
+              <e-item
+                (click)="highlightText()"
+                prefixIcon="e-edit btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+              ></e-item>
+              <e-item
+                (click)="addComment()"
+                prefixIcon="e-font btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+              >
+              </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -297,7 +305,9 @@
         [(zoom)]="zoomValue"
         (zoomChange)="changeZoom('', $event)"
         [(page)]="curPage"
+        [handTool]="false"
         [showHandToolButton]="false"
+        [textLayer]="true"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
@@ -308,9 +318,9 @@
         [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail"
         [enableDragAndDrop]="false"
-        [handTool]="false"
         [contextMenuAllowed]="false"
         [enablePinchOnMobile]="false"
+        (updateFindMatchesCount)="show($event)"
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
         (textLayerRendered)="getTextLayerInfo($event)"
@@ -695,7 +705,8 @@
                             [name]="'lblSignDateType0'"
                             [default]="lstSignDateType[0]"
                             [formModel]=""
-                          ></codx-label>
+                          >
+                          </codx-label>
                           <codx-input
                             class="me-4 date-Type"
                             name="date-Type"
@@ -704,12 +715,13 @@
                             labelPosition="After"
                             (valueChange)="changeUseSignDate()"
                           >
-                          </codx-input
-                          ><codx-label
+                          </codx-input>
+                          <codx-label
                             [name]="'lblSignDateType1'"
                             [default]="lstSignDateType[1]"
                             [formModel]=""
-                          ></codx-label>
+                          >
+                          </codx-label>
                           <!-- </div> -->
                         </div>
                         <div class="btn-apply d-flex justify-content-end">

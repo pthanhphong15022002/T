@@ -15,6 +15,7 @@ import {
 } from 'codx-core';
 import { AnyARecord } from 'dns';
 import { resolve } from 'path';
+import { highLightTextArea } from 'projects/codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
@@ -997,6 +998,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'AddImgToPDFAsync',
       data
+    );
+  }
+
+  addHighlightText(lstHighlightTextArea: Array<highLightTextArea>) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'AddHighlightTextAsync',
+      lstHighlightTextArea
     );
   }
 
