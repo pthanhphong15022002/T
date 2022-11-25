@@ -1,14 +1,9 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [views]="views" [button]="buttons" [moreFuncs]="moreFuncs"
-  [idField]="idField" [className]="className" [method]="method" (buttonClick)="click($event)"
-  (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
+  [views]="views" [button]="buttons" [moreFuncs]="moreFuncs" [idField]="idField" [className]="className"
+  [method]="method" (buttonClick)="click($event)" (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
   <ng-template #avatarCol let-data>
-    <div class="h-50px m-4">
-      <codx-img [objectId]="data?.recID" 
-      [objectName]="data.resourceName" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle" 
-        width="50" [imgOn]="data.modifiedOn"></codx-img>
-    </div>
-
+    <codx-img [objectId]="data?.recID" [objectName]="data.resourceName" [funcId]="funcID" [objectType]="'EP_Resources'"
+      imageType="circle" width="40" [imgOn]="data.modifiedOn"></codx-img>
   </ng-template>
 
   <ng-template #statusCol let-data>
@@ -20,12 +15,12 @@
 
   <ng-template #ownerCol let-data>
     <div class="d-flex has-action-menu align-items-center">
-      <codx-img [objectId]="data?.owner" objectType="AD_Users"></codx-img>
+      <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
       <div class="ms-2">
         <div class="fw-bold">{{ data?.ownerName }}</div>
       </div>
-      <codx-mfunc [dataItem]="data" 
-      (changeDataMF)="changeDataMF($event, data)" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
+      <codx-mfunc [dataItem]="data" (changeDataMF)="changeDataMF($event, data)" [formModel]="formModel"
+        (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
     </div>
   </ng-template>
 
@@ -45,28 +40,18 @@
         </div>
       </div>
     </div>
-    <div class="mx-4 pt-4 px-2" >
+    <div class="mx-4 pt-4 px-2">
       <div>
         <div class="form-group">
           <codx-label name="lblReceivePeople" [default]="curPopupGrv?.UserID?.headerText"></codx-label>
-          <codx-input
-          type="combobox"
-          [refValue]="'Users'"
-          [crrValue]="cardUserID"
-          [placeholder]="curPopupGrv.UserID.headerText"
-          (valueChange)="valueUserIDChange($event)"
-          >
+          <codx-input type="combobox" [refValue]="'Users'" [crrValue]="cardUserID"
+            [placeholder]="curPopupGrv.UserID.headerText" (valueChange)="valueUserIDChange($event)">
           </codx-input>
         </div>
         <div class="form-group">
           <codx-label name="lblReceiveDate" [default]="curPopupGrv?.TransDate?.headerText"></codx-label>
-          <codx-input 
-            type="datetime" 
-            format="d" 
-            class="form-control test-datetime" 
-            [crrValue]="cardDate"
-            (valueChange)="valueDateChange($event)"
-          ></codx-input>
+          <codx-input type="datetime" format="d" class="form-control test-datetime" [crrValue]="cardDate"
+            (valueChange)="valueDateChange($event)"></codx-input>
           <!-- <codx-input             
             ControlName="transDate"
             [Group]="curPopupFG"
@@ -75,20 +60,16 @@
         </div>
         <div class="form-group align-items-end">
           <codx-label name="lblNote" [default]="curPopupGrv?.Note?.headerText"></codx-label>
-          <codx-input
-          type="text"
-          [crrValue]="cardNote" 
-          [placeholder]="curPopupGrv.Note.headerText"       
-          (valueChange)="valueNoteChange($event)"
-          >
+          <codx-input type="text" [crrValue]="cardNote" [placeholder]="curPopupGrv.Note.headerText"
+            (valueChange)="valueNoteChange($event)">
           </codx-input>
         </div>
       </div>
     </div>
-    <div class="mx-4 pt-4 px-2" >
+    <div class="mx-4 pt-4 px-2">
       <div class="form-group d-flex justify-content-end flex-row">
         <button type="button" class="btn btn-primary" (click)="createCardTrans(currTrans)">
-          <codx-label name="lblSave" default="Lưu" ></codx-label>
+          <codx-label name="lblSave" default="Lưu"></codx-label>
         </button>
       </div>
     </div>

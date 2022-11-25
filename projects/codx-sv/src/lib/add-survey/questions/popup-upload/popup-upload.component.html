@@ -1,10 +1,10 @@
 <codx-form
-  [headerText]="typeFile == 'image' ? 'Chọn hình ảnh' : 'Chọn video'"
+  [headerText]="typeFile == 'P' ? 'Chọn hình ảnh' : 'Chọn video'"
   [body]="body"
   [dialog]="dialog"
 >
   <ng-template #body>
-    <ng-container #image *ngIf="typeFile == 'image'">
+    <ng-container #image *ngIf="typeFile == 'P'">
       <ejs-tab headerPlacement="Top">
         <e-tabitems>
           <e-tabitem>
@@ -101,7 +101,7 @@
         </e-tabitems>
       </ejs-tab>
     </ng-container>
-    <ng-container #image *ngIf="typeFile == 'video'">
+    <ng-container #image *ngIf="typeFile == 'V'">
       <ejs-tab headerPlacement="Top">
         <e-tabitems>
           <e-tabitem>
@@ -166,7 +166,15 @@
                 [src]="urlEmbedSafe"
                 frameborder="0"
                 allowfullscreen
-              ></iframe></ng-template
+              ></iframe>
+              <div class="d-flex justify-content-end" #footer>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  (click)="onSave('V', true)"
+                >
+                  <codx-label fiedName="Save" default="Chèn video"></codx-label>
+                </button></div></ng-template
           ></e-tabitem>
           <e-tabitem>
             <ng-template #headerText class="">

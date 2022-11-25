@@ -11,12 +11,11 @@ import { PopupAddCardTransComponent } from './popup-add-cardTrans/popup-add-card
 })
 export class CardTransComponent
   extends UIComponent
-  implements AfterViewInit
-{
+  implements AfterViewInit {
   @ViewChild('tranTypeCol') tranTypeCol: TemplateRef<any>;
   @ViewChild('userIDCol') userIDCol: TemplateRef<any>;
-  @ViewChild('createByCol') createByCol: TemplateRef<any>;  
-  @ViewChild('transDateCol') transDateCol: TemplateRef<any>;  
+  @ViewChild('createByCol') createByCol: TemplateRef<any>;
+  @ViewChild('transDateCol') transDateCol: TemplateRef<any>;
   @ViewChild('cardTranTmp') cardTranTmp: TemplateRef<any>;
   service = 'EP';
   assemblyName = 'EP';
@@ -25,16 +24,16 @@ export class CardTransComponent
   className = 'ResourceTransBusiness';
   method = 'GetListAsync';
   viewType = ViewType;
-  funcID:any;
-  formModel:FormModel;
-  columnGrids:any;
-  views:any;
-  popupDialog:any;
+  funcID: any;
+  formModel: FormModel;
+  columnGrids: any;
+  views: any;
+  popupDialog: any;
   dialog: DialogRef;
-  button:ButtonModel;
-  fGroupResourceTran:FormGroup;
-  id:any;
-  popupTitle:any;
+  button: ButtonModel;
+  fGroupResourceTran: FormGroup;
+  id: any;
+  popupTitle: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -50,16 +49,16 @@ export class CardTransComponent
     });
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
-        this.formModel = res;        
-        
+        this.formModel = res;
+
       }
     });
   }
-  onInit(): void {    
-    
+  onInit(): void {
+
     this.initForm();
-    this.button={
-      id:'btnAdd',
+    this.button = {
+      id: 'btnAdd',
     }
   }
   viewChanged(evt: any) {
@@ -71,8 +70,8 @@ export class CardTransComponent
     });
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
-        this.formModel = res;        
-        
+        this.formModel = res;
+
       }
     });
   }
@@ -83,10 +82,10 @@ export class CardTransComponent
         this.formModel?.gridViewName
       )
       .then((item) => {
-        this.fGroupResourceTran = item;    
+        this.fGroupResourceTran = item;
       });
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
   onLoading(evt: any) {
     let formModel = this.view.formModel;
     if (formModel) {
@@ -97,7 +96,7 @@ export class CardTransComponent
             {
               field: 'transType',
               headerText: gv?.TransType?.headerText,
-              width: "15%",
+              width: "100",
               template: this.tranTypeCol,
               headerTextAlign: 'Center',
               textAlign: 'Center',
@@ -106,18 +105,18 @@ export class CardTransComponent
               field: 'transDate',
               headerText: gv?.TransDate?.headerText,
               width: 200,
-              template : this.transDateCol,
+              template: this.transDateCol,
             },
             {
               field: 'userID',
               headerText: gv?.UserID?.headerText,
               width: 250,
               template: this.userIDCol,
-            },          
+            },
             {
               field: 'note',
               headerText: gv?.Note?.headerText,
-              width: "20%",          
+              width: "200",
             },
             {
               field: 'createdBy',
@@ -134,15 +133,15 @@ export class CardTransComponent
               model: {
                 resources: this.columnGrids,
               },
-            },            
+            },
           ];
           this.detectorRef.detectChanges();
         });
     }
-    
+
   }
   openPopupCardFunction(template: any) {
-    
+
     let time = new Date();
     this.popupDialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
@@ -153,19 +152,19 @@ export class CardTransComponent
       case 'btnAdd':
         this.addNew()
         break;
-      
+
     }
   }
   addNew() {
-    this.view.dataService.addNew().subscribe((res) => {      
-    this.dialog = this.callFuncService.openForm(
-      PopupAddCardTransComponent,'',550,450,this.funcID,
-      [this.view.dataService.dataSelected,this.formModel,this.popupTitle,this.funcID,this.view.dataService]
-        
-    );
+    this.view.dataService.addNew().subscribe((res) => {
+      this.dialog = this.callFuncService.openForm(
+        PopupAddCardTransComponent, '', 550, 450, this.funcID,
+        [this.view.dataService.dataSelected, this.formModel, this.popupTitle, this.funcID, this.view.dataService]
+
+      );
       this.dialog.closed.subscribe((returnData) => {
-        this.view.dataService.clear();        
-        this.view.dataService.dataSelected=null;
+        this.view.dataService.clear();
+        this.view.dataService.dataSelected = null;
       });
     });
   }

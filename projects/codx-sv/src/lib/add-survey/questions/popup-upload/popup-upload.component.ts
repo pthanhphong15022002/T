@@ -81,35 +81,47 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
-  onSave(referType) {
-    this.generateGuid();
-    let recID = JSON.parse(JSON.stringify(this.guidID));
-    var dataUpload: any;
-    if (referType == 'P') dataUpload = this.dataImg;
-    else dataUpload = this.dataVideo;
-    delete dataUpload['recID'];
-    delete dataUpload['id'];
-    delete dataUpload['uploadId'];
-    dataUpload.history = null;
-    dataUpload.objectType = this.functionList.entityName;
-    dataUpload.objectID = recID;
-    var result = {
-      referType: referType,
-      dataUpload: [dataUpload],
-    };
-    this.api
-      .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', dataUpload)
-      .subscribe((res) => {
-        if (res) {
-          if (this.modeFile == 'change') {
-            this.SVServices.deleteFile(
-              this.data.recID,
-              this.functionList.entityName
-            ).subscribe();
+  onSave(referType, youtube = false) {
+    if (youtube) {
+      let resultY = {
+        referType: referType,
+        dataUpload: this.url,
+        youtube: true,
+        videoID: this.videoID,
+      };
+      this.dialog.close(resultY);
+    } else {
+      this.generateGuid();
+      let recID = JSON.parse(JSON.stringify(this.guidID));
+      var dataUpload: any;
+      if (referType == 'P') dataUpload = this.dataImg;
+      else dataUpload = this.dataVideo;
+      delete dataUpload['recID'];
+      delete dataUpload['id'];
+      delete dataUpload['uploadId'];
+      dataUpload.history = null;
+      dataUpload.objectType = this.functionList.entityName;
+      dataUpload.objectID = recID;
+      let result = {
+        referType: referType,
+        dataUpload: [dataUpload],
+        youtube: false,
+        videoID: null,
+      };
+      this.api
+        .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', dataUpload)
+        .subscribe((res) => {
+          if (res) {
+            if (this.modeFile == 'change') {
+              this.SVServices.deleteFile(
+                this.data.recID,
+                this.functionList.entityName
+              ).subscribe();
+            }
+            this.dialog.close(result);
           }
-          this.dialog.close(result);
-        }
-      });
+        });
+    }
   }
 
   getSrcVideo(data) {
@@ -178,6 +190,8 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
         var obj = {
           referType: referType,
           dataUpload: files,
+          youtube: false,
+          videoID: null,
         };
         this.dialog.close(obj);
       }
@@ -221,9 +235,14 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   urlEmbedSafe: any;
   iframeMarkup: any;
+  url: any;
+  videoID: any;
   getURLEmbed(url) {
     const ID = this.getEmbedID(url);
     var urlEmbed = `//www.youtube.com/embed/${ID}`;
+    this.url = urlEmbed;
+    this.videoID = ID;
     this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(urlEmbed);
+    console.log('check url img', this.url);
   }
 }
