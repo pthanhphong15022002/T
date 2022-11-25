@@ -22,6 +22,7 @@ import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
 import { OkrEditComponent } from './okr/okr-edit/okr-edit.component';
 import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
 import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
+import { PopupCheckInComponent } from './popup/popup-check-in/popup-check-in.component';
 
 const routes: Routes = [
   {
@@ -74,7 +75,8 @@ const routes: Routes = [
     OkrTargetsComponent,
     OkrEditComponent,
     OkrReviewsComponent,
-    OKRTasksComponent
+    OKRTasksComponent,
+    PopupCheckInComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

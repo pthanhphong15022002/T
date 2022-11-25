@@ -26,6 +26,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 
 
 @Component({
@@ -36,7 +37,9 @@ import { CodxOmService } from '../../codx-om.service';
 export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   
   views: Array<ViewModel> | any = [];
+  @ViewChild('checkin') checkin: TemplateRef<any>;
   @ViewChild('alignKR') alignKR: TemplateRef<any>;
+  @ViewChild('attachment') attachment: AttachmentComponent;
 
   dialogRef: DialogRef;
   formModel: FormModel;
@@ -45,6 +48,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   dataOKR=[];
   openAccordion = [];
   dataKR:any;
+  dialogCheckIn: DialogRef;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -94,6 +98,30 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
       
     }
   }
+  //Check-in region
+  checkIn(evt:any, kr:any){   
 
+      this.dialogCheckIn = this.callfc.openForm(
+        PopupCheckInComponent,'',800,500,"OMT01",
+        [kr,this.formModel]          
+      );
+  }
 
+  checkinSave(){
+
+  }
+  checkinCancel(){
+    this.dialogCheckIn.close();
+  }
+  
+  popupUploadFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileCount(evt:any){
+    
+  }
+
+  fileAdded(evt:any){
+
+  }
 }
