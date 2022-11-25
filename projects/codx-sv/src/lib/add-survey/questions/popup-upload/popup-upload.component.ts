@@ -32,7 +32,7 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   functionList: any;
   user: any;
-  predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
+  predicate = `(ObjectType=@0 or ObjectType=@1) && IsDelete=@2 && CreatedBy=@3 && ReferType=@4`;
   dataValueImage: any;
   dataValueVideo: any;
   dtService: any;
@@ -70,8 +70,8 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.data = dt.data?.data;
     this.functionList = dt.data.functionList;
     this.user = auth.get();
-    this.dataValueImage = `WP_Comments;false;${this.user?.userID};image`;
-    this.dataValueVideo = `WP_Comments;false;${this.user?.userID};video`;
+    this.dataValueImage = `WP_Comments;SV_Surveys;false;${this.user?.userID};image`;
+    this.dataValueVideo = `WP_Comments;SV_Surveys;false;${this.user?.userID};video`;
     var dataSv = new CRUDService(injector);
     dataSv.request.gridViewName = 'grvFileInfo';
     dataSv.request.entityName = 'DM_FileInfo';

@@ -105,6 +105,8 @@ export class QuestionsComponent
   indexSessionA = 0;
   indexQuestionA = 0;
   @Input() changeModeQ: any;
+  @Input() formModel: any;
+  @Input() dataService: any;
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
@@ -531,8 +533,8 @@ export class QuestionsComponent
 
   addQuestionOther() {
     var option = new DialogModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    option.DataService = this.dataService;
+    option.FormModel = this.formModel;
     var dialog = this.callfc.openForm(
       TemplateSurveyOtherComponent,
       '',
@@ -592,8 +594,8 @@ export class QuestionsComponent
             clearInterval(myInterval);
             var obj = { dataSurvey: res.event, dataQuestion: dataQuestion };
             var option = new SidebarModel();
-            option.DataService = this.view.dataService;
-            option.FormModel = this.view.formModel;
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
             var dialog = this.callfc.openSide(
               PopupQuestionOtherComponent,
               obj,
