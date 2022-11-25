@@ -52,7 +52,6 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.title = this.titleAction;
   }
 
   ngOnInit(): void {
@@ -159,7 +158,7 @@ export class PopupAddProcessesComponent implements OnInit {
     //Chưa có mssg code
     if (this.isCheckFromToDate(this.process.activedOn)) {
       this.notiService.notify(
-        'Vui lòng chọn ngày hiệu lực lớn hơn hoặc bằng ngày hiện tại!'
+        'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
       );
       return;
     }
