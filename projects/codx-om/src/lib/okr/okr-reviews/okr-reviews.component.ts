@@ -27,27 +27,25 @@ export class OkrReviewsComponent extends UIComponent {
       console.log(res);
       this.reviewType = res?.datas;
     });
-
-    var dataRequest = new DataRequest();
-    dataRequest.funcID = 'OMT01';
-    dataRequest.entityName = 'OM_OKRs';
-    dataRequest.page = 1;
-    dataRequest.pageSize = 20;
-    dataRequest.predicate = 'ParentID=null';
-    this.omServices.getOKR(dataRequest).subscribe((item: any) => {
-      if (item) this.dataOKR = this.dataOKR.concat(item);
-    });
   }
 
   clickMF(e: any) {}
 
-  getItemOKR(i: any, recID: any) {
-    this.openAccordion[i] = !this.openAccordion[i];
-    if (this.dataOKR[i].child && this.dataOKR[i].child.length <= 0)
-      this.omServices.getKRByOKR(recID).subscribe((item: any) => {
-        if (item) this.dataOKR[i].child = item;
-      });
-  }
-
   changeCalendar(event) {}
+
+  addReview(data) {
+    let type = data.value;
+    switch (type) {
+      case '1':
+        break;
+      case '2':
+        break;
+      case '3':
+        break;
+      case '4':
+        break;
+      default:
+        break;
+    }
+  }
 }
