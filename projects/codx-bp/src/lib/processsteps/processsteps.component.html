@@ -58,13 +58,11 @@
               (mouseenter)="openMoreFunction(item,p)"
               placement="left bottom top"
             > -->
-            <div
-            class="d-flex"
-          >
+            <div class="d-flex">
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
               ></i>
-              <div class="test-check me-4 mb-2 ">{{ item.stepName }}</div>
+              <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
             </div>
           </ng-container>
         </div>
@@ -160,24 +158,6 @@
           heightScroll="100"
         >
         </codx-attachment>
-        <!-- <ng-container *ngFor="let item of data?.items">
-          <codx-attachment
-            #attachment
-            [objectType]="view.formModel.entityName"
-            [objectId]="item?.recID"
-            hideFolder="1"
-            hideImageUpload="1"
-            hideImageThumb="0"
-            hideUploadBtn="1"
-            hideDes="1"
-            type="inline"
-            allowMultiFile="1"
-            [formModel]="view.formModel"
-            [functionID]="funcID"
-            displayThumb="full"
-          >
-          </codx-attachment>
-        </ng-container> -->
       </div>
     </div>
   </div>
@@ -238,10 +218,8 @@
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
 <ng-template #itemViewList>
   <div class="card">
-    <div
-      
-    >
-    <!-- <div> -->
+    <div>
+      <!-- <div> -->
       <!-- <div class="mb-5">
         <h4 class="fw-bold text-gray-900 mb-104">
           {{ process?.processName }}
@@ -309,7 +287,7 @@
           </div>
         </div>
       </div> -->
-      
+
       <ng-container
         *ngIf="view.dataService.data?.length == 0"
         [ngTemplateOutlet]="tmpEmpty"
@@ -336,10 +314,14 @@
                     </div> -->
 
                     <codx-temp-full
+                      (clickMF)="clickMF($event, item)"
+                      [typeMF]="'hover'"
+                      [formModel]="view.formModel"
                       [titleTmp]="titleTmp"
                       [desc]="item?.memo"
                       [footer]="footerBase"
                       [dataItem]="item"
+                      [moreFuncCss]="'me-15'"
                     >
                     </codx-temp-full>
                   </div>
@@ -378,11 +360,15 @@
                                 <span class="icon-reorder"></span>
                               </div> -->
                               <codx-temp-full
+                                (clickMF)="clickMF($event, item1)"
+                                [typeMF]="'hover'"
+                                [formModel]="view.formModel"
                                 [titleTmp]="titleTmp"
                                 [desc]="item1?.memo"
                                 [dataItem]="item1"
                                 [desc2Tmp]="cardTitleTmp"
                                 [footer]="cardImgFooter"
+                                [moreFuncCss]="'me-15'"
                               >
                               </codx-temp-full>
 
@@ -454,14 +440,40 @@
       >&nbsp;
       <span>{{ data?.interval | vll: vllInterval:"text" | async }}</span>
     </span>
-    <codx-mfunc
-      type="hover"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data)"
-      [isBookMark]="false"
-      [dataItem]="data"
-    >
-    </codx-mfunc>
+    <div class="has-action-menu">
+      <div class="action-menu">
+        <ng-container #moreFC>
+          <div class="moreFC rounded-4">
+            <ng-container *ngIf="data.stepType == 'P'">
+              <ng-container *ngFor="let menu of childFuncOfP">
+                <div class="icon-MF" (click)="clickMenu(data, menu)">
+                  <span
+                    class="{{ menu.icon }} icon-20 text-hover-primary mb-2"
+                    [ngbPopover]="hoverViewText(menu.text)"
+                    triggers="mouseenter:mouseleave"
+                    placement="right left"
+                    [autoClose]="'outside'"
+                  ></span>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="data.stepType == 'A'">
+              <ng-container *ngFor="let menu of childFuncOfA">
+                <div class="icon-MF" (click)="clickMenu(data, menu)">
+                  <span
+                    class="{{ menu.icon }} icon-20 text-hover-primary mb-2"
+                    [ngbPopover]="hoverViewText(menu.text)"
+                    triggers="mouseenter:mouseleave"
+                    placement="right left"
+                    [autoClose]="'outside'"
+                  ></span>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
   </div>
 </ng-template>
 
