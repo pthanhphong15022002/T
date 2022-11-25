@@ -44,6 +44,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   dtStatus:any;
   dataOKR=[];
   openAccordion = [];
+  dataKR:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -57,6 +58,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.dialogRef = dialogRef;
     this.formModel = dialogData.data[2];    
     this.dataOKR.push(dialogData.data[1]);
+    this.dataKR=dialogData.data[0];
     
   }
   getItemOKR(i:any,recID:any)

@@ -1,6 +1,6 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end">
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" (click)="onSaveForm()">
         <i class="icon-save"></i>
         <codx-label
             default="Lưu"
@@ -27,8 +27,8 @@
             </codx-label>
             <codx-input
                 field="assetID"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
                 >
             </codx-input>
         </div>
@@ -39,8 +39,8 @@
                 <div>
                     <codx-input
                         field="assetCategory"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                     ></codx-input>
                 </div>
             </div>
@@ -48,8 +48,8 @@
                 <codx-label fiedName="IsAllowReturn" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                         field="isAllowReturn"
                     ></codx-input>
                 </div>
@@ -62,8 +62,8 @@
             </codx-label>
             <codx-input
                 field="assetNo"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
                 >
             </codx-input>
         </div>
@@ -74,8 +74,8 @@
                 <div>
                     <codx-input
                         field="isReturned"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                     ></codx-input>
                 </div>
             </div>
@@ -83,8 +83,8 @@
                 <codx-label fiedName="ReturnedDate" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                         field="returnedDate"
                     ></codx-input>
                 </div>
@@ -97,8 +97,8 @@
             </codx-label>
             <codx-input
                 field="note"
-                [formModel]="form.formModel"
-                [Group]="form.formGroup"
+                [formModel]="formModel"
+                [Group]="formGroup"
                 >
             </codx-input>
         </div>
@@ -109,8 +109,8 @@
                 <div>
                     <codx-input
                         field="issuedDate"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                     ></codx-input>
                 </div>
             </div>
@@ -118,8 +118,8 @@
                 <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                         field="issuedBy"
                     ></codx-input>
                 </div>
@@ -133,8 +133,8 @@
                 <div>
                     <codx-input
                         field="receivedDate"
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                     ></codx-input>
                 </div>
             </div>
@@ -142,13 +142,12 @@
                 <codx-label fiedName="ReceivedBy" [formModel]="formModel"></codx-label>
                 <div>
                     <codx-input
-                        [formModel]="form.formModel"
-                        [Group]="form.formGroup"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
                         field="receivedBy"
                     ></codx-input>
                 </div>
             </div>
-            
         </div>
     </ng-template>
 </codx-form>

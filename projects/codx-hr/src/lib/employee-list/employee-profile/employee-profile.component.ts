@@ -1,3 +1,4 @@
+import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
 import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
 import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
 import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
@@ -620,9 +621,10 @@ export class EmployeeProfileComponent extends UIComponent {
 
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAllocatedPropertyComponent,
+      EmployeeAllocatedPropertyDetailComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
         headerText: 'Tài sản cấp phát',
       },
       option
