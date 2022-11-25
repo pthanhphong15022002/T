@@ -28,7 +28,7 @@ import { CodxEpService } from '../../../codx-ep.service';
 import { Equipments } from '../../../models/equipments.model';
 
 @Component({
-  selector: 'popup-add-cardTran',
+  selector: 'popup-add-n',
   templateUrl: 'popup-add-cardTrans.component.html',
   styleUrls: ['popup-add-cardTrans.component.scss'],
 })
@@ -60,15 +60,15 @@ export class PopupAddCardTransComponent extends UIComponent {
     this.data = dialogData?.data[0];
     this.data.transDate = new Date();
     this.formModel = dialogData?.data[1];
-    this.headerText = dialogData?.data[2];    
-    this.funcID = dialogData?.data[3];  
+    this.headerText = dialogData?.data[2];
+    this.funcID = dialogData?.data[3];
     this.dialogRef = dialogRef;
-    this.dialogRef.formModel = this.formModel;    
+    this.dialogRef.formModel = this.formModel;
     this.dialogRef.dataService = dialogData?.data[4];
 
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   onInit(): void {
     this.initForm();
@@ -92,12 +92,12 @@ export class PopupAddCardTransComponent extends UIComponent {
   }
 
   onSaveForm() {
-    if(this.funcID=="EPT22"){      
-      this.data.transType='1';
-    }else{      
-      this.data.transType='2';
+    if (this.funcID == "EPT22") {
+      this.data.transType = '1';
+    } else {
+      this.data.transType = '2';
     }
-    this.data.resourceType='2';
+    this.data.resourceType = '2';
     this.fGroupCardTrans.patchValue(this.data);
     if (this.fGroupCardTrans.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupCardTrans, this.formModel);
