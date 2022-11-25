@@ -99,12 +99,14 @@ export class EmployeeProfileComponent extends UIComponent {
   crrVisa: any = {};
   //work permit
   lstWorkPermit: any;
+  //jobInfo
+  jobInfo: any;
 
   formModel;
   itemDetail;
 
   hrEContract;
-  crrTab: number = 2;
+  crrTab: number = 0;
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -223,6 +225,9 @@ export class EmployeeProfileComponent extends UIComponent {
             console.log('w permit', res);
             this.lstWorkPermit = res;
           });
+
+        //Job info
+        //this.hrService.getJobInfo()
       }
     });
     this.router.params.subscribe((param: any) => {
