@@ -354,7 +354,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
           result = result.concat(this.dmSV.listFiles);
         this.data = result;
-        //this.data = [...this.data];
+        this.data = [...this.data];
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -817,7 +817,8 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
-    this.getDataFile("");
+    this.dmSV.page = 1;
+    this.getDataFile(this.dmSV.folderID);
     //  this.data = [];
   }
   viewChanging(event) {
@@ -1083,7 +1084,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       //this.data = [];
       this.clearWaitingThumbnail();
       // this.dmSV.listFolder = [];
-      this.dmSV.listFiles = [];
+      //this.dmSV.listFiles = [];
       this.fileService.getTotalHdd().subscribe((item) => {
         //  totalUsed: any;
         // totalHdd: any;
