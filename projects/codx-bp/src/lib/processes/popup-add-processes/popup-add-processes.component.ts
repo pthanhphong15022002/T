@@ -41,7 +41,11 @@ export class PopupAddProcessesComponent implements OnInit {
     this.action = dt.data[0];
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
-
+    this.cache.functionList(this.funcID).subscribe(res=>{
+      if(res){
+        this.title = this.titleAction + ' ' + res.customName;
+      }
+    })
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
