@@ -298,6 +298,7 @@ export class ProcessesComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
+      // option.zIndex = 499;
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['add', this.titleAction],
@@ -711,14 +712,14 @@ export class ProcessesComponent
     } else p.close();
   }
 
-  
+
   openPopup() {
     if (this.tmpListItem) {
       let option = new DialogModel();
       let popup = this.callfc.openForm(this.tmpListItem, "", 400, 500, "", null, "", option);
       popup.closed.subscribe((res: any) => {
         if (res) {
-          
+
         }
       });
     }
