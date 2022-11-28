@@ -63,6 +63,20 @@ export class PopupAddPermissionComponent implements OnInit {
     this.per.byPermission = this.byPermission;
     this.per.ccPermission = this.ccPermission;
     for (var i = 0; i < this.per.toPermission.length; i++) {
+      if(this.startDate != null && this.endDate != null){
+        if (this.startDate >= this.endDate) {
+          this.notificationsService.notify(
+            'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
+          );
+          return;
+        }
+        if (this.isCheckFromToDate(this.process.activedOn)) {
+          this.notificationsService.notify(
+            'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
+          );
+          return;
+        }
+      }
       this.per.toPermission[i].startDate = this.startDate;
       this.per.toPermission[i].endDate = this.endDate;
       if (!this.isShare) {
@@ -120,6 +134,12 @@ export class PopupAddPermissionComponent implements OnInit {
   //#endregion
 
   //#region event
+  isCheckFromToDate(toDate) {
+    var to = new Date(toDate);
+    if (to <= new Date()) return true;
+    else return false;
+  }
+
   onUserEvent($event, type: string) {
     console.log($event);
       switch (type) {

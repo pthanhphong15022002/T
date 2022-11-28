@@ -31,7 +31,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   all: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
-    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 1000 },
+    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 17 },
   ];
   formModelFlowChart :FormModel ;
   listPhaseName = [] ;
@@ -178,6 +178,9 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     else {
       this.notificationsService.notifyCode("SYS018");
     }
+  }
+  openPopUp(){
+
   }
 
 }
