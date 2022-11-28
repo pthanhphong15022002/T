@@ -1,7 +1,15 @@
+import { TabModel } from './../../../../../../codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { InvoicesLine } from '../../../models/invoice.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import {
   EditSettingsModel,
   GridComponent,
@@ -12,11 +20,13 @@ import {
   CacheService,
   CallFuncService,
   CodxFormComponent,
+  CodxGridviewV2Component,
   DialogData,
   DialogRef,
   FormModel,
   Util,
 } from 'codx-core';
+import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-add-edit',
@@ -31,6 +41,7 @@ export class AddEditComponent implements OnInit {
   invoices: any;
   action: string;
   active = true;
+  gridHeight: number;
   fmGoods: FormModel = {
     formName: 'EIInvoiceLines',
     gridViewName: 'grvEIInvoiceLines',
@@ -95,8 +106,15 @@ export class AddEditComponent implements OnInit {
     },
   ];
 
-  @ViewChild('grid') public grid: GridComponent;
+  tabs: TabModel[] = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+  ];
+  @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
+  @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
+  @ViewChild('invoicesRef') invoicesRef: ElementRef;
+  @ViewChild('noteRef') noteRef: ElementRef;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -142,54 +160,14 @@ export class AddEditComponent implements OnInit {
   //#endregion
 
   //#region Event
-  actionComplete(e) {
-    if (e.requestType === 'save' && e.action === 'add') {
-      this.grid.selectRow(e.index);
-      this.grid.startEdit();
-    }
-    return;
+  gridCreated(e) {
+    let hBody, hTab, hNote;
+    if (this.cardbodyRef)
+      hBody = this.cardbodyRef.nativeElement.parentElement.offsetHeight;
+    if (this.invoicesRef) hTab = (this.invoicesRef as any).element.offsetHeight;
+    if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
-    if (e.requestType === 'save' && e.action === 'edit') {
-      if (
-        e.previousData &&
-        JSON.stringify(e.data) === JSON.stringify(e.previousData)
-      ) {
-        e.cancel = true;
-        return;
-      }
-      this.grid.updateRow(e.rowIndex, e.data);
-    }
-  }
-
-  keyPressed(e) {
-    if (e.keyCode === 13) {
-      e.cancel = true;
-      if (this.grid.isEdit) {
-        this.grid.updateRow(this.selectedIndex, this.selectedItem);
-      }
-      if ((e.target as HTMLElement).classList.contains('e-rowcell')) {
-        const rIndex = Number((e.target as HTMLElement).getAttribute('Index'));
-        const cIndex = Number(
-          (e.target as HTMLElement).getAttribute('aria-colindex')
-        );
-        const i = { rowIndex: rIndex, cellIndex: cIndex };
-        const field: string = this.grid.getColumns()[cIndex].field;
-        this.grid.editCell(rIndex, field);
-      }
-    }
-    if (e.key === 'Escape') {
-      this.grid.closeEdit();
-    }
-  }
-
-  getSelected(e) {
-    if (e && e.data) {
-      this.fmGoods.currentData = e.data;
-      this.bindData(e.data);
-      this.selectedItem = e.data;
-      this.selectedIndex = e.rowIndex;
-      console.log(this.selectedIndex, this.selectedItem);
-    }
+    this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
   onChangedValue(e, data) {
@@ -212,28 +190,11 @@ export class AddEditComponent implements OnInit {
   }
 
   addRow() {
-    let line = {};
     let idx = this.data.length;
-    line['no'] = idx + 1;
-    this.grid.addRecord(line, idx);
+    this.grid.addRow(null, idx);
   }
-
-  navChange(e) {}
-  //#endregion
 
   //#region Function
-  bindData(obj: any) {
-    var objValue: any = {};
-    if (!this.fgGoods || !this.fgGoods.controls) return;
-    var fields = Object.keys(this.fgGoods.controls);
-    fields.forEach((element) => {
-      if (obj) {
-        objValue[element] = obj[element];
-      }
-    });
-    this.fgGoods!.patchValue(objValue);
-  }
-
   bindingTaxInfor(data) {
     this.form.formGroup.patchValue({ custName: data['custName'] });
     this.form.formGroup.patchValue({ adddess: data['address'] });
