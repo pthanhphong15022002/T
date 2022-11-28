@@ -23,7 +23,7 @@
           <!-- <div class="d-flex justify-content-between mt-4">
         <div class="p-2"> -->
           <!-- ///noi dung -->
-          <div class="mb-5">
+          <div class="mb-4">
             <h4 class="fw-bold text-gray-900 mb-104">
               {{ process?.processName }}
             </h4>
@@ -174,9 +174,9 @@
         data-kt-scroll="true"
         data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".sprints-task-header"
-        data-kt-scroll-wrappers=".stepper-body .no-header"
-        [attr.data-kt-scroll-offset]="offset"
+        data-kt-scroll-dependencies=".sprints-task-header  "
+        data-kt-scroll-wrappers=".stepper-body .no-header .page-viewdetail"
+        [attr.data-kt-scroll-offset]="'75px'"
       >
         <ng-container *ngIf="name == 'ViewList'">
           <ng-container *ngIf="process && childFunc?.length > 0">
@@ -234,7 +234,7 @@
                   </button>
                 </div>
                 <div
-                  class="p-2 bd-highlight align-self-center cursor-pointer"
+                  class="p-2 bd-highlight align-self-center cursor-pointer text-primary text-hover-danger"
                   (click)="print()"
                 >
                   <span class="fa-solid fa-lg fa-print mx-2"></span
@@ -245,10 +245,10 @@
                   ></codx-label>
                 </div>
                 <div
-                  class="p-2 bd-highlight align-self-center cursor-pointer"
+                  class="p-2 bd-highlight align-self-center cursor-pointer text-primary text-hover-danger"
                   (click)="download()"
                 >
-                  <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
+                  <span class="fa-solid  fa-lg fa-arrow-down mx-2"></span
                   ><codx-label
                     default="Tải về"
                     [fiedName]="'Download'"

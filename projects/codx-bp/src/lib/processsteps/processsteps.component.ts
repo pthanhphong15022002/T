@@ -256,11 +256,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
       // {
-      //   type: ViewType.content,
+      //   type: ViewType.chart,
       //   active: false,
       //   sameData: false,
-      //   icon: 'icon-bubble_chart',
-      //   text: 'Flowchart',
       //   model: {
       //     panelRightRef: this.flowChart,
       //   },

@@ -21,7 +21,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   viewMode = '16';
   funcID="BPT11" //testsau klaay từ more ra
   name = 'ViewList';
-  offset = '59px';
+  offset = '75px';
   dialog!: DialogRef;
   data: any;
   moreFunc: any;
@@ -101,7 +101,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       }
     });
     item.isActive = true;
-    if( this.name=="Flowchart") this.offset = '0px' ;else this.offset ="59px"
+    // if( this.name=="Flowchart") this.offset = '0px' ;else this.offset ="59px"
     this.changeDetectorRef.detectChanges();
   }
 
