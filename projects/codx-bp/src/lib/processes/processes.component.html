@@ -45,17 +45,22 @@
         <div class="d-flex flex-wrap justify-content-between my-1">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
-              <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'P'"></lib-popup-phases-activities>
-              <!-- <span class="icon-server text-dark icon-14 me-1"></span>
+              <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'P'"></lib-popup-phases-activities> -->
+              <span class="icon-server text-dark icon-14 me-1"></span>
               <span #phases class="">
                 {{
                 data.phases
                 }}
-              </span> -->
+              </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'A'"></lib-popup-phases-activities>
-
+              <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'A'"></lib-popup-phases-activities> -->
+              <span
+                  class="icon-format_list_numbered text-danger icon-16 me-1"
+                ></span>
+                <span #activities class="">
+                  {{data.activities}}
+                </span>
             </div>
             <div class="d-flex me-3 align-items-center">
               <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
@@ -92,25 +97,26 @@
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
-              <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'P'"></lib-popup-phases-activities>
-              <!-- <span class="icon-server text-dark icon-14 me-1"></span>
+              <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"  [openDelay]="500"
+              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement=""></span>
               <span #phases class="">
                 {{
                 data.phases
                 }}
-              </span> -->
-            </div>
-            <div class="d-flex me-3 align-items-center">
-              <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'A'">
-              </lib-popup-phases-activities>
-
-            </div>
-            <div class="d-flex me-3 align-items-center">
-              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
-                (mouseleave)="p.close()" placement="right left">
-                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments">
-                </codx-attachment-temp>
               </span>
+            </div>
+            <div class="d-flex me-3 align-items-center">
+              <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover" [ngbPopover]="popperActivitiest" [openDelay]="500"
+              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="bottom"></span>
+              <span #activities class="">
+                {{data.activities}}
+              </span>
+            </div>
+            <div class="d-flex me-3 align-items-center" >
+              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
+              (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom">
+              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
+              ></codx-attachment-temp></span>
             </div>
             <!-- <div class="d-flex me-3 align-items-center" *ngIf="data.attachments == 0">
               <span class="icon-attach_file text-primary icon-16 me-1"></span>
@@ -187,6 +193,16 @@
 <ng-template #popperAttachment>
   <span>
     <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperPhases>
+  <span style="height: 50px;">
+    <codx-label name="phases" [formModel]="view.formModel" default="Phases"></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperActivitiest>
+  <span>
+    <codx-label name="activities" [formModel]="view.formModel" default="Activities"></codx-label>
   </span>
 </ng-template>
 
@@ -391,4 +407,12 @@
   <button type="button" class="btn btn-primary" (click)="onSave()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+<ng-template #tmpListItem let-dialog>
+  <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách file đính kèm">
+  </codx-form>
+  <ng-template #body>
+      <codx-thumbnail class="popup-attachment" [files]="[]" [formModel]="null"></codx-thumbnail>
+  </ng-template>
 </ng-template>

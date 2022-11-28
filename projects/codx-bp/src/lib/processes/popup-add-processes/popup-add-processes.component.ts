@@ -153,19 +153,20 @@ export class PopupAddProcessesComponent implements OnInit {
       return;
     }
     //Chưa có mssg code
-    if (this.process.activedOn >= this.process.expiredOn) {
-      this.notiService.notify(
-        'Vui lòng chọn ngày hiệu lực nhỏ hơn ngày hết hạn!'
-      );
-      return;
-    }
-    //Chưa có mssg code
     if (this.isCheckFromToDate(this.process.activedOn)) {
       this.notiService.notify(
         'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
       );
       return;
     }
+    //Chưa có mssg code
+    if (this.process.activedOn >= this.process.expiredOn) {
+      this.notiService.notify(
+        'Vui lòng chọn ngày hiệu lực nhỏ hơn ngày hết hạn!'
+      );
+      return;
+    }
+
 
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
