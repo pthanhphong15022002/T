@@ -28,7 +28,10 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
-import { CodxEpModule } from 'projects/codx-ep/src/public-api';
+//import { CodxEpModule } from 'projects/codx-ep/src/public-api';
+import { CodxEp4Module } from 'projects/codx-ep/src/lib/room/codx-ep4.module';
+import { CodxEp7Module } from 'projects/codx-ep/src/lib/car/codx-ep7.module';
+import { CodxEp8Module } from 'projects/codx-ep/src/lib/stationery/codx-ep8.module';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
@@ -37,6 +40,7 @@ import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
+
 
 registerLocaleData(localeFr);
 
@@ -101,7 +105,10 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ERMModule,
     CodxCoreModule.forRoot({ environment }),
     TMModule.forRoot({ environment }),
-    CodxEpModule.forRoot({ environment }),
+    //CodxEpModule.forRoot({ environment }),
+    CodxEp4Module.forRoot({ environment }),
+    CodxEp7Module.forRoot({ environment }),
+    CodxEp8Module.forRoot({ environment }),
     CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
     CodxReportModule.forRoot({ environment }),

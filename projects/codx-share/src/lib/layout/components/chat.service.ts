@@ -13,6 +13,7 @@ export class ChatService{
     }
     listeningChatMessage() {
         this.signalRService.signalChat.subscribe((signData: any)=>{
+            debugger
             let topic = signData.topic;
             let data = signData.data;
             switch(topic){

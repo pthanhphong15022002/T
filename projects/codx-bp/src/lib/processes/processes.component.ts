@@ -48,6 +48,7 @@ export class ProcessesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
+  @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
@@ -61,6 +62,7 @@ export class ProcessesComponent
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
+
   itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
@@ -296,6 +298,7 @@ export class ProcessesComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
+      // option.zIndex = 499;
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
         ['add', this.titleAction],
@@ -654,7 +657,7 @@ export class ProcessesComponent
 
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
-    dialogModel.zIndex = 900;
+    dialogModel.zIndex = 999;
     var dialog = this.callfc.openForm(
       PopupViewDetailProcessesComponent,
       '',
@@ -667,14 +670,13 @@ export class ProcessesComponent
     );
 
     dialog.closed.subscribe((e) => {
-      if(e && data.recID){
+      if (e && data.recID) {
         this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          if(process)
-          this.view.dataService.update(process).subscribe();
+          if (process) this.view.dataService.update(process).subscribe();
           this.detectorRef.detectChanges();
-          })
+        });
       }
-    })
+    });
   }
 
   approval($event) {}
@@ -708,4 +710,18 @@ export class ProcessesComponent
       if (emp.memo != null) p.open();
     } else p.close();
   }
+
+
+  openPopup() {
+    if (this.tmpListItem) {
+      let option = new DialogModel();
+      let popup = this.callfc.openForm(this.tmpListItem, "", 400, 500, "", null, "", option);
+      popup.closed.subscribe((res: any) => {
+        if (res) {
+
+        }
+      });
+    }
+  }
+
 }
