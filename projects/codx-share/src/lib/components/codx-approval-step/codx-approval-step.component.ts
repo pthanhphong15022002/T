@@ -66,7 +66,7 @@ export class CodxApprovalStepComponent
 
   initForm() {
     if (this.transID != null) {
-      if (this.approveStatus == '1') {
+      if (this.approveStatus == '1' || this.approveStatus == '2') {
         this.esService.getFormModel('EST04').then((res) => {
           if (res) {
             let fmApprovalStep = res;

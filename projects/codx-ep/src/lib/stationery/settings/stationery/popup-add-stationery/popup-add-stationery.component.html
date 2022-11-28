@@ -1,0 +1,320 @@
+<codx-layout-add
+  #form
+  [title]="title"
+  [tabInfo]="tabInfo"
+  [formModel]="formModel"
+  [subHeader]=""
+  [footer]="footer"
+  [dialog]="dialogRef"
+  (buttonClick)="buttonClick($event)"
+  (setTitle)="setTitle($event)"
+  [tabContent]="[tabGeneralInfo, tabQuotaInfo, tabMoreInfo]"
+  [data]="data"
+  *ngIf="isAfterRender"
+>
+  <ng-template #tabGeneralInfo>
+    <ng-container *ngIf="form && form.formGroup">
+      <div id="rome" class="tabpanel">
+        <div class="row">
+          <div class="form-group col-8">
+            <codx-label
+              class="fw-bold"
+              fiedName="ResourceName"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              ControlName="resourceName"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="form-group col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="UMID"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              ControlName="uMID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-8">
+            <codx-label
+              class="fw-bold"
+              fiedName="GroupID"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+
+            <codx-input
+              ControlName="groupID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group col-4">
+            <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+            </codx-label>
+
+            <codx-input
+              ControlName="resourceID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              [disabled]="autoNumDisable"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label
+              class="fw-bold"
+              fiedName="Location"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              type="combobox"
+              refValue="EP_Warehouses"
+              field="location"
+              [crrValue]="this.defaultWarehouse"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label
+              class="fw-bold"
+              fiedName="Owner"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              type="text"
+              field="owner"
+              [crrValue]="this.warehouseOwnerName"
+              (valueChange)="valueChange($event)"
+              disabled="true"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="form-group col-12">
+            <codx-label
+              class="fw-bold"
+              fiedName="Note"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+
+            <codx-input
+              ControlName="note"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-start mb-4">
+          <div *ngIf="data?.recID" class="upload-img">
+            <codx-img
+              #imageUpLoad
+              [width]="100"
+              imageType="circle"
+              [objectType]="'EP_Resources'"
+              [objectName]="data.resourceName"
+              aria-disabled="false"
+              [funcId]="formModel?.funcID"
+              [isAllowEdit]="true"
+              [objectId]="imgRecID"
+              [objectName]="data.resourceName"
+            >
+            </codx-img>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="ms-4">
+              <div class="m-2 d-flex align-items-center">
+                <span class="me-2 fw-bold text-black-50">Màu sắc: </span>
+                <codx-colorpicker
+                  field="color"
+                  mode="Picker"
+                  [value]="data?.color ? data?.color : '#fff'"
+                  (valueChange)="valueChange($event)"
+                ></codx-colorpicker>
+              </div>
+              <div class="m-2">
+                <span class="fw-bold text-black-50">Tồn kho: </span>
+                <span class="fw-bold">{{ data?.currentQty }}</span>
+              </div>
+              <div class="m-2">
+                <span class="fw-bold text-black-50">Đã dành hàng: </span>
+                <span class="fw-bold">{{ data?.reservedQty }}</span>
+              </div>
+              <div class="m-2">
+                <span class="fw-bold text-black-50">Sẵn sàng xuất: </span>
+                <span class="fw-bold">{{ data?.availableQty }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #tabQuotaInfo>
+    <table class="table bg-header">
+      <thead>
+        <tr class="border-bottom">
+          <th scope="col">
+            <codx-label
+              class="fw-bold"
+              name="lblQuota"
+              default="Định mức"
+            ></codx-label>
+          </th>
+          <th scope="col" class="text-center">
+            <codx-label
+              class="fw-bold"
+              name="lblEmpLevel"
+              default="Cấp bậc nhân viên"
+            ></codx-label>
+          </th>
+          <th scope="col" class="w-10 text-center"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of quota">
+          <td>
+            {{ item?.quantity }}{{ " / "
+            }}{{ item?.ruleType | vll: "EP013":"text" | async }}
+          </td>
+          <td class="text-center">
+            {{ item?.objectType | vll: "EP015":"text" | async }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
+
+  <ng-template #tabMoreInfo>
+    <ng-container *ngIf="form && form.formGroup">
+      <div id="rome" class="tabpanel">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h4 class="fw-bolder text-gray-800 d-block mb-2">
+            <codx-label
+              name="lblInformation"
+              default="Thông tin khác"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </h4>
+          <span class="icon-layers text-primary fs-1"></span>
+        </div>
+
+        <div class="d-flex row align-items-center mb-4">
+          <div class="col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="AvailableQty"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [disabled]="true"
+              ControlName="availableQty"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="ReservedQty"
+              aria-disabled="false"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [disabled]="true"
+              ControlName="reservedQty"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-4">
+            <codx-label
+              class="fw-bold"
+              fiedName="CurrentQty"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [disabled]="true"
+              ControlName="currentQty"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="d-flex flex-stack mb-4">
+          <div class="col-6">
+            <codx-label
+              class="fw-bold"
+              fiedName="CostPrice"
+              [formModel]="form.formModel"
+            >
+            </codx-label>
+            <codx-input
+              [min]="0"
+              ControlName="costPrice"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            ></codx-input>
+          </div>
+        </div>
+
+        <div class="d-flex flex-column mb-4">
+          <codx-label
+            class="fw-bold"
+            fiedName="Note"
+            [formModel]="form.formModel"
+          >
+          </codx-label>
+
+          <codx-input
+            ControlName="note"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="form.formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-layout-add>
