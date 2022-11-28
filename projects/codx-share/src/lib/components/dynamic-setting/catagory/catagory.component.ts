@@ -9,6 +9,7 @@ import {
 import {
   ApiHttpService,
   CallFuncService,
+  CodxFormScheduleComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -29,7 +30,7 @@ export class CatagoryComponent implements OnInit {
     cpnAlertRules: PopupAddEmailTemplateComponent,
     cpnApprovals: CodxApproveStepsComponent,
     cpnCategories: null,
-    cpnScheduleTask: null,
+    cpnScheduledTasks: CodxFormScheduleComponent,
   };
   category = '';
   title = '';
@@ -39,6 +40,7 @@ export class CatagoryComponent implements OnInit {
   settingValue = [];
   groupSetting = [];
   alertRules = [];
+  schedules = [];
   function: any = {};
   valuelist: any = {};
   dataValue: any = {};
@@ -94,6 +96,7 @@ export class CatagoryComponent implements OnInit {
         if (this.category === '2' || this.category === '7')
           this.getIDAutoNumber();
         else if (this.category === '5') this.getAlertRule();
+        else if (this.category === '6') this.getSchedules();
       }
       this.loadSettingValue();
 
@@ -208,7 +211,21 @@ export class CatagoryComponent implements OnInit {
           // if (!rule) return;
           // data['formGroup'] = null;
           // data['templateID'] = rule.emailTemplate;
-          // this.callfc.openForm(component, '', 800, screen.height, '', data);
+          //this.callfc.openForm(component, '', 800, screen.height, '', value);
+          break;
+        case 'cpnscheduledtasks':
+          var schedule = this.schedules[value];
+          if (!schedule || schedule.stop) return;
+          // data['formGroup'] = null;
+          // data['templateID'] = rule.emailTemplate;
+          this.callfc.openForm(
+            component,
+            '',
+            800,
+            screen.height,
+            '',
+            schedule.recID
+          );
           break;
         default:
           break;
@@ -313,6 +330,27 @@ export class CatagoryComponent implements OnInit {
     }
   }
 
+  getSchedules() {
+    var lstScheduleID = [];
+    if (this.setting) {
+      this.setting.forEach((element) => {
+        if (element.fieldName) lstScheduleID.push(element.fieldName);
+      });
+    }
+    if (lstScheduleID.length > 0) {
+      this.api
+        .execSv<any>('SYS', 'AD', 'ScheduledTasksBusiness', 'GetDicByIDAsync', [
+          lstScheduleID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.schedules = res;
+          }
+          this.changeDetectorRef.detectChanges();
+        });
+    }
+  }
+
   valueChange(evt: any, data: any, autoDefault: any = null) {
     var fieldName = data.fieldName;
     var field = evt.field;
@@ -364,6 +402,22 @@ export class CatagoryComponent implements OnInit {
         rule[field] = value;
         this.api
           .execAction('AD_AlertRules', [rule], 'UpdateAsync')
+          .subscribe((res) => {
+            if (res) {
+            }
+            this.changeDetectorRef.detectChanges();
+            console.log(res);
+          });
+      } else if (this.category === '6') {
+        var schedule = this.schedules[fieldName];
+        if (!schedule) return;
+        if (typeof value == 'string') {
+          value = value === '1';
+        }
+        if (!value === schedule[field]) return;
+        schedule[field] = !value;
+        this.api
+          .execAction('AD_ScheduledTasks', [schedule], 'UpdateAsync')
           .subscribe((res) => {
             if (res) {
             }
