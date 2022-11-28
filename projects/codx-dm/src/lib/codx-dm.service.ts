@@ -451,6 +451,7 @@ export class CodxDMService {
   }
 
   openItem(data: any) {
+    debugger;
     if (!data.fileName) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');
@@ -894,6 +895,7 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
+      if(data?.viewThumb) return environment.urlUpload+"/"+ data.thumbnail;
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
       //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -1285,6 +1287,23 @@ export class CodxDMService {
 
       case 'DMT0202': // chinh sua thu muc
       case 'DMT0209': // properties folder
+      {
+        var breadcumb = [];
+        var breadcumbLink = [];
+        var treeView = view?.currentView?.currentComponent?.treeView;
+        if (treeView) {
+          treeView.textField = 'folderName';
+          var list = treeView.getBreadCumb(data.recID);
+          breadcumb.push(this.menuActive.getValue());
+          breadcumbLink.push(this.idMenuActive);
+          for (var i = list.length - 1; i >= 0; i--) {
+            breadcumb.push(list[i].text);
+            breadcumbLink.push(list[i].id);
+          }
+          this.breadcumbLink = breadcumbLink;
+          this.breakCumArr = breadcumb;
+          this.breadcumb.next(breadcumb);
+        }
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1294,6 +1313,8 @@ export class CodxDMService {
         data.readonly = $event.functionID == 'DMT0209' ? true : false;
         this.callfc.openSide(CreateFolderComponent, data, option);
         break;
+      }
+       
 
       case 'DMT0213': // chinh sua file
         this.callfc.openForm(
