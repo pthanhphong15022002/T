@@ -777,14 +777,7 @@ groupName = "";
       .subscribe((res: any) => {
         if (res) {
 
-           this.signalrService.sendVoteData(data,res,voteType,"VoteMessage");
-          
-           
-          
-          
-          
-
-             
+          //  this.signalrService.sendVoteData(data,res,voteType,"VoteMessage");
                 // data.votes = res[0];
                 // data.totalVote = res[1];
                 // data.listVoteType = res[2];
@@ -798,8 +791,6 @@ groupName = "";
                 //   data.myVoted = true;
                 //   this.checkVoted = true;
                 // }
-                
-          
         }
 
       });

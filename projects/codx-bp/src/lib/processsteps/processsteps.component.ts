@@ -16,6 +16,8 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -61,9 +63,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
+  
   @Input() process?: BP_Processes;
   @Input() viewMode = '6';
   @Input() funcID = 'BPT11';
+  @Input() childFunc = [];
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -95,7 +99,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //view file
   dataChild = [];
   lockParent = false;
-  childFunc = [];
+  // childFunc = [];
   formModelMenu: FormModel;
   vllInterval = 'VL004';
   dataFile: any;
@@ -104,7 +108,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   checkList = [];
   isKanban = true;
   dataHover: any;
-
+  titleAdd = '';
+  childFuncOfA = [];
+  childFuncOfP = [];
+  parentID = '';
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -117,6 +124,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.user = this.authStore.get();
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      if (mf) {
+        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+        if (mfAdd) this.titleAdd = mfAdd?.customName;
+      }
+    });
 
     // view trang
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -138,20 +151,20 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       // }else{
       //   this.getFlowChart(this.process);
       // }
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessStepsBusiness';
-    this.request.method = 'GetProcessStepsWithKanbanAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj; ///de test
+      this.request = new ResourceModel();
+      this.request.service = 'BP';
+      this.request.assemblyName = 'BP';
+      this.request.className = 'ProcessStepsBusiness';
+      this.request.method = 'GetProcessStepsWithKanbanAsync';
+      this.request.idField = 'recID';
+      this.request.dataObj = this.dataObj; ///de test
 
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'BP';
-    this.resourceKanban.assemblyName = 'BP';
-    this.resourceKanban.className = 'ProcessStepsBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+      this.resourceKanban = new ResourceModel();
+      this.resourceKanban.service = 'BP';
+      this.resourceKanban.assemblyName = 'BP';
+      this.resourceKanban.className = 'ProcessStepsBusiness';
+      this.resourceKanban.method = 'GetColumnsKanbanAsync';
+      this.resourceKanban.dataObj = this.dataObj;
     });
 
     // //view popup
@@ -175,29 +188,51 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //   this.resourceKanban.method = 'GetColumnsKanbanAsync';
     //   this.resourceKanban.dataObj = this.dataObj;
     // }
+
+    // this.bpService
+    //   .getListFunctionMenuCreatedStepAsync(this.funcID)
+    //   .subscribe((datas) => {
+    //   var items = [];
+    //   if (datas && datas.length > 0) {
+    //     this.childFunc = datas;
+    //     items = datas.map((obj) => {
+    //       var menu = {
+    //         id: obj.id,
+    //         icon: obj.icon,
+    //         text: obj.text,
+    //       };
+    //       return menu;
+    //     });
+    //   }
+    //   this.button = {
+    //     id: 'btnAdd',
+    //     items: items,
+    //   };
+    // });
   }
 
   onInit(): void {
-    this.bpService
-      .getListFunctionMenuCreatedStepAsync(this.funcID)
-      .subscribe((datas) => {
-        var items = [];
-        if (datas && datas.length > 0) {
-          this.childFunc = datas;
-          items = datas.map((obj) => {
-            var menu = {
-              id: obj.id,
-              icon: obj.icon,
-              text: obj.text,
-            };
-            return menu;
-          });
-        }
-        this.button = {
-          id: 'btnAdd',
-          items: items,
+    var items = [];
+    if (this.childFunc && this.childFunc.length > 0) {
+      items = this.childFunc.map((obj) => {
+        var menu = {
+          id: obj.id,
+          icon: obj.icon,
+          text: obj.text,
         };
+        return menu;
       });
+    }
+    this.button = {
+      id: 'btnAdd',
+      items: items,
+    };
+    this.childFunc.forEach((obj) => {
+      if (obj.id != 'P') this.childFuncOfP.push(obj);
+    });
+    this.childFunc.map((obj) => {
+      if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
+    });
   }
 
   ngAfterViewInit(): void {
@@ -247,8 +282,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       option.FormModel = this.view?.formModel;
       //option.FormModel = this.formModel;
       option.Width = '550px';
+      option.zIndex = 1001;
 
       this.view.dataService.dataSelected.processID = this.processID;
+      if (this.parentID != '')
+        this.view.dataService.dataSelected.parentID = this.parentID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         ['add', this.titleAction, this.stepType, this.formModelMenu],
@@ -630,6 +668,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
       var p = this.button.items.find((x) => (x.id = this.stepType));
@@ -643,20 +682,19 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     } else {
       this.stepType = evt.id;
       var customName = '';
-      this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-        if (mf) {
-          var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-          if (mfAdd) customName = mfAdd?.customName + ' ';
-        }
-        this.titleAction =
-          customName +
-          evt?.text.charAt(0).toLocaleLowerCase() +
-          evt?.text.slice(1);
-        this.add();
-      });
+      // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      //   if (mf) {
+      //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+      if (this.titleAdd) customName = this.titleAdd + ' ';
+      // }
+      this.titleAction =
+        this.titleAdd +
+        ' ' +
+        evt?.text.charAt(0).toLocaleLowerCase() +
+        evt?.text.slice(1);
+      this.add();
+      // });
     }
-
-    // test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
 
@@ -672,21 +710,32 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     }
   }
+  hoverViewText(text) {
+    return (
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+    );
+  }
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
 
   clickMF(e: any, data?: any) {
-    this.itemSelected = data;
+    this.stepType = data.stepType;
     this.titleAction = this.getTitleAction(e.text, data.stepType);
     //test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
     switch (e.functionID) {
       case 'SYS01':
@@ -701,6 +750,30 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       case 'SYS02':
         this.delete(data);
     }
+  }
+
+  clickMenu(data, funcMenu) {
+    this.stepType = funcMenu.id;
+    this.parentID =
+      this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
+    this.titleAction = this.getTitleAction(this.titleAdd, data.stepType);
+    this.formModelMenu = this.view?.formModel;
+    this.add();
+    if (funcMenu) {
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
+    }
+  }
+  clickAddActivity(data) {
+    let funcMenu = this.childFuncOfP?.find((x) => x.id == 'A');
+    if (funcMenu) this.clickMenu(data, funcMenu);
   }
 
   getTitleAction(action, stepType): string {

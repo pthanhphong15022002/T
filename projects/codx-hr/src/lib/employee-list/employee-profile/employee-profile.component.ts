@@ -1,3 +1,5 @@
+import { PopupEmployeePartyInfoComponent } from './../../employee-profile/popup-employee-party-info/popup-employee-party-info.component';
+import { EmployeeFamilyRelationshipDetailComponent } from './../../employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
 import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
 import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
 import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
@@ -39,7 +41,6 @@ import {
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
 import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
-import { PopupAddEmployeesPartyInfoComponent } from '../../employee-profile/popup-add-employees-party-info/popup-add-employees-party-info.component';
 import { ActivatedRoute } from '@angular/router';
 import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
 
@@ -243,11 +244,17 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  clickMF(event: any, data) {
+  clickMF(event: any, data: any, funcID = null) {
     switch (event.functionID) {
-      case 'SYS03':
+      case 'SYS03': //edit
+        if(funcID == ""){
+
+        }
         break;
-      case 'SYS02':
+      case 'SYS02': //delete
+      if(funcID == ""){
+        
+      }
         break;
     }
   }
@@ -428,16 +435,16 @@ export class EmployeeProfileComponent extends UIComponent {
     this.crrTab = tabNumber;
   }
 
-  addEmployeePartyInfo() {
+  editEmployeePartyInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      PopupAddEmployeesPartyInfoComponent,
+      PopupEmployeePartyInfoComponent,
       {
-        isAdd: true,
+        isAdd: false,
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option
@@ -447,7 +454,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addAssuranceTaxBankAccountInfo() {
+  editAssuranceTaxBankAccountInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -466,7 +473,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeSelfInfo() {
+  editEmployeeSelfInfo() {
     this.view.dataService.dataSelected = this.data;
     // this.view.dataService
     // .edit(this.data)
@@ -497,9 +504,10 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeFamilyRelationshipComponent,
+      EmployeeFamilyRelationshipDetailComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
         headerText: 'Quan hệ gia đình',
       },
       option
@@ -509,18 +517,18 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeePassportInfo() {
+  handleEmployeePassportInfo(isEdit: boolean) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     console.log('datas', option.DataService);
 
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeLegalPassportFormComponent,
       {
-        isAdd: true,
+        isAdd: isEdit,
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
       },
