@@ -4,13 +4,13 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 import { Observable, of } from 'rxjs';
 
 @Component({
-  selector: 'lib-layout',
-  templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss'],
+  selector: 'lib-layout7',
+  templateUrl: './layout7.component.html',
+  styleUrls: ['./layout7.component.scss'],
 })
 export class Layout7Component extends LayoutBaseComponent {
 
-  module = "EP";
+  module = "EP7";
   dialog!: DialogRef;
 
   constructor(

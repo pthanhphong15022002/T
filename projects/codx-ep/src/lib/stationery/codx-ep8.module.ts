@@ -23,7 +23,7 @@ import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/po
 import { PopupAddStationeryComponent } from './settings/stationery/popup-add-stationery/popup-add-stationery.component';
 import { PopupUpdateQuantityComponent } from './settings/stationery/popup-update-quantity/popup-update-quantity.component';
 import { StationeryComponent } from './settings/stationery/stationery.component';
-import { Layout8Component } from './_layout8/layout.component';
+import { Layout8Component } from './_layout8/layout8.component';
 
 const routes: Route[] = [
   {
