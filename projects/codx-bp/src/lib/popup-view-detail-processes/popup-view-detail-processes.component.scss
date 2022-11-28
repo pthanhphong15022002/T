@@ -90,5 +90,14 @@
         height: calc(100vh - 186px) !important;
         overflow: hidden;
     }
+    .dropdown-toggle-click::before{
+        content: "";
+        border-left: 1px solid var(--bs-border-color);
+        height: 50%;
+        position: absolute;
+        left: 0px;
+        top: 25%;
+    }
+       
 
 }
