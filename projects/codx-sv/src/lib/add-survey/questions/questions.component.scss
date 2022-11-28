@@ -244,7 +244,7 @@
     border-bottom: 1px solid aqua !important;
   }
 
-  .e-input-group {
+  > .e-input-group {
     border: none;
     width: 80%;
     display: block !important;
@@ -536,6 +536,39 @@
 
   .mt-30px {
     margin-top: 30px;
+  }
+
+  .primary {
+    color: #1a73e8;
+  }
+  .pb-10px {
+    padding-bottom: 10px;
+  }
+
+  .w-fit-content {
+    width: fit-content !important;
+  }
+
+  .e-radio + label .e-label {
+    font-size: 14px !important;
+  }
+
+  .w-95px {
+    width: 95px !important;
+  }
+
+  .w-540px {
+    width: 540px !important;
+  }
+
+  .fs-18px {
+    font-size: 18px;
+    color: #202124;
+  }
+
+  .bg-active {
+    background-color: #eaf8ef;
+    height: 35px !important;
   }
 }
 

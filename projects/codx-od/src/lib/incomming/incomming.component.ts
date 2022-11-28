@@ -270,7 +270,7 @@ export class IncommingComponent
     if (
       this.view.formModel.funcID == 'ODT41' &&
       (data?.approveStatus == '2' ||
-      data?.approveStatus == '3' || data?.approveStatus == '4') && data?.createdBy == this.userID
+      data?.approveStatus == '3') && data?.createdBy == this.userID
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
@@ -447,7 +447,6 @@ export class IncommingComponent
       recID = dt.recID;
       this.dataItem = dt;
     }
-
     this.getDtDis(recID);
   }
   fileAdded(event: any) {
@@ -476,7 +475,7 @@ export class IncommingComponent
     console.log(evt);
   }
   openFormFuncID(val: any, data: any) {
-    this.viewdetail.openFormFuncID(val, data);
+    this.viewdetail.openFormFuncID(val, data , true);
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;

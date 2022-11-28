@@ -73,6 +73,8 @@ export class PropertiesComponent implements OnInit {
   data: any;
   vlL1473: any;
   vlL14733: any;
+  dataFile: any;
+  visible: any;
   constructor(
     private domSanitizer: DomSanitizer,
     private tenantService: TenantService,
@@ -173,10 +175,10 @@ export class PropertiesComponent implements OnInit {
   }
 
   getThumbnail(data) {
-    if (data.hasThumbnail)
+    debugger;
+    if (data?.viewThumb)
       return environment.urlUpload + "/" + data.thumbnail;
-    else
-      return `../../../assets/codx/dms/` + this.getAvatar(data.extension);
+    return `../../../assets/codx/dms/` + this.getAvatar(data.extension);
   }
 
   getAvatar(filename: string) {
@@ -286,6 +288,17 @@ export class PropertiesComponent implements OnInit {
     });
   }
 
+  dbView(data: any,fileEdit) {
+    this.viewFile(data);
+  }
+  viewFile(e: any) {
+    this.dataFile = e;
+    this.visible = true;
+  }
+  dialogClosed() {
+    this.visible = false;
+    this.changeDetectorRef.detectChanges();
+  }
   getRating(data: View[]) {
     let _rating1 = 0;
     let _rating2 = 0;

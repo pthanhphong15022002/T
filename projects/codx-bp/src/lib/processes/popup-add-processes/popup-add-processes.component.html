@@ -41,11 +41,14 @@
       </div>
     </div>
     <div class="form-group">
-      <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
-      </codx-label>
-      <codx-input field="groupID" [crrValue]="process.groupID" [formModel]="form.formModel"
-        [refValue]="gridViewSetup['GroupID']['referedValue']" type="combobox" (valueChange)="valueChange($event)">
-      </codx-input>
+      <div class="col-4">
+        <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
+        </codx-label>
+        <codx-input field="groupID" [crrValue]="process.groupID" [formModel]="form.formModel"
+          [refValue]="gridViewSetup['GroupID']['referedValue']" type="combobox" (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+
     </div>
     <div class="row">
       <div class="col-6">

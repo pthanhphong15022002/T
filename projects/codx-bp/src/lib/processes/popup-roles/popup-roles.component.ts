@@ -108,7 +108,7 @@ export class PopupRolesComponent implements OnInit {
           this.dialog.close(res);
         } else {
           this.notifi.notify('Phân quyền không thành công');
-          this.dialog.close();
+          return;
         }
       });
     }

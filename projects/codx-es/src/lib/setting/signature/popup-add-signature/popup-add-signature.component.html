@@ -1,59 +1,110 @@
-<codx-form #form [headerText]="headerText" [subHeaderText]="" [body]="body" [footer]="footer" [data]="data"
-  [formModel]="formModel" [dialog]="dialog">
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]=""
+  [body]="body"
+  [footer]="footer"
+  [data]="data"
+  [formModel]="formModel"
+  [dialog]="dialog"
+>
   <ng-template #body>
     <div class="d-flex flex-stack fs-6 py-3">
       <div class="fw-bold text-primary">
-        <codx-label [name]="'lblTitleAddSignature'" default="THÔNG TIN CHỮ KÝ SỐ" [formModel]="formModel">
+        <codx-label
+          [name]="'lblTitleAddSignature'"
+          default="THÔNG TIN CHỮ KÝ SỐ"
+          [formModel]="formModel"
+        >
         </codx-label>
       </div>
       <span class="text-end align-items-end" style="display: none">
-        <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-          (click)="openPopup(null)">
-          <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+        <button
+          type="button"
+          class="btn btn-clean btn-sm btn-icon btn-icon-md"
+          data-dismiss="modal"
+          (click)="openPopup(null)"
+        >
+          <i
+            class="icon-select_all text-primary text-hover-primary-dark icon-24"
+          ></i>
         </button>
       </span>
     </div>
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
-      <div class="d-flex border-bottom mb-1 pb-1">
-        <!-- <div class="w-100 me-2">
+      <div class="d-flex">
+        <div class="w-100 me-2" *ngIf="!isAdd">
           <codx-input
             type="text"
             field="email"
             [Group]="form.formGroup"
             [formModel]="dialog.formModel"
+            [disabled]="true"
           >
           </codx-input>
-        </div> -->
+        </div>
 
-        <codx-input [ngClass]="'w-100'" type="Combobox" [refValue]="'UserEmails'" refType="P" field="email"
-          [crrValue]="data.email" [showInput]="true" [multiple]="false" (valueChange)="valueChange($event)">
+        <codx-input
+          *ngIf="isAdd"
+          [ngClass]="'w-100'"
+          type="Combobox"
+          [refValue]="'UserEmails'"
+          refType="P"
+          field="email"
+          [crrValue]="data.email"
+          [showInput]="true"
+          [multiple]="false"
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
     </div>
     <div class="form-group">
       <codx-label fiedName="FullName" [formModel]="dialog.formModel">
       </codx-label>
-      <codx-input type="text" field="fullName" [Group]="form.formGroup" [formModel]="dialog.formModel"
-        [crrValue]="data.fullName">
+      <codx-input
+        type="text"
+        field="fullName"
+        [Group]="form.formGroup"
+        [formModel]="dialog.formModel"
+        [crrValue]="data.fullName"
+      >
       </codx-input>
     </div>
     <div class="form-group row mt-3">
       <div class="col-6">
         <codx-label fiedName="SignatureType" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="valuelist" field="signatureType" [Group]="form.formGroup" [formModel]="dialog.formModel"
-          (valueChange)="valueChange($event)">
+        <codx-input
+          type="valuelist"
+          field="signatureType"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
       <div class="col-6">
         <codx-label fiedName="Supplier" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input *ngIf="data.signatureType == '1'" type="valuelist" field="supplier" [refValue]="'ES029'"
-          (valueChange)="valueChange($event)" [crrValue]="data.supplier">
+        <codx-input
+          *ngIf="data.signatureType == '1'"
+          type="valuelist"
+          field="supplier"
+          [refValue]="'ES029'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
+        >
         </codx-input>
-        <codx-input *ngIf="data.signatureType == '2'" type="valuelist" field="supplier" [refValue]="'ES032'"
-          (valueChange)="valueChange($event)" [crrValue]="data.supplier">
+        <codx-input
+          *ngIf="data.signatureType == '2'"
+          type="valuelist"
+          field="supplier"
+          [refValue]="'ES032'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
+        >
         </codx-input>
         <!-- <codx-input
           type="valuelist"
@@ -68,11 +119,22 @@
     <div class="form-group">
       <div class="d-flex flex-stack fs-6 py-2">
         <div class="fw-bolder">
-          <codx-label default="Chữ ký & Con dấu" name="lblTitleSignment" [formModel]="dialog.formModel"></codx-label>
+          <codx-label
+            default="Chữ ký & Con dấu"
+            name="lblTitleSignment"
+            [formModel]="dialog.formModel"
+          ></codx-label>
         </div>
         <span class="text-end align-items-end">
-          <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal">
-            <i class="icon-select_all text-primary text-hover-primary-dark icon-24" (click)="openPopup(content)"></i>
+          <button
+            type="button"
+            class="btn btn-clean btn-sm btn-icon btn-icon-md"
+            data-dismiss="modal"
+          >
+            <i
+              class="icon-select_all text-primary text-hover-primary-dark icon-24"
+              (click)="openPopup(content)"
+            ></i>
           </button>
         </span>
       </div>
@@ -82,38 +144,81 @@
         <div class="text-center me-6 mb-3">
           <div class="mb-5 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img #imgSignature1 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                [imageType]="'square'" [width]="80" referType="S1" [objectId]="data.recID"
-                [objectType]="formModel.entityName" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-                data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true"
-                [updateDirect]="true" (dataChanged)="dataImageChanged($event, 'S1')" [funcId]="'ESS21'">
+              <codx-img
+                #imgSignature1
+                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [imageType]="'square'"
+                [width]="80"
+                referType="S1"
+                [objectId]="data.recID"
+                [objectType]="formModel.entityName"
+                data-kt-menu-trigger="click"
+                data-kt-menu-attach="parent"
+                data-kt-menu-placement="bottom-end"
+                data-kt-menu-flip="bottom"
+                [isAllowEdit]="true"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S1')"
+                [funcId]="'ESS21'"
+              >
               </codx-img>
             </div>
           </div>
-          <codx-label fiedName="Signature1" [formModel]="dialog.formModel"></codx-label>
+          <codx-label
+            fiedName="Signature1"
+            [formModel]="dialog.formModel"
+          ></codx-label>
         </div>
         <div class="text-center me-6 mb-3">
           <div class="mb-5 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img #imgSignature2 referType="S2" [imageType]="'square'"
-                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage" [width]="80" [objectId]="data.recID"
-                [objectType]="formModel.entityName" data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-                data-kt-menu-placement="bottom-end" data-kt-menu-flip="bottom" [isAllowEdit]="true"
-                [updateDirect]="true" (dataChanged)="dataImageChanged($event, 'S2')" [funcId]="'ESS21'">
+              <codx-img
+                #imgSignature2
+                referType="S2"
+                [imageType]="'square'"
+                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [width]="80"
+                [objectId]="data.recID"
+                [objectType]="formModel.entityName"
+                data-kt-menu-trigger="click"
+                data-kt-menu-attach="parent"
+                data-kt-menu-placement="bottom-end"
+                data-kt-menu-flip="bottom"
+                [isAllowEdit]="true"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S2')"
+                [funcId]="'ESS21'"
+              >
               </codx-img>
             </div>
           </div>
-          <codx-label class="" fiedName="Signature2" [formModel]="dialog.formModel">
+          <codx-label
+            class=""
+            fiedName="Signature2"
+            [formModel]="dialog.formModel"
+          >
           </codx-label>
         </div>
         <div class="text-center me-6 mb-3">
           <div class="mb-5 d-flex align-items-center">
             <div class="m-auto">
-              <codx-img #imgStamp referType="S3" class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                [imageType]="'square'" [width]="80" [objectId]="data.recID" [objectType]="formModel.entityName"
-                data-kt-menu-trigger="click" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
-                data-kt-menu-flip="bottom" [isAllowEdit]="true" [updateDirect]="true"
-                (dataChanged)="dataImageChanged($event, 'S3')" [funcId]="'ESS21'">
+              <codx-img
+                #imgStamp
+                referType="S3"
+                class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                [imageType]="'square'"
+                [width]="80"
+                [objectId]="data.recID"
+                [objectType]="formModel.entityName"
+                data-kt-menu-trigger="click"
+                data-kt-menu-attach="parent"
+                data-kt-menu-placement="bottom-end"
+                data-kt-menu-flip="bottom"
+                [isAllowEdit]="true"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S3')"
+                [funcId]="'ESS21'"
+              >
               </codx-img>
             </div>
           </div>
@@ -127,75 +232,142 @@
       <div class="col-4">
         <codx-label fiedName="OTPControl" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input field="oTPControl" [Group]="form.formGroup" [formModel]="dialog.formModel"
-          (valueChange)="valueChange($event)">
+        <codx-input
+          field="oTPControl"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
       <div class="col-4">
         <codx-label fiedName="OTPPin" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input field="oTPPin" [Group]="form.formGroup" [formModel]="dialog.formModel"
-          [disabled]="data.oTPControl == '3' ? false : true">
+        <codx-input
+          field="oTPPin"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="data.oTPControl == '3' ? false : true"
+        >
         </codx-input>
       </div>
       <div class="col-4">
         <codx-label fiedName="SpanTime" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="number" field="spanTime" [min]="0" max="50" [showSpinButton]="false" [Group]="form.formGroup"
-          [formModel]="dialog.formModel" [disabled]="
+        <codx-input
+          type="number"
+          field="spanTime"
+          [min]="0"
+          max="50"
+          [showSpinButton]="false"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="
             data.oTPControl == '1' || data.oTPControl == '2' ? false : true
-          ">
+          "
+        >
         </codx-input>
       </div>
     </div>
     <div class="d-flex flex-stack fs-6 py-2">
       <div class="fw-bolder text-primary">
-        <codx-label [name]="'lblTitleCA'" default="Thông tin CA" [formModel]="dialog.formModel">
+        <codx-label
+          [name]="'lblTitleCA'"
+          default="Thông tin CA"
+          [formModel]="dialog.formModel"
+        >
         </codx-label>
       </div>
       <span class="text-end align-items-end">
-        <a class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
-          [style.visibility]="data.signatureType == '1' ? 'visible' : 'hidden'" (click)="popupUploadFile($event)">
+        <a
+          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+          [style.visibility]="data.signatureType == '1' ? 'visible' : 'hidden'"
+          (click)="popupUploadFile($event)"
+        >
           <span class="icon-upload btn-text-primary me-2"></span>
-          <codx-label name="lblUploadCA" default="Upload CA" [formModel]="dialog.formModel"></codx-label>
+          <codx-label
+            name="lblUploadCA"
+            default="Upload CA"
+            [formModel]="dialog.formModel"
+          ></codx-label>
         </a>
       </span>
     </div>
     <div>
-      <codx-attachment #attachment [objectType]="form.formModel?.entityName" hideBtnSave="1" hideFolder="1"
-        hideUploadBtn="1" hideDes="1" hideImageThumb="1" [functionID]="'ESS21'" (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)" [objectId]="data.recID" [allowMultiFile]="0" [idBrowse]="'add'"
-        [displayThumb]="true">
+      <codx-attachment
+        #attachment
+        [objectType]="form.formModel?.entityName"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        hideImageThumb="1"
+        [functionID]="'ESS21'"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        [objectId]="data.recID"
+        [allowMultiFile]="0"
+        [idBrowse]="'add'"
+        [displayThumb]="true"
+      >
       </codx-attachment>
     </div>
     <div class="form-group row mt-3">
       <div class="col-4">
         <codx-label fiedName="StartedOn" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="datetime" field="startedOn" format="d" [formModel]="dialog.formModel" [Group]="form.formGroup"
-          [disabled]="true">
+        <codx-input
+          type="datetime"
+          field="startedOn"
+          format="d"
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          [disabled]="true"
+        >
         </codx-input>
       </div>
       <div class="col-4">
         <codx-label fiedName="ExpiredOn" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="datetime" field="expiredOn" format="d" [formModel]="dialog.formModel" [Group]="form.formGroup"
-          [disabled]="data.signatureType == '1' ? false : true">
+        <codx-input
+          type="datetime"
+          field="expiredOn"
+          format="d"
+          [formModel]="dialog.formModel"
+          [Group]="form.formGroup"
+          [disabled]="data.signatureType == '1' ? false : true"
+        >
         </codx-input>
       </div>
       <div class="col-4">
         <codx-label fiedName="Password" [formModel]="dialog.formModel">
         </codx-label>
-        <codx-input type="password" field="password" [Group]="form.formGroup" [formModel]="dialog.formModel"
-          [disabled]="data.signatureType == '1' ? false : true">
+        <codx-input
+          type="password"
+          field="password"
+          [Group]="form.formGroup"
+          [formModel]="dialog.formModel"
+          [disabled]="data.signatureType == '1' ? false : true"
+        >
         </codx-input>
       </div>
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex form-group">
+        <codx-input type="checkbox" [crrValue]="data.stop" [disabled]="true">
+        </codx-input>
+        <codx-label class="ms-2" fiedName="Stop" [formModel]="dialog.formModel">
+        </codx-label>
+      </div>
+
       <button class="btn btn-primary" (click)="onSaveForm()">
-        <codx-label default="Lưu" name="lblSave" [formModel]="dialog.formModel"></codx-label>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="dialog.formModel"
+        ></codx-label>
       </button>
     </div>
   </ng-template>
