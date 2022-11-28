@@ -41,7 +41,11 @@ export class PopupAddProcessesComponent implements OnInit {
     this.action = dt.data[0];
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
-
+    this.cache.functionList(this.funcID).subscribe(res=>{
+      if(res){
+        this.title = this.titleAction + ' ' + res.customName.charAt(0).toLocaleLowerCase() + res.customName.slice(1);;
+      }
+    })
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -52,7 +56,6 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.title = this.titleAction;
   }
 
   ngOnInit(): void {
@@ -133,6 +136,38 @@ export class PopupAddProcessesComponent implements OnInit {
       return;
     }
 
+    if (!this.process.activedOn ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
+      );
+      return;
+    }
+    if ( !this.process.expiredOn) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
+      );
+      return;
+    }
+    //Chưa có mssg code
+    if (this.isCheckFromToDate(this.process.activedOn)) {
+      this.notiService.notify(
+        'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
+      );
+      return;
+    }
+    //Chưa có mssg code
+    if (this.process.activedOn >= this.process.expiredOn) {
+      this.notiService.notify(
+        'Vui lòng chọn ngày hiệu lực nhỏ hơn ngày hết hạn!'
+      );
+      return;
+    }
+
+
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
@@ -154,9 +189,21 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   //#endregion method
 
+  //#region check date
+  isCheckFromToDate(toDate) {
+    var to = new Date(toDate);
+    if (to <= new Date()) return true;
+    else return false;
+  }
+  ////#endregion
+
   //#region event
   valueChange(e) {
     this.process[e.field] = e.data;
+  }
+
+  valueChangeTag(e) {
+    this.process.tags = e.data;
   }
 
   valueDateChange(e){

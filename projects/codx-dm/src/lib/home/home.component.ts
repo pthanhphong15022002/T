@@ -4,6 +4,7 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   Injector,
+  OnDestroy,
 } from '@angular/core';
 import {
   AuthStore,
@@ -36,13 +37,14 @@ import {
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
 import { mode } from 'crypto-js';
+import { A } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent extends UIComponent {
+export class HomeComponent extends UIComponent implements  OnDestroy {
   @ViewChild('templateMain') templateMain: TemplateRef<any>;
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
@@ -362,14 +364,13 @@ export class HomeComponent extends UIComponent {
         if (tree) tree.setNodeTree(item);
         this.changeDetectorRef.detectChanges();
         this.data = [];
-        var a = { data: item };
         if(this.view.dataService.data.length == 0)
           this.view.dataService.data.push(item);
         var ele = document.getElementsByClassName('item-selected');
         if (ele.length > 0) ele[0].classList.remove('item-selected');
         var ele2 = document.getElementsByClassName(item?.recID);
         if (ele2.length > 0) ele2[0].classList.add('item-selected');
-        this.onSelectionChanged(a);
+        //this.onSelectionChanged(a);
       }
       this._beginDrapDrop();
     });
@@ -809,13 +810,15 @@ export class HomeComponent extends UIComponent {
       this.folderService.options.favoriteID = "2";
       this.fileService.options.favoriteID = "2";
     }
-    this.getDataFile('');
+    this.getDataFile("");
     //   console.log(this.button);
   }
 
   changeView(event) {
     this.currView = null;
     this.currView = event.view.model.template2;
+    this.dmSV.page = 1;
+    this.getDataFile(this.dmSV.folderID);
     //  this.data = [];
   }
   viewChanging(event) {
@@ -834,14 +837,7 @@ export class HomeComponent extends UIComponent {
     }
   }
   ngOnDestroy() {
-    console.log('detroy');
-    //   this.atSV.openForm.unsubscribe();
-    //this.clearWaitingThumbnail();
-    // if (this.interval?.length > 0) {
-    //   this.interval.forEach((element) => {
-    //     clearInterval(element.instant);
-    //   });
-    // }
+    //this.dmSV.isAddFolder
   }
 
   clearWaitingThumbnail() {
@@ -984,8 +980,6 @@ export class HomeComponent extends UIComponent {
   filterChange($event) {
     if (!$event) {
       this.dmSV.page = 1;
-      this.getDataFolder(this.dmSV.folderID);
-      this.getDataFile(this.dmSV.folderID);
     } else {
       try {
         this.data = [];
@@ -1065,7 +1059,9 @@ export class HomeComponent extends UIComponent {
           item.active = false;
           item.hide = false;
           if (item.text == 'Search') item.hide = true;
-          if (item.text == this.viewActive.text) item.active = true;
+          if (item.text == this.viewActive.text && (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03')) item.active = true;
+          else if(item.text == "Thẻ") item.active = true;
+          this.changeDetectorRef.detectChanges();
         });
         if (this.view.funcID == 'DMT02' || this.view.funcID == 'DMT03') {
           this.view.viewChange(this.viewActive);
@@ -1088,7 +1084,7 @@ export class HomeComponent extends UIComponent {
       //this.data = [];
       this.clearWaitingThumbnail();
       // this.dmSV.listFolder = [];
-      this.dmSV.listFiles = [];
+      //this.dmSV.listFiles = [];
       this.fileService.getTotalHdd().subscribe((item) => {
         //  totalUsed: any;
         // totalHdd: any;
@@ -1180,6 +1176,8 @@ export class HomeComponent extends UIComponent {
         this.dmSV.disableInput.next(false);
       }
     }
+
+
   }
   getDataFile(id: any) {
     this.fileService.options.funcID = this.view.funcID;

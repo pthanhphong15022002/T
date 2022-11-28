@@ -22,3 +22,6 @@
 .icon-email{
     color: #747474;
 }
+::ng-deep .e-popup-open{
+    z-index: 1005 !important;
+}

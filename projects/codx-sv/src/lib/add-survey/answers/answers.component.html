@@ -1,0 +1,253 @@
+<div class="page-anwsers pt-3">
+  <div class="d-flex w-100">
+    <div class="d-flex flex-column">
+      <div class="box">
+        <div
+          class="col-lg-8 control-section inplace-editor-control-section form-lafyout"
+          id="inplace-editor-control"
+        >
+          <div [ngClass]="'content-wrapper b-t'">
+            <form id="formAnswer" class="form-horizontal example-box">
+              <ng-container #body>
+                <div class="d-flex">
+                  <div class="title-answer">
+                    0 &nbsp;<codx-label
+                      fiedName="Answers"
+                      [formModel]="formModel"
+                      default="câu trả lời"
+                    ></codx-label>
+                  </div>
+                  <span class="icon-more_vert icon-24"></span>
+                </div>
+                <div class="d-flex justify-content-end pe-6 pt-12 pb-12">
+                  <codx-label
+                    fiedName="Answers"
+                    [formModel]="formModel"
+                    default="Chấp nhận phản hồi"
+                  ></codx-label>
+                  <codx-input type="switch" class=""></codx-input>
+                </div>
+              </ng-container>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-anwsers mt-032px">
+  <div class="d-flex w-100">
+    <div class="d-flex flex-column">
+      <div class="box">
+        <div
+          class="col-lg-8 control-section inplace-editor-control-section form-lafyout"
+          id="inplace-editor-control"
+        >
+          <div [ngClass]="'content-wrapper b-t'">
+            <ejs-tab headerPlacement="Top">
+              <e-tabitems>
+                <e-tabitem>
+                  <ng-template #headerText class="">
+                    <div class="nav-item">
+                      <a class="nav-link d-flex px-0">
+                        <span class="fw-bold">
+                          <codx-label
+                            name="Summary"
+                            [formModel]="formModel"
+                            default="Bảng tóm tắt"
+                          >
+                          </codx-label>
+                        </span>
+                      </a>
+                    </div>
+                  </ng-template>
+                  <ng-template #content class="pt-6">
+                    <ng-container
+                      *ngTemplateOutlet="summary; context: {}"
+                    ></ng-container>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText class="">
+                    <div class="nav-item">
+                      <a class="nav-link d-flex px-0">
+                        <span class="fw-bold">
+                          <codx-label
+                            name="Questions"
+                            [formModel]="formModel"
+                            default="Câu hỏi"
+                          >
+                          </codx-label>
+                        </span>
+                      </a>
+                    </div>
+                  </ng-template>
+                  <ng-template #content class="pt-6">
+                    <ng-container
+                      *ngTemplateOutlet="questions; context: {}"
+                    ></ng-container>
+                  </ng-template>
+                </e-tabitem>
+                <e-tabitem>
+                  <ng-template #headerText class="">
+                    <div class="nav-item">
+                      <a class="nav-link d-flex px-0">
+                        <span class="fw-bold">
+                          <codx-label
+                            name="Personal"
+                            [formModel]="formModel"
+                            default="Cá nhân"
+                          >
+                          </codx-label>
+                        </span>
+                      </a>
+                    </div>
+                  </ng-template>
+                  <ng-template #content class="pt-6">
+                    <ng-container
+                      *ngTemplateOutlet="personal; context: {}"
+                    ></ng-container>
+                  </ng-template>
+                </e-tabitem>
+              </e-tabitems>
+            </ejs-tab>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #summary>
+  <div [ngClass]="'content-wrapper pt-6'">
+    <form id="formAnswer" class="form-horizontal example-box">
+      <ng-container #body>
+        <div class="d-flex ps-6 pb-6">
+          <span class="icon-insert_chart_outlined icon-24"></span>
+          <codx-label
+            class="infor-detail ps-3"
+            fiedName="Answers"
+            [formModel]="formModel"
+            default="Thông tin chi tiết"
+          ></codx-label>
+        </div>
+        <hr />
+        <div class="row fs-14-fw-5 ps-7rem pe-7rem" align="center">
+          <div class="col">
+            <codx-label
+              fiedName="Avenger"
+              [formModel]="formModel"
+              default="Trung bình"
+            ></codx-label>
+          </div>
+          <div class="col">
+            <codx-label
+              fiedName=""
+              [formModel]="formModel"
+              default="Trung vị"
+            ></codx-label>
+          </div>
+          <div class="col">
+            <codx-label
+              fiedName=""
+              [formModel]="formModel"
+              default="Giải ô"
+            ></codx-label>
+          </div>
+          <div class="w-100"></div>
+          <div class="col">
+            <span>
+              0&nbsp;/&nbsp;0&nbsp;
+              <codx-label
+                fiedName="Score"
+                [formModel]="formModel"
+                default="điểm"
+              ></codx-label>
+            </span>
+          </div>
+          <div class="col">
+            <span>
+              0&nbsp;/&nbsp;0&nbsp;
+              <codx-label
+                fiedName="Score"
+                [formModel]="formModel"
+                default="điểm"
+              ></codx-label>
+            </span>
+          </div>
+          <div class="col">
+            <span>
+              0&nbsp;/&nbsp;0&nbsp;
+              <codx-label
+                fiedName="Score"
+                [formModel]="formModel"
+                default="điểm"
+              ></codx-label>
+            </span>
+          </div>
+        </div>
+        <br />
+        <div class="fs-14-fw-5 pt-6 pb-6 align-items-center" align="center">
+          <codx-label
+            class=""
+            fiedName=""
+            [formModel]="formModel"
+            default="Phân phối tổng điểm"
+          ></codx-label>
+        </div>
+        <div align="center">
+          <ejs-chart
+            style="display: block"
+            [chartArea]="chartArea"
+            [width]="width"
+            align="center"
+            id="chartcontainer"
+            [primaryXAxis]="primaryXAxis"
+            [primaryYAxis]="primaryYAxis"
+            [tooltip]="tooltip"
+          >
+            <e-series-collection>
+              <e-series
+                [dataSource]="data"
+                type="Column"
+                xName="Country"
+                yName="GoldMedal"
+                width="2"
+                tooltipMappingName="Country"
+              >
+              </e-series>
+            </e-series-collection>
+          </ejs-chart>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+  <div [ngClass]="'content-wrapper pt-6'">
+    <form id="formAnswer" class="form-horizontal example-box">
+      <ng-container #header>
+        <div class="d-flex ps-6 pb-6">
+          <codx-label
+            class="fs-16 ps-3"
+            fiedName="Name"
+            [formModel]="formModel"
+            default="Tên"
+          ></codx-label>
+        </div>
+        <div class="d-flex ps-6 pb-6">
+          0&nbsp;
+          <codx-label
+            class="fs-12 ps-3"
+            fiedName="Answer"
+            [formModel]="formModel"
+            default="câu trả lời"
+          ></codx-label>
+        </div>
+      </ng-container>
+      <ng-container #body class="pt-6">
+        
+      </ng-container>
+    </form>
+  </div>
+</ng-template>
+<ng-template #questions> </ng-template>
+<ng-template #personal> </ng-template>

@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -39,7 +40,6 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { debug } from 'console';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -153,12 +153,13 @@ export class CodxTasksComponent
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private tmSv: CodxTasksService
+    private tmSv: CodxTasksService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // if (!this.funcID)
+    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -177,11 +178,11 @@ export class CodxTasksComponent
 
   //#region Init
   onInit(): void {
+    console.log(this.funcID);
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
-    } else {
-      this.vllStatus = this.vllStatusTasks;
-    }
+    } else this.vllStatus = this.vllStatusTasks;
+
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
 
@@ -302,7 +303,7 @@ export class CodxTasksComponent
         request: this.requestSchedule,
         request2: this.modelResource,
         showSearchBar: false,
-        showFilter:false,
+        showFilter: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -874,7 +875,7 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
-      }else{
+      } else {
         if (kanban) kanban.updateCard(taskAction);
       }
       this.detectorRef.detectChanges();
@@ -1090,10 +1091,9 @@ export class CodxTasksComponent
     );
     this.dialogApproveStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
-        });
-        this.itemSelected = e?.event[0];
+        this.view.dataService.update(e?.event).subscribe();
+
+        this.itemSelected = e?.event;
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
       }
@@ -1196,7 +1196,7 @@ export class CodxTasksComponent
       return;
     }
 
-    if (data.extendStatus == '1') {
+    if (data.extendStatus == '3') {
       this.notiService.alertCode('TM055').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
           this.confirmExtend(data, moreFunc);
@@ -1416,11 +1416,19 @@ export class CodxTasksComponent
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-        if ((x.functionID == 'TMT02015'|| x.functionID == 'TMT02025')&& data.status=='90') {
+        if (
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
-        //an cap nhat tien do khi hoan tat 
-        if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
       });
@@ -1507,7 +1515,7 @@ export class CodxTasksComponent
               (item as any).style.backgroundColor = this.dayoff[i].color;
             });
           }
-          if(this.dayoff[i].note ){
+          if (this.dayoff[i].note) {
             return (
               '<icon class="' +
               this.dayoff[i].symbol +
@@ -1516,9 +1524,7 @@ export class CodxTasksComponent
               this.dayoff[i].note +
               '</span>'
             );
-          }
-          else return null;
-
+          } else return null;
         }
       }
     }

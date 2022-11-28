@@ -1,5 +1,32 @@
 <codx-form #form [headerText]="headerText" [body]="body"
-  [footer]="footer" [dialog]="dialog"  >
+  [footer]="footer" [dialog]="dialog" [formModel]="formModel" [data]="dataOKR" >
 </codx-form>
-<ng-template #body></ng-template>
+<ng-template #body>
+  <div class="row">
+    <div class="col-4">
+      <codx-label [formModel]="form.formModel" fiedName="Category" class="fw-bold"></codx-label>
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="Category" >
+      </codx-input> -->
+      <div>
+        Chờ Thương thiết lập
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-label [formModel]="form.formModel" fiedName="Category" class="fw-bold"></codx-label>
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="Category" >
+      </codx-input> -->
+      <div>
+        Chờ Thương thiết lập
+      </div>
+    </div>
+    <div class="col-4">
+      <codx-label [formModel]="form.formModel" fiedName="Category" class="fw-bold"></codx-label>
+      <!-- <codx-input [formModel]="form.formModel" [Group]="form.formGroup" field="Category" >
+      </codx-input> -->
+      <div>
+        Chờ Thương thiết lập
+      </div>
+    </div>
+  </div>
+</ng-template>
 <ng-template #footer></ng-template>

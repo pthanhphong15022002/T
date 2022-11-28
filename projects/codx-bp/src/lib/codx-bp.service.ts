@@ -88,6 +88,14 @@ export class CodxBpService {
       data
     );
   }
+  getProcessesByID(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'GetProcessesAsync',
+      data
+    );
+  }
   GetProcessStepDetailsByRecID(recID) {
     return this.api.exec<any>(
       'BP',

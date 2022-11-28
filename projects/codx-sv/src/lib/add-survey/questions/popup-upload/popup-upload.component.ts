@@ -20,7 +20,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { CodxSvService } from '../codx-sv.service';
+import { CodxSvService } from '../../../codx-sv.service';
 
 @Component({
   selector: 'app-popup-upload',
@@ -32,7 +32,7 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   functionList: any;
   user: any;
-  predicate = `ObjectType=@0 && IsDelete=@1 && CreatedBy=@2 && ReferType=@3`;
+  predicate = `(ObjectType=@0 or ObjectType=@1) && IsDelete=@2 && CreatedBy=@3 && ReferType=@4`;
   dataValueImage: any;
   dataValueVideo: any;
   dtService: any;
@@ -70,8 +70,8 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.data = dt.data?.data;
     this.functionList = dt.data.functionList;
     this.user = auth.get();
-    this.dataValueImage = `WP_Comments;false;${this.user?.userID};image`;
-    this.dataValueVideo = `WP_Comments;false;${this.user?.userID};video`;
+    this.dataValueImage = `WP_Comments;SV_Surveys;false;${this.user?.userID};image`;
+    this.dataValueVideo = `WP_Comments;SV_Surveys;false;${this.user?.userID};video`;
     var dataSv = new CRUDService(injector);
     dataSv.request.gridViewName = 'grvFileInfo';
     dataSv.request.entityName = 'DM_FileInfo';
@@ -81,35 +81,47 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
-  onSave(referType) {
-    this.generateGuid();
-    let recID = JSON.parse(JSON.stringify(this.guidID));
-    var dataUpload: any;
-    if (referType == 'P') dataUpload = this.dataImg;
-    else dataUpload = this.dataVideo;
-    delete dataUpload['recID'];
-    delete dataUpload['id'];
-    delete dataUpload['uploadId'];
-    dataUpload.history = null;
-    dataUpload.objectType = this.functionList.entityName;
-    dataUpload.objectID = recID;
-    var result = {
-      referType: referType,
-      dataUpload: [dataUpload],
-    };
-    this.api
-      .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', dataUpload)
-      .subscribe((res) => {
-        if (res) {
-          if (this.modeFile == 'change') {
-            this.SVServices.deleteFile(
-              this.data.recID,
-              this.functionList.entityName
-            ).subscribe();
+  onSave(referType, youtube = false) {
+    if (youtube) {
+      let resultY = {
+        referType: referType,
+        dataUpload: this.url,
+        youtube: true,
+        videoID: this.videoID,
+      };
+      this.dialog.close(resultY);
+    } else {
+      this.generateGuid();
+      let recID = JSON.parse(JSON.stringify(this.guidID));
+      var dataUpload: any;
+      if (referType == 'P') dataUpload = this.dataImg;
+      else dataUpload = this.dataVideo;
+      delete dataUpload['recID'];
+      delete dataUpload['id'];
+      delete dataUpload['uploadId'];
+      dataUpload.history = null;
+      dataUpload.objectType = this.functionList.entityName;
+      dataUpload.objectID = recID;
+      let result = {
+        referType: referType,
+        dataUpload: [dataUpload],
+        youtube: false,
+        videoID: null,
+      };
+      this.api
+        .execSv('DM', 'DM', 'FileBussiness', 'CopyAsync', dataUpload)
+        .subscribe((res) => {
+          if (res) {
+            if (this.modeFile == 'change') {
+              this.SVServices.deleteFile(
+                this.data.recID,
+                this.functionList.entityName
+              ).subscribe();
+            }
+            this.dialog.close(result);
           }
-          this.dialog.close(result);
-        }
-      });
+        });
+    }
   }
 
   getSrcVideo(data) {
@@ -178,6 +190,8 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
         var obj = {
           referType: referType,
           dataUpload: files,
+          youtube: false,
+          videoID: null,
         };
         this.dialog.close(obj);
       }
@@ -221,9 +235,14 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   urlEmbedSafe: any;
   iframeMarkup: any;
+  url: any;
+  videoID: any;
   getURLEmbed(url) {
     const ID = this.getEmbedID(url);
     var urlEmbed = `//www.youtube.com/embed/${ID}`;
+    this.url = urlEmbed;
+    this.videoID = ID;
     this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(urlEmbed);
+    console.log('check url img', this.url);
   }
 }

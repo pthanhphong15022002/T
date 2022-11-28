@@ -32,6 +32,7 @@ import { PopupRolesComponent } from './processes/popup-roles/popup-roles.compone
 import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 import { PopupUpdateRevisionsComponent } from './processes/popup-update-revisions/popup-update-revisions.component';
 import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes/popup-view-detail-processes.component';
+import { PopupPhasesActivitiesComponent } from './processes/popup-phases-activities/popup-phases-activities.component';
 
 export const routes: Routes = [
   {
@@ -88,6 +89,7 @@ export const routes: Routes = [
     PopupRolesComponent,
     PopupUpdateRevisionsComponent,
     PopupViewDetailProcessesComponent,
+    PopupPhasesActivitiesComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

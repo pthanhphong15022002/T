@@ -20,11 +20,14 @@
     <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex flex-column">
+      <!-- <div class="d-flex justify-content-between mt-4">
+        <div class="p-2"> -->
           <!-- ///noi dung -->
           <div class="mb-5">
             <h4 class="fw-bold text-gray-900 mb-104">
               {{ process?.processName }}
             </h4>
+
             <div class="d-flex flex-wrap mb-2">
               <div class="d-flex align-items-center me-4">
                 <span class="fw-bolb">
@@ -89,8 +92,14 @@
             </div> -->
           </div>
         </div>
-      </div>
+        <!-- <div class="ml-auto p-2">
 
+          <button type="button" class="btn btn-primary" (click)="openPopUp()">
+            <codx-label name="Save" formName="Sprints" default="Thêm nè"></codx-label>
+          </button>
+        </div> -->
+
+      </div>
       <div class="d-flex tab-header">
         <ng-container *ngFor="let item of tabControl; let i = index">
           <a
@@ -100,6 +109,9 @@
               (item.isActive ? 'tab-active' : '')
             "
           >
+          <!-- <codx-vll name="SYS025" [value]="item.id" [showText]="true"
+           class=""  (click)="clickMenu(item)">
+         </codx-vll> -->
             <codx-label
               [name]="'lbl' + item.name"
               [formName]="'SYS'"
@@ -121,83 +133,109 @@
         data-kt-scroll-wrappers=".stepper-body .no-header"
         [attr.data-kt-scroll-offset]="offset"
       >
+
         <ng-container *ngIf="name == 'ViewList'">
-          <ng-container *ngIf="process">
+          <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
               [process]="process"
               [viewMode]="16"
               [funcID]="funcID"
+              [childFunc]='childFunc'
             ></codx-processsteps>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Kanban'">
-          <ng-container *ngIf="process">
+          <ng-container  *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
               [process]="process"
               [viewMode]="6"
               [funcID]="funcID"
+              [childFunc]='childFunc'
+
             ></codx-processsteps>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Flowchart'">
-         
-            <div class="d-flex justify-content-between mb-5">
-              <h1 #processName>
-                {{
-                  process?.processName
-                    | formatvalue
-                      : formModelFlowChart
-                      : "processName"
-                      : processName
-                      : "Processes"
-                      : "grvProcesses"
-                    | async
-                }}
-              </h1>
-              <button
-                type="button"
-                class="btn btn-light-primary me-3"
-                (click)="addFile($event)"
-              >
-                <i class="icon-cloud_upload fs-5"></i
-                ><span
+          <div class="d-flex justify-content-between mb-5">
+            <h1 #processName>
+              {{
+                process?.processName
+                  | formatvalue
+                    : formModelFlowChart
+                    : "processName"
+                    : processName
+                    : "Processes"
+                    : "grvProcesses"
+                  | async
+              }}
+            </h1>
+            <div>
+              <div class="d-flex flex-row-reverse bd-highlight">
+                <div class="p-2 bd-highlight">
+                  <button
+                  type="button"
+                  class="btn btn-light-primary"
+                  (click)="addFile($event)"
+                >
+                  <i class="icon-cloud_upload fs-5"></i
+                  ><span
+                    ><codx-label
+                      name="UploadFile"
+                      formName="Processes"
+                      gridViewName="grvProcesses"
+                      default="Tải ảnh"
+                    ></codx-label>
+                  </span>
+                </button>
+                </div>
+                <div class="p-2 bd-highlight align-self-center cursor-pointer" (click)="print()">
+                  <span class="fa-solid fa-lg fa-print mx-2"></span
                   ><codx-label
-                    name="UploadFile"
-                    formName="Processes"
-                    gridViewName="grvProcesses"
-                    default="Tải ảnh"
+                    default="In"
+                    [fiedName]="'Print'"
+                    class="me-2"
                   ></codx-label>
-                </span>
-              </button>
+                </div>
+                <div class="p-2 bd-highlight align-self-center cursor-pointer" (click)="download()" >
+                  <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
+                  ><codx-label
+                    default="Tải về"
+                    [fiedName]="'Download'"
+                    class="me-2"
+                  ></codx-label>
+                </div>
+              </div>
+
             </div>
-            <!-- chua co referedType -->
-            <ng-container>
-              <codx-attachment
-                #addFlowchart
-                [objectType]="'BP_Processes'"
-                [objectId]="process?.recID"
-                [hideFolder]="1"
-                [hideImageUpload]="1"
-                [hideImageThumb]="1"
-                [hideUploadBtn]="1"
-                [hideDes]="1"
-                [type]="'inline'"
-                [allowMultiFile]="0"
-                [formModel]="formModelFlowChart"
-                [functionID]="funcID"
-                [isSaveSelected]="1"
-                allowExtensions=".jpg,.png"
-                (fileAdded)="fileAdded($event)"
-                (fileCount)="getfileCount($event)"
-                displayThumb="full"
-              >
-              </codx-attachment>
-            </ng-container>
-            <ng-container *ngIf="dataFile">
-              <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
-            </ng-container>
-            <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
-            </ng-container>
+          </div>
+          <!-- chua co referedType -->
+          <ng-container>
+            <codx-attachment
+              #addFlowchart
+              [objectType]="'BP_Processes'"
+              [objectId]="process?.recID"
+              [hideFolder]="1"
+              [hideImageUpload]="1"
+              [hideImageThumb]="1"
+              [hideUploadBtn]="1"
+              [hideDes]="1"
+              [type]="'inline'"
+              [allowMultiFile]="0"
+              [formModel]="formModelFlowChart"
+              [functionID]="funcID"
+              [isSaveSelected]="1"
+              allowExtensions=".jpg,.png"
+              (fileAdded)="fileAdded($event)"
+              (fileCount)="getfileCount($event)"
+              displayThumb="full"
+            >
+            </codx-attachment>
+          </ng-container>
+          <ng-container *ngIf="dataFile">
+            <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+          </ng-container>
+          <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
+          </ng-container>
         </ng-container>
       </div>
     </div>

@@ -1387,8 +1387,8 @@ export class CodxDMService {
         this.callfc.openForm(
           CopyComponent,
           '',
-          950,
           650,
+          250,
           '',
           [type, data, title, true],
           ''

@@ -40,7 +40,7 @@
                     field="awardDate"
                     [formModel]="formModel"
                     [Group]="formGroup"
-                    (valueChange)="handleSelectAwardDate($event.target.value)"
+                    (valueChange)="handleSelectAwardDate($event)"
                 ></codx-input>
             </div>
             <div class="col-6">
@@ -48,11 +48,15 @@
                     fiedName="InYear"
                     [formModel]="formModel"
                 ></codx-label>
-                <codx-input
-                    field="inYear"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
+                 <ejs-datepicker 
+                #picker start="Decade" 
+                depth="Decade" 
+                [value]="valueYear"
+                [format]="'y'"
+                locale="vi"
+                (change)="inYearSelect($event)"
+                >
+                </ejs-datepicker>
             </div>
         </div>
 

@@ -14,8 +14,11 @@ import {
   CallFuncService,
   DialogModel,
   DataRequest,
+  SidebarModel,
+  FormModel,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
+import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
 
 @Component({
@@ -76,8 +79,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //Hàm click
   click(event: any) {
-    switch (event) {
-      case 'add': {
+    switch (event.id) {
+      case 'btnAdd': {
+        this.add();
+        break;
+      }
+      case 'btnAddKR': {
+        this.addKR();
+        break;
+      }
+      case 'btnAddO': {
         this.add();
         break;
       }
@@ -113,6 +124,24 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     })
   }
 
+  //Thêm KR
+  addKR(o: any=null) {
+    // Tạo FormModel cho OKRs
+    let formModelKR = new FormModel();
+    formModelKR.entityName = 'OM_OKRs';
+    formModelKR.gridViewName = 'grvOKRs';
+    formModelKR.formName = 'OKRs';
+    formModelKR.entityPer = 'OM_OKRs';
 
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = formModelKR;
+
+    let dialogKR = this.callfc.openSide(
+      PopupAddKRComponent,
+      [null, o, formModelKR, true, 'Thêm mới kết quả chính'],
+      option
+    );
+  }
 
 }

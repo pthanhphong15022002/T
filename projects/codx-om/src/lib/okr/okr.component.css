@@ -1,144 +1,123 @@
-#om-tab
-{
-    height: 100% !important;
-    max-width: 79rem;
+#om-tab {
+  height: 100% !important;
+  max-width: 125rem;
 }
-#om-tab .e-tab-header
-{
-    text-align: center;
+
+#om-tab .e-tab-header {
+  text-align: center;
 }
-#om-tab > .e-content 
-{
-    height: calc(100% - 35px) !important;
-    overflow: auto;
+#om-tab > .e-content {
+  height: calc(100% - 35px) !important;
+  overflow: auto;
 }
-#om-tab > .e-content .e-item
-{
-    height: calc(100% - 35px) !important;
+#om-tab > .e-content .e-item {
+  height: calc(100% - 35px) !important;
 }
-.e-item > div
-{
-    height: 100%;
+.e-item > div {
+  height: 100%;
 }
-#om-tab-child .e-tab-header
-{
-    text-align: left !important;
+#om-tab-child .e-tab-header {
+  text-align: left !important;
 }
-#om-tab-child
-{
-    padding: 0 5rem;
+#om-tab-child {
+  padding: 0 5rem;
 }
-#om-tab-child .e-tab-header
-{
-    border-bottom: solid 1px #C5C7D0;
+#om-tab-child .e-tab-header {
+  border-bottom: solid 1px #c5c7d0;
 }
-#om-tab-child .e-content
-{
-    padding-bottom: 7px;
+#om-tab-child .e-content {
+  padding-bottom: 7px;
 }
-#om-tab .e-tab-text
-{
-    color: black;
+#om-tab .e-tab-text {
+  color: black;
 }
-#om-tab .e-tab-header::before
-{
-    border-style: none;
+#om-tab .e-tab-header::before {
+  border-style: none;
 }
-#om-tab .e-tab-header .e-toolbar-item.e-active
-{
-    border-bottom: solid 2px #0379FF !important;
+#om-tab .e-tab-header .e-toolbar-item.e-active {
+  border-bottom: solid 2px #0379ff !important;
 }
-#om-tab .e-tab-header .e-active codx-label , #om-tab .e-tab-header .e-active i
-{
-    color: #0379FF;
+#om-tab .e-tab-header .e-active codx-label,
+#om-tab .e-tab-header .e-active i {
+  color: #0379ff;
 }
-.p-om-okr
-{
-    height: calc(100% - 94px);
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+.p-om-okr {
+  height: calc(100% - 94px);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 .p-om-okr:focus {
-    outline: none !important;
+  outline: none !important;
 }
 .h-100vh {
-    border: 1px aqua solid;
-    height: calc(100vh - 40px);
+  border: 1px aqua solid;
+  height: calc(100vh - 40px);
 }
 
 .icon-with-number {
-    position: relative;
-    min-width: 30px;
-    width: 30px;
-    height: 30px;
-    border: 1px aqua solid;
+  position: relative;
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
+  border: 1px aqua solid;
 }
 
 .icon-with-number .number {
-    background-color: var(--primary);
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    font-size: 10px;
-    color: var(--primary-inverse);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  background-color: var(--primary);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  font-size: 10px;
+  color: var(--primary-inverse);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .kr-process {
-    position: relative;
+  position: relative;
 }
 
 .process-per {
-    margin-left: -40px;
-    color: var(--primary-inverse);
+  margin-left: -40px;
+  color: var(--primary-inverse);
 }
 
 .pic-face,
 .pic-local {
-    position: absolute;
-    top: -3px;
+  position: absolute;
+  top: -3px;
 }
-.txt-color-0E4C55
-{
-    color: #0E4C55;
+.txt-color-0E4C55 {
+  color: #0e4c55;
 }
-.bg-2D3958
-{
-    background-color: #2D3958;
+.bg-2D3958 {
+  background-color: #2d3958;
 }
-.p-4px
-{
-    padding: 4px;
+.p-4px {
+  padding: 4px;
 }
-.w-h-circle
-{
-    width: 26px;
-    height: 26px;
+.w-h-circle {
+  width: 26px;
+  height: 26px;
 }
-.om-pt-1
-{
-    padding-top: 2px;
+.om-pt-1 {
+  padding-top: 2px;
 }
-.ps-5rem
-{
-    padding-left: 85px;
+.ps-5rem {
+  padding-left: 85px;
 }
-.w-18px
-{
-    width: 18px;
+.w-18px {
+  width: 18px;
 }
-.w-22px
-{
-    width: 22px;
+.w-22px {
+  width: 22px;
 }
-.h-18px
-{
-    height: 18px;
+.h-18px {
+  height: 18px;
 }

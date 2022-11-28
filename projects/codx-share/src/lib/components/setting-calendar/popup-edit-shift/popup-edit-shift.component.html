@@ -1,35 +1,17 @@
-<codx-form
-  #form
-  [headerText]="title"
-  [subHeaderText]="subHeader"
-  [body]="body"
-  [dialog]="dialog"
->
+<codx-form #form [headerText]="title" [subHeaderText]="subHeader" [body]="body" [dialog]="dialog">
   <ng-template #body>
-    <div class="d-flex justify-content-between">
+    <div class="d-flex justify-content-between mt-6">
       <div class="row">
         <div class="form-group col-6">
           <codx-label name="lblStartTime" default="Bắt đầu"></codx-label>
-          <codx-input
-            type="datetime"
-            class="test-datetime"
-            field="startTime"
-            [crrValue]="startTime"
-            format="t"
-            (valueChange)="valueChange($event, 'startTime')"
-          >
+          <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
+            (valueChange)="valueChange($event, 'startTime')">
           </codx-input>
         </div>
         <div class="form-group col-6">
           <codx-label name="lblEndTime" default="Kết thúc"></codx-label>
-          <codx-input
-            type="datetime"
-            class="test-datetime"
-            field="endTime"
-            [crrValue]="endTime"
-            format="t"
-            (valueChange)="valueChange($event, 'endTime')"
-          >
+          <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
+            (valueChange)="valueChange($event, 'endTime')">
           </codx-input>
         </div>
       </div>
