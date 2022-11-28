@@ -149,8 +149,7 @@
 
         <ng-container *ngIf="name == 'ViewList'">
           <ng-container *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
-              [typeButton]="typeButton"
+            <codx-processsteps #processViewList
               [process]="process"
               [viewMode]="16"
               [funcID]="funcID"
@@ -160,12 +159,11 @@
         </ng-container>
         <ng-container *ngIf="name == 'Kanban'">
           <ng-container  *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
+            <codx-processsteps #processKanban
               [process]="process"
               [viewMode]="6"
               [funcID]="funcID"
               [childFunc]='childFunc'
-              [typeButton]="typeButton"
             ></codx-processsteps>
           </ng-container>
         </ng-container>

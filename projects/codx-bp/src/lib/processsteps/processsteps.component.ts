@@ -16,6 +16,8 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -61,8 +63,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
- 
-  @Input() typeButton: ButtonModel;
+  
   @Input() process?: BP_Processes;
   @Input() viewMode = '6';
   @Input() funcID = 'BPT11';
@@ -208,9 +209,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //     items: items,
     //   };
     // });
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    this.click(this.typeButton)
   }
 
   onInit(): void {
@@ -715,8 +713,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
     );
   }
-
-
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
