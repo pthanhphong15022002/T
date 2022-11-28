@@ -9,7 +9,7 @@ import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/
 })
 export class Layout4Component extends LayoutBaseComponent {
 
-  module = "EP";
+  module = "EP4";
   dialog!: DialogRef;
 
   constructor(

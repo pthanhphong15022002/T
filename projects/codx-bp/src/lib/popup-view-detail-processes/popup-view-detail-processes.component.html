@@ -94,7 +94,7 @@
           </div>
         </div>
         <div class="overflow-hidden btn-group me-3 ">
-          <button style="border-radius: 3px 0 0 3px!important;" type="button" class="btn btn-primary"><i class="icon-add"></i>Thêm</button>
+          <button  style="border-radius: 3px 0 0 3px!important;" type="button" class="btn btn-primary" (click) ="clickButtonAdd()"><i class="icon-add"></i>Thêm</button>
           <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown " container="body">
             <button style="border-radius:0 3px 3px 0!important;" type="button" class="btn btn-primary dropdown-toggle-split dropdown-toggle-click" ngbDropdownToggle></button>
             <div class="dropdown-menu" ngbDropdownMenu>
@@ -149,8 +149,7 @@
 
         <ng-container *ngIf="name == 'ViewList'">
           <ng-container *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
-              [typeButton]="typeButton"
+            <codx-processsteps #processViewList
               [process]="process"
               [viewMode]="16"
               [funcID]="funcID"
@@ -160,12 +159,11 @@
         </ng-container>
         <ng-container *ngIf="name == 'Kanban'">
           <ng-container  *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
+            <codx-processsteps #processKanban
               [process]="process"
               [viewMode]="6"
               [funcID]="funcID"
               [childFunc]='childFunc'
-              [typeButton]="typeButton"
             ></codx-processsteps>
           </ng-container>
         </ng-container>

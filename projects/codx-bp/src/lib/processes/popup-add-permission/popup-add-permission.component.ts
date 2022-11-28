@@ -59,10 +59,8 @@ export class PopupAddPermissionComponent implements OnInit {
   //#region footer
   onShare() {
     this.per.recIDProcess = this.id;
-    if( this.toPermission == null){
-      this.notificationsService.notify(
-        'Bạn chưa chọn người!'
-      );
+    if (this.toPermission == null) {
+      this.notificationsService.notify('Bạn chưa chọn người!');
       return;
     }
     this.per.toPermission = this.toPermission;
@@ -71,15 +69,15 @@ export class PopupAddPermissionComponent implements OnInit {
     for (var i = 0; i < this.per.toPermission.length; i++) {
       if (this.startDate != null && this.endDate != null) {
         if (this.startDate >= this.endDate) {
-          //Chưa có mssg code
-          if (this.isCheckFromToDate(this.process.activedOn)) {
-            this.notificationsService.notify(
-              'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
-            );
-            return;
-          }
           this.notificationsService.notify(
             'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
+          );
+          return;
+        }
+        //Chưa có mssg code
+        if (!this.isCheckFromToDate(this.startDate)) {
+          this.notificationsService.notify(
+            'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
           );
           return;
         }
@@ -122,7 +120,7 @@ export class PopupAddPermissionComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           if (this.per.form == '2') {
-            this.notificationsService.notify('Chia sẻ thành công');
+            this.notificationsService.notifyCode('OD013');
             this.dialog.close(res);
           } else {
             this.notificationsService.notify('Đã yêu cầu cấp quyền');
@@ -144,7 +142,7 @@ export class PopupAddPermissionComponent implements OnInit {
   //#region event
   isCheckFromToDate(toDate) {
     var to = new Date(toDate);
-    if (to <= new Date()) return true;
+    if (to >= new Date()) return true;
     else return false;
   }
 
