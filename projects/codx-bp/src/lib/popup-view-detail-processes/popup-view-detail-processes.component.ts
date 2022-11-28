@@ -185,6 +185,10 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   openPopUp(){
 
   }
+  clickButtonAdd(){
+    let value = this.childFunc.find(x => x.id === "P");
+    this.clickButton(value);
+  }
 
   clickButton(e: ButtonModel) {
    if(this.name=="ViewList" || this.name=="Flowchart") this.processViewList.click(e);
