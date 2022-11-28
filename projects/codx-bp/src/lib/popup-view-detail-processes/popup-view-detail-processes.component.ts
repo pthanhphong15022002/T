@@ -1,10 +1,11 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { BP_Processes, TabModel } from '../models/BP_Processes.model';
 import { environment } from 'src/environments/environment';
 import { ToolbarService , PrintService } from '@syncfusion/ej2-angular-documenteditor'
+import { CodxBpService } from '../codx-bp.service';
 @Component({
   selector: 'lib-popup-view-detail-processes',
   templateUrl: './popup-view-detail-processes.component.html',
@@ -27,19 +28,22 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   dataFile : any
   formModel :any
   linkFile : any;
+  typeButton : ButtonModel;
   all: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
-    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 1000 },
+    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 9 },
   ];
   formModelFlowChart :FormModel ;
-  listPhaseName = []
+  listPhaseName = [] ;
+  childFunc = []
 
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
+    private bpService: CodxBpService,
     private notificationsService : NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -60,6 +64,14 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     })
     this.getFlowChart(this.process)
     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
+
+    this.bpService
+      .getListFunctionMenuCreatedStepAsync(this.funcID)
+      .subscribe((datas) => {
+        if(datas){
+          this.childFunc = datas;         
+        }
+      })
   }
 
   ngOnInit(): void {
@@ -167,6 +179,13 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     else {
       this.notificationsService.notifyCode("SYS018");
     }
+  }
+  openPopUp(){
+
+  }
+
+  clickButton(e: ButtonModel) {
+    this.typeButton = e;
   }
 
 }

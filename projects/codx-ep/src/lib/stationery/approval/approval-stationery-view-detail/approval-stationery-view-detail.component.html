@@ -1,0 +1,230 @@
+<codx-detail-tmp
+  #itemDetailTemplate
+  [formModel]="formModel"
+  [dataItem]="itemDetail"
+  [header]="header"
+  [body]="body"
+  [footer]="!hideFooter ? footer : null"
+  [hideMF]="hideMF"
+  (clickMF)="clickMF($event, itemDetail)"
+  (changeDataMF)="changeDataMF($event, itemDetail)"
+>
+  <ng-template #header>
+    <div class="d-flex justify-content-between">
+      <h3>{{ itemDetail?.reasonName }}</h3>
+      <codx-vll
+        [name]="'EP022'"
+        [value]="itemDetail?.approveStatus"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2"
+      >
+      </codx-vll>
+    </div>
+    <div class="d-flex flex-column flex-grow-1 mb-2">
+      <codx-temp-full
+        [title]="itemDetail?.requester"
+        [subTitleTmp]="subTitleTmp"
+        [imageId]="itemDetail?.createdBy"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+      >
+      </codx-temp-full>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          fiedName="Category"
+          [formModel]="formModel"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          :
+          {{ itemDetail?.category | vll: "EP018":"text" | async }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          fiedName="BUID"
+          [formModel]="formModel"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          :
+          {{
+            itemDetail.orgUnitName ? itemDetail.orgUnitName : itemDetail.buid
+          }}
+        </span>
+      </div>
+    </div>
+
+    <div class="d-flex mb-2">
+      <div class="d-flex text-dark me-6">
+        <codx-label
+          fiedName="Note"
+          [formModel]="formModel"
+          class="fw-bold me-1"
+        >
+        </codx-label>
+        <span class="text-gray-600">
+          :
+          {{ itemDetail?.note }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #body let-data>
+    <div class="tab-horizone h-od-tab h-100">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <div class="d-flex align-item-center">
+              <i class="icon-layers me-2 text-primary"></i
+              ><span>Văn phòng phẩm</span>
+            </div>
+          </a>
+        </li>
+      </ul>
+      <div class="w-100 h-100">
+        <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaulEmpt">
+          <div *ngFor="let item of itemDetail?.bookingItems">
+            <div
+              class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-100"
+            >
+              <div class="d-flex flex-row">
+                <div class="me-2">
+                  <codx-img
+                    [objectId]="item.recID"
+                    imageType="circle"
+                    width="35"
+                    objectType="EP_Resources"                    
+                    [objectName]="item.itemName"
+                  ></codx-img>
+                </div>
+                <div class="ms-2">
+                  <div class="">
+                    <span href="#" class="fw-bold">{{ item.itemName }}</span>
+                  </div>
+                  <div class="d-flex flex-row flex-grow-1">
+                    <codx-label
+                      default="Đơn vị tính:"
+                      name="lblQuantity"
+                      class="text-gray-600"
+                    ></codx-label>
+                    <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex align-items-center me-3">
+                <codx-label
+                  default="Số lượng:"
+                  name="lblQuantity"
+                  class="text-gray-600"
+                ></codx-label>
+                <span class="ms-2 fw-bold">{{ item.quantity }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</codx-detail-tmp>
+<ng-template #footer>
+  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID"  [TabControl]="tabControl"></codx-tabs>
+</ng-template>
+<ng-template #defaulEmpt>
+  <div class="w-100 h-100 container">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #baseTmpRight let-data>
+  <ng-container *ngIf="data?.relationType != '1' && !data?.reCall">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [name]="'OD009'"
+      [value]="data?.view"
+      class="badge badge-light badge-md fs-7"
+    >
+    </codx-vll>
+  </ng-container>
+
+  <ng-container *ngIf="data?.reCall">
+    <codx-vll
+      [showText]="true"
+      [showBgColor]="true"
+      [name]="'OD010'"
+      [value]="data?.reCall"
+      class="badge badge-light badge-md fs-7"
+    >
+    </codx-vll>
+  </ng-container>
+</ng-template>
+
+<ng-template #footerTask let-data>
+  <div class="d-flex align-items-center mt-2" [style.marginLeft.px]="50">
+    <div class="d-flex align-items-center">
+      <span
+        class="icon-person me-1"
+        [class.text-muted]="data?.items.length == 0"
+        [class.text-primary]="data?.items.length > 0"
+      ></span>
+      <span class="text-dark" *ngIf="data?.items.length > 0">{{
+        data?.items.length
+      }}</span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+      <span class="icon-chat_bubble_outline me-1 text-muted"></span>
+      <span class="text-dark"></span>
+    </div>
+    <div class="d-flex align-items-center ms-6">
+      <span class="icon-attach_file me-1 text-muted"></span>
+      <span class="text-dark"></span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #subTitleTmp>
+  <div class="d-flex flex-row">
+    <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <span class="fw-bold">
+        {{ itemDetail?.positionName }}
+      </span>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <i class="icon-email me-1"></i>
+      <span class="fw-bold">
+        {{ itemDetail?.email }}
+      </span>
+    </div>
+
+    <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
+      <i class="icon-phone_android me-1"></i>
+      <span class="fw-bold">
+        {{ itemDetail?.phoneNumber }}
+      </span>
+    </div>
+  </div>
+</ng-template>

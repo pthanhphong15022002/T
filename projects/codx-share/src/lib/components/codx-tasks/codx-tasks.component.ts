@@ -158,9 +158,8 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    // if (!this.funcID)
-    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+ 
+    this.showMoreFunc = this.funcID=="TMT0206";
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;

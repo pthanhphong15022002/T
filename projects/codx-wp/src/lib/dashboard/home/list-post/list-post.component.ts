@@ -107,7 +107,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.userValue;
     this.getSetUp('WP');
     this.getValueList();
-    // this.clearData();
     this.refreshAvatar();
   }
 
@@ -436,14 +435,5 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     this.dt.detectChanges();
   }
 
-  clearData() {
-    this.api
-      .execSv(
-        'WP',
-        'ERM.Business.WP',
-        'CommentsBusiness',
-        'DeleteDataCommentsAsync'
-      )
-      .subscribe((res) => {});
-  }
+  
 }

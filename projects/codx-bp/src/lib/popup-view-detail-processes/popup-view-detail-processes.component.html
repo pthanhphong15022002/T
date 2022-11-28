@@ -20,11 +20,14 @@
     <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
       <div class="d-flex align-items-center justify-content-between mt-4">
         <div class="d-flex flex-column">
+      <!-- <div class="d-flex justify-content-between mt-4">
+        <div class="p-2"> -->
           <!-- ///noi dung -->
           <div class="mb-5">
             <h4 class="fw-bold text-gray-900 mb-104">
               {{ process?.processName }}
             </h4>
+
             <div class="d-flex flex-wrap mb-2">
               <div class="d-flex align-items-center me-4">
                 <span class="fw-bolb">
@@ -66,6 +69,7 @@
                 </span>
               </div>
             </div>
+        
             <!-- <div class="d-flex flex-wrap mb-2" *ngIf="listPhaseName?.length > 0">
               <div class="d-flex align-items-center me-4">
                 <span>
@@ -89,8 +93,26 @@
             </div> -->
           </div>
         </div>
-      </div>
+        <div class="overflow-hidden btn-group me-3 ">
+          <button style="border-radius: 3px 0 0 3px!important;" type="button" class="btn btn-primary"><i class="icon-add"></i>Thêm</button>
+          <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown " container="body">
+            <button style="border-radius:0 3px 3px 0!important;" type="button" class="btn btn-primary dropdown-toggle-split dropdown-toggle-click" ngbDropdownToggle></button>
+            <div class="dropdown-menu" ngbDropdownMenu>
+              <button ngbDropdownItem style="align-items: center;" *ngFor="let item of childFunc" (click) ="clickButton(item)">
+                <i class="{{item.icon}}"></i>
+                <span class="ms-2">{{item.text}}</span>
+              </button>           
+            </div>
+          </div>
+        </div>
+        <!-- <div class="ml-auto p-2">
 
+          <button type="button" class="btn btn-primary" (click)="openPopUp()">
+            <codx-label name="Save" formName="Sprints" default="Thêm nè"></codx-label>
+          </button>
+        </div> -->
+
+      </div>
       <div class="d-flex tab-header">
         <ng-container *ngFor="let item of tabControl; let i = index">
           <a
@@ -100,13 +122,16 @@
               (item.isActive ? 'tab-active' : '')
             "
           >
-            <codx-label
+          <codx-vll name="SYS025" [value]="item.id" [showText]="true"
+           class=""  (click)="clickMenu(item)">
+         </codx-vll>
+            <!-- <codx-label
               [name]="'lbl' + item.name"
               [formName]="'SYS'"
               [default]="item.textDefault"
               (click)="clickMenu(item)"
             >
-            </codx-label>
+            </codx-label> -->
           </a>
         </ng-container>
       </div>
@@ -121,21 +146,26 @@
         data-kt-scroll-wrappers=".stepper-body .no-header"
         [attr.data-kt-scroll-offset]="offset"
       >
+
         <ng-container *ngIf="name == 'ViewList'">
-          <ng-container *ngIf="process">
+          <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
+              [typeButton]="typeButton"
               [process]="process"
               [viewMode]="16"
               [funcID]="funcID"
+              [childFunc]='childFunc'              
             ></codx-processsteps>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Kanban'">
-          <ng-container *ngIf="process">
+          <ng-container  *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
               [process]="process"
               [viewMode]="6"
               [funcID]="funcID"
+              [childFunc]='childFunc'
+              [typeButton]="typeButton"
             ></codx-processsteps>
           </ng-container>
         </ng-container>
@@ -216,7 +246,7 @@
             </codx-attachment>
           </ng-container>
           <ng-container *ngIf="dataFile">
-            <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+            <codx-view-flowchart  [dataFile]="dataFile"></codx-view-flowchart>
           </ng-container>
           <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
           </ng-container>

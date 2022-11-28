@@ -210,7 +210,7 @@
                             <ng-container *ngIf="fileEditing.views">
                                 <ng-container *ngFor="let view of fileEditing.views; let i = index">
                                     <div *ngIf="view.rating > 0"
-                                        class="d-flex flex-column py-3 w-100 border-bottom user-rating">
+                                        class="d-flex flex-column py-4 w-100 border-bottom user-rating">
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="me-3">
                                                 <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users"
@@ -235,7 +235,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="rating-comment mt-1">
+                                        <div class="rating-comment mt-3">
                                             {{view.comment}}
                                         </div>
                                     </div>
@@ -251,10 +251,10 @@
                         <e-tabitems>
                             <e-tabitem>
                                 <ng-template #headerText>
-                                    <div>{{titleVersion}}</div>
+                                    <div class="ms-2">{{titleVersion}}</div>
                                 </ng-template>
                                 <ng-template #content>
-                                    <div class="pt-5 extend-more-content pe-3">
+                                    <div class="pt-5 extend-more-content px-3 ms-2">
                                         <ng-container
                                             *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let his of fileEditing.history; let i = index">
@@ -285,7 +285,7 @@
                                     <div>{{titleHistory}}</div>
                                 </ng-template>
                                 <ng-template #content>
-                                    <div class="pt-5 extend-more-content pe-3">
+                                    <div class="pt-5 extend-more-content px-3 ms-2">
                                         <ng-container
                                             *ngIf="(fileEditing?.history && fileEditing?.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let history of fileEditing.history; let i = index"

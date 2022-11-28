@@ -1,0 +1,37 @@
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [dataValue]="dataValue" [views]="views" [idField]="idField" [className]="className" [method]="method"
+  (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
+
+</codx-views>
+
+<ng-template #tranTypeCol let-data>
+  <div class="">
+    <codx-vll [showText]="true" [showBgColor]="true" [name]="'EP019'" [value]="data?.transType"
+      class="badge badge-light badge-md fs-7">
+    </codx-vll>
+  </div>
+</ng-template>
+<ng-template #transDateCol let-data>
+  <div class="">
+    {{data?.transDate|fmDT}}
+  </div>
+</ng-template>
+<ng-template #userIDCol let-data>
+
+  <div class="h-50px d-flex has-action-menu align-items-center">
+    <codx-img [objectId]="data?.userID" objectType="AD_Users"></codx-img>
+    <div class="ms-2">
+      <div class="fw-bold">{{ data?.userName }}</div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #createByCol let-data>
+  <div class="d-flex has-action-menu align-items-center">
+    <codx-img [width]="25" [objectId]="data?.createdBy" objectType="AD_Users"></codx-img>
+    <div class="ms-2">
+      <div class="fw-bold">{{ data?.createdName }}</div>
+    </div>
+  </div>
+</ng-template>

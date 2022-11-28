@@ -451,14 +451,14 @@ img.w-20px.h-20px,
 }
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link {
-  padding: 8px 10px;
-  margin: 4px 15px;
+  padding: 8px;
+  margin: 4px 10px;
   border-radius: 4px;
 }
 
-lib-nosubaside[data-kt-aside-minimize=on] .aside-menu .menu .menu-item .menu-link {
-  margin: 4px 10px;
-}
+// lib-nosubaside[data-kt-aside-minimize=on] .aside-menu .menu .menu-item .menu-link {
+//   margin: 4px 10px;
+// }
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
 
@@ -477,6 +477,14 @@ lib-nosubaside .aside-menu .menu .menu-item .menu-link:hover .menu-title {
   color: var(--primary-inverse) !important;
 }
 
+lib-nosubaside .aside-footer .menu .menu-item .menu-link {
+  padding-left: 15px !important;
+}
+
+lib-nosubaside .aside-footer.py-1 {
+  padding-top: 0 !important;
+}
+
 codx-aside .menu-item .menu-heading {
   font-size: 15px;
   font-weight: bold;
@@ -487,6 +495,18 @@ codx-aside .menu-item .separator {
   margin-top: 20px;
 }
 
+[data-kt-aside-minimize=on] .aside .menu-column {
+  overflow: hidden;
+}
+
+.aside .aside-logo#kt_aside_logo {
+  padding-left: 13px !important;
+  padding-right: 13px !important;
+}
+
+
+
+/****/
 codx-views>.container-fluid.h-100 {
   padding: 0;
 }
@@ -1278,6 +1298,23 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
 
 .e-schedule-table td div {
   font-size: 13px !important;
+}
+
+.codx-form.card .card-header .card-toolbar.w-100 {
+  width: auto !important;
+}
+
+.card-process .card-body .p-3 {
+  padding: 0 !important;
+
+}
+
+.card-process .codx-image {
+  align-items: flex-start !important;
+}
+
+.e-grid.e-default tr td:first-child {
+  padding-left: 12px !important;
 }
 
 // codx-popup-container .share-box {
