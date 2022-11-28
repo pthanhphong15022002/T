@@ -1,7 +1,9 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Injector,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -29,7 +31,6 @@ import { OkrAddComponent } from './okr-add/okr-add.component';
 export class OKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
   @ViewChild('panelRight') panelRight: TemplateRef<any>;
-
   openAccordion = [];
   dataOKR = [];
 
@@ -66,15 +67,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //   if(item) this.titleRoom = item.organizationName
     // })
     var dataRequest = new DataRequest();
-    dataRequest.funcID = "OMT01"
-    dataRequest.entityName = "OM_OKRs"
+    dataRequest.funcID = 'OMT01';
+    dataRequest.entityName = 'OM_OKRs';
     dataRequest.page = 1;
     dataRequest.pageSize = 20;
-    dataRequest.predicate="ParentID=null"
-    this.okrService.getOKR(dataRequest).subscribe((item:any)=>{
-      if(item) this.dataOKR = this.dataOKR.concat(item);
+    dataRequest.predicate = 'ParentID=null';
+    this.okrService.getOKR(dataRequest).subscribe((item: any) => {
+      if (item) this.dataOKR = this.dataOKR.concat(item);
     });
-    
   }
 
   //Hàm click
@@ -109,19 +109,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       '',
       dialogModel
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event) this.dataOKR = this.dataOKR.concat(item.event);
-    })
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.dataOKR = this.dataOKR.concat(item.event);
+    });
   }
 
   //Lấy data danh sách mục tiêu
-  getGridViewSetup()
-  {
+  getGridViewSetup() {
     this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
-      this.okrService.loadGridView(fuc?.formName, fuc?.gridViewName).subscribe(grd=>{
-        this.gridView = grd;
-      })
-    })
+      this.okrService
+        .loadGridView(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridView = grd;
+        });
+    });
   }
 
   //Thêm KR
