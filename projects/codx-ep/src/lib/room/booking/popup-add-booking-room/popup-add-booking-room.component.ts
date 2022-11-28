@@ -192,7 +192,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'EPParameters'
+        'EPRoomParameters'
       )
       .subscribe((res) => {
         if (res) {
@@ -258,6 +258,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.changeDetectorRef.detectChanges();
         }
       });
+      
     //Thêm lấy thời gian hiện tại làm thông tin đặt phòng khi thêm mới
     // if (this.isAdd && this.optionalData!=null) {
     //   let tmpDate = new Date();
