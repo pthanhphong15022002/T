@@ -282,9 +282,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       option.FormModel = this.view?.formModel;
       //option.FormModel = this.formModel;
       option.Width = '550px';
+      option.zIndex = 1001;
 
       this.view.dataService.dataSelected.processID = this.processID;
-      if(this.parentID!='') this.view.dataService.dataSelected.parentID = this.parentID ;
+      if (this.parentID != '')
+        this.view.dataService.dataSelected.parentID = this.parentID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         ['add', this.titleAction, this.stepType, this.formModelMenu],
@@ -666,7 +668,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
-    this.parentID='';
+    this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
       var p = this.button.items.find((x) => (x.id = this.stepType));
@@ -752,7 +754,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   clickMenu(data, funcMenu) {
     this.stepType = funcMenu.id;
-    this.parentID = this.stepType!="A" && data.stepType=="P" ? '' : data.recID ;
+    this.parentID =
+      this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
     this.titleAction = this.getTitleAction(this.titleAdd, data.stepType);
     this.formModelMenu = this.view?.formModel;
     this.add();
@@ -768,9 +771,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     }
   }
-  clickAddActivity(data){
-    let funcMenu = this.childFuncOfP?.find(x=>x.id== "A") ;
-    if(funcMenu) this.clickMenu(data,funcMenu)
+  clickAddActivity(data) {
+    let funcMenu = this.childFuncOfP?.find((x) => x.id == 'A');
+    if (funcMenu) this.clickMenu(data, funcMenu);
   }
 
   getTitleAction(action, stepType): string {

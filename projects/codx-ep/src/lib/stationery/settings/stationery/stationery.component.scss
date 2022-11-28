@@ -1,0 +1,16 @@
+::ng-deep {
+  .card-vpp {
+    .codx-image {
+      display: unset !important;
+      max-height: 120px !important;
+    }
+  }
+}
+
+.reservedQty_card {
+  color: #f4c703 !important;
+}
+
+.availableQty_card {
+  color: #0938fc !important;
+}
