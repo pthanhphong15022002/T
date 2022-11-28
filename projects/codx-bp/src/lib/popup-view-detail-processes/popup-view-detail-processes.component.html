@@ -127,8 +127,10 @@
                 *ngFor="let item of childFunc"
                 (click)="clickButton(item)"
               >
-                <i class="{{ item.icon }}"></i>
-                <span class="ms-2">{{ item.text }}</span>
+                <div class="text-hover-primary d-flex">
+                  <i class="{{ item.icon }}"></i>
+                  <span class="ms-2">{{ item.text }}</span>
+                </div>
               </button>
             </div>
           </div>
@@ -157,13 +159,6 @@
               (click)="clickMenu(item)"
             >
             </codx-vll>
-            <!-- <codx-label
-              [name]="'lbl' + item.name"
-              [formName]="'SYS'"
-              [default]="item.textDefault"
-              (click)="clickMenu(item)"
-            >
-            </codx-label> -->
           </a>
         </ng-container>
       </div>
@@ -178,25 +173,14 @@
         data-kt-scroll-wrappers=".stepper-body .no-header .page-viewdetail"
         [attr.data-kt-scroll-offset]="'75px'"
       >
-        <ng-container *ngIf="name == 'ViewList'">
+        <ng-container *ngIf="name == 'ViewList' || name == 'Kanban'">
           <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
-              #processViewList
+              #viewProcessSteps
               [process]="process"
-              [viewMode]="16"
               [funcID]="funcID"
               [childFunc]="childFunc"
-            ></codx-processsteps>
-          </ng-container>
-        </ng-container>
-        <ng-container *ngIf="name == 'Kanban'">
-          <ng-container *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
-              #processKanban
-              [process]="process"
-              [viewMode]="6"
-              [funcID]="funcID"
-              [childFunc]="childFunc"
+              [formModel]="formModelFlowChart"
             ></codx-processsteps>
           </ng-container>
         </ng-container>
@@ -248,7 +232,7 @@
                   class="p-2 bd-highlight align-self-center cursor-pointer text-primary text-hover-danger"
                   (click)="download()"
                 >
-                  <span class="fa-solid  fa-lg fa-arrow-down mx-2"></span
+                  <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
                   ><codx-label
                     default="Tải về"
                     [fiedName]="'Download'"

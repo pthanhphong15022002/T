@@ -65,9 +65,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   
   @Input() process?: BP_Processes;
-  @Input() viewMode = '6';
+  @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
+  @Input() formModel: FormModel;
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -112,6 +113,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfA = [];
   childFuncOfP = [];
   parentID = '';
+  linkFile : any;
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -151,6 +154,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       // }else{
       //   this.getFlowChart(this.process);
       // }
+      this.getFlowChart(this.process);
       this.request = new ResourceModel();
       this.request.service = 'BP';
       this.request.assemblyName = 'BP';
@@ -260,7 +264,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       //   active: false,
       //   sameData: false,
       //   model: {
-      //     panelRightRef: this.flowChart,
+      //     panelLeftRef: this.flowChart,
       //   },
       // },
     ];
@@ -271,6 +275,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
     // this.changeDetectorRef.detectChanges();
   }
+
+//Thay doi viewModel
+chgViewModel(type){
+  let view = this.views.find(x=>x.type == type);
+  if(view)
+  this.view.viewChange(view);
+}
 
   //#region CRUD bước công việc
   add() {
@@ -710,7 +721,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   hoverViewText(text) {
     return (
-      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1) 
     );
   }
 
@@ -1071,11 +1082,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     });
     return arrOwner.join(';');
   }
-  //test data flow chart 636341e8e82afdc6f9a4ab54
+
   getFlowChart(process) {
-    // this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
-    //   if (data) this.dataFile = data;
-    // });
     let paras = [
       '',
       this.funcID,
@@ -1138,5 +1146,51 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     }
     if (p?.isOpen) p.close();
     p.open();
+  }
+
+  print() {
+    if (this.linkFile)
+    {
+     const output = document.getElementById("output");
+     const img = document.createElement("img");
+     img.src = this.linkFile;
+     output.appendChild(img);
+     const br = document.createElement("br");
+     output.appendChild(br);
+     window.print();
+
+     document.body.removeChild(output);
+    }
+    else
+      window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
+   }
+
+   checkDownloadRight() {
+    return this.dataFile.download;
+  }
+   async download(): Promise<void> {
+    var id = this.dataFile?.recID;
+    var fullName = this.dataFile.fileName;
+    var that = this;
+
+    if (this.checkDownloadRight()) {
+      ///lấy hàm của chung dang fail
+      this.fileService.downloadFile(id).subscribe(async res => {
+        if (res) {
+          let blob = await fetch(res).then(r => r.blob());
+          let url = window.URL.createObjectURL(blob);
+          var link = document.createElement("a");
+          link.setAttribute("href", url);
+          link.setAttribute("download", fullName);
+          link.style.display = "none";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+    }
+    else {
+      this.notiService.notifyCode("SYS018");
+    }
   }
 }
