@@ -2,8 +2,9 @@ import { CodxOmService } from './../../codx-om.service';
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Injector,
-  Input,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -13,6 +14,7 @@ import {
   ResourceModel,
   UIComponent,
   ViewModel,
+  ViewsComponent,
   ViewType,
 } from 'codx-core';
 
@@ -22,7 +24,9 @@ import {
   styleUrls: ['./okr-tasks.component.scss'],
 })
 export class OKRTasksComponent extends UIComponent implements AfterViewInit {
+  @ViewChild('viewTask') viewTask!: ViewsComponent;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @Output() click = new EventEmitter<string>();
   service = 'TM';
   entityName = 'TM_Tasks';
   idField = 'taskID';
@@ -33,10 +37,15 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   dataObj;
   formModel: FormModel;
   button?: ButtonModel;
+  buttons: Array<ButtonModel>;
   views: Array<ViewModel> | any = [];
   viewType = ViewType;
   request: ResourceModel;
   resourceKanban?: ResourceModel;
+  isKanban: boolean = true;
+  dataTreeProcessStep = [];
+  listPhaseName = [];
+  kanban: any;
 
   constructor(inject: Injector, private omService: CodxOmService) {
     super(inject);
@@ -71,13 +80,30 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     //this.resourceKanban.dataObj = '125125';
+
+    this.button = {
+      id: 'btnAdd',
+    };
+
+    this.buttons = [
+      {
+        id: '1',
+        icon: 'icon-format_list_bulleted icon-18',
+        text: ' List',
+      },
+      {
+        id: '2',
+        icon: 'icon-appstore icon-18',
+        text: ' Card',
+      },
+    ];
   }
 
   ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.kanban,
-        active: false,
+        active: true,
         sameData: false,
         request: this.request,
         request2: this.resourceKanban,
@@ -85,22 +111,19 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
           template: this.cardKanban,
         },
       },
-      // {
-      //   type: ViewType.schedule,
-      //   active: false,
-      //   sameData: false,
-      //   request: ,
-      //   request2: ,
-      //   showSearchBar: false,
-      //   showFilter: false,
-      //   model: {
-      //     statusColorRef: 'TM004',
-      //   },
-      // },
+      {
+        type: ViewType.schedule,
+        active: false,
+        sameData: false,
+        // request: ,
+        // request2: ,
+        showSearchBar: false,
+        showFilter: false,
+        model: {
+          statusColorRef: 'TM004',
+        },
+      },
     ];
-    this.button = {
-      id: 'btnAdd',
-    };
   }
 
   clickMF(e: any, data?: any) {}
@@ -158,6 +181,21 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
           x.disabled = true;
         }
       });
+    }
+  }
+
+  buttonClick(event: any) {
+    this.click.emit(event);
+  }
+
+  viewChange(event) {
+    if (event?.type == 6) {
+      this.viewTask.viewChange(this.views[0]);
+      this.detectorRef.detectChanges();
+    }
+    if (event?.type == 8) {
+      this.viewTask.viewChange(this.views[1]);
+      this.detectorRef.detectChanges();
     }
   }
 

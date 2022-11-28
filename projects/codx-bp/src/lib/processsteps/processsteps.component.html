@@ -50,14 +50,6 @@
         </label>
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
-            <!-- <div
-              class="d-flex"
-              [ngbPopover]="hoverMoreFunction"
-              #p="ngbPopover"
-              [openDelay]="500"
-              (mouseenter)="openMoreFunction(item,p)"
-              placement="left bottom top"
-            > -->
             <div class="d-flex">
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
@@ -104,16 +96,16 @@
         </ng-container>
       </ng-container>
       <ng-container *ngIf="checkReferencesByStepType(data, 'Q')">
+        <label class="text-danger fw-bold mb-2">
+          <codx-label
+            [fiedName]="'Reference'"
+            [formName]="'BPQuestionnaires'"
+            [gridViewName]="'grvBPQuestionnaires'"
+            default="Bảng khảo sát"
+          ></codx-label>
+        </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <label class="text-danger fw-bold mb-2">
-              <codx-label
-                [fiedName]="'Reference'"
-                [formName]="'BPQuestionnaires'"
-                [gridViewName]="'grvBPQuestionnaires'"
-                default="Bảng khảo sát"
-              ></codx-label>
-            </label>
             <div class="check-list text-dark" #reference>
               {{
                 item.reference
