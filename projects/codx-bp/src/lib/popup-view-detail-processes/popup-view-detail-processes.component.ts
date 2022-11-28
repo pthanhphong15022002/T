@@ -189,7 +189,6 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   clickButton(e: ButtonModel) {
    if(this.name=="ViewList" || this.name=="Flowchart") this.processViewList.click(e);
    if(this.name=="Kanban" || this.name=="Flowchart") this.processKanban.click(e);
-
   }
 
 }
