@@ -59,26 +59,35 @@ export class PopupAddPermissionComponent implements OnInit {
   //#region footer
   onShare() {
     this.per.recIDProcess = this.id;
+    if( this.toPermission == null){
+      this.notificationsService.notify(
+        'Bạn chưa chọn người!'
+      );
+      return;
+    }
     this.per.toPermission = this.toPermission;
     this.per.byPermission = this.byPermission;
     this.per.ccPermission = this.ccPermission;
     for (var i = 0; i < this.per.toPermission.length; i++) {
-      if(this.startDate != null && this.endDate != null){
+      if (this.startDate != null && this.endDate != null) {
         if (this.startDate >= this.endDate) {
+          //Chưa có mssg code
+          if (this.isCheckFromToDate(this.process.activedOn)) {
+            this.notificationsService.notify(
+              'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
+            );
+            return;
+          }
           this.notificationsService.notify(
             'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
           );
           return;
         }
-        if (this.isCheckFromToDate(this.process.activedOn)) {
-          this.notificationsService.notify(
-            'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
-          );
-          return;
-        }
+
+        this.per.toPermission[i].startDate = this.startDate;
+        this.per.toPermission[i].endDate = this.endDate;
       }
-      this.per.toPermission[i].startDate = this.startDate;
-      this.per.toPermission[i].endDate = this.endDate;
+
       if (!this.isShare) {
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
@@ -119,7 +128,6 @@ export class PopupAddPermissionComponent implements OnInit {
             this.notificationsService.notify('Đã yêu cầu cấp quyền');
             this.dialog.close(res);
           }
-
         } else {
           if (this.per.form == '2')
             this.notificationsService.notify('Chia sẻ không thành công');
@@ -142,120 +150,114 @@ export class PopupAddPermissionComponent implements OnInit {
 
   onUserEvent($event, type: string) {
     console.log($event);
-      switch (type) {
-        case 'to':
-          if ($event.data != undefined) {
-            var data = $event.data;
-            var list = [];
-            if(this.toPermission != null)
-              list = this.toPermission;
-            else
-              list = [];
-            for (var i = 0; i < data.length; i++) {
-              var item = data[i];
-              // if(item.id != null && item.objectType != "U"){
-                var perm = new BP_ProcessPermissions();
-                perm.startDate = this.startDate;
-                perm.endDate = this.endDate;
-                perm.objectName = item.text != null ? item.text : item.objectName;
-                perm.objectID = item.id;
-                perm.isActive = true;
-                perm.objectType = item.objectType;
-                list.push(Object.assign({}, perm));
-              // }else if (item.id != null && item.objectType == "U"){
-              //   var perm = new BP_ProcessPermissions();
-              //   perm.startDate = this.startDate;
-              //   perm.endDate = this.endDate;
-              //   perm.objectName = item.text != null ? item.text : item.objectName;
-              //   perm.objectID = item.id;
-              //   perm.isActive = true;
-              //   perm.objectType = item.objectType;
-              //   perm.read = true;
-              //   this.toPermission.push(Object.assign({}, perm));
-              // }
-            }
-            this.toPermission = list;
+    switch (type) {
+      case 'to':
+        if ($event.data != undefined) {
+          var data = $event.data;
+          var list = [];
+          if (this.toPermission != null) list = this.toPermission;
+          else list = [];
+          for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            // if(item.id != null && item.objectType != "U"){
+            var perm = new BP_ProcessPermissions();
+            perm.startDate = this.startDate;
+            perm.endDate = this.endDate;
+            perm.objectName = item.text != null ? item.text : item.objectName;
+            perm.objectID = item.id;
+            perm.isActive = true;
+            perm.objectType = item.objectType;
+            list.push(Object.assign({}, perm));
+            // }else if (item.id != null && item.objectType == "U"){
+            //   var perm = new BP_ProcessPermissions();
+            //   perm.startDate = this.startDate;
+            //   perm.endDate = this.endDate;
+            //   perm.objectName = item.text != null ? item.text : item.objectName;
+            //   perm.objectID = item.id;
+            //   perm.isActive = true;
+            //   perm.objectType = item.objectType;
+            //   perm.read = true;
+            //   this.toPermission.push(Object.assign({}, perm));
+            // }
           }
-          break;
-        case 'cc':
-          if ($event.data != undefined) {
-            var data = $event.data;
-            var list = [];
-            if(this.ccPermission != null)
-              list = this.ccPermission;
-            else
-              list = [];
-            for (var i = 0; i < data.length; i++) {
-              var item = data[i];
-              // if(item.id != null && item.objectType != "U"){
-                var perm = new BP_ProcessPermissions();
-                perm.startDate = this.startDate;
-                perm.endDate = this.endDate;
-                perm.objectName = item.text != null ? item.text : item.objectName;
-                perm.objectID = item.id;
-                perm.isActive = true;
-                perm.objectType = item.objectType;
-                list.push(Object.assign({}, perm));
+          this.toPermission = list;
+        }
+        break;
+      case 'cc':
+        if ($event.data != undefined) {
+          var data = $event.data;
+          var list = [];
+          if (this.ccPermission != null) list = this.ccPermission;
+          else list = [];
+          for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            // if(item.id != null && item.objectType != "U"){
+            var perm = new BP_ProcessPermissions();
+            perm.startDate = this.startDate;
+            perm.endDate = this.endDate;
+            perm.objectName = item.text != null ? item.text : item.objectName;
+            perm.objectID = item.id;
+            perm.isActive = true;
+            perm.objectType = item.objectType;
+            list.push(Object.assign({}, perm));
             //
-            }
-            this.ccPermission = list;
           }
-          break;
-        case 'by':
-          if ($event.data != undefined) {
-            var data = $event.data;
-            var list = [];
-            if(this.byPermission != null)
-              list = this.byPermission;
-            else
-              list = [];
-            for (var i = 0; i < data.length; i++) {
-              var item = data[i];
-              // if(item.id != null && item.objectType != "U"){
-                var perm = new BP_ProcessPermissions();
-                perm.startDate = this.startDate;
-                perm.endDate = this.endDate;
-                perm.objectName = item.text != null ? item.text : item.objectName;
-                perm.objectID = item.id;
-                perm.isActive = true;
-                perm.objectType = item.objectType;
-                list.push(Object.assign({}, perm));
-              // }else if (item.id != null && item.objectType == "U"){
-              //   var perm = new BP_ProcessPermissions();
-              //   perm.startDate = this.startDate;
-              //   perm.endDate = this.endDate;
-              //   perm.objectName = item.text != null ? item.text : item.objectName;
-              //   perm.objectID = item.id;
-              //   perm.isActive = true;
-              //   perm.objectType = item.objectType;
-              //   perm.read = true;
-              //   this.byPermission.push(Object.assign({}, perm));
-              // }
-            }
-            this.byPermission = list;
+          this.ccPermission = list;
+        }
+        break;
+      case 'by':
+        if ($event.data != undefined) {
+          var data = $event.data;
+          var list = [];
+          if (this.byPermission != null) list = this.byPermission;
+          else list = [];
+          for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            // if(item.id != null && item.objectType != "U"){
+            var perm = new BP_ProcessPermissions();
+            perm.startDate = this.startDate;
+            perm.endDate = this.endDate;
+            perm.objectName = item.text != null ? item.text : item.objectName;
+            perm.objectID = item.id;
+            perm.isActive = true;
+            perm.objectType = item.objectType;
+            list.push(Object.assign({}, perm));
+            // }else if (item.id != null && item.objectType == "U"){
+            //   var perm = new BP_ProcessPermissions();
+            //   perm.startDate = this.startDate;
+            //   perm.endDate = this.endDate;
+            //   perm.objectName = item.text != null ? item.text : item.objectName;
+            //   perm.objectID = item.id;
+            //   perm.isActive = true;
+            //   perm.objectType = item.objectType;
+            //   perm.read = true;
+            //   this.byPermission.push(Object.assign({}, perm));
+            // }
           }
-          break;
-      }
-      this.changeDetectorRef.detectChanges();
+          this.byPermission = list;
+        }
+        break;
     }
-
+    this.changeDetectorRef.detectChanges();
+  }
 
   txtValue($event, ctrl) {
     switch (ctrl) {
       case 'requestTitle':
-        if($event.data != ''){
-          this.api.execSv<any>(
-            'SYS',
-            'ERM.Business.AD',
-            'EmailTemplatesBusiness',
-            'GetViewEmailTemplateAsync',
-            [$event.data]
-          ).subscribe(res=>{
-            if(res != null){
-              this.requestTitle = res[0].subject;
-
-            }
-          });
+        if ($event.data != '') {
+          this.api
+            .execSv<any>(
+              'SYS',
+              'ERM.Business.AD',
+              'EmailTemplatesBusiness',
+              'GetViewEmailTemplateAsync',
+              [$event.data]
+            )
+            .subscribe((res) => {
+              if (res != null) {
+                this.requestTitle = res[0].subject;
+              }
+            });
         }
         break;
       case 'shareContent':
