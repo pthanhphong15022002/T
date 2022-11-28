@@ -460,9 +460,9 @@
           <div class="moreFC rounded-4">
             <ng-container *ngIf="data.stepType == 'P'">
               <ng-container *ngFor="let menu of childFuncOfP">
-                <div class="icon-MF" (click)="clickMenu(data, menu)">
+                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
                   <span
-                    class="{{ menu.icon }} icon-20 text-hover-primary mb-2"
+                    class="{{ menu.icon }} icon-20 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
                     triggers="mouseenter:mouseleave"
                     placement="right left"
@@ -473,9 +473,9 @@
             </ng-container>
             <ng-container *ngIf="data.stepType == 'A'">
               <ng-container *ngFor="let menu of childFuncOfA">
-                <div class="icon-MF" (click)="clickMenu(data, menu)">
+                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
                   <span
-                    class="{{ menu.icon }} icon-20 text-hover-primary mb-2"
+                    class="{{ menu.icon }} icon-20 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
                     triggers="mouseenter:mouseleave"
                     placement="right left"

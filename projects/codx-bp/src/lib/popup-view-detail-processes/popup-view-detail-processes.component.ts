@@ -38,7 +38,9 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   ];
   formModelFlowChart :FormModel ;
   listPhaseName = [] ;
-  childFunc = []
+  childFunc = [] ;
+  mfAdd :any
+  isShowButton = true ;
 
   constructor(
     private api: ApiHttpService,
@@ -56,6 +58,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc?.customName;
     this.formModel = this.data?.formModel
+   
     this.cache.functionList(this.funcID).subscribe(f=>{
       if(f){
         this.formModelFlowChart = f.formModel
@@ -191,8 +194,8 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
 
   clickButton(e: ButtonModel) {
-   if(this.name=="ViewList" || this.name=="Flowchart") this.processViewList.click(e);
-   if(this.name=="Kanban" || this.name=="Flowchart") this.processKanban.click(e);
+   if(this.name=="ViewList" || this.name=="Flowchart") this.processViewList?.click(e);
+   if(this.name=="Kanban" ) this.processKanban?.click(e);
   }
 
 }

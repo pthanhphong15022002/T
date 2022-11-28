@@ -756,7 +756,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.stepType = funcMenu.id;
     this.parentID =
       this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
-    this.titleAction = this.getTitleAction(this.titleAdd, data.stepType);
+    this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
     this.formModelMenu = this.view?.formModel;
     this.add();
     if (funcMenu) {
