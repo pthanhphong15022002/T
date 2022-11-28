@@ -1,0 +1,76 @@
+<codx-form
+  #form
+  [headerText]="title"
+  [subHeaderText]="subTitle"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [data]="result"
+>
+  <ng-template #body>
+    <div class="reason form-group" *ngIf="mode != 5">
+      <codx-label fiedName="ResourceName" [formModel]="formModel"> </codx-label>
+      <codx-input
+        type="combobox"
+        [Group]="dialogSignFile"
+        [field]="controlName"
+        [formModel]="formModel"
+      >
+      </codx-input>
+    </div>
+
+    <div class="note form-group">
+      <codx-label fiedName="Comment" [formModel]="formModel"> </codx-label>
+      <codx-input
+        type="text"
+        field="comment"
+        [crrValue]="result.comment"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+    </div>
+
+    <!-- <div class="attachment" *ngIf="mode == 5">
+      <codx-attachment
+        #attachment
+        [objectType]="'ES_SignFiles'"
+        hideBtnSave="1"
+        hideFolder="1"
+        hideUploadBtn="1"
+        hideDes="1"
+        hideImageUpload="0"
+        hideImageThumb="1"
+        [functionID]="funcID"
+        [objectId]="recID"
+        [allowMultiFile]="1"
+        [idBrowse]="'add'"
+      >
+      </codx-attachment>
+    </div>
+    -->
+  </ng-template>
+
+  <ng-template #footer>
+    <!-- mode == 5
+      ? 'justify-content-between card-footer d-flex'
+      :  -->
+    <div [class]="'justify-content-end card-footer d-flex'">
+      <!-- <button
+        *ngIf="mode == 5"
+        type="button"
+        class="btn btn-primary"
+        (click)="popupUploadFile()"
+      >
+        <codx-label
+          name="lblAttachFiles"
+          default="Đính kèm"
+          [formModel]="formModel"
+        ></codx-label>
+      </button> -->
+      <button type="button" class="btn btn-primary" (click)="onSaveForm()">
+        <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true">
+        </codx-vll>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

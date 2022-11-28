@@ -127,7 +127,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         isActive: false,
         template: this.reference,
       },
-      // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
 
@@ -439,7 +439,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       });
       datas = this.view.dataService.data[index];
     }
-    if (funcID != 'recallUser' && funcID != 'ODT201' && funcID != 'SYS02' && this.view.dataService.dataSelected.recID != datas.recID)
+    if (
+      funcID != 'recallUser' &&
+      funcID != 'ODT201' &&
+      funcID != 'SYS02' &&
+      this.view.dataService.dataSelected.recID != datas.recID
+    )
       this.view.dataService.onAction.next({ type: 'update', data: datas });
     delete datas._uuid;
     delete datas.__loading;
@@ -456,7 +461,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText: 'Chỉnh sửa '+ (this.funcList?.defaultName).toLowerCase(),
+              headerText:
+                'Chỉnh sửa ' + (this.funcList?.defaultName).toLowerCase(),
               formModel: this.formModel,
               type: 'edit',
               data: datas,
@@ -516,7 +522,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         this.view.dataService.dataSelected = datas;
         this.view.dataService.copy(0).subscribe((res: any) => {
           this.view.dataService.dataSelected.recID = res?.recID;
-          this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo
+          this.view.dataService.dataSelected.dispatchNo = res?.dispatchNo;
           this.view.dataService.dataSelected.owner = res?.owner;
           this.view.dataService.dataSelected.departmentID = res?.departmentID;
           let option = new SidebarModel();
@@ -525,7 +531,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             IncommingAddComponent,
             {
               gridViewSetup: this.gridViewSetup,
-              headerText: 'Sao chép ' + (this.funcList?.defaultName).toLowerCase(),
+              headerText:
+                'Sao chép ' + (this.funcList?.defaultName).toLowerCase(),
               type: 'copy',
               formModel: this.formModel,
             },
@@ -539,7 +546,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                   data: x.event,
                 });
               });
-            } 
+            }
           });
         });
         break;
@@ -806,7 +813,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       }
       //Gửi duyệt
       case 'ODT201':
-      case "ODT3001" : {
+      case 'ODT3001': {
         if (datas.bsCategory) {
           //Có thiết lập bước duyệt
           if (datas.bsCategory.approval) {
@@ -853,12 +860,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Hủy xét duyệt
-      case 'ODT212':
-      {
+      case 'ODT212': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
         this.notifySvr
-          .alert('Thông báo', 'Bạn có chắc chắn muốn hủy yêu cầu xét duyệt?', config)
+          .alert(
+            'Thông báo',
+            'Bạn có chắc chắn muốn hủy yêu cầu xét duyệt?',
+            config
+          )
           .closed.subscribe((x) => {
             if (x.event.status == 'Y') this.cancelAproval(datas.recID);
           });
@@ -876,7 +886,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas  },
+            { data: datas },
             '',
             option
           )
@@ -889,52 +899,55 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Trả lại
-      case "ODT113":
-        {
-          var option = new DialogModel();
-          option.FormModel = this.formModel;
-          this.callfunc
+      case 'ODT113': {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
           .openForm(
             RefuseComponent,
             null,
             600,
             400,
             null,
-            { data: datas , headerText:"Trả lại" , status:"4"},
+            { data: datas, headerText: 'Trả lại', status: '4' },
             '',
             option
           )
           .closed.subscribe((x) => {
             if (x.event) this.view.dataService.update(x.event).subscribe();
           });
-          // this.refuse(datas);
-          break;
-        }
-      //Chuyển lại
-      case "ODT114":
-      {
-        var option = new DialogModel();
-        option.FormModel = this.formModel;
-        this.callfunc
-        .openForm(
-          RefuseComponent,
-          null,
-          600,
-          400,
-          null,
-          { data: datas , headerText:"Chuyển lại" , status:"3"},
-          '',
-          option
-        )
-        .closed.subscribe((x) => {
-          if (x.event) this.view.dataService.update(x.event).subscribe();
-        });
         // this.refuse(datas);
         break;
       }
-      default:
-      {
-        this.shareService.defaultMoreFunc(val,datas,this.afterSaveTask,this.view.formModel,this.view.dataService);
+      //Chuyển lại
+      case 'ODT114': {
+        var option = new DialogModel();
+        option.FormModel = this.formModel;
+        this.callfunc
+          .openForm(
+            RefuseComponent,
+            null,
+            600,
+            400,
+            null,
+            { data: datas, headerText: 'Chuyển lại', status: '3' },
+            '',
+            option
+          )
+          .closed.subscribe((x) => {
+            if (x.event) this.view.dataService.update(x.event).subscribe();
+          });
+        // this.refuse(datas);
+        break;
+      }
+      default: {
+        this.shareService.defaultMoreFunc(
+          val,
+          datas,
+          this.afterSaveTask,
+          this.view.formModel,
+          this.view.dataService
+        );
         break;
       }
     }
@@ -976,36 +989,31 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   //Hủy yêu cầu xét duyệt
-  cancelAproval(recID:any)
-  {
+  cancelAproval(recID: any) {
     alert(recID);
   }
 
-  afterSaveTask(e?:any)
-  {
+  afterSaveTask(e?: any) {
     // Chú thích ;
     // e:{
     //   funcID: Mã moreFunc ,
     //   result : kết quả trả về sau khi thực hiện,
     //   data: data truyền vào
     // }
-    switch(e?.funcID)
-    {
+    switch (e?.funcID) {
       //Giao việc
-      case "SYS005":
-      {
+      case 'SYS005': {
         if (e?.result && e?.result[0]) {
           e.data.status = '3';
-            this.odService.updateDispatch(e.data, false).subscribe((item) => {
-              if (item.status == 0) {
-                this.view.dataService.update(e.data).subscribe();
-              } else this.notifySvr.notify(item.message);
-            });
-          }
+          this.odService.updateDispatch(e.data, false).subscribe((item) => {
+            if (item.status == 0) {
+              this.view.dataService.update(e.data).subscribe();
+            } else this.notifySvr.notify(item.message);
+          });
+        }
         break;
       }
     }
-   
   }
   getJSONString(data) {
     return JSON.stringify(data);
@@ -1063,18 +1071,19 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       );
       approvel[0].disabled = true;
     }
-    if(this.formModel.funcID == 'ODT41')
-    {
+    if (this.formModel.funcID == 'ODT41') {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
       approvel[0].disabled = true;
     }
-   
+
     if (
       this.formModel.funcID == 'ODT41' &&
       (data?.approveStatus == '2' ||
-      data?.approveStatus == '3' || data?.approveStatus == '4') && data?.createdBy == this.userID
+        data?.approveStatus == '3' ||
+        data?.approveStatus == '4') &&
+      data?.createdBy == this.userID
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
@@ -1090,7 +1099,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           x.functionID == 'SYS03' ||
           x.functionID == 'ODT103' ||
           x.functionID == 'ODT202' ||
-          x.functionID == "ODT101" ||
+          x.functionID == 'ODT101' ||
           x.functionID == 'ODT113'
       );
       for (var i = 0; i < completed.length; i++) {
@@ -1099,28 +1108,23 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
     if (data?.status == '3') {
       var completed = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'SYS02'
+        (x: { functionID: string }) => x.functionID == 'SYS02'
       );
       completed.forEach((elm) => {
         elm.disabled = true;
       });
     }
     var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'ODT114' 
+      (x: { functionID: string }) => x.functionID == 'ODT114'
     );
-    if(approvelCL[0])
-      approvelCL[0].disabled = true;
+    if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
-    if(data?.status == "4")
-    {
+    if (data?.status == '4') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT113' 
+        (x: { functionID: string }) => x.functionID == 'ODT113'
       );
-      if(approvel[0])
-        approvel[0].disabled = true;
-      if(approvelCL[0])
-        approvelCL[0].disabled = false;
+      if (approvel[0]) approvel[0].disabled = true;
+      if (approvelCL[0]) approvelCL[0].disabled = false;
     }
     //data?.isblur = true
   }
@@ -1239,8 +1243,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     return '';
   }
   //Từ chối
-  refuse(datas:any)
-  {
+  refuse(datas: any) {
     //datas = this.
   }
 }

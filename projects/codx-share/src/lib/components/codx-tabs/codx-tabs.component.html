@@ -1,9 +1,19 @@
 <div class="tab-horizone tab-footer tab-off">
-  <ul ngbNav #nav="ngbNav" [(activeId)]="active" (navChange)="navChange($event)" class="nav nav-tabs">
+  <ul
+    ngbNav
+    #nav="ngbNav"
+    [(activeId)]="active"
+    (navChange)="navChange($event)"
+    class="nav nav-tabs"
+  >
     <ng-container *ngFor="let item of TabControl; let i = index">
       <li [ngbNavItem]="i + 1" class="nav-item">
         <a ngbNavLink class="nav-link">
-          <codx-label [name]="'tab' + item.name" [formName]="'SYS'" [default]="item.textDefault || item.name">
+          <codx-label
+            [name]="'tab' + item.name"
+            [formName]="'SYS'"
+            [default]="item.textDefault || item.name"
+          >
           </codx-label>
         </a>
 
@@ -35,29 +45,55 @@
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'attachment'">
-      <codx-attachment #attachment [objectType]="entityName" [objectId]="objectID" [hideFolder]="1" [hideUploadBtn]="0"
-        [hideDes]="hideFolder" [type]="type" [allowExtensions]="allowExtensions" [allowMultiFile]="allowMultiFile"
-        [formModel]="formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-        [displayThumb]="displayThumb" [isSaveSelected]="1">
+      <codx-attachment
+        #attachment
+        [objectType]="entityName"
+        [objectId]="objectID"
+        [hideFolder]="1"
+        [hideUploadBtn]="0"
+        [hideDes]="hideFolder"
+        [type]="type"
+        [allowExtensions]="allowExtensions"
+        [allowMultiFile]="allowMultiFile"
+        [formModel]="formModel"
+        [functionID]="funcID"
+        (fileAdded)="fileAdded($event)"
+        (fileCount)="getfileCount($event)"
+        [displayThumb]="displayThumb"
+        [isSaveSelected]="1"
+      >
       </codx-attachment>
     </ng-container>
     <ng-container *ngSwitchCase="'comment'">
       <div class="tab-comt">
         <div class="tab_container">
-          <codx-tree-history [objectID]="objectID" [objectType]="entityName" [actionType]="'C'" [addNew]="true"
-            [viewIcon]="false" [viewVote]="true" [funcID]="funcID">
+          <codx-tree-history
+            [objectID]="objectID"
+            [objectType]="entityName"
+            [actionType]="'C'"
+            [addNew]="true"
+            [viewIcon]="false"
+            [viewVote]="true"
+            [funcID]="funcID"
+          >
           </codx-tree-history>
         </div>
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'assignto'">
       <div *ngIf="dataTree.length > 0">
-        <codx-view-assign [dataTree]="dataTree" [formModel]="formModel"></codx-view-assign>
+        <codx-view-assign
+          [dataTree]="dataTree"
+          [formModel]="formModel"
+        ></codx-view-assign>
       </div>
       <div class="container h-100" *ngIf="dataTree.length == 0">
         <div class="list-empty card card-flush h-100">
           <div class="d-flex flex-column flex-center justify-content-center">
-            <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+            <img
+              src="../assets/themes/sys/default/img/DataEmpty.svg"
+              class="w-200px"
+            />
             <div class="fs-5 text-dark fw-bold mt-2 text-center">
               {{ "SYS011" | mssg | async }}
             </div>
@@ -66,15 +102,24 @@
       </div>
     </ng-container>
     <ng-container *ngSwitchCase="'references'">
-      <codx-references [funcID]="funcID" [dataReferences]="dataReferences" [vllRefType]="vllRefType"
-        [formModel]="formModel"></codx-references>
+      <codx-references
+        [funcID]="funcID"
+        [dataReferences]="dataReferences"
+        [vllRefType]="vllRefType"
+        [formModel]="formModel"
+      ></codx-references>
     </ng-container>
     <ng-container *ngSwitchCase="'approve'">
-      <ng-container> Comming soon... </ng-container>
+      <ng-container>
+        <codx-approval-step [transID]="transID" [approveStatus]="approveStatus">
+        </codx-approval-step>
+      </ng-container>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <ng-container *ngIf="tab.template">
-        <ng-container *ngTemplateOutlet="tab.template; context: { $implicit: tab }">
+        <ng-container
+          *ngTemplateOutlet="tab.template; context: { $implicit: tab }"
+        >
         </ng-container>
       </ng-container>
     </ng-container>

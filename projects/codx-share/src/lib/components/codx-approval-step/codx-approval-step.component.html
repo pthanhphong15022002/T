@@ -1,6 +1,6 @@
 <div
   class="codx-approval step-signature-temp"
-  *ngIf="process?.length > 0 && approveStatus == '1'"
+  *ngIf="process?.length > 0 && lstSttApproveStep.includes(approveStatus)"
 >
   <ng-container *ngFor="let item of process; let index = index">
     <div class="codx-approval-step pb-3 step-approve">
@@ -191,7 +191,7 @@
 
 <div
   class="codx-approval step-signature-temp"
-  *ngIf="process?.length > 0 && approveStatus != '1'"
+  *ngIf="process?.length > 0 && !lstSttApproveStep.includes(approveStatus)"
 >
   <ng-container *ngFor="let item of process; let index = index">
     <div class="codx-approval-step pb-3 step-approve">

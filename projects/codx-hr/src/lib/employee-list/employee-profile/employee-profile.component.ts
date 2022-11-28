@@ -247,14 +247,12 @@ export class EmployeeProfileComponent extends UIComponent {
   clickMF(event: any, data: any, funcID = null) {
     switch (event.functionID) {
       case 'SYS03': //edit
-        if(funcID == ""){
-
+        if (funcID == '') {
         }
         break;
       case 'SYS02': //delete
-      if(funcID == ""){
-        
-      }
+        if (funcID == '') {
+        }
         break;
     }
   }
