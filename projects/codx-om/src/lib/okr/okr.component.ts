@@ -1,7 +1,9 @@
 import {
   AfterViewInit,
   Component,
+  EventEmitter,
   Injector,
+  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -14,8 +16,11 @@ import {
   CallFuncService,
   DialogModel,
   DataRequest,
+  SidebarModel,
+  FormModel,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
+import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
 
 @Component({
@@ -26,7 +31,6 @@ import { OkrAddComponent } from './okr-add/okr-add.component';
 export class OKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
   @ViewChild('panelRight') panelRight: TemplateRef<any>;
-
   openAccordion = [];
   dataOKR = [];
 
@@ -63,21 +67,28 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //   if(item) this.titleRoom = item.organizationName
     // })
     var dataRequest = new DataRequest();
-    dataRequest.funcID = "OMT01"
-    dataRequest.entityName = "OM_OKRs"
+    dataRequest.funcID = 'OMT01';
+    dataRequest.entityName = 'OM_OKRs';
     dataRequest.page = 1;
     dataRequest.pageSize = 20;
-    dataRequest.predicate="ParentID=null"
-    this.okrService.getOKR(dataRequest).subscribe((item:any)=>{
-      if(item) this.dataOKR = this.dataOKR.concat(item);
+    dataRequest.predicate = 'ParentID=null';
+    this.okrService.getOKR(dataRequest).subscribe((item: any) => {
+      if (item) this.dataOKR = this.dataOKR.concat(item);
     });
-    
   }
 
   //Hàm click
   click(event: any) {
-    switch (event) {
-      case 'add': {
+    switch (event.id) {
+      case 'btnAdd': {
+        this.add();
+        break;
+      }
+      case 'btnAddKR': {
+        this.addKR();
+        break;
+      }
+      case 'btnAddO': {
         this.add();
         break;
       }
@@ -98,21 +109,40 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       '',
       dialogModel
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event) this.dataOKR = this.dataOKR.concat(item.event);
-    })
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.dataOKR = this.dataOKR.concat(item.event);
+    });
   }
 
   //Lấy data danh sách mục tiêu
-  getGridViewSetup()
-  {
+  getGridViewSetup() {
     this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
-      this.okrService.loadGridView(fuc?.formName, fuc?.gridViewName).subscribe(grd=>{
-        this.gridView = grd;
-      })
-    })
+      this.okrService
+        .loadGridView(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridView = grd;
+        });
+    });
   }
 
+  //Thêm KR
+  addKR(o: any=null) {
+    // Tạo FormModel cho OKRs
+    let formModelKR = new FormModel();
+    formModelKR.entityName = 'OM_OKRs';
+    formModelKR.gridViewName = 'grvOKRs';
+    formModelKR.formName = 'OKRs';
+    formModelKR.entityPer = 'OM_OKRs';
 
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = formModelKR;
+
+    let dialogKR = this.callfc.openSide(
+      PopupAddKRComponent,
+      [null, o, formModelKR, true, 'Thêm mới kết quả chính'],
+      option
+    );
+  }
 
 }

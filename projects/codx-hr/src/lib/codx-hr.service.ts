@@ -484,13 +484,23 @@ export class CodxHrService {
     );
   }
 
-  addNewFamily(empID: string) {
+  getEmployeeFamilyRelationshipInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EFamiliesBusiness',
-      'AddNewAsync',
-      [empID]
+      'GetEmployeeFamilyInfoAsync',
+      data
+    );
+  }
+
+  saveEmployeeFamilyRelationshipInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'AddEmployeeFamilyMemberInfoAsync',
+      data
     );
   }
 

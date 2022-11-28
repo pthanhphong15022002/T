@@ -1027,10 +1027,15 @@ codx-tag .codx-tag:hover {
 }
 
 .header-fixed.toolbar-fixed .wrapper .fillter-card-body {
-  height: calc(100vh - 228px);
+  //height: calc(100vh - 228px);
   max-height: calc(100vh - 228px);
   overflow: auto;
-  //  padding-top: 10px;
+}
+
+.header-fixed.toolbar-enabled .wrapper .fillter-card-body {
+  //height: calc(100vh - 228px);
+  max-height: calc(100vh - 245px);
+  overflow: auto;
 }
 
 .card .card-header.fillter-card-header {
@@ -1269,6 +1274,14 @@ ejs-timepicker .e-clear-icon {
 
 ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   visibility: hidden;
+}
+
+.e-schedule-table td div {
+  font-size: 13px !important;
+}
+
+.codx-form.card .card-header .card-toolbar.w-100 {
+  width: auto !important;
 }
 
 // codx-popup-container .share-box {

@@ -442,7 +442,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -790,7 +790,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeePartyInfo()"
+                        (click)="editEmployeePartyInfo()"
                       ></span>
                     </a>
                   </div>
@@ -984,7 +984,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addAssuranceTaxBankAccountInfo()"
+                        (click)="editAssuranceTaxBankAccountInfo()"
                       ></span>
                     </a>
                   </div>
@@ -1136,7 +1136,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addEmployeePassportInfo()"
+                        (click)="handleEmployeePassportInfo(false)"
                       ></span>
                     </a>
                   </div>
@@ -1164,6 +1164,7 @@
                         <div class="d-flex">
                           <span
                             class="icon-connection-point icon-14 text-gray-600 me-1"
+                            (click)="handleEmployeePassportInfo(true)"
                           ></span>
                           <codx-label
                             class="text-gray-600 me-2"
@@ -1214,7 +1215,7 @@
                     <codx-mfunc
                       *ngIf="lstPassport?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, crrPassport)"
+                      (clickMF)="clickMF($event, crrPassport, 'passport')"
                       type="hover"
                       [dataItem]="crrPassport"
                     >
@@ -1673,7 +1674,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -1934,7 +1935,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2045,7 +2046,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2172,7 +2173,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2424,7 +2425,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2535,7 +2536,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2993,7 +2994,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3046,7 +3047,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3102,7 +3103,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3159,7 +3160,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3215,7 +3216,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>

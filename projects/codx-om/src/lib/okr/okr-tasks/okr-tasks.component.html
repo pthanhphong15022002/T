@@ -1,16 +1,146 @@
-<div>Công việc</div>
-<!-- <div style="height: 900px">
-  <codx-views
-    #view_task
-    [views]="views"
-    (buttonClick)="add($event)"
-    [button]="button"
-    [entityName]="''"
-    [assemblyName]="''"
-    [service]="''"
-    [selectedFirst]="false"
-    idField="recID"
-  >
-  </codx-views>
-</div> -->
+<div class="me-2 mb-2 pe-2 pb-2">
+  <div class="d-flex justify-content-between align-item-center">
+    <codx-dropdown-calendar displayOption="wm"></codx-dropdown-calendar>
+    <div class="d-flex justify-content-between align-item-center">
+      <codx-toolbar-button
+        class="me-2"
+        [button]="button"
+        (buttonClick)="buttonClick('add')"
+      >
+      </codx-toolbar-button>
+      <codx-toolbar-choose
+        class="me-2"
+        [views]="views"
+        (viewChange)="viewChange($event)"
+      ></codx-toolbar-choose>
+      <codx-toolbar-more [buttons]="buttons"></codx-toolbar-more>
+    </div>
+  </div>
+</div>
 
+<codx-views
+  #viewTask
+  [service]="service"
+  [entityName]="entityName"
+  [idField]="idField"
+  [funcID]="funcID"
+  [assemblyName]="assemblyName"
+  [className]="className"
+  [method]="method"
+  [views]="views"
+  (buttonClick)="add($event)"
+  [button]="button"
+  [dataObj]="dataObj"
+  [selectedFirst]="false"
+  [viewActiveType]="viewType.kanban"
+>
+</codx-views>
+
+<ng-template #cardKanban let-data let-setting="setting">
+  <codx-card-img
+    cardCss="border h-100"
+    imageObjType="AD_Users"
+    [hideMF]="true"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [iconCss]="data?.isTimeOut ? 'icon-notifications expired' : ''"
+    [icoStatus2]="data?.priority"
+    [icoStatusVll2]="'TM005'"
+    [title]="data.userName"
+    [subTitle]="data.positionName"
+    [content]="data.taskName"
+    [status]="data.status"
+    [statusVll]="'TM004'"
+    [showBgColorVll]="true"
+    [date]="data.dueDate"
+    [resources]="data.assignTo"
+    [rootData]="data"
+    [setting]="setting"
+    [footer]="cardImgFooter"
+    [dataItem]="data"
+  >
+  </codx-card-img>
+</ng-template>
+
+<ng-template #cardImgFooter let-data let-setting="setting">
+  <div class="d-flex flex-column flex-grow-1 mt-2">
+    <div class="min-w-100px mb-2" *ngIf="setting?.processBar">
+      <div class="d-flex flex-column justify-content-start">
+        <div class="progress w-100 h-5px">
+          <div
+            class="progress-bar progress-bar-done"
+            role="progressbar"
+            attr.aria-valuenow="{{ data?.percentage | number }}"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            [style.width.%]="data?.percentage"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!--begin::Item-->
+    <div class="d-flex justify-content-between align-items-end mt-2">
+      <div
+        *ngIf="setting?.countObjects"
+        class="d-flex align-items-end me-2 codx-badge"
+      >
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-mode_comment icon-20 text-gray-400"></span>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+            >{{ data?.comments }}</span
+          >
+        </div>
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-check_box icon-20 text-gray-400"></span>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+            >{{ data?.todo }}</span
+          >
+        </div>
+        <div class="d-flex align-items-center position-relative me-4">
+          <span class="icon-attach_file icon-20 text-gray-400"></span>
+          <span
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-primary badge-sm mn-6"
+            >{{ data?.attachments }}</span
+          >
+        </div>
+      </div>
+      <div class="symbol-group symbol-hover justify-content-end">
+        <ng-container
+          *ngIf="
+            data.category == '3' &&
+              setting.resources &&
+              data.assignTo &&
+              data.assignTo.length;
+            else avatTemplate
+          "
+        >
+          <codx-imgs
+            [width]="30"
+            [objectId]="data.assignTo"
+            objectType="AD_Users"
+            [numberImages]="3"
+            placement="left bottom top right"
+            container="body"
+            autoClose="outside"
+          >
+          </codx-imgs>
+        </ng-container>
+        <ng-template #avatTemplate>
+          <div *ngIf="data.category == '2'">
+            <codx-img
+              [objectId]="data.createdBy"
+              [objectName]="data.userNameCreate"
+              objectType="AD_Users"
+            >
+            </codx-img>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <!--end::Item-->
+  </div>
+</ng-template>
