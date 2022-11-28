@@ -93,6 +93,18 @@
             </div> -->
           </div>
         </div>
+        <div class="overflow-hidden btn-group me-3 ">
+          <button  style="border-radius: 3px 0 0 3px!important;" type="button" class="btn btn-primary" (click) ="clickButtonAdd()"><i class="icon-add"></i>Thêm</button>
+          <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown " container="body">
+            <button style="border-radius:0 3px 3px 0!important;" type="button" class="btn btn-primary dropdown-toggle-split dropdown-toggle-click" ngbDropdownToggle></button>
+            <div class="dropdown-menu" ngbDropdownMenu>
+              <button ngbDropdownItem style="align-items: center;" *ngFor="let item of childFunc" (click) ="clickButton(item)">
+                <i class="{{item.icon}}"></i>
+                <span class="ms-2">{{item.text}}</span>
+              </button>           
+            </div>
+          </div>
+        </div>
         <!-- <div class="ml-auto p-2">
 
           <button type="button" class="btn btn-primary" (click)="openPopUp()">
@@ -137,22 +149,21 @@
 
         <ng-container *ngIf="name == 'ViewList'">
           <ng-container *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
+            <codx-processsteps #processViewList
               [process]="process"
               [viewMode]="16"
               [funcID]="funcID"
-              [childFunc]='childFunc'
+              [childFunc]='childFunc'              
             ></codx-processsteps>
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Kanban'">
           <ng-container  *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps
+            <codx-processsteps #processKanban
               [process]="process"
               [viewMode]="6"
               [funcID]="funcID"
               [childFunc]='childFunc'
-
             ></codx-processsteps>
           </ng-container>
         </ng-container>
@@ -233,7 +244,7 @@
             </codx-attachment>
           </ng-container>
           <ng-container *ngIf="dataFile">
-            <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
+            <codx-view-flowchart  [dataFile]="dataFile"></codx-view-flowchart>
           </ng-container>
           <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
           </ng-container>

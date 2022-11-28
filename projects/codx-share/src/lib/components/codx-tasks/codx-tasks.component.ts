@@ -158,9 +158,8 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-    // if (!this.funcID)
-    //   this.funcID = this.activedRouter.snapshot.params['funcID'];
-
+ 
+    this.showMoreFunc = this.funcID=="TMT0206";
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -1140,16 +1139,10 @@ export class CodxTasksComponent
     }
     if (data.status < '10') {
       this.notiService.notifyCode('TM061');
-      // this.notiService.notify(
-      //   'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
-      // );
       return;
     }
     if (data.status == '50' || data.status == '80') {
       this.notiService.notifyCode('TM062');
-      // this.notiService.notify(
-      //   'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
-      // );
       return;
     }
 

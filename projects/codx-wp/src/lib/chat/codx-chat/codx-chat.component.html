@@ -1,0 +1,25 @@
+<div ngbDropdown class="d-inline-block w-100" #dropdown container="body">
+  <button type="button" class="btn btn-sm" (click)="openChatBox()" id="chat-box"
+    ngbDropdownToggle>
+    <div
+    class="btn btn-icon btn-active-light-primary position-relative"
+    [ngClass]="codxService.toolbarButtonHeightClass">
+    <span 
+        [inlineSVG]="'./assets/themes/sys/default/img/header_chatting.svg'"
+        class="svg-icon"
+        [ngClass]="codxService.toolbarButtonIconSizeClass">
+    </span>
+    <!-- <span
+      class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
+    ></span> -->
+  </div>
+  </button>
+  <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chát-bóc-dropdownPopup"
+    class="h-600px w-300px">
+    <div class="w-100 h-100" id="dropdown">
+      <ng-container *ngIf="loaded">
+        <wp-chat-list></wp-chat-list>
+      </ng-container>
+    </div>
+  </div>
+</div>

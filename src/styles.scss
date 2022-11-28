@@ -1313,6 +1313,29 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   align-items: flex-start !important;
 }
 
+.e-grid.e-default tr td:first-child {
+  padding-left: 12px !important;
+}
+
+.e-frozencontent.e-frozen-left-content {
+  border-right: 1px var(--gray-200) solid;
+}
+
+.e-frozencontent.e-frozen-left-content>table {
+  width: auto;
+
+}
+
+.e-frozencontent.e-frozen-left-content>table tr td {
+  height: 47px !important;
+
+}
+
+.e-movablecontent table tr td {
+  height: 47px !important;
+  white-space: nowrap !important;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }

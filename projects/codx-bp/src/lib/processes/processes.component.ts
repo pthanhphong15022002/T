@@ -657,7 +657,7 @@ export class ProcessesComponent
 
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
-    dialogModel.zIndex = 900;
+    dialogModel.zIndex = 999;
     var dialog = this.callfc.openForm(
       PopupViewDetailProcessesComponent,
       '',
@@ -670,14 +670,13 @@ export class ProcessesComponent
     );
 
     dialog.closed.subscribe((e) => {
-      if(e && data.recID){
+      if (e && data.recID) {
         this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          if(process)
-          this.view.dataService.update(process).subscribe();
+          if (process) this.view.dataService.update(process).subscribe();
           this.detectorRef.detectChanges();
-          })
+        });
       }
-    })
+    });
   }
 
   approval($event) {}
