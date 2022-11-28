@@ -1,5 +1,25 @@
+<div class="me-2 mb-2 pe-2 pb-2">
+  <div class="d-flex justify-content-between align-item-center">
+    <codx-dropdown-calendar displayOption="wm"></codx-dropdown-calendar>
+    <div class="d-flex justify-content-between align-item-center">
+      <codx-toolbar-button
+        class="me-2"
+        [button]="button"
+        (buttonClick)="buttonClick('add')"
+      >
+      </codx-toolbar-button>
+      <codx-toolbar-choose
+        class="me-2"
+        [views]="views"
+        (viewChange)="viewChange($event)"
+      ></codx-toolbar-choose>
+      <codx-toolbar-more [buttons]="buttons"></codx-toolbar-more>
+    </div>
+  </div>
+</div>
+
 <codx-views
-  #view_task
+  #viewTask
   [service]="service"
   [entityName]="entityName"
   [idField]="idField"

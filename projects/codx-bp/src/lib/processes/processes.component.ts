@@ -117,13 +117,12 @@ export class ProcessesComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
-    private routers : Router,
+    private routers: Router
   ) {
     super(inject);
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    console.log(routers.url);
     if (this.funcID == 'BPT3') {
       this.method = 'GetListShareByProcessAsync';
     }
@@ -192,8 +191,8 @@ export class ProcessesComponent
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
     this.view.dataService.methodDelete = 'DeleteProcessesAsync';
- //   this.view.dataService.searchText='GetProcessesByKeyAsync';
-    this.changeDetectorRef.detectChanges();    
+    //   this.view.dataService.searchText='GetProcessesByKeyAsync';
+    this.changeDetectorRef.detectChanges();
   }
 
   getGridModel() {
@@ -275,19 +274,19 @@ export class ProcessesComponent
     //     });
     //     this.changeDetectorRef.detectChanges();
     //   } else {
-        // this.views.forEach((item) => {
-        //   item.hide = true;
-        //   if (item.text == 'Search') item.hide = false;
-        // });
-        // this.changeDetectorRef.detectChanges();
-        // this.isSearch = true;
-        //     this.pageNumberCliked= this.pageNumberDefault;
+    // this.views.forEach((item) => {
+    //   item.hide = true;
+    //   if (item.text == 'Search') item.hide = false;
+    // });
+    // this.changeDetectorRef.detectChanges();
+    // this.isSearch = true;
+    //     this.pageNumberCliked= this.pageNumberDefault;
     //     this.getHomeProcessSearch();
     //   }
     // } catch (ex) {
     //   this.changeDetectorRef.detectChanges();
     // }
-   // this.view.dataService.searchText
+    // this.view.dataService.searchText
     this.view.dataService.search($event).subscribe();
     this.changeDetectorRef.detectChanges();
   }
@@ -331,8 +330,14 @@ export class ProcessesComponent
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
           if (e && e.event != null) {
-            this.view.dataService.update(e).subscribe();
+            this.view.dataService.update(e.event).subscribe();
             this.detectorRef.detectChanges();
           }
         });
@@ -493,7 +498,6 @@ export class ProcessesComponent
   }
 
   roles(e: any) {
-    console.log(e);
     this.callfc
       .openForm(
         PopupRolesComponent,
@@ -601,13 +605,9 @@ export class ProcessesComponent
       });
   }
 
-  onDragDrop(e: any) {
-    console.log(e);
-  }
+  onDragDrop(e: any) {}
 
   changeDataMF(e, data) {
-    console.log(e);
-    console.log(e);
     if (e != null && data != null) {
       e.forEach((res) => {
         if (
@@ -617,7 +617,8 @@ export class ProcessesComponent
           res.functionID == 'SYS002' ||
           res.functionID == 'SYS003'
         ) {
-          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled = true;
+          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
+            true;
         }
       });
     }
@@ -638,7 +639,6 @@ export class ProcessesComponent
 
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
-
     // this.codxService.navigate('', e?.url); thuong chua add
     // this.codxService.navigate('', 'bp/processstep/BPT11')
 
@@ -648,11 +648,11 @@ export class ProcessesComponent
     // this.codxService.navigate('', url, { processID: data.recID });
 
     //view popup
-    let obj ={
-      moreFunc : moreFunc,
-      data : data ,
-      formModel : this.view.formModel
-    }
+    let obj = {
+      moreFunc: moreFunc,
+      data: data,
+      formModel: this.view.formModel,
+    };
 
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
@@ -671,13 +671,8 @@ export class ProcessesComponent
     dialog.closed.subscribe((e) => {
       if(e && data.recID){
         this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          // this.view.dataService.data.forEach(element => {
-          //   if(element.recID == process.recID){
-          //     element = process
-          //   }
-          // });
-          e.event = process;
-          this.view.dataService.update(e).subscribe();
+          if(process)
+          this.view.dataService.update(process).subscribe();
           this.detectorRef.detectChanges();
           })
       }
@@ -712,7 +707,7 @@ export class ProcessesComponent
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
-      if (emp.memo != null ) p.open();
+      if (emp.memo != null) p.open();
     } else p.close();
   }
 
