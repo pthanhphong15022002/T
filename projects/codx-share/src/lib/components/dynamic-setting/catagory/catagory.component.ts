@@ -28,6 +28,8 @@ export class CatagoryComponent implements OnInit {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
     cpnAlertRules: PopupAddEmailTemplateComponent,
     cpnApprovals: CodxApproveStepsComponent,
+    cpnCategories: null,
+    cpnScheduleTask: null,
   };
   category = '';
   title = '';

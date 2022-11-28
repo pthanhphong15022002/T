@@ -1,0 +1,36 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialogRef"
+>
+
+
+  
+</codx-form>  
+<ng-template #body> 
+  <div class=" pt-4 px-2">
+    <div class="form-group">
+      <codx-label name="lblDriverAvailable" default="Tài xế sẵn sàng"></codx-label>        
+      <ejs-combobox 
+        id='driver' 
+        #samples [dataSource]='cbbDriver'           
+        [fields]='fields' 
+        [placeholder]="'Tài xế '" 
+        (valueChange)="cbxChange($event)"
+      ></ejs-combobox>
+
+    </div>
+  </div>   
+</ng-template>
+  <ng-template #footer>
+    <div class=" pt-4 " >
+        <div class="form-group d-flex justify-content-end flex-row">
+          <button type="button" class="btn btn-primary" (click)="onSaveForm()" >
+            <codx-label name="lblSave" default="Lưu" ></codx-label>
+          </button>
+        </div>
+      </div>
+  </ng-template>
