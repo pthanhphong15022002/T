@@ -225,7 +225,7 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeAssurTaxBankAccountInfo(data) {
+  updateEmployeeAssurTaxBankAccountInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -266,13 +266,12 @@ export class CodxHrService {
 
   //#region EPassportsBusiness
 
-  getEmployeePassportInfo(data) {
+  getEmployeePassportModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
-      'GetEmployeePassportInfoAsync',
-      data
+      'GetEmployeePassportModelAsync'
     );
   }
 
@@ -361,13 +360,12 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeWorkingLisenceDetail(data) {
+  getEmployeeWorkingLisenceModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
-      'GetEmployeeWorkPermitInfoAsync',
-      data
+      'GetEmployeeWorkPermitModelAsync',
     );
   }
 
@@ -406,7 +404,27 @@ export class CodxHrService {
       'HR',
       'HR',
       'EPassportsBusiness',
-      'EditEmployeePassportInfoAsync',
+      'UpdateEmployeePassportInfoAsync',
+      data
+    )
+  }
+
+  addEmployeePassportInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'AddEmployeePassportInfoAsync',
+      data
+    )
+  }
+
+  DeleteEmployeePassportInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'DeleteEmployeePassportInfoAsync',
       data
     )
   }
@@ -431,12 +449,32 @@ export class CodxHrService {
     )
   }
 
-  updateEmployeeWorkingLisenceDetail(data){
+  updateEmployeeWorkPermitDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'UpdateEmployeeWorkPermitInfoAsync',
+      data
+    )
+  }
+
+  addEmployeeWorkPermitDetail(data){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
       'AddEmployeeWorkPermitInfoAsync',
+      data
+    )
+  }
+
+  DeleteEmployeeWorkPermitInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'DeleteEmployeeWorkPermitInfoAsync',
       data
     )
   }

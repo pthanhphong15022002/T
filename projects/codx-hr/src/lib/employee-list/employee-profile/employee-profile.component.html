@@ -1105,7 +1105,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="handleEmployeePassportInfo(false)"
+                        (click)="handleEmployeePassportInfo('add', null)"
                       ></span>
                     </a>
                   </div>
@@ -1125,7 +1125,7 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ crrPassport?.passportNo }}</span
+                            : {{ lstPassport[0]?.passportNo }}</span
                           >
                         </div>
                       </div>
@@ -1133,7 +1133,6 @@
                         <div class="d-flex">
                           <span
                             class="icon-connection-point icon-14 text-gray-600 me-1"
-                            (click)="handleEmployeePassportInfo(true)"
                           ></span>
                           <codx-label
                             class="text-gray-600 me-2"
@@ -1142,7 +1141,7 @@
                           >
                           </codx-label>
                           <span #IssuedPlace
-                            >: {{ crrPassport?.issuedPlace }}</span
+                            >: {{ lstPassport[0]?.issuedPlace }}</span
                           >
                         </div>
                       </div>
@@ -1160,7 +1159,7 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ crrPassport?.issuedDate | fmDT }}</span
+                            >: {{ lstPassport[0]?.issuedDate | fmDT }}</span
                           >
                         </div>
                       </div>
@@ -1176,7 +1175,7 @@
                           >
                           </codx-label>
                           <span #ExpiredDate
-                            >: {{ crrPassport?.expiredDate | fmDT }}</span
+                            >: {{ lstPassport[0]?.expiredDate | fmDT }}</span
                           >
                         </div>
                       </div>
@@ -1184,9 +1183,9 @@
                     <codx-mfunc
                       *ngIf="lstPassport?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, crrPassport, 'passport')"
+                      (clickMF)="clickMF($event, lstPassport[0], 'passport')"
                       type="hover"
-                      [dataItem]="crrPassport"
+                      [dataItem]="lstPassport[0]"
                     >
                     </codx-mfunc>
                   </div>
@@ -1300,7 +1299,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addEmployeeWorkingLisenceInfo()"
+                        (click)="handleEmployeeWorkingPermitInfo(true, null)"
                       ></span>
                     </a>
                   </div>
@@ -1377,7 +1376,7 @@
                     <codx-mfunc
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstWorkPermit[0])"
+                      (clickMF)="clickMF($event, lstWorkPermit[0], 'workpermit')"
                       type="hover"
                       [dataItem]="lstWorkPermit[0]"
                     >
