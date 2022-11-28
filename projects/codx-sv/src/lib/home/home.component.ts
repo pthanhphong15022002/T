@@ -66,6 +66,9 @@ export class HomeComponent extends UIComponent implements OnInit {
   }
 
   update(item) {
-    this.codxService.navigate('', 'sv/add-survey', { funcID: this.funcID, recID: item.recID });
+    this.codxService.navigate('', 'sv/add-survey', {
+      funcID: this.funcID,
+      recID: item.recID,
+    });
   }
 }

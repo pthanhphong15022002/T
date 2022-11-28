@@ -363,9 +363,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         return;
       }
     }
-    //Chưa có mssg code
     if (this.isCheckStartEndTime(this.meeting.startDate)) {
-      this.notiService.notify(' "Giờ" họp phải lớn hơn "Giờ" hiện tại !');
+      this.notiService.notifyCode('CO002');
       return;
     }
 
@@ -388,7 +387,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
 
     if (this.meeting.fromDate >= this.meeting.toDate) {
-      this.notiService.notifyCode('CO003');
+      this.notiService.notifyCode('TM034');
       return;
     }
     //Chưa có mssg code

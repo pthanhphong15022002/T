@@ -203,8 +203,8 @@ export class PropertiesComponent implements OnInit {
           this.process = res;
           this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
           this.getRating(res.rattings);
-          this.notificationsService.notify('Đánh giá thành công');
-          // this.history.getDataAsync(res.recID, null);
+          this.notificationsService.notifyCode('DM010');
+          // this.history.getDataAsync(this.process.recID, '');bp
           this.dialog.dataService.update(this.process).subscribe();
           this.changeDetectorRef.detectChanges();
 
