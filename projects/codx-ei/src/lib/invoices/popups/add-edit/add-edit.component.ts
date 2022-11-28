@@ -55,56 +55,7 @@ export class AddEditComponent implements OnInit {
   };
   selectedItem: any;
   selectedIndex: number = 0;
-  data: Array<InvoicesLine> = [
-    {
-      no: 1,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 2,
-      itemDesc: 'Sản phẩm B',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 3,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-    {
-      no: 4,
-      itemDesc: 'Sản phẩm A',
-      umid: 'CAI',
-      quantity: 2,
-      salesPrice: 40000,
-      salesAmt: 80000,
-      vatid: 2,
-      vatAmt: 1600,
-      totalAmt: 78400,
-      lineType: 'Gia dụng',
-    },
-  ];
+  data: any = [];
 
   tabs: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -117,9 +68,7 @@ export class AddEditComponent implements OnInit {
   @ViewChild('noteRef') noteRef: ElementRef;
   constructor(
     private cache: CacheService,
-    private callfc: CallFuncService,
     private api: ApiHttpService,
-    private apiv2: HttpClient,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData
   ) {
