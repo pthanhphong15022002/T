@@ -10,6 +10,7 @@ import { Post } from 'src/shared/models/post';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
+  apiUrl = "http://localhost:8011";
   signalData = new EventEmitter<Post>();
   userConnect = new EventEmitter<any>();
   signalObject = new EventEmitter<any>();
@@ -21,9 +22,11 @@ export class SignalRService {
   signalVoteType = new EventEmitter<any>();
   
 
-  constructor(
+  constructor
+  (
     private authStore: AuthStore
-  ) {
+  ) 
+  {
     this.createConnection();
     this.registerOnServerEvents();
   }
@@ -50,29 +53,39 @@ export class SignalRService {
       this.userConnect.emit(data);
     });
 
-    this.hubConnection.on('dataResponse', (data) => {
-      this.signalData.emit(data);
+    // sendMessage
+    this.hubConnection.on('receiveChatMessage', (data) => {
+      debugger
+      console.log(data);
+      this.userConnect.emit(data);
     });
 
-    this.hubConnection.on('SignalIncontroller', (data) => {
-      this.signalData.emit(data);
-    });
 
-    this.hubConnection.on('VotePost', (obj) => {
-      this.signalObject.emit(obj);
-    });
 
-    this.hubConnection.on('receiveChatMessage', (obj) => {
-      this.signalChat.emit(obj);
-    });
-    this.hubConnection.on('voteChatMessage', (obj, obj1, obj2) => {
-      this.signaDataVote.emit(obj);
-      this.signalVote.emit(obj1);
-      this.signalVoteType.emit(obj2);
-    });
-    this.hubConnection.on('delChatMessage', (obj) => {
-      this.signalDelChat.emit(obj);
-    });
+    // this.hubConnection.on('dataResponse', (data) => {
+    //   this.signalData.emit(data);
+    // });
+
+    // this.hubConnection.on('SignalIncontroller', (data) => {
+    //   this.signalData.emit(data);
+    // });
+
+    // this.hubConnection.on('VotePost', (obj) => {
+    //   this.signalObject.emit(obj);
+    // });
+
+    // this.hubConnection.on('receiveChatMessage', (obj) => {
+    //   debugger
+    //   this.signalChat.emit(obj);
+    // });
+    // this.hubConnection.on('voteChatMessage', (obj, obj1, obj2) => {
+    //   this.signaDataVote.emit(obj);
+    //   this.signalVote.emit(obj1);
+    //   this.signalVoteType.emit(obj2);
+    // });
+    // this.hubConnection.on('delChatMessage', (obj) => {
+    //   this.signalDelChat.emit(obj);
+    // });
   }
   //#endregion
 
@@ -80,8 +93,6 @@ export class SignalRService {
   sendData(message, func = 'NewMessage') {
     this.hubConnection.invoke(func, message);
   }
-  sendVoteData(data,votes,voteType, func = 'VoteMessage') {
-    this.hubConnection.invoke(func, data, votes, voteType);
-  }
+
   //#endregion
 }
