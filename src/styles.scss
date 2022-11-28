@@ -1313,6 +1313,10 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   align-items: flex-start !important;
 }
 
+.e-grid.e-default tr td:first-child {
+  padding-left: 12px !important;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
