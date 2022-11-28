@@ -1,0 +1,374 @@
+<div class="cdx-dash w-100">
+  <div class="row gy-5 g-xl-8">
+    <div class="col-xl-6">
+      <div class="row">
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a
+            href="#"
+            class="card bgi-no-repeat bg-primary mb-5"
+            style="
+              background-position: right bottom;
+              background-size: 30% auto;
+              background-image: url(/assets/themes/es/default/light/img/dash_Unprocessed.png);
+            "
+          >
+            <!--begin::Body-->
+            <div class="card-body p-0">
+              <div class="fw-bold text-gray-100">Chưa xử lý</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt1? stt1 : '0'}}</div>
+            </div>
+            <!--end::Body-->
+          </a>
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a
+            href="#"
+            class="card bgi-no-repeat bg-info mb-5"
+            style="
+              background-position: right bottom;
+              background-size: 30% auto;
+              background-image: url(/assets/themes/es/default/light/img/dash_Urgent.png);
+            "
+          >
+            <!--begin::Body-->
+            <div class="card-body p-0">
+              <div class="fw-bold text-gray-100">Khẩn cấp</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt2? stt2 : '0'}}</div>
+            </div>
+            <!--end::Body-->
+          </a>
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a
+            href="#"
+            class="card bgi-no-repeat bg-danger mb-5"
+            style="
+              background-position: right bottom;
+              background-size: 30% auto;
+              background-image: url(/assets/themes/es/default/light/img/dash_Overdue.png);
+            "
+          >
+            <!--begin::Body-->
+            <div class="card-body p-0">
+              <div class="fw-bold text-gray-100">Quá hạn</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt3? stt3 : '0'}}</div>
+            </div>
+            <!--end::Body-->
+          </a>
+        </div>
+        <div class="col-xl-3">
+          <!--begin::Statistics Widget 5-->
+          <a
+            href="#"
+            class="card bgi-no-repeat bg-warning mb-5"
+            style="
+              background-position: right bottom;
+              background-size: 30% auto;
+              background-image: url(/assets/themes/es/default/light/img/dash_Postponed.png);
+            "
+          >
+            <!--begin::Body-->
+            <div class="card-body p-0">
+              <div class="fw-bold text-gray-100">Hoãn lại</div>
+              <div class="text-white fw-bolder fs-2x mb-0 mt-5">{{stt4 ? stt4 : '0'}}</div>
+            </div>
+            <!--end::Body-->
+          </a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card card-xl-stretch mb-5">
+            <!-- <div class="card-header border-0 p-0">
+                          <h3 class="card-title align-items-start">
+                              <span class="card-label fw-bolder fs-5 mb-1">Thống kê số lương booking theo phòng
+                                  <small>(đơn vị tính: lần)</small>
+                              </span>
+                          </h3>
+                      </div> -->
+            <div class="card-body">
+              <div id="kt_apexcharts_2" style="height: 400px">
+                <ejs-chart
+                  style="display: block"
+                  id="chartcontainer"
+                  [primaryYAxis]="primaryYAxis"
+                  [primaryXAxis]="primaryXAxis"
+                  [tooltip]="tooltip"
+                  (load)="load($event)"
+                  [chartArea]="chartArea"
+                  [title]="title"
+                  height="400px"
+                  [width]="width"
+                  [legendSettings]="legendSettings"
+                  *ngIf="statDayOfWeek.length > 0"
+                >
+                  <e-series-collection>
+                    <e-series
+                      *ngFor="let item of statDayOfWeek"
+                      [dataSource]="item.statdata"
+                      type="Line"
+                      xName="day"
+                      yName="count"
+                      [name]="item.resourceName"
+                      width="2"
+                      [marker]="marker"
+                    >
+                    </e-series>
+                  </e-series-collection>
+                </ejs-chart>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3">
+      <div class="card card-xl-stretch mb-5">
+        <!-- <div class="card-header border-0 p-0">
+          <h3 class="card-title align-items-start">
+            <span class="card-label fw-bolder fs-5 mb-1"
+              >Top 10 phòng ban sử dụng nhiều nhất
+            </span>
+          </h3>
+        </div> -->
+        <div class="card-body">
+          <div id="kt_apexcharts_3" style="height: 400px">
+            <ejs-chart style='display:block;' [chartArea]='chartArea' [width]='width' align='center' id='chartcontainer1' [primaryYAxis]="primaryYAxis" [primaryXAxis]='primaryXAxis'
+            [primaryYAxis]='primaryYAxis' [title]='titleBar' [tooltip]='tooltip' (load)='load($event)' [legendSettings]="legendSettings1">
+            <e-series-collection>
+                <e-series [dataSource]='data' type='Bar' xName='x' yName='y' name='Imports' [marker]='marker'> </e-series>
+            </e-series-collection>
+        </ejs-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3">
+      <div class="card card-xl-stretch mb-5">
+        <div class="card-body">
+          <div id="kt_chartjs_3" class="height: 400px;">
+            <ejs-progressbar
+              #annotation1
+              id="label-container"
+              type="Circular"
+              maximum="100"
+              minimum="0"
+              [value]="efficiency"
+              width="180"
+              height="180"
+              [animation]="animation"
+              (load)="load($event)"
+              startAngle="0"
+              endAngle="360"
+              style="margin: 0 40px;"
+              [progressThickness]="15"
+              [trackThickness]="15"
+              progressColor="#b30900"
+            >
+            </ejs-progressbar>
+            <div class="d-flex justify-content-center">
+              <span  style="font-weight: 700;font-size: 12px;">Hiệu quả sử dụng tài sản</span>
+               <span style="font-size:11px"> &nbsp;(đơn vị tính: %)</span>
+            </div>
+
+          </div>
+          <div class="container mt-3" *ngIf="statEffenciencyOfResource.length>0">
+            <div class="row w-100"  *ngFor='let item of statEffenciencyOfResource'>
+
+                <span style="font-size:12px; color: rgb(70, 69, 69)">{{item.resourceName}}</span>
+
+                <ejs-progressbar  id='linear{{item.resourceName}}' type='Linear' [maximum]='100' [minimum]='0'
+                [value]='item.percent' width='100%' [trackThickness]='12' [progressThickness]='12'
+                height='5' [animation]='animation' role="Danger" style="margin: 0 -10px;"></ejs-progressbar>
+            </div>
+
+          <!-- </ejs-progressbar>
+            <ejs-progressbar *ngFor='let item of statEffenciencyOfResource' type='Linear' maximum='100' minimum='0' [value]='item.percent'
+            [width]='width' [trackThickness]='trackThickness' [progressThickness]='progressThickness'
+            height='20px' role='Danger' showProgressValue='true' [animation]='animation'
+            (load)='loadProgress($event)'>
+        </ejs-progressbar> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row g-5 g-xl-8">
+    <div class="col-xl-3">
+      <div class="card card-custom box-shadow-none">
+        <div class="card-body" style="position: relative">
+          <!--begin::Chart-->
+          <div
+            id="chart_11"
+            class="d-flex justify-content-center"
+            style="min-height: 241.7px; margin-top: -20px"
+          >
+            <ejs-accumulationchart
+              id="container3"
+              #pie
+              style="display: block; width: 100%"
+              [legendSettings]="legendSettings"
+              [tooltip]="tooltip"
+              (load)="load($event)"
+              *ngIf="statEquipments.length > 0"
+            >
+              <e-accumulation-series-collection>
+                <e-accumulation-series
+                  name="Project"
+                  [dataSource]="statEquipments"
+                  xName="equipment"
+                  yName="percent"
+                  innerText="ABC"
+                  startAngle="0"
+                  endAngle="360"
+                  innerRadius="75%"
+                  radius="80%"
+                  [dataLabel]="dataLabel"
+                  explode="true"
+                  explodeOffset="5%"
+
+                >
+                </e-accumulation-series>
+              </e-accumulation-series-collection>
+            </ejs-accumulationchart>
+          </div>
+          <!--end::Chart-->
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3">
+      <div class="card card-custom box-shadow-none">
+        <div class="card-body" style="position: relative">
+          <!--begin::Chart-->
+          <div
+            id="chart_11"
+            class="d-flex justify-content-center"
+            style="min-height: 241.7px; margin-top: -20px"
+          >
+            <ejs-accumulationchart
+              id="container2"
+              #pie
+              style="display: block; width: 100%"
+              [legendSettings]="legendSettings"
+              [tooltip]="tooltip"
+              (load)="load($event)"
+              *ngIf="statEquipments.length > 0"
+            >
+              <e-accumulation-series-collection>
+                <e-accumulation-series
+                  name="Project"
+                  [dataSource]="statEquipments"
+                  xName="equipment"
+                  yName="percent"
+                  innerText="ABC"
+                  startAngle="0"
+                  endAngle="360"
+                  innerRadius="75%"
+                  radius="80%"
+                  [dataLabel]="dataLabel"
+                  explode="true"
+                  explodeOffset="5%"
+
+                >
+                </e-accumulation-series>
+              </e-accumulation-series-collection>
+            </ejs-accumulationchart>
+          </div>
+          <!--end::Chart-->
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3">
+      <div class="card card-custom box-shadow-none">
+        <div class="card-body" style="position: relative">
+          <!--begin::Chart-->
+          <div
+            id="chart_11"
+            class="d-flex justify-content-center"
+            style="min-height: 241.7px; margin-top: -20px"
+          >
+            <ejs-accumulationchart
+              id="container1"
+              #pie
+              style="display: block; width: 100%"
+              [legendSettings]="legendSettings"
+              [tooltip]="tooltip"
+              (load)="load($event)"
+              *ngIf="statEquipments.length > 0"
+            >
+              <e-accumulation-series-collection>
+                <e-accumulation-series
+                  name="Project"
+                  [dataSource]="statUsedHoursOfResource"
+                  xName="resourceName"
+                  yName="percent"
+                  innerText="ABC"
+                  startAngle="0"
+                  endAngle="360"
+                  innerRadius="75%"
+                  radius="80%"
+                  [dataLabel]="dataLabel"
+                  explode="true"
+                  explodeOffset="5%"
+                >
+                </e-accumulation-series>
+              </e-accumulation-series-collection>
+            </ejs-accumulationchart>
+          </div>
+
+          <!-- <ejs-progressbar #linear1 id='linear1' type='Linear' [maximum]='100' [minimum]='0'
+          value='80' width='100%' [trackThickness]='12' [progressThickness]='12'
+          height='5' [animation]='animation'>
+        </ejs-progressbar> -->
+
+
+          <!--end::Chart-->
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3">
+      <div class="card card-custom box-shadow-none">
+        <div class="card-body" style="position: relative">
+          <!--begin::Chart-->
+          <div
+            id="chart_11"
+            class="d-flex justify-content-center"
+            style="min-height: 241.7px; margin-top: -20px"
+          >
+            <ejs-accumulationchart
+              id="container"
+              #pie
+              style="display: block; width: 100%"
+              [legendSettings]="legendSettings"
+              [tooltip]="tooltip"
+              (load)="load($event)"
+              *ngIf="statEquipments.length > 0"
+            >
+              <e-accumulation-series-collection>
+                <e-accumulation-series
+                  name="Project"
+                  [dataSource]="statEquipments"
+                  xName="equipment"
+                  yName="percent"
+                  innerText="ABC"
+                  startAngle="0"
+                  endAngle="360"
+                  innerRadius="75%"
+                  radius="80%"
+                  [dataLabel]="dataLabel"
+                  explode="true"
+                  explodeOffset="5%"
+                >
+                </e-accumulation-series>
+              </e-accumulation-series-collection>
+            </ejs-accumulationchart>
+          </div>
+          <!--end::Chart-->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
