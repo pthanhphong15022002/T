@@ -259,7 +259,7 @@
                                             *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
                                             <div *ngFor="let his of fileEditing.history; let i = index">
                                                 <ng-container *ngIf="his.fileName != null && his.fileName != ''">
-                                                    <div class="d-flex history-item pb-4 line-hor">
+                                                    <div class="d-flex history-item pb-4 line-hor" (click)="dbView(his,fileEditing)">
                                                         <img *ngIf="his.extension != null && his.extension != ''"
                                                             alt="{{his.fileName}}" class="max-h-20px me-2"
                                                             src="../../../assets/codx/dms/{{getAvatar(his.extension)}}">
@@ -334,3 +334,6 @@
         </div>
     </div>
 </ng-template>
+<ng-container *ngIf="visible">
+    <lib-dialogthumb [dataFile]="dataFile" (dialogClosed)="dialogClosed()"></lib-dialogthumb>
+</ng-container>
