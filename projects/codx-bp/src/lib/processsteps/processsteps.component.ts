@@ -711,20 +711,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     );
   }
 
-  // changeDataMF(e, data) {
-  //   if (e) {
-  //     var assign = e.find(x=>x.functionID=='SYS005')
-  //     this.childFunc.forEach(obj=>{
-  //        var a = assign ;
-  //        a.functionID= obj.funcID ;
-  //        a.icon= obj.icon ;
-  //        a.data =[] ;
-  //        a.text = obj.text
-  //        e.push(a)
-  //     })
 
-  //   }
-  // }
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
@@ -776,11 +763,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
-           
           });
       });
     }
-   
+  }
+  clickAddActivity(data){
+    let funcMenu = this.childFuncOfP?.find(x=>x.id== "A") ;
+    if(funcMenu) this.clickMenu(data,funcMenu)
   }
 
   getTitleAction(action, stepType): string {
