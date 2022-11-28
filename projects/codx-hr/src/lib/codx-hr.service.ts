@@ -381,67 +381,67 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeDesciplinesInfo(data){
+  getEmployeeDesciplinesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeAssetsInfo(data){
+  getEmployeeAssetsInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
       'GetEmployeeAssetsInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeePassportInfo(data){
+  updateEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
       'EditEmployeePassportInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeeVisaInfo(data){
+  updateEmployeeVisaInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmpVisasBusiness',
       'AddEmployeeVisasInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeeTrainCourseInfo(data){
+  updateEmployeeTrainCourseInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'EditEmployeeTraincourseInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeeWorkingLisenceDetail(data){
+  updateEmployeeWorkingLisenceDetail(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
       'AddEmployeeWorkPermitInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeeAwardInfo(data){
+  updateEmployeeAwardInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -451,26 +451,25 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeDisciplinesInfo(data){
+  updateEmployeeDisciplinesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EDisciplinesBusiness',
       'AddEmployeeDisciplinesInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeeAssetsInfo(data){
+  updateEmployeeAssetsInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
       'AddEmployeeAssetsInfoAsync',
       data
-    )
+    );
   }
-
 
   //#endregion
 
@@ -481,6 +480,16 @@ export class CodxHrService {
       'HR',
       'EFamiliesBusiness',
       'GetByEmployeeIDAsync',
+      [empID]
+    );
+  }
+
+  addNewFamily(empID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'AddNewAsync',
       [empID]
     );
   }
