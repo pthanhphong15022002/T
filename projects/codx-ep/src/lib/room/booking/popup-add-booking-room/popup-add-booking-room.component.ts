@@ -192,7 +192,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'EPRoomParameters'
+        'EPParameters'
       )
       .subscribe((res) => {
         if (res) {
