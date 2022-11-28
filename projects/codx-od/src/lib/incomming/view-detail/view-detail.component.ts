@@ -852,6 +852,18 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
         break;
       }
+      //Hủy xét duyệt
+      case 'ODT212':
+      {
+        var config = new AlertConfirmInputConfig();
+        config.type = 'YesNo';
+        this.notifySvr
+          .alert('Thông báo', 'Bạn có chắc chắn muốn hủy yêu cầu xét duyệt?', config)
+          .closed.subscribe((x) => {
+            if (x.event.status == 'Y') this.cancelAproval(datas.recID);
+          });
+        break;
+      }
       //Hoàn tất
       case 'ODT112':
       case 'ODT211': {
@@ -962,6 +974,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       this.notifySvr.notify(item.message);
     });
   }
+
+  //Hủy yêu cầu xét duyệt
+  cancelAproval(recID:any)
+  {
+    alert(recID);
+  }
+
   afterSaveTask(e?:any)
   {
     // Chú thích ;
@@ -1018,6 +1037,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.view.dataService.data[index] = data;
   }
   changeDataMF(e: any, data: any) {
+    debugger;
     var bm = e.filter(
       (x: { functionID: string }) =>
         x.functionID == 'ODT110' || x.functionID == 'ODT209'
@@ -1042,6 +1062,24 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
       approvel[0].disabled = true;
+    }
+    if(this.formModel.funcID == 'ODT41')
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT212'
+      );
+      approvel[0].disabled = true;
+    }
+   
+    if (
+      this.formModel.funcID == 'ODT41' &&
+      (data?.approveStatus == '2' ||
+      data?.approveStatus == '3' || data?.approveStatus == '4') && data?.createdBy == this.userID
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT212'
+      );
+      approvel[0].disabled = false;
     }
     if (data?.status == '7') {
       var completed = e.filter(

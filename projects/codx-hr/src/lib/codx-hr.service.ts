@@ -485,5 +485,25 @@ export class CodxHrService {
     );
   }
 
+  getEmployeeFamilyRelationshipInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'GetEmployeeFamilyInfoAsync',
+      data
+    )
+  }
+
+  saveEmployeeFamilyRelationshipInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'AddEmployeeFamilyMemberInfoAsync',
+      data
+    )
+  }
+
   //#endregion
 }

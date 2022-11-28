@@ -41,7 +41,11 @@ export class PopupAddProcessesComponent implements OnInit {
     this.action = dt.data[0];
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
-
+    this.cache.functionList(this.funcID).subscribe(res=>{
+      if(res){
+        this.title = this.titleAction + ' ' + res.customName.charAt(0).toLocaleLowerCase() + res.customName.slice(1);;
+      }
+    })
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -52,7 +56,6 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.title = this.titleAction;
   }
 
   ngOnInit(): void {
@@ -159,7 +162,7 @@ export class PopupAddProcessesComponent implements OnInit {
     //Chưa có mssg code
     if (this.isCheckFromToDate(this.process.activedOn)) {
       this.notiService.notify(
-        'Vui lòng chọn ngày hiệu lực lớn hơn hoặc bằng ngày hiện tại!'
+        'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
       );
       return;
     }
