@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { BP_Processes, TabModel } from '../models/BP_Processes.model';
 import { environment } from 'src/environments/environment';
@@ -28,10 +28,11 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   dataFile : any
   formModel :any
   linkFile : any;
+  typeButton : ButtonModel;
   all: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
-    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 17 },
+    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 9 },
   ];
   formModelFlowChart :FormModel ;
   listPhaseName = [] ;
@@ -68,7 +69,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       .getListFunctionMenuCreatedStepAsync(this.funcID)
       .subscribe((datas) => {
         if(datas){
-          this.childFunc = datas     
+          this.childFunc = datas;         
         }
       })
   }
@@ -181,6 +182,10 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
   openPopUp(){
 
+  }
+
+  clickButton(e: ButtonModel) {
+    this.typeButton = e;
   }
 
 }

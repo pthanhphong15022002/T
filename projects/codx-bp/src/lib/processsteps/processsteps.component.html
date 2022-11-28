@@ -327,15 +327,36 @@
                       *ngIf="!item?.items || item?.items?.length == 0"
                     >
                       <div
-                        class="card card-steplist p-0"
+                        class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
                         cdkDrag
                         [cdkDragDisabled]="true"
                         [cdkDragData]="null"
+                        (click)='clickAddActivity(item)'
                       >
-                        <h3>
+                        <!-- <h3>
                           Thêm công việc để hoàn thiện quy trình ---Kéo công
                           việc vào đây !-Test đừng ai bắt lỗi , please ! ^^!
-                        </h3>
+                        </h3> -->
+
+                        <div class="dropzone-msg dz-message needsclick">
+                          <div class="dropzone-msg-title mb-2">
+                            <codx-label
+                              name="lblDropDrap"
+                              [formModel]="view.formModel"
+                              default="Thêm bước công đoạn để hoàn thiện quy trình"
+                              class="fw-bold"
+                            >
+                            </codx-label>
+                          </div>
+                          <span class="dropzone-msg-desc">
+                            <codx-label
+                              name="lblDropDrap2"
+                              [formModel]="view.formModel"
+                              default="Kéo thả bước công đoạn vào đây"
+                              class="fw-bold"
+                            ></codx-label>
+                          </span>
+                        </div>
                       </div>
                     </ng-container>
                     <ng-container *ngIf="item?.items?.length > 0">

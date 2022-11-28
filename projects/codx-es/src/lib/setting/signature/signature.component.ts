@@ -27,7 +27,7 @@ import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-sign
 import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CodxEsService } from '../../codx-es.service';
 
-export class defaultRecource {}
+export class defaultRecource { }
 @Component({
   selector: 'signature',
   templateUrl: './signature.component.html',
@@ -126,7 +126,7 @@ export class SignatureComponent implements OnInit, AfterViewInit {
             {
               field: '',
               headerText: '',
-              width: 20,
+              width: 40,
               template: this.itemAction,
               textAlign: 'center',
             },
