@@ -577,7 +577,6 @@ export class CreateFolderComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    debugger;
     this.folderName = this.folderName.trim();
     this.fileEditing.folderName = this.folderName;
     this.fileEditing.approval = this.approval;

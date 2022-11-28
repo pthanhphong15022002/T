@@ -1184,4 +1184,26 @@ export class QuestionsComponent
   getSrcImage(data) {
     return (data['srcImage'] = `${environment.urlUpload}/${data.urlPath}`);
   }
+
+  alignImg(seqNoSession, seqNoQuestion, typeTrue, typeFalse, typeFalse1) {
+    this.questions[seqNoSession].children[seqNoQuestion][typeTrue] = true;
+    this.questions[seqNoSession].children[seqNoQuestion][typeFalse] = false;
+    this.questions[seqNoSession].children[seqNoQuestion][typeFalse1] = false;
+  }
+
+  showAnswer(seqNoSession, seqNoQuestion) {
+    this.questions[seqNoSession].children[seqNoQuestion]['showAnswer'] =
+      !this.questions[seqNoSession].children[seqNoQuestion]['showAnswer'];
+  }
+
+  valueChangeAnswer(event, seqNoSession, seqNoQuestion, seqNoAnswer) {
+    if (event) {
+      this.questions[seqNoSession].children[seqNoQuestion].answers[seqNoAnswer][
+        'check'
+      ] =
+        !this.questions[seqNoSession].children[seqNoQuestion].answers[
+          seqNoAnswer
+        ]['check'];
+    }
+  }
 }

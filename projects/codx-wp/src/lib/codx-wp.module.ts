@@ -20,7 +20,7 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
-import { ChatListComponent } from './chatting/chat-list/chat-list.component';
+import { ChatListComponent } from './chat/chat-list/chat-list.component';
 import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
 import { ChattingComponent } from './chatting/chatting.component';
 import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
@@ -52,7 +52,7 @@ import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
-import { CodxChatComponent } from './chatting/codx-chat/codx-chat.component';
+import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
 import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
 
@@ -191,13 +191,12 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
-    // TestSurveyComponent,
     CodxChatComponent,
     ChattingComponent, 
     LayoutComponent,
     ChatVoteComponent,
     PopupViewImageComponent,
-    PopupAddPostComponent
+    PopupAddPostComponent,
   ];
 
 @NgModule({

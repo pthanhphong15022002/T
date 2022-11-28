@@ -34,6 +34,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  NotificationsService,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -61,6 +62,7 @@ export class EmployeeProfileComponent extends UIComponent {
     private df: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private codxMwpService: CodxMwpService,
+    private notify: NotificationsService,
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -245,13 +247,54 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any, funcID = null) {
+    console.log('data ', data);
     switch (event.functionID) {
       case 'SYS03': //edit
-        if (funcID == '') {
+        if (funcID == 'passport') {
+          this.handleEmployeePassportInfo('edit', data);
+        } else if (funcID == 'workpermit') {
+          this.handleEmployeeWorkingPermitInfo(false, data);
         }
         break;
+
       case 'SYS02': //delete
-        if (funcID == '') {
+        if (funcID == 'passport') {
+          this.hrService
+            .DeleteEmployeePassportInfo(data.recID)
+            .subscribe((p) => {
+              if (p == true) {
+                this.notify.notifyCode('SYS008');
+                let i = this.lstPassport.indexOf(data);
+                if (i != -1) {
+                  this.lstPassport.splice(i, 1);
+                }
+                this.df.detectChanges();
+              } else {
+                this.notify.notifyCode('SYS022');
+              }
+            });
+        } else if (funcID == 'workpermit') {
+          this.hrService
+            .DeleteEmployeeWorkPermitInfo(data.recID)
+            .subscribe((p) => {
+              if (p == true) {
+                this.notify.notifyCode('SYS008');
+                let i = this.lstWorkPermit.indexOf(data);
+                if (i != -1) {
+                  this.lstWorkPermit.splice(i, 1);
+                }
+                this.df.detectChanges();
+              } else {
+                this.notify.notifyCode('SYS022');
+              }
+            });
+        }
+
+        break;
+
+      case 'SYS04': //copy
+        if (funcID == 'passport') {
+          this.handleEmployeePassportInfo('copy', data);
         }
         break;
     }
@@ -515,7 +558,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  handleEmployeePassportInfo(isEdit: boolean) {
+  handleEmployeePassportInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -526,34 +569,41 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       EmployeeLegalPassportFormComponent,
       {
-        isAdd: isEdit,
+        actionType: actionType,
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
+        passPortSelected: data,
       },
       option
     );
 
     dialogAdd.closed.subscribe((res) => {
+      this.lstPassport.push(res.event);
+      console.log('data tra ve', res.event);
+      console.log('lst passport', this.lstPassport);
+
       if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeWorkingLisenceInfo() {
+  handleEmployeeWorkingPermitInfo(isAdd: boolean, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       EmployeeWorkingLisenceDetailComponent,
       {
-        isAdd: true,
+        isAdd: isAdd,
+        selectedWorkPermit: data,
         headerText: 'Giấy phép lao động',
         employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      this.lstWorkPermit.push(res?.event);
       if (!res?.event) this.view.dataService.clear();
     });
   }
@@ -575,6 +625,7 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      this.lstWorkPermit.push(res?.event);
       if (!res?.event) this.view.dataService.clear();
     });
   }
