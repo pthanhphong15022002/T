@@ -13,7 +13,7 @@ import { AuthGuard, CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { Layout7Component } from './_layout7/layout.component';
+import { Layout7Component } from './_layout7/layout7.component';
 import { BookingCarComponent } from './booking/booking-car.component';
 import { PopupAddBookingCarComponent } from './booking/popup-add-booking-car/popup-add-booking-car.component';
 import { BookingCarViewDetailComponent } from './booking/view-detail/booking-car-view-detail.component';
