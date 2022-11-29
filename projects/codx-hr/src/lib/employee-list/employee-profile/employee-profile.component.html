@@ -1234,7 +1234,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addEmployeeVisaInfo()"
+                        (click)="handleEmployeeVisaInfo('add', null)"
                       ></span>
                     </a>
                   </div>
@@ -1253,7 +1253,7 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ crrVisa?.visaNo }}</span
+                            : {{ lstVisa[0]?.visaNo }}</span
                           >
                         </div>
                       </div>
@@ -1268,7 +1268,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ crrVisa?.issuedPlace }} </span>
+                          <span>: {{ lstVisa[0]?.issuedPlace }} </span>
                         </div>
                       </div>
                     </div>
@@ -1285,7 +1285,7 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ crrVisa?.issuedDate | fmDT }}</span
+                            >: {{ lstVisa[0]?.issuedDate | fmDT }}</span
                           >
                         </div>
                       </div>
@@ -1301,8 +1301,8 @@
                           >
                           </codx-label>
                           <span #issuedOn
-                            >: {{ crrVisa?.effectedDate | fmDT }} -
-                            {{ crrVisa?.expiredDate | fmDT }}
+                            >: {{ lstVisa[0]?.effectedDate | fmDT }} -
+                            {{ lstVisa[0]?.expiredDate | fmDT }}
                           </span>
                         </div>
                       </div>
@@ -1310,9 +1310,9 @@
                     <codx-mfunc
                       *ngIf="lstVisa?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, crrVisa)"
+                      (clickMF)="clickMF($event, lstVisa[0], 'visa')"
                       type="hover"
-                      [dataItem]="crrVisa"
+                      [dataItem]="lstVisa[0]"
                     >
                     </codx-mfunc>
                   </div>
@@ -1330,7 +1330,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="handleEmployeeWorkingPermitInfo(true, null)"
+                        (click)="handleEmployeeWorkingPermitInfo('add', null)"
                       ></span>
                     </a>
                   </div>
