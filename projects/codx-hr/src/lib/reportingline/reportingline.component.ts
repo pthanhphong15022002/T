@@ -1,18 +1,14 @@
 import {
-  AfterContentInit,
-  AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import {
   ButtonModel,
   CodxFormDynamicComponent,
-  CodxListviewComponent,
-  CodxTreeviewComponent,
   CRUDService,
   DialogModel,
   DialogRef,
@@ -25,7 +21,6 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddPositionsComponent } from './popup-add-positions/popup-add-positions.component';
-import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { ReportinglineDetailComponent } from './reportingline-detail/reportingline-detail.component';
 
 @Component({
@@ -65,7 +60,8 @@ export class ReportinglineComponent extends UIComponent {
   dataSelected: any = null;
   positionID: string = '';
   request: ResourceModel;
-  constructor(private notifiSv: NotificationsService, inject: Injector) {
+  constructor(private notifiSv: NotificationsService, inject: Injector,
+    private dt:ChangeDetectorRef) {
     super(inject);
   }
 
@@ -126,37 +122,77 @@ export class ReportinglineComponent extends UIComponent {
       this.detailComponent = component;
     }
   }
-
-  clickMF(e: any, data?: any) {
-    switch (e.functionID) {
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
+  // btn add toolbar click
+  btnClick(event:any) {
+    if (this.view) 
+    {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      this.view.dataService.addNew().subscribe((result: any) => {
+        if (result) {
+          let data = {
+            dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: result,
+            function: this.funcID,
+            isAddMode: true,
+            titleMore: event.text,
+          };
+          let popup = this.callfc.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.funcID
+          );
+        }
+      });
     }
   }
-  edit(data: any) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
+  // click moreFunction
+  clickMF(event: any, data: any = null) 
+  {
+    if(event){
+      switch (event.functionID) {
+        case 'SYS03':
+          this.edit(event,data);
+          break;
+        case 'SYS04':
+          this.copy(data);
+          break;
+        case 'SYS02':
+          this.delete(data);
+          break;
+      }
     }
-    (this.view.dataService as CRUDService)
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddPositionsComponent,
-          'edit',
-          option
+  }
+  edit(event:any,data:any) {
+    if (this.view && data && event) 
+    {
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '550px';
+      let dataSelected = data;
+      this.view.dataService.edit(dataSelected)
+      .subscribe( () => {
+        let data = {
+          dataService: this.view.dataService,
+          formModel: this.view.formModel,
+          data: dataSelected,
+          function: this.view.formModel.funcID,
+          isAddMode: false,
+          titleMore: event.text,
+        };
+        let popup = this.callfc.openSide(
+          CodxFormDynamicComponent,
+          data,
+          option,
+          this.view.formModel.funcID
         );
       });
+    }
   }
   copy(data) {
     if (data) {
@@ -199,44 +235,13 @@ export class ReportinglineComponent extends UIComponent {
   }
   loadEmployByCountStatus() {}
 
-  btnClick() {
-    if (this.view) {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '550px';
-      this.view.dataService.addNew().subscribe((result: any) => {
-        if (result) {
-          let data = {
-            dataService: this.view.dataService,
-            formModel: this.view.formModel,
-            data: result,
-            function: this.funcID,
-            isAddMode: true,
-          };
-          let popup = this.callfc.openSide(
-            CodxFormDynamicComponent,
-            data,
-            option,
-            this.funcID
-          );
-          popup.closed.subscribe((res: any) => {
-            if (res && res?.event?.save?.data) {
-              let newNode = res.event.save.data;
-              // this.codxTreeComponent.setNodeTree(newNode);
-            }
-          });
-        }
-      });
-    }
-  }
-
-  onSelectionChanged(event) {
+  
+  // selected data
+  onSelectionChanged(event) 
+  {
     if (this.view) {
       let viewActive = this.view.views.find((e) => e.active == true);
-      if (viewActive && viewActive.id == '1') {
-        return;
-      }
+      if (viewActive?.id == '1') return;
       this.dataSelected = event.data;
       this.positionID = event.data.positionID;
       this.detectorRef.detectChanges();
@@ -264,11 +269,7 @@ export class ReportinglineComponent extends UIComponent {
   searchUser($event){
     
   }
-  isShow
-  showEmployees(){
-
-  }
-  closeEmployee(){
-
+  searchChange(event:any){
+    debugger
   }
 }
