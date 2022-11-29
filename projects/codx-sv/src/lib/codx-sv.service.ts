@@ -180,9 +180,29 @@ export class CodxSvService {
     return obj;
   }
 
-  private getUniqueListBy(arr: any, key: any) {
+  public getUniqueListBy(arr: any, key: any) {
     return [
       ...new Map(arr.map((item: any) => [item[key], item])).values(),
     ] as any;
+  }
+
+  getFilesByObjectType(objectType) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByObjectTypeAsync',
+      objectType
+    );
+  }
+
+  onSave(transID, data, isModeAdd) {
+    return this.api.execSv(
+      'SV',
+      'ERM.Business.SV',
+      'QuestionsBusiness',
+      'SaveAsync',
+      [transID, data, isModeAdd]
+    );
   }
 }

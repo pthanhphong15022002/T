@@ -64,7 +64,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   lstApproval: any = null;
   grvSetup: any;
   settingDataValue: any;
-  havaESign: boolean = false;
+  //havaESign: boolean = false;
 
   type: string;
   parentRecID: string;
@@ -75,6 +75,8 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   signatureType: string;
 
   oUpdate: any = null; //update item in grid
+
+  hasModuleES: boolean = false;
 
   constructor(
     private esService: CodxEsService,
@@ -128,6 +130,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    let predicate = 'RefModule=@0 and FormName=@1';
+    let dataValue = 'SYS;System';
+    this.esService
+      .getSettingByPredicate(predicate, dataValue)
+      .subscribe((res) => {
+        if (res?.dataValue) {
+          let item = JSON.parse(res?.dataValue);
+          console.log('Module Es', item);
+
+          if (item?.ES1 == true) {
+            this.hasModuleES = true;
+            this.cr.detectChanges();
+          }
+        }
+      });
     //copy
     if (this.type == 'copy') {
       //New list step
@@ -144,13 +161,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         if (grv) this.grvSetup = grv;
       });
 
-    this.cache.functionList('ES').subscribe((res) => {
-      if (res) this.havaESign = true;
-      if (this.isAdd == true) {
-        this.data.eSign = this.havaESign;
-        this.cr.detectChanges();
-      }
-    });
+    // this.cache.functionList('ES').subscribe((res) => {
+    //   if (res) this.havaESign = true;
+    //   if (this.isAdd == true) {
+    //     this.data.eSign = this.havaESign;
+    //     this.cr.detectChanges();
+    //   }
+    // });
     if (this.isAdd) {
       this.data.countStep = 0;
 

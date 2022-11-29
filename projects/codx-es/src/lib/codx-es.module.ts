@@ -55,6 +55,7 @@ import { ExternalSigningComponent } from './external-signing/external-signing.co
 import { PopupAddApproverComponent } from './setting/approval-step/popup-add-approver/popup-add-approver.component';
 import { WarningMissImgComponent } from './sign-file/popup-sign-for-approval/warning-miss-img/warning-miss-img.component';
 import { PopupConfirmSaveLabelComponent } from './sign-file/popup-select-label/popup-confirm-save-label/popup-confirm-save-label.component';
+import { PopupCommentComponent } from './sign-file/popup-comment/popup-comment.component';
 
 const routes: Routes = [
   {
@@ -152,6 +153,7 @@ const routes: Routes = [
     PopupAddApproverComponent,
     WarningMissImgComponent,
     PopupConfirmSaveLabelComponent,
+    PopupCommentComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

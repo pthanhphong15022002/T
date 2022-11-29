@@ -15,8 +15,8 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả">
         </codx-label>
       </div>
-      <codx-input field="memo" type="textarea" [crrValue]="process?.memo"
-        [placeholder]="gridViewSetup?.Memo?.headerText" (valueChange)="valueChange($event)">
+      <codx-input field="memo" type="text" [crrValue]="process?.memo"
+        [placeholder]="gridViewSetup?.Memo?.description" (valueChange)="valueChange($event)">
       </codx-input>
     </div>
     <div class="form-group">
@@ -30,6 +30,7 @@
         </div>
         <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="owner" [dataShared]="[]"
           [showInput]="false" multiple="false">
+
         </codx-input>
       </div>
       <div class="d-flex flex-wrap">

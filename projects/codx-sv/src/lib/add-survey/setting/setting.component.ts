@@ -14,7 +14,6 @@ import { UIComponent } from 'codx-core';
   styleUrls: ['./setting.component.scss'],
 })
 export class SettingComponent extends UIComponent implements OnInit, OnChanges {
-  @Input() changeModeS: any;
   constructor(private injector: Injector) {
     super(injector);
   }

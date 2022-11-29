@@ -994,6 +994,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Duyệt công văn
   documentApproval(datas: any) {
+    debugger;
     if (datas.bsCategory) {
       //Có thiết lập bước duyệt
       if (datas.bsCategory.approval) {
@@ -1025,7 +1026,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
                 'ES',
                 'CategoriesBusiness',
                 'GetDefaulProcessIDAsync',
-                this.formModels.entityName
+                this.formModel.entityName
               )
               .subscribe((item: any) => {
                 if (item) {

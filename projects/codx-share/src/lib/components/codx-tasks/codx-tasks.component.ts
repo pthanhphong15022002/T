@@ -158,8 +158,6 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
- 
-    this.showMoreFunc = this.funcID=="TMT0206";
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -221,8 +219,8 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
-
-    if (this.funcID != 'TMT0201') {
+    
+    if (this.funcID != 'TMT0201' && this.funcID != 'TMT0206') {
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;

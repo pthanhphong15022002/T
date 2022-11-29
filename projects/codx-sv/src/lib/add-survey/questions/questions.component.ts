@@ -19,6 +19,7 @@ import {
 import { RichTextEditorModel } from '@syncfusion/ej2-angular-richtexteditor';
 import {
   CallFuncService,
+  CodxInputComponent,
   DialogModel,
   NotificationsService,
   SidebarModel,
@@ -38,6 +39,7 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
+import { SV_RespondResults } from '../../model/SV_RespondResults';
 
 @Component({
   selector: 'app-questions',
@@ -46,11 +48,9 @@ import { SortSessionComponent } from './sort-session/sort-session.component';
   encapsulation: ViewEncapsulation.None,
   providers: [RteService, MultiSelectService],
 })
-export class QuestionsComponent
-  extends UIComponent
-  implements OnInit, OnChanges
-{
+export class QuestionsComponent extends UIComponent implements OnInit {
   surveys: SV_Surveys = new SV_Surveys();
+  respondResults: any = new Array();
   formats: any = new Array();
   questions: any = new Array();
   sessions: any = new Array();
@@ -125,6 +125,7 @@ export class QuestionsComponent
   @ViewChild('ATM_Image') ATM_Image: AttachmentComponent;
   @ViewChild('templateQuestionMF') templateQuestionMF: TemplateRef<any>;
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
+  @ViewChild('input_check') input_check: CodxInputComponent;
   src: any;
   constructor(
     inject: Injector,
@@ -146,19 +147,14 @@ export class QuestionsComponent
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
       }
+      this.loadData();
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
     });
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['changeModeQ']) {
-      this.loadData();
-    }
-  }
-  onInit(): void {
-    this.onLoading();
-  }
+
+  onInit(): void {}
 
   ngAfterViewInit() {}
 
@@ -181,7 +177,11 @@ export class QuestionsComponent
       .subscribe((res: any) => {
         if (res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
-          console.log('check questions', this.questions);
+          this.SVServices.getFilesByObjectType(
+            this.functionList.entityName
+          ).subscribe((res) => {
+            if (res) this.lstEditIV = res;
+          });
         } else {
           this.questions = [
             {
@@ -394,6 +394,11 @@ export class QuestionsComponent
     } else data.answers.push(dataAnswerTemp);
     this.questions[indexSession].children[indexQuestion] = data;
     console.log('check question after addAnswer', this.questions);
+    let timer;
+    timer = window.setTimeout(function () {
+      alert('Hello!');
+    }, 3000);
+    window.clearTimeout(timer);
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
@@ -825,7 +830,6 @@ export class QuestionsComponent
     if (itemActive) {
       if (category == 'S') this.addSession(itemActive, seqNoSession);
       else this.addNoSession(itemActive, seqNoSession, category);
-      console.log('check addCard', this.questions);
     }
   }
 
@@ -1182,7 +1186,19 @@ export class QuestionsComponent
   }
 
   getSrcImage(data) {
-    return (data['srcImage'] = `${environment.urlUpload}/${data.urlPath}`);
+    return (data['srcImage'] = `${environment.urlUpload}/${
+      data.urlPath ? data.urlPath : data.pathDisk
+    }`);
+  }
+
+  getSrcVideo(data) {
+    var result: any;
+    this.SVServices.getFileByObjectID(data.recID).subscribe((res: any) => {
+      debugger;
+      if (res)
+        result = data['srcVideo'] = `${environment.urlUpload}/${res.pathDisk}`;
+    });
+    return result;
   }
 
   alignImg(seqNoSession, seqNoQuestion, typeTrue, typeFalse, typeFalse1) {
@@ -1197,13 +1213,53 @@ export class QuestionsComponent
   }
 
   valueChangeAnswer(event, seqNoSession, seqNoQuestion, seqNoAnswer) {
-    if (event) {
-      this.questions[seqNoSession].children[seqNoQuestion].answers[seqNoAnswer][
-        'check'
-      ] =
-        !this.questions[seqNoSession].children[seqNoQuestion].answers[
-          seqNoAnswer
-        ]['check'];
+    if (event.data == true) {
+      var dataTemp = JSON.parse(
+        JSON.stringify(
+          this.questions[seqNoSession].children[seqNoQuestion].answers[
+            seqNoAnswer
+          ]
+        )
+      );
+      var obj: any;
+      if (
+        this.questions[seqNoSession].children[seqNoQuestion].category != 'O2' &&
+        this.questions[seqNoSession].children[seqNoQuestion].category != 'C2'
+      ) {
+        obj = {
+          seqNo: dataTemp.seqNo,
+          answer: dataTemp.answer,
+          other: dataTemp.other,
+          columnNo: 0,
+        };
+      }
+      this.respondResults.push(obj);
+      this.respondResults = this.SVServices.getUniqueListBy(
+        this.respondResults,
+        'seqNo'
+      );
+    } else {
+      var index = this.respondResults.findIndex((x) => x.seqNo == seqNoAnswer);
+      this.respondResults.splice(index, 1);
     }
+    console.log('check respondResults', this.respondResults);
+  }
+
+  valueChangeQuestion(event: any, seqNoSession, seqNoQuestion) {
+    if (event) {
+      var dataTemp = JSON.parse(JSON.stringify(this.questions[seqNoSession]));
+      dataTemp.children[seqNoQuestion][event.field] = event.data;
+    }
+    console.log('check valueChangeQuestion', dataTemp);
+  }
+
+  onSave(transID, data, isModeAdd) {
+    return this.api.execSv(
+      'SV',
+      'ERM.Business.SV',
+      'QuestionsBusiness',
+      'SaveAsync',
+      [transID, data, isModeAdd]
+    );
   }
 }
