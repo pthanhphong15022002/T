@@ -115,7 +115,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
-
+  msgBP001= 'Vui lòng thêm bước công việc trước khi thực hiện'; // gán tạm message
+  msgBP002= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  listCountPhases:any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -170,6 +172,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.resourceKanban.className = 'ProcessStepsBusiness';
       this.resourceKanban.method = 'GetColumnsKanbanAsync';
       this.resourceKanban.dataObj = this.dataObj;
+      this.listCountPhases = this.process.phases;
     });
 
     // //view popup
@@ -675,6 +678,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    if(this.listCountPhases<=0 && evt.id !='P'){
+      return this.notiService.notify(this.msgBP002);
+    }
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
@@ -758,24 +764,29 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         this.delete(data);
     }
   }
-
   clickMenu(data, funcMenu) {
-    this.stepType = funcMenu.id;
-    this.parentID =
+    const isdata = data.items.length;
+    if (data.stepType == 'P' && funcMenu.id!='A' && isdata <= 0) {
+      return this.notiService.notify(this.msgBP001);
+    }
+    else {
+      this.stepType = funcMenu.id;
+      this.parentID =
       this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
-    this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
-    this.formModelMenu = this.view?.formModel;
-    this.add();
-    if (funcMenu) {
-      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
-        this.cache
-          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
-          .subscribe((res) => {
-            this.formModelMenu.formName = funcMenu.formName;
-            this.formModelMenu.gridViewName = funcMenu.gridViewName;
-            this.formModelMenu.funcID = funcMenu.funcID;
-          });
-      });
+      this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
+      this.formModelMenu = this.view?.formModel;
+      this.add();
+      if (funcMenu) {
+        this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+          this.cache
+            .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+            .subscribe((res) => {
+              this.formModelMenu.formName = funcMenu.formName;
+              this.formModelMenu.gridViewName = funcMenu.gridViewName;
+              this.formModelMenu.funcID = funcMenu.funcID;
+            });
+        });
+     }
     }
   }
   clickAddActivity(data) {
@@ -835,7 +846,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             parentNew.items.push(data);
             this.view.dataService.update(parentOld).subscribe();
             if(this.kanban) this.kanban.updateCard(data);
-          }        
+          }
           this.notiService.notifyCode('SYS007');
         } else {
           this.notiService.notifyCode(' SYS021');
