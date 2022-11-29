@@ -158,8 +158,6 @@ export class CodxTasksComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
- 
-    this.showMoreFunc = this.funcID=="TMT0206";
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -181,7 +179,7 @@ export class CodxTasksComponent
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else this.vllStatus = this.vllStatusTasks;
-
+   
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
 

@@ -98,7 +98,7 @@
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
               <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"  [openDelay]="500"
-              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement=""></span>
+              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement="bottom top right left"></span>
               <span #phases class="">
                 {{
                 data.phases
@@ -107,14 +107,14 @@
             </div>
             <div class="d-flex me-3 align-items-center">
               <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover" [ngbPopover]="popperActivitiest" [openDelay]="500"
-              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="bottom"></span>
+              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="bottom top right left"></span>
               <span #activities class="">
                 {{data.activities}}
               </span>
             </div>
             <div class="d-flex me-3 align-items-center" >
               <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
-              (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom">
+              (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right left">
               <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
               ></codx-attachment-temp></span>
             </div>
@@ -196,13 +196,13 @@
   </span>
 </ng-template>
 <ng-template #popperPhases>
-  <span style="height: 50px;">
-    <codx-label name="phases" [formModel]="view.formModel" default="Phases"></codx-label>
+  <span >
+    <codx-label name="phases" [formModel]="view.formModel" default="Số lượng công đoạn"></codx-label>
   </span>
 </ng-template>
 <ng-template #popperActivitiest>
   <span>
-    <codx-label name="activities" [formModel]="view.formModel" default="Activities"></codx-label>
+    <codx-label name="activities" [formModel]="view.formModel" default="Số lượng bước công việc"></codx-label>
   </span>
 </ng-template>
 
