@@ -15,16 +15,14 @@ import {
   DialogRef,
   FormModel,
   LayoutService,
+  NotificationsService,
   SidebarModel,
   ViewModel,
   ViewsComponent,
   ViewType,
 } from 'codx-core';
-import { environment } from 'src/environments/environment';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute } from '@angular/router';
 import { PopupAddSignatureComponent } from './popup-add-signature/popup-add-signature.component';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { CodxEsService } from '../../codx-es.service';
 
 export class defaultRecource { }
@@ -43,8 +41,10 @@ export class SignatureComponent implements OnInit, AfterViewInit {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('sideBarRightRef') sideBarRightRef: TemplateRef<any>;
   @ViewChild('signatureType', { static: true }) signatureType;
+  @ViewChild('fullName', { static: true }) fullName;
   @ViewChild('supplier', { static: true }) supplier;
   @ViewChild('oTPControl', { static: true }) oTPControl;
+  @ViewChild('templateStop', { static: true }) templateStop;
   @ViewChild('noName', { static: true }) noName;
   @ViewChild('createdBy', { static: true }) createdBy;
   @ViewChild('editSignature') editSignature: PopupAddSignatureComponent;
@@ -73,7 +73,8 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     private readonly auth: AuthService,
     private activedRouter: ActivatedRoute,
     private esService: CodxEsService,
-    private layout: LayoutService
+    private layout: LayoutService,
+    private notify: NotificationsService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
@@ -130,19 +131,19 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               template: this.itemAction,
               textAlign: 'center',
             },
-            {
-              field: 'email',
-              headerText: gv ? gv['Email'].headerText || 'Email' : 'Email',
-              template: '',
-              width: 200,
-            },
+            // {
+            //   field: 'email',
+            //   headerText: gv ? gv['Email'].headerText || 'Email' : 'Email',
+            //   template: '',
+            //   width: 200,
+            // },
             {
               field: 'fullName',
               headerText: gv
                 ? gv['FullName'].headerText || 'FullName'
                 : 'FullName',
-              template: '',
-              width: 200,
+              template: this.fullName,
+              width: 180,
             },
             {
               field: 'signatureType',
@@ -189,7 +190,14 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               field: 'otpControl',
               headerText: gv ? gv['OTPControl'].headerText || 'Icon' : 'Icon',
               template: this.oTPControl,
-              width: 130,
+              width: 110,
+            },
+            {
+              field: 'stop',
+              headerText: gv ? gv['Stop'].headerText || 'Icon' : 'Icon',
+              template: this.templateStop,
+              width: 80,
+              //textAlign: 'Center',
             },
           ];
           this.views = [
@@ -336,6 +344,20 @@ export class SignatureComponent implements OnInit, AfterViewInit {
     });
   }
 
+  stop(evt) {
+    let data = this.viewBase.dataService.dataSelected;
+    if (evt?.data) {
+      data = evt?.data;
+    }
+    data.stop = true;
+    this.esService.editSignature(data).subscribe((res) => {
+      if (res) {
+        this.notify.notifyCode('E0528');
+        this.viewBase.dataService.update(data).subscribe();
+      }
+    });
+  }
+
   closeEditForm(event) {
     //this.dialog && this.dialog.close();
   }
@@ -351,7 +373,13 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         break;
       //Copy
       case 'SYS04': {
-        this.copy(event);
+        //this.copy(event);
+        this.stop(event);
+        break;
+      }
+      //Stop
+      case 'STOP': {
+        this.stop(event);
         break;
       }
     }

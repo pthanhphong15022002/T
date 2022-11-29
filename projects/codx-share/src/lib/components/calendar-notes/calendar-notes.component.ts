@@ -113,7 +113,8 @@ export class CalendarNotesComponent
     this.loadData();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+  }
 
   loadData() {
     this.noteService.data.subscribe((res) => {

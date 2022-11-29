@@ -199,7 +199,19 @@ export class CodxFullTextSearch implements OnInit, OnChanges, AfterViewInit {
         if (item) {
           this.count = 0;
           this.hideN = false;
-          this.searchData = item;
+         
+          if(item[0])
+          {
+            if(item[2] && item[2].length >0)
+            {
+              for(var i = 0 ; i < item[0].length ; i++)
+              {
+                var hl = item[2].filter(x=>x.recID == item[0][i].recID.toString());
+                if(hl[0]) item[0][i].highlight = hl[0].highlight;
+              }
+            }
+            this.searchData = item[0];
+          }
           if (item[1]) {
             this.count = item[1];
             if (!changePage) {

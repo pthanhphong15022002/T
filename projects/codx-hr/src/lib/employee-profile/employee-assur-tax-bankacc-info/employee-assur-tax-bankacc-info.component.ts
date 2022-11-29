@@ -33,6 +33,8 @@ export class EmployeeAssurTaxBankaccInfoComponent extends UIComponent implements
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
+    console.log('formModel', this.formModel);
+    
     this.headerText = data?.data?.headerText;
     if(this.formModel){
       this.isAfterRender = true
@@ -44,7 +46,9 @@ export class EmployeeAssurTaxBankaccInfoComponent extends UIComponent implements
   }
 
   onSaveForm(){
-    this.hrService.saveEmployeeAssurTaxBankAccountInfo(this.data).subscribe(p => {
+    console.log(this.data);
+    
+    this.hrService.updateEmployeeAssurTaxBankAccountInfo(this.data).subscribe(p => {
       if(p === "True"){
         this.notify.notifyCode('SYS007')
         this.dialog.close();

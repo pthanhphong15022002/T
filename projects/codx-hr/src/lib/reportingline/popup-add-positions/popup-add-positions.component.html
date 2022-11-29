@@ -13,11 +13,11 @@ subHeaderText=""
                 <div class="form-group">
                     <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
                     <codx-input 
-                        [disabled]="paramaterHR?.stop ? false : true"
+                        [disabled]="true"
                         type="text"
                         field="PositionID"
                         (valueChange)="dataChange($event, 'PositionID')" 
-                        [crrValue]="positionID">
+                        [crrValue]="data.positionID">
                     </codx-input>
                 </div>
             </div>
@@ -43,7 +43,6 @@ subHeaderText=""
                 <div class="form-group">
                     <codx-label [formModel]="dialogRef.formModel" fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
                     <codx-input 
-                        class="form-control" 
                         type="text" 
                         field="PositionName2"
                         (valueChange)="dataChange($event, 'PositionName2')"
@@ -217,6 +216,8 @@ subHeaderText=""
 
 <ng-template #footer>
     <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
+        <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+            <codx-label [formModel]="dialogRef.formModel" [default]="'Lưu'"></codx-label>
+        </button>
     </div>
 </ng-template>

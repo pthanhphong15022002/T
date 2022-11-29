@@ -167,10 +167,6 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   btnClick(e) {
-    // var headerText = '';
-    // if (e.text) headerText = e.text;
-    // this.add(headerText);
-
     if(this.view)
     {
       debugger

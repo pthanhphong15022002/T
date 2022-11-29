@@ -51,6 +51,6 @@ export class SearchingComponent extends UIComponent implements OnDestroy, AfterV
     });
   }
   onSelected(e: any) {
-    alert(JSON.stringify(e));
+    // alert(JSON.stringify(e));
   }
 }

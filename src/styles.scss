@@ -1336,6 +1336,11 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   white-space: nowrap !important;
 }
 
+.dropdown-menu.overflow-auto.show a.dropdown-item.cursor-pointer.border-top:first-child {
+  border-top: 0 !important;
+  margin-top: 0;
+}
+
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;
 // }
