@@ -55,6 +55,7 @@
                     placement="bottom"
                     [autoClose]="'outside'"
                     class="w-30px me-2"
+                    container="body"
                     src="/{{ item.smallIcon }}"
                   />
                 </a>
@@ -78,6 +79,7 @@
                     placement="bottom"
                     [autoClose]="'outside'"
                     class="w-30px"
+                    container="body"
                     src="../../../{{ item.smallIcon }}"
                   />
                 </a>
@@ -86,8 +88,6 @@
                 <span
                   [ngbPopover]="manyModule"
                   triggers="mouseenter:mouseleave"
-                  placement="bottom"
-                  [autoClose]="'outside'"
                   class="btn btn-sm btn-icon btn-light-primary rounde-1 ms-1 w-30px h-30px"
                 >
                   +{{ data.chooseRoles && data.chooseRoles.length - 5 }}
@@ -196,5 +196,3 @@
     </div>
   </div>
 </ng-template>
-
-<ng-template #manyModule>dsfdf</ng-template>

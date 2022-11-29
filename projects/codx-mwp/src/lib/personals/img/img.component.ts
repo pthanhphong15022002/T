@@ -77,20 +77,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
     ScrollComponent.reinitialization();
   }
 
-  // getFile() {
-  //   this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').
-  //     subscribe((files: any[]) => {
-  //       if (files.length > 0) {
-  //         files.forEach((f: any) => {
-  //           if (f.referType == this.FILE_REFERTYPE.IMAGE && (f.thumbnail != '' || f.thumbnail != null)) {
-  //             this.file_img.push(f);
-  //           }
-  //         });
-  //         this.dt.detectChanges();
-  //       }
-  //     })
-  // }
-
   openImg(item) {
     this.fileService.getFile(item.recID).subscribe((data) => {
       this.callfc.openForm(

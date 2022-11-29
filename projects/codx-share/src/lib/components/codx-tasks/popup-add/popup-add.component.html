@@ -25,18 +25,6 @@
       <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
       </codx-label>
     </div>
-    <!-- <codx-input
-      field="taskGroupID"
-      [type]="gridViewSetup['TaskGroupID']['controlType']"
-      [placeholder]="gridViewSetup['TaskGroupID']['headerText']"
-      [refValue]="gridViewSetup['TaskGroupID']['referedValue']"
-      [refType]="gridViewSetup['TaskGroupID']['referedType']"
-      (valueChange)="cbxChange($event)"
-      [crrValue]="task?.taskGroupID"
-      [showInput]="true"
-      [disabled]="readOnly"
-    >
-    </codx-input> -->
     <codx-input field="taskGroupID" [formModel]="form.formModel" [Group]="form.formGroup"
       (valueChange)="cbxChange($event)" [disabled]="readOnly">
     </codx-input>
@@ -111,19 +99,9 @@
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
         </div>
-        <codx-input type="number" field="estimated" placeholder="Số giờ " [showSpinButton]="false"
+        <codx-input type="number" field="estimated" [placeholder]="gridViewSetup?.Estimated?.descriptions" [showSpinButton]="false"
           [crrValue]="task?.estimated" (valueChange)="valueChangeEstimated($event)" [disabled]="readOnly">
         </codx-input>
-        <!-- <codx-input
-        field="estimated"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        [showSpinButton]="false"
-        (valueChange)="valueChangeEstimated($event)"
-        [crrValue]="task?.estimated"
-        [disabled]="readOnly"
-      >
-      </codx-input> -->
       </div>
     </div>
   </ng-container>
