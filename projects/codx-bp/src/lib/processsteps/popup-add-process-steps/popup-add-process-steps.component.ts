@@ -161,7 +161,6 @@ export class PopupAddProcessStepsComponent
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
         this.processSteps['reference'] = res.event?.recID;
-        // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
       }
     });
   }
