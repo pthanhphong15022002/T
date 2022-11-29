@@ -15,13 +15,12 @@ import { CodxBpService } from '../codx-bp.service';
 })
 export class PopupViewDetailProcessesComponent implements OnInit {
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
-  @ViewChild('processViewList') processViewList: ProcessStepsComponent;
-  @ViewChild('processKanban') processKanban: ProcessStepsComponent;
+  @ViewChild('viewProcessSteps') viewProcessSteps: ProcessStepsComponent;
   process!: BP_Processes;
   viewMode = '16';
   funcID="BPT11" //testsau klaay từ more ra
   name = 'ViewList';
-  offset = '59px';
+  offset = '75px';
   dialog!: DialogRef;
   data: any;
   moreFunc: any;
@@ -38,7 +37,10 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   ];
   formModelFlowChart :FormModel ;
   listPhaseName = [] ;
-  childFunc = []
+  childFunc = [] ;
+  mfAdd :any
+  isShowButton = true ;
+
 
   constructor(
     private api: ApiHttpService,
@@ -56,6 +58,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc?.customName;
     this.formModel = this.data?.formModel
+   
     this.cache.functionList(this.funcID).subscribe(f=>{
       if(f){
         this.formModelFlowChart = f.formModel
@@ -85,12 +88,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
+    // if( this.name=="Flowchart") this.isShowButton = false ;else this.isShowButton = true 
     this.changeDetectorRef.detectChanges();
   }
 
   clickMenu(item) {
     this.name = item.name;
-    // this.viewMode = item.id
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -98,7 +101,10 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       }
     });
     item.isActive = true;
-    if( this.name=="Flowchart") this.offset = '0px' ;else this.offset ="59px"
+    if(item.id == 6 || item.id == 16){
+      this.viewProcessSteps.chgViewModel(item.id);
+    }
+    //  if( this.name=="Flowchart") this.isShowButton = false ;else this.isShowButton = true 
     this.changeDetectorRef.detectChanges();
   }
 
@@ -191,8 +197,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
 
   clickButton(e: ButtonModel) {
-   if(this.name=="ViewList" || this.name=="Flowchart") this.processViewList.click(e);
-   if(this.name=="Kanban" || this.name=="Flowchart") this.processKanban.click(e);
+    this.viewProcessSteps?.click(e);
   }
 
 }
