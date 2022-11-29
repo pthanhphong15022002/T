@@ -1,3 +1,4 @@
+import { PopupRescheduleBookingComponent } from './booking/popup-reschedule-booking/popup-reschedule-booking.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -23,6 +24,7 @@ import { ApprovalRoomViewDetailComponent } from './approval/approval-room-view-d
 import { ApprovalRoomsComponent } from './approval/approval-room.component';
 import { PopupAddRoomsComponent } from './settings/rooms/popup-add-rooms/popup-add-rooms.component';
 import { RoomsComponent } from './settings/rooms/rooms.component';
+import { PopupAddAttendeesComponent } from './booking/popup-add-attendees/popup-add-attendees.component';
 
 const routes: Route[] = [
   {
@@ -78,6 +80,8 @@ const Components: Type<any>[] = [
   BookingRoomViewDetailComponent,
   RoomDashboardComponent,
   ApprovalRoomViewDetailComponent,
+  PopupRescheduleBookingComponent,
+  PopupAddAttendeesComponent,
 ];
 
 @NgModule({
