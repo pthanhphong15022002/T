@@ -272,8 +272,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
-
-    // this.changeDetectorRef.detectChanges();
   }
 
 //Thay doi viewModel
@@ -813,7 +811,7 @@ chgViewModel(type){
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
         if (res) {
-          ///xử lý sau
+          
           this.notiService.notifyCode('SYS007');
         } else {
           this.notiService.notifyCode(' SYS021');
