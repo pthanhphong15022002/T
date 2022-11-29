@@ -328,7 +328,7 @@
                       *ngIf="!item?.items || item?.items?.length == 0"
                     >
                       <div
-                        class="mt-3 dropzone dropzone-default dropzone-primary d-flex flex-center flex-column"
+                        style="height:15px; width:100%;"
                         cdkDrag
                         [cdkDragDisabled]="true"
                         [cdkDragData]="null"
@@ -339,7 +339,7 @@
                           việc vào đây !-Test đừng ai bắt lỗi , please ! ^^!
                         </h3> -->
 
-                        <div class="dropzone-msg dz-message needsclick">
+                        <!-- <div class="dropzone-msg dz-message needsclick">
                           <div class="dropzone-msg-title mb-2">
                             <codx-label
                               name="lblDropDrap"
@@ -348,16 +348,16 @@
                               class="fw-bold"
                             >
                             </codx-label>
-                          </div>
-                          <span class="dropzone-msg-desc">
+                          </div> -->
+                          <!-- <span class="dropzone-msg-desc">
                             <codx-label
                               name="lblDropDrap2"
                               [formModel]="view.formModel"
                               default="Kéo thả bước công đoạn vào đây"
                               class="fw-bold"
                             ></codx-label>
-                          </span>
-                        </div>
+                          </span> -->
+                        <!-- </div> -->
                       </div>
                     </ng-container>
                     <ng-container *ngIf="item?.items?.length > 0">
