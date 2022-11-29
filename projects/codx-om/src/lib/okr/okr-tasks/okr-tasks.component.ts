@@ -17,6 +17,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { PopupAddTaskComponent } from '../../popup/popup-add-task/popup-add-task.component';
 
 @Component({
   selector: 'lib-okr-tasks',
@@ -185,7 +186,8 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   }
 
   buttonClick(event: any) {
-    this.click.emit(event);
+    // this.click.emit(event);
+    this.callfc.openSide(PopupAddTaskComponent);
   }
 
   viewChange(event) {

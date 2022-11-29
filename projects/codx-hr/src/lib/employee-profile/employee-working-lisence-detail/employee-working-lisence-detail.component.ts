@@ -20,6 +20,7 @@ export class EmployeeWorkingLisenceDetailComponent extends UIComponent implement
   formModel: FormModel;
   dialog: DialogRef;
   data;
+  isAdd;
   formGroup: FormGroup
   funcID;
   employId;
@@ -50,6 +51,11 @@ export class EmployeeWorkingLisenceDetailComponent extends UIComponent implement
     }
     this.funcID = this.dialog.formModel.funcID
     this.employId = data?.data?.employeeId;
+    this.isAdd = data?.data?.isAdd;
+    if(this.isAdd == false){
+      this.data = data?.data?.selectedWorkPermit;
+      this.formModel.currentData = this.data
+    }
     console.log('employeeId', this.employId);
     console.log('formModel', this.formModel);
   }
@@ -60,14 +66,16 @@ export class EmployeeWorkingLisenceDetailComponent extends UIComponent implement
     .then((item) => {
       this.formGroup = item;
       console.log('formGroup', this.formGroup);
-      this.hrService.getEmployeeWorkingLisenceDetail(this.employId).subscribe(p => {
-        console.log('thong tin giay phep lao dong', p);
-        this.data = p;
-        this.formModel.currentData = this.data
-        console.log('du lieu formmodel', this.formModel.currentData);
-        this.formGroup.patchValue(this.data)
-        this.isAfterRender = true
-      })
+      if(this.isAdd == true){
+        this.hrService.getEmployeeWorkingLisenceModel().subscribe(p => {
+          console.log('thong tin giay phep lao dong', p);
+          this.data = p;
+          this.formModel.currentData = this.data
+          console.log('du lieu formmodel', this.formModel.currentData);
+        })
+      }
+      this.formGroup.patchValue(this.data)
+      this.isAfterRender = true
     })
   }
 
@@ -76,12 +84,25 @@ export class EmployeeWorkingLisenceDetailComponent extends UIComponent implement
   }
 
   onSaveForm(){
-    this.hrService.updateEmployeeWorkingLisenceDetail(this.data).subscribe(p => {
-      if(p === "True"){
-        this.notify.notifyCode('SYS007')
-        this.dialog.close();
-      }
-      else this.notify.notifyCode('DM034')
-    })
+    this.data.employeeID = this.employId
+    if(this.isAdd == true){
+      this.hrService.addEmployeeWorkPermitDetail(this.data).subscribe(p => {
+        if(p == true){
+          this.notify.notifyCode('SYS007')
+          this.dialog.close();
+        }
+        else this.notify.notifyCode('DM034')
+      })
+    }
+    else{
+      this.hrService.updateEmployeeWorkPermitDetail(this.data).subscribe(p => {
+        if(p == true){
+          this.notify.notifyCode('SYS007')
+          this.dialog.close()
+        }
+        else this.notify.notifyCode('DM034')
+      });
+    }
+
   }
 }

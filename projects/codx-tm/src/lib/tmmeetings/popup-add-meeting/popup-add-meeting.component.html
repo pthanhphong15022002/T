@@ -13,7 +13,7 @@
       <codx-label fiedName="MeetingName" formName="TMMeetings" gridViewName="grvTMMeetings" default="Tên buổi họp">
       </codx-label>
     </div>
-    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" placeholder="Tên buổi họp"
+    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" [placeholder]="gridViewSetup['MeetingName'].headerText"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -58,7 +58,7 @@
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" [formModel]="form.formModel" [crrValue]="meeting?.location" [Group]="form.formGroup"
+    <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location'].headerText" [crrValue]="meeting?.location"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -71,7 +71,7 @@
         }}</span> -->
     </div>
     <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields'
-      [placeholder]="'Địa điểm'" (valueChange)="cbxChange($event)"></ejs-combobox>
+    [placeholder]="gridViewSetup['Location'].headerText" (valueChange)="cbxChange($event)"></ejs-combobox>
 
   </div>
   <div class="form-group">
@@ -145,7 +145,8 @@
         </div>
       </div>
       <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
-        multiple="true" [showInput]="false">
+        multiple="true" [showInput]="false" [disabled]="readOnly"
+        >
       </codx-input>
     </div>
     <div class="d-flex flex-wrap">
