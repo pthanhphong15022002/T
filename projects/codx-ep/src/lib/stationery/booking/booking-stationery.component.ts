@@ -204,6 +204,7 @@ export class BookingStationeryComponent
         this.view.dataService
           .edit(this.view.dataService.dataSelected)
           .subscribe((res) => {
+
             this.popupClosed = false;
             let option = new SidebarModel();
             option.DataService = this.view?.dataService;

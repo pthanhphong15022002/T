@@ -91,9 +91,6 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   }
   onInit(): void {
     //this.view.dataService.methodDelete = 'DeleteResourceAsync';
-    this.cache.functionList('EPS22').subscribe(res => {
-      var x = res;
-    })
     this.cache.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
