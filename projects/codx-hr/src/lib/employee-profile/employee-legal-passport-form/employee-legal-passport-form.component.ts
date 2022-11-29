@@ -16,6 +16,7 @@ import {
   NotificationsService,
   UIComponent,
  } from 'codx-core';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-employee-legal-passport-form',
@@ -28,9 +29,9 @@ export class EmployeeLegalPassportFormComponent extends UIComponent implements O
   dialog: DialogRef;
   data;
   headerText;
+  actionType;
   funcID;
   isAfterRender = false;
-
   employId;
   @ViewChild('form') form: CodxFormComponent;
   onInit(): void {
@@ -57,50 +58,56 @@ export class EmployeeLegalPassportFormComponent extends UIComponent implements O
     
     this.funcID = this.dialog.formModel.funcID;
     this.employId = data?.data?.employeeId;
+    this.actionType = data?.data?.actionType;
+    if(this.actionType === 'edit' || this.actionType ==='copy'){
+      this.data = JSON.parse(JSON.stringify(data?.data?.passPortSelected));
+      this.formModel.currentData = this.data
+    }
     console.log('employid', this.employId)
     console.log('formmdel', this.formModel);
-    // this.data = dialog?.dataService?.dataSelected
    }
    initForm() {
     this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        // this.cache.gridView(this.formModel.gridViewName).subscribe((gridView) => {
-        //   this.cache.setGridView(this.formModel.gridViewName, gridView);
-        //   this.cache
-        //     .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
-        //     .subscribe((gridViewSetup) => {
-        //       this.cache.setGridViewSetup(
-        //         this.formModel.formName,
-        //         this.formModel.gridViewName,
-        //         gridViewSetup
-        //       );
-        //     });
-        // });
         this.formGroup = item;  
-        console.log('formgr test:', this.formGroup)  
-        this.hrService.getEmployeePassportInfo(this.employId).subscribe(p => {
-          console.log('thong tin ho chieu', p);
-          this.data = p;
-          this.formModel.currentData = this.data
-          // this.dialog.dataService.dataSelected = this.data
-          console.log('du lieu formmodel',this.formModel.currentData);
-          this.formGroup.patchValue(this.data)
-          
-          this.isAfterRender = true
-        })    
+        if(this.actionType == 'add'){
+          this.hrService.getEmployeePassportModel().subscribe(p => {
+            console.log('thong tin ho chieu', p);
+            this.data = p;
+            this.formModel.currentData = this.data
+            // this.dialog.dataService.dataSelected = this.data
+            console.log('du lieu formmodel',this.formModel.currentData);
+          })  
+        }
+        this.formGroup.patchValue(this.data)
+        this.isAfterRender = true
       }); 
   }
 
     onSaveForm(){
+      if(this.actionType === 'copy'){
+        this.data.recID = null;
+      }
+      this.data.employeeID = this.employId 
       console.log('du lieu form', this.formGroup.value);
-      
-      this.hrService.updateEmployeePassportInfo(this.data).subscribe(p => {
-        if(p === "True"){
-          this.notify.notifyCode('SYS007')
-          this.dialog.close()
-        }
-        else this.notify.notifyCode('DM034')
-      });
+      if(this.actionType === 'add' || this.actionType === 'copy'){
+        this.hrService.addEmployeePassportInfo(this.data).subscribe(p => {
+          if(p != null){
+            this.notify.notifyCode('SYS007')
+            this.dialog.close(p)
+          }
+          else this.notify.notifyCode('DM034')
+        });
+      } 
+      else{
+        this.hrService.updateEmployeePassportInfo(this.data).subscribe(p => {
+          if(p == true){
+            this.notify.notifyCode('SYS007')
+            this.dialog.close(this.data)
+          }
+          else this.notify.notifyCode('DM034')
+        });
+      }
    }
 }
