@@ -27,23 +27,21 @@ export class PopupAddPositionsComponent implements OnInit {
     private reportingLine: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData,
-  ) {
-    this.action = dt.data;
+  ) 
+  {
+    this.action = dt.data.action;
+    this.title = dt.data.title;
+    this.data  = dt.data.data;
     this.dialogRef = dialog;
     this.functionID = this.dialogRef.formModel.funcID;
-    this.data = dialog.dataService!.dataSelected;
     this.position = this.data;
   }
 
   ngOnInit(): void {
     this.user = this.auth.userValue;
-    this.getParamerAsync(this.functionID);
-    if (this.action === 'edit') {
-      this.title = 'Chỉnh sửa';
-      this.isNew = false;
-    }
-    if (this.action === 'copy') {
-      this.title = 'Sao chép';
+    if(this.action != "edit"){
+      this.getParamerAsync(this.functionID);
+
     }
   }
 
@@ -90,7 +88,7 @@ export class PopupAddPositionsComponent implements OnInit {
           if(res)
           {
             this.positionID = res;
-            this.data.OrgUnitID = res;
+            this.data.positionID = res;
             this.detectorRef.detectChanges();
           }
         })
@@ -129,34 +127,38 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
-
-    this.api.exec("ERM.Business.HR", "PositionsBusiness", "UpdateAsync", [this.data, this.isNew]).subscribe(res => {
-      if (res) {
-        if (res) {
-          if (this.isNew) {
-            this.reportingLine.reportingLineComponent.addPosition(res);
+    if(this.action)
+    {
+      this.isNew = this.action === "add" ? true : false;
+      this.api.execSv(
+        "HR",
+        "ERM.Business.HR",
+        "PositionsBusiness",
+        "UpdateAsync",
+        [this.data,
+        this.isNew])
+        .subscribe(res => {
+          if (res) 
+          {
+            this.dialogRef.close(res);
           }
           else {
-            this.reportingLine.positionsComponent.updatePosition(res);
+            this.notiService.notify("Error");
+            this.dialogRef.close();
           }
-          this.Savechange.emit(res);
-          this.dialogRef.close(res);
-        }
-        else {
-          this.notiService.notify("Error");
-        }
-      }
-    });
+        });
+    }
+    
   }
 
-  addPosition() {
-    var t = this;
-    this.dialogRef.dataService.save((opt: any) => {
-      opt.data = [this.position];
-      return true;
-    })
+  addPosition() 
+  {
+    debugger
+    this.dialogRef.dataService.save((opt: any) => { opt.data = [this.position]; return true;})
       .subscribe((res) => {
-        if (res.save) {
+        debugger
+        if (res.save) 
+        {
           this.dialogRef.close();
         }
       });
