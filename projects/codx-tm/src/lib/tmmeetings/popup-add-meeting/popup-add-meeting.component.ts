@@ -212,7 +212,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         'EP',
         'ResourcesBusiness',
         'GetListAvailableResourceAsync',
-        ['1', startDate.toUTCString(), endDate.toUTCString()]
+        ['1', startDate, endDate]
       )
       .subscribe((res) => {
         if (res.msgBodyData[0] && res.msgBodyData[0].length > 0) {
@@ -812,7 +812,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM036');
       }
     }
-    this.loadRoomAvailable(this.meeting.startDate, this.meeting.endDate);
+    if(this.isRoom){
+      this.loadRoomAvailable(this.meeting.startDate, this.meeting.endDate);
+    }
   }
 
   openPopupLink() {
