@@ -1,4 +1,4 @@
-import { OnChanges, SimpleChanges } from '@angular/core';
+import { OnChanges, Output, SimpleChanges } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectorRef,
@@ -374,6 +374,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     data?.answers.filter((x) => x.other == false);
     var seqNo = data?.answers.length;
     var dataAnswerTemp = {
+      recID: this.generateGUID(),
       seqNo: seqNo,
       answer: `Tùy chọn ${seqNo + 1}`,
       other: false,
@@ -383,6 +384,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     var index = data.answers.findIndex((x) => x.other == true);
     if (index >= 0) {
       var dataOtherTemp = {
+        recID: this.generateGUID(),
         seqNo: seqNo - 1,
         answer: `Tùy chọn ${seqNo}`,
         other: false,
@@ -394,11 +396,19 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     } else data.answers.push(dataAnswerTemp);
     this.questions[indexSession].children[indexQuestion] = data;
     console.log('check question after addAnswer', this.questions);
-    let timer;
-    timer = window.setTimeout(function () {
-      alert('Hello!');
-    }, 3000);
-    window.clearTimeout(timer);
+    this.SVServices.signalSave.next('saving');
+    this.setTimeout(data);
+  }
+
+  saveDataTimeout = new Map();
+
+  setTimeout(data) {
+    clearTimeout(this.saveDataTimeout?.get(data.recID));
+    this.saveDataTimeout?.delete(this.saveDataTimeout?.get(data.recID));
+    this.saveDataTimeout.set(
+      data.recID,
+      setTimeout(this.onSave.bind(this, this.recID, data, false), 2000)
+    );
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
@@ -415,6 +425,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     if (dataAnswer.other)
       this.questions[indexSession].children[indexQuestion].other = false;
     console.log('check questions', this.questions);
+    this.SVServices.signalSave.next('saving');
+    this.setTimeout(this.questions[indexSession].children[indexQuestion]);
   }
 
   deleteCard(seqNoSession, seqNoQuestion, category) {
@@ -488,6 +500,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     data.push(dataAnswerTemp);
     this.questions[indexSession].children[indexQuestion]!.answers = data;
     this.questions[indexSession].children[indexQuestion]['other'] = true;
+    this.SVServices.signalSave.next('saving');
+    this.setTimeout(this.questions[indexSession].children[indexQuestion]);
   }
 
   copyCard(itemSession, itemQuestion, category) {
@@ -722,6 +736,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                   res.event?.dataUpload[0].objectID;
               }
               this.lstEditIV.push(res.event?.dataUpload[0]);
+              //Tạm thời update lại recID của item đó theo objectID của File
+              //Sau này sẽ convert ngược lại để giảm thiểu việc xuống BE
+              this.SVServices.signalSave.next('saving');
+              this.setTimeout(
+                t.questions[seqNoQuestion].children[seqNoQuestion]
+              );
               this.change.detectChanges();
               console.log('check data file', this.lstEditIV);
             }
@@ -899,6 +919,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.questions[seqNoSession]['children'] = lstUp;
     }
     this.clickToScroll(seqNoSession + 1, this.GUID, 'S');
+    this.SVServices.signalSave.next('saving');
+    this.setTimeout(this.questions[seqNoSession + 1]['children']);
+    this.setTimeout(this.questions[seqNoSession]['children']);
   }
 
   addNoSession(itemActive, seqNoSession, category) {
@@ -941,6 +964,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
       ];
     this.clickToScroll(seqNoSession, this.GUID, category);
+    this.SVServices.signalSave.next('saving');
+    this.setTimeout(this.questions[seqNoSession]);
+    this.setTimeout(this.questions[seqNoSession].children);
   }
 
   importQuestion(dataQuestion) {}
@@ -993,6 +1019,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       );
       this.questions[seqNoSession].children[dataQuestion.seqNo].recID =
         data[0].objectID;
+      this.setTimeout(
+        this.questions[seqNoSession].children[dataQuestion.seqNo]
+      );
     }
     if (!youtube) {
       data[0]['recID'] = data[0].objectID;
@@ -1002,6 +1031,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       }
       this.lstEditIV.push(data[0]);
     }
+    this.SVServices.signalSave.next('saving');
+    this.setTimeout(
+      this.questions[seqNoSession].children[dataQuestion.seqNo + 1]
+    );
     console.log('check data file', this.lstEditIV);
     console.log('check data after uploadFile', this.questions);
     this.change.detectChanges();
@@ -1254,12 +1287,15 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   onSave(transID, data, isModeAdd) {
-    return this.api.execSv(
-      'SV',
-      'ERM.Business.SV',
-      'QuestionsBusiness',
-      'SaveAsync',
-      [transID, data, isModeAdd]
-    );
+    this.api
+      .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+        transID,
+        data,
+        isModeAdd,
+      ])
+      .subscribe((res) => {
+        if (res) this.SVServices.signalSave.next('done');
+        else this.notification.alertCode('');
+      });
   }
 }
