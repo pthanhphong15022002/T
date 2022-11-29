@@ -1,64 +1,45 @@
-<div class="modal-header">
+<div class="modal-header pb-2">
   <div class="d-flex flex-column flex-grow-1">
     <div class="d-flex justify-content-between align-items-center">
-      <h2 id="modal-basic-title">
+      <div class="fs-3 fw-bold text-dark" id="modal-basic-title">
         <codx-label name="lblOnlineUrl" default="Họp trực tuyến"></codx-label>
-      </h2>
-      <button
-        type="button"
-        class="btn btn-xs btn-icon btn-light btn-hover-primary"
-        aria-label="Close"
-        (click)="closeDialog(false)"
-      >
+      </div>
+      <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+        (click)="closeDialog(false)">
         <span class="icon-close icon-20 text-dark text-hover-primary"></span>
       </button>
     </div>
-    <div class="text-dark-50">
-      <codx-label
-        name="lblOnlineUrlSetting"
-        default="Thiết lập đường dẫn"
-      ></codx-label>
+    <div class="text-gray-500">
+      <codx-label name="lblOnlineUrlSetting" default="Thiết lập đường dẫn"></codx-label>
     </div>
   </div>
 </div>
 
-<div class="card-body d-flex justify-content-between">
-  <div class="meeting" *ngFor="let imgUrl of vllImgUrl; let idx = index">
-    <!-- [disabled]="idx != 0" -->
-    <button
-      (click)="changeHost(imgUrl)"
-      [ngClass]="{
+<div class="card-body mt-5">
+  <div class="form-group">
+    <div class="d-flex align-items-center">
+      <div class="meeting me-6" *ngFor="let imgUrl of vllImgUrl; let idx = index">
+        <!-- [disabled]="idx != 0" -->
+        <button (click)="changeHost(imgUrl)" [ngClass]="{
         'opacity-25': idx != 0,
-        'btn-primary': imgUrl == curHost,
+        'btn-light-primary p-0': imgUrl == curHost,
         btn: true,
         'border-0': true
-      }"
-    >
-      <img [src]="baseUrl + imgUrl.icon" alt="" width="50px" height="50px" />
-    </button>
-  </div>
-</div>
-<div class="card-body">
-  <div class="form-group"></div>
-  <div class="form-group">
-    <codx-label
-      fiedName="OnlineUrl"
-      default="Đường dẫn"
-      [formModel]="dialogRef.formModel"
-    ></codx-label>
+      }">
+          <img [src]="baseUrl + imgUrl.icon" alt="" width="35px" height="35px" />
+        </button>
+      </div>
+    </div>
   </div>
   <div class="form-group">
-    <codx-input
-      class="form-control"
-      type="text"
-      [disabled]="meetingUrl != null"
-      [crrValue]="meetingUrl"
-    >
+    <codx-label fiedName="OnlineUrl" default="Đường dẫn" [formModel]="dialogRef.formModel"></codx-label>
+    <codx-input class="form-control" type="text" [disabled]="meetingUrl != null" [crrValue]="meetingUrl">
     </codx-input>
   </div>
 </div>
+
 <div class="card-footer">
-  <div class="form-group d-flex justify-content-between">
+  <div class="d-flex justify-content-between">
     <div class="d-flex">
       <button type="button" class="btn btn-primary" (click)="createMeeting()">
         <codx-label name="lblCreateMeeting" default="Tạo mới"></codx-label>
