@@ -8,7 +8,35 @@
 }
 
 .subheader {
-    margin-top: -16px;
-    width: 103%;
-    margin-left: -27px;
+  margin-top: -16px;
+  width: 103%;
+  margin-left: -27px;
+}
+
+.saving {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  line-height: 16px;
+  color: #5f6368;
+}
+
+.icon_survey {
+  width: 34px !important;
+  height: 40px !important;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 24px;
+  color: #202124;
+}
+
+.pt-10px {
+  padding-top: 10px;
+}
+
+.pt-16px {
+  padding-top: 16px;
 }

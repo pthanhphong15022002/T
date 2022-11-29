@@ -10,6 +10,7 @@ import {
   ComponentRef,
 } from '@angular/core';
 import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxSvService } from '../codx-sv.service';
 
 @Component({
   selector: 'app-add-survey',
@@ -24,16 +25,25 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
   viewType = ViewType;
   mode: any = 'Q';
+  title: any;
+  signal: any = null;
 
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
 
-  constructor(private injector: Injector, private change: ChangeDetectorRef) {
+  constructor(
+    private injector: Injector,
+    private change: ChangeDetectorRef,
+    private SVService: CodxSvService
+  ) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
       if (queryParams?.funcID) this.funcID = queryParams.funcID;
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
+      }
+      if (queryParams?.title) {
+        this.title = queryParams.title;
       }
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
@@ -41,7 +51,18 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {}
+  onInit(): void {
+    this.getSignalAfterSave();
+  }
+
+  getSignalAfterSave() {
+    this.SVService.signalSave.subscribe((res) => {
+      if (res) {
+        this.signal = res;
+        this.change.detectChanges();
+      }
+    });
+  }
 
   onLoading(e) {
     if (this.view.formModel) {
