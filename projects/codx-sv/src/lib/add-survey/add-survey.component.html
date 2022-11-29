@@ -78,8 +78,7 @@
           </div>
         </ng-template>
         <ng-template #content class="pd-t-20">
-          <app-questions
-            [changeModeQ]="changeMode"
+          <app-questions #app_question
             [formModel]="view.formModel"
             [dataService]="view.dataService"
             *ngIf="mode == 'Q'"
@@ -103,7 +102,6 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <app-answers
-            [changeModeA]="changeMode"
             *ngIf="mode == 'A'"
             [formModel]="view.formModel"
           ></app-answers>
@@ -126,7 +124,6 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <app-setting
-            [changeModeS]="changeMode"
             *ngIf="mode == 'S'"
           ></app-setting>
         </ng-template>
