@@ -63,7 +63,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
-  
+
   @Input() process?: BP_Processes;
   @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
@@ -113,8 +113,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfA = [];
   childFuncOfP = [];
   parentID = '';
-  linkFile : any;
-
+  linkFile: any;
+  msgBP001= 'Vui lòng thêm bước công việc trước khi thực hiện'; // gán tạm message
+  msgBP002= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  listCountPhases:any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -169,6 +171,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.resourceKanban.className = 'ProcessStepsBusiness';
       this.resourceKanban.method = 'GetColumnsKanbanAsync';
       this.resourceKanban.dataObj = this.dataObj;
+      this.listCountPhases = this.process.phases;
     });
 
     // //view popup
@@ -675,6 +678,9 @@ chgViewModel(type){
 
   //#region event
   click(evt: ButtonModel) {
+    if(this.listCountPhases<=0 && evt.id !='P'){
+      return this.notiService.notify(this.msgBP002);
+    }
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
@@ -719,7 +725,7 @@ chgViewModel(type){
   }
   hoverViewText(text) {
     return (
-      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1) 
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
     );
   }
 
@@ -758,24 +764,29 @@ chgViewModel(type){
         this.delete(data);
     }
   }
-
   clickMenu(data, funcMenu) {
-    this.stepType = funcMenu.id;
-    this.parentID =
+    const isdata = data.items.length;
+    if (data.stepType == 'P' && funcMenu.id!='A' && isdata <= 0) {
+      return this.notiService.notify(this.msgBP001);
+    }
+    else {
+      this.stepType = funcMenu.id;
+      this.parentID =
       this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
-    this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
-    this.formModelMenu = this.view?.formModel;
-    this.add();
-    if (funcMenu) {
-      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
-        this.cache
-          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
-          .subscribe((res) => {
-            this.formModelMenu.formName = funcMenu.formName;
-            this.formModelMenu.gridViewName = funcMenu.gridViewName;
-            this.formModelMenu.funcID = funcMenu.funcID;
-          });
-      });
+      this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
+      this.formModelMenu = this.view?.formModel;
+      this.add();
+      if (funcMenu) {
+        this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+          this.cache
+            .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+            .subscribe((res) => {
+              this.formModelMenu.formName = funcMenu.formName;
+              this.formModelMenu.gridViewName = funcMenu.gridViewName;
+              this.formModelMenu.funcID = funcMenu.funcID;
+            });
+        });
+     }
     }
   }
   clickAddActivity(data) {
@@ -811,7 +822,6 @@ chgViewModel(type){
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
         if (res) {
-          
           this.notiService.notifyCode('SYS007');
         } else {
           this.notiService.notifyCode(' SYS021');
@@ -1147,48 +1157,48 @@ chgViewModel(type){
   }
 
   print() {
-    if (this.linkFile)
-    {
-     const output = document.getElementById("output");
-     const img = document.createElement("img");
-     img.src = this.linkFile;
-     output.appendChild(img);
-     const br = document.createElement("br");
-     output.appendChild(br);
-     window.print();
+    if (this.linkFile) {
+      const output = document.getElementById('output');
+      const img = document.createElement('img');
+      img.src = this.linkFile;
+      output.appendChild(img);
+      const br = document.createElement('br');
+      output.appendChild(br);
+      window.print();
 
-     document.body.removeChild(output);
-    }
-    else
-      window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
-   }
+      document.body.removeChild(output);
+    } else
+      window.frames[0].postMessage(
+        JSON.stringify({ MessageId: 'Action_Print' }),
+        '*'
+      );
+  }
 
-   checkDownloadRight() {
+  checkDownloadRight() {
     return this.dataFile.download;
   }
-   async download(): Promise<void> {
+  async download(): Promise<void> {
     var id = this.dataFile?.recID;
     var fullName = this.dataFile.fileName;
     var that = this;
 
     if (this.checkDownloadRight()) {
       ///lấy hàm của chung dang fail
-      this.fileService.downloadFile(id).subscribe(async res => {
+      this.fileService.downloadFile(id).subscribe(async (res) => {
         if (res) {
-          let blob = await fetch(res).then(r => r.blob());
+          let blob = await fetch(res).then((r) => r.blob());
           let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", fullName);
-          link.style.display = "none";
+          var link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', fullName);
+          link.style.display = 'none';
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
         }
       });
-    }
-    else {
-      this.notiService.notifyCode("SYS018");
+    } else {
+      this.notiService.notifyCode('SYS018');
     }
   }
 }
