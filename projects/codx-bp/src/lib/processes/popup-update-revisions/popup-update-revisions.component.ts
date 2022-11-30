@@ -51,7 +51,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.dialog = dialog;
     this.getProcess = this.data;
-    this.titleAction = dt.data;
+    this.titleAction = dt.data.title;
     this.moreFunc = dt.data.moreFunc;
     // this.action = dt.data[0];
     // this.dateLanguage=dt.data[1].more;
@@ -70,7 +70,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.dialog.close();
   }
   getProcessesStep(item) {
-    this.bpService.getProcessesByVersionNo([this.data.revisionID, this.data.versionNo])
+    this.bpService.getProcessesByVersionNo([this.data.recID, item.versionNo])
       .subscribe(proesses => {
         if (proesses) {
           this.dialog.close();
