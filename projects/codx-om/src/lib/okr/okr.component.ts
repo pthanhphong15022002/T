@@ -18,6 +18,7 @@ import {
   DataRequest,
   SidebarModel,
   FormModel,
+  AuthService,
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
@@ -40,10 +41,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   auth: AuthStore;
   okrService: CodxOmService;
   gridView: any;
-  constructor(inject: Injector) {
+  constructor(
+    inject: Injector,
+    private authService : AuthService,
+    ) {
     super(inject);
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
+    //var x= this.authService.userValue;
   }
   ngAfterViewInit(): void {
     this.views = [
