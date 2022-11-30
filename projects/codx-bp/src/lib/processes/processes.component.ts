@@ -413,6 +413,7 @@ export class ProcessesComponent
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -566,8 +567,6 @@ export class ProcessesComponent
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
-        this.permission(data);
-        break;
       case 'BPT105':
         this.permission(data);
         break;
@@ -643,11 +642,8 @@ export class ProcessesComponent
 
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
-    // this.codxService.navigate('', e?.url); thuong chua add
-    // this.codxService.navigate('', 'bp/processstep/BPT11')
-
     //đoi view
-    this.bpService.viewProcesses.next(data);
+    // this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
 

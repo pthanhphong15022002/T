@@ -20,6 +20,13 @@ export class OkrPlansComponent implements OnInit {
   okrForm: FormGroup;
   date = new Date();
   ops = ['m','q','y'];
+  selectedType = "y";
+  //Kỳ
+  periodID = "" ;
+  //Loại
+  interval = "";
+  //Năm
+  year = null;
   constructor(
     private api: ApiHttpService,
     private ref: ChangeDetectorRef,
@@ -30,7 +37,13 @@ export class OkrPlansComponent implements OnInit {
   ) 
   {
     //FormModel
-    if(dt?.data[0]) this.formModel = dt?.data[0]
+    if(dt?.data[0]) this.formModel = dt?.data[0];
+    if(dt?.data[1]) this.periodID = dt?.data[1];
+    if(dt?.data[2]) {
+      this.interval = dt?.data[2];
+      this.selectedType = dt?.data[2].toLowerCase();
+    }
+    if(dt?.data[3]) this.year = dt?.data[3];
     this.dialog =  dialog;
   }
 
