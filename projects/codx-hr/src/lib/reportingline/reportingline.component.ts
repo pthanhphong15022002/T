@@ -170,22 +170,22 @@ export class ReportinglineComponent extends UIComponent {
   edit(event:any,data:any) {
     if (this.view && data && event) 
     {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data)); 
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      let dataSelected = data;
-      this.view.dataService.edit(dataSelected)
-      .subscribe( () => {
+      this.view.dataService.edit(this.view.dataService.dataSelected)
+      .subscribe(() => {
         let data = {
           dataService: this.view.dataService,
           formModel: this.view.formModel,
-          data: dataSelected,
+          data: this.view.dataService.dataSelected,
           function: this.view.formModel.funcID,
           isAddMode: false,
           titleMore: event.text,
         };
-        let popup = this.callfc.openSide(
+        this.callfc.openSide(
           CodxFormDynamicComponent,
           data,
           option,

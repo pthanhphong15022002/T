@@ -280,7 +280,7 @@ export class PropertiesComponent implements OnInit {
         var files = this.dmSV.listFiles;
         if (files != null) {
           this.dmSV.listFiles = files;
-          this.dmSV.ChangeData.next(true);
+          //this.dmSV.ChangeData.next(true);
         }
 
         this.changeDetectorRef.detectChanges();

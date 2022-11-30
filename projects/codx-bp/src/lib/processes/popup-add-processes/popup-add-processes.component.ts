@@ -228,58 +228,48 @@ export class PopupAddProcessesComponent implements OnInit {
   eventApply(e) {
     console.log(e);
     var data = e.data[0];
+    var id = '';
     switch (data.objectType) {
       case 'U':
         this.process.owner = data.id;
         break;
     }
-    if (this.process.owner != null) {
+    if (this.process.owner) {
       this.addPermission(this.process.owner);
     }
   }
 
   addPermission(id) {
     if (id != null) {
-      if (this.process.permissions != null) {
-        var lstPerm = this.process.permissions;
-      } else {
-        this.valueOwner(id);
-      }
+      this.valueOwner(id);
     }
   }
 
   valueOwner(id) {
     this.api
-      .execSv<any>(
-        'HR',
-        'ERM.Business.HR',
-        'EmployeesBusiness',
-        'GetListEmployeesByUserIDAsync',
-        JSON.stringify(id.split(';'))
-      )
+      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
-        if (res && res.length > 0) {
-          for (var i = 0; i < res.length; i++) {
-            let emp = res[i];
-            var tmpPermission = new BP_ProcessPermissions();
-            tmpPermission.objectID = emp?.userID;
-            tmpPermission.objectName = emp?.userName;
-            tmpPermission.objectType = 'U';
-            tmpPermission.read = true;
-            tmpPermission.share = true;
-            tmpPermission.full = true;
-            tmpPermission.delete = true;
-            tmpPermission.update = true;
-            tmpPermission.upload = true;
-            tmpPermission.assign = true;
-            tmpPermission.download = true;
-            tmpPermission.nemberType = '1';
-            tmpPermission.autoCreate = true;
+        if (res) {
+          this.perms = [];
+          let emp = res;
+          var tmpPermission = new BP_ProcessPermissions();
+          tmpPermission.objectID = emp?.userID;
+          tmpPermission.objectName = emp?.userName;
+          tmpPermission.objectType = 'U';
+          tmpPermission.read = true;
+          tmpPermission.share = true;
+          tmpPermission.full = true;
+          tmpPermission.delete = true;
+          tmpPermission.update = true;
+          tmpPermission.upload = true;
+          tmpPermission.assign = true;
+          tmpPermission.download = true;
+          tmpPermission.nemberType = '1';
+          tmpPermission.autoCreate = true;
 
-            this.perms.push(tmpPermission);
+          this.perms.push(tmpPermission);
 
-            this.process.permissions = this.perms;
-          }
+          this.process.permissions = this.perms;
         }
       });
   }
