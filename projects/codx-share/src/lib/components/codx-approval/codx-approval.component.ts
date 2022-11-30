@@ -20,6 +20,7 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  DataRequest,
   DialogModel,
   NotificationsService,
   SidebarModel,
@@ -209,6 +210,26 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list2[i].disabled = true;
       }
     }
+   if(datas.status != "3")
+   {
+    this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'CheckRestoreAsync',
+      datas.recID
+    ).subscribe(item=>{
+      if(item) 
+      {
+        var bm = data.filter(
+          (x: { functionID: string }) =>
+            x.functionID == 'SYS207'
+        );
+        bm.disabled = false;
+      }
+    });
+    
+   }
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
