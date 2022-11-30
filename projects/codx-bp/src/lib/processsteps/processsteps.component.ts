@@ -115,8 +115,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
-  msgBP001= 'Vui lòng thêm bước công việc trước khi thực hiện'; // gán tạm message
-  msgBP002= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP001= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP002= 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
   listCountPhases:any;
   constructor(
     inject: Injector,
@@ -697,11 +697,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.add();
     } else {
       this.stepType = evt.id;
-      var customName = '';
-      // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-      //   if (mf) {
-      //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-      if (this.titleAdd) customName = this.titleAdd + ' ';
+      // let customName = '';
+      // // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      // //   if (mf) {
+      // //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+      // if (this.titleAdd) customName = this.titleAdd + ' ';
       // }
       this.titleAction =
         this.titleAdd +

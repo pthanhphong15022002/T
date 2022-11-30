@@ -320,6 +320,16 @@ export class CodxEsService {
     return obj;
   }
 
+  getMoreFunction(funcID: string, formName: string, grvName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermSystemAsync',
+      [funcID, formName, grvName]
+    );
+  }
+
   //#endregion
 
   //#region  EP

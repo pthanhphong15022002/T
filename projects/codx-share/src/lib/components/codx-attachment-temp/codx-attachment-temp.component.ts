@@ -62,6 +62,7 @@ export class CodxAttachmentTempComponent implements OnInit {
     }
   }
   openPopup() {
+    debugger
     if (this.tmpListItem) {
       let option = new DialogModel();
       let popup = this.callFC.openForm(this.tmpListItem, "", 400, 500, "", null, "", option);
