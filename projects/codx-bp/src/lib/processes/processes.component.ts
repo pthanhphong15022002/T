@@ -676,7 +676,7 @@ export class ProcessesComponent
             if(process.delete){
               this.view.dataService.onAction.next({ type: 'delete', data: data });
             }else{
-              this.view.dataService.update(process).subscribe(); 
+              this.view.dataService.update(process).subscribe();
             }
           }
           this.detectorRef.detectChanges();
