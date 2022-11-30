@@ -119,10 +119,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
-  msgBP001 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
-  msgBP002 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+
+  msgBP001 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP002 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
   listCountPhases: any;
   actived = false;
+  isBlock:any = true;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -312,6 +314,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.listPhaseName.push(processStep.stepName);
           }
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -619,6 +622,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           }
 
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -634,9 +638,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    this.isBlockClickMoreFunction(this.dataTreeProcessStep);
     if (this.listCountPhases <= 0 && evt.id != 'P') {
+      return this.notiService.notify(this.msgBP001);
+    }
+    if (this.listCountPhases > 0 && evt.id != 'A' && this.isBlock && evt.id != 'P' ) {
       return this.notiService.notify(this.msgBP002);
     }
+
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
@@ -1186,6 +1195,23 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     } else {
       this.notiService.notifyCode('SYS018');
+    }
+  }
+
+  isBlockClickMoreFunction(listData){
+    const check = listData.length>0?true:false;
+    if(check){
+      this.listCountPhases = listData.length;
+      this.isBlock=true;
+      listData.forEach(x=>{
+          if(x.items.length >0) {
+            this.isBlock=false;
+          }
+      })
+    }
+    else {
+      this.listCountPhases = listData.length;
+      this.isBlock=true;
     }
   }
 }
