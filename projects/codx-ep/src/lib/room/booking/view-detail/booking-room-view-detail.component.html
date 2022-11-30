@@ -154,7 +154,7 @@
           </a>
           <ng-template ngbNavContent>
             <div *ngIf="itemDetail?.memo != null">
-              <span>{{ itemDetail?.memo }}</span>
+              <span [innerHTML]="itemDetail?.memo"></span>
             </div>
             <div *ngIf="itemDetail?.memo == null">
               <ng-container *ngTemplateOutlet="defaulEmpt"> </ng-container>
