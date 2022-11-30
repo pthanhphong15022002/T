@@ -117,9 +117,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
-  msgBP001 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
-  msgBP002 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+
+  msgBP001 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP002 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
   listCountPhases: any;
+  isBlock:any = true;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -139,14 +141,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       }
     });
     // this.dataView = dt?.data
-    //  this.bpService.viewProcesses.subscribe((res) => {  
+    //  this.bpService.viewProcesses.subscribe((res) => {
     //  this.process = res
       // this.processID = this.process?.recID ? this.process?.recID : '';
       // this.numberColums = this.process?.phases ? this.process?.phases : 0;
       // this.dataObj = {
       //   processID: this.processID,
       // };
-    
+
       // this.getFlowChart(this.process);
       // this.request = new ResourceModel();
       // this.request.service = 'BP';
@@ -169,13 +171,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    
+
     this.processID = this.process?.recID ? this.process?.recID : '';
     this.numberColums = this.process?.phases ? this.process?.phases : 0;
     this.dataObj = {
       processID: this.processID,
     };
-  
+
     this.getFlowChart(this.process);
     this.request = new ResourceModel();
     this.request.service = 'BP';
@@ -334,6 +336,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.listPhaseName.push(processStep.stepName);
           }
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -639,6 +642,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           }
 
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -654,9 +658,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    this.isBlockClickMoreFunction(this.dataTreeProcessStep);
     if (this.listCountPhases <= 0 && evt.id != 'P') {
+      return this.notiService.notify(this.msgBP001);
+    }
+    if (this.listCountPhases > 0 && evt.id != 'A' && this.isBlock && evt.id != 'P' ) {
       return this.notiService.notify(this.msgBP002);
     }
+
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
@@ -1199,6 +1208,23 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     } else {
       this.notiService.notifyCode('SYS018');
+    }
+  }
+
+  isBlockClickMoreFunction(listData){
+    const check = listData.length>0?true:false;
+    if(check){
+      this.listCountPhases = listData.length;
+      this.isBlock=true;
+      listData.forEach(x=>{
+          if(x.items.length >0) {
+            this.isBlock=false;
+          }
+      })
+    }
+    else {
+      this.listCountPhases = listData.length;
+      this.isBlock=true;
     }
   }
 }
