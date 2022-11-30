@@ -61,6 +61,9 @@
         </e-tabitem>
       </e-tabitems>
     </ejs-tab>
+    <div class="row mb-2">
+      <ng-container *ngTemplateOutlet="addLine"></ng-container>
+    </div>
     <!-- Diễn giải -->
     <div #noteRef class="form-group mb-0 row">
       <div class="col-10">
@@ -100,9 +103,6 @@
   </button>
 </ng-template>
 <ng-template #footer>
-  <div class="row mb-2">
-    <ng-container *ngTemplateOutlet="addLine"></ng-container>
-  </div>
   <div class="row" *ngIf="invoices">
     <ng-container *ngTemplateOutlet="tabRef"></ng-container>
   </div>

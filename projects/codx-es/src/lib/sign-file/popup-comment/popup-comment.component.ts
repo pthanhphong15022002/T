@@ -78,8 +78,8 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e) {
-    if (e.field == 'comment') {
-      this.result.comment = e.data;
+    if (e.field && e.data) {
+      this.result[e.field] = e.data;
     }
   }
 }

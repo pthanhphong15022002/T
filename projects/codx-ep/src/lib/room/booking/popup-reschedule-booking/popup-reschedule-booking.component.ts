@@ -164,9 +164,14 @@ export class PopupRescheduleBookingComponent implements OnInit {
       return;
     }
     this.codxEpService.rescheduleBooking(this.data.recID, this.data.startDate, this.data.endDate).subscribe(res=>{
-      this.notificationsService.notifyCode('SYS034');
-      this.dialogRef && this.dialogRef.close(this.data);
-    })
+      if(res){
+        this.notificationsService.notifyCode('SYS034');
+        this.dialogRef && this.dialogRef.close(this.data);
+      }
+      else{
+        this.dialogRef.close();
+      }
+    });
   }
   //#region check dieu kien khi add data
   valueAllDayChange(event) {

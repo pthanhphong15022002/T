@@ -994,7 +994,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Duyệt công văn
   documentApproval(datas: any) {
-    debugger;
     if (datas.bsCategory) {
       //Có thiết lập bước duyệt
       if (datas.bsCategory.approval) {
@@ -1192,6 +1191,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         else {
           data.status = '3';
           data.approveStatus = '3';
+          this.notifySvr.notifyCode("ES007");
           this.odService.updateDispatch(data, false).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();
