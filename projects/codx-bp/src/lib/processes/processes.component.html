@@ -26,6 +26,7 @@
           : "grvProcesses"
           | async
           }}</div>
+
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
@@ -84,7 +85,18 @@
   <tr class="has-action-menu">
     <td class="rowphoto">
       <div class="d-flex flex-column ">
-        <div #processName class="fw-bold line-clamp" [ngbTooltip]="data.processName">
+        <div class="box">
+          <div #processName class="fw-bold line-clamp"> {{
+            data?.processName | formatvalue
+            : view.formModel
+            : "processName"
+            : processName
+            : "Processes"
+            : "grvProcesses"
+            | async
+            }}</div>
+        </div>
+        <!-- <div #processName class="fw-bold line-clamp" [ngbTooltip]="data.processName">
           {{
           data.processName | formatvalue
           : view.formModel
@@ -94,7 +106,7 @@
           : "grvProcesses"
           | async
           }}
-        </div>
+        </div> -->
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">

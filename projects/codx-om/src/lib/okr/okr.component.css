@@ -13,9 +13,16 @@
 #om-tab > .e-content .e-item {
   height: calc(100% - 35px) !important;
 }
-.e-item > div {
-  height: 100%;
+.om-def
+{
+  -webkit-transform: translateY(100%); 
+  transform: translateY(100%); 
 }
+.om-def >div
+{
+  padding: 20px;
+}
+
 #om-tab-child .e-tab-header {
   text-align: left !important;
 }
@@ -41,6 +48,7 @@
 #om-tab .e-tab-header .e-active i {
   color: #0379ff;
 }
+
 .p-om-okr {
   height: calc(100% - 94px);
   -webkit-tap-highlight-color: transparent;
