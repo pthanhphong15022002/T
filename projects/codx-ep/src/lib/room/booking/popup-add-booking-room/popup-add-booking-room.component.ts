@@ -192,7 +192,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'EPParameters'
+        'EPRoomParameters'
       )
       .subscribe((res) => {
         if (res) {
@@ -920,7 +920,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     if (startTime != null && endTime != null) {
       let tempStartTime = startTime.split(':');
       let tempEndTime = endTime.split(':');
-      let tmpDay = this.data.bookingOn;
+      let tmpDay = new Date(this.data.bookingOn);
 
       this.data.startDate = new Date(
         tmpDay.getFullYear(),
