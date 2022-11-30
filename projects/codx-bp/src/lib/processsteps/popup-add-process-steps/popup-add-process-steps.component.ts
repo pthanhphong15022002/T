@@ -297,7 +297,6 @@ export class PopupAddProcessStepsComponent
     this.attachment.uploadFile();
   }
   fileAdded(e) {
-    console.log(e);
   }
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
