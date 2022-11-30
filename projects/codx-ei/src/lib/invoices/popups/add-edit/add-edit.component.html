@@ -98,7 +98,7 @@
     ></codx-label>
   </button>
 
-  <button class="btn btn-sm btn-danger">
+  <button class="btn btn-sm btn-danger" (click)="save()">
     <codx-label name="btnSave" formName="System" default="Lưu"></codx-label>
   </button>
 </ng-template>
@@ -443,7 +443,7 @@
             <codx-label
               fiedName="eInvoiceID"
               [formModel]="form.formModel"
-              default="Địa chỉ"
+              default="Mã cơ quan thuế"
             >
             </codx-label>
             <codx-input
