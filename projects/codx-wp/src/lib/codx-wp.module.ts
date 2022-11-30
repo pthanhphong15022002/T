@@ -12,7 +12,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoreModule } from '@core/core.module';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
@@ -33,7 +32,6 @@ import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-t
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
 import { PopupAddPostComponents } from './dashboard/home/list-post/popup-add/popup-add.component';
-
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
 import { PopupSearchPostComponent } from './dashboard/home/list-post/popup-search/popup-search.component';
@@ -55,6 +53,7 @@ import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
 import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
 import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
+import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
 
 
 export const routes: Routes = [
@@ -197,6 +196,7 @@ const Component: Type<any>[] =
     ChatVoteComponent,
     PopupViewImageComponent,
     PopupAddPostComponent,
+    PopupAddGroupComponent
   ];
 
 @NgModule({

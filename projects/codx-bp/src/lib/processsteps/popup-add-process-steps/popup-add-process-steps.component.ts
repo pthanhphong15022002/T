@@ -112,8 +112,8 @@ export class PopupAddProcessStepsComponent
     }
     this.cache
       .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName
       )
       .subscribe((res) => {
         if (res) {
@@ -188,7 +188,6 @@ export class PopupAddProcessStepsComponent
   }
 
   async saveData() {
-    this.gridViewSetup;  
     let headerText =  this.checkValidate();
     if(headerText.length > 0){
       this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');

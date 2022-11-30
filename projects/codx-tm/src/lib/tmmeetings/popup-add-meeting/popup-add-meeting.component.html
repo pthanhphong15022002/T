@@ -13,7 +13,7 @@
       <codx-label fiedName="MeetingName" formName="TMMeetings" gridViewName="grvTMMeetings" default="Tên buổi họp">
       </codx-label>
     </div>
-    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" [placeholder]="gridViewSetup['MeetingName'].headerText"
+    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" [placeholder]="gridViewSetup['MeetingName'].description"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -58,7 +58,7 @@
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location'].headerText" [crrValue]="meeting?.location"
+    <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location'].description" [crrValue]="meeting?.location"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -71,7 +71,7 @@
         }}</span> -->
     </div>
     <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields'
-    [placeholder]="gridViewSetup['Location'].headerText" (valueChange)="cbxChange($event)"></ejs-combobox>
+    [placeholder]="gridViewSetup['Location'].description" (valueChange)="cbxChange($event)"></ejs-combobox>
 
   </div>
   <div class="form-group">
@@ -85,7 +85,7 @@
       </button>
     </div>
     <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" [crrValue]="meeting?.memo"
-      (valueChange)="changeMemo($event)">
+      (valueChange)="changeMemo($event)" [placeholder]="gridViewSetup['Memo'].description">
     </codx-input>
     <div class="d-flex justify-content-end" *ngIf="meeting.templateID">
       <div class="font-italic">
