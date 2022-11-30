@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<codx-views #view [views]="views" [autoLoad]="false"> </codx-views>
+<codx-views #view [views]="views" [autoLoad]="false" [funcID]="funcID"> </codx-views>
 
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data?.date)"></div>

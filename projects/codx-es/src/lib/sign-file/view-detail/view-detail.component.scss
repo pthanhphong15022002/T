@@ -63,18 +63,26 @@ codx-view-list-detail .codx-detail-main {
 }
 
 .dt-es div.codx-detail-body {
-  height: calc(100vh - 375px) !important;
+  height: calc(100vh - 203px) !important;
+  overflow: hidden !important;
+}
+.dt-es-view div.codx-detail-body
+{
+  height: calc(100vh - 466px) !important;
   overflow: hidden !important;
   //border: 1px aqua solid;
 }
-
 .dt-es .codx-detail-body .tab-content {
   height: calc(100vh - 430px) !important;
   overflow: auto !important;
 }
-
-.dt-aprovel.dt-es .codx-detail-body .tab-content {
-  height: calc(100vh - 407px) !important;
+.dt-es .codx-detail-main
+{
+  position: relative !important ;
+}
+.h-od-tab .tab-content {
+  height: 100% !important;
+  overflow: auto;
 }
 
 .float-left>div {

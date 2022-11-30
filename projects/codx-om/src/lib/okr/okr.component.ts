@@ -40,6 +40,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   auth: AuthStore;
   okrService: CodxOmService;
   gridView: any;
+
+  //Kỳ
+  periodID = "" ;
+  //Loại
+  interval = "";
+  //Năm
+  year = null;
+  dataDate = null;
   constructor(inject: Injector) {
     super(inject);
     this.auth = inject.get(AuthStore);
@@ -66,15 +74,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     // this.cache.getCompany(user.userID).subscribe(item=>{
     //   if(item) this.titleRoom = item.organizationName
     // })
-    var dataRequest = new DataRequest();
-    dataRequest.funcID = 'OMT01';
-    dataRequest.entityName = 'OM_OKRs';
-    dataRequest.page = 1;
-    dataRequest.pageSize = 20;
-    dataRequest.predicate = 'ParentID=null';
-    this.okrService.getOKR(dataRequest).subscribe((item: any) => {
-      if (item) this.dataOKR = this.dataOKR.concat(item);
-    });
   }
 
   //Hàm click
@@ -92,6 +91,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.add();
         break;
       }
+      case 'Calendar': {
+        this.changeCalendar(event.data)
+        break;
+      }
     }
   }
 
@@ -105,7 +108,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       null,
       null,
       null,
-      [this.view.formModel],
+      [this.view.formModel,this.periodID,this.interval,this.year],
       '',
       dialogModel
     );
@@ -145,4 +148,25 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     );
   }
 
+  getOKRPlans(periodID: any , interval: any , year: any)
+  {
+    this.okrService.getOKRPlans(periodID,interval,year).subscribe((item: any) => {
+      if (item) this.dataOKR = this.dataOKR.concat(item);
+    });
+  }
+
+  changeCalendar(data:any)
+  {
+    if(data.type == "year")
+    {
+      this.periodID = ""
+      this.interval = "Y";
+      this.year = new Date(data.fromDate).getFullYear();
+      this.dataDate = {
+        formDate : data.formDate,
+        toDate : data.toDate
+      }
+    } 
+    this.getOKRPlans(this.periodID , this.interval , this.year);
+  }
 }

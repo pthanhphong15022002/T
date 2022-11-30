@@ -1,0 +1,142 @@
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body] = "body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="DecisionNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="decisionNo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="IsCurrent"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="isCurrent"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="EffectedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="effectedDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ExpiredDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="expiredDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+        <div class="form-group row">
+            <codx-label
+                fiedName="JSalary"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="jSalary"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="SignedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="signedDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="SignStatus"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="signStatus"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="SignerID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="signerID"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="SignerPosition"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="signerPosition"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group rpw">
+            <codx-label
+                fiedName="Note"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="note"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </ng-template>
+</codx-form>

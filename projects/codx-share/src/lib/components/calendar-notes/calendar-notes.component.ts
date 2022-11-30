@@ -36,6 +36,7 @@ import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-n
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
 import { T } from '@angular/cdk/keycodes';
 import moment from 'moment';
+import { DetailCalendarComponent } from './detail-calendar/detail-calendar.component';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -50,7 +51,6 @@ export class CalendarNotesComponent
   x;
   listNote: any[] = [];
   type: any;
-  typeCalendar = 'week';
   itemUpdate: any;
   recID: any;
   countNotePin = 0;
@@ -81,6 +81,11 @@ export class CalendarNotesComponent
   functionList: any;
   dialog: DialogRef;
 
+  @Input() showHeader = true;
+  @Input() typeCalendar = 'month';
+  @Input() showList = true;
+  @Input() showListParam = false;
+
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
   @ViewChild('calendar') calendar: any;
@@ -105,16 +110,15 @@ export class CalendarNotesComponent
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
-    if (this.typeCalendar == 'month') this.getFirstParam();
   }
 
   onInit(): void {
+    if (this.typeCalendar == 'month') this.getFirstParam();
     this.getMaxPinNote();
     this.loadData();
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   loadData() {
     this.noteService.data.subscribe((res) => {
@@ -280,16 +284,34 @@ export class CalendarNotesComponent
     }
   }
 
-  changeDayOfWeek(e, lstView) {
+  changeDayOfWeek(e) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
-    this.setDate(data, lstView);
+    this.setDate(data, this.lstView);
   }
 
   dateOfMonth: any;
-  changeDayOfMonth(args: any, lstView) {
+  changeDayOfMonth(args: any) {
+    if (!this.dateOfMonth) {
+      var dateCrr = new Date();
+      var monthCrr = 1 + moment(dateCrr).month();
+      var nextMonth = 1 + moment(args.value).month();
+      if (monthCrr != nextMonth) {
+        let fDayOfMonth = moment(args.value).startOf('month').toISOString();
+        let lDayOfMonth = moment(args.value).endOf('month').toISOString();
+        this.getParam(fDayOfMonth, lDayOfMonth);
+      }
+    } else {
+      var monthCrr = 1 + moment(this.dateOfMonth).month();
+      var nextMonth = 1 + moment(args.value).month();
+      if (monthCrr != nextMonth) {
+        let fDayOfMonth = moment(args.value).startOf('month').toISOString();
+        let lDayOfMonth = moment(args.value).endOf('month').toISOString();
+        this.getParam(fDayOfMonth, lDayOfMonth);
+      }
+    }
     this.dateOfMonth = args.value;
     var data = JSON.parse(JSON.stringify(args.value));
-    this.setDate(data, lstView);
+    this.setDate(data, this.lstView);
     this.change.detectChanges();
   }
 
@@ -315,15 +337,17 @@ export class CalendarNotesComponent
     var fromDate = dateT.toISOString();
     this.daySelected = fromDate;
     var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
-    (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
-    (lstView.dataService as CRUDService).predicates =
-      'CreatedOn >= @0 && CreatedOn < @1';
-    (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
-    lstView.dataService
-      .setPredicate(this.predicate, [this.dataValue])
-      .subscribe((res) => {
-        this.change.detectChanges();
-      });
+    if (this.showList && lstView) {
+      (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
+      (lstView.dataService as CRUDService).predicates =
+        'CreatedOn >= @0 && CreatedOn < @1';
+      (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
+      lstView.dataService
+        .setPredicate(this.predicate, [this.dataValue])
+        .subscribe((res) => {
+          this.change.detectChanges();
+        });
+    }
     this.FDdate = fromDate;
     this.TDate = toDate;
   }
@@ -775,5 +799,24 @@ export class CalendarNotesComponent
         note,
       ])
       .subscribe();
+  }
+
+  openFormDetail() {
+    var obj = {
+      funcID: 'WPT08',
+    };
+    let option = new DialogModel();
+    option.DataService = this.view?.currentView?.dataService;
+    option.FormModel = this.view?.currentView?.formModel;
+    var dialog = this.callfc.openForm(
+      DetailCalendarComponent,
+      '',
+      1438,
+      775,
+      '',
+      obj,
+      '',
+      option
+    );
   }
 }

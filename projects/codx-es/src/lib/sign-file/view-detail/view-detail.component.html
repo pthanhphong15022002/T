@@ -1,6 +1,6 @@
 <codx-detail-tmp #itemDetailTemplate [header]="header" [dataItem]="itemDetail" [footer]="!hideFooter ? footer : null"
   [body]="body" [hideMF]="hideMF" [formModel]="formModel" (clickMF)="openFormFuncID($event)"
-  (changeDataMF)="changeDataMF($event, itemDetail)" class="h-100 dt-es" *ngIf="isAfterRender">
+  (changeDataMF)="changeDataMF($event, itemDetail)" class="h-100 dt-es-view" *ngIf="isAfterRender">
   <ng-template #header>
     <div class="d-flex justify-content-between flex-grow-1 mb-3">
       <div class="d-flex align-items-center">

@@ -54,7 +54,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = dt?.data;
-    this.process = this.data?.data;
+    this.process = JSON.parse(JSON.stringify(this.data.data)) ;
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc?.customName;
     this.formModel = this.data?.formModel

@@ -1,7 +1,11 @@
 <div class="cal-notes">
-  <div class="more-btn">
+  <div class="more-btn" *ngIf="showHeader">
     <span
-      class="icon-edit-one icon-18 icon-add btn btn-icon btn-active-light-primary position-relative"
+      (click)="openFormDetail()"
+      class="icon-calendar_today icon-18 icon-gray btn btn-icon btn-active-light-primary position-relative ml-24px"
+    ></span>
+    <span
+      class="icon-edit-one icon-18 icon-gray btn btn-icon btn-active-light-primary position-relative"
       (click)="openFormAddNote()"
     ></span>
     <div
@@ -19,7 +23,7 @@
         aria-expanded="false"
       >
         <i
-          class="icon-more_vert icon-20 icon-add btn btn-icon btn-active-light-primary position-relative"
+          class="icon-more_vert icon-20 icon-gray btn btn-icon btn-active-light-primary position-relative"
         ></i>
       </a>
       <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
@@ -147,7 +151,7 @@
       <div *ngIf="typeCalendar == 'week'">
         <selectweek
           (onChangeWeek)="setEventWeek()"
-          (onChangeValue)="changeDayOfWeek($event, listview)"
+          (onChangeValue)="changeDayOfWeek($event)"
           (onChangeNewWeek)="changeNewWeek($event)"
         >
         </selectweek>
@@ -156,7 +160,7 @@
         <ejs-calendar
           #calendar
           (renderDayCell)="onLoad($event)"
-          (change)="changeDayOfMonth($event, listview)"
+          (change)="changeDayOfMonth($event)"
           cssClass="width-calendar"
           class="e-customStyle"
           title="Lịch các nhân"
@@ -166,8 +170,107 @@
       </div>
     </div>
   </div>
+  <ng-container *ngIf="showListParam">
+    <div class="row title-calendar">
+      <div class="col-md-10 mt-2">
+        <codx-label
+          fiedName="Calendar"
+          default="Calendar"
+          class="pt-3"
+        ></codx-label>
+      </div>
+      <span class="icon-more_vert icon-20 icon-gray col-md-2 pt-1 ps-6"></span>
+    </div>
+    <div class="flex" *ngIf="WP_NotesParam != null">
+      <div class="w-5px">
+        <li
+          [style.background-color]="WP_NotesParam?.ShowColor"
+          [style.color]="WP_NotesParam?.ShowColor"
+        ></li>
+      </div>
+      <div class="show-list-event">
+        <codx-label
+          name="lblNote"
+          formName="WP_Notes"
+          default="Ghi chú"
+        ></codx-label>
+      </div>
+      <div class="show-event-check">
+        <codx-input
+          type="checkbox"
+          field="WP_Notes_ShowEvent"
+          [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'"
+          labelPosition="Before"
+          [disabled]="false"
+          class="test-check"
+          (valueChange)="valueChangeSetting($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <br />
+    <div class="flex" *ngIf="TM_TasksParam != null">
+      <div class="w-5px">
+        <li
+          [style.background-color]="TM_TasksParam?.ShowColor"
+          [style.color]="TM_TasksParam?.ShowColor"
+        ></li>
+      </div>
+      <div class="show-list-event">
+        <codx-label
+          name="lblTask"
+          formName="WP_Task"
+          default="Công việc cá nhân"
+        ></codx-label>
+      </div>
+      <div class="show-event-check">
+        <codx-input
+          type="checkbox"
+          field="TM_Tasks_ShowEvent"
+          [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'"
+          labelPosition="Before"
+          [disabled]="false"
+          class="test-check"
+          (valueChange)="valueChangeSetting($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <br />
+    <div class="flex" *ngIf="CO_MeetingsParam != null">
+      <div class="w-5px">
+        <li
+          [style.background-color]="CO_MeetingsParam?.ShowColor"
+          [style.color]="CO_MeetingsParam?.ShowColor"
+        ></li>
+      </div>
+      <div class="show-list-event">
+        <codx-label
+          name="lblMeeting"
+          formName="CO_Meetings"
+          default="Lịch họp cá nhân"
+        >
+        </codx-label>
+      </div>
+      <div class="show-event-check">
+        <codx-input
+          type="checkbox"
+          field="CO_Meetings_ShowEvent"
+          [checked]="
+            checkCO_MeetingsParam == 'true' || checkCO_MeetingsParam == '1'
+          "
+          labelPosition="Before"
+          [disabled]="false"
+          class="test-check"
+          (valueChange)="valueChangeSetting($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+  </ng-container>
   <div class="lstView">
     <codx-listview
+      *ngIf="showList"
       #listview
       service="SYS"
       assemblyName="ERM.Business.SYS"
