@@ -15,7 +15,7 @@ export class PopupAddGroupComponent implements OnInit {
   gridViewSetUp:any = null;
   user:any = null;
   headerText:string = "";
-  group:WP_Groups = null;
+  group:WP_Groups = new WP_Groups();
   constructor(
     private api:ApiHttpService,
     private notifiSV:NotificationsService,
@@ -31,12 +31,12 @@ export class PopupAddGroupComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setData();
   }
 
   setData(){
     if(this.dialogData)
     {
-      this.group = new WP_Groups();
       this.headerText = this.dialogData.headerText;
       this.gridViewSetUp = this.dialogData.gridViewSetUp;
     }
