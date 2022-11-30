@@ -66,7 +66,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
 
-  @Input() process?: BP_Processes;
+  @Input() process : BP_Processes;
   @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
@@ -128,9 +128,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private fileService: FileService,
-    @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef,
+    private fileService: FileService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -140,9 +138,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
-    this.dataView = dt?.data
-    // this.bpService.viewProcesses.subscribe((res) => {  
-      this.process = JSON.parse(JSON.stringify(this.dataView.data));
+    // this.dataView = dt?.data
+     this.bpService.viewProcesses.subscribe((res) => {  
+     this.process = res
       this.processID = this.process?.recID ? this.process?.recID : '';
       this.numberColums = this.process?.phases ? this.process?.phases : 0;
       this.dataObj = {
@@ -165,7 +163,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.resourceKanban.method = 'GetColumnsKanbanAsync';
       this.resourceKanban.dataObj = this.dataObj;
       this.listCountPhases = this.process.phases;
-    // });
+    });
 
 
   }
