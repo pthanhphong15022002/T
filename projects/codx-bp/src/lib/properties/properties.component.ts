@@ -15,6 +15,7 @@ import {
 import { CodxBpService } from '../codx-bp.service';
 import { B } from '@angular/cdk/keycodes';
 import { CodxTreeHistoryComponent } from 'projects/codx-share/src/lib/components/codx-tree-history/codx-tree-history.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-properties',
@@ -240,7 +241,7 @@ export class PropertiesComponent implements OnInit {
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
       .subscribe((res) => {
         if (res&& res?.url) {
-          let obj = { pathDisk: res?.url, fileName: this.process?.processName };
+          let obj = { pathDisk: environment.urlUpload+ "/" +res?.url, fileName: this.process?.processName };
           this.flowChart = obj;
         }
       });

@@ -55,6 +55,7 @@ export class RevisionsComponent implements OnInit {
   msgSucess = 'msgSucess'; //Condtion sucess
   isUpdate: boolean;
   gridViewSetup:any;
+  fucntionIdMain:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -70,6 +71,7 @@ export class RevisionsComponent implements OnInit {
     this.funcID = this.more?.functionID;
     this.entityName = this.more?.entityName;
     this.process = this.data?.data;
+    this.fucntionIdMain = this.data?.funcIdMain
     this.revisions = this.process?.versions;
     this.headerText =dt?.data.more.defaultName;
     this.verNo ='V'+this.revisions.length.toString()+'.0';
@@ -134,7 +136,8 @@ export class RevisionsComponent implements OnInit {
       }
    }
    if(this.isUpdate) {
-      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName).subscribe((res) => {
+      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName,this.fucntionIdMain)
+      .subscribe((res) => {
         if (res) {
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;

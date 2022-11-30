@@ -157,7 +157,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       // }else{
       //   this.getFlowChart(this.process);
       // }
-      // this.getFlowChart(this.process);
+      this.getFlowChart(this.process);
       this.request = new ResourceModel();
       this.request.service = 'BP';
       this.request.assemblyName = 'BP';
@@ -1145,9 +1145,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.addFlowchart.uploadFile();
   }
 
-  viewFile(e) {
-    if(e && e.length>0){
+  fileSave(e){
+    if(e && (typeof e === 'object')){
       this.dataFile = e;
+      this.changeDetectorRef.detectChanges();
     }
   }
 
