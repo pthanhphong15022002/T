@@ -1,20 +1,26 @@
 @import "/node_modules/codx-core/assets/sass/init";
+
 :host ::ng-deep {
+
   /****************/
   .codx-approval-step::after {
     z-index: 1;
   }
+
   .step-number {
     z-index: 2;
   }
+
   codx-view-list-detail .codx-detail-footer {
     z-index: 10;
   }
+
   .step-title {
     // text-transform: uppercase;
   }
-  .symbol-vllicon {
-  }
+
+  .symbol-vllicon {}
+
   .symbol-vllicon .btn.select-icon {
     display: flex;
     flex-direction: row;
@@ -27,6 +33,7 @@
     border-radius: 32px !important;
     border: 0 !important;
   }
+
   .e-templatecell .rounded-circle {
     border-radius: 50% !important;
     width: 35px !important;
@@ -35,11 +42,13 @@
     text-align: center;
     font-size: 16px !important;
   }
+
   //scroll
   .apexcharts-canvas ::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 6px;
   }
+
   .apexcharts-canvas ::-webkit-scrollbar-thumb {
     border-radius: 4px;
     background-color: rgba(0, 0, 0, 0.5);

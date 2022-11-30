@@ -226,7 +226,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             var bm = data.filter(
               (x: { functionID: string }) => x.functionID == 'SYS207'
             );
-            bm.disabled = false;
+            bm[0].disabled = false;
           }
         });
     }

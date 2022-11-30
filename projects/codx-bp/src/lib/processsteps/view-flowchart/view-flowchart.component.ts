@@ -69,33 +69,33 @@ export class ViewFlowchartComponent implements OnInit,OnChanges {
 
   //  }
 
-   checkDownloadRight() {
-    return this.data.download;
-  }
-   async download(): Promise<void> {
-    var id = this.data?.recID;
-    var fullName = this.data.fileName;
-    var that = this;
+  //  checkDownloadRight() {
+  //   return this.data.download;
+  // }
+  //  async download(): Promise<void> {
+  //   var id = this.data?.recID;
+  //   var fullName = this.data.fileName;
+  //   var that = this;
 
-    if (this.checkDownloadRight()) {
-      ///lấy hàm của chung dang fail
-      this.fileService.downloadFile(id).subscribe(async res => {
-        if (res) {
-          let blob = await fetch(res).then(r => r.blob());
-          let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", fullName);
-          link.style.display = "none";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      });
-    }
-    else {
-      this.notificationsService.notifyCode("SYS018");
-    }
-  }
+  //   if (this.checkDownloadRight()) {
+  //     ///lấy hàm của chung dang fail
+  //     this.fileService.downloadFile(id).subscribe(async res => {
+  //       if (res) {
+  //         let blob = await fetch(res).then(r => r.blob());
+  //         let url = window.URL.createObjectURL(blob);
+  //         var link = document.createElement("a");
+  //         link.setAttribute("href", url);
+  //         link.setAttribute("download", fullName);
+  //         link.style.display = "none";
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //       }
+  //     });
+  //   }
+  //   else {
+  //     this.notificationsService.notifyCode("SYS018");
+  //   }
+  // }
 
 }

@@ -115,9 +115,9 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
-  msgBP001= 'Vui lòng thêm bước công việc trước khi thực hiện'; // gán tạm message
-  msgBP002= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
-  listCountPhases:any;
+  msgBP001 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP002 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+  listCountPhases: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -245,8 +245,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.views = [
-      { 
-        id : "16",
+      {
+        id: '16',
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -255,7 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
       {
-        id : "6",
+        id: '6',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -266,7 +266,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
       {
-        id : "9",
+        id: '9',
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -681,7 +681,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
-    if(this.listCountPhases<=0 && evt.id !='P'){
+    if (this.listCountPhases <= 0 && evt.id != 'P') {
       return this.notiService.notify(this.msgBP002);
     }
     this.parentID = '';
@@ -697,11 +697,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.add();
     } else {
       this.stepType = evt.id;
-      var customName = '';
-      // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-      //   if (mf) {
-      //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-      if (this.titleAdd) customName = this.titleAdd + ' ';
+      // let customName = '';
+      // // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      // //   if (mf) {
+      // //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+      // if (this.titleAdd) customName = this.titleAdd + ' ';
       // }
       this.titleAction =
         this.titleAdd +
@@ -769,13 +769,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   clickMenu(data, funcMenu) {
     const isdata = data.items.length;
-    if (data.stepType == 'P' && funcMenu.id!='A' && isdata <= 0) {
+    if (data.stepType == 'P' && funcMenu.id != 'A' && isdata <= 0) {
       return this.notiService.notify(this.msgBP001);
-    }
-    else {
+    } else {
       this.stepType = funcMenu.id;
       this.parentID =
-      this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
+        this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
       this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
       this.formModelMenu = this.view?.formModel;
       this.add();
@@ -789,7 +788,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
               this.formModelMenu.funcID = funcMenu.funcID;
             });
         });
-     }
+      }
     }
   }
   clickAddActivity(data) {
@@ -848,7 +847,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             else data.stepNo = 1;
             parentNew.items.push(data);
             this.view.dataService.update(parentOld).subscribe();
-            if(this.kanban) this.kanban.updateCard(data);
+            if (this.kanban) this.kanban.updateCard(data);
           }
           this.notiService.notifyCode('SYS007');
         } else {
@@ -1137,6 +1136,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         if (res && res?.url) {
           let obj = { pathDisk: res?.url, fileName: process?.processName };
           this.dataFile = obj;
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
@@ -1144,14 +1144,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.addFlowchart.referType = 'Flowchart';
     this.addFlowchart.uploadFile();
   }
-  fileAdded(e) {
-    if (e && e?.data?.length > 0) {
-      this.dataFile = e.data[0];
-    }
-    this.changeDetectorRef.detectChanges();
-  }
 
-  getfileCount(e) {}
+  fileSave(e){
+    if(e && (typeof e === 'object')){
+      this.dataFile = e;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
 
   showIconByStepType(stepType) {
     var type = this.button?.items.find((x) => x.id == stepType);
