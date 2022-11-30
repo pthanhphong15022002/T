@@ -860,9 +860,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   if (item.data.fileName != null && item.data.fileName != '') {
                     //'../../../assets/img/loader.gif';
                     that.displayThumbnail(item.data);
-                    item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
-                      item.data.extension
-                    )}`;
+                    if(!item.data.thumbnail)
+                      item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                        item.data.extension
+                      )}`;
                     files.push(Object.assign({}, item.data));
                   } else {
                     if (
@@ -890,7 +891,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   }
                 }
                 this.dmSV.listFiles = files;
-                this.dmSV.ChangeData.next(true);
+                this.dmSV.addFile.next(true);
+                //this.dmSV.ChangeData.next(true);
               });
               this.notificationsService.notifyCode(
                 'DM061',
@@ -1328,17 +1330,20 @@ export class AttachmentComponent implements OnInit, OnChanges {
             if (files == null) files = [];
             var res = item.data;
             var thumbnail = res.thumbnail; //'../../../assets/img/loader.gif';
-            res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.extension)}`;
+            if(!thumbnail) 
+            {
+              res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.extension)}`;
+              this.displayThumbnail(res);
+              item.data.thumbnail = thumbnail;
+            }
             if(item.unit != "isSubFolder")
             {
               files.push(Object.assign({}, res));
             }
             this.dmSV.listFiles = files;
-            this.dmSV.ChangeData.next(true);
+            this.dmSV.addFile.next(true);
             this.atSV.fileListAdded.push(Object.assign({}, item));
             this.data.push(Object.assign({}, item));
-            item.data.thumbnail = thumbnail;
-            this.displayThumbnail(item.data);
             this.dmSV.updateHDD.next(item.messageHddUsed);
             this.notificationsService.notify(item.message);
             this.changeDetectorRef.detectChanges();
@@ -1380,7 +1385,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   files[index].recID = res.data.recID;
                 }
                 this.dmSV.listFiles = files;
-                this.dmSV.ChangeData.next(true);
+                this.dmSV.addFile.next(true);
                 //this.fileUploadList[0].recID = res.data.recID;
                 this.atSV.fileListAdded.push(Object.assign({}, item));
                 this.data.push(Object.assign({}, item));

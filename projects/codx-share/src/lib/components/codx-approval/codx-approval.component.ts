@@ -173,7 +173,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205' ) {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -227,7 +227,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           (x: { functionID: string }) =>
             x.functionID == 'SYS207'
         );
-        bm.disabled = false;
+        bm[0].disabled = false;
       }
     });
     
