@@ -56,6 +56,7 @@ export class RevisionsComponent implements OnInit {
   isUpdate: boolean;
   gridViewSetup:any;
   fucntionIdMain:any;
+  enterComment:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -84,8 +85,10 @@ export class RevisionsComponent implements OnInit {
     this.cache.gridViewSetup('ProcessRevisions', 'grvProcessRevisions').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.enterComment =this.gridViewSetup['Comment']?.description;
       }
     });
+
   }
 
 
