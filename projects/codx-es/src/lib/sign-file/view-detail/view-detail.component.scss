@@ -62,8 +62,15 @@ codx-view-list-detail .codx-detail-main {
   height: 100%;
 }
 
-.dt-es .codx-detail-body {
-  height: calc(100% - 270px) !important;
+.dt-es div.codx-detail-body {
+  height: calc(100vh - 415px) !important;
+  overflow: hidden !important;
+}
+
+.dt-es .codx-detail-body .tab-content {
+  height: calc(100% - 35px) !important;
+  overflow: auto;
+  padding-bottom: 10px;
 }
 
 .h-od-tab .tab-content {
@@ -73,9 +80,4 @@ codx-view-list-detail .codx-detail-main {
 
 .float-left>div {
   float: left;
-}
-
-.dt-es>.codx-detail-main.px-6 {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
 }
