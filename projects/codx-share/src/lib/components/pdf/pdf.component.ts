@@ -47,7 +47,7 @@ import {
   ES_SignFile,
   SetupShowSignature,
 } from 'projects/codx-es/src/lib/codx-es.model';
-import { FindState, FindResultMatchesCount } from 'ngx-extended-pdf-viewer';
+
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -2234,7 +2234,9 @@ export class PdfComponent
     );
     selectedChildren.forEach((ele: HTMLSpanElement) => {
       if (ele.classList.contains('main-center')) {
-        let textLayer = ele.querySelector('.textLayer');
+        let textLayer = document
+          .querySelectorAll('.textLayer')
+          .item(this.curPage - 1);
         let lstSpan = ele.querySelectorAll(
           '.textLayer span[role="presentation"]'
         );
@@ -2246,21 +2248,18 @@ export class PdfComponent
         );
         subSelectedChildren.forEach((subEle: HTMLElement) => {
           subEle.style.cssText += `background-color: red;`;
+          subEle.classList.add('highlighted');
           // selection.insertNode(subEle);
           textLayer.appendChild(subEle);
         });
       } else if (ele.tagName == 'SPAN') {
         ele.style.cssText += `background-color: red;`;
+        ele.classList.add('highlighted');
         selection.insertNode(ele);
       }
     });
 
-    // var span = document.createElement('span');
-    // span.style.backgroundColor = 'red';
-    // span.style.display = 'flex';
-    // span.style.position = 'inherit';
-    // span.appendChild(selectedText);
-    // selection.insertNode(span);
+    // let lstTmpHighlight:Array<highLightTextArea> =
   }
 
   highlightText() {

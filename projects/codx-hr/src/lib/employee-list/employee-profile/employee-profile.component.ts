@@ -640,13 +640,13 @@ export class EmployeeProfileComponent extends UIComponent {
     let eData = {
       data: this.data,
     };
-    let ePositionsDialog = this.callfc.openForm(
+    let option = new SidebarModel();
+    option.Width = '800px';
+
+    let ePositionsDialog = this.callfc.openSide(
       EmployeePositionsComponent,
-      '',
-      900,
-      800,
-      '',
-      eData
+      eData,
+      option
     );
     ePositionsDialog.closed.subscribe((ret) => {
       console.log('dong pop up', ret);
