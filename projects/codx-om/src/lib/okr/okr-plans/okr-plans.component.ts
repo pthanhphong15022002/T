@@ -4,12 +4,12 @@ import { DialogRef , DialogData, ApiHttpService, NotificationsService} from 'cod
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'lib-okr-add',
-  templateUrl: './okr-add.component.html',
-  styleUrls: ['./okr-add.component.css'],
+  selector: 'lib-okr-plans',
+  templateUrl: './okr-plans.component.html',
+  styleUrls: ['./okr-plans.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class OkrAddComponent implements OnInit {
+export class OkrPlansComponent implements OnInit {
   @ViewChildren('nameInput') nameInputs:  QueryList<ElementRef>;
 
   titleForm = "Thêm bộ bộ mục tiêu";
@@ -20,6 +20,13 @@ export class OkrAddComponent implements OnInit {
   okrForm: FormGroup;
   date = new Date();
   ops = ['m','q','y'];
+  selectedType = "y";
+  //Kỳ
+  periodID = "" ;
+  //Loại
+  interval = "";
+  //Năm
+  year = null;
   constructor(
     private api: ApiHttpService,
     private ref: ChangeDetectorRef,
@@ -30,7 +37,13 @@ export class OkrAddComponent implements OnInit {
   ) 
   {
     //FormModel
-    if(dt?.data[0]) this.formModel = dt?.data[0]
+    if(dt?.data[0]) this.formModel = dt?.data[0];
+    if(dt?.data[1]) this.periodID = dt?.data[1];
+    if(dt?.data[2]) {
+      this.interval = dt?.data[2];
+      this.selectedType = dt?.data[2].toLowerCase();
+    }
+    if(dt?.data[3]) this.year = dt?.data[3];
     this.dialog =  dialog;
   }
 

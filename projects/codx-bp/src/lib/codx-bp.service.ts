@@ -96,6 +96,14 @@ export class CodxBpService {
       data
     );
   }
+  getProcessesByVersionNo(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'GetProcessesByprocessNoAsync',
+      data
+    );
+  }
   GetProcessStepDetailsByRecID(recID) {
     return this.api.exec<any>(
       'BP',
@@ -138,8 +146,8 @@ export class CodxBpService {
     );
   }
 
-  updateRevision(funcID,recID,verNo, verName,comment, entityName ): Observable<any> {
+  updateRevision(funcID,recID,verNo, verName,comment, entityName, fucntionIdMain ): Observable<any> {
     return this.api
-      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName]);
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName,fucntionIdMain]);
   }
 }

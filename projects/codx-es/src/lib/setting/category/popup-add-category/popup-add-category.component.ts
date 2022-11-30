@@ -137,8 +137,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         if (res?.dataValue) {
           let item = JSON.parse(res?.dataValue);
-          console.log('Module Es', item);
-
           if (item?.ES1 == true) {
             this.hasModuleES = true;
             this.cr.detectChanges();
@@ -150,15 +148,13 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       //New list step
       this.esService
         .copyApprovalStep(this.oldRecID, this.data.recID)
-        .subscribe((res) => {
-          console.log(this.data);
-          console.log(res);
-        });
+        .subscribe((res) => {});
     }
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((grv) => {
         if (grv) this.grvSetup = grv;
+        this.cr.detectChanges();
       });
 
     // this.cache.functionList('ES').subscribe((res) => {
@@ -179,7 +175,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         .subscribe((setting) => {
           if (setting?.dataValue) {
             this.settingDataValue = JSON.parse(setting.dataValue);
-            console.log(this.settingDataValue);
             if (this.settingDataValue) {
               let lstTrueFalse = ['AllowEditAreas'];
               for (const key in this.settingDataValue) {
@@ -190,7 +185,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   this.data[fieldName] =
                     this.settingDataValue[key] == '0' ? false : true;
                   if (key == 'AreaControl') {
-                    console.log('AreaControl', this.data[fieldName]);
                   }
                 } else {
                   this.data[fieldName] = this.settingDataValue[key];
@@ -200,7 +194,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   fieldName: this.data[fieldName],
                 });
               }
-              console.log(this.data);
               this.esService
                 .getAutoNumber(this.data.autoNumber)
                 .subscribe((res) => {
@@ -217,7 +210,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
           }
         });
     } else {
-      console.log(this.data);
     }
     this.form?.formGroup?.addControl(
       'countStep',
@@ -254,8 +246,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component) {
-      console.log('value change', event);
-
       let fieldName =
         event.field.charAt(0).toUpperCase() + event.field.slice(1);
       switch (event?.field) {
@@ -352,8 +342,6 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         }
       }
     }
-
-    console.log('value change', event);
     this.cr.detectChanges();
   }
 

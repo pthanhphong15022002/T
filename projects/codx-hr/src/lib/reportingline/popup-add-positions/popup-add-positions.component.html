@@ -1,14 +1,14 @@
 <codx-form 
-[headerText]="title" 
-subHeaderText="" 
-[body]="body" 
-[footer]="footer" 
-[dialog]="dialogRef"> 
+    [headerText]="title" 
+    subHeaderText="" 
+    [body]="body" 
+    [footer]="footer" 
+    [dialog]="dialogRef"> 
 </codx-form>
 
 <ng-template #body>
     <div>
-        <div *ngIf="isNew" class="row">
+        <div class="row">
             <div class="col">
                 <div class="form-group">
                     <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>

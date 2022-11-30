@@ -28,8 +28,9 @@
             <div class="dms-info">
               <div class="d-flex align-items-center">
                 <div *ngIf="process != null && flowChart != null">
-                  <img alt="{{flowChart.fileName}}" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
+                  <img alt="" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
                     src="{{flowChart.pathDisk}}">
+
                 </div>
                 <!-- <ng-template #elsethenAvatar1>
                     <div class="mh-150px me-2" [style.background]="flowChart.backGround" style="width: 500px; margin-bottom: 5px;">
@@ -46,11 +47,7 @@
               </div>
             </div>
             <div class="mb-5">
-              <h4 class="fw-bold text-dark mb-3">
-                <codx-label fiedName="Info" [formModel]="form.formModel" default="Thông tin">
-                </codx-label>
-              </h4>
-              <div class="d-flex flex-wrap mb-1">
+              <div class="d-flex flex-wrap mb-1 margin">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Người tạo:"> </codx-label>
@@ -71,7 +68,7 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-1">
+              <div class="d-flex flex-wrap mb-1 margin">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Phiên bản:"> </codx-label>
@@ -81,7 +78,7 @@
                 <div class="d-flex align-items-center">
                   <span class="me-1 icon-16 icon-access_alarm"></span><span #activedOn> {{
                     data.activedOn | formatvalue
-                    : dialog.formModel
+                    : form.formModel
                     : "activedOn"
                     : activedOn
                     : "Processes"
@@ -90,7 +87,29 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-2">
+              <!--Gắn tạm sau này BA hướng dẫn phê duyệt thì mới thay-->
+              <div class="d-flex flex-wrap mb-1 margin" >
+                <div class="d-flex align-items-center me-4">
+                  <span class="fw-bold text-dark">
+                    <codx-label name="" default="Người phê duyệt:"> </codx-label>
+                  </span>
+                  <span class="text-dark">
+                    <div>{{data.userNameCreatedBy}}</div>
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="me-1 icon-16 icon-access_alarm"></span><span #createdOn> {{
+                    data.createdOn | formatvalue
+                    : dialog.formModel
+                    : "createdOn"
+                    : createdOn
+                    : "Processes"
+                    : "grvProcesses"
+                    | async
+                    }}</span>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap mb-2 margin">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Chủ qui trình:"> </codx-label>
@@ -101,7 +120,7 @@
             </div>
             <div class="card-rating mt-6">
               <div class="fw-bold text-gray-600 mb-4">
-                <codx-label name="" default="Đánh giá"> </codx-label>
+                <codx-label class="fw-bold " name="" default="Đánh giá"> </codx-label>
               </div>
               <div class="d-flex">
                 <div class="d-flex flex-column me-20 text-center">
