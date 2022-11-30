@@ -62,18 +62,20 @@ codx-view-list-detail .codx-detail-main {
   height: 100%;
 }
 
-.dt-es .codx-detail-body
-{
+.dt-es .codx-detail-body {
   height: calc(100% - 270px) !important;
 }
 
 .h-od-tab .tab-content {
   height: 100% !important;
   overflow: auto;
-  margin-right: -18px;
-  padding-right: 20px;
 }
 
 .float-left>div {
   float: left;
+}
+
+.dt-es>.codx-detail-main.px-6 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }

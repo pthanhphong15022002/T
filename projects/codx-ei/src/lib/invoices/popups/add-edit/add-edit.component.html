@@ -6,104 +6,107 @@
   [data]="invoices"
   [formModel]="dialog.formModel"
   [dialog]="dialog"
->
   [subToolbar]="subToolbar"
-  <ng-template #body>
-    <div class="card-add">
-      <ejs-tab id="invoices">
-        <e-tabitems>
-          <!-- Tab thông tin hóa đơn -->
-          <e-tabitem>
-            <ng-template #headerText>
+  subToolbarCss="text-end"
+>
+</codx-form>
+
+<!-- Template Popup -->
+<ng-template #body>
+  <div class="card-add" #cardbodyRef>
+    <ejs-tab #invoicesRef id="invoices">
+      <e-tabitems>
+        <!-- Tab thông tin hóa đơn -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="tabBasic"
+              default="Thông tin hóa đơn"
+            ></codx-label>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
+          </ng-template>
+        </e-tabitem>
+        <!-- Tab thông tin mở rộng -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="tabBasic"
+              default="Thông tin mở rộng"
+            ></codx-label>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabExtend"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+    <ejs-tab id="invoiceLines">
+      <e-tabitems>
+        <!-- Tab Hàng hóa/dịch vụ -->
+        <e-tabitem>
+          <ng-template #headerText>
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="good/services"
+              default="Hàng hóa/dịch vụ"
+            ></codx-label>
+          </ng-template>
+          <ng-template #content>
+            <ng-container *ngTemplateOutlet="tabGood"></ng-container>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+    <div class="row mb-2">
+      <ng-container *ngTemplateOutlet="addLine"></ng-container>
+    </div>
+    <!-- Diễn giải -->
+    <div #noteRef class="form-group mb-0 row">
+      <div class="col-10">
+        <div class="form-group mb-0 row">
+          <div class="col-3">
+            <div class="form-group mb-0 pt-1">
               <codx-label
+                fiedName="memo"
                 [formModel]="form.formModel"
-                fiedName="tabBasic"
-                default="Thông tin hóa đơn"
-              ></codx-label>
-            </ng-template>
-            <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabBasic"></ng-container>
-            </ng-template>
-          </e-tabitem>
-          <!-- Tab thông tin mở rộng -->
-          <e-tabitem>
-            <ng-template #headerText>
-              <codx-label
+                default="Diễn giải"
+              >
+              </codx-label>
+              <codx-input
+                field="memo"
                 [formModel]="form.formModel"
-                fiedName="tabBasic"
-                default="Thông tin mở rộng"
-              ></codx-label>
-            </ng-template>
-            <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabExtend"></ng-container>
-            </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
-      <ejs-tab id="invoiceLines">
-        <e-tabitems>
-          <!-- Tab Hàng hóa/dịch vụ -->
-          <e-tabitem>
-            <ng-template #headerText>
-              <codx-label
-                [formModel]="form.formModel"
-                fiedName="good/services"
-                default="Hàng hóa/dịch vụ"
-              ></codx-label>
-            </ng-template>
-            <ng-template #content>
-              <ng-container *ngTemplateOutlet="tabGood"></ng-container>
-            </ng-template>
-          </e-tabitem>
-        </e-tabitems>
-      </ejs-tab>
-      <!-- Diễn giải -->
-      <div class="form-group mb-0 row">
-        <div class="col-10">
-          <div class="form-group mb-0 row">
-            <div class="col-3">
-              <div class="form-group mb-0 pt-1">
-                <codx-label
-                  fiedName="memo"
-                  [formModel]="form.formModel"
-                  default="Diễn giải"
-                >
-                </codx-label>
-                <codx-input
-                  field="memo"
-                  [formModel]="form.formModel"
-                  [Group]="form.formGroup"
-                >
-                </codx-input>
-              </div>
+                [Group]="form.formGroup"
+              >
+              </codx-input>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </ng-template>
-  <ng-template #subToolbar>
-    <button class="btn btn-md btn-warning">
-      <codx-label
-        name="btnSaveNew"
-        formName="System"
-        default="Lưu & mới "
-      ></codx-label>
-    </button>
+  </div>
+</ng-template>
+<ng-template #subToolbar>
+  <button class="btn btn-sm btn-warning me-1">
+    <codx-label
+      name="btnSaveNew"
+      formName="System"
+      default="Lưu & mới "
+    ></codx-label>
+  </button>
 
-    <button class="btn btn-md btn-danger">
-      <codx-label name="btnSave" formName="System" default="Lưu"></codx-label>
-    </button>
-  </ng-template>
-  <ng-template #footer>
-    <div class="row mb-2">
-      <ng-container *ngTemplateOutlet="addLine"></ng-container>
-    </div>
-    <div class="row">
-      <ng-container *ngTemplateOutlet="tabRef"></ng-container>
-    </div>
-  </ng-template>
-</codx-form>
+  <button class="btn btn-sm btn-danger">
+    <codx-label name="btnSave" formName="System" default="Lưu"></codx-label>
+  </button>
+</ng-template>
+<ng-template #footer>
+  <div class="row" *ngIf="invoices">
+    <ng-container *ngTemplateOutlet="tabRef"></ng-container>
+  </div>
+</ng-template>
 
 <!--Template Tab thông tin hóa đơn -->
 <ng-template #tabBasic>
@@ -522,108 +525,16 @@
 <!-- Template Tab Hàng hóa/dịch vụ -->
 <ng-template #tabGood>
   <codx-gridview-v2
+    #grid
     [formName]="fmGoods.formName"
     [gridViewName]="fmGoods.gridViewName"
     [entityName]="fmGoods.entityName"
     [dataSource]="data"
     [editSettings]="editSettings"
+    rowHeight="40"
+    [height]="gridHeight"
+    (created)="gridCreated($event)"
   ></codx-gridview-v2>
-  <!-- <ejs-grid
-    #grid
-    [editSettings]="editSettings"
-    [dataSource]="data"
-    [height]="300"
-    (rowSelected)="getSelected($event)"
-    (keyPressed)="keyPressed($event)"
-    (actionComplete)="actionComplete($event)"
-  >
-    <e-columns>
-      <e-column
-        field="no"
-        headerText="STT"
-        textAlign="center"
-        width="50"
-        [isPrimaryKey]="true"
-      ></e-column>
-      <e-column
-        field="itemDesc"
-        headerText="Tên sản phẩm"
-        width="200"
-      ></e-column>
-      <e-column
-        field="umid"
-        headerText="Đơn vị tính"
-        textAlign="left"
-        width="100"
-      >
-      </e-column>
-      <e-column
-        field="quantity"
-        headerText="Số lượng"
-        textAlign="Right"
-        width="100"
-      ></e-column>
-      <e-column
-        field="salesPrice"
-        headerText="Đơn giá"
-        textAlign="Right"
-        width="100"
-      ></e-column>
-      <e-column
-        field="salesAmt"
-        headerText="Thành tiền"
-        textAlign="Right"
-        width="100"
-      ></e-column>
-      <e-column
-        field="vatid"
-        headerText="Thuế suất (%)"
-        textAlign="Right"
-        width="100"
-      ></e-column>
-      <e-column
-        field="vatAmt"
-        headerText="Thuế GTGT"
-        textAlign="Right"
-        width="100"
-      ></e-column>
-      <e-column
-        field="totalAmt"
-        headerText="Thành tiền sau thuế"
-        textAlign="Right"
-        width="100"
-      ></e-column>
-      <e-column
-        field="lineType"
-        headerText="Loại mặt hàng"
-        textAlign="left"
-        width="100"
-      ></e-column>
-      <e-column
-        field="note"
-        headerText="Ghi chú"
-        textAlign="left"
-        width="200"
-      ></e-column>
-      <e-column
-        field="action"
-        headerText=""
-        textAlign="Right"
-        width="50"
-        isPrimaryKey="true"
-        tem
-      >
-        <ng-template #template let-data>
-          <button class="btn btn-sm btn-danger">Xóa</button>
-        </ng-template>
-      </e-column>
-    </e-columns>
-    <ng-template #editSettingsTemplate let-data>
-      <ng-container
-        *ngTemplateOutlet="editTemplate; context: { $implicit: data }"
-      ></ng-container>
-    </ng-template>
-  </ejs-grid> -->
 </ng-template>
 
 <!-- Add Line template -->
@@ -639,7 +550,7 @@
     </colgroup>
     <tbody>
       <tr>
-        <td class="e-rowcell">
+        <td class="e-rowcell text-start">
           <button class="btn btn-md btn-primary" (click)="addRow()">
             <codx-label
               name="btnAdd"
@@ -648,14 +559,14 @@
             ></codx-label>
           </button>
         </td>
-        <td style="text-align: left" class="e-rowcell">
+        <td class="e-rowcell text-start">
           <codx-label
             fiedName="totalAmt"
             [formModel]="form.formModel"
             default="Tổng cộng"
           ></codx-label>
         </td>
-        <td style="text-align: right" class="e-rowcell">
+        <td class="e-rowcell text-end">
           <span>30</span>
         </td>
         <td class="e-rowcell">
@@ -669,149 +580,13 @@
   </table>
 </ng-template>
 
-<!-- Edit Gird template -->
-<ng-template #editTemplate let-data>
-  <div [formGroup]="fgGoods">
-    <table class="e-table">
-      <colgroup>
-        <col style="width: 30px" />
-        <col style="width: 200px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 100px" />
-        <col style="width: 200px" />
-      </colgroup>
-      <tbody>
-        <tr>
-          <td style="text-align: right" class="e-rowcell">
-            <input
-              class="e-input e-field"
-              [value]="data.no"
-              required
-              [attr.disabled]="!data.isAdd ? '' : null"
-              name="no"
-              type="text"
-              style="text-align: center"
-            />
-          </td>
-          <td class="e-rowcell">
-            <codx-input
-              field="itemDesc"
-              formControlName="itemDesc"
-              [formModel]="form.formModel"
-              [Group]="fgGoods"
-              (valueChange)="onChangedValue($event, data)"
-            >
-            </codx-input>
-          </td>
-          <td style="text-align: right" class="e-rowcell">
-            <codx-input
-              class="e-input e-field"
-              name="umid"
-              field="UMID"
-              [formModel]="fmGoods"
-              [Group]="fgGoods"
-              (valueChange)="onChangedValue($event, data)"
-            >
-            </codx-input>
-          </td>
-          <td style="text-align: right" class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="quantity"
-              name="quantity"
-              type="number"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="salesPrice"
-              name="salesPrice"
-              type="number"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="salesAmt"
-              name="salesAmt"
-              type="number"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="vatid"
-              name="vatid"
-              type="number"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="vatAmt"
-              name="vatAmt"
-              type="number"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="totalAmt"
-              name="totalAmt"
-              type="number"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="lineType"
-              name="lineType"
-              type="text"
-            />
-          </td>
-          <td class="e-rowcell">
-            <input
-              class="e-input e-field"
-              formControlName="note"
-              name="note"
-              type="text"
-            />
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-template>
-
 <!-- Tab Reference -->
 <ng-template #tabRef>
-  <div class="tab-horizone tab-footer tab-off">
-    <!-- <ul
-      ngbNav
-      #nav="ngbNav"
-      [(activeId)]="active"
-      (navChange)="navChange($event)"
-      class="nav nav-tabs"
-    >
-      <li class="nav-item">
-        <a ngbNavLink class="nav-link">
-          <codx-label
-            name="tab"
-            [formName]="'SYS'"
-            [default]="item.textDefault || item.name"
-          >
-          </codx-label>
-        </a>
-
-        <ng-template ngbNavContent> </ng-template>
-      </li>
-    </ul> -->
-  </div>
+  <codx-tabs
+    [entityName]="form.formModel.entityName"
+    [formModel]="form.formModel"
+    [objectID]="invoices.recID"
+    [funcID]="form.formModel.funcID"
+    [TabControl]="tabs"
+  ></codx-tabs>
 </ng-template>

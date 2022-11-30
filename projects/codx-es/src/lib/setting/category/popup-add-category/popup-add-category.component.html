@@ -68,7 +68,7 @@
     </div>
     <div class="row">
       <div class="col-md-3">
-        <div class="d-flex align-items-center mb-4" *ngIf="havaESign == true">
+        <div class="d-flex align-items-center mb-4" *ngIf="hasModuleES == true">
           <codx-input
             #checkbox
             type="switch"
@@ -88,7 +88,7 @@
       <div class="col-md-4">
         <div
           class="d-flex align-items-center mb-4"
-          *ngIf="havaESign == true && data.eSign"
+          *ngIf="hasModuleES == true && data.eSign"
         >
           <codx-input
             #checkbox
@@ -111,7 +111,7 @@
       <div class="col-md-4">
         <div
           class="d-flex align-items-center mb-4"
-          *ngIf="havaESign == true && data.eSign"
+          *ngIf="hasModuleES == true && data.eSign"
         >
           <codx-input
             #checkbox

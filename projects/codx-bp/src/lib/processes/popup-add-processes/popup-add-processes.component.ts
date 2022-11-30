@@ -1,6 +1,18 @@
-import { BP_Processes, BP_ProcessRevisions } from './../../models/BP_Processes.model';
+import {
+  BP_Processes,
+  BP_ProcessPermissions,
+  BP_ProcessRevisions,
+} from './../../models/BP_Processes.model';
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef, CacheService, CallFuncService, AuthStore, NotificationsService } from 'codx-core';
+import {
+  DialogData,
+  DialogRef,
+  CacheService,
+  CallFuncService,
+  AuthStore,
+  NotificationsService,
+  ApiHttpService,
+} from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
 @Component({
@@ -24,13 +36,15 @@ export class PopupAddProcessesComponent implements OnInit {
   funcID: any;
   showLabelAttachment = false;
   isHaveFile = false;
-  revisions :  BP_ProcessRevisions[] = [];
+  revisions: BP_ProcessRevisions[] = [];
+  perms: BP_ProcessPermissions[] = [];
   user: any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
     private notiService: NotificationsService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -41,7 +55,15 @@ export class PopupAddProcessesComponent implements OnInit {
     this.action = dt.data[0];
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
-
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.title =
+          this.titleAction +
+          ' ' +
+          res.customName.charAt(0).toLocaleLowerCase() +
+          res.customName.slice(1);
+      }
+    });
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -52,13 +74,13 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.title = this.titleAction;
+    if (this.action === 'add' || this.action === 'copy')
+      this.valueOwner(this.process.owner);
   }
 
   ngOnInit(): void {
-    if(this.action === 'edit'){
+    if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
-
     }
   }
 
@@ -75,7 +97,7 @@ export class PopupAddProcessesComponent implements OnInit {
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
-      this.revisions.push(versions) ;
+      this.revisions.push(versions);
       this.process.versions = this.revisions;
       data = [this.process];
     } else if (this.action == 'edit') {
@@ -101,13 +123,13 @@ export class PopupAddProcessesComponent implements OnInit {
 
   onUpdate() {
     this.dialog.dataService
-    .save((option: any) => this.beforeSave(option))
-    .subscribe((res) => {
-      if (res.update) {
-        this.attachment?.clearData();
-        this.dialog.close(res.update);
-      }
-    });
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.attachment?.clearData();
+          this.dialog.close(res.update);
+        }
+      });
   }
   async onSave() {
     if (
@@ -121,10 +143,7 @@ export class PopupAddProcessesComponent implements OnInit {
       );
       return;
     }
-    if (
-      this.process.owner == null ||
-      this.process.owner.trim() == ''
-    ) {
+    if (this.process.owner == null || this.process.owner.trim() == '') {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -133,7 +152,7 @@ export class PopupAddProcessesComponent implements OnInit {
       return;
     }
 
-    if (!this.process.activedOn ) {
+    if (!this.process.activedOn) {
       this.notiService.notifyCode(
         'SYS009',
         0,
@@ -141,18 +160,11 @@ export class PopupAddProcessesComponent implements OnInit {
       );
       return;
     }
-    if ( !this.process.expiredOn) {
+    if (!this.process.expiredOn) {
       this.notiService.notifyCode(
         'SYS009',
         0,
         '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
-      );
-      return;
-    }
-    //Chưa có mssg code
-    if (this.process.activedOn >= this.process.expiredOn) {
-      this.notiService.notify(
-        'Vui lòng chọn ngày hiệu lực nhỏ hơn ngày hết hạn!'
       );
       return;
     }
@@ -163,15 +175,22 @@ export class PopupAddProcessesComponent implements OnInit {
       );
       return;
     }
+    //Chưa có mssg code
+    if (this.process.activedOn >= this.process.expiredOn) {
+      this.notiService.notify(
+        'Vui lòng chọn ngày hiệu lực nhỏ hơn ngày hết hạn!'
+      );
+      return;
+    }
 
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           var countAttack = 0;
           countAttack = Array.isArray(res) ? res.length : 1;
-          if(this.action === 'edit'){
+          if (this.action === 'edit') {
             this.process.attachments += countAttack;
-          }else{
+          } else {
             this.process.attachments = countAttack;
           }
           if (this.action === 'add' || this.action === 'copy') this.onAdd();
@@ -202,12 +221,11 @@ export class PopupAddProcessesComponent implements OnInit {
     this.process.tags = e.data;
   }
 
-  valueDateChange(e){
+  valueDateChange(e) {
     this.process[e.field] = e.data.fromDate;
-
   }
 
-  eventApply(e){
+  eventApply(e) {
     console.log(e);
     var data = e.data[0];
     switch (data.objectType) {
@@ -215,14 +233,59 @@ export class PopupAddProcessesComponent implements OnInit {
         this.process.owner = data.id;
         break;
     }
-
+    if (this.process.owner != null) {
+      this.addPermission(this.process.owner);
+    }
   }
 
+  addPermission(id) {
+    if (id != null) {
+      if (this.process.permissions != null) {
+        var lstPerm = this.process.permissions;
+      } else {
+        this.valueOwner(id);
+      }
+    }
+  }
 
+  valueOwner(id) {
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(id.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpPermission = new BP_ProcessPermissions();
+            tmpPermission.objectID = emp?.userID;
+            tmpPermission.objectName = emp?.userName;
+            tmpPermission.objectType = 'U';
+            tmpPermission.read = true;
+            tmpPermission.share = true;
+            tmpPermission.full = true;
+            tmpPermission.delete = true;
+            tmpPermission.update = true;
+            tmpPermission.upload = true;
+            tmpPermission.assign = true;
+            tmpPermission.download = true;
+            tmpPermission.nemberType = '1';
+            tmpPermission.autoCreate = true;
+
+            this.perms.push(tmpPermission);
+
+            this.process.permissions = this.perms;
+          }
+        }
+      });
+  }
 
   addFile(e) {
     this.attachment.uploadFile();
-
   }
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
@@ -231,8 +294,6 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   fileAdded(e) {}
 
-
-  valueCbx(e) {
-  }
+  valueCbx(e) {}
   //#endregion event
 }

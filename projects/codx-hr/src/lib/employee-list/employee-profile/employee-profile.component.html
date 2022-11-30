@@ -14,7 +14,9 @@
         <div class="user-left me-7">
           <div class="d-flex flex-column mt-9">
             <div class="d-flex flex-column text-center mb-4">
-              <div class="mb-2 d-flex justify-content-between">
+              <div
+                class="mb-2 d-flex justify-content-between align-items-center"
+              >
                 <span
                   class="icon-arrow_back_ios icon-16 text-hover-primary t-gray-800 me-1"
                 ></span>
@@ -37,12 +39,11 @@
               <div class="font-weight-bold font-size-h5 mb-2">
                 {{ infoPersonal.employeeName }}
               </div>
-              <div class="text-muted">{{ infoPersonal.email }}</div>
-              <div class="text-dark-75">Busssiness Solution Center</div>
+              <div class="text-dark-75">{{ infoPersonal.positionName }}</div>
             </div>
           </div>
           <div class="d-flex flex-column mt-9 ms-5">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-2">
               <span
                 class="icon-qr_code_scanner icon-16 text-danger me-1"
               ></span>
@@ -58,12 +59,13 @@
               </span>
             </div>
             <codx-vll
-              [name]="'L0614'"
-              [value]="'1'"
+              [field]="'Status'"
+              [value]="infoPersonal.status"
+              [formModel]="view.formModel"
               [showText]="true"
               [showBgColor]="true"
             ></codx-vll>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-2">
               <span
                 class="icon-connection-point icon-16 text-gray-800 me-1"
               ></span>
@@ -73,23 +75,23 @@
                 <span #email>Trung tâm DXC</span>
               </span>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-2">
               <span class="icon-email icon-16 text-gray-800 me-1"></span>
               <span class="text-dark">
                 <span #email>{{ infoPersonal.email }}</span>
               </span>
             </div>
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center mb-2">
               <span class="icon-local_phone icon-16 text-gray-800 me-1"></span>
               <span class="text-dark">
-                <span #phone>Số điện thoại</span>
+                <span #phone>{{ infoPersonal.phone }}</span>
               </span>
 
               <span
                 class="icon-phone_android icon-16 text-gray-800 me-1 ms-2"
               ></span>
               <span class="text-dark">
-                <span #street>0907323495</span>
+                <span>{{ infoPersonal.mobile }}</span>
               </span>
             </div>
           </div>
@@ -97,7 +99,7 @@
             <ul
               class="nav nav-tabs nav-pills flex-row border-0 flex-md-column me-3 mb-3 mb-md-0 fs-6 min-w-lg-200px"
             >
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -118,7 +120,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -139,7 +141,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -160,7 +162,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -181,7 +183,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -202,7 +204,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -223,7 +225,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -244,7 +246,7 @@
                   </div>
                 </a>
               </li>
-              <li class="nav-item w-100 me-0 mb-md-2">
+              <li class="nav-item w-100 me-0">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -440,7 +442,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -723,7 +725,10 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #street>: {{ infoPersonal.street }}</span>
+                      <span #street
+                        >:
+                        {{ infoPersonal.street ?? infoPersonal.address }}</span
+                      >
                     </div>
                   </div>
                   <div class="row form-group">
@@ -785,7 +790,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeePartyInfo()"
+                        (click)="editEmployeePartyInfo()"
                       ></span>
                     </a>
                   </div>
@@ -868,27 +873,54 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addFamilyRelationshipInfo()"
+                        (click)="handleEFamilyInfo('add', null)"
                       ></span>
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
                     <ng-container *ngFor="let item of lstFamily">
                       <div
-                        class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                        class="border rounded min-w-250px mw-250px me-4 mb-2"
                       >
                         <codx-temp-full
-                          cardCss="card-template px-2 pt-4 pb-2"
+                          (clickMF)="clickMF($event, item, 'family')"
+                          cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                           [imageId]="'ADMIN'"
                           imageObjType="AD_Users"
                           [imageWidth]="40"
                           [formModel]="view.formModel"
-                          [title]="'experences.companyName'"
-                          [dataItem]="'experences'"
-                          [desc]="'relationType' + ' | ' + 'Năm sinh: '"
+                          [title]="item.relationName"
+                          [dataItem]="item"
+                          [desc]="
+                            (item.relationType | vll: 'HR006':'text' | async) +
+                            ' | ' +
+                            'Năm sinh: ' +
+                            (item.birthday | fmDT)
+                          "
                           [typeMF]="'hover'"
+                          [footer]="footerFamily"
                         >
                         </codx-temp-full>
+                        <ng-template #footerFamily let-data>
+                          <div
+                            class="d-flex align-items-center mt-1"
+                            *ngIf="data.isDependent"
+                          >
+                            <span
+                              class="icon-check icon-14 me-1 text-success"
+                            ></span
+                            >Phụ thuộc giảm trừ gia cảnh
+                          </div>
+                          <div
+                            class="d-flex align-items-center"
+                            *ngIf="data.isEmergency"
+                          >
+                            <span
+                              class="icon-check icon-14 me-1 text-danger"
+                            ></span
+                            >Liên hệ khẩn cấp: {{ data.mobile }}
+                          </div>
+                        </ng-template>
                       </div>
                     </ng-container>
                   </div>
@@ -953,7 +985,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addAssuranceTaxBankAccountInfo()"
+                        (click)="editAssuranceTaxBankAccountInfo()"
                       ></span>
                     </a>
                   </div>
@@ -1105,7 +1137,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addEmployeePassportInfo()"
+                        (click)="handleEmployeePassportInfo('add', null)"
                       ></span>
                     </a>
                   </div>
@@ -1125,7 +1157,7 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ crrPassport?.passportNo }}</span
+                            : {{ lstPassport[0]?.passportNo }}</span
                           >
                         </div>
                       </div>
@@ -1141,7 +1173,7 @@
                           >
                           </codx-label>
                           <span #IssuedPlace
-                            >: {{ crrPassport?.issuedPlace }}</span
+                            >: {{ lstPassport[0]?.issuedPlace }}</span
                           >
                         </div>
                       </div>
@@ -1159,7 +1191,7 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ crrPassport?.issuedDate | fmDT }}</span
+                            >: {{ lstPassport[0]?.issuedDate | fmDT }}</span
                           >
                         </div>
                       </div>
@@ -1175,7 +1207,7 @@
                           >
                           </codx-label>
                           <span #ExpiredDate
-                            >: {{ crrPassport?.expiredDate | fmDT }}</span
+                            >: {{ lstPassport[0]?.expiredDate | fmDT }}</span
                           >
                         </div>
                       </div>
@@ -1183,9 +1215,9 @@
                     <codx-mfunc
                       *ngIf="lstPassport?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, crrPassport)"
+                      (clickMF)="clickMF($event, lstPassport[0], 'passport')"
                       type="hover"
-                      [dataItem]="crrPassport"
+                      [dataItem]="lstPassport[0]"
                     >
                     </codx-mfunc>
                   </div>
@@ -1203,7 +1235,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addEmployeeVisaInfo()"
+                        (click)="handleEmployeeVisaInfo('add', null)"
                       ></span>
                     </a>
                   </div>
@@ -1222,7 +1254,7 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ crrVisa?.visaNo }}</span
+                            : {{ lstVisa[0]?.visaNo }}</span
                           >
                         </div>
                       </div>
@@ -1237,7 +1269,7 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ crrVisa?.issuedPlace }} </span>
+                          <span>: {{ lstVisa[0]?.issuedPlace }} </span>
                         </div>
                       </div>
                     </div>
@@ -1254,7 +1286,7 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ crrVisa?.issuedDate | fmDT }}</span
+                            >: {{ lstVisa[0]?.issuedDate | fmDT }}</span
                           >
                         </div>
                       </div>
@@ -1270,8 +1302,8 @@
                           >
                           </codx-label>
                           <span #issuedOn
-                            >: {{ crrVisa?.effectedDate | fmDT }} -
-                            {{ crrVisa?.expiredDate | fmDT }}
+                            >: {{ lstVisa[0]?.effectedDate | fmDT }} -
+                            {{ lstVisa[0]?.expiredDate | fmDT }}
                           </span>
                         </div>
                       </div>
@@ -1279,9 +1311,9 @@
                     <codx-mfunc
                       *ngIf="lstVisa?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, crrVisa)"
+                      (clickMF)="clickMF($event, lstVisa[0], 'visa')"
                       type="hover"
-                      [dataItem]="crrVisa"
+                      [dataItem]="lstVisa[0]"
                     >
                     </codx-mfunc>
                   </div>
@@ -1299,7 +1331,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addEmployeeWorkingLisenceInfo()"
+                        (click)="handleEmployeeWorkingPermitInfo('add', null)"
                       ></span>
                     </a>
                   </div>
@@ -1376,7 +1408,9 @@
                     <codx-mfunc
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstWorkPermit[0])"
+                      (clickMF)="
+                        clickMF($event, lstWorkPermit[0], 'workpermit')
+                      "
                       type="hover"
                       [dataItem]="lstWorkPermit[0]"
                     >
@@ -1554,6 +1588,9 @@
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div class="d-flex justify-content-between mb-2 mt-6">
+            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+              <span class="icon-edit icon-18"></span>
+            </a>
             <div class="fw-bold fs-4 text-primary">
               <codx-label
                 name="lblInfoPersonal"
@@ -1639,7 +1676,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -1738,7 +1775,7 @@
                       >
                       </codx-label>
                       <span class="text-dark fw-bold">
-                        <span>{{ infoPersonal.positionID }}</span>
+                        <span>{{ infoPersonal.positionName }}</span>
                       </span>
                     </div>
                     <div class="col d-flex" id="jobLevel">
@@ -1900,7 +1937,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2011,7 +2048,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2138,7 +2175,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2390,7 +2427,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2501,7 +2538,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -2959,7 +2996,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3012,7 +3049,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3068,7 +3105,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3125,7 +3162,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="popupEmployeePositions()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>
@@ -3181,7 +3218,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
-                        (click)="addEmployeeSelfInfo()"
+                        (click)="editEmployeeSelfInfo()"
                       ></span>
                     </a>
                   </div>

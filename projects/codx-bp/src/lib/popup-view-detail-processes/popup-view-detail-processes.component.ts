@@ -1,10 +1,12 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { ProcessStepsComponent } from './../processsteps/processsteps.component';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild, Output, EventEmitter } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
-import { ApiHttpService, CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
+import { ApiHttpService, ButtonModel, CacheService, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { BP_Processes, TabModel } from '../models/BP_Processes.model';
 import { environment } from 'src/environments/environment';
 import { ToolbarService , PrintService } from '@syncfusion/ej2-angular-documenteditor'
+import { CodxBpService } from '../codx-bp.service';
 @Component({
   selector: 'lib-popup-view-detail-processes',
   templateUrl: './popup-view-detail-processes.component.html',
@@ -13,11 +15,12 @@ import { ToolbarService , PrintService } from '@syncfusion/ej2-angular-documente
 })
 export class PopupViewDetailProcessesComponent implements OnInit {
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
+  @ViewChild('viewProcessSteps') viewProcessSteps: ProcessStepsComponent;
   process!: BP_Processes;
   viewMode = '16';
   funcID="BPT11" //testsau klaay từ more ra
   name = 'ViewList';
-  offset = '59px';
+  offset = '75px';
   dialog!: DialogRef;
   data: any;
   moreFunc: any;
@@ -30,16 +33,21 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   all: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
-    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 1000 },
+    { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 9 },
   ];
   formModelFlowChart :FormModel ;
-  listPhaseName = []
+  listPhaseName = [] ;
+  childFunc = [] ;
+  mfAdd :any
+  isShowButton = true ;
+
 
   constructor(
     private api: ApiHttpService,
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
+    private bpService: CodxBpService,
     private notificationsService : NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -50,16 +58,22 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc?.customName;
     this.formModel = this.data?.formModel
+   
     this.cache.functionList(this.funcID).subscribe(f=>{
       if(f){
         this.formModelFlowChart = f.formModel
-        // this.formModelFlowChart.funcID = this.funcID
-        // this.formModelFlowChart.formName = f?.formName
-        // this.formModelFlowChart.gridViewName = f?.gridViewName
       }
     })
     this.getFlowChart(this.process)
     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
+
+    this.bpService
+      .getListFunctionMenuCreatedStepAsync(this.funcID)
+      .subscribe((datas) => {
+        if(datas){
+          this.childFunc = datas;         
+        }
+      })
   }
 
   ngOnInit(): void {
@@ -76,7 +90,6 @@ export class PopupViewDetailProcessesComponent implements OnInit {
 
   clickMenu(item) {
     this.name = item.name;
-    // this.viewMode = item.id
     this.tabControl.forEach((obj) => {
       if (obj.isActive == true) {
         obj.isActive = false;
@@ -84,7 +97,9 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       }
     });
     item.isActive = true;
-    if( this.name=="Flowchart") this.offset = '0px' ;else this.offset ="59px"
+    // if(item.id == 6 || item.id == 16){
+      this.viewProcessSteps.chgViewModel(item.id);
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
@@ -167,6 +182,17 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     else {
       this.notificationsService.notifyCode("SYS018");
     }
+  }
+  openPopUp(){
+
+  }
+  clickButtonAdd(){
+    let value = this.childFunc.find(x => x.id === "P");
+    this.clickButton(value);
+  }
+
+  clickButton(e: ButtonModel) {
+    this.viewProcessSteps?.click(e);
   }
 
 }

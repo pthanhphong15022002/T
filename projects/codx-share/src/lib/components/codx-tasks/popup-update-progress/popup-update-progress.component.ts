@@ -94,7 +94,6 @@ export class PopupUpdateProgressComponent implements OnInit {
     if(res && res.length > 0){
       this.dialog.close(res) ;
       this.notiService.notifyCode('SYS007');
-     // this.notiService.notify("Cập nhật tiến độ thành công !")
     }
    })
   }

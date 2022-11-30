@@ -5,13 +5,12 @@
 </codx-views>
 
 <ng-template #templateListCard let-data>
-    <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100 w-225px card-no-body"
-      [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID" [imageWidth]="10000"
-      [imageReferType]="'Flowchart'"  [rootData]="data" [dataItem]="data"
-      [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-      [imageWidth]="600" (changeDataMF)="changeDataMF($event, data)"
-      >
-    </codx-card-img>
+  <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100 w-225px card-no-body"
+    [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
+    [imageWidth]="10000" [imageReferType]="'Flowchart'" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
+    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" [imageWidth]="600"
+    (changeDataMF)="changeDataMF($event, data)">
+  </codx-card-img>
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
     | vll: gridViewSetup['Status'].referedValue:'color'
@@ -46,7 +45,9 @@
         <div class="d-flex flex-wrap justify-content-between my-1">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
-              <span class="icon-server text-dark icon-14 me-1"></span>
+              <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'P'"></lib-popup-phases-activities> -->
+              <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"  [openDelay]="500"
+              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement="right"></span>
               <span #phases class="">
                 {{
                 data.phases
@@ -54,16 +55,19 @@
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
-              <span #activities class="">
-                {{data.activities}}
-              </span>
+              <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'A'"></lib-popup-phases-activities> -->
+              <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover" [ngbPopover]="popperActivitiest" [openDelay]="500"
+              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="right "></span>
+                <span #activities class="">
+                  {{data.activities}}
+                </span>
             </div>
-            <div class="d-flex me-3 align-items-center" >
-              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500"
-              (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
-              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
-              ></codx-attachment-temp></span>
+            <div class="d-flex me-3 align-items-center">
+              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
+                (mouseleave)="p.close()" placement="right">
+                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments">
+                </codx-attachment-temp>
+              </span>
             </div>
           </div>
           <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
@@ -93,7 +97,8 @@
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
-              <span class="icon-server text-dark icon-14 me-1"></span>
+              <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"  [openDelay]="500"
+              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement="bottom top right left"></span>
               <span #phases class="">
                 {{
                 data.phases
@@ -101,14 +106,15 @@
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span class="icon-format_list_numbered text-danger icon-16 me-1"></span>
+              <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover" [ngbPopover]="popperActivitiest" [openDelay]="500"
+              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="bottom top right left"></span>
               <span #activities class="">
                 {{data.activities}}
               </span>
             </div>
             <div class="d-flex me-3 align-items-center" >
-              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500"
-              (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
+              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
+              (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right left">
               <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
               ></codx-attachment-temp></span>
             </div>
@@ -187,6 +193,16 @@
 <ng-template #popperAttachment>
   <span>
     <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperPhases>
+  <span >
+    <codx-label name="phases" [formModel]="view.formModel" default="Số lượng công đoạn"></codx-label>
+  </span>
+</ng-template>
+<ng-template #popperActivitiest>
+  <span>
+    <codx-label name="activities" [formModel]="view.formModel" default="Số lượng bước công việc"></codx-label>
   </span>
 </ng-template>
 
@@ -391,4 +407,12 @@
   <button type="button" class="btn btn-primary" (click)="onSave()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+<ng-template #tmpListItem let-dialog>
+  <codx-form [body]="body" [dialog]="dialog" headerText="Danh sách file đính kèm">
+  </codx-form>
+  <ng-template #body>
+      <codx-thumbnail class="popup-attachment" [files]="[]" [formModel]="null"></codx-thumbnail>
+  </ng-template>
 </ng-template>

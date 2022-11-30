@@ -9,6 +9,8 @@ import { ButtonModel } from 'codx-core';
 })
 export class OkrToolbarComponent implements OnInit {
 
+  buttonAddKR: ButtonModel;
+  buttonAddO: ButtonModel;
   button?: ButtonModel;
   @Output() click = new EventEmitter<string>();
   date = new Date();
@@ -16,8 +18,23 @@ export class OkrToolbarComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    
+    
     this.button = {
       id: 'btnAdd',
+      icon:'icon-i-chevron-down',
+      formName:'OKRPlans',
+      items:[
+        {
+          text:'Thêm mục tiêu',
+          id:'btnAddO',
+          
+        },
+        {
+          text:'Thêm kết quả',
+          id:'btnAddKR',
+        }
+      ]
     };
   }
   buttonClick(event:any)

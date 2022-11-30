@@ -167,21 +167,15 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   btnClick(e) {
-    // var headerText = '';
-    // if (e.text) headerText = e.text;
-    // this.add(headerText);
-
     if(this.view)
     {
-      debugger
-      
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       this.view.dataService.addNew().subscribe((result: any) => {
-        if (result) {
-          debugger
+        if (result) 
+        {
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -190,7 +184,7 @@ export class OrgorganizationComponent extends UIComponent {
             isAddMode: true,
             titleMore: e.text,
           };
-          let popup = this.callfc.openSide(
+          this.callfc.openSide(
             CodxFormDynamicComponent,
             data,
             option,

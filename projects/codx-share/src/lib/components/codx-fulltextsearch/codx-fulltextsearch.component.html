@@ -63,7 +63,7 @@
     </div>
     <div class="d-flex flex-column justify-content-start w-100">
       <div class="d-flex justify-content-between align-items-center border-bottom pb-3">
-        <ng-container *ngIf="searchData && searchData[0]">
+        <ng-container *ngIf="searchData">
           <span class="fs-4 fw-bold text-dark">Khoảng <span class="text-danger">{{count}}</span> kết quả được tìm
             thấy</span>
         </ng-container>
@@ -71,8 +71,8 @@
       </div>
       <div class="overflow-auto pe-5 h-searchtmp">
         <!-- <div class="ps-5" [style.maxWidth.px]="widthItemTmp"> </div> -->
-        <ng-container *ngIf="searchData && searchData[0] ; else defaulEmpt">
-          <ng-container *ngFor="let data of searchData[0]">
+        <ng-container *ngIf="searchData ; else defaulEmpt">
+          <ng-container *ngFor="let data of searchData">
             <div (click)="onSelected(data)">
               <ng-container *ngTemplateOutlet="centerTmp ; context: { $implicit: data}"></ng-container>
             </div>

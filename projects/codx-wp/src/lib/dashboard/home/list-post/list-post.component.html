@@ -209,7 +209,7 @@
       </ng-container>
       <ng-template #noContentShareTemp>
         <div class="my-3">
-          <div [innerHTML]="item.content"></div>
+          <div [innerHTML]="item.content | safe: 'html'" ></div>
         </div>
       </ng-template>
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>

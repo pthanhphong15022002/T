@@ -33,7 +33,7 @@ import { ChatVoteComponent } from './chat-vote/chat-vote.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 
-import { SignalRService } from '@core/services/signalr/signalr.service';
+import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 
 
 import { environment } from 'src/environments/environment';
@@ -777,14 +777,7 @@ groupName = "";
       .subscribe((res: any) => {
         if (res) {
 
-           this.signalrService.sendVoteData(data,res,voteType,"VoteMessage");
-          
-           
-          
-          
-          
-
-             
+          //  this.signalrService.sendVoteData(data,res,voteType,"VoteMessage");
                 // data.votes = res[0];
                 // data.totalVote = res[1];
                 // data.listVoteType = res[2];
@@ -798,8 +791,6 @@ groupName = "";
                 //   data.myVoted = true;
                 //   this.checkVoted = true;
                 // }
-                
-          
         }
 
       });

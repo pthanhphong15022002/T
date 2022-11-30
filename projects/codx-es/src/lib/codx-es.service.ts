@@ -321,6 +321,16 @@ export class CodxEsService {
     return obj;
   }
 
+  getMoreFunction(funcID: string, formName: string, grvName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermSystemAsync',
+      [funcID, formName, grvName]
+    );
+  }
+
   //#endregion
 
   //#region  EP
@@ -632,9 +642,9 @@ export class CodxEsService {
     });
   }
 
-  getApprovalSteps(model: GridModels): Observable<any> {
+  getApprovalSteps(model: GridModels) {
     if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
-      return this.api.execSv(
+      return this.api.execSv<any>(
         'es',
         'ERM.Business.ES',
         'ApprovalStepsBusiness',

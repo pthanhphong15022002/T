@@ -1,7 +1,7 @@
 import { ApiHttpService, DataRequest } from "codx-core";
 import { Post } from "@shared/models/post";
 import { EventEmitter, Injectable } from "@angular/core";
-import { SignalRService } from "@core/services/signalr/signalr.service";
+import { SignalRService } from "projects/codx-wp/src/lib/services/signalr.service";
 
 @Injectable({
     providedIn: 'root'

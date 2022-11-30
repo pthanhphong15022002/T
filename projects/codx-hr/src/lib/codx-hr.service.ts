@@ -162,7 +162,6 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
-
         'OrganizationUnitsBusiness',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
@@ -225,7 +224,7 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeAssurTaxBankAccountInfo(data) {
+  updateEmployeeAssurTaxBankAccountInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -278,13 +277,12 @@ export class CodxHrService {
 
   //#region EPassportsBusiness
 
-  getEmployeePassportInfo(data) {
+  getEmployeePassportModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
-      'GetEmployeePassportInfoAsync',
-      data
+      'GetEmployeePassportModelAsync'
     );
   }
 
@@ -301,12 +299,41 @@ export class CodxHrService {
   //#endregion
 
   //#region EmpVisasBusiness
-  getEmployeeVisasInfo(data) {
+  getEmployeeVisaModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmpVisasBusiness',
-      'GetEmployeeVisasInfoAsync',
+      'GetEmployeeVisaModelAsync'
+    );
+  }
+
+  updateEmployeeVisaInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'UpdateEmployeeVisasInfoAsync',
+      data
+    );
+  }
+
+  AddEmployeeVisaInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'AddEmployeeVisasInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeVisaInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'DeleteEmployeeVisaInfoAsync',
       data
     );
   }
@@ -373,13 +400,12 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeWorkingLisenceDetail(data) {
+  getEmployeeWorkingLisenceModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
-      'GetEmployeeWorkPermitInfoAsync',
-      data
+      'GetEmployeeWorkPermitModelAsync',
     );
   }
 
@@ -393,62 +419,94 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeDesciplinesInfo(data){
+  getEmployeeDesciplinesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
       data
-    )
+    );
   }
 
-  getEmployeeAssetsInfo(data){
+  getEmployeeAssetsInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
       'GetEmployeeAssetsInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeePassportInfo(data){
+  updateEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EPassportsBusiness',
-      'EditEmployeePassportInfoAsync',
+      'UpdateEmployeePassportInfoAsync',
       data
     )
   }
 
-  updateEmployeeVisaInfo(data){
+  addEmployeePassportInfo(data){
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EmpVisasBusiness',
-      'AddEmployeeVisasInfoAsync',
+      'EPassportsBusiness',
+      'AddEmployeePassportInfoAsync',
       data
     )
   }
 
-  updateEmployeeTrainCourseInfo(data){
+  DeleteEmployeePassportInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EPassportsBusiness',
+      'DeleteEmployeePassportInfoAsync',
+      data
+    );
+  }
+
+
+
+  updateEmployeeTrainCourseInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'ETrainCoursesBusiness',
       'EditEmployeeTraincourseInfoAsync',
       data
+    );
+  }
+
+  updateEmployeeWorkPermitDetail(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'UpdateEmployeeWorkPermitInfoAsync',
+      data
     )
   }
 
-  updateEmployeeWorkingLisenceDetail(data){
+  addEmployeeWorkPermitDetail(data){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
       'AddEmployeeWorkPermitInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeWorkPermitInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EWorkPermitsBusiness',
+      'DeleteEmployeeWorkPermitInfoAsync',
       data
     )
   }
@@ -463,26 +521,25 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeDisciplinesInfo(data){
+  updateEmployeeDisciplinesInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EDisciplinesBusiness',
       'AddEmployeeDisciplinesInfoAsync',
       data
-    )
+    );
   }
 
-  updateEmployeeAssetsInfo(data){
+  updateEmployeeAssetsInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
       'AddEmployeeAssetsInfoAsync',
       data
-    )
+    );
   }
-
 
   //#endregion
 
@@ -494,6 +551,45 @@ export class CodxHrService {
       'EFamiliesBusiness',
       'GetByEmployeeIDAsync',
       [empID]
+    );
+  }
+
+  getEFamilyModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'GetEmployeeFamilyModelAsync',
+    );
+  }
+
+  AddEmployeeFamilyInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'AddEmployeeFamilyInfoAsync',
+      data
+    );
+  }
+
+  UpdateEmployeeFamilyInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'UpdateEmployeeFamilyInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeFamilyInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'DeleteEmployeeFamilyInfoAsync',
+      data
     );
   }
 

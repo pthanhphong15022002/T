@@ -16,6 +16,8 @@ import {
   OnChanges,
   SimpleChanges,
   OnDestroy,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -61,9 +63,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
+
   @Input() process?: BP_Processes;
-  @Input() viewMode = '6';
+  @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
+  @Input() childFunc = [];
+  @Input() formModel: FormModel;
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -95,16 +100,24 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //view file
   dataChild = [];
   lockParent = false;
-  childFunc = [];
+  // childFunc = [];
   formModelMenu: FormModel;
   vllInterval = 'VL004';
   dataFile: any;
   crrParentID = '';
+  crrStepNo = '1';
   kanban: any;
   checkList = [];
   isKanban = true;
   dataHover: any;
-
+  titleAdd = '';
+  childFuncOfA = [];
+  childFuncOfP = [];
+  parentID = '';
+  linkFile: any;
+  msgBP001= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP002= 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+  listCountPhases:any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -117,6 +130,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   ) {
     super(inject);
     this.user = this.authStore.get();
+    this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      if (mf) {
+        var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+        if (mfAdd) this.titleAdd = mfAdd?.customName;
+      }
+    });
 
     // view trang
     // this.funcID = this.activedRouter.snapshot.params['funcID'];
@@ -138,20 +157,22 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       // }else{
       //   this.getFlowChart(this.process);
       // }
-    this.request = new ResourceModel();
-    this.request.service = 'BP';
-    this.request.assemblyName = 'BP';
-    this.request.className = 'ProcessStepsBusiness';
-    this.request.method = 'GetProcessStepsWithKanbanAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = this.dataObj; ///de test
+      this.getFlowChart(this.process);
+      this.request = new ResourceModel();
+      this.request.service = 'BP';
+      this.request.assemblyName = 'BP';
+      this.request.className = 'ProcessStepsBusiness';
+      this.request.method = 'GetProcessStepsWithKanbanAsync';
+      this.request.idField = 'recID';
+      this.request.dataObj = this.dataObj; ///de test
 
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'BP';
-    this.resourceKanban.assemblyName = 'BP';
-    this.resourceKanban.className = 'ProcessStepsBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = this.dataObj;
+      this.resourceKanban = new ResourceModel();
+      this.resourceKanban.service = 'BP';
+      this.resourceKanban.assemblyName = 'BP';
+      this.resourceKanban.className = 'ProcessStepsBusiness';
+      this.resourceKanban.method = 'GetColumnsKanbanAsync';
+      this.resourceKanban.dataObj = this.dataObj;
+      this.listCountPhases = this.process.phases;
     });
 
     // //view popup
@@ -175,34 +196,57 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     //   this.resourceKanban.method = 'GetColumnsKanbanAsync';
     //   this.resourceKanban.dataObj = this.dataObj;
     // }
+
+    // this.bpService
+    //   .getListFunctionMenuCreatedStepAsync(this.funcID)
+    //   .subscribe((datas) => {
+    //   var items = [];
+    //   if (datas && datas.length > 0) {
+    //     this.childFunc = datas;
+    //     items = datas.map((obj) => {
+    //       var menu = {
+    //         id: obj.id,
+    //         icon: obj.icon,
+    //         text: obj.text,
+    //       };
+    //       return menu;
+    //     });
+    //   }
+    //   this.button = {
+    //     id: 'btnAdd',
+    //     items: items,
+    //   };
+    // });
   }
 
   onInit(): void {
-    this.bpService
-      .getListFunctionMenuCreatedStepAsync(this.funcID)
-      .subscribe((datas) => {
-        var items = [];
-        if (datas && datas.length > 0) {
-          this.childFunc = datas;
-          items = datas.map((obj) => {
-            var menu = {
-              id: obj.id,
-              icon: obj.icon,
-              text: obj.text,
-            };
-            return menu;
-          });
-        }
-        this.button = {
-          id: 'btnAdd',
-          items: items,
+    var items = [];
+    if (this.childFunc && this.childFunc.length > 0) {
+      items = this.childFunc.map((obj) => {
+        var menu = {
+          id: obj.id,
+          icon: obj.icon,
+          text: obj.text,
         };
+        return menu;
       });
+    }
+    this.button = {
+      id: 'btnAdd',
+      items: items,
+    };
+    this.childFunc.forEach((obj) => {
+      if (obj.id != 'P') this.childFuncOfP.push(obj);
+    });
+    this.childFunc.map((obj) => {
+      if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
+    });
   }
 
   ngAfterViewInit(): void {
     this.views = [
-      {
+      { 
+        id : "16",
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -211,6 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
       {
+        id : "6",
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -220,23 +265,26 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           template: this.cardKanban,
         },
       },
-      // {
-      //   type: ViewType.content,
-      //   active: false,
-      //   sameData: false,
-      //   icon: 'icon-bubble_chart',
-      //   text: 'Flowchart',
-      //   model: {
-      //     panelRightRef: this.flowChart,
-      //   },
-      // },
+      {
+        id : "9",
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        model: {
+          panelLeftRef: this.flowChart,
+        },
+      },
     ];
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
+  }
 
-    // this.changeDetectorRef.detectChanges();
+  //Thay doi viewModel
+  chgViewModel(type) {
+    let view = this.views.find((x) => x.id == type);
+    if (view) this.view.viewChange(view);
   }
 
   //#region CRUD bước công việc
@@ -247,8 +295,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       option.FormModel = this.view?.formModel;
       //option.FormModel = this.formModel;
       option.Width = '550px';
+      option.zIndex = 1001;
 
       this.view.dataService.dataSelected.processID = this.processID;
+      if (this.parentID != '')
+        this.view.dataService.dataSelected.parentID = this.parentID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         ['add', this.titleAction, this.stepType, this.formModelMenu],
@@ -630,6 +681,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    if(this.listCountPhases<=0 && evt.id !='P'){
+      return this.notiService.notify(this.msgBP002);
+    }
+    this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
       var p = this.button.items.find((x) => (x.id = this.stepType));
@@ -642,21 +697,20 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.add();
     } else {
       this.stepType = evt.id;
-      var customName = '';
-      this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-        if (mf) {
-          var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-          if (mfAdd) customName = mfAdd?.customName + ' ';
-        }
-        this.titleAction =
-          customName +
-          evt?.text.charAt(0).toLocaleLowerCase() +
-          evt?.text.slice(1);
-        this.add();
-      });
+      // let customName = '';
+      // // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
+      // //   if (mf) {
+      // //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
+      // if (this.titleAdd) customName = this.titleAdd + ' ';
+      // }
+      this.titleAction =
+        this.titleAdd +
+        ' ' +
+        evt?.text.charAt(0).toLocaleLowerCase() +
+        evt?.text.slice(1);
+      this.add();
+      // });
     }
-
-    // test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
 
@@ -672,21 +726,32 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     }
   }
+  hoverViewText(text) {
+    return (
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+    );
+  }
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
 
   clickMF(e: any, data?: any) {
-    this.itemSelected = data;
+    this.stepType = data.stepType;
     this.titleAction = this.getTitleAction(e.text, data.stepType);
     //test
     this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
     if (funcMenu) {
-      this.formModelMenu.formName = funcMenu.formName;
-      this.formModelMenu.gridViewName = funcMenu.gridViewName;
-      this.formModelMenu.funcID = funcMenu.funcID;
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+          });
+      });
     }
     switch (e.functionID) {
       case 'SYS01':
@@ -701,6 +766,35 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       case 'SYS02':
         this.delete(data);
     }
+  }
+  clickMenu(data, funcMenu) {
+    const isdata = data.items.length;
+    if (data.stepType == 'P' && funcMenu.id!='A' && isdata <= 0) {
+      return this.notiService.notify(this.msgBP001);
+    }
+    else {
+      this.stepType = funcMenu.id;
+      this.parentID =
+      this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
+      this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
+      this.formModelMenu = this.view?.formModel;
+      this.add();
+      if (funcMenu) {
+        this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+          this.cache
+            .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+            .subscribe((res) => {
+              this.formModelMenu.formName = funcMenu.formName;
+              this.formModelMenu.gridViewName = funcMenu.gridViewName;
+              this.formModelMenu.funcID = funcMenu.funcID;
+            });
+        });
+     }
+    }
+  }
+  clickAddActivity(data) {
+    let funcMenu = this.childFuncOfP?.find((x) => x.id == 'A');
+    if (funcMenu) this.clickMenu(data, funcMenu);
   }
 
   getTitleAction(action, stepType): string {
@@ -721,6 +815,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         break;
       case 'drag':
         this.crrParentID = e?.data?.parentID;
+        this.crrStepNo = e?.data?.stepNo;
         break;
     }
   }
@@ -731,7 +826,30 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
         if (res) {
-          ///xử lý sau
+          var parentOldIndex = this.view.dataService.data.findIndex(
+            (x) => x.recID == this.crrParentID
+          );
+          if (parentOldIndex != -1) {
+            var parentOld = this.view.dataService.data[parentOldIndex];
+            let idx = parentOld.items?.findIndex((x) => x.recID == data?.recID);
+            parentOld.items.splice(idx, 1);
+            parentOld.items.forEach((obj) => {
+              if (obj.stepNo > this.crrStepNo) obj.stepNo--;
+            });
+            this.view.dataService.update(parentOld).subscribe();
+          }
+          //new chua biet xu ly sao nen add vao cuoi tam
+          var parentNew = this.view.dataService.data.find(
+            (x) => x.recID == data.parentID
+          );
+          if (parentNew) {
+            if (parentNew.items?.length > 0)
+              data.stepNo = parentNew.items?.length + 1;
+            else data.stepNo = 1;
+            parentNew.items.push(data);
+            this.view.dataService.update(parentOld).subscribe();
+            if(this.kanban) this.kanban.updateCard(data);
+          }
           this.notiService.notifyCode('SYS007');
         } else {
           this.notiService.notifyCode(' SYS021');
@@ -1000,11 +1118,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     });
     return arrOwner.join(';');
   }
-  //test data flow chart 636341e8e82afdc6f9a4ab54
+
   getFlowChart(process) {
-    // this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
-    //   if (data) this.dataFile = data;
-    // });
     let paras = [
       '',
       this.funcID,
@@ -1067,5 +1182,51 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     }
     if (p?.isOpen) p.close();
     p.open();
+  }
+
+  print() {
+    if (this.linkFile) {
+      const output = document.getElementById('output');
+      const img = document.createElement('img');
+      img.src = this.linkFile;
+      output.appendChild(img);
+      const br = document.createElement('br');
+      output.appendChild(br);
+      window.print();
+
+      document.body.removeChild(output);
+    } else
+      window.frames[0].postMessage(
+        JSON.stringify({ MessageId: 'Action_Print' }),
+        '*'
+      );
+  }
+
+  checkDownloadRight() {
+    return this.dataFile.download;
+  }
+  async download(): Promise<void> {
+    var id = this.dataFile?.recID;
+    var fullName = this.dataFile.fileName;
+    var that = this;
+
+    if (this.checkDownloadRight()) {
+      ///lấy hàm của chung dang fail
+      this.fileService.downloadFile(id).subscribe(async (res) => {
+        if (res) {
+          let blob = await fetch(res).then((r) => r.blob());
+          let url = window.URL.createObjectURL(blob);
+          var link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', fullName);
+          link.style.display = 'none';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+    } else {
+      this.notiService.notifyCode('SYS018');
+    }
   }
 }

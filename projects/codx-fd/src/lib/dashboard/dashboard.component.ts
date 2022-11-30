@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { WPService } from '@core/services/signalr/apiwp.service';
-import { SignalRService } from '@core/services/signalr/signalr.service';
+import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 import { Post } from '@shared/models/post';
 import { CodxListviewComponent, ApiHttpService, AuthService, CodxService, ViewModel, ViewType, UIComponent, ButtonModel, CRUDService, RequestOption, NotificationsService, ViewsComponent, SortModel } from 'codx-core';
 
