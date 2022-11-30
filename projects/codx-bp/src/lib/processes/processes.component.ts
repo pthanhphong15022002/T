@@ -444,6 +444,7 @@ export class ProcessesComponent
     var obj = {
       more: more,
       data: data,
+      funcIdMain: this.funcID,
     };
     this.dialog = this.callfc.openForm(
       RevisionsComponent,

@@ -84,6 +84,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
         "GetTrackLogsByObjectIDAsync",
         [objectID,id]).
       subscribe((res:any[]) =>{
+        debugger
         if(res) {
           this.root.listSubComment = res;
         }
@@ -130,7 +131,10 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
 
 
   setDicData(data) {
-    this.dicDatas[data["recID"]] = data;
+    if(data && data["recID"])
+    {
+      this.dicDatas[data["recID"]] = data;
+    }
   }
 
   setNodeTree(newNode: any) {
