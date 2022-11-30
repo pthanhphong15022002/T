@@ -885,14 +885,6 @@ export class CodxTasksComponent
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    // this.api
-    //   .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
-    //   .subscribe((res) => {
-    //     if (res) {
-    //       this.view.dataService.update(data).subscribe();
-    //     }
-    //   });
-    ///chắc chắn phải sửa
     if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
       return;
     var moreFun = this.moreFunction.find(

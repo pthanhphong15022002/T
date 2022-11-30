@@ -103,6 +103,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   dataChild = [];
   lockParent = false;
   lockChild = false;
+  hideMoreFC = false;
   // childFunc = [];
   formModelMenu: FormModel;
   vllInterval = 'VL004';
@@ -121,7 +122,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   msgBP001 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
   msgBP002 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
   listCountPhases: any;
-  actived = true;
+  actived = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -140,38 +141,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
-    // this.dataView = dt?.data
-    //  this.bpService.viewProcesses.subscribe((res) => {
-    //  this.process = res
-    // this.processID = this.process?.recID ? this.process?.recID : '';
-    // this.numberColums = this.process?.phases ? this.process?.phases : 0;
-    // this.dataObj = {
-    //   processID: this.processID,
-    // };
-
-    // this.getFlowChart(this.process);
-    // this.request = new ResourceModel();
-    // this.request.service = 'BP';
-    // this.request.assemblyName = 'BP';
-    // this.request.className = 'ProcessStepsBusiness';
-    // this.request.method = 'GetProcessStepsWithKanbanAsync';
-    // this.request.idField = 'recID';
-    // this.request.dataObj = this.dataObj; ///de test
-
-    // this.resourceKanban = new ResourceModel();
-    // this.resourceKanban.service = 'BP';
-    // this.resourceKanban.assemblyName = 'BP';
-    // this.resourceKanban.className = 'ProcessStepsBusiness';
-    // this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    // this.resourceKanban.dataObj = this.dataObj;
-    // this.listCountPhases = this.process.phases;
-    // });
   }
 
   onInit(): void {
     this.actived = this.process?.actived;
     if (!this.actived) {
-      this.lockChild = this.lockParent = true;
+      this.lockChild = this.lockParent = this.hideMoreFC = true;
     }
     this.processID = this.process?.recID ? this.process?.recID : '';
     this.numberColums = this.process?.phases ? this.process?.phases : 0;
@@ -798,6 +773,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onDragDrop(data) {
+    if (!this.actived) {
+      data.parentID = this.crrParentID;
+      return;
+    }
     if (this.crrParentID == data?.parentID) return;
     this.bpService
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
@@ -1148,7 +1127,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     if (!data?.items || data?.items?.length == 0) return false;
     let checkList = [];
     data?.items.forEach((x) => {
-      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') checkList.push(x);
+      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M')
+        checkList.push(x);
     });
     let check = checkList.length > 0;
     return check;

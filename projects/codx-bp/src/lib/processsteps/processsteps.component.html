@@ -22,6 +22,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
+    [hideMF]="hideMoreFC"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -307,6 +308,7 @@
                     </div> -->
 
                     <codx-temp-full
+                      [hideMF]="hideMoreFC"
                       (clickMF)="clickMF($event, item)"
                       [typeMF]="'hover'"
                       [formModel]="view.formModel"
@@ -332,9 +334,9 @@
                         cdkDrag
                         [cdkDragDisabled]="true"
                         [cdkDragData]="null"
-                        (click)="clickAddActivity(item)"
                       >
-                        <!-- <h3>
+                      <!-- (click)="clickAddActivity(item)" -->
+                        <!-- <h3> 
                           Thêm công việc để hoàn thiện quy trình ---Kéo công
                           việc vào đây !-Test đừng ai bắt lỗi , please ! ^^!
                         </h3> -->
@@ -375,6 +377,7 @@
                                 <span class="icon-reorder"></span>
                               </div> -->
                               <codx-temp-full
+                                [hideMF]="hideMoreFC"
                                 (clickMF)="clickMF($event, item1)"
                                 [typeMF]="'hover'"
                                 [formModel]="view.formModel"
@@ -455,7 +458,7 @@
       >&nbsp;
       <span>{{ data?.interval | vll: vllInterval:"text" | async }}</span>
     </span>
-    <div class="has-action-menu">
+    <div class="has-action-menu" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
           <div class="moreFC rounded-4">
@@ -628,7 +631,7 @@
     </h1>
     <div>
       <div class="d-flex flex-row-reverse bd-highlight">
-        <div class="p-2 bd-highlight">
+        <div class="p-2 bd-highlight" *ngIf="!hideMoreFC">
           <button
             type="button"
             class="btn btn-light-primary"
