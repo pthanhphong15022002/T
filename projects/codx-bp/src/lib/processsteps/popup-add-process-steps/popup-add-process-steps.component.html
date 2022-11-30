@@ -48,7 +48,7 @@
           <codx-label
             fiedName="Duration"
             [formModel]="form.formModel"
-            default="Thời gian chuẩn"
+            default="Thời gian chuẩn"        
           >
           </codx-label>
           <codx-input
@@ -57,6 +57,7 @@
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
             [showSpinButton]="false"
+            [min]="0"
           >
           </codx-input>
         </div>
@@ -212,6 +213,7 @@
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
             [showSpinButton]="false"
+            [min]="0"
           >
           </codx-input>
         </div>

@@ -207,6 +207,24 @@ export class CodxEpService {
       [resourceID]
     );
   }
+  rescheduleBooking(recID:string,startDate:any,endDate:any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'RescheduleAsync',
+      [recID,startDate,endDate]
+    );
+  }
+  inviteAttendees(recID:string,attendees: any[]) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'InviteAttendeesAfterApprovedAsync',
+      [recID,attendees]
+    );
+  }
 
   getWarehousesOwner(warehouseID: string) {
     return this.api.execSv(

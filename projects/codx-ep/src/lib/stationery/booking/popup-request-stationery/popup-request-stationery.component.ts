@@ -187,6 +187,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
           }
           if (!this.isAddNew) {
             this.data.bookingOn = new Date(this.data.bookingOn);
+            this.dialogAddBookingStationery.addControl(
+              'warehouseID',
+              new FormControl(this.data.warehouseID)
+            );
             this.dialogAddBookingStationery.patchValue(this.data);
             this.detectorRef.detectChanges();
           }
@@ -395,6 +399,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   addCart(event, data) {
+    debugger;
     let tmpResource;
     tmpResource = { ...data };
 

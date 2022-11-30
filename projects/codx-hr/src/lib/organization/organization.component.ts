@@ -130,6 +130,7 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   onSelectionChanged(evt: any) {
+    debugger
     var data = evt.data || evt;
     if (data && this.orgUnitID != data.orgUnitID) {
       this.orgUnitID = data.orgUnitID;
@@ -167,10 +168,6 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   btnClick(e) {
-    // var headerText = '';
-    // if (e.text) headerText = e.text;
-    // this.add(headerText);
-
     if(this.view)
     {
       debugger

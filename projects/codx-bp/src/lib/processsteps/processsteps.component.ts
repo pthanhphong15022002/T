@@ -63,7 +63,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
-  
+
   @Input() process?: BP_Processes;
   @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
@@ -105,6 +105,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   vllInterval = 'VL004';
   dataFile: any;
   crrParentID = '';
+  crrStepNo = '1';
   kanban: any;
   checkList = [];
   isKanban = true;
@@ -113,8 +114,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfA = [];
   childFuncOfP = [];
   parentID = '';
-  linkFile : any;
-
+  linkFile: any;
+  msgBP001= 'Vui lòng thêm bước công việc trước khi thực hiện'; // gán tạm message
+  msgBP002= 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  listCountPhases:any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -169,6 +172,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       this.resourceKanban.className = 'ProcessStepsBusiness';
       this.resourceKanban.method = 'GetColumnsKanbanAsync';
       this.resourceKanban.dataObj = this.dataObj;
+      this.listCountPhases = this.process.phases;
     });
 
     // //view popup
@@ -241,7 +245,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.views = [
-      {
+      { 
+        id : "16",
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -250,6 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
       {
+        id : "6",
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -259,14 +265,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           template: this.cardKanban,
         },
       },
-      // {
-      //   type: ViewType.chart,
-      //   active: false,
-      //   sameData: false,
-      //   model: {
-      //     panelLeftRef: this.flowChart,
-      //   },
-      // },
+      {
+        id : "9",
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        model: {
+          panelLeftRef: this.flowChart,
+        },
+      },
     ];
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
@@ -274,12 +281,11 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
   }
 
-//Thay doi viewModel
-chgViewModel(type){
-  let view = this.views.find(x=>x.type == type);
-  if(view)
-  this.view.viewChange(view);
-}
+  //Thay doi viewModel
+  chgViewModel(type) {
+    let view = this.views.find((x) => x.id == type);
+    if (view) this.view.viewChange(view);
+  }
 
   //#region CRUD bước công việc
   add() {
@@ -675,6 +681,9 @@ chgViewModel(type){
 
   //#region event
   click(evt: ButtonModel) {
+    if(this.listCountPhases<=0 && evt.id !='P'){
+      return this.notiService.notify(this.msgBP002);
+    }
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
@@ -719,7 +728,7 @@ chgViewModel(type){
   }
   hoverViewText(text) {
     return (
-      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1) 
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
     );
   }
 
@@ -758,24 +767,29 @@ chgViewModel(type){
         this.delete(data);
     }
   }
-
   clickMenu(data, funcMenu) {
-    this.stepType = funcMenu.id;
-    this.parentID =
+    const isdata = data.items.length;
+    if (data.stepType == 'P' && funcMenu.id!='A' && isdata <= 0) {
+      return this.notiService.notify(this.msgBP001);
+    }
+    else {
+      this.stepType = funcMenu.id;
+      this.parentID =
       this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
-    this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
-    this.formModelMenu = this.view?.formModel;
-    this.add();
-    if (funcMenu) {
-      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
-        this.cache
-          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
-          .subscribe((res) => {
-            this.formModelMenu.formName = funcMenu.formName;
-            this.formModelMenu.gridViewName = funcMenu.gridViewName;
-            this.formModelMenu.funcID = funcMenu.funcID;
-          });
-      });
+      this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
+      this.formModelMenu = this.view?.formModel;
+      this.add();
+      if (funcMenu) {
+        this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+          this.cache
+            .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+            .subscribe((res) => {
+              this.formModelMenu.formName = funcMenu.formName;
+              this.formModelMenu.gridViewName = funcMenu.gridViewName;
+              this.formModelMenu.funcID = funcMenu.funcID;
+            });
+        });
+     }
     }
   }
   clickAddActivity(data) {
@@ -801,6 +815,7 @@ chgViewModel(type){
         break;
       case 'drag':
         this.crrParentID = e?.data?.parentID;
+        this.crrStepNo = e?.data?.stepNo;
         break;
     }
   }
@@ -811,7 +826,30 @@ chgViewModel(type){
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
         if (res) {
-          
+          var parentOldIndex = this.view.dataService.data.findIndex(
+            (x) => x.recID == this.crrParentID
+          );
+          if (parentOldIndex != -1) {
+            var parentOld = this.view.dataService.data[parentOldIndex];
+            let idx = parentOld.items?.findIndex((x) => x.recID == data?.recID);
+            parentOld.items.splice(idx, 1);
+            parentOld.items.forEach((obj) => {
+              if (obj.stepNo > this.crrStepNo) obj.stepNo--;
+            });
+            this.view.dataService.update(parentOld).subscribe();
+          }
+          //new chua biet xu ly sao nen add vao cuoi tam
+          var parentNew = this.view.dataService.data.find(
+            (x) => x.recID == data.parentID
+          );
+          if (parentNew) {
+            if (parentNew.items?.length > 0)
+              data.stepNo = parentNew.items?.length + 1;
+            else data.stepNo = 1;
+            parentNew.items.push(data);
+            this.view.dataService.update(parentOld).subscribe();
+            if(this.kanban) this.kanban.updateCard(data);
+          }
           this.notiService.notifyCode('SYS007');
         } else {
           this.notiService.notifyCode(' SYS021');
@@ -1147,48 +1185,48 @@ chgViewModel(type){
   }
 
   print() {
-    if (this.linkFile)
-    {
-     const output = document.getElementById("output");
-     const img = document.createElement("img");
-     img.src = this.linkFile;
-     output.appendChild(img);
-     const br = document.createElement("br");
-     output.appendChild(br);
-     window.print();
+    if (this.linkFile) {
+      const output = document.getElementById('output');
+      const img = document.createElement('img');
+      img.src = this.linkFile;
+      output.appendChild(img);
+      const br = document.createElement('br');
+      output.appendChild(br);
+      window.print();
 
-     document.body.removeChild(output);
-    }
-    else
-      window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
-   }
+      document.body.removeChild(output);
+    } else
+      window.frames[0].postMessage(
+        JSON.stringify({ MessageId: 'Action_Print' }),
+        '*'
+      );
+  }
 
-   checkDownloadRight() {
+  checkDownloadRight() {
     return this.dataFile.download;
   }
-   async download(): Promise<void> {
+  async download(): Promise<void> {
     var id = this.dataFile?.recID;
     var fullName = this.dataFile.fileName;
     var that = this;
 
     if (this.checkDownloadRight()) {
       ///lấy hàm của chung dang fail
-      this.fileService.downloadFile(id).subscribe(async res => {
+      this.fileService.downloadFile(id).subscribe(async (res) => {
         if (res) {
-          let blob = await fetch(res).then(r => r.blob());
+          let blob = await fetch(res).then((r) => r.blob());
           let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", fullName);
-          link.style.display = "none";
+          var link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', fullName);
+          link.style.display = 'none';
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
         }
       });
-    }
-    else {
-      this.notiService.notifyCode("SYS018");
+    } else {
+      this.notiService.notifyCode('SYS018');
     }
   }
 }

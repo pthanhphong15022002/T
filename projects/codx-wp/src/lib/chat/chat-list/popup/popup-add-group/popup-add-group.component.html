@@ -1,0 +1,34 @@
+<codx-form 
+    [dialog]="dialogRef" 
+    [headerText]="headerText"  
+    [body]="body" 
+    [footer]="footer">
+</codx-form>
+<ng-template #body>
+    <div class="container" *ngIf="group">
+        <!-- Group name - Group avatar -->
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="">
+                <codx-img 
+                    [objectId]="group.groupID" 
+                    [objectName]="group.groupName" 
+                    [objectType]="'WP_Groups'" 
+                    [width]="40" 
+                    isDefaulImg="true"
+                    [funcId]="dialogRef.formModel.funcID"
+                    [isAllowEdit]="true">
+                </codx-img>
+            </div>
+            <div class="ms-4">
+                <codx-input 
+                    [type]="'text'" 
+                    [field]="'groupName'" 
+                    [crrValue]="group.groupName"
+                    (valueChange)="valueChange($event)">
+                </codx-input>  
+            </div>
+        </div>
+        <!-- end Group name - Group avatar -->
+    </div>
+</ng-template>
+<ng-template #footer></ng-template>

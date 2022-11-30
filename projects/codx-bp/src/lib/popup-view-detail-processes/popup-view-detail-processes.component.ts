@@ -62,9 +62,6 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.cache.functionList(this.funcID).subscribe(f=>{
       if(f){
         this.formModelFlowChart = f.formModel
-        // this.formModelFlowChart.funcID = this.funcID
-        // this.formModelFlowChart.formName = f?.formName
-        // this.formModelFlowChart.gridViewName = f?.gridViewName
       }
     })
     this.getFlowChart(this.process)
@@ -88,7 +85,6 @@ export class PopupViewDetailProcessesComponent implements OnInit {
         (x: TabModel) => x.isActive == true
       );
     }
-    // if( this.name=="Flowchart") this.isShowButton = false ;else this.isShowButton = true 
     this.changeDetectorRef.detectChanges();
   }
 
@@ -101,10 +97,9 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       }
     });
     item.isActive = true;
-    if(item.id == 6 || item.id == 16){
+    // if(item.id == 6 || item.id == 16){
       this.viewProcessSteps.chgViewModel(item.id);
-    }
-    //  if( this.name=="Flowchart") this.isShowButton = false ;else this.isShowButton = true 
+    // }
     this.changeDetectorRef.detectChanges();
   }
 
