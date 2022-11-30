@@ -1,3 +1,4 @@
+import { title } from 'process';
 import {
   Component,
   TemplateRef,
@@ -57,8 +58,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
   viewType = ViewType;
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -272,26 +271,24 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'SYS02': //Xoa
         this.delete(data);
         break;
-
       case 'SYS03': //Sua.
         this.edit(data);
         break;
       case 'SYS04': //copy.
         this.copy(data);
         break;
-
-      case 'SYS005': //Sua.
-        this.reschedule(data);
+      case 'EP4T1101': //Dời
+        this.reschedule(data,event?.text);
         break;
-      case 'SYS003': //copy.
-        this.invite(data);
+      case 'EP4T1102': //Mời
+        this.invite(data,event?.text);
         break;
     }
   }
-  reschedule(data:any){
+  reschedule(data:any,title:any){
     let dialogReschedule = this.callfc.openForm(
       PopupRescheduleBookingComponent,'',550,300,this.funcID,
-      [data,this.formModel,"Dời lịch"]
+      [data,this.formModel,title]
     );
     dialogReschedule.closed.subscribe((x) => {
       this.popupClosed = true;
@@ -308,10 +305,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  invite(data:any){
+  invite(data:any,title:any){
     let dialogInvite = this.callfc.openForm(
       PopupAddAttendeesComponent,'',800,500,this.funcID,
-      [data,this.formModel,"Mời người tham gia"]
+      [data,this.formModel,title]
     );
     dialogInvite.closed.subscribe((x) => {
       

@@ -52,8 +52,6 @@ export class BookingStationeryComponent
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-  predicate = 'ResourceType=@0';
-  dataValue = '6';
   funcIDName = '';
   popupTitle = '';
   formModel: FormModel;

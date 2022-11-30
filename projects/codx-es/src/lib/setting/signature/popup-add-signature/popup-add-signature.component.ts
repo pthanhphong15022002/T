@@ -300,18 +300,23 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         if (event && this.data.signature1 == null) {
           this.data.signature1 = (event[0] as any).recID;
         }
+        this.data.signature1 = (event[0] as any).recID;
         break;
       }
       case 'S2': {
         if (event && this.data.signature2 == null) {
           this.data.signature2 = (event[0] as any).recID;
         }
+        this.data.signature2 = (event[0] as any).recID;
+
         break;
       }
       case 'S3': {
         if (event && this.data.stamp == null) {
           this.data.stamp = (event[0] as any).recID;
         }
+        this.data.stamp = (event[0] as any).recID;
+
         break;
       }
     }
