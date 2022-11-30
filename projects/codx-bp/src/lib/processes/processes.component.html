@@ -47,7 +47,7 @@
             <div class="d-flex me-3 align-items-center">
               <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'P'"></lib-popup-phases-activities> -->
               <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"  [openDelay]="500"
-              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement="bottom top right left"></span>
+              (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement="right"></span>
               <span #phases class="">
                 {{
                 data.phases
@@ -57,14 +57,14 @@
             <div class="d-flex me-3 align-items-center">
               <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'A'"></lib-popup-phases-activities> -->
               <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover" [ngbPopover]="popperActivitiest" [openDelay]="500"
-              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="bottom top right left"></span>
+              (mouseenter)="activitiest.open()" (mouseleave)="activitiest.close()" placement="right "></span>
                 <span #activities class="">
                   {{data.activities}}
                 </span>
             </div>
             <div class="d-flex me-3 align-items-center">
               <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
-                (mouseleave)="p.close()" placement="right left">
+                (mouseleave)="p.close()" placement="right">
                 <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments">
                 </codx-attachment-temp>
               </span>
@@ -192,17 +192,17 @@
 <!-- view-list -->
 <ng-template #popperAttachment>
   <span>
-    <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
+    <codx-label name="lblAttachments" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
   </span>
 </ng-template>
 <ng-template #popperPhases>
   <span >
-    <codx-label name="phases" [formModel]="view.formModel" default="Số lượng công đoạn"></codx-label>
+    <codx-label name="lblPhases" [formModel]="view.formModel" default="Số lượng công đoạn"></codx-label>
   </span>
 </ng-template>
 <ng-template #popperActivitiest>
   <span>
-    <codx-label name="activities" [formModel]="view.formModel" default="Số lượng bước công việc"></codx-label>
+    <codx-label name="lblActivities" [formModel]="view.formModel" default="Số lượng bước công việc"></codx-label>
   </span>
 </ng-template>
 
