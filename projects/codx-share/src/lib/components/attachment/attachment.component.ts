@@ -152,6 +152,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Output() filePrimitive = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
+  @Output() fileSave = new EventEmitter<any>();
   /////////////////////////////////////////////
   @ViewChild('templateupload') public uploadObj: UploaderComponent;
   // @Input('openFolder') openFolder: ViewsComponent;
@@ -849,6 +850,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
 
             if (addList.length > 0) {
+              this.fileSave.emit(addList);
               addList.forEach((item) => {
                 this.data.push(Object.assign({}, item));
                 if (item.status == 0)
@@ -1329,6 +1331,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var files = this.dmSV.listFiles;
             if (files == null) files = [];
             var res = item.data;
+            this.fileSave.emit(res);
             var thumbnail = res.thumbnail; //'../../../assets/img/loader.gif';
             if(!thumbnail) 
             {
