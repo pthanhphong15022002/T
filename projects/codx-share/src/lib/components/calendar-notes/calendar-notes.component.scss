@@ -87,7 +87,7 @@ app-notes-home {
   margin-left: 100%;
 }
 
-.icon-add {
+.icon-gray {
   color: darkgray;
 }
 
@@ -114,6 +114,11 @@ app-notes-home {
   width: 130px;
 }
 
+.show-list-event {
+  margin-left: 10px;
+  width: 174px;
+}
+
 .show-event-check {
   margin-left: 10px;
 }
@@ -132,4 +137,13 @@ ejs-listview .e-ul > li {
 
 .dropup .dropdown-toggle::after {
   display: none !important;
+}
+
+.ml-24px {
+  margin-left: -24px;
+}
+
+.title-calendar {
+  background-color: #ddf7f5;
+  height: 2.5rem;
 }
