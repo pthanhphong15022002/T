@@ -5,6 +5,7 @@ import {
   AfterViewInit,
   ViewChild,
   TemplateRef,
+  Input,
 } from '@angular/core';
 import {
   UIComponent,
@@ -12,6 +13,7 @@ import {
   ViewType,
   ViewModel,
   ViewsComponent,
+  ResourceModel,
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
 import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
@@ -34,6 +36,13 @@ export class SettingCalendarComponent
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
+  @Input() fields = {
+    id: 'recID',
+    subject: { name: 'memo' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+  };
+  @Input() request?: ResourceModel;
 
   constructor(
     private injector: Injector,
@@ -55,7 +64,9 @@ export class SettingCalendarComponent
         type: ViewType.calendar,
         active: true,
         sameData: false,
+        request: this.request,
         model: {
+          eventModel: this.fields,
           template3: this.cellTemplate,
         },
       },
