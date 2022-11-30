@@ -10,7 +10,6 @@ import { Post } from 'src/shared/models/post';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   connectionId: string;
-  apiUrl = "http://localhost:8011";
   signalData = new EventEmitter<Post>();
   userConnect = new EventEmitter<any>();
   signalObject = new EventEmitter<any>();
@@ -20,6 +19,8 @@ export class SignalRService {
   signalVote = new EventEmitter<any>();
   signalDelChat = new EventEmitter<any>();
   signalVoteType = new EventEmitter<any>();
+  //signalR emit data 
+  signalREmit = new EventEmitter<any>();
   
 
   constructor
@@ -54,10 +55,8 @@ export class SignalRService {
     });
 
     // sendMessage
-    this.hubConnection.on('receiveChatMessage', (data) => {
-      debugger
-      console.log(data);
-      this.userConnect.emit(data);
+    this.hubConnection.on('openGroupChat', (data) => {
+      this.signalREmit.emit(data);
     });
 
 
@@ -90,8 +89,12 @@ export class SignalRService {
   //#endregion
 
   //#region Post to server
-  sendData(message, func = 'NewMessage') {
-    this.hubConnection.invoke(func, message);
+  sendData(message, method = null)
+  {
+    if(method)
+    {
+      this.hubConnection.invoke(method, message);
+    }
   }
 
   //#endregion

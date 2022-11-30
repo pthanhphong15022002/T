@@ -1,30 +1,61 @@
-<ng-container [ngSwitch]="actionType">
-    <ng-container *ngSwitchCase="'C'">
-        <ng-container *ngTemplateOutlet="C"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'N'">
-        <ng-container *ngTemplateOutlet="N"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'E'">
-        <ng-container *ngTemplateOutlet="E"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'T'">
-        <ng-container *ngTemplateOutlet="T"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'U'">
-        <ng-container *ngTemplateOutlet="U"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'A'">
-        <ng-container *ngTemplateOutlet="A"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'S'">
-        <ng-container *ngTemplateOutlet="S"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'D'">
-        <ng-container *ngTemplateOutlet="D"></ng-container>
-    </ng-container>
-    <ng-container *ngSwitchCase="'C1'">
-        <ng-container *ngTemplateOutlet="C1"></ng-container>
+<ng-container *ngIf="actionType">
+    <ng-container [ngSwitch]="actionType">
+        <!-- Bình luận -->
+        <ng-container *ngSwitchCase="'C'">
+            <ng-container *ngTemplateOutlet="C"></ng-container>
+        </ng-container>
+        <!-- thêm mới -->
+        <ng-container *ngSwitchCase="'N'">
+            <ng-container *ngTemplateOutlet="N"></ng-container>
+        </ng-container>
+        <!-- gửi mail -->
+        <ng-container *ngSwitchCase="'E'">
+            <ng-container *ngTemplateOutlet="E"></ng-container>
+        </ng-container>
+        <!-- phân công công việc -->
+        <ng-container *ngSwitchCase="'T'">
+            <ng-container *ngTemplateOutlet="T"></ng-container>
+        </ng-container>
+        <!-- cập nhật -->
+        <ng-container *ngSwitchCase="'U'">
+            <ng-container *ngTemplateOutlet="U"></ng-container>
+        </ng-container>
+        <!-- đính kèm -->
+        <ng-container *ngSwitchCase="'A'">
+            <ng-container *ngTemplateOutlet="A"></ng-container>
+        </ng-container>
+        <!-- share -->
+        <ng-container *ngSwitchCase="'S'">
+            <ng-container *ngTemplateOutlet="S"></ng-container>
+        </ng-container>
+        <!-- xóa -->
+        <ng-container *ngSwitchCase="'D'">
+            <ng-container *ngTemplateOutlet="D"></ng-container>
+        </ng-container>
+        <!-- chỉnh sửa gì đó ai biết -->
+        <ng-container *ngSwitchCase="'C1'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- khôi phục -->
+        <ng-container *ngSwitchCase="'A1'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- làm lại -->
+        <ng-container *ngSwitchCase="'A2'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- phát hành -->
+        <ng-container *ngSwitchCase="'A3'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- từ chối -->
+        <ng-container *ngSwitchCase="'A4'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- duyệt -->
+        <ng-container *ngSwitchCase="'A5'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
     </ng-container>
 </ng-container>
 <!-- COMMENT -->
@@ -308,7 +339,6 @@
     </div>
 
 </ng-template>
-
 <!-- END MAIL -->
 <!-- TASK -->
 <ng-template #T>
@@ -398,10 +428,10 @@
                                     <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
                                 </td>
                                 <td scope="col-4">
-                                    {{item.oldValue}}
+                                    {{item.oldValue | formatvalue:formModel:item.fieldName | async}}
                                 </td>
                                 <td scope="col-4">
-                                    {{item.newValue}}
+                                    {{item.newValue | formatvalue:formModel:item.fieldName | async}}
                                 </td>
                             </tr>
                         </ng-container>

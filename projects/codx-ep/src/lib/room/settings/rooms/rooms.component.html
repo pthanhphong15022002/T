@@ -9,19 +9,19 @@
     <div class="ms-4 d-flex flex-column">
       <span class="fw-bold">{{ data?.resourceName }}</span>
       <div class="float-left fs-7">
-        <codx-label [default]="grvRooms?.Ranking?.headerText" [formModel]="formModel" name="lblRanking"></codx-label>
+        <codx-label [default]="'Xếp hạng'" [formModel]="formModel" name="lblRanking"></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1">{{
           data?.ranking | vll: "EP005":"text" | async
           }}</span>
       </div>
       <div class="float-left fs-7">
-        <codx-label [default]="grvRooms?.Area?.headerText" name="lblArea" class="text-gray-600"></codx-label>
+        <codx-label [default]="'Diện tích(m2)'" name="lblArea" class="text-gray-600"></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1">{{ data?.area }}</span>
       </div>
       <div class="float-left fs-7">
-        <codx-label [default]="grvRooms?.Capacity?.headerText" name="lblCapacity" class="text-gray-600"></codx-label>
+        <codx-label [default]="'Sức chứa(người)'" name="lblCapacity" class="text-gray-600"></codx-label>
         <span>:</span>
         <span class="fw-bold ms-1">{{ data?.capacity }}</span>
       </div>
@@ -41,7 +41,7 @@
     <div class="d-flex flex-column flex-grow-1">
       <div class="d-flex justify-content-between align-items-center">
         <h2 id="modal-basic-title">
-          <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="grvRooms.Equipments.headerText"
+          <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="'Thiết bị'"
             [formModel]="dialog.formModel"></codx-label>
         </h2>
         <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
@@ -81,7 +81,7 @@
   <div (click)="openPopupDevice(popupDevice, data?.equipments)" class="d-flex align-items-center">
     <i class="icon-devices me-2"></i>
     <span class="fw-bold me-1">{{ data?.equipmentQty }}</span>
-    <codx-label [default]="grvRooms.Equipments.headerText" class="text-dark fs-7" name="lblDevice"></codx-label>
+    <codx-label [default]="'Thiết bị'" class="text-dark fs-7" name="lblDevice"></codx-label>
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>

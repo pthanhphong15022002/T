@@ -1354,10 +1354,25 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
 
 .dropdown-menu.overflow-auto.show a.dropdown-item.cursor-pointer.border-top:first-child {
   border-top: 0 !important;
-  margin-top: 0;
+  margin-top: 0 !important;
 }
 
+.role-group .content-tree {
+  padding: 0;
+}
 
+.role-group .content-tree .menu-item {
+  padding: 2px !important;
+  border-radius: 3px !important;
+}
+
+.role-group .content-tree .menu-item:hover {
+  background-color: var(--gray-100);
+}
+
+.dt-aprovel .codx-detail-header.mt-2 {
+  margin-top: 1rem !important;
+}
 
 // codx-popup-container .share-box {
 //   border: 1px aqua solid !important;

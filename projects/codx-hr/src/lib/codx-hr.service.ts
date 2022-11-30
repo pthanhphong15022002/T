@@ -162,7 +162,6 @@ export class CodxHrService {
       .callSv(
         'HR',
         'ERM.Business.HR',
-
         'OrganizationUnitsBusiness',
         'GetDataDiagramAsync',
         [orgUnitID, numberLV, parentID, onlyDepartment]
@@ -543,25 +542,65 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeFamilyRelationshipInfo(data) {
+  getEFamilyModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EFamiliesBusiness',
-      'GetEmployeeFamilyInfoAsync',
-      data
+      'GetEmployeeFamilyModelAsync',
     );
   }
 
-  saveEmployeeFamilyRelationshipInfo(data) {
+  AddEmployeeFamilyInfo(data){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EFamiliesBusiness',
-      'AddEmployeeFamilyMemberInfoAsync',
+      'AddEmployeeFamilyInfoAsync',
       data
     );
   }
 
+  UpdateEmployeeFamilyInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'UpdateEmployeeFamilyInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeFamilyInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'DeleteEmployeeFamilyInfoAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+  //region #EJobSalaries
+  GetEmployeeJobSalariesModel(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetEmployeeJobSalaryModelAsync'
+    )
+  }
+
+  AddEmployeeJobSalariesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'AddEmployeeJobSalaryInfoAsync',
+      data
+    )
+  }
   //#endregion
 }

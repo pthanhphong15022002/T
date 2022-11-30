@@ -156,7 +156,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         showFilter:false,
         model: {
           //panelLeftRef:this.panelLeft,
-          eventModel: this.fields,
+          //eventModel: this.fields,
           resourceModel: this.resourceField, //resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
@@ -392,6 +392,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
       if (!res) {
         this.notificationsService.notifyCode('SYS022');
+        this.view.dataService.remove(deleteItem).subscribe();
       }
     });
   }

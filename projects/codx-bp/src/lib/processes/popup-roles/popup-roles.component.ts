@@ -38,7 +38,7 @@ export class PopupRolesComponent implements OnInit {
   user: any;
   userID: any;
   listRoles: any;
-  isSetFull = false;
+  isSetFull = true;
   currentPemission = 0;
   idUserSelected: any;
   popover: any;
@@ -75,6 +75,7 @@ export class PopupRolesComponent implements OnInit {
         this.autoName = res.datas[0].text;
       }
     });
+    // this.showOwner(this.data);
   }
 
   ngOnInit(): void {
@@ -82,6 +83,23 @@ export class PopupRolesComponent implements OnInit {
       this.changePermission(0);
     }
   }
+
+  // showOwner(data){
+  //   var perm = new BP_ProcessPermissions();
+  //   perm.objectID = data.owner;
+  //   perm.objectName = data.userName;
+  //   perm.nemberType = '1';
+  //   perm.autoCreate = false;
+  //   perm.isActive = true;
+  //   // perm.read = true;
+  //   perm.objectType = "U";
+  //   this.process.permissions = this.checkUserPermission(
+  //     this.process.permissions,
+  //     perm
+  //   );
+  //   this.changePermission(this.currentPemission);
+  // }
+
   //#region save
   onSave() {
     if (
@@ -122,7 +140,7 @@ export class PopupRolesComponent implements OnInit {
     switch (type) {
       case 'full':
         this.full = data;
-        if (this.isSetFull) {
+        if (data == true) {
           this.read = data;
           this.share = data;
           this.assign = data;
@@ -141,10 +159,10 @@ export class PopupRolesComponent implements OnInit {
       case 'download':
         this.download = data;
         break;
-      default:
-        this.isSetFull = false;
-        this[type] = data;
-        break;
+      // default:
+      //   this.isSetFull = false;
+      //   this[type] = data;
+      //   break;
     }
     if (type != 'full' && data == false) this.full = false;
 
@@ -198,15 +216,17 @@ export class PopupRolesComponent implements OnInit {
       this.currentPemission = index;
     }
 
-    if (
+    if(this.process.owner == this.process.permissions[index].objectID){
+      this.isAssign = false;
+    }
+    else if(
       (this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '2') ||
       (!this.autoCreate && this.nemberType == '3')
     )
       this.isAssign = true;
-    else this.isAssign = false;
-
+      else this.isAssign = false;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -309,7 +329,8 @@ export class PopupRolesComponent implements OnInit {
   //#region assign
   checkAdminUpdate() {
     if (this.isAssign) return false;
-    else return true;
+    else
+     return true;
   }
 
   checkAssignRemove(i) {

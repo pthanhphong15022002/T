@@ -176,6 +176,11 @@ export class CodxOmService {
     return this.api.execSv("OM","OM","OKRBusiness","GetAsync",dataRequest);
   }
 
+  //Lấy danh sách Bộ mục tiêu
+  getOKRPlans(periodID: string , interval: string , year: any)
+  {
+    return this.api.execSv("OM","OM","OKRPlansBusiness","GetAsync",[periodID,interval,year]);
+  }
   //Lấy danh sách chi tiết KR từ recID OKR
   getKRByOKR(recID : any)
   {

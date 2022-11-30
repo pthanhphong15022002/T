@@ -409,7 +409,7 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(data) {
+  Updaterevisions(moreFunc,data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -423,7 +423,10 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
-          [this.titleAction],
+          {
+            title: this.titleAction,
+            moreFunc: moreFunc,
+          },
           option
         );
         this.dialog.closed
@@ -442,6 +445,7 @@ export class ProcessesComponent
     var obj = {
       more: more,
       data: data,
+      funcIdMain: this.funcID,
     };
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
@@ -560,11 +564,9 @@ export class ProcessesComponent
         break;
       case 'BPT107':
         //this.revisions(e.data, data);
-        this.Updaterevisions(data);
+        this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
-        this.permission(data);
-        break;
       case 'BPT105':
         this.permission(data);
         break;
@@ -640,11 +642,8 @@ export class ProcessesComponent
 
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
-    // this.codxService.navigate('', e?.url); thuong chua add
-    // this.codxService.navigate('', 'bp/processstep/BPT11')
-
     //đoi view
-    this.bpService.viewProcesses.next(data);
+    // this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
 
@@ -672,7 +671,13 @@ export class ProcessesComponent
     dialog.closed.subscribe((e) => {
       if (e && data.recID) {
         this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          if (process) this.view.dataService.update(process).subscribe();
+          if (process){
+            if(process.delete){
+              this.view.dataService.onAction.next({ type: 'delete', data: data });
+            }else{
+              this.view.dataService.update(process).subscribe();
+            }
+          }
           this.detectorRef.detectChanges();
         });
       }

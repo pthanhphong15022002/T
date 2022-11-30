@@ -1,3 +1,4 @@
+import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
 import { PopupEVisasComponent } from './../../employee-profile/popup-evisas/popup-evisas.component';
 import { PopupETraincourseComponent } from './../../employee-profile/popup-etraincourse/popup-etraincourse.component';
@@ -275,6 +276,10 @@ export class EmployeeProfileComponent extends UIComponent {
           this.handleEmployeeVisaInfo('edit', data);
           this.df.detectChanges();
         }
+        else if(funcID == 'family'){
+          this.handleEFamilyInfo('edit', data);
+          this.df.detectChanges();
+        }
         break;
 
       case 'SYS02': //delete
@@ -326,6 +331,23 @@ export class EmployeeProfileComponent extends UIComponent {
             }
           });
         }
+        else if(funcID == 'family'){
+          this.hrService
+          .DeleteEmployeeFamilyInfo(data.recID)
+          .subscribe((p) => {
+            if(p == true){
+              this.notify.notifyCode('SYS008');
+              let i = this.lstFamily.indexOf(data);
+              if (i != -1) {
+                this.lstFamily.splice(i, 1);
+              }
+              this.df.detectChanges();
+            }
+            else{
+              this.notify.notifyCode('SYS022');
+            }
+          })
+        }
 
         break;
 
@@ -340,6 +362,10 @@ export class EmployeeProfileComponent extends UIComponent {
         }
         else if(funcID == 'visa'){
           this.handleEmployeeVisaInfo('copy', data);
+          this.df.detectChanges();
+        }
+        else if(funcID == 'family'){
+          this.handleEFamilyInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -585,8 +611,28 @@ export class EmployeeProfileComponent extends UIComponent {
     });
     // })
   }
+  HandleEmployeeJobSalariesInfo(actionType: string, data: any){
+    this.view.dataService.dataSelected = this.data
+    let option = new SidebarModel()
+    option.DataService = this.view.dataService
+    option.FormModel = this.view.formModel
+    option.Width = '550px'
+    let dialogAdd = this.callfunc.openSide(
+      PopupEJobSalariesComponent,
+      {
+        actionType: actionType,
+        employeeId : this.data.employeeID,
+        headerText: 'Lương chức danh',
+        salarySelected: data,
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(res?.event) this.view.dataService.clear()
+      })
+  }
 
-  addFamilyRelationshipInfo() {
+  handleEFamilyInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -596,13 +642,21 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeFamilyRelationshipDetailComponent,
       PopupEFamiliesComponent,
       {
-        isAdd: true,
+        actionType: actionType,
         employeeId: this.data.employeeID,
         headerText: 'Quan hệ gia đình',
+        familyMemberSelected: data,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      if(actionType == 'add' || actionType == 'copy'){
+        this.lstFamily.push(res?.event)
+      }
+      else{
+        let index = this.lstFamily.indexOf(data)
+        this.lstFamily[index] = res?.event
+      }
       if (!res?.event) this.view.dataService.clear();
     });
   }
@@ -631,8 +685,8 @@ export class EmployeeProfileComponent extends UIComponent {
         this.lstPassport.push(res.event);
       }
       else{
-        let index = this.lstWorkPermit.indexOf(data);
-        this.lstWorkPermit[index] = res.event;
+        let index = this.lstPassport.indexOf(data);
+        this.lstPassport[index] = res.event;
       }
 
       console.log('data tra ve', res.event);
