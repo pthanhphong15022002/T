@@ -15,7 +15,6 @@ import { UIComponent } from 'codx-core';
   styleUrls: ['./answers.component.scss'],
 })
 export class AnswersComponent extends UIComponent implements OnInit, OnChanges {
-  @Input() changeModeA: any;
   @Input() formModel: any;
   constructor(private injector: Injector) {
     super(injector);

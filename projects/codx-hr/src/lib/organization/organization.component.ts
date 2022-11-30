@@ -130,6 +130,7 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   onSelectionChanged(evt: any) {
+    debugger
     var data = evt.data || evt;
     if (data && this.orgUnitID != data.orgUnitID) {
       this.orgUnitID = data.orgUnitID;

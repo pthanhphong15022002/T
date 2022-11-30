@@ -9,6 +9,7 @@ import {
   SimpleChanges,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { CallFuncService, DataRequest, DialogRef, SidebarModel, UIComponent, ViewsComponent } from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
@@ -19,15 +20,16 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
   selector: 'booking-room-view-detail',
   templateUrl: 'booking-room-view-detail.component.html',
   styleUrls: ['booking-room-view-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class BookingRoomViewDetailComponent extends UIComponent implements OnChanges {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
   @ViewChild('attachment') attachment;
-  @ViewChild('bookingRoom') bookingRoom : BookingRoomComponent;
-  @Output('edit') edit: EventEmitter<any> = new EventEmitter();  
-  @Output('copy') copy: EventEmitter<any> = new EventEmitter(); 
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
+  @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
+  @Output('edit') edit: EventEmitter<any> = new EventEmitter();
+  @Output('copy') copy: EventEmitter<any> = new EventEmitter();
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
@@ -54,32 +56,32 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   ) {
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
-    if(this.routerRecID!=null){
-      this.hideFooter=true
+    if (this.routerRecID != null) {
+      this.hideFooter = true
     }
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
-    let tempRecID:any;
-    if(this.routerRecID!=null){
-      tempRecID=this.routerRecID;
+    let tempRecID: any;
+    if (this.routerRecID != null) {
+      tempRecID = this.routerRecID;
     }
-    else{
-      tempRecID=this.itemDetail?.currentValue?.recID
+    else {
+      tempRecID = this.itemDetail?.currentValue?.recID
     }
     this.api
-        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
-          tempRecID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.itemDetail = res;
-            this.detectorRef.detectChanges();
-          }
-        });
-      this.detectorRef.detectChanges();
-      this.setHeight();
+      .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
+        tempRecID,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.itemDetail = res;
+          this.detectorRef.detectChanges();
+        }
+      });
+    this.detectorRef.detectChanges();
+    this.setHeight();
   }
   ngAfterViewInit(): void {
     this.tabControl = [
@@ -93,7 +95,7 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
     if (
       changes?.itemDetail &&
       changes.itemDetail?.previousValue?.recID !=
-        changes.itemDetail?.currentValue?.recID
+      changes.itemDetail?.currentValue?.recID
     ) {
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
@@ -105,84 +107,82 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
             this.detectorRef.detectChanges();
           }
         });
-        this.files=[];
-        this.api.execSv(
-          'DM',
-          'ERM.Business.DM',
-          'FileBussiness',
-          'GetFilesForOutsideAsync',
-          [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
-        ).subscribe((res:[])=>{
-          if(res){
-            this.files=res;
-          }
-        });
+      this.files = [];
+      this.api.execSv(
+        'DM',
+        'ERM.Business.DM',
+        'FileBussiness',
+        'GetFilesForOutsideAsync',
+        [this.funcID, this.itemDetail.recID, 'EP_BookingRooms']
+      ).subscribe((res: []) => {
+        if (res) {
+          this.files = res;
+        }
+      });
       //this.itemDetail = changes.itemDetail.currentValue;
       this.detectorRef.detectChanges();
     }
     this.setHeight();
     this.active = 1;
   }
-  showHour(date:any){
-    let temp= new Date(date);
+  showHour(date: any) {
+    let temp = new Date(date);
     let time =
-          ('0' + temp.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + temp.getMinutes()).toString().slice(-2);
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
-  childClickMF(event, data) {   
+  childClickMF(event, data) {
     switch (event?.functionID) {
       case 'SYS02': //Xoa
         this.lviewDelete(data);
         break;
 
       case 'SYS03': //Sua.
-        this.lviewEdit(data,event.text);
+        this.lviewEdit(data, event.text);
         break;
 
-        case 'SYS04': //copy.
-        this.lviewCopy(data,event.text);
+      case 'SYS04': //copy.
+        this.lviewCopy(data, event.text);
         break;
     }
   }
-  lviewEdit(data?,mfuncName?) {
-    if (data) {  
-      this.setPopupTitle.emit(mfuncName);    
+  lviewEdit(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
       this.edit.emit(data);
     }
   }
   lviewDelete(data?) {
-    if (data) {      
+    if (data) {
       this.delete.emit(data);
     }
   }
-  lviewCopy(data?,mfuncName?) {
-    if (data) {      
-      this.setPopupTitle.emit(mfuncName); 
+  lviewCopy(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
       this.copy.emit(data);
     }
   }
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
       // event.forEach(func => {        
       //   func.disabled=true;        
       // });
-      if(data.approveStatus=='1'){
+      if (data.approveStatus == '1') {
         event.forEach(func => {
-          if(func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/)
-          {
-            func.disabled=false;
+          if (func.functionID == "SYS02" /*MF sửa*/ || func.functionID == "SYS03"/*MF xóa*/ || func.functionID == "SYS04"/*MF chép*/) {
+            func.disabled = false;
           }
-        });  
+        });
       }
-      else{
+      else {
         event.forEach(func => {
-          if(func.functionID == "SYS04"/*MF chép*/)
-          {
-            func.disabled=false;
+          if (func.functionID == "SYS04"/*MF chép*/) {
+            func.disabled = false;
           }
-        });  
+        });
       }
     }
   }
