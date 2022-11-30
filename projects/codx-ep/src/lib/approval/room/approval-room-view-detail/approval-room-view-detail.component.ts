@@ -55,13 +55,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      //{ name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      {
-        name: 'ReferencesOD',
-        textDefault: 'Tham chiếu',
-        isActive: false,
-        template: this.reference,
-      },
+      
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }

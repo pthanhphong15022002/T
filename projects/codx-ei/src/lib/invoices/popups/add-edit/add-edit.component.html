@@ -7,7 +7,7 @@
   [formModel]="dialog.formModel"
   [dialog]="dialog"
 >
-<!-- [subToolbar]="subToolbar" -->
+  [subToolbar]="subToolbar"
   <ng-template #body>
     <div class="card-add">
       <ejs-tab id="invoices">
@@ -526,6 +526,7 @@
     [gridViewName]="fmGoods.gridViewName"
     [entityName]="fmGoods.entityName"
     [dataSource]="data"
+    [editSettings]="editSettings"
   ></codx-gridview-v2>
   <!-- <ejs-grid
     #grid

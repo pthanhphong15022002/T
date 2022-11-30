@@ -105,8 +105,6 @@
   $primary-lighter: #f7e7df;
   $primary-lightest: #fffcf4;
 
-
-  $title-color: #fd492a;
   $link-hover-color: #fd492a;
   $link-hover-decoration: #fd492a;
 
@@ -139,6 +137,10 @@
       color: $title-color !important;
     }
 
+    .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+      color: $title-color !important;
+    }
+
     .menu-item .menu-link.active .menu-bullet .bullet {
       background-color: $title-color !important;
     }
@@ -157,6 +159,10 @@
   .btn.btn-primary {
     border-color: $primary-dark;
     background-color: $primary-dark;
+  }
+
+  .text-primary {
+    color: var(--text-primary) !important;
   }
 
   a {
@@ -1021,10 +1027,15 @@ codx-tag .codx-tag:hover {
 }
 
 .header-fixed.toolbar-fixed .wrapper .fillter-card-body {
-  height: calc(100vh - 228px);
+  //height: calc(100vh - 228px);
   max-height: calc(100vh - 228px);
   overflow: auto;
-  //  padding-top: 10px;
+}
+
+.header-fixed.toolbar-enabled .wrapper .fillter-card-body {
+  //height: calc(100vh - 228px);
+  max-height: calc(100vh - 245px);
+  overflow: auto;
 }
 
 .card .card-header.fillter-card-header {
@@ -1263,6 +1274,14 @@ ejs-timepicker .e-clear-icon {
 
 ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   visibility: hidden;
+}
+
+.e-schedule-table td div {
+  font-size: 13px !important;
+}
+
+.codx-form.card .card-header .card-toolbar.w-100 {
+  width: auto !important;
 }
 
 // codx-popup-container .share-box {

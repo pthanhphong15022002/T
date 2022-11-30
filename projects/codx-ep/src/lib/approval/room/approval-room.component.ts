@@ -76,6 +76,7 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
     this.request.idField = 'recID';
+    
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';

@@ -2,7 +2,7 @@ import {
   BP_Processes,
   BP_ProcessesRating,
 } from './../models/BP_Processes.model';
-import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import {
@@ -14,6 +14,7 @@ import {
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
 import { B } from '@angular/cdk/keycodes';
+import { CodxTreeHistoryComponent } from 'projects/codx-share/src/lib/components/codx-tree-history/codx-tree-history.component';
 
 @Component({
   selector: 'lib-properties',
@@ -24,6 +25,8 @@ import { B } from '@angular/cdk/keycodes';
 
 
 export class PropertiesComponent implements OnInit {
+  @ViewChild(CodxTreeHistoryComponent, {static: true}) history: CodxTreeHistoryComponent;
+
   process = new BP_Processes();
   rattings: BP_ProcessesRating[] = [];
   dialog: any;
@@ -200,9 +203,11 @@ export class PropertiesComponent implements OnInit {
           this.process = res;
           this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
           this.getRating(res.rattings);
-          this.changeDetectorRef.detectChanges();
           this.notificationsService.notify('Đánh giá thành công');
+          // this.history.getDataAsync(res.recID, null);
           this.dialog.dataService.update(this.process).subscribe();
+          this.changeDetectorRef.detectChanges();
+
         }
       });
   }

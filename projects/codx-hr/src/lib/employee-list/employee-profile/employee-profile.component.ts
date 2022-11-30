@@ -1,3 +1,4 @@
+import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
 import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
 import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
 import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
@@ -92,6 +93,8 @@ export class EmployeeProfileComponent extends UIComponent {
   crrVisa: any = {};
   //work permit
   lstWorkPermit: any;
+  //jobInfo
+  jobInfo: any;
 
   formModel;
   itemDetail;
@@ -178,69 +181,74 @@ export class EmployeeProfileComponent extends UIComponent {
               this.infoPersonal = response.InfoPersonal;
               this.data = response.Employee;
               console.log(this.data);
-        // Thong tin ca nhan
-        this.hrService.getEmployeeInfo(params.employeeID).subscribe((emp) => {
-          if (emp) {
-            this.data = emp;
-            this.infoPersonal = emp;
-            console.log('data', this.data);
-          }
-        });
+              // Thong tin ca nhan
+              this.hrService
+                .getEmployeeInfo(params.employeeID)
+                .subscribe((emp) => {
+                  if (emp) {
+                    this.data = emp;
+                    this.infoPersonal = emp;
+                    console.log('data', this.data);
+                  }
+                });
 
-        //Quan he gia dinh
-        this.hrService
-          .getFamilyByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('family', res);
-            this.lstFamily = res;
-          });
+              //Quan he gia dinh
+              this.hrService
+                .getFamilyByEmployeeID(params.employeeID)
+                .subscribe((res) => {
+                  console.log('family', res);
+                  this.lstFamily = res;
+                });
 
-        //Passport
-        this.hrService
-          .GetListPassportByEmpID(params.employeeID)
-          .subscribe((res) => {
-            console.log('passport', res);
+              //Passport
+              this.hrService
+                .GetListPassportByEmpID(params.employeeID)
+                .subscribe((res) => {
+                  console.log('passport', res);
 
-            this.lstPassport = res;
-            if (this.lstPassport.length > 0) {
-              this.crrPassport = this.lstPassport[0];
+                  this.lstPassport = res;
+                  if (this.lstPassport.length > 0) {
+                    this.crrPassport = this.lstPassport[0];
+                  }
+                });
+
+              //Vissa
+              this.hrService
+                .getListVisaByEmployeeID(params.employeeID)
+                .subscribe((res) => {
+                  console.log('visa', res);
+
+                  this.lstVisa = res;
+                  if (this.lstVisa.length > 0) {
+                    this.crrVisa = this.lstVisa[0];
+                  }
+                });
+
+              //work permit
+              this.hrService
+                .getListWorkPermitByEmployeeID(params.employeeID)
+                .subscribe((res) => {
+                  console.log('w permit', res);
+                  this.lstWorkPermit = res;
+                });
+
+              //Job info
+              //this.hrService.getJobInfo()
             }
           });
-
-        //Vissa
-        this.hrService
-          .getListVisaByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('visa', res);
-
-            this.lstVisa = res;
-            if (this.lstVisa.length > 0) {
-              this.crrVisa = this.lstVisa[0];
-            }
-          });
-
-        //work permit
-        this.hrService
-          .getListWorkPermitByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('w permit', res);
-            this.lstWorkPermit = res;
-          });
-      }
-    });
-    this.router.params.subscribe((param: any) => {
-      if (param) {
-        this.functionID = param['funcID'];
-        this.getDataAsync(this.functionID);
-        this.codxMwpService.empInfo.subscribe((res: string) => {
-          if (res) {
-            console.log(res);
+        this.router.params.subscribe((param: any) => {
+          if (param) {
+            this.functionID = param['funcID'];
+            this.getDataAsync(this.functionID);
+            this.codxMwpService.empInfo.subscribe((res: string) => {
+              if (res) {
+                console.log(res);
+              }
+            });
           }
         });
       }
     });
-    
-  }})
   }
 
   clickMF(event: any, data) {
@@ -615,9 +623,10 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAllocatedPropertyComponent,
+      EmployeeAllocatedPropertyDetailComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
         headerText: 'Tài sản cấp phát',
       },
       option

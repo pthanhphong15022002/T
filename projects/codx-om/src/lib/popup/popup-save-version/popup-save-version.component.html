@@ -1,0 +1,71 @@
+<codx-form
+  [headerText]="headerText"
+  [subHeaderText]="subHeaderText"
+  [dialog]="dialogRef"
+  [bodyCss]="'bgEDEDED okr-add-body'"
+  [body]="body"
+  [footer]="footer"
+></codx-form>
+
+<ng-template #body>
+  <div class="row">
+    <div class="col-3">
+      <div class="form-group">
+        <codx-label default="Số phiên bản" name=""></codx-label>
+        <codx-input type="text"></codx-input>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group">
+        <codx-label default="Ngày phiên bản" name=""></codx-label>
+        <codx-input type="text"></codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label default="Ghi chú" name=""></codx-label>
+    <codx-input type="text"></codx-input>
+  </div>
+
+  <div class="AttachmentFile-group flex-nowrap">
+    <codx-attachment
+      #attachment
+      [objectType]="formModel?.entityName"
+      hideBtnSave="1"
+      hideFolder="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      hideImageUpload="0"
+      hideImageThumb="0"
+      [functionID]="funcID"
+      [objectId]="data?.recID"
+      [allowMultiFile]="0"
+      [idBrowse]="'add'"
+      displayThumb="full"
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="fileCount($event)"
+    >
+    </codx-attachment>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex flex-column mb-4">
+    <div class="d-flex justify-content-between">
+      <a
+        (click)="popupUploadFile($event)"
+        class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row"
+      >
+        <span class="icon-cloud_upload btn-text-primary me-2"></span>
+        <codx-label fiedName="lblUploadFile" default="Đính kèm"></codx-label>
+      </a>
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>
