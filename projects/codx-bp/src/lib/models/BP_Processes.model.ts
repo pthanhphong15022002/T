@@ -42,6 +42,7 @@ export class BP_Processes {
   modifiedOn: Date;
   modifiedBy: string;
   tags: string;
+  actived : boolean
 }
 
 export class BP_ProcessSteps {

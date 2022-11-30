@@ -190,7 +190,7 @@ export class PopupAddProcessStepsComponent
   async saveData() {
     let headerText =  this.checkValidate();
     if(headerText.length > 0){
-      this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');
+      this.notiService.notifyCode('SYS009', 0, "'"  + headerText.join(", ") +"'");
       return ;
     }
 
