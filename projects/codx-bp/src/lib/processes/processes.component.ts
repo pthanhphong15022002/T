@@ -565,8 +565,6 @@ export class ProcessesComponent
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
-        this.permission(data);
-        break;
       case 'BPT105':
         this.permission(data);
         break;

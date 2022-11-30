@@ -269,7 +269,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         id: '9',
         type: ViewType.content,
         active: false,
-        sameData: false,
+        sameData: true,
         model: {
           panelLeftRef: this.flowChart,
         },
