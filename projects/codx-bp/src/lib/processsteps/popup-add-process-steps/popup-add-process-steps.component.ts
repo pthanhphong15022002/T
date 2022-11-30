@@ -76,7 +76,6 @@ export class PopupAddProcessStepsComponent
     // private cache: CacheService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
-    private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -187,11 +186,11 @@ export class PopupAddProcessStepsComponent
     return headerText;
   }
 
-  async saveData() {
+  async saveData() {    
     let headerText =  this.checkValidate();
     if(headerText.length > 0){
       this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');
-      return ;
+      return ; 
     }
 
     this.processSteps.owners = this.owners;
