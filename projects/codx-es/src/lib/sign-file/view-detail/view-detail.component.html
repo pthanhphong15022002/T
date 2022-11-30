@@ -18,18 +18,17 @@
       </div>
     </div>
 
-    <div class="d-flex flex-column flex-grow-1 mb-2">
-      <codx-temp-full [title]="itemDetail?.ownerName" [subTitle]="itemDetail?.ownerPosition ?? ''"
+    <div class="d-flex mb-2">
+      <codx-temp-full class="user-center" [title]="itemDetail?.ownerName" [subTitle]="itemDetail?.ownerPosition ?? ''"
         [imageId]="itemDetail?.owner" imageObjType="AD_Users" [imageWidth]="40">
       </codx-temp-full>
     </div>
     <div class="d-flex flex-grow-1 mb-2">
-      <div class="me-4 icon-apartment"></div>
-      <div class="d-flex align-items-center me-5 mb-2">
+      <div class="me-2 icon-apartment"></div>
+      <div class="d-flex align-items-center me-5">
         <codx-label fiedName="OrgUnitID" [formModel]="formModel" class="fw-bold me-1"></codx-label>
         <span class="text-gray-600">: {{ itemDetail?.ownerOrgUnit }}</span>
       </div>
-      <div class="d-flex flex-column flex-grow-1"></div>
     </div>
     <div class="d-flex flex-wrap mt-2">
       <div class="d-flex align-items-center me-5 mb-2">

@@ -8,7 +8,7 @@
           <div class="d-flex flex-column w-100">
             <div class="pb-1">
               <div *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                <codx-label class="text-dark fw-bold fs-5" default="Phiên bản đầu tiên"></codx-label>
+                <codx-label class="text-dark fw-bold fs-5 cursor-pointer" (dblclick)="getProcessesStep(item)" default="Phiên bản đầu tiên"></codx-label>
               </div>
               <ng-template #firstVersionNo>
                 <div class="text-dark fw-bold fs-5 cursor-pointer" (dblclick)="getProcessesStep(item)">
