@@ -1,3 +1,4 @@
+import { Util } from "codx-core";
 export class WP_Groups{
     public recID:string;
     public groupID:string;
@@ -14,7 +15,7 @@ export class WP_Groups{
 
     constructor()
     {
-        this.recID = "";
+        this.recID = Util.uid();
         this.groupID = "";
         this.groupName = "";
         this.groupType = "";
