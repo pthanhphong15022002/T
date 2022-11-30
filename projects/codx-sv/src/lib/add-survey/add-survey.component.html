@@ -7,58 +7,114 @@
   (onLoading)="onLoading($event)"
 ></codx-views>
 <ng-template #itemTemplate>
-  <div class="bg-white d-flex justify-content-end subheader">
-    <span
-      class="icon icon-color_lens icon-24 pe-6 pt-2"
-      [ngbPopover]="customUI"
-      triggers="mouseenter:mouseleave"
-      placement="bottom"
-      [autoClose]="'outside'"
-    ></span>
-    <ng-template #customUI>
+  <div class="bg-white row subheader">
+    <div class="justify-content-start saving ps-12 col-md-9 d-flex">
+      <svg
+        class="icon_survey"
+        version="1.1"
+        id="Layer_1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        x="0px"
+        y="0px"
+        viewBox="0 0 40 40"
+        style="enable-background: new 0 0 40 40"
+        xml:space="preserve"
+      >
+        <rect
+          x="-4"
+          y="-4"
+          class="st0"
+          fill="none"
+          width="48"
+          height="48"
+        ></rect>
+        <g>
+          <polygon
+            class="st1"
+            fill="#56368A"
+            points="24.5,10 30,11 34.5,10 24.5,0 23.2,4.7"
+          ></polygon>
+          <path
+            class="st2"
+            fill="#7248B9"
+            d="M24.5,10V0H8.2C6.7,0,5.5,1.2,5.5,2.7v34.5c0,1.5,1.2,2.7,2.7,2.7h23.6c1.5,0,2.7-1.2,2.7-2.7V10H24.5z"
+          ></path>
+          <path
+            class="st3"
+            fill="#FFFFFF"
+            d="M13.2,28.9c-0.8,0-1.4-0.6-1.4-1.4c0-0.8,0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4 C14.5,28.2,13.9,28.9,13.2,28.9z M13.2,23.4c-0.8,0-1.4-0.6-1.4-1.4s0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4S13.9,23.4,13.2,23.4z M13.2,17.9c-0.8,0-1.4-0.6-1.4-1.4c0-0.8,0.6-1.4,1.4-1.4c0.8,0,1.4,0.6,1.4,1.4C14.5,17.3,13.9,17.9,13.2,17.9z M28.2,28.6H16.8 v-2.3h11.4V28.6z M28.2,23.2H16.8v-2.3h11.4V23.2z M28.2,17.7H16.8v-2.3h11.4V17.7z"
+          ></path>
+        </g>
+      </svg>
+      <span class="title ps-6 pt-10px">{{ title }}</span>
+      <span class="icon-bookmarks icon-24 ps-6 pt-3"></span>
       <codx-label
-        fiedName="CustomUI"
-        default="Tùy chỉnh giao diện"
+        *ngIf="signal == 'done'"
+        fiedName="Saving"
+        [default]="'Đã lưu tất cả trong thay đổi'"
+        class="pt-16px ps-6"
       ></codx-label>
-    </ng-template>
-    <span
-      class="icon icon-remove_red_eye icon-24 pe-6 pt-2"
-      [ngbPopover]="show"
-      triggers="mouseenter:mouseleave"
-      placement="bottom"
-      [autoClose]="'outside'"
-    ></span>
-    <ng-template #show>
-      <codx-label fiedName="Show" default="Xem trước"></codx-label>
-    </ng-template>
-    <span
-      class="icon icon-undo icon-24 pe-6 pt-2"
-      [ngbPopover]="undo"
-      triggers="mouseenter:mouseleave"
-      placement="bottom"
-      [autoClose]="'outside'"
-    ></span>
-    <ng-template #undo>
-      <codx-label fiedName="Undo" default="Hủy"></codx-label>
-    </ng-template>
-    <span
-      class="icon icon-redo icon-24 pe-6 pt-2"
-      [ngbPopover]="redo"
-      triggers="mouseenter:mouseleave"
-      placement="bottom"
-      [autoClose]="'outside'"
-    ></span>
-    <ng-template #redo>
-      <codx-label fiedName="Redo" default="Làm lại"></codx-label>
-    </ng-template>
-    <button
-      type="button"
-      class="btn btn-primary btn-submit pe-6"
-      (click)="onSubmit()"
-    >
-      <codx-label fiedName="Submit" default="Gửi"></codx-label>
-    </button>
-    <span class="icon icon-more_vert icon-24 pe-6 pt-2 ps-6"></span>
+      <codx-label
+        *ngIf="signal == 'saving'"
+        fiedName="Saving"
+        [default]="'Đang lưu...'"
+        class="pt-16px ps-6"
+      ></codx-label>
+    </div>
+    <div class="justify-content-end col-md-3">
+      <span
+        class="icon icon-color_lens icon-24 pe-6 pt-2"
+        [ngbPopover]="customUI"
+        triggers="mouseenter:mouseleave"
+        placement="bottom"
+        [autoClose]="'outside'"
+      ></span>
+      <ng-template #customUI>
+        <codx-label
+          fiedName="CustomUI"
+          default="Tùy chỉnh giao diện"
+        ></codx-label>
+      </ng-template>
+      <span
+        class="icon icon-remove_red_eye icon-24 pe-6 pt-2"
+        [ngbPopover]="show"
+        triggers="mouseenter:mouseleave"
+        placement="bottom"
+        [autoClose]="'outside'"
+      ></span>
+      <ng-template #show>
+        <codx-label fiedName="Show" default="Xem trước"></codx-label>
+      </ng-template>
+      <span
+        class="icon icon-undo icon-24 pe-6 pt-2"
+        [ngbPopover]="undo"
+        triggers="mouseenter:mouseleave"
+        placement="bottom"
+        [autoClose]="'outside'"
+      ></span>
+      <ng-template #undo>
+        <codx-label fiedName="Undo" default="Hủy"></codx-label>
+      </ng-template>
+      <span
+        class="icon icon-redo icon-24 pe-6 pt-2"
+        [ngbPopover]="redo"
+        triggers="mouseenter:mouseleave"
+        placement="bottom"
+        [autoClose]="'outside'"
+      ></span>
+      <ng-template #redo>
+        <codx-label fiedName="Redo" default="Làm lại"></codx-label>
+      </ng-template>
+      <button
+        type="button"
+        class="btn btn-primary btn-submit pe-6"
+        (click)="onSubmit()"
+      >
+        <codx-label fiedName="Submit" default="Gửi"></codx-label>
+      </button>
+      <span class="icon icon-more_vert icon-24 pe-6 pt-2 ps-6"></span>
+    </div>
   </div>
   <ejs-tab headerPlacement="Top" (selected)="onSelected($event)">
     <e-tabitems>
@@ -79,7 +135,7 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <app-questions
-            [changeModeQ]="changeMode"
+            #app_question
             [formModel]="view.formModel"
             [dataService]="view.dataService"
             *ngIf="mode == 'Q'"
@@ -103,7 +159,6 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <app-answers
-            [changeModeA]="changeMode"
             *ngIf="mode == 'A'"
             [formModel]="view.formModel"
           ></app-answers>
@@ -125,10 +180,7 @@
           </div>
         </ng-template>
         <ng-template #content class="pd-t-20">
-          <app-setting
-            [changeModeS]="changeMode"
-            *ngIf="mode == 'S'"
-          ></app-setting>
+          <app-setting *ngIf="mode == 'S'"></app-setting>
         </ng-template>
       </e-tabitem>
     </e-tabitems>

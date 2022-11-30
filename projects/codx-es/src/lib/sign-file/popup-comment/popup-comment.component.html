@@ -6,15 +6,23 @@
   [footer]="footer"
   [dialog]="dialog"
   [data]="result"
+  *ngIf="isAfterRender"
 >
   <ng-template #body>
     <div class="reason form-group" *ngIf="mode != 5">
-      <codx-label fiedName="ResourceName" [formModel]="formModel"> </codx-label>
+      <codx-label fiedName="ReasonID" [formModel]="formModel"> </codx-label>
+      <!-- <codx-input
+        type="valuelist"
+        [refValue]="grvSetup[controlName]['referedValue']"
+        [crrValue]="result.comment"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input> -->
       <codx-input
-        type="combobox"
-        [Group]="dialogSignFile"
-        [field]="controlName"
-        [formModel]="formModel"
+        type="text"
+        field="reasonID"
+        [crrValue]="result.reasonID"
+        (valueChange)="valueChange($event)"
       >
       </codx-input>
     </div>
@@ -68,8 +76,13 @@
         ></codx-label>
       </button> -->
       <button type="button" class="btn btn-primary" (click)="onSaveForm()">
-        <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true">
-        </codx-vll>
+        <!-- <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true">
+        </codx-vll> -->
+        <codx-label
+          name="btnOK"
+          default="OK"
+          [formModel]="formModel"
+        ></codx-label>
       </button>
     </div>
   </ng-template>

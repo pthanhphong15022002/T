@@ -112,8 +112,8 @@ export class PopupAddProcessStepsComponent
     }
     this.cache
       .gridViewSetup(
-        this.dialog.formModel.formName,
-        this.dialog.formModel.gridViewName
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName
       )
       .subscribe((res) => {
         if (res) {
@@ -161,7 +161,6 @@ export class PopupAddProcessStepsComponent
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
         this.processSteps['reference'] = res.event?.recID;
-        // this.processSteps["reference"] = "8a37d9b8-a5bc-489e-8b5b-f325d59c8cb4";
       }
     });
   }
@@ -189,7 +188,6 @@ export class PopupAddProcessStepsComponent
   }
 
   async saveData() {
-    this.gridViewSetup;  
     let headerText =  this.checkValidate();
     if(headerText.length > 0){
       this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');

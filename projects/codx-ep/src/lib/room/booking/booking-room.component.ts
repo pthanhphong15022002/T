@@ -1,3 +1,4 @@
+import { title } from 'process';
 import {
   Component,
   TemplateRef,
@@ -27,7 +28,9 @@ import {
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
 import { CodxEpService } from '../../codx-ep.service';
+import { PopupAddAttendeesComponent } from './popup-add-attendees/popup-add-attendees.component';
 import { PopupAddBookingRoomComponent } from './popup-add-booking-room/popup-add-booking-room.component';
+import { PopupRescheduleBookingComponent } from './popup-reschedule-booking/popup-reschedule-booking.component';
 
 @Component({
   selector: 'booking-room',
@@ -55,8 +58,6 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
   viewType = ViewType;
   modelResource?: ResourceModel;
   request?: ResourceModel;
@@ -270,14 +271,60 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'SYS02': //Xoa
         this.delete(data);
         break;
-
       case 'SYS03': //Sua.
         this.edit(data);
         break;
       case 'SYS04': //copy.
         this.copy(data);
         break;
+      case 'EP4T1101': //Dời
+        this.reschedule(data,event?.text);
+        break;
+      case 'EP4T1102': //Mời
+        this.invite(data,event?.text);
+        break;
     }
+  }
+  reschedule(data:any,title:any){
+    let dialogReschedule = this.callfc.openForm(
+      PopupRescheduleBookingComponent,'',550,300,this.funcID,
+      [data,this.formModel,title]
+    );
+    dialogReschedule.closed.subscribe((x) => {
+      this.popupClosed = true;
+      if (!x.event) this.view.dataService.clear();
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.detectorRef.detectChanges();
+          });
+      else if (x.event) {
+        x.event.modifiedOn = new Date();
+        this.view.dataService.update(x.event).subscribe();
+      }
+    });
+  }
+  invite(data:any,title:any){
+    let dialogInvite = this.callfc.openForm(
+      PopupAddAttendeesComponent,'',800,500,this.funcID,
+      [data,this.formModel,title]
+    );
+    dialogInvite.closed.subscribe((x) => {
+      
+      if (!x.event) this.view.dataService.clear();
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe((x) => {
+            this.detectorRef.detectChanges();
+          });
+      else if (x.event) {
+        x.event.modifiedOn = new Date();
+        
+        this.view.dataService.update(x.event).subscribe();
+      }
+    });
   }
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
