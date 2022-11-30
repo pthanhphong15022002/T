@@ -477,7 +477,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       return;
     }
 
-    if(!this.validatePhoneNumber(this.data.phone)){
+    if(!this.validatePhoneNumber(this.data.phone) && this.data.phone!=null && this.data.phone==''){
       this.notificationsService.notify('Số điện thoại không hợp lệ','2',0);// EP_WAIT doi messcode tu BA
       return;
     };

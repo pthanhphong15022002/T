@@ -51,7 +51,10 @@ export class RoomsComponent extends UIComponent {
   funcID: string;
   showToolBar = 'true';
   roomEquipments = [];
-
+  labelEquip:'';
+  labelArea:'';
+  labelRanking:'';
+  labelCâpcity:'';
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';

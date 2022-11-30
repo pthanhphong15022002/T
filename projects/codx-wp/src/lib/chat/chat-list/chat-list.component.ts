@@ -85,7 +85,7 @@ export class ChatListComponent implements OnInit,  AfterViewInit {
   clickGroupChat(group:any){
     if(group)
     {
-      this.api.execSv("WP","ERM.Business.WP","ChatBusiness","OpenGroupChatAsync",[group.groupID])
+      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","OpenGroupChatAsync",[group.groupID])
       .subscribe((res:any) =>
       {
         if(res)

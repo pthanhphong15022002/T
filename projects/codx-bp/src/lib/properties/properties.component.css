@@ -207,7 +207,7 @@ div.offcanvas {
 }
 
 
-/* 
+/*
 .filled.bad {
     color: #ff1e1e;
 } */
@@ -317,4 +317,8 @@ div.offcanvas {
 .pic-file.h-140px {
     height: 140px;
     overflow: hidden;
+}
+
+.margin{
+  margin-top: 15px;
 }

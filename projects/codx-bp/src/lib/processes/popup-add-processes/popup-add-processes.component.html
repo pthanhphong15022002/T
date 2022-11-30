@@ -3,11 +3,11 @@
   <ng-template #body>
     <div class="form-group">
       <div>
-        <codx-label fiedName="ProcessName" [formModel]="form.formModel" default="Tên quy trình">
+        <codx-label fiedName="ProcessName" [formModel]="form.formModel" default="Tên qui trình">
         </codx-label>
       </div>
-      <codx-input field="processName" type="text" [crrValue]="process?.processName"
-        [placeholder]="gridViewSetup?.ProcessName?.description" (valueChange)="valueChange($event)">
+      <codx-input field="processName"
+      [Group]="form.formGroup" [formModel]="form.formModel" >
       </codx-input>
     </div>
     <div class="form-group">
@@ -15,8 +15,8 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả">
         </codx-label>
       </div>
-      <codx-input field="memo" type="text" [crrValue]="process?.memo"
-        [placeholder]="gridViewSetup?.Memo?.description" (valueChange)="valueChange($event)">
+      <codx-input field="memo"
+      [Group]="form.formGroup" [formModel]="form.formModel" >
       </codx-input>
     </div>
     <div class="form-group">
@@ -45,8 +45,8 @@
       <div class="col-4">
         <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
         </codx-label>
-        <codx-input field="groupID" [crrValue]="process.groupID" [placeholder]="gridViewSetup?.GroupID?.description"
-          [refValue]="gridViewSetup['GroupID']['referedValue']" type="combobox" (valueChange)="valueChange($event)">
+        <codx-input field="groupID"
+        [Group]="form.formGroup" [formModel]="form.formModel">
         </codx-input>
       </div>
 
@@ -55,18 +55,18 @@
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="ActivedOn" [formModel]="form.formModel" default="Ngày hiệu lực"></codx-label>
-          <codx-input type="datetime" class="test-datetime" [crrValue]="process?.activedOn"
-            [placeholder]="gridViewSetup?.ActivedOn?.description" (valueChange)="valueDateChange($event)"
-            field="activedOn" format="d">
+          <codx-input
+          [Group]="form.formGroup" [formModel]="form.formModel"
+            field="activedOn">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="ExpiredOn" [formModel]="form.formModel" default="Ngày hết hạn"></codx-label>
-          <codx-input type="datetime" class="test-datetime" [crrValue]="process?.expiredOn"
-            [placeholder]="gridViewSetup?.ExpiredOn?.description" (valueChange)="valueDateChange($event)"
-            field="expiredOn" format="d">
+          <codx-input
+          [Group]="form.formGroup" [formModel]="form.formModel"
+            field="expiredOn" >
           </codx-input>
         </div>
       </div>
