@@ -138,7 +138,7 @@
             </ng-template>
           </ng-container>
 
-          <ng-container *ngIf="data.category == '2' && !data.isCustomize">
+          <ng-container *ngIf="data.category == '2' && data.isCustomize == '0'">
             <span class="me-2">
               <codx-input
                 type="Switch"

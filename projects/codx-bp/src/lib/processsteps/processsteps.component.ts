@@ -245,7 +245,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit(): void {
     this.views = [
-      {
+      { 
+        id : "16",
         type: ViewType.content,
         active: false,
         sameData: false,
@@ -254,6 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
       {
+        id : "6",
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -263,14 +265,15 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           template: this.cardKanban,
         },
       },
-      // {
-      //   type: ViewType.chart,
-      //   active: false,
-      //   sameData: false,
-      //   model: {
-      //     panelLeftRef: this.flowChart,
-      //   },
-      // },
+      {
+        id : "9",
+        type: ViewType.content,
+        active: false,
+        sameData: false,
+        model: {
+          panelLeftRef: this.flowChart,
+        },
+      },
     ];
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
@@ -280,7 +283,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //Thay doi viewModel
   chgViewModel(type) {
-    let view = this.views.find((x) => x.type == type);
+    let view = this.views.find((x) => x.id == type);
     if (view) this.view.viewChange(view);
   }
 

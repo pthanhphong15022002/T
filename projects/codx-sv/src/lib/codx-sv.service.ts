@@ -22,6 +22,7 @@ export class CodxSvService {
   active = '';
   tenant: string;
   private title = new BehaviorSubject<any>(null);
+  signalSave = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private router: Router,

@@ -173,7 +173,7 @@
         data-kt-scroll-wrappers=".stepper-body .no-header .page-viewdetail"
         [attr.data-kt-scroll-offset]="'75px'"
       >
-        <ng-container *ngIf="name == 'ViewList' || name == 'Kanban'">
+        <ng-container >
           <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps
               #viewProcessSteps
@@ -184,7 +184,7 @@
             ></codx-processsteps>
           </ng-container>
         </ng-container>
-        <ng-container *ngIf="name == 'Flowchart'">
+        <!-- <ng-container *ngIf="name == 'Flowchart'">
           <div class="d-flex justify-content-between mb-5">
             <h1 #processName>
               {{
@@ -242,7 +242,7 @@
               </div>
             </div>
           </div>
-          <!-- chua co referedType -->
+        
           <ng-container>
             <codx-attachment
               #addFlowchart
@@ -270,7 +270,7 @@
           </ng-container>
           <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
           </ng-container>
-        </ng-container>
+        </ng-container> -->
       </div>
     </div>
   </div>

@@ -1,22 +1,33 @@
+import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
+import { PopupEVisasComponent } from './../../employee-profile/popup-evisas/popup-evisas.component';
+import { PopupETraincourseComponent } from './../../employee-profile/popup-etraincourse/popup-etraincourse.component';
+import { PopupESkillsComponent } from './../../employee-profile/popup-eskills/popup-eskills.component';
+import { PopupESelfInfoComponent } from './../../employee-profile/popup-eself-info/popup-eself-info.component';
+import { PopupEFamiliesComponent } from './../../employee-profile/popup-efamilies/popup-efamilies.component';
+import { PopupEDisciplinesComponent } from './../../employee-profile/popup-edisciplines/popup-edisciplines.component';
+import { PopupEDegreesComponent } from './../../employee-profile/popup-edegrees/popup-edegrees.component';
+import { PopupECertificatesComponent } from './../../employee-profile/popup-ecertificates/popup-ecertificates.component';
+import { PopupEAwardsComponent } from './../../employee-profile/popup-eawards/popup-eawards.component';
+import { PopupEAssurTaxBankComponent } from './../../employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
+import { PopupEAssetsComponent } from './../../employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEmployeePartyInfoComponent } from './../../employee-profile/popup-employee-party-info/popup-employee-party-info.component';
-import { EmployeeFamilyRelationshipDetailComponent } from './../../employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
-import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
-import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
-import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
-import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
-import { EmployeeTraincoursesComponent } from './../../employee-profile/employee-traincourses/employee-traincourses.component';
-import { EmployeeSkillDetailComponent } from './../../employee-profile/employee-skill-detail/employee-skill-detail.component';
-import { EmployeeDegreeDetailComponent } from './../../employee-profile/employee-degree-detail/employee-degree-detail.component';
-import { EmployeeCertificateDetailComponent } from './../../employee-profile/employee-certificate-detail/employee-certificate-detail.component';
-import { EmployeeVisaFormComponent } from './../../employee-profile/employee-visa-form/employee-visa-form.component';
-import { EmployeeAllocatedPropertyComponent } from './../../employee-profile/employee-allocated-property/employee-allocated-property.component';
-import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
-import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
-import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
-import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
+// import { EmployeeFamilyRelationshipDetailComponent } from './../../employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
+// import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
+// import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
+// import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
+// import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
+// import { EmployeeTraincoursesComponent } from './../../employee-profile/employee-traincourses/employee-traincourses.component';
+// import { EmployeeSkillDetailComponent } from './../../employee-profile/employee-skill-detail/employee-skill-detail.component';
+// import { EmployeeDegreeDetailComponent } from './../../employee-profile/employee-degree-detail/employee-degree-detail.component';
+// import { EmployeeCertificateDetailComponent } from './../../employee-profile/employee-certificate-detail/employee-certificate-detail.component';
+// import { EmployeeVisaFormComponent } from './../../employee-profile/employee-visa-form/employee-visa-form.component';
+// import { EmployeeAllocatedPropertyComponent } from './../../employee-profile/employee-allocated-property/employee-allocated-property.component';
+// import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
+// import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
+// import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
+// import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { EmployeeLegalPassportFormComponent } from './../../employee-profile/employee-legal-passport-form/employee-legal-passport-form.component';
-import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
+// import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CheckBox } from '@syncfusion/ej2-angular-buttons';
 import { CodxMwpService } from 'projects/codx-mwp/src/public-api';
 import {
@@ -41,9 +52,11 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
-import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
+// import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { ActivatedRoute } from '@angular/router';
-import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
+// import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
+import { I } from '@angular/cdk/keycodes';
+import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -252,8 +265,15 @@ export class EmployeeProfileComponent extends UIComponent {
       case 'SYS03': //edit
         if (funcID == 'passport') {
           this.handleEmployeePassportInfo('edit', data);
-        } else if (funcID == 'workpermit') {
-          this.handleEmployeeWorkingPermitInfo(false, data);
+          this.df.detectChanges();
+        } 
+        else if (funcID == 'workpermit') {
+          this.handleEmployeeWorkingPermitInfo('edit', data);
+          this.df.detectChanges();
+        }
+        else if(funcID == 'visa'){
+          this.handleEmployeeVisaInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -273,7 +293,8 @@ export class EmployeeProfileComponent extends UIComponent {
                 this.notify.notifyCode('SYS022');
               }
             });
-        } else if (funcID == 'workpermit') {
+        } 
+        else if (funcID == 'workpermit') {
           this.hrService
             .DeleteEmployeeWorkPermitInfo(data.recID)
             .subscribe((p) => {
@@ -289,12 +310,37 @@ export class EmployeeProfileComponent extends UIComponent {
               }
             });
         }
+        else if(funcID == 'visa'){
+          this.hrService
+          .DeleteEmployeeVisaInfo(data.recID)
+          .subscribe((p) => {
+            if (p == true) {
+              this.notify.notifyCode('SYS008');
+              let i = this.lstVisa.indexOf(data);
+              if (i != -1) {
+                this.lstVisa.splice(i, 1);
+              }
+              this.df.detectChanges();
+            } else {
+              this.notify.notifyCode('SYS022');
+            }
+          });
+        }
 
         break;
 
       case 'SYS04': //copy
         if (funcID == 'passport') {
           this.handleEmployeePassportInfo('copy', data);
+          this.df.detectChanges();
+        }
+        else if(funcID == 'workpermit'){
+          this.handleEmployeeWorkingPermitInfo('copy', data);
+          this.df.detectChanges();
+        }
+        else if(funcID == 'visa'){
+          this.handleEmployeeVisaInfo('copy', data);
+          this.df.detectChanges();
         }
         break;
     }
@@ -502,7 +548,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAssurTaxBankaccInfoComponent,
+      // EmployeeAssurTaxBankaccInfoComponent,
+      PopupEAssurTaxBankComponent,
       {
         isAdd: true,
         headerText: 'Bảo hiểm - MST - Tài khoản',
@@ -525,7 +572,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeSelfInfoComponent,
+      // EmployeeSelfInfoComponent,
+      PopupESelfInfoComponent,
       {
         isAdd: true,
         headerText: 'Thông tin bản thân',
@@ -545,7 +593,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeFamilyRelationshipDetailComponent,
+      // EmployeeFamilyRelationshipDetailComponent,
+      PopupEFamiliesComponent,
       {
         isAdd: true,
         employeeId: this.data.employeeID,
@@ -567,7 +616,7 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeLegalPassportFormComponent,
+      PopupEPassportsComponent,
       {
         actionType: actionType,
         headerText: 'Hộ chiếu',
@@ -578,7 +627,14 @@ export class EmployeeProfileComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      this.lstPassport.push(res.event);
+      if(actionType != 'edit'){
+        this.lstPassport.push(res.event);
+      }
+      else{
+        let index = this.lstWorkPermit.indexOf(data);
+        this.lstWorkPermit[index] = res.event;
+      }
+
       console.log('data tra ve', res.event);
       console.log('lst passport', this.lstPassport);
 
@@ -586,16 +642,17 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  handleEmployeeWorkingPermitInfo(isAdd: boolean, data: any) {
+  handleEmployeeWorkingPermitInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeWorkingLisenceDetailComponent,
+      // EmployeeWorkingLisenceDetailComponent,
+      PopupEWorkPermitsComponent,
       {
-        isAdd: isAdd,
+        actionType: actionType,
         selectedWorkPermit: data,
         headerText: 'Giấy phép lao động',
         employeeId: this.data.employeeID,
@@ -603,29 +660,45 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      this.lstWorkPermit.push(res?.event);
+      console.log('work permit', res?.event);
+      if(actionType != 'edit'){
+        this.lstWorkPermit.push(res?.event);
+      }
+      else{
+        let index = this.lstWorkPermit.indexOf(data);
+        this.lstWorkPermit[index] = res.event;
+      }
+      console.log(this.lstWorkPermit);
       if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  addEmployeeVisaInfo() {
+  handleEmployeeVisaInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeVisaFormComponent,
-      //TestingTwoSideFormComponent,
+      // EmployeeVisaFormComponent,
+      PopupEVisasComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        visaSelected: data,
         headerText: 'Thị thực',
         employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      this.lstWorkPermit.push(res?.event);
+      if(actionType != 'edit'){
+        this.lstVisa.push(res?.event);
+      }
+      else{
+        let index = this.lstVisa.indexOf(data);
+        this.lstVisa[index] = res.event;
+      }
+      console.log(this.lstVisa);
       if (!res?.event) this.view.dataService.clear();
     });
   }
@@ -637,7 +710,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeDisciplinesDetailComponent,
+      // EmployeeDisciplinesDetailComponent,
+      PopupEDisciplinesComponent,
       {
         isAdd: true,
         employeeId: this.data.employeeID,
@@ -657,7 +731,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAwardsDetailComponent,
+      // EmployeeAwardsDetailComponent,
+      PopupEAwardsComponent,
       {
         isAdd: true,
         employeeId: this.data.employeeID,
@@ -678,7 +753,8 @@ export class EmployeeProfileComponent extends UIComponent {
 
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeAllocatedPropertyDetailComponent,
+      // EmployeeAllocatedPropertyDetailComponent,
+      PopupEAssetsComponent,
       {
         isAdd: true,
         employeeId: this.data.employeeID,
@@ -698,8 +774,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeCertificateDetailComponent,
-      //TestingTwoSideFormComponent,
+      // EmployeeCertificateDetailComponent,
+      PopupECertificatesComponent,
       {
         isAdd: true,
         headerText: 'Chứng chỉ',
@@ -719,8 +795,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeDegreeDetailComponent,
-      //TestingTwoSideFormComponent,
+      // EmployeeDegreeDetailComponent,
+      PopupEDegreesComponent,
       {
         isAdd: true,
         headerText: 'Bằng cấp',
@@ -740,7 +816,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeSkillDetailComponent,
+      // EmployeeSkillDetailComponent,
+      PopupESkillsComponent,
       {
         isAdd: true,
         headerText: 'Kỹ năng',
@@ -760,7 +837,8 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      EmployeeTraincoursesComponent,
+      // EmployeeTraincoursesComponent,
+      PopupETraincourseComponent,
       {
         isAdd: true,
         headerText: 'Đào tạo',
