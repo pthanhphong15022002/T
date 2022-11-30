@@ -328,11 +328,11 @@
                       *ngIf="!item?.items || item?.items?.length == 0"
                     >
                       <div
-                        style="height:15px; width:100%;"
+                        style="height: 15px; width: 100%"
                         cdkDrag
                         [cdkDragDisabled]="true"
                         [cdkDragData]="null"
-                        (click)='clickAddActivity(item)'
+                        (click)="clickAddActivity(item)"
                       >
                         <!-- <h3>
                           Thêm công việc để hoàn thiện quy trình ---Kéo công
@@ -349,7 +349,7 @@
                             >
                             </codx-label>
                           </div> -->
-                          <!-- <span class="dropzone-msg-desc">
+                        <!-- <span class="dropzone-msg-desc">
                             <codx-label
                               name="lblDropDrap2"
                               [formModel]="view.formModel"
@@ -461,7 +461,10 @@
           <div class="moreFC rounded-4">
             <ng-container *ngIf="data.stepType == 'P'">
               <ng-container *ngFor="let menu of childFuncOfP">
-                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
+                <div
+                  class="icon-MF cursor-pointer mb-2"
+                  (click)="clickMenu(data, menu)"
+                >
                   <span
                     class="{{ menu.icon }} icon-20 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
@@ -474,7 +477,10 @@
             </ng-container>
             <ng-container *ngIf="data.stepType == 'A'">
               <ng-container *ngFor="let menu of childFuncOfA">
-                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
+                <div
+                  class="icon-MF cursor-pointer mb-2"
+                  (click)="clickMenu(data, menu)"
+                >
                   <span
                     class="{{ menu.icon }} icon-20 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
@@ -511,23 +517,24 @@
       </div>
     </div>
   </div>
-
-  <codx-attachment
-    #attachment
-    [objectType]="view.formModel.entityName"
-    [objectId]="data?.recID"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="0"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="1"
-    [formModel]="view.formModel"
-    [functionID]="funcID"
-    displayThumb="full"
-  >
-  </codx-attachment>
+  <ng-container *ngIf="data.stepType !='P'">
+    <codx-attachment
+      #attachment
+      [objectType]="view.formModel.entityName"
+      [objectId]="data?.recID"
+      hideFolder="1"
+      hideImageUpload="1"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      [formModel]="view.formModel"
+      [functionID]="funcID"
+      displayThumb="full"
+    >
+    </codx-attachment>
+  </ng-container>
 
   <div class="mt-5" *ngIf="data?.owners != null && data?.owners.length > 0">
     <codx-imgs
@@ -688,8 +695,7 @@
   <ng-container *ngIf="dataFile">
     <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
   </ng-container>
-  <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
-  </ng-container>
+  <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty"> </ng-container>
 </ng-template>
 
 <ng-template #tmpEmpty>

@@ -255,7 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
-    this.changeDetectorRef.detectChanges() ;
+    this.changeDetectorRef.detectChanges();
   }
 
   //Thay doi viewModel
@@ -270,7 +270,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      //option.FormModel = this.formModel;
       option.Width = '550px';
       option.zIndex = 1001;
 
@@ -355,6 +354,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
+        option.zIndex = 1001;
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
@@ -520,6 +520,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
+        option.zIndex = 1001;
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
@@ -1135,19 +1136,21 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   checkReferencesByStepType(data, stepType): boolean {
     if (!data?.items || data?.items?.length == 0) return false;
-    this.checkList = data?.items.map((x) => {
-      if (x.stepType == stepType) return x;
+    let checkList = [];
+    data?.items.forEach((x) => {
+      if (x.stepType == stepType) checkList.push(x);
     });
-    let check = this.checkList.length > 0;
+    let check = checkList.length > 0;
     return check;
   }
 
   checkAction(data): boolean {
     if (!data?.items || data?.items?.length == 0) return false;
-    this.checkList = data?.items.map((x) => {
-      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') return x;
+    let checkList = [];
+    data?.items.forEach((x) => {
+      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') checkList.push(x);
     });
-    let check = this.checkList.length > 0;
+    let check = checkList.length > 0;
     return check;
   }
 

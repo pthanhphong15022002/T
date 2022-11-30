@@ -71,9 +71,7 @@ export class PopupAddProcessStepsComponent
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
-    // private api: ApiHttpService,
     private authStore: AuthStore,
-    // private cache: CacheService,
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
     private callfunc: CallFuncService,
@@ -96,6 +94,10 @@ export class PopupAddProcessStepsComponent
     this.funcID = this.dialog.formModel.funcID;
 
     this.title = this.titleActon;
+    if (this.processSteps.parentID && (this.stepType != 'A' && this.stepType != 'P')){
+      this.getOwnerByParentID(this.processSteps.parentID);
+    }
+
     if (this.action == 'edit') {
       this.showLabelAttachment =
         this.processSteps.attachments > 0 ? true : false;
@@ -235,19 +237,9 @@ export class PopupAddProcessStepsComponent
           this.dialog.close(data);
         } else this.dialog.close();
       });
-    // }
   }
 
   updateProcessStep() {
-    //đang lỗi
-    // this.dialog.dataService
-    //   .save((option: any) => this.beforeSave(option))
-    //   .subscribe((res) => {
-    //     this.attachment?.clearData();
-    //     if (res) {
-    //       this.dialog.close(res.update);
-    //     } else this.dialog.close();
-    //   });
     this.bpService
       .updateProcessStep([this.processSteps, this.owners])
       .subscribe((data) => {
