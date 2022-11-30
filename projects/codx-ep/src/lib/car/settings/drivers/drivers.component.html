@@ -23,7 +23,7 @@
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex justify-content-between align-items-center">
           <h2 id="modal-basic-title">
-            <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="grvDrivers?.Equipments?.headerText"
+            <codx-label default="Cài đặt thiết bị" name="lblEquipment" [default]="'Thiết bị'"
               [formModel]="dialog.formModel"></codx-label>
           </h2>
           <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
@@ -64,7 +64,7 @@
     <div (click)="openPopupDevice(popupDevice, data?.carEquipments)" class="d-flex align-items-center">
       <i class="icon-devices"></i>
       <span class="ms-2 fw-bold">{{ data?.equipmentQty }}</span>
-      <codx-label [default]="grvDrivers?.Equipments?.headerText" class="ms-1 fw-bold" name="lblDevice"></codx-label>
+      <codx-label [default]="'Thiết bị'" class="ms-1 fw-bold" name="lblDevice"></codx-label>
     </div>
   </ng-template>
   <ng-template #noteCol let-data>

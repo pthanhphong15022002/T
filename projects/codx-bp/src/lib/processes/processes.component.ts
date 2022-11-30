@@ -409,11 +409,10 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(data) {
+  Updaterevisions(moreFunc,data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -423,7 +422,10 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
-          [this.titleAction],
+          {
+            title: this.titleAction,
+            moreFunc: moreFunc,
+          },
           option
         );
         this.dialog.closed
@@ -560,7 +562,7 @@ export class ProcessesComponent
         break;
       case 'BPT107':
         //this.revisions(e.data, data);
-        this.Updaterevisions(data);
+        this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
         this.permission(data);

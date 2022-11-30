@@ -873,7 +873,7 @@
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-add icon-18"
-                        (click)="addFamilyRelationshipInfo()"
+                        (click)="handleEFamilyInfo('add', null)"
                       ></span>
                     </a>
                   </div>
@@ -883,6 +883,7 @@
                         class="border rounded min-w-250px mw-250px me-4 mb-2"
                       >
                         <codx-temp-full
+                          (clickMF)="clickMF($event,item,'family')"
                           cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                           [imageId]="'ADMIN'"
                           imageObjType="AD_Users"
