@@ -18,6 +18,7 @@ import {
   OnDestroy,
   EventEmitter,
   Output,
+  Optional,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -26,6 +27,7 @@ import {
   AuthStore,
   ButtonModel,
   DataRequest,
+  DialogData,
   DialogRef,
   FormModel,
   LayoutService,
@@ -64,7 +66,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
 
-  @Input() process?: BP_Processes;
+  @Input() process : BP_Processes;
   @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
@@ -96,7 +98,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   processID = '';
   dataTreeProcessStep = [];
   urlBack = '/bp/processes/BPT1'; //gang tam
-  data: any; //them de test
+  dataView: any; //them de test
   //view file
   dataChild = [];
   lockParent = false;
@@ -136,90 +138,61 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
+    // this.dataView = dt?.data
+    //  this.bpService.viewProcesses.subscribe((res) => {  
+    //  this.process = res
+      // this.processID = this.process?.recID ? this.process?.recID : '';
+      // this.numberColums = this.process?.phases ? this.process?.phases : 0;
+      // this.dataObj = {
+      //   processID: this.processID,
+      // };
+    
+      // this.getFlowChart(this.process);
+      // this.request = new ResourceModel();
+      // this.request.service = 'BP';
+      // this.request.assemblyName = 'BP';
+      // this.request.className = 'ProcessStepsBusiness';
+      // this.request.method = 'GetProcessStepsWithKanbanAsync';
+      // this.request.idField = 'recID';
+      // this.request.dataObj = this.dataObj; ///de test
 
-    // view trang
-    // this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // this.activedRouter.params.subscribe((res) => {
-    //   this.funcID = res.funcID;
-    //   this.processID = res.processID;
+      // this.resourceKanban = new ResourceModel();
+      // this.resourceKanban.service = 'BP';
+      // this.resourceKanban.assemblyName = 'BP';
+      // this.resourceKanban.className = 'ProcessStepsBusiness';
+      // this.resourceKanban.method = 'GetColumnsKanbanAsync';
+      // this.resourceKanban.dataObj = this.dataObj;
+      // this.listCountPhases = this.process.phases;
     // });
-    this.bpService.viewProcesses.subscribe((res) => {
-      this.process = res;
-      this.processID = this.process?.recID ? this.process?.recID : '';
-      this.numberColums = this.process?.phases ? this.process?.phases : 0;
-      this.dataObj = {
-        processID: this.processID,
-      };
-      // this.layout.setUrl(this.urlBack);
-      // this.layout.setLogo(null);
-      // if (!this.processID) {
-      //   this.codxService.navigate('', this.urlBack);
-      // }else{
-      //   this.getFlowChart(this.process);
-      // }
-      this.getFlowChart(this.process);
-      this.request = new ResourceModel();
-      this.request.service = 'BP';
-      this.request.assemblyName = 'BP';
-      this.request.className = 'ProcessStepsBusiness';
-      this.request.method = 'GetProcessStepsWithKanbanAsync';
-      this.request.idField = 'recID';
-      this.request.dataObj = this.dataObj; ///de test
 
-      this.resourceKanban = new ResourceModel();
-      this.resourceKanban.service = 'BP';
-      this.resourceKanban.assemblyName = 'BP';
-      this.resourceKanban.className = 'ProcessStepsBusiness';
-      this.resourceKanban.method = 'GetColumnsKanbanAsync';
-      this.resourceKanban.dataObj = this.dataObj;
-      this.listCountPhases = this.process.phases;
-    });
 
-    // //view popup
-    // if (this.process) {
-    //   this.processID = this.process.recID;
-    //   this.dataObj = {
-    //     processID: this.processID,
-    //   };
-    //   this.request = new ResourceModel();
-    //   this.request.service = 'BP';
-    //   this.request.assemblyName = 'BP';
-    //   this.request.className = 'ProcessStepsBusiness';
-    //   this.request.method = 'GetProcessStepsWithKanbanAsync';
-    //   this.request.idField = 'recID';
-    //   this.request.dataObj = this.dataObj; ///de test
-
-    //   this.resourceKanban = new ResourceModel();
-    //   this.resourceKanban.service = 'BP';
-    //   this.resourceKanban.assemblyName = 'BP';
-    //   this.resourceKanban.className = 'ProcessStepsBusiness';
-    //   this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    //   this.resourceKanban.dataObj = this.dataObj;
-    // }
-
-    // this.bpService
-    //   .getListFunctionMenuCreatedStepAsync(this.funcID)
-    //   .subscribe((datas) => {
-    //   var items = [];
-    //   if (datas && datas.length > 0) {
-    //     this.childFunc = datas;
-    //     items = datas.map((obj) => {
-    //       var menu = {
-    //         id: obj.id,
-    //         icon: obj.icon,
-    //         text: obj.text,
-    //       };
-    //       return menu;
-    //     });
-    //   }
-    //   this.button = {
-    //     id: 'btnAdd',
-    //     items: items,
-    //   };
-    // });
   }
 
   onInit(): void {
+    
+    this.processID = this.process?.recID ? this.process?.recID : '';
+    this.numberColums = this.process?.phases ? this.process?.phases : 0;
+    this.dataObj = {
+      processID: this.processID,
+    };
+  
+    this.getFlowChart(this.process);
+    this.request = new ResourceModel();
+    this.request.service = 'BP';
+    this.request.assemblyName = 'BP';
+    this.request.className = 'ProcessStepsBusiness';
+    this.request.method = 'GetProcessStepsWithKanbanAsync';
+    this.request.idField = 'recID';
+    this.request.dataObj = this.dataObj; ///de test
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'BP';
+    this.resourceKanban.assemblyName = 'BP';
+    this.resourceKanban.className = 'ProcessStepsBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = this.dataObj;
+    this.listCountPhases = this.process.phases;
+
     var items = [];
     if (this.childFunc && this.childFunc.length > 0) {
       items = this.childFunc.map((obj) => {
@@ -269,7 +242,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         id: '9',
         type: ViewType.content,
         active: false,
-        sameData: false,
+        sameData: true,
         model: {
           panelLeftRef: this.flowChart,
         },

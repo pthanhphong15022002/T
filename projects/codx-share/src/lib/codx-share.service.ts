@@ -362,6 +362,19 @@ export class CodxShareService {
         }
         break;
       }
+      case '5': {
+        //duyet
+        if (approvalTrans.approveControl != '1') {
+          _dialog = this.openPopupComment(
+            status,
+            approvalTrans,
+            funcID,
+            title,
+            formModel
+          );
+        }
+        break;
+      }
       case '4': {
         //reject
         if (

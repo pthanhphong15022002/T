@@ -582,4 +582,25 @@ export class CodxHrService {
   }
 
   //#endregion
+
+  //region #EJobSalaries
+  GetEmployeeJobSalariesModel(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetEmployeeJobSalaryModelAsync'
+    )
+  }
+
+  AddEmployeeJobSalariesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'AddEmployeeJobSalaryInfoAsync',
+      data
+    )
+  }
+  //#endregion
 }
