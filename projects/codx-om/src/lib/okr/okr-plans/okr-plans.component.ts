@@ -4,12 +4,12 @@ import { DialogRef , DialogData, ApiHttpService, NotificationsService} from 'cod
 import { take } from 'rxjs';
 
 @Component({
-  selector: 'lib-okr-add',
-  templateUrl: './okr-add.component.html',
-  styleUrls: ['./okr-add.component.css'],
+  selector: 'lib-okr-plans',
+  templateUrl: './okr-plans.component.html',
+  styleUrls: ['./okr-plans.component.css'],
   encapsulation: ViewEncapsulation.None
 })
-export class OkrAddComponent implements OnInit {
+export class OkrPlansComponent implements OnInit {
   @ViewChildren('nameInput') nameInputs:  QueryList<ElementRef>;
 
   titleForm = "Thêm bộ bộ mục tiêu";
