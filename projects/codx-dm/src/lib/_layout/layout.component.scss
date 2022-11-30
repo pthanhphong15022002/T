@@ -300,3 +300,18 @@ codx-view-tree-detail .e-pane.e-static-pane {
   flex-basis: 26% !important;
   min-width: 250px;
 }
+
+codx-views#dm .content-tree {
+  padding-right: 0 !important;
+
+}
+
+codx-views#dm .content-tree codx-mfunc .btn {
+  padding-top: 8px !important;
+  background-color: #fff !important;
+
+}
+
+// codx-views#dm .content-tree .px-3.home {
+//   padding-right: 0 !important;
+// }
