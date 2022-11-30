@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { SignalRService } from '@core/services/signalr/signalr.service';
+import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 // import { CreateGroupComponent } from '@modules/wp/components/create-group/create-group.component';
 import { ApiHttpService, AuthStore, CallFuncService, DataRequest, DialogModel, DialogRef } from 'codx-core';
 import { UpdateExtendComponent } from 'projects/codx-od/src/lib/incomming/update/update.component';

@@ -10,6 +10,7 @@ import {
   AuthStore,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
@@ -27,10 +28,13 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
   subTitle: string = '';
   result = { comment: '', reasonID: '' };
   grvSetup: any = {};
+  controlName: string;
+  mode;
   data;
   dialog;
   user;
-
+  formModel: FormModel;
+  isAfterRender: boolean = false;
   constructor(
     private inject: Injector,
     private authStore: AuthStore,
@@ -39,9 +43,10 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     super(inject);
-    super(inject);
     this.dialog = dialog;
     this.data = dt.data;
+    this.mode = this.data.mode;
+    this.formModel = this.data.formModel;
     this.user = this.authStore.get();
     this.cache
       .gridViewSetup(
@@ -49,13 +54,17 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
         this.data.formModel.gridViewName
       )
       .subscribe((grv) => {
-        if (grv) this.grvSetup = grv;
+        if (grv) {
+          this.grvSetup = grv;
+          this.isAfterRender = true;
+        }
       });
   }
 
   onInit(): void {
     this.title = this.data.title;
     this.subTitle = this.data.subTitle;
+    this.controlName = this.mode != 2 ? 'RejectControl' : 'RedoControl';
   }
 
   onSaveForm() {
@@ -69,8 +78,8 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e) {
-    if (e.field == 'comment') {
-      this.result.comment = e.data;
+    if (e.field && e.data) {
+      this.result[e.field] = e.data;
     }
   }
 }

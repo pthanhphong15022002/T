@@ -114,7 +114,7 @@ export class CodxEmailComponent implements OnInit {
     //this.formGroup = data?.data?.formGroup;
     this.templateID = data?.data?.templateID;
     this.isAddNew = data?.data?.isAddNew ?? true;
-    console.log(this.templateID);
+    console.log(data?.data);
 
     this.cache.valueList('ES014').subscribe((res) => {
       console.log('vll', res);

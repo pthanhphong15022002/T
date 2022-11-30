@@ -10,14 +10,14 @@
             <!-- users - check - chat -->
             <div class="d-flex align-items-center justify-content-end">
                 <ul class="chat-list">
-                    <li>
-                        <a href="!#"><i class="icon-people_alt"></i></a>
+                    <li (click)="openPopupAddGroup()">
+                        <a><i class="icon-people_alt"></i></a>
                     </li>
                     <li>
-                        <a href="!#"><i class="icon-playlist_add_check"></i></a>
+                        <a><i class="icon-playlist_add_check"></i></a>
                     </li>
                     <li>
-                        <a href="!#"><i class="icon-open_in_new"></i></a>
+                        <a><i class="icon-open_in_new"></i></a>
                     </li>
                 </ul>
             </div>
@@ -49,7 +49,7 @@
     <!-- end list group chat -->
 </div>
 <ng-template #itemTemplate let-item>
-    <div class="row mt-2 p-2">
+    <div class="row mt-2 p-2" (click)="clickGroupChat(item)">
         <!-- image -->
         <div class="col-2">
             <codx-img 
@@ -67,7 +67,7 @@
             </div>
             <div class="d-flex align-items-center justify-content-between mt-2">
                 <span [ngClass]="'last-message'" [classList]="item.isRead ? 'text-dark-500' : 'text-primary'">{{item.message}}</span>
-                <span ngClass="dots" [classList]="item.isRead ? 'text-dark-500' : 'text-primary'"></span>
+                <span [class.dots]="!item.isRead"></span>
             </div>
         </div>
     </div>

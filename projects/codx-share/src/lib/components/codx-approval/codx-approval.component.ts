@@ -36,7 +36,7 @@ import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatc
   selector: 'codx-approval',
   templateUrl: './codx-approval.component.html',
   styleUrls: ['./codx-approval.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('view') view!: ViewsComponent;
@@ -56,6 +56,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   dataItem: any;
   lstDtDis: any;
   lstUserID: any;
+  listApproveMF: any;
   /**
    *
    */
@@ -198,6 +199,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         )
           list[i].disabled = true;
       }
+      this.listApproveMF = list.filter((p) => p.disabled == false);
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
@@ -268,6 +270,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             stepNo: data.stepNo,
             transRecID: data.recID,
             oTrans: data,
+            lstMF: this.listApproveMF,
           },
           '',
           dialogModel
