@@ -643,7 +643,7 @@ export class ProcessesComponent
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
     //đoi view
-    this.bpService.viewProcesses.next(data);
+    // this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
 

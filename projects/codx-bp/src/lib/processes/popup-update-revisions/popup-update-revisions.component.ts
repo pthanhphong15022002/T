@@ -74,7 +74,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
       .subscribe(proesses => {
         if (proesses) {
           this.dialog.close();
-          this.bpService.viewProcesses.next(proesses);
+          // this.bpService.viewProcesses.next(proesses);
           let obj = {
             moreFunc: this.moreFunc,
             data: proesses,
