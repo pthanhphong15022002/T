@@ -8,8 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import {
   ApiHttpService,
   AuthStore,
@@ -81,6 +80,8 @@ export class ViewDetailComponent implements OnInit {
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
 
+  tabControl: TabModel[] = [];
+
   ngOnInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
@@ -108,6 +109,16 @@ export class ViewDetailComponent implements OnInit {
         }
       });
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
   }
 
   ngOnChanges(changes: SimpleChanges): void {

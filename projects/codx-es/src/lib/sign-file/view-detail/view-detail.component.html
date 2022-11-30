@@ -231,6 +231,7 @@
 
   <ng-template #footer>
     <codx-tabs
+      [TabControl]="tabControl"
       [entityName]="formModel.entityName"
       [objectID]="itemDetail?.transID"
       [funcID]="formModel.funcID"

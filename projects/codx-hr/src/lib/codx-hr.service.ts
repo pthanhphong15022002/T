@@ -287,12 +287,41 @@ export class CodxHrService {
   //#endregion
 
   //#region EmpVisasBusiness
-  getEmployeeVisasInfo(data) {
+  getEmployeeVisaModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmpVisasBusiness',
-      'GetEmployeeVisasInfoAsync',
+      'GetEmployeeVisaModelAsync'
+    );
+  }
+
+  updateEmployeeVisaInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'UpdateEmployeeVisasInfoAsync',
+      data
+    );
+  }
+
+  AddEmployeeVisaInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'AddEmployeeVisasInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeVisaInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmpVisasBusiness',
+      'DeleteEmployeeVisaInfoAsync',
       data
     );
   }
@@ -428,15 +457,7 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeVisaInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EmpVisasBusiness',
-      'AddEmployeeVisasInfoAsync',
-      data
-    );
-  }
+
 
   updateEmployeeTrainCourseInfo(data) {
     return this.api.execSv<any>(

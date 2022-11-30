@@ -1,0 +1,45 @@
+<codx-form [headerText]="headerText" subHeaderText="" [formModel]="formModel" [body]="body" [footer]="footer" [dialog]="dialogRef" [data]="data" #form>
+  <ng-template #body>
+    <ng-container *ngIf="form && form.formGroup">
+      <div class="form-group row mt-3">
+        <div class="col-4">      
+          <codx-label fiedName="BookingOn" [formModel]="form.formModel">
+          </codx-label>      
+          <codx-input ControlName="bookingOn" [formModel]="form.formModel" [Group]="form.formGroup">
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label name="lblStatTime" default="Từ giờ" [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName">
+          </codx-label>
+          <codx-input type="datetime" class="test-datetime" field="startTime" [crrValue]="startTime" format="t"
+            (valueChange)="valueStartTimeChange($event)" [disabled]="false">
+          </codx-input>
+        </div>
+        <div class="col-3 form-group">
+          <codx-label name="lblEndTime" default="Đến giờ" [formName]="formModel.formName"
+            [gridViewName]="formModel.gridViewName"></codx-label>
+          <codx-input type="datetime" class="test-datetime" field="endTime" [crrValue]="endTime" format="t"
+            (valueChange)="valueEndTimeChange($event)" [disabled]="false">
+          </codx-input>
+        </div>
+    
+        <div class="col-2 d-flex flex-column justify-content-center">
+          <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
+            (valueChange)="valueAllDayChange($event)" [disabled]="false" [checked]="isFullDay">
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label fiedName="Note" [formModel]="form.formModel">
+        </codx-label>      
+        <codx-input ControlName="note" [formModel]="form.formModel" [Group]="form.formGroup">
+        </codx-input>
+      </div>
+    </ng-container>  
+  </ng-template>
+  <ng-template #footer>
+    <button type="button" (click)="onSave()" class="btn btn-primary">Lưu</button>
+  </ng-template>
+  
+</codx-form>

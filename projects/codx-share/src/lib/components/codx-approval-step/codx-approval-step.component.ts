@@ -43,7 +43,7 @@ export class CodxApprovalStepComponent
 
   positionDefault: string;
 
-  lstSttApproveStep = ['2', '4', '1'];
+  lstSttApproveStep = ['0', '1', '2', '4', '6'];
   process: any = [];
   // lstStep: any = [];
   constructor(
