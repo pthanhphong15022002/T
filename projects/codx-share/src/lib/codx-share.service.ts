@@ -331,11 +331,12 @@ export class CodxShareService {
     title: string,
     formModel: FormModel
   ) {
+    let _dialog: any;
     switch (status) {
       case '0': {
         //cancel
         if (approvalTrans.cancelControl != 1) {
-          let dialog = this.openPopupComment(
+          _dialog = this.openPopupComment(
             status,
             approvalTrans,
             funcID,
@@ -351,7 +352,7 @@ export class CodxShareService {
           approvalTrans.redoControl == '2' ||
           approvalTrans.redoControl == '3'
         ) {
-          this.openPopupComment(
+          _dialog = this.openPopupComment(
             status,
             approvalTrans,
             funcID,
@@ -367,7 +368,7 @@ export class CodxShareService {
           approvalTrans.rejectControl == '2' ||
           approvalTrans.redoControl == '3'
         ) {
-          this.openPopupComment(
+          _dialog = this.openPopupComment(
             status,
             approvalTrans,
             funcID,
@@ -378,6 +379,7 @@ export class CodxShareService {
         break;
       }
     }
+    return _dialog;
   }
 
   openPopupComment(
@@ -400,7 +402,7 @@ export class CodxShareService {
         mode: status,
       }
     );
-    dialogComment.closed.subscribe((res) => {});
+    return dialogComment;
   }
 }
 
