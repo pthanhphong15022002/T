@@ -1,3 +1,5 @@
+import { PopupEBasicSalariesComponent } from './employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
+import { PopupEJobSalariesComponent } from './employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './employee-profile/popup-ework-permits/popup-ework-permits.component';
 import { PopupEVisasComponent } from './employee-profile/popup-evisas/popup-evisas.component';
 import { PopupETraincourseComponent } from './employee-profile/popup-etraincourse/popup-etraincourse.component';
@@ -290,7 +292,9 @@ const T_Component: Type<any>[] = [
   PopupESkillsComponent,
   PopupETraincourseComponent,
   PopupEVisasComponent,
-  PopupEWorkPermitsComponent
+  PopupEWorkPermitsComponent,
+  PopupEJobSalariesComponent,
+  PopupEBasicSalariesComponent
 ];
 @NgModule({
   imports: [
