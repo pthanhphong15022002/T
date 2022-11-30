@@ -13,6 +13,7 @@ import {
 } from 'codx-core';
 import { AssignInfoComponent } from './components/assign-info/assign-info.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-comment/popup-comment.component';
 
 @Injectable({
   providedIn: 'root',
@@ -323,9 +324,87 @@ export class CodxShareService {
   }
   //#endregion
 
-  //#region Model
+  beforeApprove(
+    status: string,
+    approvalTrans: any,
+    funcID: string,
+    title: string,
+    formModel: FormModel
+  ) {
+    switch (status) {
+      case '0': {
+        //cancel
+        if (approvalTrans.cancelControl != 1) {
+          let dialog = this.openPopupComment(
+            status,
+            approvalTrans,
+            funcID,
+            title,
+            formModel
+          );
+        }
+        break;
+      }
+      case '2': {
+        //redo
+        if (
+          approvalTrans.redoControl == '2' ||
+          approvalTrans.redoControl == '3'
+        ) {
+          this.openPopupComment(
+            status,
+            approvalTrans,
+            funcID,
+            title,
+            formModel
+          );
+        }
+        break;
+      }
+      case '4': {
+        //reject
+        if (
+          approvalTrans.rejectControl == '2' ||
+          approvalTrans.redoControl == '3'
+        ) {
+          this.openPopupComment(
+            status,
+            approvalTrans,
+            funcID,
+            title,
+            formModel
+          );
+        }
+        break;
+      }
+    }
+  }
+
+  openPopupComment(
+    status: string,
+    approvalTrans: any,
+    funcID: string,
+    title: string,
+    formModel: FormModel
+  ) {
+    let dialogComment = this.callfunc.openForm(
+      PopupCommentComponent,
+      title,
+      500,
+      500,
+      funcID,
+      {
+        title: title,
+        formModel: formModel,
+        approveControl: approvalTrans?.approveControl,
+        mode: status,
+      }
+    );
+    dialogComment.closed.subscribe((res) => {});
+  }
 }
 
+//#region Model
 export class Approvers {
   recID: string;
   roleType: string;
