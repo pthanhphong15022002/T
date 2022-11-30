@@ -20,6 +20,7 @@ import {
   CacheService,
   CallFuncService,
   CodxService,
+  DataRequest,
   DialogModel,
   NotificationsService,
   SidebarModel,
@@ -35,7 +36,7 @@ import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatc
   selector: 'codx-approval',
   templateUrl: './codx-approval.component.html',
   styleUrls: ['./codx-approval.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   @ViewChild('view') view!: ViewsComponent;
@@ -55,6 +56,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   dataItem: any;
   lstDtDis: any;
   lstUserID: any;
+  listApproveMF: any;
   /**
    *
    */
@@ -197,6 +199,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         )
           list[i].disabled = true;
       }
+      this.listApproveMF = list.filter((p) => p.disabled == false);
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
@@ -209,6 +212,26 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list2[i].disabled = true;
       }
     }
+   if(datas.status != "3")
+   {
+    this.api.execSv<any>(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'CheckRestoreAsync',
+      datas.recID
+    ).subscribe(item=>{
+      if(item) 
+      {
+        var bm = data.filter(
+          (x: { functionID: string }) =>
+            x.functionID == 'SYS207'
+        );
+        bm.disabled = false;
+      }
+    });
+    
+   }
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
@@ -247,6 +270,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
             stepNo: data.stepNo,
             transRecID: data.recID,
             oTrans: data,
+            lstMF: this.listApproveMF,
           },
           '',
           dialogModel

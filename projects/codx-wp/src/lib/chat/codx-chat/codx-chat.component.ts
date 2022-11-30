@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { SignalRService } from '@core/services/signalr/signalr.service';
+import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 import { CodxService, CallFuncService } from 'codx-core';
 
 @Component({
@@ -12,6 +12,7 @@ export class CodxChatComponent implements OnInit {
     return "d-flex align-items-center " + this.codxService.toolbarButtonMarginClass; 
   }
   loaded = false;
+  autoClose:boolean = true;
   constructor(
     public codxService:CodxService,
     private callFc:CallFuncService,
@@ -22,7 +23,10 @@ export class CodxChatComponent implements OnInit {
   ngOnInit(): void {
   }
 
-
+  close()
+  {
+    alert("close");
+  }
   openChatBox()
   {
     this.loaded = true;

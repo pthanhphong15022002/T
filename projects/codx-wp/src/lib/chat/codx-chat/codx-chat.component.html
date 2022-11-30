@@ -1,4 +1,4 @@
-<div ngbDropdown class="d-inline-block w-100" #dropdown container="body">
+<div ngbDropdown class="d-inline-block w-100" [autoClose]="autoClose" #dropdown container="body">
   <button type="button" class="btn btn-sm" (click)="openChatBox()" id="chat-box"
     ngbDropdownToggle>
     <div
@@ -14,11 +14,11 @@
     ></span> -->
   </div>
   </button>
-  <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chát-bóc-dropdownPopup"
+  <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
     class="h-600px w-300px">
     <div class="w-100 h-100" id="dropdown">
       <ng-container *ngIf="loaded">
-        <wp-chat-list></wp-chat-list>
+        <wp-chat-list [(isOpen)]="autoClose"></wp-chat-list>
       </ng-container>
     </div>
   </div>

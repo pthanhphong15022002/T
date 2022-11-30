@@ -42,7 +42,7 @@ export class PopupAddAttendeesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private codxEpService: CodxEpService,
     private apiHttpService: ApiHttpService,
-    private noti: NotificationsService,
+    private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -102,13 +102,19 @@ export class PopupAddAttendeesComponent implements OnInit {
 
   onSave(){
     this.codxEpService.inviteAttendees(this.data.recID,this.newAttendees).subscribe(res=>{
-      var x= res;
-      let listUserID=this.data.bookingAttendees;
-      this.newAttendees.forEach(item=>{        
-        listUserID=listUserID+';'+item.userID;        
-      });
-      this.data.bookingAttendees=listUserID;
-      this.dialogRef && this.dialogRef.close(this.data);
+      if(res){
+        let listUserID=this.data.bookingAttendees;
+        this.newAttendees.forEach(item=>{        
+          listUserID=listUserID+';'+item.userID;        
+        });
+        this.data.bookingAttendees=listUserID;
+        this.notificationsService.notifyCode('SYS034');
+        this.dialogRef && this.dialogRef.close(this.data);
+      }
+      else{
+        this.dialogRef.close();
+      }
+
     });
   }
   
@@ -188,7 +194,7 @@ export class PopupAddAttendeesComponent implements OnInit {
   }
   
   attendeesCheckChange(event: any, userID: any) {
-    this.attendeesList.forEach((attender) => {
+    this.newAttendees.forEach((attender) => {
       if (attender.userID == userID) {
         attender.optional = event.data;
       }

@@ -44,8 +44,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   className = 'BookingsBusiness';
   method = 'GetListBookingAsync';
   idField = 'recID';
-  predicate = 'ResourceType=@0';
-  dataValue = '2';
   optionalData: any;
   viewType = ViewType;
   formModel: FormModel;
