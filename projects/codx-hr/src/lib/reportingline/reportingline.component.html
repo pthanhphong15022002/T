@@ -99,7 +99,7 @@
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-primary fs-2 fw-bold">
-                        <span>{{data.filledCounts - data.onBoard - data.offBoard}}</span>
+                        <span>{{(data.filledCounts ? data.filledCounts : 0 )  - (data.onBoard ? data.onBoard : 0) - (data.offBoard ? data.offBoard : 0)}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
                         <codx-label [formModel]="view.formModel" name="lblCurrentcounts" default="Chính thức">
@@ -116,7 +116,7 @@
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-warning fs-2 fw-bold">
-                        <span>{{data.onBoard}}</span>
+                        <span>{{data.onBoard ? data.onBoard : 0}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
                         <codx-label [formModel]="view.formModel" name="lblOnboard" default="Onboard">
@@ -132,7 +132,7 @@
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-warning fs-2 fw-bold">
-                        <span>{{data.offBoard}}</span>
+                        <span>{{data.offBoard ? data.offBoard : 0}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
                         <codx-label [formModel]="view.formModel" name="lblOffboard" default="Offboard">

@@ -21,7 +21,7 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
-import { OkrAddComponent } from './okr-add/okr-add.component';
+import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 
 @Component({
   selector: 'lib-okr',
@@ -100,7 +100,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     var dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     let dialog = this.callfc.openForm(
-      OkrAddComponent,
+      OkrPlansComponent,
       '',
       null,
       null,
