@@ -349,6 +349,14 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
+        this.dmSV.page = 1;
+        this.getDataFolder(this.dmSV.folderID);
+        this.getDataFile(this.dmSV.folderID);
+      }
+    });
+    this.dmSV.isAddFile.subscribe((item) => {
+      if (item) {
+        this.dmSV.page = 1;
         this.getDataFolder(this.dmSV.folderID);
         var result = this.dmSV.listFolder;
         if (this.dmSV.listFiles && this.dmSV.listFiles.length > 0)
