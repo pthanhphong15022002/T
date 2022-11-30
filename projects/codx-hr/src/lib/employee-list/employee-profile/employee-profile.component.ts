@@ -56,6 +56,7 @@ import { ActivatedRoute } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
 import { I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
+import { EmployeePositionsComponent } from './employee-positions/employee-positions.component';
 
 @Component({
   selector: 'lib-employee-profile',

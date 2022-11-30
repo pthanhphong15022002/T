@@ -90,6 +90,7 @@ import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-
 // import { EmployeeTraincoursesComponent } from './employee-profile/employee-traincourses/employee-traincourses.component';
 import { PopupEAssetsComponent } from './employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEPassportsComponent } from './employee-profile/popup-epassports/popup-epassports.component';
+import { EmployeePositionsComponent } from './employee-list/employee-profile/employee-positions/employee-positions.component';
 
 export const routes: Routes = [
   {
@@ -291,6 +292,7 @@ const T_Component: Type<any>[] = [
   PopupETraincourseComponent,
   PopupEVisasComponent,
   PopupEWorkPermitsComponent,
+  EmployeePositionsComponent,
 ];
 @NgModule({
   imports: [
