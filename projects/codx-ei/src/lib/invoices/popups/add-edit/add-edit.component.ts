@@ -24,6 +24,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  RequestOption,
   Util,
 } from 'codx-core';
 import { TabComponent } from '@syncfusion/ej2-angular-navigations';
@@ -143,6 +144,22 @@ export class AddEditComponent implements OnInit {
     this.grid.addRow(null, idx);
   }
 
+  //#endregion
+
+  //#region CRUD
+  save() {
+    this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'AddAsync';
+        opt.className = 'InvoicesBusiness';
+        opt.assemblyName = 'EI';
+        opt.service = 'EI';
+        opt.data = this.invoices;
+        return true;
+      })
+      .subscribe();
+  }
+  //#endregion
   //#region Function
   bindingTaxInfor(data) {
     this.form.formGroup.patchValue({ custName: data['custName'] });

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
+import { ApiHttpService, AuthStore, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
 import { WP_Groups } from 'projects/codx-wp/src/lib/models/WP_Groups.model';
 import { WP_Members } from 'projects/codx-wp/src/lib/models/WP_Members.model';
 
@@ -17,6 +17,8 @@ export class PopupAddGroupComponent implements OnInit {
   user:any = null;
   headerText:string = "";
   group:WP_Groups = new WP_Groups();
+  gridModel:DataRequest = new DataRequest();
+  listUser:any[] = [];
   @ViewChild("codxImg") codxImg:ImageViewerComponent;
   constructor(
     private api:ApiHttpService,
@@ -41,9 +43,30 @@ export class PopupAddGroupComponent implements OnInit {
     {
       this.headerText = this.dialogData.headerText;
       this.gridViewSetUp = this.dialogData.gridViewSetUp;
+      this.gridModel.funcID = this.dialogRef.formModel.funcID;
+      this.gridModel.comboboxName = "Users";
+      this.gridModel.entityName = "AD_Users";
+      this.gridModel.pageLoading = true;
+      this.gridModel.page = 1;
+      this.loadDataCbbAsync(this.gridModel);
     }
   }
 
+  loadDataCbbAsync(gridModel:any){
+    if(gridModel){
+      this.api.execSv("SYS","ERM.Business.CM","DataBusiness","LoadDataCbxAsync",[gridModel])
+      .subscribe((res:any[]) => 
+      {
+        if(res.length > 0)
+        {
+          let arrUser = JSON.parse(res[0]);
+          this.listUser = this.listUser.concat(arrUser);
+          console.log(this.listUser);
+          this.dt.detectChanges();
+        }
+      });
+    }
+  }
   // value change
   valueChange(event)
   {

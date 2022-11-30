@@ -16,6 +16,7 @@ import {
   NotificationsService,
   AuthStore,
 } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/lib/codx-share.service';
 import { PdfComponent } from 'projects/codx-share/src/lib/components/pdf/pdf.component';
 import { CodxEsService } from '../../codx-es.service';
 import { PopupCommentComponent } from '../popup-comment/popup-comment.component';
@@ -60,6 +61,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
     private esService: CodxEsService,
     private notify: NotificationsService,
     private authStore: AuthStore,
+    private codxShareService: CodxShareService,
     private http: HttpClient,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -83,7 +85,6 @@ export class PopupSignForApprovalComponent extends UIComponent {
     this.funcID = this.data ? this.data.funcID : 'EST01';
     this.canOpenSubPopup = this.data?.status == 3 ? true : false;
     this.stepNo = this.data?.stepNo;
-    console.log('step no', this.stepNo);
 
     this.sfRecID = this.data.sfRecID;
     this.transRecID = this.data.transRecID;
@@ -95,9 +96,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           this.formModel.formName,
           this.formModel.gridViewName
         )
-        .subscribe((res) => {
-          console.log('more fucn', res);
-        });
+        .subscribe((res) => {});
 
       this.esService
         .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -126,12 +125,12 @@ export class PopupSignForApprovalComponent extends UIComponent {
           .confirmOTPPin(this.oApprovalTrans.recID, this.confirmValue)
           .subscribe((res) => {
             if (res) {
-              this.approve(this.mode, this.title, this.subTitle);
+              this.beforeApprove(this.mode, this.title, this.subTitle);
             }
           });
       } else if (this.otpControl == '3') {
         if (this.confirmValue === this.signerInfo.otpPin) {
-          this.approve(this.mode, this.title, this.subTitle);
+          this.beforeApprove(this.mode, this.title, this.subTitle);
         } else {
           this.notify.notifyCode('ES014');
         }
@@ -201,7 +200,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
             this.otpControl = this.signerInfo.otpControl;
             this.openConfirm();
           } else {
-            this.approve(mode, title, subTitle);
+            this.beforeApprove(mode, title, subTitle);
           }
         }
       });
@@ -247,7 +246,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         this.otpControl = this.signerInfo.otpControl;
         this.openConfirm();
       } else {
-        this.approve(mode, title, subTitle);
+        this.beforeApprove(mode, title, subTitle);
       }
     }
   }
@@ -265,537 +264,665 @@ export class PopupSignForApprovalComponent extends UIComponent {
     );
   }
 
-  approve(mode, title: string, subTitle: string) {
-    if (this.oApprovalTrans?.approveControl != '1') {
-      // let dialogADR = this.callfc.openForm(
-      //   PopupADRComponent,
-      //   title,
-      //   500,
-      //   500,
-      //   this.funcID,
-      //   {
-      //     signfileID: this.sfRecID,
-      //     mode: mode,
-      //     title: title,
-      //     subTitle: subTitle,
-      //     funcID: this.funcID,
-      //     formModel: this.formModel,
-      //     formGroup: this.dialogSignFile,
-      //     stepType: this.data.stepType,
-      //     approveControl: this.oApprovalTrans?.approveControl,
-      //   }
-      // );
+  beforeApprove(mode, title: string, subTitle: string) {
+    let checkControl = this.codxShareService.beforeApprove(
+      mode.toString(),
+      this.oApprovalTrans,
+      this.funcID,
+      title,
+      this.formModel
+    );
+    if (checkControl) {
+      checkControl.closed.subscribe((res) => {
+        let oComment = res?.event;
+        console.log('result', res?.event);
+        this.dialogSignFile.patchValue({ comment: oComment.comment });
+        this.dialogSignFile.patchValue({ reasonID: oComment.reasonID });
+        this.approve(mode, title, subTitle, null);
+      });
+    } else {
+      this.approve(mode, title, subTitle, null);
+    }
+  }
 
-      // this.pdfView.curPage = this.pdfView.pageMax;
-      // dialogADR.closed.subscribe((res) => {
-      //   if (res.event.toString()) {
-      //     switch (this.pdfView.signerInfo.signType) {
-      //       //ky noi bo
-      //       case '2': {
-      //         if (this.pdfView.isAwait) {
-      //           this.pdfView
-      //             .signPDF(mode, this.dialogSignFile.value.comment)
-      //             .then((value) => {
-      //               if (value) {
-      //                 let result = {
-      //                   result: true,
-      //                   mode: mode,
-      //                 };
-      //                 this.notify.notifyCode('RS002');
-      //                 this.canOpenSubPopup = false;
-      //                 this.dialog && this.dialog.close(result);
-      //               } else {
-      //                 this.canOpenSubPopup = false;
-      //                 let result = {
-      //                   result: false,
-      //                   mode: mode,
-      //                 };
-      //                 this.notify.notifyCode('SYS021');
-      //                 this.dialog && this.dialog.close(result);
-      //               }
-      //             });
-      //         }
+  approve(mode, title: string, subTitle: string, comment: any) {
+    // if (this.oApprovalTrans?.approveControl != '1') {
+    //   // let dialogADR = this.callfc.openForm(
+    //   //   PopupADRComponent,
+    //   //   title,
+    //   //   500,
+    //   //   500,
+    //   //   this.funcID,
+    //   //   {
+    //   //     signfileID: this.sfRecID,
+    //   //     mode: mode,
+    //   //     title: title,
+    //   //     subTitle: subTitle,
+    //   //     funcID: this.funcID,
+    //   //     formModel: this.formModel,
+    //   //     formGroup: this.dialogSignFile,
+    //   //     stepType: this.data.stepType,
+    //   //     approveControl: this.oApprovalTrans?.approveControl,
+    //   //   }
+    //   // );
 
-      //         //khong doi
-      //         else {
-      //           switch (mode.toString()) {
-      //             case '5': {
-      //               this.esService
-      //                 .updateTransAwaitingStatus(this.transRecID, false)
-      //                 .subscribe((updateTransStatus) => {
-      //                   if (updateTransStatus) {
-      //                     let result = {
-      //                       result: true,
-      //                       mode: 9, //dang ky
-      //                     };
-      //                     this.pdfView
-      //                       .signPDF(mode, this.dialogSignFile.value.comment)
-      //                       .then((value) => {
-      //                         if (value) {
-      //                           let result = {
-      //                             result: true,
-      //                             mode: mode,
-      //                           };
-      //                           this.esService.setupChange.next(true);
-      //                           this.esService.statusChange.next(mode);
-      //                           this.notify.notifyCode('RS002');
-      //                           this.canOpenSubPopup = false;
-      //                         } else {
-      //                           this.canOpenSubPopup = false;
-      //                           this.esService
-      //                             .updateTransAwaitingStatus(
-      //                               this.transRecID,
-      //                               true
-      //                             )
-      //                             .subscribe((updateTransStatus) => {
-      //                               //that bai
-      //                               this.esService.setupChange.next(true);
-      //                               this.esService.statusChange.next(3);
-      //                               this.notify.notifyCode('ES017');
-      //                             });
-      //                         }
-      //                       });
-      //                     this.canOpenSubPopup = false;
-      //                     this.dialog && this.dialog.close(result);
-      //                   } else {
-      //                     this.canOpenSubPopup = false;
-      //                     let result = {
-      //                       result: false,
-      //                       mode: mode,
-      //                     };
-      //                     this.notify.notifyCode('SYS021');
-      //                     this.dialog && this.dialog.close(result);
-      //                   }
-      //                 });
-      //               break;
-      //             }
-      //           }
-      //         }
-      //         break;
-      //       }
-      //       //ky cong khai
-      //       case '1': {
-      //         this.esService
-      //           .getSignContracts(
-      //             this.sfRecID,
-      //             this.pdfView.curFileID,
-      //             this.pdfView.curFileUrl,
-      //             this.stepNo
-      //           )
-      //           .subscribe(async (lstContract) => {
-      //             switch (this.signerInfo.supplier) {
-      //               //usb
-      //               case '5': {
-      //                 if (lstContract) {
-      //                   let finalContract = await this.signContractUSBToken(
-      //                     lstContract,
-      //                     0,
-      //                     this.dialogSignFile.value.comment
-      //                   );
-      //                   if (finalContract) {
-      //                     let result = {
-      //                       result: true,
-      //                       mode: mode,
-      //                     };
-      //                     this.notify.notifyCode('RS002');
-      //                     this.canOpenSubPopup = false;
-      //                     this.dialog && this.dialog.close(result);
-      //                   } else {
-      //                     this.canOpenSubPopup = false;
-      //                     let result = {
-      //                       result: false,
-      //                       mode: mode,
-      //                     };
-      //                     this.notify.notifyCode('SYS021');
-      //                     this.dialog && this.dialog.close(result);
-      //                   }
-      //                 }
-      //                 break;
-      //               }
+    //   // this.pdfView.curPage = this.pdfView.pageMax;
+    //   // dialogADR.closed.subscribe((res) => {
+    //   //   if (res.event.toString()) {
+    //   //     switch (this.pdfView.signerInfo.signType) {
+    //   //       //ky noi bo
+    //   //       case '2': {
+    //   //         if (this.pdfView.isAwait) {
+    //   //           this.pdfView
+    //   //             .signPDF(mode, this.dialogSignFile.value.comment)
+    //   //             .then((value) => {
+    //   //               if (value) {
+    //   //                 let result = {
+    //   //                   result: true,
+    //   //                   mode: mode,
+    //   //                 };
+    //   //                 this.notify.notifyCode('RS002');
+    //   //                 this.canOpenSubPopup = false;
+    //   //                 this.dialog && this.dialog.close(result);
+    //   //               } else {
+    //   //                 this.canOpenSubPopup = false;
+    //   //                 let result = {
+    //   //                   result: false,
+    //   //                   mode: mode,
+    //   //                 };
+    //   //                 this.notify.notifyCode('SYS021');
+    //   //                 this.dialog && this.dialog.close(result);
+    //   //               }
+    //   //             });
+    //   //         }
 
-      //               //vnpt || ky noi bo
-      //               default: {
-      //                 this.pdfView
-      //                   .signPDF(mode, this.dialogSignFile.value.comment)
-      //                   .then((value) => {
-      //                     if (value) {
-      //                       let result = {
-      //                         result: true,
-      //                         mode: mode,
-      //                       };
-      //                       this.notify.notifyCode('RS002');
-      //                       this.canOpenSubPopup = false;
-      //                       this.dialog && this.dialog.close(result);
-      //                     } else {
-      //                       this.canOpenSubPopup = false;
-      //                       let result = {
-      //                         result: false,
-      //                         mode: mode,
-      //                       };
-      //                       this.notify.notifyCode('SYS021');
-      //                       this.dialog && this.dialog.close(result);
-      //                     }
-      //                   });
-      //               }
-      //             }
-      //           });
-      //       }
-      //     }
-      //   }
-      // });
+    //   //         //khong doi
+    //   //         else {
+    //   //           switch (mode.toString()) {
+    //   //             case '5': {
+    //   //               this.esService
+    //   //                 .updateTransAwaitingStatus(this.transRecID, false)
+    //   //                 .subscribe((updateTransStatus) => {
+    //   //                   if (updateTransStatus) {
+    //   //                     let result = {
+    //   //                       result: true,
+    //   //                       mode: 9, //dang ky
+    //   //                     };
+    //   //                     this.pdfView
+    //   //                       .signPDF(mode, this.dialogSignFile.value.comment)
+    //   //                       .then((value) => {
+    //   //                         if (value) {
+    //   //                           let result = {
+    //   //                             result: true,
+    //   //                             mode: mode,
+    //   //                           };
+    //   //                           this.esService.setupChange.next(true);
+    //   //                           this.esService.statusChange.next(mode);
+    //   //                           this.notify.notifyCode('RS002');
+    //   //                           this.canOpenSubPopup = false;
+    //   //                         } else {
+    //   //                           this.canOpenSubPopup = false;
+    //   //                           this.esService
+    //   //                             .updateTransAwaitingStatus(
+    //   //                               this.transRecID,
+    //   //                               true
+    //   //                             )
+    //   //                             .subscribe((updateTransStatus) => {
+    //   //                               //that bai
+    //   //                               this.esService.setupChange.next(true);
+    //   //                               this.esService.statusChange.next(3);
+    //   //                               this.notify.notifyCode('ES017');
+    //   //                             });
+    //   //                         }
+    //   //                       });
+    //   //                     this.canOpenSubPopup = false;
+    //   //                     this.dialog && this.dialog.close(result);
+    //   //                   } else {
+    //   //                     this.canOpenSubPopup = false;
+    //   //                     let result = {
+    //   //                       result: false,
+    //   //                       mode: mode,
+    //   //                     };
+    //   //                     this.notify.notifyCode('SYS021');
+    //   //                     this.dialog && this.dialog.close(result);
+    //   //                   }
+    //   //                 });
+    //   //               break;
+    //   //             }
+    //   //           }
+    //   //         }
+    //   //         break;
+    //   //       }
+    //   //       //ky cong khai
+    //   //       case '1': {
+    //   //         this.esService
+    //   //           .getSignContracts(
+    //   //             this.sfRecID,
+    //   //             this.pdfView.curFileID,
+    //   //             this.pdfView.curFileUrl,
+    //   //             this.stepNo
+    //   //           )
+    //   //           .subscribe(async (lstContract) => {
+    //   //             switch (this.signerInfo.supplier) {
+    //   //               //usb
+    //   //               case '5': {
+    //   //                 if (lstContract) {
+    //   //                   let finalContract = await this.signContractUSBToken(
+    //   //                     lstContract,
+    //   //                     0,
+    //   //                     this.dialogSignFile.value.comment
+    //   //                   );
+    //   //                   if (finalContract) {
+    //   //                     let result = {
+    //   //                       result: true,
+    //   //                       mode: mode,
+    //   //                     };
+    //   //                     this.notify.notifyCode('RS002');
+    //   //                     this.canOpenSubPopup = false;
+    //   //                     this.dialog && this.dialog.close(result);
+    //   //                   } else {
+    //   //                     this.canOpenSubPopup = false;
+    //   //                     let result = {
+    //   //                       result: false,
+    //   //                       mode: mode,
+    //   //                     };
+    //   //                     this.notify.notifyCode('SYS021');
+    //   //                     this.dialog && this.dialog.close(result);
+    //   //                   }
+    //   //                 }
+    //   //                 break;
+    //   //               }
 
-      let dialogComment = this.callfc.openForm(
-        PopupCommentComponent,
-        title,
-        500,
-        500,
-        this.funcID,
-        {
-          signfileID: this.sfRecID,
-          title: title,
-          formModel: this.formModel,
-          formGroup: this.dialogSignFile,
-          stepType: this.data.stepType,
-          approveControl: this.oApprovalTrans?.approveControl,
-          mode: this.mode,
-        }
-      );
+    //   //               //vnpt || ky noi bo
+    //   //               default: {
+    //   //                 this.pdfView
+    //   //                   .signPDF(mode, this.dialogSignFile.value.comment)
+    //   //                   .then((value) => {
+    //   //                     if (value) {
+    //   //                       let result = {
+    //   //                         result: true,
+    //   //                         mode: mode,
+    //   //                       };
+    //   //                       this.notify.notifyCode('RS002');
+    //   //                       this.canOpenSubPopup = false;
+    //   //                       this.dialog && this.dialog.close(result);
+    //   //                     } else {
+    //   //                       this.canOpenSubPopup = false;
+    //   //                       let result = {
+    //   //                         result: false,
+    //   //                         mode: mode,
+    //   //                       };
+    //   //                       this.notify.notifyCode('SYS021');
+    //   //                       this.dialog && this.dialog.close(result);
+    //   //                     }
+    //   //                   });
+    //   //               }
+    //   //             }
+    //   //           });
+    //   //       }
+    //   //     }
+    //   //   }
+    //   // });
 
-      // let dialogComment = this.callfc.openForm(
-      //   PopupADRComponent,
-      //   title,
-      //   500,
-      //   500,
-      //   this.funcID,
-      //   {
-      //     title: title,
-      //     subTitle: subTitle,
-      //     formModel: this.formModel,
-      //     approveControl: this.oApprovalTrans?.approveControl,
-      //   }
-      // );
-      this.pdfView.curPage = this.pdfView.pageMax;
-      dialogComment.closed.subscribe((res) => {
-        if (res.event) {
-          let result = res.event;
-          this.dialogSignFile.patchValue({ comment: result.comment });
-          switch (this.pdfView.signerInfo.signType) {
-            //ky noi bo
-            case '2': {
-              if (this.pdfView.isAwait) {
-                this.pdfView
-                  .signPDF(mode, this.dialogSignFile.value.comment)
-                  .then((value) => {
-                    if (value) {
-                      let result = {
-                        result: true,
-                        mode: mode,
-                      };
-                      this.notify.notifyCode('RS002');
-                      this.canOpenSubPopup = false;
-                      this.dialog && this.dialog.close(result);
-                    } else {
-                      this.canOpenSubPopup = false;
-                      let result = {
-                        result: false,
-                        mode: mode,
-                      };
-                      this.notify.notifyCode('SYS021');
-                      this.dialog && this.dialog.close(result);
-                    }
-                  });
-              }
+    //   let dialogComment = this.callfc.openForm(
+    //     PopupCommentComponent,
+    //     title,
+    //     500,
+    //     500,
+    //     this.funcID,
+    //     {
+    //       signfileID: this.sfRecID,
+    //       title: title,
+    //       formModel: this.formModel,
+    //       formGroup: this.dialogSignFile,
+    //       stepType: this.data.stepType,
+    //       approveControl: this.oApprovalTrans?.approveControl,
+    //       mode: this.mode,
+    //     }
+    //   );
 
-      //         //khong doi
-      //         else {
-      //           switch (mode.toString()) {
-      //             case '5': {
-      //               this.esService
-      //                 .updateTransAwaitingStatus(this.transRecID, false)
-      //                 .subscribe((updateTransStatus) => {
-      //                   if (updateTransStatus) {
-      //                     let result = {
-      //                       result: true,
-      //                       mode: 9, //dang ky
-      //                     };
-      //                     this.pdfView
-      //                       .signPDF(mode, this.dialogSignFile.value.comment)
-      //                       .then((value) => {
-      //                         if (value) {
-      //                           let result = {
-      //                             result: true,
-      //                             mode: mode,
-      //                           };
-      //                           this.esService.setupChange.next(true);
-      //                           this.esService.statusChange.next(mode);
-      //                           this.notify.notifyCode('RS002');
-      //                           this.canOpenSubPopup = false;
-      //                         } else {
-      //                           this.canOpenSubPopup = false;
-      //                           this.esService
-      //                             .updateTransAwaitingStatus(
-      //                               this.transRecID,
-      //                               true
-      //                             )
-      //                             .subscribe((updateTransStatus) => {
-      //                               //that bai
-      //                               this.esService.setupChange.next(true);
-      //                               this.esService.statusChange.next(3);
-      //                               this.notify.notifyCode('ES017');
-      //                             });
-      //                         }
-      //                       });
-      //                     this.canOpenSubPopup = false;
-      //                     this.dialog && this.dialog.close(result);
-      //                   } else {
-      //                     this.canOpenSubPopup = false;
-      //                     let result = {
-      //                       result: false,
-      //                       mode: mode,
-      //                     };
-      //                     this.notify.notifyCode('SYS021');
-      //                     this.dialog && this.dialog.close(result);
-      //                   }
-      //                 });
-      //               break;
-      //             }
-      //           }
-      //         }
-      //         break;
-      //       }
-      //       //ky cong khai
-      //       case '1': {
-      //         this.esService
-      //           .getSignContracts(
-      //             this.sfRecID,
-      //             this.pdfView.curFileID,
-      //             this.pdfView.curFileUrl,
-      //             this.stepNo
-      //           )
-      //           .subscribe(async (lstContract) => {
-      //             switch (this.signerInfo.supplier) {
-      //               //usb
-      //               case '5': {
-      //                 if (lstContract) {
-      //                   let finalContract = await this.signContractUSBToken(
-      //                     lstContract,
-      //                     0,
-      //                     this.dialogSignFile.value.comment
-      //                   );
-      //                   if (finalContract) {
-      //                     let result = {
-      //                       result: true,
-      //                       mode: mode,
-      //                     };
-      //                     this.notify.notifyCode('RS002');
-      //                     this.canOpenSubPopup = false;
-      //                     this.dialog && this.dialog.close(result);
-      //                   } else {
-      //                     this.canOpenSubPopup = false;
-      //                     let result = {
-      //                       result: false,
-      //                       mode: mode,
-      //                     };
-      //                     this.notify.notifyCode('SYS021');
-      //                     this.dialog && this.dialog.close(result);
-      //                   }
-      //                 }
-      //                 break;
-      //               }
+    //   this.pdfView.curPage = this.pdfView.pageMax;
+    //   dialogComment.closed.subscribe((res) => {
+    //     if (res.event) {
+    //       let result = res.event;
+    //       this.dialogSignFile.patchValue({ comment: result.comment });
+    //       switch (this.pdfView.signerInfo.signType) {
+    //         //ky noi bo
+    //         case '2': {
+    //           if (this.pdfView.isAwait) {
+    //             this.pdfView
+    //               .signPDF(mode, this.dialogSignFile.value.comment)
+    //               .then((value) => {
+    //                 if (value) {
+    //                   let result = {
+    //                     result: true,
+    //                     mode: mode,
+    //                   };
+    //                   this.notify.notifyCode('RS002');
+    //                   this.canOpenSubPopup = false;
+    //                   this.dialog && this.dialog.close(result);
+    //                 } else {
+    //                   this.canOpenSubPopup = false;
+    //                   let result = {
+    //                     result: false,
+    //                     mode: mode,
+    //                   };
+    //                   this.notify.notifyCode('SYS021');
+    //                   this.dialog && this.dialog.close(result);
+    //                 }
+    //               });
+    //           }
 
-      //               //vnpt || ky noi bo
-      //               default: {
-      //                 this.pdfView
-      //                   .signPDF(mode, this.dialogSignFile.value.comment)
-      //                   .then((value) => {
-      //                     if (value) {
-      //                       let result = {
-      //                         result: true,
-      //                         mode: mode,
-      //                       };
-      //                       this.notify.notifyCode('RS002');
-      //                       this.canOpenSubPopup = false;
-      //                       this.dialog && this.dialog.close(result);
-      //                     } else {
-      //                       this.canOpenSubPopup = false;
-      //                       let result = {
-      //                         result: false,
-      //                         mode: mode,
-      //                       };
-      //                       this.notify.notifyCode('SYS021');
-      //                       this.dialog && this.dialog.close(result);
-      //                     }
-      //                   });
-      //               }
-      //             }
-      //           });
-      //       }
-      //     }
-      //   }
-      // });
-      // this.pdfView.curPage = this.pdfView.pageMax;
+    //           //         //khong doi
+    //           //         else {
+    //           //           switch (mode.toString()) {
+    //           //             case '5': {
+    //           //               this.esService
+    //           //                 .updateTransAwaitingStatus(this.transRecID, false)
+    //           //                 .subscribe((updateTransStatus) => {
+    //           //                   if (updateTransStatus) {
+    //           //                     let result = {
+    //           //                       result: true,
+    //           //                       mode: 9, //dang ky
+    //           //                     };
+    //           //                     this.pdfView
+    //           //                       .signPDF(mode, this.dialogSignFile.value.comment)
+    //           //                       .then((value) => {
+    //           //                         if (value) {
+    //           //                           let result = {
+    //           //                             result: true,
+    //           //                             mode: mode,
+    //           //                           };
+    //           //                           this.esService.setupChange.next(true);
+    //           //                           this.esService.statusChange.next(mode);
+    //           //                           this.notify.notifyCode('RS002');
+    //           //                           this.canOpenSubPopup = false;
+    //           //                         } else {
+    //           //                           this.canOpenSubPopup = false;
+    //           //                           this.esService
+    //           //                             .updateTransAwaitingStatus(
+    //           //                               this.transRecID,
+    //           //                               true
+    //           //                             )
+    //           //                             .subscribe((updateTransStatus) => {
+    //           //                               //that bai
+    //           //                               this.esService.setupChange.next(true);
+    //           //                               this.esService.statusChange.next(3);
+    //           //                               this.notify.notifyCode('ES017');
+    //           //                             });
+    //           //                         }
+    //           //                       });
+    //           //                     this.canOpenSubPopup = false;
+    //           //                     this.dialog && this.dialog.close(result);
+    //           //                   } else {
+    //           //                     this.canOpenSubPopup = false;
+    //           //                     let result = {
+    //           //                       result: false,
+    //           //                       mode: mode,
+    //           //                     };
+    //           //                     this.notify.notifyCode('SYS021');
+    //           //                     this.dialog && this.dialog.close(result);
+    //           //                   }
+    //           //                 });
+    //           //               break;
+    //           //             }
+    //           //           }
+    //           //         }
+    //           //         break;
+    //           //       }
+    //           //       //ky cong khai
+    //           //       case '1': {
+    //           //         this.esService
+    //           //           .getSignContracts(
+    //           //             this.sfRecID,
+    //           //             this.pdfView.curFileID,
+    //           //             this.pdfView.curFileUrl,
+    //           //             this.stepNo
+    //           //           )
+    //           //           .subscribe(async (lstContract) => {
+    //           //             switch (this.signerInfo.supplier) {
+    //           //               //usb
+    //           //               case '5': {
+    //           //                 if (lstContract) {
+    //           //                   let finalContract = await this.signContractUSBToken(
+    //           //                     lstContract,
+    //           //                     0,
+    //           //                     this.dialogSignFile.value.comment
+    //           //                   );
+    //           //                   if (finalContract) {
+    //           //                     let result = {
+    //           //                       result: true,
+    //           //                       mode: mode,
+    //           //                     };
+    //           //                     this.notify.notifyCode('RS002');
+    //           //                     this.canOpenSubPopup = false;
+    //           //                     this.dialog && this.dialog.close(result);
+    //           //                   } else {
+    //           //                     this.canOpenSubPopup = false;
+    //           //                     let result = {
+    //           //                       result: false,
+    //           //                       mode: mode,
+    //           //                     };
+    //           //                     this.notify.notifyCode('SYS021');
+    //           //                     this.dialog && this.dialog.close(result);
+    //           //                   }
+    //           //                 }
+    //           //                 break;
+    //           //               }
 
+    //           //               //vnpt || ky noi bo
+    //           //               default: {
+    //           //                 this.pdfView
+    //           //                   .signPDF(mode, this.dialogSignFile.value.comment)
+    //           //                   .then((value) => {
+    //           //                     if (value) {
+    //           //                       let result = {
+    //           //                         result: true,
+    //           //                         mode: mode,
+    //           //                       };
+    //           //                       this.notify.notifyCode('RS002');
+    //           //                       this.canOpenSubPopup = false;
+    //           //                       this.dialog && this.dialog.close(result);
+    //           //                     } else {
+    //           //                       this.canOpenSubPopup = false;
+    //           //                       let result = {
+    //           //                         result: false,
+    //           //                         mode: mode,
+    //           //                       };
+    //           //                       this.notify.notifyCode('SYS021');
+    //           //                       this.dialog && this.dialog.close(result);
+    //           //                     }
+    //           //                   });
+    //           //               }
+    //           //             }
+    //           //           });
+    //           //       }
+    //           //     }
+    //           //   }
+    //           // });
+    //           // this.pdfView.curPage = this.pdfView.pageMax;
 
-      // dialogADR.closed.subscribe((res) => {
-      //   if (res.event.toString()) {
-      //     switch (this.pdfView.signerInfo.signType) {
-      //       //ky noi bo
-      //       case '2': {
-      //         if (this.pdfView.isAwait) {
-      //           this.pdfView
-      //             .signPDF(mode, this.dialogSignFile.value.comment)
-      //             .then((value) => {
-      //               if (value) {
-      //                 let result = {
-      //                   result: true,
-      //                   mode: mode,
-      //                 };
-      //                 this.notify.notifyCode('RS002');
-      //                 this.canOpenSubPopup = false;
-      //                 this.dialog && this.dialog.close(result);
-      //               } else {
-      //                 this.canOpenSubPopup = false;
-      //                 let result = {
-      //                   result: false,
-      //                   mode: mode,
-      //                 };
-      //                 this.notify.notifyCode('SYS021');
-      //                 this.dialog && this.dialog.close(result);
-      //               }
-      //             });
-             
+    //           // dialogADR.closed.subscribe((res) => {
+    //           //   if (res.event.toString()) {
+    //           //     switch (this.pdfView.signerInfo.signType) {
+    //           //       //ky noi bo
+    //           //       case '2': {
+    //           //         if (this.pdfView.isAwait) {
+    //           //           this.pdfView
+    //           //             .signPDF(mode, this.dialogSignFile.value.comment)
+    //           //             .then((value) => {
+    //           //               if (value) {
+    //           //                 let result = {
+    //           //                   result: true,
+    //           //                   mode: mode,
+    //           //                 };
+    //           //                 this.notify.notifyCode('RS002');
+    //           //                 this.canOpenSubPopup = false;
+    //           //                 this.dialog && this.dialog.close(result);
+    //           //               } else {
+    //           //                 this.canOpenSubPopup = false;
+    //           //                 let result = {
+    //           //                   result: false,
+    //           //                   mode: mode,
+    //           //                 };
+    //           //                 this.notify.notifyCode('SYS021');
+    //           //                 this.dialog && this.dialog.close(result);
+    //           //               }
+    //           //             });
 
-              //khong doi
-              else {
-                switch (mode.toString()) {
-                  case '5': {
-                    this.esService
-                      .updateTransAwaitingStatus(this.transRecID, false)
-                      .subscribe((updateTransStatus) => {
-                        if (updateTransStatus) {
-                          let result = {
-                            result: true,
-                            mode: 9, //dang ky
-                          };
-                          this.pdfView
-                            .signPDF(mode, this.dialogSignFile.value.comment)
-                            .then((value) => {
-                              if (value) {
-                                let result = {
-                                  result: true,
-                                  mode: mode,
-                                };
-                                this.esService.setupChange.next(true);
-                                this.esService.statusChange.next(mode);
-                                this.notify.notifyCode('RS002');
-                                this.canOpenSubPopup = false;
-                              } else {
-                                this.canOpenSubPopup = false;
-                                this.esService
-                                  .updateTransAwaitingStatus(
-                                    this.transRecID,
-                                    true
-                                  )
-                                  .subscribe((updateTransStatus) => {
-                                    //that bai
-                                    this.esService.setupChange.next(true);
-                                    this.esService.statusChange.next(3);
-                                    this.notify.notifyCode('ES017');
-                                  });
-                              }
-                            });
-                          this.canOpenSubPopup = false;
-                          this.dialog && this.dialog.close(result);
-                        } else {
-                          this.canOpenSubPopup = false;
-                          let result = {
-                            result: false,
-                            mode: mode,
-                          };
-                          this.notify.notifyCode('SYS021');
-                          this.dialog && this.dialog.close(result);
-                        }
-                      });
-                    break;
-                  }
-                }
-              }
-              break;
+    //           //khong doi
+    //           else {
+    //             switch (mode.toString()) {
+    //               case '5': {
+    //                 this.esService
+    //                   .updateTransAwaitingStatus(this.transRecID, false)
+    //                   .subscribe((updateTransStatus) => {
+    //                     if (updateTransStatus) {
+    //                       let result = {
+    //                         result: true,
+    //                         mode: 9, //dang ky
+    //                       };
+    //                       this.pdfView
+    //                         .signPDF(mode, this.dialogSignFile.value.comment)
+    //                         .then((value) => {
+    //                           if (value) {
+    //                             let result = {
+    //                               result: true,
+    //                               mode: mode,
+    //                             };
+    //                             this.esService.setupChange.next(true);
+    //                             this.esService.statusChange.next(mode);
+    //                             this.notify.notifyCode('RS002');
+    //                             this.canOpenSubPopup = false;
+    //                           } else {
+    //                             this.canOpenSubPopup = false;
+    //                             this.esService
+    //                               .updateTransAwaitingStatus(
+    //                                 this.transRecID,
+    //                                 true
+    //                               )
+    //                               .subscribe((updateTransStatus) => {
+    //                                 //that bai
+    //                                 this.esService.setupChange.next(true);
+    //                                 this.esService.statusChange.next(3);
+    //                                 this.notify.notifyCode('ES017');
+    //                               });
+    //                           }
+    //                         });
+    //                       this.canOpenSubPopup = false;
+    //                       this.dialog && this.dialog.close(result);
+    //                     } else {
+    //                       this.canOpenSubPopup = false;
+    //                       let result = {
+    //                         result: false,
+    //                         mode: mode,
+    //                       };
+    //                       this.notify.notifyCode('SYS021');
+    //                       this.dialog && this.dialog.close(result);
+    //                     }
+    //                   });
+    //                 break;
+    //               }
+    //             }
+    //           }
+    //           break;
+    //         }
+    //         //ky cong khai
+    //         case '1': {
+    //           this.esService
+    //             .getSignContracts(
+    //               this.sfRecID,
+    //               this.pdfView.curFileID,
+    //               this.pdfView.curFileUrl,
+    //               this.stepNo
+    //             )
+    //             .subscribe(async (lstContract) => {
+    //               switch (this.signerInfo.supplier) {
+    //                 //usb
+    //                 case '5': {
+    //                   if (lstContract) {
+    //                     let finalContract = await this.signContractUSBToken(
+    //                       lstContract,
+    //                       0,
+    //                       this.dialogSignFile.value.comment
+    //                     );
+    //                     if (finalContract) {
+    //                       let result = {
+    //                         result: true,
+    //                         mode: mode,
+    //                       };
+    //                       this.notify.notifyCode('RS002');
+    //                       this.canOpenSubPopup = false;
+    //                       this.dialog && this.dialog.close(result);
+    //                     } else {
+    //                       this.canOpenSubPopup = false;
+    //                       let result = {
+    //                         result: false,
+    //                         mode: mode,
+    //                       };
+    //                       this.notify.notifyCode('SYS021');
+    //                       this.dialog && this.dialog.close(result);
+    //                     }
+    //                   }
+    //                   break;
+    //                 }
+
+    //                 //vnpt || ky noi bo
+    //                 default: {
+    //                   this.pdfView
+    //                     .signPDF(mode, this.dialogSignFile.value.comment)
+    //                     .then((value) => {
+    //                       if (value) {
+    //                         let result = {
+    //                           result: true,
+    //                           mode: mode,
+    //                         };
+    //                         this.notify.notifyCode('RS002');
+    //                         this.canOpenSubPopup = false;
+    //                         this.dialog && this.dialog.close(result);
+    //                       } else {
+    //                         this.canOpenSubPopup = false;
+    //                         let result = {
+    //                           result: false,
+    //                           mode: mode,
+    //                         };
+    //                         this.notify.notifyCode('SYS021');
+    //                         this.dialog && this.dialog.close(result);
+    //                       }
+    //                     });
+    //                 }
+    //               }
+    //             });
+    //         }
+    //       }
+    //     }
+    //   });
+    // } else {
+    switch (this.pdfView.signerInfo.signType) {
+      case '2': {
+        if (this.pdfView.isAwait) {
+          this.pdfView.signPDF(mode, '').then((value) => {
+            if (value) {
+              let result = {
+                result: true,
+                mode: mode,
+              };
+              this.notify.notifyCode('RS002');
+              this.canOpenSubPopup = false;
+              this.dialog && this.dialog.close(result);
+            } else {
+              this.canOpenSubPopup = false;
+              let result = {
+                result: false,
+                mode: mode,
+              };
+              this.notify.notifyCode('SYS021');
+              this.dialog && this.dialog.close(result);
             }
-            //ky cong khai
-            case '1': {
+          });
+        } else {
+          switch (mode.toString()) {
+            case '5': {
               this.esService
-                .getSignContracts(
-                  this.sfRecID,
-                  this.pdfView.curFileID,
-                  this.pdfView.curFileUrl,
-                  this.stepNo
-                )
-                .subscribe(async (lstContract) => {
-                  switch (this.signerInfo.supplier) {
-                    //usb
-                    case '5': {
-                      if (lstContract) {
-                        let finalContract = await this.signContractUSBToken(
-                          lstContract,
-                          0,
-                          this.dialogSignFile.value.comment
-                        );
-                        if (finalContract) {
+                .updateTransAwaitingStatus(this.transRecID, false)
+                .subscribe((updateTransStatus) => {
+                  if (updateTransStatus) {
+                    let result = {
+                      result: true,
+                      mode: 9, //dang ky
+                    };
+                    this.pdfView
+                      .signPDF(mode, this.dialogSignFile.value.comment)
+                      .then((value) => {
+                        if (value) {
                           let result = {
                             result: true,
                             mode: mode,
                           };
+                          this.esService.statusChange.next(mode);
+                          this.esService.setupChange.next(true);
                           this.notify.notifyCode('RS002');
                           this.canOpenSubPopup = false;
-                          this.dialog && this.dialog.close(result);
                         } else {
+                          this.esService.setupChange.next(true);
                           this.canOpenSubPopup = false;
                           let result = {
                             result: false,
                             mode: mode,
                           };
                           this.notify.notifyCode('SYS021');
-                          this.dialog && this.dialog.close(result);
                         }
-                      }
-                      break;
-                    }
-
-                    //vnpt || ky noi bo
-                    default: {
-                      this.pdfView
-                        .signPDF(mode, this.dialogSignFile.value.comment)
-                        .then((value) => {
-                          if (value) {
-                            let result = {
-                              result: true,
-                              mode: mode,
-                            };
-                            this.notify.notifyCode('RS002');
-                            this.canOpenSubPopup = false;
-                            this.dialog && this.dialog.close(result);
-                          } else {
-                            this.canOpenSubPopup = false;
-                            let result = {
-                              result: false,
-                              mode: mode,
-                            };
-                            this.notify.notifyCode('SYS021');
-                            this.dialog && this.dialog.close(result);
-                          }
-                        });
-                    }
+                      });
+                    this.canOpenSubPopup = false;
+                    this.dialog && this.dialog.close(result);
+                  } else {
+                    this.canOpenSubPopup = false;
+                    let result = {
+                      result: false,
+                      mode: mode,
+                    };
+                    this.esService
+                      .updateTransAwaitingStatus(this.transRecID, true)
+                      .subscribe((updateTransStatus) => {
+                        //that bai
+                        this.esService.setupChange.next(true);
+                        this.esService.statusChange.next(3);
+                        this.notify.notifyCode('ES017');
+                      });
+                    this.notify.notifyCode('SYS021');
+                    this.dialog && this.dialog.close(result);
                   }
                 });
+              break;
             }
           }
         }
-      });
-    } else {
-      switch (this.pdfView.signerInfo.signType) {
-        case '2': {
-          if (this.pdfView.isAwait) {
+
+        break;
+      }
+
+      case '1': {
+        switch (this.signerInfo.supplier) {
+          //usb
+          case '5': {
+            this.esService
+              .getSignContracts(
+                this.sfRecID,
+                this.pdfView.curFileID,
+                this.pdfView.curFileUrl,
+                this.stepNo
+              )
+              .subscribe(async (lstContract) => {
+                if (lstContract) {
+                  let finalContract = await this.signContractUSBToken(
+                    lstContract,
+                    0,
+                    this.dialogSignFile.value.comment
+                  );
+                  if (finalContract) {
+                    let result = {
+                      result: true,
+                      mode: mode,
+                    };
+                    this.notify.notifyCode('RS002');
+                    this.canOpenSubPopup = false;
+                    this.dialog && this.dialog.close(result);
+                  } else {
+                    this.canOpenSubPopup = false;
+                    let result = {
+                      result: false,
+                      mode: mode,
+                    };
+                    this.notify.notifyCode('SYS021');
+                    this.dialog && this.dialog.close(result);
+                  }
+                }
+              });
+            break;
+          }
+
+          //vnpt || ky noi bo
+          default: {
             this.pdfView.signPDF(mode, '').then((value) => {
               if (value) {
                 let result = {
@@ -815,133 +942,10 @@ export class PopupSignForApprovalComponent extends UIComponent {
                 this.dialog && this.dialog.close(result);
               }
             });
-          } else {
-            switch (mode.toString()) {
-              case '5': {
-                this.esService
-                  .updateTransAwaitingStatus(this.transRecID, false)
-                  .subscribe((updateTransStatus) => {
-                    if (updateTransStatus) {
-                      let result = {
-                        result: true,
-                        mode: 9, //dang ky
-                      };
-                      this.pdfView
-                        .signPDF(mode, this.dialogSignFile.value.comment)
-                        .then((value) => {
-                          if (value) {
-                            let result = {
-                              result: true,
-                              mode: mode,
-                            };
-                            this.esService.statusChange.next(mode);
-                            this.esService.setupChange.next(true);
-                            this.notify.notifyCode('RS002');
-                            this.canOpenSubPopup = false;
-                          } else {
-                            this.esService.setupChange.next(true);
-                            this.canOpenSubPopup = false;
-                            let result = {
-                              result: false,
-                              mode: mode,
-                            };
-                            this.notify.notifyCode('SYS021');
-                          }
-                        });
-                      this.canOpenSubPopup = false;
-                      this.dialog && this.dialog.close(result);
-                    } else {
-                      this.canOpenSubPopup = false;
-                      let result = {
-                        result: false,
-                        mode: mode,
-                      };
-                      this.esService
-                        .updateTransAwaitingStatus(this.transRecID, true)
-                        .subscribe((updateTransStatus) => {
-                          //that bai
-                          this.esService.setupChange.next(true);
-                          this.esService.statusChange.next(3);
-                          this.notify.notifyCode('ES017');
-                        });
-                      this.notify.notifyCode('SYS021');
-                      this.dialog && this.dialog.close(result);
-                    }
-                  });
-                break;
-              }
-            }
+            break;
           }
-
-          break;
         }
-
-        case '1': {
-          switch (this.signerInfo.supplier) {
-            //usb
-            case '5': {
-              this.esService
-                .getSignContracts(
-                  this.sfRecID,
-                  this.pdfView.curFileID,
-                  this.pdfView.curFileUrl,
-                  this.stepNo
-                )
-                .subscribe(async (lstContract) => {
-                  if (lstContract) {
-                    let finalContract = await this.signContractUSBToken(
-                      lstContract,
-                      0,
-                      this.dialogSignFile.value.comment
-                    );
-                    if (finalContract) {
-                      let result = {
-                        result: true,
-                        mode: mode,
-                      };
-                      this.notify.notifyCode('RS002');
-                      this.canOpenSubPopup = false;
-                      this.dialog && this.dialog.close(result);
-                    } else {
-                      this.canOpenSubPopup = false;
-                      let result = {
-                        result: false,
-                        mode: mode,
-                      };
-                      this.notify.notifyCode('SYS021');
-                      this.dialog && this.dialog.close(result);
-                    }
-                  }
-                });
-              break;
-            }
-
-            //vnpt || ky noi bo
-            default: {
-              this.pdfView.signPDF(mode, '').then((value) => {
-                if (value) {
-                  let result = {
-                    result: true,
-                    mode: mode,
-                  };
-                  this.notify.notifyCode('RS002');
-                  this.canOpenSubPopup = false;
-                  this.dialog && this.dialog.close(result);
-                } else {
-                  this.canOpenSubPopup = false;
-                  let result = {
-                    result: false,
-                    mode: mode,
-                  };
-                  this.notify.notifyCode('SYS021');
-                  this.dialog && this.dialog.close(result);
-                }
-              });
-              break;
-            }
-          }
-          break;
-        }
+        break;
       }
     }
   }
