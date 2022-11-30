@@ -409,10 +409,11 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(moreFunc,data) {
+  Updaterevisions(data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -422,10 +423,7 @@ export class ProcessesComponent
         option.Width = '550px';
         this.dialog = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
-          {
-            title: this.titleAction,
-            moreFunc: moreFunc,
-          },
+          [this.titleAction],
           option
         );
         this.dialog.closed
@@ -444,7 +442,6 @@ export class ProcessesComponent
     var obj = {
       more: more,
       data: data,
-      funcIdMain: this.funcID,
     };
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
@@ -563,7 +560,7 @@ export class ProcessesComponent
         break;
       case 'BPT107':
         //this.revisions(e.data, data);
-        this.Updaterevisions(e?.data, data);
+        this.Updaterevisions(data);
         break;
       case 'BPT104':
       case 'BPT105':
@@ -641,9 +638,6 @@ export class ProcessesComponent
 
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
-    // this.codxService.navigate('', e?.url); thuong chua add
-    // this.codxService.navigate('', 'bp/processstep/BPT11')
-
     //đoi view
     this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
