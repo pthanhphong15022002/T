@@ -330,22 +330,22 @@
         }}</span>&nbsp;
       <span>{{ data?.interval | vll: vllInterval:"text" | async }}</span>
     </span>
-    <div class="has-action-menu" *ngIf="!hideMoreFC">
+    <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
-          <div class="moreFC rounded-4">
+          <div class="moreFC rounded-4 py-2">
             <ng-container *ngIf="data.stepType == 'P'">
               <ng-container *ngFor="let menu of childFuncOfP">
-                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
-                  <span class="{{ menu.icon }} icon-20 text-hover-primary " [ngbPopover]="hoverViewText(menu.text)"
+                <div class="icon-MF cursor-pointer pt-1 pb-2" (click)="clickMenu(data, menu)">
+                  <span class="{{ menu.icon }} icon-18 text-hover-primary " [ngbPopover]="hoverViewText(menu.text)"
                     triggers="mouseenter:mouseleave" placement="right left" [autoClose]="'outside'"></span>
                 </div>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="data.stepType == 'A'">
               <ng-container *ngFor="let menu of childFuncOfA">
-                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
-                  <span class="{{ menu.icon }} icon-20 text-hover-primary " [ngbPopover]="hoverViewText(menu.text)"
+                <div class="icon-MF cursor-pointer pt-1 pb-2" (click)="clickMenu(data, menu)">
+                  <span class="{{ menu.icon }} icon-18 text-hover-primary " [ngbPopover]="hoverViewText(menu.text)"
                     triggers="mouseenter:mouseleave" placement="right left" [autoClose]="'outside'"></span>
                 </div>
               </ng-container>
