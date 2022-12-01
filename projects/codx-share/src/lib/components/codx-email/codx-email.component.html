@@ -10,8 +10,6 @@
   [dialog]="dialog"
   *ngIf="isAfterRender"
 >
-  <!-- <codx-form [dialog]="dialog" [headerText]="headerText" [subHeaderText]="subHeaderText" [body]="body" [footer]="footer"
-  [formControl]="dialogETemplate" *ngIf="isAfterRender"> -->
   <ng-template #body>
     <div class="request-to">
       <div id="box_from" *ngIf="showFrom">
@@ -59,7 +57,9 @@
                         [src]="
                           './assets/themes/sys/default/img/' +
                           (item.icon ??
-                            (item.objectType | vll: vllShare:'icon' | async) ??
+                            (item.objectType
+                              | vll : vllShare : 'icon'
+                              | async) ??
                             'share_default.svg')
                         "
                       />
@@ -67,7 +67,7 @@
                     <div class="text-gray-600 flex-grow-1 me-2">
                       {{
                         item.text ??
-                          (item.objectType | vll: vllShare:"text" | async)
+                          (item.objectType | vll : vllShare : "text" | async)
                       }}
                     </div>
                     <a
@@ -122,7 +122,9 @@
                         [src]="
                           './assets/themes/sys/default/img/' +
                           (item.icon ??
-                            (item.objectType | vll: vllShare:'icon' | async) ??
+                            (item.objectType
+                              | vll : vllShare : 'icon'
+                              | async) ??
                             'share_default.svg')
                         "
                       />
@@ -131,7 +133,7 @@
                       {{
                         item.text != null
                           ? item.text
-                          : (item.objectType | vll: vllShare:"text" | async)
+                          : (item.objectType | vll : vllShare : "text" | async)
                       }}
                     </div>
                     <a
@@ -155,7 +157,7 @@
                       [src]="
                         './assets/themes/sys/default/img/' +
                         (item.icon ??
-                          (item.objectType | vll: vllShare:'icon' | async) ??
+                          (item.objectType | vll : vllShare : 'icon' | async) ??
                           'share_default.svg')
                       "
                     />
@@ -164,7 +166,7 @@
                     {{
                       item.text != null
                         ? item.text
-                        : (item.objectType | vll: vllShare:"text" | async)
+                        : (item.objectType | vll : vllShare : "text" | async)
                     }}
                   </div>
                   <a
@@ -246,7 +248,7 @@
                       [src]="
                         './assets/themes/sys/default/img/' +
                         (item.icon ??
-                          (item.objectType | vll: vllShare:'icon' | async) ??
+                          (item.objectType | vll : vllShare : 'icon' | async) ??
                           'share_default.svg')
                       "
                     />
@@ -254,7 +256,7 @@
                   <div class="text-gray-600 flex-grow-1 me-2">
                     {{
                       item.text ??
-                        (item.objectType | vll: vllShare:"text" | async)
+                        (item.objectType | vll : vllShare : "text" | async)
                     }}
                   </div>
                   <a
@@ -320,7 +322,7 @@
                       [src]="
                         './assets/themes/sys/default/img/' +
                         (item.icon ??
-                          (item.objectType | vll: vllShare:'icon' | async) ??
+                          (item.objectType | vll : vllShare : 'icon' | async) ??
                           'share_default.svg')
                       "
                     />
@@ -329,7 +331,7 @@
                     {{
                       item.text != null
                         ? item.text
-                        : (item.objectType | vll: vllShare:"text" | async)
+                        : (item.objectType | vll : vllShare : "text" | async)
                     }}
                   </div>
                   <a
