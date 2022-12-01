@@ -15,9 +15,11 @@ import {
   DialogRef,
 } from 'codx-core';
 //import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
-import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
+import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -27,9 +29,9 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
-    cpnAlertRules: PopupAddEmailTemplateComponent,
+    cpnAlertRules: CodxEmailComponent,
     cpnApprovals: CodxApproveStepsComponent,
-    cpnCategories: null,
+    cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
   };
   category = '';
@@ -206,12 +208,12 @@ export class CatagoryComponent implements OnInit {
 
           this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
-        case 'cpnApprovals':
+        case 'cpnapprovals':
           // var rule = this.alertRules[value];
           // if (!rule) return;
-          // data['formGroup'] = null;
+          data['transID'] = null;
           // data['templateID'] = rule.emailTemplate;
-          //this.callfc.openForm(component, '', 800, screen.height, '', value);
+          this.callfc.openForm(component, '', 800, screen.height, '', data);
           break;
         case 'cpnscheduledtasks':
           var schedule = this.schedules[value];
