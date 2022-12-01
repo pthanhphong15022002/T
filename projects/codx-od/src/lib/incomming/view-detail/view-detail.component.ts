@@ -1007,7 +1007,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .subscribe((item: any) => {
             if (item) {
               this.approvalTrans(item?.processID, datas);
-            } else {
+            } 
+            else {
             }
           });
       }

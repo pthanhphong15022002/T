@@ -173,8 +173,8 @@
 </ng-template>
 
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-column">
-    <span >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
-    <span class="fw-bold text-center col-10 text-truncate" >{{data.title}}</span>
+  <div class="d-flex flex-column w-100">
+    <span class="text-center" >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
+    <span class="fw-bold text-center" >{{data.title}}</span>
   </div>
 </ng-template>

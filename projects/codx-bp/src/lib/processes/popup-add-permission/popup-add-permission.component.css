@@ -26,3 +26,15 @@
   font-size: 12px !important;
   font-weight: 400 !important;
 }
+
+.background-name{
+  background: #b2acac;
+    height: 45px;
+    border-radius: 5px;
+}
+
+.text-name{
+  margin-left: 10px;
+  font-weight: 500;
+  font-size: 14px;
+}
