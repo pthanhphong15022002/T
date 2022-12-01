@@ -129,10 +129,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
-    private layout: LayoutService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private fileService: FileService
   ) {
