@@ -36,7 +36,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
-
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   showToolBar = 'true';
   service = 'EP';
   assemblyName = 'EP';
@@ -165,6 +165,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
+          template:this.cardTemplate,
           resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,
