@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -10,14 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import {
-  multiLevelLabelClick,
-  Thickness,
-} from '@syncfusion/ej2-angular-charts';
-import {
-  NodeSelection,
-  RichTextEditorComponent,
-} from '@syncfusion/ej2-angular-richtexteditor';
+import { NodeSelection } from '@syncfusion/ej2-angular-richtexteditor';
 import { DataManager, Query } from '@syncfusion/ej2-data';
 import {
   ApiHttpService,
@@ -32,7 +24,6 @@ import {
 } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EmailSendTo } from 'projects/codx-es/src/lib/codx-es.model';
-import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxShareService } from '../../codx-share.service';
 
