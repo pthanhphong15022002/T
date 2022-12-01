@@ -129,10 +129,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
-    private layout: LayoutService,
     private changeDetectorRef: ChangeDetectorRef,
     private authStore: AuthStore,
-    private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
     private fileService: FileService
   ) {
@@ -425,7 +423,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
       phaseOld.items[index] = processStep;
     } else {
       // doi parent
-      phaseOld.splice(index, 1);
+      phaseOld?.items.splice(index, 1);
       if (index < phaseOld.length - 1) {
         for (var i = index; i < phaseOld.length; i++) {
           phaseOld[i].stepNo--;
