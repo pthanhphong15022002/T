@@ -22,6 +22,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
+    [hideMF]="hideMoreFC"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -307,6 +308,7 @@
                     </div> -->
 
                     <codx-temp-full
+                      [hideMF]="hideMoreFC"
                       (clickMF)="clickMF($event, item)"
                       [typeMF]="'hover'"
                       [formModel]="view.formModel"
@@ -328,13 +330,13 @@
                       *ngIf="!item?.items || item?.items?.length == 0"
                     >
                       <div
-                        style="height:15px; width:100%;"
+                        style="height: 15px; width: 100%"
                         cdkDrag
                         [cdkDragDisabled]="true"
                         [cdkDragData]="null"
-                        (click)='clickAddActivity(item)'
                       >
-                        <!-- <h3>
+                      <!-- (click)="clickAddActivity(item)" -->
+                        <!-- <h3> 
                           Thêm công việc để hoàn thiện quy trình ---Kéo công
                           việc vào đây !-Test đừng ai bắt lỗi , please ! ^^!
                         </h3> -->
@@ -349,7 +351,7 @@
                             >
                             </codx-label>
                           </div> -->
-                          <!-- <span class="dropzone-msg-desc">
+                        <!-- <span class="dropzone-msg-desc">
                             <codx-label
                               name="lblDropDrap2"
                               [formModel]="view.formModel"
@@ -365,6 +367,7 @@
                         <div
                           class="card card-steplist p-0"
                           cdkDrag
+                          [cdkDragDisabled]="lockChild"
                           [cdkDragStartDelay]="200"
                           [cdkDragData]="item1"
                         >
@@ -374,6 +377,7 @@
                                 <span class="icon-reorder"></span>
                               </div> -->
                               <codx-temp-full
+                                [hideMF]="hideMoreFC"
                                 (clickMF)="clickMF($event, item1)"
                                 [typeMF]="'hover'"
                                 [formModel]="view.formModel"
@@ -454,13 +458,16 @@
       >&nbsp;
       <span>{{ data?.interval | vll: vllInterval:"text" | async }}</span>
     </span>
-    <div class="has-action-menu">
+    <div class="has-action-menu" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
           <div class="moreFC rounded-4">
             <ng-container *ngIf="data.stepType == 'P'">
               <ng-container *ngFor="let menu of childFuncOfP">
-                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
+                <div
+                  class="icon-MF cursor-pointer mb-2"
+                  (click)="clickMenu(data, menu)"
+                >
                   <span
                     class="{{ menu.icon }} icon-20 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
@@ -473,7 +480,10 @@
             </ng-container>
             <ng-container *ngIf="data.stepType == 'A'">
               <ng-container *ngFor="let menu of childFuncOfA">
-                <div class="icon-MF cursor-pointer mb-2" (click)="clickMenu(data, menu)">
+                <div
+                  class="icon-MF cursor-pointer mb-2"
+                  (click)="clickMenu(data, menu)"
+                >
                   <span
                     class="{{ menu.icon }} icon-20 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
@@ -510,23 +520,24 @@
       </div>
     </div>
   </div>
-
-  <codx-attachment
-    #attachment
-    [objectType]="view.formModel.entityName"
-    [objectId]="data?.recID"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="0"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="1"
-    [formModel]="view.formModel"
-    [functionID]="funcID"
-    displayThumb="full"
-  >
-  </codx-attachment>
+  <ng-container *ngIf="data.stepType !='P'">
+    <codx-attachment
+      #attachment
+      [objectType]="view.formModel.entityName"
+      [objectId]="data?.recID"
+      hideFolder="1"
+      hideImageUpload="1"
+      hideImageThumb="0"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="1"
+      [formModel]="view.formModel"
+      [functionID]="funcID"
+      displayThumb="full"
+    >
+    </codx-attachment>
+  </ng-container>
 
   <div class="mt-5" *ngIf="data?.owners != null && data?.owners.length > 0">
     <codx-imgs
@@ -620,7 +631,7 @@
     </h1>
     <div>
       <div class="d-flex flex-row-reverse bd-highlight">
-        <div class="p-2 bd-highlight">
+        <div class="p-2 bd-highlight" *ngIf="!hideMoreFC">
           <button
             type="button"
             class="btn btn-light-primary"
@@ -687,8 +698,7 @@
   <ng-container *ngIf="dataFile">
     <codx-view-flowchart [dataFile]="dataFile"></codx-view-flowchart>
   </ng-container>
-  <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty">
-  </ng-container>
+  <ng-container *ngIf="!dataFile" [ngTemplateOutlet]="tmpEmpty"> </ng-container>
 </ng-template>
 
 <ng-template #tmpEmpty>

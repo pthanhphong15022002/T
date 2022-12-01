@@ -18,6 +18,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupAddTaskComponent } from '../../popup/popup-add-task/popup-add-task.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-okr-tasks',
@@ -57,8 +58,13 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   modelResource: ResourceModel;
 
   dayoff = [];
-  constructor(inject: Injector, private omService: CodxOmService) {
+  constructor(
+    inject: Injector, 
+    private omService: CodxOmService,
+    private activatedRoute:ActivatedRoute,
+    ) {
     super(inject);
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.api
       .execSv<any>(
         'SYS',
@@ -142,38 +148,56 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.views = [
-      {
-        type: ViewType.kanban,
-        active: true,
-        sameData: false,
-        request: this.request,
-        request2: this.resourceKanban,
-        model: {
-          template: this.cardKanban,
+    
+    if(this.funcID!='OMT01' && this.funcID!='OMT04'){
+      this.views = [
+        {
+          type: ViewType.kanban,
+          active: true,
+          sameData: false,
+          request: this.request,
+          request2: this.resourceKanban,
+          model: {
+            template: this.cardKanban,
+          },
         },
-      },
-      {
-        type: ViewType.schedule,
-        active: false,
-        sameData: false,
-        request: this.requestSchedule,
-        request2: this.modelResource,
-        showSearchBar: false,
-        showFilter: false,
-        model: {
-          eventModel: this.fields,
-          resourceModel: this.resourceField,
-          //template7: this.footerNone, ///footer
-          template4: this.resourceHeader,
-          // template: this.eventTemplate, lấy event của temo
-          //template2: this.headerTemp,
-          template3: this.cellTemplate,
-          template8: this.contentTmp, //content
-          statusColorRef: 'TM004',
+        {
+          type: ViewType.schedule,
+          active: false,
+          sameData: false,
+          request: this.requestSchedule,
+          request2: this.modelResource,
+          showSearchBar: false,
+          showFilter: false,
+          model: {
+            eventModel: this.fields,
+            resourceModel: this.resourceField,
+            //template7: this.footerNone, ///footer
+            template4: this.resourceHeader,
+            // template: this.eventTemplate, lấy event của temo
+            //template2: this.headerTemp,
+            template3: this.cellTemplate,
+            template8: this.contentTmp, //content
+            statusColorRef: 'TM004',
+          },
         },
-      },
-    ];
+      ];
+    } 
+    else{
+      this.views = [
+        {
+          type: ViewType.kanban,
+          active: true,
+          sameData: false,
+          request: this.request,
+          request2: this.resourceKanban,
+          model: {
+            template: this.cardKanban,
+          },
+        },
+      ]
+    }
+    
   }
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {

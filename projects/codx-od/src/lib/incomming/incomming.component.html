@@ -1,72 +1,152 @@
 <ng-template #itemTemplate let-data>
-  <codx-temp-full (clickMF)="openFormFuncID($event, data)" (click)="click(data)" [typeMF]="'hover'"
-    [title]="data?.title" [desc]="
+  <codx-temp-full
+    (clickMF)="openFormFuncID($event, data)"
+    (click)="click(data)"
+    [typeMF]="'hover'"
+    [title]="data?.title"
+    [desc]="
       convertHtmlAgency(
         data.agencyName,
         this.gridViewSetup?.AgencyName?.headerText
       )
-    " cardCss="card-template border-bottom pt-3 pb-1 px-4" [formModel]="view.formModel" [icoStatus]="data?.urgency"
-    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']" [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [modeImgs]="false" [bookmark]="data.isBookmark"
-    [titleLine]="2" [icoDateCss]="checkDeadLine(data?.deadline)" [dataItem]="data"
-    (changeDataMF)="changeDataMF($event,data)" [footer]="footerTmp" [moreFuncCss]="'me-10'">
+    "
+    cardCss="card-template border-bottom pt-3 pb-1 px-4"
+    [formModel]="view.formModel"
+    [icoStatus]="data?.urgency"
+    [icoStatusVll]="gridViewSetup['Urgency']['referedValue']"
+    [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+    [modeImgs]="false"
+    [bookmark]="data.isBookmark"
+    [titleLine]="2"
+    [icoDateCss]="checkDeadLine(data?.deadline)"
+    [dataItem]="data"
+    (changeDataMF)="changeDataMF($event, data)"
+    [footer]="footerTmp"
+    [moreFuncCss]="'me-10'"
+  >
   </codx-temp-full>
   <!--  [titleLine]="2"  [icoDateCss]="'icon-access_alarm'" -->
 </ng-template>
 <ng-template #panelRightRef>
-  <app-view-detail #viewdetail [data]="lstDtDis" [dataItem]="dataItem" [gridViewSetup]="gridViewSetup" [view]="view"
-    (uploaded)="getDtDis($event)" [pfuncID]="view?.formModel?.funcID">
+  <app-view-detail
+    #viewdetail
+    [data]="lstDtDis"
+    [dataItem]="dataItem"
+    [gridViewSetup]="gridViewSetup"
+    [view]="view"
+    (uploaded)="getDtDis($event)"
+    [pfuncID]="view?.formModel?.funcID"
+  >
   </app-view-detail>
 </ng-template>
 
 <ng-template #cardKanban let-data let-setting="setting">
-  <codx-card-img (clickMF)="openFormFuncID($event, data)" cardCss="card-template border-bottom px-2 pt-4 pb-2"
-    (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'" [icoStatus2]="data?.security"
-    [icoStatusVll2]="gridViewSetup['Security']['referedValue']" [statusVll]="gridViewSetup['Status']['referedValue']"
-    [icoStatus]="data?.urgency" [title]="data?.title" [status]="data.status" [date]="data.createdOn" [rootData]="data"
-    [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter" [dataItem]="data" [showBgColorVll]="true">
+  <codx-card-img
+    (clickMF)="openFormFuncID($event, data)"
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (changeDataMF)="changeDataMF($event, data)"
+    [typeMF]="'hover'"
+    [icoStatus2]="data?.security"
+    [icoStatusVll2]="gridViewSetup['Security']['referedValue']"
+    [statusVll]="gridViewSetup['Status']['referedValue']"
+    [icoStatus]="data?.urgency"
+    [title]="data?.title"
+    [status]="data.status"
+    [date]="data.createdOn"
+    [rootData]="data"
+    [formModel]="view.formModel"
+    [setting]="setting"
+    [footer]="cardImgFooter"
+    [dataItem]="data"
+    [showBgColorVll]="true"
+  >
   </codx-card-img>
 </ng-template>
 
 <ng-template #cardImgFooter let-data let-setting="setting">
   <div class="d-flex flex-column flex-grow-1 mt-2">
-    <div class="d-flex align-items-center mb-2" [innerHTML]="convertHtmlAgency(
-      data.agencyName,
-      this.gridViewSetup?.AgencyName?.headerText
-    )
-  "></div>
+    <div
+      class="d-flex align-items-center mb-2"
+      [innerHTML]="
+        convertHtmlAgency(
+          data.agencyName,
+          this.gridViewSetup?.AgencyName?.headerText
+        )
+      "
+    ></div>
     <div class="d-flex justify-content-end">
-      <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" objectType="AD_Users" [numberImages]="4"
-        [width]="30">
-
+      <codx-imgs
+        [objectId]="getIdUser(data.createdBy, data.owner)"
+        objectType="AD_Users"
+        [numberImages]="4"
+        [width]="30"
+      >
       </codx-imgs>
     </div>
   </div>
 </ng-template>
 
-<codx-views #view [views]="views" (buttonClick)="click($event)" [button]="button" [entityName]="'OD_Dispatches'"
-  [method]="'GetListByStatusAsync'" [assemblyName]="'OD'" [service]="'OD'" [className]="'DispatchesBusiness'"
-  (selectedChange)="valueChange($event)" [selectedFirst]="true" idField="recID" (requestEnded)="requestEnded($event)"
-  (viewChanged)="viewChange($event)">
+<codx-views
+  #view
+  [views]="views"
+  (buttonClick)="click($event)"
+  [button]="button"
+  [entityName]="'OD_Dispatches'"
+  [method]="'GetListByStatusAsync'"
+  [assemblyName]="'OD'"
+  [service]="'OD'"
+  [className]="'DispatchesBusiness'"
+  (selectedChange)="valueChange($event)"
+  [selectedFirst]="true"
+  idField="recID"
+  (requestEnded)="requestEnded($event)"
+  (viewChanged)="viewChange($event)"
+>
 </codx-views>
 <ng-template #footerTmp let-data>
-  <div class="d-flex flex-wrap justify-content-between ">
+  <div class="d-flex flex-wrap justify-content-between">
     <div class="d-flex align-items-center">
-      <codx-vll [value]="data.status" [name]="gridViewSetup['Status']['referedValue']" [showIcon]="true"
-        [showText]="true" [showBgColor]="true" class="badge">
+      <codx-vll
+        [value]="data.status"
+        [name]="gridViewSetup['Status']['referedValue']"
+        [showIcon]="true"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge"
+      >
       </codx-vll>
 
-      <codx-vll *ngIf="view?.formModel?.funcID == 'ODT41' || view?.formModel?.funcID == 'ODT51'"
-        [value]="data.approveStatus" [name]="gridViewSetup['ApproveStatus']['referedValue']" [showIcon]="true"
-        [showText]="true" [showBgColor]="true" class="badge">
+      <codx-vll
+        *ngIf="
+          view?.formModel?.funcID == 'ODT41' ||
+          view?.formModel?.funcID == 'ODT51'
+        "
+        [value]="data.approveStatus"
+        [name]="gridViewSetup['ApproveStatus']['referedValue']"
+        [showIcon]="true"
+        [showText]="true"
+        [showBgColor]="true"
+        class="badge"
+      >
       </codx-vll>
       <div class="d-flex align-items-center">
-        <span class="me-1 icon-14 text-gray-600" [ngClass]="checkDeadLine(data?.deadline)"></span>
-        <span class="text-gray-600 fs-7">{{data.createdOn | amDateFormat: (''||'L')}}</span>
+        <span
+          class="me-1 icon-14 text-gray-600"
+          [ngClass]="checkDeadLine(data?.deadline)"
+        ></span>
+        <span class="text-gray-600 fs-7">{{
+          data.createdOn | amDateFormat: "" || "L"
+        }}</span>
       </div>
     </div>
-    <codx-imgs [objectId]="getIdUser(data.createdBy, data.owner)" [objectType]="'AD_Users'" [width]="30"
-      [numberImages]="3" [mode]="false">
+    <codx-imgs
+      [objectId]="getIdUser(data.createdBy, data.owner)"
+      [objectType]="'AD_Users'"
+      [width]="30"
+      [numberImages]="3"
+      [mode]="false"
+    >
     </codx-imgs>
   </div>
 </ng-template>
