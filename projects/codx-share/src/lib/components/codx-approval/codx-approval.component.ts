@@ -235,7 +235,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     debugger;
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-    if (data.processType == 'ES_SignFiles') {
+    if (data.eSign == true) {
       //Kys
       if (
         funcID == 'SYS201' ||
@@ -302,7 +302,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       // else if (funcID == 'SYS204') {
 
       // }
-    } else if (data.processType != 'ES_SignFiles') {
+    } else {
       var status;
       if (
         funcID == 'SYS201' ||
@@ -325,12 +325,19 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           if (!res2?.msgCodeError) {
             data.status = status;
             this.view.dataService.update(data).subscribe();
+            this.esService.setupChange.next(true);
             this.notifySvr.notifyCode('SYS007');
           } else this.notifySvr.notify(res2?.msgCodeError);
         });
     }
     if (funcID == 'SYS207') {
-      //Khoi phuc
+      this.esService.undo(data?.recID).subscribe((res) => {
+        if (res != null) {
+          data = res;
+          this.view.dataService.update(data).subscribe();
+          this.esService.setupChange.next(true);
+        }
+      });
     }
   }
 
