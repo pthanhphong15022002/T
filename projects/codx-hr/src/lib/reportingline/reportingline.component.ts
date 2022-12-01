@@ -60,8 +60,11 @@ export class ReportinglineComponent extends UIComponent {
   dataSelected: any = null;
   positionID: string = '';
   request: ResourceModel;
-  constructor(private notifiSv: NotificationsService, inject: Injector,
-    private dt:ChangeDetectorRef) {
+  constructor(
+    private notifiSv: NotificationsService,
+    inject: Injector,
+    private dt: ChangeDetectorRef
+  ) {
     super(inject);
   }
 
@@ -123,9 +126,8 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   // btn add toolbar click
-  btnClick(event:any) {
-    if (this.view) 
-    {
+  btnClick(event: any) {
+    if (this.view) {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
@@ -151,12 +153,11 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   // click moreFunction
-  clickMF(event: any, data: any = null) 
-  {
-    if(event){
+  clickMF(event: any, data: any = null) {
+    if (event) {
       switch (event.functionID) {
         case 'SYS03':
-          this.edit(event,data);
+          this.edit(event, data);
           break;
         case 'SYS04':
           this.copy(data);
@@ -167,31 +168,31 @@ export class ReportinglineComponent extends UIComponent {
       }
     }
   }
-  edit(event:any,data:any) {
-    if (this.view && data && event) 
-    {
-      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data)); 
+  edit(event: any, data: any) {
+    if (this.view && data && event) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.view.dataService.edit(this.view.dataService.dataSelected)
-      .subscribe(() => {
-        let data = {
-          dataService: this.view.dataService,
-          formModel: this.view.formModel,
-          data: this.view.dataService.dataSelected,
-          function: this.view.formModel.funcID,
-          isAddMode: false,
-          titleMore: event.text,
-        };
-        this.callfc.openSide(
-          CodxFormDynamicComponent,
-          data,
-          option,
-          this.view.formModel.funcID
-        );
-      });
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe(() => {
+          let data = {
+            dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: this.view.dataService.dataSelected,
+            function: this.view.formModel.funcID,
+            isAddMode: false,
+            titleMore: event.text,
+          };
+          this.callfc.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.view.formModel.funcID
+          );
+        });
     }
   }
   copy(data) {
@@ -235,10 +236,8 @@ export class ReportinglineComponent extends UIComponent {
   }
   loadEmployByCountStatus() {}
 
-  
   // selected data
-  onSelectionChanged(event) 
-  {
+  onSelectionChanged(event) {
     if (this.view) {
       let viewActive = this.view.views.find((e) => e.active == true);
       if (viewActive?.id == '1') return;
@@ -266,10 +265,6 @@ export class ReportinglineComponent extends UIComponent {
       );
     }
   }
-  searchUser($event){
-    
-  }
-  searchChange(event:any){
-    debugger
-  }
+  searchUser($event) {}
+  searchChange(event: any) {}
 }
