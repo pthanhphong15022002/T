@@ -4,5 +4,25 @@
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://172.16.1.210:8011",
   "appName": "hps-file-test",
-  "office365": ""
+  "office365": "",
+  "saas": 1,
+  "SureMeet": {
+    "baseUrl": "https://api.suremeet.vn/",
+    "tokenUrl": "api/auth/token",
+    "addUpdateMeetingUrl": "PublicMeeting/AddUpdate",
+    "connectMettingUrl": "PublicMeeting/Verify",
+    "client_id": "portal",
+    "client_secret": "lacviet@2022@$%!$$!(@",
+    "app_id": "demo.suremeet@gmail.com",
+    "app_secret": "123456"
+  },
+  "firebase": {
+    "apiKey": "AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic",
+    "authDomain": "ermtest-2a9bb.firebaseapp.com",
+    "projectId": "ermtest-2a9bb",
+    "storageBucket": "ermtest-2a9bb.appspot.com",
+    "messagingSenderId": "319703529330",
+    "appId": "1:319703529330:web:d0569f86d85524c1ca0feb",
+    "measurementId": "G-HH40VHYRF0"
+  }
 }
