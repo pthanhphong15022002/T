@@ -967,7 +967,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
-    debugger;
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
@@ -1008,7 +1007,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .subscribe((item: any) => {
             if (item) {
               this.approvalTrans(item?.processID, datas);
-            } else {
+            } 
+            else {
             }
           });
       }
