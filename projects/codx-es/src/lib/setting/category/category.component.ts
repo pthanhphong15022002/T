@@ -25,10 +25,10 @@ import { AttachmentService } from 'projects/codx-share/src/lib/components/attach
 import { ActivatedRoute } from '@angular/router';
 import { CodxEsService } from '../../codx-es.service';
 import { ApprovalStepComponent } from '../approval-step/approval-step.component';
-import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from '../approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
-export class defaultRecource { }
+export class defaultRecource {}
 @Component({
   selector: 'doc-category',
   templateUrl: './category.component.html',

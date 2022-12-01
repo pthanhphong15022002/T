@@ -66,7 +66,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
 
-  @Input() process : BP_Processes;
+  @Input() process: BP_Processes;
   @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
@@ -102,6 +102,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   //view file
   dataChild = [];
   lockParent = false;
+  lockChild = false;
+  hideMoreFC = false;
   // childFunc = [];
   formModelMenu: FormModel;
   vllInterval = 'VL004';
@@ -117,9 +119,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
-  msgBP001 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
-  msgBP002 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+
+  msgBP001 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP002 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
   listCountPhases: any;
+  actived = false;
+  isBlock:any = true;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -138,44 +143,19 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
-    // this.dataView = dt?.data
-    //  this.bpService.viewProcesses.subscribe((res) => {  
-    //  this.process = res
-      // this.processID = this.process?.recID ? this.process?.recID : '';
-      // this.numberColums = this.process?.phases ? this.process?.phases : 0;
-      // this.dataObj = {
-      //   processID: this.processID,
-      // };
-    
-      // this.getFlowChart(this.process);
-      // this.request = new ResourceModel();
-      // this.request.service = 'BP';
-      // this.request.assemblyName = 'BP';
-      // this.request.className = 'ProcessStepsBusiness';
-      // this.request.method = 'GetProcessStepsWithKanbanAsync';
-      // this.request.idField = 'recID';
-      // this.request.dataObj = this.dataObj; ///de test
-
-      // this.resourceKanban = new ResourceModel();
-      // this.resourceKanban.service = 'BP';
-      // this.resourceKanban.assemblyName = 'BP';
-      // this.resourceKanban.className = 'ProcessStepsBusiness';
-      // this.resourceKanban.method = 'GetColumnsKanbanAsync';
-      // this.resourceKanban.dataObj = this.dataObj;
-      // this.listCountPhases = this.process.phases;
-    // });
-
-
   }
 
   onInit(): void {
-    
+    this.actived = this.process?.actived;
+    if (!this.actived) {
+      this.lockChild = this.lockParent = this.hideMoreFC = true;
+    }
     this.processID = this.process?.recID ? this.process?.recID : '';
     this.numberColums = this.process?.phases ? this.process?.phases : 0;
     this.dataObj = {
       processID: this.processID,
     };
-  
+
     this.getFlowChart(this.process);
     this.request = new ResourceModel();
     this.request.service = 'BP';
@@ -252,6 +232,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
+    this.changeDetectorRef.detectChanges();
   }
 
   //Thay doi viewModel
@@ -266,7 +247,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
-      //option.FormModel = this.formModel;
       option.Width = '550px';
       option.zIndex = 1001;
 
@@ -275,7 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         this.view.dataService.dataSelected.parentID = this.parentID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType, this.formModelMenu],
+        ['add', this.titleAction, this.stepType, this.formModelMenu,this.process],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -334,6 +314,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.listPhaseName.push(processStep.stepName);
           }
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -351,6 +332,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
+        option.zIndex = 1001;
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
@@ -358,6 +340,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
@@ -516,6 +499,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
+        option.zIndex = 1001;
         this.dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
@@ -523,6 +507,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
@@ -639,6 +624,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
           }
 
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -654,9 +640,14 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
 
   //#region event
   click(evt: ButtonModel) {
+    this.isBlockClickMoreFunction(this.dataTreeProcessStep);
     if (this.listCountPhases <= 0 && evt.id != 'P') {
+      return this.notiService.notify(this.msgBP001);
+    }
+    if (this.listCountPhases > 0 && evt.id != 'A' && this.isBlock && evt.id != 'P' ) {
       return this.notiService.notify(this.msgBP002);
     }
+
     this.parentID = '';
     if (evt.id == 'btnAdd') {
       this.stepType = 'P';
@@ -793,6 +784,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
 
   onDragDrop(data) {
+    if (!this.actived) {
+      data.parentID = this.crrParentID;
+      return;
+    }
     if (this.crrParentID == data?.parentID) return;
     this.bpService
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
@@ -1118,8 +1113,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
     this.addFlowchart.uploadFile();
   }
 
-  fileSave(e){
-    if(e && (typeof e === 'object')){
+  fileSave(e) {
+    if (e && typeof e === 'object') {
       this.dataFile = e;
       this.changeDetectorRef.detectChanges();
     }
@@ -1131,19 +1126,22 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   }
   checkReferencesByStepType(data, stepType): boolean {
     if (!data?.items || data?.items?.length == 0) return false;
-    this.checkList = data?.items.map((x) => {
-      if (x.stepType == stepType) return x;
+    let checkList = [];
+    data?.items.forEach((x) => {
+      if (x.stepType == stepType) checkList.push(x);
     });
-    let check = this.checkList.length > 0;
+    let check = checkList.length > 0;
     return check;
   }
 
   checkAction(data): boolean {
     if (!data?.items || data?.items?.length == 0) return false;
-    this.checkList = data?.items.map((x) => {
-      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M') return x;
+    let checkList = [];
+    data?.items.forEach((x) => {
+      if (x.stepType != 'C' && x.stepType != 'Q' && x.stepType != 'M')
+        checkList.push(x);
     });
-    let check = this.checkList.length > 0;
+    let check = checkList.length > 0;
     return check;
   }
 
@@ -1199,6 +1197,23 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       });
     } else {
       this.notiService.notifyCode('SYS018');
+    }
+  }
+
+  isBlockClickMoreFunction(listData){
+    const check = listData.length>0?true:false;
+    if(check){
+      this.listCountPhases = listData.length;
+      this.isBlock=true;
+      listData.forEach(x=>{
+          if(x.items.length >0) {
+            this.isBlock=false;
+          }
+      })
+    }
+    else {
+      this.listCountPhases = listData.length;
+      this.isBlock=true;
     }
   }
 }

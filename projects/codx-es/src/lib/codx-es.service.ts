@@ -1081,6 +1081,16 @@ export class CodxEsService {
     );
   }
 
+  undo(transRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [transRecID]
+    );
+  }
+
   getOneApprovalTrans(recID: string) {
     return this.api.execSv<any>(
       'es',

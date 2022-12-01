@@ -29,7 +29,7 @@ import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
-import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
   selector: 'popup-add-approval-step',

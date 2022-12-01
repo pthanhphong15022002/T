@@ -88,6 +88,7 @@
           field="parentID"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
+          [model]="process"
           (valueChange)="valueChangeCbx($event)"
         >
         </codx-input>
@@ -460,7 +461,6 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <!-- <div class="d-flex justify-content-between mt-4" > -->
     <button
       style="float: left"
       type="button"
