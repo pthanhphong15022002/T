@@ -405,6 +405,7 @@ export class CodxEmailComponent implements OnInit {
           break;
         }
         case 'sendTime': {
+          this.data[event.field] = event.data.fromDate;
           this.dialogETemplate.patchValue({
             [event['field']]: event.data.fromDate,
           });
@@ -456,6 +457,7 @@ export class CodxEmailComponent implements OnInit {
           break;
         }
         default: {
+          this.data[event.field] = event.data;
           this.dialogETemplate.patchValue({ [event['field']]: event.data });
         }
       }
