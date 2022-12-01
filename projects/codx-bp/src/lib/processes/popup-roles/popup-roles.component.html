@@ -96,7 +96,7 @@
                   </codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="full" field="full"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="full" field="full"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'full')"
                     >
                   </codx-input>
@@ -124,7 +124,7 @@
                   </codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="read" field="read"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="read" field="read"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'read')">
                   </codx-input>
 
@@ -165,7 +165,7 @@
                   <codx-label [default]="'Cho phép chia sẻ qui trình'" [fiedName]="'DescriptionShare'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="share" field="share"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'share')">
                   </codx-input>
                 </td>
@@ -179,7 +179,7 @@
                   </codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="assign" field="assign"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="assign" field="assign"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'assign')">
                   </codx-input>
                 </td>
@@ -205,7 +205,7 @@
                   <codx-label [default]="'Cho phép download file'" [fiedName]="'DescriptionDownload'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="download" field="download"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="download" field="download"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
                   </codx-input>
                 </td>

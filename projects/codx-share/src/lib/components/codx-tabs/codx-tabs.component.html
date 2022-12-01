@@ -32,7 +32,7 @@
     <ng-container *ngSwitchCase="'history'">
       <div class="tab-his">
         <div class="tab_body">
-          <codx-tree-history
+          <!-- <codx-tree-history
             [objectID]="objectID"
             [id]="id"
             [formModel]="formModel"
@@ -40,7 +40,8 @@
             [viewIcon]="true"
             [funcID]="funcID"
           >
-          </codx-tree-history>
+          </codx-tree-history> -->
+          <codx-history [objectID]="objectID" [id]="id"  [formModel]="formModel" [funcID]="funcID"></codx-history>
         </div>
       </div>
     </ng-container>
