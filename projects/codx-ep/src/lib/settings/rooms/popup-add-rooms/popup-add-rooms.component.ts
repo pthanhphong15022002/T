@@ -124,6 +124,9 @@ export class PopupAddRoomsComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
   onSaveForm() {
+    if(this.data.area==null || this.data.area==''){
+      this.data.area=0;
+    }
     this.fGroupAddRoom.patchValue(this.data);
     if (this.fGroupAddRoom.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddRoom, this.formModel);

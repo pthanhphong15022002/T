@@ -7,11 +7,11 @@
           <span class="me-2 icon-18 icon-history"></span>
           <div class="d-flex flex-column w-100">
             <div class="pb-1">
-              <div *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                <codx-label class="text-dark fw-bold fs-5 cursor-pointer" (dblclick)="getProcessesStep(item)" default="Phiên bản đầu tiên"></codx-label>
-              </div>
+              <button class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
+                <codx-label class="text-dark fw-bold fs-5" (dblclick)="getProcessesStep(item)" default="Phiên bản đầu tiên"></codx-label>
+              </button>
               <ng-template #firstVersionNo>
-                <div class="text-dark fw-bold fs-5 cursor-pointer" (dblclick)="getProcessesStep(item)">
+                <button class="text-dark fw-bold fs-5 button-version" (dblclick)="getProcessesStep(item)">
                   <codx-label default="Phiên bản:"></codx-label>
                   <span #versionNo>
                     {{
@@ -25,7 +25,7 @@
                     | async
                     }}
                   </span>
-                </div>
+                </button>
               </ng-template>
             </div>
             <div class="pb-1">
