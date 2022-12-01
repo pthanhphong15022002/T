@@ -57,6 +57,7 @@ export class RevisionsComponent implements OnInit {
   gridViewSetup:any;
   fucntionIdMain:any;
   enterComment:any;
+  enterName:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -86,6 +87,7 @@ export class RevisionsComponent implements OnInit {
       if (res) {
         this.gridViewSetup = res;
         this.enterComment =this.gridViewSetup['Comment']?.description;
+        this.enterName = this.gridViewSetup['VersionName']?.headerText;
       }
     });
 
@@ -126,11 +128,18 @@ export class RevisionsComponent implements OnInit {
   onSave() {
     switch(this.checkValiName(this.verName)) {
       case this.msgErrorValidIsNull: {
-        this.notiService.notifyCode('SYS009', 0, '"' + 'headerText' + '"');
+        this.notiService.notifyCode('SYS009', 0, '"' + this.enterName + '"');
          break;
       }
       case this.msgErrorValidExit: {
-        this.notiService.notifyCode('BP002');
+
+        this.notiService.alertCode('BP004').subscribe((x) => {
+          if (x.event.status == 'N') {
+            return;
+          } else {
+            this.isUpdate = true;
+          }
+        });
          break;
       }
       case this.msgSucess: {

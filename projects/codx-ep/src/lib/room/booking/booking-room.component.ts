@@ -48,6 +48,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
 
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
@@ -159,7 +160,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
           resourceModel: this.resourceField, //resource
-          //template:this.cardTemplate,
+          template:this.cardTemplate,
           template4: this.resourceHeader,
           //template5: this.resourceTootip,//tooltip
           template6: this.mfButton, //header

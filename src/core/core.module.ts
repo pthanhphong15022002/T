@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { FilterPipe } from './pipes/filterObject.pipe';
 import { DatetimePipe } from './pipes/datetime.pipe';
 import { FormatDatetimePipe } from './pipes/format-datetime.pipe';
-import { SharedControlPipe } from './pipes/sharedcontrol.pipe';
+// import { SharedControlPipe } from './pipes/sharedcontrol.pipe';
 import { FunctionPipe } from './pipes/function.pipe';
 import { BackgroundImagePipe } from './pipes/background-image.pipe';
 import { ErrorInterceptor, JwtInterceptor } from 'codx-core';
@@ -24,7 +24,7 @@ import { TimeAgoPipe } from '../../projects/codx-hr/src/lib/pipe/time-ago.pipe';
     FilterPipe,
     DatetimePipe,
     FormatDatetimePipe,
-    SharedControlPipe,
+    // SharedControlPipe,
     FunctionPipe,
     BackgroundImagePipe,
     AvatarCardPipe,
@@ -42,7 +42,7 @@ import { TimeAgoPipe } from '../../projects/codx-hr/src/lib/pipe/time-ago.pipe';
     GroupFilterPipe,
     FilterPipe,
     FormatDatetimePipe,
-    SharedControlPipe,
+    // SharedControlPipe,
     FunctionPipe,
     BackgroundImagePipe,
     AvatarCardPipe,

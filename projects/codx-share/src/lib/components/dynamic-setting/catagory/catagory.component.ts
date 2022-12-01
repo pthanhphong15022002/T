@@ -102,10 +102,9 @@ export class CatagoryComponent implements OnInit {
         else if (this.category === '5') this.getAlertRule();
         else if (this.category === '6') this.getSchedules();
       }
-      this.loadSettingValue();
-
       this.changeDetectorRef.detectChanges();
     }
+    this.loadSettingValue();
 
     //labels
     this.api
@@ -146,6 +145,7 @@ export class CatagoryComponent implements OnInit {
       );
       data['settingFull'] = itemChild;
       data['valuelist'] = this.valuelist;
+      //data['settingValue'] = this.settingValue;
       data['category'] = this.category;
       data['function'] = this.function;
       width = 500;

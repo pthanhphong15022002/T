@@ -82,7 +82,7 @@ export class CalendarNotesComponent
   dialog: DialogRef;
 
   @Input() showHeader = true;
-  @Input() typeCalendar = 'month';
+  @Input() typeCalendar = 'week';
   @Input() showList = true;
   @Input() showListParam = false;
 

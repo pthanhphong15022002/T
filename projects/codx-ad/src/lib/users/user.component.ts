@@ -59,7 +59,7 @@ export class UserComponent extends UIComponent {
     super(inject);
     this.dialog = dialog;
     this.user = this.authStore.get();
-    this.funcID = this.activeRouter.snapshot.params['funcID'];
+    this.funcID = this.activeRouter.snapshot.params['funcID'];  
   }
 
   onInit(): void {

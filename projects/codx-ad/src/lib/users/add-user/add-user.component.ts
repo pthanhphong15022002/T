@@ -316,8 +316,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
           dt.userID = this.adUser.userID;
         });
       }
-      this.adUser
-      debugger
+      this.adUser;
+
       data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
@@ -344,8 +344,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res.save) {
           this.getHTMLFirstPost(this.adUser);
-          this.adService.createFirstPost(this.tmpPost).subscribe((res) => {
-          });
+          this.adService.createFirstPost(this.tmpPost).subscribe((res) => {});
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
