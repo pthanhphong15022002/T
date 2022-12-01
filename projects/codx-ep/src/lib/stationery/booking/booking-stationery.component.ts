@@ -84,6 +84,7 @@ export class BookingStationeryComponent
   onInit(): void {
     this.button = {
       id: 'btnAdd',
+      disabled: true,
     };
   }
 
@@ -133,7 +134,7 @@ export class BookingStationeryComponent
   }
 
   changeDataMF(event, data: any) {
-    if (event != null && data != null && this.funcID == 'EPT32') {
+    if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {
         if (
           func.functionID == 'SYS02' /*MF sửa*/ ||
@@ -144,11 +145,9 @@ export class BookingStationeryComponent
         }
       });
     }
-    if(event != null && data != null && data.issueStatus == 3){
+    if (event != null && data != null && data.issueStatus == 3) {
       event.forEach((func) => {
-        if (
-          func.functionID == 'EPT40303' /*MF cấp phát*/ 
-        ) {
+        if (func.functionID == 'EPT40303' /*MF cấp phát*/) {
           func.disabled = true;
         }
       });
@@ -202,7 +201,6 @@ export class BookingStationeryComponent
         this.view.dataService
           .edit(this.view.dataService.dataSelected)
           .subscribe((res) => {
-
             this.popupClosed = false;
             let option = new SidebarModel();
             option.DataService = this.view?.dataService;

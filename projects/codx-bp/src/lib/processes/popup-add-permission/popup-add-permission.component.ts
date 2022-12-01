@@ -73,7 +73,9 @@ export class PopupAddPermissionComponent implements OnInit {
   onShare() {
     this.per.recIDProcess = this.id;
     if (this.toPermission == null) {
-      this.notificationsService.notify('Không được phép để trống!');
+      this.notificationsService.notifyCode(
+        'SYS009'
+      );
       return;
     }
     this.per.toPermission = this.toPermission;
@@ -136,12 +138,12 @@ export class PopupAddPermissionComponent implements OnInit {
             this.notificationsService.notifyCode('OD013');
             this.dialog.close(res);
           } else {
-            this.notificationsService.notify('Đã yêu cầu cấp quyền');
+            this.notificationsService.notifyCode('SYS034');
             this.dialog.close(res);
           }
         } else {
           if (this.per.form == '2')
-            this.notificationsService.notify('Chia sẻ không thành công');
+            this.notificationsService.notifyCode('SYS016');
           else
             this.notificationsService.notify(
               'Yêu cầu cấp quyền không thành công'
