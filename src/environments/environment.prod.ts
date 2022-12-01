@@ -32,6 +32,4 @@ export const environment = {
     appId: "1:319703529330:web:d0569f86d85524c1ca0feb",
     measurementId: "G-HH40VHYRF0"
   },
-  FCMToken: "",
-  IMGEXTENSION: ["png", "jpeg", "jpg", "bmp"]
 };
