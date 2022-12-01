@@ -389,17 +389,19 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId != '' && this.objectId != undefined) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      this.dataRequest.predicate = "ObjectID=@0 && IsDelete = false";
+      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false';
       this.dataRequest.dataValue = this.objectId;
-      this.dataRequest.entityName = "DM_FileInfo";
-      this.dataRequest.funcID = "DMT02";
-      this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
-        if (res) {
-          this.data = res[0];
-          this.fileGet.emit(this.data);
-          this.changeDetectorRef.detectChanges();
-        }
-      });
+      this.dataRequest.entityName = 'DM_FileInfo';
+      this.dataRequest.funcID = 'DMT02';
+      this.fileService
+        .getFileByDataRequest(this.dataRequest)
+        .subscribe((res) => {
+          if (res) {
+            this.data = res[0];
+            this.fileGet.emit(this.data);
+            this.changeDetectorRef.detectChanges();
+          }
+        });
     }
   }
 
@@ -625,8 +627,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
-    try
-    {
+    try {
       if (this.data == undefined) this.data = [];
 
       let total = this.fileUploadList.length;
@@ -646,11 +647,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
         // if (total > 1) {
         //   this.addFileObservable(this.fileUploadList[i], false, i).subscribe(item => {
         //     if (i == total -1)
-  
+
         //   });
         // }
       }
-  
+
       if (total > 1) {
         return this.fileService
           .addMultiFileObservable(
@@ -666,12 +667,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 var newlist = res.filter((x) => x.status == 6);
                 var newlistNot = res.filter((x) => x.status == -1);
                 var addList = res.filter((x) => x.status == 0 || x.status == 9);
-  
+
                 for (var i = 0; i < addList.length; i++) {
                   this.data.push(Object.assign({}, addList[i]));
                   this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
                 }
-  
+
                 if (addList.length == this.fileUploadList.length) {
                   this.atSV.fileList.next(this.fileUploadList);
                   this.atSV.fileListAdded = addList;
@@ -785,12 +786,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
         this.notificationsService.notify(this.title2);
         return null;
       }
-    }
-    catch(ex)
-    {
+    } catch (ex) {
       return null;
     }
-    
   }
 
   testObservable() {
@@ -862,7 +860,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   if (item.data.fileName != null && item.data.fileName != '') {
                     //'../../../assets/img/loader.gif';
                     that.displayThumbnail(item.data);
-                    if(!item.data.thumbnail)
+                    if (!item.data.thumbnail)
                       item.data.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
                         item.data.extension
                       )}`;
@@ -1012,7 +1010,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
     try {
-      debugger;
       fileItem.uploadId = '';
       fileItem.objectID = this.objectId;
       var appName = environment.appName; // Tam thoi de hard
@@ -1052,8 +1049,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     isAddFile: boolean = true,
     index: number = -1
   ): Observable<any[]> {
-    try
-    {
+    try {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
       fileItem.data = '';
@@ -1078,17 +1074,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
           },
         })
       );
-  
+
       var chunSizeInfBytes = ChunkSizeInKB * 1024;
       var sizeInBytes = 0;
       return obj.pipe(
         mergeMap((retUpload, i) => {
-          if(!retUpload) return null;
+          if (!retUpload) return null;
           // update len server urs và thumbnail
           fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
           fileItem.uploadId = retUpload.Data?.UploadId; //"";
           fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
-  
+
           //this.displayThumbnail(res.recID, res.pathDisk);
           var sizeInBytes = uploadFile?.size;
           var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
@@ -1155,12 +1151,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
           }
         })
       );
-    }
-    catch(ex)
-    {
+    } catch (ex) {
       return null;
     }
-    
   }
 
   rewriteFileObservable(
@@ -1333,14 +1326,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var res = item.data;
             this.fileSave.emit(res);
             var thumbnail = res.thumbnail; //'../../../assets/img/loader.gif';
-            if(!thumbnail) 
-            {
-              res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(res.extension)}`;
+            if (!thumbnail) {
+              res.thumbnail = `../../../assets/codx/dms/${this.dmSV.getAvatar(
+                res.extension
+              )}`;
               this.displayThumbnail(res);
               item.data.thumbnail = thumbnail;
             }
-            if(item.unit != "isSubFolder")
-            {
+            if (item.unit != 'isSubFolder') {
               files.push(Object.assign({}, res));
             }
             this.dmSV.listFiles = files;
@@ -1462,10 +1455,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
       ''
     );
     dialog.closed.subscribe((item) => {
-      if (item.event) 
-      {
-        var index = this.fileUploadList.findIndex(x=>x.recID == item.event.recID);
-        if(index >= 0) this.fileUploadList[index]=item.event;
+      if (item.event) {
+        var index = this.fileUploadList.findIndex(
+          (x) => x.recID == item.event.recID
+        );
+        if (index >= 0) this.fileUploadList[index] = item.event;
         this.isCopyRight--;
       }
     });
@@ -2982,12 +2976,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
         //fileUpload.folderId = this.folderId;
         fileUpload.folderID = this.dmSV.folderId.getValue();
 
-        if(this.category) fileUpload.category = this.category
-    
+        if (this.category) fileUpload.category = this.category;
+
         fileUpload.permissions = this.addPermissionForRoot(
           fileUpload.permissions
         );
-     
+
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
@@ -3027,8 +3021,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   handleDelete(e: any) {
     this.fileDelete.emit(e);
   }
-  scrollFile()
-  {
+  scrollFile() {
     this.dataRequest.page += 1;
     this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
       if (res) {

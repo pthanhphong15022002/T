@@ -56,7 +56,7 @@
             ></codx-label>
           </ng-template>
           <ng-template #content>
-            <ng-container *ngTemplateOutlet="tabGood"></ng-container>
+            <ng-container *ngTemplateOutlet="invoiceLines"></ng-container>
           </ng-template>
         </e-tabitem>
       </e-tabitems>
@@ -523,12 +523,12 @@
 </ng-template>
 
 <!-- Template Tab Hàng hóa/dịch vụ -->
-<ng-template #tabGood>
+<ng-template #invoiceLines>
   <codx-gridview-v2
     #grid
-    [formName]="fmGoods.formName"
-    [gridViewName]="fmGoods.gridViewName"
-    [entityName]="fmGoods.entityName"
+    [formName]="fmInvoiceLines.formName"
+    [gridViewName]="fmInvoiceLines.gridViewName"
+    [entityName]="fmInvoiceLines.entityName"
     [dataSource]="data"
     [editSettings]="editSettings"
     rowHeight="40"
