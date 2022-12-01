@@ -677,8 +677,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             res.split(';')?.length != listDepartmentID.split(';')?.length
           )
           this.notiService.notifyCode('TM065');
-          assignTo += res;
-          this.valueSelectUser(assignTo);
+          this.valueSelectUser(res);
         } else this.notiService.notifyCode('TM065');
       });
     }
