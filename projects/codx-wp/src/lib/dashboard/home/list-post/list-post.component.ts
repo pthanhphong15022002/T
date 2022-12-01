@@ -190,8 +190,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     // set moreFucntion
     if (arrMoreFc) {
       arrMoreFc.forEach((x: any) => {
-        if(x.functionID == 'WP000' || !this.defaultMoreFC.some((e) => e.functionID == x.functionID)) 
-        {
+        if (
+          x.functionID == 'WP000' ||
+          !this.defaultMoreFC.some((e) => e.functionID == x.functionID)
+        ) {
           x.disabled = true;
         }
       });
@@ -199,7 +201,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   }
   clickMF(event: any, post: any) {
     if (event && post) {
-      debugger
       switch (event.functionID) {
         case 'WP001': // cập nhật
           this.openPopupEdit(post);
@@ -261,9 +262,9 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   openPopupAdd() {
     let data = new WP_Comments();
     let permission = new Permission();
-    let headerText = "Tạo bài viết";
-    permission.memberType = "2"; //share
-    permission.objectType = "9";
+    let headerText = 'Tạo bài viết';
+    permission.memberType = '2'; //share
+    permission.objectType = '9';
     permission.createdBy = this.user.userID;
     permission.createdOn = new Date();
     data.shareControl = '9';
@@ -274,7 +275,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     var obj = {
       data: data,
       status: 'create',
-      headerText: headerText
+      headerText: headerText,
     };
     let option = new DialogModel();
     option.DataService = this.listview.dataService as CRUDService;
@@ -297,7 +298,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     });
   }
   openPopupEdit(post: any) {
-    let headerText = "Chỉnh sửa bài viết";
+    let headerText = 'Chỉnh sửa bài viết';
     let data = JSON.parse(JSON.stringify(post));
     let obj = {
       data: data,
@@ -333,11 +334,11 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       data.createdBy = this.user.userID;
       data.createdName = this.user.userName;
       data.shares = JSON.parse(JSON.stringify(post));
-      let headerText = "Chia sẻ bài viết"
+      let headerText = 'Chia sẻ bài viết';
       var obj = {
         data: data,
         status: 'share',
-        headerText: headerText
+        headerText: headerText,
       };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
@@ -363,7 +364,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
   openPopupSave(post: any) {
     if (post) {
       let data = JSON.parse(JSON.stringify(post));
-      let headerText = "Thêm vào kho lưu trữ";
+      let headerText = 'Thêm vào kho lưu trữ';
       var obj = {
         data: data,
         headerText: headerText,
@@ -406,10 +407,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) 
-  {
-    if (file)
-    {
+  clickViewDetail(file: any) {
+    if (file) {
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
@@ -434,6 +433,4 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
-
-  
 }

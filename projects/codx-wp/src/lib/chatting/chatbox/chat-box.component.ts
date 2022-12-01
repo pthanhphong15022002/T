@@ -11,13 +11,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { 
-  ApiHttpService, 
-  AuthStore, 
-  DialogData, 
-  DialogModel, 
-  UIComponent, 
-  ViewModel, 
+import {
+  ApiHttpService,
+  AuthStore,
+  DialogData,
+  DialogModel,
+  UIComponent,
+  ViewModel,
   ViewType,
 } from 'codx-core';
 import { ActivatedRoute } from '@angular/router';
@@ -34,7 +34,7 @@ import { PopupViewImageComponent } from '../popup-view-image/popup-view-image.co
   templateUrl: './chat-box.component.html',
   styleUrls: ['./chat-box.component.scss'],
 })
-export class ChatBoxComponent extends UIComponent implements OnInit  {
+export class ChatBoxComponent extends UIComponent implements OnInit {
   @Input() public receiverId: string = ''; // user ID cua nguoi nhan
   @Input() public groupId: string = ''; // grp id cua nhom
   @Input() public groupID: string = ''; // grp id cua nhom
@@ -42,12 +42,11 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
   @Input() receiverName = '';
   @Input() senderName = '';
 
-  @ViewChild("itemTemplate") itemTemplate: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
 
-  mesDelete = "Tin nhắn đã xóa";
-  titleFunction = "Xóa";
+  mesDelete = 'Tin nhắn đã xóa';
+  titleFunction = 'Xóa';
 
-  
   @Input() messageType = '1';
   @Input() objectType: string = '';
 
@@ -71,50 +70,49 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
   messageList: any;
   receiverId_coppy: any;
 
-  datenow : any;
+  datenow: any;
 
-  
-  userId : any;
+  userId: any;
   clickCheck = false;
   titleRef = 'Đang trả lời ';
-  refName ='';
-  refID : any ;
+  refName = '';
+  refID: any;
   refContent = '';
-  
+
   lstData: any;
 
-  
   @Input() dVll: any = {};
   chatService: ChatService;
   authStore: AuthStore;
   changeDetectorRef: ChangeDetectorRef;
   element: ElementRef<any>;
-  constructor(inject: Injector, private route: ActivatedRoute ,  private codxODService : CodxOdService,@Optional() dt?: DialogData,)
-   {
+  constructor(
+    inject: Injector,
+    private route: ActivatedRoute,
+    private codxODService: CodxOdService,
+    @Optional() dt?: DialogData
+  ) {
     super(inject);
 
-    this.api = inject.get(ApiHttpService),
-    this.element =  inject.get(ElementRef),
-    this.chatService = inject.get(ChatService),
-    this.changeDetectorRef = inject.get(ChangeDetectorRef),
-    this.authStore = inject.get(AuthStore),
-    
-
-    this.user = this.authStore.get();
+    (this.api = inject.get(ApiHttpService)),
+      (this.element = inject.get(ElementRef)),
+      (this.chatService = inject.get(ChatService)),
+      (this.changeDetectorRef = inject.get(ChangeDetectorRef)),
+      (this.authStore = inject.get(AuthStore)),
+      (this.user = this.authStore.get());
     this.data = dt?.data;
   }
 
-  addEmoji(event: any){
+  addEmoji(event: any) {
     this.message += event.emoji.native;
     this.changeDetectorRef.detectChanges();
   }
   onInit(): void {
     //this.senderId = this.user.userID;//
 
-    
     this.senderId = this.user.userID;
     this.senderName = this.user.userName;
-    
+
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
         this.lstData = res.datas;
@@ -124,43 +122,51 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
     this.loadGroupInformation();
   }
   // override ngOnInit(): void {
-    
+
   // }
   ngAfterViewInit(): void {
-    this.views = [{
-      type : ViewType.listdetail,
-      active:false,
-      sameData:false,
-      model:{
-        template: this.itemTemplate
-      }
-    }]
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: false,
+        sameData: false,
+        model: {
+          template: this.itemTemplate,
+        },
+      },
+    ];
   }
-  clickImage(event: any){
+  clickImage(event: any) {
     let dialogModel = new DialogModel();
     dialogModel.DataService = this.view.dataService;
     dialogModel.FormModel = this.view.formModel;
-    this.callfc.openForm(PopupViewImageComponent,null,0,850,null,{ data: event },"",dialogModel);
-    
+    this.callfc.openForm(
+      PopupViewImageComponent,
+      null,
+      0,
+      850,
+      null,
+      { data: event },
+      '',
+      dialogModel
+    );
   }
-  clickShowChatting()
-  {
+  clickShowChatting() {
     /* let option = new DialogModel();
     option.IsFull = true;
     this.callFC.openForm(ChattingComponent,"",0,0,"",null,"",option); */
-    
   }
   showVotes(data: any) {
-    // debugger;
+    //
     let object = {
       data: data,
-      entityName: "WP_Messages",
-      vll: this.dVll
-    }
-    this.callfc.openForm(ChatVoteComponent, "", 750, 500, "", object);
+      entityName: 'WP_Messages',
+      vll: this.dVll,
+    };
+    this.callfc.openForm(ChatVoteComponent, '', 750, 500, '', object);
   }
   votePost(data: any, voteType = null) {
-    // debugger;
+    //
     // this.api.execSv(
     //   "WP",
     //   "ERM.Business.WP",
@@ -168,7 +174,7 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
     //   "VoteChatPostAsync",
     //   [data.messageId, voteType])
     //   .subscribe((res: any) => {
-    //     debugger;
+    //
     //     if (res) {
     //       data.votes = res[0];
     //       data.totalVote = res[1];
@@ -185,51 +191,44 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
     //       }
     //       this.dt.detectChanges();
     //     }
-
     //   });
   }
-  DelMessage(event: any){
-    
-    
-
-    if(event.receiverId != null){
-      this.userId = event.receiverId
-    }else{
+  DelMessage(event: any) {
+    if (event.receiverId != null) {
+      this.userId = event.receiverId;
+    } else {
       this.userId = event.senderId;
     }
-    this.messageType = "5";
+    this.messageType = '5';
     this.api
-    .exec<Post>('ERM.Business.WP', 'ChatBusiness', 'DeleteMessageAsync', [
-      event.groupId,
-      event.messageId,
-      this.userId,
-      this.messageType,
-      this.pageSize,
-      this.pageIndex,
-      
-    ])
-    .subscribe((resp: any) => {
-      
-      if (resp == false) {
-        // //Xử lý xóa tin nhắn không thành công
-        return;
-        
-      }
+      .exec<Post>('ERM.Business.WP', 'ChatBusiness', 'DeleteMessageAsync', [
+        event.groupId,
+        event.messageId,
+        this.userId,
+        this.messageType,
+        this.pageSize,
+        this.pageIndex,
+      ])
+      .subscribe((resp: any) => {
+        if (resp == false) {
+          // //Xử lý xóa tin nhắn không thành công
+          return;
+        }
 
-      event.message = this.mesDelete;
-      this.detectorRef.detectChanges();
-    });
-
-
+        event.message = this.mesDelete;
+        this.detectorRef.detectChanges();
+      });
   }
   loadGroupInformation() {
     this.groupId = this.data.data.groupId;
 
-    this.api.exec<any>('ERM.Business.WP', 'ChatBusiness', 'GetGroupInformationAsync', [
-        this.groupId,
-        this.senderId,
-        this.receiverId,
-      ])
+    this.api
+      .exec<any>(
+        'ERM.Business.WP',
+        'ChatBusiness',
+        'GetGroupInformationAsync',
+        [this.groupId, this.senderId, this.receiverId]
+      )
       .subscribe((resp: any) => {
         if (resp) {
           this.groupId = resp.groupID;
@@ -249,7 +248,7 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
           this.receiverName = receiver.userName;
           this.tags = receiver.tags;
 
-          if(this.groupType == 2){
+          if (this.groupType == 2) {
             this.receiverName = resp.groupName;
           }
 
@@ -297,45 +296,44 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
         }
       });
 
-      // this.api
-      // .exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessagesAsync', [
-      //   this.groupId,
-      //   this.pageSize,
-      //   this.pageIndex,
-      // ])
-      // .subscribe((resp: any[]) => {
-      //   if (resp) {
-      //     this.messageList = resp[0];
-      //     let lastEle =
-      //       this.chatMessages.length == 0 ? undefined : this.chatMessages[0];
-      //     let showImage = !lastEle ? true : lastEle.senderId == this.senderId;
+    // this.api
+    // .exec<any>('ERM.Business.WP', 'ChatBusiness', 'LoadMessagesAsync', [
+    //   this.groupId,
+    //   this.pageSize,
+    //   this.pageIndex,
+    // ])
+    // .subscribe((resp: any[]) => {
+    //   if (resp) {
+    //     this.messageList = resp[0];
+    //     let lastEle =
+    //       this.chatMessages.length == 0 ? undefined : this.chatMessages[0];
+    //     let showImage = !lastEle ? true : lastEle.senderId == this.senderId;
 
+    //     for (let i = 0; i < this.messageList.length; i++) {
+    //       this.messageList[i].showImage = false;
+    //       if(this.receiverId_coppy !=  this.messageList[i].senderId) showImage = true;
+    //       if (this.messageList[i].senderId == this.senderId) {
+    //         showImage = true;
+    //       } else {
+    //         if (showImage) {
+    //           this.messageList[i].showImage = true;
+    //           showImage = false;
+    //         }
+    //       }
+    //       this.receiverId_coppy =  this.messageList[i].senderId;
+    //     }
+    //
 
-      //     for (let i = 0; i < this.messageList.length; i++) {
-      //       this.messageList[i].showImage = false;
-      //       if(this.receiverId_coppy !=  this.messageList[i].senderId) showImage = true;
-      //       if (this.messageList[i].senderId == this.senderId) {
-      //         showImage = true;
-      //       } else {
-      //         if (showImage) {
-      //           this.messageList[i].showImage = true;
-      //           showImage = false;
-      //         }
-      //       }
-      //       this.receiverId_coppy =  this.messageList[i].senderId;
-      //     }
-      //     debugger;
+    //     this.chatMessages = [...this.messageList, ...this.chatMessages];
+    //     let totalPage = resp[1];
+    //     this.pageIndex++;
+    //     if (this.pageIndex >= totalPage) {
+    //       this.isFull = true;
+    //     }
 
-      //     this.chatMessages = [...this.messageList, ...this.chatMessages];
-      //     let totalPage = resp[1];
-      //     this.pageIndex++;
-      //     if (this.pageIndex >= totalPage) {
-      //       this.isFull = true;
-      //     }
-          
-      //     /* this.changeDetectorRef.detectChanges(); */
-      //   }
-      // });
+    //     /* this.changeDetectorRef.detectChanges(); */
+    //   }
+    // });
   }
 
   onScroll(event: any) {
@@ -350,23 +348,22 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
   }
 
   async sendMessage() {
-    
     //Gọi service gửi tin nhắn
-    if(!this.clickCheck && this.messageType != "2") {
+    if (!this.clickCheck && this.messageType != '2') {
       this.refID = '00000000-0000-0000-0000-000000000000';
       this.refContent = null;
-    } 
-    debugger;
-    if(this.messageType == "1" || this.messageType == "4"){
+    }
+
+    if (this.messageType == '1' || this.messageType == '4') {
       if (!this.message) {
         return;
       }
-    }else if(this.messageType == "2"){
-      this.refID =  '00000000-0000-0000-0000-000000000000' ;
+    } else if (this.messageType == '2') {
+      this.refID = '00000000-0000-0000-0000-000000000000';
       this.refContent = null;
-      if(!this.message) this.message = "";
+      if (!this.message) this.message = '';
     }
-    
+
     this.api
       .exec<Post>('ERM.Business.WP', 'ChatBusiness', 'SendMessageAsync', {
         senderId: this.senderId,
@@ -377,15 +374,14 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
         senderName: this.senderName,
         receiverName: this.receiverName,
         refContent: this.refContent,
-        refId: this.refID
+        refId: this.refID,
       })
       .subscribe(async (resp: any) => {
-        
         if (!resp) {
           //Xử lý gửi tin nhắn không thành công
           return;
         }
-        // debugger;
+        //
         // if (!this.groupId) {
         //   this.groupId = resp[1].groupID;
         //   this.groupType = resp[1].groupType;
@@ -397,49 +393,44 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
         //   this.chatService.sendMessage(resp[0], 'SendMessageToGroup');
         // }
 
-        debugger;
         this.onCloseref();
-        
+
         //send file
-          // if (this.listFileUpload.length > 0) {
-          //   this.attachment.objectId = resp[0].messageId;
-          //   this.attachment.fileUploadList = [...this.listFileUpload];
-          //   resp.files = [...this.listFileUpload];
-          //   (await this.attachment.saveFilesObservable()).subscribe((res: any) => {
-              
-          //     /* if (res) {
-          //       if(this.dialogRef?.dataService){
-          //         this.dialogRef.dataService.add(result, 0).subscribe();
-          //       }
-          //       this.notifySvr.notifyCode('WP020');
-          //       this.dialogRef.close();
-          //     }
-          //     else 
-          //     {
-          //       this.notifySvr.notifyCode('WP013');
-          //       this.dialogRef.close();
-          //     } */
-          //   });
-          // }
-          // else {
-          //   // if(this.dialogRef?.dataService)
-          //   // {
-          //   //   this.dialogRef.dataService.add(resp, 0).subscribe();
-          //   // }
-          //   // //this.notifySvr.notifyCode('WP020');
-          //   // this.dialogRef.close();
-          // }
-        
+        // if (this.listFileUpload.length > 0) {
+        //   this.attachment.objectId = resp[0].messageId;
+        //   this.attachment.fileUploadList = [...this.listFileUpload];
+        //   resp.files = [...this.listFileUpload];
+        //   (await this.attachment.saveFilesObservable()).subscribe((res: any) => {
 
+        //     /* if (res) {
+        //       if(this.dialogRef?.dataService){
+        //         this.dialogRef.dataService.add(result, 0).subscribe();
+        //       }
+        //       this.notifySvr.notifyCode('WP020');
+        //       this.dialogRef.close();
+        //     }
+        //     else
+        //     {
+        //       this.notifySvr.notifyCode('WP013');
+        //       this.dialogRef.close();
+        //     } */
+        //   });
+        // }
+        // else {
+        //   // if(this.dialogRef?.dataService)
+        //   // {
+        //   //   this.dialogRef.dataService.add(resp, 0).subscribe();
+        //   // }
+        //   // //this.notifySvr.notifyCode('WP020');
+        //   // this.dialogRef.close();
+        // }
 
-        
         this.chatMessages.push(resp[0]);
         this.detectorRef.detectChanges();
-        this.message="";
+        this.message = '';
       });
-      
   }
-  clickrendo(event: any){
+  clickrendo(event: any) {
     this.clickCheck = true;
     this.refName = event.senderName;
     this.refContent = event.message;
@@ -449,7 +440,7 @@ export class ChatBoxComponent extends UIComponent implements OnInit  {
   onClose(event: any) {
     this.close.emit(event);
   }
-  onCloseref(){
+  onCloseref() {
     this.clickCheck = false;
   }
 

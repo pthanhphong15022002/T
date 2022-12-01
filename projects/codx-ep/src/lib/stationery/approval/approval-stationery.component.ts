@@ -91,7 +91,7 @@ export class ApprovalStationeryComponent
           this.approve(datas,"5")
         }
         break;      
-      case 'EPT40305':
+      case 'EPT40302':
         {
           //alert('Từ chối');
           this.approve(datas,"4")

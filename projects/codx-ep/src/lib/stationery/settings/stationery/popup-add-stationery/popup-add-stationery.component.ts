@@ -89,7 +89,7 @@ export class PopupAddStationeryComponent extends UIComponent {
       this.imgRecID = null;
     } else {
       this.imgRecID = this.data.recID;
-      this.defaultWarehouse = this.data.location;      
+      this.defaultWarehouse = this.data.location;
       this.warehouseOwnerName = this.data.ownerName;
     }
   }
@@ -135,13 +135,13 @@ export class PopupAddStationeryComponent extends UIComponent {
           this.api
             .exec('EP', 'WarehousesBusiness', 'GetDefaultWarehousesIDAsync', [])
             .subscribe((res: string) => {
-              this.defaultWarehouse = res;              
+              this.defaultWarehouse = res;
               this.data.location = this.defaultWarehouse;
               this.epService
                 .getWarehousesOwner(this.defaultWarehouse)
                 .subscribe((res: string) => {
                   this.warehouseOwner = res[0];
-                  this.data.owner =this.warehouseOwner;
+                  this.data.owner = this.warehouseOwner;
                   this.warehouseOwnerName = res[1];
                   this.detectorRef.detectChanges();
                 });

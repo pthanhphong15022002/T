@@ -1,5 +1,20 @@
-import { Component, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DataRequest, AuthService, ViewModel, ViewType, UIComponent, CallFuncService, RequestOption, DialogModel } from 'codx-core';
+import {
+  Component,
+  Injector,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  DataRequest,
+  AuthService,
+  ViewModel,
+  ViewType,
+  UIComponent,
+  CallFuncService,
+  RequestOption,
+  DialogModel,
+} from 'codx-core';
 import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add-post/popup-add-post.component';
 import { PopupAddPostComponents } from '../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
@@ -8,100 +23,95 @@ import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.componen
   selector: 'lib-approve',
   templateUrl: './approve.component.html',
   styleUrls: ['./approve.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class ApproveComponent extends UIComponent {
-
-  service:string = "WP";
-  assemblyName:string = "ERM.Business.WP";
-  className:string = "NewsBusiness";
-  method:string = "GetDataApprovalAsync";
-  entityName:string = "";
-  predicate:string = "";
-  dataValue:string = "";
-  predicates:string = '';
-  dataValues:string = '';
-  funcID:string = "";
-  functionName:string = "";
+  service: string = 'WP';
+  assemblyName: string = 'ERM.Business.WP';
+  className: string = 'NewsBusiness';
+  method: string = 'GetDataApprovalAsync';
+  entityName: string = '';
+  predicate: string = '';
+  dataValue: string = '';
+  predicates: string = '';
+  dataValues: string = '';
+  funcID: string = '';
+  functionName: string = '';
   user: any;
   dataDetail: any;
-  option:string = "";
-  acceptApprove:string = "5";
-  cancelApprove:string = "4";
-  remakeApprove:string = "2";
+  option: string = '';
+  acceptApprove: string = '5';
+  cancelApprove: string = '4';
+  remakeApprove: string = '2';
   views: Array<ViewModel> = [];
   gridViewSetUp: any = null;
   dataSelected: any = null;
   itemSelected: any = null;
-  selectedID: string = "";
+  selectedID: string = '';
 
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   tabAsside = [
     {
-      name: "await",
-      text: "Chờ duyệt",
-      value: "3",
+      name: 'await',
+      text: 'Chờ duyệt',
+      value: '3',
       total: 0,
-      predicate: "ApproveStatus = @0",
-      datavalue: "3",
-      active: false
+      predicate: 'ApproveStatus = @0',
+      datavalue: '3',
+      active: false,
     },
     {
-      name: "approve",
-      text: "Đã duyệt",
-      value: "5",
+      name: 'approve',
+      text: 'Đã duyệt',
+      value: '5',
       total: 0,
-      predicate: "ApproveStatus = @0",
-      datavalue: "5",
-      active: false
+      predicate: 'ApproveStatus = @0',
+      datavalue: '5',
+      active: false,
     },
     {
-      name: "cancel",
-      text: "Từ chối",
-      value: "4",
+      name: 'cancel',
+      text: 'Từ chối',
+      value: '4',
       total: 0,
-      predicate: "ApproveStatus = @0",
-      datavalue: "4",
-      active: false
+      predicate: 'ApproveStatus = @0',
+      datavalue: '4',
+      active: false,
     },
     {
-      name: "all",
-      text: "Tất cả",
-      value: "0",
+      name: 'all',
+      text: 'Tất cả',
+      value: '0',
       total: 0,
-      predicate: "",
-      datavalue: "",
-      active: true
+      predicate: '',
+      datavalue: '',
+      active: true,
     },
-  ]
-  constructor
-  (
+  ];
+  constructor(
     private auth: AuthService,
     private callFuc: CallFuncService,
     private injector: Injector
-  ) 
-  {
+  ) {
     super(injector);
   }
   onInit(): void {
     this.user = this.auth.userValue;
     this.router.params.subscribe((param) => {
-      if(param)
-      {
-        this.funcID = param["funcID"];
+      if (param) {
+        this.funcID = param['funcID'];
         this.cache.functionList(this.funcID).subscribe((func: any) => {
-          if(func)
-          {
+          if (func) {
             this.functionName = func.customName;
-            this.cache.gridViewSetup(func.formName, func.gridViewName)
-            .subscribe((grd: any) => {
-              if (grd) 
-              {
-                this.gridViewSetUp = grd;
-              }
-            });
+            this.cache
+              .gridViewSetup(func.formName, func.gridViewName)
+              .subscribe((grd: any) => {
+                if (grd) {
+                  this.gridViewSetUp = grd;
+                }
+              });
           }
         });
         this.loadDataTab(this.funcID);
@@ -109,31 +119,33 @@ export class ApproveComponent extends UIComponent {
     });
   }
   ngAfterViewInit(): void {
-    this.views = [{
-      type: ViewType.listdetail,
-      active: true,
-      sameData: true,
-      model: {
-        template: this.itemTemplate,
-        panelLeftRef: this.panelLeftRef,
-        panelRightRef: this.panelRightRef
-      }
-    }];
+    this.views = [
+      {
+        type: ViewType.listdetail,
+        active: true,
+        sameData: true,
+        model: {
+          template: this.itemTemplate,
+          panelLeftRef: this.panelLeftRef,
+          panelRightRef: this.panelRightRef,
+        },
+      },
+    ];
     this.detectorRef.detectChanges();
   }
-  loadDataTab(funcID:string) {
-    if(funcID)
-    {
+  loadDataTab(funcID: string) {
+    if (funcID) {
       let model = new DataRequest();
-      model.funcID = funcID; 
-      this.api.execSv(
-        "WP",
-        "ERM.Business.WP",
-        "NewsBusiness",
-        "GetDataByApproSatusAsync",
-        [model])
-        .subscribe(
-        (res: any) => {
+      model.funcID = funcID;
+      this.api
+        .execSv(
+          'WP',
+          'ERM.Business.WP',
+          'NewsBusiness',
+          'GetDataByApproSatusAsync',
+          [model]
+        )
+        .subscribe((res: any) => {
           if (res) {
             this.tabAsside.map((tab: any) => {
               tab.total = res[tab.value];
@@ -144,8 +156,7 @@ export class ApproveComponent extends UIComponent {
     }
   }
   selectedChange(event: any) {
-    if (event?.data?.recID)
-    {
+    if (event?.data?.recID) {
       this.selectedID = event.data.recID;
       this.detectorRef.detectChanges();
     }
@@ -154,25 +165,19 @@ export class ApproveComponent extends UIComponent {
     this.loadDataTab(this.view.funcID);
   }
   clickTabApprove(item, predicate: string, dataValue: string) {
-    debugger
-    this.view.dataService.setPredicates([predicate],[dataValue]).subscribe();
-    this.tabAsside.forEach(e => {
-      if(e.value == item.value){
+    this.view.dataService.setPredicates([predicate], [dataValue]).subscribe();
+    this.tabAsside.forEach((e) => {
+      if (e.value == item.value) {
         e.active = true;
-      }
-      else
-      {
+      } else {
         e.active = false;
       }
     });
   }
-  clickMF(event: any, data: any) 
-  {
-    if(event.functionID)
-    {
-      let headerText = event.text + " " + this.functionName;
-      switch (event.functionID) 
-      {
+  clickMF(event: any, data: any) {
+    if (event.functionID) {
+      let headerText = event.text + ' ' + this.functionName;
+      switch (event.functionID) {
         case 'SYS02': //delete
           this.deletedPost(data);
           break;
@@ -180,30 +185,38 @@ export class ApproveComponent extends UIComponent {
           let option = new DialogModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
-          if (this.view.funcID == "WPT0211" || this.view.funcID == "WPT0212")  // tin tức sự kiện
-          {
+          if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
+            // tin tức sự kiện
             option.IsFull = true;
             let object = {
               headerText: headerText,
-              data: data
-            }
-            let popup = this.callFuc.openForm(PopupEditComponent,"", 0, 0, this.view.funcID, object, '', option);
+              data: data,
+            };
+            let popup = this.callFuc.openForm(
+              PopupEditComponent,
+              '',
+              0,
+              0,
+              this.view.funcID,
+              object,
+              '',
+              option
+            );
             popup.closed.subscribe((res: any) => {
-              debugger
-              if (res?.event) 
-              {
+              if (res?.event) {
                 this.view.dataService.update(res.event).subscribe();
               }
             });
-          }
-          else // MXH
-          {
-            this.api.execSv(
-              this.service,
-              this.assemblyName,
-              "CommentsBusiness",
-              "GetPostByIDAsync",
-              [data.recID])
+          } // MXH
+          else {
+            this.api
+              .execSv(
+                this.service,
+                this.assemblyName,
+                'CommentsBusiness',
+                'GetPostByIDAsync',
+                [data.recID]
+              )
               .subscribe((res: any) => {
                 if (res) {
                   let obj = {
@@ -214,10 +227,18 @@ export class ApproveComponent extends UIComponent {
                   let option = new DialogModel();
                   option.DataService = this.view.dataService;
                   option.FormModel = this.view.formModel;
-                  let popup =  this.callfc.openForm(PopupAddPostComponent,headerText, 700, 550, '', obj, '', option);
+                  let popup = this.callfc.openForm(
+                    PopupAddPostComponent,
+                    headerText,
+                    700,
+                    550,
+                    '',
+                    obj,
+                    '',
+                    option
+                  );
                   popup.closed.subscribe((res: any) => {
-                    if (res?.event) 
-                    {
+                    if (res?.event) {
                       this.view.dataService.update(res.event).subscribe();
                     }
                   });
@@ -229,19 +250,16 @@ export class ApproveComponent extends UIComponent {
           break;
       }
     }
-    
   }
 
   beforDeletedPost(option: RequestOption, data: any) {
-    option.service = "WP";
-    option.assemblyName = "ERM.Business.WP";
-    option.className = "NewsBusiness";
-    if (this.view.funcID == "WPT0211" || this.view.funcID == "WPT0212") 
-    {
-      option.methodName = "DeleteNewsAsync";
-    }
-    else {
-      option.methodName = "DeletePostAsync";
+    option.service = 'WP';
+    option.assemblyName = 'ERM.Business.WP';
+    option.className = 'NewsBusiness';
+    if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
+      option.methodName = 'DeleteNewsAsync';
+    } else {
+      option.methodName = 'DeletePostAsync';
     }
     option.data = data;
     return true;
@@ -249,14 +267,14 @@ export class ApproveComponent extends UIComponent {
 
   deletedPost(data: any) {
     if (!data) return;
-    this.view.dataService.delete([data],true,(opt: any) => this.beforDeletedPost(opt, data)).subscribe();
+    this.view.dataService
+      .delete([data], true, (opt: any) => this.beforDeletedPost(opt, data))
+      .subscribe();
   }
 
-  clickBtnAdd() {
+  clickBtnAdd() {}
 
-  }
-
-  setStyles(data:any) {
+  setStyles(data: any) {
     let styles = {
       backgroundColor: data,
       color: 'white',
@@ -264,7 +282,9 @@ export class ApproveComponent extends UIComponent {
     return styles;
   }
 
-  deleteData(){
-    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","DeleteAllDataAsync").subscribe()
+  deleteData() {
+    this.api
+      .execSv('WP', 'ERM.Business.WP', 'NewsBusiness', 'DeleteAllDataAsync')
+      .subscribe();
   }
 }

@@ -1329,12 +1329,13 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   align-items: flex-start !important;
 }
 
-.e-grid.e-default tr td:first-child {
+.e-grid.e-default tr td:first-child,
+.e-grid.e-default tr th:first-child {
   padding-left: 12px !important;
 }
 
-.e-frozencontent.e-frozen-left-content {
-  border-right: 1px var(--gray-200) solid;
+.e-grid .e-headercelldiv {
+  margin-left: 0 !important;
 }
 
 .e-frozencontent.e-frozen-left-content>table {

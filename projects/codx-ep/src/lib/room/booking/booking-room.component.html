@@ -203,3 +203,9 @@
 <ng-template #report>
   <report-viewer [reportUUID]="reportUUID" (pinedItems)="lstPined = $event" #reportObj></report-viewer>
 </ng-template>
+<ng-template #cardTemplate let-data>
+  <div class="d-flex flex-column">
+    <span >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
+    <span class="fw-bold text-center col-10 text-truncate" >{{data.title}}</span>
+  </div>
+</ng-template>
