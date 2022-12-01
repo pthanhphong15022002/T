@@ -122,7 +122,7 @@ export class PopupRolesComponent implements OnInit {
     ) {
       this.bpSv.updatePermissionProcess(this.process).subscribe((res) => {
         if (res.permissions.length > 0) {
-          this.notifi.notify('Phân quyền thành công');
+          this.notifi.notifyCode('SYS034');
           this.dialog.close(res);
         } else {
           this.notifi.notify('Phân quyền không thành công');

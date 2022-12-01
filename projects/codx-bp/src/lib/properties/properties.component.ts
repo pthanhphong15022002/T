@@ -7,6 +7,7 @@ import {
   Component,
   OnInit,
   Optional,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
@@ -85,6 +86,10 @@ export class PropertiesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.eventEnter();
+  // }
+
   loadUserName(id) {
     // this.api.callSv('SYS','AD','UsersBusiness','GetAsync', id).subscribe(res=>{
     //   if(res.msgBodyData[0]){
@@ -105,9 +110,15 @@ export class PropertiesComponent implements OnInit {
   }
 
   //#region event enter comment
-  // eventEnter() {
-
-  // }
+  eventEnter() {
+    var input = document.getElementById("myInput");
+    input.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("myBtn").click();
+      }
+    });
+  }
   //#endregion
 
   //#region mo rong

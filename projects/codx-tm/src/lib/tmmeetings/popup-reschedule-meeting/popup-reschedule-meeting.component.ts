@@ -59,7 +59,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
   //#region save
   onSave(){
     if (this.isCheckStartEndTime(this.meeting.startDate)) {
-      this.notiService.notify(' "Giờ" họp phải lớn hơn "Giờ" hiện tại !');
+      this.notiService.notifyCode('CO002');
       return;
     }
 
@@ -113,7 +113,7 @@ export class PopupRescheduleMeetingComponent implements OnInit {
       if(res){
         this.dialog.close(res);
         //chưa có mssgcode dời lịch
-        this.notiService.notify('Cập nhật thành công');
+        this.notiService.notifyCode('SYS034');
         this.tmSv.changeBookingDateTime(this.meeting.recID, this.meeting.startDate.toUTCString(), this.meeting.endDate.toUTCString())
         this.tmSv.sendMailAlert(this.meeting.recID, 'TM_0025', this.funcID).subscribe();
         //dời phòng bên EP
