@@ -670,15 +670,12 @@ export class ProcessesComponent
 
     dialog.closed.subscribe((e) => {
       if (e && data.recID) {
-        this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          if (process){
-            if(process.delete){
-              this.view.dataService.onAction.next({ type: 'delete', data: data });
-            }else{
-              this.view.dataService.update(process).subscribe();
-            }
+        this.bpService.getProcessesByID(data.recID).subscribe((process) => {
+          if (process){          
+            this.view.dataService.update(process).subscribe();
+            this.detectorRef.detectChanges();
           }
-          this.detectorRef.detectChanges();
+         
         });
       }
     });

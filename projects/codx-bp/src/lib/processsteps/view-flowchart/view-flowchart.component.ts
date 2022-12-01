@@ -1,46 +1,66 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { NotificationsService } from 'codx-core';
 import { environment } from 'src/environments/environment';
-import { ToolbarService , PrintService } from '@syncfusion/ej2-angular-documenteditor'
-
+import {
+  ToolbarService,
+  PrintService,
+} from '@syncfusion/ej2-angular-documenteditor';
 
 @Component({
   selector: 'codx-view-flowchart',
   templateUrl: './view-flowchart.component.html',
   styleUrls: ['./view-flowchart.component.css'],
-  providers:[ToolbarService , PrintService]
+  providers: [ToolbarService, PrintService],
 })
-export class ViewFlowchartComponent implements OnInit,OnChanges {
+export class ViewFlowchartComponent
+  implements OnInit, AfterViewInit
+{
   @Input() dataFile: any;
   data: any;
-  linkFile : any
+  linkFile: any;
   isShow = true;
-  heightFlowChart = 600 ;
+  heightFlowChart = 600;
 
   pzProperties = {
     zoomControlScale: 2,
     minScale: 2,
     limitPan: true,
-    wheelZoomFactor: 1
+    wheelZoomFactor: 1,
   };
-  constructor(private fileService: FileService, private notificationsService : NotificationsService) {
-    if(this.dataFile){
-      this.data = this.dataFile ;
-      this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
-      this.heightFlowChart = screen.height
+  constructor(
+    private fileService: FileService,
+    private notificationsService: NotificationsService
+  ) {
+    if (this.dataFile) {
+      this.data = this.dataFile;
+      this.linkFile = environment.urlUpload + '/' + this.data?.pathDisk;
+      this.heightFlowChart = screen.height;
     }
     // else
     //  this.getImg(''); //test
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if(this.dataFile){
-      this.data = this.dataFile ;
-      this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
+  ngAfterViewInit(): void {
+   
+  }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if(this.dataFile){
+  //     this.data = this.dataFile ;
+  //     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
+  //   }
+  // }
+
+  ngOnInit(): void {
+    if (this.dataFile) {
+      this.data = this.dataFile;
+      this.linkFile = environment.urlUpload + '/' + this.data?.pathDisk;
     }
   }
-
-  ngOnInit(): void {}
 
   // getImg(recID) {
   //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((data) => {
@@ -97,5 +117,4 @@ export class ViewFlowchartComponent implements OnInit,OnChanges {
   //     this.notificationsService.notifyCode("SYS018");
   //   }
   // }
-
 }

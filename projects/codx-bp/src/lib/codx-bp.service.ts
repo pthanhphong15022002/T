@@ -96,11 +96,11 @@ export class CodxBpService {
       data
     );
   }
-  getProcessesByVersionNo(data) {
+  getProcessesByVersion(data) {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
-      'GetProcessesByprocessNoAsync',
+      'GetProcessesByVersionAsync',
       data
     );
   }

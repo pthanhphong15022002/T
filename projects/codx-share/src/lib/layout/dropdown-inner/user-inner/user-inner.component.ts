@@ -62,7 +62,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.user$ = this.auth.userSubject.asObservable();
+    this.user$ = this.auth.user$;
     this.tenant = this.tenantStore.get()?.tenant;
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
     this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
@@ -83,6 +83,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     //Nguyên thêm để refresh avatar khi change
     this.codxShareSV.dataRefreshImage.subscribe((res) => {
       if (res) {
+        debugger
         this.user['modifiedOn'] = res?.modifiedOn;
         this.change.detectChanges();
       }

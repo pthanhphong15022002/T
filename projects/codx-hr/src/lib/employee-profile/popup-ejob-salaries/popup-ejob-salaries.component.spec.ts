@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PostsComponent } from './posts.component';
+import { PopupEJobSalariesComponent } from './popup-ejob-salaries.component';
 
-describe('PostsComponent', () => {
-  let component: PostsComponent;
-  let fixture: ComponentFixture<PostsComponent>;
+describe('PopupEJobSalariesComponent', () => {
+  let component: PopupEJobSalariesComponent;
+  let fixture: ComponentFixture<PopupEJobSalariesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PostsComponent ]
+      declarations: [ PopupEJobSalariesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PostsComponent);
+    fixture = TestBed.createComponent(PopupEJobSalariesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
