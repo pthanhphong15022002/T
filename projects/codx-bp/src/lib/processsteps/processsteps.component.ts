@@ -121,8 +121,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
   parentID = '';
   linkFile: any;
 
-  msgBP001 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
-  msgBP002 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP001 = 'BP005'; // gán tạm message
+  msgBP002 = 'BP006'; // gán tạm message
   listCountPhases: any;
   actived = false;
   isBlock:any = true;
