@@ -74,7 +74,7 @@ export class PopupAddResourcesComponent implements OnInit {
           if(this.lstResources != null && this.lstResources.length > 0){
             this.tmSv.SendMailNewResources(this.meeting.recID, 'TM_0023', this.funcID, this.lstResources).subscribe();
           }
-          this.noti.notify('Mời người tham gia thành công');
+          this.noti.notifyCode('SYS034');
         } else {
           this.dialog.close();
           this.noti.notify('Mời người không thành công');

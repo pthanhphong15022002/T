@@ -97,6 +97,8 @@ export class PopupAddProcessesComponent implements OnInit {
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
+      this.process.phases = 0;
+      this.process.activities = 0;
       this.revisions.push(versions);
       this.process.versions = this.revisions;
       data = [this.process];
