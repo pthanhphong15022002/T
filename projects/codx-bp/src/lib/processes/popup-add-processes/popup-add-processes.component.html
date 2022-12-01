@@ -6,8 +6,7 @@
         <codx-label fiedName="ProcessName" [formModel]="form.formModel" default="Tên qui trình">
         </codx-label>
       </div>
-      <codx-input field="processName"
-      [Group]="form.formGroup" [formModel]="form.formModel" >
+      <codx-input field="processName" [Group]="form.formGroup" [formModel]="form.formModel">
       </codx-input>
     </div>
     <div class="form-group">
@@ -15,34 +14,28 @@
         <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả">
         </codx-label>
       </div>
-      <codx-input field="memo"
-      [Group]="form.formGroup" [formModel]="form.formModel" >
+      <codx-input field="memo" [Group]="form.formGroup" [formModel]="form.formModel">
       </codx-input>
     </div>
 
     <div class="form-group">
-        <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
-        </codx-label>
-        <codx-input field="groupID"
-        [Group]="form.formGroup" [formModel]="form.formModel">
-        </codx-input>
+      <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm quy trình">
+      </codx-label>
+      <codx-input field="groupID" [Group]="form.formGroup" [formModel]="form.formModel">
+      </codx-input>
     </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="ActivedOn" [formModel]="form.formModel" default="Ngày hiệu lực"></codx-label>
-          <codx-input
-          [Group]="form.formGroup" [formModel]="form.formModel"
-            field="activedOn">
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="activedOn">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
           <codx-label fiedName="ExpiredOn" [formModel]="form.formModel" default="Ngày hết hạn"></codx-label>
-          <codx-input
-          [Group]="form.formGroup" [formModel]="form.formModel"
-            field="expiredOn" >
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="expiredOn">
           </codx-input>
         </div>
       </div>
