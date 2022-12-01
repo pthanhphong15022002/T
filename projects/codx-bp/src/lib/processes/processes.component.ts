@@ -152,14 +152,6 @@ export class ProcessesComponent
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
     ];
-    // this.views.forEach(x=>{
-    //   if (x.type === ViewType.card) {
-    //     this.isViewCard=true;
-    //   }
-    //   else {
-    //     this.isViewCard=false;
-    //   }
-    // })
   }
 
   ngAfterViewInit(): void {
