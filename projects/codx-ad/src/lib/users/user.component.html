@@ -197,28 +197,3 @@
   </div>
 </ng-template>
 
-<ng-template #please_use>
-  <codx-form
-    [headerText]="'Mời sử dụng'"
-    [body]="body"
-    [dialog]="dialog"
-    [footer]="footer_"
-  >
-    <ng-template #body>
-      <codx-label
-        fiedName="Email"
-        default="Email"
-        [formModel]="view.formModel"
-      ></codx-label>
-      <codx-input field="email" (valueChange)="valueChange($event)">
-      </codx-input>
-    </ng-template>
-    <ng-template #footer_>
-      <div class="d-flex justify-content-end" #footer>
-        <button type="button" class="btn btn-primary" (click)="onContinue()">
-          <codx-label fiedName="Continue" default="Tiếp tục"></codx-label>
-        </button>
-      </div>
-    </ng-template>
-  </codx-form>
-</ng-template>

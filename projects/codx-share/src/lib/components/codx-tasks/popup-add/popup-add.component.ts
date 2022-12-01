@@ -304,7 +304,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.param = param;
           this.taskType = param?.TaskType;
           if (this.param?.PlanControl == '1' && this.task.startDate == null)
-            this.task.startDate = new Date();   
+            this.task.startDate = new Date();
         }
       });
   }
@@ -643,6 +643,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     var assignTo = '';
     var listDepartmentID = '';
     var listUserID = '';
+    var listPositionID = '';
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
@@ -654,6 +655,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
         }
       }
     });
@@ -661,18 +665,29 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       listUserID = listUserID.substring(0, listUserID.length - 1);
       this.valueSelectUser(listUserID);
     }
-
     if (listDepartmentID != '') {
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
       );
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-        if (res) {
-          assignTo += res;
-          if (listUserID != '') assignTo += ';' + listUserID;
-          this.valueSelectUser(assignTo);
-        }
+        if (res && res.trim() != '') {
+          if (
+            res.trim() == '' ||
+            res.split(';')?.length != listDepartmentID.split(';')?.length
+          )
+          this.notiService.notifyCode('TM065');
+          this.valueSelectUser(res);
+        } else this.notiService.notifyCode('TM065');
+      });
+    }
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.tmSv.getListUserIDByListPositionsID(listPositionID).subscribe((res) => {
+        if (res && res.length > 0 ) {
+          if (!res[1]) this.notiService.notifyCode('TM066');
+          this.valueSelectUser(res[0]);
+        } else this.notiService.notifyCode('TM066');
       });
     }
   }

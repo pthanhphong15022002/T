@@ -1,0 +1,32 @@
+<codx-form
+  [headerText]="'Mời sử dụng'"
+  [body]="body"
+  [dialog]="dialog"
+  [footer]="footer"
+  [formModel]="dialog.formModel"
+  #form
+>
+  <ng-template #body>
+    <codx-label
+      fiedName="Email"
+      default="Email"
+      [formModel]="form.formModel"
+    ></codx-label>
+    <div class="pt-3">
+      <codx-input
+        field="email"
+        (valueChange)="valueChange($event)"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
+      >
+      </codx-input>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end" #footer>
+      <button type="button" class="btn btn-primary" (click)="onContinue()">
+        <codx-label fiedName="Continue" default="Tiếp tục"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

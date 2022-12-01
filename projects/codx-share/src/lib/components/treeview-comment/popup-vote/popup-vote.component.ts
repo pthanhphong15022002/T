@@ -32,35 +32,53 @@ export class PopupVoteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.entityName == "WP_Comments"){
-      this.getWPCommentsVotes();
-    }
-    else
-    {
-      this.getTracklogsCommentVotes();
+    if(this.data){
+      if(this.entityName === "WP_Comments"){
+        this.getWPCommentsVotes(this.data.recID);
+      }
+      else
+      {
+        this.getBGCommentVotes(this.data.recID);
+      }
     }
   }
-  getTracklogsCommentVotes(){
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","GetVotesCommentAsync",[this.data.recID])
-    .subscribe((res:any[]) => {
-      if(res)
-      {
-        this.lstVote = res[0];
-        this.getUserVote(this.defaultVote);
-      }
-    })
+  getBGCommentVotes(objectID:string){
+    if(objectID){
+      this.api.execSv(
+        "BG",
+        "ERM.Business.BG",
+        "CommentLogsBusiness",
+        "GetVotesCommentAsync",
+        [objectID])
+        .subscribe((res:any[]) => {
+          if(res)
+          {
+            this.lstVote = res[0];
+            this.getUserVote(this.defaultVote);
+          }
+        });
+    }
+    
   }
 
-  getWPCommentsVotes(){
-    this.api.execSv("WP","ERM.Business.WP","VotesBusiness","GetVotesAsync",[this.data.recID])
-    .subscribe((res:any[]) => {
-      if(res)
-      {
-        this.lstVote = res[0];
-        this.getUserVote(this.defaultVote);
-        this.dt.detectChanges();
-      }
-    })
+  getWPCommentsVotes(objectID:string)
+  {
+    if(objectID){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "VotesBusiness",
+        "GetVotesAsync",
+        [objectID])
+        .subscribe((res:any[]) => {
+          if(res)
+          {
+            this.lstVote = res[0];
+            this.getUserVote(this.defaultVote);
+            this.dt.detectChanges();
+          }
+        });
+    }
   }
 
   getUserVote(voteType:string){
