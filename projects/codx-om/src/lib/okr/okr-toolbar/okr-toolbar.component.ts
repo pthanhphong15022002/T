@@ -12,7 +12,7 @@ export class OkrToolbarComponent implements OnInit {
   buttonAddKR: ButtonModel;
   buttonAddO: ButtonModel;
   button?: ButtonModel;
-  @Output() click = new EventEmitter<string>();
+  @Output() click = new EventEmitter<any>();
   date = new Date();
   ops = ['m','q','y'];
   constructor() { }
@@ -43,6 +43,11 @@ export class OkrToolbarComponent implements OnInit {
   }
   changeCalendar(event:any)
   {
-    debugger;
+    var obj = 
+    {
+      id : "Calendar",
+      data : event
+    };
+    this.click.emit(obj);
   }
 }

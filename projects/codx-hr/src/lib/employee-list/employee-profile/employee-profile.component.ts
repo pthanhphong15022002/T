@@ -1,3 +1,4 @@
+import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
 import { PopupEVisasComponent } from './../../employee-profile/popup-evisas/popup-evisas.component';
 import { PopupETraincourseComponent } from './../../employee-profile/popup-etraincourse/popup-etraincourse.component';
@@ -609,6 +610,26 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
     // })
+  }
+  HandleEmployeeJobSalariesInfo(actionType: string, data: any){
+    this.view.dataService.dataSelected = this.data
+    let option = new SidebarModel()
+    option.DataService = this.view.dataService
+    option.FormModel = this.view.formModel
+    option.Width = '550px'
+    let dialogAdd = this.callfunc.openSide(
+      PopupEJobSalariesComponent,
+      {
+        actionType: actionType,
+        employeeId : this.data.employeeID,
+        headerText: 'Lương chức danh',
+        salarySelected: data,
+      },
+      option
+    )
+    dialogAdd.closed.subscribe((res) => {
+      if(res?.event) this.view.dataService.clear()
+      })
   }
 
   handleEFamilyInfo(actionType: string, data: any) {

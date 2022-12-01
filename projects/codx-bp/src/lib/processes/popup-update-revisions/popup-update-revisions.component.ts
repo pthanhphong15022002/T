@@ -70,10 +70,11 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.dialog.close();
   }
   getProcessesStep(item) {
-    this.bpService.getProcessesByVersionNo([this.data.recID, item.versionNo])
+    this.bpService.getProcessesByVersion([this.data.recID, item.versionNo])
       .subscribe(proesses => {
         if (proesses) {
           this.dialog.close();
+          // this.bpService.viewProcesses.next(proesses);
           let obj = {
             moreFunc: this.moreFunc,
             data: proesses,

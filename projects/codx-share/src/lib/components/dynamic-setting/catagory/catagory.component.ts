@@ -15,9 +15,11 @@ import {
   DialogRef,
 } from 'codx-core';
 //import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
-import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
+import { PopupAddCategoryComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-category/popup-add-category.component';
 import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve-steps.component';
+import { CodxEmailComponent } from '../../codx-email/codx-email.component';
 @Component({
   selector: 'lib-catagory',
   templateUrl: './catagory.component.html',
@@ -27,9 +29,9 @@ import { CodxApproveStepsComponent } from '../../codx-approve-steps/codx-approve
 export class CatagoryComponent implements OnInit {
   private components = {
     cpnAutoNumbers: PopupAddAutoNumberComponent,
-    cpnAlertRules: PopupAddEmailTemplateComponent,
+    cpnAlertRules: CodxEmailComponent,
     cpnApprovals: CodxApproveStepsComponent,
-    cpnCategories: null,
+    cpnCategories: PopupAddCategoryComponent,
     cpnScheduledTasks: CodxFormScheduleComponent,
   };
   category = '';
@@ -41,6 +43,7 @@ export class CatagoryComponent implements OnInit {
   groupSetting = [];
   alertRules = [];
   schedules = [];
+  categories = [];
   function: any = {};
   valuelist: any = {};
   dataValue: any = {};
@@ -95,6 +98,7 @@ export class CatagoryComponent implements OnInit {
         this.title = ds.text;
         if (this.category === '2' || this.category === '7')
           this.getIDAutoNumber();
+        else if (this.category === '4') this.getCategories();
         else if (this.category === '5') this.getAlertRule();
         else if (this.category === '6') this.getSchedules();
       }
@@ -124,7 +128,7 @@ export class CatagoryComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       });
   }
-  changeLabelImg(data, e: any) {}
+
   openPopup(evt: any, item: any, reference: string = '') {
     let value = item.fieldName,
       recID = item.recID;
@@ -204,14 +208,62 @@ export class CatagoryComponent implements OnInit {
           // data['showIsPublish'] = null;
           // data['showSendLater'] = null;
 
-          this.callfc.openForm(component, '', 800, screen.height, '', data);
+          this.callfc.openForm(
+            component,
+            '',
+            800,
+            screen.height,
+            '',
+            data,
+            '',
+            dialogModel
+          );
           break;
-        case 'cpnApprovals':
           // var rule = this.alertRules[value];
           // if (!rule) return;
-          // data['formGroup'] = null;
+          data['transID'] = null;
           // data['templateID'] = rule.emailTemplate;
-          //this.callfc.openForm(component, '', 800, screen.height, '', value);
+          this.callfc.openForm(
+            component,
+            '',
+            screen.width,
+            screen.height,
+            '',
+            data,
+            '',
+            dialogModel
+          );
+          break;
+        case 'cpnapprovals':
+          dialogModel.IsFull = true;
+          var category = this.categories[value];
+          if (!category) return;
+          data['transID'] = category.recID;
+          this.callfc.openForm(
+            component,
+            '',
+            screen.width,
+            screen.height,
+            '',
+            data,
+            '',
+            dialogModel
+          );
+          break;
+        case 'cpncategories':
+          //         let option = new SidebarModel();
+          // option.Width = '550px';
+          // option.DataService = this.viewBase?.dataService;
+          // option.FormModel = this.viewBase?.formModel;
+          // let popupAdd = this.callfunc.openSide(
+          //   PopupAddCategoryComponent,
+          //   {
+          //     data: this.viewBase.dataService.dataSelected,
+          //     isAdd: true,
+          //     headerText: evt.text + ' ' + this.funcList?.customName ?? '',
+          //   },
+          //   option
+          // );
           break;
         case 'cpnscheduledtasks':
           var schedule = this.schedules[value];
@@ -224,7 +276,9 @@ export class CatagoryComponent implements OnInit {
             800,
             screen.height,
             '',
-            schedule.recID
+            schedule.recID,
+            '',
+            dialogModel
           );
           break;
         default:
@@ -345,6 +399,27 @@ export class CatagoryComponent implements OnInit {
         .subscribe((res) => {
           if (res) {
             this.schedules = res;
+          }
+          this.changeDetectorRef.detectChanges();
+        });
+    }
+  }
+
+  getCategories() {
+    var lstCategoryID = [];
+    if (this.setting) {
+      this.setting.forEach((element) => {
+        if (element.fieldName) lstCategoryID.push(element.fieldName);
+      });
+    }
+    if (lstCategoryID.length > 0) {
+      this.api
+        .execSv<any>('ES', 'ES', 'CategoriesBusiness', 'GetDicByIDAsync', [
+          lstCategoryID,
+        ])
+        .subscribe((res) => {
+          if (res) {
+            this.categories = res;
           }
           this.changeDetectorRef.detectChanges();
         });
@@ -492,5 +567,4 @@ export class CatagoryComponent implements OnInit {
         console.log(res);
       });
   }
-  checkA(e: any) {}
 }

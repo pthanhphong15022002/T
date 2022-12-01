@@ -173,7 +173,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205' ) {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -212,31 +212,30 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list2[i].disabled = true;
       }
     }
-   if(datas.status != "3")
-   {
-    this.api.execSv<any>(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'CheckRestoreAsync',
-      datas.recID
-    ).subscribe(item=>{
-      if(item) 
-      {
-        var bm = data.filter(
-          (x: { functionID: string }) =>
-            x.functionID == 'SYS207'
-        );
-        bm[0].disabled = false;
-      }
-    });
-    
-   }
+    if (datas.status != '3') {
+      this.api
+        .execSv<any>(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'CheckRestoreAsync',
+          datas.recID
+        )
+        .subscribe((item) => {
+          if (item) {
+            var bm = data.filter(
+              (x: { functionID: string }) => x.functionID == 'SYS207'
+            );
+            bm[0].disabled = false;
+          }
+        });
+    }
   }
   clickMF(e: any, data: any) {
+    debugger;
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-    if (data.processType == 'ES_SignFiles') {
+    if (data.eSign == true) {
       //Kys
       if (
         funcID == 'SYS201' ||
@@ -303,7 +302,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       // else if (funcID == 'SYS204') {
 
       // }
-    } else if (data.processType != 'ES_SignFiles') {
+    } else {
       var status;
       if (
         funcID == 'SYS201' ||
@@ -326,9 +325,19 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           if (!res2?.msgCodeError) {
             data.status = status;
             this.view.dataService.update(data).subscribe();
+            this.esService.setupChange.next(true);
             this.notifySvr.notifyCode('SYS007');
           } else this.notifySvr.notify(res2?.msgCodeError);
         });
+    }
+    if (funcID == 'SYS207') {
+      this.esService.undo(data?.recID).subscribe((res) => {
+        if (res != null) {
+          data = res;
+          this.view.dataService.update(data).subscribe();
+          this.esService.setupChange.next(true);
+        }
+      });
     }
   }
 

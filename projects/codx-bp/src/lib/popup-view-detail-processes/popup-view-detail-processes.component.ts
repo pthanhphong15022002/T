@@ -16,7 +16,7 @@ import { CodxBpService } from '../codx-bp.service';
 export class PopupViewDetailProcessesComponent implements OnInit {
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   @ViewChild('viewProcessSteps') viewProcessSteps: ProcessStepsComponent;
-  process!: BP_Processes;
+  process : BP_Processes;
   viewMode = '16';
   funcID="BPT11" //testsau klaay từ more ra
   name = 'ViewList';
@@ -54,7 +54,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = dt?.data;
-    this.process = this.data?.data;
+    this.process = JSON.parse(JSON.stringify(this.data.data)) ;
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc?.customName;
     this.formModel = this.data?.formModel
@@ -136,7 +136,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  getfileCount(e) {}
+  fileSave(e) {
+    if (e && typeof e === 'object') {
+      this.dataFile = e;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
 
   print() {
     if (this.linkFile)

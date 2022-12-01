@@ -45,7 +45,6 @@ export class InvoicesComponent extends UIComponent {
     this.views = [
       {
         type: ViewType.list,
-        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
@@ -53,7 +52,6 @@ export class InvoicesComponent extends UIComponent {
       },
       {
         type: ViewType.listdetail,
-        active: true,
         sameData: true,
         model: {
           template: this.itemTemplate,
