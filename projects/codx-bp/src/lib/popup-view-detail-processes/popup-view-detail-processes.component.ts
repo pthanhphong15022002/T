@@ -136,7 +136,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  getfileCount(e) {}
+  fileSave(e) {
+    if (e && typeof e === 'object') {
+      this.dataFile = e;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
 
   print() {
     if (this.linkFile)

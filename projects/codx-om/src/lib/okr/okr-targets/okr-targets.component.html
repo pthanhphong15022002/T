@@ -11,7 +11,20 @@
     </div>
   </div>
   <!-- Content Dasboard -->
-  <div></div>
+  <div>
+    <codx-chart
+      [title]="chartData?.title"
+      [enableCrossHair]="true"
+      [legendSettings]="{ visible: false }"
+      [primaryXAxis]="chartData?.primaryXAxis"
+      [primaryYAxis]="chartData?.primaryYAxis"
+      [seriesSetting]="chartData?.seriesSetting"
+      [service]="chartData?.service"
+      [assemblyName]="chartData?.assembly"
+      [className]="chartData?.className"
+      [method]="chartData?.method"
+    ></codx-chart>
+  </div>
   <!-- Title OKR -->
   <div class="d-flex align-items-center justify-content-between" #titleOKR>
     <div class="d-flex align-items-center">
@@ -138,10 +151,7 @@
             </div>
           </div>
           <div class="d-flex ms-9">
-            <button
-              class="btn btn-icon btn-sm position-relative ms-4"
-              
-            >
+            <button class="btn btn-icon btn-sm position-relative ms-4">
               <span
                 class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"
               ></span>
