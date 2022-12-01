@@ -55,6 +55,7 @@ export class PopupAddKRComponent extends UIComponent {
   fGroupAddKR: FormGroup;
   o:any;
   oParentID:any;
+  dialogTargets: DialogRef;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -112,41 +113,84 @@ export class PopupAddKRComponent extends UIComponent {
 
   onSaveForm(){
     this.fGroupAddKR.patchValue(this.kr);
+    //tính lại Targets cho KR
+    if(this.kr.targets?.length==0 || this.kr.targets==null){
+      this.calculatorTarget();
+    }
   }
 
+  typePlan='';
 
-  openPopupTarget(template: any) {    
-    if(this.kr?.plan=='M'){
-      let dialogPlan = this.callfc.openForm(template, '', 550, 800, null,);
+  openPopupTarget(template: any) {   
+    
+
+    if((this.kr.targets?.length==0 || this.kr.targets==null) || this.kr.plan!=this.typePlan){
+      this.calculatorTarget();
+      if( this.kr.plan=='M'){
+        this.typePlan='M';
+      }
+      else if( this.kr.plan=='Q'){      
+        this.typePlan='Q';
+      }
     }
-    else if(this.kr?.plan=='Q'){
-      let dialogPlan = this.callfc.openForm(template, '', 550, 400 , null,);
+    else{
+      if( this.kr?.plan=='M'){
+        
+      this.typePlan='M';
+        this.planMonth=[];
+        this.kr.targets.forEach(element => {
+          this.planMonth.push(element.target);
+        });
+      }
+      else if( this.kr?.plan=='Q'){
+            
+      this.typePlan='Q';
+        this.planQuarter=[];
+        this.kr.targets.forEach(element => {
+          this.planQuarter.push(element.target);
+        });
+      }
+    }
+    
+    if( this.kr?.plan=='M'){
+      this.dialogTargets = this.callfc.openForm(template, '', 550, 800, null,);
+    }
+    else if( this.kr?.plan=='Q'){
+      this.dialogTargets = this.callfc.openForm(template, '', 550, 420 , null,);
     }
     this.detectorRef.detectChanges();
   }
 
   calculatorTarget(){
     if(this.kr.target && this.kr.plan){
-      if(this.kr.plan='M'){
-        for (let i = 1; i < 12; i++) {
-          this.planMonth.push()
+      this.planMonth=[];
+      this.planQuarter=[];
+      if(this.kr.plan=='M'){
+        for (let i = 1; i <= 12; i++) {
+          this.planMonth.push(this.kr.target/12)
         }
       }
-      else if(this.kr.plan='Q'){
-
+      else if(this.kr.plan=='Q'){
+        for (let i = 1; i <= 4; i++) {
+          this.planQuarter.push(this.kr.target/4)
+        }
       }
     }
+    this.detectorRef.detectChanges();
   }
 
   onSaveTarget(){
     this.kr.targets=[];
     let krTarget=[];
+    let type ='';
     if(this.kr.plan=='M'){
+      type='M';
       this.planMonth.forEach(item=>{
         krTarget.push(item);
       });
     }
     else if(this.kr.plan=='Q'){
+      type='Q';
       this.planQuarter.forEach(item=>{
         krTarget.push(item);
       });
@@ -159,16 +203,18 @@ export class PopupAddKRComponent extends UIComponent {
       tempTarget.target=item;
       tempTarget.createdOn=new Date();
       this.kr.targets.push(tempTarget);
-    });
+    });    
+    this.dialogTargets.close();
+    this.dialogTargets=null;
   }
 
   valueChange(evt:any){
     if(evt && evt.field)
     {
-      if(this.kr.plan='M'){
+      if(this.kr.plan=='M'){
         this.planMonth[evt.field]=evt.data;
       }
-      if(this.kr.plan='Q'){
+      if(this.kr.plan=='Q'){
         this.planQuarter[evt.field]=evt.data;
       }
     }
