@@ -255,7 +255,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         this.view.dataService.dataSelected.parentID = this.parentID;
       this.dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType, this.formModelMenu],
+        ['add', this.titleAction, this.stepType, this.formModelMenu,this.process],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -340,6 +340,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
@@ -506,6 +507,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
