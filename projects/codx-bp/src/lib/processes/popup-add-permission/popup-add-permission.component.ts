@@ -5,6 +5,7 @@ import {
   DialogRef,
   ApiHttpService,
   NotificationsService,
+  CacheService,
 } from 'codx-core';
 import {
   BP_Processes,
@@ -33,6 +34,7 @@ export class PopupAddPermissionComponent implements OnInit {
   sentEmail: any;
   postblog: any;
   process: BP_Processes;
+  gridViewSetup: any;
   per = new tmpPermission();
   permission: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
@@ -42,6 +44,7 @@ export class PopupAddPermissionComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -52,6 +55,16 @@ export class PopupAddPermissionComponent implements OnInit {
     this.id = this.process.recID;
     this.fullName = this.process.processName;
     this.isShare = dt.data[2];
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   ngOnInit(): void {}
