@@ -156,7 +156,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   onInit(): void {}
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    this.onLoading();
+  }
 
   onLoading() {
     var html = document.querySelector('codx-wrapper');
@@ -397,7 +399,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion] = data;
     console.log('check question after addAnswer', this.questions);
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(data, false);
+    this.setTimeoutSaveDate(data, false);
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
@@ -415,7 +417,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.questions[indexSession].children[indexQuestion].other = false;
     console.log('check questions', this.questions);
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(
+    this.setTimeoutSaveDate(
       this.questions[indexSession].children[indexQuestion],
       false
     );
@@ -493,7 +495,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion]!.answers = data;
     this.questions[indexSession].children[indexQuestion]['other'] = true;
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(
+    this.setTimeoutSaveDate(
       this.questions[indexSession].children[indexQuestion],
       false
     );
@@ -939,6 +941,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     tempQuestion.seqNo = itemActive.category == 'S' ? 0 : itemActive.seqNo + 1;
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
+    delete tempQuestion.id;
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
       0,
@@ -946,6 +949,13 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     );
     this.questions[seqNoSession].children.forEach(
       (x, index) => (x.seqNo = index)
+    );
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveDate(
+      tempQuestion,
+      true,
+      true,
+      this.questions[seqNoSession].children
     );
     if (itemActive.category == 'S') this.questions[seqNoSession].active = false;
     else this.questions[seqNoSession].children[itemActive.seqNo].active = false;
@@ -1012,7 +1022,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       );
       this.questions[seqNoSession].children[dataQuestion.seqNo].recID =
         data[0].objectID;
-      this.setTimeout(
+      this.setTimeoutSaveDate(
         this.questions[seqNoSession].children[dataQuestion.seqNo],
         false
       );
@@ -1026,7 +1036,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.lstEditIV.push(data[0]);
     }
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(
+    this.setTimeoutSaveDate(
       this.questions[seqNoSession].children[dataQuestion.seqNo + 1],
       false
     );
@@ -1282,12 +1292,15 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   saveDataTimeout = new Map();
-  setTimeout(data, isModeAdd) {
+  setTimeoutSaveDate(data, isModeAdd, updateList = false, list = null) {
     clearTimeout(this.saveDataTimeout?.get(data.recID));
     this.saveDataTimeout?.delete(this.saveDataTimeout?.get(data.recID));
     this.saveDataTimeout.set(
       data.recID,
-      setTimeout(this.onSave.bind(this, this.recID, data, isModeAdd), 2000)
+      setTimeout(
+        this.onSave.bind(this, this.recID, data, isModeAdd, updateList, list),
+        2000
+      )
     );
   }
 
@@ -1301,7 +1314,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   //   );
   // }
 
-  onSave(transID, data, isModeAdd) {
+  onSave(transID, data, isModeAdd, updateList = false, list = null) {
     this.api
       .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
         transID,
@@ -1309,17 +1322,21 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         isModeAdd,
       ])
       .subscribe((res) => {
-        if (res) this.SVServices.signalSave.next('done');
-        else this.notification.alertCode('');
+        if (res && updateList && list) {
+          this.onUpdateList(list).subscribe((x) => {
+            if (x) this.SVServices.signalSave.next('done');
+          });
+        } else this.notification.alertCode('');
       });
   }
 
   onUpdateList(data) {
-    this.api
-      .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'UpdateListAsync', data)
-      .subscribe((res) => {
-        if (res) this.SVServices.signalSave.next('done');
-        else this.notification.alertCode('');
-      });
+    return this.api.execSv(
+      'SV',
+      'ERM.Business.SV',
+      'QuestionsBusiness',
+      'UpdateListAsync',
+      [data]
+    );
   }
 }
