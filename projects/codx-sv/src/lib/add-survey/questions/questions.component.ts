@@ -397,18 +397,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion] = data;
     console.log('check question after addAnswer', this.questions);
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(data);
-  }
-
-  saveDataTimeout = new Map();
-
-  setTimeout(data) {
-    clearTimeout(this.saveDataTimeout?.get(data.recID));
-    this.saveDataTimeout?.delete(this.saveDataTimeout?.get(data.recID));
-    this.saveDataTimeout.set(
-      data.recID,
-      setTimeout(this.onSave.bind(this, this.recID, data, false), 2000)
-    );
+    this.setTimeout(data, false);
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
@@ -426,7 +415,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.questions[indexSession].children[indexQuestion].other = false;
     console.log('check questions', this.questions);
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(this.questions[indexSession].children[indexQuestion]);
+    this.setTimeout(
+      this.questions[indexSession].children[indexQuestion],
+      false
+    );
   }
 
   deleteCard(seqNoSession, seqNoQuestion, category) {
@@ -501,7 +493,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion]!.answers = data;
     this.questions[indexSession].children[indexQuestion]['other'] = true;
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(this.questions[indexSession].children[indexQuestion]);
+    this.setTimeout(
+      this.questions[indexSession].children[indexQuestion],
+      false
+    );
   }
 
   copyCard(itemSession, itemQuestion, category) {
@@ -738,10 +733,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               this.lstEditIV.push(res.event?.dataUpload[0]);
               //Tạm thời update lại recID của item đó theo objectID của File
               //Sau này sẽ convert ngược lại để giảm thiểu việc xuống BE
-              this.SVServices.signalSave.next('saving');
-              this.setTimeout(
-                t.questions[seqNoQuestion].children[seqNoQuestion]
-              );
+              // this.SVServices.signalSave.next('saving');
+              // this.setTimeout(
+              //   t.questions[seqNoQuestion].children[seqNoQuestion]
+              // );
               this.change.detectChanges();
               console.log('check data file', this.lstEditIV);
             }
@@ -920,8 +915,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     }
     this.clickToScroll(seqNoSession + 1, this.GUID, 'S');
     this.SVServices.signalSave.next('saving');
-    this.setTimeout(this.questions[seqNoSession + 1]['children']);
-    this.setTimeout(this.questions[seqNoSession]['children']);
   }
 
   addNoSession(itemActive, seqNoSession, category) {
@@ -964,9 +957,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         itemActive.category == 'S' ? 0 : itemActive.seqNo + 1
       ];
     this.clickToScroll(seqNoSession, this.GUID, category);
-    this.SVServices.signalSave.next('saving');
-    this.setTimeout(this.questions[seqNoSession]);
-    this.setTimeout(this.questions[seqNoSession].children);
+    // this.SVServices.signalSave.next('saving');
+    // this.setTimeout(this.questions[seqNoSession]);
+    // this.setTimeout(this.questions[seqNoSession].children);
   }
 
   importQuestion(dataQuestion) {}
@@ -1020,7 +1013,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.questions[seqNoSession].children[dataQuestion.seqNo].recID =
         data[0].objectID;
       this.setTimeout(
-        this.questions[seqNoSession].children[dataQuestion.seqNo]
+        this.questions[seqNoSession].children[dataQuestion.seqNo],
+        false
       );
     }
     if (!youtube) {
@@ -1033,7 +1027,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     }
     this.SVServices.signalSave.next('saving');
     this.setTimeout(
-      this.questions[seqNoSession].children[dataQuestion.seqNo + 1]
+      this.questions[seqNoSession].children[dataQuestion.seqNo + 1],
+      false
     );
     console.log('check data file', this.lstEditIV);
     console.log('check data after uploadFile', this.questions);
@@ -1286,6 +1281,26 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     console.log('check valueChangeQuestion', dataTemp);
   }
 
+  saveDataTimeout = new Map();
+  setTimeout(data, isModeAdd) {
+    clearTimeout(this.saveDataTimeout?.get(data.recID));
+    this.saveDataTimeout?.delete(this.saveDataTimeout?.get(data.recID));
+    this.saveDataTimeout.set(
+      data.recID,
+      setTimeout(this.onSave.bind(this, this.recID, data, isModeAdd), 2000)
+    );
+  }
+
+  // saveListDataTimeout = new Map();
+  // setTimeoutUpdateList(lstData) {
+  //   clearTimeout(this.saveListDataTimeout?.get(lstData));
+  //   this.saveListDataTimeout?.delete(this.saveListDataTimeout?.get(lstData));
+  //   this.saveListDataTimeout.set(
+  //     lstData,
+  //     setTimeout(this.onUpdateList.bind(this, lstData), 2000)
+  //   );
+  // }
+
   onSave(transID, data, isModeAdd) {
     this.api
       .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
@@ -1293,6 +1308,15 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         data,
         isModeAdd,
       ])
+      .subscribe((res) => {
+        if (res) this.SVServices.signalSave.next('done');
+        else this.notification.alertCode('');
+      });
+  }
+
+  onUpdateList(data) {
+    this.api
+      .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'UpdateListAsync', data)
       .subscribe((res) => {
         if (res) this.SVServices.signalSave.next('done');
         else this.notification.alertCode('');
