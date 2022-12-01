@@ -109,6 +109,7 @@ export class ProcessesComponent
   moreFunc: any;
   heightWin: any;
   widthWin: any;
+  isViewCard: boolean = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -151,6 +152,14 @@ export class ProcessesComponent
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
     ];
+    // this.views.forEach(x=>{
+    //   if (x.type === ViewType.card) {
+    //     this.isViewCard=true;
+    //   }
+    //   else {
+    //     this.isViewCard=false;
+    //   }
+    // })
   }
 
   ngAfterViewInit(): void {
@@ -671,11 +680,11 @@ export class ProcessesComponent
     dialog.closed.subscribe((e) => {
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
-          if (process){          
+          if (process){
             this.view.dataService.update(process).subscribe();
             this.detectorRef.detectChanges();
           }
-         
+
         });
       }
     });
