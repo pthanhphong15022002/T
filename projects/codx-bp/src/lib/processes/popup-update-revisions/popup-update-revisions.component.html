@@ -12,7 +12,7 @@
               </button>
               <ng-template #firstVersionNo>
                 <button class="text-dark fw-bold fs-5 button-version" (dblclick)="getProcessesStep(item)">
-                  <codx-label default="Phiên bản:"></codx-label>
+                  <span>{{item.versionName}}:</span>
                   <span #versionNo>
                     {{
                     item?.versionNo
