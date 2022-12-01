@@ -67,6 +67,7 @@ export class PopupAddProcessStepsComponent
   formModelMenu: FormModel;
   crrIndex = 0;
   gridViewSetup: any;
+  process : any
 
   constructor(
     private inject: Injector,
@@ -87,6 +88,7 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
+    this.process = dt?.data[4]
 
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];

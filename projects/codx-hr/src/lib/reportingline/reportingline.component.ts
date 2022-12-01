@@ -130,6 +130,7 @@ export class ReportinglineComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
+      debugger
       this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
           let data = {
@@ -140,7 +141,7 @@ export class ReportinglineComponent extends UIComponent {
             isAddMode: true,
             titleMore: event.text,
           };
-          let popup = this.callfc.openSide(
+          this.callfc.openSide(
             CodxFormDynamicComponent,
             data,
             option,
