@@ -201,7 +201,9 @@
   </ng-template>
   <ng-template #footer>
     <codx-tabs [entityName]="formModel?.entityName" [id]="data?.id" [objectID]="data?.recID"
-      [funcID]="formModel?.funcID" [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]=""
+      [funcID]="formModel?.funcID" 
+      [formModel]="formModel"
+      [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]=""
       [approveStatus]=""></codx-tabs>
   </ng-template>
 
