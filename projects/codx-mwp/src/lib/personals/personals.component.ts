@@ -68,8 +68,7 @@ export class PersonalsComponent implements OnInit {
     this.refreshAvatar();
   }
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   refreshAvatar() {
     this.codxShareSV.dataRefreshImage.subscribe((res) => {
@@ -88,11 +87,11 @@ export class PersonalsComponent implements OnInit {
     //       this.pageTitle.setSubTitle(res.customName);
     //       this.formName = res.formName;
     //       this.gridViewName = res.gridViewName;
-    //       debugger
+    //
     //       this.cachesv
     //         .moreFunction(this.formName, this.gridViewName)
     //         .subscribe((res: any) => {
-    //           debugger
+    //
     //           this.moreFunc = res;
     //           this.changedt.detectChanges();
     //         });

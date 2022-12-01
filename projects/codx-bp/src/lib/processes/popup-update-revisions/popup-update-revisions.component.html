@@ -8,10 +8,10 @@
           <div class="d-flex flex-column w-100">
             <div class="pb-1">
               <button class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                <codx-label class="text-dark fw-bold fs-5" (dblclick)="getProcessesStep(item)" default="Phiên bản đầu tiên"></codx-label>
+                <codx-label class="text-dark fw-bold fs-5 button-version" (click)="getProcessesStep(item)" default="Phiên bản đầu tiên"></codx-label>
               </button>
               <ng-template #firstVersionNo>
-                <button class="text-dark fw-bold fs-5 button-version" (dblclick)="getProcessesStep(item)">
+                <button class="text-dark fw-bold fs-5 button-version" (click)="getProcessesStep(item)">
                   <span>{{item.versionName}}:</span>
                   <span #versionNo>
                     {{
@@ -44,11 +44,11 @@
         <div class="d-flex flex-column px-3">
           <div class="justify-content-end mb-2">
             <codx-label name="lblActivedOn" fiedName="ActivedOn" formName="ProcessRevisions"
-              gridViewName="grvProcessRevisions" default="Ngày hiệu lực">
+              gridViewName="grvProcessRevisions" default="Hiệu lực">
             </codx-label>
           </div>
           <div class="justify-content-end">
-            <span #activedOn>
+            <!-- <span #activedOn>
               {{
               item?.activedOn
               | formatvalue
@@ -59,7 +59,19 @@
               : "grvProcesses"
               | async
               }}
-            </span>
+            </span> -->
+            <div #activedOn>
+              {{
+                item.activedOn | formatvalue
+              : form.formModel
+              : "activedOn"
+              : activedOn
+              : "Processes"
+              : "grvProcesses"
+              | async
+              }}
+            </div>
+
           </div>
         </div>
       </div>

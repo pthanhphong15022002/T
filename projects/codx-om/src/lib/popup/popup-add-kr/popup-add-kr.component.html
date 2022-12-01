@@ -10,6 +10,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
+    <ng-container *ngIf="form && form.formGroup">
     <div class="form-group">
       <codx-label default="Mục tiêu" fiedName="" [formModel]="form.formModel">
       </codx-label>
@@ -88,7 +89,7 @@
       </div>
 
       <div class="form-group col-4">        
-        <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="openPopupDevice(popupDevice)">
+        <button class="btn btn-outline-primary d-flex flex-row justify-content-center" (click)="openPopupTarget(popupTarget)">
           <span class="icon-airplay btn-text-primary me-2"></span>
           <codx-label
             name="lbl"
@@ -173,6 +174,7 @@
         <span role="button" class="icon-i-signpost-2 text-primary "></span>
       </div>
     </div>
+  </ng-container>
   </ng-template>
 
   <ng-template #footer>
@@ -187,50 +189,87 @@
     </div>
   </ng-template>
 
-  <ng-template #popupDevice let-dialogRef>
-    <div class="modal-header">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
+  <ng-template #popupTarget let-dialogRef>
+    <div class=" h-100 d-flex flex-column justify-content-between">
+      <div class="modal-header">
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 id="modal-basic-title">
+              <codx-label
+                name="lbl"
+                default="Kế hoạch chỉ tiêu"
+                [formModel]="form.formModel"
+              ></codx-label>
+            </h2>
+            <button
+              type="button"
+              class="btn btn-xs btn-icon btn-light btn-hover-primary"
+              aria-label="Close"
+              (click)="dialogRef.close()"
+            >
+              <span
+                class="icon-close icon-20 text-dark text-hover-primary"
+              ></span>
+            </button>
+          </div>
+          <div class="text-dark-50">
             <codx-label
-              name="lbl"
-              default="Kế hoạch chỉ tiêu"
-              [formModel]="form.formModel"
+              name="lblChooseCarEquipments"
+              default="Thay đổi giá trị mục tiêu theo từng chu kì check-in"
+              
             ></codx-label>
-          </h2>
-          <button
-            type="button"
-            class="btn btn-xs btn-icon btn-light btn-hover-primary"
-            aria-label="Close"
-            (click)="dialogRef.close()"
-          >
-            <span
-              class="icon-close icon-20 text-dark text-hover-primary"
-            ></span>
-          </button>
-        </div>
-        <div class="text-dark-50">
-          <codx-label
-            name="lblChooseCarEquipments"
-            default="Thay đổi giá trị mục tiêu theo từng chu kì check-in"
-            
-          ></codx-label>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="modal-body">
-      <div class="px-5 d-flex flex-column">
-        
-          <div class="d-flex">
-            <div class="form-group col-3">
-              <codx-label name="Tháng 1"></codx-label>              
-            </div>
-            <div class="form-group col-9">
-              <codx-input type="text"></codx-input>              
+      <div class="modal-body">
+        <div class="px-5 d-flex flex-column justify-content-center" *ngIf="kr.plan=='M'">
+          <div *ngFor="let item of months; let i = index" >
+            <div class="d-flex justify-content-between">
+              <div class="form-group col-3">
+                <codx-label [name]="month + ' ' + item"></codx-label>              
+              </div>
+              <div class="form-group col-8">
+                <codx-input 
+                  type="text" 
+                  [field]="item" 
+                  [crrValue]="planMonth[i]"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>               
+              </div>
             </div>
           </div>
+        </div>
+        <div class="px-5 d-flex flex-column" *ngIf="kr.plan=='Q'">
+          <div *ngFor="let item of quarters; let i = index">
+            <div class="d-flex justify-content-between">
+              <div class="form-group col-3">
+                <codx-label [name]="quarter + ' ' + item"></codx-label>              
+              </div>
+              <div class="form-group col-8">
+                <codx-input 
+                  type="text" 
+                  [field]="item" 
+                  [crrValue]="planQuarter[i]"
+                  (valueChange)="valueChange($event)"
+                ></codx-input>              
+              </div>
+            </div>
+          </div>
+        </div>
         
       </div>
+      <div class="modal-footer">
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" (click)="onSaveTarget()">
+            <codx-label
+              name="lblSave"
+              default="Lưu"
+              [formModel]="form.formModel"
+            ></codx-label>
+          </button>
+        </div>
+      </div>
     </div>
+    
   </ng-template>
 </codx-form>
