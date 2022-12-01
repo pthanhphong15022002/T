@@ -1414,6 +1414,15 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
+         //an voi ca TMT026
+        if (
+            (x.functionID == 'SYS02' ||
+              x.functionID == 'SYS03' ||
+              x.functionID == 'SYS04') &&
+            this.funcID == 'TMT0206'
+          ) {
+            x.disabled = true;
+          }
       });
     }
   }

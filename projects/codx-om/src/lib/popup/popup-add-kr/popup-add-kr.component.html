@@ -230,8 +230,9 @@
               </div>
               <div class="form-group col-8">
                 <codx-input 
-                  type="text" 
-                  [field]="item" 
+                  type="number" 
+                  [field]="i" 
+                  [min]="0"
                   [crrValue]="planMonth[i]"
                   (valueChange)="valueChange($event)"
                 ></codx-input>               
@@ -247,8 +248,9 @@
               </div>
               <div class="form-group col-8">
                 <codx-input 
-                  type="text" 
-                  [field]="item" 
+                  type="number" 
+                  [field]="i" 
+                  [min]="0"
                   [crrValue]="planQuarter[i]"
                   (valueChange)="valueChange($event)"
                 ></codx-input>              

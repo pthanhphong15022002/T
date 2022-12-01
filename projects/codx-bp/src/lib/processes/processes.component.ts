@@ -109,6 +109,7 @@ export class ProcessesComponent
   moreFunc: any;
   heightWin: any;
   widthWin: any;
+  isViewCard: boolean = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -671,11 +672,11 @@ export class ProcessesComponent
     dialog.closed.subscribe((e) => {
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
-          if (process){          
+          if (process){
             this.view.dataService.update(process).subscribe();
             this.detectorRef.detectChanges();
           }
-         
+
         });
       }
     });

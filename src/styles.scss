@@ -211,6 +211,25 @@ textarea.e-input,
   min-width: 26px;
 }
 
+.e-input-group:active,
+.e-input-group.e-input-focus,
+.e-input:focus,
+.e-control.e-focused,
+.codx-textarea:focus,
+textarea:focus,
+.codx-input[type="textarea"] {
+  box-shadow: none !important;
+  border-color: var(--primary) !important;
+}
+
+.codx-search.codx-focus {
+  border-color: var(--primary) !important;
+}
+
+.e-input[readonly]:focus {
+  border-color: #ced4da !important;
+}
+
 /***END Khong duoc xoa***/
 .user-mini-icon {
   width: 36px;

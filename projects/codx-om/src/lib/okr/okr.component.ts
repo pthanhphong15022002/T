@@ -110,7 +110,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       null,
       null,
       null,
-      [this.view.formModel,this.periodID,this.interval,this.year],
+      [this.view.formModel,this.periodID,this.interval,this.year,this.dataDate],
       '',
       dialogModel
     );
@@ -159,16 +159,28 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   changeCalendar(data:any)
   {
+    var date = new Date(data.toDate);
+    this.year = date.getFullYear();
+    this.dataDate = {
+      formDate : data.formDate,
+      toDate : data.toDate
+    }
     if(data.type == "year")
     {
       this.periodID = ""
       this.interval = "Y";
-      this.year = new Date(data.fromDate).getFullYear();
-      this.dataDate = {
-        formDate : data.formDate,
-        toDate : data.toDate
-      }
-    } 
+    }
+    else if(data.type == "quarter")
+    {
+      var m = Math.floor(date.getMonth()/3) + 1;
+      this.periodID = (m > 4? m - 4 : m).toString();
+      this.interval = "Q";
+    }
+    else if(data.type == "month") 
+    {
+      this.periodID = (date.getMonth() + 1).toString();
+      this.interval = "M";
+    }
     this.getOKRPlans(this.periodID , this.interval , this.year);
   }
 }

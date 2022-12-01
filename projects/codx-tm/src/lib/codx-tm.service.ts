@@ -346,6 +346,15 @@ export class CodxTMService {
       data
     );
   }
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );  
+  }
 
   getResourcesTrackEvent(meetingID, data, startDate, endDate){
     return this.api.execSv<any>('CO','CO','MeetingsBusiness','AddResourcesEventAsync',[meetingID, data,startDate,endDate]);

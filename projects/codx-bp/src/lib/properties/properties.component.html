@@ -47,7 +47,7 @@
               </div>
             </div>
             <div class="mb-5">
-              <div class="d-flex flex-wrap mb-1 margin">
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Người tạo:"> </codx-label>
@@ -68,7 +68,7 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-1 margin">
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Phiên bản:"> </codx-label>
@@ -88,7 +88,7 @@
                 </div>
               </div>
               <!--Gắn tạm sau này BA hướng dẫn phê duyệt thì mới thay-->
-              <div class="d-flex flex-wrap mb-1 margin" >
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Người phê duyệt:"> </codx-label>
@@ -109,7 +109,7 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-2 margin">
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Chủ qui trình:"> </codx-label>
@@ -242,11 +242,11 @@
               </div>
               <div class="d-flex align-items-center mt-4">
                 <div class="comment-box flex-grow-1">
-                  <codx-input placeholder="Nhận xét của bạn..." class="form-control test-datetime" type="textarea"
-                    format="ed2" style="width: 100%" [crrValue]="commenttext"
+                  <codx-input placeholder="Nhận xét của bạn..." id="myInput" class="form-control test-datetime"
+                    type="textarea" format="ed2" style="width: 100%" [crrValue]="commenttext"
                     (valueChange)="txtValue($event, 'commenttext')"></codx-input>
                 </div>
-                <span (click)="setComment()"  class="btn btn-primary ms-3 min-w-60px">
+                <span (click)="setComment()" id="myBtn" class="btn btn-primary ms-3 min-w-60px">
                   <codx-label name="" default="Gửi"> </codx-label>
                 </span>
               </div>
@@ -396,8 +396,8 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                    <codx-tree-history [objectID]="data.recID" [objectType]="entityName" [actionType]="'C'" [viewIcon]="true"
-                    [funcID]="funcID">
+                  <codx-tree-history [objectID]="data.recID" [objectType]="entityName" [actionType]="'C'"
+                    [viewIcon]="true" [funcID]="funcID">
                   </codx-tree-history>
                 </ng-template>
               </e-tabitem>
