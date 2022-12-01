@@ -423,7 +423,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       phaseOld.items[index] = processStep;
     } else {
       // doi parent
-      phaseOld.splice(index, 1);
+      phaseOld?.items.splice(index, 1);
       if (index < phaseOld.length - 1) {
         for (var i = index; i < phaseOld.length; i++) {
           phaseOld[i].stepNo--;
