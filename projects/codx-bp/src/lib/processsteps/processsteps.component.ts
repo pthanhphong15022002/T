@@ -19,6 +19,7 @@ import {
   EventEmitter,
   Output,
   Optional,
+  AfterViewInit,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FileService } from '@shared/services/file.service';
@@ -58,7 +59,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProcessStepsComponent extends UIComponent implements OnInit {
+export class ProcessStepsComponent extends UIComponent implements OnInit,AfterViewInit {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -120,8 +121,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
   parentID = '';
   linkFile: any;
 
-  msgBP001 = 'Vui lòng thêm công đoạn trước khi thực hiện'; // gán tạm message
-  msgBP002 = 'Vui lòng thêm bước công đoạn trước khi thực hiện'; // gán tạm message
+  msgBP001 = 'BP005'; // gán tạm message
+  msgBP002 = 'BP006'; // gán tạm message
   listCountPhases: any;
   actived = false;
   isBlock:any = true;
@@ -228,6 +229,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
         },
       },
     ];
+
+   
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
@@ -339,7 +342,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             'edit',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
-            this.formModelMenu,
+            this.formModelMenu          
           ],
           option
         );
@@ -422,7 +425,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
       phaseOld.items[index] = processStep;
     } else {
       // doi parent
-      phaseOld.splice(index, 1);
+      phaseOld?.items.splice(index, 1);
       if (index < phaseOld.length - 1) {
         for (var i = index; i < phaseOld.length; i++) {
           phaseOld[i].stepNo--;
@@ -505,7 +508,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit {
             'copy',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
-            this.formModelMenu,
+            this.formModelMenu
           ],
           option
         );

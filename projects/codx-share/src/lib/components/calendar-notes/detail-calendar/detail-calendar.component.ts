@@ -71,6 +71,5 @@ export class DetailCalendarComponent extends UIComponent implements OnInit {
     a.instance.funcID = this.funcID;
     a.instance.fields = this.fields;
     a.instance.request = this.request;
-    debugger
   }
 }
