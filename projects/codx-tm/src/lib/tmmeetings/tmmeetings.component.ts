@@ -621,7 +621,7 @@ export class TMMeetingsComponent
     this.dialog = this.callfc.openForm(
       PopupRescheduleMeetingComponent,
       '',
-      500,
+      700,
       350,
       '',
       obj
