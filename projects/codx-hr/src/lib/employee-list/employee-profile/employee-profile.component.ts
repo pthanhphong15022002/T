@@ -56,7 +56,7 @@ import { CodxHrService } from '../../codx-hr.service';
 // import { EmployeeSelfInfoComponent } from '../../employee-profile/employee-self-info/employee-self-info.component';
 import { ActivatedRoute } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
-import { I } from '@angular/cdk/keycodes';
+import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
 
 @Component({
@@ -118,6 +118,7 @@ export class EmployeeProfileComponent extends UIComponent {
   lstWorkPermit: any;
   //jobInfo
   jobInfo: any;
+  crrJobSalaries: any= {}
 
   formModel;
   itemDetail;
@@ -245,6 +246,14 @@ export class EmployeeProfileComponent extends UIComponent {
 
         //Job info
         //this.hrService.getJobInfo()
+
+
+        //Job salaries
+        this.hrService
+          .GetCurrentJobSalaryByEmployeeID(params.employeeID)
+          .subscribe((res) => {
+            this.crrJobSalaries = res     
+          })
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -278,6 +287,10 @@ export class EmployeeProfileComponent extends UIComponent {
         }
         else if(funcID == 'family'){
           this.handleEFamilyInfo('edit', data);
+          this.df.detectChanges();
+        }
+        else if(funcID == 'jobSalary'){
+          this.HandleEmployeeJobSalariesInfo('edit', data)
           this.df.detectChanges();
         }
         break;
@@ -348,6 +361,23 @@ export class EmployeeProfileComponent extends UIComponent {
             }
           })
         }
+        else if(funcID == 'jobSalary'){
+          this.hrService
+          .DeleteEmployeeJobsalaryInfo(data.recID)
+          .subscribe((p) => {
+            if(p == true){
+              this.notify.notifyCode('SYS008');
+              this.hrService.GetCurrentJobSalaryByEmployeeID(data.employeeID).subscribe(p => {
+                console.log('current employee EJob', p);
+                this.crrJobSalaries = p
+              })
+              this.df.detectChanges();
+            }
+            else{
+              this.notify.notifyCode('SYS022');
+            }
+          })
+        }
 
         break;
 
@@ -366,6 +396,10 @@ export class EmployeeProfileComponent extends UIComponent {
         }
         else if(funcID == 'family'){
           this.handleEFamilyInfo('copy', data);
+          this.df.detectChanges();
+        }
+        else if(funcID == 'jobSalary'){
+          this.HandleEmployeeJobSalariesInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -628,6 +662,12 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     )
     dialogAdd.closed.subscribe((res) => {
+      if(res != null){
+        this.hrService.GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        .subscribe((p => {
+          this.crrJobSalaries = p;
+        }))
+      }
       if(res?.event) this.view.dataService.clear()
       })
   }

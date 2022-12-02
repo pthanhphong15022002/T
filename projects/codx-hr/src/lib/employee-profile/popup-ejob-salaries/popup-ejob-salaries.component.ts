@@ -25,6 +25,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   dialog: DialogRef
   data: any
   funcID: string
+  actionType: string
   employeeId: string
   isAfterRender = false
   headerText : string
@@ -47,7 +48,11 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
       this.formModel.gridViewName = 'grvEJobSalaries'
     }
     this.employeeId = data?.data?.employeeId
-
+    this.actionType = data?.data?.actionType
+    if(this.actionType === 'edit' || this.actionType === 'copy'){
+      this.data = JSON.parse(JSON.stringify(data?.data?.salarySelected))
+      this.formModel.currentData = this.data
+    }
   }
 
   initForm(){
@@ -55,10 +60,12 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
     .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
     .then((item) => {
       this.formGroup = item
-      this.hrSevice.GetEmployeeJobSalariesModel().subscribe(p => {
-        this.data = p
-        this.formModel.currentData = this.data
-      })
+      if(this.actionType == 'add'){
+        this.hrSevice.GetEmployeeJobSalariesModel().subscribe(p => {
+          this.data = p
+          this.formModel.currentData = this.data
+        })
+      }
       this.formGroup.patchValue(this.data)
       this.isAfterRender = true
     })
@@ -73,15 +80,30 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
       this.notify.notifyCode('HR002')
       return
     }
-
-
+    if(this.actionType == 'copy'){
+      delete this.data.recID
+    }
     this.data.employeeID = this.employeeId
-    this.hrSevice.AddEmployeeJobSalariesInfo(this.data).subscribe(p => {
-      if(p != null){
-        this.notify.notifyCode('SYS007')
-        this.dialog.close(p);
-      }
-      else this.notify.notifyCode('DM034')
-    })
+    console.log('du lieu luong goi be', this.data);
+    
+    if(this.actionType === 'add' || this.actionType === 'copy'){
+      this.hrSevice.AddEmployeeJobSalariesInfo(this.data).subscribe(p => {
+        if(p != null){
+          this.notify.notifyCode('SYS007')
+          this.dialog.close(p)
+        }
+        else this.notify.notifyCode('DM034')
+      })
+    }
+    else{
+      this.hrSevice.UpdateEmployeeJobSalariesInfo(this.data).subscribe(p => {
+        if(p == true){
+          this.notify.notifyCode('SYS007')
+          this.dialog.close(this.data)
+        }
+        else this.notify.notifyCode('DM034')
+      });
+    }
+    }
   }
-}
+
