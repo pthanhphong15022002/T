@@ -25,7 +25,29 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
   }
 
   onContinue() {
-    // this.api.execSv('SYS', 'ERM.Business')
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.AD',
+        'UsersBusiness',
+        'GetByEmailAsync',
+        this.email
+      )
+      .subscribe((res) => {
+        var obj: any;
+        if (res) {
+          obj = {
+            formType: 'edit',
+            data: res,
+          };
+        } else {
+          obj = {
+            formType: 'add',
+            data: null,
+          };
+        }
+        this.dialog.close(obj);
+      });
   }
 
   checkValidEmail(value) {
@@ -34,6 +56,8 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
     if (checkRegex == false) {
       this.notificationsService.notify("Trường 'Email' không hợp lệ");
       return;
+    } else {
+      this.onContinue();
     }
   }
 }
