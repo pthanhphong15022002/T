@@ -549,7 +549,7 @@ export class CodxDMService {
                       0,
                       this.user?.userName
                     );
-                    this.ChangeData.next(true);
+                    this.addFile.next(true);
                     //  this.changeDetectorRef.detectChanges();
                   }
 
