@@ -277,9 +277,10 @@ export class PopupAddProcessStepsComponent
     }
   }
   valueChangeRefrence(e) {
-    if (e?.data && e?.data.trim() != '') {
-      this.textChange = e?.data;
-      // this.enterRefrence();
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.textChange = value;
+      this.enterRefrence()
     }
   }
   enterRefrence() {
@@ -289,6 +290,7 @@ export class PopupAddProcessStepsComponent
       this.textChange = '';
       this.changeDef.detectChanges();
     }
+
   }
 
   showPoppoverDeleteRef(p, i) {

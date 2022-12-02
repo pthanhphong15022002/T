@@ -272,7 +272,7 @@ export class IncommingComponent
 
     if (
       this.view.formModel.funcID == 'ODT41' &&
-      (data?.approveStatus == '2' || data?.approveStatus == '3') &&
+       data?.approveStatus == '3' &&
       data?.createdBy == this.userID
     ) {
       var approvel = e.filter(

@@ -61,62 +61,60 @@
 <!-- COMMENT -->
 <ng-template #C>
     <div class="position-relative pb-3 send-comt">
-        <ng-container *ngIf="data">
-            <div class="d-flex">
+        <div class="d-flex">
+            <div class="me-3">
+                <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
+            </div>
+            <div class="d-flex w-100">
                 <div class="me-3">
-                    <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
+                    <codx-img 
+                        [objectId]="data.createdBy" 
+                        [objectName]="data.createdName" 
+                        objectType="AD_Users" 
+                        [imageType]="'circle'"
+                        [width]="30">
+                    </codx-img>
                 </div>
-                <div class="d-flex w-100">
-                    <div class="me-3">
-                        <codx-img 
-                            [objectId]="data.createdBy" 
-                            [objectName]="data.createdName" 
-                            objectType="AD_Users" 
-                            [imageType]="'circle'"
-                            [width]="30">
-                        </codx-img>
+                <div class="w-100 footer-comt">
+                    <div class="">
+                        <p class="m-0" [innerHTML]="data.description"></p>
+                        <p class="m-0 text-gray-400">{{data.createdOn | timefrom}}</p>
+                        <p class="m-0 log-comment" [innerHTML]="data.comment"></p>
                     </div>
-                    <div class="w-100 footer-comt">
-                        <div class="">
-                            <p class="m-0" [innerHTML]="data.description"></p>
-                            <p class="m-0 text-gray-400">{{data.createdOn | timefrom}}</p>
-                            <p class="m-0 log-comment" [innerHTML]="data.comment"></p>
-                        </div>
-                        <ng-container *ngIf="lstFile">
-                            <div class="row px-4 justify-content-between">
-                                <ng-container *ngFor="let item of lstFile">
-                                    <div class="col-5 my-2">
-                                        <div class="w-100 position-relative">
-                                            <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
-                                                <ng-container *ngIf="item.recID;else imageSrc">
-                                                    <codx-img [recId]="item.recID" [objectId]="item.objectID"
-                                                        [width]="100" cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
-                                                    </codx-img>
-                                                </ng-container>
-                                                <ng-template #imageSrc>
-                                                    <img [src]="item.data || item.avatar" alt="" class="image">
-                                                </ng-template>
+                    <ng-container *ngIf="lstFile">
+                        <div class="row px-4 justify-content-between">
+                            <ng-container *ngFor="let item of lstFile">
+                                <div class="col-5 my-2">
+                                    <div class="w-100 position-relative">
+                                        <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                                            <ng-container *ngIf="item.recID;else imageSrc">
+                                                <codx-img [recId]="item.recID" [objectId]="item.objectID"
+                                                    [width]="100" cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
+                                                </codx-img>
                                             </ng-container>
-                                            <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
-                                                <video #video controls class="w-100 rounded min-h-250px">
-                                                    <source [src]="item.srcVideo || item.data" type="video/mp4">
-                                                </video>
-                                            </ng-container>
-                                            <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                                                <codx-temp-full imageSrc="{{item.extension | avtFile}}"
-                                                    imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}"
-                                                    [descLine]="1">
-                                                </codx-temp-full>
-                                            </ng-container>
-                                        </div>
+                                            <ng-template #imageSrc>
+                                                <img [src]="item.data || item.avatar" alt="" class="image">
+                                            </ng-template>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                                            <video #video controls class="w-100 rounded min-h-250px">
+                                                <source [src]="item.srcVideo || item.data" type="video/mp4">
+                                            </video>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                                            <codx-temp-full imageSrc="{{item.extension | avtFile}}"
+                                                imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}"
+                                                [descLine]="1">
+                                            </codx-temp-full>
+                                        </ng-container>
                                     </div>
-                                </ng-container>
-                            </div>
-                        </ng-container>
-                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
                 </div>
             </div>
-        </ng-container>
+        </div>
     </div>
 </ng-template>
 <!-- END COMMENT -->

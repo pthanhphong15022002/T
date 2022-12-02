@@ -109,6 +109,7 @@ export class ProcessesComponent
   moreFunc: any;
   heightWin: any;
   widthWin: any;
+  isViewCard: boolean = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
