@@ -304,7 +304,7 @@ export class ViewDetailComponent implements OnInit {
       bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != '3') {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
