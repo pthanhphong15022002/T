@@ -70,8 +70,8 @@
           </codx-input>
         </div>
       </div>
-      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6">
-        <div class="role-right">
+      <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6 role-right">
+        <div class="list-role">
           <table class="table">
             <thead>
               <tr>
@@ -97,8 +97,7 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="full" field="full"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'full')"
-                    >
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'full')">
                   </codx-input>
                 </td>
               </tr>
@@ -205,8 +204,8 @@
                   <codx-label [default]="'Cho phép download file'" [fiedName]="'DescriptionDownload'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="download" field="download"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="download"
+                    field="download" [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'download')">
                   </codx-input>
                 </td>
               </tr>

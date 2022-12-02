@@ -164,8 +164,10 @@ export class CodxApproveStepsComponent
       this.updateApprovalStep();
     } else {
       //Nhấn nút lưu
-      this.data.countStep = this.lstStep.length;
-      this.model.patchValue({ countStep: this.lstStep.length });
+      if (this.data) {
+        this.data.countStep = this.lstStep.length;
+        this.model.patchValue({ countStep: this.lstStep.length });
+      }
       this.updateApprovalStep();
       this.dialogApproval && this.dialogApproval.close(true);
     }
