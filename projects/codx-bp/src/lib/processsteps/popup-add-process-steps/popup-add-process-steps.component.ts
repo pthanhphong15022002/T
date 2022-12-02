@@ -67,7 +67,6 @@ export class PopupAddProcessStepsComponent
   formModelMenu: FormModel;
   crrIndex = 0;
   gridViewSetup: any;
-  process : any
 
   constructor(
     private inject: Injector,
@@ -88,7 +87,6 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-    this.process = dt?.data[4]
 
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
@@ -279,9 +277,10 @@ export class PopupAddProcessStepsComponent
     }
   }
   valueChangeRefrence(e) {
-    if (e?.data && e?.data.trim() != '') {
-      this.textChange = e?.data;
-      // this.enterRefrence();
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.textChange = value;
+      this.enterRefrence()
     }
   }
   enterRefrence() {
@@ -291,6 +290,7 @@ export class PopupAddProcessStepsComponent
       this.textChange = '';
       this.changeDef.detectChanges();
     }
+
   }
 
   showPoppoverDeleteRef(p, i) {

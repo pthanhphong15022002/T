@@ -13,6 +13,8 @@ import {
   RequestOption,
   AlertConfirmInputConfig,
   NotificationsService,
+  FormModel,
+  DialogModel,
 } from 'codx-core';
 import {
   Component,
@@ -29,6 +31,8 @@ import {
 import { ViewUsersComponent } from './view-users/view-users.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CodxAdService } from '../codx-ad.service';
+import { environment } from 'src/environments/environment';
+import { PleaseUseComponent } from './please-use/please-use.component';
 
 @Component({
   selector: 'lib-user',
@@ -40,6 +44,7 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
+  @ViewChild('please_use') please_use: TemplateRef<any>;
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -129,26 +134,42 @@ export class UserComponent extends UIComponent {
   }
 
   add(e) {
-    this.headerText = e.text;
-    this.view.dataService.addNew().subscribe((res: any) => {
-      var obj = {
-        formType: 'add',
-        headerText: this.headerText,
-      };
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
-        if (e?.event) {
-          e.event.modifiedOn = new Date();
-          this.view.dataService.update(e.event).subscribe();
-          this.changeDetectorRef.detectChanges();
-        }
+    if (environment.saas == 1) {
+      this.headerText = e.text;
+      this.view.dataService.addNew().subscribe((res: any) => {
+        var obj = {
+          formType: 'add',
+          headerText: this.headerText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = 'Auto'; // s k thấy gửi từ ben đây,
+        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+        this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
+          if (e?.event) {
+            e.event.modifiedOn = new Date();
+            this.view.dataService.update(e.event).subscribe();
+            this.changeDetectorRef.detectChanges();
+          }
+        });
       });
-    });
+    } else {
+      let optionForm = new DialogModel();
+      optionForm.DataService = this.view?.currentView?.dataService;
+      optionForm.FormModel = this.view?.currentView?.formModel;
+      var dialog = this.callfc.openForm(
+        PleaseUseComponent,
+        '',
+        400,
+        70,
+        '',
+        '',
+        '',
+        optionForm
+      );
+    }
   }
 
   delete(data: any) {
@@ -157,7 +178,9 @@ export class UserComponent extends UIComponent {
       .delete([this.view.dataService.dataSelected])
       .subscribe((res: any) => {
         if (res.data) {
-          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true).subscribe();
+          this.codxAdService
+            .deleteFile(res.data.userID, 'AD_Users', true)
+            .subscribe();
         }
       });
   }

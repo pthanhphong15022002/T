@@ -1232,7 +1232,6 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   getSrcVideo(data) {
     var result: any;
     this.SVServices.getFileByObjectID(data.recID).subscribe((res: any) => {
-      debugger;
       if (res)
         result = data['srcVideo'] = `${environment.urlUpload}/${res.pathDisk}`;
     });

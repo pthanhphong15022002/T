@@ -167,15 +167,13 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   btnClick(e) {
-    if(this.view)
-    {
+    if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       this.view.dataService.addNew().subscribe((result: any) => {
-        if (result) 
-        {
+        if (result) {
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -197,8 +195,7 @@ export class OrgorganizationComponent extends UIComponent {
 
   add(headerText) {
     this.currentView = this.view.currentView;
-    if (this.currentView)
-    {
+    if (this.currentView) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view?.currentView?.dataService;
@@ -248,7 +245,6 @@ export class OrgorganizationComponent extends UIComponent {
         }
       });
     }
-      
   }
 
   edit(data, headerText) {
@@ -321,7 +317,6 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   clickMF(evt: any, data: any) {
-    debugger
     var headerText = '';
     if (evt.text) headerText = evt.text;
     switch (evt.functionID) {

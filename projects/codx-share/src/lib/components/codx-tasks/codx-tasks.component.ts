@@ -885,6 +885,7 @@ export class CodxTasksComponent
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
+    if(this.funcID=='TMT0206'){data.status = this.crrStatus; return}
     if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
       return;
     var moreFun = this.moreFunction.find(
@@ -1414,6 +1415,15 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
+         //an voi ca TMT026
+        if (
+            (x.functionID == 'SYS02' ||
+              x.functionID == 'SYS03' ||
+              x.functionID == 'SYS04') &&
+            this.funcID == 'TMT0206'
+          ) {
+            x.disabled = true;
+          }
       });
     }
   }

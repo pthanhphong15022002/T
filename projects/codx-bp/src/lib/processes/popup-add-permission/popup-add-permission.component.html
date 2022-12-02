@@ -1,9 +1,9 @@
 <codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="dialog.formModel" #form>
   <ng-template #body>
     <div class="offcanvas-wrapper">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <span class="text-dark">{{fullName}}</span>
+      <div class="d-flex justify-content-between background-name">
+        <div class="d-flex align-items-center " >
+          <span class="text-name">{{fullName}}</span>
         </div>
       </div>
       <div class="request-to mt-4">
@@ -148,7 +148,7 @@
           </codx-label>
         </div>
         <codx-input class="form-control" [placeholder]="" [class]="validate('shareContent')" type="textarea"
-           headerposition="none" format="ed" height="150" [crrValue]="shareContent" (valueChange)="txtValue($event, 'shareContent')">
+           headerposition="none" format="ed" height="250" [crrValue]="shareContent" (valueChange)="txtValue($event, 'shareContent')">
         </codx-input>
       </div>
       <div class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
@@ -187,7 +187,7 @@
               </codx-label>
             </div>
             <div class="col-8">
-              <codx-input placeholder="startDate..." class="form-control test-datetime" type="datetime"
+              <codx-input [placeholder]="gridViewSetup['ToDate']?.description" class="form-control test-datetime" type="datetime"
                 style="width:100%" format="d" [crrValue]="startDate" (valueChange)="txtValue($event, 'startDate')">
               </codx-input>
             </div>
@@ -200,7 +200,7 @@
               </codx-label>
             </div>
             <div class="col-8">
-              <codx-input placeholder="endDate..." class="form-control test-datetime" type="datetime"
+              <codx-input [placeholder]="gridViewSetup['ToDate']?.description" class="form-control test-datetime" type="datetime"
                 style="width:100%;" format="d" [crrValue]="endDate" (valueChange)="txtValue($event, 'endDate')">
               </codx-input>
             </div>
