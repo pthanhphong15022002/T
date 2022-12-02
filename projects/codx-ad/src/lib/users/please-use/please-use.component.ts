@@ -1,5 +1,5 @@
 import { Component, OnInit, Injector, Optional } from '@angular/core';
-import { DialogRef, UIComponent } from 'codx-core';
+import { DialogRef, UIComponent, NotificationsService } from 'codx-core';
 
 @Component({
   selector: 'lib-please-use',
@@ -9,7 +9,11 @@ import { DialogRef, UIComponent } from 'codx-core';
 export class PleaseUseComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   email: any;
-  constructor(private injector: Injector, @Optional() dialog: DialogRef) {
+  constructor(
+    private injector: Injector,
+    @Optional() dialog: DialogRef,
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
     this.dialog = dialog;
   }
@@ -22,5 +26,14 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
 
   onContinue() {
     // this.api.execSv('SYS', 'ERM.Business')
+  }
+
+  checkValidEmail(value) {
+    const regex = new RegExp('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$');
+    var checkRegex = regex.test(value);
+    if (checkRegex == false) {
+      this.notificationsService.notify("Trường 'Email' không hợp lệ");
+      return;
+    }
   }
 }

@@ -216,17 +216,16 @@ export class PopupRolesComponent implements OnInit {
       this.currentPemission = index;
     }
 
-    if(this.process.owner == this.process.permissions[index].objectID){
+    if (this.process.owner == this.process.permissions[index].objectID) {
       this.isAssign = false;
-    }
-    else if(
+    } else if (
       (this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '2') ||
       (!this.autoCreate && this.nemberType == '3')
     )
       this.isAssign = true;
-      else this.isAssign = false;
+    else this.isAssign = false;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -328,9 +327,10 @@ export class PopupRolesComponent implements OnInit {
 
   //#region assign
   checkAdminUpdate() {
-    if (this.isAssign) return false;
-    else
-     return true;
+    if (this.user.administrator || this.user.userID == this.process.owner) {
+      if (this.isAssign) return false;
+      else return true;
+    } else return false;
   }
 
   checkAssignRemove(i) {
