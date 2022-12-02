@@ -1,13 +1,11 @@
 export abstract class AppConfig {
   shopping: string;
   apiUrl: string;
-  pdfUrl: string;
-  librOfficeUrl: string;
   urlUpload: string;
-  urlTenant: string;
-  urlThumbnail: string;
-  urlFile: string;
   appName: string;
   reportUrl: string;
-  office365: string
+  office365: string;
+  saas: number;
+  sureMeet: any;
+  firebase: any;
 }

@@ -1,0 +1,392 @@
+<ng-container *ngIf="data">
+    <ng-container [ngSwitch]="data.actionType">
+        <!-- Bình luận -->
+        <ng-container *ngSwitchCase="'C'">
+            <ng-container *ngTemplateOutlet="C"></ng-container>
+        </ng-container>
+        <!-- thêm mới -->
+        <ng-container *ngSwitchCase="'N'">
+            <ng-container *ngTemplateOutlet="N"></ng-container>
+        </ng-container>
+        <!-- gửi mail -->
+        <ng-container *ngSwitchCase="'E'">
+            <ng-container *ngTemplateOutlet="E"></ng-container>
+        </ng-container>
+        <!-- phân công công việc -->
+        <ng-container *ngSwitchCase="'T'">
+            <ng-container *ngTemplateOutlet="T"></ng-container>
+        </ng-container>
+        <!-- cập nhật -->
+        <ng-container *ngSwitchCase="'U'">
+            <ng-container *ngTemplateOutlet="U"></ng-container>
+        </ng-container>
+        <!-- đính kèm -->
+        <ng-container *ngSwitchCase="'A'">
+            <ng-container *ngTemplateOutlet="A"></ng-container>
+        </ng-container>
+        <!-- share -->
+        <ng-container *ngSwitchCase="'S'">
+            <ng-container *ngTemplateOutlet="S"></ng-container>
+        </ng-container>
+        <!-- xóa -->
+        <ng-container *ngSwitchCase="'D'">
+            <ng-container *ngTemplateOutlet="D"></ng-container>
+        </ng-container>
+        <!-- chỉnh sửa gì đó ai biết -->
+        <ng-container *ngSwitchCase="'C1'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- khôi phục -->
+        <ng-container *ngSwitchCase="'A1'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- làm lại -->
+        <ng-container *ngSwitchCase="'A2'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- phát hành -->
+        <ng-container *ngSwitchCase="'A3'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- từ chối -->
+        <ng-container *ngSwitchCase="'A4'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+        <!-- duyệt -->
+        <ng-container *ngSwitchCase="'A5'">
+            <ng-container *ngTemplateOutlet="C1"></ng-container>
+        </ng-container>
+    </ng-container>
+</ng-container>
+<!-- COMMENT -->
+<ng-template #C>
+    <div class="position-relative pb-3 send-comt">
+        <div class="d-flex">
+            <div class="me-3">
+                <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
+            </div>
+            <div class="d-flex w-100">
+                <div class="me-3">
+                    <codx-img 
+                        [objectId]="data.createdBy" 
+                        [objectName]="data.createdName" 
+                        objectType="AD_Users" 
+                        [imageType]="'circle'"
+                        [width]="30">
+                    </codx-img>
+                </div>
+                <div class="w-100 footer-comt">
+                    <div class="">
+                        <p *ngIf="data.description" class="m-0" [innerHTML]="data.description"></p>
+                        <p *ngIf="data.createdOn" class="m-0 text-gray-400">{{data.createdOn | timefrom}}</p>
+                        <p *ngIf="data.comment" class="m-0 log-comment" [innerHTML]="data.comment"></p>
+                    </div>
+                    <ng-container *ngIf="lstFile">
+                        <div class="row px-4 justify-content-between">
+                            <ng-container *ngFor="let item of lstFile">
+                                <div class="col-5 my-2">
+                                    <div class="w-100 position-relative">
+                                        <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
+                                            <ng-container *ngIf="item.recID;else imageSrc">
+                                                <codx-img [recId]="item.recID" [objectId]="item.objectID"
+                                                    [width]="100" cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
+                                                </codx-img>
+                                            </ng-container>
+                                            <ng-template #imageSrc>
+                                                <img [src]="item.data || item.avatar" alt="" class="image">
+                                            </ng-template>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
+                                            <video #video controls class="w-100 rounded min-h-250px">
+                                                <source [src]="item.srcVideo || item.data" type="video/mp4">
+                                            </video>
+                                        </ng-container>
+                                        <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
+                                            <codx-temp-full imageSrc="{{item.extension | avtFile}}"
+                                                imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}"
+                                                [descLine]="1">
+                                            </codx-temp-full>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END COMMENT -->
+<!-- NEW -->
+<ng-template #N>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_New.svg" alt="">
+        </div>
+        <div class="w-100 d-flex align-items-top">
+            <div class="me-3">
+                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+<!-- END NEW -->
+<!-- MAIL -->
+<ng-template #E>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Email.svg" alt="">
+        </div>
+        <div class="w-100 d-flex align-items-top">
+            <div class="me-3">
+                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100">
+                    <span [innerHTML]="data.description"></span>
+                    <span class="ms-2">
+                        <ng-container *ngFor="let item of data.sendToObject">
+                            <span [ngbPopover]="tmpEUserHover" triggers="mouseenter:mouseleave">
+                                <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
+                                </codx-img>
+                            </span>
+                            <ng-template #tmpEUserHover>
+                                <div class="d-flex">
+                                    <span>
+                                        <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30"
+                                            [imageType]="'circle'">
+                                        </codx-img>
+                                    </span>
+                                    <span class="ms-2">
+                                        {{item.objectName}}
+                                    </span>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </span>
+                </div>
+                <div class="text-gray-400 flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+<!-- END MAIL -->
+<!-- TASK -->
+<ng-template #T>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Tasks.svg" alt="">
+        </div>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <div class="w-100">
+                    <span [innerHTML]="data.description"></span>
+                    <span class="ms-3">
+                        <ng-container *ngFor="let item of data.sendToObject">
+                            <span [ngbPopover]="tmpTUserHover" triggers="mouseenter:mouseleave">
+                                <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
+                                </codx-img>
+                            </span>
+                            <ng-template #tmpTUserHover>
+                                <div class="d-flex">
+                                    <span>
+                                        <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30"
+                                            [imageType]="'circle'">
+                                        </codx-img>
+                                    </span>
+                                    <span class="ms-2">
+                                        {{item.objectName}}
+                                    </span>
+                                </div>
+                            </ng-template>
+                        </ng-container>
+                    </span>
+                </div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+                <!-- <div>
+                    <button class="btn btn-seen">
+                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END TASK -->
+<!-- UPDATE -->
+<ng-template #U>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_CommentOnUpdate.svg" alt="">
+        </div>
+        <div class="w-100">
+            <div class="d-flex">
+                <div class="me-3">
+                    <codx-img [objectId]="data.createdBy" [objectName]="data.createdName" objectType="AD_Users" [width]="30"></codx-img>
+                </div>
+                <div class="">
+                    <div class="w-100" [innerHTML]="data.description"></div>
+                    <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                        {{data.createdOn | timefrom}}
+                    </div>
+                </div>
+            </div>
+            <div class="row p-4">
+                <table class="table w-100">
+                    <thead class="border-bottom bg-light">
+                        <th scope="col-4">
+                            <codx-label [formModel]="formModel" name="lblFieldName" [default]="'Thông tin'">
+                            </codx-label>
+                        </th>
+                        <th scope="col-4">
+                            <codx-label [formModel]="formModel" name="lblOldValue" [default]="'Giá trị cũ'">
+                            </codx-label>
+                        </th>
+                        <th scope="col-4">
+                            <codx-label [formModel]="formModel" name="lblNewValue" [default]="'Giá trị mới'">
+                            </codx-label>
+                        </th>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="data.datas">
+                            <tr class="my-2" *ngFor="let item of data.datas">
+                                <td scope="col-4">
+                                    <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
+                                </td>
+                                <td scope="col-4">
+                                    {{item.oldValue | formatvalue:formModel:item.fieldName | async}}
+                                </td>
+                                <td scope="col-4">
+                                    {{item.newValue | formatvalue:formModel:item.fieldName | async}}
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+<!-- END UPDATE -->
+<!-- ATTACHMENT -->
+<ng-template #A>
+    <div class="d-flex align-items-top">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Attachments.svg" alt="">
+        </div>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img 
+                    [objectId]="data.createdBy"
+                    [objectName]="data.createdName"
+                    objectType="AD_Users" 
+                    [width]="30">
+                </codx-img>
+            </div>
+            <div class="d-flex flex-column">
+                <div class="d-flex flex-column flex-wrap">
+                    <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+                    <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7">{{data.createdOn | timefrom}}</div>
+                </div>
+                <ng-container *ngIf="data.listFile">
+                    <div class="row mt-2">
+                        <codx-thumbnail class="popup-attachment" [files]="data.listFile" [formModel]="formModel"></codx-thumbnail>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END ATTACHMENT -->
+<!-- SHARE -->
+<ng-template #S>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Share.svg" alt="">
+        </div>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img class="w-30px" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+            </div>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END SHARE -->
+<!-- DELETED -->
+<ng-template #D>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Delete.svg" alt="">
+        </div>
+        <div class="d-flex align-items-top w-100">
+            <div class="me-3">
+                <codx-img class="w-30px" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+            </div>
+            <div class="d-flex flex-column flex-wrap">
+                <div class="w-100" [innerHTML]="data.description"></div>
+                <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                    {{data.createdOn | timefrom}}
+                </div>
+                <!-- <div>
+                    <button class="btn btn-seen">
+                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
+                    </button>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END DELETED -->
+<!-- C1 -->
+<ng-template #C1>
+    <div class="d-flex align-items-top ">
+        <div class="me-3">
+            <img class="w-30px iconHistory" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
+        </div>
+        <div class="d-flex justify-content-between align-items-top w-100">
+            <div class="d-flex align-items-top w-100">
+                <div class="me-3">
+                    <codx-img 
+                        [objectId]="data.createdBy" 
+                        [objectName]="data.createdName"
+                        objectType="AD_Users" 
+                        [width]="30">
+                    </codx-img>
+                </div>
+                <div class="d-flex flex-column flex-wrap w-100">
+                    <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+                    <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
+                        {{data.createdOn | timefrom}}
+                    </div>
+                    <div *ngIf="data.comment" class="comment text-nowrap">
+                        <span [innerHTML]="data.comment"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- END C1 -->

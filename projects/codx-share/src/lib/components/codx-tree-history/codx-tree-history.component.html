@@ -46,9 +46,12 @@
         <ng-container *ngIf="item.showReply">
             <codx-comment-history 
                 [type]="'create'" 
-                [funcID]="funcID" [actionType]="actionType"
+                [funcID]="funcID" 
+                [actionType]="actionType"
                 [formModel]="formModel"
-                [objectID]="item.objectID" [objectType]="item.objectType" [reference]="item.recID"
+                [objectID]="objectID" 
+                [objectType]="objectType" 
+                [reference]="item.recID"
                 (evtSend)="sendComment($event,item)">
             </codx-comment-history>
         </ng-container>

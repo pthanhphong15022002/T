@@ -98,6 +98,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   location: any;
   reminder: any;
   fields: Object = { text: 'location', value: 'resourceID' };
+  disabledProject = false
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -115,6 +116,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
+    this.disabledProject = dt.data[2]
     this.functionID = this.dialog.formModel.funcID;
 
     this.cache

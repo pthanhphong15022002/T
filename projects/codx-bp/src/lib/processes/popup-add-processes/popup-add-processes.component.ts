@@ -97,6 +97,8 @@ export class PopupAddProcessesComponent implements OnInit {
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
+      this.process.phases = 0;
+      this.process.activities = 0;
       this.revisions.push(versions);
       this.process.versions = this.revisions;
       data = [this.process];
@@ -152,36 +154,36 @@ export class PopupAddProcessesComponent implements OnInit {
       return;
     }
 
-    if (!this.process.activedOn) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
-      );
-      return;
+    // if (!this.process.activedOn) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
+    //   );
+    //   return;
+    // }
+    // if (!this.process.expiredOn) {
+    //   this.notiService.notifyCode(
+    //     'SYS009',
+    //     0,
+    //     '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
+    //   );
+    //   return;
+    // }
+
+    if (this.process.activedOn && this.process.expiredOn) {
+      // if (this.isCheckFromToDate(this.process.activedOn)) {
+      //   this.notiService.notify(
+      //     'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
+      //   );
+      //   return;
+      // }
+      if (this.process.activedOn >= this.process.expiredOn) {
+        this.notiService.notifyCode('BP003');
+        return;
+      }
     }
-    if (!this.process.expiredOn) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
-      );
-      return;
-    }
-    //Chưa có mssg code
-    if (this.isCheckFromToDate(this.process.activedOn)) {
-      this.notiService.notify(
-        'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
-      );
-      return;
-    }
-    //Chưa có mssg code
-    if (this.process.activedOn >= this.process.expiredOn) {
-      this.notiService.notify(
-        'Vui lòng chọn ngày hiệu lực nhỏ hơn ngày hết hạn!'
-      );
-      return;
-    }
+
 
     if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {

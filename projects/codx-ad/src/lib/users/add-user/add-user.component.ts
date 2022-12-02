@@ -287,6 +287,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 }
               });
             this.dataAfterSave = res.save;
+            console.log('check dataAfterSave', this.dataAfterSave);
           }
         });
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
@@ -316,8 +317,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
           dt.userID = this.adUser.userID;
         });
       }
-      this.adUser
-      debugger
+      this.adUser;
+
       data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
@@ -333,9 +334,22 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var data = [];
     this.isAddMode = true;
     op.methodName = 'AddUserAsync';
-    data = [this.adUser, null, false, false];
+    data = [this.adUser, this.viewChooseRole, false, false];
     op.data = data;
     return true;
+  }
+
+  updateAfterAdd() {
+    var checkDifference =
+      JSON.stringify(this.viewChooseRoleTemp) ===
+      JSON.stringify(this.viewChooseRole);
+    this.api
+      .execSv('SYS', 'ERM.Business.AD', 'UsersBusiness', 'UpdateUserAsync', [
+        this.adUser,
+        this.viewChooseRole,
+        checkDifference,
+      ])
+      .subscribe();
   }
 
   onAdd() {
@@ -344,8 +358,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res.save) {
           this.getHTMLFirstPost(this.adUser);
-          this.adService.createFirstPost(this.tmpPost).subscribe((res) => {
-          });
+          this.adService.createFirstPost(this.tmpPost).subscribe((res) => {});
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -399,6 +412,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         if (this.checkBtnAdd == false) {
           this.onAdd();
         } else {
+          this.updateAfterAdd();
           if (
             this.countListViewChooseRoleApp > 0 ||
             this.countListViewChooseRoleService > 0
@@ -408,15 +422,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  this.dialog.close(res);
                   (this.dialog.dataService as CRUDService)
                     .update(res)
                     .subscribe();
+                  this.dialog.close(res);
                   this.changeDetector.detectChanges();
                 }
               });
           }
-          this.notification.notifyCode('SYS006');
+          // this.notification.notifyCode('SYS006');
         }
       } else this.onUpdate();
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);

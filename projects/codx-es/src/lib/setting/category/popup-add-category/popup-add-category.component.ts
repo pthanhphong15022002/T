@@ -29,9 +29,10 @@ import {
   RequestOption,
 } from 'codx-core';
 import { CodxApprovalStepComponent } from 'projects/codx-share/src/lib/components/codx-approval-step/codx-approval-step.component';
+import { CodxApproveStepsComponent } from 'projects/codx-share/src/lib/components/codx-approve-steps/codx-approve-steps.component';
 import { SettingAlertDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/alert-drawer/setting-alert-drawer/setting-alert-drawer.component';
 import { CodxEsService, GridModels } from '../../../codx-es.service';
-import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
+//import { ApprovalStepComponent } from '../../approval-step/approval-step.component';
 import { PopupAddAutoNumberComponent } from '../popup-add-auto-number/popup-add-auto-number.component';
 @Component({
   selector: 'popup-add-category',
@@ -485,7 +486,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
     dialogModel.IsFull = true;
 
     let popupeStep = this.cfService.openForm(
-      ApprovalStepComponent,
+      CodxApproveStepsComponent,
       '',
       screen.width,
       screen.height,

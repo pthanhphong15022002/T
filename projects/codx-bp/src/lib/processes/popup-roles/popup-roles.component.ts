@@ -122,7 +122,7 @@ export class PopupRolesComponent implements OnInit {
     ) {
       this.bpSv.updatePermissionProcess(this.process).subscribe((res) => {
         if (res.permissions.length > 0) {
-          this.notifi.notify('Phân quyền thành công');
+          this.notifi.notifyCode('SYS034');
           this.dialog.close(res);
         } else {
           this.notifi.notify('Phân quyền không thành công');
@@ -216,17 +216,16 @@ export class PopupRolesComponent implements OnInit {
       this.currentPemission = index;
     }
 
-    if(this.process.owner == this.process.permissions[index].objectID){
+    if (this.process.owner == this.process.permissions[index].objectID) {
       this.isAssign = false;
-    }
-    else if(
+    } else if (
       (this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '2') ||
       (!this.autoCreate && this.nemberType == '3')
     )
       this.isAssign = true;
-      else this.isAssign = false;
+    else this.isAssign = false;
     this.changeDetectorRef.detectChanges();
   }
 
@@ -328,20 +327,23 @@ export class PopupRolesComponent implements OnInit {
 
   //#region assign
   checkAdminUpdate() {
-    if (this.isAssign) return false;
-    else
-     return true;
+    if (this.user.administrator || this.user.userID == this.process.owner) {
+      if (this.isAssign) return false;
+      else return true;
+    } else return false;
   }
 
   checkAssignRemove(i) {
-    if (
-      !this.process.permissions[i].autoCreate &&
-      this.process.permissions[i].nemberType == '1'
-    )
-      //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
+    if (this.user.administrator || this.user.userID == this.process.owner) {
+      if (
+        !this.process.permissions[i].autoCreate &&
+        this.process.permissions[i].nemberType == '1'
+      )
+        //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
 
-      return true;
-    else return false;
+        return true;
+      else return false;
+    } else return false;
   }
 
   //#endregion

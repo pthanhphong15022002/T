@@ -25,7 +25,7 @@ import {
   BP_ProcessSteps,
 } from '../../models/BP_Processes.model';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
@@ -94,7 +94,11 @@ export class PopupAddProcessStepsComponent
     this.funcID = this.dialog.formModel.funcID;
 
     this.title = this.titleActon;
-    if (this.processSteps.parentID && (this.stepType != 'A' && this.stepType != 'P')){
+    if (
+      this.processSteps.parentID &&
+      this.stepType != 'A' &&
+      this.stepType != 'P'
+    ) {
       this.getOwnerByParentID(this.processSteps.parentID);
     }
 
@@ -124,7 +128,7 @@ export class PopupAddProcessStepsComponent
   }
 
   onInit(): void {
-    this.loadData();   
+    this.loadData();
     this.getListUser();
 
     if (this.action == 'edit') {
@@ -173,26 +177,33 @@ export class PopupAddProcessStepsComponent
 
   checkValidate() {
     let headerText = [];
-    if (this.stepType != 'P' && (this.processSteps.parentID == '' || this.processSteps.parentID == null)) {
-      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'ParentID');            
+    if (
+      this.stepType != 'P' &&
+      (this.processSteps.parentID == '' || this.processSteps.parentID == null)
+    ) {
+      headerText.push(this.gridViewSetup['ParentID']?.headerText ?? 'ParentID');
     }
-    if(!this.processSteps.stepName?.trim()){
-      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'StepName');         
+    if (!this.processSteps.stepName?.trim()) {
+      headerText.push(this.gridViewSetup['StepName']?.headerText ?? 'StepName');
     }
-    if(this.processSteps.duration <=0){
-      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'Duration');    
+    if (this.processSteps.duration <= 0) {
+      headerText.push(this.gridViewSetup['Duration']?.headerText ?? 'Duration');
     }
-    if(this.owners.length === 0){
+    if (this.owners.length === 0) {
       headerText.push(this.gridViewSetup['Owners']?.headerText ?? 'Owners');
     }
     return headerText;
   }
 
-  async saveData() {    
-    let headerText =  this.checkValidate();
-    if(headerText.length > 0){
-      this.notiService.notifyCode('SYS009', 0, '"' + headerText.join(", ") + '"');
-      return ; 
+  async saveData() {
+    let headerText = this.checkValidate();
+    if (headerText.length > 0) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + headerText.join(', ') + '"'
+      );
+      return;
     }
 
     this.processSteps.owners = this.owners;
@@ -200,12 +211,12 @@ export class PopupAddProcessStepsComponent
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-         var attachments = Array.isArray(res) ? res.length : 1;
+          var attachments = Array.isArray(res) ? res.length : 1;
           if (this.action == 'edit') {
-            this.processSteps.attachments +=attachments
+            this.processSteps.attachments += attachments;
             this.updateProcessStep();
           } else {
-            this.processSteps.attachments =attachments
+            this.processSteps.attachments = attachments;
             this.addProcessStep();
           }
         }
@@ -266,9 +277,10 @@ export class PopupAddProcessStepsComponent
     }
   }
   valueChangeRefrence(e) {
-    if (e?.data && e?.data.trim() != '') {
-      this.textChange = e?.data;
-      // this.enterRefrence();
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.textChange = value;
+      this.enterRefrence()
     }
   }
   enterRefrence() {
@@ -278,6 +290,7 @@ export class PopupAddProcessStepsComponent
       this.textChange = '';
       this.changeDef.detectChanges();
     }
+
   }
 
   showPoppoverDeleteRef(p, i) {
@@ -296,8 +309,7 @@ export class PopupAddProcessStepsComponent
   addFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileAdded(e) {
-  }
+  fileAdded(e) {}
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
@@ -352,11 +364,11 @@ export class PopupAddProcessStepsComponent
     if (i != -1) this.owners.splice(i, 1);
   }
 
-  // get list user 
+  // get list user
   getListUser() {
     this.listOwnerDetails = this.owners.map((user) => {
       return { id: user.objectID, name: user.objectName };
-    });   
+    });
   }
   getOwnerByParentID(id, isChange = false) {
     this.bpService.getOwnersByParentID([id]).subscribe((data) => {
