@@ -138,7 +138,7 @@ export class UserComponent extends UIComponent {
   };
   add(e) {
     // if (environment.saas == 0) {
-      this.headerTextAdd.text = e.text;
+      // this.headerTextAdd.text = e.text;
       this.headerText = e.text;
       this.view.dataService.addNew().subscribe((res: any) => {
         var obj = {
