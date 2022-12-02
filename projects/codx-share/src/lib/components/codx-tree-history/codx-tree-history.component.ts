@@ -30,10 +30,7 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   @Input() totalComment: number = 0;
   @Output() totalCommentChange = new EventEmitter<number>();
   /////////////////////////////
-  service = 'BG';
-  assemply = 'ERM.Business.BG';
-  className = 'TrackLogsBusiness';
-  vllL1480 = 'L1480'; // valueList icon viết chết
+  vllL1480 = 'L1480'; // valueList icon 
   vllIcon: any = [];
   dVll: any = {};
   lstHistory: any[] = [];
@@ -51,12 +48,12 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.objectID.previousValue != changes.objectID.currentValue) {
-      this.getDataAsync(this.objectID, this.id);
+      this.getDataAsync();
     }
   }
 
   ngOnInit(): void {
-    this.getDataAsync(this.objectID, this.id);
+    this.getDataAsync();
   }
 
   getValueIcon() {
@@ -71,41 +68,22 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
       }
     });
   }
-  getDataAsync(objectID: string, id: string) {
-    if (this.actionType == 'C') {
-      this.GetCommentTrackLogByObjectIDAsync(objectID, id);
-    } else {
-      this.getTrackLogAsync(objectID, id);
-    }
+  getDataAsync() 
+  {    
+    this.getCommentsAsync(this.objectID);
     this.getValueIcon();
   }
-  getTrackLogAsync(objectID: string, id: string) {
-    if (objectID || id) {
+  // get data comments 
+  getCommentsAsync(objectID: string) 
+  {
+    if(objectID ){
       this.api
-        .execSv(
-          this.service,
-          this.assemply,
-          this.className,
-          'GetTrackLogsByObjectIDAsync',
-          [objectID, id]
-        )
-        .subscribe((res: any[]) => {
-          if (res) {
-            this.root.listSubComment = res;
-          }
-        });
-    }
-  }
-
-  GetCommentTrackLogByObjectIDAsync(objectID: string, id: string) {
-    this.api
       .execSv(
-        this.service,
-        this.assemply,
-        this.className,
-        'GetCommentTrackLogByObjectIDAsync',
-        [objectID, id, this.actionType]
-      )
+        "BG",
+        "ERM.Business.BG",
+        "CommentLogsBusiness",
+        'GetCommentByIDAsync',
+        [objectID])
       .subscribe((res: any[]) => {
         if (res) {
           this.root.listSubComment = res[0];
@@ -113,18 +91,19 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
           this.totalCommentChange.emit(this.totalComment);
         }
       });
+    }
   }
-
+  // click reply
   replyTo(data) {
     data.showReply = !data.showReply;
     this.dt.detectChanges();
   }
-
+  // delete comment
   deleteComment(event: any) {
     this.removeNodeTree(event.recID);
     this.dt.detectChanges();
   }
-
+  // send comments 
   sendComment(event: any, data: any = null) {
     event.showReply = false;
     if (data) {
@@ -146,7 +125,6 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
     var id = newNode['recID'],
       parentId = newNode['reference'];
     this.dicDatas[id] = newNode;
-    var t = this;
     var parent = this.dicDatas[parentId];
     if (parent) {
       this.addNode(parent, newNode, id);
@@ -158,7 +136,6 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   }
 
   addNode(dataNode: any, newNode: any, id: string) {
-    var t = this;
     if (!dataNode) {
       dataNode = [newNode];
     } else {
@@ -206,7 +183,6 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
           return element['recID'] != id;
         });
       }
-
       delete this.dicDatas[id];
     }
     this.dt.detectChanges();

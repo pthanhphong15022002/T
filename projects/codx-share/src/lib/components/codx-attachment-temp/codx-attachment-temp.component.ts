@@ -27,6 +27,7 @@ export class CodxAttachmentTempComponent implements OnInit {
   @Input() formModel: FormModel = null;
   @Input() viewType = '0';
   @Input() count = 0;
+  @Input() zIndex: number = 0; // Thảo truyền z index
 
   services: string = 'DM';
   assamplyName: string = 'ERM.Business.DM';
@@ -81,6 +82,7 @@ export class CodxAttachmentTempComponent implements OnInit {
   openPopup() {
     if (this.tmpListItem) {
       let option = new DialogModel();
+      if (this.zIndex > 0) option.zIndex = this.zIndex;
       let popup = this.callFC.openForm(
         this.tmpListItem,
         '',

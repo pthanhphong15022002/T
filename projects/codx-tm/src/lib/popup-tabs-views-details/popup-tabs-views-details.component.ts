@@ -75,6 +75,14 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
       this.projectID = this.data?.projectID;
       this.resources = this.data?.resources;
       this.iterationID = this.data?.iterationID;
+      if (this.data?.iterationType == '0') {
+        this.all = [
+          { name: 'Dashboard', textDefault: 'Dashboard', isActive: false },
+          { name: 'Tasks', textDefault: 'Công việc', isActive: true },
+          { name: 'History', textDefault: 'Lịch sử', isActive: false },
+          { name: 'Comments', textDefault: 'Bình luận', isActive: false },
+        ];
+      }
     }
 
     if (this.data?.meetingID) {
@@ -96,8 +104,8 @@ export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
         { name: 'Tasks', textDefault: 'Công việc', isActive: false },
       ];
 
-      this.showButtonAdd = false;
-      this.showMoreFunc = false;
+      this.showButtonAdd = true;
+      this.showMoreFunc = true;
     }
 
     this.dialog = dialog;

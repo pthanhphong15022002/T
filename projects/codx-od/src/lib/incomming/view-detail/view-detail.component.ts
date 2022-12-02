@@ -1007,7 +1007,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .subscribe((item: any) => {
             if (item) {
               this.approvalTrans(item?.processID, datas);
-            } else {
+            } 
+            else {
             }
           });
       }
@@ -1123,7 +1124,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
     if (
       this.formModel.funcID == 'ODT41' &&
-      (data?.approveStatus == '2' || data?.approveStatus == '3') &&
+      data?.approveStatus == '3' &&
       data?.createdBy == this.userID
     ) {
       var approvel = e.filter(

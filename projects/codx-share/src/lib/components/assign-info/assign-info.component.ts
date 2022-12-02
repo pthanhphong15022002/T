@@ -459,19 +459,23 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var assignTo = '';
     var listDepartmentID = '';
     var listUserID = '';
+    var listPositionID = '';
 
     e?.data?.forEach((obj) => {
       if (obj.objectType && obj.id) {
         switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
+        }
       }
-       }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
@@ -484,12 +488,28 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         listDepartmentID.length - 1
       );
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-        if (res) {
-          assignTo += res;
-          if (listUserID != '') assignTo += ';' + listUserID;
-          this.valueSelectUser(assignTo);
-        }
+        if (res && res.trim() != '') {
+          if (
+            res.trim() == '' ||
+            res.split(';')?.length != listDepartmentID.split(';')?.length
+          )
+            this.notiService.notifyCode('TM065');
+          this.valueSelectUser(res);
+        } else this.notiService.notifyCode('TM065');
       });
+    }
+
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.tmSv
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notiService.notifyCode('TM066');
+            assignTo = res[0];
+            this.valueSelectUser(assignTo);       
+          } else this.notiService.notifyCode('TM066');
+        });
     }
   }
 
@@ -521,7 +541,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    if(!this.listUser) this.listUser = []
+    if (!this.listUser) this.listUser = [];
     this.listUser = this.listUser.concat(arrUser);
     this.api
       .execSv<any>(
@@ -617,9 +637,12 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
-          if (this.taskGroup?.planControl == '1' && this.task.startDate==null) {
+          if (
+            this.taskGroup?.planControl == '1' &&
+            this.task.startDate == null
+          ) {
             this.task.startDate = new Date();
-          } 
+          }
           // else {
           //   this.task.startDate = null;
           //   this.task.endDate = null;
@@ -643,7 +666,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
-          if (this.param?.PlanControl == '1' && this.task.startDate==null) {
+          if (this.param?.PlanControl == '1' && this.task.startDate == null) {
             this.task.startDate = new Date();
           }
           //  else {

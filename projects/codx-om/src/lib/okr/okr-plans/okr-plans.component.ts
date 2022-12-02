@@ -10,12 +10,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import {
-  DialogRef,
-  DialogData,
-  ApiHttpService,
-  NotificationsService,
-} from 'codx-core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
+import { DialogRef , DialogData, ApiHttpService, NotificationsService} from 'codx-core';
 import { take } from 'rxjs';
 
 @Component({
@@ -34,14 +30,17 @@ export class OkrPlansComponent implements OnInit {
   formModel: any;
   okrForm: FormGroup;
   date = new Date();
-  ops = ['m', 'q', 'y'];
-  selectedType = 'y';
   //Kỳ
   periodID = '';
   //Loại
   interval = '';
   //Năm
   year = null;
+  //
+  dataDate = null;
+  valueDate = ""; 
+  dataCompany = null ; //Thông tin công ty
+  oKRLevel = null;
   constructor(
     private api: ApiHttpService,
     private ref: ChangeDetectorRef,
@@ -51,14 +50,14 @@ export class OkrPlansComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     //FormModel
-    if (dt?.data[0]) this.formModel = dt?.data[0];
-    if (dt?.data[1]) this.periodID = dt?.data[1];
-    if (dt?.data[2]) {
-      this.interval = dt?.data[2];
-      this.selectedType = dt?.data[2].toLowerCase();
-    }
-    if (dt?.data[3]) this.year = dt?.data[3];
-    this.dialog = dialog;
+    if(dt?.data[0]) this.formModel = dt?.data[0];
+    if(dt?.data[1]) this.periodID = dt?.data[1];
+    if(dt?.data[2]) this.interval = dt?.data[2];
+    if(dt?.data[3]) this.year = dt?.data[3];
+    if(dt?.data[4]) this.date = dt?.data[4]?.toDate;
+    if(dt?.data[5]) this.dataCompany = dt?.data[5];
+    if(dt?.data[6]) this.oKRLevel = dt?.data[6]
+    this.dialog =  dialog;
   }
 
   ngOnInit(): void {
@@ -68,6 +67,7 @@ export class OkrPlansComponent implements OnInit {
       this.titleAdd += ' công ty';
     }
     this.createFormGroup();
+    this.getTextDate()
   }
   get okrFormArray(): FormArray {
     return this.okrForm.get('okrFormArray') as FormArray;
@@ -90,17 +90,34 @@ export class OkrPlansComponent implements OnInit {
     const repocontributors = this.okrForm.get(text);
     (repocontributors as FormArray).push(this.newKRs());
   }
+
   save() {
-    this.api
-      .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
-        this.okrForm.value.okrFormArray,
-      ])
-      .subscribe((item) => {
-        if (item) {
-          this.notifySvr.notifyCode('SYS006');
-          this.dialog.close(item);
-        }
-      });
+    //Them moi bo muc tieu
+    debugger;
+    var dataOKRPlans = 
+    {
+      //Cong ty
+      oKRLevel : this.oKRLevel,
+      companyID : this.dataCompany
+    }
+    // this.api
+    //   .execSv('OM', 'OM', 'OKRPlansBusiness', 'SaveOKRPlansAsync', )
+    //   .subscribe((item) => {
+    //     if (item) {
+    //       this.notifySvr.notifyCode('SYS006');
+    //       this.dialog.close(item);
+    //     }
+    //   });
+    // this.api
+    //   .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
+    //     this.okrForm.value.okrFormArray,
+    //   ])
+    //   .subscribe((item) => {
+    //     if (item) {
+    //       this.notifySvr.notifyCode('SYS006');
+    //       this.dialog.close(item);
+    //     }
+    //   });
   }
   newOKRs(): FormGroup {
     return this.fb.group({
@@ -124,5 +141,26 @@ export class OkrPlansComponent implements OnInit {
     return form.controls.child.controls;
   }
 
-  changeCalendar(event: any) {}
+  changeCalendar(event:any)
+  {
+    debugger;
+  }
+  getTextDate()
+  {
+    switch(this.interval)
+    {
+      case "Q":
+        {
+          this.valueDate = "Q"+ this.periodID + "/" + this.year;
+          break;
+        }
+      case "M":
+        {
+          this.valueDate = "T"+ this.periodID + "/" + this.year;
+          break;
+        }
+      default:
+        this.valueDate = this.year
+    }
+  }
 }

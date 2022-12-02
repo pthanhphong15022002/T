@@ -2,7 +2,14 @@ import {
   BP_Processes,
   BP_ProcessesRating,
 } from './../models/BP_Processes.model';
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import {
@@ -22,11 +29,9 @@ import { environment } from 'src/environments/environment';
   templateUrl: './properties.component.html',
   styleUrls: ['./properties.component.css'],
 })
-
-
-
 export class PropertiesComponent implements OnInit {
-  @ViewChild(CodxTreeHistoryComponent, {static: true}) history: CodxTreeHistoryComponent;
+  @ViewChild(CodxTreeHistoryComponent, { static: true })
+  history: CodxTreeHistoryComponent;
 
   process = new BP_Processes();
   rattings: BP_ProcessesRating[] = [];
@@ -68,15 +73,22 @@ export class PropertiesComponent implements OnInit {
     this.entityName = this.dialog.formModel.entityName;
     this.viewFlowChart();
 
-    if (this.process.rattings.length > 0) this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
+    if (this.process.rattings.length > 0)
+      this.rattings = this.process.rattings.sort(
+        (a, b) =>
+          new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+      );
     this.totalRating = 0;
   }
-
 
   ngOnInit(): void {
     this.openProperties(this.data.recID);
     this.changeDetectorRef.detectChanges();
   }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.eventEnter();
+  // }
 
   loadUserName(id) {
     // this.api.callSv('SYS','AD','UsersBusiness','GetAsync', id).subscribe(res=>{
@@ -96,6 +108,18 @@ export class PropertiesComponent implements OnInit {
     this.getRating(this.rattings);
     this.changeDetectorRef.detectChanges();
   }
+
+  //#region event enter comment
+  eventEnter() {
+    var input = document.getElementById("myInput");
+    input.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("myBtn").click();
+      }
+    });
+  }
+  //#endregion
 
   //#region mo rong
   extendShow(): void {
@@ -193,24 +217,34 @@ export class PropertiesComponent implements OnInit {
   }
   //#endregion
 
-  setComment() {
+  setComment(event = null) {
+    console.log(event)
     this.bpSV
-      .setViewRattings(this.id, this.currentRate.toString(), this.commenttext, this.funcID, this.entityName)
+      .setViewRattings(
+        this.id,
+        this.currentRate.toString(),
+        this.commenttext,
+        this.funcID,
+        this.entityName
+      )
       .subscribe((res) => {
         if (res.rattings.length > 0) {
           this.currentRate = 1;
           this.readonly = false;
           this.commenttext = '';
           this.process = res;
-          this.rattings = this.process.rattings.sort((a,b) => new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime());
+          this.rattings = this.process.rattings.sort(
+            (a, b) =>
+              new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
+          );
           this.getRating(res.rattings);
           this.notificationsService.notifyCode('DM010');
           // this.history.getDataAsync(this.process.recID, '');bp
           this.dialog.dataService.update(this.process).subscribe();
           this.changeDetectorRef.detectChanges();
-
         }
       });
+
   }
 
   setClassRating(i, rating) {
@@ -225,7 +259,7 @@ export class PropertiesComponent implements OnInit {
   //     return date1 - date2;
   //   });
 
-  viewFlowChart(){
+  viewFlowChart() {
     let paras = [
       '',
       this.funcID,
@@ -240,11 +274,13 @@ export class PropertiesComponent implements OnInit {
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
       .subscribe((res) => {
-        if (res&& res?.url) {
-          let obj = { pathDisk: environment.urlUpload+ "/" +res?.url, fileName: this.process?.processName };
+        if (res && res?.url) {
+          let obj = {
+            pathDisk: environment.urlUpload + '/' + res?.url,
+            fileName: this.process?.processName,
+          };
           this.flowChart = obj;
         }
       });
-
   }
 }

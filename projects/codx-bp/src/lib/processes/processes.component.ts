@@ -109,6 +109,7 @@ export class ProcessesComponent
   moreFunc: any;
   heightWin: any;
   widthWin: any;
+  isViewCard: boolean = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -349,8 +350,8 @@ export class ProcessesComponent
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
@@ -672,14 +673,10 @@ export class ProcessesComponent
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
           if (process){
-            // if(process.delete){
-            //   this.view.dataService.onAction.next({ type: 'delete', data: data });
-            // }else{
-              this.view.dataService.update(process).subscribe();
-            // }
+            this.view.dataService.update(process).subscribe();
             this.detectorRef.detectChanges();
           }
-         
+
         });
       }
     });

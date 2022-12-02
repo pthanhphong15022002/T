@@ -318,13 +318,13 @@ export class SignFileComponent extends UIComponent {
       bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != 3) {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
       cancel[0].disabled = true;
     }
-    if (data.approveStatus != 1) {
+    if (data.approveStatus != 1 && data.approveStatus != 2) {
       edit[0].disabled = true;
     }
   }
