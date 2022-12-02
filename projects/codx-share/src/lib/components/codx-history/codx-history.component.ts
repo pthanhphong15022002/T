@@ -9,9 +9,10 @@ import { ApiHttpService, AuthService, CacheService, FormModel } from 'codx-core'
 export class CodxHistoryComponent implements OnInit {
 
   @Input() objectID:string = "";
-  @Input() id:string = "";
   @Input() funcID:string = "";
   @Input() formModel:FormModel = null;
+  pridicate:string = "";
+  dataValue:string = "";
   listHistory:any = []; 
   constructor(
     private api:ApiHttpService,
@@ -25,18 +26,19 @@ export class CodxHistoryComponent implements OnInit {
 
   ngOnInit(): void 
   {
-    this.getDataAsync(this.objectID,this.id);
+    debugger
+    this.getDataAsync(this.objectID);
   }
   // get data logs
-  getDataAsync(objectID:string,id:string){
-    if(objectID || id)
+  getDataAsync(objectID:string){
+    if(objectID)
     {
       this.api.execSv(
         "BG",
         "ERM.Business.BG",
         "TrackLogsBusiness",
         "GetLogByIDAsync",
-        [objectID,id]).
+        [objectID]).
         subscribe((res:any[]) =>{
           if(res) 
           {

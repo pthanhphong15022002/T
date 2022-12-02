@@ -334,14 +334,16 @@ export class PopupRolesComponent implements OnInit {
   }
 
   checkAssignRemove(i) {
-    if (
-      !this.process.permissions[i].autoCreate &&
-      this.process.permissions[i].nemberType == '1'
-    )
-      //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
+    if (this.user.administrator || this.user.userID == this.process.owner) {
+      if (
+        !this.process.permissions[i].autoCreate &&
+        this.process.permissions[i].nemberType == '1'
+      )
+        //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
 
-      return true;
-    else return false;
+        return true;
+      else return false;
+    } else return false;
   }
 
   //#endregion

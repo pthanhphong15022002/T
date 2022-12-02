@@ -77,9 +77,9 @@
                 </div>
                 <div class="w-100 footer-comt">
                     <div class="">
-                        <p class="m-0" [innerHTML]="data.description"></p>
-                        <p class="m-0 text-gray-400">{{data.createdOn | timefrom}}</p>
-                        <p class="m-0 log-comment" [innerHTML]="data.comment"></p>
+                        <p *ngIf="data.description" class="m-0" [innerHTML]="data.description"></p>
+                        <p *ngIf="data.createdOn" class="m-0 text-gray-400">{{data.createdOn | timefrom}}</p>
+                        <p *ngIf="data.comment" class="m-0 log-comment" [innerHTML]="data.comment"></p>
                     </div>
                     <ng-container *ngIf="lstFile">
                         <div class="row px-4 justify-content-between">
@@ -120,7 +120,7 @@
 <!-- END COMMENT -->
 <!-- NEW -->
 <ng-template #N>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_New.svg" alt="">
         </div>
@@ -141,7 +141,7 @@
 <!-- END NEW -->
 <!-- MAIL -->
 <ng-template #E>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Email.svg" alt="">
         </div>
@@ -184,7 +184,7 @@
 <!-- END MAIL -->
 <!-- TASK -->
 <ng-template #T>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Tasks.svg" alt="">
         </div>
@@ -231,7 +231,7 @@
 <!-- END TASK -->
 <!-- UPDATE -->
 <ng-template #U>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_CommentOnUpdate.svg" alt="">
         </div>
@@ -287,50 +287,27 @@
 <!-- END UPDATE -->
 <!-- ATTACHMENT -->
 <ng-template #A>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Attachments.svg" alt="">
         </div>
         <div class="d-flex align-items-top w-100">
             <div class="me-3">
-                <codx-img class="w-30px" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
+                <codx-img 
+                    [objectId]="data.createdBy"
+                    [objectName]="data.createdName"
+                    objectType="AD_Users" 
+                    [width]="30">
+                </codx-img>
             </div>
             <div class="d-flex flex-column">
                 <div class="d-flex flex-column flex-wrap">
-                    <div class="w-100" [innerHTML]="data.description"></div>
-                    <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
-                        {{data.createdOn | timefrom}}
-                    </div>
+                    <div *ngIf="data.description" class="w-100" [innerHTML]="data.description"></div>
+                    <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7">{{data.createdOn | timefrom}}</div>
                 </div>
-                <ng-container *ngIf="lstFile">
-                    <div class="row mt-2 justify-content-between">
-                        <ng-container *ngFor="let item of lstFile">
-                            <div class="col-5 my-2">
-                                <div class="w-100 position-relative">
-                                    <ng-container *ngIf="item.referType == REFERTYPE.IMAGE">
-                                        <ng-container *ngIf="item.recID;else imageSrc">
-                                            <codx-img [recId]="item.recID" [objectId]="item.objectID" [width]="100"
-                                                cssClass="pic" imageType="square" [imgOn]="item.modifiedOn">
-                                            </codx-img>
-                                        </ng-container>
-                                        <ng-template #imageSrc>
-                                            <img [src]="item.data || item.avatar" alt="" class="image">
-                                        </ng-template>
-                                    </ng-container>
-                                    <ng-container *ngIf="item.referType == REFERTYPE.VIDEO">
-                                        <video #video controls class="w-100 rounded min-h-250px">
-                                            <source [src]="item.srcVideo || item.data" type="video/mp4">
-                                        </video>
-                                    </ng-container>
-                                    <ng-container *ngIf="item.referType == REFERTYPE.APPLICATION">
-                                        <codx-temp-full imageSrc="{{item.extension | avtFile}}"
-                                            imgCss="w-20px me-3 cursor-pointer" title="{{item.fileName}}"
-                                            [descLine]="1">
-                                        </codx-temp-full>
-                                    </ng-container>
-                                </div>
-                            </div>
-                        </ng-container>
+                <ng-container *ngIf="data.listFile">
+                    <div class="row mt-2">
+                        <codx-thumbnail class="popup-attachment" [files]="data.listFile" [formModel]="formModel"></codx-thumbnail>
                     </div>
                 </ng-container>
             </div>
@@ -340,7 +317,7 @@
 <!-- END ATTACHMENT -->
 <!-- SHARE -->
 <ng-template #S>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Share.svg" alt="">
         </div>
@@ -360,7 +337,7 @@
 <!-- END SHARE -->
 <!-- DELETED -->
 <ng-template #D>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="iconHistory w-30px" src="assets/themes/sys/default/img/History_Delete.svg" alt="">
         </div>
@@ -385,7 +362,7 @@
 <!-- END DELETED -->
 <!-- C1 -->
 <ng-template #C1>
-    <div class="d-flex align-items-top mt-4">
+    <div class="d-flex align-items-top ">
         <div class="me-3">
             <img class="w-30px iconHistory" src="assets/themes/sys/default/img/History_Comments.svg" alt="">
         </div>
