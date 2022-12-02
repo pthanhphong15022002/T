@@ -199,6 +199,8 @@ textarea.e-input,
 
 .popover-body {
   padding: 1rem;
+  max-height: 300px;
+  overflow: auto;
 }
 
 .extend-more .e-input-group .e-input-group-icon,
