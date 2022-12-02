@@ -93,9 +93,6 @@ export class UserComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.headerText = e.text;
     switch (e.functionID) {
-      case 'SYS01':
-        this.add(e);
-        break;
       case 'SYS03':
         this.edit(data);
         break;
@@ -133,56 +130,11 @@ export class UserComponent extends UIComponent {
     return desc + '</div>';
   }
 
-  headerTextAdd: {
-    text: '';
-  };
-  add(e) {
-    // if (environment.saas == 0) {
-      // this.headerTextAdd.text = e.text;
-      this.headerText = e.text;
-      this.view.dataService.addNew().subscribe((res: any) => {
-        var obj = {
-          formType: 'add',
-          headerText: this.headerText,
-        };
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = 'Auto'; // s k thấy gửi từ ben đây,
-        this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
-        this.dialog.closed.subscribe((e) => {
-          if (!e?.event) this.view.dataService.clear();
-          if (e?.event) {
-            e.event.modifiedOn = new Date();
-            this.view.dataService.update(e.event).subscribe();
-            this.changeDetectorRef.detectChanges();
-          }
-        });
-      });
-    // } else {
-    //   let optionForm = new DialogModel();
-    //   optionForm.DataService = this.view?.currentView?.dataService;
-    //   optionForm.FormModel = this.view?.currentView?.formModel;
-    //   var dialog = this.callfc.openForm(
-    //     PleaseUseComponent,
-    //     '',
-    //     400,
-    //     70,
-    //     '',
-    //     '',
-    //     '',
-    //     optionForm
-    //   );
-    //   dialog.closed.subscribe((res) => {
-    //     if (res?.formType == 'edit') {
-    //     } else {
-    //     }
-    //   });
-    // }
-  }
-
   pleaseUse(e) {
-    if (environment.saas == 1) {
+    if (environment.saas == 0) {
+      this.headerText = e.text;
+      this.add();
+    } else {
       let optionForm = new DialogModel();
       optionForm.DataService = this.view?.currentView?.dataService;
       optionForm.FormModel = this.view?.currentView?.formModel;
@@ -196,15 +148,50 @@ export class UserComponent extends UIComponent {
         '',
         optionForm
       );
-      dialog.closed.subscribe((res) => {
-        if (res?.formType == 'edit') {
-
-        } else {
+      dialog.closed.subscribe((x) => {
+        if (x.event) {
+          this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+            if (res) {
+              var dataMF: any = [];
+              if (x.event?.formType == 'edit') {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS03');
+                this.headerText = dataMF[0].customName;
+                this.edit(x.event?.data);
+              } else {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
+                this.headerText = dataMF[0].customName;
+                this.add(x.event?.data);
+              }
+            }
+          });
         }
       });
-    } else {
-      this.add(e);
     }
+  }
+
+  add(email = null) {
+    this.view.dataService.addNew().subscribe((res: any) => {
+      var obj = {
+        formType: 'add',
+        headerText: this.headerText,
+        email: email,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+      option.Width = 'Auto'; // s k thấy gửi từ ben đây,
+      this.dialog = this.callfunc.openSide(AddUserComponent, obj, option);
+      this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e?.event) {
+          e.event.modifiedOn = new Date();
+          this.view.dataService.update(e.event).subscribe();
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+    });
   }
 
   delete(data: any) {

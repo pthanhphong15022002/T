@@ -43,7 +43,7 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
         } else {
           obj = {
             formType: 'add',
-            data: null,
+            data: this.email,
           };
         }
         this.dialog.close(obj);
