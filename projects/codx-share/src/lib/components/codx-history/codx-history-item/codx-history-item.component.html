@@ -382,9 +382,6 @@
                         {{data.createdOn | timefrom}}
                     </div>
                     <div *ngIf="data.comment" class="comment text-nowrap">
-                        <span>
-                            <codx-label [formModel]="formModel" name="" [default]="'Ghi chú :'"></codx-label>
-                        </span>
                         <span [innerHTML]="data.comment"></span>
                     </div>
                 </div>
