@@ -246,6 +246,7 @@ export class CatagoryComponent implements OnInit {
           var category = this.categories[value];
           if (!category) return;
           data['transID'] = category.recID;
+          data['type'] = '0';
           this.callfc.openForm(
             component,
             '',

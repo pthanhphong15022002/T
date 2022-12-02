@@ -95,6 +95,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   gridViewSetup: any;
   changTimeCount = 2;
   dataReferences = [];
+  disabledProject =false
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -178,6 +179,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data[3];
     this.functionID = dt?.data[4];
     this.taskCopy = dt?.data[5];
+    this.disabledProject =dt?.data[6]
     this.dialog = dialog;
     this.user = this.authStore.get();
 

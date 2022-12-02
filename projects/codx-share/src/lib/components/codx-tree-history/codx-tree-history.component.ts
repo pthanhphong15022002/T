@@ -70,19 +70,20 @@ export class CodxTreeHistoryComponent implements OnInit, OnChanges {
   }
   getDataAsync() 
   {    
-    this.getCommentsAsync(this.objectID, this.id);
+    this.getCommentsAsync(this.objectID);
     this.getValueIcon();
   }
   // get data comments 
-  getCommentsAsync(objectID: string, id: string) {
-    if(this.objectID || this.id){
+  getCommentsAsync(objectID: string) 
+  {
+    if(objectID ){
       this.api
       .execSv(
         "BG",
         "ERM.Business.BG",
         "CommentLogsBusiness",
         'GetCommentByIDAsync',
-        [objectID, id])
+        [objectID])
       .subscribe((res: any[]) => {
         if (res) {
           this.root.listSubComment = res[0];
