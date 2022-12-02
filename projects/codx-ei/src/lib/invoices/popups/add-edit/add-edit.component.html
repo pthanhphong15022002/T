@@ -114,7 +114,7 @@
     <div class="col-10">
       <div class="form-group mb-0 row">
         <!-- Mã số thuế -->
-        <div class="col-3">
+        <div class="col-1">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="taxCode"
@@ -132,7 +132,7 @@
           </div>
         </div>
         <!-- Tên khách hàng -->
-        <div class="col-3">
+        <div class="col-2">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="custName"
@@ -210,7 +210,7 @@
     <div class="col-10">
       <div class="form-group mb-0 row">
         <!-- Tên người mua hàng -->
-        <div class="col-3">
+        <div class="col-2">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="contact"
@@ -227,7 +227,7 @@
           </div>
         </div>
         <!-- Điện thoại -->
-        <div class="col-3">
+        <div class="col-1">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="phone"
@@ -244,7 +244,7 @@
           </div>
         </div>
         <!-- email -->
-        <div class="col-3">
+        <div class="col-2">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="email"
@@ -305,7 +305,7 @@
     <div class="col-10">
       <div class="form-group mb-0 row">
         <!-- Hình thức thanh toán -->
-        <div class="col-3">
+        <div class="col-2">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="pmtMethodID"
@@ -322,7 +322,7 @@
           </div>
         </div>
         <!-- Số tài khoản -->
-        <div class="col-3">
+        <div class="col-2">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="bankAccount"
@@ -339,7 +339,7 @@
           </div>
         </div>
         <!-- Tên ngân hàng -->
-        <div class="col-3">
+        <div class="col-2">
           <div class="form-group mb-0 pt-1">
             <codx-label
               fiedName="bankName"
@@ -416,6 +416,7 @@
               field="invoiceType"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
+              (valueChange)="valueChanged($event)"
             >
             </codx-input>
           </div>
@@ -531,8 +532,9 @@
     [entityName]="fmInvoiceLines.entityName"
     [dataSource]="data"
     [editSettings]="editSettings"
-    rowHeight="40"
     [height]="gridHeight"
+    [autoLoad]="true"
+    rowHeight="40"
     (created)="gridCreated($event)"
   ></codx-gridview-v2>
 </ng-template>
