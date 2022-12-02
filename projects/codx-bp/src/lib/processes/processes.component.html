@@ -7,7 +7,7 @@
 <ng-template #templateListCard let-data>
   <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100 w-225px card-no-body"
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
-    [imageWidth]="10000" [imageReferType]="'Flowchart'" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
+    [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
     [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)" (dblclick)="viewDetailProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>
@@ -72,8 +72,10 @@
               </span>
             </div>
           </div>
-          <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
-          </codx-img>
+          <!-- <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
+          </codx-img> -->
+          <codx-imgs [width]="25" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
+          </codx-imgs>
         </div>
       </div>
     </div>
@@ -271,7 +273,7 @@
 </ng-template>
 
 <ng-template #itemVersionNo let-data>
-  <codx-label fiedName="VersionNo" default="Phiên bản">
+  <codx-label fiedName="VersionNo" [formModel]="view.formModel" default="Phiên bản">
   </codx-label>
 </ng-template>
 

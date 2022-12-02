@@ -8,5 +8,7 @@ export class tmpHistory{
     public attachments:number;
     public reference:string;
     public functionID:string;
-
+    public createdBy:string;
+    public createdName:string;
+    public createdOn:Date;
 }

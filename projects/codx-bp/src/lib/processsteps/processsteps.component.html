@@ -445,22 +445,23 @@
       }} -->
     </h1>
     <div>
-      <div class="d-flex flex-row-reverse bd-highlight">
+      <div class="d-flex bd-highlight">
+        <div type="button" class="me-2 btn btn-sm btn-white d-flex align-items-center" (click)="download()">
+          <span class="icon-arrow_downward icon-20 me-2"></span>
+          <codx-label default="Tải về" [fiedName]="'Download'" class="me-2"></codx-label>
+        </div>
+
+        <div type="button" class="me-2 btn btn-sm btn-white d-flex align-items-center" (click)="print()">
+          <span class="icon-print icon-20 me-2"></span>
+          <codx-label default="In" [fiedName]="'Print'" class="me-2"></codx-label>
+        </div>
         <div class="me-2" *ngIf="!hideMoreFC">
-          <div type="button" class="btn btn-sm btn-white" (click)="addFile($event)">
-            <i class="icon-arrow_downward icon-18"></i><span>
+          <div type="button" class="btn btn-sm btn-light-primary d-flex align-items-center" (click)="addFile($event)">
+            <i class="icon-upload icon-20"></i><span>
               <codx-label name="UploadFile" formName="Processes" gridViewName="grvProcesses" default="Tải ảnh">
               </codx-label>
             </span>
           </div>
-        </div>
-        <div type="button" class="me-2 btn btn-sm btn-white" (click)="print()">
-          <span class="icon-print icon-18 me-2"></span>
-          <codx-label default="In" [fiedName]="'Print'" class="me-2"></codx-label>
-        </div>
-        <div type="button" class="me-2 btn btn-sm btn-light-primary" (click)="download()">
-          <span class="icon-cloud_upload icon-18 me-2"></span>
-          <codx-label default="Tải về" [fiedName]="'Download'" class="me-2"></codx-label>
         </div>
       </div>
     </div>

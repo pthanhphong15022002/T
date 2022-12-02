@@ -103,6 +103,7 @@ export class TMMeetingsComponent
   toolbarCls: string;
   heightWin: any;
   widthWin: any;
+  disabledProject = false;
 
   constructor(
     inject: Injector,
@@ -116,7 +117,7 @@ export class TMMeetingsComponent
 
     if (!this.funcID)
       this.funcID = this.activedRouter.snapshot.params['funcID'];
-  //  this.tmService.RPASendMailMeeting('TM_0024', this.funcID).subscribe();
+    //  this.tmService.RPASendMailMeeting('TM_0024', this.funcID).subscribe();
 
     this.tmService.functionParent = this.funcID;
     this.cache.functionList(this.funcID).subscribe((f) => {
@@ -460,9 +461,13 @@ export class TMMeetingsComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = 'Auto';
+      if (this.projectID) {
+        this.view.dataService.dataSelected.refID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['add', this.titleAction],
+        ['add', this.titleAction, this.disabledProject],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -486,9 +491,12 @@ export class TMMeetingsComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = 'Auto';
+        if (this.projectID) {
+          this.disabledProject = true;
+        } else this.disabledProject = false;
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
-          ['edit', this.titleAction],
+          ['edit', this.titleAction, this.disabledProject],
           option
         );
         this.dialog.closed.subscribe((e) => {
@@ -508,9 +516,12 @@ export class TMMeetingsComponent
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.currentView?.formModel;
       option.Width = 'Auto';
+      if (this.projectID) {
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['copy', this.titleAction],
+        ['copy', this.titleAction,this.disabledProject],
         option
       );
       this.dialog.closed.subscribe((e) => {

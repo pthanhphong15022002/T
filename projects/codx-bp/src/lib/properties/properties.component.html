@@ -47,10 +47,10 @@
               </div>
             </div>
             <div class="mb-5">
-              <div class="d-flex flex-wrap mb-1 margin">
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
-                    <codx-label name="" default="Người tạo:"> </codx-label>
+                    <codx-label fiedName="CreatedBy" [formModel]="form.formModel" default="Người tạo:"> </codx-label>
                   </span>
                   <span class="text-dark">
                     <div>{{data.userNameCreatedBy}}</div>
@@ -68,10 +68,10 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-1 margin">
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
-                    <codx-label name="" default="Phiên bản:"> </codx-label>
+                    <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Phiên bản:"> </codx-label>
                   </span>
                   <span class="text-dark">{{ data.versionNo }}</span>
                 </div>
@@ -88,7 +88,7 @@
                 </div>
               </div>
               <!--Gắn tạm sau này BA hướng dẫn phê duyệt thì mới thay-->
-              <div class="d-flex flex-wrap mb-1 margin" >
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Người phê duyệt:"> </codx-label>
@@ -109,10 +109,10 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex flex-wrap mb-2 margin">
+              <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
-                    <codx-label name="" default="Chủ qui trình:"> </codx-label>
+                    <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ qui trình:"> </codx-label>
                   </span>
                   <span class="text-dark">{{ data.userName }}</span>
                 </div>
@@ -242,8 +242,8 @@
               </div>
               <div class="d-flex align-items-center mt-4">
                 <div class="comment-box flex-grow-1">
-                  <codx-input placeholder="Nhận xét của bạn..." id="myInput" class="form-control test-datetime" type="textarea"
-                    format="ed2" style="width: 100%" [crrValue]="commenttext"
+                  <codx-input placeholder="Nhận xét của bạn..." id="myInput" class="form-control test-datetime"
+                    type="textarea" format="ed2" style="width: 100%" [crrValue]="commenttext"
                     (valueChange)="txtValue($event, 'commenttext')"></codx-input>
                 </div>
                 <span (click)="setComment()" id="myBtn" class="btn btn-primary ms-3 min-w-60px">
@@ -313,61 +313,54 @@
                   <div class="pt-5 extend-more-content px-3 ms-2">
                     <ng-container *ngIf="(process.versions && process.versions.length>0 ), else defaulEmpt">
                       <div *ngFor="let item of process.versions; index as i">
-                        <div class="d-flex flex-row my-5 aqua">
-                          <span class="me-1 icon-18 icon-history"></span>
-                          <div class="d-flex flex-column">
-                            <div class="p-2">
-                              <div *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                                <codx-label [formModel]="dialog.formModel" default="Phiên bản đầu tiên"></codx-label>
-                              </div>
-                              <ng-template #firstVersionNo>
-                                <div class="fw-bold fs-6 text-dark">
-                                  Phiên bản:
-                                  <span #versionNo>
-                                    {{
-                                    item?.versionNo
-                                    | formatvalue
-                                    : form.formModel
-                                    : "versionNo"
-                                    : versionNo
-                                    : "Processes"
-                                    : "grvProcesses"
-                                    | async
-                                    }}
-                                  </span>
+                        <div class="d-flex flex-row pb-3 mt-3 border-bottom justify-content-between">
+                          <div class="d-flex align-items-start w-100">
+                            <span class="me-2 icon-18 icon-history"></span>
+                            <div class="d-flex flex-column w-100">
+                              <div class="pb-1">
+                                <div class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
+                                  <codx-label class="text-dark fw-bold fs-5 button-version cursor-pointer"
+                                   [formModel]="form.formModel" default="Phiên bản đầu tiên"></codx-label>
                                 </div>
-                              </ng-template>
+                                <ng-template #firstVersionNo>
+                                  <div class="text-dark fw-bold fs-5 button-version cursor-pointer" >
+                                    <span>{{item.versionName}}:</span>
+                                    <span #versionNo>
+                                      {{
+                                      item?.versionNo
+                                      | formatvalue
+                                      : form.formModel
+                                      : "versionNo"
+                                      : versionNo
+                                      : "Processes"
+                                      : "grvProcesses"
+                                      | async
+                                      }}
+                                    </span>
+                                  </div>
+                                </ng-template>
+                              </div>
+                              <div class="pb-1">
+                                <span class="text-primary">
+                                  <codx-label default="Cập nhật bởi, "></codx-label>{{ data.userNameCreatedBy }}
+                                </span>
+                                <span class="text-gray-500 mx-1"> |</span>
+                                <span class="text-primary">
+                                  {{item.createdOn| timefrom}}
+                                </span>
+                              </div>
+                              <div [innerHTML]="item.comment"></div>
                             </div>
-                            <div class="p-2">
-                              <span class="text-primary">
-                                <codx-label [formModel]="dialog.formModel" default="Cập nhật bởi,"></codx-label>
-                                {{ data.userNameCreatedBy }}
-                              </span>
-                              <span class="text-dark fw-bold"> |</span>
-                              <span class="text-primary" #createdOn>
-                                {{
-                                item?.createdOn
-                                | formatvalue
-                                : form.formModel
-                                : "createdOn"
-                                : createdOn
-                                : "Processes"
-                                : "grvProcesses"
-                                | async
-                                }}
-                              </span>
-
-                            </div>
-                            <div class="p-2" [innerHTML]="item.comment"></div>
                           </div>
-                          <div class="d-flex flex-column">
-                            <div class="justify-content-end p-2">
-                              <codx-label name="lblActivedOn" fiedName="ActivedOn" [formModel]="dialog.formModel"
-                                default="Ngày hiệu lực">
+
+                          <div class="d-flex flex-column w-125px min-w-125px px-3 ms-6">
+                            <div class="justify-content-end mb-2">
+                              <codx-label name="lblActivedOn" fiedName="ActivedOn" formName="ProcessRevisions"
+                                gridViewName="grvProcessRevisions" default="Ngày hiệu lực">
                               </codx-label>
                             </div>
-                            <div class="justify-content-end p-2">
-                              <span #activedOn>
+                            <div class="justify-content-end">
+                              <!-- <span #activedOn>
                                 {{
                                 item?.activedOn
                                 | formatvalue
@@ -378,7 +371,19 @@
                                 : "grvProcesses"
                                 | async
                                 }}
-                              </span>
+                              </span> -->
+                              <div #activedOn>
+                                {{
+                                item.activedOn | formatvalue
+                                : form.formModel
+                                : "activedOn"
+                                : activedOn
+                                : "Processes"
+                                : "grvProcesses"
+                                | async
+                                }}
+                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -396,9 +401,11 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                    <codx-tree-history [objectID]="data.recID" [objectType]="entityName" [actionType]="'C'" [viewIcon]="true"
-                    [funcID]="funcID">
-                  </codx-tree-history>
+                  <!-- <codx-tree-history [objectID]="data.recID" [objectType]="entityName"
+                    [viewIcon]="true" [funcID]="funcID">
+                  </codx-tree-history> -->
+                  <codx-history [objectID]="data.recID" [formModel]="form.formModel" [funcID]="funcID"></codx-history>
+
                 </ng-template>
               </e-tabitem>
             </e-tabitems>

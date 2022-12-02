@@ -14,6 +14,7 @@ import {
   AlertConfirmInputConfig,
   NotificationsService,
   FormModel,
+  DialogModel,
 } from 'codx-core';
 import {
   Component,
@@ -31,6 +32,7 @@ import { ViewUsersComponent } from './view-users/view-users.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CodxAdService } from '../codx-ad.service';
 import { environment } from 'src/environments/environment';
+import { PleaseUseComponent } from './please-use/please-use.component';
 
 @Component({
   selector: 'lib-user',
@@ -131,8 +133,12 @@ export class UserComponent extends UIComponent {
     return desc + '</div>';
   }
 
+  headerTextAdd: {
+    text: '';
+  };
   add(e) {
-    if (environment.saas == 0) {
+    // if (environment.saas == 0) {
+      // this.headerTextAdd.text = e.text;
       this.headerText = e.text;
       this.view.dataService.addNew().subscribe((res: any) => {
         var obj = {
@@ -153,8 +159,51 @@ export class UserComponent extends UIComponent {
           }
         });
       });
+    // } else {
+    //   let optionForm = new DialogModel();
+    //   optionForm.DataService = this.view?.currentView?.dataService;
+    //   optionForm.FormModel = this.view?.currentView?.formModel;
+    //   var dialog = this.callfc.openForm(
+    //     PleaseUseComponent,
+    //     '',
+    //     400,
+    //     70,
+    //     '',
+    //     '',
+    //     '',
+    //     optionForm
+    //   );
+    //   dialog.closed.subscribe((res) => {
+    //     if (res?.formType == 'edit') {
+    //     } else {
+    //     }
+    //   });
+    // }
+  }
+
+  pleaseUse(e) {
+    if (environment.saas == 1) {
+      let optionForm = new DialogModel();
+      optionForm.DataService = this.view?.currentView?.dataService;
+      optionForm.FormModel = this.view?.currentView?.formModel;
+      var dialog = this.callfc.openForm(
+        PleaseUseComponent,
+        '',
+        400,
+        70,
+        '',
+        '',
+        '',
+        optionForm
+      );
+      dialog.closed.subscribe((res) => {
+        if (res?.formType == 'edit') {
+
+        } else {
+        }
+      });
     } else {
-      var dialog = this.callfc.openForm(this.please_use, '', 500, 400, '');
+      this.add(e);
     }
   }
 
@@ -262,13 +311,5 @@ export class UserComponent extends UIComponent {
   changeDataMF(e: any) {
     var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
     dl[0].disabled = true;
-  }
-
-  valueChange(e) {
-
-  }
-
-  onContinue() {
-    
   }
 }

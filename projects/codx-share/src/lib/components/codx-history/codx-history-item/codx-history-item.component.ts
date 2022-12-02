@@ -32,7 +32,7 @@ export class CodxHistoryItemComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.data)
+    if(this.data?.actionType === "C")
     {
       this.getFileByObjectID(this.data.recID);
     }

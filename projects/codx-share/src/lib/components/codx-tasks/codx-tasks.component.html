@@ -91,6 +91,7 @@
     [rootData]="data"
     [formModel]="view.formModel"
     [setting]="setting"
+    [footer]="cardImgFooter"
     [dataItem]="data"
   >
   </codx-card-img>
@@ -579,7 +580,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd ? button : ''"
+  [button]="showButtonAdd && funcID!='TMT0206' ? button : ''"
   (buttonClick)="click($event)"
   (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj"

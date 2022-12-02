@@ -95,6 +95,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   gridViewSetup: any;
   changTimeCount = 2;
   dataReferences = [];
+  disabledProject =false
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -178,6 +179,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data[3];
     this.functionID = dt?.data[4];
     this.taskCopy = dt?.data[5];
+    this.disabledProject =dt?.data[6]
     this.dialog = dialog;
     this.user = this.authStore.get();
 
@@ -677,8 +679,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             res.split(';')?.length != listDepartmentID.split(';')?.length
           )
           this.notiService.notifyCode('TM065');
-          assignTo += res;
-          this.valueSelectUser(assignTo);
+          this.valueSelectUser(res);
         } else this.notiService.notifyCode('TM065');
       });
     }

@@ -379,7 +379,7 @@ export class CodxShareService {
         //reject
         if (
           approvalTrans.rejectControl == '2' ||
-          approvalTrans.redoControl == '3'
+          approvalTrans.rejectControl == '3'
         ) {
           _dialog = this.openPopupComment(
             status,
