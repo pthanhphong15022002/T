@@ -125,11 +125,10 @@
             <span>{{ i + 1 }}</span><span>
               <codx-label name="lblSymboy" default="."></codx-label> </span><span
               [ngbPopover]="deleteReference"
-              placement="left"
               #p="ngbPopover"
               (mouseenter)="showPoppoverDeleteRef(p, i)"
               autoClose="outside"
-              placement="right">{{ item }}</span>
+              placement="right left top bottom">{{ item }}</span>
           </div>
         </div>
       </ng-container>
