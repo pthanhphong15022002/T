@@ -396,9 +396,11 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <codx-tree-history [objectID]="data.recID" [objectType]="entityName" [actionType]="'C'"
+                  <!-- <codx-tree-history [objectID]="data.recID" [objectType]="entityName"
                     [viewIcon]="true" [funcID]="funcID">
-                  </codx-tree-history>
+                  </codx-tree-history> -->
+                  <codx-history [objectID]="data.recID" [formModel]="form.formModel" [funcID]="funcID"></codx-history>
+
                 </ng-template>
               </e-tabitem>
             </e-tabitems>
