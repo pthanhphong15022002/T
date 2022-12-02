@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  Injector,
   OnInit,
   Optional,
   Type,
@@ -8,11 +9,15 @@ import {
 } from '@angular/core';
 import {
   ApiHttpService,
+  CacheService,
   CallFuncService,
   CodxFormScheduleComponent,
+  DataService,
   DialogData,
   DialogModel,
   DialogRef,
+  FormModel,
+  SidebarModel,
 } from 'codx-core';
 //import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 //import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
@@ -60,6 +65,8 @@ export class CatagoryComponent implements OnInit {
     private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     private callfc: CallFuncService,
+    private cache: CacheService,
+    private inject: Injector,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
   ) {
@@ -251,19 +258,39 @@ export class CatagoryComponent implements OnInit {
           );
           break;
         case 'cpncategories':
-          //         let option = new SidebarModel();
-          // option.Width = '550px';
-          // option.DataService = this.viewBase?.dataService;
-          // option.FormModel = this.viewBase?.formModel;
-          // let popupAdd = this.callfunc.openSide(
-          //   PopupAddCategoryComponent,
-          //   {
-          //     data: this.viewBase.dataService.dataSelected,
-          //     isAdd: true,
-          //     headerText: evt.text + ' ' + this.funcList?.customName ?? '',
-          //   },
-          //   option
-          // );
+          var category = this.categories[value];
+          if (!category) return;
+          this.cache.functionList('ESS22').subscribe((func) => {
+            //Function này tạm thời code chết chờ c Th tìm ra cách lấy sau
+            if (!func || !func.gridViewName || !func.formName) return;
+            this.cache.gridView(func.gridViewName).subscribe((gridview) => {
+              this.cache
+                .gridViewSetup(func.formName, func.gridViewName)
+                .subscribe((grvSetup) => {
+                  var formModel = new FormModel();
+                  formModel.gridViewName = func.gridViewName;
+                  formModel.formName = func.formName;
+                  formModel.entityPer = func.entityName;
+                  formModel.currentData = category;
+                  var dataService = new DataService(this.inject);
+                  dataService.dataSelected = category;
+                  let option = new SidebarModel();
+                  option.Width = '550px';
+                  option.DataService = dataService;
+                  option.FormModel = formModel;
+                  let popupAdd = this.callfc.openSide(
+                    PopupAddCategoryComponent,
+                    {
+                      data: category,
+                      isAdd: false,
+                      headerText: /*"Sửa" + ' ' +*/ func?.customName ?? '',
+                    },
+                    option
+                  );
+                });
+            });
+          });
+
           break;
         case 'cpnscheduledtasks':
           var schedule = this.schedules[value];
