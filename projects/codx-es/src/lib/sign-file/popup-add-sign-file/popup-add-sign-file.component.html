@@ -27,7 +27,13 @@
           </div>
           <div *ngIf="modeView == '1'">{{ headerText }}</div>
 
-          <div *ngIf="data?.approveStatus != 1 && modeView != '1'">
+          <div
+            *ngIf="
+              data?.approveStatus != 1 &&
+              data?.approveStatus != 2 &&
+              modeView != '1'
+            "
+          >
             {{ data?.title }}
           </div>
         </h2>
@@ -667,7 +673,10 @@
         [recID]="data.recID"
         [isApprover]="false"
         [isEditable]="
-          data?.approveStatus == '1' && modeView != '1' ? true : false
+          (data?.approveStatus == '1' || data?.approveStatus == '2') &&
+          modeView != '1'
+            ? true
+            : false
         "
         (isAreaControl)="setValueAreaControl($event)"
       >
