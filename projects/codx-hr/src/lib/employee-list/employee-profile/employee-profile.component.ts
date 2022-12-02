@@ -1,3 +1,4 @@
+import { PopupEexperiencesComponent } from './../../employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
 import { PopupEVisasComponent } from './../../employee-profile/popup-evisas/popup-evisas.component';
@@ -645,6 +646,26 @@ export class EmployeeProfileComponent extends UIComponent {
     });
     // })
   }
+
+  handlEmployeeExperiences(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEexperiencesComponent,
+      {
+        isAdd: true,
+        headerText: 'Kinh nghiệm trước đây',
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
   HandleEmployeeJobSalariesInfo(actionType: string, data: any){
     this.view.dataService.dataSelected = this.data
     let option = new SidebarModel()
