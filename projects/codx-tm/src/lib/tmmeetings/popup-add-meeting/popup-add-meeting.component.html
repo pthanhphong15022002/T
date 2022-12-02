@@ -317,10 +317,10 @@
         <codx-label fiedName="RefID" [formModel]="form.formModel" default="Dự án">
         </codx-label>
         <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
-          [crrValue]="meeting.refID" loadFull="true">
+          [crrValue]="meeting.refID" loadFull="true" [disabled]="disabledProject">
         </codx-input>
         <!-- <codx-input field="refID" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)" [disabled]="disabledProject">
         </codx-input>
         dung cái này dính edit ko view được
        -->

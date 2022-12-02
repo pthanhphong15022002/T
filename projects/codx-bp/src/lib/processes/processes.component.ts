@@ -46,8 +46,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -107,6 +106,7 @@ export class ProcessesComponent
   pageNumberSearch: number;
   clickDisable: string;
   moreFunc: any;
+  moreFuncDbClick: any;
   heightWin: any;
   widthWin: any;
   isViewCard: boolean = false;
@@ -124,12 +124,12 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funcID == 'BPT3') {
-      this.method = 'GetListShareByProcessAsync';
-    }
-    if (this.funcID == 'BPT2') {
-      this.method = 'GetListMyProcessesAsync';
-    }
+    // if (this.funcID == 'BPT3') {
+    //   this.method = 'GetListShareByProcessAsync';
+    // }
+    // if (this.funcID == 'BPT2') {
+    //   this.method = 'GetListMyProcessesAsync';
+    // }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -152,6 +152,28 @@ export class ProcessesComponent
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
     ];
+    this.moreFuncDbClick = {
+      customName:"Chi tiết quy trình",
+      dataValue:null,
+      defaultName:"Chi tiết quy trình",
+      delete:true,
+      description:"Chi tiết quy trình",
+      displayField:"",
+      displayMode:"3",
+      entityName:"BP_Processes",
+      formName:"Processes",
+      functionID:"BPT101",
+      functionType:1,
+      gridViewName:"grvProcesses"
+    }
+    // this.views.forEach(x=>{
+    //   if (x.type === ViewType.card) {
+    //     this.isViewCard=true;
+    //   }
+    //   else {
+    //     this.isViewCard=false;
+    //   }
+    // })
   }
 
   ngAfterViewInit(): void {
@@ -410,7 +432,7 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(moreFunc,data) {
+  Updaterevisions(moreFunc, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -564,7 +586,6 @@ export class ProcessesComponent
         this.reName(data);
         break;
       case 'BPT107':
-        //this.revisions(e.data, data);
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
@@ -575,6 +596,27 @@ export class ProcessesComponent
         this.roles(data);
         break;
       case 'BPT103':
+        this.revisions(e.data, data);
+        break;
+      case 'BPT206':
+        this.properties(data);
+        break;
+      case 'BPT201':
+        this.viewDetailProcessSteps(e?.data, data);
+        break;
+      case 'BPT202':
+        this.reName(data);
+        break;
+      case 'BPT207':
+        this.Updaterevisions(e?.data, data);
+        break;
+      case 'BPT205':
+        this.permission(data);
+        break;
+      case 'BPT208':
+        this.roles(data);
+        break;
+      case 'BPT203':
         this.revisions(e.data, data);
         break;
     }
@@ -647,7 +689,6 @@ export class ProcessesComponent
     // this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
-
     //view popup
     let obj = {
       moreFunc: moreFunc,
@@ -672,7 +713,7 @@ export class ProcessesComponent
     dialog.closed.subscribe((e) => {
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
-          if (process){
+          if (process) {
             this.view.dataService.update(process).subscribe();
             this.detectorRef.detectChanges();
           }
@@ -682,7 +723,7 @@ export class ProcessesComponent
     });
   }
 
-  approval($event) {}
+  approval($event) { }
   //tesst
   getFlowchart(data) {
     this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {

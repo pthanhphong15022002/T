@@ -20,7 +20,7 @@
     </div>
   </div>
   <div class="row-group">
-    <div *ngIf="isNew" class="row">
+    <div *ngIf="isNew;else edit" class="row">
       <div class="col">
         <div class="form-group">
           <codx-label [formModel]="dialogRef.formModel" name="lblEmployeeID" fiedName="EmployeeID" default="Mã nhân viên">
@@ -35,6 +35,22 @@
         </div>
       </div>
     </div>
+    <ng-template #edit>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label [formModel]="dialogRef.formModel" name="lblEmployeeID" fiedName="EmployeeID" default="Mã nhân viên">
+            </codx-label>
+            <codx-input class="form-control" 
+              [disabled]="true"
+              type="text" 
+              [crrValue]="employee.employeeID" 
+              field="employeeID">
+            </codx-input>
+          </div>
+        </div>
+      </div>
+    </ng-template>
     <div class="row">
       <div class="col">
         <div class="form-group">

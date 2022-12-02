@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService, FormModel } from 'codx-core';
 
 @Component({
@@ -6,12 +6,13 @@ import { ApiHttpService, AuthService, CacheService, FormModel } from 'codx-core'
   templateUrl: './codx-history.component.html',
   styleUrls: ['./codx-history.component.css']
 })
-export class CodxHistoryComponent implements OnInit {
+export class CodxHistoryComponent implements OnInit,OnChanges {
 
   @Input() objectID:string = "";
-  @Input() id:string = "";
   @Input() funcID:string = "";
   @Input() formModel:FormModel = null;
+  pridicate:string = "";
+  dataValue:string = "";
   listHistory:any = []; 
   constructor(
     private api:ApiHttpService,
@@ -25,18 +26,25 @@ export class CodxHistoryComponent implements OnInit {
 
   ngOnInit(): void 
   {
-    this.getDataAsync(this.objectID,this.id);
+    this.getDataAsync(this.objectID);
+  }
+
+  // change objectID reload logs
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.objectID?.previousValue != changes?.objectID?.currentValue) {
+      this.getDataAsync(this.objectID);
+    }
   }
   // get data logs
-  getDataAsync(objectID:string,id:string){
-    if(objectID || id)
+  getDataAsync(objectID:string){
+    if(objectID)
     {
       this.api.execSv(
         "BG",
         "ERM.Business.BG",
         "TrackLogsBusiness",
         "GetLogByIDAsync",
-        [objectID,id]).
+        [objectID]).
         subscribe((res:any[]) =>{
           if(res) 
           {

@@ -1462,12 +1462,12 @@
                     ></span>
                   </div>
                   <div class="add-process">
-                    <button class="btn btn-sm btn-light">
+                    <button class="btn btn-sm btn-light" (click)="handlEmployeeExperiences()">
                       <i class="icon-add icon-16 ms-n2"></i>
                       <codx-label
                         name="lblAdd"
                         [formModel]="view.formModel"
-                        default="Thêm mới"
+                        default="Thêm mới kinh nghiệm"
                       >
                       </codx-label>
                     </button>
@@ -2713,8 +2713,43 @@
                   </div>
                   <div class="row form-group"></div>
                 </div>
+                
 
                 <div class="border mb-3">
+                  <div class="d-flex flex-wrap py-3 px-4">
+                      <div
+                      class="border rounded min-w-250px mw-250px me-4 mb-2"
+                      *ngIf="crrJobSalaries != null"
+                      >
+                        <codx-temp-full
+                          (clickMF)="clickMF($event, crrJobSalaries,'jobSalary')"
+                          [dataItem]="crrJobSalaries"
+                          [formModel]="view.formModel"
+                          [footer]="footerJobSalaries"
+                          cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                          [typeMF]="'hover'"
+                        >
+                        </codx-temp-full>
+                        <ng-template #footerJobSalaries let-data>
+                          <div
+                            class="d-flex align-items-center mt-1"
+                          >
+                            <span
+                              class="icon-attach_money"
+                            ></span
+                            >Lương chức danh: {{crrJobSalaries.jSalary}}
+                          </div>
+                          <div
+                            class="d-flex align-items-center"
+                          >
+                            <span
+                              class="icon-calendar_today"
+                            ></span
+                            >Hiệu lực: {{ crrJobSalaries.effectedDate | date:'MM/dd/yyyy'}} - {{crrJobSalaries.expiredDate | date:'MM/dd/yyyy'}}
+                          </div>
+                        </ng-template>
+                      </div>
+                  </div>
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >

@@ -147,6 +147,7 @@ export class CodxTasksComponent
   titleAction = '';
   moreFunction = [];
   crrStatus = '';
+  disabledProject = false;
 
   constructor(
     inject: Injector,
@@ -219,7 +220,7 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
-    
+
     if (this.funcID != 'TMT0201' && this.funcID != 'TMT0206') {
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
@@ -341,12 +342,14 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      if (this.projectID)
+      option.zIndex = 1001;
+      if (this.projectID) {
         this.view.dataService.dataSelected.projectID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
       if (this.refType)
         this.view.dataService.dataSelected.refType = this.refType;
-
       var dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -355,6 +358,8 @@ export class CodxTasksComponent
           this.isAssignTask,
           this.titleAction,
           this.funcID,
+          null,
+          this.disabledProject
         ],
         option
       );
@@ -419,6 +424,11 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      option.zIndex = 1001;
+      if (this.projectID) {
+        this.view.dataService.dataSelected.projectID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -428,6 +438,7 @@ export class CodxTasksComponent
           this.titleAction,
           this.funcID,
           data,
+          this.disabledProject
         ],
         option
       );
@@ -526,6 +537,10 @@ export class CodxTasksComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
+        option.zIndex = 1001;
+        if (this.projectID) {
+          this.disabledProject = true;
+        } else this.disabledProject = false;
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -534,6 +549,8 @@ export class CodxTasksComponent
             this.isAssignTask,
             this.titleAction,
             this.funcID,
+            null,
+            this.disabledProject,
           ],
           option
         );
@@ -885,7 +902,10 @@ export class CodxTasksComponent
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    if(this.funcID=='TMT0206'){data.status = this.crrStatus; return}
+    if (this.funcID == 'TMT0206') {
+      data.status = this.crrStatus;
+      return;
+    }
     if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
       return;
     var moreFun = this.moreFunction.find(
@@ -1415,15 +1435,15 @@ export class CodxTasksComponent
         ) {
           x.disabled = true;
         }
-         //an voi ca TMT026
+        //an voi ca TMT026
         if (
-            (x.functionID == 'SYS02' ||
-              x.functionID == 'SYS03' ||
-              x.functionID == 'SYS04') &&
-            this.funcID == 'TMT0206'
-          ) {
-            x.disabled = true;
-          }
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          this.funcID == 'TMT0206'
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }

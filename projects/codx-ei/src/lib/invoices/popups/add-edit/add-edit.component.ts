@@ -1,3 +1,4 @@
+import { mode } from 'crypto-js';
 import { TabModel } from './../../../../../../codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import { InvoicesLine } from '../../../models/invoice.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -44,24 +45,49 @@ export class AddEditComponent implements OnInit {
   active = true;
   gridHeight: number;
   fmInvoiceLines: FormModel = {
-    formName: 'EIInvoiceLines',
-    gridViewName: 'grvEIInvoiceLines',
-    entityName: 'EI_InvoiceLines',
+    formName: 'Users',
+    gridViewName: 'grvUsers',
+    entityName: 'AD_Users',
   };
   fgGoods: FormGroup;
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
+    mode: 'Batch',
   };
   selectedItem: any;
   selectedIndex: number = 0;
-  data: any = [];
-
+  data = [
+    //   {
+    //     itemDesc: 'Sản phẩm A',
+    //     umid: 'CAI',
+    //     quantity: 2,
+    //     salesPrice: 40000,
+    //     salesAmt: 80000,
+    //     vatid: 2,
+    //     vatAmt: 1600,
+    //     totalAmt: 78400,
+    //     lineType: 'Gia dụng',
+    //   },
+    //   {
+    //     itemDesc: 'Sản phẩm A',
+    //     umid: 'CAI',
+    //     quantity: 2,
+    //     salesPrice: 40000,
+    //     salesAmt: 80000,
+    //     vatid: 2,
+    //     vatAmt: 1600,
+    //     totalAmt: 78400,
+    //     lineType: 'Gia dụng',
+    //   },
+  ];
   tabs: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
   ];
+  dicMST: Map<string, any> = new Map<string, any>();
+
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('cardbodyRef') cardbodyRef: ElementRef;
@@ -105,7 +131,13 @@ export class AddEditComponent implements OnInit {
       });
   }
   ngAfterViewInit() {
-    this.form.formGroup.patchValue({ invoiceDate: new Date() });
+    if (this.action != 'add') this.form.formGroup.patchValue(this.invoices);
+    else {
+      this.form.formGroup.patchValue({
+        invoiceDate: new Date(),
+        invoiceType: '1',
+      });
+    }
   }
   //#endregion
 
@@ -120,28 +152,33 @@ export class AddEditComponent implements OnInit {
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
-  onChangedValue(e, data) {
-    if (e && e.data) {
-      if (e.field === 'UMID') this.selectedItem[e.field.toLowerCase()] = e.data;
-      else this.selectedItem[e.field] = e.data;
-    }
+  valueChanged(e) {
+    // if (e && e.data) {
+    //   if (e.field === 'UMID') this.selectedItem[e.field.toLowerCase()] = e.data;
+    //   else this.selectedItem[e.field] = e.data;
+    // }
+    console.log(e);
   }
 
   mstChange(e) {
     if (e && e.data) {
-      this.api
-        .exec<any>('EI', 'CustomersBusiness', 'GetCustomerAsync', e.data)
-        .subscribe((res) => {
-          if (res) {
-            this.bindingTaxInfor(res);
-          }
-        });
+      let mst = this.dicMST.has(e.data);
+      if (mst) this.bindingTaxInfor(this.dicMST.get(e.data));
+      else
+        this.api
+          .exec<any>('EI', 'CustomersBusiness', 'GetCustomerAsync', e.data)
+          .subscribe((res) => {
+            if (res) {
+              this.dicMST.set(e.data, res);
+              this.bindingTaxInfor(res);
+            }
+          });
     }
   }
 
   addRow() {
     let idx = this.data.length;
-    this.grid.addRow(null, idx);
+    this.grid.gridRef?.addRecord();
   }
 
   //#endregion
