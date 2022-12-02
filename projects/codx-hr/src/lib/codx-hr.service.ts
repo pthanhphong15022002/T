@@ -584,6 +584,36 @@ export class CodxHrService {
   //#endregion
 
   //region #EJobSalaries
+  GetCurrentJobSalaryByEmployeeID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetCurrentJobSalariesByEmployeeIDAsync',
+      data
+    )
+  }
+
+  getListJobSalariesByEmployeeID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetListJobSalariesByEmployeeIDAsync',
+      data
+    )
+  }
+
+  DeleteEmployeeJobsalaryInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'DeleteEmployeeJobsalaryInfoAsync',
+      data
+    );
+  }
+
   GetEmployeeJobSalariesModel(){
     return this.api.execSv<any>(
       'HR',
@@ -599,6 +629,16 @@ export class CodxHrService {
       'HR',
       'EJobSalariesBusiness',
       'AddEmployeeJobSalaryInfoAsync',
+      data
+    )
+  }
+
+  UpdateEmployeeJobSalariesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'UpdateEmployeeJobSalaryInfoAsync',
       data
     )
   }

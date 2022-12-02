@@ -801,25 +801,27 @@ export class PopupSignForApprovalComponent extends UIComponent {
     switch (this.pdfView.signerInfo.signType) {
       case '2': {
         if (this.pdfView.isAwait) {
-          this.pdfView.signPDF(mode, '').then((value) => {
-            if (value) {
-              let result = {
-                result: true,
-                mode: mode,
-              };
-              this.notify.notifyCode('RS002');
-              this.canOpenSubPopup = false;
-              this.dialog && this.dialog.close(result);
-            } else {
-              this.canOpenSubPopup = false;
-              let result = {
-                result: false,
-                mode: mode,
-              };
-              this.notify.notifyCode('SYS021');
-              this.dialog && this.dialog.close(result);
-            }
-          });
+          this.pdfView
+            .signPDF(mode, this.dialogSignFile?.value?.comment)
+            .then((value) => {
+              if (value) {
+                let result = {
+                  result: true,
+                  mode: mode,
+                };
+                this.notify.notifyCode('RS002');
+                this.canOpenSubPopup = false;
+                this.dialog && this.dialog.close(result);
+              } else {
+                this.canOpenSubPopup = false;
+                let result = {
+                  result: false,
+                  mode: mode,
+                };
+                this.notify.notifyCode('SYS021');
+                this.dialog && this.dialog.close(result);
+              }
+            });
         } else {
           switch (mode.toString()) {
             case '5': {
