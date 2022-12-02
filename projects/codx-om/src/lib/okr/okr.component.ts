@@ -37,6 +37,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //title//
   titleRoom = 'Phòng kinh doanh';
+  dtCompany = null;
   /////////
   auth: AuthStore;
   okrService: CodxOmService;
@@ -73,9 +74,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     var user = this.auth.get();
-    // this.cache.getCompany(user.userID).subscribe(item=>{
-    //   if(item) this.titleRoom = item.organizationName
-    // })
+    this.cache.getCompany(user.userID).subscribe(item=>{
+      debugger;
+      if(item) 
+      {
+        debugger;
+        this.titleRoom = item.organizationName;
+        this.dtCompany = item;
+      }
+    })
   }
 
   //Hàm click
@@ -110,7 +117,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       null,
       null,
       null,
-      [this.view.formModel,this.periodID,this.interval,this.year,this.dataDate],
+      [this.view.formModel,this.periodID,this.interval,this.year,this.dataDate , this.dtCompany , "1"],
       '',
       dialogModel
     );

@@ -38,8 +38,9 @@ export class OkrPlansComponent implements OnInit {
   year = null;
   //
   dataDate = null;
-
-  valueDate = "";
+  valueDate = ""; 
+  dataCompany = null ; //Thông tin công ty
+  oKRLevel = null;
   constructor(
     private api: ApiHttpService,
     private ref: ChangeDetectorRef,
@@ -54,6 +55,8 @@ export class OkrPlansComponent implements OnInit {
     if(dt?.data[2]) this.interval = dt?.data[2];
     if(dt?.data[3]) this.year = dt?.data[3];
     if(dt?.data[4]) this.date = dt?.data[4]?.toDate;
+    if(dt?.data[5]) this.dataCompany = dt?.data[5];
+    if(dt?.data[6]) this.oKRLevel = dt?.data[6]
     this.dialog =  dialog;
   }
 
@@ -87,17 +90,34 @@ export class OkrPlansComponent implements OnInit {
     const repocontributors = this.okrForm.get(text);
     (repocontributors as FormArray).push(this.newKRs());
   }
+
   save() {
-    this.api
-      .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
-        this.okrForm.value.okrFormArray,
-      ])
-      .subscribe((item) => {
-        if (item) {
-          this.notifySvr.notifyCode('SYS006');
-          this.dialog.close(item);
-        }
-      });
+    //Them moi bo muc tieu
+    debugger;
+    var dataOKRPlans = 
+    {
+      //Cong ty
+      oKRLevel : this.oKRLevel,
+      companyID : this.dataCompany
+    }
+    // this.api
+    //   .execSv('OM', 'OM', 'OKRPlansBusiness', 'SaveOKRPlansAsync', )
+    //   .subscribe((item) => {
+    //     if (item) {
+    //       this.notifySvr.notifyCode('SYS006');
+    //       this.dialog.close(item);
+    //     }
+    //   });
+    // this.api
+    //   .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
+    //     this.okrForm.value.okrFormArray,
+    //   ])
+    //   .subscribe((item) => {
+    //     if (item) {
+    //       this.notifySvr.notifyCode('SYS006');
+    //       this.dialog.close(item);
+    //     }
+    //   });
   }
   newOKRs(): FormGroup {
     return this.fb.group({
@@ -129,7 +149,6 @@ export class OkrPlansComponent implements OnInit {
   {
     switch(this.interval)
     {
-     
       case "Q":
         {
           this.valueDate = "Q"+ this.periodID + "/" + this.year;
@@ -140,6 +159,8 @@ export class OkrPlansComponent implements OnInit {
           this.valueDate = "T"+ this.periodID + "/" + this.year;
           break;
         }
+      default:
+        this.valueDate = this.year
     }
   }
 }

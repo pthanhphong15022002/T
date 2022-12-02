@@ -199,6 +199,8 @@ textarea.e-input,
 
 .popover-body {
   padding: 1rem;
+  max-height: 300px;
+  overflow: auto;
 }
 
 .extend-more .e-input-group .e-input-group-icon,
@@ -1314,7 +1316,7 @@ div.user-mini-nav {
 
 .e-frozen-left-header,
 .e-frozen-left-content {
-  min-width: 40px;
+  min-width: 46px;
 }
 
 
@@ -1353,9 +1355,9 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   padding-left: 12px !important;
 }
 
-.e-grid .e-headercelldiv {
-  margin-left: 0 !important;
-}
+// .e-grid .e-headercelldiv {
+//   margin-left: 0 !important;
+// }
 
 .e-frozencontent.e-frozen-left-content>table {
   width: auto;

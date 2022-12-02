@@ -50,7 +50,7 @@
               <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
-                    <codx-label name="" default="Người tạo:"> </codx-label>
+                    <codx-label fiedName="CreatedBy" [formModel]="form.formModel" default="Người tạo:"> </codx-label>
                   </span>
                   <span class="text-dark">
                     <div>{{data.userNameCreatedBy}}</div>
@@ -71,7 +71,7 @@
               <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
-                    <codx-label name="" default="Phiên bản:"> </codx-label>
+                    <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Phiên bản:"> </codx-label>
                   </span>
                   <span class="text-dark">{{ data.versionNo }}</span>
                 </div>
@@ -112,7 +112,7 @@
               <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
-                    <codx-label name="" default="Chủ qui trình:"> </codx-label>
+                    <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ qui trình:"> </codx-label>
                   </span>
                   <span class="text-dark">{{ data.userName }}</span>
                 </div>
