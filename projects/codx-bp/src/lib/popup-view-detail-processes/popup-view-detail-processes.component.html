@@ -1,18 +1,7 @@
-<div class="stepper-body popup-task-detail no-header page-viewdetail">
-  <div class="my-3 mx-6 sprints-task-header">
-    <div class="d-flex justify-content-between">
-      <div class="d-flex align-items-center">
-        <!-- ///noi dung -->
-        <h1>{{ title }}</h1>
-      </div>
-      <div>
-        <button class="btn text-dark-75 text-hover-danger cursor-pointer px-0" (click)="dialog.close()">
-          <span class="icon-close icon-18"></span>
-        </button>
-      </div>
-    </div>
-  </div>
-  <!-- </div> -->
+<codx-form [body]="body" [headerText]="title" [dialog]="dialog"></codx-form>
+<!-- </div> -->
+<ng-template #body>
+
   <div class="w-100 bg-gray-100 pt-1 view-details-main">
     <div class="view-details-header rounded-3 bg-body scroll-y px-6 mt-3">
       <div class="d-flex align-items-top justify-content-between mt-4">
@@ -223,7 +212,8 @@
       </div>
     </div>
   </div>
-</div>
+</ng-template>
+
 
 <ng-template #tmpEmpty>
   <div class="w-100 h-100">
