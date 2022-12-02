@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { ApiHttpService, AuthService, CacheService, FormModel } from 'codx-core';
 
 @Component({
@@ -6,7 +6,7 @@ import { ApiHttpService, AuthService, CacheService, FormModel } from 'codx-core'
   templateUrl: './codx-history.component.html',
   styleUrls: ['./codx-history.component.css']
 })
-export class CodxHistoryComponent implements OnInit {
+export class CodxHistoryComponent implements OnInit,OnChanges {
 
   @Input() objectID:string = "";
   @Input() funcID:string = "";
@@ -26,8 +26,14 @@ export class CodxHistoryComponent implements OnInit {
 
   ngOnInit(): void 
   {
-    debugger
     this.getDataAsync(this.objectID);
+  }
+
+  // change objectID reload logs
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes?.objectID?.previousValue != changes?.objectID?.currentValue) {
+      this.getDataAsync(this.objectID);
+    }
   }
   // get data logs
   getDataAsync(objectID:string){

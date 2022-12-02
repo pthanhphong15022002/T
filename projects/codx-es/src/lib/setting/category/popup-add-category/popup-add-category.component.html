@@ -140,6 +140,7 @@
           <codx-label fiedName="SignatureType" [formModel]="formModel">
           </codx-label>
           <codx-input
+            *ngIf="grvSetup && grvSetup['SignatureType']"
             field="signatureType"
             [crrValue]="data.signatureType"
             type="valuelist"
