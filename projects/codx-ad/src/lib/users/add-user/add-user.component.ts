@@ -287,7 +287,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 }
               });
             this.dataAfterSave = res.save;
-            console.log("check dataAfterSave", this.dataAfterSave);
+            console.log('check dataAfterSave', this.dataAfterSave);
           }
         });
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
@@ -337,6 +337,19 @@ export class AddUserComponent extends UIComponent implements OnInit {
     data = [this.adUser, this.viewChooseRole, false, false];
     op.data = data;
     return true;
+  }
+
+  updateAfterAdd() {
+    var checkDifference =
+      JSON.stringify(this.viewChooseRoleTemp) ===
+      JSON.stringify(this.viewChooseRole);
+    this.api
+      .execSv('SYS', 'ERM.Business.AD', 'UsersBusiness', 'UpdateUserAsync', [
+        this.adUser,
+        this.viewChooseRole,
+        checkDifference,
+      ])
+      .subscribe();
   }
 
   onAdd() {
@@ -399,6 +412,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         if (this.checkBtnAdd == false) {
           this.onAdd();
         } else {
+          this.updateAfterAdd();
           if (
             this.countListViewChooseRoleApp > 0 ||
             this.countListViewChooseRoleService > 0
@@ -408,8 +422,6 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  this.formType = 'edit';
-                  this.onUpdate();
                   (this.dialog.dataService as CRUDService)
                     .update(res)
                     .subscribe();
