@@ -464,7 +464,7 @@ export class TMMeetingsComponent
       if (this.projectID) {
         this.view.dataService.dataSelected.refID = this.projectID;
         this.disabledProject = true;
-      } else this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
         ['add', this.titleAction, this.disabledProject],
@@ -493,7 +493,7 @@ export class TMMeetingsComponent
         option.Width = 'Auto';
         if (this.projectID) {
           this.disabledProject = true;
-        } else this.disabledProject = true;
+        } else this.disabledProject = false;
         this.dialog = this.callfc.openSide(
           PopupAddMeetingComponent,
           ['edit', this.titleAction, this.disabledProject],
@@ -518,7 +518,7 @@ export class TMMeetingsComponent
       option.Width = 'Auto';
       if (this.projectID) {
         this.disabledProject = true;
-      } else this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
         ['copy', this.titleAction,this.disabledProject],

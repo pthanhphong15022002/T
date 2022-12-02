@@ -346,7 +346,7 @@ export class CodxTasksComponent
       if (this.projectID) {
         this.view.dataService.dataSelected.projectID = this.projectID;
         this.disabledProject = true;
-      } else this.disabledProject = true;
+      } else this.disabledProject = false;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
       if (this.refType)
         this.view.dataService.dataSelected.refType = this.refType;
@@ -428,7 +428,7 @@ export class CodxTasksComponent
       if (this.projectID) {
         this.view.dataService.dataSelected.projectID = this.projectID;
         this.disabledProject = true;
-      } else this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -540,7 +540,7 @@ export class CodxTasksComponent
         option.zIndex = 1001;
         if (this.projectID) {
           this.disabledProject = true;
-        } else this.disabledProject = true;
+        } else this.disabledProject = false;
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
