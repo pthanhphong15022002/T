@@ -53,6 +53,13 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   firstLoad = true;
   viewTags = '';
   vllPriority = 'TM005';
+  tabControl = [
+    { name: 'History', textDefault: 'Lịch sử', isActive: true },
+    { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+    { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+    { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+    { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+  ];
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -60,12 +67,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) { }
+  ) {}
   //#endregion
   //#region Init
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['taskID']) {
@@ -76,7 +83,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#region
   //#region Method
-  getChangeData() { }
+  getChangeData() {}
   getTaskDetail() {
     this.viewTags = '';
     this.dataTree = [];
@@ -184,22 +191,30 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
-        if ((x.functionID == 'TMT02015'|| x.functionID == 'TMT02025')&& data.status=='90') {
+        if (
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
-         //an cap nhat tien do khi hoan tat 
-         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
           x.disabled = true;
         }
-          //an voi ca TMT026
-          if (
-            (x.functionID == 'SYS02' ||
-              x.functionID == 'SYS03' ||
-              x.functionID == 'SYS04') &&
-              this.formModel?.funcID == 'TMT0206'
-          ) {
-            x.disabled = true;
-          }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          this.formModel?.funcID == 'TMT0206'
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -224,7 +239,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region  tree
   loadTreeView() {
     this.dataTree = [];
-    if (!this.itemSelected || !this.itemSelected?.taskID || !this.itemSelected.isAssign ) return;
+    if (
+      !this.itemSelected ||
+      !this.itemSelected?.taskID ||
+      !this.itemSelected.isAssign
+    )
+      return;
     this.api
       .execSv<any>(
         'TM',
