@@ -174,8 +174,6 @@ export class PopupAddPermissionComponent implements OnInit {
             var item = data[i];
             // if(item.id != null && item.objectType != "U"){
             var perm = new BP_ProcessPermissions();
-            perm.startDate = this.startDate;
-            perm.endDate = this.endDate;
             perm.objectName = item.text != null ? item.text : item.objectName;
             perm.objectID = item.id;
             perm.isActive = true;

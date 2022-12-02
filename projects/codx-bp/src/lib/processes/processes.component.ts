@@ -350,8 +350,8 @@ export class ProcessesComponent
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
