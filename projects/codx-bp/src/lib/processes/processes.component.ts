@@ -124,12 +124,12 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funcID == 'BPT3') {
-      this.method = 'GetListShareByProcessAsync';
-    }
-    if (this.funcID == 'BPT2') {
-      this.method = 'GetListMyProcessesAsync';
-    }
+    // if (this.funcID == 'BPT3') {
+    //   this.method = 'GetListShareByProcessAsync';
+    // }
+    // if (this.funcID == 'BPT2') {
+    //   this.method = 'GetListMyProcessesAsync';
+    // }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;

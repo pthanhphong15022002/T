@@ -133,8 +133,12 @@ export class UserComponent extends UIComponent {
     return desc + '</div>';
   }
 
+  headerTextAdd: {
+    text: '';
+  };
   add(e) {
-    if (environment.saas == 1) {
+    // if (environment.saas == 0) {
+      // this.headerTextAdd.text = e.text;
       this.headerText = e.text;
       this.view.dataService.addNew().subscribe((res: any) => {
         var obj = {
@@ -155,7 +159,30 @@ export class UserComponent extends UIComponent {
           }
         });
       });
-    } else {
+    // } else {
+    //   let optionForm = new DialogModel();
+    //   optionForm.DataService = this.view?.currentView?.dataService;
+    //   optionForm.FormModel = this.view?.currentView?.formModel;
+    //   var dialog = this.callfc.openForm(
+    //     PleaseUseComponent,
+    //     '',
+    //     400,
+    //     70,
+    //     '',
+    //     '',
+    //     '',
+    //     optionForm
+    //   );
+    //   dialog.closed.subscribe((res) => {
+    //     if (res?.formType == 'edit') {
+    //     } else {
+    //     }
+    //   });
+    // }
+  }
+
+  pleaseUse(e) {
+    if (environment.saas == 1) {
       let optionForm = new DialogModel();
       optionForm.DataService = this.view?.currentView?.dataService;
       optionForm.FormModel = this.view?.currentView?.formModel;
@@ -169,6 +196,14 @@ export class UserComponent extends UIComponent {
         '',
         optionForm
       );
+      dialog.closed.subscribe((res) => {
+        if (res?.formType == 'edit') {
+
+        } else {
+        }
+      });
+    } else {
+      this.add(e);
     }
   }
 

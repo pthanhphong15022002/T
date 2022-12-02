@@ -7,6 +7,7 @@ import {
   CodxGridviewComponent,
   DialogRef,
   DialogModel,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -61,13 +62,13 @@ export class DetailNoteBooksComponent extends UIComponent {
   constructor(
     injector: Injector,
     private route: ActivatedRoute,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private notifySvr: NotificationsService
   ) {
     super(injector);
     this.route.params.subscribe((params) => {
       if (params) this.funcID = params['funcID'];
     });
-
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.functionList.formName = res.formName;
@@ -185,7 +186,6 @@ export class DetailNoteBooksComponent extends UIComponent {
         headerText: this.headerText,
       },
     ];
-
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new DialogModel();
       option.DataService = this.view?.currentView?.dataService;
@@ -222,11 +222,9 @@ export class DetailNoteBooksComponent extends UIComponent {
         headerText: this.headerText,
       },
     ];
-
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -247,15 +245,14 @@ export class DetailNoteBooksComponent extends UIComponent {
   }
 
   delete(data) {
-    this.api
-      .exec<any>(
-        'ERM.Business.WP',
-        'NotesBusiness',
-        'DeleteNoteAsync',
-        data.recID
+    if (data) this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (option: any) =>
+        this.beforeDelete(option, this.view.dataService.dataSelected)
       )
       .subscribe((res) => {
         if (res) {
+          this.view.dataService.remove(res).subscribe();
           this.api
             .execSv(
               'DM',
@@ -265,10 +262,16 @@ export class DetailNoteBooksComponent extends UIComponent {
               [data.recID, 'WP_Notes', true]
             )
             .subscribe();
-          this.view.dataService.remove(res).subscribe();
-          this.detectorRef.detectChanges();
         }
       });
+  }
+
+  beforeDelete(op: any, data) {
+    op.assemblyName = 'ERM.Business.WP';
+    op.className = 'NotesBusiness';
+    op.methodName = 'DeleteNoteAsync';
+    op.data = data.recID;
+    return true;
   }
 
   copy(data) {

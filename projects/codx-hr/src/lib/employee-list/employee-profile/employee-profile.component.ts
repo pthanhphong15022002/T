@@ -118,7 +118,7 @@ export class EmployeeProfileComponent extends UIComponent {
   lstWorkPermit: any;
   //jobInfo
   jobInfo: any;
-  crrJobSalaries: any= {}
+  crrJobSalaries: any = {};
 
   formModel;
   itemDetail;
@@ -247,13 +247,12 @@ export class EmployeeProfileComponent extends UIComponent {
         //Job info
         //this.hrService.getJobInfo()
 
-
         //Job salaries
         this.hrService
           .GetCurrentJobSalaryByEmployeeID(params.employeeID)
           .subscribe((res) => {
-            this.crrJobSalaries = res     
-          })
+            this.crrJobSalaries = res;
+          });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -276,21 +275,17 @@ export class EmployeeProfileComponent extends UIComponent {
         if (funcID == 'passport') {
           this.handleEmployeePassportInfo('edit', data);
           this.df.detectChanges();
-        } 
-        else if (funcID == 'workpermit') {
+        } else if (funcID == 'workpermit') {
           this.handleEmployeeWorkingPermitInfo('edit', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'visa'){
+        } else if (funcID == 'visa') {
           this.handleEmployeeVisaInfo('edit', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'family'){
+        } else if (funcID == 'family') {
           this.handleEFamilyInfo('edit', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'jobSalary'){
-          this.HandleEmployeeJobSalariesInfo('edit', data)
+        } else if (funcID == 'jobSalary') {
+          this.HandleEmployeeJobSalariesInfo('edit', data);
           this.df.detectChanges();
         }
         break;
@@ -311,8 +306,7 @@ export class EmployeeProfileComponent extends UIComponent {
                 this.notify.notifyCode('SYS022');
               }
             });
-        } 
-        else if (funcID == 'workpermit') {
+        } else if (funcID == 'workpermit') {
           this.hrService
             .DeleteEmployeeWorkPermitInfo(data.recID)
             .subscribe((p) => {
@@ -327,11 +321,8 @@ export class EmployeeProfileComponent extends UIComponent {
                 this.notify.notifyCode('SYS022');
               }
             });
-        }
-        else if(funcID == 'visa'){
-          this.hrService
-          .DeleteEmployeeVisaInfo(data.recID)
-          .subscribe((p) => {
+        } else if (funcID == 'visa') {
+          this.hrService.DeleteEmployeeVisaInfo(data.recID).subscribe((p) => {
             if (p == true) {
               this.notify.notifyCode('SYS008');
               let i = this.lstVisa.indexOf(data);
@@ -343,40 +334,36 @@ export class EmployeeProfileComponent extends UIComponent {
               this.notify.notifyCode('SYS022');
             }
           });
-        }
-        else if(funcID == 'family'){
-          this.hrService
-          .DeleteEmployeeFamilyInfo(data.recID)
-          .subscribe((p) => {
-            if(p == true){
+        } else if (funcID == 'family') {
+          this.hrService.DeleteEmployeeFamilyInfo(data.recID).subscribe((p) => {
+            if (p == true) {
               this.notify.notifyCode('SYS008');
               let i = this.lstFamily.indexOf(data);
               if (i != -1) {
                 this.lstFamily.splice(i, 1);
               }
               this.df.detectChanges();
-            }
-            else{
+            } else {
               this.notify.notifyCode('SYS022');
             }
-          })
-        }
-        else if(funcID == 'jobSalary'){
+          });
+        } else if (funcID == 'jobSalary') {
           this.hrService
-          .DeleteEmployeeJobsalaryInfo(data.recID)
-          .subscribe((p) => {
-            if(p == true){
-              this.notify.notifyCode('SYS008');
-              this.hrService.GetCurrentJobSalaryByEmployeeID(data.employeeID).subscribe(p => {
-                console.log('current employee EJob', p);
-                this.crrJobSalaries = p
-              })
-              this.df.detectChanges();
-            }
-            else{
-              this.notify.notifyCode('SYS022');
-            }
-          })
+            .DeleteEmployeeJobsalaryInfo(data.recID)
+            .subscribe((p) => {
+              if (p == true) {
+                this.notify.notifyCode('SYS008');
+                this.hrService
+                  .GetCurrentJobSalaryByEmployeeID(data.employeeID)
+                  .subscribe((p) => {
+                    console.log('current employee EJob', p);
+                    this.crrJobSalaries = p;
+                  });
+                this.df.detectChanges();
+              } else {
+                this.notify.notifyCode('SYS022');
+              }
+            });
         }
 
         break;
@@ -385,20 +372,16 @@ export class EmployeeProfileComponent extends UIComponent {
         if (funcID == 'passport') {
           this.handleEmployeePassportInfo('copy', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'workpermit'){
+        } else if (funcID == 'workpermit') {
           this.handleEmployeeWorkingPermitInfo('copy', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'visa'){
+        } else if (funcID == 'visa') {
           this.handleEmployeeVisaInfo('copy', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'family'){
+        } else if (funcID == 'family') {
           this.handleEFamilyInfo('copy', data);
           this.df.detectChanges();
-        }
-        else if(funcID == 'jobSalary'){
+        } else if (funcID == 'jobSalary') {
           this.HandleEmployeeJobSalariesInfo('copy', data);
           this.df.detectChanges();
         }
@@ -645,31 +628,32 @@ export class EmployeeProfileComponent extends UIComponent {
     });
     // })
   }
-  HandleEmployeeJobSalariesInfo(actionType: string, data: any){
-    this.view.dataService.dataSelected = this.data
-    let option = new SidebarModel()
-    option.DataService = this.view.dataService
-    option.FormModel = this.view.formModel
-    option.Width = '550px'
+  HandleEmployeeJobSalariesInfo(actionType: string, data: any) {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       PopupEJobSalariesComponent,
       {
         actionType: actionType,
-        employeeId : this.data.employeeID,
+        employeeId: this.data.employeeID,
         headerText: 'Lương chức danh',
         salarySelected: data,
       },
       option
-    )
+    );
     dialogAdd.closed.subscribe((res) => {
-      if(res != null){
-        this.hrService.GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        .subscribe((p => {
-          this.crrJobSalaries = p;
-        }))
+      if (res != null) {
+        this.hrService
+          .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+          .subscribe((p) => {
+            this.crrJobSalaries = p;
+          });
       }
-      if(res?.event) this.view.dataService.clear()
-      })
+      if (res?.event) this.view.dataService.clear();
+    });
   }
 
   handleEFamilyInfo(actionType: string, data: any) {
@@ -690,12 +674,11 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if(actionType == 'add' || actionType == 'copy'){
-        this.lstFamily.push(res?.event)
-      }
-      else{
-        let index = this.lstFamily.indexOf(data)
-        this.lstFamily[index] = res?.event
+      if (actionType == 'add' || actionType == 'copy') {
+        this.lstFamily.push(res?.event);
+      } else {
+        let index = this.lstFamily.indexOf(data);
+        this.lstFamily[index] = res?.event;
       }
       if (!res?.event) this.view.dataService.clear();
     });
@@ -721,10 +704,9 @@ export class EmployeeProfileComponent extends UIComponent {
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if(actionType != 'edit'){
+      if (actionType != 'edit') {
         this.lstPassport.push(res.event);
-      }
-      else{
+      } else {
         let index = this.lstPassport.indexOf(data);
         this.lstPassport[index] = res.event;
       }
@@ -755,10 +737,9 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       console.log('work permit', res?.event);
-      if(actionType != 'edit'){
+      if (actionType != 'edit') {
         this.lstWorkPermit.push(res?.event);
-      }
-      else{
+      } else {
         let index = this.lstWorkPermit.indexOf(data);
         this.lstWorkPermit[index] = res.event;
       }
@@ -785,10 +766,9 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if(actionType != 'edit'){
+      if (actionType != 'edit') {
         this.lstVisa.push(res?.event);
-      }
-      else{
+      } else {
         let index = this.lstVisa.indexOf(data);
         this.lstVisa[index] = res.event;
       }
