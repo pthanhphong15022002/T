@@ -34,7 +34,7 @@ export class Approver {}
 @Component({
   selector: 'app-approval-steps',
   templateUrl: './codx-approve-steps.component.html',
-  styleUrls: ['./codx-approve-steps.component.css'],
+  styleUrls: ['./codx-approve-steps.component.scss'],
 })
 export class CodxApproveStepsComponent
   implements OnInit, AfterViewInit, OnChanges

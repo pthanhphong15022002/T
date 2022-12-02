@@ -144,7 +144,10 @@ export class PopupAddSignFileComponent implements OnInit {
         this.data = data?.data.dataSelected;
         this.processTab = 4;
       }
-      if (this.data?.approveStatus != 1 || this.modeView == '1') {
+      if (
+        (this.data?.approveStatus != 1 && this.data?.approveStatus != 2) ||
+        this.modeView == '1'
+      ) {
         this.currentTab = 3;
         this.processTab = 4;
       }

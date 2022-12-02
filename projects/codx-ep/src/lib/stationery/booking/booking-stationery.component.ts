@@ -132,7 +132,20 @@ export class BookingStationeryComponent
         break;
     }
   }
-
+  viewChanged(evt: any) {
+    this.funcID = this.router.snapshot.params['funcID'];
+    this.codxEpService.getFormModel(this.funcID).then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
+    this.cache.functionList(this.funcID).subscribe((res) => {
+      if (res) {
+        this.funcIDName =
+          res.customName.charAt(0).toLowerCase() + res.customName.slice(1);
+      }
+    });
+  }
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {
