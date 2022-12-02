@@ -9,7 +9,7 @@
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data" [dataItem]="data" [formModel]="view.formModel"
     [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" [imageWidth]="600"
-    (changeDataMF)="changeDataMF($event, data)">
+    (changeDataMF)="changeDataMF($event, data)" (dblclick)="viewDetailProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
@@ -84,7 +84,7 @@
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <tr class="has-action-menu">
+  <tr class="has-action-menu" (dblclick)="viewDetailProcessSteps(moreFuncDbClick , data)">
     <td class="rowphoto">
       <div class="d-flex flex-column ">
         <div class="box">

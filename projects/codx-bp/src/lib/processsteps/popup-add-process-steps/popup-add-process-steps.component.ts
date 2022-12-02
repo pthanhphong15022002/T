@@ -143,9 +143,9 @@ export class PopupAddProcessStepsComponent
   }
 
   handelMail() {
-    let data = {
+    let data = { 
       dialog: this.dialog,
-      formGroup: true,
+      formGroup: null,
       templateID: this.recIdEmail,
       showIsTemplate: true,
       showIsPublish: true,
@@ -166,6 +166,8 @@ export class PopupAddProcessStepsComponent
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
         this.processSteps['reference'] = res.event?.recID;
+        this.recIdEmail = res.event?.recID ? res.event?.recID : "";
+        this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
   }
