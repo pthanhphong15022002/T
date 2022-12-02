@@ -9,15 +9,17 @@
     <codx-form
       headerText="{{ title }}"
       #form
-      [body]="body"
+      [body]="body1"
       [data]="data"
       [dialog]="dialog!"
       [formModel]="formModel!"
       [subHeader]="subHeader"
       [subHeaderText]="subHeaderText"
       [openMore]="openMore"
+      [title]="title"
+      [footer]="footer"
     >
-      <ng-template #body>
+      <ng-template #body1>
         <ng-container [ngTemplateOutlet]="RightTemlate"> </ng-container>
       </ng-template>
     </codx-form>
