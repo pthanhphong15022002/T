@@ -25,7 +25,6 @@ export class CodxTabsComponent implements OnInit {
   @Input() id!: any;
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
-  @Input() viewDefaut = ''; //Thao defaut cho TM, ai muon df gi truyen vao chu tab dùng chung
   //tree task
   @Input() dataTree: any[] = [];
   @Input() vllStatus: any;
@@ -61,15 +60,14 @@ export class CodxTabsComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.TabControl.length == 0) {
-      if (this.viewDefaut == '') this.TabControl = this.all;
-      else {
-        let arrViewDefault = this.viewDefaut.split(';');
-        this.all.forEach((res) => {
-          let index = arrViewDefault.findIndex((x) => x == res.name);
-          if (index != -1) this.TabControl.push(res);
-        });
-        if(this.TabControl.length > 0) this.TabControl[0].isActive = true ;
-      }
+      this.TabControl = this.all;
+      // this.all.forEach((res, index) => {
+      //   var tabModel = new TabModel();
+      //   tabModel.name = tabModel.textDefault = res;
+      //   if (index == 0) tabModel.isActive = true;
+      //   else tabModel.isActive = false;
+      //   this.TabControl.push(tabModel);
+      // });
     } else {
       this.active = this.TabControl.findIndex(
         (x: TabModel) => x.isActive == true
