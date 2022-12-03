@@ -576,7 +576,8 @@ export class PdfComponent
             this.signerInfo.supplier,
             hasCA,
             mode,
-            comment
+            comment,
+            this.transRecID
           )
           .subscribe((status) => {
             resolve(status);

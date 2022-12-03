@@ -1174,6 +1174,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
       }
       if(this.view.funcID == 'DMT05' || this.view.funcID == 'DMT06')
       {
+        this.getDataFile("");
         this.getDataFolder("");
       }
       if (this.view.funcID != 'DMT02' && this.view.funcID != 'DMT03') {

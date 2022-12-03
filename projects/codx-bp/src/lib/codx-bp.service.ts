@@ -104,7 +104,16 @@ export class CodxBpService {
       data
     );
   }
-  GetProcessStepDetailsByRecID(recID) {
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );  
+  }
+  getProcessStepDetailsByRecID(recID) {
     return this.api.exec<any>(
       'BP',
       'ProcessStepsBusiness',

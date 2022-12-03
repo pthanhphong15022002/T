@@ -109,15 +109,18 @@ export class PopupShareSprintsComponent implements OnInit {
           case 'D':
             listDepartmentID += obj.id + ';';
             break;
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
         }
       }
     });
-    if (listUserID != ''){
+    if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
       this.valueSelectUser(listUserID);
     }
-      
-    if (listDepartmentID != ''){
+
+    if (listDepartmentID != '') {
       listDepartmentID = listDepartmentID.substring(
         0,
         listDepartmentID.length - 1
@@ -136,15 +139,16 @@ export class PopupShareSprintsComponent implements OnInit {
 
     if (listPositionID != '') {
       listPositionID = listPositionID.substring(0, listPositionID.length - 1);
-      this.tmSv.getListUserIDByListPositionsID(listPositionID).subscribe((res) => {
-        if (res && res.length > 0) {
-          if (!res[1]) this.notiService.notifyCode('TM066');
-          resources = res[0];
-          this.valueSelectUser(resources);
-        } else this.notiService.notifyCode('TM066');
-      });
+      this.tmSv
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notiService.notifyCode('TM066');
+            resources = res[0];
+            this.valueSelectUser(resources);
+          } else this.notiService.notifyCode('TM066');
+        });
     }
-     
   }
 
   valueSelectUser(resources) {

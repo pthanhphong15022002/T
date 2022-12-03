@@ -24,7 +24,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <ng-container *ngIf="dataOKR && dataOKR.length > 0; else elseOKR">
+              <ng-container *ngIf="dataOKRPlans && dataOKR && dataOKR.length > 0; else elseOKR">
                 <lib-okr-targets
                   [dataOKR]="dataOKR"
                   [formModel]="view?.formModel"

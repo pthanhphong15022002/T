@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OkrEditComponent } from './okr-edit.component';
+import { PopupEexperiencesComponent } from './popup-eexperiences.component';
 
-describe('OkrEditComponent', () => {
-  let component: OkrEditComponent;
-  let fixture: ComponentFixture<OkrEditComponent>;
+describe('PopupEexperiencesComponent', () => {
+  let component: PopupEexperiencesComponent;
+  let fixture: ComponentFixture<PopupEexperiencesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OkrEditComponent ]
+      declarations: [ PopupEexperiencesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OkrEditComponent);
+    fixture = TestBed.createComponent(PopupEexperiencesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -28,9 +28,11 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-approval',
@@ -57,6 +59,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   lstDtDis: any;
   lstUserID: any;
   listApproveMF: any;
+
+  tabControl: TabModel[] = [];
   /**
    *
    */
@@ -68,6 +72,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private detectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
+    private codxShareService: CodxShareService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private esService: CodxEsService
@@ -75,6 +80,13 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {}
   ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
     this.views = [
       {
         type: ViewType.listdetail,
@@ -312,6 +324,14 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         status = '5';
       else if (funcID == 'SYS205') status = '4';
       else if (funcID == 'SYS206') status = '2';
+
+      // let dialog = this.codxShareService.beforeApprove(
+      //   status,
+      //   data,
+      //   this.funcID,
+      //   e?.text,
+      //   null
+      // );
       this.api
         .execSv(
           'ES',
