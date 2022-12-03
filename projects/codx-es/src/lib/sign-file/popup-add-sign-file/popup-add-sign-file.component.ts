@@ -119,7 +119,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
     this.disableCateID = data?.data?.disableCateID ?? false;
-    this.headerText = data?.data?.headerText;
+    this.headerText = data?.data?.headerText ?? '';
 
     if (this.modeView == '2') {
       this.disableCateID = true;
