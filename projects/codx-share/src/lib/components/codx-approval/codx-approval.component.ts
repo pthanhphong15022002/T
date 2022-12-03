@@ -32,6 +32,7 @@ import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-approval',
@@ -71,6 +72,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private detectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
+    private codxShareService: CodxShareService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private esService: CodxEsService
@@ -322,6 +324,14 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         status = '5';
       else if (funcID == 'SYS205') status = '4';
       else if (funcID == 'SYS206') status = '2';
+
+      // let dialog = this.codxShareService.beforeApprove(
+      //   status,
+      //   data,
+      //   this.funcID,
+      //   e?.text,
+      //   null
+      // );
       this.api
         .execSv(
           'ES',
