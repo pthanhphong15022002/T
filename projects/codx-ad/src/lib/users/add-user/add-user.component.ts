@@ -124,6 +124,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
     } else {
       this.adUser.buid = null;
       this.adUser.employeeID = null;
+      if (dt?.data?.email) this.adUser.email = dt?.data?.email;
     }
     this.dialog = dialog;
     this.user = auth.get();
