@@ -643,4 +643,16 @@ export class CodxHrService {
     )
   }
   //#endregion
+
+  //region #EExperience
+  GetEmployeeExperienceInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EExperiencesBusiness',
+      'GetEmployeeExperienceModelAsync',
+      data
+    )
+  }
+  //#endregion
 }

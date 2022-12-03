@@ -119,7 +119,7 @@ export class CodxDMService {
   public listFiles = [];
   page = 1;
   totalPage = 1;
-  pageSize = 20;
+  pageSize = 50;
   ChunkSizeInKB = 1024 * 2;
   revision: boolean;
   moveable = false;

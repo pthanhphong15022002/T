@@ -106,7 +106,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   isCopyRight = 0;
   dataFolder: any;
   lstRawFile = [];
-
+  date = new Date();
+  isScroll = true;
   dataRequest = new DataRequest();
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
@@ -140,6 +141,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   @Input() pageSize = 5;
   @Input() heightScroll = 100;
+  @Input() isTab = false;
 
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
@@ -821,6 +823,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
       this.fileUploadList[i].description = this.description[i];
       this.fileUploadList[i].avatar = null;
       this.fileUploadList[i].data = '';
+      if(this.isTab) this.fileUploadList[i].createdOn = this.date;
+      else this.fileUploadList[i].createdOn = new Date();
       toltalUsed += this.fileUploadList[i].fileSize;
       if (total > 1)
         this.fileUploadList[i] = await this.addFileLargeLong(
@@ -846,7 +850,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
-
+            debugger;
             if (addList.length > 0) {
               this.fileSave.emit(addList);
               addList.forEach((item) => {
@@ -3022,10 +3026,13 @@ export class AttachmentComponent implements OnInit, OnChanges {
     this.fileDelete.emit(e);
   }
   scrollFile() {
+    if(!this.isScroll) return;
     this.dataRequest.page += 1;
     this.fileService.getFileByDataRequest(this.dataRequest).subscribe((res) => {
       if (res) {
-        this.data = this.data.concat(res[0]);
+        if(res[0].length>0)
+          this.data = this.data.concat(res[0]);
+        else this.isScroll = false;
       }
     });
   }
