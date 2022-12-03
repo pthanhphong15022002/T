@@ -175,6 +175,7 @@ const T_Component: Type<any>[] = [
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
+  CodxApproveStepsComponent,
   NotifyDrawerComponent,
   NotifyDrawerSliderComponent,
   MessengerDrawerComponent,
@@ -227,7 +228,7 @@ const T_Component: Type<any>[] = [
   ListPostComponent,
   LayoutListDetailComponent,
   CodxHistoryComponent,
-  CodxHistoryItemComponent
+  CodxHistoryItemComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -240,7 +241,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     DialogthumbComponent,
     CodxEmailComponent,
     LayoutListDetailComponent,
-    CodxApproveStepsComponent,
+    //CodxApproveStepsComponent,
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
   ],
