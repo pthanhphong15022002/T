@@ -21,6 +21,7 @@ export class PopupAddGroupComponent implements OnInit {
   strUserID:string = "";
   arrUsers:string[] = [];
   @ViewChild("codxImg") codxImg:ImageViewerComponent;
+  @ViewChild("listview") listview:CodxListviewComponent;
   @ViewChild("listviewSelected") listviewSelected:CodxListviewComponent;
   constructor(
     private api:ApiHttpService,
@@ -49,6 +50,9 @@ export class PopupAddGroupComponent implements OnInit {
     }
   }
 
+  searchEvent(textSearch:any){
+    this.listview.dataService.search(textSearch).subscribe();
+  }
   // value change
   valueChange(event)
   {
@@ -63,7 +67,6 @@ export class PopupAddGroupComponent implements OnInit {
   selectedChange(event){
     if(event?.data)
     {
-      debugger
       let itemSelected = event.data;
       let isExist = this.arrUsers.some(x => x == itemSelected.UserID);
       if(isExist) // đã tồn tại
@@ -71,20 +74,23 @@ export class PopupAddGroupComponent implements OnInit {
         this.removeMember(itemSelected);
       }
       else
-      {
+      { 
+        let member = {
+          userID : itemSelected.UserID,
+          userName: itemSelected.UserName
+        }
+        this.group.members.push(member);
         this.arrUsers.push(itemSelected.UserID);
         this.strUserID += itemSelected.UserID + ";";
-        (this.listviewSelected.dataService as CRUDService)
+        (this.listviewSelected.dataService as CRUDService) 
         .add(itemSelected)
         .subscribe((x) => 
         {
           this.dt.detectChanges();
-          var input = document.querySelector(
-            'codx-input[data-id="' +
-              event.data[itemSelected.UserID] +
-              '"] ejs-checkbox span.e-icons'
-          );
-          if (input) input.classList.add('e-check');
+          var input = document.querySelector(`codx-input[data-id="${itemSelected.UserID}"] ejs-checkbox span.e-icons`);
+          if (input) {
+            input.classList.add('e-check');
+          }
         });
       }
     }
@@ -94,7 +100,6 @@ export class PopupAddGroupComponent implements OnInit {
   selectedRemoveChange(event:any){
     if(event)
     {
-      debugger
       let itemSelected = event.data;
       this.removeMember(itemSelected);
     }
@@ -104,20 +109,15 @@ export class PopupAddGroupComponent implements OnInit {
   {
     if(data)
     {
-      debugger
-      let tmpArr = this.arrUsers.filter(x => x != data.UserID);
-      this.arrUsers = JSON.parse(JSON.stringify(tmpArr));
+      this.group.members = this.group.members.filter(x => x != data.UserID);
+      this.arrUsers = this.arrUsers.filter(x => x != data.UserID);
       this.strUserID = this.arrUsers.toString();
       this.dt.detectChanges();
       (this.listviewSelected.dataService as CRUDService)
         .remove(data)
         .subscribe((x) => 
         {
-          var input = document.querySelector(
-            'codx-input[data-id="' +
-            data.UserID +
-              '"] ejs-checkbox span.e-icons'
-          );
+          var input = document.querySelector(`codx-input[data-id="${data.UserID}"] ejs-checkbox span.e-icons`);
           if(input && input.classList.contains("e-check"))
           {
             input.classList.remove('e-check');
@@ -127,25 +127,24 @@ export class PopupAddGroupComponent implements OnInit {
   }
   // insert group
   insertGroup(){
-    
     if(this.user)
     {
       console.log(this.group);
-      // this.api.execSv("WP","ERM.Business.WP","GroupBusiness","InsertGroupAsync",[this.group])
-      // .subscribe((res:any[]) =>{
-      //   if(Array.isArray(res) && res[0])
-      //   {
-      //     let data = res[1];
-      //     if(data.groupType === "2"){
-      //       this.codxImg.updateFileDirectReload(this.group.groupID).subscribe();
-      //     }
-      //     this.dialogRef.close(data);
-      //   }
-      //   else{
-      //     this.dialogRef.close();
-      //     this.notifiSV.notify("Thêm không thành công");
-      //   }
-      // });
+      this.api.execSv("WP","ERM.Business.WP","GroupBusiness","InsertGroupAsync",[this.group])
+      .subscribe((res:any[]) =>{
+        if(Array.isArray(res) && res[0])
+        {
+          let data = res[1];
+          if(data.groupType === "2"){
+            this.codxImg.updateFileDirectReload(this.group.groupID).subscribe();
+          }
+          this.dialogRef.close(data);
+        }
+        else{
+          this.dialogRef.close();
+          this.notifiSV.notify("Thêm không thành công");
+        }
+      });
     }
     
   }

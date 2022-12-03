@@ -5,21 +5,20 @@
     [footer]="footer">
 </codx-form>
 <ng-template #body>
-    <div class="container">
-        <!-- Group name - Group avatar -->
-        <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="popup">
+        <div class="popup-header">
             <div class="me-4">
                 <codx-img 
                     #codxImg
                     [objectId]="group.groupID" 
-                    [objectName]="group.groupName" 
                     [objectType]="'WP_Groups'" 
-                    [width]="70" 
+                    [width]="40" 
                     isDefaulImg="true"
+                    isAllowEdit="true"
                     [funcId]="dialogRef.formModel.funcID">
                 </codx-img>
             </div>
-            <div class="w-100 ms-4">
+            <div class="ms-4 w-100">
                 <codx-input 
                     [type]="'text'" 
                     [field]="'groupName'" 
@@ -28,19 +27,13 @@
                 </codx-input>  
             </div>
         </div>
-        <!-- end Group name - Group avatar -->
-        <!-- list user -->
-        <div class="row">
-            <div>
-                <codx-label [formModel]="dialogRef.formModel" default="Danh sách người dùng"></codx-label>
-            </div>
-        </div>
-        <div class="row w-100">
-            <div class="col-7 h-100">
-                <div>
-                    <codx-searchbar #codxSearch [iconPos]="'left'"></codx-searchbar>
+        <div class="popup-body">
+            <div class="panel-left">
+                <div class="panel-left-header">
+                    <codx-label class="fw-bolder" [formModel]="dialogRef.formModel" default="Danh sách người dùng"></codx-label>
+                    <codx-searchbar #codxSearch [iconPos]="'left'" (searchEvent)="searchEvent($event)"></codx-searchbar>
                 </div>
-                <div class="row">
+                <div class="panel-left-body">
                     <codx-listview
                         #listview
                         (onSelectionChanged)="selectedChange($event)"
@@ -56,10 +49,9 @@
                     </codx-listview>
                 </div>
             </div>
-            <div class="col-5 h-100">
+            <div class="panel-right">
                 <codx-listview
                     #listviewSelected
-                    (onSelectionChanged)="selectedRemoveChange($event)"
                     [itemTemplate]="selectedtemplate"
                     [headerTemplate]="headerTemplate"
                     [funcId]="dialogRef.formModel.funcID"
@@ -91,7 +83,13 @@
                 </div>
             </div>
             <div>
-                <codx-input [id]="item.UserID" type="checkbox" [class]="'check-circle'"></codx-input>
+                <codx-input 
+                    [disabled]="true"
+                    [checked]="false"
+                    [attr.data-id]="item.UserID"
+                    type="checkbox" 
+                    [class]="'check-circle'">
+                </codx-input>
             </div>
         </div>
     </ng-template>
@@ -109,14 +107,14 @@
                     <p class="m-0 fw-bolder" *ngIf="item.UserName">{{item.UserName}}</p>
                 </div>
             </div>
-            <div>
+            <div (click)="removeMember(item)">
                 <span class="icon-close text-danger"></span>
             </div>
         </div>
     </ng-template>
     <ng-template #headerTemplate>
-        <div class="row">
-            {{"Danh sách" + arrUsers.length}}
+        <div class="row fw-bolder ms-2 w-100">
+            {{"Selected ("+arrUsers.length+')'}}
         </div>
     </ng-template>
 </ng-template>
