@@ -31,7 +31,7 @@ export class FileService implements OnDestroy {
         private api: ApiHttpService
     ) {
       //  this.options.pageLoading = false;
-        this.options.pageSize = 1;
+        this.options.pageSize = 20;
         this.options.funcID = "";
         this.options.srtDirections
     }
@@ -270,7 +270,7 @@ export class FileService implements OnDestroy {
          );*/
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", parentId);
         this.options.entityName = "DM_FileInfo";      
-        this.options.pageSize = 20;         
+        this.options.pageSize = 50;         
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
         var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
         // var fileIbfo = data[0]

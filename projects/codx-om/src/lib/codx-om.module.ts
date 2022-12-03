@@ -20,7 +20,7 @@ import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
 import { PopupDistributeKRComponent } from './popup/popup-distribute-kr/popup-distribute-kr.component';
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
-import { OkrEditComponent } from './okr/okr-edit/okr-edit.component';
+import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
 import { PopupSaveVersionComponent } from './popup/popup-save-version/popup-save-version.component';
 import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
@@ -76,7 +76,7 @@ const routes: Routes = [
     PopupShowKRComponent,
     PopupDistributeKRComponent,
     OkrTargetsComponent,
-    OkrEditComponent,
+    OkrAddComponent,
     OkrReviewsComponent,
     OKRTasksComponent,
     PopupCheckInComponent,

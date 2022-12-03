@@ -10,7 +10,7 @@ import { ChartData } from '../../model/chart.model';
 import { OKRs } from '../../model/okr.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
-import { OkrEditComponent } from '../okr-edit/okr-edit.component';
+import { OkrAddComponent } from '../okr-add/okr-add.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -83,7 +83,7 @@ export class OkrTargetsComponent implements OnInit {
     var funcID = e?.functionID;
     switch (funcID) {
       case 'SYS03': {
-        let dialog = this.callfunc.openSide(OkrEditComponent, [
+        let dialog = this.callfunc.openSide(OkrAddComponent, [
           this.gridView,
           this.formModel,
         ]);

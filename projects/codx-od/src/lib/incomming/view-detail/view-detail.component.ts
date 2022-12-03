@@ -1113,13 +1113,13 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
     if (this.formModel.funcID == 'ODT41') {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
 
     if (
@@ -1130,7 +1130,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = false;
+      if(approvel[0]) approvel[0].disabled = false;
     }
     if (data?.status == '7') {
       var completed = e.filter(

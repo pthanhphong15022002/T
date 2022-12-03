@@ -98,26 +98,28 @@ export class OkrPlansComponent implements OnInit {
     {
       //Cong ty
       oKRLevel : this.oKRLevel,
-      companyID : this.dataCompany
+      companyID : this.dataCompany?.organizationID,
+      year: this.year,
+      interval: this.interval,
+      periodID: this.periodID,
     }
-    // this.api
-    //   .execSv('OM', 'OM', 'OKRPlansBusiness', 'SaveOKRPlansAsync', )
-    //   .subscribe((item) => {
-    //     if (item) {
-    //       this.notifySvr.notifyCode('SYS006');
-    //       this.dialog.close(item);
-    //     }
-    //   });
-    // this.api
-    //   .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
-    //     this.okrForm.value.okrFormArray,
-    //   ])
-    //   .subscribe((item) => {
-    //     if (item) {
-    //       this.notifySvr.notifyCode('SYS006');
-    //       this.dialog.close(item);
-    //     }
-    //   });
+    this.api
+      .execSv('OM', 'OM', 'OKRPlansBusiness', 'SaveOKRPlansAsync',dataOKRPlans )
+      .subscribe((item:any) => {
+        if (item) {
+           this.api
+          .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
+            this.okrForm.value.okrFormArray,item.recID
+          ])
+          .subscribe((item2) => {
+            if (item2) {
+              this.notifySvr.notifyCode('SYS006');
+              this.dialog.close(item);
+            }
+          });
+        }
+      });
+   
   }
   newOKRs(): FormGroup {
     return this.fb.group({
