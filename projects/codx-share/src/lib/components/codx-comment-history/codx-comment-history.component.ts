@@ -84,7 +84,8 @@ export class CodxCommentHistoryComponent implements OnInit {
   // deleted comment 
   deleteComment(item:any){
     this.notifySV.alertCode('WP032').subscribe((res) => {
-      if (res.event.status == "Y"){
+      if (res.event.status == "Y")
+      {
         this.api.execSv("BG","ERM.Business.BG","CommentLogsBusiness","DeleteAsync",item.recID)
         .subscribe((res:any) => {
           if(res)
