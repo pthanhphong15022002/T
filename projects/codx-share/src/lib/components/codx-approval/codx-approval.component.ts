@@ -28,6 +28,7 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
@@ -57,6 +58,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   lstDtDis: any;
   lstUserID: any;
   listApproveMF: any;
+
+  tabControl: TabModel[] = [];
   /**
    *
    */
@@ -75,6 +78,13 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {}
   ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
     this.views = [
       {
         type: ViewType.listdetail,

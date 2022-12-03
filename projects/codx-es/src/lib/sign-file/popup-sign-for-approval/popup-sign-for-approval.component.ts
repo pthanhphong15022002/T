@@ -153,7 +153,11 @@ export class PopupSignForApprovalComponent extends UIComponent {
   }
 
   imgAreaConfig = ['S1', 'S2', 'S3'];
-  clickOpenPopupADR(mode) {
+  clickOpenPopupADR(mf) {
+    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
+    let morefuncID = mf.functionID;
+    this.title = mf.text ?? '';
+
     if (!this.isConfirm) {
       this.notify.notifyCode('ES011');
       return;
@@ -170,26 +174,44 @@ export class PopupSignForApprovalComponent extends UIComponent {
         area.stepNo == this.pdfView.stepNo
       );
     });
+
+    switch (morefuncID) {
+      case 'SYS205': //tu choi
+        this.mode = 4;
+        break;
+      case 'SYS206': //lam lai
+        this.mode = 2;
+        break;
+      default: {
+        if (
+          morefuncID == 'SYS201' ||
+          morefuncID == 'SYS202' ||
+          morefuncID == 'SYS203'
+        ) {
+          this.mode = 5;
+        }
+      }
+    }
     if (missingImgArea || this.pdfView.lstAreas.length == 0) {
       this.notify.alertCode('ES019').subscribe((x) => {
         if (x.event.status == 'Y') {
-          this.mode = mode;
-          let title = '';
+          //this.mode = mode;
+          //let title = '';
           let subTitle = 'Comment khi duyệt';
-          switch (mode) {
-            case 5:
-              title = 'Duyệt';
-              break;
-            case 4:
-              title = 'Từ chối';
-              break;
-            case 2:
-              title = 'Làm lại';
-              break;
-            default:
-              return;
-          }
-          this.title = title;
+          // switch (this.mode) {
+          //   case 5:
+          //     title = 'Duyệt';
+          //     break;
+          //   case 4:
+          //     title = 'Từ chối';
+          //     break;
+          //   case 2:
+          //     title = 'Làm lại';
+          //     break;
+          //   default:
+          //     return;
+          // }
+          //this.title = title;
           this.subTitle = subTitle;
           if (
             this.data.stepType == 'S' &&
@@ -200,7 +222,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
             this.otpControl = this.signerInfo.otpControl;
             this.openConfirm();
           } else {
-            this.beforeApprove(mode, title, subTitle);
+            this.beforeApprove(this.mode, this.title, subTitle);
           }
         }
       });
@@ -219,23 +241,22 @@ export class PopupSignForApprovalComponent extends UIComponent {
       //   }
       // });
     } else {
-      this.mode = mode;
-      let title = '';
+      //this.mode = mode;
+      //let title = '';
       let subTitle = 'Comment khi duyệt';
-      switch (mode) {
-        case 5:
-          title = 'Duyệt';
-          break;
-        case 4:
-          title = 'Từ chối';
-          break;
-        case 2:
-          title = 'Làm lại';
-          break;
-        default:
-          return;
-      }
-      this.title = title;
+      // switch (mode) {
+      //   case 5:
+      //     title = 'Duyệt';
+      //     break;
+      //   case 4:
+      //     title = 'Từ chối';
+      //     break;
+      //   case 2:
+      //     title = 'Làm lại';
+      //     break;
+      //   default:
+      //     return;
+      // }
       this.subTitle = subTitle;
       if (
         this.data.stepType == 'S' &&
@@ -246,7 +267,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
         this.otpControl = this.signerInfo.otpControl;
         this.openConfirm();
       } else {
-        this.beforeApprove(mode, title, subTitle);
+        this.beforeApprove(this.mode, this.title, subTitle);
       }
     }
   }
