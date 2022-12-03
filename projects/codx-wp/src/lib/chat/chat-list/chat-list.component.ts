@@ -125,8 +125,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       let popup = this.callFCSV.openForm(
         PopupAddGroupComponent,
         '',
-        0,
-        0,
+        600,
+        600,
         this.function.funcID,
         data,
         '',
