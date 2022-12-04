@@ -5,22 +5,20 @@
     [footer]="footer">
 </codx-form>
 <ng-template #body>
-    <div class="container">
-        <!-- Group name - Group avatar -->
-        <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="popup">
+        <div class="popup-header">
             <div class="me-4">
                 <codx-img 
                     #codxImg
                     [objectId]="group.groupID" 
-                    [objectName]="group.groupName" 
                     [objectType]="'WP_Groups'" 
-                    [width]="70" 
+                    [width]="40" 
                     isDefaulImg="true"
-                    [funcId]="dialogRef.formModel.funcID"
-                    [isAllowEdit]="true">
+                    isAllowEdit="true"
+                    [funcId]="dialogRef.formModel.funcID">
                 </codx-img>
             </div>
-            <div class="w-100 ms-4">
+            <div class="ms-4 w-100">
                 <codx-input 
                     [type]="'text'" 
                     [field]="'groupName'" 
@@ -29,13 +27,101 @@
                 </codx-input>  
             </div>
         </div>
-        <!-- end Group name - Group avatar -->
-        <!-- list user -->
+        <div class="popup-body">
+            <div class="panel-left">
+                <div class="panel-left-header">
+                    <codx-label class="fw-bolder" [formModel]="dialogRef.formModel" default="Danh sách người dùng"></codx-label>
+                    <codx-searchbar #codxSearch [iconPos]="'left'" (searchEvent)="searchEvent($event)"></codx-searchbar>
+                </div>
+                <div class="panel-left-body">
+                    <codx-listview
+                        #listview
+                        (onSelectionChanged)="selectedChange($event)"
+                        [comboboxName]="'users'"
+                        [itemTemplate]="itemtemplate"
+                        [funcId]="dialogRef.formModel.funcID"
+                        [entityName]="'AD_Users'"
+                        [service]="'SYS'"
+                        [assemblyName]="'ERM.Business.CM'"
+                        [className]="'DataBusiness'"
+                        [method]="'LoadDataCbxAsync'"
+                        [selectFirst]="false">
+                    </codx-listview>
+                </div>
+            </div>
+            <div class="panel-right">
+                <codx-listview
+                    #listviewSelected
+                    [itemTemplate]="selectedtemplate"
+                    [headerTemplate]="headerTemplate"
+                    [funcId]="dialogRef.formModel.funcID"
+                    [entityName]="'AD_Users'"
+                    [comboboxName]="'users'"
+                    [service]="'SYS'"
+                    [assemblyName]="'ERM.Business.CM'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadSelectedDataCbxAsync'"
+                    [currentValue]="strUserID"
+                    [selectFirst]="false">
+                </codx-listview>
+            </div>
+        </div>
         <!-- end list user -->
     </div>
+    <ng-template #itemtemplate let-item>
+        <div class="d-flex align-items-center justify-content-between p-2">
+            <div class="d-flex align-items-center justify-content-between">
+                <codx-img
+                    [width]="30" 
+                    [objectId]="item.UserID" 
+                    [objectName]="item.UserName" 
+                    objectType="AD_Users"
+                    imageType="circle">
+                </codx-img>
+                <div class="text-left ms-2">
+                    <p class="m-0 fw-bolder" *ngIf="item.UserName">{{item.UserName}}</p>
+                </div>
+            </div>
+            <div>
+                <codx-input 
+                    [disabled]="true"
+                    [checked]="false"
+                    [attr.data-id]="item.UserID"
+                    type="checkbox" 
+                    [class]="'check-circle'">
+                </codx-input>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #selectedtemplate let-item>
+        <div class="d-flex align-items-center justify-content-between p-2">
+            <div class="d-flex justify-content-between">
+                <codx-img
+                    [width]="30" 
+                    [objectId]="item.UserID" 
+                    [objectName]="item.UserName" 
+                    objectType="AD_Users"
+                    imageType="circle">
+                </codx-img>
+                <div class="text-left ms-2">
+                    <p class="m-0 fw-bolder" *ngIf="item.UserName">{{item.UserName}}</p>
+                </div>
+            </div>
+            <div (click)="removeMember(item)">
+                <span class="icon-close text-danger"></span>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template #headerTemplate>
+        <div class="row fw-bolder ms-2 w-100">
+            {{"Selected ("+arrUsers.length+')'}}
+        </div>
+    </ng-template>
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-end">
         <button type="submit" class="btn btn-sm btn-primary" (click)="insertGroup()">Ok</button>
     </div>
 </ng-template>
+
+

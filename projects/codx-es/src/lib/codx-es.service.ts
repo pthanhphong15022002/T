@@ -1092,6 +1092,16 @@ export class CodxEsService {
     );
   }
 
+  undo(transRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [transRecID]
+    );
+  }
+
   getOneApprovalTrans(recID: string) {
     return this.api.execSv<any>(
       'es',
@@ -1285,7 +1295,8 @@ export class CodxEsService {
     supplier,
     hasCA,
     mode,
-    comment
+    comment,
+    transRecID
   ) {
     let data = [
       stepNo,
@@ -1297,6 +1308,7 @@ export class CodxEsService {
       hasCA,
       mode,
       comment,
+      transRecID,
     ];
     return this.api.execSv(
       'es',

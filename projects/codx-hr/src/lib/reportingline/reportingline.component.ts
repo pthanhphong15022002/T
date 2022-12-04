@@ -9,6 +9,7 @@ import {
 import {
   ButtonModel,
   CodxFormDynamicComponent,
+  CodxTreeviewComponent,
   CRUDService,
   DialogModel,
   DialogRef,
@@ -60,8 +61,12 @@ export class ReportinglineComponent extends UIComponent {
   dataSelected: any = null;
   positionID: string = '';
   request: ResourceModel;
-  constructor(private notifiSv: NotificationsService, inject: Injector,
-    private dt:ChangeDetectorRef) {
+  codxTreeView:CodxTreeviewComponent = null;
+  constructor(
+    private notifiSv: NotificationsService,
+    inject: Injector,
+    private dt: ChangeDetectorRef
+  ) {
     super(inject);
   }
 
@@ -107,15 +112,15 @@ export class ReportinglineComponent extends UIComponent {
   }
 
   viewChange(event: any) {
-    if (event && event.view?.id) {
-      if (event.view.id == '2') {
-        //this.view.dataService.parentIdField = 'ReportTo';
-        // this.view.dataService.load().subscribe(res=>{
-        //   this.detectorRef.detectChanges();
-        //   console.log(res);
-        // })
-      }
-    }
+    // if (event?.view?.id == "2") 
+    // {
+      
+    //   this.view.dataService.parentIdField = 'ReportTo';
+    //     this.view.dataService.load().subscribe(res=>{
+    //       this.detectorRef.detectChanges();
+    //       console.log(res);
+    //     })
+    // }
   }
   orgChartViewInit(component: any) {
     if (component) {
@@ -123,13 +128,20 @@ export class ReportinglineComponent extends UIComponent {
     }
   }
   // btn add toolbar click
-  btnClick(event:any) {
-    if (this.view) 
-    {
+  btnClick(event: any) {
+    if (this.view) {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
+      if(this.views[1].active) // modeView tree-orgchart
+      {
+        let currentView:any = this.view.currentView;
+        if(currentView)
+        {
+          this.codxTreeView = currentView.currentComponent?.treeView;
+        }
+      }
       this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
           let data = {
@@ -140,23 +152,31 @@ export class ReportinglineComponent extends UIComponent {
             isAddMode: true,
             titleMore: event.text,
           };
-          let popup = this.callfc.openSide(
+          let form = this.callfc.openSide(
             CodxFormDynamicComponent,
             data,
             option,
             this.funcID
           );
+          form.closed.subscribe((res:any) => {
+            debugger
+            if(res?.event?.save)
+            {
+              let node = res.event.save.data;
+              this.codxTreeView.setNodeTree(node);
+              console.log(this.codxTreeView);
+            }
+          });
         }
       });
     }
   }
   // click moreFunction
-  clickMF(event: any, data: any = null) 
-  {
-    if(event){
+  clickMF(event: any, data: any = null) {
+    if (event) {
       switch (event.functionID) {
         case 'SYS03':
-          this.edit(event,data);
+          this.edit(event, data);
           break;
         case 'SYS04':
           this.copy(data);
@@ -167,31 +187,31 @@ export class ReportinglineComponent extends UIComponent {
       }
     }
   }
-  edit(event:any,data:any) {
-    if (this.view && data && event) 
-    {
-      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data)); 
+  edit(event: any, data: any) {
+    if (this.view && data && event) {
+      this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.view.dataService.edit(this.view.dataService.dataSelected)
-      .subscribe(() => {
-        let data = {
-          dataService: this.view.dataService,
-          formModel: this.view.formModel,
-          data: this.view.dataService.dataSelected,
-          function: this.view.formModel.funcID,
-          isAddMode: false,
-          titleMore: event.text,
-        };
-        this.callfc.openSide(
-          CodxFormDynamicComponent,
-          data,
-          option,
-          this.view.formModel.funcID
-        );
-      });
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe(() => {
+          let data = {
+            dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: this.view.dataService.dataSelected,
+            function: this.view.formModel.funcID,
+            isAddMode: false,
+            titleMore: event.text,
+          };
+          this.callfc.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.view.formModel.funcID
+          );
+        });
     }
   }
   copy(data) {
@@ -235,11 +255,10 @@ export class ReportinglineComponent extends UIComponent {
   }
   loadEmployByCountStatus() {}
 
-  
   // selected data
-  onSelectionChanged(event) 
-  {
-    if (this.view) {
+  onSelectionChanged(event) {
+    if (this.view) 
+    {
       let viewActive = this.view.views.find((e) => e.active == true);
       if (viewActive?.id == '1') return;
       this.dataSelected = event.data;
@@ -266,10 +285,6 @@ export class ReportinglineComponent extends UIComponent {
       );
     }
   }
-  searchUser($event){
-    
-  }
-  searchChange(event:any){
-    debugger
-  }
+  searchUser($event) {}
+  searchChange(event: any) {}
 }

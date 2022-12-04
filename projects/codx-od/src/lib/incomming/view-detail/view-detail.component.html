@@ -11,6 +11,20 @@
         </div>
         <div class="d-flex flex-wrap mt-3">
           <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
+              ngClass="me-2 fw-bold"></codx-label>
+            <span class="text-gray-600">{{
+              data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
+              }}</span>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
+            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
+              fiedName="DispatchNo" ngClass="me-2 fw-bold"></codx-label>
+            <span class="text-gray-600">{{
+              data?.dispatchNo ? data?.dispatchNo : gridViewSetup?.dispatchNo?.headerText
+              }}</span>
+          </div>
+          <div class="d-flex align-items-center me-5 mb-3">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="CategoryID" class="me-2 fw-bold"></codx-label>
             <span [class.text-gray-600]="!data?.category">{{
@@ -62,13 +76,7 @@
               : gridViewSetup?.Deadline?.headerText
               }}</span>
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
-            <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
-              ngClass="me-2 fw-bold"></codx-label>
-            <span class="text-gray-600">{{
-              data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
-              }}</span>
-          </div>
+
           <div class="d-flex align-items-center me-5 mb-3">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefDate"
               ngClass="me-2 fw-bold"></codx-label>
@@ -201,8 +209,8 @@
   </ng-template>
   <ng-template #footer>
     <codx-tabs [entityName]="formModel?.entityName" [id]="data?.id" [objectID]="data?.recID"
-      [funcID]="formModel?.funcID" [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]=""
-      [approveStatus]=""></codx-tabs>
+      [funcID]="formModel?.funcID" [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl"
+      [transID]="data?.recID" [approveStatus]="data?.approveStatus" [formModel]="formModel"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>

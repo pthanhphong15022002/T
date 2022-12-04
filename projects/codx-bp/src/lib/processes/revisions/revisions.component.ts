@@ -55,6 +55,9 @@ export class RevisionsComponent implements OnInit {
   msgSucess = 'msgSucess'; //Condtion sucess
   isUpdate: boolean;
   gridViewSetup:any;
+  fucntionIdMain:any;
+  enterComment:any;
+  enterName:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -70,6 +73,7 @@ export class RevisionsComponent implements OnInit {
     this.funcID = this.more?.functionID;
     this.entityName = this.more?.entityName;
     this.process = this.data?.data;
+    this.fucntionIdMain = this.data?.funcIdMain
     this.revisions = this.process?.versions;
     this.headerText =dt?.data.more.defaultName;
     this.verNo ='V'+this.revisions.length.toString()+'.0';
@@ -82,8 +86,11 @@ export class RevisionsComponent implements OnInit {
     this.cache.gridViewSetup('ProcessRevisions', 'grvProcessRevisions').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        this.enterComment =this.gridViewSetup['Comment']?.description;
+        this.enterName = this.gridViewSetup['VersionName']?.headerText;
       }
     });
+
   }
 
 
@@ -121,11 +128,18 @@ export class RevisionsComponent implements OnInit {
   onSave() {
     switch(this.checkValiName(this.verName)) {
       case this.msgErrorValidIsNull: {
-        this.notiService.notifyCode('SYS009', 0, '"' + 'headerText' + '"');
+        this.notiService.notifyCode('SYS009', 0, '"' + this.enterName + '"');
          break;
       }
       case this.msgErrorValidExit: {
-        this.notiService.notifyCode('BP002');
+
+        this.notiService.alertCode('BP004').subscribe((x) => {
+          if (x.event.status == 'N') {
+            return;
+          } else {
+            this.isUpdate = true;
+          }
+        });
          break;
       }
       case this.msgSucess: {
@@ -134,7 +148,8 @@ export class RevisionsComponent implements OnInit {
       }
    }
    if(this.isUpdate) {
-      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName).subscribe((res) => {
+      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName,this.fucntionIdMain)
+      .subscribe((res) => {
         if (res) {
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;

@@ -8,7 +8,9 @@
         <h2 class="h2-title">
           <codx-label
             *ngIf="
-              data?.approveStatus == 1 && isAddNew == true && modeView != '1'
+              (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+              isAddNew == true &&
+              modeView != '1'
             "
             name="lblTitleSignFile"
             default="Thêm mới tài liệu"
@@ -16,21 +18,32 @@
           ></codx-label>
           <div
             *ngIf="
-              data?.approveStatus == 1 && isAddNew == false && modeView != '1'
+              (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+              isAddNew == false &&
+              modeView != '1'
             "
           >
             {{ headerText }}
           </div>
           <div *ngIf="modeView == '1'">{{ headerText }}</div>
 
-          <div *ngIf="data?.approveStatus != 1 && modeView != '1'">
+          <div
+            *ngIf="
+              data?.approveStatus != 1 &&
+              data?.approveStatus != 2 &&
+              modeView != '1'
+            "
+          >
             {{ data?.title }}
           </div>
         </h2>
       </div>
       <div
         class="d-flex align-items-center stepper"
-        *ngIf="data?.approveStatus == 1 && modeView != '1'"
+        *ngIf="
+          (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+          modeView != '1'
+        "
       >
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div
@@ -198,7 +211,11 @@
       </div>
       <div class="d-flex justify-content-end">
         <ng-container
-          *ngIf="data?.approveStatus == 1 && modeView != '1' && modeView != '2'"
+          *ngIf="
+            (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+            modeView != '1' &&
+            modeView != '2'
+          "
         >
           <div
             ngbDropdown
@@ -269,7 +286,7 @@
             [style.visibility]="
               currentTab == 3 &&
               data.files?.length > 0 &&
-              data.approveStatus == '1'
+              (data.approveStatus == '1' || data.approveStatus == '2')
                 ? 'visible'
                 : 'hidden'
             "
@@ -494,7 +511,7 @@
               id="pane_3"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
-              <app-approval-steps
+              <codx-approval-steps
                 #viewApprovalStep
                 *ngIf="currentTab == 2"
                 [transId]="
@@ -507,7 +524,7 @@
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
-              </app-approval-steps>
+              </codx-approval-steps>
             </div>
             <div
               class="tab-pane fade"
@@ -656,7 +673,10 @@
         [recID]="data.recID"
         [isApprover]="false"
         [isEditable]="
-          data?.approveStatus == '1' && modeView != '1' ? true : false
+          (data?.approveStatus == '1' || data?.approveStatus == '2') &&
+          modeView != '1'
+            ? true
+            : false
         "
         (isAreaControl)="setValueAreaControl($event)"
       >

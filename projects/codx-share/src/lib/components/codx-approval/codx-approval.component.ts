@@ -28,9 +28,11 @@ import {
   ViewsComponent,
   ViewType,
 } from 'codx-core';
+import { TabModel } from 'projects/codx-ep/src/lib/models/tabControl.model';
 import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupSignForApprovalComponent } from 'projects/codx-es/src/lib/sign-file/popup-sign-for-approval/popup-sign-for-approval.component';
 import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'codx-approval',
@@ -57,6 +59,8 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   lstDtDis: any;
   lstUserID: any;
   listApproveMF: any;
+
+  tabControl: TabModel[] = [];
   /**
    *
    */
@@ -68,6 +72,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
     private detectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
     private codxService: CodxService,
+    private codxShareService: CodxShareService,
     private notifySvr: NotificationsService,
     private callfunc: CallFuncService,
     private esService: CodxEsService
@@ -75,6 +80,13 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnChanges(changes: SimpleChanges): void {}
   ngOnInit(): void {}
   ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
     this.views = [
       {
         type: ViewType.listdetail,
@@ -173,7 +185,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       );
       for (var i = 0; i < list.length; i++) {
         list[i].isbookmark = true;
-        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205' ) {
+        if (list[i].functionID != 'SYS206' && list[i].functionID != 'SYS205') {
           list[i].disabled = true;
           if (value.status == '5' || value.status == '2' || value.status == '4')
             list[i].disabled = true;
@@ -212,31 +224,29 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         list2[i].disabled = true;
       }
     }
-   if(datas.status != "3")
-   {
-    this.api.execSv<any>(
-      'ES',
-      'ERM.Business.ES',
-      'ApprovalTransBusiness',
-      'CheckRestoreAsync',
-      datas.recID
-    ).subscribe(item=>{
-      if(item) 
-      {
-        var bm = data.filter(
-          (x: { functionID: string }) =>
-            x.functionID == 'SYS207'
-        );
-        bm[0].disabled = false;
-      }
-    });
-    
-   }
+    if (datas.status != '3') {
+      this.api
+        .execSv<any>(
+          'ES',
+          'ERM.Business.ES',
+          'ApprovalTransBusiness',
+          'CheckRestoreAsync',
+          datas.recID
+        )
+        .subscribe((item) => {
+          if (item) {
+            var bm = data.filter(
+              (x: { functionID: string }) => x.functionID == 'SYS207'
+            );
+            bm[0].disabled = false;
+          }
+        });
+    }
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
     var funcID = e?.functionID;
-    if (data.processType == 'ES_SignFiles') {
+    if (data.eSign == true) {
       //Kys
       if (
         funcID == 'SYS201' ||
@@ -303,7 +313,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       // else if (funcID == 'SYS204') {
 
       // }
-    } else if (data.processType != 'ES_SignFiles') {
+    } else {
       var status;
       if (
         funcID == 'SYS201' ||
@@ -314,6 +324,14 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
         status = '5';
       else if (funcID == 'SYS205') status = '4';
       else if (funcID == 'SYS206') status = '2';
+
+      // let dialog = this.codxShareService.beforeApprove(
+      //   status,
+      //   data,
+      //   this.funcID,
+      //   e?.text,
+      //   null
+      // );
       this.api
         .execSv(
           'ES',
@@ -326,9 +344,19 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
           if (!res2?.msgCodeError) {
             data.status = status;
             this.view.dataService.update(data).subscribe();
+            this.esService.setupChange.next(true);
             this.notifySvr.notifyCode('SYS007');
           } else this.notifySvr.notify(res2?.msgCodeError);
         });
+    }
+    if (funcID == 'SYS207') {
+      this.esService.undo(data?.recID).subscribe((res) => {
+        if (res != null) {
+          data = res;
+          this.view.dataService.update(data).subscribe();
+          this.esService.setupChange.next(true);
+        }
+      });
     }
   }
 

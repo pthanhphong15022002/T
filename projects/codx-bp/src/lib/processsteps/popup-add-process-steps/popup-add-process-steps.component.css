@@ -25,3 +25,15 @@
 /* ::ng-deep .e-popup-open{
     z-index: 1005 !important;
 } */
+.owners{
+  background: #dcdedf;
+  padding: 7px;
+  border-radius: 20px;
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+}
+.owners .owners-text{
+  margin-left: 10px;
+  color: #767676;
+}

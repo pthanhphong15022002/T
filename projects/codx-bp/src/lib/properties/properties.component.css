@@ -207,7 +207,7 @@ div.offcanvas {
 }
 
 
-/* 
+/*
 .filled.bad {
     color: #ff1e1e;
 } */
@@ -318,3 +318,8 @@ div.offcanvas {
     height: 140px;
     overflow: hidden;
 }
+
+.margin{
+  margin-top: 15px;
+}
+

@@ -274,3 +274,12 @@
   /* Text/Muted */
   color: #6C757D;
 }
+
+.moreFC-ver .action-menu {
+  padding: 6px 10px 3px !important;
+}
+
+.moreFC-ver .action-menu ngb-popover-window .popover-body {
+  white-space: nowrap !important;
+  padding: 8px 15px !important;
+}

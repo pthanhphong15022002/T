@@ -116,8 +116,10 @@ export class AddNoteComponent implements OnInit {
       if (res) this.functionList = res;
     });
     if (this.component == 'note-drawer') {
-      if (this.formType == 'add') this.currentDate = new Date();
-      else
+      if (this.formType == 'add') {
+        var date = new Date();
+        this.currentDate = date.toISOString();
+      } else
         this.currentDate = JSON.parse(
           JSON.stringify(dt.data?.dataUpdate?.createdOn)
         );
@@ -401,7 +403,7 @@ export class AddNoteComponent implements OnInit {
     this.noteService.dataUpdate.subscribe((x) => {
       if (x) {
         if (x[0].formType == 'edit') this.dialog.close();
-        if(x[0].formType == 'add') this.onCreateNote();
+        if (x[0].formType == 'add') this.onCreateNote();
       }
     });
   }

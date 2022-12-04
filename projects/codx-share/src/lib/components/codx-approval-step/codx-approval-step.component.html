@@ -7,7 +7,7 @@
       <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item.stepNo }}</div>
         <div class="step-title text-gray-700 fw-bold fs-5">
-          {{ item.stepType | vll: "ES002":"text" | async }}
+          {{ item.stepType | vll : "ES002" : "text" | async }}
         </div>
         <div class="text-gray-500 fs-5">
           - {{ item.stepName ?? item.stepNote }}
@@ -26,7 +26,7 @@
               [title]="
                 approver.name ??
                 approver.approverName ??
-                (approver.approver | vll: 'ES014':'text' | async)
+                (approver.approver | vll : 'ES014' : 'text' | async)
               "
               [desc]="
                 approver.position ??
@@ -43,8 +43,8 @@
               "
               imgCss="w-30px p-3 me-3 user-mini-icon"
               [imageWidth]="20"
-              [title]="approver.approver | vll: 'ES014':'text' | async"
-              [desc]="approver.approver | vll: 'ES014':'text' | async"
+              [title]="approver.approver | vll : 'ES014' : 'text' | async"
+              [desc]="approver.approver | vll : 'ES014' : 'text' | async"
             >
             </codx-temp-full>
             <div class="d-flex align-items-center ms-6 flex-column flex-column">
@@ -108,7 +108,7 @@
                     :
                   </span>
                   <span class="text-gray-600">
-                    {{ approver?.leadtime | number: ".2-2" }} h</span
+                    {{ approver?.leadtime | number : ".2-2" }} h</span
                   >
                 </div>
 
@@ -120,7 +120,7 @@
                     :
                   </span>
                   <span class="text-gray-600"
-                    >{{ approver?.duration ?? 0 | number: ".2-2" }} h</span
+                    >{{ approver?.duration ?? 0 | number : ".2-2" }} h</span
                   >
                 </div>
               </div>
@@ -198,7 +198,7 @@
       <div class="codx-approval-header d-flex align-items-center mb-3">
         <div class="step-number border-success">{{ item.stepNo }}</div>
         <div class="step-title text-gray-800 fw-bold fs-4 me-1">
-          {{ item.stepType | vll: "ES002":"text" | async }}
+          {{ item.stepType | vll : "ES002" : "text" | async }}
         </div>
         <div class="text-gray-400 fs-5">
           - {{ item.stepName ?? item.stepNote }}
@@ -214,7 +214,7 @@
               [title]="
                 approver.name ??
                 approver.approverName ??
-                (approver.approver | vll: 'ES014':'text' | async)
+                (approver.approver | vll : 'ES014' : 'text' | async)
               "
               [desc]="
                 approver.position ??
@@ -230,37 +230,33 @@
               >
                 {{ approver.activedOn | amTimeAgo }}
               </div>
-              <div class="d-flex mt-1" *ngIf="approver.status == '5'">
-                <codx-label
-                  fiedName="ApprovedOn"
-                  [formModel]="fmApprovalTrans"
-                ></codx-label>
-                <div class="text-dark fs-7 me-4">
-                  : {{ approver.approvedOn | fmDT }}
+              <div class="d-flex flex-wrap">
+                <div class="d-flex mt-1" *ngIf="approver.status == '5'">
+                  <codx-label
+                    fiedName="ApprovedOn"
+                    [formModel]="fmApprovalTrans"
+                  ></codx-label>
+                  <div class="d-flex text-dark fs-7 me-4">
+                    : {{ approver.approvedOn | fmDT }}
+                  </div>
                 </div>
-              </div>
 
-              <codx-vll
-                *ngIf="approver.status != '1'"
-                [value]="approver.status + approver.stepType"
-                [name]="'ES030'"
-                [showIcon]="true"
-                [showText]="true"
-                [showBgColor]="true"
-                class="badge"
-              >
-              </codx-vll>
+                <codx-vll
+                  *ngIf="approver.status != '1'"
+                  [value]="approver.status + approver.stepType"
+                  [name]="'ES030'"
+                  [showIcon]="true"
+                  [showText]="true"
+                  [showBgColor]="true"
+                  class="badge"
+                >
+                </codx-vll>
+              </div>
 
               <div
                 *ngIf="approver.status == '1'"
                 class="d-flex align-items-center justify-content-between ms-6 flex-column"
               >
-                <!-- <span class="badge badge-light ms-6">
-                  <codx-label
-                    default="Chờ giải quyêt"
-                    name="lblStatusNew"
-                  ></codx-label>
-                </span> -->
                 <codx-vll
                   [value]="approver.actived ? '1' : '0'"
                   [name]="'ES031'"
@@ -313,7 +309,7 @@
                     :
                   </span>
                   <span class="text-gray-600">
-                    {{ approver?.leadtime | number: ".2-2" }} h</span
+                    {{ approver?.leadtime | number : ".2-2" }} h</span
                   >
                 </div>
 
@@ -325,7 +321,7 @@
                     :
                   </span>
                   <span class="text-gray-600"
-                    >{{ approver?.duration ?? 0 | number: ".2-2" }} h</span
+                    >{{ approver?.duration ?? 0 | number : ".2-2" }} h</span
                   >
                 </div>
               </div>
@@ -346,14 +342,15 @@
                 </div>
               </ng-container> -->
           </div>
-          <!-- <div class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3">
-              <div class="text-comment">
-                Thank you so much for letting me be a part of your party. The
-                food was delicious, and everything was so perfect. Thank you for
-                inviting me.
-              </div>
+          <div
+            class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3"
+            *ngIf="approver.status != '3' && approver.comment != ''"
+          >
+            <div class="text-comment">
+              {{ approver.comment }}
             </div>
-            <div class="d-attach pb-5">
+          </div>
+          <!-- <div class="d-attach pb-5">
               <div class="d-flex flex-wrap align-items-center">
                 <codx-temp-full
                   cardCss="sm-card rounded-1 px-2 py-3 d-flex flex-aligns-center me-5 w-250px"

@@ -132,6 +132,9 @@ import { LayoutListDetailComponent } from './layout/components/layout-list-detai
 import { CodxApproveStepsComponent } from './components/codx-approve-steps/codx-approve-steps.component';
 import { AddEditApprovalStepComponent } from './components/codx-approve-steps/add-edit-approval-step/add-edit-approval-step.component';
 import { PopupAddApproverComponent } from './components/codx-approve-steps/popup-add-approver/popup-add-approver.component';
+import { DetailCalendarComponent } from './components/calendar-notes/detail-calendar/detail-calendar.component';
+import { CodxHistoryComponent } from './components/codx-history/codx-history.component';
+import { CodxHistoryItemComponent } from './components/codx-history/codx-history-item/codx-history-item.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -154,6 +157,7 @@ const T_Component: Type<any>[] = [
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
+  DetailCalendarComponent,
   CalendarDateComponent,
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
@@ -171,6 +175,7 @@ const T_Component: Type<any>[] = [
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
+  CodxApproveStepsComponent,
   NotifyDrawerComponent,
   NotifyDrawerSliderComponent,
   MessengerDrawerComponent,
@@ -222,6 +227,8 @@ const T_Component: Type<any>[] = [
   CodxAssignTempComponent,
   ListPostComponent,
   LayoutListDetailComponent,
+  CodxHistoryComponent,
+  CodxHistoryItemComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -234,7 +241,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     DialogthumbComponent,
     CodxEmailComponent,
     LayoutListDetailComponent,
-    CodxApproveStepsComponent,
+    //CodxApproveStepsComponent,
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
   ],

@@ -7,21 +7,26 @@
         </h2>
       </div>
       <div class="d-flex justify-content-end">
-        <div>
+        <ng-container *ngFor="let item of lstMF">
           <button
             type="button"
-            class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+            [style.background]="item?.color"
+            class="btn btn-sm text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
             [disabled]="!canOpenSubPopup || !isConfirm"
-            (click)="clickOpenPopupADR(5)"
+            (click)="clickOpenPopupADR(item)"
           >
-            <codx-vll
-              [name]="'ES002'"
-              [value]="data?.stepType"
-              [showText]="true"
-            >
-            </codx-vll>
+            {{ item?.text }}
           </button>
-        </div>
+        </ng-container>
+        <!-- <button
+          type="button"
+          class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
+          [disabled]="!canOpenSubPopup || !isConfirm"
+          (click)="clickOpenPopupADR(5)"
+        >
+          <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true">
+          </codx-vll>
+        </button>
         <button
           type="button"
           class="btn btn-sm btn-bg-danger text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
@@ -45,7 +50,7 @@
             [formModel]="formModel"
             default="Làm lại"
           ></codx-label>
-        </button>
+        </button> -->
 
         <!-- <button
           type="button"

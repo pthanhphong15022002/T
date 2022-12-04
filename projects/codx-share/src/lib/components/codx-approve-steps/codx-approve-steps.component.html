@@ -82,7 +82,7 @@
                         </div>
                         <div class="stepper-label mw-125px">
                           <h3 class="stepper-title line-clamp line-clamp-3">
-                            {{ item.stepType | vll: "ES002":"text" | async }}
+                            {{ item.stepType | vll : "ES002" : "text" | async }}
                           </h3>
                           <div class="stepper-desc">
                             {{ item.stepName }}
@@ -137,12 +137,12 @@
                                 imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
                                 [title]="
                                   approver.approver
-                                    | vll: 'ES014':'text'
+                                    | vll : 'ES014' : 'text'
                                     | async
                                 "
                                 [subTitle]="
                                   approver.approver
-                                    | vll: 'ES014':'text'
+                                    | vll : 'ES014' : 'text'
                                     | async
                                 "
                                 [status]="lstStep.status"
@@ -275,7 +275,7 @@
                   </div>
                   <div class="stepper-label mw-125px">
                     <h3 class="stepper-title line-clamp line-clamp-3">
-                      {{ item.stepType | vll: "ES002":"text" | async }}
+                      {{ item.stepType | vll : "ES002" : "text" | async }}
                     </h3>
                     <div class="stepper-desc">
                       {{ item.stepName }}
@@ -326,10 +326,10 @@
                           "
                           imgCss="me-3 p-3 user-mini-icon w-40px h-40px"
                           [title]="
-                            approver.approver | vll: 'ES014':'text' | async
+                            approver.approver | vll : 'ES014' : 'text' | async
                           "
                           [subTitle]="
-                            approver.approver | vll: 'ES014':'text' | async
+                            approver.approver | vll : 'ES014' : 'text' | async
                           "
                           [status]="lstStep.status"
                           [modeImgs]="true"
@@ -344,7 +344,7 @@
                             class="d-flex align-items-center justify-content-end"
                           >
                             <span class="icon-access_time icon-14 me-1"></span
-                            >{{ data.leadtime }} giờ
+                            >{{ data.leadtime }} h
                           </div>
                         </ng-template>
                       </div>

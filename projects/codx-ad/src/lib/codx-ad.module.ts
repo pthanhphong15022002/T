@@ -45,6 +45,7 @@ import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
 import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
+import { PleaseUseComponent } from './users/please-use/please-use.component';
 
 export const routes: Routes = [
   {
@@ -112,6 +113,7 @@ const T_Component: Type<any>[] = [
   AddApproversComponent,
   BindPipe,
   ActiveTemplatePipe,
+  PleaseUseComponent,
 ];
 @NgModule({
   imports: [

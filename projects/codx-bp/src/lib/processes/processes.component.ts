@@ -46,8 +46,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
-{
+  implements OnInit, AfterViewInit {
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -107,8 +106,10 @@ export class ProcessesComponent
   pageNumberSearch: number;
   clickDisable: string;
   moreFunc: any;
+  moreFuncDbClick: any;
   heightWin: any;
   widthWin: any;
+  isViewCard: boolean = false;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -123,12 +124,12 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    if (this.funcID == 'BPT3') {
-      this.method = 'GetListShareByProcessAsync';
-    }
-    if (this.funcID == 'BPT2') {
-      this.method = 'GetListMyProcessesAsync';
-    }
+    // if (this.funcID == 'BPT3') {
+    //   this.method = 'GetListShareByProcessAsync';
+    // }
+    // if (this.funcID == 'BPT2') {
+    //   this.method = 'GetListMyProcessesAsync';
+    // }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -151,6 +152,28 @@ export class ProcessesComponent
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
     ];
+    this.moreFuncDbClick = {
+      customName:"Chi tiết quy trình",
+      dataValue:null,
+      defaultName:"Chi tiết quy trình",
+      delete:true,
+      description:"Chi tiết quy trình",
+      displayField:"",
+      displayMode:"3",
+      entityName:"BP_Processes",
+      formName:"Processes",
+      functionID:"BPT101",
+      functionType:1,
+      gridViewName:"grvProcesses"
+    }
+    // this.views.forEach(x=>{
+    //   if (x.type === ViewType.card) {
+    //     this.isViewCard=true;
+    //   }
+    //   else {
+    //     this.isViewCard=false;
+    //   }
+    // })
   }
 
   ngAfterViewInit(): void {
@@ -349,8 +372,8 @@ export class ProcessesComponent
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService.copy().subscribe((res: any) => {
       let option = new SidebarModel();
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.currentView?.formModel;
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
       option.Width = '550px';
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
@@ -409,10 +432,11 @@ export class ProcessesComponent
     this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
 
-  Updaterevisions(moreFunc,data) {
+  Updaterevisions(moreFunc, data) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
+
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
@@ -444,6 +468,7 @@ export class ProcessesComponent
     var obj = {
       more: more,
       data: data,
+      funcIdMain: this.funcID,
     };
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
@@ -561,12 +586,9 @@ export class ProcessesComponent
         this.reName(data);
         break;
       case 'BPT107':
-        //this.revisions(e.data, data);
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
-        this.permission(data);
-        break;
       case 'BPT105':
         this.permission(data);
         break;
@@ -574,6 +596,27 @@ export class ProcessesComponent
         this.roles(data);
         break;
       case 'BPT103':
+        this.revisions(e.data, data);
+        break;
+      case 'BPT206':
+        this.properties(data);
+        break;
+      case 'BPT201':
+        this.viewDetailProcessSteps(e?.data, data);
+        break;
+      case 'BPT202':
+        this.reName(data);
+        break;
+      case 'BPT207':
+        this.Updaterevisions(e?.data, data);
+        break;
+      case 'BPT205':
+        this.permission(data);
+        break;
+      case 'BPT208':
+        this.roles(data);
+        break;
+      case 'BPT203':
         this.revisions(e.data, data);
         break;
     }
@@ -642,14 +685,10 @@ export class ProcessesComponent
 
   //tesst
   viewDetailProcessSteps(moreFunc, data) {
-    // this.codxService.navigate('', e?.url); thuong chua add
-    // this.codxService.navigate('', 'bp/processstep/BPT11')
-
     //đoi view
-    this.bpService.viewProcesses.next(data);
+    // this.bpService.viewProcesses.next(data);
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
-
     //view popup
     let obj = {
       moreFunc: moreFunc,
@@ -673,21 +712,18 @@ export class ProcessesComponent
 
     dialog.closed.subscribe((e) => {
       if (e && data.recID) {
-        this.bpService.getProcessesByID([data.recID]).subscribe((process) => {
-          if (process){
-            if(process.delete){
-              this.view.dataService.onAction.next({ type: 'delete', data: data });
-            }else{
-              this.view.dataService.update(process).subscribe();
-            }
+        this.bpService.getProcessesByID(data.recID).subscribe((process) => {
+          if (process) {
+            this.view.dataService.update(process).subscribe();
+            this.detectorRef.detectChanges();
           }
-          this.detectorRef.detectChanges();
+
         });
       }
     });
   }
 
-  approval($event) {}
+  approval($event) { }
   //tesst
   getFlowchart(data) {
     this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {

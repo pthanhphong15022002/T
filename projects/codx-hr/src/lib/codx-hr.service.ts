@@ -594,4 +594,77 @@ export class CodxHrService {
   }
 
   //#endregion
+
+  //region #EJobSalaries
+  GetCurrentJobSalaryByEmployeeID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetCurrentJobSalariesByEmployeeIDAsync',
+      data
+    )
+  }
+
+  getListJobSalariesByEmployeeID(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetListJobSalariesByEmployeeIDAsync',
+      data
+    )
+  }
+
+  DeleteEmployeeJobsalaryInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'DeleteEmployeeJobsalaryInfoAsync',
+      data
+    );
+  }
+
+  GetEmployeeJobSalariesModel(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'GetEmployeeJobSalaryModelAsync'
+    )
+  }
+
+  AddEmployeeJobSalariesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'AddEmployeeJobSalaryInfoAsync',
+      data
+    )
+  }
+
+  UpdateEmployeeJobSalariesInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EJobSalariesBusiness',
+      'UpdateEmployeeJobSalaryInfoAsync',
+      data
+    )
+  }
+  //#endregion
+
+  //region #EExperience
+  GetEmployeeExperienceInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EExperiencesBusiness',
+      'GetEmployeeExperienceModelAsync',
+      data
+    )
+  }
+  //#endregion
 }

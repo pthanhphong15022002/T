@@ -41,7 +41,7 @@
                 [funcId]="'WPT11'" 
                 service="WP" 
                 assemblyName="ERM.Business.WP" 
-                className="ChatBusiness"
+                className="GroupBusiness"
                 method="GetGroupsChatAsync">
             </codx-listview>
         </div>
@@ -55,8 +55,7 @@
             <codx-img 
                 [objectId]="item.groupID" 
                 [objectName]="item.groupName" 
-                [objectType]="'WP_Groups'"
-                [width]="30">
+                [objectType]="'WP_Groups'">
             </codx-img>
         </div>
         <!-- group name - created - seen -->
@@ -70,10 +69,5 @@
                 <span [class.dots]="!item.isRead"></span>
             </div>
         </div>
-    </div>
-</ng-template>
-<ng-template #tmpDataEmty>
-    <div>
-        <img src="" alt="" srcset="">
     </div>
 </ng-template>

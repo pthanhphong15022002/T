@@ -1,0 +1,42 @@
+
+.popup{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+.popup-header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+}
+.popup-body{
+    width: 100%;
+    height: 400px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+}
+.panel-left{
+    width: 100%;
+    height: 100%;
+}
+.panel-right{
+    width: 100%;
+    height: 400px;
+    margin-left: 15px;
+}
+.panel-left-header{
+    width: 100%;
+    height: auto;
+}
+.panel-left-body{
+    width: 100%;
+    height: 400px;
+}
+
+.e-dialog .e-dlg-content{
+    overflow: hidden;
+}

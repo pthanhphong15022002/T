@@ -60,7 +60,7 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.getFileByObjectID();
     }
   }
-
+  // get file by id
   getFileByObjectID(){
     this.api.execSv(
       "DM",
@@ -81,11 +81,12 @@ export class CodxCommentHistoryComponent implements OnInit {
         this.dt.detectChanges();
     }});
   }
-
+  // deleted comment 
   deleteComment(item:any){
     this.notifySV.alertCode('WP032').subscribe((res) => {
-      if (res.event.status == "Y"){
-        this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","DeleteAsync",item.recID)
+      if (res.event.status == "Y")
+      {
+        this.api.execSv("BG","ERM.Business.BG","CommentLogsBusiness","DeleteAsync",item.recID)
         .subscribe((res:any) => {
           if(res)
           {
@@ -98,13 +99,14 @@ export class CodxCommentHistoryComponent implements OnInit {
     });
     
   }
-
+  // value change
   valueChange(event: any) {
     if (event.data) {
       this.message = event.data;
       this.dt.detectChanges();
     }
   }
+  // select file
   selectedFiles(event: any) {
     if (event.data.length > 0) {
       let files = event.data;
@@ -123,12 +125,15 @@ export class CodxCommentHistoryComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
+  // remove file
   removeFile(file: any) {
     this.lstFile = this.lstFile.filter((e: any) => e.fileName != file.fileName);
     this.dt.detectChanges();
   }
+  // send comment
   async sendComments() {
-    if(!this.message && this.lstFile.length == 0){
+    if(!this.message && this.lstFile.length == 0)
+    {
       this.notifySV.notifyCode("SYS010");
       return;
     }
@@ -137,27 +142,29 @@ export class CodxCommentHistoryComponent implements OnInit {
     data.attachments = this.lstFile.length;
     data.objectID = this.objectID;
     data.objectType = this.objectType;
-    data.actionType = this.actionType;
     data.functionID = this.funcID;
     data.reference = this.reference;
-    this.api.execSv("BG","ERM.Business.BG","TrackLogsBusiness","InsertAsync",data)
-    .subscribe(async (res1:any) => {
-      if(res1){
+    data.createdBy = this.user.userID;
+    data.createdName = this.user.userName;
+    data.createdOn = new Date();
+    this.api.execSv("BG","ERM.Business.BG","CommentLogsBusiness","InsertCommentAsync",data)
+    .subscribe(async (res1:any[]) => {
+      if(res1[0])
+      { 
+        debugger
+        data = JSON.parse(JSON.stringify(res1[1])); 
         if(data.attachments > 0)
         {
-          this.codxATM.objectId = res1.recID;
-          this.codxATM.objectType = "BG_TrackLogs";
-          this.lstFile.map((e:any) => {
-            e.objectId = res1.recID;
-          });
-          this.codxATM.fileUploadList = this.lstFile;  
+          this.codxATM.objectId = data.recID;
+          this.codxATM.objectType = "BG_Comments";
+          this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.lstFile));  
           (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
             if(res2){
               this.lstFile.unshift(res2.data);
-              this.evtSend.emit(res1);
+              this.evtSend.emit(data);
               this.notifySV.notifyCode("WP034"); 
               this.clearData();  
-              this.lstFile = [...this.lstFile]; 
+              this.lstFile = JSON.parse(JSON.stringify(this.lstFile)); 
               this.dt.detectChanges();
             }
           })
@@ -165,12 +172,13 @@ export class CodxCommentHistoryComponent implements OnInit {
         else
         {
            
-            this.evtSend.emit(res1);
+            this.evtSend.emit(data);
             this.notifySV.notifyCode("WP034");
             this.clearData();   
         }
       }
-      else {
+      else 
+      {
         this.notifySV.notifyCode("SYS023");
       }
     });
@@ -194,7 +202,7 @@ export class CodxCommentHistoryComponent implements OnInit {
     this.api.execSv(
       "BG",
       "ERM.Business.BG",
-      "TrackLogsBusiness",
+      "CommentLogsBusiness",
       "VoteCommentAsync",
       [data.recID, voteType])
       .subscribe((res: any) => {
@@ -202,7 +210,8 @@ export class CodxCommentHistoryComponent implements OnInit {
           data.votes = res[0];
           data.totalVote = res[1];
           data.listVoteType = res[2];
-          if (voteType == data.myVoteType) {
+          if (voteType == data.myVoteType) 
+          {
             data.myVoteType = null;
             data.myVoted = false;
           }
@@ -216,11 +225,14 @@ export class CodxCommentHistoryComponent implements OnInit {
       });
   }
   showVotes(data:any){
-    let object = {
-      data: data,
-      entityName: "BG_TrackLogs",
-      vll: this.dVll
+    if(data){
+      debugger
+      let object = {
+        data: data,
+        entityName: "BG_Comments",
+        vll: this.dVll
+      }
+      this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
     }
-    this.callFuc.openForm(PopupVoteComponent, "", 750, 500, "", object);
   }
 }

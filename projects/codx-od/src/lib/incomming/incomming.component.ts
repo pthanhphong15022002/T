@@ -116,7 +116,7 @@ export class IncommingComponent
   showAgency = false;
   dataItem: any;
   funcList: any;
-  userID:any;
+  userID: any;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -131,7 +131,11 @@ export class IncommingComponent
   atSV: AttachmentService;
   fileService: FileService;
   authStore: AuthStore;
-  constructor(inject: Injector, private route: ActivatedRoute ,  private codxODService : CodxOdService,) {
+  constructor(
+    inject: Injector,
+    private route: ActivatedRoute,
+    private codxODService: CodxOdService
+  ) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
@@ -161,7 +165,7 @@ export class IncommingComponent
   ngAfterViewInit(): void {
     this.views = [
       {
-        id:"1",
+        id: '1',
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -173,7 +177,7 @@ export class IncommingComponent
         },
       },
       {
-        id:"2",
+        id: '2',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -256,26 +260,25 @@ export class IncommingComponent
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
 
-    if(this.view.formModel.funcID == 'ODT41')
-    {
+    if (this.view.formModel.funcID == 'ODT41') {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
-   
+
     if (
       this.view.formModel.funcID == 'ODT41' &&
-      (data?.approveStatus == '2' ||
-      data?.approveStatus == '3') && data?.createdBy == this.userID
+       data?.approveStatus == '3' &&
+      data?.createdBy == this.userID
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = false;
+      if(approvel[0]) approvel[0].disabled = false;
     }
     //Hoàn tất
     if (data?.status == '7') {
@@ -287,7 +290,7 @@ export class IncommingComponent
           x.functionID == 'SYS03' ||
           x.functionID == 'ODT103' ||
           x.functionID == 'ODT202' ||
-          x.functionID == "ODT101" ||
+          x.functionID == 'ODT101' ||
           x.functionID == 'ODT113'
       );
       for (var i = 0; i < completed.length; i++) {
@@ -296,28 +299,23 @@ export class IncommingComponent
     }
     if (data?.status == '3') {
       var completed = e.filter(
-        (x: { functionID: string }) =>
-          x.functionID == 'SYS02' 
+        (x: { functionID: string }) => x.functionID == 'SYS02'
       );
       completed.forEach((elm) => {
         elm.disabled = true;
       });
     }
     var approvelCL = e.filter(
-      (x: { functionID: string }) => x.functionID == 'ODT114' 
+      (x: { functionID: string }) => x.functionID == 'ODT114'
     );
-    if(approvelCL[0])
-      approvelCL[0].disabled = true;
+    if (approvelCL[0]) approvelCL[0].disabled = true;
     //Trả lại
-    if(data?.status == "4")
-    {
+    if (data?.status == '4') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT113' 
+        (x: { functionID: string }) => x.functionID == 'ODT113'
       );
-      if(approvel[0])
-        approvel[0].disabled = true;
-      if(approvelCL[0])
-        approvelCL[0].disabled = false;
+      if (approvel[0]) approvel[0].disabled = true;
+      if (approvelCL[0]) approvelCL[0].disabled = false;
     }
   }
   aaaa(e: any) {
@@ -343,6 +341,7 @@ export class IncommingComponent
         .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetup = grd;
+          console.log(this.gridViewSetup);
           if (grd['Security']['referedValue'] != undefined)
             this.codxODService
               .loadValuelist(grd['Security']['referedValue'])
@@ -409,13 +408,15 @@ export class IncommingComponent
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
-      this.odService.getDetailDispatch(id,this.view.formModel.entityName).subscribe((item) => {
-        //this.getChildTask(id);
-        if (item) {
-          this.lstDtDis = formatDtDis(item);
-          //this.view.dataService.setDataSelected(this.lstDtDis);
-        }
-      });
+      this.odService
+        .getDetailDispatch(id, this.view.formModel.entityName)
+        .subscribe((item) => {
+          //this.getChildTask(id);
+          if (item) {
+            this.lstDtDis = formatDtDis(item);
+            //this.view.dataService.setDataSelected(this.lstDtDis);
+          }
+        });
     }
   }
 
@@ -475,7 +476,7 @@ export class IncommingComponent
     console.log(evt);
   }
   openFormFuncID(val: any, data: any) {
-    this.viewdetail.openFormFuncID(val, data , true);
+    this.viewdetail.openFormFuncID(val, data, true);
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;

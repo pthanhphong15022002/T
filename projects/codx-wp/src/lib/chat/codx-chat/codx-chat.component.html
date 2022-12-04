@@ -15,8 +15,8 @@
   </div>
   </button>
   <div ngbDropdownMenu #popup aria-labelledby="chat-box" id="chatbox-dropdownPopup"
-    class="h-600px w-300px">
-    <div class="w-100 h-100" id="dropdown">
+    class="h-600px w-400px">
+    <div class="w-100" id="dropdown" style="height: 600px;">
       <ng-container *ngIf="loaded">
         <wp-chat-list [(isOpen)]="autoClose"></wp-chat-list>
       </ng-container>

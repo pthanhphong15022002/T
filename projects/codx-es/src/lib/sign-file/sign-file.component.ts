@@ -311,21 +311,21 @@ export class SignFileComponent extends UIComponent {
     var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
 
     if (bookmarked == true) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
+      if (bm?.length) bm[0].disabled = true;
+      if (unbm?.length) unbm[0].disabled = false;
     } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if (unbm?.length) unbm[0].disabled = true;
+      if (bm?.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != 3) {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
-      cancel[0].disabled = true;
+      if (cancel?.length) cancel[0].disabled = true;
     }
-    if (data.approveStatus != 1) {
-      edit[0].disabled = true;
+    if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (edit?.length) edit[0].disabled = true;
     }
   }
 

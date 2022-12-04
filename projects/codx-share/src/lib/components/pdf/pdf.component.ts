@@ -583,7 +583,8 @@ export class PdfComponent
             this.signerInfo.supplier,
             hasCA,
             mode,
-            comment
+            comment,
+            this.transRecID
           )
           .subscribe((status) => {
             resolve(status);
@@ -1568,7 +1569,7 @@ export class PdfComponent
         left: x / this.xScale,
         width: w / this.xScale,
         height: h / this.yScale,
-        pageNumber: this.curPage - 1,
+        pageNumber: tmpName.PageNumber,
       },
       stepNo: tmpName.StepNo,
       fontStyle: this.imgConfig.includes(type) ? '' : this.curAnnotFontStyle,

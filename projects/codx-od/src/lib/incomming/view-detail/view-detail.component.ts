@@ -967,7 +967,6 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
 
   //Hủy yêu cầu xét duyệt
   cancelAproval(data: any) {
-    debugger;
     //Có thiết lập duyệt
     if (data.bsCategory) {
       this.api
@@ -1008,7 +1007,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           .subscribe((item: any) => {
             if (item) {
               this.approvalTrans(item?.processID, datas);
-            } else {
+            } 
+            else {
             }
           });
       }
@@ -1113,24 +1113,24 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
     if (this.formModel.funcID == 'ODT41') {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
 
     if (
       this.formModel.funcID == 'ODT41' &&
-      (data?.approveStatus == '2' || data?.approveStatus == '3') &&
+      data?.approveStatus == '3' &&
       data?.createdBy == this.userID
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = false;
+      if(approvel[0]) approvel[0].disabled = false;
     }
     if (data?.status == '7') {
       var completed = e.filter(
@@ -1191,7 +1191,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         else {
           data.status = '3';
           data.approveStatus = '3';
-          this.notifySvr.notifyCode("ES007");
+          this.notifySvr.notifyCode('ES007');
           this.odService.updateDispatch(data, false).subscribe((item) => {
             if (item.status == 0) {
               this.view.dataService.update(item?.data).subscribe();

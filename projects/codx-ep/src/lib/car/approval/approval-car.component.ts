@@ -21,6 +21,7 @@ import moment from 'moment';
 export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   @ViewChild('resourceHeader') resourceHeader!: TemplateRef<any>;
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
@@ -132,6 +133,7 @@ export class ApprovalCarsComponent extends UIComponent {
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
+          template:this.cardTemplate,
           resourceModel: this.resourceField,
           //template:this.cardTemplate,
           template4: this.resourceHeader,

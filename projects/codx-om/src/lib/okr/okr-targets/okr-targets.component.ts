@@ -6,10 +6,11 @@ import {
   FormModel,
   DialogModel,
 } from 'codx-core';
+import { ChartData } from '../../model/chart.model';
 import { OKRs } from '../../model/okr.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
-import { OkrEditComponent } from '../okr-edit/okr-edit.component';
+import { OkrAddComponent } from '../okr-add/okr-add.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -24,6 +25,38 @@ export class OkrTargetsComponent implements OnInit {
   openAccordion = [];
 
   formModelKR = new FormModel();
+
+  chartData: ChartData = {
+    title: '',
+    primaryXAxis: {
+      majorGridLines: { width: 0 },
+      edgeLabelPlacement: 'Shift',
+    },
+    primaryYAxis: {
+      minimum: 0,
+      maximum: 100,
+      interval: 20,
+      lineStyle: { width: 0 },
+      majorTickLines: { width: 0 },
+      minorTickLines: { width: 0 },
+    },
+    seriesSetting: [
+      {
+        type: 'StackingArea',
+        xName: 'month',
+        yName: 'percent',
+      },
+      {
+        type: 'StackingArea',
+        xName: 'month',
+        yName: 'percent',
+      },
+    ],
+    service: 'OM',
+    assembly: 'ERM.Business.OM',
+    className: 'OKRBusiness',
+    method: 'GetChartDataAsync',
+  };
 
   constructor(private callfunc: CallFuncService, private cache: CacheService) {}
 
@@ -50,7 +83,7 @@ export class OkrTargetsComponent implements OnInit {
     var funcID = e?.functionID;
     switch (funcID) {
       case 'SYS03': {
-        let dialog = this.callfunc.openSide(OkrEditComponent, [
+        let dialog = this.callfunc.openSide(OkrAddComponent, [
           this.gridView,
           this.formModel,
         ]);

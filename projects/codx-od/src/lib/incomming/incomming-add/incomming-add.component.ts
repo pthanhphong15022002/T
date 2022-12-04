@@ -327,7 +327,9 @@ export class IncommingAddComponent implements OnInit {
   }
   getfileCount(e: any) {
     if (e && e?.data) this.fileCount = e.data.length;
-    else if (e) this.fileCount = e.length;
+    else if (typeof e == 'number') this.fileCount = e;
+    else this.fileCount = e.length;
+
     if (this.fileCount == 0) this.dltDis = true;
   }
   changeFormAgency(val: any) {
@@ -354,6 +356,7 @@ export class IncommingAddComponent implements OnInit {
       var name = arr.join(" , ");
       return this.notifySvr.notifyCode('SYS009', 0, name);
     }
+    debugger;
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;

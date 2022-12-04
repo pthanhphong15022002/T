@@ -119,7 +119,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
     this.disableCateID = data?.data?.disableCateID ?? false;
-    this.headerText = data?.data?.headerText;
+    this.headerText = data?.data?.headerText ?? '';
 
     if (this.modeView == '2') {
       this.disableCateID = true;
@@ -144,7 +144,10 @@ export class PopupAddSignFileComponent implements OnInit {
         this.data = data?.data.dataSelected;
         this.processTab = 4;
       }
-      if (this.data?.approveStatus != 1 || this.modeView == '1') {
+      if (
+        (this.data?.approveStatus != 1 && this.data?.approveStatus != 2) ||
+        this.modeView == '1'
+      ) {
         this.currentTab = 3;
         this.processTab = 4;
       }
@@ -168,7 +171,11 @@ export class PopupAddSignFileComponent implements OnInit {
         let sf = this.esService
           .getSFByID(this.oSignFile.recID)
           .subscribe((signFile) => {
-            if (signFile && signFile?.signFile?.approveStatus == '1') {
+            if (
+              signFile &&
+              (signFile?.signFile?.approveStatus == '1' ||
+                signFile?.signFile?.approveStatus == '2')
+            ) {
               this.data = signFile?.signFile;
               this.data.recID = this.oSignFile.recID;
               this.data.title = this.oSignFile.title;

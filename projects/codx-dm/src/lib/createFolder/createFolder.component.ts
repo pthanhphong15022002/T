@@ -220,7 +220,7 @@ export class CreateFolderComponent implements OnInit {
   titleSetting = 'Thiết lập';
   titleLevel = 'Cấp thư mục';
   titleCreateSubFolder = 'Tạo thư mục cấp con tự động';
-  titleAvatar = "Hiển thị hình ảnh tập tin"
+  titleAvatar = 'Hiển thị hình ảnh tập tin';
   titleSecurityControl = 'Bảo mật';
   copymessage = 'Bạn có muốn lưu lên không ?';
   renamemessage = 'Bạn có muốn lưu với tên {0} không ?';
@@ -338,8 +338,7 @@ export class CreateFolderComponent implements OnInit {
       this.listFormat4 = res.datas;
     });
   }
-  refesh()
-  {
+  refesh() {
     this.revision = false;
     this.physical = false;
     this.copyrightsControl = false;
@@ -359,11 +358,11 @@ export class CreateFolderComponent implements OnInit {
     }
   }
 
-  allpyShare($event) { }
+  allpyShare($event) {}
 
   changeValueOwner($event) {
     this.showPopup = false;
-    this.approvers = $event.id
+    this.approvers = $event.id;
     // this.api.execSv("SYS","AD","UserGroupsBusiness","GetListMemberIDByGroupIDAsync",$event.id).subscribe(item=>{
     //   if(item)
     //     this.approvers = item[0]
@@ -566,7 +565,10 @@ export class CreateFolderComponent implements OnInit {
 
   onFolderSave() {
     this.errorshow = true;
-    if (this.approval && (this.approvers == '' || this.approvers == undefined)) {
+    if (
+      this.approval &&
+      (this.approvers == '' || this.approvers == undefined)
+    ) {
       this.notificationsService.notify(this.titleApprovalName);
       return;
     }
@@ -587,7 +589,8 @@ export class CreateFolderComponent implements OnInit {
     this.fileEditing.recID = this.id;
     this.fileEditing.location = this.location;
     this.fileEditing.hasSubFolder = this.createSubFolder;
-    this.fileEditing.checkSecurity = this.security == null ? false : this.security;
+    this.fileEditing.checkSecurity =
+      this.security == null ? false : this.security;
     this.fileEditing.approvers = this.approvers;
     this.fileEditing.revisionNote = this.revisionNote;
     this.fileEditing.icon = this.icon;
@@ -672,7 +675,7 @@ export class CreateFolderComponent implements OnInit {
                         }
                         that.dmSV.listFolder = folders;
                         that.dmSV.ChangeData.next(true);
-                        this.dmSV.fileEditing.next(null)
+                        this.dmSV.fileEditing.next(null);
                         this.dialog.close();
                       } else {
                         // $('#fullName').addClass('form-control is-invalid');
@@ -687,7 +690,7 @@ export class CreateFolderComponent implements OnInit {
               });
           } else {
             this.notificationsService.notify(item.message);
-            this.dmSV.fileEditing.next(null)
+            this.dmSV.fileEditing.next(null);
             this.dialog.close();
           }
         });
@@ -724,12 +727,10 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event)
-      debugger;
-        this.listSubFolder = item.event;
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.listSubFolder = item.event;
       this.changeDetectorRef.detectChanges();
-    })
+    });
   }
 
   onDeleteSub(index) {
@@ -758,21 +759,23 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.indexSub, this.subitem, this.listSubFolder],
       ''
     );
-    dialog.closed.subscribe(item=>{
-      if(item.event) this.listSubFolder = item.event
+    dialog.closed.subscribe((item) => {
+      if (item.event) this.listSubFolder = item.event;
       this.changeDetectorRef.detectChanges();
-    })
+    });
   }
 
   removeUserRight(index) {
-    this.fileEditing.permissions = this.fileEditing.permissions.filter(x=>x.id != this.fileEditing.permissions[index].id);
+    this.fileEditing.permissions = this.fileEditing.permissions.filter(
+      (x) => x.id != this.fileEditing.permissions[index].id
+    );
     // this.folderService.updateFolderPermisson(this.fileEditing).subscribe(async res => {
     //   if (res) {
     //     this.dmSV.fileEditing.next(this.fileEditing);
     //     this.notificationsService.notify(res.message);
     //   }
     // });
-   }
+  }
 
   isShowAll(action = false) {
     if (action) this.showAll = !this.showAll;
@@ -887,9 +890,8 @@ export class CreateFolderComponent implements OnInit {
   valueChange($event, field) {
     if ($event != null) {
       switch (field) {
-        case "icon":
-          if ($event)
-            this.icon = $event;
+        case 'icon':
+          if ($event) this.icon = $event;
           break;
       }
     }

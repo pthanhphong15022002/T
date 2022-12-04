@@ -104,7 +104,7 @@
           </ng-container>
         </ng-container>
         <ng-container *ngIf="name == 'Meetings'">
-          <codx-tmmeetings *ngIf="dataObj" [funcID]="'TMT05011'" [dataObj]="dataObj" [showButtonAdd]="false">
+          <codx-tmmeetings *ngIf="dataObj" [funcID]="'TMT05011'" [dataObj]="dataObj" [showButtonAdd]="showButtonAdd" [projectID]="projectID" >
           </codx-tmmeetings>
         </ng-container>
       </div>

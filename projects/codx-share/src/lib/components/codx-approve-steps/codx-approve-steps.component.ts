@@ -32,9 +32,9 @@ import { AddEditApprovalStepComponent } from './add-edit-approval-step/add-edit-
 
 export class Approver {}
 @Component({
-  selector: 'app-approval-steps',
+  selector: 'codx-approval-steps',
   templateUrl: './codx-approve-steps.component.html',
-  styleUrls: ['./codx-approve-steps.component.css'],
+  styleUrls: ['./codx-approve-steps.component.scss'],
 })
 export class CodxApproveStepsComponent
   implements OnInit, AfterViewInit, OnChanges
@@ -164,8 +164,10 @@ export class CodxApproveStepsComponent
       this.updateApprovalStep();
     } else {
       //Nhấn nút lưu
-      this.data.countStep = this.lstStep.length;
-      this.model.patchValue({ countStep: this.lstStep.length });
+      if (this.data) {
+        this.data.countStep = this.lstStep.length;
+        this.model.patchValue({ countStep: this.lstStep.length });
+      }
       this.updateApprovalStep();
       this.dialogApproval && this.dialogApproval.close(true);
     }

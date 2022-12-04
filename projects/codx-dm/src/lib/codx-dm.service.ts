@@ -119,7 +119,7 @@ export class CodxDMService {
   public listFiles = [];
   page = 1;
   totalPage = 1;
-  pageSize = 20;
+  pageSize = 50;
   ChunkSizeInKB = 1024 * 2;
   revision: boolean;
   moveable = false;
@@ -127,7 +127,7 @@ export class CodxDMService {
   path: string;
   breakCumArr = [];
   //tài liệu yêu cầu / được yêu cầu DMT02 favoriteID
-  dmFavoriteID:any;
+  dmFavoriteID: any;
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
@@ -451,7 +451,6 @@ export class CodxDMService {
   }
 
   openItem(data: any) {
-    debugger;
     if (!data.fileName) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');
@@ -550,7 +549,7 @@ export class CodxDMService {
                       0,
                       this.user?.userName
                     );
-                    this.ChangeData.next(true);
+                    this.addFile.next(true);
                     //  this.changeDetectorRef.detectChanges();
                   }
 
@@ -677,13 +676,11 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
-            if(this.dmFavoriteID == "2") list ='DMT0226;DMT0227';
-            else list = 'DMT0227'
-          } 
-          else 
-          {
-            if(this.dmFavoriteID == "2") list = 'DMT0230;DMT0231';
-            else list = 'DMT0231'
+            if (this.dmFavoriteID == '2') list = 'DMT0226;DMT0227';
+            else list = 'DMT0227';
+          } else {
+            if (this.dmFavoriteID == '2') list = 'DMT0230;DMT0231';
+            else list = 'DMT0231';
           }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = false;
@@ -831,7 +828,7 @@ export class CodxDMService {
             case 'DMT0218': // quan ly version
               if (!data.write || !this.revision) e[i].isblur = true; // duoc view
               break;
-            
+
             // case "DMT0220": // persmission file
             //   break;
             // case "DMT0221": //yeu cau cap quyen file
@@ -895,7 +892,7 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
-      if(data?.viewThumb) return environment.urlUpload+"/"+ data.thumbnail;
+      if (data?.viewThumb) return environment.urlUpload + '/' + data.thumbnail;
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
       //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -1135,21 +1132,22 @@ export class CodxDMService {
   }
 
   async getToken() {
-    try
-    {
+    try {
       lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
       var retToken = await lvFileClientAPI.formPost('api/accounts/token', {
         username: 'admin/root',
         password: 'root',
       });
-      if(retToken?.access_token)
+      if (retToken?.access_token)
         window.localStorage.setItem('lv-file-api-token', retToken.access_token);
-      else this.notificationsService.notify("Server lưu trữ tập tin không hoạt động");
-      
-    }
-    catch(ex)
-    {
-      this.notificationsService.notify("Server lưu trữ tập tin không hoạt động");
+      else
+        this.notificationsService.notify(
+          'Server lưu trữ tập tin không hoạt động'
+        );
+    } catch (ex) {
+      this.notificationsService.notify(
+        'Server lưu trữ tập tin không hoạt động'
+      );
     }
   }
 
@@ -1286,8 +1284,7 @@ export class CodxDMService {
         break;
 
       case 'DMT0202': // chinh sua thu muc
-      case 'DMT0209': // properties folder
-      {
+      case 'DMT0209': { // properties folder
         var breadcumb = [];
         var breadcumbLink = [];
         var treeView = view?.currentView?.currentComponent?.treeView;
@@ -1314,7 +1311,6 @@ export class CodxDMService {
         this.callfc.openSide(CreateFolderComponent, data, option);
         break;
       }
-       
 
       case 'DMT0213': // chinh sua file
         this.callfc.openForm(
@@ -1446,8 +1442,7 @@ export class CodxDMService {
       case 'DMT0221':
       case 'DMT0208':
         //Là file
-        if(data?.extension)
-        {
+        if (data?.extension) {
           this.fileService.getFile(data.recID).subscribe((datas) => {
             option.DataService = this.dataService;
             option.FormModel = this.formModel;
@@ -1456,9 +1451,7 @@ export class CodxDMService {
             datas.id = datas.recID;
             this.callfc.openSide(ShareComponent, [type, datas, false], option);
           });
-        }
-        else
-        {
+        } else {
           option.DataService = this.dataService;
           option.FormModel = this.formModel;
           option.Width = '550px';

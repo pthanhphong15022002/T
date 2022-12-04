@@ -9,7 +9,7 @@
   idField="userID"
   [selectedFirst]="true"
   [button]="button"
-  (buttonClick)="add($event)"
+  (buttonClick)="pleaseUse($event)"
   (viewChanged)="changeView($event)"
   (selectedChange)="selectedChange($event)"
 >
@@ -87,7 +87,7 @@
               <ng-container>
                 <span
                   [ngbPopover]="manyModule"
-                  triggers="mouseenter:mouseleave"
+                  [autoClose]="'outside'"
                   class="btn btn-sm btn-icon btn-light-primary rounde-1 ms-1 w-30px h-30px"
                 >
                   +{{ data.chooseRoles && data.chooseRoles.length - 5 }}
@@ -196,3 +196,4 @@
     </div>
   </div>
 </ng-template>
+

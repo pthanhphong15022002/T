@@ -5,6 +5,7 @@ import {
   DialogRef,
   ApiHttpService,
   NotificationsService,
+  CacheService,
 } from 'codx-core';
 import {
   BP_Processes,
@@ -33,6 +34,7 @@ export class PopupAddPermissionComponent implements OnInit {
   sentEmail: any;
   postblog: any;
   process: BP_Processes;
+  gridViewSetup: any;
   per = new tmpPermission();
   permission: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
@@ -42,6 +44,7 @@ export class PopupAddPermissionComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -52,6 +55,16 @@ export class PopupAddPermissionComponent implements OnInit {
     this.id = this.process.recID;
     this.fullName = this.process.processName;
     this.isShare = dt.data[2];
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   ngOnInit(): void {}
@@ -60,7 +73,9 @@ export class PopupAddPermissionComponent implements OnInit {
   onShare() {
     this.per.recIDProcess = this.id;
     if (this.toPermission == null) {
-      this.notificationsService.notify('Không được phép để trống!');
+      this.notificationsService.notifyCode(
+        'SYS009'
+      );
       return;
     }
     this.per.toPermission = this.toPermission;
@@ -123,12 +138,12 @@ export class PopupAddPermissionComponent implements OnInit {
             this.notificationsService.notifyCode('OD013');
             this.dialog.close(res);
           } else {
-            this.notificationsService.notify('Đã yêu cầu cấp quyền');
+            this.notificationsService.notifyCode('SYS034');
             this.dialog.close(res);
           }
         } else {
           if (this.per.form == '2')
-            this.notificationsService.notify('Chia sẻ không thành công');
+            this.notificationsService.notifyCode('SYS016');
           else
             this.notificationsService.notify(
               'Yêu cầu cấp quyền không thành công'
@@ -159,8 +174,6 @@ export class PopupAddPermissionComponent implements OnInit {
             var item = data[i];
             // if(item.id != null && item.objectType != "U"){
             var perm = new BP_ProcessPermissions();
-            perm.startDate = this.startDate;
-            perm.endDate = this.endDate;
             perm.objectName = item.text != null ? item.text : item.objectName;
             perm.objectID = item.id;
             perm.isActive = true;

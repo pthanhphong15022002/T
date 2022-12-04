@@ -1,9 +1,9 @@
 <codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="dialog.formModel" #form>
   <ng-template #body>
     <div class="offcanvas-wrapper">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <span class="text-dark">{{fullName}}</span>
+      <div class="d-flex justify-content-between background-name">
+        <div class="d-flex align-items-center ">
+          <span class="text-name">{{fullName}}</span>
         </div>
       </div>
       <div class="request-to mt-4">
@@ -130,13 +130,12 @@
       <div *ngIf="!isShare" class="d-flex justify-content-between border-bottom mt-4">
         <div class="w-100">
           <codx-input type="text" tyle="width:100%" class="borderless" [crrValue]="requestTitle"
-            [placeholder]="'Nhập lý do'" [class]="validate('requestTitle')"
-           >
+            [placeholder]="'Nhập lý do'" [class]="validate('requestTitle')">
           </codx-input>
         </div>
         <div class="d-flex align-items-center mb-1">
-          <codx-input type="combobox" field="requestTitle" refValue="EmailTemplates"
-            placeholder="Mail mẫu" (valueChange)="txtValue($event, 'requestTitle')" [formModel]="form.formModel">
+          <codx-input type="combobox" field="requestTitle" refValue="EmailTemplates" placeholder="Mail mẫu"
+            (valueChange)="txtValue($event, 'requestTitle')" [formModel]="form.formModel">
           </codx-input>
         </div>
 
@@ -148,28 +147,29 @@
           </codx-label>
         </div>
         <codx-input class="form-control" [placeholder]="" [class]="validate('shareContent')" type="textarea"
-          style="width:100%; height: 400px;" [crrValue]="shareContent" (valueChange)="txtValue($event, 'shareContent')">
+          headerposition="none" format="ed" height="250" [crrValue]="shareContent"
+          (valueChange)="txtValue($event, 'shareContent')">
         </codx-input>
       </div>
       <div class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
         <div class="text-dark-75">
           <codx-label [fiedName]="'isShare'" [formModel]="form.formModel" default="Cho phép chia sẻ lại cho người khác?"
-            class="ms-1 fw-bold"></codx-label>
+            class="fw-bold"></codx-label>
         </div>
         <div class="d-flex">
-          <span class="switch switch-sm mr-2">
+          <span class="switch switch-sm me-2">
             <codx-input class="test-datetime" type="switch" tyle="width:100%" [crrValue]="share"
               (valueChange)="txtValue($event, 'share')"></codx-input>
           </span>
         </div>
       </div>
-      <div class="d-flex align-items-center justify-content-between share-item mt-6">
+      <div class="d-flex align-items-center justify-content-between share-item mt-2">
         <div class="text-dark-75">
           <codx-label fiedName="lblDownload" [formModel]="form.formModel" default="Cho phép download hoặc in tài liệu?"
-            class="ms-1 fw-bold"></codx-label>
+            class="fw-bold"></codx-label>
         </div>
         <div class="d-flex">
-          <span class="switch switch-sm mr-2">
+          <span class="switch switch-sm me-2">
             <codx-input placeholder="download..." class="test-datetime" type="switch" style="width:100%" format="d"
               [crrValue]="download" (valueChange)="txtValue($event, 'download')"></codx-input>
           </span>
@@ -177,9 +177,9 @@
       </div>
       <div class="text-primary font-weight-bold mt-4">
         <codx-label name="lblDownload" [formModel]="form.formModel" default="Giới hạn thời gian chia sẻ"
-          class="ms-1 fw-bold"></codx-label>
+          class="fw-bold"></codx-label>
       </div>
-      <div class="row mt-5">
+      <div class="row mt-3">
         <div class="col-xl-6 col-lg-6 col-md-6">
           <div class="form-group row">
             <div class="col-4 pt-2">
@@ -187,8 +187,9 @@
               </codx-label>
             </div>
             <div class="col-8">
-              <codx-input placeholder="startDate..." class="form-control test-datetime" type="datetime"
-                style="width:100%" format="d" [crrValue]="startDate" (valueChange)="txtValue($event, 'startDate')">
+              <codx-input [placeholder]="gridViewSetup['ToDate']?.description" class="form-control test-datetime"
+                type="datetime" style="width:100%" format="d" [crrValue]="startDate"
+                (valueChange)="txtValue($event, 'startDate')">
               </codx-input>
             </div>
           </div>
@@ -200,8 +201,9 @@
               </codx-label>
             </div>
             <div class="col-8">
-              <codx-input placeholder="endDate..." class="form-control test-datetime" type="datetime"
-                style="width:100%;" format="d" [crrValue]="endDate" (valueChange)="txtValue($event, 'endDate')">
+              <codx-input [placeholder]="gridViewSetup['ToDate']?.description" class="form-control test-datetime"
+                type="datetime" style="width:100%;" format="d" [crrValue]="endDate"
+                (valueChange)="txtValue($event, 'endDate')">
               </codx-input>
             </div>
           </div>
