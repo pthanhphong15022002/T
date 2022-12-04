@@ -121,14 +121,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      {
-        name: 'ReferencesOD',
-        textDefault: 'Tham chiếu',
-        isActive: false,
-        template: this.reference,
-      },
-      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+      // {
+      //   name: 'ReferencesOD',
+      //   textDefault: 'Tham chiếu',
+      //   isActive: false,
+      //   template: this.reference,
+      // },
+      // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
+    if(this.view.funcID == "ODT41") this.tabControl.push({ name: 'Approve', textDefault: 'Xét duyệt', isActive: false });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -979,7 +980,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         )
         .subscribe((item) => {
           if (item) {
-            data.approveStatus = '4';
+            data.approveStatus = '0';
             this.odService.updateDispatch(data, false).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
