@@ -115,7 +115,7 @@ export class PdfComponent
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
-  isInteractPDF = true;
+  isInteractPDF = false;
   lstHighlightTextArea: Array<highLightTextArea> = [];
 
   //vll

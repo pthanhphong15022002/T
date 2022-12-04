@@ -34,6 +34,7 @@ import { PopupPersonalComponent } from './popup-personal/popup-personal.componen
 import { LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TN_OrderModule } from '../models/tmpModule.model';
 
 @Component({
   selector: 'lib-company-setting',
@@ -79,6 +80,10 @@ export class CompanySettingComponent
   optionMailHeader: any = 'mailheader';
   tenant: any;
 
+  //bought modules
+  lstModule: Array<TN_OrderModule> = [];
+  lstInstalledModule: Array<TN_OrderModule> = [];
+  lstNotInstallModule: Array<TN_OrderModule> = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -100,6 +105,21 @@ export class CompanySettingComponent
         this.moreFunc = res;
       }
     });
+
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          this.lstModule = res;
+          this.lstModule.forEach((md) => {
+            if (md.bought) {
+              this.lstInstalledModule.push(md);
+            } else {
+              this.lstNotInstallModule.push(md);
+            }
+          });
+        }
+      });
     this.loadData();
   }
   ngAfterViewInit(): void {
