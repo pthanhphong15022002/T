@@ -13,7 +13,7 @@ import {
   UserModel,
 } from 'codx-core';
 import { Observable } from 'rxjs/internal/Observable';
-import { environment } from 'src/environments/environment';
+//import { environment } from 'src/environments/environment';
 
 export class ModelPage {
   functionID = '';
@@ -51,7 +51,20 @@ export class CodxEpService {
     private api: ApiHttpService,
     private notificationsService: NotificationsService
   ) {}
-
+  // hiện đang ko đọc đc biến enviroment từ file
+  // khi sửa đc replace: this.environment. thành environment.
+  //temp environment
+  environment=  {SureMeet: {
+    baseUrl: 'https://api.suremeet.vn/',
+    tokenUrl: 'api/auth/token',
+    addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
+    connectMettingUrl: 'PublicMeeting/Verify',
+    client_id: 'portal',
+    client_secret: 'lacviet@2022@$%!$$!(@',
+    app_id: 'demo.suremeet@gmail.com',
+    app_secret: '123456',
+  },
+}
   //#region Get from FunctionList
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
@@ -534,16 +547,16 @@ export class CodxEpService {
     }
     return axios
       .create({
-        baseURL: environment.SureMeet.baseUrl,
+        baseURL: this.environment.SureMeet.baseUrl,
       })
-      .post(environment.SureMeet.tokenUrl, {
-        client_id: environment.SureMeet.client_id,
-        client_secret: environment.SureMeet.client_secret,
+      .post(this.environment.SureMeet.tokenUrl, {
+        client_id: this.environment.SureMeet.client_id,
+        client_secret: this.environment.SureMeet.client_secret,
       })
       .then((res: any) => {
         let data = {
-          app_id: environment.SureMeet.app_id,
-          app_secret: environment.SureMeet.app_secret,
+          app_id: this.environment.SureMeet.app_id,
+          app_secret: this.environment.SureMeet.app_secret,
           meetingschedule_id: 0,
           meetingschedule_title: meetingTitle,
           meetingschedule_description: meetingDescription,
@@ -557,9 +570,9 @@ export class CodxEpService {
 
         return axios
           .create({
-            baseURL: environment.SureMeet.baseUrl,
+            baseURL: this.environment.SureMeet.baseUrl,
           })
-          .post(environment.SureMeet.addUpdateMeetingUrl, data)
+          .post(this.environment.SureMeet.addUpdateMeetingUrl, data)
           .then((meeting: any) => {
             return meeting.data.url;
           })
@@ -607,16 +620,16 @@ export class CodxEpService {
 
     return axios
       .create({
-        baseURL: environment.SureMeet.baseUrl,
+        baseURL: this.environment.SureMeet.baseUrl,
       })
-      .post(environment.SureMeet.tokenUrl, {
-        client_id: environment.SureMeet.client_id,
-        client_secret: environment.SureMeet.client_secret,
+      .post(this.environment.SureMeet.tokenUrl, {
+        client_id: this.environment.SureMeet.client_id,
+        client_secret: this.environment.SureMeet.client_secret,
       })
       .then((res: any) => {
         let data = {
-          app_id: environment.SureMeet.app_id,
-          app_secret: environment.SureMeet.app_secret,
+          app_id: this.environment.SureMeet.app_id,
+          app_secret: this.environment.SureMeet.app_secret,
           key: (url as string).split('/').reverse().at(0),
           password: null,
           name: userName,
@@ -625,9 +638,9 @@ export class CodxEpService {
         };
         return axios
           .create({
-            baseURL: environment.SureMeet.baseUrl,
+            baseURL: this.environment.SureMeet.baseUrl,
           })
-          .post(environment.SureMeet.connectMettingUrl, data)
+          .post(this.environment.SureMeet.connectMettingUrl, data)
           .then((connectData: any) => {
             if (connectData?.data?.url) {
               return connectData?.data?.url;
@@ -637,6 +650,7 @@ export class CodxEpService {
       })
       .catch((err: any) => {});
   }
+    
   // createMeeting(
   //   meetingUrl,
   //   meetingTitle,
@@ -650,17 +664,7 @@ export class CodxEpService {
   //     return meetingUrl;
   //   }
   //   return axios
-  // //   let environment=  {SureMeet: {
-  // //     baseUrl: 'https://api.suremeet.vn/',
-  // //     tokenUrl: 'api/auth/token',
-  // //     addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
-  // //     connectMettingUrl: 'PublicMeeting/Verify',
-  // //     client_id: 'portal',
-  // //     client_secret: 'lacviet@2022@$%!$$!(@',
-  // //     app_id: 'demo.suremeet@gmail.com',
-  // //     app_secret: '123456',
-  // //   },
-  // // }
+  
   //     .create({
   //       baseURL: 'https://api.suremeet.vn/',
   //     })
