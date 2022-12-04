@@ -9,6 +9,7 @@ import {
 import {
   ButtonModel,
   CodxFormDynamicComponent,
+  CodxTreeviewComponent,
   CRUDService,
   DialogModel,
   DialogRef,
@@ -60,6 +61,7 @@ export class ReportinglineComponent extends UIComponent {
   dataSelected: any = null;
   positionID: string = '';
   request: ResourceModel;
+  codxTreeView:CodxTreeviewComponent = null;
   constructor(
     private notifiSv: NotificationsService,
     inject: Injector,
@@ -110,15 +112,15 @@ export class ReportinglineComponent extends UIComponent {
   }
 
   viewChange(event: any) {
-    if (event && event.view?.id) {
-      if (event.view.id == '2') {
-        //this.view.dataService.parentIdField = 'ReportTo';
-        // this.view.dataService.load().subscribe(res=>{
-        //   this.detectorRef.detectChanges();
-        //   console.log(res);
-        // })
-      }
-    }
+    // if (event?.view?.id == "2") 
+    // {
+      
+    //   this.view.dataService.parentIdField = 'ReportTo';
+    //     this.view.dataService.load().subscribe(res=>{
+    //       this.detectorRef.detectChanges();
+    //       console.log(res);
+    //     })
+    // }
   }
   orgChartViewInit(component: any) {
     if (component) {
@@ -132,7 +134,14 @@ export class ReportinglineComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      debugger
+      if(this.views[1].active) // modeView tree-orgchart
+      {
+        let currentView:any = this.view.currentView;
+        if(currentView)
+        {
+          this.codxTreeView = currentView.currentComponent?.treeView;
+        }
+      }
       this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
           let data = {
@@ -143,12 +152,21 @@ export class ReportinglineComponent extends UIComponent {
             isAddMode: true,
             titleMore: event.text,
           };
-          this.callfc.openSide(
+          let form = this.callfc.openSide(
             CodxFormDynamicComponent,
             data,
             option,
             this.funcID
           );
+          form.closed.subscribe((res:any) => {
+            debugger
+            if(res?.event?.save)
+            {
+              let node = res.event.save.data;
+              this.codxTreeView.setNodeTree(node);
+              console.log(this.codxTreeView);
+            }
+          });
         }
       });
     }
@@ -239,7 +257,8 @@ export class ReportinglineComponent extends UIComponent {
 
   // selected data
   onSelectionChanged(event) {
-    if (this.view) {
+    if (this.view) 
+    {
       let viewActive = this.view.views.find((e) => e.active == true);
       if (viewActive?.id == '1') return;
       this.dataSelected = event.data;

@@ -511,7 +511,7 @@
               id="pane_3"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
-              <app-approval-steps
+              <codx-approval-steps
                 #viewApprovalStep
                 *ngIf="currentTab == 2"
                 [transId]="
@@ -524,7 +524,7 @@
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
-              </app-approval-steps>
+              </codx-approval-steps>
             </div>
             <div
               class="tab-pane fade"

@@ -32,7 +32,7 @@ import { AddEditApprovalStepComponent } from './add-edit-approval-step/add-edit-
 
 export class Approver {}
 @Component({
-  selector: 'app-approval-steps',
+  selector: 'codx-approval-steps',
   templateUrl: './codx-approve-steps.component.html',
   styleUrls: ['./codx-approve-steps.component.scss'],
 })
