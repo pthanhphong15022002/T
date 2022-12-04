@@ -59,6 +59,7 @@
   </ng-template>
   <ng-template #footer>
     <codx-tabs
+      [TabControl]="tabControl"
       [entityName]="view?.formModel?.entityName"
       [objectID]="transID"
       [funcID]="view?.formModel?.funcID"

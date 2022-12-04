@@ -1,7 +1,13 @@
-<ng-container *ngIf="positionID; else tmpEmpty">
+<ng-container *ngIf="data; else tmpEmpty">
   <div>
-    <ejs-diagram #diagram class="codx-orgchart" width="100%" height="650px" [getConnectorDefaults]="connDefaults"
-      [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
+    <ejs-diagram #diagram class="codx-orgchart" 
+      width="100%" 
+      height="650px" 
+      [getConnectorDefaults]="connDefaults"
+      [getNodeDefaults]="nodeDefaults" 
+      [layout]="layout" 
+      [tool]="tool" 
+      [snapSettings]="snapSettings"
       [dataSourceSettings]="datasetting" (click)="orgClick($event)">
       <ng-template #nodeTemplate let-node>
         <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
@@ -12,7 +18,6 @@
   </div>
 </ng-container>
 <ng-template #tmpEmpty>
-
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
@@ -64,8 +69,8 @@
       </ng-template>
     </div>
     <div *ngIf="data.isChildrent" class="d-flex justify-content-center">
-      <span #icon class="icon-20" [ngClass]="classIcon(data, icon)" (mouseup)="mouseUp(data, $event)"
-        (click)="loadDataChild(data)"></span>
+      <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
+        (click)="loadDataChild(data,icon)"></span>
     </div>
   </div>
 </ng-template>

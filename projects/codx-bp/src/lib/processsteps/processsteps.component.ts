@@ -59,7 +59,10 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProcessStepsComponent extends UIComponent implements OnInit,AfterViewInit {
+export class ProcessStepsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -120,12 +123,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
+  crrPopper: any;
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message
   listCountPhases: any;
   actived = false;
-  isBlock:any = true;
+  isBlock: any = true;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -227,8 +231,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
         },
       },
     ];
-
-   
 
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
@@ -340,7 +342,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
             'edit',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
-            this.formModelMenu          
+            this.formModelMenu,
           ],
           option
         );
@@ -506,7 +508,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
             'copy',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
-            this.formModelMenu
+            this.formModelMenu,
           ],
           option
         );
@@ -643,7 +645,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
     if (this.listCountPhases <= 0 && evt.id != 'P') {
       return this.notiService.notify(this.msgBP001);
     }
-    if (this.listCountPhases > 0 && evt.id != 'A' && this.isBlock && evt.id != 'P' ) {
+    if (
+      this.listCountPhases > 0 &&
+      evt.id != 'A' &&
+      this.isBlock &&
+      evt.id != 'P'
+    ) {
       return this.notiService.notify(this.msgBP002);
     }
 
@@ -1199,20 +1206,36 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
     }
   }
 
-  isBlockClickMoreFunction(listData){
-    const check = listData.length>0?true:false;
-    if(check){
+  isBlockClickMoreFunction(listData) {
+    const check = listData.length > 0 ? true : false;
+    if (check) {
       this.listCountPhases = listData.length;
-      this.isBlock=true;
-      listData.forEach(x=>{
-          if(x.items.length >0) {
-            this.isBlock=false;
-          }
-      })
-    }
-    else {
+      this.isBlock = true;
+      listData.forEach((x) => {
+        if (x.items.length > 0) {
+          this.isBlock = false;
+        }
+      });
+    } else {
       this.listCountPhases = listData.length;
-      this.isBlock=true;
+      this.isBlock = true;
     }
   }
+
+  openMF(data, p) {
+    if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
+    this.crrPopper = p;
+    if (data != null) {
+      // var element = document.getElementById(data?.parentID);
+      // if (element ) {
+      //  element.classList.add('hiden') ;  
+      // }
+      this.dataHover = data;
+      p.open();
+    } else {
+      p.close();
+    }
+    this.changeDetectorRef.detectChanges()
+  }
+
 }

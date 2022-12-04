@@ -391,19 +391,19 @@
       </ng-container>
 
       <div class="mt-6 mb-3 text-primary fw-bold">
-        <codx-label name="lblTaskName" formName="Tasks" default="Công việc">
+        <codx-label name="lblTaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc">
         </codx-label>:
       </div>
       <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
-      <div class="text-gray-700" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected['memoHTML']"></div>
+      <div class="text-gray-700" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected.memo"></div>
       <div *ngIf="itemSelected?.memo2">
         <span class="text-gray-700">
-          <codx-label name="lblMemo2" formName="Tasks" default="Ghi chú phân công">
+          <codx-label name="lblMemo2" formName="Tasks" gridViewName="grvTasks" default="Ghi chú phân công">
           </codx-label>:
         </span>
-        <div class="text-gray-700" [innerHTML]="itemSelected['memoHTML2']"></div>
+        <div class="text-gray-700" [innerHTML]="itemSelected.memo2"></div>
       </div>
 
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
@@ -435,7 +435,7 @@
 
 <ng-template #popEmpList>
   <div class="fw-bold">
-    <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
+    <codx-label name="lblAssignmentList" formName="Tasks" gridViewName="grvTasks" default="Danh sách phân công cho"></codx-label>
     <span>{{ "(" + countResource + ")" }}</span>
   </div>
   <div>

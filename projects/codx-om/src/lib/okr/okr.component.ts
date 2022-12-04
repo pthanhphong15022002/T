@@ -22,7 +22,7 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
-import { PopupDistributeKRComponent } from '../popup/popup-distribute-kr/popup-distribute-kr.component';
+import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 
 @Component({
@@ -35,7 +35,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   @ViewChild('panelRight') panelRight: TemplateRef<any>;
   openAccordion = [];
   dataOKR = [];
-
+  dataOKRPlans = null;
   //title//
   titleRoom = 'Phòng kinh doanh';
   dtCompany = null;
@@ -51,6 +51,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Năm
   year = null;
   dataDate = null;
+
+  dataRequest = new DataRequest();
+  formModelKR = new FormModel();
   constructor(inject: Injector) {
     super(inject);
     this.auth = inject.get(AuthStore);
@@ -71,26 +74,34 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       },
     ];
     this.getGridViewSetup();
+
+    this.dataRequest.funcID = 'OMT01';
+    this.dataRequest.entityName = 'OM_OKRs';
+    this.dataRequest.page = 1;
+    this.dataRequest.pageSize = 20;
+    this.dataRequest.predicate = 'ParentID=@0';
   }
 
   onInit(): void {
     var user = this.auth.get();
     this.cache.getCompany(user.userID).subscribe(item=>{
-      debugger;
       if(item) 
       {
-        debugger;
         this.titleRoom = item.organizationName;
         this.dtCompany = item;
       }
     })
+    this.formModelKR.entityName = 'OM_OKRs';
+    this.formModelKR.gridViewName = 'grvOKRs';
+    this.formModelKR.formName = 'OKRs';
+    this.formModelKR.entityPer = 'OM_OKRs';
   }
 
   //Hàm click
   click(event: any) {
     switch (event.id) {
       case 'btnAdd': {
-        this.add();
+        this.addOKR();
         break;
       }
       case 'btnAddKR': {
@@ -98,7 +109,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-        this.add();
+        this.addOKRPlans();
         break;
       }
       case 'Calendar': {
@@ -108,8 +119,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  //Thêm mới mục tiêu
-  add() {
+  //Thêm mới bộ mục tiêu
+  addOKRPlans() {
     var dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     let dialog = this.callfc.openForm(
@@ -127,6 +138,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     });
   }
 
+  //Thêm mới mục tiêu
+  addOKR()
+  {
+    let dialog = this.callfc.openSide(OkrAddComponent, [
+      this.gridView,
+      this.formModelKR,
+      "Thêm mới mục tiêu"
+    ]);
+  }
   //Lấy data danh sách mục tiêu
   getGridViewSetup() {
     this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
@@ -141,19 +161,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Thêm KR
   addKR(o: any=null) {
     // Tạo FormModel cho OKRs
-    let formModelKR = new FormModel();
-    formModelKR.entityName = 'OM_OKRs';
-    formModelKR.gridViewName = 'grvOKRs';
-    formModelKR.formName = 'OKRs';
-    formModelKR.entityPer = 'OM_OKRs';
-
+    
+   
     let option = new SidebarModel();
     option.Width = '550px';
-    option.FormModel = formModelKR;
+    option.FormModel = this.formModelKR;
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [null, o, formModelKR, true, 'Thêm mới kết quả chính'],
+      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
       option
     );
     
@@ -162,7 +178,13 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   getOKRPlans(periodID: any , interval: any , year: any)
   {
     this.okrService.getOKRPlans(periodID,interval,year).subscribe((item: any) => {
-      if (item) this.dataOKR = this.dataOKR.concat(item);
+      if (item) {
+        this.dataOKRPlans = item ;
+        this.dataRequest.dataValue = item.recID
+        this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
+          if (item) this.dataOKR = this.dataOKR.concat(item);
+        });
+      }
     });
   }
 

@@ -1284,7 +1284,8 @@ export class CodxEsService {
     supplier,
     hasCA,
     mode,
-    comment
+    comment,
+    transRecID
   ) {
     let data = [
       stepNo,
@@ -1296,6 +1297,7 @@ export class CodxEsService {
       hasCA,
       mode,
       comment,
+      transRecID,
     ];
     return this.api.execSv(
       'es',

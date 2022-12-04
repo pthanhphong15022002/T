@@ -260,14 +260,14 @@ export class IncommingComponent
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
 
     if (this.view.formModel.funcID == 'ODT41') {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
 
     if (
@@ -278,7 +278,7 @@ export class IncommingComponent
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT212'
       );
-      approvel[0].disabled = false;
+      if(approvel[0]) approvel[0].disabled = false;
     }
     //Hoàn tất
     if (data?.status == '7') {

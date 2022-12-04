@@ -43,6 +43,7 @@ import {
   SetupShowSignature,
 } from 'projects/codx-es/src/lib/codx-es.model';
 import { text } from 'stream/consumers';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -275,12 +276,28 @@ export class PdfComponent
                 fileName: file.fileName,
                 fileRefNum: sf.refNo,
                 fileID: file.fileID,
-                fileUrl: res.urls[index],
+                fileUrl: environment.urlUpload + "/" + res.urls[index],
                 signers: res?.approvers,
                 areas: file.areas,
               });
             });
             this.lstSigners = res.approvers;
+            this.lstSigners.forEach((signer) => {
+              //chu ky chinh
+              if (signer.signature1) {
+                signer.signature1 =
+                  environment.urlUpload + '/' + signer.signature1;
+              }
+              //chu ky nhay
+              if (signer.signature2) {
+                signer.signature2 =
+                  environment.urlUpload + '/' + signer.signature2;
+              }
+              //con dau
+              if (signer.stamp) {
+                signer.stamp = environment.urlUpload + '/' + signer.stamp;
+              }
+            });
             if (this.isApprover) {
               this.signerInfo = res?.approvers.find(
                 (approver) => approver.authorID == this.user.userID
@@ -291,7 +308,7 @@ export class PdfComponent
               this.signerInfo = res.approvers[0];
             }
             this.curFileID = sf?.files[0]?.fileID;
-            this.curFileUrl = res.urls[0];
+            this.curFileUrl = environment.urlUpload + "/" + res.urls[0];
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
@@ -576,7 +593,8 @@ export class PdfComponent
             this.signerInfo.supplier,
             hasCA,
             mode,
-            comment
+            comment,
+            this.transRecID
           )
           .subscribe((status) => {
             resolve(status);

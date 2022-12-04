@@ -253,7 +253,7 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch[event?.field] = event?.data.fromDate;
   }
   /////// lưu/câp nhật công văn
-  onSave() {
+  async onSave() {
     if (!this.checkIsRequired()) return;
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
@@ -279,22 +279,23 @@ export class IncommingAddComponent implements OnInit {
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.dispatch.approveStatus = '1';
-      this.odService
-        .saveDispatch(this.dataRq, this.dispatch)
-        .subscribe(async (item) => {
-          if (item.status == 0) {
-            this.data = item;
-            this.attachment.objectId = item.data.recID;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (item2: any) => {
-                if (item2?.status == 0) {
-                  this.dialog.close(item.data);
-                  this.notifySvr.notify(item.message);
-                } else this.notifySvr.notify(item2.message);
-              }
-            );
-          } else this.notifySvr.notify(item.message);
-        });
+      this.attachment.objectId = this.dispatch.recID;
+      (await this.attachment.saveFilesObservable()).subscribe(
+        (item2: any) => {
+          if (item2?.status == 0) {
+            this.odService
+            .saveDispatch(this.dataRq, this.dispatch)
+            .subscribe(async (item) => {
+              if (item.status == 0) {
+                this.data = item;
+                this.dialog.close(item.data);
+                this.notifySvr.notify(item.message);
+              } else this.notifySvr.notify(item.message);
+            });
+          } else this.notifySvr.notify(item2.message);
+        }
+      );
+      
     } else if (this.type == 'edit') {
       this.odService
         .updateDispatch(this.dispatch, false)
@@ -327,7 +328,9 @@ export class IncommingAddComponent implements OnInit {
   }
   getfileCount(e: any) {
     if (e && e?.data) this.fileCount = e.data.length;
-    else if (e) this.fileCount = e.length;
+    else if (typeof e == 'number') this.fileCount = e;
+    else this.fileCount = e.length;
+
     if (this.fileCount == 0) this.dltDis = true;
   }
   changeFormAgency(val: any) {
@@ -354,6 +357,7 @@ export class IncommingAddComponent implements OnInit {
       var name = arr.join(" , ");
       return this.notifySvr.notifyCode('SYS009', 0, name);
     }
+    debugger;
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;
