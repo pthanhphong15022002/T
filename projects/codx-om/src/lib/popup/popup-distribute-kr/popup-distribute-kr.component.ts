@@ -24,7 +24,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 
 
@@ -50,7 +49,7 @@ export class PopupDistributeKRComponent extends UIComponent implements AfterView
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText= "Xem chi tiết - Kết quả chính"//dialogData?.data[2];
+    this.headerText= "Phân bổ KR"//dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;    
     

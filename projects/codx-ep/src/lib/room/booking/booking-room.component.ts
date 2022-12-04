@@ -81,6 +81,15 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   optionalData;
   formModel: FormModel;
   popupClosed = true;
+  listRoom=[];  
+  listReason=[];  
+  listAttendees=[];  
+  listItem=[];
+  tempReasonName='';
+  tempRoomName='';  
+  tempAttendees='';
+  selectBookingItems=[];  
+  selectBookingAttendees='';
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -142,9 +151,26 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     };
+
+    this.codxEpService.getListResource('1').subscribe((res:any)=>{
+      if(res){
+        this.listRoom=[];
+        this.listRoom=res;
+      }        
+    });
+    this.codxEpService.getListReason('EP_BookingRooms').subscribe((res:any)=>{
+      if(res){
+        this.listReason=[];
+        this.listReason=res;
+      }        
+    });    
   }
 
   ngAfterViewInit(): void {
+    
+    
+
+
     this.view.dataService.methodDelete = 'DeleteBookingAsync';
     this.views = [
       {
@@ -189,7 +215,43 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     ];
     this.detectorRef.detectChanges();
   }
+  getResourceName(resourceID:any){
+    this.tempRoomName='';
+    this.listRoom.forEach(r=>{
+      if(r.resourceID==resourceID){
+        this.tempRoomName= r.resourceName;
+      }      
+    });
+    return this.tempRoomName;
+  }
+  getReasonName(reasonID:any){
+    this.tempReasonName='';
+    this.listReason.forEach(r=>{
+      if(r.reasonID==reasonID){
+        this.tempReasonName= r.description;
+      }      
+    });
+    return this.tempReasonName;
+  }
+  getMoreInfo(recID:any){  
+    this.selectBookingItems=[];  
+    this.selectBookingAttendees='';
 
+    this.codxEpService.getListItems(recID).subscribe((item:any)=>{
+      if(item){
+        this.selectBookingItems = item;
+      }        
+    });
+    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
+      if(attendees){
+        let lstAttendees=attendees;
+        lstAttendees.forEach(element => {
+          this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
+        });
+        this.selectBookingAttendees;
+      }        
+    });
+  }
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
@@ -256,6 +318,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
+          }
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ 
+          ) {
+            func.disabled = true;
           }
         });
       }
@@ -345,14 +413,16 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         option.Width = '800px';
         option.DataService = this.view?.dataService;
         option.FormModel = this.formModel;
-        this.dialog = this.callFuncService.openSide(
+        let dialog = this.callFuncService.openSide(
           PopupAddBookingRoomComponent,
           [this.dataSelected, true, this.popupTitle, this.optionalData],
           option
         );
-        this.dialog.closed.subscribe((returnData) => {
+        dialog.closed.subscribe((returnData) => {
           this.popupClosed = true;
-          if (!returnData.event) this.view.dataService.clear();
+          if (!returnData.event) {
+            this.view.dataService.clear();
+          }
         });
       });
     }
@@ -378,20 +448,23 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             option.Width = '800px';
             option.DataService = this.view?.dataService;
             option.FormModel = this.formModel;
-            this.dialog = this.callFuncService.openSide(
+            let dialog = this.callFuncService.openSide(
               PopupAddBookingRoomComponent,
               [this.view.dataService.dataSelected, false, this.popupTitle],
               option
             );
-            this.dialog.closed.subscribe((returnData) => {
+            dialog.closed.subscribe((returnData) => {
               this.popupClosed = true;
-              if (!returnData.event) this.view.dataService.clear();
+              if (!returnData.event) 
+              {
+                this.view.dataService.clear();
+              }
             });
           });
       }
     }
   }
-
+  
   copy(evt?) {
     if (evt) {
       if (this.popupClosed) {
@@ -405,7 +478,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             option.Width = '800px';
             option.DataService = this.view?.dataService;
             option.FormModel = this.formModel;
-            this.dialog = this.callFuncService.openSide(
+            let dialog = this.callFuncService.openSide(
               PopupAddBookingRoomComponent,
               [
                 this.view.dataService.dataSelected,
@@ -416,9 +489,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
               ],
               option
             );
-            this.dialog.closed.subscribe((returnData) => {
+            dialog.closed.subscribe((returnData) => {
               this.popupClosed = true;
-              if (!returnData.event) this.view.dataService.clear();
+              if (!returnData.event) {
+                this.view.dataService.clear();
+              }
             });
           });
       }
@@ -437,10 +512,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         return;
       }
     }
-    this.view.dataService.delete([deleteItem]).subscribe((res) => {
-      if (!res) {
-        this.notificationsService.notifyCode('SYS022');
-      }
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {      
     });
   }
 

@@ -22,6 +22,7 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
+import { PopupDistributeKRComponent } from '../popup/popup-distribute-kr/popup-distribute-kr.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 
 @Component({
@@ -155,6 +156,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       [null, o, formModelKR, true, 'Thêm mới kết quả chính'],
       option
     );
+    
   }
 
   getOKRPlans(periodID: any , interval: any , year: any)

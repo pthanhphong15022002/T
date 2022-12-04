@@ -4,7 +4,7 @@
     [bodyCss]="'bgEDEDED okr-add-body'"
     [body]="alignKR"
 >
-</codx-form>
+
 <ng-template #alignKR>  
   <div class=" w-100 h-100 bg-white px-5">
     <div class="pt-5 pb-2 text-center">
@@ -27,9 +27,9 @@
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
-                <i class="fa-solid fa-bullseye me-2"></i>
+                <i class="fa-solid icon-i-diagram-3-fill me-2"></i>
                 <codx-label
-                  default="Check-in"
+                  default="Cơ cấu tổ chức"
                   fiedName="lbltaget"
                   class="fw-bold"
                 ></codx-label>
@@ -40,9 +40,9 @@
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
-                <i class="fa-solid fa-folder-tree me-2"></i>
+                <i class="fa-solid icon-groups me-2"></i>
                 <codx-label
-                  default="Liên kết"
+                  default="Cơ cấu báo cáo"
                   fiedName="lbltreetaget"
                   class="fw-bold"
                 ></codx-label>
@@ -50,28 +50,13 @@
             </ng-template>
             <ng-template #content> Cơ cấu báo cáo </ng-template>
           </e-tabitem>
+
           <e-tabitem>
             <ng-template #headerText>
               <div class="d-flex align-items-center">
-                <i class="fa-solid fa-list me-2"></i>
+                <i class="fa-solid icon-account_circle me-2"></i>
                 <codx-label
-                  default="Công việc"
-                  fiedName="lbljob"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content>
-              Công việc
-              <!-- <lib-okr-tasks></lib-okr-tasks> -->
-            </ng-template>
-          </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-regular fa-calendar me-2"></i>
-                <codx-label
-                  default="Họp định kỳ"
+                  default="Nhân viên "
                   fiedName="lblmeeting"
                   class="fw-bold"
                 ></codx-label>
@@ -79,22 +64,12 @@
             </ng-template>
             <ng-template #content> Nhân viên </ng-template>
           </e-tabitem>
-          <e-tabitem>
-            <ng-template #headerText>
-              <div class="d-flex align-items-center">
-                <i class="fa-regular icon-i-chat me-2"></i>
-                <codx-label
-                  default="Ghi chú"
-                  fiedName="lblNote"
-                  class="fw-bold"
-                ></codx-label>
-              </div>
-            </ng-template>
-            <ng-template #content> Ghi chú </ng-template>
-          </e-tabitem>
+          
           
         </e-tabitems>
       </ejs-tab>
     </div>
   </div>
 </ng-template>
+
+</codx-form>
