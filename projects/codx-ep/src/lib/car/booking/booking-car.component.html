@@ -61,7 +61,8 @@
       'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
     " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
     imageObjType="AD_Users" [resources]="data?.bookingAttendees" [titleLine]="2" [dataItem]="data"
-    [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data">
+    [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data"
+    (changeDataMF)="changeDataMF($event, data)">
   </codx-temp-full>
 </ng-template>
 
@@ -138,19 +139,22 @@
     <codx-label name="lblCar" default="Loại xe" class="fw-bold"></codx-label>
     <span class="me-1 fw-bold">:</span>
     <span class="">
-      {{ data?.resourceName }}
+      {{ getResourceName(data?.resourceID) }}
     </span>
   </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <i class="icon-contact_mail me-1"></i>
     <codx-label name="lblDriver" default="Tài xế" class="fw-bold"></codx-label>
     <span class="me-1 fw-bold">:</span>
-    <span *ngIf="data?.driverName != null">
+    <span *ngIf="driverName != '' && driverName != null">
       <span class="">
-        {{ data?.driverName }}
+        {{ driverName }}
       </span>
     </span>
-    <span *ngIf="data?.driverName == null">
+    <span *ngIf="driverName ==''">
+      <span></span>
+    </span>
+    <span *ngIf="driverName ==null">
       <codx-label default="Không có tài xế" class="" name="lblUnavailableDriver"></codx-label>
     </span>
   </div>
@@ -204,7 +208,7 @@
   <div class="mb-2">
     <codx-label name="lblReason" default="Mục tiêu sử dụng" class="fw-bold"></codx-label>
     <span class="me-1 fw-bold">:</span>
-    <span class="ms-1">{{ data?.reasonName }} </span>
+    <span class="ms-1">{{ getReasonName(data?.reasonID) }} </span>
   </div>
   <div class="mb-2">
     <codx-label name="lblAgencyName" default="Tên đơn vị" class="fw-bold"></codx-label>
@@ -222,7 +226,7 @@
       <div class="d-flex text-dark me-6">
         <!-- <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label> -->
         <div class="d-flex justify-content-end">
-          <codx-imgs [objectId]="data?.bookingAttendees" objectType="AD_Users" [numberImages]="7" [width]="30">
+          <codx-imgs [objectId]="selectBookingAttendees" objectType="AD_Users" [numberImages]="7" [width]="30">
           </codx-imgs>
         </div>
       </div>
@@ -230,8 +234,8 @@
   </div>
 </ng-template>
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-column w-100">
-    <span class="text-center" >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
-    <span class="fw-bold text-center" >{{data.title}}</span>
+  <div class="d-flex flex-column w-100" (click)="getMoreInfo(data.recID)">
+    <span >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
+    <span class="fw-bold " >{{data.title}}</span>
   </div>
 </ng-template>

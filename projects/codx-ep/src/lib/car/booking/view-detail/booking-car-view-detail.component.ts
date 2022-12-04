@@ -141,7 +141,34 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
     }
   }
   changeDataMF(event, data: any) {
-    
+    if (event != null && data != null) {
+      // event.forEach(func => {
+      //   func.disabled=true;
+      // });
+      if (data.approveStatus == '1') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (func.functionID == 'SYS04' /*MF chép*/) {
+            func.disabled = false;
+          }
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ 
+          ) {
+            func.disabled = true;
+          }
+        });
+      }
+    }
   }
   sameDayCheck(sDate:any, eDate:any){
     return moment(new Date(sDate)).isSame(new Date(eDate),'day');

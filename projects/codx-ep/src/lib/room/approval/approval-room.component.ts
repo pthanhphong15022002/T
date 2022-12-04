@@ -51,9 +51,16 @@ export class ApprovalRoomsComponent extends UIComponent {
   resourceField;
   dataSelected: any;
   dialog!: DialogRef;
-  tempReasonName = '';
   viewType = ViewType;
-
+  listRoom=[];  
+  listReason=[];  
+  listAttendees=[];  
+  listItem=[];
+  tempReasonName='';
+  tempRoomName='';  
+  tempAttendees='';
+  selectBookingItems=[];  
+  selectBookingAttendees='';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -105,6 +112,18 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
+    this.codxEpService.getListResource('1').subscribe((res:any)=>{
+      if(res){
+        this.listRoom=[];
+        this.listRoom=res;
+      }        
+    });
+    this.codxEpService.getListReason('EP_BookingRooms').subscribe((res:any)=>{
+      if(res){
+        this.listReason=[];
+        this.listReason=res;
+      }        
+    });  
   }
 
   ngAfterViewInit(): void {
@@ -147,7 +166,43 @@ export class ApprovalRoomsComponent extends UIComponent {
   }
 
   click(event) {}
+  getResourceName(resourceID:any){
+    this.tempRoomName='';
+    this.listRoom.forEach(r=>{
+      if(r.resourceID==resourceID){
+        this.tempRoomName= r.resourceName;
+      }      
+    });
+    return this.tempRoomName;
+  }
+  getReasonName(reasonID:any){
+    this.tempReasonName='';
+    this.listReason.forEach(r=>{
+      if(r.reasonID==reasonID){
+        this.tempReasonName= r.description;
+      }      
+    });
+    return this.tempReasonName;
+  }
+  getMoreInfo(recID:any){  
+    this.selectBookingItems=[];  
+    this.selectBookingAttendees='';
 
+    this.codxEpService.getListItems(recID).subscribe((item:any)=>{
+      if(item){
+        this.selectBookingItems = item;
+      }        
+    });
+    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
+      if(attendees){
+        let lstAttendees=attendees;
+        lstAttendees.forEach(element => {
+          this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
+        });
+        this.selectBookingAttendees;
+      }        
+    });
+  }
   clickMF(value, datas: any = null) {
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;

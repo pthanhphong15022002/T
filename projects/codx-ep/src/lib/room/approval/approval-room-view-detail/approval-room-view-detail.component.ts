@@ -161,29 +161,31 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
           });
       });
   }
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {       
-        if(func.functionID == "SYS04"/*Copy*/) 
-        {
-          func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (func.functionID == 'SYS04' /*Copy*/) {
+          func.disabled = true;
         }
       });
-      if(data.approveStatus=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/)
-          {
-            func.disabled=false;
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40105' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )
-          {
-            func.disabled=true;
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40105' /*MF từ chối*/
+          ) {
+            func.disabled = true;
           }
-        });  
+        });
       }
     }
   }

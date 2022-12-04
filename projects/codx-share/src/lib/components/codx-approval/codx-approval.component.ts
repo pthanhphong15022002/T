@@ -110,6 +110,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   click(e: any) {}
   openFormFuncID(e: any) {}
   valueChange(dt: any) {
+    debugger;
     this.transID = null;
     if (dt?.data) {
       if (dt?.data[0]) {
@@ -127,6 +128,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
+      debugger;
       if (fuc) {
         var params;
         if (fuc?.url) {
@@ -156,7 +158,9 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   getGridViewSetup(funcID: any) {
+    debugger;
     this.cache.valueList('ES022').subscribe((item) => {
+      debugger;
       this.dvlApproval = item?.datas[0];
       //this.ref.detectChanges();
     });

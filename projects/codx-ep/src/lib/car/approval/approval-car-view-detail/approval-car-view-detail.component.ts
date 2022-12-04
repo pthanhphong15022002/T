@@ -194,7 +194,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if(data.status==5 && data.driverName==null)
+            if(data.approveStatus==5 && data.driverName==null)
               func.disabled = false;
             else{
               func.disabled = true;
