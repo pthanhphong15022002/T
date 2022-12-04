@@ -52,18 +52,13 @@
         </label>
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
-            <div class="d-flex has-action-menu">
+            <div class="d-flex" #p="ngbPopover"
+            [ngbPopover]="hoverMoreFunction" (mouseenter)="openMF(item,p)"
+             autoClose="outside" placement="right">
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
               ></i>
               <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
-              <codx-mfunc
-                type="hover"
-                [dataItem]="item"
-                [formModel]="view.formModel"
-                (clickMF)="clickMF($event, item)"             
-                [isBookMark]="false"
-              ></codx-mfunc>
             </div>
           </ng-container>
         </div>
@@ -162,6 +157,7 @@
       </div>
     </div>
   </div>
+  
 </ng-template>
 <ng-template #cardImgFooter let-data>
   <div
@@ -465,7 +461,7 @@
     <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
-          <div class="moreFC rounded-4 py-2">
+          <div class="moreFC rounded-4 py-2"  id="{{data?.recID}}">
             <ng-container *ngIf="data.stepType == 'P'">
               <ng-container *ngFor="let menu of childFuncOfP">
                 <div
@@ -726,12 +722,12 @@
 </ng-template>
 
 <ng-template #hoverMoreFunction>
-  <!-- <codx-mfunc
+  <codx-mfunc
     type="hover"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, dataHover)"
     [isBookMark]="false"
     [dataItem]="dataHover"
   >
-  </codx-mfunc> -->
+  </codx-mfunc>
 </ng-template>
