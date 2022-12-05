@@ -17,8 +17,13 @@
 
 <ng-template #templateDetail>
   <ng-container *ngIf="orgUnitID">
-    <lib-organize-detail [orgUnitID]="orgUnitID" [data]="dataDetail" [formModel]="view.formModel" [numberLV]="numberLV"
-      (afterInit)="orgChartAfterView($event)"></lib-organize-detail>
+    <lib-organize-detail 
+      [orgUnitID]="orgUnitID" 
+      [data]="dataDetail" 
+      [formModel]="view.formModel" 
+      [numberLV]="numberLV"
+      (afterInit)="orgChartAfterView($event)">
+    </lib-organize-detail>
   </ng-container>
 </ng-template>
 
