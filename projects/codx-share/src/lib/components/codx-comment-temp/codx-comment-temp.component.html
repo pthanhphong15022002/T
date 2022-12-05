@@ -6,11 +6,28 @@
     </div>
 </div>
 <ng-template #tmpListItem let-dialog>
-    <codx-form [body]="body" [dialog]="dialog">
-    </codx-form>
-    <ng-template #body>
-        <codx-tree-history [objectID]="objectID" [objectType]="entityName" [actionType]="'C'" [addNew]="true"
-            [viewIcon]="false" [viewVote]="true">
-        </codx-tree-history>
-    </ng-template>
+    <div class="container p-4">
+        <div class="d-flex justify-content-between">
+            <div class="fw-bold mt-2">
+              <codx-label
+                name=""
+                formName="Tasks"
+                default="Danh sách bình luận"
+              ></codx-label>
+              <span class="">{{"(" + countData + ")"}}</span>
+            </div>
+            <div>
+              <button
+                class="btn text-dark-75 text-hover-danger cursor-pointer px-0"
+                (click)="dialog.close()"
+              >
+                <span class="icon-close icon-18"></span>
+              </button>
+            </div>
+          </div>
+        <div class="row">
+            <codx-tree-history [objectID]="objectID" [objectType]="'BG_Comments'" [actionType]="'C'" [addNew]="true">
+            </codx-tree-history>
+        </div>
+    </div>
 </ng-template>
