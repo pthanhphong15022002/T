@@ -214,6 +214,8 @@ export class PopupAddProcessStepsComponent
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
+          this.bpService.updatePermissionsFile([this.owners, this.processSteps.recID]).subscribe();
+
           var attachments = Array.isArray(res) ? res.length : 1;
           if (this.action == 'edit') {
             this.processSteps.attachments += attachments;
