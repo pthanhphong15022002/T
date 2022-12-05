@@ -88,8 +88,9 @@ export class ProcessesComponent
   funcID = 'BPT1';
   method = 'GetListProcessesAsync';
   itemSelected: any;
-  dialogPopupReName: DialogRef;
+  dialogPopup: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
+  @ViewChild('viewReleaseProcess', { static: true }) viewReleaseProcess;
   @Input() process = new BP_Processes();
   newName = '';
   crrRecID = '';
@@ -110,6 +111,16 @@ export class ProcessesComponent
   heightWin: any;
   widthWin: any;
   isViewCard: boolean = false;
+  
+  statusLable = '';
+  commentLable = '';
+  titleReleaseProcess=''
+  status = '';
+  comment = '';
+  processsId = '';
+  objectType = '';
+  entityName = '';
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -124,23 +135,17 @@ export class ProcessesComponent
 
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // if (this.funcID == 'BPT3') {
-    //   this.method = 'GetListShareByProcessAsync';
-    // }
-    // if (this.funcID == 'BPT2') {
-    //   this.method = 'GetListMyProcessesAsync';
-    // }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
-        this.gridViewSetup = res;
+        this.gridViewSetup = res;       
       }
-    });
-
+    });    
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
   }
 
-  onInit(): void {
+  onInit(): void { 
+   
     this.button = {
       id: 'btnAdd',
     };
@@ -429,7 +434,18 @@ export class ProcessesComponent
     this.dataSelected = data;
     this.newName = data.processName;
     this.crrRecID = data.recID;
-    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+    this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
+  }
+  releaseProcess(data) {
+    let userId = this.user?.userID
+    let checkRole = data?.permissions.findIndex(x => x.objectID == userId && x.publish);   
+    if(checkRole >=0){
+      this.statusLable = this.gridViewSetup['Status']['headerText'];
+      this.commentLable = this.gridViewSetup['Comments']['headerText'];
+      this.status = data.status;
+      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);
+    }
+   
   }
 
   Updaterevisions(moreFunc, data) {
@@ -563,6 +579,7 @@ export class ProcessesComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
+    this.entityName = e?.data?.entityName;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -584,6 +601,9 @@ export class ProcessesComponent
         break;
       case 'BPT102':
         this.reName(data);
+        break;
+      case 'BPT109':
+        this.releaseProcess(data);
         break;
       case 'BPT107':
         this.Updaterevisions(e?.data, data);
@@ -647,7 +667,7 @@ export class ProcessesComponent
           this.notification.notifyCode('SYS007');
           this.changeDetectorRef.detectChanges();
         }
-        this.dialogPopupReName.close();
+        this.dialogPopup.close();
       });
   }
 
@@ -766,6 +786,32 @@ export class ProcessesComponent
         }
       });
     }
+  }
+
+  setComment(e){
+    this.comment = e.data;
+  }
+
+  updateReleaseProcess(){
+    let processsId = this.itemSelected?.recID;
+
+    this.bpService.updateReleaseProcess(
+      [
+        processsId,
+        '1',
+        this.comment,
+        this.moreFunc,
+        this.entityName
+      ]
+    )
+    .subscribe((res) => {
+      if(res){
+        this.notification.notifyCode('SYS007');
+        this.dialogPopup.close();
+        this.view.dataService.update(res).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
 }

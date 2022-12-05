@@ -167,4 +167,13 @@ export class CodxBpService {
     return this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName,fucntionIdMain]);
   }
+
+  updateReleaseProcess(data){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateReleaseProcess',
+      data
+    );
+  }
 }

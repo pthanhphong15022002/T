@@ -123,7 +123,7 @@ export class PopupAddProcessStepsComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.gridViewSetup = res;
+          this.gridViewSetup = res;          
         }
       });
   }
@@ -366,7 +366,7 @@ export class PopupAddProcessStepsComponent
 
   eventApply(e) {
     if (!e || e?.data.length == 0) return;
-    var dataSelected = e?.data;
+    var dataSelected = e?.data['dataSelected'];
     var listUser = [];
     dataSelected.forEach((dt) => {
       var index = -1;
