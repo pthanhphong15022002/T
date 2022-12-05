@@ -41,7 +41,6 @@
             class="test-check"
             [checked]="checkWeek"
             (valueChange)="valueChangeTypeCalendar($event)"
-            [crrValue]="checkWeek"
           >
           </codx-input>
         </div>
@@ -133,6 +132,74 @@
                 [checked]="
                   checkCO_MeetingsParam == 'true' ||
                   checkCO_MeetingsParam == '1'
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div *ngIf="EP_BookingRoomsParam != null">
+          <div class="flex">
+            <div class="w-5px">
+              <li
+                [style.background-color]="EP_BookingRoomsParam?.ShowColor"
+                [style.color]="EP_BookingRoomsParam?.ShowColor"
+              ></li>
+            </div>
+            <div class="show-event">
+              <codx-label
+                name="lblBookingRoom"
+                formName="EP_BookingRooms"
+                default="Lịch đặt phòng"
+              >
+              </codx-label>
+            </div>
+            <div class="show-event-check">
+              <codx-input
+                type="checkbox"
+                field="CO_BookingRooms_ShowEvent"
+                [checked]="
+                  checkEP_BookingRoomsParam == 'true' ||
+                  checkEP_BookingRoomsParam == '1'
+                "
+                labelPosition="Before"
+                [disabled]="false"
+                class="test-check"
+                (valueChange)="valueChangeSetting($event)"
+              >
+              </codx-input>
+            </div>
+          </div>
+        </div>
+        <br />
+        <div *ngIf="EP_BookingCarsParam != null">
+          <div class="flex">
+            <div class="w-5px">
+              <li
+                [style.background-color]="EP_BookingCarsParam?.ShowColor"
+                [style.color]="EP_BookingCarsParam?.ShowColor"
+              ></li>
+            </div>
+            <div class="show-event">
+              <codx-label
+                name="lblBookingCar"
+                formName="EP_BookingCars"
+                default="Lịch đặt xe"
+              >
+              </codx-label>
+            </div>
+            <div class="show-event-check">
+              <codx-input
+                type="checkbox"
+                field="CO_BookingCars_ShowEvent"
+                [checked]="
+                  checkEP_BookingCarsParam == 'true' ||
+                  checkEP_BookingCarsParam == '1'
                 "
                 labelPosition="Before"
                 [disabled]="false"
@@ -258,6 +325,70 @@
           field="CO_Meetings_ShowEvent"
           [checked]="
             checkCO_MeetingsParam == 'true' || checkCO_MeetingsParam == '1'
+          "
+          labelPosition="Before"
+          [disabled]="false"
+          class="test-check"
+          (valueChange)="valueChangeSetting($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <br />
+    <div class="flex" *ngIf="EP_BookingRoomsParam != null">
+      <div class="w-5px">
+        <li
+          [style.background-color]="EP_BookingRoomsParam?.ShowColor"
+          [style.color]="EP_BookingRoomsParam?.ShowColor"
+        ></li>
+      </div>
+      <div class="show-list-event">
+        <codx-label
+          name="lblBookingRoom"
+          formName="EP_BookingRooms"
+          default="Đặt phòng"
+        >
+        </codx-label>
+      </div>
+      <div class="show-event-check">
+        <codx-input
+          type="checkbox"
+          field="EP_BookingRooms_ShowEvent"
+          [checked]="
+            checkEP_BookingRoomsParam == 'true' ||
+            checkEP_BookingRoomsParam == '1'
+          "
+          labelPosition="Before"
+          [disabled]="false"
+          class="test-check"
+          (valueChange)="valueChangeSetting($event)"
+        >
+        </codx-input>
+      </div>
+    </div>
+    <br />
+    <div class="flex" *ngIf="EP_BookingCarsParam != null">
+      <div class="w-5px">
+        <li
+          [style.background-color]="EP_BookingCarsParam?.ShowColor"
+          [style.color]="EP_BookingCarsParam?.ShowColor"
+        ></li>
+      </div>
+      <div class="show-list-event">
+        <codx-label
+          name="lblBookingCar"
+          formName="EP_BookingCars"
+          default="Đặt xe"
+        >
+        </codx-label>
+      </div>
+      <div class="show-event-check">
+        <codx-input
+          type="checkbox"
+          field="EP_BookingCars_ShowEvent"
+          [checked]="
+            checkEP_BookingCarsParam == 'true' ||
+            checkEP_BookingCarsParam == '1'
           "
           labelPosition="Before"
           [disabled]="false"
@@ -501,6 +632,45 @@
         [ngStyle]="{
           'background-color': CO_MeetingsParam?.ShowBackground,
           'border-left': '3px ' + CO_MeetingsParam?.ShowColor + ' solid'
+        }"
+      >
+        <div class="checkbox-list">
+          <div class="d-flex flex-column note-option">
+            <span [innerHTML]="item.memo"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="
+        (checkEP_BookingRoomsParam == true ||
+          checkEP_BookingRoomsParam == '1') &&
+        item?.type == 'EP_BookingRooms'
+      "
+    >
+      <div
+        [ngStyle]="{
+          'background-color': EP_BookingRooms?.ShowBackground,
+          'border-left': '3px ' + EP_BookingRooms?.ShowColor + ' solid'
+        }"
+      >
+        <div class="checkbox-list">
+          <div class="d-flex flex-column note-option">
+            <span [innerHTML]="item.memo"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="
+        (checkEP_BookingCarsParam == true || checkEP_BookingCarsParam == '1') &&
+        item?.type == 'EP_BookingCars'
+      "
+    >
+      <div
+        [ngStyle]="{
+          'background-color': EP_BookingCars?.ShowBackground,
+          'border-left': '3px ' + EP_BookingCars?.ShowColor + ' solid'
         }"
       >
         <div class="checkbox-list">
