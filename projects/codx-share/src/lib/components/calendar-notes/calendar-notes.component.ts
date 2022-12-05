@@ -59,12 +59,18 @@ export class CalendarNotesComponent
   TM_Tasks: any = new Array();
   WP_Notes: any = new Array();
   CO_Meetings: any = new Array();
+  EP_BookingRooms: any = new Array();
+  EP_BookingCars: any = new Array();
   TM_TasksParam: any;
   WP_NotesParam: any;
   CO_MeetingsParam: any;
+  EP_BookingRoomsParam: any;
+  EP_BookingCarsParam: any;
   checkTM_TasksParam: any;
   checkWP_NotesParam: any;
   checkCO_MeetingsParam: any;
+  checkEP_BookingRoomsParam: any;
+  checkEP_BookingCarsParam: any;
   daySelected: any;
   checkWeek = true;
   typeList = 'notes-home';
@@ -381,17 +387,34 @@ export class CalendarNotesComponent
       .subscribe((res) => {
         if (res && res.msgBodyData[0]) {
           var dt = res.msgBodyData[0];
-          this.TM_TasksParam = JSON.parse(dt[3].TM_Tasks);
-          this.WP_NotesParam = JSON.parse(dt[3].WP_Notes);
-          this.CO_MeetingsParam = JSON.parse(dt[3].CO_Meetings);
+          this.TM_TasksParam = dt[5]?.TM_Tasks
+            ? JSON.parse(dt[5]?.TM_Tasks)
+            : null;
+          this.WP_NotesParam = dt[5]?.WP_Notes
+            ? JSON.parse(dt[5]?.WP_Notes)
+            : null;
+          this.CO_MeetingsParam = dt[5]?.CO_Meetings
+            ? JSON.parse(dt[5]?.CO_Meetings)
+            : null;
+          this.EP_BookingRoomsParam = dt[5]?.EP_BookingRooms
+            ? JSON.parse(dt[5]?.EP_BookingRooms)
+            : null;
+          this.EP_BookingCarsParam = dt[5]?.EP_BookingCars
+            ? JSON.parse(dt[5]?.EP_BookingCars)
+            : null;
           if (updateCheck == true) {
             this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
             this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
             this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
+            this.checkEP_BookingRoomsParam =
+              this.EP_BookingRoomsParam?.ShowEvent;
+            this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
           }
           this.WP_Notes = dt[0];
           this.TM_Tasks = dt[1];
           this.CO_Meetings = dt[2];
+          this.EP_BookingRooms = dt[3];
+          this.EP_BookingCars = dt[4];
           if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
               if (res.isPin == true || res.isPin == '1') {
@@ -407,6 +430,8 @@ export class CalendarNotesComponent
     let calendarWP = 0;
     let calendarTM = 0;
     let calendarCO = 0;
+    let calendarEP_Room = 0;
+    let calendarEP_Car = 0;
     let countShowCalendar = 0;
     if (args) {
       var date = args.date;
@@ -417,7 +442,13 @@ export class CalendarNotesComponent
           (this.checkCO_MeetingsParam &&
             this.CO_MeetingsParam &&
             this.CO_Meetings) ||
-          (this.checkWP_NotesParam && this.WP_NotesParam && this.WP_Notes)
+          (this.checkWP_NotesParam && this.WP_NotesParam && this.WP_Notes) ||
+          (this.checkEP_BookingRoomsParam &&
+            this.EP_BookingRoomsParam &&
+            this.EP_BookingRooms) ||
+          (this.checkEP_BookingCarsParam &&
+            this.EP_BookingCarsParam &&
+            this.EP_BookingCars)
         ) {
           clearInterval(myInterval);
           if (
@@ -450,7 +481,6 @@ export class CalendarNotesComponent
               }
             }
           }
-
           if (
             this.checkWP_NotesParam == true ||
             this.checkWP_NotesParam == '1'
@@ -474,10 +504,41 @@ export class CalendarNotesComponent
               }
             }
           }
-
+          if (
+            this.checkEP_BookingRoomsParam == true ||
+            this.checkEP_BookingRoomsParam == '1'
+          ) {
+            if (this.EP_BookingRoomsParam?.ShowEvent == '1') {
+              for (let y = 0; y < this.EP_BookingRooms?.length; y++) {
+                var dateParse = new Date(this.EP_BookingRooms[y]?.startDate);
+                var dataLocal = dateParse.toLocaleDateString();
+                if (date == dataLocal) {
+                  calendarEP_Room++;
+                  break;
+                }
+              }
+            }
+          }
+          if (
+            this.checkEP_BookingCarsParam == true ||
+            this.checkEP_BookingCarsParam == '1'
+          ) {
+            if (this.EP_BookingCarsParam?.ShowEvent == '1') {
+              for (let y = 0; y < this.EP_BookingCars?.length; y++) {
+                var dateParse = new Date(this.EP_BookingCars[y]?.startDate);
+                var dataLocal = dateParse.toLocaleDateString();
+                if (date == dataLocal) {
+                  calendarEP_Car++;
+                  break;
+                }
+              }
+            }
+          }
           var spanWP: HTMLElement = document.createElement('span');
           var spanTM: HTMLElement = document.createElement('span');
           var spanCO: HTMLElement = document.createElement('span');
+          var spanEP_Room: HTMLElement = document.createElement('span');
+          var spanEP_Car: HTMLElement = document.createElement('span');
           var flex: HTMLElement = document.createElement('span');
           flex.className = 'd-flex note-point';
           ele.append(flex);
@@ -525,11 +586,41 @@ export class CalendarNotesComponent
             }
             flex.append(spanCO);
           }
+          if (calendarEP_Room >= 1) {
+            if (this.typeCalendar == 'week') {
+              spanEP_Room.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            } else {
+              spanEP_Room.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};height: 6px;border-radius: 50%;`
+              );
+            }
+            flex.append(spanEP_Room);
+          }
+          if (calendarEP_Car >= 1) {
+            if (this.typeCalendar == 'week') {
+              spanEP_Car.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};height: 6px;border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+            } else {
+              spanEP_Car.setAttribute(
+                'style',
+                `width: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};height: 6px;border-radius: 50%;`
+              );
+            }
+            flex.append(spanEP_Car);
+          }
 
           if (
             calendarWP >= 1 &&
             calendarTM >= 1 &&
             calendarCO >= 1 &&
+            calendarEP_Room >= 1 &&
+            calendarEP_Car >= 1 &&
             countShowCalendar < 1
           ) {
             if (this.typeCalendar == 'week') {
@@ -545,6 +636,14 @@ export class CalendarNotesComponent
                 'style',
                 `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
               );
+              spanEP_Room.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+              spanEP_Car.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
             } else {
               spanWP.setAttribute(
                 'style',
@@ -558,10 +657,20 @@ export class CalendarNotesComponent
                 'style',
                 `width: 6px;height: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
               );
+              spanEP_Room.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
+              spanEP_Car.setAttribute(
+                'style',
+                `width: 6px;height: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};border-radius: 50%;margin-left: 2px;margin-top: 0px;`
+              );
             }
             flex.append(spanWP);
             flex.append(spanTM);
             flex.append(spanCO);
+            flex.append(spanEP_Room);
+            flex.append(spanEP_Car);
           }
         }
       }, 500);
