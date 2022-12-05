@@ -128,7 +128,7 @@ export class BP_ProcessPermissions {
   upload: boolean;
   isActive: boolean;
   download: boolean;
-  nemberType: string;
+  memberType: string;
   startDate: Date;
   endDate: Date;
   approveStatus: string;
@@ -142,6 +142,8 @@ export class BP_ProcessPermissions {
   modifiedOn: Date;
   modifiedBy: string;
   form: string;
+  reason: string;
+  memo: string;
 }
 
 export class BP_ProcessesRating{
@@ -164,6 +166,8 @@ export class tmpPermission{
   postBlog: boolean;
   urlShare: string;
   urlPath: string;
+  reason: string;
+  memo: string;
   permissions: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
   byPermission: BP_ProcessPermissions[];

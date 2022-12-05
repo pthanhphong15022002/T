@@ -50,7 +50,7 @@ export const routes: Routes = [
       },
       {
         path: 'aprpermission/:funcID',
-        component: AprpermissionComponent,
+        component: ProcessesComponent,
       },
       {
         path: 'testhtml',

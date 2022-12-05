@@ -17,10 +17,6 @@ import { ApiHttpService, CallFuncService, DialogModel } from 'codx-core';
 export class CodxCommentTempComponent implements OnInit {
   @Input() objectID: string = null;
   @Input() zIndex: number = 0; //Anh Thảo truyền z index
-  services: string = 'BG';
-  assamplyName: string = 'ERM.Business.BG';
-  className: string = 'TrackLogsBusiness';
-  entityName: string = 'BG_TrackLogs';
   lstData: any[] = [];
   dVll: any = {};
 
@@ -40,9 +36,9 @@ export class CodxCommentTempComponent implements OnInit {
     if (pObjectID) {
       this.api
         .execSv(
-          this.services,
-          this.assamplyName,
-          this.className,
+          "BG",
+          "ERM.Business.BG",
+          "CommentLogsBusiness",
           'GetTotalCommentsAsync',
           [pObjectID]
         )

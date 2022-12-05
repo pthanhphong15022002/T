@@ -196,7 +196,7 @@
                 <div class="w-100">
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
                     <span class="ms-3">
-                        <ng-container *ngFor="let item of data.sendToObject">
+                        <ng-container *ngFor="let item of data.sendToObjects">
                             <span [ngbPopover]="tmpTUserHover" triggers="mouseenter:mouseleave">
                                 <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
                                 </codx-img>
