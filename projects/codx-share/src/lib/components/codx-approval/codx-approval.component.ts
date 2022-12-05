@@ -158,7 +158,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   getGridViewSetup(funcID: any) {
-    debugger;
     this.cache.valueList('ES022').subscribe((item) => {
       debugger;
       this.dvlApproval = item?.datas[0];
