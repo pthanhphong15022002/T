@@ -172,6 +172,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
       option
     );
+    
   }
 
   getOKRPlans(periodID: any , interval: any , year: any)

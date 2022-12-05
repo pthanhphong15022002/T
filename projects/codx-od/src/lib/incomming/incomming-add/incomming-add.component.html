@@ -4,7 +4,7 @@
 <ng-template #subHeader>
   <div class="d-flex align-items-center">
     <div *ngIf="
-        this.dispatch?.status == '1' || this.dispatch?.status == '2';
+        this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4';
         else elseSelected
       ">
       <span class="btn btn-sm btn-primary btn-pill" (click)="openFormUploadFile()">
@@ -26,7 +26,7 @@
       (fileAdded)="fileAdded($event)" (fileDelete)="handleDelete($event)" (fileCount)="getfileCount($event)"
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [objectId]="dispatch?.recID" [allowMultiFile]="0"
       [idBrowse]="'add'" [hideDelete]="
-        this.dispatch?.status == '1' || this.dispatch?.status == '2' ? '0' : '1'
+        this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
       " hideMoreF="0" [category]="'5'" [fdName]="dispatch?.dispatchNo">
     </codx-attachment>
   </div>

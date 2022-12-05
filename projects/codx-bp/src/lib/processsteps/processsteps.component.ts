@@ -59,7 +59,10 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   styleUrls: ['./processsteps.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class ProcessStepsComponent extends UIComponent implements OnInit,AfterViewInit {
+export class ProcessStepsComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
@@ -120,12 +123,13 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
   childFuncOfP = [];
   parentID = '';
   linkFile: any;
+  crrPopper: any;
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message
   listCountPhases: any;
   actived = false;
-  isBlock:any = true;
+  isBlock: any = true;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -228,8 +232,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
       },
     ];
 
-   
-
     this.view.dataService.methodSave = 'AddProcessStepAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessStepAsync';
     this.view.dataService.methodDelete = 'DeleteProcessStepAsync';
@@ -269,7 +271,6 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
         else {
           if ((this.view.currentView as any)?.kanban)
             this.kanban = (this.view.currentView as any).kanban;
-          this.notiService.notifyCode('SYS006');
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
             if (processStep.stepType == 'A') {
@@ -316,6 +317,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
           }
           this.dataTreeProcessStep = this.view.dataService.data;
           this.isBlockClickMoreFunction(this.dataTreeProcessStep);
+          this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -340,7 +342,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
             'edit',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
-            this.formModelMenu          
+            this.formModelMenu,
           ],
           option
         );
@@ -506,7 +508,8 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
             'copy',
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
-            this.formModelMenu
+            this.formModelMenu,
+            data.recID
           ],
           option
         );
@@ -552,11 +555,17 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
                 ? this.kanban?.columns?.length
                 : 0;
               this.kanban.addColumn(column, index);
+              if(processStep.items.length>0 ){
+                processStep.items.forEach(obj=>{
+                  if (this.kanban) this.kanban.addCard(obj);
+                })            
+              }          
             }
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -643,7 +652,12 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
     if (this.listCountPhases <= 0 && evt.id != 'P') {
       return this.notiService.notify(this.msgBP001);
     }
-    if (this.listCountPhases > 0 && evt.id != 'A' && this.isBlock && evt.id != 'P' ) {
+    if (
+      this.listCountPhases > 0 &&
+      evt.id != 'A' &&
+      this.isBlock &&
+      evt.id != 'P'
+    ) {
       return this.notiService.notify(this.msgBP002);
     }
 
@@ -657,7 +671,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
         ' ' +
         p?.text.charAt(0).toLocaleLowerCase() +
         p?.text.slice(1);
-      this.add();
+      // this.add();
     } else {
       this.stepType = evt.id;
       // let customName = '';
@@ -671,7 +685,7 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
         ' ' +
         evt?.text.charAt(0).toLocaleLowerCase() +
         evt?.text.slice(1);
-      this.add();
+      // this.add();
       // });
     }
     this.formModelMenu = this.view?.formModel;
@@ -685,7 +699,10 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
+            this.formModelMenu.entityName = funcMenu.entityName;
+            this.add();
           });
+          
       });
     }
   }
@@ -713,22 +730,26 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
+            this.formModelMenu.entityName = funcMenu.entityName;
+
+
+            switch (e.functionID) {
+              case 'SYS01':
+                this.add();
+                break;
+              case 'SYS03':
+                this.edit(data);
+                break;
+              case 'SYS04':
+                this.copy(data);
+                break;
+              case 'SYS02':
+                this.delete(data);
+            }
           });
       });
     }
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-    }
+  
   }
   clickMenu(data, funcMenu) {
     const isdata = data.items.length;
@@ -1199,20 +1220,36 @@ export class ProcessStepsComponent extends UIComponent implements OnInit,AfterVi
     }
   }
 
-  isBlockClickMoreFunction(listData){
-    const check = listData.length>0?true:false;
-    if(check){
+  isBlockClickMoreFunction(listData) {
+    const check = listData.length > 0 ? true : false;
+    if (check) {
       this.listCountPhases = listData.length;
-      this.isBlock=true;
-      listData.forEach(x=>{
-          if(x.items.length >0) {
-            this.isBlock=false;
-          }
-      })
-    }
-    else {
+      this.isBlock = true;
+      listData.forEach((x) => {
+        if (x.items.length > 0) {
+          this.isBlock = false;
+        }
+      });
+    } else {
       this.listCountPhases = listData.length;
-      this.isBlock=true;
+      this.isBlock = true;
     }
   }
+
+  openMF(data, p) {
+    if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
+    this.crrPopper = p;
+    if (data != null) {
+      // var element = document.getElementById(data?.parentID);
+      // if (element ) {
+      //  element.classList.add('hiden') ;  
+      // }
+      this.dataHover = data;
+      p.open();
+    } else {
+      p.close();
+    }
+    this.changeDetectorRef.detectChanges()
+  }
+
 }

@@ -121,14 +121,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
-      {
-        name: 'ReferencesOD',
-        textDefault: 'Tham chiếu',
-        isActive: false,
-        template: this.reference,
-      },
-      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+      // {
+      //   name: 'ReferencesOD',
+      //   textDefault: 'Tham chiếu',
+      //   isActive: false,
+      //   template: this.reference,
+      // },
+      // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
+    if(this.view.funcID == "ODT41") this.tabControl.push({ name: 'Approve', textDefault: 'Xét duyệt', isActive: false });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -979,7 +980,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         )
         .subscribe((item) => {
           if (item) {
-            data.approveStatus = '4';
+            data.approveStatus = '0';
             this.odService.updateDispatch(data, false).subscribe((item) => {
               if (item.status == 0) {
                 this.view.dataService.update(item?.data).subscribe();
@@ -1148,6 +1149,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         completed[i].disabled = true;
       }
     }
+    //Từ chối , Bị đóng 
+    if(data?.status == "9" || data?.approveStatus == "4")
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211'
+      );
+      if(approvel[0]) approvel[0].disabled = true;
+    }
+    
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
