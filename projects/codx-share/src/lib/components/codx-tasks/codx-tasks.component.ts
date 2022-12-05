@@ -504,7 +504,7 @@ export class CodxTasksComponent
     option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose, title],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose, title,data],
       option
     );
     this.dialog.closed.subscribe((e) => {

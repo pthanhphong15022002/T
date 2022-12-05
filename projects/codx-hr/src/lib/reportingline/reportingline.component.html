@@ -13,7 +13,9 @@
 </codx-views>
 
 <ng-template #tmpTree let-data>
-    {{data.positionName}}
+    <div class="d-flex align-items-center py-1">
+        <i class="icon-home me-2"></i><span>{{ data.positionName }}</span>
+      </div>
 </ng-template>
 
 

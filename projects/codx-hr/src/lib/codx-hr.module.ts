@@ -93,6 +93,7 @@ import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-
 import { PopupEAssetsComponent } from './employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEPassportsComponent } from './employee-profile/popup-epassports/popup-epassports.component';
 import { PopupEexperiencesComponent } from './employee-profile/popup-eexperiences/popup-eexperiences.component';
+import { OrganizationOrgchartComponent } from './organization/organization-orgchart/organization-orgchart.component';
 
 export const routes: Routes = [
   {
@@ -296,7 +297,8 @@ const T_Component: Type<any>[] = [
   PopupEWorkPermitsComponent,
   PopupEJobSalariesComponent,
   PopupEBasicSalariesComponent,
-  PopupEexperiencesComponent
+  PopupEexperiencesComponent,
+  OrganizationOrgchartComponent
 ];
 @NgModule({
   imports: [
