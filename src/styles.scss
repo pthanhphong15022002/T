@@ -1242,10 +1242,23 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   margin-top: 1rem !important;
 }
 
+/*** tabs ***/
+.tab-item {
+  padding: 7px;
+  display: inline-block;
+  border-bottom: 2px transparent solid;
+  margin-right: 1px;
+}
+
+.tab-item:hover,
+.tab-item.tab-active {
+  cursor: pointer;
+  color: var(--text-primary) !important;
+  border-color: var(--text-primary);
+}
 
 /******* tam ***/
 
 codx-vll {
-  font-style: 12px !important;
   border-radius: 20px !important;
 }
