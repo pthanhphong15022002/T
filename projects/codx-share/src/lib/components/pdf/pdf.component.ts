@@ -1544,7 +1544,7 @@ export class PdfComponent
       });
       this.curSelectedArea.destroy();
       this.curSelectedArea = textArea;
-      let curLayer = this.lstLayer.get(tmpName.PageNumber + 1);
+      let curLayer = this.lstLayer.get(tmpName.PageNumber); //xoa cho nay ne
 
       this.tr?.nodes([this.curSelectedArea]);
       curLayer.add(this.curSelectedArea);

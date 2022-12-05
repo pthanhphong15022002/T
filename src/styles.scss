@@ -21,6 +21,10 @@
 }
 
 
+erm-quick-links-inner .dropdown-menu {
+  width: 450px !important;
+}
+
 /***** end theme ****/
 ::-webkit-scrollbar {
   width: 0.4rem;
@@ -521,6 +525,11 @@ codx-view-list-detail .codx-detail-footer {
 
   border-bottom: 2px var(--text-primary) solid !important;
   border-radius: 0;
+}
+
+.e-tab .e-tab-header .e-toolbar-item.e-active span,
+.e-tab .e-tab-header .e-toolbar-item.e-active {
+  color: var(--text-primary) !important;
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
