@@ -105,12 +105,12 @@ export class PopupAddPermissionComponent implements OnInit {
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
         this.per.toPermission[i].autoCreate = false;
-        this.per.toPermission[i].nemberType = '3';
+        this.per.toPermission[i].memberType = '3';
       } else {
         this.per.toPermission[i].share = this.share;
         this.per.toPermission[i].download = this.download;
         this.per.toPermission[i].autoCreate = false;
-        this.per.toPermission[i].nemberType = '2';
+        this.per.toPermission[i].memberType = '2';
       }
       if (!this.isShare) {
         this.per.form = '3';

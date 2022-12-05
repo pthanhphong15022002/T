@@ -128,7 +128,7 @@ export class BP_ProcessPermissions {
   upload: boolean;
   isActive: boolean;
   download: boolean;
-  nemberType: string;
+  memberType: string;
   startDate: Date;
   endDate: Date;
   approveStatus: string;
