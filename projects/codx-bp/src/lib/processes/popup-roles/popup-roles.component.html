@@ -4,7 +4,7 @@
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
         <div class="user-mini-nav">
           <div *ngIf="process != null && process?.permissions != null">
-            <ng-container *ngFor="let perm of process?.permissions; index as i;">
+            <ng-container *ngFor="let perm of permissions; index as i;">
               <div (click)="changePermission(i)"
                 [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
@@ -37,7 +37,7 @@
                           <div class="text-dark fw-bold">
                             {{ perm.objectName }}
                           </div>
-                          <div *ngIf="perm.autoCreate" class="text-gray-700">{{ autoName }}</div>
+                          <!-- <div  class="text-gray-700">{{ role.text }}</div> -->
                         </div>
                       </div>
 
@@ -55,19 +55,22 @@
             </ng-container>
           </div>
         </div>
-        <div class="add-user d-flex justify-content-between">
-          <div class="d-flex justify-content-between">
+        <div class="add-user">
+          <div class="d-flex justify-content-end">
+            <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+              (valueChange)="changUsers($event)">
+            </codx-input>
+          </div>
+          <!-- <div class="d-flex justify-content-between">
             <ng-container *ngFor="let item of listRoles">
               <div class="d-flex align-items-center ms-3">
                 <span inlineSVG="./assets/themes/bp/default/img/{{ item.icon }}"></span>
                 <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
               </div>
             </ng-container>
-          </div>
+          </div> -->
 
-          <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-            (valueChange)="changUsers($event)">
-          </codx-input>
+
         </div>
       </div>
       <div class="col-xl-8 col-lg-8 col-md-8 col-sm-12 ps-6 role-right">
@@ -89,10 +92,10 @@
             <tbody>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Toàn quyền'" [fiedName]="'Full'"></codx-label>
+                  <codx-label [default]="'Toàn quyền'" [formModel]="dialog.formModel" [fiedName]="'Full'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [fiedName]="'DescriptionFull'">
+                  <codx-label [default]="'Người dùng có tất cả quyền trên quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionFull'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -116,10 +119,10 @@
               </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Xem'" [fiedName]="'Read'"></codx-label>
+                  <codx-label [default]="'Xem'" [formModel]="dialog.formModel" [fiedName]="'Read'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xem chi tiết quy trình'" [fiedName]="'DescriptionRead'">
+                  <codx-label [default]="'Cho phép xem chi tiết quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionRead'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -129,20 +132,34 @@
 
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Chỉnh sửa'" [fiedName]="'Update'"></codx-label>
+                  <codx-label [default]="'Chỉnh sửa'" [formModel]="dialog.formModel" [fiedName]="'Edit'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chỉnh sửa thông tin của folder/file'"
-                    [fiedName]="'DescriptionUpdate'"></codx-label>
+                  <codx-label [default]="'Cho phép chỉnh sửa qui trình'" [formModel]="dialog.formModel"
+                    [fiedName]="'Edit'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="updatePerm" field="update"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'update')">
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="edit" field="edit"
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'edit')">
                   </codx-input>
                 </td>
-              </tr> -->
+              </tr>
+              <tr>
+                <td class="font-size-lg text-dark">
+                  <codx-label [default]="'Phát hành'" [formModel]="dialog.formModel" [fiedName]="'Publish'"></codx-label>
+                </td>
+                <td>
+                  <codx-label [default]="'Cho phép phát hành qui trình'" [formModel]="dialog.formModel"
+                    [fiedName]="'Publish'"></codx-label>
+                </td>
+                <td class="text-center">
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="publish" field="publish"
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'publish')">
+                  </codx-input>
+                </td>
+              </tr>
               <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Xóa'" [fiedName]="'Delete'"></codx-label>
@@ -158,10 +175,10 @@
               </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Chia sẻ'" [fiedName]="'Share'"></codx-label>
+                  <codx-label [default]="'Chia sẻ'" [formModel]="dialog.formModel" [fiedName]="'Share'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chia sẻ qui trình'" [fiedName]="'DescriptionShare'"></codx-label>
+                  <codx-label [default]="'Cho phép chia sẻ qui trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionShare'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="share" field="share"
@@ -171,10 +188,10 @@
               </tr>
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Phân quyền'" [fiedName]="'Assign'"></codx-label>
+                  <codx-label [default]="'Phân quyền'" [formModel]="dialog.formModel" [fiedName]="'Assign'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [fiedName]="'DescriptionAssign'">
+                  <codx-label [default]="'Cho phép chia sẻ và chỉnh sửa quyền'" [formModel]="dialog.formModel" [fiedName]="'DescriptionAssign'">
                   </codx-label>
                 </td>
                 <td class="text-center">
@@ -198,10 +215,10 @@
               </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Download'" [fiedName]="'Download'"></codx-label>
+                  <codx-label [default]="'Download'" [formModel]="dialog.formModel" [fiedName]="'Download'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép download file'" [fiedName]="'DescriptionDownload'"></codx-label>
+                  <codx-label [default]="'Cho phép download file'" [formModel]="dialog.formModel" [fiedName]="'DescriptionDownload'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="download"

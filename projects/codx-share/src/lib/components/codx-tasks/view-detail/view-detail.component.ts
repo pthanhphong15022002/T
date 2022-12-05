@@ -241,8 +241,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     this.dataTree = [];
     if (
       !this.itemSelected ||
-      !this.itemSelected?.taskID ||
-      !this.itemSelected.isAssign
+      !this.itemSelected?.taskID 
     )
       return;
     this.api
