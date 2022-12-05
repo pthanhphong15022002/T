@@ -247,7 +247,7 @@
         <div class="mt-2" style="overflow: auto" [style.maxHeight]="heightScroll + 'px'" (scroll)="scrollFile()">
             <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" [isScroll]="'1'"
                 (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
-                [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)">
+                [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)" [permissions]="permissions">
             </codx-thumbnail>
         </div>
     </div>

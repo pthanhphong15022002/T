@@ -163,6 +163,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.active = 1;
     this.setHeight();
   }
+
   ngOnInit(): void {
     this.active = 1;
     this.formModel = this.view?.formModel;
@@ -1157,7 +1158,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       );
       if(approvel[0]) approvel[0].disabled = true;
     }
-    
+
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
