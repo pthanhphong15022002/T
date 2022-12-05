@@ -98,6 +98,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   checkDownloadRight(file) {
+    debugger;
     return file.download;;
   }
 

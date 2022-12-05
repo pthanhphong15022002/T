@@ -1149,6 +1149,15 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         completed[i].disabled = true;
       }
     }
+    //Từ chối , Bị đóng 
+    if(data?.status == "9" || data?.approveStatus == "4")
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211'
+      );
+      if(approvel[0]) approvel[0].disabled = true;
+    }
+    
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
