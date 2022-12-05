@@ -55,7 +55,7 @@ export class PopupAddProcessStepsComponent
   textChange = '';
   titleActon = '';
   stepType = 'C';
-  vllShare = 'TM003';
+  vllShare = 'BP021';
   readOnly = false;
   isHaveFile = false;
   isNewEmails = true;
@@ -366,7 +366,7 @@ export class PopupAddProcessStepsComponent
 
   eventApply(e) {
     if (!e || e?.data.length == 0) return;
-    var dataSelected = e?.data['dataSelected'];
+    var dataSelected = e?.data;
     var listUser = [];
     dataSelected.forEach((dt) => {
       var index = -1;
