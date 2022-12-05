@@ -119,7 +119,7 @@ export class CodxBpService {
       'EmployeesBusiness',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
-    );  
+    );
   }
   getProcessStepDetailsByRecID(recID) {
     return this.api.exec<any>(
@@ -175,5 +175,9 @@ export class CodxBpService {
       'UpdateReleaseProcess',
       data
     );
+  }
+  checkAdminOfBP(userId ): Observable<any> {
+    return this.api
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
   }
 }

@@ -17,14 +17,22 @@ import { ForgotPasswordComponent } from './forgot-password/forgot-password.compo
 import { CoreModule } from 'src/core/core.module';
 import { CodxCoreModule } from 'codx-core';
 import { environment } from 'src/environments/environment';
+import { ForgotPasswordDefaultComponent } from './default/forgot-password-default/forgot-password-default.component';
+import { ForgotPasswordQTSCComponent } from './cz/qtsc/forgot-password-qtsc/forgot-password-qtsc.component';
+import { LoginDefaultComponent } from './default/login-default/login-default.component';
+import { LoginQTSCComponent } from './cz/qtsc/login-qtsc/login-qtsc.component';
 
 @NgModule({
   declarations: [
     LoginComponent,
+    LoginDefaultComponent,
+    LoginQTSCComponent,
     // RegistrationComponent,
     ForgotPasswordComponent,
     // LogoutComponent,
-    AuthComponent
+    AuthComponent,
+    ForgotPasswordDefaultComponent,
+    ForgotPasswordQTSCComponent
   ],
   imports: [
     CommonModule,
