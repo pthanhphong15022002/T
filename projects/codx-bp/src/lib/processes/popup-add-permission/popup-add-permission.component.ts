@@ -258,13 +258,15 @@ export class PopupAddPermissionComponent implements OnInit {
               'SYS',
               'ERM.Business.AD',
               'EmailTemplatesBusiness',
-              'GetViewEmailTemplateAsync',
+              'GetViewEmailTemplate2Async',
               [$event.data]
             )
             .subscribe((res) => {
               if (res != null) {
                 this.requestTitle = res[0].subject;
-              }
+              }else
+              this.requestTitle = $event.data;
+
             });
         }
         break;
