@@ -151,7 +151,7 @@
       <div *ngIf="typeCalendar == 'week'">
         <selectweek
           (onChangeWeek)="setEventWeek()"
-          (onChangeValue)="changeDayOfWeek($event)"
+          (onChangeValue)="changeDayOfWeek($event, listview)"
           (onChangeNewWeek)="changeNewWeek($event)"
         >
         </selectweek>
@@ -270,7 +270,6 @@
   </ng-container>
   <div class="lstView">
     <codx-listview
-      *ngIf="showList"
       #listview
       service="SYS"
       assemblyName="ERM.Business.SYS"
@@ -294,7 +293,12 @@
         item.showCalendar == true
       "
     >
-      <div class="note-content">
+      <div
+        [ngStyle]="{
+          'background-color': WP_NotesParam?.ShowBackground,
+          'border-left': '3px ' + WP_NotesParam?.ShowColor + ' solid'
+        }"
+      >
         <div class="checkbox-list">
           <div *ngIf="item.memo != null">
             <div class="action-menu d-flex">
@@ -474,7 +478,12 @@
         item?.type == 'TM_Tasks'
       "
     >
-      <div class="task-content">
+      <div
+        [ngStyle]="{
+          'background-color': TM_TasksParam?.ShowBackground,
+          'border-left': '3px ' + TM_TasksParam?.ShowColor + ' solid'
+        }"
+      >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.memo"></span>
@@ -488,7 +497,12 @@
         item?.type == 'CO_Meetings'
       "
     >
-      <div class="meeting-content">
+      <div
+        [ngStyle]="{
+          'background-color': CO_MeetingsParam?.ShowBackground,
+          'border-left': '3px ' + CO_MeetingsParam?.ShowColor + ' solid'
+        }"
+      >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
             <span [innerHTML]="item.memo"></span>

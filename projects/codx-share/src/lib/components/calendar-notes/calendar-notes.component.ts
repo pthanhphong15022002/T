@@ -290,9 +290,9 @@ export class CalendarNotesComponent
     }
   }
 
-  changeDayOfWeek(e) {
+  changeDayOfWeek(e, lstView) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
-    this.setDate(data, this.lstView);
+    this.setDate(data, lstView);
   }
 
   dateOfMonth: any;
