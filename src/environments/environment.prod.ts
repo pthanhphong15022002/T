@@ -9,10 +9,11 @@ export const environment = {
   pdfUrl: 'http://172.16.7.34:8015/api/pdf',
   shopping: 'http://172.16.7.34:8111/Shopping',
   urlUpload: 'http://172.16.1.210:8011',
-  office365: "https://view.officeapps.live.com/op/view.aspx?src=",
+  office365: 'https://view.officeapps.live.com/op/view.aspx?src=',
   reportUrl: '',
   appName: 'hps-file-test', // Tam thoi de hard
   saas: 1,
+  loginTmp: 'qtsc',
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',
@@ -24,12 +25,12 @@ export const environment = {
     app_secret: '123456',
   },
   firebase: {
-    apiKey: "AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic",
-    authDomain: "ermtest-2a9bb.firebaseapp.com",
-    projectId: "ermtest-2a9bb",
-    storageBucket: "ermtest-2a9bb.appspot.com",
-    messagingSenderId: "319703529330",
-    appId: "1:319703529330:web:d0569f86d85524c1ca0feb",
-    measurementId: "G-HH40VHYRF0"
+    apiKey: 'AIzaSyC1SKqppxpxwT7i3qEdUjJjn-J_SMoUBic',
+    authDomain: 'ermtest-2a9bb.firebaseapp.com',
+    projectId: 'ermtest-2a9bb',
+    storageBucket: 'ermtest-2a9bb.appspot.com',
+    messagingSenderId: '319703529330',
+    appId: '1:319703529330:web:d0569f86d85524c1ca0feb',
+    measurementId: 'G-HH40VHYRF0',
   },
 };
