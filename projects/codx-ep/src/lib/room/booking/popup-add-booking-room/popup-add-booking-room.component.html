@@ -103,8 +103,8 @@
         </div>
         <ng-container class="d-flex align-items-center fw-bold" *ngIf="data?.online && data.onlineUrl">
           <button (click)="connectMeetingNow()"
-            class="text-decoration-underline border-0 fw-bold bg-transparent text-primary text-start">
-            {{ data?.onlineUrl }}
+            class=" bg-transparent border-0 text-start" >
+            <span class="text-decoration-underline  fw-bold" style="color: #007bff;">{{ data?.onlineUrl }}</span>
           </button>
         </ng-container>
       </div>

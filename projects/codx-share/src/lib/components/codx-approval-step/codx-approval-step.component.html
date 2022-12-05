@@ -344,7 +344,7 @@
           </div>
           <div
             class="bg-gray-100 bg-opacity-70 rounded-2 px-3 py-4 mb-3"
-            *ngIf="approver.status != '3' && approver.comment != ''"
+            *ngIf="approver.status != '3' && approver.comment != '' && approver.comment"
           >
             <div class="text-comment">
               {{ approver.comment }}

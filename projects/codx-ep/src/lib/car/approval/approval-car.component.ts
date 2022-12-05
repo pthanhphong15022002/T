@@ -54,10 +54,23 @@ export class ApprovalCarsComponent extends UIComponent {
   formModel: FormModel;
   viewType=ViewType;
   driverID:any;
-  listDriver=[];
+  listDriverAssign=[];
   driver:any;
   fields:any;
   popupTitle: any;
+    
+  listCar=[];  
+  listReason=[];  
+  listAttendees=[];  
+  listItem=[];
+  tempReasonName='';
+  tempCarName='';  
+  tempAttendees='';
+  selectBookingItems=[];  
+  selectBookingAttendees='';
+  listDriver: any[];
+  tempDriverName='';  
+  driverName='';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -108,6 +121,24 @@ export class ApprovalCarsComponent extends UIComponent {
       TextField: 'resourceName',
       Title: 'Resources',
     };
+    this.codxEpService.getListResource('2').subscribe((res:any)=>{
+      if(res){
+        this.listCar=[];
+        this.listCar=res;
+      }        
+    });
+    this.codxEpService.getListResource('3').subscribe((res:any)=>{
+      if(res){
+        this.listDriver=[];
+        this.listDriver=res;
+      }        
+    });
+    this.codxEpService.getListReason('EP_BookingCars').subscribe((res:any)=>{
+      if(res){
+        this.listReason=[];
+        this.listReason=res;
+      }        
+    });
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -146,6 +177,57 @@ export class ApprovalCarsComponent extends UIComponent {
       },
     ];
     this.detectorRef.detectChanges();
+  }
+  getMoreInfo(recID:any){  
+    this.selectBookingAttendees='';
+    this.driverName=' ';
+    let driverCheck=true;
+    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
+      if(attendees){
+        let lstAttendees=attendees;
+        lstAttendees.forEach(element => {
+          if(element.roleType!='2'){            
+            this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
+          }
+          else{
+            this.driverName= this.getDriverName(element.userID);
+          }
+        });
+        this.selectBookingAttendees;
+        
+        if(this.driverName==' '){
+          this.driverName=null;
+        };
+      }        
+    });
+  }
+  getResourceName(resourceID:any){
+    this.tempCarName='';
+    this.listCar.forEach(r=>{
+      if(r.resourceID==resourceID){
+        this.tempCarName= r.resourceName;
+      }      
+    });
+    return this.tempCarName;
+  }
+  getDriverName(resourceID:any){
+    this.tempDriverName='';
+    this.listDriver.forEach(r=>{
+      if(r.resourceID==resourceID){
+        this.tempDriverName= r.resourceName;
+      }      
+    });
+    return this.tempDriverName;
+  }
+
+  getReasonName(reasonID:any){
+    this.tempReasonName='';
+    this.listReason.forEach(r=>{
+      if(r.reasonID==reasonID){
+        this.tempReasonName= r.description;
+      }      
+    });
+    return this.tempReasonName;
   }
 
   click(event) {}
@@ -216,8 +298,8 @@ export class ApprovalCarsComponent extends UIComponent {
     .subscribe((res:any)=>{
       if(res){
         this.cbbDriver=[];
-        this.listDriver = res;
-        this.listDriver.forEach(dri=>{
+        this.listDriverAssign = res;
+        this.listDriverAssign.forEach(dri=>{
           var tmp = new DriverModel();
           tmp['driverID'] = dri.resourceID;
           tmp['driverName'] = dri.resourceName;
@@ -280,8 +362,10 @@ export class ApprovalCarsComponent extends UIComponent {
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if(data.status==5 && data.driverName==null)
-              func.disabled = false;
+            if(data.approveStatus==5 && data.driverName==null){
+                func.disabled = false;   
+              }
+             
             else{
               func.disabled = true;
             }

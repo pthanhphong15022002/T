@@ -67,6 +67,7 @@ export class PopupAddProcessStepsComponent
   formModelMenu: FormModel;
   crrIndex = 0;
   gridViewSetup: any;
+  recIDCopied: any;
 
   constructor(
     private inject: Injector,
@@ -87,7 +88,7 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-
+    this.recIDCopied = dt?.data[4]
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
@@ -143,7 +144,7 @@ export class PopupAddProcessStepsComponent
   }
 
   handelMail() {
-    let data = { 
+    let data = {
       dialog: this.dialog,
       formGroup: null,
       templateID: this.recIdEmail,
@@ -166,7 +167,7 @@ export class PopupAddProcessStepsComponent
     popEmail.closed.subscribe((res) => {
       if (res && res.event) {
         this.processSteps['reference'] = res.event?.recID;
-        this.recIdEmail = res.event?.recID ? res.event?.recID : "";
+        this.recIdEmail = res.event?.recID ? res.event?.recID : '';
         this.isNewEmails = this.recIdEmail ? true : false;
       }
     });
@@ -217,15 +218,19 @@ export class PopupAddProcessStepsComponent
           if (this.action == 'edit') {
             this.processSteps.attachments += attachments;
             this.updateProcessStep();
-          } else {
+          } else if (this.action == 'add') {
             this.processSteps.attachments = attachments;
             this.addProcessStep();
+          } else {
+            this.processSteps.attachments = attachments;
+            this.copyProcessStep();
           }
         }
       });
     else {
       if (this.action == 'edit') this.updateProcessStep();
-      else this.addProcessStep();
+      else if (this.action == 'add') this.addProcessStep();
+      else this.copyProcessStep();
     }
   }
 
@@ -234,9 +239,18 @@ export class PopupAddProcessStepsComponent
     if (this.action == 'edit') {
       op.method = 'UpdateProcessStepAsync';
       data = [this.processSteps, this.owners];
-    } else {
+    } else if (this.action == 'add') {
       op.method = 'AddProcessStepAsync';
       data = [this.processSteps, this.owners];
+    } else {
+      op.method = 'CopyProcessStepAsync';
+      data = [
+        this.processSteps,
+        this.owners,
+        this.recIDCopied,
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName,
+      ];
     }
     op.data = data;
     return true;
@@ -245,6 +259,21 @@ export class PopupAddProcessStepsComponent
   addProcessStep() {
     this.bpService
       .addProcessStep([this.processSteps, this.owners])
+      .subscribe((data) => {
+        if (data) {
+          this.dialog.close(data);
+        } else this.dialog.close();
+      });
+  }
+  copyProcessStep() {
+    this.bpService
+      .copyProcessStep([
+        this.processSteps,
+        this.owners,
+        this.recIDCopied,
+        this.formModelMenu.formName,
+        this.formModelMenu.gridViewName,
+      ])
       .subscribe((data) => {
         if (data) {
           this.dialog.close(data);
@@ -282,7 +311,7 @@ export class PopupAddProcessStepsComponent
     let value = e.target.value;
     if (value && value.trim() != '') {
       this.textChange = value;
-      this.enterRefrence()
+      this.enterRefrence();
     }
   }
   enterRefrence() {
@@ -292,7 +321,6 @@ export class PopupAddProcessStepsComponent
       this.textChange = '';
       this.changeDef.detectChanges();
     }
-
   }
 
   showPoppoverDeleteRef(p, i) {

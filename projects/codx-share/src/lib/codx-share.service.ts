@@ -338,7 +338,7 @@ export class CodxShareService {
         if (approvalTrans.cancelControl != 1) {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans,
+            approvalTrans.cancelControl,
             funcID,
             title,
             formModel
@@ -354,7 +354,7 @@ export class CodxShareService {
         ) {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans,
+            approvalTrans.redoControl,
             funcID,
             title,
             formModel
@@ -367,7 +367,7 @@ export class CodxShareService {
         if (approvalTrans.approveControl != '1') {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans,
+            approvalTrans.approveControl,
             funcID,
             title,
             formModel
@@ -383,7 +383,7 @@ export class CodxShareService {
         ) {
           _dialog = this.openPopupComment(
             status,
-            approvalTrans,
+            approvalTrans.rejectControl,
             funcID,
             title,
             formModel
@@ -397,10 +397,10 @@ export class CodxShareService {
 
   openPopupComment(
     status: string,
-    approvalTrans: any,
+    funcControl: string,
     funcID: string,
     title: string,
-    formModel: FormModel
+    formModel: FormModel,
   ) {
     let dialogComment = this.callfunc.openForm(
       PopupCommentComponent,
@@ -411,7 +411,7 @@ export class CodxShareService {
       {
         title: title,
         formModel: formModel,
-        approveControl: approvalTrans?.approveControl,
+        approveControl: funcControl,
         mode: status,
       }
     );

@@ -45,6 +45,14 @@ export class CodxBpService {
       data
     );
   }
+  copyProcessStep(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessStepsBusiness',
+      'CopyProcessStepAsync',
+      data
+    );
+  }
   updateProcessStep(data) {
     return this.api.exec<any>(
       'BP',
