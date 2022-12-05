@@ -282,7 +282,17 @@ export class IncommingAddComponent implements OnInit {
       this.attachment.objectId = this.dispatch.recID;
       (await this.attachment.saveFilesObservable()).subscribe(
         (item2: any) => {
-          if (item2?.status == 0) {
+          //Chưa xử lý Upload nhìu file
+          // var countSusscess = 0;
+          // var countError = 0;
+          // if(Array.isArray(item2))
+          // {
+          //   var count =  item2.filter(x=>x.status == 0);
+          //   if(count) countSusscess = count.length;
+          //   countError = item2.length - countSusscess;
+           
+          // }
+          if (item2?.status == 0 || Array.isArray(item2)) {
             this.odService
             .saveDispatch(this.dataRq, this.dispatch)
             .subscribe(async (item) => {

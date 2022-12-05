@@ -13,6 +13,7 @@ export const environment = {
   office365: '',
   appName: '',
   saas: 1,
+  loginTmp: "qtsc",
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',

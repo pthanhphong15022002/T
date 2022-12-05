@@ -109,6 +109,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   date = new Date();
   isScroll = true;
   dataRequest = new DataRequest();
+  @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
   @Input() formModel: any;

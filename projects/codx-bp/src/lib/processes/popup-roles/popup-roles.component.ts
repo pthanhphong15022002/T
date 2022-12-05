@@ -220,9 +220,9 @@ export class PopupRolesComponent implements OnInit {
       this.isAssign = false;
     } else if (
       (this.autoCreate && this.nemberType == '1') ||
-      (!this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '2') ||
-      (!this.autoCreate && this.nemberType == '3')
+      (!this.autoCreate && this.nemberType == '3') ||
+      (!this.autoCreate && this.nemberType == '4')
     )
       this.isAssign = true;
     else this.isAssign = false;
@@ -237,7 +237,7 @@ export class PopupRolesComponent implements OnInit {
         var perm = new BP_ProcessPermissions();
         perm.objectName = data.text != null ? data.text : data.objectName;
         perm.objectID = data.id;
-        perm.memberType = '1';
+        perm.memberType = '2';
         perm.autoCreate = false;
         perm.isActive = true;
         // perm.read = true;
@@ -337,7 +337,7 @@ export class PopupRolesComponent implements OnInit {
     if (this.user.administrator || this.user.userID == this.process.owner) {
       if (
         !this.process.permissions[i].autoCreate &&
-        this.process.permissions[i].memberType == '1'
+        this.process.permissions[i].memberType == '2'
       )
         //  (this.permissions[i].objectID == '' && this.permissions[i].objectID == null)
 

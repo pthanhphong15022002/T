@@ -118,10 +118,11 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.templateTree,
           panelRightRef: this.templateRight,
           template2: this.templateListView,
+          resourceModel: { parentIDField: 'ParentID' }
         },
       },
     ];
-    this.view.dataService.parentIdField = 'ParentID';
+    // this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
   }
 
