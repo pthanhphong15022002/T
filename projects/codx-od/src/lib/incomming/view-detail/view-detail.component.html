@@ -102,7 +102,7 @@
     </div>
     <ng-container *ngIf="data && data?.files">
       <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
-        (viewFile)="handleViewFile($event)">
+        (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
       </codx-thumbnail>
     </ng-container>
   </ng-template>
@@ -332,7 +332,7 @@
   </div>
   <ng-container *ngIf="data?.filess">
     <codx-thumbnail [files]="data?.filess" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
-      (viewFile)="handleViewFile($event)">
+      (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
     </codx-thumbnail>
   </ng-container>
 </ng-template>
