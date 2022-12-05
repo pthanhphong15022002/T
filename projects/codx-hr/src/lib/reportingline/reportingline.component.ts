@@ -112,15 +112,6 @@ export class ReportinglineComponent extends UIComponent {
   }
 
   viewChange(event: any) {
-    // if (event?.view?.id == "2") 
-    // {
-      
-    //   this.view.dataService.parentIdField = 'ReportTo';
-    //     this.view.dataService.load().subscribe(res=>{
-    //       this.detectorRef.detectChanges();
-    //       console.log(res);
-    //     })
-    // }
   }
   orgChartViewInit(component: any) {
     if (component) {
