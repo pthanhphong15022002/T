@@ -259,7 +259,7 @@ export class PopupAddProcessesComponent implements OnInit {
           var tmpPermission = new BP_ProcessPermissions();
           tmpPermission.objectID = emp?.userID;
           tmpPermission.objectName = emp?.userName;
-          tmpPermission.objectType = 'U';
+          tmpPermission.objectType = '1';
           tmpPermission.read = true;
           tmpPermission.share = true;
           tmpPermission.full = true;
@@ -268,7 +268,7 @@ export class PopupAddProcessesComponent implements OnInit {
           tmpPermission.upload = true;
           tmpPermission.assign = true;
           tmpPermission.download = true;
-          tmpPermission.nemberType = '1';
+          tmpPermission.memberType = '0';
           tmpPermission.autoCreate = true;
           this.perms.push(tmpPermission);
 

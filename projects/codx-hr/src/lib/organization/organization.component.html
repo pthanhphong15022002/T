@@ -16,10 +16,16 @@
 </ng-template>
 
 <ng-template #templateDetail>
-  <ng-container *ngIf="orgUnitID">
-    <lib-organize-detail [orgUnitID]="orgUnitID" [data]="dataDetail" [formModel]="view.formModel" [numberLV]="numberLV"
-      (afterInit)="orgChartAfterView($event)"></lib-organize-detail>
-  </ng-container>
+  <!-- <ng-container *ngIf="orgUnitID">
+    <lib-organize-detail 
+      [orgUnitID]="orgUnitID" 
+      [data]="dataDetail" 
+      [formModel]="view.formModel" 
+      [numberLV]="numberLV"
+      (afterInit)="orgChartAfterView($event)">
+    </lib-organize-detail>
+  </ng-container> -->
+  <hr-organization-orgchart [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
 </ng-template>
 
 <ng-template #templateListView>
@@ -93,7 +99,9 @@
 </ng-template>
 
 <ng-template #templateTree let-data>
-  <span>{{ data.orgUnitName }}</span>
+  <div class="d-flex align-items-center py-1">
+    <i class="icon-home me-2"></i><span>{{ data.orgUnitName }}</span>
+  </div>
 </ng-template>
 
 <ng-template #infoEmployee let-data>
