@@ -123,11 +123,13 @@ export class BP_ProcessPermissions {
   read: boolean;
   update: boolean;
   delete: boolean;
+  edit: boolean;
   assign: boolean;
   share: boolean;
   upload: boolean;
   isActive: boolean;
   download: boolean;
+  publish: boolean;
   memberType: string;
   startDate: Date;
   endDate: Date;
