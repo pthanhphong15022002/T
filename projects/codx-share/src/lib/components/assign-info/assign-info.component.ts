@@ -160,7 +160,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refType = this.refType;
     this.task.taskName = this.taskName;
     if (this.taskParent) {
-      // this.task.parentID = this.taskParent.recID ;
+      this.task.parentID = this.taskParent.recID ;
       this.task.dueDate = this.taskParent.dueDate;
       this.task.endDate = this.taskParent.endDate;
       this.task.startDate = this.taskParent.startDate;
@@ -172,7 +172,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.projectID = this.taskParent.projectID;
       this.task.location = this.taskParent.location;
       this.task.tags = this.taskParent.tags;
-      this.task.refID = this.taskParent.recID;
+      this.task.refID = this.refID? this.refID : this.taskParent.recID;
       this.task.refNo = this.taskParent.taskID;
       this.task.taskType = this.taskParent.taskType;
       this.copyListTodo(this.taskParent.taskID);

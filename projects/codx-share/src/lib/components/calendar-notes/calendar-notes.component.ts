@@ -290,9 +290,9 @@ export class CalendarNotesComponent
     }
   }
 
-  changeDayOfWeek(e) {
+  changeDayOfWeek(e, lstView) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
-    this.setDate(data, this.lstView);
+    this.setDate(data, lstView);
   }
 
   dateOfMonth: any;
@@ -362,10 +362,10 @@ export class CalendarNotesComponent
     if (e) {
       if (e.data == true) {
         this.typeCalendar = 'week';
-        this.checkWeek = true;
+        // this.checkWeek = true;
       } else {
         this.typeCalendar = 'month';
-        this.checkWeek = false;
+        // this.checkWeek = false;
         var date = new Date();
         if (this.dateOfMonth) date = this.dateOfMonth;
         var fDayOfMonth = moment(date).startOf('month').toISOString();
@@ -551,7 +551,7 @@ export class CalendarNotesComponent
             } else {
               spanWP.setAttribute(
                 'style',
-                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
+                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};margin-left: 2px;border-radius: 50%`
               );
             }
             flex.append(spanWP);
@@ -566,7 +566,7 @@ export class CalendarNotesComponent
             } else {
               spanTM.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanTM);
@@ -581,7 +581,7 @@ export class CalendarNotesComponent
             } else {
               spanCO.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanCO);
@@ -595,7 +595,7 @@ export class CalendarNotesComponent
             } else {
               spanEP_Room.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanEP_Room);
@@ -609,7 +609,7 @@ export class CalendarNotesComponent
             } else {
               spanEP_Car.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanEP_Car);
@@ -619,8 +619,6 @@ export class CalendarNotesComponent
             calendarWP >= 1 &&
             calendarTM >= 1 &&
             calendarCO >= 1 &&
-            calendarEP_Room >= 1 &&
-            calendarEP_Car >= 1 &&
             countShowCalendar < 1
           ) {
             if (this.typeCalendar == 'week') {
@@ -673,7 +671,7 @@ export class CalendarNotesComponent
             flex.append(spanEP_Car);
           }
         }
-      }, 500);
+      }, 1000);
     }
   }
 
