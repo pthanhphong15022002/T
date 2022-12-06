@@ -100,19 +100,21 @@ export class OrgorganizationComponent extends UIComponent {
         id: '1',
         type: ViewType.tree_orgchart,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           resizable: true,
           template: this.templateTree,
           panelRightRef: this.templateRight,
           template2: this.templateOrgchart,
+          resourceModel: { parentIDField: 'ParentID' }
+
         },
       },
       {
         id: '2',
-        type: ViewType.tree_list,
+        type: ViewType.masterdetail,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           resizable: true,
           template: this.templateTree,
@@ -122,7 +124,7 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
-    // this.view.dataService.parentIdField = 'ParentID';
+    this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
   }
 
