@@ -4,6 +4,8 @@ import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
+  CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -27,6 +29,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -51,6 +54,10 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
       this.data = JSON.parse(JSON.stringify(data?.data?.salarySelected));
       this.formModel.currentData = this.data;
     }
+  }
+
+  ngAfterViewInit() {
+    console.log(this.listView);
   }
 
   initForm() {
@@ -88,7 +95,10 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
       this.hrSevice.AddEmployeeJobSalariesInfo(this.data).subscribe((p) => {
         if (p != null) {
           this.notify.notifyCode('SYS007');
-          this.dialog.close(p);
+          if (this.listView) {
+            (this.listView.dataService as CRUDService).add(p).subscribe();
+          }
+          //this.dialog.close(p);
         } else this.notify.notifyCode('DM034');
       });
     } else {
@@ -102,9 +112,17 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   }
 
   click(data) {
+    debugger;
     console.log(data);
     this.data = data;
     this.formGroup?.patchValue(this.data);
     this.cr.detectChanges();
+  }
+
+  afterRenderListView(evt) {
+
+    this.listView = evt;
+    console.log(this.listView);
+
   }
 }

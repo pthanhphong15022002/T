@@ -100,7 +100,7 @@ export class FileService implements OnDestroy {
         return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByGridModelAsync", dataRequest);
     }
     downloadFile(id: string): Observable<any> {
-        return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
+        return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", [id,true]);
     }
 
     arrayBufferToBase64(buffer) {
