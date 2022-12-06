@@ -65,6 +65,9 @@ import { MWPBookingRoomViewDetailComponent } from './booking/room/view-detail/mw
 import { MWPBookingCarComponent } from './booking/car/mwp-booking-car.component';
 import { MWPPopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/mwp-popup-add-booking-car.component';
 import { MWPBookingCarViewDetailComponent } from './booking/car/view-detail/mwp-booking-car-view-detail.component';
+import { MWPBookingStationeryComponent } from './booking/stationery/mwp-booking-stationery.component';
+import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
+import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 
 export const routes: Routes = [
   {
@@ -105,9 +108,10 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'bookingrooms/:funcID',
-        component: MWPBookingRoomComponent,
+      {      
+  
+        path: 'bookingstationery/:funcID',
+        component: MWPBookingStationeryComponent,
       },
     ],
   },
@@ -115,9 +119,21 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      {
-        path: 'bookingcars/:funcID',
+      {      
+  
+        path: 'bookingcar/:funcID',
         component: MWPBookingCarComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {      
+  
+        path: 'bookingrooms/:funcID',
+        component: MWPBookingRoomComponent,
       },
     ],
   },
@@ -151,6 +167,9 @@ const Component: Type<any>[] = [
   MWPBookingCarComponent,
   MWPPopupAddBookingCarComponent,
   MWPBookingCarViewDetailComponent,
+  MWPBookingStationeryComponent,
+  BookingStationeryViewDetailComponent,
+  PopupRequestStationeryComponent
 ];
 
 @NgModule({
@@ -170,11 +189,16 @@ const Component: Type<any>[] = [
     SidebarModule,
     AccumulationChartModule,
     TabModule,
-    NgbModule,   
-    CoreModule, 
+    NgbModule,
+    CoreModule,
   ],
   exports: [RouterModule],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent, InformationComponent],
+  declarations: [
+    Component,
+    EditSkillComponent,
+    PopAddSkillComponent,
+    InformationComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

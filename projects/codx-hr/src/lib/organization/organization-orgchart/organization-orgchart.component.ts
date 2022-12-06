@@ -25,8 +25,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   datasetting: any = null;
   layout: Object = {
     type: 'HierarchicalTree',
-    verticalSpacing: 30,
-    horizontalSpacing: 40,
+    verticalSpacing: 60,
+    horizontalSpacing: 60,
     enableAnimation: true,
   };
   tool: DiagramTools = DiagramTools.ZoomPan;
@@ -37,12 +37,12 @@ export class OrganizationOrgchartComponent implements OnInit {
   @Input() formModel:FormModel;
   @Input() orgUnitID:string; 
   data:any[] = [];
-  width = 260;
-  height = 300;
+  width = 250;
+  height = 350;
   maxWidth = 300;
-  maxHeight = 300;
-  minWidth = 100;
-  minHeight = 300;
+  maxHeight = 400;
+  minWidth = 250;
+  minHeight = 350;
   imployeeInfo: any = {};
   employees:any[] = [];
   headerColor:string = "#03a9f4";
@@ -121,7 +121,50 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
   // load data child
   loadDataChild(node:any){
-
+    let result = [];
+    if(node.loadChildren){
+      result = this.data.filter(e => e.parentID != node.orgUnitID);
+      if(result.length > 0)
+      {
+        result.forEach(element => {
+          if(element.orgUnitID == node.orgUnitID)
+          {
+            element.loadChildren = false;
+          }
+        });
+        this.data = JSON.parse(JSON.stringify(result))
+      }
+      this.setDataOrg(this.data);
+    }
+    else{
+      if(node.orgUnitID)
+      {
+        this.api.execSv(
+          "HR",
+          "ERM.Business.HR",
+          "OrganizationUnitsBusiness",
+          "GetDataChildOrgChartAsync",
+          [node.orgUnitID]
+          )
+          .subscribe((res:any) =>{
+            if(res)
+            {
+              result = this.data.concat(res);
+              if(result.length > 0)
+              {
+                result.forEach(element => {
+                  if(element.orgUnitID == node.orgUnitID)
+                  {
+                    element.loadChildren = true;
+                  }
+                });
+              }
+              this.data = JSON.parse(JSON.stringify(result))
+              this.setDataOrg(this.data);
+            }
+          });
+      }
+    }
   }
 
   // show employee infor
