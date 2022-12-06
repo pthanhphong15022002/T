@@ -250,8 +250,8 @@ export class ReportinglineComponent extends UIComponent {
   onSelectionChanged(event) {
     if (this.view) 
     {
-      let viewActive = this.view.views.find((e) => e.active == true);
-      if (viewActive?.id == '1') return;
+      // let viewActive = this.view.views.find((e) => e.active == true);
+      // if (viewActive?.id == '1') return;
       this.dataSelected = event.data;
       this.positionID = event.data.positionID;
       this.detectorRef.detectChanges();
