@@ -17,6 +17,7 @@ import {
   ButtonModel,
   DialogModel,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   ResourceModel,
@@ -111,7 +112,8 @@ export class ProcessesComponent
   heightWin: any;
   widthWin: any;
   isViewCard: boolean = false;
-  
+  formModelMF :FormModel ;
+
   statusLable = '';
   commentLable = '';
   titleReleaseProcess=''
@@ -138,15 +140,15 @@ export class ProcessesComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
-        this.gridViewSetup = res;       
+        this.gridViewSetup = res;
       }
-    });    
+    });
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
   }
 
-  onInit(): void { 
-   
+  onInit(): void {
+
     this.button = {
       id: 'btnAdd',
     };
@@ -472,7 +474,9 @@ export class ProcessesComponent
       more: more,
       data: data,
       funcIdMain: this.funcID,
+      formModel : this.formModelMF
     };
+
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
       '',

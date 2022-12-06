@@ -376,17 +376,17 @@ export class PopupAddProcessStepsComponent
         index = this.owners.findIndex(
           (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
         );
-      if (index == -1) {
-        var owner = new BP_ProcessOwners();
-        owner.objectType = dt.objectType;
-        owner.objectID = dt.id;
-        owner.objectName = dt.text;
-        owner.rAIC = 'R';
-        this.owners.push(owner);
-        this.listOwnerDetails.push({
-          id: dt.id,
-          name: dt.text,
-        });
+      if (index == -1 && dt?.objectID && dt?.objectName) {      
+          var owner = new BP_ProcessOwners();
+          owner.objectType = dt.objectType;
+          owner.objectID = dt.id;
+          owner.objectName = dt.text;
+          owner.rAIC = 'R';
+          this.owners.push(owner);
+          this.listOwnerDetails.push({
+            id: dt.id,
+            name: dt.text,
+          });  
       }
     });
   }

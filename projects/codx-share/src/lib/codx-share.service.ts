@@ -34,7 +34,8 @@ export class CodxShareService {
     data: any,
     afterSave?: Function,
     formModel?: any,
-    dataService?: any
+    dataService?: any,
+    that:any = null
   ) {
     var funcID = val?.functionID;
     switch (funcID) {
@@ -62,7 +63,7 @@ export class CodxShareService {
               result: e?.event,
               data: data,
             };
-            afterSave(result);
+            afterSave(result , that);
           }
         });
         break;
