@@ -619,6 +619,8 @@ export class CalendarNotesComponent
             calendarWP >= 1 &&
             calendarTM >= 1 &&
             calendarCO >= 1 &&
+            calendarEP_Room >= 1 &&
+            calendarEP_Car >= 1 &&
             countShowCalendar < 1
           ) {
             if (this.typeCalendar == 'week') {

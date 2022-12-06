@@ -67,5 +67,6 @@ export class LayoutListDetailComponent implements OnInit {
   ngAfterViewInit() {
     this.formModel = this.form.formModel;
     this.formGroup = this.form.formGroup;
+    this.changeDetectorRef.detectChanges();
   }
 }
