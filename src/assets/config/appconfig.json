@@ -1,11 +1,12 @@
 {
-  "apiUrl": "http://localhost:8011",
+  "apiUrl": "http://172.16.7.34:8011",
   "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
-  "urlUpload": "http://localhost:8011/lvfile",
+  "urlUpload": "http://172.16.7.34:8011/lvfile",
   "appName": "hps-file-test",
   "office365": "",
   "saas": 1,
+  "loginTmp": "qtsc",
   "SureMeet": {
     "baseUrl": "https://api.suremeet.vn/",
     "tokenUrl": "api/auth/token",
