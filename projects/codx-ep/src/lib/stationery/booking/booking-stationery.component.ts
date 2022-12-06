@@ -60,9 +60,7 @@ export class BookingStationeryComponent
 
   constructor(
     private injector: Injector,
-    private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
-    private cacheService: CacheService,
     private notificationsService: NotificationsService,
     private authService: AuthService
   ) {

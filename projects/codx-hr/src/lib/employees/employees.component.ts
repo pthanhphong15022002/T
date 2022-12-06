@@ -211,7 +211,8 @@ export class EmployeesComponent extends UIComponent {
   }
 
   edit(data?) {
-    if (data) {
+    if (data) 
+    {
       this.view.dataService.dataSelected = data;
     }
     this.view.dataService
@@ -227,24 +228,14 @@ export class EmployeesComponent extends UIComponent {
           option
         );
         dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
           if (e?.event && e?.event != null) {
             this.view.dataService
               .update(e.event.update.InfoPersonal)
               .subscribe();
-            // this.view.dataService.update(e.event.update.Employees).subscribe();
-            // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
             this.detectorRef.detectChanges();
           }
         });
       });
-    // this.detectorRef.detectChanges();
   }
 
   copy(data) {
