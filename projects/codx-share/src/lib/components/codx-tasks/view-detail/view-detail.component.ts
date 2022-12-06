@@ -301,10 +301,9 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   // }
   //referen new
   loadDataReferences() {
+    this.dataReferences = []
     if (this.itemSelected.refID)
       this.getReferencesByCategory3(this.itemSelected);
-    else this.dataReferences = [];
-    return;
   }
 
   getReferencesByCategory3(task) {
