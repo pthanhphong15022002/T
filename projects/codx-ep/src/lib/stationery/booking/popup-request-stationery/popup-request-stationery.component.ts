@@ -122,7 +122,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.nagetivePhysical = json.NagetivePhysical;
       });
 
-    this.cache.functionList('EPS24').subscribe((res) => {
+    this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
         this.cache
           .gridViewSetup(res.formName, res.gridViewName)
@@ -422,7 +422,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
-      this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }

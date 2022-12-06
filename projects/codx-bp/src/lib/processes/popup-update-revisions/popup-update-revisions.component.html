@@ -38,7 +38,7 @@
                 {{item.createdOn| timefrom}}
               </span>
             </div>
-            <div [innerHTML]="item.comment"></div>
+            <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"></div>
           </div>
         </div>
 
@@ -49,18 +49,6 @@
             </codx-label>
           </div>
           <div class="justify-content-end">
-            <!-- <span #activedOn>
-              {{
-              item?.activedOn
-              | formatvalue
-              : form.formModel
-              : "activedOn"
-              : activedOn
-              : "Processes"
-              : "grvProcesses"
-              | async
-              }}
-            </span> -->
             <div #activedOn>
               {{
               item.activedOn | formatvalue
