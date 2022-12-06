@@ -17,6 +17,7 @@ import {
   ButtonModel,
   DialogModel,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   ResourceModel,
@@ -111,7 +112,8 @@ export class ProcessesComponent
   heightWin: any;
   widthWin: any;
   isViewCard: boolean = false;
-  
+  formModelMF :FormModel ;
+
   statusLable = '';
   commentLable = '';
   titleReleaseProcess=''
@@ -137,15 +139,15 @@ export class ProcessesComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
-        this.gridViewSetup = res;       
+        this.gridViewSetup = res;
       }
-    });    
+    });
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
   }
 
-  onInit(): void { 
-   
+  onInit(): void {
+
     this.button = {
       id: 'btnAdd',
     };
@@ -438,14 +440,13 @@ export class ProcessesComponent
   }
   releaseProcess(data) {
     let userId = this.user?.userID
-    let checkRole = data?.permissions.findIndex(x => x.objectID == userId && x.publish);   
+    let checkRole = data?.permissions.findIndex(x => x.objectID == userId && x.publish);
     if(checkRole >=0){
       this.statusLable = this.gridViewSetup['Status']['headerText'];
       this.commentLable = this.gridViewSetup['Comments']['headerText'];
       this.status = data.status;
       this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);
     }
-   
   }
 
   Updaterevisions(moreFunc, data) {
@@ -485,7 +486,9 @@ export class ProcessesComponent
       more: more,
       data: data,
       funcIdMain: this.funcID,
+      formModel : this.formModelMF
     };
+
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
       '',

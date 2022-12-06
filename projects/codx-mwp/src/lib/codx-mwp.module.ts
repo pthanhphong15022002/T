@@ -1,3 +1,4 @@
+import { CoreModule } from '@core/core.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
@@ -58,6 +59,11 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
 import { InformationComponent } from './personals/information/information.component';
+import { MWPBookingStationeryComponent } from './booking/stationery/mwp-booking-stationery.component';
+import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
+import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
+//import { BookingRoomComponent } from './booking/room/booking-room.component';
+//import { PopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/popup-add-booking-room.component';
 
 export const routes: Routes = [
   {
@@ -94,6 +100,16 @@ export const routes: Routes = [
       },
     ],
   },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'bookingstationery/:funcID',
+        component: MWPBookingStationeryComponent,
+      },
+    ],
+  },
 ];
 
 const Component: Type<any>[] = [
@@ -117,6 +133,11 @@ const Component: Type<any>[] = [
   EditRelationComponent,
   TasksComponent,
   InformationComponent,
+  //BookingRoomComponent,
+  //PopupAddBookingRoomComponent,
+  MWPBookingStationeryComponent,
+  BookingStationeryViewDetailComponent,
+  PopupRequestStationeryComponent
 ];
 
 @NgModule({
@@ -137,9 +158,15 @@ const Component: Type<any>[] = [
     AccumulationChartModule,
     TabModule,
     NgbModule,
+    CoreModule,
   ],
   exports: [RouterModule],
-  declarations: [Component, EditSkillComponent, PopAddSkillComponent, InformationComponent],
+  declarations: [
+    Component,
+    EditSkillComponent,
+    PopAddSkillComponent,
+    InformationComponent,
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     AreaSeriesService,

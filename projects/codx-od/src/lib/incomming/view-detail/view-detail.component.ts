@@ -433,6 +433,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     });
   }
   openFormFuncID(val: any, datas: any = null, isData = false) {
+    let that = this;
     var funcID = val?.functionID;
     if (!datas) datas = this.data;
     else {
@@ -925,7 +926,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
           datas,
           this.afterSaveTask,
           this.view.formModel,
-          this.view.dataService
+          this.view.dataService,
+          that
         );
         break;
       }
@@ -1040,7 +1042,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  afterSaveTask(e?: any) {
+  afterSaveTask(e?: any , that:any = null) {
     // Chú thích ;
     // e:{
     //   funcID: Mã moreFunc ,
@@ -1052,10 +1054,14 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'SYS005': {
         if (e?.result && e?.result[0]) {
           e.data.status = '3';
-          this.odService.updateDispatch(e.data, false).subscribe((item) => {
+          // debugger;
+          // that.odService.getTaskByRefID(e.data.recID).subscribe(item=>{
+          //   if(item) that.data.tasks= item;
+          // })
+          that.odService.updateDispatch(e.data, false).subscribe((item) => {
             if (item.status == 0) {
-              this.view.dataService.update(e.data).subscribe();
-            } else this.notifySvr.notify(item.message);
+              that.view.dataService.update(e.data).subscribe();
+            } else that.notifySvr.notify(item.message);
           });
         }
         break;
@@ -1154,11 +1160,20 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     if(data?.status == "9" || data?.approveStatus == "4")
     {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211'
+        (x: { functionID: string }) => 
+          x.functionID == 'ODT112' || 
+          x.functionID == 'ODT211' || 
+          x.functionID == 'ODT103' || 
+          x.functionID == 'ODT202' ||
+          x.functionID == 'SYS03'  ||
+          x.functionID == 'ODT103' ||
+          x.functionID == 'ODT202'
       );
-      if(approvel[0]) approvel[0].disabled = true;
+      if(approvel && approvel.length > 0)
+        for (var i = 0; i < approvel.length; i++) {
+          approvel[i].disabled = true;
+        }
     }
-
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'

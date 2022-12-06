@@ -1,0 +1,88 @@
+<codx-views
+  #view
+  [views]="views"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entity"
+  [className]="className"
+  [method]="method"
+  [button]="button"
+  (buttonClick)="click($event)"
+  (selectedChange)="changeItemDetail($event)"
+  [selectedFirst]="true"
+  [autoLoad]="true"
+  [idField]="idField"
+  (requestEnded)="closeAddForm($event)"
+  [viewActiveType]="viewType.listdetail"
+  (viewChanged)="viewChanged($event)"
+>
+</codx-views>
+
+<ng-template #chart>
+  <codx-stationery-dashboard></codx-stationery-dashboard>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+  <codx-temp-full
+    cardCss="card-template border-bottom px-2 pt-4 pb-2"
+    (click)="click(data)"
+    [typeMF]="'hover'"
+    [title]="data?.requester"
+    [subTitle]="data?.positionName"
+    [subTitleCss]="'text-gray-600'"
+    [content]="data?.reasonName"
+    [footer]="footerTmp"
+    [icoCss]="
+      'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+    "
+    [imageId]="data?.createdBy"
+    imageObjType="AD_Users"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+    typeMF="hover"
+  >
+  </codx-temp-full>
+</ng-template>
+
+<ng-template #panelRightRef>
+  <booking-stationery-view-detail
+    #viewdetail
+    [itemDetail]="itemDetail"
+    [funcID]="funcID"
+    [formModel]="view?.formModel"
+    [view]="view"
+    (copy)="copy($event)"
+    (edit)="edit($event)"
+    (delete)="delete($event)"
+    (setPopupTitle)="setPopupTitle($event)"
+    (uploaded)="getDetailBooking($event)"
+  ></booking-stationery-view-detail>
+</ng-template>
+
+<ng-template #footerTmp let-data>
+  <div class="d-flex justify-content-between mt-1 px-12">
+    <div class="d-flex align-items-center">
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        [name]="'EP022'"
+        [value]="data?.approveStatus"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+      <codx-vll
+        [showText]="true"
+        [showBgColor]="true"
+        [name]="'EP020'"
+        [value]="data?.issueStatus"
+        class="badge badge-light badge-md fs-7"
+      >
+      </codx-vll>
+      <!-- đợi vll issueStatus -->
+    </div>
+    <div>{{ data?.bookingOn | fmDT }}</div>
+  </div>
+</ng-template>

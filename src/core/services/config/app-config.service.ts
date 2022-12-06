@@ -22,6 +22,7 @@ export class AppConfigService extends AppConfig {
       environment.reportUrl = res.reportUrl;
       environment.office365 = res.office365;
       environment.saas = res.saas;
+      environment.loginTmp = res.loginTmp;
       environment.SureMeet = res.sureMeet;
       environment.firebase = res.firebase;
     }));
