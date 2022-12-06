@@ -7,14 +7,14 @@ import { ODApprovelComponent } from './incomming/approvel/approvel.component';
 
 const routes: Routes = [
   {
-      path: '',
-      component: CodxApprovalComponent,
-      children: [
-        {
-          path: 'dispatches/:funcID/:id',
-          component: ODApprovelComponent,
-        },
-      ],
+    path: '',
+    component: CodxApprovalComponent,
+    children: [
+      {
+        path: 'dispatches/:funcID/:id',
+        component: ODApprovelComponent,
+      },
+    ],
   }
 ];
 

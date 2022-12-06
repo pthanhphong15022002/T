@@ -36,6 +36,8 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
   @ViewChild('equipmentsCol') equipmentsCol: TemplateRef<any>;
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('linkCol') linkCol: TemplateRef<any>;
+  
+  @ViewChild('itemAction') itemAction: TemplateRef<any>;
 
   @Input() data!: any;
 
@@ -118,6 +120,13 @@ export class CarsComponent extends UIComponent implements AfterViewInit {
         .subscribe((gv) => {
           this.grvCars = gv;
           this.columnGrids = [
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,

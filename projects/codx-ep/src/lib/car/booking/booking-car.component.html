@@ -236,6 +236,6 @@
 <ng-template #cardTemplate let-data>
   <div class="d-flex flex-column w-100" (click)="getMoreInfo(data.recID)">
     <span >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
-    <span class="fw-bold " >{{data.title}}</span>
+    <span class="fw-bold " style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;" >{{data.title}}</span>
   </div>
 </ng-template>

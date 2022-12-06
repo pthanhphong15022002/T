@@ -127,7 +127,7 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-    
+    debugger;
       var s = this.router.url.split("/"); s = s.slice(2 , 5);
       let r = "/" + s.join("/").toString() + "/";
      

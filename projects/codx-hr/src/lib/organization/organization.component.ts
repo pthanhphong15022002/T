@@ -100,7 +100,7 @@ export class OrgorganizationComponent extends UIComponent {
         id: '1',
         type: ViewType.tree_orgchart,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           resizable: true,
           template: this.templateTree,
@@ -112,9 +112,9 @@ export class OrgorganizationComponent extends UIComponent {
       },
       {
         id: '2',
-        type: ViewType.masterdetail,
+        type: ViewType.tree_list,
         sameData: true,
-        active: false,
+        active: true,
         model: {
           resizable: true,
           template: this.templateTree,
