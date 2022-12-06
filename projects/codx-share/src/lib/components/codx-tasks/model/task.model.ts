@@ -234,6 +234,7 @@ export class TM_Parameter {
   AdjustHours: string;
   ApproveBy: string;
   ApproveControl: string;
+  Approvers: string;
   Approver: string;
   AutoCompleted: string;
   CalendarID: string;
