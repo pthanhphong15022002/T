@@ -70,7 +70,7 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
   }
 
   public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
-    connector.targetDecorator!.shape = 'None';
+    connector.targetDecorator.shape = 'None';
     connector.type = 'Orthogonal';
     connector.constraints = 0;
     connector.cornerRadius = 5;
@@ -146,26 +146,6 @@ export class ReportinglineOrgChartComponent implements OnInit,OnChanges {
   onSearch($event){
     
   }
-
-  isClick = false;
-  classIcon(dt: any, ele: HTMLElement): string {
-    if (this.isClick) {
-      var cls = ele.classList;
-      if (cls.contains('icon-do_disturb_on')) {
-        cls.remove('icon-do_disturb_on');
-        return 'icon-add_circle_outline';
-      } else {
-        cls.remove('icon-add_circle_outline');
-        return 'icon-do_disturb_on';
-      }
-    } else 
-    {
-      var exist = this.checkExistParent(dt.positionCode);
-      if (exist) return 'icon-do_disturb_on';
-      else return 'icon-add_circle_outline';
-    }
-  }
-
   mouseUp(dataNode: any, evt: any) {
     this.positionID = dataNode.positionID;
     var exist = this.checkExistParent(this.positionID);
