@@ -1,4 +1,3 @@
-import { CodxEpService } from './../../../codx-ep.service';
 import {
   Component,
   Injector,
@@ -19,10 +18,10 @@ import {
   UserModel,
   AuthStore,
   CRUDService,
-  AuthService,
 } from 'codx-core';
 import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { BookingService } from '../../../services/booking.services';
 @Component({
   selector: 'popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -84,7 +83,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   constructor(
     private injector: Injector,
     private auth: AuthStore,
-    private epService: CodxEpService,
+    private epService: BookingService,
     private notificationsService: NotificationsService,
     @Optional() dialog: DialogRef,
     @Optional() data: DialogData
@@ -122,7 +121,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.nagetivePhysical = json.NagetivePhysical;
       });
 
-    this.cache.functionList('EPS24').subscribe((res) => {
+    this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
         this.cache
           .gridViewSetup(res.formName, res.gridViewName)
@@ -187,6 +186,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
           }
           if (!this.isAddNew) {
             this.data.bookingOn = new Date(this.data.bookingOn);
+            this.dialogAddBookingStationery.addControl(
+              'warehouseID',
+              new FormControl(this.data.warehouseID)
+            );
             this.dialogAddBookingStationery.patchValue(this.data);
             this.detectorRef.detectChanges();
           }
@@ -400,7 +403,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
     //NagetivePhysical = 0: khong am kho
-    debugger;
+
     if (tmpResource.availableQty == 0) {
       if (this.nagetivePhysical == '0') {
         //không add
@@ -418,6 +421,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
+      this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }
