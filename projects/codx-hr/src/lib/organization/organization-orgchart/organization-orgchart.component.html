@@ -5,6 +5,7 @@
         class="codx-orgchart" 
         width="100%" 
         height="700px" 
+        [getConnectorDefaults]="connDefaults"
         [getNodeDefaults]="nodeDefaults" 
         [layout]="layout" 
         [tool]="tool" 
@@ -20,7 +21,7 @@
     </div>
   </ng-container>
   <ng-template #template let-data let-node="node">
-    <div class="department-card border border-gray-300 w-250px position-relative">
+    <div class="department-card border border-gray-300 w-250px h-350px position-relative">
       <div class="d-flex align-items-center p-3 w-100" [style.background-color]="data.colorStatus ? data.colorStatus : headerColor">
         <i class="text-white me-2" [ngClass]="data.icon ? data.icon : 'icon-business icon-18'"></i>
         <div class="d-flex flex-grow-1 text-white fs-5">
@@ -46,44 +47,34 @@
             <codx-label [formModel]="formModel" name="txtPositionName" [default]="data.positionName || 'Chức vụ'"></codx-label>
           </div>
           <div class="d-flex align-items-center mt-2">
-            <div class="btn btn-sm btn-light-primary me-3 counter" data-toggle="tooltip"
-              title="Định biên" 
-              data-status="" 
-              [attr.data-orgid]="data.departmentCode"
-              [attr.data-headcounts]="data.headcounts">
+            <div class="btn btn-sm btn-light-primary me-3 counter">
               <i class="icon-account_tree icon-16 me-1"></i>
-              <span class="fw-bold text-primary">{{data.headcounts?data.headcounts:0}}</span>
+              <span class="fw-bold text-primary">{{data.headcounts ? data.headcounts : 0}}</span>
             </div>
-            <div class="btn btn-sm btn-light-primary counter" data-toggle="tooltip"
-              title="Chính thức" 
-              data-status="" 
-              [attr.data-orgid]="data.departmentCode">
+            <div class="btn btn-sm btn-light-primary counter">
               <i class="icon-perm_contact_calendar icon-16 me-1"></i>
-              <span class="fw-bold text-primary">{{data.filledCounts?data.filledCounts:0}}</span>
+              <span class="fw-bold text-primary">{{data.filledCounts ? data.filledCounts : 0}}</span>
             </div>
           </div>
         </div>
         <div class="d-flex justify-content-between mt-5 px-3">
-          <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="50"
-            [attr.data-orgid]="data.departmentCode">
+          <div class="d-flex flex-column align-items-center counter cursor-pointer" >
             <h3 class="text-primary">{{data.counts? data.counts : 0}}</h3>
             <codx-label class="text-gray-600" [formModel]="formModel" name="lblStaff" [default]="'Chính thức'"></codx-label>
 
           </div>
-          <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="30"
-            [attr.data-orgid]="data.departmentCode">
-            <h3 class="text-success">{{ data.onboard }}</h3>
+          <div class="d-flex flex-column align-items-center counter cursor-pointer">
+            <h3 class="text-success">{{ data.onboard ? data.onboard : 0 }}</h3>
             <codx-label class="text-gray-600" [formModel]="formModel" name="lblOnboard" [default]="'Onboard'"></codx-label>
           </div>
-          <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="70"
-            [attr.data-orgid]="data.departmentCode">
-            <h3 class="text-danger">{{ data.offboard }}</h3>
+          <div class="d-flex flex-column align-items-center counter cursor-pointer">
+            <h3 class="text-danger">{{ data.offboard ? data.offboard : 0 }}</h3>
             <codx-label class="text-gray-600" [formModel]="formModel" name="lblOffboard" [default]="'Offboard'"></codx-label>
           </div>
         </div>
       </div>
       <div *ngIf="data.isChildren" class="department-card-info ec connector">
-        <span #icon class="icon-20" [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
+        <span #icon class="icon-20" [classList]="data.loadChildren ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
           (click)="loadDataChild(data)"></span>
       </div>
     </div>
