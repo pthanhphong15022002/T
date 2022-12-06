@@ -231,6 +231,7 @@ export class RoleDetailComponent
         per[e.field] = e.data;
         per['functionID'] = funcID;
         per['roleID'] = this.recid;
+        per['run'] = true;
         this.dataRole[funcID].DataPer = per;
         this.RolesService._dataChanged = true;
       }
