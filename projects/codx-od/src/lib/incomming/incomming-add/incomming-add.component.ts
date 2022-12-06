@@ -58,7 +58,8 @@ export class IncommingAddComponent implements OnInit {
   activeDiv: any;
   dataRq = new DataRequest();
   objRequied = [];
-  fileDelete:any
+  fileDelete:any;
+  service:any;
   constructor(
     private api: ApiHttpService,
     private odService: DispatchService,
@@ -86,7 +87,7 @@ export class IncommingAddComponent implements OnInit {
     this.subHeaderText = this.data?.subHeaderText;
     this.type = this.data?.type;
     this.formModel = this.data?.formModel;
-
+    this.service = this.data?.service;
     this.dataRq.entityName = this.formModel?.entityName;
     this.dataRq.formName = this.formModel?.formName;
     this.dataRq.funcID = this.formModel?.funcID;
@@ -280,31 +281,38 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.dispatch.approveStatus = '1';
       this.attachment.objectId = this.dispatch.recID;
-      (await this.attachment.saveFilesObservable()).subscribe(
-        (item2: any) => {
-          //Chưa xử lý Upload nhìu file
-          // var countSusscess = 0;
-          // var countError = 0;
-          // if(Array.isArray(item2))
-          // {
-          //   var count =  item2.filter(x=>x.status == 0);
-          //   if(count) countSusscess = count.length;
-          //   countError = item2.length - countSusscess;
-           
-          // }
-          if (item2?.status == 0 || Array.isArray(item2)) {
-            this.odService
-            .saveDispatch(this.dataRq, this.dispatch)
-            .subscribe(async (item) => {
-              if (item.status == 0) {
-                this.data = item;
+      this.odService
+      .saveDispatch(this.dataRq, this.dispatch)
+      .subscribe(async (item) => {
+        if (item.status == 0) {
+          this.data = item;
+          (await this.attachment.saveFilesObservable()).subscribe(
+            (item2: any) => {
+              //Chưa xử lý Upload nhìu file
+              // var countSusscess = 0;
+              // var countError = 0;
+              // if(Array.isArray(item2))
+              // {
+              //   var count =  item2.filter(x=>x.status == 0);
+              //   if(count) countSusscess = count.length;
+              //   countError = item2.length - countSusscess;
+               
+              // }
+              if (item2?.status == 0 || Array.isArray(item2)) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);
-              } else this.notifySvr.notify(item.message);
-            });
-          } else this.notifySvr.notify(item2.message);
-        }
-      );
+              } 
+              else {
+                this.notifySvr.notify(item2.message);
+                this.odService.deleteDispatch(this.dispatch.recID).subscribe();
+                this.dialog.dataService.delete(this.dispatch).subscribe();
+              }
+            }
+          );
+         
+        } else this.notifySvr.notify(item.message);
+      });
+     
       
     } else if (this.type == 'edit') {
       this.odService

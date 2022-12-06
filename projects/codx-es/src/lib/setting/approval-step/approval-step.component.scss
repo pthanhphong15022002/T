@@ -1,45 +1,49 @@
-::ng-deep  {
+@import "/node_modules/codx-core/assets/sass/init";
+
+@import "./src/theme.scss";
+::ng-deep {
   //timeline
-  .e-device .e-dlg-content, .e-device .e-dlg-content * {
+  .e-device .e-dlg-content,
+  .e-device .e-dlg-content * {
     font-size: inherit;
-}
-.timeline{
-  .timeline-item::after {
-    content: "";
-    background-color: var(--text-primary-light);
-    width: 1px;
-    position: absolute;
-    top: 0;
-    left: 18px;
-    bottom: 0;
-    z-index: 9;
   }
-  .timeline-media {
-      width: 36px!important;
-      height: 36px!important;
+  .timeline {
+    .timeline-item::after {
+      content: "";
+      background-color: var(--gray-500);
+      width: 1px;
+      position: absolute;
+      top: 0;
+      left: 18px;
+      bottom: 0;
+      z-index: 9;
+    }
+    .timeline-media {
+      width: 36px !important;
+      height: 36px !important;
       border: 2px var(--text-primary) solid;
       line-height: 32px;
       text-align: center;
-      font-size: 16px;    
+      font-size: 16px;
       font-weight: 500;
       color: var(--text-primary);
-      background-color: #fff;   
+      background-color: #fff;
       border-radius: 36px;
       margin-right: 15px;
       position: relative;
       z-index: 10;
-  }
-    .stepper-title{
+    }
+    .stepper-title {
       font-weight: 500;
       font-size: 14px;
       margin-bottom: 3px;
       max-width: 120px;
     }
-    .stepper-desc{
+    .stepper-desc {
       color: var(--gray-500);
       font-size: 12px;
     }
-    .timeline-items .timeline-item .step-add{
+    .timeline-items .timeline-item .step-add {
       left: 4px;
       border: 2px var(--gray-500) solid;
       text-align: center;
@@ -53,118 +57,118 @@
       color: var(--gray-500);
       border-radius: 100%;
     }
-    .step-add:hover,.step-add:focus{
+    .step-add:hover,
+    .step-add:focus {
       background-color: var(--text-primary);
       color: #fff;
     }
-//ENd timeline
-}
+    //ENd timeline
+  }
   .dropzone.dropzone-default .dropzone-msg-title {
-        color: #3F4254;
-        margin: 0 0 5px 0;
-        padding: 0;
-        font-weight: 500;
-        font-size: 14px;
-    }
+    color: #3f4254;
+    margin: 0 0 5px 0;
+    padding: 0;
+    font-weight: 500;
+    font-size: 14px;
+  }
 
-//     .codx-card-custom {
-//       .stepper-body {
-//           background: rgba(229, 229, 229, 0.67);
-//           box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
-//           height: calc(100% - 60px);
-//       }
+  //     .codx-card-custom {
+  //       .stepper-body {
+  //           background: rgba(229, 229, 229, 0.67);
+  //           box-shadow: 0px 12px 22px 20px rgba(167, 167, 167, 0.1);
+  //           height: calc(100% - 60px);
+  //       }
 
-//       .codx-stepper {
-//           .stepper-item {
-//               .stepper-default {
-//                   display: block;
-//               }
+  //       .codx-stepper {
+  //           .stepper-item {
+  //               .stepper-default {
+  //                   display: block;
+  //               }
 
-//               .stepper-active {
-//                   display: none;
-//               }
+  //               .stepper-active {
+  //                   display: none;
+  //               }
 
-//               .stepper-approve {
-//                   display: none;
-//               }
+  //               .stepper-approve {
+  //                   display: none;
+  //               }
 
-//               .stepper-approve-disabled {
-//                   display: none;
-//               }
-//           }
+  //               .stepper-approve-disabled {
+  //                   display: none;
+  //               }
+  //           }
 
-//           .stepper-item.active {
-//               .stepper-default {
-//                   display: none;
-//               }
+  //           .stepper-item.active {
+  //               .stepper-default {
+  //                   display: none;
+  //               }
 
-//               .stepper-active {
-//                   display: block;
-//               }
+  //               .stepper-active {
+  //                   display: block;
+  //               }
 
-//               .stepper-approve {
-//                   display: none;
-//               }
+  //               .stepper-approve {
+  //                   display: none;
+  //               }
 
-//               .stepper-approve-disabled {
-//                   display: none;
-//               }
-//           }
+  //               .stepper-approve-disabled {
+  //                   display: none;
+  //               }
+  //           }
 
-//           .stepper-item.approve-disabled {
-//               .stepper-default {
-//                   display: none;
-//               }
+  //           .stepper-item.approve-disabled {
+  //               .stepper-default {
+  //                   display: none;
+  //               }
 
-//               .stepper-active {
-//                   display: none;
-//               }
+  //               .stepper-active {
+  //                   display: none;
+  //               }
 
-//               .stepper-approve {
-//                   display: none;
-//               }
+  //               .stepper-approve {
+  //                   display: none;
+  //               }
 
-//               .stepper-approve-disabled {
-//                   display: block;
-//               }
-//           }
+  //               .stepper-approve-disabled {
+  //                   display: block;
+  //               }
+  //           }
 
-//           .stepper-item.approve {
-//               .stepper-default {
-//                   display: none;
-//               }
+  //           .stepper-item.approve {
+  //               .stepper-default {
+  //                   display: none;
+  //               }
 
-//               .stepper-active {
-//                   display: none;
-//               }
+  //               .stepper-active {
+  //                   display: none;
+  //               }
 
-//               .stepper-approve {
-//                   display: block;
-//               }
+  //               .stepper-approve {
+  //                   display: block;
+  //               }
 
-//               .stepper-approve-disabled {
-//                   display: none;
-//               }
-//           }
+  //               .stepper-approve-disabled {
+  //                   display: none;
+  //               }
+  //           }
 
-//           .stepper-item .stepper-icon {
-//               display: flex;
-//               align-items: center;
-//               justify-content: center;
-//               transition: color 0.2s ease, background-color 0.2s ease;
-//               margin: 0;
-//               border-radius: 0;
-//               width: auto;
-//               height: auto;
-//               background-color: transparent;
-//           }
+  //           .stepper-item .stepper-icon {
+  //               display: flex;
+  //               align-items: center;
+  //               justify-content: center;
+  //               transition: color 0.2s ease, background-color 0.2s ease;
+  //               margin: 0;
+  //               border-radius: 0;
+  //               width: auto;
+  //               height: auto;
+  //               background-color: transparent;
+  //           }
 
-//           .stepper-line {
-//               border: 0.5px dashed #ccc;
-//           }
-//       }
-//   }
-
+  //           .stepper-line {
+  //               border: 0.5px dashed #ccc;
+  //           }
+  //       }
+  //   }
 
   // End ::ng-deep
 }

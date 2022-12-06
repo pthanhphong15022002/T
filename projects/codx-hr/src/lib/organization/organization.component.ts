@@ -106,6 +106,8 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.templateTree,
           panelRightRef: this.templateRight,
           template2: this.templateOrgchart,
+          resourceModel: { parentIDField: 'ParentID' }
+
         },
       },
       {
@@ -122,7 +124,7 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
-    // this.view.dataService.parentIdField = 'ParentID';
+    this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
   }
 

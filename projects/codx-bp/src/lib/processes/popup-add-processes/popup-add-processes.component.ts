@@ -40,6 +40,8 @@ export class PopupAddProcessesComponent implements OnInit {
   revisions: BP_ProcessRevisions[] = [];
   perms: BP_ProcessPermissions[] = [];
   user: any;
+  isCoppyFile: any;
+  isAction: boolean = false;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -85,7 +87,6 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
-
   }
 
   //#region method
@@ -106,7 +107,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.revisions.push(versions);
 
       this.process.versions = this.revisions;
-      data = [this.process];
+      data = [this.process, this.action];
     } else if (this.action == 'edit') {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
@@ -118,7 +119,6 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   onAdd() {
-
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -159,6 +159,22 @@ export class PopupAddProcessesComponent implements OnInit {
       );
       return;
     }
+    if (this.process.activedOn === null) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.process.expiredOn === null) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
+      );
+      return;
+    }
 
     // if (!this.process.activedOn) {
     //   this.notiService.notifyCode(
@@ -176,39 +192,70 @@ export class PopupAddProcessesComponent implements OnInit {
     //   );
     //   return;
     // }
-
-    if (this.process.activedOn && this.process.expiredOn) {
-      // if (this.isCheckFromToDate(this.process.activedOn)) {
-      //   this.notiService.notify(
-      //     'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
-      //   );
-      //   return;
-      // }
-      if (this.process.activedOn >= this.process.expiredOn) {
-        this.notiService.notifyCode('BP003');
-        return;
-      }
+    if (this.process.activedOn >= this.process.expiredOn) {
+      this.notiService.notifyCode('BP003');
+      return;
     }
-    if (this.attachment?.fileUploadList?.length)
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          var countAttack = 0;
-          countAttack = Array.isArray(res) ? res.length : 1;
-          if (this.action === 'edit') {
-            this.process.attachments += countAttack;
+    // if (this.process.activedOn && this.process.expiredOn) {
+    //   // if (this.isCheckFromToDate(this.process.activedOn)) {
+    //   //   this.notiService.notify(
+    //   //     'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
+    //   //   );
+    //   //   return;
+    //   // }
+    // }
+    switch (this.action) {
+      case 'copy': {
+        this.notiService.alertCode('BP007').subscribe((x) => {
+          if (x.event.status == 'N') {
+            this.isCoppyFile = false;
+            this.isProcessAction();
           } else {
-            this.process.attachments = countAttack;
+            this.isCoppyFile = true;
+            this.isProcessAction();
+
           }
-          if (this.action === 'add' || this.action === 'copy') this.onAdd();
-          else this.onUpdate();
-        }
-      });
-    else {
-      if (this.action === 'add' || this.action === 'copy') this.onAdd();
-      else this.onUpdate();
+        });
+        break;
+      }
+      case 'add': {
+        this.isProcessAction();
+        break;
+      }
+      case 'edit': {
+        this.isProcessAction();
+        break;
+      }
+      default: {
+        this.isAction = false;
+        break;
+      }
     }
   }
   //#endregion method
+  async isProcessAction() {
+    if (this.attachment?.fileUploadList?.length)
+    (await this.attachment.saveFilesObservable()).subscribe((res) => {
+      if (res) {
+        var countAttack = 0;
+        countAttack = Array.isArray(res) ? res.length : 1;
+        if (this.action === 'edit') {
+          this.process.attachments += countAttack;
+        } else {
+          this.process.attachments = countAttack;
+        }
+        if (this.action === 'add' || this.action === 'copy') {
+          this.onAdd();
+        } else this.onUpdate();
+      }
+    });
+  else {
+    if (this.action === 'add' || this.action === 'copy') {
+      this.onAdd();
+    } else this.onUpdate();
+  }
+
+  }
 
   //#region check date
   isCheckFromToDate(toDate) {
@@ -336,4 +383,5 @@ export class PopupAddProcessesComponent implements OnInit {
     this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
     return check;
   }
+  CoppyFile() {}
 }

@@ -146,9 +146,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                   index = list.findIndex(d => d.recID.toString() === id);
                 }
                 if (index > -1) {
+                  this.dataDelete.push(list[index]);
+                  this.fileDelete.emit(this.dataDelete);
                   list.splice(index, 1);//remove element from array
                   this.files = list;
                   this.fileCount.emit(this.files);
+          
                   this.changeDetectorRef.detectChanges();
                 }
               }
@@ -183,12 +186,10 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     
     this.fileService.getFile(id).subscribe(file => {
       var id = file.recID;
-      var that = this;
-     
       if (this.checkDownloadRight(file)) {
         this.fileService.downloadFile(id).subscribe(async res => {
           if (res) {
-            fetch(res)
+            fetch(environment.urlUpload + "/" + res)
               .then(response => response.blob())
               .then(blob => {
                 const link = document.createElement("a");

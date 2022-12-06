@@ -78,6 +78,7 @@
                     (click)="filterStationery()"
                   >
                     <codx-label name="lblAll" default="Tất cả"></codx-label>
+                    <span>({{ totalStationery }})</span>
                   </span>
                 </li>
                 <li class="nav-item" *ngFor="let item of groupStationery">
@@ -85,12 +86,18 @@
                     class="nav-link fw-bold cursor-pointer active"
                     [ngClass]="{ active: item?.resourceID == groupID }"
                     (click)="filterStationery(item?.resourceID)"
-                    >{{ item?.resourceName }}</span
+                    >{{ item?.resourceName }} ({{ item?.qtyItems }})</span
                   >
                 </li>
               </ul>
-              <div class="d-flex">
-                <button class="btn btn-icon btn-tran position-relative me-5">
+
+              <div class="d-flex justify-content-between align-items-center">
+                <codx-searchbar
+                  [width]="300"
+                  iconPos="right"
+                  (searchEvent)="search($event)"
+                ></codx-searchbar>
+                <button class="btn btn-icon btn-tran position-relative mx-5">
                   <span class="icon-shopping_cart icon-24"></span>
                   <span
                     *ngIf="getCartQty(this.cart) != 0"
@@ -120,6 +127,7 @@
                 [method]="'GetListAsync'"
                 [predicate]="'ResourceType=@0'"
                 [dataValue]="6"
+                [funcId]="'EP8S21'"
                 [itemTemplate]="templateListCard"
               >
               </codx-listview>
@@ -152,8 +160,8 @@
     <div class="text-start">
       {{
         data?.costPrice == 0
-          ? (0 | currency: "VND")
-          : (data?.costPrice | currency: "VND":"symbol":"3.0")
+          ? (0 | currency : "VND")
+          : (data?.costPrice | currency : "VND" : "symbol" : "3.0")
       }}
     </div>
     <div class="d-flex justify-content-between align-items-end mt-2">
