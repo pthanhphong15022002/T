@@ -22,6 +22,7 @@ import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
 import {
   AlertConfirmInputConfig,
+  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -109,6 +110,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   date = new Date();
   isScroll = true;
   dataRequest = new DataRequest();
+  @Input() idField :any ; 
   @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
@@ -132,7 +134,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() showMessage = '1';
   @Input() hideMoreF = '1';
   @Input() displayThumb: string;
-  @Input() category: string;
   ////////////////////////////////////////////////////
   @Input() fdID: any = ''; //Folder ID truyền vào
   @Input() fdName: any = ''; //Folder Name truyền vào
@@ -173,6 +174,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   )[0] as HTMLElement;
 
   constructor(
+    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
     private auth: AuthStore,
@@ -454,8 +456,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // totalHdd: any;
       // this.getHDDInformaton(item);
     });
+    //this.getFolderNameByFuncList();
   }
 
+  getFolderNameByFuncList()
+  {
+   
+    // this.cache.functionList(this.functionID).subscribe(item=>{
+    //   if(item && item.subFolderControl && item.subFolderControl != "" && item.subFolderControl != "1" && item.subFolderControl != "2" && item.subFolderControl != "3"  && item.subFolderControl != "4" && !this.fdName) 
+    //     this.fdName = item.subFolderControl;
+    // })
+  }
   ngOnDestroy() {
     //   this.atSV.openForm.unsubscribe();
     // if (this.interval?.length > 0) {
@@ -662,7 +673,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
             this.isDM,
             this.fdID,
             this.fdName,
-            this.parentID
+            this.parentID,
+            this.idField
           )
           .pipe(
             map((res) => {
@@ -729,7 +741,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                                   this.isDM,
                                   this.fdID,
                                   this.fdName,
-                                  this.parentID
+                                  this.parentID,
+                                  this.idField
                                 )
                                 .pipe()
                                 .subscribe((result) => {
@@ -843,7 +856,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
           this.isDM,
           this.fdID,
           this.fdName,
-          this.parentID
+          this.parentID,
+          this.idField
         )
         .toPromise()
         .then((res) => {
@@ -956,7 +970,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                             this.isDM,
                             this.fdID,
                             this.fdName,
-                            this.parentID
+                            this.parentID,
+                            this.idField
                           )
                           .toPromise()
                           .then((result) => {
@@ -1124,7 +1139,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                 this.isDM,
                 this.fdID,
                 this.fdName,
-                this.parentID
+                this.parentID,
+                this.idField
               )
               .pipe(
                 map((item) => {
@@ -2981,7 +2997,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         //fileUpload.folderId = this.folderId;
         fileUpload.folderID = this.dmSV.folderId.getValue();
 
-        if (this.category) fileUpload.category = this.category;
 
         fileUpload.permissions = this.addPermissionForRoot(
           fileUpload.permissions
