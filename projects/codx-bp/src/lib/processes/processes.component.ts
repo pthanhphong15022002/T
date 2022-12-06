@@ -677,13 +677,14 @@ export class ProcessesComponent
           /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
             true;
         }
-
-        let userId = this.user?.userID;
-        let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && x.publish) ||this.user?.administrator); 
-        debugger
-        if((data.status === "6" || checkRole >=0 ) && res.functionID === "BPT109" ) {
-          res.disabled = true;
+        if(res.functionID === "BPT109"){
+          let userId = this.user?.userID;
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && x.publish) || !this.user?.administrator); 
+          if(data.status === "6" || checkRole >=0 ) {
+            res.disabled = true;
+          }
         }
+      
       });
     }
   }
