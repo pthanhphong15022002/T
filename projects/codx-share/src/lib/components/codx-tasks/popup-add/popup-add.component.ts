@@ -197,7 +197,18 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             }
           });
       }
-    });
+    })
+     this.cache
+      .gridViewSetup(
+        'TaskGoals',
+        "grvTaskGoals"
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.planholderTaskGoal = res["Memo"]?.description;
+        }
+      });
+    ;
     // this.functionID = this.dialog.formModel.funcID;
     // this.cache
     //   .gridViewSetup(
