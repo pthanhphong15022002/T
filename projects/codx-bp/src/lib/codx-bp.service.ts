@@ -180,7 +180,7 @@ export class CodxBpService {
     return this.api.exec<any>(
       'DM',
       'FileBussiness',
-      'UpdatePermissionFileAsync',
+      'UpdatePermissionFileOfTaskAsync',
       data
     );
   }
