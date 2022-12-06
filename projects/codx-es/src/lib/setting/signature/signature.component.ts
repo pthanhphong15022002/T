@@ -192,13 +192,13 @@ export class SignatureComponent implements OnInit, AfterViewInit {
               template: this.oTPControl,
               width: 110,
             },
-            {
-              field: 'stop',
-              headerText: gv ? gv['Stop'].headerText || 'Icon' : 'Icon',
-              template: this.templateStop,
-              width: 80,
-              //textAlign: 'Center',
-            },
+            // {
+            //   field: 'stop',
+            //   headerText: gv ? gv['Stop'].headerText || 'Icon' : 'Icon',
+            //   template: this.templateStop,
+            //   width: 80,
+            //   //textAlign: 'Center',
+            // },
           ];
           this.views = [
             {
@@ -373,15 +373,19 @@ export class SignatureComponent implements OnInit, AfterViewInit {
         break;
       //Copy
       case 'SYS04': {
-        //this.copy(event);
-        this.stop(event);
+        this.copy(event);
+        //this.stop(event);
         break;
       }
       //Stop
-      case 'STOP': {
+      case 'ESS211': {
         this.stop(event);
         break;
       }
     }
+  }
+
+  changeDataMF(evt){
+
   }
 }
