@@ -65,13 +65,16 @@ export class EmployeeInfomationComponent extends UIComponent {
   dialog!: DialogRef;
   formModel: FormModel;
   showCBB = false;
-
+  parameter: any =
+  {
+    maxLevelSkill: 0
+  };
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
   itemSelected: any;
   employeeID: any;
-
   width: number = 720;
   height: number = window.innerHeight;
+  educations:any[] = [];
   constructor(
     private injector: Injector,
     private codxMwpService: CodxMwpService,
@@ -88,15 +91,16 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.router.params.subscribe((param: any) => {
       if (param) {
         this.functionID = param['funcID'];
+        let employeeID = this.router.snapshot.queryParams["employeeID"];
+        this.getEmployeeInfo(employeeID);
         this.getDataAsync(this.functionID);
+        
         this.codxMwpService.modeEdit.subscribe(res => {
           this.editMode = res;
           this.editSkillMode = false;
         })
         this.codxMwpService.empInfo.subscribe((res: string) => {
           if (res) {
-            console.log(res);
-
             this.employeeInfo = null;
             this.employeeHobbie = null;
             this.employeeContracts = null;
@@ -119,7 +123,6 @@ export class EmployeeInfomationComponent extends UIComponent {
             this.formName = res.formName;
             this.gridViewName = res.gridViewName;
             this.cache.moreFunction(this.formName, this.gridViewName).subscribe((res: any) => {
-              console.log(res);
               this.detectorRef.detectChanges();
             });
           }
@@ -244,7 +247,6 @@ export class EmployeeInfomationComponent extends UIComponent {
     }
   }
   LoadData(employee) {
-    console.log(this.view)
     this.loadEmployee(employee, e => { });
     this.codxMwpService.LoadData(employee.Employee.employeeID, "", "2")
       .subscribe((response: any) => {
@@ -272,10 +274,6 @@ export class EmployeeInfomationComponent extends UIComponent {
         this.updateSkill(response);
       }
     });
-    // setTimeout(() => {
-
-    // }, 100);
-
   }
   updateHobby(response) {
     if (response) {
@@ -468,8 +466,8 @@ export class EmployeeInfomationComponent extends UIComponent {
     });
   }
 
-  editDataEdu(data) {
-
+  editDataEdu() {
+    debugger
   }
 
   addRelation() {
@@ -649,10 +647,7 @@ export class EmployeeInfomationComponent extends UIComponent {
       });
   }
 
-  parameter: any =
-    {
-      maxLevelSkill: 0
-    };
+  
   getParameterAsync(formName: string, category: string) {
     if (!formName || !category) return;
     this.api.execSv("SYS",
@@ -718,18 +713,37 @@ export class EmployeeInfomationComponent extends UIComponent {
     this.showCBB = !this.showCBB;
   }
 
-}
 
+  // load employee info
+  getEmployeeInfo(employeeID:string){
+    this.api.execSv(
+      "HR",
+      "ERM.Business.HR",
+      "EmployeesBusiness",
+      "GetEmployeeInforAsync",
+      [employeeID])
+      .subscribe((res:any) => {
 
-class Guid {
-  static newGuid() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        var r = (Math.random() * 16) | 0,
-          v = c == 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      }
-    );
+        console.log(res);
+      });
+  }
+
+  // get education
+  getEducation(employeeID:string){
+    this.api.execSv(
+      "HR",
+      "ERM.Business.HR",
+      "EducationsBusiness",
+      "GetEducationByEmpIDAsync",
+      [employeeID])
+      .subscribe((res:any) => {
+        console.log(res);
+      });
+  }
+
+  // popup education
+  openPopupEducation(){
+    
   }
 }
+

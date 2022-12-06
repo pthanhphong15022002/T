@@ -146,9 +146,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                   index = list.findIndex(d => d.recID.toString() === id);
                 }
                 if (index > -1) {
+                  this.dataDelete.push(list[index]);
+                  this.fileDelete.emit(this.dataDelete);
                   list.splice(index, 1);//remove element from array
                   this.files = list;
                   this.fileCount.emit(this.files);
+          
                   this.changeDetectorRef.detectChanges();
                 }
               }

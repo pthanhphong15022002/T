@@ -214,8 +214,6 @@ export class PopupAddProcessStepsComponent
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.bpService.updatePermissionsFile([this.owners, this.processSteps.recID]).subscribe();
-
           var attachments = Array.isArray(res) ? res.length : 1;
           if (this.action == 'edit') {
             this.processSteps.attachments += attachments;
@@ -376,7 +374,7 @@ export class PopupAddProcessStepsComponent
         index = this.owners.findIndex(
           (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
         );
-      if (index == -1 && dt?.objectID && dt?.objectName) {      
+      if (index == -1 && dt?.id && dt?.objectName) {      
           var owner = new BP_ProcessOwners();
           owner.objectType = dt.objectType;
           owner.objectID = dt.id;

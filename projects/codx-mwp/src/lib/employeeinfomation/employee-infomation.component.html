@@ -518,7 +518,7 @@
                         <div class="row mb-4">
                           <div class="fw-bold text-dark">{{ data.competenceName }}</div>
                           <ejs-slider [width]="300" [type]="minType" [min]="0"
-                            [max]="parameter?.maxLevelSkill? parameter.maxLevelSkill : 10 " [value]="data.rating"
+                            [max]="parameter?.maxLevelSkill ? parameter.maxLevelSkill : 10 " [value]="data.rating"
                             [readonly]="true">
                           </ejs-slider>
                         </div>
@@ -543,8 +543,14 @@
                         </button>
                       </div>
                       <ng-container *ngIf="showCBB">
-                        <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
-                          [height]="height" (clickSave)="saveAddSkill($event)" title="Kỹ năng">
+                        <codx-combobox-popup 
+                          comboboxName="Skills" 
+                          field="skill" 
+                          [multiple]="true" 
+                          [width]="width"
+                          [height]="height" 
+                          (clickSave)="saveAddSkill($event)" 
+                          title="Kỹ năng">
                         </codx-combobox-popup>
                       </ng-container>
                     </ng-container>
@@ -557,73 +563,31 @@
             <div id="MWP00204" class="d-block mb-3">
               <div class="user-profile overview">
                 <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblTraining" formName="Employees" default="Đào tạo cá nhân">
+                  <codx-label name="lblTraining" [formModel]="view.formModel" default="Đào tạo cá nhân">
                   </codx-label>
                 </div>
-                <ngx-skeleton-loader *ngIf="
-                    !trainingInterObl &&
-                    !trainingInterUnObl &&
-                    !trainingPersonal
-                  " count="5" animation="progress"></ngx-skeleton-loader>
-                <div class="border rounded-2 p-6" *ngIf="
-                    trainingInterObl || trainingInterUnObl || trainingPersonal
-                  ">
-                  <div *ngIf="trainingPersonal && trainingPersonal.length > 0"
+                <div class="border rounded-2 p-6">
+                  <div
                     class="text-dark fw-bold text-uppercase mt-8 mb-4">
-                    <codx-label formName="Employees" default="Bên ngoài công ty">
+                    <codx-label [formModel]="view.formModel" name="lblOutSide" default="Bên ngoài công ty">
                     </codx-label>
                   </div>
                   <div class="user-process process-v swiper-wrapper">
-                    <ng-container swiperSlide *ngIf="editMode">
-                      <ng-container>
-                        <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                          <div class="d-flex">
-                            <div class="add-process">
-                              <button class="btn btn-sm btn-light" (click)="editDataEdu(null)">
-                                <i class="icon-add icon-16 ms-n2"></i>
-                                <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
-                                </codx-label>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>
+                    <ng-container *ngFor="let item of educations">
+                      <div>
+                        {{item.courseName}}
+                      </div>
                     </ng-container>
-
-                    <ng-container swiperSlide *ngFor="let item of trainingPersonal">
-                      <ng-container>
-                        <div class="process-item swiper-slide">
-                          <span class="yeartoyear btn btn-sm">{{
-                            item.completeOn
-                            }}</span>
-                          <div class="d-flex flex-column mt-4">
-                            <div class="text-dark mb-1">
-                              {{ item.organizationName }}
-                            </div>
-                            <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-check_circle icon-16 me-2"></span>
-                              <span class="text-dark-50">{{
-                                item.certificateName
-                                }}</span>
-                            </div>
-                            <div class="text-dark mt-1 d-flex align-items-start">
-                              <span class="text-dark-50 icon-class icon-16 me-2"></span>
-                              <span class="text-dark-50">{{ item.memo }}</span>
-                            </div>
-                            <div class="d-flex mt-4">
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-2" *ngIf="editMode"
-                                (click)="editDataEdu(item)">
-                                <span class="icon-edit icon-18"></span>
-                              </a>
-                              <a class="btn btn-xs btn-icon btn-light btn-hover-danger" *ngIf="editMode"
-                                (click)="deleteEducation(item)">
-                                <span class="icon-close icon-18"></span>
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                      </ng-container>
+                    <ng-container *ngIf="editMode">
+                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
+                        <button class="btn btn-sm btn-light" (click)="openPopupEducation()">
+                          <i class="icon-add icon-16 ms-n2"></i>
+                          <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
+                          </codx-label>
+                        </button>
+                      </div>
                     </ng-container>
+                    
                   </div>
                 </div>
               </div>
