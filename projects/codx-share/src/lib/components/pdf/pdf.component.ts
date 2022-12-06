@@ -33,7 +33,6 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import {
   CodxEsService,
-  UrlUpload,
 } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
@@ -1353,7 +1352,7 @@ export class PdfComponent
     );
     popupSignature.closed.subscribe((res) => {
       if (res?.event[0]) {
-        area.labelValue = UrlUpload + '/' + res.event[0].pathDisk;
+        area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
         this.detectorRef.detectChanges();
         this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
       }
@@ -1638,17 +1637,17 @@ export class PdfComponent
         let img = res.event[0];
         switch (img?.referType) {
           case 'S1': // Ky chinh
-            this.signerInfo.signature1 = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature1 = environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.signature1 ?? '';
             break;
           case 'S2': //Ky nhay
-            this.signerInfo.signature2 = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature2 = environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.signature2 ?? '';
             break;
           case 'S3': //Con dau
-            this.signerInfo.stamp = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.stamp = environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.stamp ?? '';
             break;
