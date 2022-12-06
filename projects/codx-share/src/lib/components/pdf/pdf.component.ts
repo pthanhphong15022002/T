@@ -307,7 +307,7 @@ export class PdfComponent
               this.signerInfo = res.approvers[0];
             }
             this.curFileID = sf?.files[0]?.fileID;
-            this.curFileUrl = environment.urlUpload + '/' + res.urls[0];
+            this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? ''
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }

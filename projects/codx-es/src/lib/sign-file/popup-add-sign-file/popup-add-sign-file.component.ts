@@ -1149,4 +1149,9 @@ export class PopupAddSignFileComponent implements OnInit {
       });
     }
   }
+
+  fileDelete(event){
+    console.log(event);
+
+  }
 }
