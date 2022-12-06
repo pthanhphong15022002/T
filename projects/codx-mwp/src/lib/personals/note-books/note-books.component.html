@@ -1,47 +1,99 @@
 <div class="pw-storgae pw-notebooks">
-    <div class="d-flex align-items-center justify-content-between pw-header mb-3">
-        <div class="pw-search">
-            <codx-searchbar [width]="300" (searchEvent)="onSearch($event)"></codx-searchbar>
-        </div>
-        <div class="d-flex justify-content-end align-items-center pw-toolbar">
-            <div class="text-dark me-1">
-                <codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label>
-            </div>
-            <div class="text-primary">
-                {{gridViewSetup?.Title?.headerText}}
-            </div>
-            <div class="mx-2 text-gray-400">|</div>
-            <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative">
-                <i class="icon-sort_A-Z icon-18" (click)="sortByDESC()" *ngIf="checkDESC == false"></i>
-                <i class="icon-sort_Z-A icon-18" (click)="sortByASC()" *ngIf="checkDESC == true"></i>
-            </div>
-            <div id="kt_drawer_addNoteBook_toggle" (click)="formAddNoteBook()">
-                <button class="btn btn-primary" type="button" id="dropdownMenuButton1" aria-expanded="false">
-                    <i class="icon-add icon-16"></i>
-                    <codx-label name="lblAddNoteBook" formName="NoteBooks" default="Thêm"></codx-label>
-                </button>
-            </div>
-        </div>
+  <div class="d-flex align-items-center justify-content-between pw-header mb-3">
+    <div class="pw-search">
+      <codx-searchbar
+        [width]="300"
+        (searchEvent)="onSearch($event)"
+      ></codx-searchbar>
     </div>
-    <div class="d-flex flex-column-fluid home-notebooks hover-scroll-overlay-y w-100" data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".pw-profile,.pw-menu, .pw-header"
-        data-kt-scroll-wrappers=".codx-wrapper, .wrapper,.pw-storgae, .pw-content" data-kt-scroll-offset="0px">
-        <codx-listview #listView entityName="WP_NoteBooks" gridViewName="grvNoteBooks" [predicate]="predicate"
-            [dataValue]="dataValue" [itemTemplate]="templateListCard" type="cardView" formName="NoteBooks"
-            funcId="MWP0094" service="WP">
-        </codx-listview>
+    <div class="d-flex justify-content-end align-items-center pw-toolbar">
+      <div class="text-dark me-1">
+        <codx-label
+          name="lblSortNoteBook"
+          formName="NoteBooks"
+          default="Sắp xếp"
+        ></codx-label>
+      </div>
+      <div class="text-primary">
+        {{ gridViewSetup?.Title?.headerText }}
+      </div>
+      <div class="mx-2 text-gray-400">|</div>
+      <div
+        class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative"
+      >
+        <i
+          class="icon-sort_A-Z icon-18"
+          (click)="sortByDESC()"
+          *ngIf="checkDESC == false"
+        ></i>
+        <i
+          class="icon-sort_Z-A icon-18"
+          (click)="sortByASC()"
+          *ngIf="checkDESC == true"
+        ></i>
+      </div>
+      <div id="kt_drawer_addNoteBook_toggle" (click)="formAddNoteBook()">
+        <button
+          class="btn btn-primary"
+          type="button"
+          id="dropdownMenuButton1"
+          aria-expanded="false"
+        >
+          <i class="icon-add icon-16"></i>
+          <codx-label
+            name="lblAddNoteBook"
+            formName="NoteBooks"
+            default="Thêm"
+          ></codx-label>
+        </button>
+      </div>
     </div>
+  </div>
+  <div
+    class="d-flex flex-column-fluid home-notebooks hover-scroll-overlay-y w-100"
+    data-kt-scroll="true"
+    data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies=".pw-profile,.pw-menu, .pw-header"
+    data-kt-scroll-wrappers=".codx-wrapper, .wrapper,.pw-storgae, .pw-content"
+    data-kt-scroll-offset="0px"
+  >
+    <codx-listview
+      #listView
+      entityName="WP_NoteBooks"
+      gridViewName="grvNoteBooks"
+      [predicate]="predicate"
+      [dataValue]="dataValue"
+      [itemTemplate]="templateListCard"
+      type="cardView"
+      formName="NoteBooks"
+      funcId="MWP0094"
+      service="WP"
+    >
+    </codx-listview>
+  </div>
 </div>
 
 <ng-template #templateListCard let-item>
-    <div (dblclick)="openDetailPage(item)">
-        <codx-card-img cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px"
-            (clickMF)="clickMF($event, item)" [imageId]="item.recID" imgCss="h-140px mb-2"
-            icoTitleCss="icon-assignment icon-16" [title]="item.title" cssTitle="line-clamp line-clamp-1"
-            [imgOn]="item?.modifiedOn" [desc2]="item.memo" cssDes2="line-clamp line-clamp-2" imageWidth="223"
-            [imageObjType]="'WP_NoteBooks'" [formModel]="listView.formModel" [dataItem]="item"
-            [imageObjName]="item.title" [typeMF]="'hover'">
-        </codx-card-img>
-    </div>
+  <div (dblclick)="openDetailPage(item)">
+    <codx-card-img
+      cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px"
+      (clickMF)="clickMF($event, item)"
+      [imageId]="item.recID"
+      imgCss="h-150px w-150px mb-2"
+      icoTitleCss="icon-assignment icon-16"
+      [title]="item.title"
+      cssTitle="line-clamp line-clamp-1"
+      [imgOn]="item?.modifiedOn"
+      [desc2]="item.memo"
+      cssDes2="line-clamp line-clamp-2"
+      imageWidth="223"
+      [imageObjType]="'WP_NoteBooks'"
+      [formModel]="listView.formModel"
+      [dataItem]="item"
+      [imageObjName]="item.title"
+      [typeMF]="'hover'"
+    >
+    </codx-card-img>
+  </div>
 </ng-template>
