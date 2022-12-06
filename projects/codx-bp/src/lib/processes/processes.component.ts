@@ -117,11 +117,13 @@ export class ProcessesComponent
   statusLable = '';
   commentLable = '';
   titleReleaseProcess=''
-  status = '';
   comment = '';
   processsId = '';
   objectType = '';
   entityName = '';
+  statusDefault = '6' ;
+  vllStatus = "BP003";
+  isAdmin =false ;
 
   constructor(
     inject: Injector,
@@ -134,7 +136,6 @@ export class ProcessesComponent
     private routers: Router
   ) {
     super(inject);
-
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
@@ -173,14 +174,6 @@ export class ProcessesComponent
       functionType:1,
       gridViewName:"grvProcesses"
     }
-    // this.views.forEach(x=>{
-    //   if (x.type === ViewType.card) {
-    //     this.isViewCard=true;
-    //   }
-    //   else {
-    //     this.isViewCard=false;
-    //   }
-    // })
   }
 
   ngAfterViewInit(): void {
@@ -439,14 +432,9 @@ export class ProcessesComponent
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
   releaseProcess(data) {
-    let userId = this.user?.userID
-    let checkRole = data?.permissions.findIndex(x => x.objectID == userId && x.publish);
-    if(checkRole >=0){
       this.statusLable = this.gridViewSetup['Status']['headerText'];
       this.commentLable = this.gridViewSetup['Comments']['headerText'];
-      this.status = data.status;
-      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);
-    }
+      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);      
   }
 
   Updaterevisions(moreFunc, data) {
@@ -689,6 +677,14 @@ export class ProcessesComponent
           /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
             true;
         }
+        if(res.functionID === "BPT109"){
+          let userId = this.user?.userID;
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && x.publish) || !this.user?.administrator); 
+          if(data.status === "6" || checkRole >=0 ) {
+            res.disabled = true;
+          }
+        }
+      
       });
     }
   }
