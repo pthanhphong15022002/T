@@ -13,7 +13,7 @@ export const environment = {
   reportUrl: '',
   appName: 'hps-file-test', // Tam thoi de hard
   saas: 1,
-  loginTmp: 'qtsc',
+  layoutCZ: 'qtsc',
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',
