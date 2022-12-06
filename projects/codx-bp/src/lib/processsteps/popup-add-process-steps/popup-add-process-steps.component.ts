@@ -55,7 +55,7 @@ export class PopupAddProcessStepsComponent
   textChange = '';
   titleActon = '';
   stepType = 'C';
-  vllShare = 'TM003';
+  vllShare = 'BP021';
   readOnly = false;
   isHaveFile = false;
   isNewEmails = true;
@@ -123,7 +123,7 @@ export class PopupAddProcessStepsComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.gridViewSetup = res;
+          this.gridViewSetup = res;          
         }
       });
   }

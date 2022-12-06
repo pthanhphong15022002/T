@@ -111,14 +111,14 @@
           [formModel]="form.formModel"
           default="Đầu mục thực hiện">
         </codx-label>
-        <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus 
-                      (blur)="valueChangeRefrence($event)"
-                      (keydown.enter)="valueChangeRefrence($event)" class="form-control"
-                      [(ngModel)]="textChange"
-                      placeholder="Nhập đầu mục danh sách..." 
-                      style=" border: none; margin-top: 3px; outline: none;"/>
+        <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
+          (blur)="valueChangeRefrence($event)"
+          (keydown.enter)="valueChangeRefrence($event)" class="form-control"
+          [(ngModel)]="textChange"
+          placeholder="Nhập đầu mục danh sách..."
+          style=" border: none; margin-top: 3px; outline: none;"/>
       </div>
-      
+
       <ng-container *ngIf="referenceText?.length> 0">
         <div *ngFor="let item of referenceText; let i= index" class="m-5">
           <div class="text-hover-primary cursor-pointer">
@@ -325,7 +325,8 @@
               [disabled]="readOnly">
               [class]="'click-owner'"
             </codx-input>
-            <span class="owners-text">{{gridViewSetup['Owners']?.headerText ?? 'Owners'}}</span>
+            <span class="owners-text">{{gridViewSetup['Owners']?.headerText ??
+              'Owners'}}</span>
           </div>
 
         </div>
@@ -350,6 +351,7 @@
           </ng-container>
         </div>
       </ng-container>
+
       <ng-container *ngIf="stepType == 'C' || stepType == 'E'">
         <div class="form-group">
           <div class="note">

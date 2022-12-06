@@ -40,6 +40,7 @@ export class PopupAddProcessesComponent implements OnInit {
   revisions: BP_ProcessRevisions[] = [];
   perms: BP_ProcessPermissions[] = [];
   user: any;
+  isCoppyFile:any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -81,9 +82,11 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isAddPermission(this.process.owner);
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
+
   }
 
   //#region method
@@ -102,7 +105,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process.phases = 0;
       this.process.activities = 0;
       this.revisions.push(versions);
-      // this.addPermission(this.process.owner);
+
       this.process.versions = this.revisions;
       data = [this.process];
     } else if (this.action == 'edit') {
@@ -116,6 +119,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   onAdd() {
+
     this.dialog.dataService
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
@@ -137,6 +141,7 @@ export class PopupAddProcessesComponent implements OnInit {
       });
   }
   async onSave() {
+
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
@@ -187,8 +192,8 @@ export class PopupAddProcessesComponent implements OnInit {
       }
     }
 
-
-    if (this.attachment?.fileUploadList?.length)
+    else {
+      if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           var countAttack = 0;
@@ -198,14 +203,26 @@ export class PopupAddProcessesComponent implements OnInit {
           } else {
             this.process.attachments = countAttack;
           }
-          if (this.action === 'add' || this.action === 'copy') this.onAdd();
+          if (this.action === 'add' || this.action === 'copy') {
+            this.CoppyFile();
+            if(this.isCoppyFile){
+
+            }
+            this.onAdd();
+          }
           else this.onUpdate();
         }
       });
     else {
-      if (this.action === 'add' || this.action === 'copy') this.onAdd();
+      if (this.action === 'add' || this.action === 'copy') {
+        this.CoppyFile();
+        this.onAdd();
+      }
       else this.onUpdate();
     }
+    }
+
+
   }
   //#endregion method
 
@@ -230,18 +247,18 @@ export class PopupAddProcessesComponent implements OnInit {
     this.process[e.field] = e.data.fromDate;
   }
 
-  eventApply(e) {
-    var data = e.data[0];
-    var id = '';
-    switch (data.objectType) {
-      case 'U':
-        this.process.owner = data.id;
-        break;
-    }
-    if (this.process.owner) {
-      this.addPermission(this.process.owner);
-    }
-  }
+  // eventApply(e) {
+  //   var data = e.data[0];
+  //   var id = '';
+  //   switch (data.objectType) {
+  //     case 'U':
+  //       this.process.owner = data.id;
+  //       break;
+  //   }
+  //   if (this.process.owner) {
+  //     this.addPermission(this.process.owner);
+  //   }
+  // }
 
   addPermission(id) {
     if (id != null) {
@@ -292,13 +309,58 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-    console.log(this.process.owner);
+    this.isAddPermission(this.process.owner);
   }
-  // checkAdminOfBP(userid:any) {
-  // let check:boolean;
-  // this.bpService.checkAdminOfBP(userid).subscribe(res=>{
-  //   check= res;
-  // });
-  // return check;
-  // }
+  isAddPermission(id) {
+    this.api
+      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
+      .subscribe((res) => {
+        if (res) {
+          this.perms = [];
+          let emp = res;
+          var tmpPermission = new BP_ProcessPermissions();
+
+          tmpPermission.objectID = emp?.userID;
+          tmpPermission.objectName = emp?.userName;
+          tmpPermission.objectType = '1';
+          tmpPermission.memberType = '0';
+          tmpPermission.autoCreate = true;
+          if (emp.administrator) {
+            tmpPermission.objectType = '7';
+          } else if (this.checkAdminOfBP(emp.id)) {
+            tmpPermission.objectType = '7';
+          }
+
+          tmpPermission.read = true;
+          tmpPermission.share = true;
+          tmpPermission.full = true;
+          tmpPermission.delete = true;
+          tmpPermission.update = true;
+          tmpPermission.upload = true;
+          tmpPermission.assign = true;
+          tmpPermission.download = true;
+          tmpPermission.memberType = '0';
+          tmpPermission.autoCreate = true;
+          this.perms.push(tmpPermission);
+
+          this.process.permissions = this.perms;
+        }
+      });
+  }
+  checkAdminOfBP(userid: any) {
+    let check: boolean;
+    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
+    return check;
+  }
+  CoppyFile(){
+    if(this.action ==='copy'){
+      this.notiService.alertCode('BP007').subscribe((x) => {
+        if (x.event.status == 'N') {
+          this.isCoppyFile=false;
+        } else {
+          this.isCoppyFile=true;
+        }
+      });
+    }
+  }
 }
