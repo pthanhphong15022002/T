@@ -1160,11 +1160,20 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     if(data?.status == "9" || data?.approveStatus == "4")
     {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211' || x.functionID == 'ODT103' || x.functionID == 'ODT202'
+        (x: { functionID: string }) => 
+          x.functionID == 'ODT112' || 
+          x.functionID == 'ODT211' || 
+          x.functionID == 'ODT103' || 
+          x.functionID == 'ODT202' ||
+          x.functionID == 'SYS03'  ||
+          x.functionID == 'ODT103' ||
+          x.functionID == 'ODT202'
       );
-      if(approvel[0]) approvel[0].disabled = true;
+      if(approvel && approvel.length > 0)
+        for (var i = 0; i < approvel.length; i++) {
+          approvel[i].disabled = true;
+        }
     }
-
     if (data?.status == '3') {
       var completed = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
