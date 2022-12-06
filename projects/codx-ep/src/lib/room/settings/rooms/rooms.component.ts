@@ -35,6 +35,7 @@ export class RoomsComponent extends UIComponent {
   @ViewChild('ownerCol') ownerCol: TemplateRef<any>;
   @ViewChild('preparatorCol') preparatorCol: TemplateRef<any>;
 
+  @ViewChild('itemAction') itemAction: TemplateRef<any>;
   views: Array<ViewModel> = [];
   viewType = ViewType;
   buttons: ButtonModel;
@@ -117,6 +118,13 @@ export class RoomsComponent extends UIComponent {
         .subscribe((gv) => {
           this.grvRooms = gv;
           this.columnGrids = [
+            {
+              field: '',
+              headerText: '',
+              width: 30,
+              template: this.itemAction,
+              textAlign: 'center',
+            },
             {
               field: 'resourceName',
               headerText: gv['ResourceName'].headerText,

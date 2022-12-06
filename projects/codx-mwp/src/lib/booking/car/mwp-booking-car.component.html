@@ -1,56 +1,55 @@
-<codx-views #view [views]="views" (buttonClick)="click($event)" [funcID]="funcID" [service]="service"
-  [assemblyName]="assemblyName" [className]="className" [method]="method" (selectedChange)="changeItemDetail($event)"
-  [selectedFirst]="true" [autoLoad]="true" [idField]="idField" (requestEnded)="closeAddForm($event)"
-  [viewActiveType]="viewType.listdetail">
+<codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+   [views]="views" [button]="buttons" (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+  (selectedChange)="changeItemDetail($event)" [selectedFirst]="true" [autoLoad]="true"
+  [viewActiveType]="viewType.schedule" (onActions)="onActionClick($event)">
 </codx-views>
 
 <ng-template #subTitleTmp let-data>
-  <div class="" *ngIf="data?.isSameDay">
+  <div class="" *ngIf="sameDayCheck(data?.startDate, data?.endDate)">
     <div class="mb-2">
       <span>{{ data?.title }}</span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2">
-
       <div class="d-flex me-6 justify-content-center align-items-center">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="text-gray-800">
+        <span class="">
           {{ data?.startDate | fmDT }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-access_time me-1"></i>
-        <span class="text-gray-800">
-          {{ data?.startHour}}
+        <span class="">
+          {{ showHour(data?.startDate) }}
         </span>
-        <span *ngIf="data?.startHour && data?.endHour" class="ms-1 me-1">{{
+        <span *ngIf="data?.startDate && data?.endDate" class="ms-1 me-1">{{
           "-"
           }}</span>
-        <span class="text-gray-800">
-          {{ data?.endHour }}
+        <span class="">
+          {{ showHour(data?.endDate) }}
         </span>
       </div>
     </div>
   </div>
 
-  <div class="" *ngIf="!data?.isSameDay">
+  <div class="" *ngIf="!sameDayCheck(data?.startDate, data?.endDate)">
     <div class="">
       <span>{{ data?.title }}</span>
     </div>
     <div class="d-flex mt-1 mb-1">
       <div class="d-flex me-6">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="text-gray-800">
-          {{ data?.startDate | fmDT:'dmy':true }}
+        <span class="">
+          {{ data?.startDate | fmDT: "dmy":true }}
         </span>
       </div>
       <div class="d-flex me-6">
         <i class="icon-calendar_today icon-16 me-2"></i>
-        <span class="text-gray-800">
-          {{ data?.endDate | fmDT:'dmy':true}}
+        <span class="">
+          {{ data?.endDate | fmDT: "dmy":true }}
         </span>
       </div>
     </div>
-
   </div>
 </ng-template>
 
@@ -59,18 +58,18 @@
 <ng-template #itemTemplate let-data>
   <codx-temp-full cardCss="card-template border-bottom px-2 pt-4 pb-2" (click)="click(data)" [typeMF]="'hover'"
     [title]="data?.requester" [subTitleTmp]="subTitleTmp" [icoCss]="
-    'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
-  " [hideMF]="" [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn"
-    [imageId]="data?.createdBy" imageObjType="AD_Users" [resources]="data?.bookingAttendees" [titleLine]="2"
-    [dataItem]="data" [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)" typeMF="hover" [dataItem]="data">
+      'fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
+    " [status]="data?.approveStatus" [statusVll]="'EP022'" [date]="data?.createdOn" [imageId]="data?.createdBy"
+    imageObjType="AD_Users" [resources]="data?.bookingAttendees" [titleLine]="2" [dataItem]="data"
+    [formModel]="formModel" [footer]="footerTmp" (clickMF)="clickMF($event, data)" typeMF="hover" [dataItem]="data"
+    (changeDataMF)="changeDataMF($event, data)">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #panelRightRef>
-  <approval-car-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel"
-    [view]="views" (uploaded)="getDetailApprovalBooking($event)" (updateStatus)="updateStatus($event)"
-    (driverAssigned)="assignDriver($event)" (setPopupTitle)="setPopupTitle($event)"></approval-car-view-detail>
+  <mwp-booking-car-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel"
+    [view]="views" (uploaded)="getDetailBooking($event)" (edit)="edit($event)" (copy)="copy($event)"
+    (delete)="delete($event)" (setPopupTitle)="setPopupTitle($event)"></mwp-booking-car-view-detail>
 </ng-template>
 
 <ng-template #chart let-data>
@@ -83,31 +82,30 @@
   <div class="d-flex flex-row ms-5 align-items-center">
     <codx-img [objectId]="data?.resourceData?.recID" [objectName]="data?.resourceData?.resourceName" imageType="circle"
       [width]="40" [objectType]="'EP_Resources'"></codx-img>
-    <div class="ms-4 d-flex flex-column" style="width:160px;">
+    <div class="ms-3 d-flex flex-column fs-7" style="width:160px;">
       <span class="fw-bold text-truncate" [title]="data?.resourceData?.resourceName">{{ data?.resourceData?.resourceName
         }}<span *ngIf="data?.resourceData?.code != null">
           - {{ data?.resourceData?.code }}</span></span>
-      <div class="d-flex flex-row fs-7">
+      <div class="d-flex flex-row">
         <codx-label name="lblRanking" default="Phân loại" class="text-gray-600"></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 fw-bold">:</span>
         <span class="fw-bold">{{
           data?.resourceData?.ranking | vll: "EP005":"text" | async
           }}</span>
       </div>
-      <div class="d-flex flex-row fs-7">
+      <div class="d-flex flex-row">
         <codx-label name="lblCapacity" default="Chỗ ngồi" class="text-gray-600"></codx-label>
-        <span class="me-1 text-gray-600">:</span>
+        <span class="me-1 fw-bold">:</span>
         <span class="fw-bold">{{ data?.resourceData?.capacity }}</span>
       </div>
     </div>
   </div>
 </ng-template>
 
-
 <ng-template #mfButton let-data>
   <div class="mt-2 me-2">
-    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)"
-      (changeDataMF)="changeDataMF($event, data)" type="hover"></codx-mfunc>
+    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"
+      (changeDataMF)="changeDataMF($event, data)"></codx-mfunc>
   </div>
 </ng-template>
 
@@ -118,7 +116,7 @@
         <span>{{ data?.title }}</span>
       </div>
       <div>
-        <codx-temp-full [formModel]="view.formModel"> </codx-temp-full>
+        <codx-temp-full [formModel]="viewBase.formModel"> </codx-temp-full>
       </div>
     </div>
     <div class="row mt-3">
@@ -235,42 +233,9 @@
     </div>
   </div>
 </ng-template>
-
-<ng-template #driverAssign let-dialog>
-  <div class="mx-4 my-4">
-    <div class="mx-4 pt-4 px-2">
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="d-flex justify-content-between align-items-center">
-          <h2 id="modal-basic-title">
-            <codx-label name="lblCardTran" [default]="popupTitle"></codx-label>
-          </h2>
-          <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
-            (click)="dialog.close()">
-            <span class="icon-close icon-20 text-dark text-hover-primary"></span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="mx-4 pt-4 px-2" *ngIf="cbbDriver!=null && cbbDriver.length>0">
-      <div class="form-group">
-        <codx-label name="lblDriverAvailable" default="Tài xế sẵn sàng"></codx-label>
-        <ejs-combobox id='driver' #samples [dataSource]='cbbDriver' [fields]='fields' [placeholder]="'Tài xế '"
-          (valueChange)="cbxChange($event)"></ejs-combobox>
-
-      </div>
-    </div>
-    <div class="mx-4 pt-4 px-2">
-      <div class="form-group d-flex justify-content-end flex-row">
-        <button type="button" class="btn btn-primary">
-          <codx-label name="lblSave" default="Lưu"></codx-label>
-        </button>
-      </div>
-    </div>
-  </div>
-</ng-template>
 <ng-template #cardTemplate let-data>
-  <div class="d-flex flex-column w-100"  (click)="getMoreInfo(data.recID)">
+  <div class="d-flex flex-column w-100" (click)="getMoreInfo(data.recID)">
     <span >{{showHour(data.startDate)}} - {{showHour(data.endDate)}}</span>
-    <span class="fw-bold" style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;" >{{data.title}}</span>
+    <span class="fw-bold " style="white-space: nowrap;overflow: hidden; text-overflow: ellipsis;" >{{data.title}}</span>
   </div>
 </ng-template>

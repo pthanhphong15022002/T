@@ -59,8 +59,12 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { TasksComponent } from './tasks/tasks.component';
 import { LayoutNoToolbarComponent } from './_noToolbar/_noToolbar.component';
 import { InformationComponent } from './personals/information/information.component';
-//import { BookingRoomComponent } from './booking/room/booking-room.component';
-//import { PopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/popup-add-booking-room.component';
+import { MWPBookingRoomComponent } from './booking/room/mwp-booking-room.component';
+import { MWPPopupAddBookingRoomComponent } from './booking/room/popup-add-booking-room/mwp-popup-add-booking-room.component';
+import { MWPBookingRoomViewDetailComponent } from './booking/room/view-detail/mwp-booking-room-view-detail.component';
+import { MWPBookingCarComponent } from './booking/car/mwp-booking-car.component';
+import { MWPPopupAddBookingCarComponent } from './booking/car/popup-add-booking-car/mwp-popup-add-booking-car.component';
+import { MWPBookingCarViewDetailComponent } from './booking/car/view-detail/mwp-booking-car-view-detail.component';
 
 export const routes: Routes = [
   {
@@ -97,16 +101,27 @@ export const routes: Routes = [
       },
     ],
   },
-  // {
-  //   path: '',
-  //   component: LayoutComponent,
-  //   children: [
-  //     {
-  //       path: 'tasks/:funcID',
-  //       component: TasksComponent,
-  //     },
-  //   ],
-  // },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'bookingrooms/:funcID',
+        component: MWPBookingRoomComponent,
+      },
+    ],
+  },
+  {
+    path: '',
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'bookingcars/:funcID',
+        component: MWPBookingCarComponent,
+      },
+    ],
+  },
+  
 ];
 
 const Component: Type<any>[] = [
@@ -130,8 +145,12 @@ const Component: Type<any>[] = [
   EditRelationComponent,
   TasksComponent,
   InformationComponent,
-  //BookingRoomComponent,
-  //PopupAddBookingRoomComponent,
+  MWPBookingRoomComponent,
+  MWPPopupAddBookingRoomComponent,
+  MWPBookingRoomViewDetailComponent,
+  MWPBookingCarComponent,
+  MWPPopupAddBookingCarComponent,
+  MWPBookingCarViewDetailComponent,
 ];
 
 @NgModule({
