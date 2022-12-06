@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import {
   Component,
   OnInit,
@@ -47,9 +48,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   email = null;
   mode: string = 'login';
   user: any;
+  loginTmp: any;
 
   // private fields
-  private unsubscribe: Subscription[] = [];
+  unsubscribe: Subscription[] = [];
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -62,6 +64,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore
   ) {
+    this.loginTmp = environment.loginTmp;
     const tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
     

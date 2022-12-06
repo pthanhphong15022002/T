@@ -45,9 +45,9 @@ export class AddEditComponent implements OnInit {
   active = true;
   gridHeight: number;
   fmInvoiceLines: FormModel = {
-    formName: 'Users',
-    gridViewName: 'grvUsers',
-    entityName: 'AD_Users',
+    formName: 'EIInvoiceLines',
+    gridViewName: 'grvEIInvoiceLines',
+    entityName: 'EI_InvoiceLines',
   };
   fgGoods: FormGroup;
   editSettings: EditSettingsModel = {

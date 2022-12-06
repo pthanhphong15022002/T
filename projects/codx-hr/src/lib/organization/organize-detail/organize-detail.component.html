@@ -83,7 +83,7 @@
       </div>
     </div>
     <div *ngIf="data.isChildren" class="department-card-info ec connector">
-      <span #icon class="icon-20" [ngClass]="classIcon(data, icon)" 
+      <span #icon class="icon-20" [ngClass]="classIcon(data, icon)"  [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
         (click)="loadDataChild(data, node)"></span>
     </div>
   </div>
