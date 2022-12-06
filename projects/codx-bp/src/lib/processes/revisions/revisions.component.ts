@@ -90,7 +90,6 @@ export class RevisionsComponent implements OnInit {
         this.enterName = this.gridViewSetup['VersionName']?.headerText;
       }
     });
-
   }
 
 
