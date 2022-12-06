@@ -358,6 +358,8 @@
                   hideUploadBtn="0"
                   [functionID]="formModelCustom.funcID"
                   type="inline"
+                  (fileDelete)="fileDelete($event)"
+                  (fileCount)="fileDelete($event)"
                 >
                 </codx-attachment>
               </div>
