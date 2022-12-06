@@ -176,14 +176,6 @@ export class CodxBpService {
       data
     );
   }
-  updatePermissionsFile(data){
-    return this.api.exec<any>(
-      'DM',
-      'FileBussiness',
-      'UpdatePermissionFileOfTaskAsync',
-      data
-    );
-  }
   checkAdminOfBP(userId ): Observable<any> {
     return this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
