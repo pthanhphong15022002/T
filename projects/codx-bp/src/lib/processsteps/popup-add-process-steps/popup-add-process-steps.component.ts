@@ -374,7 +374,7 @@ export class PopupAddProcessStepsComponent
         index = this.owners.findIndex(
           (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
         );
-      if (index == -1 && dt?.objectID && dt?.objectName) {      
+      if (index == -1 && dt?.id && dt?.objectName) {      
           var owner = new BP_ProcessOwners();
           owner.objectType = dt.objectType;
           owner.objectID = dt.id;

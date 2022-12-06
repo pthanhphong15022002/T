@@ -110,7 +110,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   click(e: any) {}
   openFormFuncID(e: any) {}
   valueChange(dt: any) {
-    debugger;
     this.transID = null;
     if (dt?.data) {
       if (dt?.data[0]) {
@@ -128,19 +127,18 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      debugger;
+    
+      var s = this.router.url.split("/"); s = s.slice(2 , 5);
+      let r = "/" + s.join("/").toString() + "/";
+     
       if (fuc) {
         var params;
         if (fuc?.url) {
           params = fuc?.url.split('/');
+          var url =  r + params[1] + '/' + fuc?.functionID + '/' + this.dataItem?.transID ;
           this.codxService.navigate(
             '',
-            '/es/approvals/EST021/' +
-              params[1] +
-              '/' +
-              fuc?.functionID +
-              '/' +
-              this.dataItem?.transID
+            url
           );
         }
 
