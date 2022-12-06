@@ -21,18 +21,16 @@
       <div class="justify-content-start min-w-450px mb-3">
         <codx-temp-full
           cardCss="card-template"
-          (clickMF)="clickMF($event, data)"
           [imageId]="data?.userID"
           imageObjType="AD_Users"
           [titleTmp]="titleTmp"
           [desc]="convertHtmlAgency(data.buName)"
-          [typeMF]="'hover'"
           [formModel]="view.formModel"
           [dataItem]="data"
           [footer]="footer"
           [imgOn]="data?.modifiedOn"
           #tempFull
-          (changeDataMF)="changeDataMF($event)"
+          [hideMF]="true"
           [imageObjName]="data?.userName"
         >
         </codx-temp-full>
@@ -120,9 +118,11 @@
           >
             <div *ngIf="!data.stop; else stopTrue">
               <span
-                [style.color]="data?.status | vll: 'AD002':'textColor' | async"
+                [style.color]="
+                  data?.status | vll : 'AD002' : 'textColor' | async
+                "
               >
-                {{ data?.status | vll: "AD002":"text" | async }}
+                {{ data?.status | vll : "AD002" : "text" | async }}
               </span>
               <div class="text-gray-500 fs-7">
                 {{ data.activeOn | timefrom }}
@@ -142,9 +142,11 @@
           >
             <div *ngIf="!data.stop; else stopTrue">
               <span
-                [style.color]="data?.status | vll: 'AD002':'textColor' | async"
+                [style.color]="
+                  data?.status | vll : 'AD002' : 'textColor' | async
+                "
               >
-                {{ data?.status | vll: "AD002":"text" | async }}
+                {{ data?.status | vll : "AD002" : "text" | async }}
               </span>
             </div>
             <ng-template #stopTrue>
@@ -155,6 +157,16 @@
               ></codx-label>
             </ng-template>
           </div>
+        </div>
+        <div class="w-10px min-w-10px">
+          <codx-mfunc
+            [formModel]="view.formModel"
+            (clickMF)="clickMF($event, data)"
+            [dataItem]="data"
+            (changeDataMF)="changeDataMF($event)"
+            type="hover"
+          >
+          </codx-mfunc>
         </div>
       </div>
     </div>
@@ -196,4 +208,3 @@
     </div>
   </div>
 </ng-template>
-

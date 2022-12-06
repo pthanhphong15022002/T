@@ -528,11 +528,12 @@
 
 <ng-template #bodyReleaseProcess>
   <div class="form-group mt-3">
-    <codx-label fiedName="lblAttachments" [default]="statusLable"></codx-label>
-    <codx-input field="status" type="text" [crrValue]="status == '1' ? 'Phát hành' : 'Đã phát hành' " disabled="true"></codx-input>
+    <codx-label fiedName="status" [formModel]="view.formModel" [default]="statusLable"></codx-label>
+    <codx-input type="valuelist" field="status" [crrValue]="statusDefault" [refValue]="vllStatus"
+    placeholder="" [disabled]="true"></codx-input>
   </div>
   <div class="form-group mt-3">
-    <codx-label fiedName="lblAttachments" [default]="commentLable"></codx-label>
+    <codx-label fiedName="comment" [formModel]="view.formModel" [default]="commentLable"></codx-label>
     <codx-input field="processName" type="text" [crrValue]="comment" (valueChange)="setComment($event)"></codx-input>
   </div>
 </ng-template>

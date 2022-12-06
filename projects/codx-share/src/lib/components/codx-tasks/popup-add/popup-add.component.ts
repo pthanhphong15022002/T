@@ -197,7 +197,18 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             }
           });
       }
-    });
+    })
+     this.cache
+      .gridViewSetup(
+        'TaskGoals',
+        "grvTaskGoals"
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.planholderTaskGoal = res["Memo"]?.description;
+        }
+      });
+    ;
     // this.functionID = this.dialog.formModel.funcID;
     // this.cache
     //   .gridViewSetup(
@@ -1036,10 +1047,9 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   // }
   //referen new
   loadDataReferences() {
+    this.dataReferences = [];
     if (this.task.refID)
       this.getReferencesByCategory3(this.task);
-    else this.dataReferences = [];
-    return;
   }
 
   getReferencesByCategory3(task) {
