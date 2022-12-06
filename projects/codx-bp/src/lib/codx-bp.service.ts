@@ -45,6 +45,14 @@ export class CodxBpService {
       data
     );
   }
+  copyProcessStep(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessStepsBusiness',
+      'CopyProcessStepAsync',
+      data
+    );
+  }
   updateProcessStep(data) {
     return this.api.exec<any>(
       'BP',
@@ -111,7 +119,7 @@ export class CodxBpService {
       'EmployeesBusiness',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
-    );  
+    );
   }
   getProcessStepDetailsByRecID(recID) {
     return this.api.exec<any>(
@@ -158,5 +166,9 @@ export class CodxBpService {
   updateRevision(funcID,recID,verNo, verName,comment, entityName, fucntionIdMain ): Observable<any> {
     return this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName,fucntionIdMain]);
+  }
+  checkAdminOfBP(userId ): Observable<any> {
+    return this.api
+      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
   }
 }

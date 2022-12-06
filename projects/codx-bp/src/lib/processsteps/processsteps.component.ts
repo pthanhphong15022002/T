@@ -271,7 +271,6 @@ export class ProcessStepsComponent
         else {
           if ((this.view.currentView as any)?.kanban)
             this.kanban = (this.view.currentView as any).kanban;
-          this.notiService.notifyCode('SYS006');
           var processStep = e?.event;
           if (processStep.stepType != 'P') {
             if (processStep.stepType == 'A') {
@@ -318,6 +317,7 @@ export class ProcessStepsComponent
           }
           this.dataTreeProcessStep = this.view.dataService.data;
           this.isBlockClickMoreFunction(this.dataTreeProcessStep);
+          this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -509,6 +509,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            data.recID
           ],
           option
         );
@@ -554,11 +555,17 @@ export class ProcessStepsComponent
                 ? this.kanban?.columns?.length
                 : 0;
               this.kanban.addColumn(column, index);
+              if(processStep.items.length>0 ){
+                processStep.items.forEach(obj=>{
+                  if (this.kanban) this.kanban.addCard(obj);
+                })            
+              }          
             }
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
           this.dataTreeProcessStep = this.view.dataService.data;
+          this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -664,7 +671,7 @@ export class ProcessStepsComponent
         ' ' +
         p?.text.charAt(0).toLocaleLowerCase() +
         p?.text.slice(1);
-      this.add();
+      // this.add();
     } else {
       this.stepType = evt.id;
       // let customName = '';
@@ -678,7 +685,7 @@ export class ProcessStepsComponent
         ' ' +
         evt?.text.charAt(0).toLocaleLowerCase() +
         evt?.text.slice(1);
-      this.add();
+      // this.add();
       // });
     }
     this.formModelMenu = this.view?.formModel;
@@ -692,7 +699,10 @@ export class ProcessStepsComponent
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
+            this.formModelMenu.entityName = funcMenu.entityName;
+            this.add();
           });
+          
       });
     }
   }
@@ -720,22 +730,26 @@ export class ProcessStepsComponent
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
+            this.formModelMenu.entityName = funcMenu.entityName;
+
+
+            switch (e.functionID) {
+              case 'SYS01':
+                this.add();
+                break;
+              case 'SYS03':
+                this.edit(data);
+                break;
+              case 'SYS04':
+                this.copy(data);
+                break;
+              case 'SYS02':
+                this.delete(data);
+            }
           });
       });
     }
-    switch (e.functionID) {
-      case 'SYS01':
-        this.add();
-        break;
-      case 'SYS03':
-        this.edit(data);
-        break;
-      case 'SYS04':
-        this.copy(data);
-        break;
-      case 'SYS02':
-        this.delete(data);
-    }
+  
   }
   clickMenu(data, funcMenu) {
     const isdata = data.items.length;

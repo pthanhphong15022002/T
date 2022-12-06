@@ -253,7 +253,7 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch[event?.field] = event?.data.fromDate;
   }
   /////// lưu/câp nhật công văn
-  onSave() {
+  async onSave() {
     if (!this.checkIsRequired()) return;
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
@@ -279,22 +279,33 @@ export class IncommingAddComponent implements OnInit {
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
       this.dispatch.approveStatus = '1';
-      this.odService
-        .saveDispatch(this.dataRq, this.dispatch)
-        .subscribe(async (item) => {
-          if (item.status == 0) {
-            this.data = item;
-            this.attachment.objectId = item.data.recID;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (item2: any) => {
-                if (item2?.status == 0) {
-                  this.dialog.close(item.data);
-                  this.notifySvr.notify(item.message);
-                } else this.notifySvr.notify(item2.message);
-              }
-            );
-          } else this.notifySvr.notify(item.message);
-        });
+      this.attachment.objectId = this.dispatch.recID;
+      (await this.attachment.saveFilesObservable()).subscribe(
+        (item2: any) => {
+          //Chưa xử lý Upload nhìu file
+          // var countSusscess = 0;
+          // var countError = 0;
+          // if(Array.isArray(item2))
+          // {
+          //   var count =  item2.filter(x=>x.status == 0);
+          //   if(count) countSusscess = count.length;
+          //   countError = item2.length - countSusscess;
+           
+          // }
+          if (item2?.status == 0 || Array.isArray(item2)) {
+            this.odService
+            .saveDispatch(this.dataRq, this.dispatch)
+            .subscribe(async (item) => {
+              if (item.status == 0) {
+                this.data = item;
+                this.dialog.close(item.data);
+                this.notifySvr.notify(item.message);
+              } else this.notifySvr.notify(item.message);
+            });
+          } else this.notifySvr.notify(item2.message);
+        }
+      );
+      
     } else if (this.type == 'edit') {
       this.odService
         .updateDispatch(this.dispatch, false)

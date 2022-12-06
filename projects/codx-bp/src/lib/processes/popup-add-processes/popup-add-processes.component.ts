@@ -14,6 +14,7 @@ import {
   ApiHttpService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxBpService } from '../../codx-bp.service';
 
 @Component({
   selector: 'lib-popup-add-processes',
@@ -45,6 +46,7 @@ export class PopupAddProcessesComponent implements OnInit {
     private authStore: AuthStore,
     private notiService: NotificationsService,
     private api: ApiHttpService,
+    private bpService: CodxBpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -100,6 +102,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process.phases = 0;
       this.process.activities = 0;
       this.revisions.push(versions);
+      // this.addPermission(this.process.owner);
       this.process.versions = this.revisions;
       data = [this.process];
     } else if (this.action == 'edit') {
@@ -228,7 +231,6 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   eventApply(e) {
-    console.log(e);
     var data = e.data[0];
     var id = '';
     switch (data.objectType) {
@@ -257,7 +259,7 @@ export class PopupAddProcessesComponent implements OnInit {
           var tmpPermission = new BP_ProcessPermissions();
           tmpPermission.objectID = emp?.userID;
           tmpPermission.objectName = emp?.userName;
-          tmpPermission.objectType = 'U';
+          tmpPermission.objectType = '1';
           tmpPermission.read = true;
           tmpPermission.share = true;
           tmpPermission.full = true;
@@ -266,9 +268,8 @@ export class PopupAddProcessesComponent implements OnInit {
           tmpPermission.upload = true;
           tmpPermission.assign = true;
           tmpPermission.download = true;
-          tmpPermission.nemberType = '1';
+          tmpPermission.memberType = '0';
           tmpPermission.autoCreate = true;
-
           this.perms.push(tmpPermission);
 
           this.process.permissions = this.perms;
@@ -288,4 +289,16 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueCbx(e) {}
   //#endregion event
+
+  valueChangeUser(e) {
+    this.process.owner = e?.data;
+    console.log(this.process.owner);
+  }
+  // checkAdminOfBP(userid:any) {
+  // let check:boolean;
+  // this.bpService.checkAdminOfBP(userid).subscribe(res=>{
+  //   check= res;
+  // });
+  // return check;
+  // }
 }

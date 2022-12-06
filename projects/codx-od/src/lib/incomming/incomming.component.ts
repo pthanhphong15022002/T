@@ -280,6 +280,14 @@ export class IncommingComponent
       );
       if(approvel[0]) approvel[0].disabled = false;
     }
+     //Từ chối , Bị đóng 
+     if(data?.status == "9" || data?.approveStatus == "4")
+     {
+       var approvel = e.filter(
+         (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211'
+       );
+       if(approvel[0]) approvel[0].disabled = true;
+     }
     //Hoàn tất
     if (data?.status == '7') {
       var completed = e.filter(

@@ -65,6 +65,19 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   funcIDName = '';
   columnsGrid: any;
   popupClosed = true;
+  
+  listCar=[];  
+  listReason=[];  
+  listAttendees=[];  
+  listItem=[];
+  tempReasonName='';
+  tempCarName='';  
+  tempAttendees='';
+  selectBookingItems=[];  
+  selectBookingAttendees='';
+  listDriver: any[];
+  tempDriverName='';  
+  driverName='';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -148,6 +161,25 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     };
+
+    this.codxEpService.getListResource('2').subscribe((res:any)=>{
+      if(res){
+        this.listCar=[];
+        this.listCar=res;
+      }        
+    });
+    this.codxEpService.getListResource('3').subscribe((res:any)=>{
+      if(res){
+        this.listDriver=[];
+        this.listDriver=res;
+      }        
+    });
+    this.codxEpService.getListReason('EP_BookingCars').subscribe((res:any)=>{
+      if(res){
+        this.listReason=[];
+        this.listReason=res;
+      }        
+    });
   }
 
   ngAfterViewInit(): void {
@@ -222,6 +254,12 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
           }
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ 
+          ) {
+            func.disabled = true;
+          }
         });
       }
     }
@@ -240,6 +278,58 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         break;
     }
   }
+  getMoreInfo(recID:any){  
+    this.selectBookingAttendees='';
+    this.driverName=' ';
+    let driverCheck=true;
+    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
+      if(attendees){
+        let lstAttendees=attendees;
+        lstAttendees.forEach(element => {
+          if(element.roleType!='2'){            
+            this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
+          }
+          else{
+            this.driverName= this.getDriverName(element.userID);
+          }
+        });
+        this.selectBookingAttendees;
+        
+        if(this.driverName==' '){
+          this.driverName=null;
+        };
+      }        
+    });
+  }
+  getResourceName(resourceID:any){
+    this.tempCarName='';
+    this.listCar.forEach(r=>{
+      if(r.resourceID==resourceID){
+        this.tempCarName= r.resourceName;
+      }      
+    });
+    return this.tempCarName;
+  }
+  getDriverName(resourceID:any){
+    this.tempDriverName='';
+    this.listDriver.forEach(r=>{
+      if(r.resourceID==resourceID){
+        this.tempDriverName= r.resourceName;
+      }      
+    });
+    return this.tempDriverName;
+  }
+
+  getReasonName(reasonID:any){
+    this.tempReasonName='';
+    this.listReason.forEach(r=>{
+      if(r.reasonID==reasonID){
+        this.tempReasonName= r.description;
+      }      
+    });
+    return this.tempReasonName;
+  }
+
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
@@ -369,10 +459,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         return;
       }
     }
-    this.view.dataService.delete([deleteItem]).subscribe((res) => {
-      if (!res) {
-        this.notificationsService.notifyCode('SYS022');
-      }
+    this.view.dataService.delete([deleteItem]).subscribe((res) => {   
     });
   }
   sameDayCheck(sDate: any, eDate: any) {

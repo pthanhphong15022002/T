@@ -658,6 +658,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
         );
       } else {
         this.driver = null;
+        
+        this.notificationsService.notify('Xe hiện tại không có tài xế','3',0);// EP_WAIT doi messcode tu BA
       }
       this.detectorRef.detectChanges();
     });

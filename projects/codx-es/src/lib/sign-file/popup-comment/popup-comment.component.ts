@@ -23,7 +23,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 })
 export class PopupCommentComponent extends UIComponent implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
-  approveControl: string; //'1':Ko comment;'2':ko bat buoc; '3': bat buoc
+  funcControl: string; //'1':Ko comment;'2':ko bat buoc; '3': bat buoc
   title: string = '';
   subTitle: string = '';
   result = { comment: '', reasonID: '' };
@@ -47,6 +47,7 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
     this.data = dt.data;
     this.mode = this.data.mode;
     this.formModel = this.data.formModel;
+    this.funcControl = this.data?.approveControl;
     this.user = this.authStore.get();
     this.cache
       .gridViewSetup(
@@ -68,7 +69,33 @@ export class PopupCommentComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.approveControl == '3' && this.result.comment == '') {
+    switch(this.mode){
+      case '5':{
+        if (this.funcControl == '3' && this.result.comment == '') {
+          let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
+          this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
+          return;
+        }
+        break;
+      }
+      case '2':{
+        if (this.funcControl == '3' && this.result.comment == '') {
+          let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
+          this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
+          return;
+        }
+        break;
+      }
+      case '4':{
+        if (this.funcControl == '3' && this.result.comment == '') {
+          let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
+          this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
+          return;
+        }
+        break;
+      }
+    }
+    if (this.funcControl == '3' && this.result.comment == '') {
       let headerText = this.grvSetup['Comment']?.headerText ?? 'Comment';
       this.notify.notifyCode('SYS009', 0, '"' + headerText + '"');
       return;

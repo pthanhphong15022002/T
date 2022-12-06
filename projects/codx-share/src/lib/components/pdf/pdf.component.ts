@@ -47,8 +47,8 @@ import {
   ES_SignFile,
   SetupShowSignature,
 } from 'projects/codx-es/src/lib/codx-es.model';
+import { text } from 'stream/consumers';
 import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -283,7 +283,7 @@ export class PdfComponent
                 fileName: file.fileName,
                 fileRefNum: sf.refNo,
                 fileID: file.fileID,
-                fileUrl: environment.urlUpload + '/' + res.urls[index], //paste ccho nay
+                fileUrl: environment.urlUpload + '/' + res.urls[index],
                 signers: res?.approvers,
                 areas: file.areas,
               });
@@ -314,8 +314,8 @@ export class PdfComponent
             } else {
               this.signerInfo = res.approvers[0];
             }
-            this.curFileID = this.lstFiles[0]['fileID']; //paste ccho nay
-            this.curFileUrl = this.lstFiles[0]['fileUrl']; //paste ccho nay
+            this.curFileID = sf?.files[0]?.fileID;
+            this.curFileUrl = environment.urlUpload + '/' + res.urls[0];
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
