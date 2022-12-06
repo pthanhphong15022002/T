@@ -3,8 +3,8 @@
   <ng-template popup adde #body>
     <div class="form-group">
       <div class="image-input image-input-outline mb-3" id="kt_user_add_avatar">
-        <codx-img #imageAvatar  [objectId]="master ? master.iterationID : ''"
-          [objectName]="master ? master.iterationName : ''" objectType="TM_Sprints" [funcId]="funcID" isAllowEdit="true"
+        <codx-img #imageAvatar [objectId]="master ? master.iterationID : ''"
+          [objectName]="master ? master.iterationName : ''" objectType="TM_Sprints" [referType]="'avt'" [funcId]="funcID" isAllowEdit="true"
            [width]="70" [disabled]="readOnly" [height]="70" [isAllowEdit]="true">
         </codx-img>
       </div>
@@ -92,7 +92,7 @@
         <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="master?.iterationID"
           hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
           allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)" displayThumb="full">
+          (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
         </codx-attachment>
       </div>
     </ng-container>

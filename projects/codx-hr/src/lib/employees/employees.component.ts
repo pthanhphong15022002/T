@@ -57,8 +57,8 @@ export class EmployeesComponent extends UIComponent {
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
-  @ViewChild('itemInfoPersonal', { static: true })itemInfoPersonal: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true })itemStatusName: TemplateRef<any>;
+  @ViewChild('itemInfoPersonal', { static: true }) itemInfoPersonal: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
@@ -66,19 +66,18 @@ export class EmployeesComponent extends UIComponent {
 
 
   constructor(
-    private injector:Injector,
+    private injector: Injector,
     private notifiSV: NotificationsService,
-  ) 
-  {
+  ) {
     super(injector);
-    
+
   }
   onInit(): void {
     this.cache.moreFunction('Employees', 'grvEmployees').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
-   
-    
+
+
   }
 
   ngAfterViewInit(): void {
@@ -89,7 +88,7 @@ export class EmployeesComponent extends UIComponent {
       {
         field: 'employeeID',
         headerText: 'Nhân viên',
-        width: 250,
+        width: 300,
         template: this.itemEmployee,
       },
       {
@@ -110,9 +109,10 @@ export class EmployeesComponent extends UIComponent {
         width: 200,
         template: this.itemStatusName,
       },
-      { field: '', 
-        headerText: '', 
-        width: 50, 
+      {
+        field: '',
+        headerText: '',
+        width: 30,
         template: this.itemAction
       },
     ];
@@ -142,22 +142,21 @@ export class EmployeesComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  btnClick(){
-    if(this.view)
-    {
+  btnClick() {
+    if (this.view) {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '800px'; 
+      option.Width = '800px';
       let popup = this.callfc.openSide(
         PopupAddEmployeesComponent,
         "add",
         option
       );
-      popup.closed.subscribe((res:any) => {
-        if(res && res.event){
+      popup.closed.subscribe((res: any) => {
+        if (res && res.event) {
           let data = res.event;
-          this.view.dataService.add(data,0).subscribe();
+          this.view.dataService.add(data, 0).subscribe();
           this.detectorRef.detectChanges();
         }
       })
@@ -172,20 +171,19 @@ export class EmployeesComponent extends UIComponent {
     }
   }
 
-  openPopupAdd(){
-    if(this.view)
-    {
+  openPopupAdd() {
+    if (this.view) {
       let option = new SidebarModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      option.Width = '800px'; 
+      option.Width = '800px';
       this.callfc.openSide(
         PopupAddEmployeesComponent,
         null,
         option
       );
     }
-    
+
   }
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
@@ -351,24 +349,15 @@ export class EmployeesComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  updateStatus(data) {
-    this.dialog = this.callfc.openForm(
-      UpdateStatusComponent,
-      'Cập nhật tình trạng',
-      350,
-      200,
-      '',
-      data
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        //  e?.event.forEach((obj) => {
-        var emp = e?.event;
+  updateStatus(data: any, funcID: string) {
+    let popup = this.callfc.openForm(UpdateStatusComponent, 'Cập nhật tình trạng', 350, 200, funcID, data);
+    popup.closed.subscribe((e) => {
+      if (e?.event) {
+        var emp = e.event;
         if (emp.status == '90') {
-          this.view.dataService.remove(e?.event).subscribe();
-        } else this.view.dataService.update(e?.event).subscribe();
-        // });
-        // this.itemSelected = e?.event;
+          this.view.dataService.remove(emp).subscribe();
+        }
+        else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });
@@ -403,31 +392,30 @@ export class EmployeesComponent extends UIComponent {
   }
 
   clickMF(e: any, data?: any) {
-    console.log(data);
-    // this.itemSelected = data;
-    // switch (e.functionID) {
-    //   case 'SYS01':
-    //     this.add();
-    //     break;
-    //   case 'SYS02':
-    //     this.delete(data);
-    //     break;
-    //   case 'SYS03':
-    //     this.edit(data);
-    //     break;
-    //   case 'SYS04':
-    //     this.copy(data);
-    //     break;
-    //   case 'HR0031': /// cần biến cố định để truyền vào đây !!!!
-    //     this.updateStatus(data);
-    //     break;
-    //   case 'HR0032':
-    //     this.viewEmployeeInfo(e.data, data);
-    //     break;
-    //   case 'SYS002':
-    //     this.exportFile();
-    //     break;
-    // }
+    this.itemSelected = data;
+    switch (e.functionID) {
+      case 'SYS01': // thêm
+        this.add();
+        break;
+      case 'SYS02': // xóa
+        this.delete(data);
+        break;
+      case 'SYS03': // edit
+        this.edit(data);
+        break;
+      case 'SYS04': // sao chép
+        this.copy(data);
+        break;
+      case 'HR0031': // cập nhật tình trạng
+        this.updateStatus(data, e.functionID);
+        break;
+      case 'HR0032': // xem chi tiết
+        this.viewEmployeeInfo(e.data, data);
+        break;
+      case 'SYS002':
+        this.exportFile();
+        break;
+    }
   }
 
   doubleClick(data) {
@@ -441,7 +429,7 @@ export class EmployeesComponent extends UIComponent {
     }
   }
 
-  placeholder(value: string,formModel: FormModel,field: string): Observable<string> {
+  placeholder(value: string, formModel: FormModel, field: string): Observable<string> {
     if (value) {
       return of(`<span>${value}</span>`);
     } else {

@@ -1,3 +1,4 @@
+import { SV_Answers } from './SV_Answers';
 export class SV_Questions {
   question: string;
   transID: string;
@@ -5,10 +6,11 @@ export class SV_Questions {
   category: string;
   answerType: string;
   answers: any;
-  parentID: number;
+  parentID: string;
   mandatory: boolean;
   random: boolean;
   hideComment: boolean;
   qPicture: boolean;
   aPicture: boolean;
+  url: any;
 }

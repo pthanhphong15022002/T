@@ -78,6 +78,22 @@ export class ViewListComponent implements OnInit {
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
+        if ((x.functionID == 'TMT02015'|| x.functionID == 'TMT02025')&& data.status=='90') {
+          x.disabled = true;
+        }
+         //an cap nhat tien do khi hoan tat 
+         if ((x.functionID == 'TMT02018'|| x.functionID == 'TMT02026'||x.functionID == 'TMT02035')&& data.status=="90") {
+          x.disabled = true;
+        }
+          //an voi ca TMT026
+          if (
+            (x.functionID == 'SYS02' ||
+              x.functionID == 'SYS03' ||
+              x.functionID == 'SYS04') &&
+              this.formModel?.funcID == 'TMT0206'
+          ) {
+            x.disabled = true;
+          }
       });
     }
   }

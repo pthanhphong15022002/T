@@ -26,42 +26,39 @@
     </div>
   </div>
   <!-- body -->
-  <div class="row mt-10">
+  <div class="row mt-6">
     <div class="col-3">
-      <div>
-        <codx-label class="fw-bolder fs-3" [formModel]="dialogRef.formModel" name="" default="Ngày tin tức">
+      <div class="mb-3">
+        <codx-label class="fw-bold fs-5 text-dark" [formModel]="dialogRef.formModel" name="" default="Ngày tin tức">
         </codx-label>
-        <div class="row">
-          <div class="col-6">
-            <codx-input type="datetime" class="test-datetime" field="createdOn" format="F"
-              (valueChange)="valueChange($event)">
-            </codx-input>
-          </div>
-          <div class="col-6">
-            <codx-input type="datetime" class="test-datetime" format="F" (valueChange)="valueChange($event)">
-            </codx-input>
-          </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <codx-input type="datetime" class="test-datetime" field="createdOn" format="F"
+            (valueChange)="valueChange($event)">
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <codx-input type="datetime" class="test-datetime" format="F" (valueChange)="valueChange($event)">
+          </codx-input>
         </div>
       </div>
       <div class="mt-6">
-        <codx-label class="fw-bolder fs-3" [formModel]="dialogRef.formModel" name="" default="Bộ lọc"></codx-label>
+        <codx-label class="fw-bold fs-5 text-dark" [formModel]="dialogRef.formModel" name="" default="Bộ lọc">
+        </codx-label>
         <div class="ps-4">
-          <div class="mt-2">
-            <span><i class="icon-border_all"></i></span>
-            <span class="ms-2">
-              <codx-label class="fw-bolder fs-5" [formModel]="dialogRef.formModel" name="" default="Tất cả">
-              </codx-label>
-            </span>
+          <div class="d-flex algin-items-center mt-2">
+            <span class="me-2"><i class="icon-border_all"></i></span>
+            <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Tất cả">
+            </codx-label>
           </div>
           <div class="mt-2">
-            <div>
-              <span><i class="icon-developer_board"></i></span>
-              <span class="ms-2">
-                <codx-label class="fw-bolder fs-5" [formModel]="dialogRef.formModel" name="" default="Bài viết">
-                </codx-label>
-              </span>
+            <div class="d-flex algin-items-center">
+              <span class="me-2"><i class="icon-developer_board"></i></span>
+              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Bài viết">
+              </codx-label>
             </div>
-            <div class="ps-7">
+            <div class="ps-8">
               <div class="d-flex justify-content-between">
                 <codx-label [formModel]="dialogRef.formModel" name="" default="Của tôi"></codx-label>
                 <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_Comments.createdBy"
@@ -89,14 +86,13 @@
             </div>
           </div>
           <div class="mt-2">
-            <div>
-              <span><i class="icon-campaign"></i></span>
-              <span class="ms-2">
-                <codx-label class="fw-bolder fs-5" [formModel]="dialogRef.formModel" name="" default="Tin tức sự kiện">
-                </codx-label>
-              </span>
+            <div class="d-flex algin-items-center">
+              <span class="me-2"><i class="icon-campaign"></i></span>
+              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name=""
+                default="Tin tức sự kiện">
+              </codx-label>
             </div>
-            <div class="ps-7">
+            <div class="ps-8">
               <div class="d-flex justify-content-between">
                 <codx-label [formModel]="dialogRef.formModel" name="" default="Của tôi"></codx-label>
                 <codx-input type="switch" [checked]="false" [disabled]="false" field="WP_News.createdBy"
@@ -124,21 +120,22 @@
             </div>
           </div>
           <div class="mt-2">
-            <span>
-              <i class="icon-image"></i>
-            </span>
-            <span>
-              <codx-label class="fw-bolder fs-5" [formModel]="dialogRef.formModel" name="" default="Hình ảnh">
+            <div class="d-flex algin-items-center">
+              <span class="me-2">
+                <i class="icon-image"></i>
+              </span>
+              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Hình ảnh">
               </codx-label>
-            </span>
+            </div>
           </div>
           <div class="mt-2">
-            <span>
-              <i class="icon-video_library"></i>
-            </span>
-            <span>
-              <codx-label class="fw-bolder fs-5" [formModel]="dialogRef.formModel" name="" default="Video"></codx-label>
-            </span>
+            <div class="d-flex algin-items-center">
+              <span class="me-2">
+                <i class="icon-video_library"></i>
+              </span>
+              <codx-label class="fw-bold fs-6 text-dark" [formModel]="dialogRef.formModel" name="" default="Video">
+              </codx-label>
+            </div>
           </div>
         </div>
       </div>
@@ -155,7 +152,7 @@
 <ng-template #itemTemplate let-item>
   <div class="row p-5 mx-3">
     <div class="d-flex align-items-top">
-      <div class="me-3">
+      <div class="me-2">
         <codx-img [objectId]="item.createdBy" objectType="AD_Users" [width]="40">
         </codx-img>
       </div>
@@ -331,7 +328,7 @@
         </div>
       </ng-template>
       <div class="mt-2">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" (viewDetail)="clickViewDetail($event)">
+        <codx-file [objectID]="item.recID" objectType="WP_Comments" (evtViewDetail)="clickViewDetail($event)">
         </codx-file>
       </div>
       <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">
@@ -360,7 +357,7 @@
               </ng-container>
               <div [innerHTML]="item.shares.content" class="mb-2"></div>
               <div class="d-flex">
-                <div class="me-3">
+                <div class="me-2">
                   <codx-img slot="start" [objectId]="item.shares.createdBy" objectType="AD_Users" [width]="30">
                   </codx-img>
                 </div>
@@ -456,14 +453,14 @@
     <div class="pic-feed mb-2">
       <ng-container *ngIf="item.files; else get">
         <div>
-          <codx-file [files]="item.files" (evtGetFiles)="getFiles($event, item)" (viewDetail)="clickViewDetail($event)">
+          <codx-file [files]="item.files" (evtGetFiles)="getFiles($event, item)" (evtViewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>
       </ng-container>
       <ng-template #get>
         <div class="pic-feed-img">
           <codx-file [objectID]="item.recID" (evtGetFiles)="getFiles($event, item)"
-            (viewDetail)="clickViewDetail($event)">
+            (evtViewDetail)="clickViewDetail($event)">
           </codx-file>
         </div>
       </ng-template>
@@ -474,7 +471,7 @@
   <div class="card card-custom card-border border border-1 mt-3">
     <div class="card-body p-5">
       <div class="d-flex">
-        <div class="me-3">
+        <div class="me-2">
           <codx-img slot="start" objectId="" objectType="AD_Users" [width]="30">
           </codx-img>
         </div>

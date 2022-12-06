@@ -44,7 +44,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('footerButton') footerButton?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;  
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
 
   @ViewChild('footer') footerTemplate?: TemplateRef<any>;
   // Lấy dữ liệu cho view
@@ -78,12 +78,11 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   funcIDName;
   optionalData;
   formModel: FormModel;
+  popupClosed = true;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
-    private cacheService: CacheService,
-    private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
     private authService: AuthService,
     private activatedRoute: ActivatedRoute
@@ -127,6 +126,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
@@ -153,9 +153,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         request: this.request,
         toolbarTemplate: this.footerButton,
         showSearchBar: false,
+        showFilter:false,
         model: {
           //panelLeftRef:this.panelLeft,
-          eventModel: this.fields,
+          //eventModel: this.fields,
           resourceModel: this.resourceField, //resource
           //template:this.cardTemplate,
           template4: this.resourceHeader,
@@ -163,7 +164,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
       {
@@ -218,6 +219,14 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
 
   valueChange(evt: any, a?: any, type?: any) {}
 
+  showHour(date: any) {
+    let temp = new Date(date);
+    let time =
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   click(evt: ButtonModel) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
@@ -231,7 +240,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       // event.forEach((func) => {
       //   func.disabled = true;
       // });
-      if (data.status == '1') {
+      if (data.approveStatus == '1') {
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
@@ -265,7 +274,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'SYS03': //Sua.
         this.edit(data);
         break;
-      case 'SYS04': //Sua.
+      case 'SYS04': //copy.
         this.copy(data);
         break;
     }
@@ -280,62 +289,91 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     } else {
       this.optionalData = null;
     }
-    this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      this.dialog = this.callFuncService.openSide(
-        PopupAddBookingRoomComponent,
-        [this.dataSelected, true, this.popupTitle, this.optionalData],
-        option
-      );
-    });
+    if (this.popupClosed) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        this.dataSelected = this.view.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '800px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callFuncService.openSide(
+          PopupAddBookingRoomComponent,
+          [this.dataSelected, true, this.popupTitle, this.optionalData],
+          option
+        );
+        this.dialog.closed.subscribe((returnData) => {
+          this.popupClosed = true;
+          if (!returnData.event) this.view.dataService.clear();
+        });
+      });
+    }
   }
 
   edit(evt?) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
+      if (
+        this.authService.userValue.userID != evt?.owner &&
+        !this.authService.userValue.administrator
+      ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view.dataService.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callFuncService.openSide(
-            PopupAddBookingRoomComponent,
-            [this.view.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-        });
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view.dataService.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '800px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callFuncService.openSide(
+              PopupAddBookingRoomComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((returnData) => {
+              this.popupClosed = true;
+              if (!returnData.event) this.view.dataService.clear();
+            });
+          });
+      }
     }
   }
 
   copy(evt?) {
     if (evt) {
-      
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view.dataService.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '800px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callFuncService.openSide(
-            PopupAddBookingRoomComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle,null,true],
-            option
-          );
-        });
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .copy(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view.dataService.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '800px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callFuncService.openSide(
+              PopupAddBookingRoomComponent,
+              [
+                this.view.dataService.dataSelected,
+                true,
+                this.popupTitle,
+                null,
+                true,
+              ],
+              option
+            );
+            this.dialog.closed.subscribe((returnData) => {
+              this.popupClosed = true;
+              if (!returnData.event) this.view.dataService.clear();
+            });
+          });
+      }
     }
   }
 
@@ -343,7 +381,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (this.authService.userValue.userID != evt?.owner) {
+      if (
+        this.authService.userValue.userID != evt?.owner &&
+        !this.authService.userValue.administrator
+      ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
@@ -351,6 +392,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.view.dataService.delete([deleteItem]).subscribe((res) => {
       if (!res) {
         this.notificationsService.notifyCode('SYS022');
+        this.view.dataService.remove(deleteItem).subscribe();
       }
     });
   }

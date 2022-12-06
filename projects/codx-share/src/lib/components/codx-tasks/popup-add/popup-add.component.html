@@ -51,18 +51,6 @@
       <codx-label name="TaskGroups" formName="Tasks" default="Nhóm công việc">
       </codx-label>
     </div>
-    <!-- <codx-input
-      field="taskGroupID"
-      [type]="gridViewSetup['TaskGroupID']['controlType']"
-      [placeholder]="gridViewSetup['TaskGroupID']['headerText']"
-      [refValue]="gridViewSetup['TaskGroupID']['referedValue']"
-      [refType]="gridViewSetup['TaskGroupID']['referedType']"
-      (valueChange)="cbxChange($event)"
-      [crrValue]="task?.taskGroupID"
-      [showInput]="true"
-      [disabled]="readOnly"
-    >
-    </codx-input> -->
     <codx-input
       field="taskGroupID"
       [formModel]="form.formModel"
@@ -207,23 +195,13 @@
         <codx-input
           type="number"
           field="estimated"
-          placeholder="Số giờ "
+          [placeholder]="gridViewSetup?.Estimated?.descriptions"
           [showSpinButton]="false"
           [crrValue]="task?.estimated"
           (valueChange)="valueChangeEstimated($event)"
           [disabled]="readOnly"
         >
         </codx-input>
-        <!-- <codx-input
-        field="estimated"
-        [formModel]="form.formModel"
-        [Group]="form.formGroup"
-        [showSpinButton]="false"
-        (valueChange)="valueChangeEstimated($event)"
-        [crrValue]="task?.estimated"
-        [disabled]="readOnly"
-      >
-      </codx-input> -->
       </div>
     </div>
   </ng-container>
@@ -479,11 +457,8 @@
   <div></div>
   <div>
     <ng-container *ngFor="let item of listTodo; index as i">
-      <div
-        class="d-flex justify-content-between align-items-center checkbox-item row"
-        style="margin-bottom: 5px; cursor: pointer"
-      >
-        <div class="checkbox-list col-10">
+      <div class="cursor-pointer checkbox-item">
+        <div class="checkbox-list mb-2">
           <div class="d-flex flex-column flex-grow-1">
             <div class="flex" *ngIf="i != indexEditTodo">
               <div class="">
@@ -595,7 +570,7 @@
       [formModel]="form.formModel"
       [Group]="form.formGroup"
       (valueChange)="cbxChange($event)"
-      [disabled]="readOnly"
+      [disabled]="readOnly || disabledProject"
     >
     </codx-input>
   </div>
@@ -626,14 +601,9 @@
       >
       </codx-label>
     </div>
-    <codx-input
-      field="refNo"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-      (valueChange)="cbxChange($event)"
-      [disabled]="readOnly"
-    >
-    </codx-input>
+    <!-- <codx-input field="refNo" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="cbxChange($event)"
+      [disabled]="readOnly">
+    </codx-input> -->
   </div>
   <div class="form-group mt-5" *ngIf="dataReferences.length > 0">
     <ng-container>
@@ -641,6 +611,7 @@
         [funcID]="functionID"
         [dataReferences]="dataReferences"
         [vllRefType]="vllRefType"
+        [zIndex]="this.disabledProject ? 1010 : 0"
       >
       </codx-references>
     </ng-container>
@@ -660,7 +631,7 @@
         <codx-label
           name="UploadFile"
           formName="Tasks"
-          default="Upload File"
+          default="Đính kèm"
         ></codx-label>
       </span>
     </button>

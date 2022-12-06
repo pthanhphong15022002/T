@@ -6,6 +6,9 @@ export class BookingAttendees {
     optional: boolean;    
     icon: string;
     roleName:string;
-    isChecked:boolean;
     //modifiedOn: string;
+  }
+  export class DriverModel {
+    driverID: string;
+    driverName: string;    
   }

@@ -81,7 +81,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   dataCopy: any;
   dataComment: any;
   contentComment: any;
-  date = new Date;
+  date = new Date();
   constructor(
     private injector: Injector,
     private changeDetector: ChangeDetectorRef,
@@ -111,7 +111,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         this.adUser = JSON.parse(JSON.stringify(this.dataCopy));
       this.adUser.phone = '';
       this.adUser.email = '';
-      this.adUser.employeeID = '';
+      this.adUser.employeeID = null;
       this.adUser.buid = null;
       this.adUser.userName = '';
       if (this.dataCopy?.chooseRoles) {
@@ -123,7 +123,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
       }
     } else {
       this.adUser.buid = null;
-      this.adUser.employeeID = '';
+      this.adUser.employeeID = null;
+      if (dt?.data?.email) this.adUser.email = dt?.data?.email;
     }
     this.dialog = dialog;
     this.user = auth.get();
@@ -287,6 +288,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
                 }
               });
             this.dataAfterSave = res.save;
+            console.log('check dataAfterSave', this.dataAfterSave);
           }
         });
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
@@ -316,6 +318,8 @@ export class AddUserComponent extends UIComponent implements OnInit {
           dt.userID = this.adUser.userID;
         });
       }
+      this.adUser;
+
       data = [this.adUser, this.viewChooseRole, true, false];
     }
     if (this.formType == 'edit') {
@@ -331,9 +335,22 @@ export class AddUserComponent extends UIComponent implements OnInit {
     var data = [];
     this.isAddMode = true;
     op.methodName = 'AddUserAsync';
-    data = [this.adUser, null, false, false];
+    data = [this.adUser, this.viewChooseRole, false, false];
     op.data = data;
     return true;
+  }
+
+  updateAfterAdd() {
+    var checkDifference =
+      JSON.stringify(this.viewChooseRoleTemp) ===
+      JSON.stringify(this.viewChooseRole);
+    this.api
+      .execSv('SYS', 'ERM.Business.AD', 'UsersBusiness', 'UpdateUserAsync', [
+        this.adUser,
+        this.viewChooseRole,
+        checkDifference,
+      ])
+      .subscribe();
   }
 
   onAdd() {
@@ -342,7 +359,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res.save) {
           this.getHTMLFirstPost(this.adUser);
-          this.adService.createFirstPost(this.tmpPost).subscribe();
+          this.adService.createFirstPost(this.tmpPost).subscribe((res) => {});
           this.imageUpload
             .updateFileDirectReload(res.save.userID)
             .subscribe((result) => {
@@ -396,6 +413,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
         if (this.checkBtnAdd == false) {
           this.onAdd();
         } else {
+          this.updateAfterAdd();
           if (
             this.countListViewChooseRoleApp > 0 ||
             this.countListViewChooseRoleService > 0
@@ -405,15 +423,15 @@ export class AddUserComponent extends UIComponent implements OnInit {
               .subscribe((res: any) => {
                 if (res) {
                   res.chooseRoles = res?.functions;
-                  this.dialog.close(res);
                   (this.dialog.dataService as CRUDService)
                     .update(res)
                     .subscribe();
+                  this.dialog.close(res);
                   this.changeDetector.detectChanges();
                 }
               });
           }
-          this.notification.notifyCode('SYS006');
+          // this.notification.notifyCode('SYS006');
         }
       } else this.onUpdate();
     } else this.adService.notifyInvalid(this.form.formGroup, this.formModel);
@@ -453,6 +471,9 @@ export class AddUserComponent extends UIComponent implements OnInit {
       category: '1',
       shareControl: '9',
       listTag: [],
+      createdOn: new Date(),
+      createdBy: 'CODXADMIN',
+      createdName: 'CoDX Administrator',
     };
   }
 

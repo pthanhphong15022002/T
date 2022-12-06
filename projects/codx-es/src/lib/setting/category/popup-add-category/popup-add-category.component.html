@@ -60,6 +60,7 @@
             field="categoryID"
             [formModel]="formModel"
             [Group]="form.formGroup"
+            [disabled]="disableCategoryID == '1'"
           >
           </codx-input>
         </div>
@@ -67,7 +68,7 @@
     </div>
     <div class="row">
       <div class="col-md-3">
-        <div class="d-flex align-items-center mb-4" *ngIf="havaESign == true">
+        <div class="d-flex align-items-center mb-4" *ngIf="hasModuleES == true">
           <codx-input
             #checkbox
             type="switch"
@@ -87,13 +88,12 @@
       <div class="col-md-4">
         <div
           class="d-flex align-items-center mb-4"
-          *ngIf="havaESign == true && data.eSign"
+          *ngIf="hasModuleES == true && data.eSign"
         >
           <codx-input
             #checkbox
             type="switch"
-            id="switch"
-            [checked]="data?.confirmControl"
+            [checked]="data?.confirmControl == '0' ? false : true"
             labelPosition="After"
             field="confirmControl"
             class="test-switch"
@@ -111,13 +111,13 @@
       <div class="col-md-4">
         <div
           class="d-flex align-items-center mb-4"
-          *ngIf="havaESign == true && data.eSign"
+          *ngIf="hasModuleES == true && data.eSign"
         >
           <codx-input
             #checkbox
             type="switch"
             id="switch"
-            [checked]="data?.areaControl"
+            [checked]="data?.areaControl == '1' ? true : false"
             labelPosition="After"
             field="areaControl"
             class="test-switch"
@@ -140,9 +140,12 @@
           <codx-label fiedName="SignatureType" [formModel]="formModel">
           </codx-label>
           <codx-input
+            *ngIf="grvSetup && grvSetup['SignatureType']"
             field="signatureType"
-            [formModel]="formModel"
-            [Group]="form.formGroup"
+            [crrValue]="data.signatureType"
+            type="valuelist"
+            [refValue]="grvSetup['SignatureType']['referedValue']"
+            (valueChange)="valueChange($event)"
           >
           </codx-input>
         </div>

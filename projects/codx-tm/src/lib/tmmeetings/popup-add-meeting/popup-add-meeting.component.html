@@ -13,7 +13,7 @@
       <codx-label fiedName="MeetingName" formName="TMMeetings" gridViewName="grvTMMeetings" default="Tên buổi họp">
       </codx-label>
     </div>
-    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" placeholder="Tên buổi họp"
+    <codx-input field="meetingName" type="text" [crrValue]="meeting?.meetingName" [placeholder]="gridViewSetup['MeetingName']?.description"
       (valueChange)="valueChange($event)">
     </codx-input>
   </div>
@@ -34,8 +34,7 @@
         </codx-label>
       </div>
       <codx-input type="datetime" [crrValue]="startTime" format="t" placeholder="timefrom"
-        (valueChange)="valueStartTimeChange($event)"
-        >
+        (valueChange)="valueStartTimeChange($event)">
       </codx-input>
     </div>
     <div class="col-3">
@@ -44,24 +43,36 @@
         </codx-label>
       </div>
       <codx-input type="datetime" [crrValue]="endTime" format="t" placeholder="timefrom"
-        (valueChange)="valueEndTimeChange($event)" >
+        (valueChange)="valueEndTimeChange($event)">
       </codx-input>
     </div>
     <div class="col-2 mt-6">
       <codx-input #checkbox type="checkbox" name="checkbox" label="Cả ngày" labelPosition="After"
-        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay" >
+        [formModel]="form.formModel" (valueChange)="valueChangeCheckFullDay($event)" [crrValue]="isFullDay">
       </codx-input>
       <!-- <span class="ml-5"> <codx-label name="FullDate" [formModel]="form.formModel"  default="Cả ngày"> </codx-label></span> -->
     </div>
   </div>
-  <div class="form-group">
+  <div *ngIf="!isRoom" class="form-group">
     <div>
       <codx-label fiedName="Location" formName="TMMeetings" gridViewName="grvTMMeetings" default="Địa điểm">
       </codx-label>
     </div>
-    <codx-input field="location" [formModel]="form.formModel" [Group]="form.formGroup"
+    <codx-input field="location" type="text" [placeholder]="gridViewSetup['Location']?.description" [crrValue]="meeting?.location"
       (valueChange)="valueChange($event)">
     </codx-input>
+  </div>
+  <div *ngIf="isRoom" class="form-group">
+    <div class="d-flex justify-content-between align-items-center">
+      <codx-label fiedName="Location" [formModel]="form.formModel" default="Địa điểm">
+      </codx-label>
+      <!-- <span class="label-status text-primary">{{
+        data?.status | vll: "VL003":"text" | async
+        }}</span> -->
+    </div>
+    <ejs-combobox id='location' #samples [dataSource]='listRoom' [value]="meeting.location" [fields]='fields'
+    [placeholder]="gridViewSetup['Location']?.description" (valueChange)="cbxChange($event)"></ejs-combobox>
+
   </div>
   <div class="form-group">
     <div class="d-flex align-items-end justify-content-between mb-2">
@@ -74,7 +85,7 @@
       </button>
     </div>
     <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150" [crrValue]="meeting?.memo"
-      (valueChange)="changeMemo($event)">
+      (valueChange)="changeMemo($event)" [placeholder]="gridViewSetup['Memo']?.description">
     </codx-input>
     <div class="d-flex justify-content-end" *ngIf="meeting.templateID">
       <div class="font-italic">
@@ -134,7 +145,8 @@
         </div>
       </div>
       <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
-        multiple="true" [showInput]="false">
+        multiple="true" [showInput]="false" [disabled]="readOnly"
+        >
       </codx-input>
     </div>
     <div class="d-flex flex-wrap">
@@ -174,7 +186,7 @@
       <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="meeting?.recID" hideFolder="1"
         hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
         [formModel]="dialog.formModel" [functionID]="functionID" (fileAdded)="fileAdded($event)"
-        (fileCount)="getfileCount($event)" displayThumb="full">
+        (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
       </codx-attachment>
     </div>
   </ng-container>
@@ -183,13 +195,13 @@
 <ng-template #tabResources>
   <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
     <div class="d-flex align-items-center">
-    <ng-container *ngFor="let item of listRoles">
-      <div class="d-flex align-items-center ms-2">
-        <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
-        <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
-      </div>
-    </ng-container>
-  </div>
+      <ng-container *ngFor="let item of listRoles">
+        <div class="d-flex align-items-center ms-2">
+          <span inlineSVG="./assets/themes/co/default/img/{{ item.icon }}"></span>
+          <div class="fs-8 text-gray-500 ms-1">{{ item.text }}</div>
+        </div>
+      </ng-container>
+    </div>
 
     <codx-input type="Share" refValue="TM003" field="resources" (valueChange)="eventApply($event)" [dataShared]="[]"
       multiple="true" [showInput]="false">
@@ -207,37 +219,44 @@
       </codx-label>
     </div>
   </div>
-  <ng-container *ngFor="let item of resources">
-    <div class="d-flex py-2 border-bottom justify-content-between list-title">
-      <div class="d-flex align-items-top">
-        <div class="me-3" style="position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
-          placement="right" #p="ngbPopover" (mouseenter)="showPopover(p, item.resourceID)" autoClose="outside">
-          <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
-          </codx-img>
-          <div style="position: absolute; right: 0px; bottom: 0px">
-            <ng-container *ngFor="let role of listRoles">
-              <ng-container *ngIf="role.value == item.roleType">
-                <span inlineSVG="./assets/themes/co/default/img/{{ role.icon }}"></span>
+  <ng-container *ngFor="let item of resources; index as i;">
+    <div class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item mb-1 p-2">
+      <div class="d-flex py-2 border-bottom justify-content-between list-title ">
+        <div class="d-flex align-items-top">
+          <div class="me-3" style="position: relative" popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles"
+            placement="right" #p="ngbPopover" (mouseenter)="showPopover(p, item.resourceID)" autoClose="outside">
+            <codx-img class="" [objectId]="item.resourceID" objectType="AD_Users">
+            </codx-img>
+            <div style="position: absolute; right: 0px; bottom: 0px">
+              <ng-container *ngFor="let role of listRoles">
+                <ng-container *ngIf="role.value == item.roleType">
+                  <span inlineSVG="./assets/themes/co/default/img/{{ role.icon }}"></span>
+                </ng-container>
               </ng-container>
-            </ng-container>
+            </div>
           </div>
-        </div>
-        <div class="d-flex flex-column me-2">
-          <div class="text-dark fw-bold fs-6">
-            {{ item.resourceName }}
+          <div class="d-flex flex-column me-2">
+            <div class="text-dark fw-bold fs-6">
+              {{ item.resourceName }}
+            </div>
+            <div class="text-gray-700">{{ item.positionName }}</div>
           </div>
-          <div class="text-gray-700">{{ item.positionName }}</div>
         </div>
       </div>
-      <div>
-        <a style="cursor: pointer">
+
+      <ng-container>
+        <div class="d-flex align-items-start">
           <div class="d-flex align-item-center">
             <codx-input type="checkbox" name="taskControl" class="check-sys d-block text-right" ngDefaultControl
               field="taskControl" (valueChange)="valueCbx(item.resourceID, $event)" [crrValue]="item.taskControl">
             </codx-input>
           </div>
-        </a>
-      </div>
+          <div class="action-menu-od d-flex justify-content-center align-items-center cursor-pointer"
+            (click)="onDeleteUser(i)">
+            <i class="icon-close text-danger icon-16"></i>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </ng-container>
 </ng-template>
@@ -247,23 +266,13 @@
     <div class="form-group">
       <div class="d-flex align-items-end justify-content-between mb-2">
         <div class="d-flex me-2">
-          <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung họp">
+          <codx-label fiedName="Reminder" [formModel]="form.formModel" default="Nhắc nhở trước cuộc họp(phút)">
           </codx-label>
-          <!-- <codx-label fiedName="Repeated" formName="TMMeetings" default="Lặp lại">
-          </codx-label> -->
         </div>
-        <!-- <div class="flex">
-            <codx-input #saveTemplate class="test-switch" type="switch" [checked]="false" [disabled]="false"
-              labelPosition="Before"></codx-input>
-          </div> -->
-
-        <button type="button" class="btn btn-sm btn-icon btn-light">
-          <span class="icon-check_box icon-18"></span>
-        </button>
+        <codx-input type="text" name="reminder" field="reminder" (valueChange)="valueChange($event)"
+          [crrValue]="meeting.reminder"></codx-input>
       </div>
-      <codx-input field="memo" type="textarea" class="meeting-des" headerposition="none" format="ed"
-        [crrValue]="meeting?.memo" (valueChange)="changeMemo($event)">
-      </codx-input>
+
     </div>
   </ng-container>
 </ng-template>
@@ -307,17 +316,15 @@
       <div class="form-group mt-3">
         <codx-label fiedName="RefID" [formModel]="form.formModel" default="Dự án">
         </codx-label>
-        <!-- <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
-          [crrValue]="meeting.refID" loadFull="true">
-        </codx-input> -->
-        <codx-input field="refID" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+        <codx-input type="combobox" field="refID" refValue="TMProjects" (valueChange)="valueChange($event)"
+          [crrValue]="meeting.refID" loadFull="true" [disabled]="disabledProject">
         </codx-input>
-        <!-- <codx-input field="refID" [type]="gridViewSetup['RefID']['controlType']"
-      [placeholder]="gridViewSetup['RefID']['headerText']" [refValue]="gridViewSetup['RefID']['referedValue']"
-      [refType]="gridViewSetup['RefID']['referedType']" (valueChange)="valueChange($event)"
-      [crrValue]="meeting?.refID" [showInput]="true" >
-    </codx-input> -->
+        <!-- <codx-input field="refID" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)" [disabled]="disabledProject">
+        </codx-input>
+        dung cái này dính edit ko view được
+       -->
+
       </div>
     </ng-container>
   </ng-container>

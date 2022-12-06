@@ -1,55 +1,17 @@
 <codx-form [headerText]="title" [body]="body" [footer]="footer" [dialog]="dialog" [formModel]="dialog.formModel" #form>
   <ng-template #body>
     <div class="offcanvas-wrapper">
-      <div class="d-flex justify-content-between">
-        <div class="d-flex align-items-center">
-          <span class="text-dark">{{fullName}}</span>
+      <div class="d-flex justify-content-between background-name">
+        <div class="d-flex align-items-center ">
+          <span class="text-name">{{fullName}}</span>
         </div>
       </div>
       <div class="request-to mt-4">
-        <div class="d-flex justify-content-between border-bottom py-1" *ngIf="!isShare">
-          <div class="d-flex align-items-center flex-grow-1">
-            <div class="w-50px">
-              <codx-label name="lblFrom" [formModel]="form.formModel" [default]="'Từ'" class="fw-bold"></codx-label>:
-            </div>
-            <div class="send-group">
-              <ng-container *ngFor="let perm of fromPermission; index as i;">
-                <div class="user-mini-item">
-                  <div class="d-flex align-items-center">
-                    <div class="me-2">
-                      <div *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
-                      </div>
-                      <ng-template #thenAvatar1>
-                        <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="20"
-                          imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle" [title]="perm.objectName"
-                          [descLine]="1">
-                        </codx-temp-full>
-                      </ng-template>
-                      <ng-template #elsethenAvatar1>
-                        <codx-temp-full [imageId]="perm.objectID" imageObjType="AD_Users"
-                          imgCss="w-20px me-2 cursor-pointer symbol symbol-20 symbol-circle" [imageWidth]="20"
-                          [title]="perm.objectName">
-                        </codx-temp-full>
-                      </ng-template>
-                    </div>
-                    <span (click)="removeUserRight(i, fromPermission)" class="icon-close icon-16 ms-2 text-danger">
-                    </span>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-          <div class="d-flex">
-            <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
-              (valueChange)="onUserEvent($event, 'from')">
-            </codx-input>
-
-          </div>
-        </div>
         <div class="d-flex justify-content-between border-bottom py-1">
           <div class="d-flex align-items-center flex-grow-1">
             <div class="w-50px">
-              <codx-label name="lblFromDate" [formModel]="form.formModel"  [default]="isShare ? 'Đến' : 'Cho'" class="fw-bold">
+              <codx-label name="lblFromDate" [formModel]="form.formModel" [default]="isShare ? 'Đến' : 'Cho'"
+                class="fw-bold">
               </codx-label>:
             </div>
             <div class="send-group">
@@ -72,8 +34,7 @@
                         </codx-temp-full>
                       </ng-template>
                     </div>
-                    <span (click)="removeUserRight(i, toPermission)" class="icon-close icon-16 ms-2 text-danger">
-                    </span>
+
                   </div>
                 </div>
               </ng-container>
@@ -111,21 +72,20 @@
                         </codx-temp-full>
                       </ng-template>
                     </div>
-                    <span (click)="removeUserRight(i, byPermission)" class="icon-close icon-16 ms-2 text-danger">
-                    </span>
+
                   </div>
                 </div>
               </ng-container>
             </div>
           </div>
           <div class="d-flex">
-            <codx-input type="share" field="addUser" refValue="DM001" [showInput]="false"
+            <codx-input type="share" field="addUser" refValue="BP022" [showInput]="false"
               (valueChange)="onUserEvent($event, 'by')">
             </codx-input>
 
           </div>
         </div>
-        <div class="d-flex justify-content-between border-bottom py-1">
+        <div *ngIf="isShare" class="d-flex justify-content-between border-bottom py-1">
           <div class="d-flex align-items-center flex-grow-1">
             <div class="w-50px">
               <codx-label name="lblCc" [formModel]="form.formModel" [default]="'Cc'" class="fw-bold"></codx-label>:
@@ -150,8 +110,7 @@
                         </codx-temp-full>
                       </ng-template>
                     </div>
-                    <span (click)="removeUserRight(i, ccPermission)" class="icon-close icon-16 ms-2 text-danger">
-                    </span>
+
                   </div>
                 </div>
               </ng-container>
@@ -165,50 +124,55 @@
           </div>
         </div>
       </div>
-      <div *ngIf="!isShare" class="request-box mt-4">
+      <div class="d-flex justify-content-between border-bottom mt-4">
+        <div class="w-100">
+          <codx-input type="text" tyle="width:100%" class="borderless" [crrValue]="requestTitle"
+            [placeholder]="'Nhập lý do'" [class]="validate('requestTitle')" (valueChange)="txtValue($event, 'requestTitle')">
+          </codx-input>
+        </div>
+        <div class="d-flex align-items-center mb-1">
+          <codx-input type="combobox" field="requestTitle" refValue="EmailTemplates" placeholder="Mail mẫu"
+            (valueChange)="txtValue($event, 'requestTitle')" [formModel]="form.formModel">
+          </codx-input>
+        </div>
 
-        <codx-input type="text" tyle="width:100%" [crrValue]="requestTitle" [placeholder]="'Nhập lý do'"
-          [class]="validate('requestTitle')" (valueChange)="txtValue($event, 'requestTitle')"></codx-input>
       </div>
 
       <div class="request-box mt-4">
-        <div *ngIf="isShare" class="fw-bold fs-6 text-primary">
-          <codx-label [formModel]="form.formModel" default="Nội dung chia sẻ">
-          </codx-label>
-        </div>
         <codx-input class="form-control" [placeholder]="" [class]="validate('shareContent')" type="textarea"
-          style="width:100%; height: 400px;" [crrValue]="shareContent" (valueChange)="txtValue($event, 'shareContent')">
+          headerposition="none" format="ed" height="250" [crrValue]="shareContent"
+          (valueChange)="txtValue($event, 'shareContent')">
         </codx-input>
       </div>
-      <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
+      <div class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
         <div class="text-dark-75">
           <codx-label [fiedName]="'isShare'" [formModel]="form.formModel" default="Cho phép chia sẻ lại cho người khác?"
-            class="ms-1 fw-bold"></codx-label>
+            class="fw-bold"></codx-label>
         </div>
         <div class="d-flex">
-          <span class="switch switch-sm mr-2">
-            <codx-input class="form-control test-datetime" type="switch" tyle="width:100%" [crrValue]="share"
+          <span class="switch switch-sm me-2">
+            <codx-input class="test-datetime" type="switch" tyle="width:100%" [crrValue]="share"
               (valueChange)="txtValue($event, 'share')"></codx-input>
           </span>
         </div>
       </div>
-      <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-6">
+      <div class="d-flex align-items-center justify-content-between share-item mt-2">
         <div class="text-dark-75">
-          <codx-label fiedName="lblDownload" [formModel]="form.formModel" default="Cho phép dowlnload hoặc in tài liệu?"
-            class="ms-1 fw-bold"></codx-label>
+          <codx-label fiedName="lblDownload" [formModel]="form.formModel" default="Cho phép download hoặc in tài liệu?"
+            class="fw-bold"></codx-label>
         </div>
         <div class="d-flex">
-          <span class="switch switch-sm mr-2">
-            <codx-input placeholder="download..." class="form-control test-datetime" type="switch" style="width:100%"
-              format="d" [crrValue]="download" (valueChange)="txtValue($event, 'download')"></codx-input>
+          <span class="switch switch-sm me-2">
+            <codx-input placeholder="download..." class="test-datetime" type="switch" style="width:100%" format="d"
+              [crrValue]="download" (valueChange)="txtValue($event, 'download')"></codx-input>
           </span>
         </div>
       </div>
-      <div *ngIf="isShare" class="text-primary font-weight-bold mt-4">
+      <div class="text-primary font-weight-bold mt-4">
         <codx-label name="lblDownload" [formModel]="form.formModel" default="Giới hạn thời gian chia sẻ"
-          class="ms-1 fw-bold"></codx-label>
+          class="fw-bold"></codx-label>
       </div>
-      <div *ngIf="isShare" class="row mt-5">
+      <div class="row mt-3">
         <div class="col-xl-6 col-lg-6 col-md-6">
           <div class="form-group row">
             <div class="col-4 pt-2">
@@ -216,8 +180,9 @@
               </codx-label>
             </div>
             <div class="col-8">
-              <codx-input placeholder="startDate..." class="form-control test-datetime" type="datetime"
-                style="width:100%" format="d" [crrValue]="startDate" (valueChange)="txtValue($event, 'startDate')">
+              <codx-input [placeholder]="gridViewSetup['ToDate']?.description" class="form-control test-datetime"
+                type="datetime" style="width:100%" format="d" [crrValue]="startDate"
+                (valueChange)="txtValue($event, 'startDate')">
               </codx-input>
             </div>
           </div>
@@ -229,15 +194,16 @@
               </codx-label>
             </div>
             <div class="col-8">
-              <codx-input placeholder="endDate..." class="form-control test-datetime" type="datetime"
-                style="width:100%;" format="d" [crrValue]="endDate" (valueChange)="txtValue($event, 'endDate')">
+              <codx-input [placeholder]="gridViewSetup['ToDate']?.description" class="form-control test-datetime"
+                type="datetime" style="width:100%;" format="d" [crrValue]="endDate"
+                (valueChange)="txtValue($event, 'endDate')">
               </codx-input>
             </div>
           </div>
         </div>
       </div>
 
-      <div *ngIf="!isShare" class="row mt-5">
+      <!-- <div *ngIf="!isShare" class="row mt-5">
         <div class="col-xl-6 col-lg-6 col-md-6">
           <div class="form-group row">
             <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Từ ngày"></codx-label>
@@ -258,27 +224,12 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex align-items-center justify-content-between">
-      <div class="checkbox-inline d-flex align-items-center">
-          <ng-container *ngIf="isShare">
-              <codx-input class="test-check" type="checkbox" [checked]="sentEmail" field="sentEmail"
-                  (valueChange)="txtValue($event, 'sentemail')"></codx-input>
-              <codx-label name="lblSendEmail" [formModel]="form.formModel" default="Gửi mail" class="ms-2 fw-bold">
-              </codx-label>
-              <codx-input class="test-check ms-5" type="checkbox" [checked]="postblog" field="postblog"
-                  (valueChange)="txtValue($event, 'postblog')"></codx-input>
-              <span></span>
-              <codx-label name="lblCreatePost" [formModel]="form.formModel" default="Tạo bài viết"
-                  class="ms-2 fw-bold"></codx-label>
-          </ng-container>
-      </div>
-      <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
-          <codx-label name="lblSend" [formModel]="form.formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
-      </button>
-  </div>
+    <button type="button" id="btnShare" class="btn btn-primary" (click)="onShare()">
+      <codx-label name="lblSend" [formModel]="form.formModel" default="Gửi" class="ms-1 fw-bold"></codx-label>
+    </button>
   </ng-template>
 </codx-form>

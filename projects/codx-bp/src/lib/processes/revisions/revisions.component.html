@@ -1,55 +1,28 @@
 <codx-form #form [headerText]="headerText" [body]="body" [footer]="footer" [dialog]="dialog"
-  [formModel]="dialog.formModel" [data]="data"></codx-form>
-<!-- <ng-template #body>
-  <div class="form-group">
-    <codx-label [formModel]="form.formModel" default="Qui trình tuyển dụng">
-    </codx-label>
-    <codx-attachment #attachment [objectType]="form.formModel.entityName" hideImageUpload="0" showMessage="0"
-      hideBtnSave="1" hideFolder="1" hideUploadBtn="1" hideDes="1" [functionID]="form.formModel.funcID"
-      [hideDelete]="'1'" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
-      (fileGet)="getfileGet($event)" (filePrimitive)="getfilePrimitive($event)" [objectId]="recID" [allowMultiFile]="0"
-      [idBrowse]="'addTemplateImport'">
-    </codx-attachment>
-    <button type="button" class="btn btn-outline-primary" style="width: 100px;" (click)="openFormUploadFile()">
-      <codx-label [formModel]="form.formModel" [fiedName]="'selectedFile'" [default]="'Chọn File'"></codx-label>
-    </button>
-  </div>
-  <div class="form-group row">
-    <div class="col-8">
-      <div>
-        <codx-label default="Phiên Bản: "></codx-label>
-        <codx-label default="V2.0"></codx-label>
-      </div>
-      <div>
-        <codx-label default="Cập nhật bởi,"></codx-label>
-        <codx-label default="Lê Phạm Hoài Thương | 1 ngày trước"></codx-label>
-      </div>
-      <div>
-        <codx-label default="Bổ sung thêm một số bước công việc"></codx-label>
-      </div>
-    </div>
-    <div class="col-4">
-      <div>
-        <codx-label default="Hiệu lực"></codx-label>
-
-      </div>
-      <codx-label default="01/01/2022"></codx-label>
-    </div>
-  </div>
-</ng-template> -->
+  [formModel]="dialog.formModel"></codx-form>
 <ng-template #body>
   <div class="form-group">
-    <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã version">
-    </codx-label>
-    <codx-input field="versionNo" type="text" [placeholder]="'Mã version'" [crrValue]="process.versionNo"
-      (valueChange)="valueChange($event)">
-    </codx-input>
+    <div class="row g-3">
+      <div class="col-8">
+        <codx-label fiedName="VersionName" [formModel]="form.formModel" default="Tên phiên bản">
+        </codx-label>
+        <codx-input field="versionName" type="text" [placeholder]="verNameDefault" [crrValue]="verName"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-4">
+        <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Mã phiên bản">
+        </codx-label>
+        <codx-input field="versionNo" type="text" [crrValue]="verNo" [disabled]="disableTitle" >
+        </codx-input>
+      </div>
+    </div>
   </div>
   <div class="form-group">
     <codx-label fiedName="Comment" [formModel]="form.formModel" default="Mô tả">
     </codx-label>
-    <codx-input field="comment" type="textarea" [placeholder]="'Mô tả'" [crrValue]="comment"
-      (valueChange)="valueComment($event)">
+    <codx-input field="comment" type="textarea" [placeholder]="enterComment" [crrValue]="version.comment==null?version.comment:''"
+      (valueChange)="valueComment($event)" >
     </codx-input>
   </div>
 </ng-template>

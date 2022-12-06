@@ -9,8 +9,8 @@
   [dialog]="dialog"
 >
   <ng-template #body>
-    <div class="d-flex flex-stack fs-6 py-2">
-      <div class="fw-bolder text-primary">
+    <div class="d-flex flex-stack fs-6 py-3">
+      <div class="fw-bold text-primary">
         <codx-label
           [name]="'lblTitleAddSignature'"
           default="THÔNG TIN CHỮ KÝ SỐ"
@@ -34,17 +34,19 @@
     <div class="form-group">
       <codx-label fiedName="Email" [formModel]="dialog.formModel"> </codx-label>
       <div class="d-flex">
-        <!-- <div class="w-100 me-2">
+        <div class="w-100 me-2" *ngIf="!isAdd">
           <codx-input
             type="text"
             field="email"
             [Group]="form.formGroup"
             [formModel]="dialog.formModel"
+            [disabled]="true"
           >
           </codx-input>
-        </div> -->
+        </div>
 
         <codx-input
+          *ngIf="isAdd"
           [ngClass]="'w-100'"
           type="Combobox"
           [refValue]="'UserEmails'"
@@ -87,13 +89,31 @@
         <codx-label fiedName="Supplier" [formModel]="dialog.formModel">
         </codx-label>
         <codx-input
+          *ngIf="data.signatureType == '1'"
           type="valuelist"
           field="supplier"
-          [Group]="form.formGroup"
-          [formModel]="dialog.formModel"
-          [disabled]="data.signatureType == '2'"
+          [refValue]="'ES029'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
         >
         </codx-input>
+        <codx-input
+          *ngIf="data.signatureType == '2'"
+          type="valuelist"
+          field="supplier"
+          [refValue]="'ES032'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
+        >
+        </codx-input>
+        <!-- <codx-input
+          type="valuelist"
+          field="supplier"
+          [refValue]="data.signatureType == '1' ? 'ES029' : 'ES032'"
+          (valueChange)="valueChange($event)"
+          [crrValue]="data.supplier"
+        >
+        </codx-input> -->
       </div>
     </div>
     <div class="form-group">
@@ -131,12 +151,14 @@
                 [width]="80"
                 referType="S1"
                 [objectId]="data.recID"
-                [objectType]="'ES_Signatures'"
+                [objectType]="formModel.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S1')"
                 [funcId]="'ESS21'"
               >
               </codx-img>
@@ -157,12 +179,14 @@
                 class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
                 [width]="80"
                 [objectId]="data.recID"
-                [objectType]="'ES_Signatures'"
+                [objectType]="formModel.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S2')"
                 [funcId]="'ESS21'"
               >
               </codx-img>
@@ -185,12 +209,14 @@
                 [imageType]="'square'"
                 [width]="80"
                 [objectId]="data.recID"
-                [objectType]="'ES_Signatures'"
+                [objectType]="formModel.entityName"
                 data-kt-menu-trigger="click"
                 data-kt-menu-attach="parent"
                 data-kt-menu-placement="bottom-end"
                 data-kt-menu-flip="bottom"
                 [isAllowEdit]="true"
+                [updateDirect]="true"
+                (dataChanged)="dataImageChanged($event, 'S3')"
                 [funcId]="'ESS21'"
               >
               </codx-img>
@@ -328,7 +354,14 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-between">
+      <div class="d-flex form-group">
+        <codx-input type="checkbox" [crrValue]="data.stop" [disabled]="true">
+        </codx-input>
+        <codx-label class="ms-2" fiedName="Stop" [formModel]="dialog.formModel">
+        </codx-label>
+      </div>
+
       <button class="btn btn-primary" (click)="onSaveForm()">
         <codx-label
           default="Lưu"

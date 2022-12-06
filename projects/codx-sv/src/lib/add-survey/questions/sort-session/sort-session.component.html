@@ -1,0 +1,45 @@
+<codx-form
+  [headerText]="'Sắp xếp lại các phần'"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div
+      cdkDropList
+      class="list example-boundary-sort"
+      (cdkDropListDropped)="drop($event)"
+    >
+      <hr />
+      <div
+        *ngFor="let item of data"
+        cdkDragBoundary=".example-boundary-sort"
+        cdkDrag
+      >
+        <div class="has-action-menu">
+          <div class="ms-1 d-flex">
+            <span
+              class="icon-menu d-flex align-items-center"
+              cdkDragHandle
+            ></span>
+            <div class="ps-6">
+              <span>{{ item.question }}</span>
+              <div class="d-flex">
+                <codx-label fiedName="Session" default="Phần"></codx-label>
+                <span>&nbsp;{{ item.seqNo + " / " + data.length }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
+        <codx-label name="Save" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </ng-template>
+</codx-form>

@@ -40,11 +40,11 @@ export class CompanyInforComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.loadData();
     let funcID =  this.router.snapshot.params["funcID"];
     if(funcID){
-      let funcIDPermisson = funcID + "P";
-      this.getUserPermission(funcIDPermisson);
+      this.funcID = funcID + "P";
+      this.loadData(this.funcID);
+      this.getUserPermission(this.funcID);
     }
     
   }
@@ -59,32 +59,44 @@ export class CompanyInforComponent extends UIComponent {
       });
     }
   }
-  loadData(){
+  loadData(funcID:string)
+  {
+    if(funcID)
+    {
       this.api
-        .execSv(
-          'WP',
-          'ERM.Business.WP',
-          'NewsBusiness',
-          'GetConpanyInforAsync'
-        )
+      .execSv(
+        'WP',
+        'ERM.Business.WP',
+        'NewsBusiness',
+        'GetConpanyInforAsync',
+        [funcID])
         .subscribe((res:any) => {
-          this.data = res;
-          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
+        if(res)
+        {
+          let companyPost = res[0];
+          this.data = {...companyPost};
           this.detectorRef.detectChanges();
-        });
+        }
+      });
+    }
   }
 
   clickShowPopupEdit(){
-    if(this.view){
+    if(this.view)
+    {
       let option = new DialogModel();
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.IsFull = true;
       let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
       popup.closed.subscribe((res:any)=>{
-        if(res.event && res.closedBy != "escape"){
-          this.data = res.event;
-          this.detectorRef.detectChanges();
+        if(res?.event){
+          let companyPost = res.event;
+          if(companyPost?.recID){
+            this.data = {...companyPost};
+            this.notifySvr.notifyCode('SYS007');
+            this.detectorRef.detectChanges();
+          }
         }
       });
     }

@@ -1,7 +1,4 @@
-<codx-views #view 
-[entityName]="entityName" 
-[views]="views" 
-[showToolBar]="false">
+<codx-views #view [entityName]="entityName" [views]="views" [showToolBar]="false">
 </codx-views>
 <div class="more-function">
     <div class="d-flex flex-column">
@@ -29,26 +26,60 @@
                         <div class=" justify-content-between border-bottom py-1">
                             <div class="d-flex flex-center justify-content-between border-bottom py-3">
                                 <div class="d-flex flex-center">
-                                    <div class="d-flex align-items-center badge badge-light me-4">
-                                        <span class="me-2">
-                                            <img class="h-12px w-12px"
-                                                src="assets/themes/sys/default/img/{{data.shareIcon}}" />
-                                        </span>
-                                        <span class="fs-7 text-gray-600">
-                                            {{data.shareText}}
-                                        </span>
+                                    <div class="d-flex align-items-center me-4">
+                                        <div class="badge badge-secondary img-14">
+                                            <codx-vll name="WP001" [value]="data.shareControl"
+                                                [path]="'assets/themes/sys/default/img/'"
+                                                [icoCss]="'symbol-12px symbol-circle'" [showText]="true"
+                                                [showIcon]="true">
+                                            </codx-vll>
+                                        </div>
+                                        <ng-container *ngIf="data.shareName">
+                                            <div class="ms-2 position-relative">
+                                                <div class="fs-6" [innerHTML]="data.shareName"
+                                                    (click)="showListShare()"></div>
+                                                <ng-container *ngIf="isShowTemplateShare">
+                                                    <div class="position-absolute tmpshare w-250px">
+                                                        <div class="d-flex justify-content-between">
+                                                            <codx-label class="fw-bold text-dark"
+                                                                [formModel]="view.formModel" name="lblListShare"
+                                                                default="Danh sách người được chia sẻ">
+                                                            </codx-label>
+                                                            <span class="ms-2" (click)="closeListShare()">
+                                                                <i class="icon-close"></i>
+                                                            </span>
+                                                        </div>
+                                                        <div class="tmpshare-body">
+                                                            <ng-container *ngFor="let item of data.permissions">
+                                                                <ng-container *ngIf="item.memberType == '2'">
+                                                                    <div class="d-flex align-items-center mb-3">
+                                                                        <codx-img class="me-3" [width]="30"
+                                                                            [imageType]="'circle'"
+                                                                            [objectId]="item.objectID"
+                                                                            objectType="AD_Users">
+                                                                        </codx-img>
+                                                                        <span class="fw-bolder">{{ item.objectName
+                                                                            }}</span>
+                                                                    </div>
+                                                                </ng-container>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                        </ng-container>
                                     </div>
                                     <div class="d-flex flex-center me-4">
-                                        <span class="icon-account_circle me-1 fs-6 text-gray-600"></span>
-                                        <span class="fs-7 text-gray-600">{{data.createdName}}</span>
+                                        <span class="icon-account_circle me-1 fs-6 "></span>
+                                        <span class="fs-7 ">{{data.createdName}}</span>
                                     </div>
                                     <div class="d-flex flex-center me-4">
-                                        <span class="icon-calendar_customize me-1 fs-6 text-gray-600"></span>
-                                        <span class="fs-7 text-gray-600">{{data.createdOn | fmDT}}</span>
+                                        <span class="icon-calendar_customize me-1 fs-6 "></span>
+                                        <span class="fs-7 ">{{data.createdOn | fmDT}}</span>
                                     </div>
                                     <div class="d-flex flex-center me-4">
-                                        <span class="icon-visibility me-1 fs-6 text-gray-600"></span>
-                                        <span class="fs-7 text-gray-600">{{data.views}}</span>
+                                        <span class="icon-visibility me-1 fs-6 "></span>
+                                        <span class="fs-7 ">{{data.views}}</span>
                                     </div>
                                 </div>
                                 <ng-container *ngIf="data.allowShare">
@@ -60,12 +91,12 @@
                                 </ng-container>
 
                             </div>
-                            <ng-contianer *ngIf="data?.newsType == NEWSTYPE.VIDEO;else news">
+                            <ng-contianer *ngIf="data.newsType == NEWSTYPE.VIDEO;else news">
                                 <wp-view-video [ObjectID]="data.recID" [ObjectType]="'WP_News'">
                                 </wp-view-video>
                             </ng-contianer>
                             <ng-template #news>
-                                <div class="py-3" [innerHTML]="data?.subContent"></div>
+                                <div class="py-3" [innerHTML]="data.subContent"></div>
                                 <div class="py-3 news-detail-content" [innerHTML]="data?.contentHtml"></div>
                             </ng-template>
 
@@ -89,7 +120,8 @@
                 <div class="col-4">
                     <div class="w-350px min-w-350px ms-5 news-right">
                         <div class="fw-bolder er text-primary fs-3 mb-5 border-bottom border-gray pb-2">
-                            <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblTopview" default="Xem nhiều nhất">
+                            </codx-label>
                         </div>
                         <ng-container *ngFor="let item of listViews; index as i">
                             <div [class]="(i == 0 || i == listViews.length - 1)?'news-item py-3 first':'news-item py-3'"
@@ -97,26 +129,30 @@
                                 <div class="d-flex align-items-top">
                                     <div class="me-4">
                                         <codx-img [width]="70" imageType="square" [cssClass]="'img'"
-                                            [objectId]="item.recID" [objectType]="'WP_News'">
+                                            [isDefaulImg]="true" [objectId]="item.recID" [objectType]="'WP_News'">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column w-100">
                                         <div class="fs-6 fw-bold news-title">
-                                            {{item.subject | maxlenght:75}}
+                                            <span *ngIf="item.subject">
+                                                {{item.subject | maxlenght:75}}
+                                            </span>
                                         </div>
                                         <div class="d-flex justify-content-between mt-2">
                                             <div class="fs-7 d-flex flex-center">
                                                 <span class="icon-visibility icon-18 text-gray-500"></span>
-                                                <span class="text-gray-500 ms-1">{{item.views}}</span>
+                                                <span *ngIf="item.views"
+                                                    class="text-gray-500 ms-1">{{item.views}}</span>
                                             </div>
-                                            <div class="fs-7 text-gray-500">{{item.createdOn | fmDT}}</div>
+                                            <div *ngIf="item.createdOn" class="fs-7 text-gray-500">{{item.createdOn |
+                                                fmDT}}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </ng-container>
                         <div class="fw-bolder text-primary fs-3 mt-9 mb-5 border-bottom border-gray">
-                            <codx-label [formModel]="view.formModel" name="lblTags" default="Tag #"></codx-label>
+                            <codx-label [formModel]="view.formModel" name="lblListTag" default="Tag #"></codx-label>
                             <div class="badge-group">
                                 <span *ngFor="let tag of listTag" class="badge badge-danger"
                                     [style.background]="tag.color" (click)="clickTag(tag)">
@@ -130,33 +166,4 @@
 
         </div>
     </ng-container>
-</ng-template>
-
-<ng-template #popTitleOfShare>
-    <div class="text-dark mb-2" style="font-size: 14px;">
-        <codx-label formName="Comments" name="lblShare" default="Danh sách người được chia sẻ"></codx-label>
-    </div>
-</ng-template>
-
-<ng-template #popContentOfShare style="width: fit-content; height: fit-content;">
-    <div *ngIf="show()">
-        <div *ngFor="let tagUser of tagUsers | filter: searchField:'objectName'">
-            <div *ngIf="tagUser.orgUnitName == undefined">
-                <div class="row" style="margin-top: 10px;margin-bottom: 10px;margin-left: -10px;">
-                    <div class="col-md-2">
-                        <codx-img class="symbol symbol-40px symbol-circle me-3" [objectId]="tagUser.userID"
-                            objectType=" HR_Employees">
-                        </codx-img>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="text-dark pb-1" style="font-weight: BOLD;">{{ tagUser.objectName }}</div>
-                        <div class="row" style="margin-left: -10px;">
-                            <div class="text-gray-600 col-md-12">{{ tagUser?.positionName}}</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </ng-template>

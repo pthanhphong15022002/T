@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   Injector,
   Input,
@@ -48,7 +49,8 @@ import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-s
 })
 export class CodxTasksComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   //#region Constructor
   @Input() funcID?: any;
   @Input() dataObj?: any;
@@ -144,33 +146,41 @@ export class CodxTasksComponent
   dataReferences = [];
   titleAction = '';
   moreFunction = [];
+  crrStatus = '';
+  disabledProject = false;
 
   constructor(
     inject: Injector,
     private authStore: AuthStore,
     private activedRouter: ActivatedRoute,
     private notiService: NotificationsService,
-    private tmSv: CodxTasksService
+    private tmSv: CodxTasksService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     super(inject);
     this.user = this.authStore.get();
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
     this.cache.valueList(this.vllRole).subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
       }
     });
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res) {
+            this.moreFunction = res;
+          }
+        });
+    });
   }
 
   //#region Init
   onInit(): void {
+    console.log(this.funcID);
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
-    } else {
-      this.vllStatus = this.vllStatusTasks;
-    }
+    } else this.vllStatus = this.vllStatusTasks;
+
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
 
@@ -194,7 +204,7 @@ export class CodxTasksComponent
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = "125125"
+    this.resourceKanban.dataObj = '125125';
 
     this.request = new ResourceModel();
     this.request.service = 'TM';
@@ -211,7 +221,7 @@ export class CodxTasksComponent
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
 
-    if (this.funcID != 'TMT0201') {
+    if (this.funcID != 'TMT0201' && this.funcID != 'TMT0206') {
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
@@ -268,7 +278,9 @@ export class CodxTasksComponent
       {
         type: ViewType.calendar,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.requestSchedule,
+        showSearchBar: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -276,7 +288,7 @@ export class CodxTasksComponent
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           // template: this.eventTemplate,
-          template2: this.headerTemp,
+          //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
@@ -288,6 +300,8 @@ export class CodxTasksComponent
         sameData: false,
         request: this.requestSchedule,
         request2: this.modelResource,
+        showSearchBar: false,
+        showFilter: false,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,
@@ -295,7 +309,7 @@ export class CodxTasksComponent
           template4: this.resourceHeader,
           template6: this.mfButton, //header
           // template: this.eventTemplate, lấy event của temo
-          template2: this.headerTemp,
+          //template2: this.headerTemp,
           template3: this.cellTemplate,
           template8: this.contentTmp, //content
           statusColorRef: this.vllStatus,
@@ -317,7 +331,7 @@ export class CodxTasksComponent
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
     this.getParam();
-    this.detectorRef.detectChanges();
+    //this.detectorRef.detectChanges();
   }
   //#endregion
 
@@ -328,12 +342,14 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
-      if (this.projectID)
+      option.zIndex = 1001;
+      if (this.projectID) {
         this.view.dataService.dataSelected.projectID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       if (this.refID) this.view.dataService.dataSelected.refID = this.refID;
       if (this.refType)
         this.view.dataService.dataSelected.refType = this.refType;
-
       var dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -342,10 +358,13 @@ export class CodxTasksComponent
           this.isAssignTask,
           this.titleAction,
           this.funcID,
+          null,
+          this.disabledProject
         ],
         option
       );
       dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -405,6 +424,11 @@ export class CodxTasksComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '800px';
+      option.zIndex = 1001;
+      if (this.projectID) {
+        this.view.dataService.dataSelected.projectID = this.projectID;
+        this.disabledProject = true;
+      } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddComponent,
         [
@@ -414,10 +438,12 @@ export class CodxTasksComponent
           this.titleAction,
           this.funcID,
           data,
+          this.disabledProject
         ],
         option
       );
       this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
             [this.view.dataService.dataSelected],
@@ -478,7 +504,7 @@ export class CodxTasksComponent
     option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose, title],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose, title,data],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -511,6 +537,10 @@ export class CodxTasksComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
+        option.zIndex = 1001;
+        if (this.projectID) {
+          this.disabledProject = true;
+        } else this.disabledProject = false;
         this.dialog = this.callfc.openSide(
           PopupAddComponent,
           [
@@ -519,10 +549,13 @@ export class CodxTasksComponent
             this.isAssignTask,
             this.titleAction,
             this.funcID,
+            null,
+            this.disabledProject,
           ],
           option
         );
         this.dialog.closed.subscribe((e) => {
+          if (!e.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
@@ -773,8 +806,8 @@ export class CodxTasksComponent
             taskAction.startOn
               ? taskAction.startOn
               : taskAction.startDate
-                ? taskAction.startDate
-                : taskAction.createdOn
+              ? taskAction.startDate
+              : taskAction.createdOn
           )
         ).toDate();
         var time = (
@@ -795,8 +828,8 @@ export class CodxTasksComponent
           ''
         )
         .subscribe((res) => {
+          let kanban = (this.view.currentView as any).kanban;
           if (res && res.length > 0) {
-            let kanban = (this.view.currentView as any).kanban;
             res.forEach((obj) => {
               this.view.dataService.update(obj).subscribe();
               if (kanban) kanban.updateCard(obj);
@@ -814,6 +847,7 @@ export class CodxTasksComponent
                 .subscribe();
             }
           } else {
+            if (kanban) kanban.updateCard(taskAction);
             this.notiService.notifyCode('TM008');
           }
         });
@@ -844,8 +878,8 @@ export class CodxTasksComponent
       obj
     );
     this.dialog.closed.subscribe((e) => {
+      let kanban = (this.view.currentView as any).kanban;
       if (e?.event && e?.event != null) {
-        let kanban = (this.view.currentView as any).kanban;
         e?.event.forEach((obj) => {
           if (kanban) {
             kanban.updateCard(obj);
@@ -855,36 +889,32 @@ export class CodxTasksComponent
         this.itemSelected = e?.event[0];
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
+      } else {
+        if (kanban) kanban.updateCard(taskAction);
       }
       this.detectorRef.detectChanges();
     });
   }
   //#endregion
   //#region Event
-  changeView(evt: any) { }
+  changeView(evt: any) {}
 
-  requestEnded(evt: any) { }
+  requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    this.api
-      .execSv<any>('TM', 'TM', 'TaskBusiness', 'UpdateAsync', data)
-      .subscribe((res) => {
-        if (res) {
-          this.view.dataService.update(data).subscribe();
-        }
-      });
-    ///chắc chắn phải sửa
-    // this.cache.functionList(this.funcID).subscribe((f) => {
-    //   if (f)
-    //     this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-    //       if (res) {
-    //       this.moreFunction = res;
-    //       if(this.moreFunction.length=0) return ;
-    //       var moreFun = this.moreFunction.find(x=>UrlUtil.getUrl('defaultValue', x?.url)==data.status && UrlUtil.getUrl('defaultField', x?.url)=="Status" )
-    //       if(moreFun) return this.changeStatusTask(moreFun,data)
-    //      }
-    //     });
-    // });
+    if (this.funcID == 'TMT0206') {
+      data.status = this.crrStatus;
+      return;
+    }
+    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
+      return;
+    var moreFun = this.moreFunction.find(
+      (x) =>
+        UrlUtil.getUrl('defaultValue', x?.url) == data.status &&
+        UrlUtil.getUrl('defaultField', x?.url) == 'Status'
+    );
+    data.status = this.crrStatus;
+    if (moreFun) this.changeStatusTask(moreFun, data);
   }
 
   //update Status of Tasks
@@ -1071,10 +1101,9 @@ export class CodxTasksComponent
     );
     this.dialogApproveStatus.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-        e?.event.forEach((obj) => {
-          this.view.dataService.update(obj).subscribe();
-        });
-        this.itemSelected = e?.event[0];
+        this.view.dataService.update(e?.event).subscribe();
+
+        this.itemSelected = e?.event;
         this.detail.taskID = this.itemSelected.taskID;
         this.detail.getTaskDetail();
       }
@@ -1121,16 +1150,10 @@ export class CodxTasksComponent
     }
     if (data.status < '10') {
       this.notiService.notifyCode('TM061');
-      // this.notiService.notify(
-      //   'Công việc chưa được xác nhận thực hiện ! Vui lòng xác nhận trước khi cập nhật tiến độ !'
-      // );
       return;
     }
     if (data.status == '50' || data.status == '80') {
       this.notiService.notifyCode('TM062');
-      // this.notiService.notify(
-      //   'Công việc đang bị "Hoãn" hoặc bị "Hủy" ! Vui lòng chuyển trạng thái trước khi cập nhật tiến độ !'
-      // );
       return;
     }
 
@@ -1177,7 +1200,7 @@ export class CodxTasksComponent
       return;
     }
 
-    if (data.extendStatus == '1') {
+    if (data.extendStatus == '3') {
       this.notiService.alertCode('TM055').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
           this.confirmExtend(data, moreFunc);
@@ -1194,7 +1217,7 @@ export class CodxTasksComponent
     this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
     this.taskExtend.reason = '';
     this.taskExtend.taskID = data?.taskID;
-    this.taskExtend.extendDate = moment(new Date()).toDate();
+    this.taskExtend.extendDate = moment(new Date(data.dueDate)).toDate();
     this.api
       .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
         this.taskExtend.extendApprover,
@@ -1397,6 +1420,30 @@ export class CodxTasksComponent
         if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
+        if (
+          (x.functionID == 'TMT02015' || x.functionID == 'TMT02025') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an cap nhat tien do khi hoan tat
+        if (
+          (x.functionID == 'TMT02018' ||
+            x.functionID == 'TMT02026' ||
+            x.functionID == 'TMT02035') &&
+          data.status == '90'
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT026
+        if (
+          (x.functionID == 'SYS02' ||
+            x.functionID == 'SYS03' ||
+            x.functionID == 'SYS04') &&
+          this.funcID == 'TMT0206'
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }
@@ -1416,6 +1463,9 @@ export class CodxTasksComponent
     switch (e.type) {
       case 'drop':
         this.onDragDrop(e.data);
+        break;
+      case 'drag':
+        this.crrStatus = e?.data?.status;
         break;
       case 'dbClick':
         this.viewTask(e?.data);
@@ -1461,22 +1511,6 @@ export class CodxTasksComponent
     Title: 'Resources',
   };
 
-  viewChange(evt: any) {
-    let fied = this.gridView?.dateControl || 'DueDate';
-    console.log(evt);
-    // lấy ra ngày bắt đầu và ngày kết thúc trong evt
-    this.startDate = evt?.fromDate;
-    this.endDate = evt?.toDate;
-    //Thêm vào option predicate
-    this.model.filter = {
-      logic: 'and',
-      filters: [
-        { operator: 'gte', field: fied, value: this.startDate, logic: 'and' },
-        { operator: 'lte', field: fied, value: this.endDate, logic: 'and' },
-      ],
-    };
-  }
-
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
@@ -1494,14 +1528,16 @@ export class CodxTasksComponent
               (item as any).style.backgroundColor = this.dayoff[i].color;
             });
           }
-          return (
-            '<icon class="' +
-            this.dayoff[i].symbol +
-            '"></icon>' +
-            '<span>' +
-            this.dayoff[i].note +
-            '</span>'
-          );
+          if (this.dayoff[i].note) {
+            return (
+              '<icon class="' +
+              this.dayoff[i].symbol +
+              '"></icon>' +
+              '<span>' +
+              this.dayoff[i].note +
+              '</span>'
+            );
+          } else return null;
         }
       }
     }

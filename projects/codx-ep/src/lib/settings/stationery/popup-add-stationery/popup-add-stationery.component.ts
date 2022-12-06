@@ -53,7 +53,7 @@ export class PopupAddStationeryComponent extends UIComponent {
     },
   ];
   data: any = {};
-  dialog: DialogRef;
+  dialogRef: DialogRef;
   isAdd = true;
   colorItem: any;
   listColor = [];
@@ -65,6 +65,11 @@ export class PopupAddStationeryComponent extends UIComponent {
     { text: 'Thông tin khác', iconCss: 'icon-tune' },
   ];
   tmpTitle = '';
+  autoNumDisable = false;
+  imgRecID: any;
+  warehouseOwner: string = '';
+  warehouseOwnerName: string = '';
+  defaultWarehouse: string = '';
 
   constructor(
     private injector: Injector,
@@ -77,12 +82,28 @@ export class PopupAddStationeryComponent extends UIComponent {
     this.data = dt?.data[0];
     this.isAdd = dt?.data[1];
     this.tmpTitle = dt?.data[2];
-    this.dialog = dialog;
-    this.formModel = this.dialog.formModel;
+    this.dialogRef = dialog;
+    this.formModel = this.dialogRef.formModel;
+    if (this.isAdd) {
+      this.imgRecID = null;
+    } else {
+      this.imgRecID = this.data.recID;
+      this.defaultWarehouse = this.data.location;
+      this.warehouseOwnerName = this.data.ownerName;
+    }
   }
 
   onInit(): void {
     this.initForm();
+    this.epService
+      .getAutoNumberDefault(this.formModel.funcID)
+      .subscribe((autoN) => {
+        if (autoN) {
+          if (!autoN?.stop) {
+            this.autoNumDisable = true;
+          }
+        }
+      });
     this.columnsGrid = [
       // {
       //   field: 'noName',
@@ -109,11 +130,32 @@ export class PopupAddStationeryComponent extends UIComponent {
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item: any) => {
         this.dialogAddStationery = item;
+        if (this.isAdd) {
+          this.api
+            .exec('EP', 'WarehousesBusiness', 'GetDefaultWarehousesIDAsync', [])
+            .subscribe((res: string) => {
+              this.defaultWarehouse = res;
+              this.epService
+                .getWarehousesOwner(this.defaultWarehouse)
+                .subscribe((res: string) => {
+                  this.warehouseOwner = res[0];
+                  this.warehouseOwnerName = res[1];
+                  this.detectorRef.detectChanges();
+                });
+              this.dialogAddStationery.patchValue({
+                reservedQty: 0,
+                currentQty: 0,
+                availableQty: 0,
+                location: res,
+              });
+            });
+        }
         this.dialogAddStationery.patchValue({
           reservedQty: 0,
           currentQty: 0,
           availableQty: 0,
         });
+
         this.isAfterRender = true;
       });
   }
@@ -126,15 +168,18 @@ export class PopupAddStationeryComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.data.resourceType = '6';
     this.dialogAddStationery.patchValue(this.data);
+    if (this.dialogAddStationery.invalid == true) {
+      this.epService.notifyInvalid(this.dialogAddStationery, this.formModel);
+      return;
+    }
     let index: any;
     if (this.isAdd) {
       index = 0;
     } else {
       index = null;
     }
-    this.dialog.dataService
+    this.dialogRef.dataService
       .save((opt: any) => this.beforeSave(opt), index)
       .subscribe(async (res) => {
         if (res.save || res.update) {
@@ -143,24 +188,21 @@ export class PopupAddStationeryComponent extends UIComponent {
           } else {
             this.returnData = res.save;
           }
-          if(this.returnData?.recID)
-          {
-            if(this.imageUpload?.imageUpload?.item) {
+          if (this.returnData?.recID) {
+            if (this.imageUpload?.imageUpload?.item) {
               this.imageUpload
-              .updateFileDirectReload(this.returnData.recID)
-              .subscribe((result) => {
-                if (result) {                  
-                  //xử lí nếu upload ảnh thất bại
-                  //...
-                  this.dialog && this.dialog.close(this.returnData);                
-                }                
-              });  
-            }          
-            else 
-            {
-              this.dialog && this.dialog.close(this.returnData);
+                .updateFileDirectReload(this.returnData.recID)
+                .subscribe((result) => {
+                  if (result) {
+                    //xử lí nếu upload ảnh thất bại
+                    //...
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  }
+                });
+            } else {
+              this.dialogRef && this.dialogRef.close(this.returnData);
             }
-          } 
+          }
         } else {
           //Trả lỗi từ backend.
           return;
@@ -175,6 +217,19 @@ export class PopupAddStationeryComponent extends UIComponent {
       } else {
         this.data[event?.field] = event.data;
       }
+    }
+
+    if (event?.field == 'location') {
+      this.epService.getWarehousesOwner(event.data).subscribe((res: string) => {
+        this.warehouseOwner = res[0];
+        this.warehouseOwnerName = res[1];
+        this.detectorRef.detectChanges();
+      });
+    }
+
+    if (event?.field == 'owner') {
+      this.data.owner = this.warehouseOwner;
+      this.detectorRef.detectChanges();
     }
   }
 

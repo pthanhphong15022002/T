@@ -51,7 +51,7 @@ export class PopupAddCardsComponent implements OnInit {
   userReciver:string = "";
   userReciverName:string ="";
   lstShare:any[] = [];
-  gift:any;
+  gifts:any;
   giftCount:number;
   shareControl:string = "9";
   objectType:string ="";
@@ -119,7 +119,9 @@ export class PopupAddCardsComponent implements OnInit {
           this.title = func.description;
           this.cache.gridViewSetup(this.formName,this.gridViewName)
           .subscribe((grdSetUp:any) => {
-            if(grdSetUp && grdSetUp?.Rating?.referedValue){
+            if(grdSetUp && grdSetUp?.Rating?.referedValue)
+            {
+              console.log(grdSetUp)
               this.ratingVll = grdSetUp.Rating.referedValue;
               this.cache.valueList(this.ratingVll)
               .subscribe((vll:any) => {
@@ -156,7 +158,6 @@ export class PopupAddCardsComponent implements OnInit {
             this.getCountPointSend(this.user.userID, this.cardType,this.parameter.ActiveCoins);
           }
         }
-        console.log(this.parameter);
         this.dt.detectChanges();
       }
     })
@@ -194,7 +195,8 @@ export class PopupAddCardsComponent implements OnInit {
         if (res && res.length > 0)
         {
           this.lstPattern = res;
-          this.patternSelected = this.lstPattern.find((e:any)=> e.isDefault == true);
+          let patternDefault = this.lstPattern.find((e:any)=> e.isDefault == true);
+          this.patternSelected = patternDefault ? patternDefault : this.lstPattern[0]; 
           this.dt.detectChanges();
         }
       });
@@ -241,12 +243,12 @@ export class PopupAddCardsComponent implements OnInit {
         this.getGiftInfor(data);
         break;
       case "quantity":
-        if(!this.gift || !this.gift?.availableQty || !this.gift?.price){
+        if(!this.gifts || !this.gifts?.availableQty || !this.gifts?.price){
           this.form.patchValue({ quanlity : 0});
           this.notifySV.notify("Vui lòng chọn quà tặng");
           return;
         }
-        else if(data > this.gift.availableQty){
+        else if(data > this.gifts.availableQty){
           this.form.patchValue({ quanlity : this.quantityOld});
           this.notifySV.notify("Vượt quá số dư quà tặng");
           return;
@@ -254,7 +256,7 @@ export class PopupAddCardsComponent implements OnInit {
         else{
           this.quantityOld = data - 1;
           this.quantity = data;
-          this.amount = this.quantity * this.gift.price;
+          this.amount = this.quantity * this.gifts.price;
           this.form.patchValue({ quantity : data});
         }
         break;
@@ -287,6 +289,7 @@ export class PopupAddCardsComponent implements OnInit {
         break;
       case "receiver":
         this.userReciver = data;
+        this.userReciverName = e.component.itemsSelected[0].UserName;
         this.form.patchValue({receiver: this.userReciver});
         if(this.parameter.MaxReceiveControl == "1"){
           this.getCountCardRecive(data,this.cardType);
@@ -326,7 +329,8 @@ export class PopupAddCardsComponent implements OnInit {
       }
     })
   }
-  Save() {
+  Save() 
+  {
     if (!this.form.controls['receiver'].value) 
     {
       let mssg  = Util.stringFormat(this.mssgNoti, "Người nhận");
@@ -388,8 +392,9 @@ export class PopupAddCardsComponent implements OnInit {
           card.pattern = this.patternSelected.patternID;
         }
       }
-      if(this.gift){
+      if(this.gifts){
         card.hasGifts = true;
+        card.gifts = this.gifts;
       }
       if(this.givePoint > 0){
         card.hasPoints = true;
@@ -435,15 +440,6 @@ export class PopupAddCardsComponent implements OnInit {
         });
     }
     
-  }
-  postFeedBack(cardID:string,shareControl:string){
-    this.api
-      .execSv("WP", "ERM.Business.WP", "CommentsBusiness", "FeedBackPostAsync", [cardID,shareControl])
-      .subscribe((res) => {
-        if(res){
-          this.notifySV.notify("Thêm thành công!");
-        }
-      })
   }
   openFormShare(content: any) {
     this.callfc.openForm(content, '', 420, window.innerHeight);
@@ -539,7 +535,7 @@ export class PopupAddCardsComponent implements OnInit {
         "FD",
         "ERM.Business.FD",
         "GiftsBusiness",
-        "GetAsync",
+        "GetGiftAsync",
         [giftID]
       ).subscribe((res:any)=>{
         if(res)
@@ -547,8 +543,12 @@ export class PopupAddCardsComponent implements OnInit {
           if(res.availableQty <= 0){
             this.notifySV.notify("Số dư quà tặng không đủ");
           }
-          else{
-            this.gift = res;
+          else
+          {
+            if(this.gifts.length == 0){
+              this.gifts = [];
+            }
+            this.gifts.push(res);
             this.form.patchValue({giftID : giftID});
           }
         }

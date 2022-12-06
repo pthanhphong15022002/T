@@ -30,18 +30,17 @@ export class SelectweekComponent implements OnInit {
   beginMonth: Date;
   endMonth: Date;
   user: any;
-  locale = "en";
+  locale = 'en';
   @Output() onChangeValue = new EventEmitter();
   @Output() onChangeWeek = new EventEmitter();
+  @Output() onChangeNewWeek = new EventEmitter();
   isGenerateWeek = false;
   constructor(private changdefect: ChangeDetectorRef, private auth: AuthStore) {
     this.user = this.auth.get();
 
-    if(this.user && this.user.language)
-    {
-      var lang =this.user.language;
-      if(lang === "VN")
-        this.locale = 'vi';
+    if (this.user && this.user.language) {
+      var lang = this.user.language;
+      if (lang === 'VN') this.locale = 'vi';
     }
   }
 
@@ -76,7 +75,6 @@ export class SelectweekComponent implements OnInit {
   LoadFinished(i) {
     // if (this.isChangeWeek == true && this.isFinished == false) {
     this.isFinished = true;
-    this.onChangeWeek.emit();
     // }
     // this.isChangeWeek == false;
   }
@@ -114,6 +112,12 @@ export class SelectweekComponent implements OnInit {
       chooseDay = daySelected;
     }
     this.changeDaySelected(chooseDay, changeWeek);
+    this.onChangeNewWeek.emit({
+      fromDate: this.fromDate,
+      toDate: this.toDate,
+    });
+    this.changdefect.detectChanges();
+    this.onChangeWeek.emit();
   }
 
   renderEvent(date) {

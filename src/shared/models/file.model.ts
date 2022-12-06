@@ -122,7 +122,7 @@ export class FileUpload {
     publishYear: any;
     publishDate: any;
     copyRights: string;
-    data: string;
+    data: any;
     item: any;
     folderID: string;
     approval: any;
@@ -167,6 +167,7 @@ export class FileUpload {
     assign: any;
     write: any;
     viewThumb:any;
+    rawFile:any
 }
 
 

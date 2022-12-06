@@ -16,7 +16,11 @@ import {
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
-import { AuthService, CodxCoreModule, CacheRouteReuseStrategy } from 'codx-core';
+import {
+  AuthService,
+  CodxCoreModule,
+  CacheRouteReuseStrategy,
+} from 'codx-core';
 import { ERMModule, SharedModule } from '../shared';
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/vi';
@@ -24,7 +28,10 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { environment } from 'src/environments/environment';
 import { CoreModule } from 'src/core/core.module';
 import { TMModule } from 'projects/codx-tm/src/public-api';
-import { CodxEpModule } from 'projects/codx-ep/src/public-api';
+//import { CodxEpModule } from 'projects/codx-ep/src/public-api';
+import { CodxEp4Module } from 'projects/codx-ep/src/lib/room/codx-ep4.module';
+import { CodxEp7Module } from 'projects/codx-ep/src/lib/car/codx-ep7.module';
+import { CodxEp8Module } from 'projects/codx-ep/src/lib/stationery/codx-ep8.module';
 import { CodxEsModule } from 'projects/codx-es/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
@@ -32,19 +39,21 @@ import { FileComponent } from './file/file.component';
 import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
+import { CodxEiModule } from 'projects/codx-ei/src/public-api';
+
 
 registerLocaleData(localeFr);
 
 function appInitializer(authService: AuthService, appConfig: AppConfigService) {
   return () => {
     return new Promise((resolve) => {
-      appConfig.load().subscribe(res => {
+      appConfig.load().subscribe((res) => {
         authService.getUserByToken().subscribe((v) => {
           resolve(v);
         });
       });
     });
-  }
+  };
 }
 
 const ngxUiLoaderConfig: NgxUiLoaderConfig = {
@@ -78,10 +87,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 };
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    FileComponent
-  ],
+  declarations: [AppComponent, FileComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -91,7 +97,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     InlineSVGModule.forRoot(),
 
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
-    NgxUiLoaderRouterModule,//.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
+    NgxUiLoaderRouterModule, //.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule,
 
     SharedModule,
@@ -99,7 +105,11 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     ERMModule,
     CodxCoreModule.forRoot({ environment }),
     TMModule.forRoot({ environment }),
-    CodxEpModule.forRoot({ environment }),
+    //CodxEpModule.forRoot({ environment }),
+    CodxEp4Module.forRoot({ environment }),
+    CodxEp7Module.forRoot({ environment }),
+    CodxEp8Module.forRoot({ environment }),
+    CodxEiModule.forRoot({ environment }),
     CodxEsModule.forRoot({ environment }),
     CodxReportModule.forRoot({ environment }),
     AppRoutingModule,
@@ -108,14 +118,14 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
       animation: 'pulse',
       loadingText: 'This item is actually loading...',
     }),
-    NgbModule
+    NgbModule,
   ],
   exports: [],
   providers: [
     {
       provide: AppConfig,
       deps: [HttpClient],
-      useExisting: AppConfigService
+      useExisting: AppConfigService,
     },
     {
       provide: APP_INITIALIZER,
@@ -128,4 +138,4 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

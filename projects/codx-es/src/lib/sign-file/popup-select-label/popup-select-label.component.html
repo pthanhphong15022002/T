@@ -1,39 +1,110 @@
 <div class="d-flex flex-column position-relative popup-form p-4">
   <div class="close-btn d-flex justify-content-end align-self-end popup-header">
-    <button class="btn btn-flex text-dark-75 text-hover-primary px-0" (click)="closePopUp(false)"><span
-        class=" icon-close icon-18"></span></button>
+    <button
+      class="btn btn-flex text-dark-75 text-hover-primary px-0"
+      (click)="closePopUp(false)"
+    >
+      <span class="icon-close icon-18"></span>
+    </button>
   </div>
 
-  <div class="d-flex  mx-auto pt-12 popup-body card-scroll">
-    <div class=" d-flex flex-wrap">
-      <div class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
-        *ngFor="let label of labels; let idx = index">
-        <div class="img d-flex flex-column  text-center ">
-          <img style="max-width: 200px;" [src]="label.Image" />
-          <!-- <codx-vll
-  [showText]="true"
-  [showBgColor]="true"
-  [name]="'ES023'"
-  [value]="label.Type"
-  class="badge badge-light badge-md fs-7"
->
-</codx-vll> -->
-          <codx-input type="radio" name="radio" labelPosition="Before" [disabled]="false" value="radio"
-            (valueChange)="changeLabel(label)">
+  <div class="d-flex mx-auto pt-12 popup-body card-scroll">
+    <div class="d-flex flex-wrap">
+      <!-- Vung load label mac dinh -->
+      <div
+        class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
+        *ngFor="let label of defaultLabels; let idx = index"
+      >
+        <div class="img d-flex flex-column text-center">
+          <img style="max-width: 200px" [src]="label.Image" />
+
+          <codx-input
+            type="radio"
+            name="radio"
+            labelPosition="Before"
+            [disabled]="false"
+            value="radio"
+            (valueChange)="changeLabel(label.Image)"
+          >
           </codx-input>
         </div>
       </div>
+      <!-- Vung load label da save truoc do -->
+      <ng-container *ngIf="selfLabels">
+        <div
+          class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
+          *ngFor="let label of selfLabels; let idx = index"
+        >
+          <div class="img d-flex flex-column text-center">
+            <img style="max-width: 200px" [src]="label.pathDisk" />
+            <codx-input
+              type="radio"
+              name="radio"
+              labelPosition="Before"
+              [disabled]="false"
+              value="radio"
+              (valueChange)="changeLabel(label.pathDisk)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Vung load label vua save -->
+      <ng-container *ngIf="lstAddedFile">
+        <div
+          class="imgs d-flex me-4 mb-4 w-250px h-250px border rounded-4 align-items-center flex-center"
+          *ngFor="let label of lstAddedFile; let idx = index"
+        >
+          <div class="img d-flex flex-column text-center">
+            <img style="max-width: 200px" [src]="label.avatar" />
+            <codx-input
+              type="radio"
+              name="radio"
+              labelPosition="Before"
+              [disabled]="false"
+              value="radio"
+              (valueChange)="changeLabel(label.avatar)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
   <div class="ok-btn d-flex justify-content-end align-self-end popup-footer">
-    <!-- <codx-attachment #attachment [objectType]="'ES_SignFiles'" hideBtnSave="0" hideFolder="1" hideUploadBtn="1"
-      hideDes="1" hideImageUpload="1" hideImageThumb="1" [functionID]="funcID" [allowExtensions]="'.png, .jpg'"
-      [allowMultiFile]="1" [idBrowse]="'add'" [fdID]="folderID" [fdName]="folderName" [parentID]="parentID"
-      [objectId]="" (fileAdded)="fileAdded($event)" (fileCount)="fileSave($event)">
+    <codx-attachment
+      #attachment
+      [objectType]="'ES_SignFiles'"
+      hideBtnSave="0"
+      hideFolder="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      hideImageUpload="1"
+      hideImageThumb="1"
+      [functionID]="funcID"
+      [allowExtensions]="'.png, .jpg'"
+      [allowMultiFile]="1"
+      [idBrowse]="'add'"
+      [fdID]="folderID"
+      [fdName]="folderName"
+      [parentID]="parentID"
+      [objectId]=""
+      (fileAdded)="fileAdded($event)"
+      (fileCount)="fileSave($event)"
+    >
     </codx-attachment>
-    <button type="button" class="btn btn-light-primary me-3" (click)="popupUploadFile()">
-      <codx-label name="lblAttachFiles" default="Đính kèm" [formModel]=""></codx-label>
-    </button> -->
+    <button
+      type="button"
+      class="btn btn-light-primary me-3"
+      (click)="popupUploadFile()"
+    >
+      <codx-label
+        name="lblAttachFiles"
+        default="Đính kèm"
+        [formModel]=""
+      ></codx-label>
+    </button>
     <button type="button" class="btn btn-primary" (click)="closePopUp(true)">
       <codx-label name="lblChooseStamp" default="OK"></codx-label>
     </button>

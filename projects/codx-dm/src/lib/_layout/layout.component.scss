@@ -134,11 +134,6 @@
   white-space: nowrap;
 }
 
-
-.e-pane codx-treeview .aside-menu {
-  padding: 10px;
-}
-
 .aside-menu codx-temp-full .fw-bold {
   font-weight: 400 !important;
   line-height: 23px;
@@ -149,8 +144,6 @@
   width: 22px;
   height: 22px;
 }
-
-
 
 .aside-menu codx-temp-full {
   width: 100%;
@@ -306,4 +299,15 @@ ejs-switch .form-control {
 codx-view-tree-detail .e-pane.e-static-pane {
   flex-basis: 26% !important;
   min-width: 250px;
+}
+
+codx-views#dm .content-tree {
+  padding-right: 0 !important;
+
+}
+
+codx-views#dm .content-tree codx-mfunc .btn {
+  padding-top: 8px !important;
+  background-color: #fff !important;
+
 }

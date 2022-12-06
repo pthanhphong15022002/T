@@ -1,3 +1,20 @@
+import { PopupEBasicSalariesComponent } from './employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
+import { PopupEJobSalariesComponent } from './employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
+import { PopupEWorkPermitsComponent } from './employee-profile/popup-ework-permits/popup-ework-permits.component';
+import { PopupEVisasComponent } from './employee-profile/popup-evisas/popup-evisas.component';
+import { PopupETraincourseComponent } from './employee-profile/popup-etraincourse/popup-etraincourse.component';
+import { PopupESkillsComponent } from './employee-profile/popup-eskills/popup-eskills.component';
+import { PopupESelfInfoComponent } from './employee-profile/popup-eself-info/popup-eself-info.component';
+import { PopupEFamiliesComponent } from './employee-profile/popup-efamilies/popup-efamilies.component';
+import { PopupEDisciplinesComponent } from './employee-profile/popup-edisciplines/popup-edisciplines.component';
+import { PopupEDegreesComponent } from './employee-profile/popup-edegrees/popup-edegrees.component';
+import { PopupECertificatesComponent } from './employee-profile/popup-ecertificates/popup-ecertificates.component';
+import { PopupEAwardsComponent } from './employee-profile/popup-eawards/popup-eawards.component';
+import { PopupEAssurTaxBankComponent } from './employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
+import { PopupEmployeePartyInfoComponent } from './employee-profile/popup-employee-party-info/popup-employee-party-info.component';
+// import { EmployeeAssurTaxBankaccInfoComponent } from './employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
+// import { EmployeeFamilyRelationshipDetailComponent } from './employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
+// import { EmployeeFamilyRelationshipComponent } from './employee-profile/employee-family-relationship/employee-family-relationship.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -20,6 +37,7 @@ import { EmployeeInfomationComponent } from 'projects/codx-mwp/src/lib/employeei
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
+import { EmployeeProfileComponent } from './employee-list/employee-profile/employee-profile.component';
 import { EmpContactsComponent } from './empcontacts/emp-contacts.component';
 import { EmployeesComponent } from './employees/employees.component';
 import { PopupAddEmployeesComponent } from './employees/popup-add-employees/popup-add-employees.component';
@@ -49,6 +67,33 @@ import { ReportinglineOrgChartComponent } from './reportingline/reportingline-or
 import { ReportinglineComponent } from './reportingline/reportingline.component';
 import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
+import { EmployeeListComponent } from './employee-list/employee-list.component';
+import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
+// import { EmployeeSelfInfoComponent } from './employee-profile/employee-self-info/employee-self-info.component';
+// import { EmployeeLegalPassportInfoComponent } from './employee-profile/employee-legal-passport-info/employee-legal-passport-info.component';
+// import { PopupPassportComponent } from './employee-profile/employee-legal-passport-form/popup-passport.component';
+// import { EmployeeWorkingLisenceDetailComponent } from './employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
+// import { EmployeeWorkingLisenceComponent } from './employee-profile/employee-working-lisence/employee-working-lisence.component';
+// import { EmployeeVisaInfoComponent } from './employee-profile/employee-visa-info/employee-visa-info.component';
+// import { EmployeeVisaFormComponent } from './employee-profile/employee-visa-form/employee-visa-form.component';
+import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-view/tmp-grid-view.component';
+// import { EmployeeAwardsDetailComponent } from './employee-profile/employee-awards-detail/employee-awards-detail.component';
+// import { EmployeeAwardsInfoComponent } from './employee-profile/employee-awards-info/employee-awards-info.component';
+// import { EmployeeDisciplinesInfoComponent } from './employee-profile/employee-disciplines-info/employee-disciplines-info.component';
+// import { EmployeeDisciplinesDetailComponent } from './employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
+// import { EmployeeAllocatedPropertyDetailComponent } from './employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
+// import { EmployeeAllocatedPropertyComponent } from './employee-profile/employee-allocated-property/employee-allocated-property.component';
+// import { EmployeeSkillInfoComponent } from './employee-profile/employee-skill-info/employee-skill-info.component';
+// import { EmployeeSkillDetailComponent } from './employee-profile/employee-skill-detail/employee-skill-detail.component';
+// import { EmployeeCertificateDetailComponent } from './employee-profile/employee-certificate-detail/employee-certificate-detail.component';
+// import { EmployeeCertificateInfoComponent } from './employee-profile/employee-certificate-info/employee-certificate-info.component';
+// import { EmployeeDegreeDetailComponent } from './employee-profile/employee-degree-detail/employee-degree-detail.component';
+// import { EmployeeDegreeInfoComponent } from './employee-profile/employee-degree-info/employee-degree-info.component';
+// import { EmployeeTraincoursesComponent } from './employee-profile/employee-traincourses/employee-traincourses.component';
+import { PopupEAssetsComponent } from './employee-profile/popup-eassets/popup-eassets.component';
+import { PopupEPassportsComponent } from './employee-profile/popup-epassports/popup-epassports.component';
+import { PopupEexperiencesComponent } from './employee-profile/popup-eexperiences/popup-eexperiences.component';
+import { OrganizationOrgchartComponent } from './organization/organization-orgchart/organization-orgchart.component';
 
 export const routes: Routes = [
   {
@@ -62,6 +107,10 @@ export const routes: Routes = [
             path: 'contactbook/:funcID',
             component: EmpContactsComponent,
           },
+          {
+            path: 'employeelist/:funcID',
+            component: EmployeeListComponent,
+          },
         ],
       },
       {
@@ -71,6 +120,16 @@ export const routes: Routes = [
           {
             path: 'empinfosub/:funcID',
             component: EmployeeInfomationComponent,
+          },
+        ],
+      },
+      {
+        path: '',
+        component: LayoutOnlyHeaderComponent,
+        children: [
+          {
+            path: 'employeedetail/:funcID',
+            component: EmployeeProfileComponent,
           },
         ],
       },
@@ -91,6 +150,11 @@ export const routes: Routes = [
             component: EmployeesComponent,
           },
           {
+            path: 'employeelist/:funcID',
+            component: EmployeeListComponent,
+          },
+
+          {
             path: 'employeeleave/:funcID',
             component: EmployeesLeaveComponent,
           },
@@ -102,6 +166,7 @@ export const routes: Routes = [
           //   path: 'employeeinfomation/:funcID',
           //   component: EmployeeInfomationComponent,
           // },
+
           {
             path: 'setting',
             component: HRParametersComponent,
@@ -189,6 +254,51 @@ const T_Component: Type<any>[] = [
   TimeAgoPipe,
   ReportinglineOrgChartComponent,
   ReportinglineDetailComponent,
+  EmployeeListComponent,
+  EmployeeProfileComponent,
+  PopupAddNewHRComponent,
+  // EmployeeSelfInfoComponent,
+  // EmployeeFamilyRelationshipComponent,
+  // EmployeeFamilyRelationshipDetailComponent,
+  // EmployeeAssurTaxBankaccInfoComponent,
+  // EmployeeLegalPassportInfoComponent,
+  // PopupPassportComponent,
+  // EmployeeWorkingLisenceComponent,
+  // EmployeeWorkingLisenceDetailComponent,
+  // EmployeeVisaInfoComponent,
+  // EmployeeVisaFormComponent,
+  TmpGridViewComponent,
+  // EmployeeAwardsDetailComponent,
+  // EmployeeAwardsInfoComponent,
+  // EmployeeDisciplinesDetailComponent,
+  // EmployeeDisciplinesInfoComponent,
+  // EmployeeAllocatedPropertyComponent,
+  // EmployeeAllocatedPropertyDetailComponent,
+  // EmployeeSkillDetailComponent,
+  // EmployeeSkillInfoComponent,
+  // EmployeeCertificateInfoComponent,
+  // EmployeeCertificateDetailComponent,
+  // EmployeeDegreeDetailComponent,
+  // EmployeeDegreeInfoComponent,
+  // EmployeeTraincoursesComponent,
+  PopupEmployeePartyInfoComponent,
+  PopupEAssetsComponent,
+  PopupEPassportsComponent,
+  PopupEAssurTaxBankComponent,
+  PopupEAwardsComponent,
+  PopupECertificatesComponent,
+  PopupEDegreesComponent,
+  PopupEDisciplinesComponent,
+  PopupEFamiliesComponent,
+  PopupESelfInfoComponent,
+  PopupESkillsComponent,
+  PopupETraincourseComponent,
+  PopupEVisasComponent,
+  PopupEWorkPermitsComponent,
+  PopupEJobSalariesComponent,
+  PopupEBasicSalariesComponent,
+  PopupEexperiencesComponent,
+  OrganizationOrgchartComponent
 ];
 @NgModule({
   imports: [

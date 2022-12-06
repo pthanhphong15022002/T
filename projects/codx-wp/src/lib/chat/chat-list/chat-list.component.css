@@ -1,0 +1,37 @@
+.chat-list{
+    margin: 0px;
+    padding: 0px;
+    list-style: none;
+}
+.chat-list > li {
+    display: inline-block;
+    padding: 8px;
+    font-weight: bolder;
+}
+.list-group-chat{
+    margin-top: 10px;
+}
+.last-message{
+    display: inline-block;
+    width: 150px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+}
+.dots {
+    height: 6px;
+    width: 6px;
+    background-color: rgb(19, 101, 224);
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: calc(-1 * var(--bs-gutter-y));
+    margin-right: calc(-0.5 * var(--bs-gutter-x));
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+}

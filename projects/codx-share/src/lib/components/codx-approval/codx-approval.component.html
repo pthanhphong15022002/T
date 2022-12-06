@@ -18,12 +18,12 @@
     [title]="dvlApproval?.text"
     [icoCss]="
       dvlApproval?.icon +
-      ' w-30px d-flex h-30px justify-content-center align-items-center rounded-circle text-white'
+      ' w-35px d-flex h-35px justify-content-center align-items-center rounded-circle text-white me-3 fs-4'
     "
     [icoStyle]="setStyles(dvlApproval?.color)"
     [desc]="data?.htmlView"
     [statusVll]="'ES030'"
-    [status]="data?.status+data?.stepType"
+    [status]="data?.status + data?.stepType"
     [titleLine]="2"
     [date]="data.createdOn"
     [resources]="data?.createdBy"
@@ -45,11 +45,11 @@
     [header]="header"
     [dataItem]="dataItem"
     [formModel]="view?.formModel"
-    (changeDataMF)="changeMF($event,dataItem)"
+    (changeDataMF)="changeMF($event, dataItem)"
     [body]="body"
     [footer]="footer"
     (clickMF)="clickMF($event, dataItem)"
-    class="h-100"
+    class="h-100 dt-aprovel dt-es pt-2"
   ></codx-detail-tmp>
   <ng-template #header> </ng-template>
   <ng-template #body>
@@ -58,7 +58,13 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="view?.formModel?.entityName" [objectID]="recID" [funcID]="view?.formModel?.funcID"></codx-tabs>
+    <codx-tabs
+      [TabControl]="tabControl"
+      [entityName]="view?.formModel?.entityName"
+      [objectID]="transID"
+      [funcID]="view?.formModel?.funcID"
+    >
+    </codx-tabs>
   </ng-template>
   <!-- <div class="pe-6 pt-1">
     <codx-mfunc [formModel]="view.formModel" [isBookMark]="true" [dataItem]="dataItem"></codx-mfunc>

@@ -7,7 +7,12 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { CodxListviewComponent, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  CodxListviewComponent,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
 
 @Component({
   selector: 'app-home',
@@ -54,11 +59,17 @@ export class HomeComponent extends UIComponent implements OnInit {
     this.change.detectChanges();
   }
 
-  clickMF(e, data) {
-
-  }
+  clickMF(e, data) {}
 
   add() {
-    this.codxService.navigate('', 'sv/pop-add-survey');
+    this.codxService.navigate('', 'sv/add-survey');
+  }
+
+  update(item) {
+    this.codxService.navigate('', 'sv/add-survey', {
+      funcID: this.funcID,
+      title: item.title,
+      recID: item.recID,
+    });
   }
 }

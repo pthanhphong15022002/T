@@ -1,0 +1,193 @@
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="row">
+            <codx-label
+                default="Bảo hiểm xã hội"
+                [formModel]="formModel"
+            >
+            </codx-label>
+        </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="SIRegisterNo" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="siRegisterNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="SIRegisterOn" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="siRegisterOn"
+                    type="datetime"
+                    format="d"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="HICardNo" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="hiCardNo"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="HIDateOf5Years" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="hiDateOf5Years"
+                    type="datetime"
+                    format="d"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="HICardFrom" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="hiCardFrom"
+                    type="datetime"
+                    format="d"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="HICardTo" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="hiCardTo"
+                    type="datetime"
+                    format="d"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+        </div>
+
+        <div class=""form-group row>
+            <codx-label fiedName="HIHospitalID" [formModel] = "formModel"></codx-label>
+            <codx-input
+                field="hiHospitalID"
+                [Group] = "form.formGroup"
+                [formModel] = "form.formModel"
+            ></codx-input>
+        </div>
+
+        <div class="row">
+            <codx-label
+                default="Mã số thuế TNCN"
+                [formModel]="formModel"
+            >
+            </codx-label>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PITNumber" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="pitNumber"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PITIssuedOn" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="pitIssuedOn"
+                    type="datetime"
+                    format="d"
+                    [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                >
+                </codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label fiedName="PITPlace" [formModel] = "formModel"></codx-label>
+            <codx-input
+                field="pitPlace"
+                [Group] = "form.formGroup"
+                [formModel] = "form.formModel"
+            ></codx-input>
+        </div>
+
+        <div class="row">
+            <codx-label
+                default="Tài khoản cá nhân"
+                name="lblSelfAccount"
+                [formModel]="formModel"
+            >
+            </codx-label>
+        </div>
+
+        <div class="form-group row">
+            <codx-label fiedName="AccountNo"></codx-label>
+            <codx-input 
+                field = "accountNo"
+                [Group]= "form.formGroup"
+                [formModel] = "form.formModel"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label fiedName="AccountName"></codx-label>
+            <codx-input 
+                field = "accountName"
+                [Group]= "form.formGroup"
+                [formModel] = "form.formModel"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label fiedName="AccountBankID"></codx-label>
+            <codx-input 
+                field = "accountBankID"
+                [Group]= "form.formGroup"
+                [formModel] = "form.formModel"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label fiedName="AccountBankBranch"></codx-label>
+            <codx-input 
+                field = "accountBankBranch"
+                [Group]= "form.formGroup"
+                [formModel] = "form.formModel"
+            ></codx-input>
+        </div>
+    </ng-template>
+</codx-form>

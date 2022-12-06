@@ -1,7 +1,5 @@
-<div class="viewfile">
-  <div
-    class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between"
-  >
+<div *ngIf="!isPdf" class="viewfile">
+  <div  class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-center">
       <span class="icon-24 text-white"></span>
       <span class="ms-3 text-white font-size-h3"></span>
@@ -104,7 +102,8 @@
         [isEditable]="false"
         [inputUrl]="linkFile"
         [hideActions]="true"
-        class="h-100"
+        [hasPermission]="true"
+        class="h-100 w-100"
       ></lib-pdf
     ></ng-container>
   </div>

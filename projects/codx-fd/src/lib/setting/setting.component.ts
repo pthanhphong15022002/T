@@ -151,7 +151,6 @@ export class SettingComponent extends UIComponent implements OnInit {
   getParameter() {
     this.settingSV.getParameter().subscribe((result: any) => {
       if (result) this.parameter = JSON.parse(result.dataValue);
-      console.log('check parameter', this.parameter);
     });
   }
 

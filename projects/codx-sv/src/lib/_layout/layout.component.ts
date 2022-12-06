@@ -10,6 +10,7 @@ export class LayoutComponent extends LayoutBaseComponent {
   dialog!: DialogRef;
   override aside = false;
   override asideFixed = false;
+  override toolbar = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   constructor(inject: Injector) {
     super(inject);

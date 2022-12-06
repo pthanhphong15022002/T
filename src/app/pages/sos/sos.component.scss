@@ -30,17 +30,10 @@
 .process-per {
     margin-left: -40px;
     color: var(--primary-inverse);
-    line-height: 20px;
 }
 
-.pic-face {
-    position: absolute;
-    top: 0;
-    left: 50%;
-}
-
+.pic-face,
 .pic-local {
     position: absolute;
-    top: 0;
-    left: 50%;
+    top: -3px;
 }

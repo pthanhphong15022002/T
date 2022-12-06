@@ -10,6 +10,7 @@ import {
 import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import {
   AlertConfirmInputConfig,
+  AuthStore,
   ButtonModel,
   CallFuncService,
   CodxListviewComponent,
@@ -115,6 +116,7 @@ export class IncommingComponent
   showAgency = false;
   dataItem: any;
   funcList: any;
+  userID: any;
   ///////////Các biến data valuelist/////////////////
 
   ///////////Các biến data default///////////////////
@@ -128,13 +130,19 @@ export class IncommingComponent
   notifySvr: NotificationsService;
   atSV: AttachmentService;
   fileService: FileService;
-  constructor(inject: Injector, private route: ActivatedRoute ,  private codxODService : CodxOdService,) {
+  authStore: AuthStore;
+  constructor(
+    inject: Injector,
+    private route: ActivatedRoute,
+    private codxODService: CodxOdService
+  ) {
     super(inject);
     this.odService = inject.get(DispatchService);
     this.agService = inject.get(AgencyService);
     this.callfunc = inject.get(CallFuncService);
     this.notifySvr = inject.get(NotificationsService);
     this.atSV = inject.get(AttachmentService);
+    this.authStore = inject.get(AuthStore);
     // this.codxService = inject.get(CodxService);
     this.fileService = inject.get(FileService);
   }
@@ -152,11 +160,12 @@ export class IncommingComponent
     this.request.className = 'DispatchesBusiness';
     this.request.method = 'GetListByStatusAsync';
     this.request.idField = 'recID';
+    this.userID = this.authStore.get().userID;
   }
   ngAfterViewInit(): void {
     this.views = [
       {
-        id:"1",
+        id: '1',
         type: ViewType.listdetail,
         active: true,
         sameData: true,
@@ -168,7 +177,7 @@ export class IncommingComponent
         },
       },
       {
-        id:"2",
+        id: '2',
         type: ViewType.kanban,
         active: false,
         sameData: false,
@@ -236,8 +245,6 @@ export class IncommingComponent
       (x: { functionID: string }) =>
         x.functionID == 'ODT111' || x.functionID == 'ODT210'
     );
-    /*  var blur =  e.filter((x: { functionID: string }) => x.functionID == 'ODT108');
-    blur[0].isblur = true; */
     if (data?.isBookmark) {
       bm[0].disabled = true;
       unbm[0].disabled = false;
@@ -253,8 +260,35 @@ export class IncommingComponent
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
-      approvel[0].disabled = true;
+      if(approvel[0]) approvel[0].disabled = true;
     }
+
+    if (this.view.formModel.funcID == 'ODT41') {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT212'
+      );
+      if(approvel[0]) approvel[0].disabled = true;
+    }
+
+    if (
+      this.view.formModel.funcID == 'ODT41' &&
+       data?.approveStatus == '3' &&
+      data?.createdBy == this.userID
+    ) {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT212'
+      );
+      if(approvel[0]) approvel[0].disabled = false;
+    }
+     //Từ chối , Bị đóng 
+     if(data?.status == "9" || data?.approveStatus == "4")
+     {
+       var approvel = e.filter(
+         (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211'
+       );
+       if(approvel[0]) approvel[0].disabled = true;
+     }
+    //Hoàn tất
     if (data?.status == '7') {
       var completed = e.filter(
         (x: { functionID: string }) =>
@@ -263,7 +297,9 @@ export class IncommingComponent
           x.functionID == 'SYS02' ||
           x.functionID == 'SYS03' ||
           x.functionID == 'ODT103' ||
-          x.functionID == 'ODT202'
+          x.functionID == 'ODT202' ||
+          x.functionID == 'ODT101' ||
+          x.functionID == 'ODT113'
       );
       for (var i = 0; i < completed.length; i++) {
         completed[i].disabled = true;
@@ -273,7 +309,21 @@ export class IncommingComponent
       var completed = e.filter(
         (x: { functionID: string }) => x.functionID == 'SYS02'
       );
-      completed[0].disabled = true;
+      completed.forEach((elm) => {
+        elm.disabled = true;
+      });
+    }
+    var approvelCL = e.filter(
+      (x: { functionID: string }) => x.functionID == 'ODT114'
+    );
+    if (approvelCL[0]) approvelCL[0].disabled = true;
+    //Trả lại
+    if (data?.status == '4') {
+      var approvel = e.filter(
+        (x: { functionID: string }) => x.functionID == 'ODT113'
+      );
+      if (approvel[0]) approvel[0].disabled = true;
+      if (approvelCL[0]) approvelCL[0].disabled = false;
     }
   }
   aaaa(e: any) {
@@ -299,6 +349,7 @@ export class IncommingComponent
         .loadGridView(fuc?.formName, fuc?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetup = grd;
+          console.log(this.gridViewSetup);
           if (grd['Security']['referedValue'] != undefined)
             this.codxODService
               .loadValuelist(grd['Security']['referedValue'])
@@ -365,13 +416,15 @@ export class IncommingComponent
     this.lstDtDis = null;
     if (id) {
       this.lstUserID = '';
-      this.odService.getDetailDispatch(id,this.view.formModel.entityName).subscribe((item) => {
-        //this.getChildTask(id);
-        if (item) {
-          this.lstDtDis = formatDtDis(item);
-          //this.view.dataService.setDataSelected(this.lstDtDis);
-        }
-      });
+      this.odService
+        .getDetailDispatch(id, this.view.formModel.entityName)
+        .subscribe((item) => {
+          //this.getChildTask(id);
+          if (item) {
+            this.lstDtDis = formatDtDis(item);
+            //this.view.dataService.setDataSelected(this.lstDtDis);
+          }
+        });
     }
   }
 
@@ -403,7 +456,6 @@ export class IncommingComponent
       recID = dt.recID;
       this.dataItem = dt;
     }
-
     this.getDtDis(recID);
   }
   fileAdded(event: any) {
@@ -432,7 +484,7 @@ export class IncommingComponent
     console.log(evt);
   }
   openFormFuncID(val: any, data: any) {
-    this.viewdetail.openFormFuncID(val, data);
+    this.viewdetail.openFormFuncID(val, data, true);
   }
   viewChange(e: any) {
     var funcID = e?.component?.instance?.funcID;

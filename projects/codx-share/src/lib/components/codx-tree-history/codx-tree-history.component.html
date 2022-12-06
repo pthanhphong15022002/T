@@ -5,6 +5,7 @@
                 [type]="'create'" 
                 [dVll]="dVll" [vllIcon]="vllIcon" 
                 [funcID]="funcID" 
+                [formModel]="formModel"
                 [actionType]="actionType" 
                 [objectID]="objectID"
                 [objectType]="objectType" 
@@ -15,7 +16,9 @@
     </ng-container>
     <div class="tree-body">
         <ng-container *ngFor="let node of root.listSubComment">
-            <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+            <ng-container *ngIf="node">
+                <ng-container *ngTemplateOutlet="NodeHistory; context: { $implicit: node }"></ng-container>
+            </ng-container>
         </ng-container>
     </div>
 </div>
@@ -27,6 +30,7 @@
             [vllIcon]="vllIcon"  
             [actionType]="item.actionType" 
             [type]="'view'"
+            [formModel]="formModel"
             (evtDelete)="deleteComment($event)" 
             (evtReply)="replyTo($event)" 
             [viewIcon]="viewIcon"
@@ -40,8 +44,14 @@
             </ng-container>
         </ng-container>
         <ng-container *ngIf="item.showReply">
-            <codx-comment-history [type]="'create'" [funcID]="funcID" [actionType]="actionType"
-                [objectID]="item.objectID" [objectType]="item.objectType" [reference]="item.recID"
+            <codx-comment-history 
+                [type]="'create'" 
+                [funcID]="funcID" 
+                [actionType]="actionType"
+                [formModel]="formModel"
+                [objectID]="objectID" 
+                [objectType]="objectType" 
+                [reference]="item.recID"
                 (evtSend)="sendComment($event,item)">
             </codx-comment-history>
         </ng-container>

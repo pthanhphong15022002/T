@@ -1,0 +1,206 @@
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText]="headerText"
+    [body]="body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="DisciplineID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="disciplineID"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="DisciplineDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="disciplineDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="DisciplineFormCategory"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="disciplineFormCategory"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="DisciplinePlace"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="disciplinePlace"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Reason"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="reason"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Content"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="content"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="IsLimit"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="isLimit"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="LimitMonths"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="limitMonths"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="FromDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="fromDate"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ToDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="toDate"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="DecisionNo"
+                    [formModel] = "formModel"
+                ></codx-label>
+                <codx-input
+                    field="decisionNo"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="SignedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="signedDate"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="SignerID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="signerID"
+                [Group]="formGroup"
+                [formModel]="formModel"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="SignerPosition"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="signerPosition"
+                [Group]="formGroup"
+                [formModel]="formModel"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Note"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="note"
+                [Group]="formGroup"
+                [formModel]="formModel"
+            ></codx-input>
+        </div>
+    </ng-template>
+</codx-form>

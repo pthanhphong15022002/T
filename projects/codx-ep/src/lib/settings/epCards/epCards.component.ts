@@ -14,6 +14,7 @@ import {
   ButtonModel,
   DialogRef,
   FormModel,
+  NotificationsService,
   SidebarModel,
   UIComponent,
   ViewModel,
@@ -22,6 +23,7 @@ import {
 } from 'codx-core';
 import { PopupAddEpCardsComponent } from './popup-add-epCards/popup-add-epCards.component';
 import { Router } from '@angular/router';
+import { AnyAaaaRecord } from 'dns';
 
 @Component({
   selector: 'setting-epCards',
@@ -49,36 +51,36 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '7';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
   allocationCard = 1;
   returnCard = 2;
-  currCardID:any;
-  currTrans:number;
-  cardTranReturnFM:FormModel;
-  cardTranReceiveFM:FormModel;  
-  cardTranReturnGRV:any;
-  cardTranReceiveGRV:any;
-  curPopupGrv:any;
-  curPopupFM:FormModel;
-  curPopupFG:FormGroup;
-  cardTranReturnFG:FormGroup;
-  cardTranReceiveFG:FormGroup;
+  currCardID: any;
+  currTrans: number;
+  cardTranReturnFM: FormModel;
+  cardTranReceiveFM: FormModel;
+  cardTranReturnGRV: any;
+  cardTranReceiveGRV: any;
+  curPopupGrv: any;
+  curPopupFM: FormModel;
+  curPopupFG: FormGroup;
+  cardTranReturnFG: FormGroup;
+  cardTranReceiveFG: FormGroup;
   //biến lưu data cho popup
-  cardUserID:string;
-  cardDate:any;
-  cardNote:any;
-
+  cardUserID: string;
+  cardDate: any;
+  cardNote: any;
+  popupDialog: any;
+  selectedCard:any;
+  popupClosed=true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
     private routers: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private authService: AuthService,
-    
+    private notificationsService: NotificationsService,
+    private authService: AuthService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -93,8 +95,6 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         });
       }
     });
-
-    
   }
 
   onInit(): void {
@@ -105,35 +105,43 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     this.buttons = {
       id: 'btnAdd',
     };
-    this.codxEpService.getFormModel('EPT22').then((ept22)=>{
+    this.codxEpService.getFormModel('EPT22').then((ept22) => {
       if (ept22) {
         this.cardTranReceiveFM = ept22; //cấp thẻ
-        this.cache.gridViewSetup(ept22.formName,ept22.gridViewName).subscribe((grv22)=>{
-          if(grv22){
-            this.cardTranReceiveGRV=grv22;
-          }
-        })
-        this.codxEpService.getFormGroup(ept22.formName,ept22.gridViewName).then((fg22)=>{
-          if(fg22){
-            this.cardTranReceiveFG=fg22;
-          }
-        });
+        this.cache
+          .gridViewSetup(ept22.formName, ept22.gridViewName)
+          .subscribe((grv22) => {
+            if (grv22) {
+              this.cardTranReceiveGRV = grv22;
+            }
+          });
+        this.codxEpService
+          .getFormGroup(ept22.formName, ept22.gridViewName)
+          .then((fg22) => {
+            if (fg22) {
+              this.cardTranReceiveFG = fg22;
+            }
+          });
       }
     });
 
-    this.codxEpService.getFormModel('EPT23').then((ept23)=>{
+    this.codxEpService.getFormModel('EPT23').then((ept23) => {
       if (ept23) {
         this.cardTranReturnFM = ept23; //trả
-        this.cache.gridViewSetup(ept23.formName,ept23.gridViewName).subscribe((grv23)=>{
-          if(grv23){
-            this.cardTranReturnGRV=grv23;
-          }
-        });
-        this.codxEpService.getFormGroup(ept23.formName,ept23.gridViewName).then((fg23)=>{
-          if(fg23){
-            this.cardTranReturnFG=fg23;
-          }
-        });
+        this.cache
+          .gridViewSetup(ept23.formName, ept23.gridViewName)
+          .subscribe((grv23) => {
+            if (grv23) {
+              this.cardTranReturnGRV = grv23;
+            }
+          });
+        this.codxEpService
+          .getFormGroup(ept23.formName, ept23.gridViewName)
+          .then((fg23) => {
+            if (fg23) {
+              this.cardTranReturnFG = fg23;
+            }
+          });
       }
     });
     this.detectorRef.detectChanges();
@@ -193,8 +201,8 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
     }
   }
 
-  clickMF(event, data) {    
-    this.currCardID=data.resourceID;
+  clickMF(event, data) {
+    this.currCardID = data.resourceID;
     this.popupTitle = event?.text + ' ' + this.funcIDName;
     switch (event?.functionID) {
       case 'SYS02':
@@ -207,16 +215,26 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         this.copy(data);
         break;
       case 'EPS2501': //cấp thẻ
-        this.curPopupFM=this.cardTranReceiveFM;
-        this.curPopupGrv=this.cardTranReceiveGRV;
-        this.curPopupFG=this.cardTranReceiveFG;
-        this.openPopupCardFunction(this.cardTranTmp,this.allocationCard,event.text);
+        this.curPopupFM = this.cardTranReceiveFM;
+        this.curPopupGrv = this.cardTranReceiveGRV;
+        this.curPopupFG = this.cardTranReceiveFG;
+        this.openPopupCardFunction(
+          this.cardTranTmp,
+          this.allocationCard,
+          event.text,
+          data
+        );
         break;
       case 'EPS2502': //trả thẻ
-        this.curPopupFM=this.cardTranReturnFM;
-        this.curPopupGrv=this.cardTranReturnGRV;
-        this.curPopupFG=this.cardTranReturnFG;
-        this.openPopupCardFunction(this.cardTranTmp,this.returnCard,event.text);
+        this.curPopupFM = this.cardTranReturnFM;
+        this.curPopupGrv = this.cardTranReturnGRV;
+        this.curPopupFG = this.cardTranReturnFG;
+        this.openPopupCardFunction(
+          this.cardTranTmp,
+          this.returnCard,
+          event.text,
+          data
+        );
         break;
       case 'EPS2503': //lịch sử thẻ
         this.historyCard(event?.data.url + '/' + data.recID);
@@ -239,81 +257,96 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
   }
 
   addNew() {
-    this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddEpCardsComponent,
-        [this.dataSelected, true, this.popupTitle],
-        option
-      );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event == null && this.view.dataService.hasSaved)
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.changeDetectorRef.detectChanges();
-            });
-        else if (x.event) {
-          x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
-        }
+    if (this.popupClosed) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        this.dataSelected = this.view.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddEpCardsComponent,
+          [this.dataSelected, true, this.popupTitle],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          this.popupClosed = true;
+          if (!x.event) this.view.dataService.clear();
+          if (x.event == null && this.view.dataService.hasSaved)
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected])
+              .subscribe((x) => {
+                this.changeDetectorRef.detectChanges();
+              });
+          else if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       });
-    });
+    }
   }
 
   edit(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddEpCardsComponent,
-            [this.view.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {});
-            }
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddEpCardsComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => {});
+              }
+            });
           });
-        });
+      }
     }
   }
 
   copy(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddEpCardsComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((x) => {
-            if (x?.event) {
-              x.event.modifiedOn = new Date();
-              this.view.dataService.update(x.event).subscribe((res) => {});
-            }
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .copy(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddEpCardsComponent,
+              [this.view.dataService.dataSelected, true, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => {});
+              }
+            });
           });
-        });
+      }
     }
   }
 
@@ -335,53 +368,83 @@ export class EpCardsComponent extends UIComponent implements AfterViewInit {
         }
       });
     }
-  }  
-  openPopupCardFunction(template: any, type :number ,title:any) {
-    let time =new Date();
-    this.cardDate=time;
-    this.currTrans=type;
-    this.popupTitle=title;
-    var dialog = this.callfc.openForm(template,title, 550, 350);
+  }
+  openPopupCardFunction(template: any, type: number, title: any,data:any) {
+    this.selectedCard=data;
+    let time = new Date();
+    this.cardDate = time;
+    this.currTrans = type;
+    this.popupTitle = title;
+    this.popupDialog = this.callfc.openForm(template, title, 550, 350);
     this.detectorRef.detectChanges();
   }
   historyCard(url: any) {
     this.codxService.navigate('', url);
   }
-  valueUserIDChange(e:any){
+  valueUserIDChange(e: any) {
     this.cardUserID = e.data;
     this.changeDetectorRef.detectChanges();
   }
-  valueDateChange(e:any){
+  valueDateChange(e: any) {
     this.cardDate = e.data.fromDate;
     this.changeDetectorRef.detectChanges();
   }
-  valueNoteChange(e:any){
+  valueNoteChange(e: any) {
     this.cardNote = e.data;
     this.changeDetectorRef.detectChanges();
   }
-  createCardTrans(currTrans:number){
-    this.curPopupFG.patchValue({
-      userID:this.cardUserID,
-      transDate:this.cardDate,
-      note:this.cardNote,
-      resourceType:'1',
-      createBy:this.authService.userValue.userID,
-      transType:currTrans,
-      status:'1',
-      resourceID:this.currCardID,
-    })
+  changeDataMF(event, data:any) {        
+    if(event!=null && data!=null){
+      // event.forEach(func => {        
+      //   func.disabled=true;        
+      // });
+      if(data.status=='1'){
+        event.forEach(func => {
+          if(func.functionID == "EPS2501" /*MF cấp*/ )
+          {
+            func.disabled=true;
+          }
+        });  
+      }
+      else{
+        event.forEach(func => {
+          if(func.functionID == "EPS2502"/*MF trả*/)
+          {
+            func.disabled=true;
+          }
+        });  
+      }
+    }
+  }
+  createCardTrans(currTrans: number) {
+    // this.curPopupFG.patchValue({
+    //   userID: this.cardUserID,
+    //   transDate: this.cardDate,
+    //   note: this.cardNote,
+    //   resourceType: '2',
+    //   createBy: this.authService.userValue.userID,
+    //   transType: currTrans,
+    //   status: '1',
+    //   resourceID: this.currCardID,
+    // });
     this.api
       .execSv(
         'EP',
         'ERM.Business.EP',
         'ResourceTransBusiness',
-        'AddResourceTransAsync',
-        [this.curPopupFG.value]
+        'AddEPResourceTransAsync',
+        [this.currCardID,this.cardUserID,this.cardDate,this.cardNote,currTrans]
       )
-      .subscribe(res=>{
-        if(res){
-          console.log("resourceTranAdd",res);
+      .subscribe((res) => {
+        if (res) {
+          this.selectedCard.status=currTrans;
+          this.view.dataService.update(this.selectedCard).subscribe((res) => {});          
+          this.popupDialog.close();
+          this.notificationsService.notifyCode('SYS034');    
         }
+        this.cardUserID=null;
+        this.cardDate=null;
+        this.cardNote=null;
       });
   }
 }

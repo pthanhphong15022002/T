@@ -1,0 +1,7 @@
+<div class="container">
+    <ng-container *ngFor="let item of listHistory">
+        <div class="row p-2">
+            <codx-history-item [data]="item" [funcID]="funcID" [formModel]="formModel"></codx-history-item>
+        </div>
+    </ng-container>
+</div>

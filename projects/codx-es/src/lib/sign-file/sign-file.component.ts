@@ -92,6 +92,7 @@ export class SignFileComponent extends UIComponent {
   dialog: DialogRef;
 
   buttons: Array<ButtonModel> = [];
+  moreFunc: Array<ButtonModel> = [];
   views: Array<ViewModel> | any = []; // @ViewChild('uploadFile') uploadFile: TemplateRef<any>;
 
   lstReferValue;
@@ -172,6 +173,13 @@ export class SignFileComponent extends UIComponent {
         },
       },
     ];
+    this.moreFunc = [
+      {
+        id: 'btnOverdue',
+        icon: 'icon-list-chechbox',
+        text: 'Duyệt quá hạn',
+      },
+    ];
     this.df.detectChanges();
   }
 
@@ -213,6 +221,9 @@ export class SignFileComponent extends UIComponent {
     switch (evt.id) {
       case 'btnAdd':
         this.addNew();
+        break;
+      case 'btnOverdue':
+        this.esService.overdue().subscribe();
         break;
     }
   }
@@ -297,20 +308,24 @@ export class SignFileComponent extends UIComponent {
     var unbm = e.filter(
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
+    var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
 
     if (bookmarked == true) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
+      if (bm?.length) bm[0].disabled = true;
+      if (unbm?.length) unbm[0].disabled = false;
     } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if (unbm?.length) unbm[0].disabled = true;
+      if (bm?.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != 3) {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
-      cancel[0].disabled = true;
+      if (cancel?.length) cancel[0].disabled = true;
+    }
+    if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (edit?.length) edit[0].disabled = true;
     }
   }
 

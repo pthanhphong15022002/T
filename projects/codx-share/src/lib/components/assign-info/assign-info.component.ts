@@ -91,11 +91,11 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dueDate = this.task?.dueDate;
     this.dueDate = this.task?.dueDate;
     this.taskName = this.task?.taskName;
-    if (dt?.data[0]?.taskID) this.taskParent = dt?.data[0];
-
+ 
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
+    this.taskParent = dt?.data[4];
     this.dialog = dialog;
     this.user = this.authStore.get();
     this.formModel = this.dialog.formModel;
@@ -160,7 +160,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refType = this.refType;
     this.task.taskName = this.taskName;
     if (this.taskParent) {
-      // this.task.parentID = this.taskParent.recID ;
+      this.task.parentID = this.taskParent.recID ;
       this.task.dueDate = this.taskParent.dueDate;
       this.task.endDate = this.taskParent.endDate;
       this.task.startDate = this.taskParent.startDate;
@@ -172,7 +172,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.projectID = this.taskParent.projectID;
       this.task.location = this.taskParent.location;
       this.task.tags = this.taskParent.tags;
-      this.task.refID = this.refID ? this.refID : this.taskParent.recID;
+      this.task.refID = this.refID? this.refID : this.taskParent.recID;
       this.task.refNo = this.taskParent.taskID;
       this.task.taskType = this.taskParent.taskType;
       this.copyListTodo(this.taskParent.taskID);
@@ -459,19 +459,23 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     var assignTo = '';
     var listDepartmentID = '';
     var listUserID = '';
+    var listPositionID = '';
 
     e?.data?.forEach((obj) => {
-      // if (obj?.data && obj?.data != '') {
-      switch (obj.objectType) {
-        case 'U':
-          listUserID += obj.id + ';';
-          break;
-        case 'O':
-        case 'D':
-          listDepartmentID += obj.id + ';';
-          break;
+      if (obj.objectType && obj.id) {
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+          case 'P':
+            listPositionID += obj.id + ';';
+            break;
+        }
       }
-      //  }
     });
     if (listUserID != '') {
       listUserID = listUserID.substring(0, listUserID.length - 1);
@@ -484,12 +488,28 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
         listDepartmentID.length - 1
       );
       this.tmSv.getUserByListDepartmentID(listDepartmentID).subscribe((res) => {
-        if (res) {
-          assignTo += res;
-          if (listUserID != '') assignTo += ';' + listUserID;
-          this.valueSelectUser(assignTo);
-        }
+        if (res && res.trim() != '') {
+          if (
+            res.trim() == '' ||
+            res.split(';')?.length != listDepartmentID.split(';')?.length
+          )
+            this.notiService.notifyCode('TM065');
+          this.valueSelectUser(res);
+        } else this.notiService.notifyCode('TM065');
       });
+    }
+
+    if (listPositionID != '') {
+      listPositionID = listPositionID.substring(0, listPositionID.length - 1);
+      this.tmSv
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notiService.notifyCode('TM066');
+            assignTo = res[0];
+            this.valueSelectUser(assignTo);       
+          } else this.notiService.notifyCode('TM066');
+        });
     }
   }
 
@@ -521,7 +541,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       listUser = listUser.replace(' ', '');
     }
     var arrUser = listUser.split(';');
-    if(!this.listUser) this.listUser = []
+    if (!this.listUser) this.listUser = [];
     this.listUser = this.listUser.concat(arrUser);
     this.api
       .execSv<any>(
@@ -617,6 +637,17 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
               this.listTodo.push(taskG);
             });
           }
+          if (
+            this.taskGroup?.planControl == '1' &&
+            this.task.startDate == null
+          ) {
+            this.task.startDate = new Date();
+          }
+          // else {
+          //   this.task.startDate = null;
+          //   this.task.endDate = null;
+          //   this.task.estimated = 0;
+          // }
           this.convertParameterByTaskGroup(this.taskGroup);
         }
       });
@@ -635,7 +666,14 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.taskType = param?.TaskType;
-          //  this.paramModule = param;
+          if (this.param?.PlanControl == '1' && this.task.startDate == null) {
+            this.task.startDate = new Date();
+          }
+          //  else {
+          //   this.task.startDate = null;
+          //   this.task.endDate = null;
+          //   this.task.estimated = 0;
+          // }
         }
       });
   }

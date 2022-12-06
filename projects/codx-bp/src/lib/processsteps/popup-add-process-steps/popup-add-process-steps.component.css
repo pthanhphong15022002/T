@@ -1,9 +1,39 @@
 .user-mini-nav {
-    height: 29px;
-    padding: 2px 10px 2px 2px !important;
-    border-radius: 20px;
-    margin-bottom: 3px;
-    background-color: #f3f3f3;
-    margin-right: 3px;
-    float: left;
+  height: 29px;
+  padding: 2px 10px 2px 2px !important;
+  border-radius: 20px;
+  margin-bottom: 3px;
+  background-color: #f3f3f3;
+  margin-right: 3px;
+  float: left;
+}
+.note ::ng-deep span.codx-label {
+  width: 100%;
+  margin-top: 12px;
+}
+.button-mail {
+  border: 1px solid #ced4da;
+  background: none;
+  outline: none;
+  border-radius: 2px;
+  height: 31.5px;
+  margin-left: 5px;
+}
+.icon-email {
+  color: #747474;
+}
+/* ::ng-deep .e-popup-open{
+    z-index: 1005 !important;
+} */
+.owners{
+  background: #dcdedf;
+  padding: 7px;
+  border-radius: 20px;
+  padding-left: 12px;
+  display: flex;
+  align-items: center;
+}
+.owners .owners-text{
+  margin-left: 10px;
+  color: #767676;
 }

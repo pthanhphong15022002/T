@@ -109,15 +109,15 @@ export class ShareComponent implements OnInit {
 
   ngOnInit(): void {   
     this.user = this.auth.get();       
-   
+    if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
   }
 
-  checkContent() {    
-    if (this.shareContent === "")
-       return false;
-     else
-       return true;
-   }
+
+  checkContent() 
+  {    
+    if (this.shareContent == "")  return false;
+    return true;
+  }
 
   validate(item) {
     //  fileName
@@ -149,6 +149,7 @@ export class ShareComponent implements OnInit {
     var list = [];
     if ($event.data != undefined) {
       var data = $event.data;
+      debugger;
       for(var i=0; i<data.length; i++) {
         var item = data[i];
         var perm = new Permission;               
@@ -156,7 +157,7 @@ export class ShareComponent implements OnInit {
         perm.endDate = this.endDate;
         perm.isSystem = false;
         perm.isActive = true;
-        perm.objectName = item.text;
+        perm.objectName = item.text ? item.text : item.objectName;
         perm.objectID = item.id;
         perm.objectType = item.objectType;
         perm.read = true;        
@@ -233,7 +234,7 @@ export class ShareComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-
+    if(!this.isShare && !this.checkPermission(this.fileEditing.permissions , this.byPermission)) return this.notificationsService.notifyCode("DM066");
     //  if (this.updateRequestShare())
     this.fileEditing.toPermission = this.toPermission;
     this.fileEditing.byPermission = this.byPermission;
@@ -314,6 +315,17 @@ export class ShareComponent implements OnInit {
     this.dialog.close();
   }  
 
+  checkPermission(permiss:any , upermiss:any)
+  {
+    var result = false;
+    for(var i = 0 ; i< upermiss.length ; i++)
+    {
+      var check = permiss.filter(x=>x.objectID == upermiss[i].objectID);
+      if(!check || !check[0]?.assign) return false;
+      else result = true;
+    }
+    return result;
+  }
   copyPath() {
     this.copyToClipboard(this.getPath())
       .then(() => console.log('text copied !'))

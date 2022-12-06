@@ -8,8 +8,11 @@ import {
   OnInit,
   Optional,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { iframeMouseDown } from '@syncfusion/ej2-angular-richtexteditor';
 import {
   AlertConfirmInputConfig,
@@ -22,10 +25,11 @@ import {
   FormModel,
   NotificationsService,
 } from 'codx-core';
+import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 import { Approvers } from '../../../codx-es.model';
 import { CodxEsService } from '../../../codx-es.service';
 import { PopupAddApproverComponent } from '../popup-add-approver/popup-add-approver.component';
-import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
+//import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popup-add-email-template.component';
 
 @Component({
   selector: 'popup-add-approval-step',
@@ -33,15 +37,23 @@ import { PopupAddEmailTemplateComponent } from '../popup-add-email-template/popu
   styleUrls: ['./popup-add-approval-step.component.scss'],
 })
 export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
+  @ViewChild('tabInfo0', { static: true }) tabInfo0: TemplateRef<any>;
+  @ViewChild('tabQuery', { static: true }) tabQuery: TemplateRef<any>;
+  @ViewChild('tabEmail', { static: true }) tabEmail: TemplateRef<any>;
+  @ViewChild('tabAnother', { static: true }) tabAnother: TemplateRef<any>;
+
   @Output() close = new EventEmitter();
   @Input() transId = '';
   @Input() stepNo = 1;
   @Input() vllShare = 'ES014';
+  @Input() hideTabQuery = false;
   dataEdit: any;
 
   isAfterRender = false;
   isAdd = true;
   formModel: FormModel;
+
+  formModelCustom: FormModel;
   dialogApprovalStep: FormGroup;
 
   lstApproveMode: any;
@@ -79,7 +91,7 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       name: 'tabAnother',
     },
   ];
-
+  tabContent: any[];
   setTitle(e: any) {
     console.log(e);
   }
@@ -111,6 +123,31 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
     this.eSign = data?.data?.eSign ?? false;
     this.data = JSON.parse(JSON.stringify(data?.data.dataEdit));
     this.vllShare = data?.data.vllShare ?? 'ES014';
+
+    this.hideTabQuery = data?.data.hideTabQuery ?? false;
+
+    this.tabContent = [
+      this.tabInfo0,
+      this.tabQuery,
+      this.tabEmail,
+      this.tabAnother,
+    ];
+    if (this.hideTabQuery) {
+      this.tabInfo = [
+        { icon: 'icon-info', text: 'Thông tin chung', name: 'tabInfo' },
+        {
+          icon: 'icon-email',
+          text: 'Email/thông báo',
+          name: 'tabEmail',
+        },
+        {
+          icon: 'icon-tune',
+          text: 'Thông tin khác',
+          name: 'tabAnother',
+        },
+      ];
+      this.tabContent = [this.tabInfo0, this.tabEmail, this.tabAnother];
+    }
   }
 
   ngAfterViewInit(): void {
@@ -123,11 +160,19 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.formModelCustom = new FormModel();
+    this.formModelCustom.formName = 'ApprovalSteps_Approvers';
+    this.formModelCustom.gridViewName = 'grvApprovalSteps_Approvers';
     this.esService.getFormModel('EST04').then((res) => {
       if (res) {
         this.formModel = res;
         this.dialog.formModel = this.formModel;
       }
+      this.cache.valueList('ES016').subscribe((vllMode) => {
+        if (vllMode) {
+          this.lstApproveMode = vllMode.datas;
+        }
+      });
       this.initForm();
     });
   }
@@ -151,6 +196,20 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
             .subscribe((res: any) => {
               if (res) {
                 this.data = res.data;
+                if (this.data.stepName == '' || this.data.stepName == null) {
+                  let vllName = this.eSign == true ? 'ES002' : 'ES026';
+                  this.cache.valueList(vllName).subscribe((res) => {
+                    if (res?.datas) {
+                      let i = res.datas.findIndex(
+                        (p) => p.value == this.data.stepType
+                      );
+                      this.data.stepName = res.datas[i]?.text;
+                      this.dialogApprovalStep.patchValue({
+                        stepName: this.data.stepName,
+                      });
+                    }
+                  });
+                }
                 this.data.stepNo = this.stepNo;
                 this.data.transID = this.transId;
                 this.data.signatureType = this.defaultSignType;
@@ -200,29 +259,45 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
 
   valueChange(event) {
     if (event?.field && event?.component && event?.data != '') {
-      if (event.field == 'allowEditAreas') {
-        this.allowEditAreas = event.data;
-      } else if (event.field == 'stepType') {
-        this.data[event?.field] = event.data;
-        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-        if (this.data.stepName == '' || this.data.stepName == null) {
-          let vllName = this.eSign == true ? 'ES002' : 'ES026';
-          this.cache.valueList(vllName).subscribe((res) => {
-            if (res?.datas) {
-              let i = res.datas.findIndex((p) => p.value == event.data);
-              this.data.stepName = res.datas[i]?.text;
-              this.dialogApprovalStep.patchValue({
-                stepName: this.data.stepName,
-              });
-              this.cr.detectChanges();
-            }
-          });
+      switch (event.field) {
+        case 'allowEditAreas': {
+          this.allowEditAreas = event.data;
+          break;
         }
-      } else {
-        this.data[event?.field] = event.data;
-        this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
-      }
+        case 'stepType': {
+          this.data[event?.field] = event.data;
+          this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+          if (this.data.stepName == '' || this.data.stepName == null) {
+            let vllName = this.eSign == true ? 'ES002' : 'ES026';
+            this.cache.valueList(vllName).subscribe((res) => {
+              if (res?.datas) {
+                let i = res.datas.findIndex((p) => p.value == event.data);
+                this.data.stepName = res.datas[i]?.text;
+                this.dialogApprovalStep.patchValue({
+                  stepName: this.data.stepName,
+                });
+                this.cr.detectChanges();
+              }
+            });
+          }
+          break;
+        }
+        case 'overdueControl': {
+          if (event.data == '3') {
+            this.data.loops = 1;
+            this.dialogApprovalStep.patchValue({ loops: this.data.loops });
+          } else {
+            this.data.loops = 0;
+            this.dialogApprovalStep.patchValue({ loops: this.data.loops });
+          }
 
+          break;
+        }
+        default: {
+          this.data[event?.field] = event.data;
+          this.dialogApprovalStep.patchValue({ [event?.field]: event.data });
+        }
+      }
       this.cr.detectChanges();
     }
   }
@@ -327,14 +402,34 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
         showFrom: true,
       };
 
-      this.callfc.openForm(
-        PopupAddEmailTemplateComponent,
+      let dialogEmail = this.callfc.openForm(
+        CodxEmailComponent,
         '',
         800,
         screen.height,
         '',
         data
       );
+      dialogEmail.closed.subscribe((res) => {
+        if (res.event) {
+          let emailTemplates = this.dialogApprovalStep?.value.emailTemplatess;
+          let i = emailTemplates?.findIndex(
+            (p) => p.emailType == res.templateType
+          );
+          if (i >= 0) {
+            emailTemplates[i].templateID = res.event.recID;
+
+            // if (this.attachment.fileUploadList.length > 0) {
+            //   this.attachment.objectId = res.recID;
+            //   this.attachment.saveFiles();
+            // }
+
+            this.dialogApprovalStep.patchValue({
+              emailTemplates: emailTemplates,
+            });
+          }
+        }
+      });
     }
   }
 
@@ -431,12 +526,4 @@ export class PopupAddApprovalStepComponent implements OnInit, AfterViewInit {
       console.log(this.lstStep);
     }
   }
-}
-
-export class Files {
-  recID: string;
-  fileID: string;
-  fileName: string;
-  eSign: boolean = true;
-  comment: string;
 }

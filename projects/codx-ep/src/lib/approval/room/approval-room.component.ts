@@ -38,12 +38,9 @@ export class ApprovalRoomsComponent extends UIComponent {
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
-  entity = 'EP_Bookings';
   className = 'BookingsBusiness';
   method = 'GetListApprovalAsync';
   idField = 'recID';
-  predicate = 'ResourceType=@0';
-  datavalue = '1';
   taskViewStt;
   jobs;
   itemDetail;
@@ -56,12 +53,12 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   tempReasonName = '';
+  viewType = ViewType;
 
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
-    
+    private notificationsService: NotificationsService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -78,9 +75,8 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
-    this.request.predicate = 'ResourceType=@0';
-    this.request.dataValue = '1';
     this.request.idField = 'recID';
+    
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -96,6 +92,7 @@ export class ApprovalRoomsComponent extends UIComponent {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
@@ -131,6 +128,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         request: this.request,
         //toolbarTemplate:this.footerButton,
         showSearchBar: false,
+        showFilter: false,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
@@ -141,7 +139,7 @@ export class ApprovalRoomsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           //template7: this.footerButton,//footer
-          statusColorRef: 'vl003',
+          statusColorRef: 'EP022',
         },
       },
     ];
@@ -151,7 +149,6 @@ export class ApprovalRoomsComponent extends UIComponent {
   click(event) {}
 
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
@@ -164,69 +161,126 @@ export class ApprovalRoomsComponent extends UIComponent {
       case 'EPT40101':
         {
           //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
+        break;
       case 'EPT40105':
         {
           //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
         break;
-      
+
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+  approve(data: any, status: string) {
     this.codxEpService
-    .approve(            
-      data?.approvalTransRecID,//ApprovelTrans.RecID
-      status,
-    )
-    .subscribe((res:any) => {
-      if (res?.msgCodeError == null && res?.rowCount>=0) {
-        if(status=="5"){
-          this.notificationsService.notifyCode('ES007');//đã duyệt
-          data.status="5"
+      .approve(
+        data?.approvalTransRecID, //ApprovelTrans.RecID
+        status
+      )
+      .subscribe((res: any) => {
+        if (res?.msgCodeError == null && res?.rowCount >= 0) {
+          if (status == '5') {
+            this.notificationsService.notifyCode('SYS034'); //đã duyệt
+            data.approveStatus = '5';
+            data.status = '5';
+            //Gửi duyệt vpp với refID(BookingStationery) = recID(BookingRoom)
+
+            this.codxEpService
+              .getCategoryByEntityName('EP_BookingStationery')
+              .subscribe((category: any) => {
+                this.codxEpService
+                  .getBookingByRefID(data.recID)
+                  .subscribe((res: any) => {
+                    //Gửi duyệt VPP
+                    res.forEach((booking) => {
+                      this.codxEpService
+                        .release(
+                          booking,
+                          category.processID,
+                          'EP_Bookings',
+                          'EPT31'
+                        )
+                        .subscribe((res) => {
+                          //Duyệt VPP tự dộng
+                          this.codxEpService
+                            .getParams('EPParameters', 'AutoApproveItem')
+                            .subscribe((res) => {
+                              if (res) {
+                                let dataValue = res[0].dataValue;
+                                let json = JSON.parse(dataValue);
+                                if (
+                                  json.AutoApproveItem &&
+                                  json.AutoApproveItem == 1
+                                ) {
+                                  this.codxEpService
+                                    .getApprovalTransByTransID(booking)
+                                    .subscribe((trans: any) => {
+                                      this.codxEpService
+                                        .approve(trans.recID, '5')
+                                        .subscribe();
+                                    });
+                                }
+                              }
+                            });
+                        });
+                    });
+                  });
+              });
+          }
+          if (status == '4') {
+            this.notificationsService.notifyCode('SYS034'); //bị hủy
+            data.approveStatus = '4';
+            data.status = '4';
+          }
+          this.view.dataService.update(data).subscribe();
+        } else {
+          this.notificationsService.notifyCode(res?.msgCodeError);
         }
-        if(status=="4"){
-          this.notificationsService.notifyCode('ES007');//bị hủy
-          data.status="4";
-        }                          
-        this.view.dataService.update(data).subscribe();
-      } else {
-        this.notificationsService.notifyCode(res?.msgCodeError);
-      }
-    });
-     
+      });
   }
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
-      if(data.status=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+
+  showHour(date: any) {
+    let temp = new Date(date);
+    let time =
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (func.functionID == 'SYS04' /*Copy*/) {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40105' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40101" /*MF Duyệt*/ || func.functionID == "EPT40105"/*MF từ chối*/ )
-          {
-            func.disabled=true;
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40101' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40105' /*MF từ chối*/
+          ) {
+            func.disabled = true;
           }
-        });  
+        });
       }
     }
   }
-  updateStatus(data:any)
-  {
+  updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }
   closeAddForm(event) {}
@@ -242,15 +296,13 @@ export class ApprovalRoomsComponent extends UIComponent {
     }
     this.getDetailApprovalBooking(recID);
   }
-  
+
   getDetailApprovalBooking(id: any) {
     this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetApprovalBookingByIDAsync',
-        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
-      )
+      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+        this.itemDetail?.recID,
+        this.itemDetail?.approvalTransRecID,
+      ])
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;

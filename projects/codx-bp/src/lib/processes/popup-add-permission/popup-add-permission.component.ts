@@ -1,9 +1,16 @@
 import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
 import { FileUpload, Permission } from '@shared/models/file.model';
-import { DialogData, DialogRef, ApiHttpService, NotificationsService } from 'codx-core';
+import {
+  DialogData,
+  DialogRef,
+  ApiHttpService,
+  NotificationsService,
+  CacheService,
+} from 'codx-core';
 import {
   BP_Processes,
   BP_ProcessPermissions,
+  tmpPermission,
 } from '../../models/BP_Processes.model';
 
 @Component({
@@ -27,117 +34,241 @@ export class PopupAddPermissionComponent implements OnInit {
   sentEmail: any;
   postblog: any;
   process: BP_Processes;
-  per: FileUpload;
-  permission: Permission[];
-  toPermission: Permission[];
-  byPermission: Permission[];
-  ccPermission: Permission[];
-  fromPermission: Permission[];
+  gridViewSetup: any;
+  data: any;
+  funcID: any;
+  per = new tmpPermission();
+  permission: BP_ProcessPermissions[];
+  toPermission: BP_ProcessPermissions[];
+  byPermission: BP_ProcessPermissions[];
+  ccPermission: BP_ProcessPermissions[];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private notificationsService: NotificationsService,
+    private cache: CacheService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
     this.title = dt.data[0];
-    this.process = dt.data[1];
+    this.data = JSON.parse(JSON.stringify(dt.data[1]));
+    this.process = this.data;
+    this.per = this.data;
     this.id = this.process.recID;
     this.fullName = this.process.processName;
     this.isShare = dt.data[2];
+    this.funcID = this.dialog.formModel.funcID;
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.setByPermission(this.process);
+  }
 
   //#region footer
   onShare() {
-    this.per.toPermission = this.toPermission;
-    this.per.permissions = this.byPermission;
-    this.per.ccPermission = this.ccPermission;
-    this.per.permissions = this.fromPermission;
-    for (var i = 0; i < this.per.toPermission.length; i++) {
-      this.per.toPermission[i].startDate = this.startDate;
-      this.per.toPermission[i].endDate = this.endDate;
-      if (!this.isShare) {
-        // this.per.toPermission[i].create = true;
-        // this.per.toPermission[i].update = true;
-        // this.per.toPermission[i].share = true;
-        // this.per.toPermission[i].download = true;
-        // this.per.toPermission[i].upload = true;
-        this.per.toPermission[i].read = true;
-      } else {
-        this.per.toPermission[i].read = true;
-        this.per.toPermission[i].share = this.share;
-        this.per.toPermission[i].download = this.download;
-      }
-      if (!this.isShare) {
-        this.per.form = 'request';
-        this.per.titleEmail = this.requestTitle;
-        this.per.contentEmail = this.shareContent;
-      } else {
-        this.per.form = 'share';
-        this.per.titleEmail = '';
-        this.per.contentEmail = this.shareContent;
-      }
-      this.per.sendEmail = this.sentEmail;
-      this.per.postBlog = this.postblog;
-      this.api.execSv<BP_ProcessPermissions>('BP','BP','ProcessesBusiness','RequestOrShareProcessAsync',this.per).subscribe(res=>{
-        if (this.per.form == "share")
-          this.notificationsService.notify('Chia sẻ thành công');
-        else
-          this.notificationsService.notify('Đã yêu cầu cấp quyền');
-      })
+    this.per.recIDProcess = this.id;
+    if (this.toPermission == null) {
+      this.notificationsService.notifyCode('SYS009');
+      return;
     }
-    this.dialog.close();
+    this.per.toPermission = this.toPermission;
+    this.per.byPermission = this.byPermission;
+    this.per.ccPermission = this.ccPermission;
+    for (var i = 0; i < this.per.toPermission.length; i++) {
+      if (this.startDate != null && this.endDate != null) {
+        if (this.startDate >= this.endDate) {
+          this.notificationsService.notify(
+            'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
+          );
+          return;
+        }
+        //Chưa có mssg code
+        if (!this.isCheckFromToDate(this.startDate)) {
+          this.notificationsService.notify(
+            'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
+          );
+          return;
+        }
 
+        this.per.toPermission[i].startDate = this.startDate;
+        this.per.toPermission[i].endDate = this.endDate;
+      }
+      this.per.toPermission[i].reason = this.requestTitle;
+      this.per.toPermission[i].memo = this.shareContent;
+      this.per.toPermission[i].share = this.share;
+      this.per.toPermission[i].download = this.download;
+      this.per.toPermission[i].autoCreate = false;
+      if (!this.isShare) {
+
+        this.per.toPermission[i].memberType = '4';
+        this.per.toPermission[i].approveStatus = '3';
+      } else {
+        this.per.toPermission[i].memberType = '3';
+      }
+      this.per.urlShare = this.getPath();
+      this.per.urlPath = this.getPath();
+    }
+    this.api
+      .execSv<any>(
+        'BP',
+        'BP',
+        'ProcessesBusiness',
+        'RequestOrShareProcessAsync',
+        [this.per, this.funcID]
+      )
+      .subscribe((res) => {
+        if (res) {
+          if (this.per.form == '2') {
+            this.notificationsService.notifyCode('OD013');
+            this.dialog.close(res);
+          } else {
+            this.notificationsService.notifyCode('SYS034');
+            this.dialog.close(res);
+          }
+        } else {
+          if (this.per.form == '2')
+            this.notificationsService.notifyCode('SYS016');
+          else
+            this.notificationsService.notify(
+              'Yêu cầu cấp quyền không thành công'
+            );
+          this.dialog.close();
+        }
+      });
   }
   //#endregion
 
   //#region event
+  isCheckFromToDate(toDate) {
+    var to = new Date(toDate);
+    if (to >= new Date()) return true;
+    else return false;
+  }
+
+  setByPermission(data) {
+    if (data != null) {
+      var lst = [];
+      var perm = new BP_ProcessPermissions();
+      perm.objectID = data.owner;
+      perm.objectName = data.userName;
+      lst.push(Object.assign({}, perm));
+      this.byPermission = lst;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
   onUserEvent($event, type: string) {
     console.log($event);
-    var list = [];
     if ($event.data != undefined) {
       var data = $event.data;
+      var list = [];
+
       for (var i = 0; i < data.length; i++) {
         var item = data[i];
-        var perm = new Permission;
-        perm.startDate = this.startDate;
-        perm.endDate = this.endDate;
-        perm.objectName = item.text;
+        var perm = new BP_ProcessPermissions();
+        perm.objectName = item.text != null ? item.text : item.objectName;
         perm.objectID = item.id;
         perm.objectType = item.objectType;
         perm.read = true;
+
         list.push(Object.assign({}, perm));
       }
-
-      switch (type) {
-        case 'to':
-          this.toPermission = [];
-          this.toPermission = list;
-          break;
-        case 'cc':
-          this.ccPermission = [];
-          this.ccPermission = list;
-          break;
-        case 'by':
-          this.byPermission = [];
-          this.byPermission = list;
-          break;
-        case 'from':
-          this.fromPermission = [];
-          this.fromPermission = list;
-          break;
-      }
-      this.changeDetectorRef.detectChanges();
     }
+    switch (type) {
+      case 'to':
+        // if ($event.data != undefined) {
+        //   var data = $event.data;
+        //   var list = [];
+        //   if (this.toPermission != null) list = this.toPermission;
+        //   else list = [];
+        //   for (var i = 0; i < data.length; i++) {
+        //     var item = data[i];
+        //     var perm = new BP_ProcessPermissions();
+        //     perm.objectName = item.text != null ? item.text : item.objectName;
+        //     perm.objectID = item.id;
+        //     perm.objectType = item.objectType;
+        //     list.push(Object.assign({}, perm));
+
+        //   }
+        this.toPermission = [];
+        this.toPermission = list;
+        // }
+        break;
+      case 'cc':
+        // if ($event.data != undefined) {
+        //   var data = $event.data;
+        //   var list = [];
+        //   if (this.ccPermission != null) list = this.ccPermission;
+        //   else list = [];
+        //   for (var i = 0; i < data.length; i++) {
+        //     var item = data[i];
+        //     var perm = new BP_ProcessPermissions();
+        //     perm.startDate = this.startDate;
+        //     perm.endDate = this.endDate;
+        //     perm.objectName = item.text != null ? item.text : item.objectName;
+        //     perm.objectID = item.id;
+        //     perm.objectType = item.objectType;
+        //     list.push(Object.assign({}, perm));
+        //   }
+        this.ccPermission = [];
+        this.ccPermission = list;
+        // }
+        break;
+      case 'by':
+        // if ($event.data != undefined) {
+        //   var data = $event.data;
+        //   var list = [];
+        //   if (this.byPermission != null) list = this.byPermission;
+        //   else list = [];
+        //   for (var i = 0; i < data.length; i++) {
+        //     var item = data[i];
+        //     var perm = new BP_ProcessPermissions();
+        //     perm.startDate = this.startDate;
+        //     perm.endDate = this.endDate;
+        //     perm.objectName = item.text != null ? item.text : item.objectName;
+        //     perm.objectID = item.id;
+        //     perm.objectType = item.objectType;
+        //     list.push(Object.assign({}, perm));
+        //   }
+        this.byPermission = [];
+        this.byPermission = list;
+        // }
+        break;
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   txtValue($event, ctrl) {
     switch (ctrl) {
       case 'requestTitle':
-        this.requestTitle = $event.data;
+        if ($event.data != '') {
+          this.api
+            .execSv<any>(
+              'SYS',
+              'ERM.Business.AD',
+              'EmailTemplatesBusiness',
+              'GetViewEmailTemplate2Async',
+              [$event.data]
+            )
+            .subscribe((res) => {
+              if (res != null) {
+                this.requestTitle = res[0].subject;
+              }else
+              this.requestTitle = $event.data;
+
+            });
+        }
         break;
       case 'shareContent':
         this.shareContent = $event.data;
@@ -153,12 +284,6 @@ export class PopupAddPermissionComponent implements OnInit {
         break;
       case 'download':
         this.download = $event.data;
-        break;
-      case 'sentemail':
-        this.sentEmail = $event.data;
-        break;
-      case 'postblog':
-        this.postblog = $event.data;
         break;
     }
   }
@@ -177,12 +302,22 @@ export class PopupAddPermissionComponent implements OnInit {
     return '';
   }
 
+  getPath() {
+    var index = window.location.href.indexOf('?');
+    var url = window.location.href;
+    if (index > -1) {
+      url = window.location.href.substring(0, index);
+    }
+    var url = `${url}?id=${this.id}`;
+    return url;
+  }
+
   checkContent() {
     if (this.shareContent === '') return false;
     else return true;
   }
 
-  removeUserRight(index, list: Permission[] = null) {
+  removeUserRight(index, list: BP_ProcessPermissions[] = null) {
     if (list != null && list.length > 0) {
       list.splice(index, 1); //remove element from array
       this.changeDetectorRef.detectChanges();

@@ -96,10 +96,11 @@ export class IncommingAddComponent implements OnInit {
       this.dispatch.copies = 1;
       this.dispatch.refDate = new Date();
       this.dispatch.dispatchOn = new Date();
-      this.dispatch.owner = null;
       if (this.type == 'add') {
         this.dispatch.dispatchType = this.data?.dispatchType;
         this.dispatch.agencyName = null;
+        // this.dispatch.departmentID = "BGĐ"
+        // this.getDispathOwner("BGĐ");
         if(this.formModel?.funcID == "ODT41") this.dispatch.owner = user?.userID
       }
       this.dispatch.createdOn = new Date();
@@ -168,14 +169,17 @@ export class IncommingAddComponent implements OnInit {
   //Nơi nhận
   changeValueBUID(event: any) {
     this.dispatch.departmentID = event?.data?.value[0];
-    if (event.data?.value[0]) {
-      this.api
+    if (event.data?.value[0]) this.getDispathOwner(event.data?.value[0]);
+  }
+  getDispathOwner(data:any)
+  {
+    this.api
         .execSv(
           'HR',
           'ERM.Business.HR',
           'OrganizationUnitsBusiness',
           'GetUserByDept',
-          [event.data?.value[0], null, null]
+          [data, null, null]
         )
         .subscribe((item: any) => {
           if (item != null && item.length > 0) {
@@ -189,7 +193,6 @@ export class IncommingAddComponent implements OnInit {
             this.dispatch.owner = '';
           }
         });
-    }
   }
   getInforByUser(id:any) : Observable<any>
   {
@@ -250,7 +253,7 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch[event?.field] = event?.data.fromDate;
   }
   /////// lưu/câp nhật công văn
-  onSave() {
+  async onSave() {
     if (!this.checkIsRequired()) return;
     /*  this.submitted = true;
     if(this.dispatchForm.value.agencyID == null)  this.checkAgenciesErrors = true;
@@ -258,7 +261,8 @@ export class IncommingAddComponent implements OnInit {
     /////////////////////////////////////////////////////////
     this.dispatch.agencyName = this.dispatch.agencyName.toString();
     if (this.type == 'add' || this.type == 'copy') {
-      this.dispatch.status = '1';
+      if(this.dispatch.owner != this.dispatch.createdBy) this.dispatch.status = '3';
+      else this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
       if (this.type == 'copy') 
       {
@@ -274,24 +278,34 @@ export class IncommingAddComponent implements OnInit {
       }
       if (this.type == 'add')
         this.dispatch.recID =  this.dialog.dataService.dataSelected.recID;
-      this.dispatch.status = '1';
       this.dispatch.approveStatus = '1';
-      this.odService
-        .saveDispatch(this.dataRq, this.dispatch)
-        .subscribe(async (item) => {
-          if (item.status == 0) {
-            this.data = item;
-            this.attachment.objectId = item.data.recID;
-            (await this.attachment.saveFilesObservable()).subscribe(
-              (item2: any) => {
-                if (item2?.status == 0) {
-                  this.dialog.close(item.data);
-                  this.notifySvr.notify(item.message);
-                } else this.notifySvr.notify(item2.message);
-              }
-            );
-          } else this.notifySvr.notify(item.message);
-        });
+      this.attachment.objectId = this.dispatch.recID;
+      (await this.attachment.saveFilesObservable()).subscribe(
+        (item2: any) => {
+          //Chưa xử lý Upload nhìu file
+          // var countSusscess = 0;
+          // var countError = 0;
+          // if(Array.isArray(item2))
+          // {
+          //   var count =  item2.filter(x=>x.status == 0);
+          //   if(count) countSusscess = count.length;
+          //   countError = item2.length - countSusscess;
+           
+          // }
+          if (item2?.status == 0 || Array.isArray(item2)) {
+            this.odService
+            .saveDispatch(this.dataRq, this.dispatch)
+            .subscribe(async (item) => {
+              if (item.status == 0) {
+                this.data = item;
+                this.dialog.close(item.data);
+                this.notifySvr.notify(item.message);
+              } else this.notifySvr.notify(item.message);
+            });
+          } else this.notifySvr.notify(item2.message);
+        }
+      );
+      
     } else if (this.type == 'edit') {
       this.odService
         .updateDispatch(this.dispatch, false)
@@ -324,7 +338,9 @@ export class IncommingAddComponent implements OnInit {
   }
   getfileCount(e: any) {
     if (e && e?.data) this.fileCount = e.data.length;
-    else if (e) this.fileCount = e.length;
+    else if (typeof e == 'number') this.fileCount = e;
+    else this.fileCount = e.length;
+
     if (this.fileCount == 0) this.dltDis = true;
   }
   changeFormAgency(val: any) {
@@ -339,13 +355,19 @@ export class IncommingAddComponent implements OnInit {
     }
   }
   checkIsRequired() {
+    var arr = [];
     for (var i = 0; i < this.objRequied.length; i++) {
       var field = capitalizeFirstLetter(this.objRequied[i]);
       var data = this.dispatch[field];
-      if (!data) {
-        return this.notifySvr.notifyCode('SYS028', 0, field);
-      }
+      if(!data)
+        arr.push(this.gridViewSetup[this.objRequied[i]].headerText);
     }
+    if(arr.length>0)
+    {
+      var name = arr.join(" , ");
+      return this.notifySvr.notifyCode('SYS009', 0, name);
+    }
+    debugger;
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;

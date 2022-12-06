@@ -56,6 +56,8 @@ export class PopupAddCarsComponent extends UIComponent {
   tmplstDevice = [];
   avatarID: any = null;
   returnData:any;
+  useCardCheck = false;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -70,7 +72,13 @@ export class PopupAddCarsComponent extends UIComponent {
     this.headerText=dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
-    
+    if(this.isAdd){
+      this.data.capacity=null;
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
+    }
   }
 
   ngAfterViewInit(): void {}
@@ -85,12 +93,15 @@ export class PopupAddCarsComponent extends UIComponent {
         device.text = item.text;
         device.icon = item.icon; 
         device.isSelected= false;       
-        if (!this.isAdd) {
-          this.data.equipments.forEach((item) => {
+        if (!this.isAdd && this.data.equipments!=null) {
+          this.data.equipments?.forEach((item) => {
             if (item.equipmentID == device.id) {
               device.isSelected = true;
             }
           });
+          if(this.data.useCard){
+            this.useCardCheck=this.data.useCard;
+          }
         }
         this.lstDeviceCar.push(device);
         this.tmplstDevice = JSON.parse(JSON.stringify(this.lstDeviceCar));
@@ -113,7 +124,7 @@ export class PopupAddCarsComponent extends UIComponent {
   }
 
   openPopupDevice(template: any) {
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
 
@@ -136,7 +147,13 @@ export class PopupAddCarsComponent extends UIComponent {
       }
     }
   }
-
+  valueUseCardChange(evt:any){
+    if(evt!=null){
+      this.data.useCard=evt.data;  
+      this.useCardCheck=evt.data;    
+      this.detectorRef.detectChanges();
+    }
+  }
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddCar.value;
     option.methodName = 'AddEditItemAsync';
@@ -145,14 +162,13 @@ export class PopupAddCarsComponent extends UIComponent {
   }
 
   onSaveForm() {
-    this.data.linkType='3';
-    this.data.resourceType='2';
+    this.data.useCard=this.useCardCheck;
     this.fGroupAddCar.patchValue(this.data);
     if (this.fGroupAddCar.invalid == true) {
       this.codxEpService.notifyInvalid(this.fGroupAddCar, this.formModel);
       return;
     }
-
+    this.lstEquipment=[];
     this.tmplstDevice.forEach((element) => {
       if (element.isSelected) {
         let tempEquip = new Equipments();

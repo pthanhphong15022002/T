@@ -12,7 +12,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { CoreModule } from '@core/core.module';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { CodxCoreModule, EnvironmentConfig } from 'codx-core';
 import { InlineSVGModule } from 'ng-inline-svg';
 import { OrgorganizationComponent } from 'projects/codx-hr/src/lib/organization/organization.component';
@@ -20,7 +19,7 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
-import { ChatListComponent } from './chatting/chat-list/chat-list.component';
+import { ChatListComponent } from './chat/chat-list/chat-list.component';
 import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
 import { ChattingComponent } from './chatting/chatting.component';
 import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
@@ -32,8 +31,7 @@ import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
 import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
-import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add.component';
-
+import { PopupAddPostComponents } from './dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
 import { PopupSearchPostComponent } from './dashboard/home/list-post/popup-search/popup-search.component';
@@ -52,8 +50,11 @@ import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
-import { CodxChatComponent } from './chatting/codx-chat/codx-chat.component';
+import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
 import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
+import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
+import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
+
 
 export const routes: Routes = [
   {
@@ -174,7 +175,7 @@ const Component: Type<any>[] =
     AddNoteComponent,
     SaveNoteComponent,
     PostComponent,
-    PopupAddPostComponent,
+    PopupAddPostComponents,
     PopupSavePostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
@@ -189,12 +190,13 @@ const Component: Type<any>[] =
     ChatBoxComponent,
     ListChatBoxComponent,
     PopupGroupComponent,
-    // TestSurveyComponent,
     CodxChatComponent,
     ChattingComponent, 
     LayoutComponent,
     ChatVoteComponent,
     PopupViewImageComponent,
+    PopupAddPostComponent,
+    PopupAddGroupComponent
   ];
 
 @NgModule({
@@ -214,6 +216,7 @@ const Component: Type<any>[] =
   exports: [RouterModule],
   declarations: [Component ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  
 })
 export class CodxWpModule {
   public static forRoot(

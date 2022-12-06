@@ -4,13 +4,14 @@
             <div class="d-flex justify-content-between">
                 <div class="d-flex align-items-center w-100 breadcrum-box me-2">
                     <codx-breadcumb end="1" start="0" max="3"></codx-breadcumb>
-                    <span class="icon-keyboard_arrow_right icon-18"></span>
-                    <span class="text-dark text-max-100px">{{fullName}}</span>
+                    <ng-container *ngIf="fullName">
+                        <span class="icon-keyboard_arrow_right icon-18"></span>
+                        <span class="text-dark text-max-100px">{{fullName}}</span>
+                    </ng-container>
                 </div>
-
                 <a *ngIf="this.type == 'file'" (click)="copyPath()" matTooltip="copy link" alt="copy link"
                     class="btn btn-icon btn-md btn-light-primary">
-                    <span class="icon-file_copy text-gray-600 icon-20"></span>
+                    <span class="icon-file_copy text-gray-600 icon-16"></span>
                 </a>
             </div>
             <div class="request-to mt-4">
@@ -198,8 +199,8 @@
             </div>
             <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-2 mt-6">
                 <div class="text-dark-75">
-                    <codx-label [fiedName]="'isShare'" [formModel]="formModel" default="Cho phép chia sẻ lại cho người khác?"
-                        class="ms-1 fw-bold"></codx-label>
+                    <codx-label [fiedName]="'isShare'" [formModel]="formModel"
+                        default="Cho phép chia sẻ lại cho người khác?" class="ms-1 fw-bold"></codx-label>
                 </div>
                 <div class="d-flex">
                     <span class="switch switch-sm mr-2">
@@ -208,7 +209,7 @@
                     </span>
                 </div>
             </div>
-            <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-6">
+            <div *ngIf="isShare" class="d-flex align-items-center justify-content-between share-item mt-3">
                 <div class="text-dark-75">
                     <codx-label fiedName="lblDownload" [formModel]="formModel"
                         default="Cho phép dowlnload hoặc in tài liệu?" class="ms-1 fw-bold"></codx-label>
@@ -265,9 +266,9 @@
 
             <div *ngIf="isShare" class="text-primary font-weight-bold mt-4">
                 <codx-label name="lblDownload" [formModel]="formModel" default="Giới hạn thời gian chia sẻ"
-                    class="ms-1 fw-bold"></codx-label>
+                    class="fw-bold"></codx-label>
             </div>
-            <div class="row mt-5">
+            <div class="row mt-3">
                 <div class="col-xl-6 col-lg-6 col-md-6">
                     <div class="form-group row">
                         <div class="col-4 pt-2">

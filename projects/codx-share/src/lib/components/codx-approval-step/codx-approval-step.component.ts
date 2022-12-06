@@ -25,8 +25,6 @@ import {
   CodxEsService,
   GridModels,
 } from 'projects/codx-es/src/lib/codx-es.service';
-import { formatDtDis } from '../../../../../codx-od/src/lib/function/default.function';
-import { DispatchService } from '../../../../../codx-od/src/lib/services/dispatch.service';
 
 @Component({
   selector: 'codx-approval-step',
@@ -40,10 +38,12 @@ export class CodxApprovalStepComponent
   @Input() approveStatus: string = '';
 
   formModel: FormModel;
+  fmApprovalTrans: FormModel;
   gridViewSetup: any = {};
 
   positionDefault: string;
 
+  lstSttApproveStep = ['0', '1', '2', '4', '6'];
   process: any = [];
   // lstStep: any = [];
   constructor(
@@ -65,7 +65,7 @@ export class CodxApprovalStepComponent
 
   initForm() {
     if (this.transID != null) {
-      if (this.approveStatus == '1') {
+      if (this.lstSttApproveStep.includes(this.approveStatus)) {
         this.esService.getFormModel('EST04').then((res) => {
           if (res) {
             let fmApprovalStep = res;
@@ -101,6 +101,12 @@ export class CodxApprovalStepComponent
   }
 
   ngOnInit(): void {
+    this.fmApprovalTrans = new FormModel();
+    this.esService.getFormModel('EST021').then((fm) => {
+      if (fm) {
+        this.fmApprovalTrans = fm;
+      }
+    });
     this.formModel = new FormModel();
     this.formModel.formName = 'ApprovalSteps_Approvers';
     this.formModel.entityName = 'ES_ApprovalSteps_Approvers';

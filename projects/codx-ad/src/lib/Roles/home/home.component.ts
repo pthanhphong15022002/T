@@ -72,7 +72,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   ngAfterViewInit() {
     this.views = [
@@ -86,13 +86,13 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
         },
       },
     ];
+    this.changedt.detectChanges();
   }
   ngOnChanges() {
     if (!this.isLoad) return;
   }
 
   LinkDetail(recID, roleName, isSystem) {
-    debugger;
     this.tempService.roleName.next(roleName);
     this.tempService.isSystem = isSystem;
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });

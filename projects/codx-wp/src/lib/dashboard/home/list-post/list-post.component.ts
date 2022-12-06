@@ -1,4 +1,3 @@
-import { NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -11,12 +10,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Permission } from '@shared/models/file.model';
 
 import {
-  UploadFile,
   CodxListviewComponent,
-  AuthStore,
-  TenantStore,
   CacheService,
   ApiHttpService,
   CallFuncService,
@@ -24,17 +21,16 @@ import {
   DialogRef,
   DialogModel,
   CRUDService,
-  ViewModel,
-  ViewType,
-  ViewsComponent,
   RequestOption,
   CodxService,
   Util,
   FormModel,
-  UIComponent,
   AuthService,
 } from 'codx-core';
-import { PopupAddPostComponent } from './popup-add/popup-add.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
+import { WP_Comments } from '../../../models/WP_Comments.model';
+import { PopupAddPostComponent } from './popup-add-post/popup-add-post.component';
+import { PopupAddPostComponents } from './popup-add/popup-add.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
@@ -45,56 +41,51 @@ import { PopupSavePostComponent } from './popup-save/popup-save.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class ListPostComponent implements OnInit, AfterViewInit {
-
-  service = "WP";
-  assemblyName = "ERM.Business.WP"
-  className = "CommentsBusiness"
-  method = "GetListPostAsync";
-  totalPage: number = 0;
-  pageIndex = 0;
+  service = 'WP';
+  assemblyName = 'ERM.Business.WP';
+  className = 'CommentsBusiness';
+  method = 'GetListPostAsync';
   user: any;
-  dataDetail: any;
   showEmojiPicker = false;
   dataVll = [];
   title: string = '';
   strEmtyData: string = '';
-
-  searchField = '';
-  checkFormAddPost = false;
+  function: any = null;
+  defaultMoreFC: any[] = [];
+  gridViewSetup: any = null;
   predicateWP: string = '';
   dataValueWP: string = '';
-  predicateFD: string = "Category =@0 && Stop=false";
-  dataValueFD: string = "3";
-  modal: DialogRef;
-  headerText = '';
+  predicateFD: string = 'Category =@0 && Stop=false';
+  dataValueFD: string = '3';
   lstData: any;
   lstUserShare: any[] = [];
   lstUserTag: any = [];
   CARDTYPE_EMNUM = {
-    Commendation: "1",
-    Thankyou: "2",
-    CommentForChange: "3",
-    SuggestionImprovement: "4",
-    Share: "5",
-    Congratulation: "6",
-    Radio: "7"
+    Commendation: '1',
+    Thankyou: '2',
+    CommentForChange: '3',
+    SuggestionImprovement: '4',
+    Share: '5',
+    Congratulation: '6',
+    Radio: '7',
   };
   CATEGORY = {
-    POST: "1",
-    COMMENTS: "2",
-    FEEDBACK: "3",
-    SHARE: "4",
-  }
-  @Input() funcID: string = "";
+    POST: '1',
+    COMMENTS: '2',
+    FEEDBACK: '3',
+    SHARE: '4',
+  };
+
+  @Input() funcID: string = '';
   @Input() dataService: CRUDService = null;
-  @Input() objectID: string = "";
+  @Input() objectID: string = '';
   @Input() predicates: any;
   @Input() dataValues: any;
   @Input() isShowCreate = true;
-  @Input() module: "WP" | "FD" = "WP";
+  @Input() module: 'WP' | 'FD' = 'WP';
   @Input() formModel: FormModel = null;
-  @Input() formName: string = "";
-  @Input() gridViewName: string = "";
+  @Input() formName: string = '';
+  @Input() gridViewName: string = '';
   @Input() moreFunc: any = null;
   @Input() moreFuncTmp: TemplateRef<any> = null;
   @ViewChild('listview') listview: CodxListviewComponent;
@@ -108,18 +99,27 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     private notifySvr: NotificationsService,
     private route: ActivatedRoute,
     private codxService: CodxService,
-
-  ) {
-  }
-  ngAfterViewInit() {
-
-  }
+    private codxShareSV: CodxShareService
+  ) {}
+  ngAfterViewInit() {}
 
   ngOnInit(): void {
     this.user = this.authStore.userValue;
-    this.getGridViewSetUp("WP");
+    this.getSetUp('WP');
     this.getValueList();
+    this.refreshAvatar();
   }
+
+  refreshAvatar() {
+    //Nguyên thêm để refresh avatar khi change
+    this.codxShareSV.dataRefreshImage.subscribe((res) => {
+      if (res) {
+        this.user['modifiedOn'] = res?.modifiedOn;
+        this.dt.detectChanges();
+      }
+    });
+  }
+
   getValueList() {
     this.cache.valueList('L1480').subscribe((res) => {
       if (res) {
@@ -146,129 +146,234 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
-  getGridViewSetUp(funcID: string) {
-    if (!funcID) return;
-    this.cache
-      .functionList(funcID)
-      .subscribe((func) => {
+  getSetUp(funcID: string) {
+    if (funcID) {
+      // get function
+      this.cache.functionList(funcID).subscribe((func) => {
         if (func) {
+          this.function = func;
+          this.formModel = new FormModel();
+          this.formModel.funcID = func.functionID;
+          this.formModel.formName = func.formName;
+          this.formModel.gridViewName = func.gridViewName;
+          this.formModel.entityName = func.entityName;
+          // get gridviewSetup
           this.cache
             .gridViewSetup(func.formName, func.gridViewName)
             .subscribe((grd: any) => {
               if (grd) {
-                this.headerText = grd['Comments'] ? grd['Comments']['headerText'] : "";
+                this.gridViewSetup = grd;
               }
             });
-          this.formModel = new FormModel();
-          this.formModel.funcID = funcID;
-          this.formModel.formName = func.formName;
-          this.formModel.gridViewName = func.gridViewName;
-          this.formModel.entityName = func.entityName;
+          // get more function
+          // this.cache
+          //   .moreFunction(func.formName, func.gridViewName)
+          //   .subscribe((mFC: any) => {
+          //     if (mFC) {
+          //       //this.defaultMoreFC = mFC;
+          //       if (typeof mFC == 'object' && !Array.isArray(mFC)) {
+          //         for (let i of Object.keys(mFC)) {
+          //           this.defaultMoreFC.push(mFC[i]);
+          //         }
+          //       }
+          //       else if(Array.isArray(mFC))
+          //       {
+          //         this.defaultMoreFC = mFC;
+          //       }
+          //     }
+          //   });
         }
       });
+    }
   }
-
+  changeMoreFunction(arrMoreFc) {
+    // set moreFucntion
+    if (arrMoreFc) {
+      arrMoreFc.forEach((x: any) => {
+        if (
+          x.functionID == 'WP000' ||
+          !this.defaultMoreFC.some((e) => e.functionID == x.functionID)
+        ) {
+          x.disabled = true;
+        }
+      });
+    }
+  }
+  clickMF(event: any, post: any) {
+    if (event && post) {
+      switch (event.functionID) {
+        case 'WP001': // cập nhật
+          this.openPopupEdit(post);
+          break;
+        case 'WP002': // xóa
+          this.removePost(post);
+          break;
+        case 'WP003': // chia sẻ
+          this.openPopupShare(post);
+          break;
+        case 'WP004': // lưu vào sổ tay
+          this.openPopupSave(post);
+          break;
+        default:
+          break;
+      }
+    }
+  }
   beforDelete(option: RequestOption, data: any) {
     if (!option || !data) return false;
-    option.service = "WP";
-    option.assemblyName = "ERM.Business.WP";
-    option.className = "CommentsBusiness";
-    option.methodName = "DeletePostAsync";
+    option.service = 'WP';
+    option.assemblyName = 'ERM.Business.WP';
+    option.className = 'CommentsBusiness';
+    option.methodName = 'DeletePostAsync';
     option.data = data;
     return true;
   }
   removePost(data: any) {
-    if (!data) return;
-    (this.listview.dataService as CRUDService).
-      delete([data], true, (op: any) => this.beforDelete(op, data), '', 'WP022', '', 'WP023').
-      subscribe((res) => {
-        if (res) {
-          if (data.files) {
-            this.api.execSv("DM",
-              "ERM.Business.DM",
-              "FileBussiness",
-              "DeleteByObjectIDAsync",
-              [data.recID, 'WP_Comments', true]
-            ).subscribe();
+    // xóa bài viết
+    if (data) {
+      (this.listview.dataService as CRUDService)
+        .delete(
+          [data],
+          true,
+          (op: any) => this.beforDelete(op, data),
+          '',
+          'WP022',
+          '',
+          'WP023'
+        )
+        .subscribe((res) => {
+          if (res) {
+            if (data.files) {
+              //xóa files
+              this.api
+                .execSv(
+                  'DM',
+                  'ERM.Business.DM',
+                  'FileBussiness',
+                  'DeleteByObjectIDAsync',
+                  [data.recID, 'WP_Comments', true]
+                )
+                .subscribe();
+            }
           }
+        });
+    }
+  }
+  openPopupAdd() {
+    let data = new WP_Comments();
+    let permission = new Permission();
+    let headerText = 'Tạo bài viết';
+    permission.memberType = '2'; //share
+    permission.objectType = '9';
+    permission.createdBy = this.user.userID;
+    permission.createdOn = new Date();
+    data.shareControl = '9';
+    data.refType = 'WP_Comments';
+    data.createdBy = this.user.userID;
+    data.createdName = this.user.userName;
+    data.permissions.push(permission);
+    var obj = {
+      data: data,
+      status: 'create',
+      headerText: headerText,
+    };
+    let option = new DialogModel();
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
+    let popup = this.callFC.openForm(
+      PopupAddPostComponent,
+      '',
+      700,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
+    popup.closed.subscribe((res: any) => {
+      if (res?.event?.recID) {
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        this.notifySvr.notifyCode('WP024');
+      }
+    });
+  }
+  openPopupEdit(post: any) {
+    let headerText = 'Chỉnh sửa bài viết';
+    let data = JSON.parse(JSON.stringify(post));
+    let obj = {
+      data: data,
+      status: 'edit',
+      headerText: headerText,
+    };
+    let option = new DialogModel();
+    option.DataService = this.listview.dataService as CRUDService;
+    option.FormModel = this.listview.formModel;
+    let popup = this.callFC.openForm(
+      PopupAddPostComponent,
+      '',
+      700,
+      550,
+      '',
+      obj,
+      '',
+      option
+    );
+    popup.closed.subscribe((res: any) => {
+      if (res?.event?.recID) {
+        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        this.notifySvr.notifyCode('WP021');
+      }
+    });
+  }
+  openPopupShare(post: any) {
+    if (post) {
+      let data = new WP_Comments();
+      data.shareControl = '9';
+      data.refType = 'WP_Comments';
+      data.refID = post.recID;
+      data.createdBy = this.user.userID;
+      data.createdName = this.user.userName;
+      data.shares = JSON.parse(JSON.stringify(post));
+      let headerText = 'Chia sẻ bài viết';
+      var obj = {
+        data: data,
+        status: 'share',
+        headerText: headerText,
+      };
+      let option = new DialogModel();
+      option.DataService = this.listview.dataService as CRUDService;
+      option.FormModel = this.listview.formModel;
+      let popup = this.callFC.openForm(
+        PopupAddPostComponent,
+        '',
+        700,
+        550,
+        '',
+        obj,
+        '',
+        option
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res?.event?.recID) {
+          (this.listview.dataService as CRUDService).add(res.event).subscribe();
+          this.notifySvr.notifyCode('WP020');
         }
       });
-
+    }
   }
-  openCreateModal() {
-    var obj = {
-      status: 'create',
-      headerText: 'Tạo bài viết',
-      lstView: this.listview,
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    this.modal = this.callFC.openForm(
-      PopupAddPostComponent,
-      '',
-      700,
-      550,
-      '',
-      obj,
-      '',
-      option
-    );
-
-  }
-  openEditModal(data: any) {
-    if (!data) return;
-    let dataEdit = { ...data };
-    let obj = {
-      post: dataEdit,
-      status: 'edit',
-      headerText: 'Chỉnh sửa bài viết',
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    this.modal = this.callFC.openForm(
-      PopupAddPostComponent,
-      '',
-      700,
-      550,
-      '',
-      obj,
-      '',
-      option
-    );
-  }
-  openModalShare(data: any) {
-    if (!data) return;
-    var obj = {
-      post: data,
-      status: 'share',
-      headerText: 'Chia sẻ bài viết',
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    this.modal = this.callFC.openForm(
-      PopupAddPostComponent,
-      '',
-      650,
-      550,
-      '',
-      obj,
-      '',
-      option
-    );
-  }
-  openModalDownload(data: any) {
-    if (!data) return;
-    var obj = {
-      post: data,
-      headerText: 'Thêm vào kho lưu trữ',
-    };
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
+  openPopupSave(post: any) {
+    if (post) {
+      let data = JSON.parse(JSON.stringify(post));
+      let headerText = 'Thêm vào kho lưu trữ';
+      var obj = {
+        data: data,
+        headerText: headerText,
+      };
+      let option = new DialogModel();
+      option.DataService = this.listview.dataService as CRUDService;
+      option.FormModel = this.listview.formModel;
+      this.callFC.openForm(PopupSavePostComponent, '', 500, 400, '', obj, '');
+    }
   }
   pushComment(data: any) {
     if (!data) return;
@@ -278,37 +383,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         return;
       }
     });
-  }
-  showListTag(item: any) {
-    if (!item || !item.listTag) return;
-    item.isShowTag = true;
-    this.lstUserTag = item.listTag;
-    this.dt.detectChanges();
-  }
-  showListShare(item: any) {
-    if (!item || !item.listShare) return;
-    if (item.shareControl == 'U' ||
-      item.shareControl == 'G' || item.shareControl == 'R' ||
-      item.shareControl == 'P' || item.shareControl == 'D' ||
-      item.shareControl == 'O') {
-      item.isShowShare = !item.isShowShare;
-      this.lstUserShare = item.listShare;
-      this.dt.detectChanges();
-    }
-  }
-  closeListShare(item: any) {
-    if (!item) return;
-    if (item.isShowShare) {
-      item.isShowShare = false;
-      this.dt.detectChanges();
-    }
-  }
-  closeListTag(item: any) {
-    if (!item) return;
-    if (item.isShowTag) {
-      item.isShowTag = false;
-      this.dt.detectChanges();
-    }
   }
   naviagteWPNew(data: any) {
     if (!data || !data.recID || !data.category) return;
@@ -322,7 +396,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.codxService.navigate('', "wp/news/WPT02/" + data.category + '/' + data.recID);
+          this.codxService.navigate(
+            '',
+            'wp/news/WPT02/' + data.category + '/' + data.recID
+          );
         }
       });
   }
@@ -330,14 +407,23 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) 
-  {
-    if (!file) return;
-    let option = new DialogModel();
-    option.DataService = this.listview.dataService as CRUDService;
-    option.FormModel = this.listview.formModel;
-    option.IsFull = true;
-    this.callFC.openForm(PopupDetailComponent, '', 0, 0, '', file, '', option);
+  clickViewDetail(file: any) {
+    if (file) {
+      let option = new DialogModel();
+      option.DataService = this.listview.dataService as CRUDService;
+      option.FormModel = this.listview.formModel;
+      option.IsFull = true;
+      this.callFC.openForm(
+        PopupDetailComponent,
+        '',
+        0,
+        0,
+        '',
+        file,
+        '',
+        option
+      );
+    }
   }
   clickShowComment(data: any) {
     data.isShowComment = !data.isShowComment;

@@ -1,6 +1,5 @@
 <codx-form
   [headerText]="header"
-  subHeaderText=""
   [body]="body"
   [footer]="footer"
   [dialog]="dialog"
@@ -60,6 +59,7 @@
           [isAllowEdit]="true"
           [objectId]="storage?.recID"
           [objectName]="storage?.title"
+          [imgOn]="storage?.modifiedOn"
         >
         </codx-img>
       </div>

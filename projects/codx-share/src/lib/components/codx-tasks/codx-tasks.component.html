@@ -228,7 +228,7 @@
 
   <div class="d-flex mt-1 flex-grow-1 mb-2">
     <div class="d-flex me-6">
-      <i class="icon-calendar_today me-1"></i>
+      <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
         <span *ngIf="data.dueDate" class="text-gray-700">{{
           data.dueDate | date: "dd/MM/yyyy"
@@ -387,18 +387,36 @@
 <ng-template #footerNone></ng-template>
 
 <ng-template #footerList let-data>
-  <div class="d-flex justify-content-between align-items-end mt-1">
+  <div class="d-flex justify-content-between align-items-center mt-1">
     <div class="d-flex align-items-end ms-14 codx-badge">
-      <codx-vll
-        [name]="funcID == 'TMT0402' ? vllApproveStatus : vllStatus"
-        [formModel]="view.formModel"
+      <!-- <codx-vll [name]="funcID == 'TMT0402' ? vllApproveStatus : vllStatus" [formModel]="view.formModel"
         [field]="funcID == 'TMT0402' ? 'ApproveStatus' : 'Status'"
-        [value]="funcID == 'TMT0402' ? data?.approveStatus : data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-md fs-7 me-2"
-      >
-      </codx-vll>
+        [value]="funcID == 'TMT0402' ? data?.approveStatus : data?.status" [showText]="true" [showBgColor]="true"
+        class="badge badge-light badge-md fs-7 me-2">
+      </codx-vll> -->
+      <ng-container *ngIf="funcID == 'TMT0402' && data?.approveStatus != null">
+        <codx-vll
+          [name]="vllApproveStatus"
+          [field]="'ApproveStatus'"
+          [value]="data?.approveStatus"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7"
+        >
+        </codx-vll>
+      </ng-container>
+      <ng-container *ngIf="funcID != 'TMT0402'">
+        <codx-vll
+          [name]="vllStatus"
+          [formModel]="view.formModel"
+          [field]="'Status'"
+          [value]="data?.status"
+          [showText]="true"
+          [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 me-2"
+        >
+        </codx-vll>
+      </ng-container>
       <span>
         <span class="fs-7 text-gray-600">{{
           data.dueDate | date: "dd/MM/yyyy"
@@ -562,9 +580,8 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd ? button : ''"
+  [button]="showButtonAdd && funcID!='TMT0206' ? button : ''"
   (buttonClick)="click($event)"
-  (viewChanged)="changeView($event)"
   (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj"
   (selectedChange)="selectedChange($event)"

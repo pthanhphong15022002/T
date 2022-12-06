@@ -18,7 +18,7 @@
     <div (dblclick)="doubleClick(data)">
       <codx-card-center cardCss="border w-250px h-100 px-3 py-3 position-relative" [formModel]="view.formModel"
         [headerTmp]="headerTmp" [title]="getDate(data)" titleCss="fs-5 mb-2 fw-bold" [subTitle]="data.meetingName"
-        [dataItem]="data" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"  [moreFuncCss]="'me-10'"
+        [dataItem]="data" [footer]="footer" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" [moreFuncCss]="'me-10'"
         (changeDataMF)="changeDataMF($event, data)" [moreFuncCss]="'me-8'">
       </codx-card-center>
     </div>
@@ -26,18 +26,18 @@
 </div>
 <ng-template #headerTmp let-data>
   <div class="d-flex align-items-center justify-content-between">
-    <div class="d-flex align-items-top">
-      <div style="width: 5px" [style.background-color]="
+    <div class="d-flex align-items-top mb-1">
+      <div class="rounded-2" style="width: 3px" [style.background-color]="
           data.status | vll: statusVll:'textColor' | async
         "></div>
       <div [innerHtml]="convertHtmlAgency(data)"></div>
     </div>
-    <div *ngIf="data?.isOnline" [ngbPopover]="popoverLinks"
-    #p1="ngbPopover" [openDelay]="500" (mouseenter)="p1.open()" (mouseleave)="p1.close()" placement="right left">
-      <i class="icon-insert_link text-primary text-hover-primary icon-24" ></i>
+    <div *ngIf="data?.isOnline" [ngbPopover]="popoverLinks" #p1="ngbPopover" [openDelay]="500" (mouseenter)="p1.open()"
+      (mouseleave)="p1.close()" placement="right left">
+      <i class="icon-insert_link text-primary text-hover-primary icon-24" (click)="openLinkMeeting(data)"></i>
     </div>
   </div>
-  <ng-template #popoverLinks >
+  <ng-template #popoverLinks>
     <span>
       <codx-label name="lblLinkOnlineMeeting" [formModel]="view.formModel" default="Link họp online"></codx-label>
     </span>
@@ -59,14 +59,16 @@
 
     </div>
   </div>
-  <div class="footer-att" *ngIf="data.attachments > 0" [ngbPopover]="popperAttachment"
-    #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
-    <span class="icon-attach_file icon-18"> </span>
+  <div class="footer-att" *ngIf="data.attachments > 0" [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500"
+    (mouseenter)="p.open()" (mouseleave)="p.close()" placement="right left">
+    <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [viewType]="1"
+      [count]="data.attachments"></codx-attachment-temp>
+    <!-- <span class="icon-attach_file icon-18"> </span>
     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
-      {{ data.attachments }}</span>
+      {{ data.attachments }}</span> -->
   </div>
 
-  <ng-template #popperAttachment >
+  <ng-template #popperAttachment>
     <span>
       <codx-label name="lblAttachment" [formModel]="view.formModel" default="Tài liệu đính kèm"></codx-label>
     </span>
@@ -100,7 +102,7 @@
   <codx-card-img cardCss="border h-100" imageObjType="AD_Users" (clickMF)="clickMF($event, data)"
     cardCss="card-template meeting-card border-bottom" (changeDataMF)="changeDataMF($event, data)" [typeMF]="'hover'"
     [title]="data?.meetingName" [status]="data.status" [statusVll]="statusVll" [showBgColorVll]="true"
-    [icoStatus2]="data?.isOnline" [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-24'"
+    [icoStatus2]="data?.isOnline" [icoStatusVll2]="'icon-insert_link text-primary text-hover-primary icon-22'"
     [date]="data.startDate" [rootData]="data" [formModel]="view.formModel" [setting]="setting" [footer]="cardImgFooter"
     [dataItem]="data">
   </codx-card-img>
@@ -153,7 +155,7 @@
 
   <div class="d-flex mt-1 flex-grow-1 mb-2">
     <div class="d-flex me-6">
-      <i class="icon-calendar_today me-1"></i>
+      <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
         <span #startDate class="text-gray-700">{{
           data.startDate | formatvalue

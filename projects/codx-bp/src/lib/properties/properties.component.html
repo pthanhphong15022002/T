@@ -1,34 +1,18 @@
-<codx-form
-  #form
-  [headerText]="data.processName"
-  [subHeader]="header"
-  [body]="body"
-  [formModel]="dialog.formModel"
-  [dialog]="dialog"
-  class="dialog-property"
->
+<codx-form #form [headerText]="data.processName" [subHeader]="header" [body]="body" [formModel]="dialog.formModel"
+  [dialog]="dialog" class="dialog-property">
   <ng-template #header>
     <div class="offcanvas-header w-100">
-      <div
-        class="btn-extand d-flex align-items-center"
-        [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'"
-      >
+      <div class="btn-extand d-flex align-items-center"
+        [ngClass]="!hideExtend ? 'justify-content-end' : 'justify-content-end'">
         <ng-container *ngIf="!hideExtend">
           <span [style.marginLeft]="'52%'">
             <codx-label fiedName="InfoExpand" default="Thông tin mở rộng">
             </codx-label>
           </span>
         </ng-container>
-        <a
-          class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer"
-          (click)="extendShow()"
-        >
+        <a class="text-dark-75 text-hover-primary d-flex align-items-center ms-2 cursor-pointer" (click)="extendShow()">
           <span *ngIf="hideExtend" class="text-dark me-2">
-            <codx-label
-              fiedName="Expand"
-              [formModel]="form.formModel"
-              default="Mở rộng"
-            >
+            <codx-label fiedName="Expand" [formModel]="form.formModel" default="Mở rộng">
             </codx-label>
           </span>
           <span class="icon-login icon-20 ext_button"></span>
@@ -39,345 +23,377 @@
   <ng-template #body>
     <div class="offcanvas-content offcanvas-extend fixed-extend">
       <div class="d-flex">
-        <div class="card-body">
-          <div class="mb-5">
-            <h4 class="fw-bold text-gray-900 mb-104">
-              <codx-label
-                fiedName="Info"
-                [formModel]="form.formModel"
-                default="Thông tin"
-              >
-              </codx-label>
-            </h4>
-            <div class="d-flex flex-wrap mb-2">
-              <div class="d-flex align-items-center me-4">
-                <span class="fw-bolb w-100px">
-                  <codx-label name="" default="Người tạo:"> </codx-label>
-                </span>
-                <span class="text-dark">{{ data.userName }}</span>
-              </div>
+        <div class="flex-grow-1 extend-main">
+          <div class="h-100 extend-content">
+            <div class="dms-info">
               <div class="d-flex align-items-center">
-                <span class="me-1 icon-16 icon-access_alarm"></span
-                ><span>{{ data.activedOn | fmDT }}</span>
-              </div>
-            </div>
-            <div class="d-flex flex-wrap mb-2">
-              <div class="d-flex align-items-center me-4">
-                <span class="fw-bolb w-100px">
-                  <codx-label name="" default="Phiên bản:"> </codx-label>
-                </span>
-                <span class="text-dark">{{ data.versionNo }}</span>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="me-1 icon-16 icon-access_alarm"></span
-                ><span>{{ data.activedOn | fmDT }}</span>
-              </div>
-            </div>
-            <div class="d-flex flex-wrap mb-2">
-              <div class="d-flex align-items-center me-4">
-                <span class="fw-bolb w-100px">
-                  <codx-label name="" default="Chủ qui trình:"> </codx-label>
-                </span>
-                <span class="text-dark">{{ data.owner }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="mb-5">
-            <h4 class="fw-bold text-gray-900 mb-4">
-              <codx-label name="" default="Đánh giá"> </codx-label>
-            </h4>
-            <div class="d-flex flex-stack w-100 me-2">
-              <!--begin::Section-->
-              <div class="d-flex flex-column flex-center">
-                <span class="text-warning fw-bolder d-block fs-3x">{{
-                  totalRating
-                }}</span>
-                <div class="rating-group">
-                  <div class="d-flex">
-                    <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                    <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                    <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                    <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                    <span class="icon-star text-gray-500 icon-16 me-1"></span>
-                  </div>
-                  <div
-                    [style.width]="styleRating"
-                    class="d-flex rating-percent"
-                  >
-                    <span class="icon-star text-warning icon-16 me-1"></span>
-                    <span class="icon-star text-warning icon-16 me-1"></span>
-                    <span class="icon-star text-warning icon-16 me-1"></span>
-                    <span class="icon-star text-warning icon-16 me-1"></span>
-                    <span class="icon-star text-warning icon-16 me-1"></span>
-                  </div>
+                <div *ngIf="process != null && flowChart != null">
+                  <img alt="" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
+                    src="{{flowChart.pathDisk}}">
+
                 </div>
-                <div class="text-gray-600 fs-7 mt-2">
-                  {{ totalViews }}
-                  <codx-label name="" default="Đánh giá"> </codx-label>
-                </div>
+                <!-- <ng-template #elsethenAvatar1>
+                    <div class="mh-150px me-2" [style.background]="flowChart.backGround" style="width: 500px; margin-bottom: 5px;">
+                      {{flowChart.fileName}}
+                    </div>
+                  </ng-template> -->
               </div>
-              <!--end::Section-->
-              <div class="flex-grow-1">
-                <div
-                  class="d-flex justify-content-end align-items-start flex-wrap"
-                >
-                  <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                    <div class="d-flex align-items-center me-3">
-                      <span class="me-1">5</span>
-                      <div class="rating-label">
-                        <i class="icon-star icon-16"></i>
-                      </div>
-                    </div>
-                    <div class="progress h-6px w-100 me-3">
-                      <div
-                        class="progress-bar bg-warning"
-                        role="progressbar"
-                        [style.width]="rating5"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-                    <span class="text-primary fw-bold">{{ rating5 }}</span>
-                  </div>
-                  <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                    <div class="d-flex align-items-center me-3">
-                      <span class="me-1">4</span>
-                      <div class="rating-label">
-                        <i class="icon-star icon-16"></i>
-                      </div>
-                    </div>
-                    <div class="progress h-6px w-100 me-3">
-                      <div
-                        class="progress-bar bg-warning"
-                        role="progressbar"
-                        [style.width]="rating4"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-                    <span class="text-primary fw-bold">{{ rating4 }}</span>
-                  </div>
-                  <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                    <div class="d-flex align-items-center me-3">
-                      <span class="me-1">3</span>
-                      <div class="rating-label">
-                        <i class="icon-star icon-16"></i>
-                      </div>
-                    </div>
-                    <div class="progress h-6px w-100 me-3">
-                      <div
-                        class="progress-bar bg-warning"
-                        role="progressbar"
-                        [style.width]="rating3"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-                    <span class="text-primary fw-bold">{{ rating3 }}</span>
-                  </div>
-                  <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                    <div class="d-flex align-items-center me-3">
-                      <span class="me-1">2</span>
-                      <div class="rating-label">
-                        <i class="icon-star icon-16"></i>
-                      </div>
-                    </div>
-                    <div class="progress h-6px w-100 me-3">
-                      <div
-                        class="progress-bar bg-warning"
-                        role="progressbar"
-                        [style.width]="rating2"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-                    <span class="text-primary fw-bold">{{ rating2 }}</span>
-                  </div>
-                  <div class="d-flex align-items-center w-100 mw-275px mb-2">
-                    <div class="d-flex align-items-center me-3">
-                      <span class="me-1">1</span>
-                      <div class="rating-label">
-                        <i class="icon-star icon-16"></i>
-                      </div>
-                    </div>
-                    <div class="progress h-6px w-100 me-3">
-                      <div
-                        class="progress-bar bg-warning"
-                        role="progressbar"
-                        [style.width]="rating1"
-                        aria-valuenow="50"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
-                    </div>
-                    <span class="text-primary fw-bold">{{ rating1 }}</span>
-                  </div>
+              <div class="dms-btn d-flex justify-content-between mt-4" style="margin-bottom: 5px;">
+                <div class="tag-1line" *ngIf="data.tags">
+                  <codx-tag [entityName]="form.formModel.entityName" [disabled]="true" [isEdit]="false"
+                    [value]="data?.tags">
+                  </codx-tag>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="separator my-2"></div>
-          <div class="mb-4">
-            <div class="d-flex flex-stack flex-wrap">
-              <div class="d-flex align-items-center py-1">
-                <div class="d-flex flex-column">
-                  <div class="text-dark fw-bold">
-                    <codx-label name="" default="Đánh giá tài liệu này">
-                    </codx-label>
+            <div class="mb-5">
+              <div class="d-flex flex-wrap mb-2">
+                <div class="d-flex align-items-center me-4">
+                  <span class="fw-bold text-dark">
+                    <codx-label fiedName="CreatedBy" [formModel]="form.formModel" default="Người tạo:"> </codx-label>
+                  </span>
+                  <span class="text-dark">
+                    <div>{{data.userNameCreatedBy}}</div>
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="me-1 icon-16 icon-access_alarm"></span><span #createdOn> {{
+                    data.createdOn | formatvalue
+                    : dialog.formModel
+                    : "createdOn"
+                    : createdOn
+                    : "Processes"
+                    : "grvProcesses"
+                    | async
+                    }}</span>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap mb-2">
+                <div class="d-flex align-items-center me-4">
+                  <span class="fw-bold text-dark">
+                    <codx-label fiedName="VersionNo" [formModel]="form.formModel" default="Phiên bản:"> </codx-label>
+                  </span>
+                  <span class="text-dark">{{ data.versionNo }}</span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="me-1 icon-16 icon-access_alarm"></span><span #activedOn> {{
+                    data.activedOn | formatvalue
+                    : form.formModel
+                    : "activedOn"
+                    : activedOn
+                    : "Processes"
+                    : "grvProcesses"
+                    | async
+                    }}</span>
+                </div>
+              </div>
+              <!--Gắn tạm sau này BA hướng dẫn phê duyệt thì mới thay-->
+              <div class="d-flex flex-wrap mb-2">
+                <div class="d-flex align-items-center me-4">
+                  <span class="fw-bold text-dark">
+                    <codx-label name="" default="Người phê duyệt:"> </codx-label>
+                  </span>
+                  <span class="text-dark">
+                    <div>{{data.userNameCreatedBy}}</div>
+                  </span>
+                </div>
+                <div class="d-flex align-items-center">
+                  <span class="me-1 icon-16 icon-access_alarm"></span><span #createdOn> {{
+                    data.createdOn | formatvalue
+                    : dialog.formModel
+                    : "createdOn"
+                    : createdOn
+                    : "Processes"
+                    : "grvProcesses"
+                    | async
+                    }}</span>
+                </div>
+              </div>
+              <div class="d-flex flex-wrap mb-2">
+                <div class="d-flex align-items-center me-4">
+                  <span class="fw-bold text-dark">
+                    <codx-label fiedName="Owner" [formModel]="form.formModel" default="Chủ qui trình:"> </codx-label>
+                  </span>
+                  <span class="text-dark">{{ data.userName }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="card-rating mt-6">
+              <div class="fw-bold text-gray-600 mb-4">
+                <codx-label class="fw-bold " name="" default="Đánh giá"> </codx-label>
+              </div>
+              <div class="d-flex">
+                <div class="d-flex flex-column me-20 text-center">
+                  <div class="fw-bolder text-warning mb-2" [style.fontSize]="'40px'">
+                    {{ totalRating }}
+                  </div>
+                  <div class="rating-group">
                     <div class="d-flex">
-                      <ngb-rating
-                        [(rate)]="currentRate"
-                        max="5"
-                        (rateChange)="readonly = false"
-                        (hover)="hovered = $event"
-                        (leave)="hovered = currentRate"
-                        [readonly]="readonly"
-                      >
-                        <ng-template let-fill="fill" let-index="index">
-                          <span
-                            class="star"
-                            [class.filled]="fill === 100"
-                            [class.bad]="index < 5"
-                            >&#9733;</span
-                          >
-                        </ng-template>
-                      </ngb-rating>
+                      <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                      <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                      <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                      <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                      <span class="icon-star text-gray-500 icon-16 me-1"></span>
+                    </div>
+                    <div [style.width]="styleRating" class="d-flex rating-percent">
+                      <span class="icon-star text-warning icon-16 me-1"></span>
+                      <span class="icon-star text-warning icon-16 me-1"></span>
+                      <span class="icon-star text-warning icon-16 me-1"></span>
+                      <span class="icon-star text-warning icon-16 me-1"></span>
+                      <span class="icon-star text-warning icon-16 me-1"></span>
                     </div>
                   </div>
-                  <div class="text-gray-700">
-                    <codx-label
-                      name=""
-                      default="Cho người khác biết suy nghĩ của bạn ...."
-                    >
-                    </codx-label>
+                  <div class="text-gray-600 fs-7 mt-2">
+                    {{ totalViews }}
+                    <codx-label name="" default="Đánh giá"> </codx-label>
                   </div>
                 </div>
-              </div>
-              <div class="d-flex align-items-center py-1">
-                <div class="rating px-4 me-2">
-                  <div class="rating-label">
-                    <i class="icon-star_outline"></i>
-                  </div>
-                  <div class="rating-label">
-                    <i class="icon-star_outline"></i>
-                  </div>
-                  <div class="rating-label">
-                    <i class="icon-star_outline"></i>
-                  </div>
-                  <div class="rating-label">
-                    <i class="icon-star_outline"></i>
-                  </div>
-                  <div class="rating-label">
-                    <i class="icon-star_outline"></i>
+                <!--end::Section-->
+                <div class="flex-grow-1">
+                  <div class="d-flex justify-content-end align-items-start flex-wrap">
+                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                      <div class="d-flex align-items-center me-3">
+                        <span class="me-1">5</span>
+                        <div class="rating-label">
+                          <i class="icon-star icon-16"></i>
+                        </div>
+                      </div>
+                      <div class="progress h-6px w-100 me-3">
+                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating5"
+                          aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <span class="text-primary fw-bold">{{ rating5 }}</span>
+                    </div>
+                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                      <div class="d-flex align-items-center me-3">
+                        <span class="me-1">4</span>
+                        <div class="rating-label">
+                          <i class="icon-star icon-16"></i>
+                        </div>
+                      </div>
+                      <div class="progress h-6px w-100 me-3">
+                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating4"
+                          aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <span class="text-primary fw-bold">{{ rating4 }}</span>
+                    </div>
+                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                      <div class="d-flex align-items-center me-3">
+                        <span class="me-1">3</span>
+                        <div class="rating-label">
+                          <i class="icon-star icon-16"></i>
+                        </div>
+                      </div>
+                      <div class="progress h-6px w-100 me-3">
+                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating3"
+                          aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <span class="text-primary fw-bold">{{ rating3 }}</span>
+                    </div>
+                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                      <div class="d-flex align-items-center me-3">
+                        <span class="me-1">2</span>
+                        <div class="rating-label">
+                          <i class="icon-star icon-16"></i>
+                        </div>
+                      </div>
+                      <div class="progress h-6px w-100 me-3">
+                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating2"
+                          aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <span class="text-primary fw-bold">{{ rating2 }}</span>
+                    </div>
+                    <div class="d-flex align-items-center w-100 mw-275px mb-2">
+                      <div class="d-flex align-items-center me-3">
+                        <span class="me-1">1</span>
+                        <div class="rating-label">
+                          <i class="icon-star icon-16"></i>
+                        </div>
+                      </div>
+                      <div class="progress h-6px w-100 me-3">
+                        <div class="progress-bar bg-warning" role="progressbar" [style.width]="rating1"
+                          aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                      <span class="text-primary fw-bold">{{ rating1 }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="position-relative cmt cmt-cmt c3 w-100">
-              <div class="comment-box flex-grow-1">
-                <codx-input
-                  placeholder="Nhận xét của bạn..."
-                  class="form-control test-datetime"
-                  type="textarea"
-                  format="ed2"
-                  style="width: 100%"
-                  [crrValue]="commenttext"
-                  (valueChange)="txtValue($event, 'commenttext')"
-                ></codx-input>
+            <div class="separator my-2"></div>
+            <div class="d-flex flex-column py-3 flex-grow-1 border-top my-rating mt-3">
+              <div class="d-flex align-items-center">
+                <div class="font-size-lg fw-bold flex-grow-1">
+                  <codx-label name="" default="Đánh giá tài liệu này">
+                  </codx-label>
+                </div>
+                <div class="d-flex">
+                  <ngb-rating [(rate)]="currentRate" max="5" (rateChange)="readonly = false" (hover)="hovered = $event"
+                    (leave)="hovered = currentRate" [readonly]="readonly">
+                    <ng-template let-fill="fill" let-index="index">
+                      <span class="star" [class.filled]="fill === 100" [class.bad]="index < 5">&#9733;</span>
+                    </ng-template>
+                  </ngb-rating>
+                </div>
               </div>
-              <span
-                (click)="setComment()"
-                class="btn btn-primary ms-3 min-w-60px"
-              >
-                <codx-label name="" default="Gửi"> </codx-label>
-              </span>
+              <div div class="text-gray-500 fs-7">
+                <codx-label name="" default="Cho người khác biết suy nghĩ của bạn ....">
+                </codx-label>
+              </div>
+              <div class="d-flex align-items-center mt-4">
+                <div class="comment-box flex-grow-1">
+                  <codx-input placeholder="Nhận xét của bạn..." id="myInput" class="form-control test-datetime"
+                    type="textarea" format="ed2" style="width: 100%" [crrValue]="commenttext"
+                    (valueChange)="txtValue($event, 'commenttext')"></codx-input>
+                </div>
+                <span (click)="setComment()" id="myBtn" class="btn btn-primary ms-3 min-w-60px">
+                  <codx-label name="" default="Gửi"> </codx-label>
+                </span>
+              </div>
             </div>
+            <!--begin::Wrapper-->
+            <div class="mb-4">
+              <!-- <ng-container *ngFor="let view of fileEditing.views; let i = index"> -->
+              <!--begin::Foot-->
+              <ng-container *ngIf="process.rattings.length>0">
+                <ng-container *ngFor="let view of rattings; let i = index">
+                  <div *ngIf="view.ratting > 0" class="d-flex flex-column py-4 w-100 border-bottom user-rating">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <div class="me-3">
+                        <codx-temp-full [imageId]="view.objectID" imageObjType="AD_Users" imgCss="w-30px me-3"
+                          [imageWidth]="30" [title]="view.objectName" [subTitle]="view.positionName">
+                        </codx-temp-full>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div class="task-date text-gray-600 d-flex flex-column align-items-center">
+                          <div class="text-gray-500 fs-7 mb-1">
+                            <span class="text-gray-600 me-2">{{view.createdOn |
+                              timefrom}}</span>
+                          </div>
+                          <div class="d-flex user-rated">
+                            <span [ngClass]="setClassRating(1, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(2, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(3, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(4, view.ratting)"></span>
+                            <span [ngClass]="setClassRating(5, view.ratting)"></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="rating-comment mt-3">
+                      {{view.comment}}
+                    </div>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+
+
+              <!--end::Foot-->
+              <!--begin::Message-->
+              <div class="fs-5 fw-normal text-gray-800">{{ data.comment }}</div>
+              <!--end::Message-->
+              <!-- </ng-container> -->
+            </div>
+            <!--end::Wrapper-->
           </div>
-          <!--begin::Wrapper-->
-          <div class="mb-4">
-            <!-- <ng-container *ngFor="let view of fileEditing.views; let i = index"> -->
-            <!--begin::Foot-->
-            <div
-              *ngIf="data.rating > 0"
-              class="d-flex flex-stack flex-wrap mb-5"
-            >
-              <codx-temp-full
-                [imageId]="data.objectID"
-                imageObjType="AD_Users"
-                imgCss="w-30px me-3"
-                [imageWidth]="30"
-                [title]="data.userName"
-                [subTitle]="data.positionName"
-              >
-              </codx-temp-full>
-              <div class="d-flex align-items-center text-center">
-                <div class="d-flex flex-column">
-                  <div class="text-gray-600 fs-7">
-                    {{ data.viewDate | timefrom }}
-                  </div>
-                  <div class="d-flex user-rated">
-                    <span [ngClass]="setClassRating(1, data.rating)"></span>
-                    <span [ngClass]="setClassRating(2, data.rating)"></span>
-                    <span [ngClass]="setClassRating(3, data.rating)"></span>
-                    <span [ngClass]="setClassRating(4, data.rating)"></span>
-                    <span [ngClass]="setClassRating(5, data.rating)"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--end::Foot-->
-            <!--begin::Message-->
-            <div class="fs-5 fw-normal text-gray-800">{{ data.comment }}</div>
-            <!--end::Message-->
-            <!-- </ng-container> -->
-          </div>
-          <!--end::Wrapper-->
         </div>
-        <div
-          [ngStyle]="{ display: hideExtend ? 'none' : 'block' }"
-          [attr.disabled]="hideExtend ? true : null"
-          class="extend-more pl-5 w-350px min-w-350px dm-tab-properties ms-3 border-left"
-        >
+        <div [ngStyle]="{ display: hideExtend ? 'none' : 'block' }" [attr.disabled]="hideExtend ? true : null"
+          class="extend-more pl-5 w-350px min-w-350px dm-tab-properties ms-3 border-left">
           <ejs-tab>
             <e-tabitems>
               <e-tabitem>
                 <ng-template #headerText>
-                  <div>
+                  <div class="ms-2">
                     <codx-label name="Version" default="Phiên bản">
                     </codx-label>
                   </div>
                 </ng-template>
-                <!-- <ng-template #content>
-                                    <div class="pt-5 extend-more-content pe-3">
-                                        <ng-container
-                                            *ngIf="(fileEditing.history && fileEditing.history.length>0 ), else defaulEmpt">
-                                            <div *ngFor="let his of fileEditing.history; let i = index">
-                                                <ng-container *ngIf="his.fileName != null && his.fileName != ''">
-                                                    <div class="d-flex history-item pb-4 line-hor">
-                                                        <img *ngIf="his.extension != null && his.extension != ''"
-                                                            alt="{{his.fileName}}" class="max-h-20px me-2"
-                                                            src="../../../assets/codx/dms/{{getAvatar(his.extension)}}">
-                                                        <div class="d-flex flex-column flex-grow-1">
-                                                            <div class="d-flex justify-content-between">
-                                                                <div class="text-dark fw-bold">{{his.fileName}}</div>
-                                                                <div class="text-gray-500 ms-3">{{his.createdOn |
-                                                                    timefrom}}</div>
-                                                            </div>
-                                                            <div class="text-primary fs-7">{{his.userName}}
-                                                            </div>
-                                                            <div class="text-gray-600">{{his.coment}}</div>
-                                                        </div>
-                                                    </div>
-                                                </ng-container>
-                                            </div>
-                                        </ng-container>
-                                    </div>
-                                </ng-template> -->
+                <ng-template #content>
+                  <div class="pt-5 extend-more-content px-3 ms-2">
+                    <ng-container *ngIf="(process.versions && process.versions.length>0 ), else defaulEmpt">
+                      <div *ngFor="let item of process.versions; index as i">
+                        <div class="d-flex flex-row pb-3 mt-3 border-bottom justify-content-between">
+                          <div class="d-flex align-items-start w-100">
+                            <span class="me-2 icon-18 icon-history"></span>
+                            <div class="d-flex flex-column w-100">
+                              <div class="pb-1">
+                                <div class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
+                                  <codx-label class="text-dark fw-bold fs-5 button-version cursor-pointer"
+                                   [formModel]="form.formModel" default="Phiên bản đầu tiên"></codx-label>
+                                </div>
+                                <ng-template #firstVersionNo>
+                                  <div class="text-dark fw-bold fs-5 button-version cursor-pointer" >
+                                    <span>{{item.versionName}}:</span>
+                                    <span #versionNo>
+                                      {{
+                                      item?.versionNo
+                                      | formatvalue
+                                      : form.formModel
+                                      : "versionNo"
+                                      : versionNo
+                                      : "Processes"
+                                      : "grvProcesses"
+                                      | async
+                                      }}
+                                    </span>
+                                  </div>
+                                </ng-template>
+                              </div>
+                              <div class="pb-1">
+                                <span class="text-primary">
+                                  <codx-label default="Cập nhật bởi, "></codx-label>{{ data.userNameCreatedBy }}
+                                </span>
+                                <span class="text-gray-500 mx-1"> |</span>
+                                <span class="text-primary">
+                                  {{item.createdOn| timefrom}}
+                                </span>
+                              </div>
+                              <div [innerHTML]="item.comment"></div>
+                            </div>
+                          </div>
+
+                          <div class="d-flex flex-column w-125px min-w-125px px-3 ms-6">
+                            <div class="justify-content-end mb-2">
+                              <codx-label name="lblActivedOn" fiedName="ActivedOn" formName="ProcessRevisions"
+                                gridViewName="grvProcessRevisions" default="Ngày hiệu lực">
+                              </codx-label>
+                            </div>
+                            <div class="justify-content-end">
+                              <!-- <span #activedOn>
+                                {{
+                                item?.activedOn
+                                | formatvalue
+                                : form.formModel
+                                : "activedOn"
+                                : activedOn
+                                : "Processes"
+                                : "grvProcesses"
+                                | async
+                                }}
+                              </span> -->
+                              <div #activedOn>
+                                {{
+                                item.activedOn | formatvalue
+                                : form.formModel
+                                : "activedOn"
+                                : activedOn
+                                : "Processes"
+                                : "grvProcesses"
+                                | async
+                                }}
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                </ng-template>
               </e-tabitem>
+
+              <!--Chưa biết lịch sử này là cái gì-->
               <e-tabitem>
                 <ng-template #headerText>
                   <div>
@@ -385,43 +401,11 @@
                   </div>
                 </ng-template>
                 <ng-template #content>
-                  <div class="pt-5 extend-more-content pe-3">
-                    <ng-container
-                      *ngIf="
-                        fileEditing?.history && fileEditing?.history.length > 0;
-                        else defaulEmpt
-                      "
-                    >
-                      <div
-                        *ngFor="
-                          let history of fileEditing.history;
-                          let i = index
-                        "
-                        class="history-item pb-6 line-hor"
-                      >
-                        <div class="d-flex">
-                          <div class="me-3">
-                            <codx-temp-full
-                              [imageId]="history.createdBy"
-                              imageObjType="AD_Users"
-                              imgCss="w-35px"
-                              [imageWidth]="35"
-                            >
-                            </codx-temp-full>
-                          </div>
-                          <div class="d-flex flex-column flex-grow-1">
-                            <div class="task-date text-gray-500">
-                              <span>{{ history.createdOn | timefrom }}</span>
-                            </div>
-                            <div class="task-name">
-                              {{ history.description }}
-                            </div>
-                            <div class="task-name">{{ history.note }}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </ng-container>
-                  </div>
+                  <!-- <codx-tree-history [objectID]="data.recID" [objectType]="entityName"
+                    [viewIcon]="true" [funcID]="funcID">
+                  </codx-tree-history> -->
+                  <codx-history [objectID]="data.recID" [formModel]="form.formModel" [funcID]="funcID"></codx-history>
+
                 </ng-template>
               </e-tabitem>
             </e-tabitems>
@@ -436,10 +420,7 @@
   <div class="container h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img
-          src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-200px"
-        />
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
         <div class="fw-bold mt-1 text-center">
           {{ "SYS011" | mssg | async }}
         </div>

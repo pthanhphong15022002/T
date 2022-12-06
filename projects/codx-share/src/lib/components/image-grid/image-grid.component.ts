@@ -5,32 +5,17 @@ import {
   EventEmitter,
   Injector,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChange,
-  SimpleChanges,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-
-import { Subscription } from 'rxjs';
 import 'lodash';
 import {
   AuthService,
   CallFuncService,
-  DialogModel,
-  FilesService,
-  NotificationsService,
 } from 'codx-core';
 import { ErmComponent } from '../ermcomponent/erm.component';
-import { isBuffer } from 'util';
 import { environment } from 'src/environments/environment';
-import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { AttachmentComponent } from '../attachment/attachment.component';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { PopupDetailComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/popup-detail/popup-detail.component';
 @Component({
   selector: 'codx-file',
   templateUrl: './image-grid.component.html',
@@ -44,9 +29,9 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   @Input() edit: boolean = false;
   @Input() files: any[] = [];
   @Output() evtGetFiles = new EventEmitter();
-  @Output() removeFile = new EventEmitter();
-  @Output() addFile = new EventEmitter();
-  @Output() viewDetail = new EventEmitter();
+  @Output() evtRemoveFile = new EventEmitter();
+  @Output() evtAddFile = new EventEmitter();
+  @Output() evtViewDetail = new EventEmitter();
   FILE_REFERTYPE = {
     IMAGE: 'image',
     VIDEO: 'video',
@@ -72,9 +57,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   ngOnInit() {
     if (this.objectID) {
       this.getFileByObjectID();
-    } else {
-      this.convertFile();
-    }
+    } 
   }
   getFileByObjectID() {
     this.api
@@ -88,21 +71,18 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
       .subscribe((result: any[]) => {
         if (result.length > 0) {
           result.forEach((f: any) => {
-            if (this.objectType == 'WP_News') {
-              if (f.referType == this.FILE_REFERTYPE.IMAGE) {
+            switch(f['referType'])
+            {
+              case this.FILE_REFERTYPE.IMAGE:
+              case this.FILE_REFERTYPE.VIDEO:
+                f["source"] = `${environment.urlUpload}`+"/"+f.url; 
                 this.file_img_video.push(f);
-              }
-            } else {
-              if (f.referType == this.FILE_REFERTYPE.IMAGE) {
-                this.file_img_video.push(f);
-              } else if (f.referType == this.FILE_REFERTYPE.VIDEO) {
-                f[
-                  'srcVideo'
-                ] = `${environment.apiUrl}/api/dm/filevideo/${f.recID}?access_token=${this.auth.userValue.token}`;
-                this.file_img_video.push(f);
-              } else {
+                break;
+              case this.FILE_REFERTYPE.APPLICATION:
                 this.file_application.push(f);
-              }
+                break;
+              default:
+                break;
             }
           });
           this.files = result;
@@ -126,7 +106,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
   }
 
   clickViewDetail(file: any) {
-    this.viewDetail.emit(file);
+    this.evtViewDetail.emit(file);
   }
 
   removeFiles(file: any) {
@@ -150,31 +130,40 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
     }
     this.files = this.files.filter((f: any) => f.fileName != file.fileName);
     this.filesDelete.push(file);
-    this.removeFile.emit(file);
+    this.evtRemoveFile.emit(file);
     this.dt.detectChanges();
   }
   addFiles(files: any[]) {
-    files.map((f) => {
-      if (f.mimeType.indexOf('image') >= 0) {
-        f['referType'] = this.FILE_REFERTYPE.IMAGE;
-        let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
-        if (a) return;
+    if(this.files.length == 0)
+    {
+      this.files = [];
+      this.file_img_video = [];
+      this.file_application = []
+    }
+    files.forEach((f) => {
+      let isExist = this.files.some((x) => x.fileName === f.fileName);
+      if(isExist) return;
+      if (f.mimeType.includes('image') || f.mimeType.includes('video')) 
+      {
+        if(f.mimeType.includes('image'))
+        {
+          f['referType'] = this.FILE_REFERTYPE.IMAGE;
+        }
+        else
+        {
+          f['referType'] = this.FILE_REFERTYPE.VIDEO;
+        }
         this.file_img_video.push(f);
-      } else if (f.mimeType.indexOf('video') >= 0) {
-        f['referType'] = this.FILE_REFERTYPE.VIDEO;
-        let a = this.file_img_video.find((f2) => f2.fileName == f.fileName);
-        if (a) return;
-        this.file_img_video.push(f);
-      } else {
+      }
+      else 
+      {
         f['referType'] = this.FILE_REFERTYPE.APPLICATION;
-        let a = this.file_application.find((f2) => f2.fileName == f.fileName);
-        if (a) return;
         this.file_application.push(f);
       }
     });
     this.filesAdd = this.filesAdd.concat(files);
     this.files = this.files.concat(files);
-    this.addFile.emit(files);
+    this.evtAddFile.emit(files);
     this.dt.detectChanges();
   }
 }

@@ -23,7 +23,7 @@ export class CodxAssignTempComponent implements OnInit {
   @Input() objectID = '';
 
   @ViewChild('tmpListResource') tmpListResource: TemplateRef<any>;
-
+  @Input() zIndex: number = 0
   countResource = 0;
   listTaskResousce = [];
   listTaskResousceSearch = [];
@@ -32,6 +32,7 @@ export class CodxAssignTempComponent implements OnInit {
   vllStatusAssign = 'TM007';
   vllStatus = 'TM004';
   searchField = '';
+  
   constructor(
     private cache: CacheService,
     private api: ApiHttpService,
@@ -69,6 +70,7 @@ export class CodxAssignTempComponent implements OnInit {
 
   openPopup() {
     let option = new DialogModel();
+    if (this.zIndex > 0) option.zIndex = this.zIndex;
     this.callFC.openForm(
       this.tmpListResource,
       '',

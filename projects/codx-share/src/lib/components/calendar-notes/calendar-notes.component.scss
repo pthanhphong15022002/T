@@ -63,21 +63,6 @@ app-notes-home {
   min-height: 34px;
 }
 
-.note-content {
-  background-color: #FFF4DE;
-  border-left: 3px #FFA800 solid;
-}
-
-.task-content {
-  background-color: #FFE2E5;
-  border-left: 3px #FF1F00 solid;
-}
-
-.meeting-content {
-  background-color: #C9F7F5;
-  border-left: 3px #1BC5BD solid;
-}
-
 .pd-left-10 {
   padding-left: 10px;
 }
@@ -87,7 +72,7 @@ app-notes-home {
   margin-left: 100%;
 }
 
-.icon-add {
+.icon-gray {
   color: darkgray;
 }
 
@@ -103,13 +88,20 @@ app-notes-home {
   width: 136px;
 }
 
-.w-5px {
-  width: 5px;
+.w-5px,
+.w-5px li {
+  width: 4px;
+  height: 18px;
 }
 
 .show-event {
   margin-left: 10px;
   width: 130px;
+}
+
+.show-list-event {
+  margin-left: 10px;
+  width: 174px;
 }
 
 .show-event-check {
@@ -124,6 +116,19 @@ app-notes-home {
 //     height: 350px !important;
 // }
 
-ejs-listview .e-ul>li {
+ejs-listview .e-ul > li {
   margin-bottom: 5px;
+}
+
+.dropup .dropdown-toggle::after {
+  display: none !important;
+}
+
+.ml-24px {
+  margin-left: -24px;
+}
+
+.title-calendar {
+  background-color: #ddf7f5;
+  height: 2.5rem;
 }

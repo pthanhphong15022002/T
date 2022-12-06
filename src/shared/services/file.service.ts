@@ -31,7 +31,7 @@ export class FileService implements OnDestroy {
         private api: ApiHttpService
     ) {
       //  this.options.pageLoading = false;
-        this.options.pageSize = 1;
+        this.options.pageSize = 20;
         this.options.funcID = "";
         this.options.srtDirections
     }
@@ -52,8 +52,8 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "SearchAsync", [textSearch, model]);
     }
 
-    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean): Observable<any> {
-        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance]);
+    searchFileAdv(textSearch: string, predicates: string, paras: string, pageNo: number, pageSize: number, searchAdvance: boolean,funcID:string): Observable<any> {
+        return this.api.exec<any>("DM", "FileBussiness", "SearchAdvAsync", [textSearch, predicates, paras, pageNo, pageSize, searchAdvance,funcID]);
     }
     updatePermisson(data: any): Observable<any> {
         return this.api.exec<DataReturn>("DM", "FileBussiness", "UpdatePermissionAsync", [data]);
@@ -96,7 +96,9 @@ export class FileService implements OnDestroy {
     getFileNyObjectID(objectID: string): Observable<any> {
         return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByObjectIDAsync", [objectID]);
     }
-
+    getFileByDataRequest(dataRequest: DataRequest): Observable<any> {
+        return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesByGridModelAsync", dataRequest);
+    }
     downloadFile(id: string): Observable<any> {
         return this.api.exec<FileDownload>("DM", "FileBussiness", "DownloadFileAsync", id);
     }
@@ -268,7 +270,7 @@ export class FileService implements OnDestroy {
          );*/
         //return this.api.exec<FolderInfo[]>("DM", "FolderBussiness", "GetFoldersAsync", parentId);
         this.options.entityName = "DM_FileInfo";      
-        this.options.pageSize = 20;         
+        this.options.pageSize = 50;         
         //return this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", parentId);
         var data = this.api.exec<FileInfo[]>("DM", "FileBussiness", "GetFilesAsync", [this.options, parentId]);
         // var fileIbfo = data[0]

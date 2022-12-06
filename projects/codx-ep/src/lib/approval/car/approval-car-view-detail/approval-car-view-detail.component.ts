@@ -1,16 +1,22 @@
+import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Injector,
   Input,
   OnChanges,
   Output,
   SimpleChanges,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
+import { DataRequest, NotificationsService, UIComponent, ViewsComponent, DialogRef } from 'codx-core';
+import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';
-
+import { DriverModel } from '../../../models/bookingAttendees.model';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
+import { PopupDriverAssignComponent } from '../popup-driver-assign/popup-driver-assign.component';
 @Component({
   selector: 'approval-car-view-detail',
   templateUrl: 'approval-car-view-detail.component.html',
@@ -20,6 +26,9 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('itemDetailTemplate') itemDetailTemplate;  
   @ViewChild('subTitleHeader') subTitleHeader;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
+  @Output('driverAssigned') driverAssigned: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
   @Input() formModel;
@@ -32,7 +41,13 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   itemDetailDataStt: any;
   itemDetailStt: any;
   active = 1;  
-
+  cbbDriver: any[];
+  listDriver=[];
+  popupDialog: DialogRef;
+  popupTitle: any;
+  dialog:any;
+  tabControl: TabModel[] = [];
+  fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,    
@@ -44,7 +59,14 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   onInit(): void {
     this.itemDetailStt = 1;
   }
-
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },      
+      { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    ];
+  }
   ngOnChanges(changes: SimpleChanges) {
     if (
       changes?.itemDetail &&
@@ -66,7 +88,17 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     this.setHeight();
     this.active = 1;
   }
-
+  sameDayCheck(sDate:any, eDate:any){
+    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
   clickMF(value, datas: any = null) {
     
     let funcID = value?.functionID;
@@ -79,19 +111,22 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     // }
     switch (funcID) {
       case 'EPT40201':
-      case 'EPT40201':
-      case 'EPT40301':
         {
           //alert('Duyệt');
           this.approve(datas,"5")
         }
         break;      
       case 'EPT40205':
-      case 'EPT40205':
-      case 'EPT40305':
         {
           //alert('Từ chối');
           this.approve(datas,"4")
+        }
+        break;
+      case 'EPT40204':
+        {
+          this.popupTitle=value.text;       
+          this.lviewSetPopupTitle(this.popupTitle);
+          this.lviewDriverAssign(datas);
         }
         break;
       
@@ -112,12 +147,12 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
           .subscribe((res:any) => {
             if (res?.msgCodeError == null && res?.rowCount>=0) {
               if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
+                this.notificationsService.notifyCode('SYS034');//đã duyệt
+                data.approveStatus="5"
               }
               if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
+                this.notificationsService.notifyCode('SYS034');//bị hủy
+                data.approveStatus="4";
               }              
               this.updateStatus.emit(data);
             } else {
@@ -128,27 +163,55 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   } 
 
   
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
-      if(data.status=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=true;
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            if(data.status==5 && data.driverName==null)
+              func.disabled = false;
+            else{
+              func.disabled = true;
+            }
           }
         });
       }
+    }
+  }
+  lviewSetPopupTitle(data){
+    if(data){
+      this.setPopupTitle.emit(data);
+    }
+  }
+  lviewDriverAssign(data) {
+    if (data) {    
+      this.driverAssigned.emit(data);
     }
   }
   clickChangeItemDetailDataStatus(stt) {

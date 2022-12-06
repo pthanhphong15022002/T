@@ -1,32 +1,29 @@
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
-  ApiHttpService,
   DialogData,
   DialogRef,
   ImageViewerComponent,
-  CRUDService,
-  CacheService,
   CodxFormComponent,
   RequestOption,
+  UIComponent,
+  NotificationsService,
 } from 'codx-core';
 import {
   Component,
   OnInit,
-  ChangeDetectorRef,
-  Input,
   EventEmitter,
   ViewChild,
   Output,
   Optional,
+  Injector,
 } from '@angular/core';
 import { NoteBooks } from '../../../model/NoteBooks.model';
-import { NoteBookServices } from '../../../services/notebook.services';
 @Component({
   selector: 'app-add-update-note-book',
   templateUrl: './add-update-note-book.component.html',
   styleUrls: ['./add-update-note-book.component.scss'],
 })
-export class AddUpdateNoteBookComponent implements OnInit {
+export class AddUpdateNoteBookComponent extends UIComponent implements OnInit {
   title: any;
   memo: any;
   formAdd: FormGroup;
@@ -48,13 +45,12 @@ export class AddUpdateNoteBookComponent implements OnInit {
   @Output() loadData = new EventEmitter();
 
   constructor(
-    private api: ApiHttpService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private noteBookService: NoteBookServices,
-    private cache: CacheService,
+    private injector: Injector,
+    private notification: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
     this.dialog = dialog;
     this.formType = dt?.data[1];
     this.formModel = dialog?.formModel;
@@ -75,10 +71,9 @@ export class AddUpdateNoteBookComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  onInit(): void {}
 
-  ngAfterViewInit() {
-  }
+  ngAfterViewInit() {}
 
   valueChange(e) {
     if (e) {
@@ -98,15 +93,13 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt), -1)
       .subscribe((res) => {
-        if (res) {
+        if (res.save) {
           this.imageUpload
-            .updateFileDirectReload(res.recID)
+            .updateFileDirectReload(res.save.recID)
             .subscribe((result) => {
-              if (result) {
-                this.loadData.emit();
-              }
+              this.loadData.emit();
+              this.dialog.close(res.save);
             });
-          this.dialog.close();
         }
       });
   }
@@ -115,16 +108,15 @@ export class AddUpdateNoteBookComponent implements OnInit {
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
-        if (res) {
+        if (res.update) {
           if (this.imageUpload) {
             this.imageUpload
-              .updateFileDirectReload(this.data?.recID)
+              .updateFileDirectReload(res.update.recID)
               .subscribe((result) => {
                 this.loadData.emit();
+                this.dialog.close(res.update);
               });
-          } else {
           }
-          this.dialog.close();
         }
       });
   }

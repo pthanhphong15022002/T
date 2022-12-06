@@ -1,30 +1,14 @@
-<codx-form
-  [headerText]="'Thêm Lễ/Tết/Sự kiện'"
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialog"
->
+<codx-form [headerText]="'Thêm Lễ/Tết/Sự kiện'" [body]="body" [footer]="footer" [dialog]="dialog">
   <ng-template #body>
     <div class="form-popup my-6">
       <div class="form-group row">
         <label class="col-2 col-form-label">
-          <codx-label
-            name="lblShiftType"
-            formName="Calendars"
-            default="Loại ngày"
-          >
+          <codx-label name="lblShiftType" formName="Calendars" default="Loại ngày">
           </codx-label>
         </label>
-        <div class="col-4">
-          <codx-input
-            class="cotrol-vll"
-            type="valuelist"
-            field="calendar"
-            refValue="L1461"
-            placeholder=""
-            [crrValue]="this.dialogAddEvent.value?.calendar"
-            (valueChange)="valueChange($event)"
-          >
+        <div class="col-10">
+          <codx-input class="cotrol-vll" type="valuelist" field="calendar" refValue="L1461" placeholder=""
+            [crrValue]="this.dialogAddEvent.value?.calendar" (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
@@ -34,64 +18,40 @@
           </codx-label>
         </label>
         <div class="col-4">
-          <codx-input
-            type="text"
-            field="month"
-            placeholder=""
-            [crrValue]="this.dialogAddEvent.value?.month"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input type="text" field="month" placeholder="" [crrValue]="this.dialogAddEvent.value?.month"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
-      </div>
-      <div class="form-group row">
         <label class="col-2 col-form-label">
           <codx-label name="lblDay" formName="Calendars" default="Ngày">
           </codx-label>
         </label>
         <div class="col-4">
-          <codx-input
-            type="text"
-            field="day"
-            placeholder=""
-            [crrValue]="this.dialogAddEvent.value?.day"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input type="text" field="day" placeholder="" [crrValue]="this.dialogAddEvent.value?.day"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
       <div #group class="form-group row">
         <label class="col-2 col-form-label">
-          <codx-label name="lblColor" formName="Calendars" default="Màu">
-          </codx-label>
-        </label>
-        <div class="col-4">
-          <codx-colorpicker
-            type="colorpicker"
-            class="form-control text-white color-large"
-            field="color"
-            format="hex"
-            [value]="this.dialogAddEvent.value?.color"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-colorpicker>
-        </div>
-      </div>
-      <div class="form-group row">
-        <label class="col-2 col-form-label">
           <codx-label name="lblSymbol" formName="Calendars" default="Symbol">
           </codx-label>
         </label>
-        <div class="col-2 input-symbol">
-          <codx-input
-            type="vllicon"
-            refValue="L1470"
-            field="symbol"
-            [crrValue]="this.dialogAddEvent.value?.symbol"
-            (valueChange)="valueChange($event)"
-          >
+        <div class="col-4 input-symbol">
+          <codx-input type="vllicon" refValue="L1470" field="symbol" [crrValue]="this.dialogAddEvent.value?.symbol"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
+        <label class="col-2 col-form-label">
+          <codx-label name="lblColor" formName="Calendars" default="Màu">
+          </codx-label>
+        </label>
+        <div class="col-2">
+          <codx-colorpicker type="colorpicker" class="form-control text-white color-large" field="color" format="hex"
+            [value]="this.dialogAddEvent.value?.color" (valueChange)="valueChange($event)">
+          </codx-colorpicker>
+        </div>
+
       </div>
       <div class="form-group row">
         <label class="col-2 col-form-label">
@@ -99,28 +59,17 @@
           </codx-label>
         </label>
         <div class="col-10">
-          <codx-input
-            type="textarea"
-            field="note"
-            format="ed3"
-            [crrValue]="this.dialogAddEvent.value?.note"
-            (valueChange)="valueChange($event)"
-          >
+          <codx-input type="textarea" field="note" format="ed3" [crrValue]="this.dialogAddEvent.value?.note"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="form-group row">
-        <div class="col-12">
-          <codx-input
-            type="checkbox"
-            name="checkbox"
-            class="text-dark"
-            label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
-            [disabled]="this.dialogAddEvent.value?.recID ? true : false"
-            field="set"
-            [checked]="set"
-            (valueChange)="valueChange($event)"
-          >
+        <div class="col-2"></div>
+        <div class="col-10">
+          <codx-input type="checkbox" name="checkbox" class="text-dark" label="Thêm vào bộ ngày nghỉ chuẩn của hệ thống"
+            [disabled]="this.dialogAddEvent.value?.recID ? true : false" field="set" [checked]="set"
+            (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>

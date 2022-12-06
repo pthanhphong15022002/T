@@ -7,7 +7,7 @@ import { DocumentEditorContainerComponent , ToolbarService , PrintService } from
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { SpreadsheetComponent } from '@syncfusion/ej2-angular-spreadsheet';
 import { Sorting } from '@syncfusion/ej2-pivotview';
-import { AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
+import { ApiHttpService, AuthService, CallFuncService, DialogData, DialogRef, NotificationsService, SidebarModel, ViewsComponent } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { PropertiesComponent } from 'projects/codx-dm/src/lib/properties/properties.component';
 import { environment } from 'src/environments/environment';
@@ -65,6 +65,8 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     private callfc: CallFuncService,    
     private elementRef: ElementRef,
     private sanitizer: DomSanitizer,
+    private route: ActivatedRoute,
+    private api: ApiHttpService,
     //private modalService: NgbModal,
     @Optional() data?: DialogData,
     @Optional() dialog?: DialogRef
@@ -260,6 +262,11 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
             this.container.documentEditor.open(http.responseText);
             this.isShow = false;
             this.changeDetectorRef.detectChanges();
+
+          }
+          else{
+            this.notificationsService.notifyCode("DM065");
+            this.isShow = false;
           }
         }
       };
@@ -316,8 +323,30 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   }
 
   ngOnInit(): void {
-    this.data = this.dataFile;
-    if(this.data)this.getData(); 
+    this.route.queryParams
+      .subscribe(params => {
+        if(params)
+        {
+          if(params.id)
+          {
+            this.api.execSv("DM","DM","FileBussiness","GetFilesByIDAsync",params.id).subscribe(item=>{
+              if(item) 
+              {
+                this.dataFile = item;
+                this.data = item;
+                this.getData();
+              }
+            })
+          }
+          else this.data = this.dataFile;
+        }
+        else
+        {
+          
+        }
+      }
+    );
+    //if(this.data)this.getData(); 
   }
   getData()
   {

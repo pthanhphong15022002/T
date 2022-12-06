@@ -1,3 +1,4 @@
+
 import { PopupAddQuotaComponent } from './settings/stationery/popup-add-quota/popup-add-quota.component';
 import { BookingStationeryViewDetailComponent } from './booking/stationery/view-detail/view-detail.component';
 import { PopupRequestStationeryComponent } from './booking/stationery/popup-request-stationery/popup-request-stationery.component';
@@ -48,6 +49,8 @@ import { HistoryCardsComponent } from './settings/historyCards/historyCards.comp
 import { CardTransComponent } from './booking/cardTran/cardTrans.component';
 import { MeetingComponent } from './meeting/meeting.component';
 import { PopupUpdateQuantityComponent } from './settings/stationery/popup-update-quantity/popup-update-quantity.component';
+import { PopupAddCardTransComponent } from './booking/cardTran/popup-add-cardTrans/popup-add-cardTrans.component';
+import { PopupDriverAssignComponent } from './approval/car/popup-driver-assign/popup-driver-assign.component';
 
 const routes: Route[] = [
   {
@@ -61,10 +64,6 @@ const routes: Route[] = [
       {
         path: 'bookingcars/:funcID',
         component: BookingCarComponent,
-      },
-      {
-        path: 'cardtrans/:funcID',
-        component: CardTransComponent,
       },
       {
         path: 'bookingstationery/:funcID',
@@ -81,6 +80,10 @@ const routes: Route[] = [
       {
         path: 'approvestationery/:funcID',
         component: ApprovalStationeryComponent,
+      },
+      {
+        path: 'cardtrans/:funcID',
+        component: CardTransComponent,
       },
       {
         path: 'settings',
@@ -168,6 +171,8 @@ const Components: Type<any>[] = [
   BookingCarViewDetailComponent,
   CardTransComponent,
   PopupUpdateQuantityComponent,
+  PopupAddCardTransComponent,
+  PopupDriverAssignComponent,
 ];
 
 @NgModule({

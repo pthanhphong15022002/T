@@ -66,8 +66,8 @@ export class CodxDMService {
   public titleEmptyAction = 'Dọn sạch thùng rác';
   public titleNodaTa = 'Không có tài liệu';
   public titleNodaTaFolder = 'Thư mục hiện tại không chứa tài liệu nào!';
-  public titleShareBy = 'Tài liệu được chia sẻ';
-  public titleRequestShare = 'Tài liệu yêu cầu chia sẻ';
+  public titleShareBy = 'Tài liệu chia sẻ';
+  public titleRequestShare = 'Tài liệu yêu cầu';
   public titleRequestBy = 'Tài liệu được yêu cầu';
 
   public formModel: FormModel;
@@ -119,13 +119,15 @@ export class CodxDMService {
   public listFiles = [];
   page = 1;
   totalPage = 1;
-  pageSize = 20;
+  pageSize = 50;
   ChunkSizeInKB = 1024 * 2;
   revision: boolean;
   moveable = false;
   itemRight: ItemRight;
   path: string;
-
+  breakCumArr = [];
+  //tài liệu yêu cầu / được yêu cầu DMT02 favoriteID
+  dmFavoriteID: any;
   // public confirmationDialogService: ConfirmationDialogService;
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
@@ -449,7 +451,7 @@ export class CodxDMService {
   }
 
   openItem(data: any) {
-    if (data.fileName == undefined) {
+    if (!data.fileName) {
       if (!data.read) {
         this.notificationsService.notifyCode('DM059');
         return;
@@ -547,7 +549,7 @@ export class CodxDMService {
                       0,
                       this.user?.userName
                     );
-                    this.ChangeData.next(true);
+                    this.addFile.next(true);
                     //  this.changeDetectorRef.detectChanges();
                   }
 
@@ -674,8 +676,12 @@ export class CodxDMService {
           //list = "DMT0226;DMT0227;DMT0228;DMT0229;DMT0230;DMT0231;DMT0232;DMT0233";
           //list = "DMT0226;DMT0227;DMT0230;DMT0231";
           if (type == 'DM_FolderInfo') {
-            list = 'DMT0226;DMT0227';
-          } else list = 'DMT0230;DMT0231';
+            if (this.dmFavoriteID == '2') list = 'DMT0226;DMT0227';
+            else list = 'DMT0227';
+          } else {
+            if (this.dmFavoriteID == '2') list = 'DMT0230;DMT0231';
+            else list = 'DMT0231';
+          }
           if (e[i].data != null && list.indexOf(e[i].data.functionID) > -1) {
             e[i].disabled = false;
           } else {
@@ -886,6 +892,7 @@ export class CodxDMService {
     if (data?.folderName && !data?.extension)
       return '../../../assets/themes/dm/default/img/icon-folder.svg';
     else {
+      if (data?.viewThumb) return environment.urlUpload + '/' + data.thumbnail;
       return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
       // if (data.hasThumbnail == null || data.hasThumbnail == false) {
       //   return `../../../assets/codx/dms/${this.getAvatar(data.extension)}`; //this.getAvatar(ext);
@@ -1125,18 +1132,28 @@ export class CodxDMService {
   }
 
   async getToken() {
-    lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
-    var retToken = await lvFileClientAPI.formPost('api/accounts/token', {
-      username: 'admin/root',
-      password: 'root',
-    });
-    window.localStorage.setItem('lv-file-api-token', retToken.access_token);
+    try {
+      lvFileClientAPI.setUrl(environment.urlUpload); //"http://192.168.18.36:8011");
+      var retToken = await lvFileClientAPI.formPost('api/accounts/token', {
+        username: 'admin/root',
+        password: 'root',
+      });
+      if (retToken?.access_token)
+        window.localStorage.setItem('lv-file-api-token', retToken.access_token);
+      else
+        this.notificationsService.notify(
+          'Server lưu trữ tập tin không hoạt động'
+        );
+    } catch (ex) {
+      this.notificationsService.notify(
+        'Server lưu trữ tập tin không hoạt động'
+      );
+    }
   }
 
   clickMF($event, data: any, view: any = null) {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
-
     switch ($event.functionID) {
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
@@ -1267,7 +1284,23 @@ export class CodxDMService {
         break;
 
       case 'DMT0202': // chinh sua thu muc
-      case 'DMT0209': // properties folder
+      case 'DMT0209': { // properties folder
+        var breadcumb = [];
+        var breadcumbLink = [];
+        var treeView = view?.currentView?.currentComponent?.treeView;
+        if (treeView) {
+          treeView.textField = 'folderName';
+          var list = treeView.getBreadCumb(data.recID);
+          breadcumb.push(this.menuActive.getValue());
+          breadcumbLink.push(this.idMenuActive);
+          for (var i = list.length - 1; i >= 0; i--) {
+            breadcumb.push(list[i].text);
+            breadcumbLink.push(list[i].id);
+          }
+          this.breadcumbLink = breadcumbLink;
+          this.breakCumArr = breadcumb;
+          this.breadcumb.next(breadcumb);
+        }
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
@@ -1277,6 +1310,7 @@ export class CodxDMService {
         data.readonly = $event.functionID == 'DMT0209' ? true : false;
         this.callfc.openSide(CreateFolderComponent, data, option);
         break;
+      }
 
       case 'DMT0213': // chinh sua file
         this.callfc.openForm(
@@ -1313,10 +1347,7 @@ export class CodxDMService {
                   ['1', data.recID, view, type],
                   ''
                 )
-                .closed.subscribe((item) => {
-                  if (item?.event)
-                    view?.dataService.update(item.event).subscribe();
-                });
+                .closed.subscribe();
             });
         } else {
           this.api
@@ -1340,8 +1371,7 @@ export class CodxDMService {
                   ''
                 )
                 .closed.subscribe((item) => {
-                  if (item?.event)
-                    view?.dataService.update(item.event).subscribe();
+                  view?.dataService.update(item.event).subscribe();
                 });
             });
         }
@@ -1374,8 +1404,8 @@ export class CodxDMService {
         this.callfc.openForm(
           CopyComponent,
           '',
-          950,
           650,
+          250,
           '',
           [type, data, title, true],
           ''
@@ -1411,14 +1441,24 @@ export class CodxDMService {
       //request permisssion
       case 'DMT0221':
       case 'DMT0208':
-        option.DataService = this.dataService;
-        option.FormModel = this.formModel;
-        option.Width = '550px';
-
-        // let data = {} as any;
-        data.title = this.titleUpdateFolder;
-        data.id = data.recID;
-        this.callfc.openSide(ShareComponent, [type, data, false], option);
+        //Là file
+        if (data?.extension) {
+          this.fileService.getFile(data.recID).subscribe((datas) => {
+            option.DataService = this.dataService;
+            option.FormModel = this.formModel;
+            option.Width = '550px';
+            datas.title = this.titleUpdateFolder;
+            datas.id = datas.recID;
+            this.callfc.openSide(ShareComponent, [type, datas, false], option);
+          });
+        } else {
+          option.DataService = this.dataService;
+          option.FormModel = this.formModel;
+          option.Width = '550px';
+          data.title = this.titleUpdateFolder;
+          data.id = data.recID;
+          this.callfc.openSide(ShareComponent, [type, data, false], option);
+        }
         break;
 
       // share
@@ -1427,7 +1467,6 @@ export class CodxDMService {
         option.DataService = this.dataService;
         option.FormModel = this.formModel;
         option.Width = '550px';
-
         // let data = {} as any;
         data.title = this.titleUpdateFolder;
         data.id = data.recID;

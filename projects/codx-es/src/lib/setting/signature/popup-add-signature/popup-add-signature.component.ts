@@ -76,7 +76,7 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.data = dialog?.dataService?.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
 
     //set gia trị data oTP != otp
     this.data.oTPControl = this.data?.otpControl;
@@ -91,9 +91,13 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.formModel = this.dialog?.formModel;
     this.headerText = data?.data?.headerText;
     this.funcID = this.router.snapshot.params['funcID'];
+    console.log(this.funcID);
   }
 
   ngAfterViewInit(): void {
+    console.log('formGroup', this.form?.formGroup);
+    console.log('data', this.data);
+    
     if (this.dialog) {
       if (!this.isSaveSuccess) {
         this.dialog.closed.subscribe((res: any) => {
@@ -145,11 +149,11 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
         });
       } else if (event?.field == 'signatureType') {
         if (event?.data == '2') {
-          this.data.supplier = null;
-          this.form?.formGroup.patchValue({ supplier: null });
+          this.data.supplier = '1';
+          this.form?.formGroup.patchValue({ supplier: this.data.supplier });
         } else if (event?.data == '1') {
-          this.data.supplier = '2';
-          this.form?.formGroup.patchValue({ supplier: '2' });
+          this.data.supplier = '3';
+          this.form?.formGroup.patchValue({ supplier: this.data.supplier });
         }
       } else this.data[event['field']] = event?.data;
       this.cr.detectChanges();
@@ -203,81 +207,81 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
             result = res.update;
           }
           this.data = result;
-          if (
-            this.imgSignature1.imageUpload?.item ||
-            this.imgSignature2.imageUpload?.item ||
-            this.imgStamp.imageUpload?.item
-          ) {
-            var i = 0;
-            if (this.imgSignature1.imageUpload?.item) i++;
-            if (this.imgSignature2.imageUpload?.item) i++;
-            if (this.imgStamp.imageUpload?.item) i++;
+          // if (
+          //   this.imgSignature1.imageUpload?.item ||
+          //   this.imgSignature2.imageUpload?.item ||
+          //   this.imgStamp.imageUpload?.item
+          // ) {
+          //   var i = 0;
+          //   if (this.imgSignature1.imageUpload?.item) i++;
+          //   if (this.imgSignature2.imageUpload?.item) i++;
+          //   if (this.imgStamp.imageUpload?.item) i++;
 
-            this.imgSignature1.imageUpload?.item &&
-              this.imgSignature1
-                .updateFileDirectReload(this.data.recID)
-                .subscribe((img) => {
-                  if (img) i--;
-                  else {
-                    this.notification.notifyCode(
-                      'DM006',
-                      0,
-                      this.imgSignature1.imageUpload?.fileName
-                    );
-                  }
-                  if (img && this.data.signature1 == null) {
-                    result.signature1 = (img[0] as any).recID;
-                    this.data.signature1 = (img[0] as any).recID;
-                    this.updateAfterUpload(i);
-                  }
+          //   this.imgSignature1.imageUpload?.item &&
+          //     this.imgSignature1
+          //       .updateFileDirectReload(this.data.recID)
+          //       .subscribe((img) => {
+          //         if (img) i--;
+          //         else {
+          //           this.notification.notifyCode(
+          //             'DM006',
+          //             0,
+          //             this.imgSignature1.imageUpload?.fileName
+          //           );
+          //         }
+          //         if (img && this.data.signature1 == null) {
+          //           result.signature1 = (img[0] as any).recID;
+          //           this.data.signature1 = (img[0] as any).recID;
+          //           this.updateAfterUpload(i);
+          //         }
 
-                  if (i <= 0) this.dialog && this.dialog.close(this.data);
-                });
-            this.imgSignature2.imageUpload?.item &&
-              this.imgSignature2
-                .updateFileDirectReload(this.data.recID)
-                .subscribe((img) => {
-                  if (img) i--;
-                  else {
-                    this.notification.notifyCode(
-                      'DM006',
-                      0,
-                      this.imgSignature2.imageUpload?.fileName
-                    );
-                  }
-                  if (img && this.data.signature2 == null) {
-                    result.signature2 = (img[0] as any).recID;
+          //         if (i <= 0) this.dialog && this.dialog.close(this.data);
+          //       });
+          //   this.imgSignature2.imageUpload?.item &&
+          //     this.imgSignature2
+          //       .updateFileDirectReload(this.data.recID)
+          //       .subscribe((img) => {
+          //         if (img) i--;
+          //         else {
+          //           this.notification.notifyCode(
+          //             'DM006',
+          //             0,
+          //             this.imgSignature2.imageUpload?.fileName
+          //           );
+          //         }
+          //         if (img && this.data.signature2 == null) {
+          //           result.signature2 = (img[0] as any).recID;
 
-                    this.data.signature2 = (img[0] as any).recID;
-                    this.updateAfterUpload(i);
-                  }
+          //           this.data.signature2 = (img[0] as any).recID;
+          //           this.updateAfterUpload(i);
+          //         }
 
-                  if (i <= 0) this.dialog && this.dialog.close(this.data);
-                });
-            this.imgStamp.imageUpload?.item &&
-              this.imgStamp
-                .updateFileDirectReload(this.data.recID)
-                .subscribe((img) => {
-                  if (img) i--;
-                  else {
-                    this.notification.notifyCode(
-                      'DM006',
-                      0,
-                      this.imgStamp.imageUpload?.fileName
-                    );
-                  }
-                  if (img && this.data.stamp == null) {
-                    result.stamp = (img[0] as any).recID;
+          //         if (i <= 0) this.dialog && this.dialog.close(this.data);
+          //       });
+          //   this.imgStamp.imageUpload?.item &&
+          //     this.imgStamp
+          //       .updateFileDirectReload(this.data.recID)
+          //       .subscribe((img) => {
+          //         if (img) i--;
+          //         else {
+          //           this.notification.notifyCode(
+          //             'DM006',
+          //             0,
+          //             this.imgStamp.imageUpload?.fileName
+          //           );
+          //         }
+          //         if (img && this.data.stamp == null) {
+          //           result.stamp = (img[0] as any).recID;
 
-                    this.data.stamp = (img[0] as any).recID;
-                    this.updateAfterUpload(i);
-                  }
+          //           this.data.stamp = (img[0] as any).recID;
+          //           this.updateAfterUpload(i);
+          //         }
 
-                  if (i <= 0) this.dialog && this.dialog.close(this.data);
-                });
-          } else {
-            this.dialog && this.dialog.close(result);
-          }
+          //         if (i <= 0) this.dialog && this.dialog.close(this.data);
+          //       });
+          // } else {
+          this.dialog && this.dialog.close(result);
+          // }
         }
       });
   }
@@ -285,6 +289,36 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
   onSavePopup() {
     if (this.content) {
       this.attachment.onMultiFileSave();
+    }
+  }
+
+  dataImageChanged(event: any, type: string) {
+    console.log(event);
+
+    switch (type) {
+      case 'S1': {
+        if (event && this.data.signature1 == null) {
+          this.data.signature1 = (event[0] as any).recID;
+        }
+        this.data.signature1 = (event[0] as any).recID;
+        break;
+      }
+      case 'S2': {
+        if (event && this.data.signature2 == null) {
+          this.data.signature2 = (event[0] as any).recID;
+        }
+        this.data.signature2 = (event[0] as any).recID;
+
+        break;
+      }
+      case 'S3': {
+        if (event && this.data.stamp == null) {
+          this.data.stamp = (event[0] as any).recID;
+        }
+        this.data.stamp = (event[0] as any).recID;
+
+        break;
+      }
     }
   }
 

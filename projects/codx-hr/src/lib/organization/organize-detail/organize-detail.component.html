@@ -1,31 +1,13 @@
 <ng-container>
-  <div
-    [ngbPopover]="popContent"
-    autoClose="outside"
-    popoverClass="empPopoverClass"
-    [popoverTitle]="popTitle"
-    #p="ngbPopover"
-    triggers="manual"
-  >
-    <ejs-diagram
-      #diagram
-      class="codx-orgchart"
-      width="100%"
-      height="650px"
+  <div [ngbPopover]="popContent" autoClose="outside" popoverClass="empPopoverClass" [popoverTitle]="popTitle"
+    #p="ngbPopover" triggers="manual">
+    <ejs-diagram #diagram class="codx-orgchart" width="100%" height="650px" 
       [getConnectorDefaults]="connDefaults"
-      [getNodeDefaults]="nodeDefaults"
-      [layout]="layout"
-      [tool]="tool"
-      [snapSettings]="snapSettings"
-      [dataSourceSettings]="datasetting"
-      (click)="orgClick($event)"
-    >
+      [getNodeDefaults]="nodeDefaults" [layout]="layout" [tool]="tool" [snapSettings]="snapSettings"
+      [dataSourceSettings]="datasetting" (click)="orgClick($event)">
       <ng-template #nodeTemplate let-node>
-        <ng-container
-          *ngIf="node?.data"
-          [ngTemplateOutlet]="template"
-          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }"
-        >
+        <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
         </ng-container>
       </ng-template>
     </ejs-diagram>
@@ -33,118 +15,76 @@
 </ng-container>
 <ng-template #template let-data let-node="node">
   <div class="department-card border border-gray-300 w-250px position-relative">
-    <div
-      class="d-flex align-items-center p-3 w-100"
-      [style.background-color]="
+    <div class="d-flex align-items-center p-3 w-100" [style.background-color]="
         data.colorStatus.includes('#') ? data.colorStatus : '#03a9f4'
-      "
-    >
-      <i
-        class="text-white me-2"
-        [ngClass]="data.icon ? data.icon : 'icon-business icon-18'"
-      ></i>
+      ">
+      <i class="text-white me-2" [ngClass]="data.icon ? data.icon : 'icon-business icon-18'"></i>
       <div class="d-flex flex-grow-1 text-white fs-5">
         {{
-          data.departmentName || "Phòng ban"
-            | lang: "txtOrgUnitName":formModel.formName
-            | async
+        data.departmentName || "Phòng ban"
+        | lang: "txtOrgUnitName":formModel.formName
+        | async
         }}
       </div>
     </div>
-    <div class="p-3 department-card-main mb-3">
-      <div class="d-flex flex-column flex-grow-1 align-items-center">
-        <codx-img
-          *ngIf="data.employeeID || data.employeeName; else noAvatar"
-          #imageUpload
-          class="symbol symbol-60 symbol-circle me-2"
-          [width]="60"
-          [objectId]="data.employeeID"
-          [objectName]="data.employeeName"
-          [objectType]="'HR_Employees'"
-        >
+    <div class="p-3 department-card-main mb-1">
+      <div class="d-flex flex-column flex-grow-1 align-items-center mt-2">
+        <codx-img *ngIf="data.employeeID || data.employeeName; else noAvatar" #imageUpload
+          class="symbol symbol-60 symbol-circle me-2" [width]="60" [objectId]="data.employeeID"
+          [objectName]="data.employeeName" [objectType]="'HR_Employees'">
         </codx-img>
         <ng-template #noAvatar>
-          <img
-            src="/assets/themes/sys/default/img/Avatar_Default.svg"
-            class="w-40px"
-            alt=""
-          />
+          <img src="/assets/themes/sys/default/img/Avatar_Default.svg" class="w-40px" alt="" />
         </ng-template>
-        <h5 class="text-dark mt-4" style="opacity: 0.3">
+        <div class="text-dark fs-4 fw-bold mt-4 mb-2">
           {{
-            data.employeeName || "Tên Nhân Viên"
-              | lang: "txtEmployeeName":formModel.formName
-              | async
+          data.employeeName || "Tên Nhân Viên"
+          | lang: "txtEmployeeName":formModel.formName
+          | async
           }}
-        </h5>
-        <div class="text-gray-600" style="opacity: 0.3">
+        </div>
+        <div class="text-gray-600 mb-3">
           {{
-            data.positionName || "Chức vụ"
-              | lang: "txtPositionName":formModel.formName
-              | async
+          data.positionName || "Chức vụ"
+          | lang: "txtPositionName":formModel.formName
+          | async
           }}
         </div>
         <div class="d-flex align-items-center mt-2">
-          <div
-            class="btn btn-sm btn-light-primary me-3 counter"
-            style="cursor: pointer"
-            data-toggle="tooltip"
-            title="Định biên"
-            data-status=""
-            [attr.data-orgid]="data.departmentCode"
-            [attr.data-headcounts]="data.headcounts"
-          >
+          <div class="btn btn-sm btn-light-primary me-3 counter" style="cursor: pointer" data-toggle="tooltip"
+            title="Định biên" data-status="" [attr.data-orgid]="data.departmentCode"
+            [attr.data-headcounts]="data.headcounts">
             <i class="icon-account_tree icon-16 me-1"></i>
             <span class="fw-bold text-primary">{{ data.headcounts }}</span>
           </div>
-          <div
-            class="btn btn-sm btn-light-primary counter"
-            style="cursor: pointer"
-            data-toggle="tooltip"
-            title="Chính thức"
-            data-status=""
-            [attr.data-orgid]="data.departmentCode"
-          >
+          <div class="btn btn-sm btn-light-primary counter" style="cursor: pointer" data-toggle="tooltip"
+            title="Chính thức" data-status="" [attr.data-orgid]="data.departmentCode">
             <i class="icon-perm_contact_calendar icon-16 me-1"></i>
             <span class="fw-bold text-primary">{{ data.filledCounts }}</span>
           </div>
         </div>
       </div>
-      <div class="d-flex justify-content-between mt-6 px-3">
-        <div
-          class="d-flex flex-column align-items-center counter cursor-pointer"
-          data-status="50"
-          [attr.data-orgid]="data.departmentCode"
-        >
+      <div class="d-flex justify-content-between mt-5 px-3">
+        <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="50"
+          [attr.data-orgid]="data.departmentCode">
           <h3 class="text-primary">{{ data.counts }}</h3>
           <span class="text-gray-600">Chính thức</span>
         </div>
-        <div
-          class="d-flex flex-column align-items-center counter cursor-pointer"
-          data-status="30"
-          [attr.data-orgid]="data.departmentCode"
-        >
+        <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="30"
+          [attr.data-orgid]="data.departmentCode">
           <h3 class="text-success">{{ data.onboard }}</h3>
           <span class="text-gray-600">Onboard</span>
         </div>
-        <div
-          class="d-flex flex-column align-items-center counter cursor-pointer"
-          data-status="70"
-          [attr.data-orgid]="data.departmentCode"
-        >
+        <div class="d-flex flex-column align-items-center counter cursor-pointer" data-status="70"
+          [attr.data-orgid]="data.departmentCode">
           <h3 class="text-danger">{{ data.offboard }}</h3>
           <span class="text-gray-600">Offboard</span>
         </div>
       </div>
     </div>
     <div *ngIf="data.isChildren" class="department-card-info ec connector">
-      <span
-        #icon
-        class="icon-20"
-        [ngClass]="classIcon(data, icon)"
-        (mouseup)="mouseUp(data, $event)"
-        (click)="loadDataChild(data, node)"
-      ></span>
+      <span #icon class="icon-20" [ngClass]="classIcon(data, icon)"  [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
+        (click)="loadDataChild(data, node)"></span>
     </div>
   </div>
 </ng-template>
@@ -155,7 +95,7 @@
       <span class="text-gray-500 me-2">Ngày sinh:</span>
       <span class="text-dark" *ngIf="imployeeInfo.birthday">{{
         imployeeInfo.birthday | date: "dd/MM/yyyy"
-      }}</span>
+        }}</span>
       <!-- <span class="text-gray-500" *ngIf="!imployeeInfo.birthday">{{
         imployeeInfo.birthday
       }}</span> -->
@@ -164,7 +104,7 @@
       <span class="text-gray-500 me-2">Ngày vào làm:</span>
       <span class="text-dark" *ngIf="imployeeInfo.joinedOn">{{
         imployeeInfo.joinedOn | date: "dd/MM/yyyy"
-      }}</span>
+        }}</span>
       <!-- <span class="text-gray-500" *ngIf="!imployeeInfo.joinedOn">{{
         imployeeInfo.joinedOn
       }}</span> -->
@@ -173,7 +113,7 @@
       <span class="text-gray-500 me-2">Tình trạng:</span>
       <span class="text-dark">{{
         imployeeInfo.status | vll: "L0225":"text" | async
-      }}</span>
+        }}</span>
     </div>
   </div>
 </ng-template>
@@ -181,13 +121,8 @@
 <ng-template #popEmpTitle>
   <div class="d-flex align-items-top">
     <div class="d-flex align-items-start user-card">
-      <codx-img
-        class="me-3"
-        [width]="40"
-        [objectId]="imployeeInfo.employeeID"
-        [objectName]="imployeeInfo.employeeName"
-        [objectType]="'HR_Employees'"
-      >
+      <codx-img class="me-3" [width]="40" [objectId]="imployeeInfo.employeeID" [objectName]="imployeeInfo.employeeName"
+        [objectType]="'HR_Employees'">
       </codx-img>
       <div class="d-flex flex-column flex-grow-1">
         <div class="d-flex align-items-center">
@@ -204,10 +139,7 @@
         >
           Chức vụ
         </div> -->
-        <div
-          class="text-gray-500 fw-normal"
-          *ngIf="imployeeInfo.organizationName != '---'"
-        >
+        <div class="text-gray-500 fw-normal" *ngIf="imployeeInfo.organizationName != '---'">
           {{ imployeeInfo.organizationName }}
         </div>
         <!-- <div
@@ -262,30 +194,14 @@
 <ng-template #popContent>
   <div>
     <div class="row">
-      <div
-        *ngFor="let emp of employees"
-        class="p-2 full rounded-2 codx-bghover cursor-pointer"
-      >
-        <div
-          *ngIf="emp.employeeName"
-          class="d-flex justify-content-between align-items-center cursor-pointer"
-          popoverClass="userPopoverClass"
-          [ngbPopover]="popEmpContent"
-          placement="right left"
-          [popoverTitle]="popEmpTitle"
-          #pemp="ngbPopover"
-          triggers="manual"
-          (click)="showEmploy(pemp, emp)"
-        >
+      <div *ngFor="let emp of employees" class="p-2 full rounded-2 codx-bghover cursor-pointer">
+        <div *ngIf="emp.employeeName" class="d-flex justify-content-between align-items-center cursor-pointer"
+          popoverClass="userPopoverClass" [ngbPopover]="popEmpContent" placement="right left"
+          [popoverTitle]="popEmpTitle" #pemp="ngbPopover" triggers="manual" (click)="showEmploy(pemp, emp)">
           <div class="d-flex flex-column org-card flex-grow-1">
             <div class="d-flex align-items-start">
-              <codx-img
-                class="me-3"
-                [width]="35"
-                [objectId]="emp.employeeID"
-                [objectName]="emp.employeeName"
-                [objectType]="'HR_Employees'"
-              >
+              <codx-img class="me-3" [width]="35" [objectId]="emp.employeeID" [objectName]="emp.employeeName"
+                [objectType]="'HR_Employees'">
               </codx-img>
               <div class="d-flex flex-column flex-grow-1">
                 <div class="text-dark fw-bold">{{ emp.employeeName }}</div>
@@ -299,34 +215,18 @@
             </a>
           </div>
         </div>
-        <div
-          *ngIf="!emp.employeeName"
-          class="d-flex justify-content-between align-items-top"
-        >
+        <div *ngIf="!emp.employeeName" class="d-flex justify-content-between align-items-top">
           <div class="d-flex flex-column org-card flex-grow-1">
             <div class="d-flex align-items-start">
-              <codx-img
-                class="symbol symbol-40 symbol-circle me-3"
-                [width]="40"
-                [objectId]="''"
-                [objectName]="''"
-                [objectType]="'HR_Employees'"
-              >
+              <codx-img class="symbol symbol-40 symbol-circle me-3" [width]="40" [objectId]="''" [objectName]="''"
+                [objectType]="'HR_Employees'">
               </codx-img>
               <div class="d-flex flex-column flex-grow-1">
                 <div class="text-50 text-gray-500">
-                  <codx-label
-                    fiedName="EmployeeName"
-                    formModel=""
-                    default="Tên nhân viên"
-                  ></codx-label>
+                  <codx-label fiedName="EmployeeName" formModel="" default="Tên nhân viên"></codx-label>
                 </div>
                 <div class="text-50 text-gray-500">
-                  <codx-label
-                    fiedName=""
-                    formModel=""
-                    default="Chức vụ"
-                  ></codx-label>
+                  <codx-label fiedName="" formModel="" default="Chức vụ"></codx-label>
                 </div>
               </div>
             </div>

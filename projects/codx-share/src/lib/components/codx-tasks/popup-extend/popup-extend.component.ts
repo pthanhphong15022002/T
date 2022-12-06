@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { ApiHttpService, DialogData, DialogRef, NotificationsService, UrlUtil } from 'codx-core';
+import moment from 'moment';
 import { CodxTasksService } from '../codx-tasks.service';
 import { TM_TaskExtends } from '../model/task.model';
 
@@ -30,8 +31,9 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
-    this.funcID = this.data.funcID
-    this.taskExtend = this.data.data ;
+    this.funcID = this.data.funcID ;
+    this.title =  this.data?.moreFunc?.customName ;
+    this.taskExtend = JSON.parse(JSON.stringify(this.data?.data)); ;
   }
 
   ngOnInit(): void {
@@ -50,7 +52,7 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
   }
 
   saveData(){
-    if(this.taskExtend.dueDate > this.taskExtend.extendDate){
+    if( moment(new Date(this.taskExtend.dueDate)).toDate() > moment(new Date(this.taskExtend.extendDate)).toDate()){
       this.notiService.notifyCode("TM022")
       return ;
     }
@@ -62,7 +64,8 @@ export class PopupExtendComponent implements OnInit, AfterViewInit {
     this.api.execSv<any>('TM','TM','TaskBusiness','ExtendTaskAsync',[this.funcID,this.taskExtend]).subscribe(res=>{
       if(res && res.length){
         this.dialog.close(res) ;
-        this.notiService.notify('Yêu cần gia hạn đã được gửi, xin vui lòng đợi xét duyệt !')
+        this.notiService.notifyCode("TM064")       
+       // this.notiService.notify('Yêu cần gia hạn đã được gửi, xin vui lòng đợi xét duyệt !')
       }else{
         this.dialog.close() ;
       }

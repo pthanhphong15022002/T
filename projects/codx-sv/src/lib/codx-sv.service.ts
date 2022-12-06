@@ -22,6 +22,7 @@ export class CodxSvService {
   active = '';
   tenant: string;
   private title = new BehaviorSubject<any>(null);
+  signalSave = new BehaviorSubject<any>(null);
   constructor(
     private api: ApiHttpService,
     private router: Router,
@@ -118,13 +119,91 @@ export class CodxSvService {
     }
   }
 
-  deleteFile(item, objectType) {
+  deleteFile(objectID, objectType) {
     return this.api.execSv(
       'DM',
       'ERM.Business.DM',
       'FileBussiness',
       'DeleteByObjectIDAsync',
-      [item.recID, objectType, true]
+      [objectID, objectType, true]
+    );
+  }
+
+  getFileByObjectID(recID) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByIbjectIDAsync',
+      recID
+    );
+  }
+
+  loadTemplateData(recID) {
+    return this.api.execSv(
+      'SV',
+      'ERM.Business.SV',
+      'QuestionsBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+  }
+
+  getDataQuestionOther(data, resultQuestion) {
+    var dataSession = JSON.parse(JSON.stringify(data));
+    var rsSession: any = new Array();
+    var rsQuestion: any = new Array();
+    //TH1 chọn session
+    rsSession = dataSession.filter((x) => x['check']);
+    if (rsSession.length > 0) {
+      rsSession.forEach((y) => {
+        y.children = y.children.filter((z) => z['check']);
+      });
+    }
+    //TH2 chọn question
+    rsQuestion = this.getUniqueListBy(resultQuestion, 'recID');
+    var dt = new Array();
+    rsSession.forEach((x) => {
+      x.children.forEach((y) => {
+        dt.push(y);
+      });
+    });
+    //Check xem list children trong session trùng với list question thì xóa bên list question
+    rsQuestion.forEach((x, index) => {
+      dt.forEach((y) => {
+        if (x.recID == y.recID) rsQuestion.splice(index, 1);
+      });
+    });
+    var obj = {
+      dataSession: rsSession,
+      dataQuestion: rsQuestion,
+    };
+    return obj;
+  }
+
+  public getUniqueListBy(arr: any, key: any) {
+    return [
+      ...new Map(arr.map((item: any) => [item[key], item])).values(),
+    ] as any;
+  }
+
+  getFilesByObjectType(objectType) {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetFilesByObjectTypeAsync',
+      objectType
+    );
+  }
+
+  onSave(transID, data, isModeAdd) {
+    return this.api.execSv(
+      'SV',
+      'ERM.Business.SV',
+      'QuestionsBusiness',
+      'SaveAsync',
+      [transID, data, isModeAdd]
     );
   }
 }

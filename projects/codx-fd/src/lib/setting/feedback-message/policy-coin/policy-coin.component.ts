@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationsService, TenantStore, UIComponent } from 'codx-core';
+import { SettingService } from '../../setting.service';
 
 @Component({
   selector: 'app-policy-coin',
@@ -16,6 +17,7 @@ import { NotificationsService, TenantStore, UIComponent } from 'codx-core';
 export class PolicyCoinComponent extends UIComponent implements OnInit {
   item: any = {};
   @Input() typeCard: string;
+  @Input() isGroup: any;
   categoryID: string = '1';
   policyCoinList = [];
   tenant: string;
@@ -24,7 +26,7 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
     private changeDr: ChangeDetectorRef,
     private tenantStore: TenantStore,
     private at: ActivatedRoute,
-    private notification: NotificationsService,
+    private settingSV: SettingService,
     injector: Injector
   ) {
     super(injector);
@@ -93,6 +95,7 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
       cardtype: this.typeCard,
       funcID: this.funcID,
       recID: item.recID,
+      isGroup: this.isGroup
     });
   }
 }

@@ -1,10 +1,7 @@
 <div class="container h-100" *ngIf="dataReferences.length == 0">
   <div class="list-empty card card-flush h-100">
     <div class="d-flex flex-column flex-center justify-content-center">
-      <img
-        src="../assets/themes/sys/default/img/DataEmpty.svg"
-        class="w-200px"
-      />
+      <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
       <div class="fs-5 text-dark fw-bold mt-2 text-center">
         {{ "SYS011" | mssg | async }}
       </div>
@@ -14,23 +11,16 @@
 <div class="container" *ngIf="dataReferences.length > 0">
   <ng-container *ngFor="let data of dataReferences; let i = index">
     <div class="w-100 tab-tch mt-3 border-bottom ms-{{ i * 15 }}">
-      <codx-temp-full
-        [icoCss]="
-          'w-40px symbol h-40px  fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 ' +
+      <codx-temp-full [icoCss]="
+          'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +
           (data.refType | vll: vllRefType:'icon' | async)
-        "
-        [icoStyle]="setStyles(data.refType | vll: vllRefType:'color' | async)"
-        [title]="data.refType | vll: vllRefType:'text' | async"
-        [desc]="data?.memo ?? data?.title"
-        [footer]="footerTempfull"
-        [dataItem]="data"
-      >
+        " [icoStyle]="setStyles(data.refType | vll: vllRefType:'color' | async)"
+        [title]="data.refType | vll: vllRefType:'text' | async" [desc]="data?.memo ?? data?.title"
+        [footer]="footerTempfull" [dataItem]="data">
       </codx-temp-full>
 
       <ng-template #footerTempfull let-data>
-        <div
-          class="d-flex justify-content-between align-items-center mt-1 mb-4"
-        >
+        <div class="d-flex justify-content-between align-items-center ms-8 mb-4">
           <div class="d-flex align-items-center ms-6 codx-badge">
             <div class="me-3">
               <div class="d-flex flex-wrap justify-content-between">
@@ -40,7 +30,7 @@
 
                     <span class="text-dark-50">{{
                       data?.createdOn | fmDT
-                    }}</span>
+                      }}</span>
                   </div>
                 </div>
               </div>
@@ -52,15 +42,10 @@
           </div>
           <div class="d-flex">
             <span class="me-4">
-              <codx-comment-temp
-                [objectID]="data.recIDReferences"
-              ></codx-comment-temp>
+              <codx-comment-temp [objectID]="data.recIDReferences" [zIndex]="zIndex"></codx-comment-temp>
             </span>
             <span class="me-4">
-              <codx-attachment-temp
-                [objectID]="data.recIDReferences"
-                [formModel]="formModel"
-              ></codx-attachment-temp>
+              <codx-attachment-temp [objectID]="data.recIDReferences" [formModel]="formModel" [zIndex]="zIndex"></codx-attachment-temp>
             </span>
           </div>
         </div>

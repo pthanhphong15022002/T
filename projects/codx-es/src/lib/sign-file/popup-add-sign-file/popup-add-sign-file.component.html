@@ -8,7 +8,9 @@
         <h2 class="h2-title">
           <codx-label
             *ngIf="
-              data?.approveStatus == 1 && isAddNew == true && modeView != true
+              (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+              isAddNew == true &&
+              modeView != '1'
             "
             name="lblTitleSignFile"
             default="Thêm mới tài liệu"
@@ -16,21 +18,32 @@
           ></codx-label>
           <div
             *ngIf="
-              data?.approveStatus == 1 && isAddNew == false && modeView != true
+              (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+              isAddNew == false &&
+              modeView != '1'
             "
           >
             {{ headerText }}
           </div>
-          <div *ngIf="modeView == true">{{ headerText }}</div>
+          <div *ngIf="modeView == '1'">{{ headerText }}</div>
 
-          <div *ngIf="data?.approveStatus != 1 && modeView != true">
+          <div
+            *ngIf="
+              data?.approveStatus != 1 &&
+              data?.approveStatus != 2 &&
+              modeView != '1'
+            "
+          >
             {{ data?.title }}
           </div>
         </h2>
       </div>
       <div
         class="d-flex align-items-center stepper"
-        *ngIf="data?.approveStatus == 1 && modeView != true"
+        *ngIf="
+          (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+          modeView != '1'
+        "
       >
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div
@@ -197,7 +210,13 @@
         </div>
       </div>
       <div class="d-flex justify-content-end">
-        <ng-container *ngIf="data?.approveStatus == 1 && modeView != true">
+        <ng-container
+          *ngIf="
+            (data?.approveStatus == 1 || data?.approveStatus == 2) &&
+            modeView != '1' &&
+            modeView != '2'
+          "
+        >
           <div
             ngbDropdown
             class="dropdown"
@@ -267,7 +286,7 @@
             [style.visibility]="
               currentTab == 3 &&
               data.files?.length > 0 &&
-              data.approveStatus == '1'
+              (data.approveStatus == '1' || data.approveStatus == '2')
                 ? 'visible'
                 : 'hidden'
             "
@@ -375,6 +394,7 @@
                     field="title"
                     [formModel]="formModelCustom"
                     [Group]="dialogSignFile"
+                    [disabled]="modeView == '2' ? true : false"
                   >
                   </codx-input>
                 </div>
@@ -386,24 +406,23 @@
                         [formModel]="formModelCustom"
                       >
                       </codx-label>
-                      <codx-input
+                      <!-- <codx-input
                         field="categoryID"
                         [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
+                        [disabled]="disableCateID"
+                      >
+                      </codx-input> -->
+                      <codx-input
+                        field="categoryID"
+                        [crrValue]="data?.categoryID"
+                        [placeholder]="gvSetup['CategoryID']['description']"
+                        [refValue]="gvSetup['CategoryID']['referedValue']"
+                        type="combobox"
                         (valueChange)="valueChange($event)"
                         [disabled]="disableCateID"
                       >
                       </codx-input>
-                      <!-- <codx-input
-                        field="categoryID"
-                        [crrValue]="data?.categoryID"
-                        [placeholder]="gvSetup['CategoryID']['Description']"
-                        [refValue]="gvSetup['CategoryID']['refValue']"
-                        refType="valuelist"
-                        (valueChange)="valueChange($event)"
-                        [disabled]="disableCateID"
-                      >
-                      </codx-input> -->
                     </div>
                   </div>
                   <div class="col-md-6">
@@ -417,6 +436,7 @@
                         field="priority"
                         [formModel]="formModelCustom"
                         [Group]="dialogSignFile"
+                        [disabled]="modeView == '2'"
                       >
                       </codx-input>
                     </div>
@@ -451,6 +471,7 @@
                         format="d"
                         field="refDate"
                         [formModel]="formModelCustom"
+                        [disabled]="modeView == '2'"
                         [Group]="dialogSignFile"
                       >
                       </codx-input>
@@ -465,6 +486,7 @@
                     (valueChange)="valueChange($event)"
                     [formModel]="formModelCustom"
                     [Group]="dialogSignFile"
+                    [disabled]="modeView == '2'"
                   >
                   </codx-input>
                 </div>
@@ -478,6 +500,7 @@
                     field="orgUnitID"
                     [formModel]="formModelCustom"
                     [Group]="dialogSignFile"
+                    [disabled]="modeView == '2'"
                   >
                   </codx-input>
                 </div>
@@ -488,7 +511,7 @@
               id="pane_3"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
-              <app-approval-steps
+              <codx-approval-steps
                 #viewApprovalStep
                 *ngIf="currentTab == 2"
                 [transId]="
@@ -501,7 +524,7 @@
                 [mssgDelete]="mssgDelete"
                 (addEditItem)="dataStepChange($event)"
               >
-              </app-approval-steps>
+              </codx-approval-steps>
             </div>
             <div
               class="tab-pane fade"
@@ -532,14 +555,13 @@
               type="button"
               class="btn btn-light-primary me-3"
               *ngIf="currentTab != 0"
+              [disabled]="modeView == '2' ? true : false"
               (click)="openPopup(processTemplate)"
             >
               <codx-label
-                name=""
+                name="lblBtnTemplate"
                 [formModel]="formModelCustom"
-                class=""
                 default="Quy trình mẫu"
-                class=""
               >
               </codx-label>
             </button>
@@ -567,7 +589,10 @@
             ></codx-label>
           </button>
 
-          <div class="d-flex" *ngIf="eSign == false && currentTab == 2">
+          <div
+            class="d-flex"
+            *ngIf="eSign == false && currentTab == 2 && modeView != '2'"
+          >
             <ng-container>
               <div ngbDropdown class="dropdown">
                 <button
@@ -648,7 +673,10 @@
         [recID]="data.recID"
         [isApprover]="false"
         [isEditable]="
-          data?.approveStatus == '1' && modeView != true ? true : false
+          (data?.approveStatus == '1' || data?.approveStatus == '2') &&
+          modeView != '1'
+            ? true
+            : false
         "
         (isAreaControl)="setValueAreaControl($event)"
       >

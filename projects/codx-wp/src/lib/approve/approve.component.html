@@ -1,7 +1,6 @@
-<codx-views #view [entityName]="entityName" idField="recID" [views]="views" [selectedFirst]="true" [service]="'WP'"
+<codx-views #view [entityName]="entityName" idField="recID" [views]="views" [service]="'WP'"
   [assemblyName]="'ERM.Business.WP'" [className]="'NewsBusiness'" [method]="'GetDataApprovalAsync'"
-  [predicates]="predicates" [dataValues]="dataValues" (selectedChange)="selectedChange($event)"
-  (buttonClick)="clickBtnAdd()">
+  [selectedFirst]="true" (selectedChange)="selectedChange($event)" (buttonClick)="clickBtnAdd()">
 </codx-views>
 
 <ng-template #panelLeftRef>
@@ -17,15 +16,20 @@
   </ul>
 </ng-template>
 <ng-template #panelRightRef>
-  <div class="py-3 news-appr-right">
-    <approve-view-detail [objectID]="selectedID" [entityName]="entityName" [dataService]="view.dataService"
-      [funcID]="funcID" (evtUpdateApproval)="updateApprovePost($event)" [formModel]="view.formModel">
-    </approve-view-detail>
-  </div>
+  <approve-view-detail [objectID]="selectedID" [entityName]="entityName" [dataService]="view.dataService"
+    [funcID]="view.funcID" (evtUpdateApproval)="realoadData($event)" [formModel]="view.formModel">
+  </approve-view-detail>
 </ng-template>
 <ng-template #tmpEmpty>
-  <div class="w-100 h-100">
-    <img src="assets/themes/sys/default/img/DataEmpty.svg">
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
+        </div>
+      </div>
+    </div>
   </div>
 </ng-template>
 <ng-template #itemTemplate let-data>
@@ -33,7 +37,7 @@
     <ng-container *ngIf="funcID == 'WPT0213';else wp_news">
       <codx-temp-full [dataItem]="data" [typeMF]="'hover'" (clickMF)="clickMF($event,data)" [descLine]="2"
         [formModel]="view.formModel" [resourceObjType]="entityName" imgCss="me-2"
-        cardCss="card-template border-bottom px-5 py-3"
+        cardCss="card-template border-bottom px-4 py-3"
         [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' + data.category | vll:'WP004':'icon' | async"
         [icoStyle]="" title="<span class='fw-bold'>{{data.category | vll:'WP004':'text'|async}}</span>"
         [desc]="data.comments" [date]="data.createdOn" [status]="data.approveStatus"
@@ -45,7 +49,7 @@
         [resourceObjType]="'AD_Users'" [resources]="data.createdBy"
         [icoCss]="'w-40px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle me-3 ' +(data.category | vll:'WP004':'icon' | async)"
         [icoStyle]="setStyles((data.category | vll:'WP004':'color'|async))" imgCss="me-3"
-        cardCss="card-template border-bottom px-5 py-3"
+        cardCss="card-template border-bottom px-4 py-3"
         title="<span class='fw-bold'>{{data.category | vll:'WP004':'text'|async}}</span>"
         [desc]="data.category == 'companyinfo'? data.content : data.subject" [descLine]="2" [date]="data.createdOn"
         [status]="data.approveStatus" [statusVll]="gridViewSetUp['ApproveStatus']['referedValue']" [bookmark]="false">

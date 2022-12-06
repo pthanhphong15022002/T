@@ -190,6 +190,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
       confirmControl: this.data?.confirmControl,
       allowEditAreas: this.data?.allowEditAreas,
+      hideTabQuery: true,
     };
 
     this.openPopupAddAppStep(data);
@@ -204,6 +205,7 @@ export class ApprovalStepComponent implements OnInit, AfterViewInit, OnChanges {
       dataEdit: approvalStep,
       type: '0',
       eSign: this.type == '1' ? this.eSign : this.data?.eSign,
+      hideTabQuery: true,
     };
     this.openPopupAddAppStep(data);
   }

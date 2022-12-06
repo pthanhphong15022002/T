@@ -43,6 +43,9 @@ import { SystemsettingsComponent } from './systemsettings/systemsettings.compone
 import { SliderModule } from '@syncfusion/ej2-angular-inputs';
 import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_onlyHeader/_onlyHeader.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
+import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
+import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
+import { PleaseUseComponent } from './users/please-use/please-use.component';
 
 export const routes: Routes = [
   {
@@ -107,7 +110,10 @@ const T_Component: Type<any>[] = [
   SystemsettingsComponent,
   NoSubAsideComponent,
   ApproversComponent,
-  AddApproversComponent
+  AddApproversComponent,
+  BindPipe,
+  ActiveTemplatePipe,
+  PleaseUseComponent,
 ];
 @NgModule({
   imports: [

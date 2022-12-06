@@ -8,8 +8,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { dataValidate } from '@syncfusion/ej2-angular-spreadsheet';
+import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 import {
   ApiHttpService,
   AuthStore,
@@ -75,21 +74,51 @@ export class ViewDetailComponent implements OnInit {
   user: any; //user loggin
   dataReferences: any = [];
   vllRefType: string = 'TM018';
+  isAfterRender: boolean = false;
+  gridViewSetup: any = {};
 
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
+
+  tabControl: TabModel[] = [];
 
   ngOnInit(): void {
     this.itemDetailStt = 3;
     this.itemDetailDataStt = 1;
     if (this.formModel) {
-      this.initForm();
+      this.cache
+        .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+        .subscribe((gv) => {
+          if (gv) this.gridViewSetup = gv;
+          console.log(this.gridViewSetup);
+
+          this.initForm();
+        });
     } else {
       this.esService.getFormModel(this.funcID).then((formModel) => {
-        if (formModel) this.formModel = formModel;
-        this.initForm();
+        if (formModel) {
+          this.formModel = formModel;
+          this.cache
+            .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
+            .subscribe((gv) => {
+              if (gv) this.gridViewSetup = gv;
+              console.log(this.gridViewSetup);
+
+              this.initForm();
+            });
+        }
       });
     }
+  }
+
+  ngAfterViewInit(): void {
+    this.tabControl = [
+      { name: 'History', textDefault: 'Lịch sử', isActive: true },
+      { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
+      { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
+      { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
+    ];
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -139,8 +168,9 @@ export class ViewDetailComponent implements OnInit {
 
   initForm() {
     this.dataReferences = [];
-    console.log(1);
-
+    if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
+      this.itemDetailTemplate.formModel = this.formModel;
+    }
     this.cache.valueList('TM018').subscribe((res) => {
       console.log('TM018', res);
     });
@@ -175,7 +205,6 @@ export class ViewDetailComponent implements OnInit {
                     this.esService
                       .getod(this.itemDetail?.recID)
                       .subscribe((res) => {
-                        console.log('1111111111111', res);
                         res.refType = this.itemDetail?.refType;
                         let item = this.dataReferences.filter((p) => {
                           p.recID == res.recID;
@@ -196,7 +225,8 @@ export class ViewDetailComponent implements OnInit {
       this.transID = this.itemDetail.processID;
       if (
         this.itemDetail?.approveControl == '1' ||
-        this.itemDetail?.approveStatus != '1'
+        this.itemDetail?.approveStatus == '3' ||
+        this.itemDetail?.approveStatus == '5'
       ) {
         this.transID = this.itemDetail.recID;
       }
@@ -225,6 +255,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetail != null) {
       this.canRequest = this.itemDetail.approveStatus < 3 ? true : false;
     }
+    this.isAfterRender = true;
     // this.setHeight();
   }
 
@@ -266,18 +297,18 @@ export class ViewDetailComponent implements OnInit {
     );
 
     if (bookmarked == true) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
+      if (bm && bm.length) bm[0].disabled = true;
+      if (unbm && unbm.length) unbm[0].disabled = false;
     } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if (unbm && unbm.length) unbm[0].disabled = true;
+      if (bm && bm.length) bm[0].disabled = false;
     }
 
-    if (data.approveStatus == '0') {
+    if (data.approveStatus != '3') {
       var cancel = e.filter(
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
-      cancel[0].disabled = true;
+      if (cancel && cancel.length) cancel[0].disabled = true;
     }
   }
 
@@ -407,9 +438,15 @@ export class ViewDetailComponent implements OnInit {
         '',
         dialogModel
       );
-      dialogAdd.closed.subscribe((res) => {
-        if (!res.event) {
-          this.esService.deleteStepByTransID(res.recID).subscribe();
+      dialogAdd.closed.subscribe((x) => {
+        if (x.event) {
+          if (x.event?.approved) {
+            this.view.dataService.add(x.event.data, 0).subscribe();
+          } else {
+            delete x.event._uuid;
+            this.view.dataService.add(x.event, 0).subscribe();
+            //this.getDtDis(x.event?.recID)
+          }
         }
       });
     });
@@ -474,6 +511,34 @@ export class ViewDetailComponent implements OnInit {
       });
   }
 
+  viewSFile(datas: any, mF: any) {
+    this.view.dataService.edit(datas).subscribe((res: any) => {
+      let option = new SidebarModel();
+      option.DataService = this.view?.dataService;
+      option.FormModel = this.view?.formModel;
+
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      let dialogAdd = this.callfunc.openForm(
+        PopupAddSignFileComponent,
+        mF?.text,
+        700,
+        650,
+        this.funcID,
+        {
+          modeView: '2',
+          isAddNew: false,
+          dataSelected: datas,
+          formModel: this.view?.formModel,
+          option: option,
+          headerText: mF?.text,
+        },
+        '',
+        dialogModel
+      );
+    });
+  }
+
   viewFile(datas: any, mF: any) {
     this.view.dataService.edit(datas).subscribe((res: any) => {
       let option = new SidebarModel();
@@ -489,7 +554,7 @@ export class ViewDetailComponent implements OnInit {
         650,
         this.funcID,
         {
-          modeView: true,
+          modeView: '1',
           isAddNew: false,
           dataSelected: datas,
           formModel: this.view?.formModel,

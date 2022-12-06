@@ -1,0 +1,54 @@
+<div class="modal-header pb-2">
+  <div class="d-flex flex-column flex-grow-1">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="fs-3 fw-bold text-dark" id="modal-basic-title">
+        <codx-label name="lblOnlineUrl" default="Họp trực tuyến"></codx-label>
+      </div>
+      <button type="button" class="btn btn-xs btn-icon btn-light btn-hover-primary" aria-label="Close"
+        (click)="closeDialog(false)">
+        <span class="icon-close icon-20 text-dark text-hover-primary"></span>
+      </button>
+    </div>
+    <div class="text-gray-500">
+      <codx-label name="lblOnlineUrlSetting" default="Thiết lập đường dẫn"></codx-label>
+    </div>
+  </div>
+</div>
+
+<div class="card-body mt-5">
+  <div class="form-group">
+    <div class="d-flex align-items-center">
+      <div class="meeting me-6" *ngFor="let imgUrl of vllImgUrl; let idx = index">
+        <!-- [disabled]="idx != 0" -->
+        <button (click)="changeHost(imgUrl)" [ngClass]="{
+        'opacity-25': idx != 0,
+        'btn-light-primary p-0': imgUrl == curHost,
+        btn: true,
+        'border-0': true
+      }">
+          <img [src]="baseUrl + imgUrl.icon" alt="" width="35px" height="35px" />
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label fiedName="OnlineUrl" default="Đường dẫn" [formModel]="dialogRef.formModel"></codx-label>
+    <codx-input class="form-control" type="text" [disabled]="meetingUrl != null" [crrValue]="meetingUrl">
+    </codx-input>
+  </div>
+</div>
+
+<div class="card-footer">
+  <div class="d-flex justify-content-between">
+    <div class="d-flex">
+      <button type="button" class="btn btn-primary" (click)="createMeeting()">
+        <codx-label name="lblCreateMeeting" default="Tạo mới"></codx-label>
+      </button>
+    </div>
+    <div class="d-flex">
+      <button type="button" class="btn btn-primary" (click)="closeDialog(true)">
+        <codx-label name="lblSave" default="Lưu"></codx-label>
+      </button>
+    </div>
+  </div>
+</div>

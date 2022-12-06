@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import {
   DialogRef,
@@ -11,6 +12,9 @@ import {
 } from 'codx-core';
 import { PopupAddBookingCarComponent } from '../../booking/car/popup-add-booking-car/popup-add-booking-car.component';
 import { CodxEpService } from '../../codx-ep.service';
+import { DriverModel } from '../../models/bookingAttendees.model';
+import { PopupDriverAssignComponent } from './popup-driver-assign/popup-driver-assign.component';
+import moment from 'moment';
 
 @Component({
   selector: 'approval-car',
@@ -24,17 +28,16 @@ export class ApprovalCarsComponent extends UIComponent {
   @ViewChild('resourceTootip') resourceTootip!: TemplateRef<any>;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('mfButton') mfButton?: TemplateRef<any>;
+  @ViewChild('driverAssign') driverAssign: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   service = 'EP';
   assemblyName = 'EP';
-  entity = 'EP_Bookings';
   className = 'BookingsBusiness';
   method = 'GetListApprovalAsync';
-  predicate = 'ResourceType=@0';
-  datavalue = '2';
+  cbbDriver: DriverModel[]=[];
   idField = 'recID';
-  
+
   // [entityName]="'ES_ApprovalTrans'"
   // [method]="'LoadDataAsync'"
   // [assemblyName]="'CM'"
@@ -47,15 +50,21 @@ export class ApprovalCarsComponent extends UIComponent {
   request?: ResourceModel;
   itemDetail;
   resourceField;
-  fields;
   dataSelected: any;
+  popupDialog: any;
   dialog!: DialogRef;
-  formModel:FormModel;
+  formModel: FormModel;
+  viewType=ViewType;
+  driverID:any;
+  listDriver=[];
+  driver:any;
+  fields:any;
+  popupTitle: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
-    ) {
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
 
     this.funcID = this.router.snapshot.params['funcID'];
@@ -64,6 +73,8 @@ export class ApprovalCarsComponent extends UIComponent {
         this.formModel = res;
       }
     });
+    
+  
   }
 
   onInit(): void {
@@ -72,8 +83,6 @@ export class ApprovalCarsComponent extends UIComponent {
     this.request.className = 'BookingsBusiness';
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
-    this.request.predicate = 'ResourceType=@0';
-    this.request.dataValue = '2';
     this.request.idField = 'recID';
 
     this.modelResource = new ResourceModel();
@@ -91,6 +100,7 @@ export class ApprovalCarsComponent extends UIComponent {
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
       code: { name: 'code' },
+      status: 'approveStatus',
     };
 
     this.resourceField = {
@@ -121,6 +131,7 @@ export class ApprovalCarsComponent extends UIComponent {
         request: this.request,
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
+        showFilter:false,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
@@ -128,9 +139,10 @@ export class ApprovalCarsComponent extends UIComponent {
           //template:this.cardTemplate,
           template4: this.resourceHeader,
           //template5: this.resourceTootip,
-          template6: this.mfButton,//header          
-          template8: this.contentTmp,//content
-          statusColorRef: 'vl003',
+          template6: this.mfButton, //header
+          template8: this.contentTmp, //content
+          statusColorRef: 'EP022',
+          
         },
       },
     ];
@@ -140,104 +152,168 @@ export class ApprovalCarsComponent extends UIComponent {
   click(event) {}
 
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
-    // if (!datas) datas = this.data;
-    // else {
-    //   var index = this.view.dataService.data.findIndex((object) => {
-    //     return object.recID === datas.recID;
-    //   });
-    //   datas = this.view.dataService.data[index];
-    // }
     switch (funcID) {
-      case 'EPT40201':
-      case 'EPT40201':
-      case 'EPT40301':
+      case 'EPT40201': //Duyệt
         {
-          //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
-      case "EPT40202":
+        break;
+      case 'EPT40202': //Từ chối
         {
-          //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
-        break;      
+        break;
+      case 'EPT40204': {
+        //Phân công tài xế
+        this.popupTitle=value.text;
+        this.assignDriver(datas);
+        break;
+      }
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+  
+  approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
-            status,
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            status
           )
-          .subscribe((res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              if (status == '5') {
+                this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                data.approveStatus = '5';
+                data.status = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
+              if (status == '4') {
+                this.notificationsService.notifyCode('SYS034'); //bị hủy
+                data.approveStatus = '4';
+                data.status = '4';
               }
-                             
+
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
-  } 
+  }
+  setPopupTitle(data:any){
+    if(data){
+      this.popupTitle=data;
+    }
+  }
+  assignDriver(data: any) {
+    let startDate= new Date(data.startDate);
+    let endDate= new Date(data.endDate);
+    this.codxEpService.getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
+    .subscribe((res:any)=>{
+      if(res){
+        this.cbbDriver=[];
+        this.listDriver = res;
+        this.listDriver.forEach(dri=>{
+          var tmp = new DriverModel();
+          tmp['driverID'] = dri.resourceID;
+          tmp['driverName'] = dri.resourceName;
+          this.cbbDriver.push(tmp);
+        })
+        this.popupDialog = this.callfc.openForm(
+          PopupDriverAssignComponent,'',550,250,this.funcID,
+          [
+            this.view.dataService.dataSelected,            
+            this.popupTitle,
+            this.view.dataService,
+            this.cbbDriver,
+          ]            
+        );
+        this.dialog.closed.subscribe((x) => {
+          if (!x.event) this.view.dataService.clear(); 
+          else {
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
+      }
+    })       
+  }
+
+  cbxChange(evt:any){}
   closeAddForm(event) {}
 
   changeItemDetail(event) {
     this.itemDetail = event?.data;
   }
 
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
-      if(data.status=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS04' /*Copy*/ ||
+          func.functionID == 'EPT40203'
+        ) {
+          func.disabled = true;
+        }
+      });
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40201" /*MF Duyệt*/ || func.functionID == "EPT40202"/*MF từ chối*/ )
-          {
-            func.disabled=true;
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            func.disabled = true;
+          }
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40201' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40202' /*MF từ chối*/
+          ) {
+            func.disabled = true;
+          }
+          if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
+            if(data.status==5 && data.driverName==null)
+              func.disabled = false;
+            else{
+              func.disabled = true;
+            }
           }
         });
       }
     }
   }
-  
-  updateStatus(data:any)
-  {
+  sameDayCheck(sDate:any, eDate:any){
+    if(sDate && eDate){
+      return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+    }
+    return false;
+  }
+  showHour(date:any){
+    let temp= new Date(date);
+    let time =
+          ('0' + temp.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
+  updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }
   getDetailApprovalBooking(id: any) {
     this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetApprovalBookingByIDAsync',
-        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
-      )
+      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+        this.itemDetail?.recID,
+        this.itemDetail?.approvalTransRecID,
+      ])
       .subscribe((res) => {
         if (res) {
           this.itemDetail = res;

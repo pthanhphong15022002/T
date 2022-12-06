@@ -1,0 +1,26 @@
+.bg-om-gray{
+    background-color: #E8E8ED !important;
+}
+.om-calendar
+{
+    border: none !important;
+    border-color: white !important;
+}
+.om-switch-room .active
+{
+    background-color: #0E4C55;
+}
+.bgC5C7D0
+{
+    background-color: #C5C7D0;
+}
+.om-rounded-pill-left
+{
+    border-top-left-radius: 50rem ;
+    border-bottom-left-radius:50rem ;
+}
+.om-rounded-pill-right
+{
+    border-top-right-radius: 50rem ;
+    border-bottom-right-radius:50rem ;
+}

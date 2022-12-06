@@ -1,7 +1,7 @@
 import { Component, HostBinding, Injector, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ViewModel, ViewType, DialogModel, UIComponent } from 'codx-core';
-import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add.component';
+import { PopupAddPostComponents } from '../../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupAddComponent } from '../popup/popup-add/popup-add.component';
 import { PopupSearchComponent } from '../popup/popup-search/popup-search.component';
 
@@ -29,6 +29,7 @@ export class ViewDetailComponent extends UIComponent {
   listNews = [];
   views: Array<ViewModel> = [];
   userPermission:any = null;
+  isShowTemplateShare = false;
 
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   constructor(
@@ -107,53 +108,6 @@ export class ViewDetailComponent extends UIComponent {
   clickTag(tag: any) {
     this.codxService.navigate('', '/wp/news/' + this.funcID + '/tag/' + tag.value);
   }
-
-  
-
-  searchField: string = "";
-  tagUsers: any;
-  show() {
-    if (this.searchField == '' || this.searchField == null) return true;
-    for (let index = 0; index < this.tagUsers.length; index++) {
-      const element: any = this.tagUsers[index];
-      if (
-        element.objectName != null &&
-        element.objectName
-          .toLowerCase()
-          .includes(this.searchField.toLowerCase())
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-  getShareUser(shareControl, commentID) {
-    if (shareControl == '1') {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareOwnerListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) this.tagUsers = res;
-        });
-    } else {
-      this.api
-        .exec<any>(
-          'ERM.Business.WP',
-          'CommentsBusiness',
-          'GetShareUserListAsync',
-          [commentID]
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.tagUsers = res;
-          }
-        });
-    }
-  }
   clickShowPopupCreate(newsType: string) {
     if(this.view){
       let option = new DialogModel();
@@ -182,6 +136,12 @@ export class ViewDetailComponent extends UIComponent {
     };
     let option = new DialogModel();
     option.FormModel = this.view.formModel;
-    this.callfc.openForm(PopupAddPostComponent, '', 650, 550, '', obj, '', option);
+    this.callfc.openForm(PopupAddPostComponents, '', 650, 550, '', obj, '', option);
+  }
+  showListShare(){
+    this.isShowTemplateShare = !this.isShowTemplateShare;
+  }
+  closeListShare(){
+    this.isShowTemplateShare = false;
   }
 }

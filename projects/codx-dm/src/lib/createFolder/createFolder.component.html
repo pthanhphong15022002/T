@@ -63,11 +63,12 @@
                 <ng-container *ngIf="fileEditing != null && fileEditing.permissions != null">
                   <ng-container *ngFor="let perm of fileEditing.permissions; index as i">
                     <ng-container *ngIf="
-                        perm.isActive != false &&
+                        perm.isActive != false && !modeSharing
+                      ">
+                      <!-- perm.isActive != false &&
                         ((!modeSharing &&
                           (!perm.isSharing || perm.isSharing == null)) ||
-                          (modeSharing && perm.isSharing))
-                      ">
+                          (modeSharing && perm.isSharing)) -->
                       <div class="user-mini-item">
                         <div class="d-flex align-items-center">
                           <div>
@@ -208,13 +209,6 @@
                         " (valueChange)="
                           onSaveRightChanged($event, 'titleAvatar')
                         "></codx-input>
-                      <!-- <label>
-                                                <input type="checkbox" name="select" #checkFolder
-                                                    [checked]="createSubFolder" id="checkFolder"
-                                                    [disabled]="this.updateRight == false || this.propertiesFolder"
-                                                    (change)="onSaveRightChanged(checkFolder.checked, 'checkFolder')" />
-                                                <span></span>
-                                            </label> -->
                     </span>
                     <div class="w-80px"></div>
                   </div>

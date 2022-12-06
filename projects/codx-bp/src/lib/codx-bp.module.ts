@@ -25,7 +25,15 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { PropertiesComponent } from './properties/properties.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupAddPermissionComponent } from './processes/popup-add-permission/popup-add-permission.component';
-
+import { AprpermissionComponent } from './aprpermission/aprpermission.component';
+import { ViewFlowchartComponent } from './processsteps/view-flowchart/view-flowchart.component';
+import { PopupRolesComponent } from './processes/popup-roles/popup-roles.component';
+// import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
+import { PopupUpdateRevisionsComponent } from './processes/popup-update-revisions/popup-update-revisions.component';
+import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes/popup-view-detail-processes.component';
+import { PopupPhasesActivitiesComponent } from './processes/popup-phases-activities/popup-phases-activities.component';
+import { ShowMoreLessComponent } from './processes/show-more-less/show-more-less.component';
 
 export const routes: Routes = [
   {
@@ -41,6 +49,10 @@ export const routes: Routes = [
         component: ProcessesComponent,
       },
       {
+        path: 'aprpermission/:funcID',
+        component: ProcessesComponent,
+      },
+      {
         path: 'testhtml',
         component: TesthtmlComponent,
       },
@@ -53,6 +65,7 @@ export const routes: Routes = [
       {
         path: 'processstep/:funcID',
         component: ProcessStepsComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -72,6 +85,13 @@ export const routes: Routes = [
     RevisionsComponent,
     PropertiesComponent,
     PopupAddPermissionComponent,
+    AprpermissionComponent,
+    ViewFlowchartComponent,
+    PopupRolesComponent,
+    PopupUpdateRevisionsComponent,
+    PopupViewDetailProcessesComponent,
+    PopupPhasesActivitiesComponent,
+    ShowMoreLessComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -86,7 +106,9 @@ export const routes: Routes = [
     OverlayModule,
     TabModule,
     CommonModule,
-    DragDropModule
+    DragDropModule,
+    PinchZoomModule,
+    // NgxImageZoomModule
   ],
   exports: [CodxBpComponent],
 })

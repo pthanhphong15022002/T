@@ -1,0 +1,15 @@
+.log-comment{
+    padding: 2px 4px;
+    color: rgb(63, 63, 63);
+    background-color: rgb(235 235 235);;
+    border-radius: 4px;
+}
+.icon-attachment-temp {
+    width: 25px;
+    height: 25px;
+    font-size: 25px !important;
+}
+
+.popup-attachment>div {
+    max-height: none !important;
+}

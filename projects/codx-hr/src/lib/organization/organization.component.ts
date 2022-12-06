@@ -11,6 +11,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { TreeViewComponent } from '@syncfusion/ej2-angular-navigations';
 import {
   ButtonModel,
+  CodxFormDynamicComponent,
   CodxTreeviewComponent,
   CRUDService,
   FormatvaluePipe,
@@ -69,9 +70,16 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
+    this.router.params.subscribe((params) => {
+      if (params) {
+        this.funcID = params['funcID'];
+        if (!this.funcID.includes('WP')) {
+          this.button = {
+            id: 'btnAdd',
+          };
+        }
+      }
+    });
     if (!this.setupEmp) {
       this.cache
         .gridViewSetup(
@@ -110,10 +118,11 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.templateTree,
           panelRightRef: this.templateRight,
           template2: this.templateListView,
+          resourceModel: { parentIDField: 'ParentID' }
         },
       },
     ];
-    this.view.dataService.parentIdField = 'ParentID';
+    // this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
   }
 
@@ -159,41 +168,84 @@ export class OrgorganizationComponent extends UIComponent {
   }
 
   btnClick(e) {
-    var headerText = '';
-    if (e.text) headerText = e.text;
-    this.add(headerText);
+    if (this.view) {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      this.view.dataService.addNew().subscribe((result: any) => {
+        if (result) {
+          let data = {
+            dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: result,
+            function: this.funcID,
+            isAddMode: true,
+            titleMore: e.text,
+          };
+          this.callfc.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.funcID
+          );
+        }
+      });
+    }
   }
 
   add(headerText) {
     this.currentView = this.view.currentView;
-    if (this.currentView)
-      this.treeComponent = this.currentView.currentComponent?.treeView;
-    this.view.dataService.addNew().subscribe(() => {
+    if (this.currentView) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view?.currentView?.dataService;
       option.FormModel = this.view?.formModel;
-      var dialog = this.callfc.openSide(
-        PopupAddOrganizationComponent,
-        {
-          function: this.funcID,
-          orgUnitID: this.orgUnitID,
-          detailComponent: this.detailComponent,
-          treeComponent: this.treeComponent,
-          headerText: headerText,
-          isModeAdd: true,
-        },
-        option
-      );
-      dialog.closed.subscribe((res) => {
-        var data = res.event?.save;
-        if (data) {
-          this.dataCard.forEach((res) => {
-            if (res.orgUnitID == data.orgUnitID) res['modifiedOn'] = new Date();
-          });
+      this.treeComponent = this.currentView.currentComponent?.treeView;
+      // this.view.dataService.addNew().subscribe(() => {
+      //   let option = new SidebarModel();
+      //   option.Width = '550px';
+      //   option.DataService = this.view?.currentView?.dataService;
+      //   option.FormModel = this.view?.formModel;
+      //   var dialog = this.callfc.openSide(
+      //     PopupAddOrganizationComponent,
+      //     {
+      //       function: this.funcID,
+      //       orgUnitID: this.orgUnitID,
+      //       detailComponent: this.detailComponent,
+      //       treeComponent: this.treeComponent,
+      //       headerText: headerText,
+      //       isModeAdd: true,
+      //     },
+      //     option
+      //   );
+      //   dialog.closed.subscribe((res) => {
+      //     var data = res.event?.save;
+      //     if (data) {
+      //       this.dataCard.forEach((res) => {
+      //         if (res.orgUnitID == data.orgUnitID) res['modifiedOn'] = new Date();
+      //       });
+      //     }
+      //   });
+      // });
+      this.view.dataService.addNew().subscribe((result: any) => {
+        if (result) {
+          let data = {
+            dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: result,
+            function: this.funcID,
+            isAddMode: true,
+          };
+          let popup = this.callfc.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.funcID
+          );
         }
       });
-    });
+    }
   }
 
   edit(data, headerText) {

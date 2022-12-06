@@ -57,8 +57,10 @@ export class ImgComponent implements OnInit, AfterViewInit {
     private injector: Injector
   ) {
     this.cache.functionList('WP').subscribe((res) => {
-      this.functionList.entityName = res.entityName;
-      this.functionList.funcID = res.functionID;
+      if (res) {
+        this.functionList.entityName = res.entityName;
+        this.functionList.funcID = res.functionID;
+      }
     });
     this.user = this.auth.get();
     this.dataValue = `WP_Comments;false;${this.user?.userID};image`;
@@ -66,7 +68,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
     dataSv.request.gridViewName = 'grvFileInfo';
     dataSv.request.entityName = 'DM_FileInfo';
     dataSv.request.formName = 'FileInfo';
-    //dataSv.request.pageSize = 15;
     this.dtService = dataSv;
   }
 
@@ -75,20 +76,6 @@ export class ImgComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
   }
-
-  // getFile() {
-  //   this.api.exec<any>('ERM.Business.DM', 'FileBussiness', 'GetFilesByObjectTypeAsync', 'WP_Comments').
-  //     subscribe((files: any[]) => {
-  //       if (files.length > 0) {
-  //         files.forEach((f: any) => {
-  //           if (f.referType == this.FILE_REFERTYPE.IMAGE && (f.thumbnail != '' || f.thumbnail != null)) {
-  //             this.file_img.push(f);
-  //           }
-  //         });
-  //         this.dt.detectChanges();
-  //       }
-  //     })
-  // }
 
   openImg(item) {
     this.fileService.getFile(item.recID).subscribe((data) => {

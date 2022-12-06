@@ -90,36 +90,55 @@
           <ng-container
             *ngIf="data.controlType && data.controlType != 'GroupControl'"
           >
-            <codx-input
-              [style]="
-                data.controlType == 'TextBox' || data.controlType == 'Combobox'
-                  ? 'width: 200px'
-                  : ''
-              "
-              [type]="data | type"
-              [name]="data.controlType"
-              placeholder=""
-              ngDefaultControl
-              [refType]="data.referedType"
-              [refValue]="data.referedValue || data.referdValue"
-              [loadFull]="true"
-              [field]="data.fieldName"
-              [checked]="
-                autoDefault && autoDefault[data.fieldName]
-                  ? !autoDefault[data.fieldName].stop
-                  : dataValue[data.fieldName] == '1'
-              "
-              [crrValue]="
-                autoDefault && autoDefault[data.fieldName]
-                  ? !autoDefault[data.fieldName].stop
-                  : dataValue[data.fieldName] || ''
-              "
-              (valueChange)="valueChange($event, data, autoDefault)"
-            >
-            </codx-input>
+            <ng-container *ngIf="data.category == '6'; else basic">
+              <codx-input
+                type="Switch"
+                name="Switch"
+                placeholder=""
+                field="stop"
+                [crrValue]="
+                  schedules && schedules[data.fieldName]
+                    ? !schedules[data.fieldName].stop
+                    : false
+                "
+                (valueChange)="valueChange($event, data, null)"
+              >
+              </codx-input>
+            </ng-container>
+
+            <ng-template #basic>
+              <codx-input
+                [style]="
+                  data.controlType == 'TextBox' ||
+                  data.controlType == 'Combobox'
+                    ? 'width: 200px'
+                    : ''
+                "
+                [type]="data | type"
+                [name]="data.controlType"
+                placeholder=""
+                ngDefaultControl
+                [refType]="data.referedType"
+                [refValue]="data.referedValue || data.referdValue"
+                [loadFull]="true"
+                [field]="data.fieldName"
+                [checked]="
+                  autoDefault && autoDefault[data.fieldName]
+                    ? !autoDefault[data.fieldName].stop
+                    : dataValue[data.fieldName] == '1'
+                "
+                [crrValue]="
+                  autoDefault && autoDefault[data.fieldName]
+                    ? !autoDefault[data.fieldName].stop
+                    : dataValue[data.fieldName] || ''
+                "
+                (valueChange)="valueChange($event, data, autoDefault)"
+              >
+              </codx-input>
+            </ng-template>
           </ng-container>
 
-          <ng-container *ngIf="data.category == '2' && !data.isCustomize">
+          <ng-container *ngIf="data.category == '2' && data.isCustomize == '0'">
             <span class="me-2">
               <codx-input
                 type="Switch"
@@ -268,23 +287,23 @@
         </div>
       </div>
       <div
-        class="d-flex mt-3"
+        class="ms-20 mt-3 lh-lg"
         *ngIf="data.displayMode === '4' || data.displayMode === '5'"
       >
-        <div class="ms-20 me-9 text-dark fw-bold minw-200px w-200px">
-          {{ data.tilte }}
-        </div>
-        <div
+        <span class="me-3 text-dark fw-bold"> {{ data.tilte }}: </span>
+        <span
           class="text-gray-600 share-object-name"
           [attr.data-recid]="data.recID"
         >
           {{
-            (data.recID | shareSetting: setting:dataValue)?.objectName == "null"
+            (data.recID | shareSetting: settingFull:dataValue)?.objectName ==
+            "null"
               ? ""
-              : (data.recID | shareSetting: setting:dataValue)?.objectName ||
-                (data.recID | shareSetting: setting:dataValue)?.objectID
+              : (data.recID | shareSetting: settingFull:dataValue)
+                  ?.objectName ||
+                (data.recID | shareSetting: settingFull:dataValue)?.objectID
           }}
-        </div>
+        </span>
       </div>
       <hr class="ms-12" *ngIf="!isGroup" />
     </div>

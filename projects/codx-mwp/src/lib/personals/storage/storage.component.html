@@ -9,7 +9,7 @@
           <codx-label name="lblSortNoteBook" formName="NoteBooks" default="Sắp xếp"></codx-label>
         </div>
         <div class="text-primary">
-          {{gridViewSetup?.Title?.headerText}}
+          {{ gridViewSetup?.Title?.headerText }}
         </div>
         <div class="mx-2 text-gray-400">|</div>
         <div class="btn btn-icon btn-white me-1 btn btn-icon btn-active-light-primary position-relative">
@@ -73,7 +73,7 @@
 <ng-template #templateListCard let-item>
   <div (dblclick)="openStorageDetail(item)">
     <codx-card-img cardCss="border rounded-3 card-img-mwp img-storage w-225px h-225px" [imageId]="item.recID"
-      imgCss="h-140px mb-2" icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo"
+      imgCss="h-150px w-150px mb-2" icoTitleCss="icon-archive icon-16" [title]="item.title" [desc2]="item.memo"
       [imgOn]="item?.modifiedOn" [imageObjType]="'WP_Storages'" imageWidth="223" [formModel]="listView?.formModel"
       (clickMF)="clickMF($event, item)" [dataItem]="item" [imageObjName]="item.title">
     </codx-card-img>

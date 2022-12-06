@@ -1,0 +1,46 @@
+<codx-form
+  [headerText]="headerText"
+  [dialog]="dialogRef"
+  [bodyCss]="'bgEDEDED okr-add-body'"
+  [body]="body"
+  [footer]="footer"
+></codx-form>
+
+<ng-template #body>
+  <div *ngFor="let version of versions">
+    <div class="px-4 py-2">
+      <div class="d-flex justify-content-between">
+        <div>
+          <div class="d-flex align-item-center">
+            <div class="icon-restore"></div>
+            <div class="ms-2">Phiên bản: V2.0</div>
+          </div>
+          <div style="margin-left: 24px; color: #3799ff">
+            Cập nhật bởi, Lê Phạm Hoài Thương | 1 ngày trước
+          </div>
+          <div style="margin-left: 24px">
+            Bổ sung thêm một số bước công việc
+          </div>
+        </div>
+        <div>
+          <div>Hiệu lực</div>
+          <div>01/01/2022</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex flex-column mb-4">
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm()">
+        <codx-label
+          name="lblSave"
+          default="Lưu"
+          [formModel]="formModel"
+        ></codx-label>
+      </button>
+    </div>
+  </div>
+</ng-template>

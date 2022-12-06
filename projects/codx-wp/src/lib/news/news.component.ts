@@ -61,6 +61,7 @@ export class NewsComponent extends UIComponent {
     super(injector)
   }
   onInit(): void {
+    // this.clearData();
     this.router.params.subscribe((param) => {
       if (param) {
         this.funcID = param["funcID"];
@@ -167,7 +168,7 @@ export class NewsComponent extends UIComponent {
       option.IsFull = true;
       let modal = this.callfc.openForm(PopupAddComponent, '', 0, 0, '', newsType, '', option);
       modal.closed.subscribe((res: any) => {
-        if (res && res.event) {
+        if (res?.event) {
           let data = res.event;
           switch(data.newsType)
           {
@@ -182,7 +183,6 @@ export class NewsComponent extends UIComponent {
                 arrPostNew.pop();
               }
               this.arrPost = [...arrPostNew];
-              
               break;
             case this.NEWSTYPE.VIDEO:
               let arrVideoNew = [];
@@ -192,12 +192,10 @@ export class NewsComponent extends UIComponent {
               }
               arrVideoNew.unshift(data);
               this.videos = [...arrVideoNew];
-              
               break;
             default:
               break;
           }
-          this.notifySV.notifyCode('SYS006');
           this.detectorRef.detectChanges();
         }
       });
@@ -213,7 +211,9 @@ export class NewsComponent extends UIComponent {
     } 
   }
 
-
+  clearData(){
+    this.api.execSv("WP","ERM.Business.WP","NewsBusiness","DeleteAllDataAsync",[]).subscribe()
+  }
 
 
 }

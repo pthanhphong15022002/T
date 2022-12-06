@@ -16,6 +16,7 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-personals',
@@ -33,38 +34,29 @@ export class PersonalsComponent implements OnInit {
   funcID = '';
   default = true;
   showHeader: boolean = true;
-  moreFunc: any[] = [
-    { functionID: `MWP0091`, description: 'Bài viết', smallIcon: 'mwp_post' },
-    { functionID: `MWP0092`, description: 'Hình ảnh', smallIcon: 'mwp_image' },
-    { functionID: `MWP0093`, description: 'Video', smallIcon: 'mwp_video' },
-    {
-      functionID: `MWP0094`,
-      description: 'Sổ tay',
-      smallIcon: 'mwp_notebooks',
-    },
-    {
-      functionID: `MWP0095`,
-      description: 'Kho lưu trữ',
-      smallIcon: 'mwp_storage',
-    },
-  ];
+  checkRefreshAvatar = false;
+
+  headerMF = {
+    POST: true,
+    IMAGE: false,
+    VIDEO: false,
+    NOTEBOOK: false,
+    STORAGE: false,
+    INFORMATION: false,
+  };
 
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
   @ViewChild('panelLeft') panelLeftRef: TemplateRef<any>;
   @ViewChild('viewbase') viewbase: ViewsComponent;
 
   constructor(
-    private api: ApiHttpService,
-    private cachesv: CacheService,
     private changedt: ChangeDetectorRef,
     private auth: AuthService,
     private route: ActivatedRoute,
-    private pageTitle: PageTitleService,
-    private codxService: CodxService
+    private codxShareSV: CodxShareService
   ) {
     var data: any = this.auth.user$;
     this.employeeInfo = data.source._value;
-
     this.active = true;
   }
 
@@ -72,13 +64,20 @@ export class PersonalsComponent implements OnInit {
     this.route.params.subscribe((param) => {
       this.funcID = param['funcID'];
       this.menuUrl = this.funcID;
-      // this.getFunctionList();
-      this.changedt.detectChanges();
     });
+    this.refreshAvatar();
   }
 
-  ngAfterViewInit() {
-    this.changedt.detectChanges();
+  ngAfterViewInit() {}
+
+  refreshAvatar() {
+    this.codxShareSV.dataRefreshImage.subscribe((res) => {
+      if (res) {
+        this.checkRefreshAvatar = !this.checkRefreshAvatar;
+        this.employeeInfo['modifiedOn'] = res?.modifiedOn;
+        this.changedt.detectChanges();
+      }
+    });
   }
 
   getFunctionList() {
@@ -88,11 +87,11 @@ export class PersonalsComponent implements OnInit {
     //       this.pageTitle.setSubTitle(res.customName);
     //       this.formName = res.formName;
     //       this.gridViewName = res.gridViewName;
-    //       debugger
+    //
     //       this.cachesv
     //         .moreFunction(this.formName, this.gridViewName)
     //         .subscribe((res: any) => {
-    //           debugger
+    //
     //           this.moreFunc = res;
     //           this.changedt.detectChanges();
     //         });
@@ -101,14 +100,14 @@ export class PersonalsComponent implements OnInit {
     // }
   }
 
-  getMenu(url, icon) {
-    this.icon = icon;
-    this.active = true;
-    this.default = false;
-    this.menuUrl = url;
-
-    this.funcID = url;
-    // this.codxService.navigate('', `mwp/personals/${url}`);
+  activeMF(type) {
+    this.headerMF.IMAGE = false;
+    this.headerMF.VIDEO = false;
+    this.headerMF.POST = false;
+    this.headerMF.NOTEBOOK = false;
+    this.headerMF.STORAGE = false;
+    this.headerMF.INFORMATION = false;
+    this.headerMF[type] = true;
     this.changedt.detectChanges();
   }
 }

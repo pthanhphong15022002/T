@@ -113,13 +113,15 @@ export class ApprovalStationeryComponent
           )
           .subscribe((res:any) => {
             if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('ES007');//đã duyệt
-                data.status="5"
+              if (status == '5') {
+                this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                data.approveStatus = '5';
+                data.status = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('ES007');//bị hủy
-                data.status="4";
+              if (status == '4') {
+                this.notificationsService.notifyCode('SYS034'); //bị hủy
+                data.approveStatus = '4';
+                data.status = '4';
               }              
               this.view.dataService.update(data).subscribe();
             } else {
@@ -130,10 +132,13 @@ export class ApprovalStationeryComponent
   }
   changeDataMF(event, data:any) {        
     if(event!=null && data!=null){
-      // event.forEach(func => {        
-      //   func.disabled=true;        
-      // });
-      if(data.status=='3'){
+      event.forEach(func => {       
+        if(func.functionID == "SYS04"/*Copy*/) 
+        {
+          func.disabled=true;        
+        }
+      });
+      if(data.approveStatus=='3'){
         event.forEach(func => {
           if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
           {

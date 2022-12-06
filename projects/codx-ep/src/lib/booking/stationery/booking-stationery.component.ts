@@ -58,6 +58,7 @@ export class BookingStationeryComponent
   popupTitle = '';
   formModel: FormModel;
   itemDetail;
+  popupClosed = true;
 
   constructor(
     private injector: Injector,
@@ -76,7 +77,8 @@ export class BookingStationeryComponent
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
-        this.funcIDName = res.customName.toString().toLowerCase();
+        this.funcIDName =
+          res.customName.charAt(0).toLowerCase() + res.customName.slice(1);
       }
     });
   }
@@ -132,106 +134,156 @@ export class BookingStationeryComponent
     }
   }
 
+  changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID == 'EPT32') {
+      event.forEach((func) => {
+        if (
+          func.functionID == 'SYS02' /*MF sửa*/ ||
+          func.functionID == 'SYS03' /*MF xóa*/ ||
+          func.functionID == 'SYS04' /*MF chép*/
+        ) {
+          func.disabled = true;
+        }
+      });
+    }
+    if(event != null && data != null && data.issueStatus == 3){
+      event.forEach((func) => {
+        if (
+          func.functionID == 'EPT40303' /*MF cấp phát*/ 
+        ) {
+          func.disabled = true;
+        }
+      });
+    }
+  }
+
   addNewRequest() {
-    this.view.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      this.callfc.openForm(
-        PopupRequestStationeryComponent,
-        this.popupTitle,
-        700,
-        650,
-        this.funcID,
-        {
-          isAddNew: true,
-          formModel: this.formModel,
-          option: option,
-          title: this.popupTitle,
-        },
-        '',
-        dialogModel
-      );
-    });
+    if (true) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        this.callfc.openForm(
+          PopupRequestStationeryComponent,
+          this.popupTitle,
+          700,
+          650,
+          this.funcID,
+          {
+            isAddNew: true,
+            formModel: this.formModel,
+            option: option,
+            title: this.popupTitle,
+          },
+          '',
+          dialogModel
+        );
+        this.dialog?.closed.subscribe((returnData) => {
+          this.popupClosed = true;
+          if (!returnData.event) this.view.dataService.clear();
+        });
+      });
+    }
   }
 
   edit(evt: any) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
+      if (
+        this.authService.userValue.userID != evt?.owner &&
+        !this.authService.userValue.administrator
+      ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          let dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          this.callfc.openForm(
-            PopupRequestStationeryComponent,
-            this.popupTitle,
-            700,
-            650,
-            this.funcID,
-            {
-              isAddNew: false,
-              formModel: this.formModel,
-              option: option,
-              title: this.popupTitle,
-            },
-            '',
-            dialogModel
-          );
-        });
+
+      if (true) {
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            let option = new SidebarModel();
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            let dialogModel = new DialogModel();
+            dialogModel.IsFull = true;
+            this.callfc.openForm(
+              PopupRequestStationeryComponent,
+              this.popupTitle,
+              700,
+              650,
+              this.funcID,
+              {
+                isAddNew: false,
+                formModel: this.formModel,
+                option: option,
+                title: this.popupTitle,
+              },
+              '',
+              dialogModel
+            );
+            this.dialog?.closed.subscribe((returnData) => {
+              this.popupClosed = true;
+              if (!returnData.event) this.view.dataService.clear();
+            });
+          });
+      }
     }
   }
 
   copy(evt: any) {
     if (evt) {
-      if (this.authService.userValue.userID != evt?.owner) {
-        this.notificationsService.notifyCode('TM052');
-        return;
+      if (true) {
+        this.view.dataService.dataSelected = evt;
+        this.view.dataService
+          .copy(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            let option = new SidebarModel();
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            let dialogModel = new DialogModel();
+            dialogModel.IsFull = true;
+            this.callfc.openForm(
+              PopupRequestStationeryComponent,
+              this.popupTitle,
+              700,
+              650,
+              this.funcID,
+              {
+                isAddNew: true,
+                formModel: this.formModel,
+                option: option,
+                title: this.popupTitle,
+              },
+              '',
+              dialogModel
+            );
+            this.dialog?.closed.subscribe((returnData) => {
+              this.popupClosed = true;
+              if (!returnData.event) this.view.dataService.clear();
+            });
+          });
       }
-      this.view.dataService.dataSelected = evt;
-      this.view.dataService
-        .copy(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          let dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          this.callfc.openForm(
-            PopupRequestStationeryComponent,
-            this.popupTitle,
-            700,
-            650,
-            this.funcID,
-            {
-              isAddNew: true,
-              formModel: this.formModel,
-              option: option,
-              title: this.popupTitle,
-            },
-            '',
-            dialogModel
-          );
-        });
     }
   }
 
   allocate(evt: any) {
-    if (evt) {
-      this.view.dataService.dataSelected.issusStatus = '2';
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {});
-    }
+    this.api
+      .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [evt.recID])
+      .subscribe((dataItem) => {
+        if (dataItem) {
+          this.view.dataService.update(dataItem).subscribe((res) => {
+            if (res) {
+              this.notificationsService.notify('Cấp phát thành công', '1', 0);
+            }
+          });
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
   setPopupTitle(mfunc) {
@@ -242,7 +294,10 @@ export class BookingStationeryComponent
     let deleteItem = this.view.dataService.dataSelected;
     if (evt) {
       deleteItem = evt;
-      if (this.authService.userValue.userID != evt?.owner) {
+      if (
+        this.authService.userValue.userID != evt?.owner &&
+        !this.authService.userValue.administrator
+      ) {
         this.notificationsService.notifyCode('TM052');
         return;
       }

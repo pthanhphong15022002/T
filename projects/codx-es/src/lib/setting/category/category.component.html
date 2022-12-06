@@ -1,37 +1,15 @@
-<codx-views
-  #base
-  [funcID]="funcID"
-  [service]="service"
-  [assemblyName]="assemblyName"
-  [entityName]="entityName"
-  [predicate]="predicate"
-  [dataValue]="dataValue"
-  [views]="views"
-  [button]="button"
-  (buttonClick)="click($event)"
-  [moreFuncs]="moreFunc"
-  [idField]="idField"
-  [className]="className"
-  [method]="method"
-  (requestEnded)="closeEditForm($event)"
-  (onLoading)="onLoading($event)"
->
+<codx-views #base [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
+  [predicate]="predicate" [dataValue]="dataValue" [views]="views" [button]="button" (buttonClick)="click($event)"
+  [moreFuncs]="moreFunc" [idField]="idField" [className]="className" [method]="method"
+  (requestEnded)="closeEditForm($event)" (onLoading)="onLoading($event)">
 </codx-views>
 
 <ng-template #process let-data>
   <div class="has-action-menu">
-    <div
-      class="progress-approval mt-3 mb-3"
-      *ngIf="data?.countStep > 0"
-      (click)="viewDetail(data)"
-    >
+    <div class="progress-approval mt-3 mb-3" *ngIf="data?.countStep > 0" (click)="viewDetail(data)">
       <ng-container *ngFor="let item of getCount(data?.countStep)">
         <div class="process-step" placement="top">
-          <div
-            class="step-node"
-            [style.color]="''"
-            [ngStyle]="{ border: '2px solid ' + '' }"
-          >
+          <div class="step-node" [style.color]="''" [ngStyle]="{ border: '2px solid ' + '' }">
             {{ item }}
           </div>
         </div>
@@ -39,20 +17,16 @@
     </div>
 
     <div class="center w-400 mt-5 mb-3" *ngIf="data?.countStep == 0">
-      <codx-label
-        name="lblNotSetup"
-        default="Chưa thiết lập"
-        [formModel]="viewBase.formModel"
-      >
+      <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel">
       </codx-label>
     </div>
-    <codx-mfunc
+    <!-- <codx-mfunc
       [formModel]="viewBase.formModel"
       (clickMF)="clickMF($event, data)"
       type="hover"
       [dataItem]="data"
     >
-    </codx-mfunc>
+    </codx-mfunc> -->
   </div>
 </ng-template>
 
@@ -64,12 +38,8 @@
 
 <ng-template #icon let-data>
   <div class="">
-    <i
-      [ngClass]="data.icon"
-      [style.background]="data.color"
-      [style.color]="'white'"
-      class="fs-3 align-self-start rounded-circle p-3 m-1"
-    ></i>
+    <i [ngClass]="data.icon" [style.background]="data.color" [style.color]="'white'"
+      class="fs-5 d-flex align-items-center justify-content-center h-35px w-35px rounded-circle p-3 m-1"></i>
   </div>
 </ng-template>
 
@@ -82,13 +52,7 @@
     [disabled]="true"
   >
   </codx-input> -->
-  <codx-input
-    #checkbox
-    type="switch"
-    id="switch"
-    [checked]="data.eSign"
-    [disabled]="true"
-  >
+  <codx-input #checkbox type="switch" id="switch" [checked]="data.eSign" [disabled]="true">
   </codx-input>
 </ng-template>
 
@@ -102,9 +66,9 @@
 <ng-template #parentID let-data>
   <div #parentID class="text-dark">
     {{
-      data.parentID
-        | formatvalue: viewBase.formModel:"parentID":parentID
-        | async
+    data.parentID
+    | formatvalue: viewBase.formModel:"parentID":parentID
+    | async
     }}
   </div>
 </ng-template>
@@ -127,15 +91,11 @@
           <div class="d-flex justify-content-center">
             <span class="badge badge-light-success fs-7 fw-bold mb-1">{{
               data.signatureType | vll: "ES001":"text" | async
-            }}</span>
+              }}</span>
           </div>
         </td>
         <td class="w-150px">
-          <div
-            id="progress"
-            class="cdx-progress mt-3"
-            *ngIf="data?.countStep > 1"
-          >
+          <div id="progress" class="cdx-progress mt-3" *ngIf="data?.countStep > 1">
             <div id="progress-bar"></div>
             <ul id="progress-num">
               <ng-container *ngFor="let item of getCount(data?.countStep)">
@@ -147,30 +107,17 @@
             <li class="step">1</li>
           </div>
           <div class="center" *ngIf="data?.countStep == 0">
-            <codx-label
-              name="lblNotSetup"
-              default="Chưa thiết lập"
-              [formModel]="viewBase.formModel"
-            ></codx-label>
+            <codx-label name="lblNotSetup" default="Chưa thiết lập" [formModel]="viewBase.formModel"></codx-label>
           </div>
         </td>
       </tbody>
     </table>
   </div>
-  <codx-temp-full
-    [formModel]="viewBase.formModel"
-    (clickMF)="clickMF($event, data)"
-    (click)="click(data)"
-  >
+  <codx-temp-full [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" (click)="click(data)">
   </codx-temp-full>
 </ng-template>
 
 <ng-template #itemAction let-data>
-  <codx-mfunc
-    [formModel]="viewBase.formModel"
-    (clickMF)="clickMF($event, data)"
-    [dataItem]="data"
-    [type]="'hover'"
-  >
+  <codx-mfunc [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
   </codx-mfunc>
 </ng-template>

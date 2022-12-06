@@ -142,9 +142,7 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         }
@@ -549,6 +547,68 @@
             "main": "projects/codx-bp/src/test.ts",
             "tsConfig": "projects/codx-bp/tsconfig.spec.json",
             "karmaConfig": "projects/codx-bp/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-om": {
+      "projectType": "library",
+      "root": "projects/codx-om",
+      "sourceRoot": "projects/codx-om/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-om/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-om/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-om/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-om/src/test.ts",
+            "tsConfig": "projects/codx-om/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-om/karma.conf.js"
+          }
+        }
+      }
+    },
+    "codx-ei": {
+      "projectType": "library",
+      "root": "projects/codx-ei",
+      "sourceRoot": "projects/codx-ei/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/codx-ei/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/codx-ei/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/codx-ei/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/codx-ei/src/test.ts",
+            "tsConfig": "projects/codx-ei/tsconfig.spec.json",
+            "karmaConfig": "projects/codx-ei/karma.conf.js"
           }
         }
       }

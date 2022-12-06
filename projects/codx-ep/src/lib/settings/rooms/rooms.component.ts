@@ -55,8 +55,6 @@ export class RoomsComponent extends UIComponent {
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
-  predicate = 'ResourceType=@0';
-  dataValue = '1';
   idField = 'recID';
   className = 'ResourcesBusiness';
   method = 'GetListAsync';
@@ -65,6 +63,7 @@ export class RoomsComponent extends UIComponent {
   afterViewInit = false;
   popupTitle = '';
   grvRooms: any;
+  popupClosed = true;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -132,12 +131,12 @@ export class RoomsComponent extends UIComponent {
               width: '10%', //gv['Equipments'].width,
               field: 'equipments',
               template: this.equipmentsCol,
-              headerTextAlign: 'Center',
-              textAlign: 'Center',
+              // headerTextAlign: 'Center',
+              // textAlign: 'Center',
             },
             {
               headerText: gv['Note'].headerText,
-              textAlign: 'center',
+              //textAlign: 'center',
               width: '20%', //width: gv['Note'].width,
               field: 'note',
             },
@@ -178,7 +177,7 @@ export class RoomsComponent extends UIComponent {
       });
     });
 
-    var dialog = this.callfc.openForm(template, '', 550, 350);
+    var dialog = this.callfc.openForm(template, '', 550, 560);
     this.detectorRef.detectChanges();
   }
 
@@ -213,84 +212,96 @@ export class RoomsComponent extends UIComponent {
   }
 
   addNew() {
-    this.view.dataService.addNew().subscribe((res) => {
-      this.dataSelected = this.view.dataService.dataSelected;
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.formModel;
-      this.dialog = this.callfc.openSide(
-        PopupAddRoomsComponent,
-        [this.dataSelected, true, this.popupTitle],
-        option
-      );
-      this.dialog.closed.subscribe((x) => {
-        if (x.event == null && this.view.dataService.hasSaved)
-          this.view.dataService
-            .delete([this.view.dataService.dataSelected])
-            .subscribe((x) => {
-              this.changeDetectorRef.detectChanges();
-            });
-        else if (x.event) {
-          x.event.modifiedOn = new Date();
-          this.view.dataService.update(x.event).subscribe();
-          //this.view.dataService.clear();
-        }
+    if (this.popupClosed) {
+      this.view.dataService.addNew().subscribe((res) => {
+        this.popupClosed = false;
+        this.dataSelected = this.view.dataService.dataSelected;
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.formModel;
+        this.dialog = this.callfc.openSide(
+          PopupAddRoomsComponent,
+          [this.dataSelected, true, this.popupTitle],
+          option
+        );
+        this.dialog.closed.subscribe((x) => {
+          this.popupClosed = true;
+          if (!x.event) this.view.dataService.clear();
+          if (x.event == null && this.view.dataService.hasSaved)
+            this.view.dataService
+              .delete([this.view.dataService.dataSelected])
+              .subscribe((x) => {
+                this.changeDetectorRef.detectChanges();
+              });
+          else if (x.event) {
+            x.event.modifiedOn = new Date();
+            this.view.dataService.update(x.event).subscribe();
+          }
+        });
       });
-    });
+    }
   }
 
   edit(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddRoomsComponent,
-            [this.view.dataService.dataSelected, false, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((res) => {
-            if (res?.event) {
-              res.event.modifiedOn = new Date();
-              this.view.dataService.update(res.event).subscribe((res) => {});
-            }
-            //this.view.dataService.clear();
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .edit(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddRoomsComponent,
+              [this.view.dataService.dataSelected, false, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => { });
+              }
+            });
           });
-        });
+      }
     }
   }
 
   copy(obj?) {
     if (obj) {
-      this.view.dataService.dataSelected = obj;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res) => {
-          this.dataSelected = this.view?.dataService?.dataSelected;
-          let option = new SidebarModel();
-          option.Width = '550px';
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.formModel;
-          this.dialog = this.callfc.openSide(
-            PopupAddRoomsComponent,
-            [this.view.dataService.dataSelected, true, this.popupTitle],
-            option
-          );
-          this.dialog.closed.subscribe((res) => {
-            if (res?.event) {
-              res.event.modifiedOn = new Date();
-              this.view.dataService.update(res.event).subscribe((res) => {});
-            }
-            //this.view.dataService.clear();
+      if (this.popupClosed) {
+        this.view.dataService.dataSelected = obj;
+        this.view.dataService
+          .copy(this.view.dataService.dataSelected)
+          .subscribe((res) => {
+            this.popupClosed = false;
+            this.dataSelected = this.view?.dataService?.dataSelected;
+            let option = new SidebarModel();
+            option.Width = '550px';
+            option.DataService = this.view?.dataService;
+            option.FormModel = this.formModel;
+            this.dialog = this.callfc.openSide(
+              PopupAddRoomsComponent,
+              [this.view.dataService.dataSelected, true, this.popupTitle],
+              option
+            );
+            this.dialog.closed.subscribe((x) => {
+              this.popupClosed = true;
+              if (!x.event) this.view.dataService.clear();
+              if (x?.event) {
+                x.event.modifiedOn = new Date();
+                this.view.dataService.update(x.event).subscribe((res) => { });
+              }
+            });
           });
-        });
+      }
     }
   }
 

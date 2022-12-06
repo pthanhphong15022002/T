@@ -1,151 +1,76 @@
-<ng-container>
-    <div [ngbPopover]="popContent" autoClose="outside" popoverClass="empPopoverClass" [popoverTitle]="popTitle"
-      #p="ngbPopover" triggers="manual">
-      <ejs-diagram #diagram 
-        class="codx-orgchart" 
-        width="100%" 
-        height="500px" 
-        [getConnectorDefaults]="connDefaults"
-        [getNodeDefaults]="nodeDefaults" 
-        [layout]="layout" 
-        [tool]="tool" 
-        [snapSettings]="snapSettings"
-        [dataSourceSettings]="datasetting"
-        (click)="orgClick($event)">
-        <ng-template #nodeTemplate let-node>
-          <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
-            [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
-          </ng-container>
-        </ng-template>
-      </ejs-diagram>
-    </div>
+<ng-container *ngIf="data; else tmpEmpty">
+  <div>
+    <ejs-diagram #diagram class="codx-orgchart" 
+      width="100%" 
+      height="650px" 
+      [getConnectorDefaults]="connDefaults"
+      [getNodeDefaults]="nodeDefaults" 
+      [layout]="layout" 
+      [tool]="tool" 
+      [snapSettings]="snapSettings"
+      [dataSourceSettings]="datasetting" (click)="orgClick($event)">
+      <ng-template #nodeTemplate let-node>
+        <ng-container *ngIf="node?.data" [ngTemplateOutlet]="template"
+          [ngTemplateOutletContext]="{ $implicit: node.data, node: node }">
+        </ng-container>
+      </ng-template>
+    </ejs-diagram>
+  </div>
 </ng-container>
-<ng-template #popEmpTitle>
-    <div class="orgChart-title">
-        <div class="d-flex align-items-top">
-            <div class="d-flex align-items-start user-card">
-              <codx-img class="me-3" 
-                [width]="40" 
-                [objectId]="employeeInfor.employeeID" 
-                [objectName]="employeeInfor.employeeName"
-                [objectType]="'HR_Employees'">
-              </codx-img>
-              <div class="d-flex flex-column flex-grow-1">
-                <div class="d-flex align-items-center">
-                  <div class="text-dark fw-bold mb-1">
-                    {{ employeeInfor.employeeName }}
-                  </div>
-                </div>
-                <div class="text-gray-700" *ngIf="employeeInfor.positionName">
-                  {{ employeeInfor.positionName }}
-                </div>
-      
-                <div class="text-gray-500 fw-normal" 
-                    *ngIf="employeeInfor.organizationName">
-                  {{ employeeInfor.organizationName }}
-                </div>
-      
-              </div>
-            </div>
-          </div>
-          <div class="d-flex flex-column employee-add mt-2">
-            <div class="d-flex align-items-center mt-2">
-              <span class="icon-email icon-16 me-2"></span>
-              <div class="text-gray-500" *ngIf="employeeInfor.email != '---'">
-                {{ employeeInfor.email }}
-              </div>
-            </div>
-            <div class="d-flex align-items-center mt-2">
-              <span class="icon-phone_android icon-16 me-2"></span>
-              <div class="text-gray-500" *ngIf="employeeInfor.phone != '---'">
-                {{ employeeInfor.phone }}
-              </div>
-            </div>
-            <div class="d-flex align-items-top mt-2">
-              <span class="icon-place icon-16 me-2"></span>
-              <div class="text-gray-500" *ngIf="employeeInfor.street != '---'">
-                {{ employeeInfor.street }}
-              </div>
-            </div>
-          </div>
-    </div>
-  </ng-template>
-<ng-template #popEmpContent>
-    <div class="orgChart-boddy">
-        <div class="d-flex flex-column">
-            <div class="d-flex align-items-center mt-2">
-              <span class="text-gray-500 me-2">Ngày sinh:</span>
-              <span class="text-dark" *ngIf="employeeInfor.birthday">{{ employeeInfor.birthday | fmDT}}</span>
-      
-            </div>
-            <div class="me-5 d-flex align-items-center mt-2">
-              <span class="text-gray-500 me-2">Ngày vào làm:</span>
-              <span class="text-dark" *ngIf="employeeInfor.joinedOn">{{
-                employeeInfor.joinedOn | date: "dd/MM/yyyy"
-                }}</span>
-      
-            </div>
-            <div class="me-5 d-flex align-items-center mt-2">
-              <span class="text-gray-500 me-2">Tình trạng:</span>
-              <span class="text-dark">{{
-                employeeInfor.status | vll: "L0225":"text" | async
-                }}</span>
-            </div>
-          </div>
-    </div>
-  </ng-template>
-  
-  
-  
-  <ng-template #popContent>
-    <div>
-      <div class="row">
-        <div *ngFor="let emp of employees" class="p-2 full rounded-2 codx-bghover cursor-pointer">
-          <div *ngIf="emp.employeeName" class="d-flex justify-content-between align-items-center cursor-pointer"
-            popoverClass="userPopoverClass" [ngbPopover]="popEmpContent" placement="right left"
-            [popoverTitle]="popEmpTitle" #pemp="ngbPopover" triggers="manual" (click)="showEmploy(pemp, emp)">
-            <div class="d-flex flex-column org-card flex-grow-1">
-              <div class="d-flex align-items-start">
-                <codx-img class="me-3" [width]="35" [objectId]="emp.employeeID" [objectName]="emp.employeeName"
-                  [objectType]="'HR_Employees'">
-                </codx-img>
-                <div class="d-flex flex-column flex-grow-1">
-                  <div class="text-dark fw-bold">{{ emp.employeeName }}</div>
-                  <div class="text-gray-500">{{ emp.positionName }}</div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <a class="text-gray-500">
-                <span class="icon-keyboard_arrow_right icon-20"></span>
-              </a>
-            </div>
-          </div>
-          <div *ngIf="!emp.employeeName" class="d-flex justify-content-between align-items-top">
-            <div class="d-flex flex-column org-card flex-grow-1">
-              <div class="d-flex align-items-start">
-                <codx-img class="symbol symbol-40 symbol-circle me-3" [width]="40" [objectId]="''" [objectName]="''"
-                  [objectType]="'HR_Employees'">
-                </codx-img>
-                <div class="d-flex flex-column flex-grow-1">
-                  <div class="text-50 text-gray-500">Tên nhân viên</div>
-                  <div class="text-50 text-gray-500">Chức vụ</div>
-                </div>
-              </div>
-            </div>
-          </div>
+<ng-template #tmpEmpty>
+  <div class="container h-100">
+    <div class="list-empty card card-flush h-100">
+      <div class="d-flex flex-column flex-center justify-content-center">
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-250px" />
+        <div class="fw-bold mt-1 text-center">
+          {{ "SYS011" | mssg | async }}
         </div>
       </div>
     </div>
-  </ng-template>
-  
-  <ng-template #popTitle>
-    <div class="text-dark mb-2">Danh sách nhân viên</div>
-    <div>
-      <codx-searchbar (searchEvent)="onSearch($event)"></codx-searchbar>
+  </div>
+</ng-template>
+
+
+<ng-template #template let-data>
+  <div class="w-250px position-relative p-4">
+    <div class="position-relative">
+      <ng-container *ngIf="data.employees?.length > 0;else tmpNoEmployee">
+        <ng-container *ngIf="data.employees.length == 1;else tmpMoreEmploye">
+          <div class="d-flex flex-column flex-grow-1 align-items-center">
+            <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
+              [width]="60" [referType]="'avt'">
+            </codx-img>
+          </div>
+        </ng-container>
+        <ng-template #tmpMoreEmploye>
+          <div class="d-flex justify-content-center">
+            <codx-img [isDefaulImg]="true" [objectId]="data.employees[0].employeeID" [objectType]="'HR_Employees'"
+              [width]="60" [referType]="'avt'">
+            </codx-img>
+            <div class="rounded-circle w-60px h-60px bg-secondary d-flex align-items-center justify-content-center">
+              <span class="text-white-50 fs-3">+{{data.employees?.length - 1}}</span>
+            </div>
+          </div>
+        </ng-template>
+        <div class="text-center mt-2">
+          <p class="text-dark m-0 p-0 fw-bolder">{{data.employees[0].employeeName}}</p>
+          <p class="text-dark m-0 p-0">{{data.employees[0].positionName}}</p>
+          <p class="text-dark m-0 p-0">{{data.employees[0].orgUnitName}}</p>
+        </div>
+      </ng-container>
+      <ng-template #tmpNoEmployee>
+        <div class="d-flex justify-content-center w-100">
+          <img src="assets/themes/sys/default/img/Avatar_Default.svg" class="w-60px" alt="" />
+        </div>
+        <div class="text-center mt-2">
+          <p class="text-dark m-0 p-0 ">{{data.positionName}}</p>
+          <p class="text-dark m-0 p-0">{{data.orgUnitName}}</p>
+        </div>
+      </ng-template>
     </div>
-  </ng-template>
-
-  <ng-template #template>
-
-  </ng-template>
+    <div *ngIf="data.isChildrent" class="d-flex justify-content-center">
+      <span #icon class="icon-20 " [classList]="data.loadChildrent ? 'icon-do_disturb_on' : 'icon-add_circle_outline'"
+        (click)="loadDataChild(data,icon)"></span>
+    </div>
+  </div>
+</ng-template>

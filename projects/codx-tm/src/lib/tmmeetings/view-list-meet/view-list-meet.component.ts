@@ -1,19 +1,37 @@
+import { ChangeDetectorRef, ViewChild } from '@angular/core';
 import { CO_Resources } from './../../models/CO_Meetings.model';
-import { Component, EventEmitter, Input, OnInit, Optional, Output } from '@angular/core';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Optional,
+  Output,
+} from '@angular/core';
+import {
+  DialogData,
+  DialogRef,
+  FormModel,
+  CallFuncService,
+  ViewsComponent,
+  Util,
+} from 'codx-core';
+import { PopupRescheduleMeetingComponent } from '../popup-reschedule-meeting/popup-reschedule-meeting.component';
+import { ActivatedRoute } from '@angular/router';
+import { PopupAddResourcesComponent } from '../popup-add-resources/popup-add-resources.component';
 
 @Component({
   selector: 'lib-view-list-meet',
   templateUrl: './view-list-meet.component.html',
-  styleUrls: ['./view-list-meet.component.scss']
+  styleUrls: ['./view-list-meet.component.scss'],
 })
 export class ViewListMeetComponent implements OnInit {
-
-  @Input() data?: any
+  @Input() data?: any;
   @Input() formModel?: FormModel;
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewDetail = new EventEmitter<any>();
+  @ViewChild('view') view!: ViewsComponent;
 
   month: any;
   day: any;
@@ -23,33 +41,43 @@ export class ViewListMeetComponent implements OnInit {
   resourceID: any;
   popoverCrr: any;
   countResource = 0;
-
+  dialog: any;
+  funcID: any;
+  widthWin: any;
+  heightWin: any;
   constructor(
+    private activedRouter: ActivatedRoute,
+    private callFc: CallFuncService,
+    private detectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef,
+    @Optional() dialog?: DialogRef
   ) {
-
+    this.dialog = dialog;
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.heightWin = Util.getViewPort().height - 100;
+    this.widthWin = Util.getViewPort().width - 100;
   }
 
   ngOnInit(): void {
     console.log(this.data);
     this.getDate();
-    this.getResourceID()
+    this.getResourceID();
   }
 
   clickMF(e: any, dt?: any) {
-    this.clickMoreFunction.emit({ e: e, data: dt })
+    this.clickMoreFunction.emit({ e: e, data: dt });
   }
   changeDataMF(e: any, data: any) {
     if (e) {
       e.forEach((x) => {
         //an giao viec
-        if (x.functionID == 'SYS005'){
+        if (x.functionID == 'SYS005') {
           x.disabled = true;
         }
       });
     }
-}
+  }
   getResourceID() {
     this.resources = this.data.resources;
     var id = '';
@@ -67,8 +95,12 @@ export class ViewListMeetComponent implements OnInit {
       this.month = this.addZero(date.getMonth() + 1);
       this.day = this.addZero(date.getDate());
       var endDate = new Date(this.data.endDate);
-      let start = this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
-      let end = this.addZero(endDate.getHours()) + ':' + this.addZero(endDate.getMinutes());
+      let start =
+        this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end =
+        this.addZero(endDate.getHours()) +
+        ':' +
+        this.addZero(endDate.getMinutes());
 
       this.startTime = start + ' - ' + end;
     }
@@ -84,7 +116,10 @@ export class ViewListMeetComponent implements OnInit {
   convertHtmlAgency(position: any) {
     var desc = '<div class="d-flex">';
     if (position)
-      desc += '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' + position + '</span></div>';
+      desc +=
+        '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="">' +
+        position +
+        '</span></div>';
 
     return desc + '</div>';
   }
@@ -97,13 +132,14 @@ export class ViewListMeetComponent implements OnInit {
     }
   }
 
-  searchName(e){
+  searchName(e) {
     this.data.resources = this.data.resources.filter((val) =>
-    val.resourceName.toLowerCase().includes(e.toLowerCase())
-  );
+      val.resourceName.toLowerCase().includes(e.toLowerCase())
+    );
   }
-  dbClick(data){
-    this.viewDetail.emit(data) ;
+  dbClick(data) {
+    this.viewDetail.emit(data);
   }
-}
 
+
+}

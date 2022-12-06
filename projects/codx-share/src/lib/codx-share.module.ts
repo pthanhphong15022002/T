@@ -125,7 +125,16 @@ import { ListChatBoxComponent } from './layout/components/list-chat-box/list-cha
 import { CodxAssignTempComponent } from './components/codx-assign-temp/codx-assign-temp.component';
 import { ListPostComponent } from 'projects/codx-wp/src/lib/dashboard/home/list-post/list-post.component';
 import { CodxCompetencesComponent } from './components/codx-competences/codx-competences.component';
-import { LazyLoadImageModule} from 'ng-lazyload-image'; 
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { CodxEmailComponent } from './components/codx-email/codx-email.component';
+import { CoreModule } from '@core/core.module';
+import { LayoutListDetailComponent } from './layout/components/layout-list-detail/layout-list-detail.component';
+import { CodxApproveStepsComponent } from './components/codx-approve-steps/codx-approve-steps.component';
+import { AddEditApprovalStepComponent } from './components/codx-approve-steps/add-edit-approval-step/add-edit-approval-step.component';
+import { PopupAddApproverComponent } from './components/codx-approve-steps/popup-add-approver/popup-add-approver.component';
+import { DetailCalendarComponent } from './components/calendar-notes/detail-calendar/detail-calendar.component';
+import { CodxHistoryComponent } from './components/codx-history/codx-history.component';
+import { CodxHistoryItemComponent } from './components/codx-history/codx-history-item/codx-history-item.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -148,6 +157,7 @@ const T_Component: Type<any>[] = [
   Readmorev2Component,
   ImageGridComponent,
   CalendarNotesComponent,
+  DetailCalendarComponent,
   CalendarDateComponent,
   LayoutNoAsideComponent,
   LayoutOnlyHeaderComponent,
@@ -165,6 +175,7 @@ const T_Component: Type<any>[] = [
   CodxFilesComponent,
   ApprovalTabsComponent,
   CodxApprovalStepComponent,
+  CodxApproveStepsComponent,
   NotifyDrawerComponent,
   NotifyDrawerSliderComponent,
   MessengerDrawerComponent,
@@ -214,13 +225,26 @@ const T_Component: Type<any>[] = [
   LayoutPanelComponent,
   CodxAttachmentTempComponent,
   CodxAssignTempComponent,
-  ListPostComponent
+  ListPostComponent,
+  LayoutListDetailComponent,
+  CodxHistoryComponent,
+  CodxHistoryItemComponent,
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
-  declarations: [T_Component, T_Pipe, AttachmentComponent, DialogthumbComponent],
+  declarations: [
+    T_Component,
+    T_Pipe,
+    AttachmentComponent,
+    DialogthumbComponent,
+    CodxEmailComponent,
+    LayoutListDetailComponent,
+    //CodxApproveStepsComponent,
+    AddEditApprovalStepComponent,
+    PopupAddApproverComponent,
+  ],
   imports: [
     CommonModule,
     NgbModule,
@@ -229,6 +253,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     InlineSVGModule.forRoot(),
     CodxCoreModule,
     CalendarModule,
+    CoreModule,
     DateRangePickerModule,
     TabModule,
     UploaderModule,
@@ -247,7 +272,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     NgxExtendedPdfViewerModule,
     DashboardLayoutAllModule,
     SliderModule,
-    LazyLoadImageModule
+    LazyLoadImageModule,
   ],
   exports: [T_Component, T_Pipe],
 })

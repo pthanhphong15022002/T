@@ -146,14 +146,20 @@ export class StorageComponent
         option.DataService = this.listView.dataService as CRUDService;
         option.FormModel = this.listView?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
           [this.listView.dataService.data, 'add'],
           option
         );
-        // this.dialog.closed.subscribe((res) => {
-        //   if (res.event) this.dialog.dataService.add(res.event).subscribe();
-        // });
+        dialog.closed.subscribe((res) => {
+          if (res.event) {
+            res.event['modifiedOn'] = new Date();
+            (this.listView.dataService as CRUDService)
+              .update(res.event)
+              .subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       });
   }
 
@@ -169,11 +175,20 @@ export class StorageComponent
         option.DataService = this.listView?.dataService as CRUDService;
         option.FormModel = this.listView?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           AddUpdateStorageComponent,
           [this.listView.dataService.dataSelected, 'edit'],
           option
         );
+        dialog.closed.subscribe((res) => {
+          if (res.event) {
+            res.event['modifiedOn'] = new Date();
+            (this.listView.dataService as CRUDService)
+              .update(res.event)
+              .subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       });
   }
 
@@ -231,7 +246,7 @@ export class StorageComponent
       entityName: 'WP_Comments',
       entityPermission: 'WP_Comments',
       gridViewName: 'grvWPComments',
-      formName: 'WPComments', 
+      formName: 'WPComments',
       funcID: 'WP',
     };
     this.a = this.detail.createComponent(ListPostComponent);
@@ -319,21 +334,7 @@ export class StorageComponent
                 .remove(dataSelected)
                 .subscribe();
               this.detectorRef.detectChanges();
-              // for (
-              //   let x = 0;
-              //   x < this.a.instance?.listview?.dataService?.data.length;
-              //   x++
-              // ) {
-              //   if (
-              //     this.a.instance?.listview?.dataService?.data[x].recID ==
-              //     this.a.instance?.listview?.dataService?.dataSelected?.recID
-              //   ) {
-              //     this.a.instance?.listview?.dataService?.data.splice(x, 1);
-              //     this.detectorRef.detectChanges();
-              //   }
-              // }
             }
-            // this.a.instance?.listview?.dataService?.data.splice(0, 1);
           }
         });
     }

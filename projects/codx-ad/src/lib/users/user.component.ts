@@ -13,6 +13,8 @@ import {
   RequestOption,
   AlertConfirmInputConfig,
   NotificationsService,
+  FormModel,
+  DialogModel,
 } from 'codx-core';
 import {
   Component,
@@ -29,6 +31,8 @@ import {
 import { ViewUsersComponent } from './view-users/view-users.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { CodxAdService } from '../codx-ad.service';
+import { environment } from 'src/environments/environment';
+import { PleaseUseComponent } from './please-use/please-use.component';
 
 @Component({
   selector: 'lib-user',
@@ -40,6 +44,7 @@ export class UserComponent extends UIComponent {
   @ViewChild('tempFull') tempFull: CodxTempFullComponent;
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('view') codxView!: any;
+  @ViewChild('please_use') please_use: TemplateRef<any>;
   itemSelected: any;
   dialog!: DialogRef;
   button?: ButtonModel;
@@ -88,9 +93,6 @@ export class UserComponent extends UIComponent {
   clickMF(e: any, data?: any) {
     this.headerText = e.text;
     switch (e.functionID) {
-      case 'SYS01':
-        this.add(e);
-        break;
       case 'SYS03':
         this.edit(data);
         break;
@@ -128,12 +130,53 @@ export class UserComponent extends UIComponent {
     return desc + '</div>';
   }
 
-  add(e) {
-    this.headerText = e.text;
+  pleaseUse(e) {
+    if (environment.saas == 0) {
+      this.headerText = e.text;
+      this.add();
+    } else {
+      let optionForm = new DialogModel();
+      optionForm.DataService = this.view?.currentView?.dataService;
+      optionForm.FormModel = this.view?.currentView?.formModel;
+      var dialog = this.callfc.openForm(
+        PleaseUseComponent,
+        '',
+        400,
+        70,
+        '',
+        '',
+        '',
+        optionForm
+      );
+      dialog.closed.subscribe((x) => {
+        if (x.event) {
+          this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+            if (res) {
+              var dataMF: any = [];
+              if (x.event?.formType == 'edit') {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS03');
+                this.headerText = dataMF[0].customName;
+                this.edit(x.event?.data);
+              } else {
+                dataMF = res;
+                dataMF = dataMF.filter((y) => y.functionID == 'SYS01');
+                this.headerText = dataMF[0].customName;
+                this.add(x.event?.data);
+              }
+            }
+          });
+        }
+      });
+    }
+  }
+
+  add(email = null) {
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
         formType: 'add',
         headerText: this.headerText,
+        email: email,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
@@ -157,7 +200,9 @@ export class UserComponent extends UIComponent {
       .delete([this.view.dataService.dataSelected])
       .subscribe((res: any) => {
         if (res.data) {
-          this.codxAdService.deleteFile(res.data.userID, 'AD_Users', true);
+          this.codxAdService
+            .deleteFile(res.data.userID, 'AD_Users', true)
+            .subscribe();
         }
       });
   }

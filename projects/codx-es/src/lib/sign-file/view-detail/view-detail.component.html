@@ -8,7 +8,8 @@
   [formModel]="formModel"
   (clickMF)="openFormFuncID($event)"
   (changeDataMF)="changeDataMF($event, itemDetail)"
-  class="h-100"
+  class="h-100 dt-es-view"
+  *ngIf="isAfterRender"
 >
   <ng-template #header>
     <div class="d-flex justify-content-between flex-grow-1 mb-3">
@@ -38,8 +39,9 @@
       </div>
     </div>
 
-    <div class="d-flex flex-column flex-grow-1 mb-2">
+    <div class="d-flex mb-2">
       <codx-temp-full
+        class="user-center"
         [title]="itemDetail?.ownerName"
         [subTitle]="itemDetail?.ownerPosition ?? ''"
         [imageId]="itemDetail?.owner"
@@ -49,21 +51,18 @@
       </codx-temp-full>
     </div>
     <div class="d-flex flex-grow-1 mb-2">
-      <div class="me-4 icon-apartment"></div>
-      <div class="d-flex flex-column flex-grow-1">
-        <div class="text-dark fw-bold fs-6">
-          <codx-label
-            fiedName="OrgUnitID"
-            [formModel]="formModel"
-            class="fw-bold me-1"
-          ></codx-label>
-          : {{ itemDetail?.ownerOrgUnit }}
-        </div>
+      <div class="me-2 icon-apartment"></div>
+      <div class="d-flex align-items-center me-5">
+        <codx-label
+          fiedName="OrgUnitID"
+          [formModel]="formModel"
+          class="fw-bold me-1"
+        ></codx-label>
+        <span class="text-gray-600">: {{ itemDetail?.ownerOrgUnit }}</span>
       </div>
     </div>
-
-    <div class="d-flex mt-1 flex-grow-1 mb-2">
-      <div class="d-flex me-6">
+    <div class="d-flex flex-wrap mt-2">
+      <div class="d-flex align-items-center me-5 mb-2">
         <codx-label
           fiedName="CreatedOn"
           [formModel]="formModel"
@@ -75,7 +74,7 @@
           {{ itemDetail?.createdOn | fmDT }}
         </span>
       </div>
-      <div class="d-flex me-6">
+      <div class="d-flex align-items-center me-5 mb-2">
         <codx-label
           fiedName="ExpiredOn"
           [formModel]="formModel"
@@ -86,7 +85,7 @@
           {{ itemDetail?.permissions?.expiredOn | fmDT }}
         </span>
       </div>
-      <div class="d-flex text-dark me-6">
+      <div class="d-flex align-items-center me-5 mb-2">
         <codx-label
           fiedName="Priority"
           [formModel]="formModel"
@@ -104,9 +103,7 @@
         >
         </codx-vll>
       </div>
-    </div>
-    <div class="d-flex mb-2">
-      <div class="d-flex me-6">
+      <div class="d-flex align-items-center me-5 mb-2">
         <codx-label
           fiedName="RefNo"
           [formModel]="formModel"
@@ -117,7 +114,7 @@
           : {{ itemDetail ? itemDetail?.refNo : "" }}
         </span>
       </div>
-      <div class="d-flex me-6">
+      <div class="d-flex align-items-center me-5 mb-2">
         <codx-label
           fiedName="RefDate"
           [formModel]="itemDetailTemplate.formModel"
@@ -131,27 +128,28 @@
     </div>
     <div class="mb-2">
       <ng-container *ngIf="files.length > 0">
-        <codx-thumbnail [files]="files" displayThumb="simple"> </codx-thumbnail>
+        <codx-thumbnail [files]="files" displayThumb="simple" [hideHover]="'0'">
+        </codx-thumbnail>
       </ng-container>
     </div>
   </ng-template>
 
   <ng-template #body>
-    <div class="tab-horizone h-od-tab h-100">
+    <div class="tab-horizone h-od-tab">
       <ul ngbNav #nav="ngbNav" [(activeId)]="itemDetailStt" class="nav-tabs">
         <li [ngbNavItem]="1">
-          <a ngbNavLink>
+          <a class="ps-0" ngbNavLink>
             <div class="d-flex align-item-center">
-              <i
-                class="icon-info icon-16 me-2"
+              <span
+                class="icon-info icon-18 me-2"
                 [ngClass]="{ 'text-primary': itemDetailStt === 1 }"
-              ></i
+              ></span
               ><span>
                 <codx-label
                   name="lblAbstract"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Mô tả ngắn gọn"
-                  class="ms-1 fw-bold"
+                  class="fw-bold"
                 ></codx-label>
               </span>
             </div>
@@ -167,16 +165,16 @@
         <li [ngbNavItem]="2">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
-              <i
-                class="icon-format_list_numbered icon-16 me-2"
+              <span
+                class="icon-format_list_numbered icon-18 me-2"
                 [ngClass]="{ 'text-primary': itemDetailStt === 2 }"
-              ></i
+              ></span
               ><span>
                 <codx-label
                   name="lblBusiness"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Công việc"
-                  class="ms-1 fw-bold"
+                  class="fw-bold"
                 ></codx-label>
               </span>
             </div>
@@ -202,16 +200,16 @@
         <li [ngbNavItem]="3">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
-              <i
-                class="icon-people_alt icon-16 me-2"
+              <span
+                class="icon-people_alt icon-18 me-2"
                 [ngClass]="{ 'text-primary': itemDetailStt === 3 }"
-              ></i
+              ></span
               ><span>
                 <codx-label
                   name="lblApprovalTrans"
                   [formModel]="itemDetailTemplate.formModel"
                   default="Quy trình duyệt"
-                  class="ms-1 fw-bold"
+                  class="fw-bold"
                 ></codx-label>
               </span>
             </div>
@@ -227,17 +225,20 @@
           </ng-template>
         </li>
       </ul>
-      <div [ngbNavOutlet]="nav" class="pt-5"></div>
+      <div [ngbNavOutlet]="nav" class="pt-4"></div>
     </div>
   </ng-template>
 
   <ng-template #footer>
     <codx-tabs
+      [TabControl]="tabControl"
       [entityName]="formModel.entityName"
-      [objectID]="itemDetail?.transID"
+      [objectID]="itemDetail?.recID"
       [funcID]="formModel.funcID"
       [dataReferences]="dataReferences"
       [vllRefType]="vllRefType"
+      [transID]="transID"
+      [approveStatus]="itemDetail?.approveStatus"
     >
     </codx-tabs>
   </ng-template>

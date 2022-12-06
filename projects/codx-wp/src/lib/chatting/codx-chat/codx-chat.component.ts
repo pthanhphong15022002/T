@@ -19,6 +19,7 @@ export class CodxChatComponent implements OnInit {
     @Input() funcID:string ="";
     @Input() objectID:string ="";
     @Input() objectType:string = "";
+    @Input() objectId:string = "";
     @Input() formModel:any;
     @Input() new:boolean = false;
     @Input() dVll: any = {};
@@ -50,7 +51,6 @@ export class CodxChatComponent implements OnInit {
       private dt:ChangeDetectorRef
     ){}
     ngOnInit(): void {
-       //debugger;
       this.user = this.auth.userValue;
       // this.cache.valueList('L1480').subscribe((res) => {
       //   if (res) {
@@ -286,7 +286,6 @@ export class CodxChatComponent implements OnInit {
       if(this.evtClickImage){
         this.evtClickImage.emit(file);
       }
-      debugger;
     }
   
   

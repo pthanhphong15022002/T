@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
@@ -20,12 +20,16 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() files: any;
   @Input() formModel: any;
   @Input() displayThumb: any;
-  @Input() hideDelete = '1';
+  @Input() hideDelete = '0';
   @Input() isDeleteTemp = '0';
   @Input() hideMoreF = '1';
+  @Input() hideHover = '1';
+  @Input() isScroll = '0';
+  @Input() permissions :any ; 
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
+
   titleEditFileDialog = "Cập nhật file";
   titleUpdateFile = "Cập nhật file";
   titleUpdateShare = "Chia sẻ";
@@ -43,6 +47,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   target: string = '.control-section';
   fileName:any
   visible: boolean = false;
+  userID: any
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -50,6 +55,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     private fileService: FileService,
     public dmSV: CodxDMService,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore
   ) {
     // this.dialog.close = function (e) {
     //   this.dialog.destroy();
@@ -82,6 +88,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         }
       });
     }
+    this.userID = this.authStore.get().userID;
   }
 
   openPermission(data) {
@@ -95,7 +102,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   checkDownloadRight(file) {
-    return file.download;;
+    if(this.permissions)
+    {
+      var per = this.permissions.filter(x=>x.userID == this.userID);
+      if(per && per.length>0) return true;
+    }
+    return file.download;
   }
 
   base64ToArrayBuffer(base64) {
@@ -168,9 +180,11 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   async download(id): Promise<void> {
+    
     this.fileService.getFile(id).subscribe(file => {
       var id = file.recID;
       var that = this;
+     
       if (this.checkDownloadRight(file)) {
         this.fileService.downloadFile(id).subscribe(async res => {
           if (res) {
@@ -195,7 +209,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   openFile(id) {
     //var data = JSON.parse(file);
     this.fileService.getFile(id).subscribe(data => {
-      debugger;
       var option = new DialogModel();
       option.IsFull = true;
       this.fileName = data.fileName;
@@ -258,17 +271,6 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     }
   }
 
-  getSubTitle(id) {
-    var html = `<div class='action-menu d-flex align-items-center cursor-pointer'>
-                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='openFile("${id}")'>
-                    <i class='icon-preview text-primary icon-18'></i>
-                  </div>
-                  <div class='btn btn-sm btn-icon btn-white cursor-pointer' (click)='download("${id}")'>
-                    <i class='icon-cloud_download text-primary icon-18'></i>
-                  </div>
-                </div> `;
-    return html;
-  }
   dialogClosed(){
     this.visible = false;
     this.changeDetectorRef.detectChanges();

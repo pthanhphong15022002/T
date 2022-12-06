@@ -1,182 +1,221 @@
 .pw-profile {
-    background-color: #d7d7d7;
-    height: 136px;
-    border-radius: 12px 12px 0 0 !important;
-    padding: 25px 45px;
-    background-size: cover;
+  background-color: #d7d7d7;
+  height: 136px;
+  border-radius: 12px 12px 0 0 !important;
+  padding: 25px 45px;
+  background-size: cover;
 }
 
 .personal-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    height: calc(100vh - 202px);
-
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - 202px);
 }
 
-.personal-container .pw-menu {
-    max-width: 720px;
-
+.personal-container .e-tab-header {
+  max-width: 750px;
 }
 
 .personal-container>div.pw-lg {
-    max-width: 100%;
+  max-width: 100%;
 }
 
 .personal-container>div.pw-md {
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0;
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
 }
 
 .pw-feed {
-    width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 0;
-    margin-top: 15px;
+  width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0;
+  margin-top: 15px;
 }
 
 .personal-container app-list-post .e-listview .e-list-item {
-    border: 0 !important;
+  border: 0 !important;
 }
 
 .personal-container .e-listview .e-list-item:hover,
 .personal-container .e-listview .e-list-item.e-active {
-    background-color: #fff;
+  background-color: #fff;
 }
 
-.pw-menu {
-    height: 48px;
-    line-height: 48px;
-    border-radius: 6px !important;
-    background-color: var(--bs-body-bg);
-    width: 100%;
-    margin: 0 auto;
-    margin-top: -18px !important;
-    position: relative;
-    z-index: 99;
-    justify-content: space-around;
+.personal-menu .e-tab-header {
+  height: 48px;
+  line-height: 48px;
+  border-radius: 6px !important;
+  background-color: var(--bs-body-bg);
+  width: 100%;
+  margin: 0 auto;
+  margin-top: -18px !important;
+  position: relative;
+  z-index: 99;
+  justify-content: space-around;
+  padding-left: 10px;
 }
 
-.pw-menu a {
-    cursor: pointer;
+
+.personal-menu .e-tab-header .e-toolbar-items {
+  height: 48px;
+  min-height: 48px;
+}
+
+.personal-menu .e-tab .e-tab-header .e-toolbar-item.e-active {
+  border: 0 !important;
+  border-bottom-color: transparent !important
+}
+
+.personal-menu .e-tab .e-tab-header::before {
+  border-color: transparent;
+}
+
+.e-tab-header .personal-menu a {
+  cursor: pointer;
 }
 
 app-personals .pw-content {
-    margin-top: 16px;
-    padding: 15px 20px;
-    min-width: 720px;
-    background-color: white;
-    box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
+  margin-top: 15px;
+  padding: 15px 15px 0;
+  min-width: 760px;
+  height: calc(100vh - 250px) !important;
+  overflow: auto;
+  background-color: white;
+  box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
 }
 
-.pw-menu div.active a,
-.pw-menu div:hover a {
-    color: #0078ff;
+// .personal-menu div.active a,
+// .personal-menu div:hover a {
+//     color: #0078ff;
+// }
+
+// .personal-menu div.active span,
+// .personal-menu div:hover span {
+//     color: #0078ff;
+// }
+
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
+  color: #495057 !important;
 }
 
-.pw-menu div.active span,
-.pw-menu div:hover span {
-    color: #0078ff;
+.e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text {
+  color: #0078ff !important;
+
+  img {
+    color: #0078ff !important;
+  }
 }
 
-.pw-menu div a .mn-icon {
-    margin-right: 5px;
+.personal-menu div a .mn-icon {
+  margin-right: 5px;
 }
 
 .pw-container {
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
 }
 
 .pw-card {
-    width: 232px;
-    float: left;
-    margin-right: 25px;
-    margin-bottom: 25px;
-    border: 1px #eee solid;
-    border-radius: 6px !important;
+  width: 232px;
+  float: left;
+  margin-right: 25px;
+  margin-bottom: 25px;
+  border: 1px #eee solid;
+  border-radius: 6px !important;
 }
 
 .h-150px {
-    height: 150px;
-    overflow: hidden;
+  height: 150px;
+  overflow: hidden;
 }
 
 .background {
-    height: 150px;
-    width: 100%;
-    margin-left: -63px;
-    margin-top: -25px;
-    border-radius: inherit;
+  height: 150px;
+  width: 100%;
+  margin-left: -63px;
+  margin-top: -25px;
+  border-radius: inherit;
 }
 
 .avatar {
-    margin-top: 1% !important;
+  margin-top: 1% !important;
 }
 
 .w-225px {
-    width: 225px !important;
+  width: 225px !important;
 }
 
 .h-225px {
-    height: 225px !important;
-
+  height: 225px !important;
 }
 
 .w-223px {
-    max-width: 223px !important;
-    width: auto;
-
+  max-width: 223px !important;
+  width: auto;
 }
 
 .w-223px.rounded-circle {
-    min-width: 140px;
+  min-width: 140px;
 }
 
 .pw-storgae .h-225px img {
-    max-height: 140px;
-    margin: 0 auto;
+  max-height: 140px;
+  margin: 0 auto;
 }
 
 .h-140px {
-    height: 140px !important;
+  height: 140px !important;
 }
 
 codx-card-img .card-icon-nowrap {
-    white-space: normal !important;
+  white-space: normal !important;
 }
 
 .pw-storgae .home-notebooks,
 .pw-storgae .home-storage {
-    height: calc(100vh - 350px) !important;
+  height: calc(100vh - 310px) !important;
 }
 
 .pw-storgae .home-img {
-    height: calc(100vh - 300px) !important;
+  height: calc(100vh - 300px) !important;
 }
 
 .pw-feed ejs-listview {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .img-storage .text-gray-600.line-clamp.line-clamp-2 {
-    margin-top: 5px;
+  margin-top: 5px;
 }
 
 .pw-storgae .container-fluid {
-    padding: 0 !important;
-    margin-top: 10px;
+  padding: 0 !important;
 }
 
 .e-listview .e-content {
-    padding-bottom: 0;
+  padding-bottom: 0;
 }
 
 .e-list-item:last-child {
-    margin-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.home-notebooks {
+  justify-content: center;
+}
+
+.pw-content .list-empty>div {
+  align-self: center;
+  align-items: stretch;
+  height: 100%;
+}
+
+.w-25px.h-25px {
+  width: 24px !important;
+  height: 24px !important;
 }

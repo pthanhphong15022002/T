@@ -1,0 +1,75 @@
+<codx-form
+    [headerText]="headerText"
+    [dialog]="dialogRef"
+    [bodyCss]="'bgEDEDED okr-add-body'"
+    [body]="alignKR"
+>
+
+<ng-template #alignKR>  
+  <div class=" w-100 h-100 bg-white px-5">
+    <div class="pt-5 pb-2 text-center">
+      <codx-label
+        [default]="'Tên Mục tiêu'"
+        fiedName="titleO"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+    <div class="pb-2 text-center">
+      <codx-label
+        [default]="'Tên KR'"
+        fiedName="titleKR"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+    <div>
+      <ejs-tab id="om-tab">
+        <e-tabitems>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-center">
+                <i class="fa-solid icon-i-diagram-3-fill me-2"></i>
+                <codx-label
+                  default="Cơ cấu tổ chức"
+                  fiedName="lbltaget"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content> Cơ cấu tổ chức </ng-template>
+          </e-tabitem>
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-center">
+                <i class="fa-solid icon-groups me-2"></i>
+                <codx-label
+                  default="Cơ cấu báo cáo"
+                  fiedName="lbltreetaget"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content> Cơ cấu báo cáo </ng-template>
+          </e-tabitem>
+
+          <e-tabitem>
+            <ng-template #headerText>
+              <div class="d-flex align-items-center">
+                <i class="fa-solid icon-account_circle me-2"></i>
+                <codx-label
+                  default="Nhân viên "
+                  fiedName="lblmeeting"
+                  class="fw-bold"
+                ></codx-label>
+              </div>
+            </ng-template>
+            <ng-template #content> Nhân viên </ng-template>
+          </e-tabitem>
+          
+          
+        </e-tabitems>
+      </ejs-tab>
+    </div>
+  </div>
+</ng-template>
+
+</codx-form>

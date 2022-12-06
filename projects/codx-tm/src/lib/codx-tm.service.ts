@@ -210,6 +210,9 @@ export class CodxTMService {
       [predicate, dataValue]
     );
   }
+
+
+
   //update status
   setStatusTask(
     funcID: string,
@@ -343,6 +346,19 @@ export class CodxTMService {
       data
     );
   }
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );  
+  }
+
+  getResourcesTrackEvent(meetingID, data, startDate, endDate){
+    return this.api.execSv<any>('CO','CO','MeetingsBusiness','AddResourcesEventAsync',[meetingID, data,startDate,endDate]);
+  }
 
   convertListToObject(
     list: Array<object>,
@@ -401,6 +417,50 @@ export class CodxTMService {
       'GetDataCompDashboardAsync',
       [model]
     );
+  }
+
+  sendMailAlert(recID: string, valueRuleNo: string, funcID: string){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'SendAlertMailAsync',
+      [recID, valueRuleNo, funcID]
+    );
+  }
+
+  UpdateDateMeeting(meetingID: string, startDate, endDate, funcID: string, comment: string){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'UpdateDateMeetingAsync',
+      [meetingID, startDate, endDate, funcID, comment]
+    );
+  }
+
+  SendMailNewResources(recID: string, valueNo: string, funcID: string, resources){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'SendAlertMailNewResourcesAsync',
+      [recID, valueNo, funcID,resources]
+    );
+  }
+
+  RPASendMailMeeting(valueNo: string, funcID: string){
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'RPASendAlertMailAsync',
+      [valueNo, funcID]
+    );
+  }
+
+  changeBookingDateTime(recID, startDate, endDate){
+    return this.api.execSv('CO','CO','MeetingsBusiness','ChangeBookingDateTimeAsync', [recID, startDate, endDate]);
   }
 
   getFormModel(functionID): Promise<FormModel> {

@@ -9,16 +9,11 @@
 >
   <ng-template #body>
     <div class="reason form-group" *ngIf="mode != 5">
-      <codx-label
-        fiedName="ResourceName"
-        [formModel]="formModel"
-        default="Lí do"
-      >
-      </codx-label>
+      <codx-label fiedName="ResourceName" [formModel]="formModel"> </codx-label>
       <codx-input
         type="combobox"
         [Group]="dialogSignFile"
-        [ControlName]="controlName"
+        [field]="controlName"
         [formModel]="formModel"
       >
       </codx-input>
@@ -29,14 +24,15 @@
       </codx-label>
       <codx-input
         type="text"
-        ControlName="comment"
-        [Group]="dialogSignFile"
-        [formModel]="formModel"
+        field="comment"
+        [crrValue]="dialogSignFile.value.comment"
+        [require]="false"
+        (valueChange)="changeReason($event)"
       >
       </codx-input>
     </div>
 
-    <div class="attachment" *ngIf="mode == 5">
+    <!-- <div class="attachment" *ngIf="mode == 5">
       <codx-attachment
         #attachment
         [objectType]="'ES_SignFiles'"
@@ -51,19 +47,17 @@
         [allowMultiFile]="1"
         [idBrowse]="'add'"
       >
-      </codx-attachment>
+      </codx-attachment> 
     </div>
+    -->
   </ng-template>
 
   <ng-template #footer>
-    <div
-      [class]="
-        mode == 5
-          ? 'justify-content-between card-footer d-flex'
-          : 'justify-content-end card-footer d-flex'
-      "
-    >
-      <button
+    <!-- mode == 5
+      ? 'justify-content-between card-footer d-flex'
+      :  -->
+    <div [class]="'justify-content-end card-footer d-flex'">
+      <!-- <button
         *ngIf="mode == 5"
         type="button"
         class="btn btn-primary"
@@ -74,7 +68,7 @@
           default="Đính kèm"
           [formModel]="formModel"
         ></codx-label>
-      </button>
+      </button> -->
       <button type="button" class="btn btn-primary" (click)="saveDialog()">
         <codx-vll [name]="'ES002'" [value]="data?.stepType" [showText]="true">
         </codx-vll>

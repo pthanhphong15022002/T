@@ -10,55 +10,63 @@ import { HR_Employees } from '../../model/HR_Employees.model';
 })
 export class UpdateStatusComponent implements OnInit {
   data: any;
-  dialog: any;
+  dialogRef: any;
   employStatus: any = {};
   funcID: any;
   title: string = 'Cập nhật tình trạng';
+  headerText:string = "";
   employee: any;
+  statusSelected:string = "";
   @Input() view: any;
-  // moreFunc: any;
 
   constructor(
     private api: ApiHttpService,
     private notiService: NotificationsService,
     private detectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
-    @Optional() dialog?: DialogRef
+    @Optional() dialogRef?: DialogRef
   ) {
     this.data = dt?.data;
     this.employee = this.data;
-    this.dialog = dialog;
+    this.dialogRef = dialogRef;
     this.funcID = this.data.funcID
-    // this.moreFunc = this.data.moreFunc;
-    // this.title = this.moreFunc.customName;
   }
 
   ngOnInit(): void {
   }
 
-  updateStatus() {
-    this.api
-      .execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", this.employee)
+  updateStatus() 
+  {
+    if(this.statusSelected)
+    {
+      this.api
+      .execSv<any>("HR", "ERM.Business.HR", "EmployeesBusiness", "UpdateStatusAsync", [this.employee.employeeID, this.statusSelected])
       .subscribe((res) => {
-        if (res) {
-          this.dialog.close(this.employee)
-        } else {
-          this.dialog.close()
+        if (res) 
+        {
+          this.employee.status = this.statusSelected;
+          this.dialogRef.close(this.employee)
+        } 
+        else 
+        {
+          this.dialogRef.close()
         }
-      }
-      );
+      });
+    }
+    
   }
 
   valueChange(e) {
     if (e) {
       var arrData = e.component?.dataSource;
-      this.employee.status = e.data;
-      arrData.forEach(obj => {
-        if (obj.value == e.data) {
-          this.employee.statusName = obj.text;
-          this.employee.statusColor = obj.color;
-        }
-      })
+      // this.employee.status = e.data;
+      this.statusSelected = e.data;
+      // arrData.forEach(obj => {
+      //   if (obj.value == e.data) {
+      //     this.employee.statusName = obj.text;
+      //     this.employee.statusColor = obj.color;
+      //   }
+      // })
     }
   }
 

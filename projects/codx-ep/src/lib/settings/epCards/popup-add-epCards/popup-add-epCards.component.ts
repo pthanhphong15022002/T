@@ -50,6 +50,9 @@ export class PopupAddEpCardsComponent extends UIComponent {
   isAfterRender = false;
   gviewEpCards: any;
   avatarID: any = null;
+  funcID: any;
+  autoNumDisable= false;
+  imgRecID: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -63,14 +66,29 @@ export class PopupAddEpCardsComponent extends UIComponent {
     this.headerText = dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
+    if(this.isAdd){
+      this.imgRecID=null;
+    }
+    else{
+      this.imgRecID=this.data.recID;
+    }
   }
 
   ngAfterViewInit(): void {}
 
   onInit(): void {
-    this.initForm();
+    this.initForm();    
+    this.codxEpService.getAutoNumberDefault(this.formModel.funcID).subscribe(autoN=>{
+      if(autoN){
+        if(!autoN?.stop ){
+          this.autoNumDisable=true;
+        }
+      }
+    })
   }
-
+  valueChange(evt:any){
+    console.log(evt);
+  }
   initForm() {    
     this.codxEpService
       .getFormGroup(
@@ -97,7 +115,6 @@ export class PopupAddEpCardsComponent extends UIComponent {
       this.codxEpService.notifyInvalid(this.fGroupAddEpCards, this.formModel);
       return;
     }
-    this.data.resourceType='7';
     let index:any
     if(this.isAdd){
       index=0;

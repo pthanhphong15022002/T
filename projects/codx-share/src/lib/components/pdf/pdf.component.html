@@ -233,15 +233,15 @@
             <e-items>
               <e-item
                 id="zoomOut"
-                (click)="changeZoom('in', $event)"
+                [disabled]="zoomValue <= 10"
                 prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               >
               </e-item>
             </e-items>
           </ejs-toolbar>
+          <!-- id="zoomValuesDropdownList" -->
           <ejs-dropdownlist
             style="width: 100%; min-width: 70px"
-            id="zoomValuesDropdownList"
             [(dataSource)]="lstZoomValue"
             [(placeholder)]="zoomValue"
             [fields]="zoomFields"
@@ -253,8 +253,8 @@
             <e-items>
               <e-item
                 id="zoomIn"
+                [disabled]="zoomValue >= 100"
                 prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom"
-                (click)="changeZoom('in', $event)"
               >
               </e-item>
             </e-items>
@@ -267,8 +267,8 @@
                 id="print"
               >
               </e-item>
-              <!-- *ngIf="hasPermission" -->
               <e-item
+                *ngIf="hasPermission"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
               >
@@ -295,8 +295,11 @@
         #ngxPdfView
         [(src)]="curFileUrl"
         [(zoom)]="zoomValue"
+        (zoomChange)="changeZoom('', $event)"
         [(page)]="curPage"
         [showHandToolButton]="false"
+        [useBrowserLocale]="false"
+        [language]="'vn'"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
@@ -527,33 +530,17 @@
                           !isPublic &&
                           (inputUrl != null ||
                             area.recID != curSelectedAnnotID ||
-                            area.labelType == '1' ||
-                            area.labelType == '2' ||
                             area.isLock == true)
                         "
                         [formGroup]="formAnnot"
                       >
-                        <!-- <div
-                          class="qr-switch"
-                          *ngIf="!isApprover && area.labelType == 8"
-                        >
-                          <codx-input
-                            class="form-control me-2"
-                            type="switch"
-                            [crrValue]="renderQRAllPage"
-                            (valueChange)="changeQRRenderState($event)"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="Lặp lại cho tất cả các trang"
-                              [formModel]=""
-                            >
-                            </codx-label>
-                          </codx-input>
-                        </div> -->
                         <div
                           class="text-content form-control my-2 ms-12"
-                          *ngIf="area.labelType == 6"
+                          *ngIf="
+                            area.labelType == 6 &&
+                            curAnnotFontSize &&
+                            curAnnotFontStyle
+                          "
                         >
                           <input
                             type="text"
@@ -578,16 +565,16 @@
 
                         <div
                           class="date-content my-2 ms-12"
-                          *ngIf="area.labelType == 5"
+                          *ngIf="area.labelType == 5 && curAnnotDateFormat"
                         >
                           <ejs-dropdownlist
                             class="me-2 min-w-70px"
                             id="dateFormatsDropdownList"
                             [dataSource]="lstAnnotDateFormat"
-                            [value]="curAnnotDateFormat"
-                            formControlName="dateFormat"
+                            [(value)]="curAnnotDateFormat"
                           >
                           </ejs-dropdownlist>
+                          <!-- formControlName="dateFormat" -->
                         </div>
                         <div class="d-flex my-2 ms-12">
                           <div
@@ -624,24 +611,28 @@
                           </div>
                           <div
                             class="text-format d-flex align-items-center"
-                            *ngIf="!imgConfig.includes(area.labelType)"
+                            *ngIf="
+                              !imgConfig.includes(area.labelType) &&
+                              curAnnotFontStyle &&
+                              curAnnotFontSize
+                            "
                           >
                             <ejs-dropdownlist
                               class="me-2 min-w-70px"
                               id="fontStylesDropdownList"
                               [dataSource]="lstAnnotFontStyle"
-                              [value]="curAnnotFontStyle"
-                              formControlName="fontStyle"
+                              [(value)]="curAnnotFontStyle"
                             >
                             </ejs-dropdownlist>
+                            <!-- formControlName="fontStyle" -->
                             <ejs-dropdownlist
                               class="me-2 w-100px"
                               id="fontSizesDropdownList"
                               [dataSource]="lstAnnotFontSize"
-                              [value]="curAnnotFontSize"
-                              formControlName="fontSize"
+                              [(value)]="curAnnotFontSize"
                             >
                             </ejs-dropdownlist>
+                            <!-- formControlName="fontSize" -->
                           </div>
                           <div
                             class="btn-format d-flex align-items-center"
@@ -725,7 +716,15 @@
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
                           <button
-                            *ngIf="!isPublic"
+                            *ngIf="
+                              !isPublic && this.isEditable == false
+                                ? false
+                                : area.allowEditAreas == false
+                                ? false
+                                : area.isLock == true
+                                ? false
+                                : true
+                            "
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="removeArea()"
@@ -740,7 +739,10 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
-                              imgConfig.includes(area.labelType) && !isPublic
+                              isEditable &&
+                              imgConfig.includes(area.labelType) &&
+                              area.labelType != '8' &&
+                              !isPublic
                             "
                             (click)="changeSignature_StampImg(area)"
                           >
@@ -754,7 +756,10 @@
                             type="button"
                             class="btn btn-sm btn-primary"
                             *ngIf="
-                              imgConfig.includes(area.labelType) && isPublic
+                              isEditable &&
+                              imgConfig.includes(area.labelType) &&
+                              area.labelType != '8' &&
+                              isPublic
                             "
                             (click)="changeSignature_StampImg_Public(area)"
                           >
@@ -765,7 +770,9 @@
                             ></codx-label>
                           </button>
                           <button
-                            *ngIf="!imgConfig.includes(area.labelType)"
+                            *ngIf="
+                              isEditable && !imgConfig.includes(area.labelType)
+                            "
                             type="button"
                             class="btn btn-sm btn-primary"
                             (click)="changeAnnotPro(area.labelType, area.recID)"
@@ -794,93 +801,36 @@
                     <ul
                       class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
                     >
-                      <li class="nav-item m-0">
-                        <a
-                          class="nav-link text-center flex-center rounded-0 min-w-100px"
-                          [ngClass]="currentTab == 1 ? 'active' : ''"
-                          data-bs-toggle="tab"
-                          id="#pane_1"
-                          (click)="changeTab(1)"
-                        >
-                          <span class="d-flex flex-column">
-                            <span
-                              class="icon-text_format icon-24 m-auto mb-1"
-                            ></span>
-                            <span class="fs-6 fw-bold">
-                              <codx-label
-                                Name="lblVNPT"
-                                default="VNPT"
-                                [formModel]=""
-                              ></codx-label>
+                      <ng-container
+                        *ngFor="let spl of vllSupplier; let index = index"
+                      >
+                        <div class="nav-item m-0">
+                          <button
+                            [disabled]="index != 0"
+                            class="nav-link text-center flex-center rounded-0 min-w-100px"
+                            [ngClass]="currentTab == index ? 'active' : ''"
+                            data-bs-toggle="tab"
+                            id="'#pane_' + index"
+                            (click)="changeTab(index)"
+                          >
+                            <span class="d-flex flex-column">
+                              <span>
+                                <img
+                                  [class]="index != 0 ? 'opacity-25' : ''"
+                                  class="h-80px w-80px p-3 user-mini-icon mb-1"
+                                  [src]="
+                                    '../assets/themes/es/default/img/' +
+                                    spl.icon
+                                  "
+                                />
+                              </span>
+                              <span class="fs-6 fw-bold">
+                                {{ spl.text }}
+                              </span>
                             </span>
-                            <span class="fs-6">
-                              <codx-label
-                                Name="lblDeveloping"
-                                default="Đang phát triển"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item m-0">
-                        <a
-                          class="nav-link text-center flex-center rounded-0 min-w-100px"
-                          [ngClass]="currentTab == 2 ? 'active' : ''"
-                          data-bs-toggle="tab"
-                          id="#pane_2"
-                          (click)="changeTab(2)"
-                        >
-                          <span class="d-flex flex-column">
-                            <span
-                              class="icon-gesture icon-24 m-auto mb-1"
-                            ></span>
-                            <span class="fs-6 fw-bold">
-                              <codx-label
-                                default="Viettel"
-                                name="lblViettel"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                            <span class="fs-6">
-                              <codx-label
-                                Name="lblDeveloping"
-                                default="Đang phát triển"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
-                      <li class="nav-item m-0">
-                        <a
-                          class="nav-link text-center flex-center rounded-0 min-w-100px"
-                          [ngClass]="currentTab == 3 ? 'active' : ''"
-                          data-bs-toggle="tab"
-                          id="#pane_3"
-                          (click)="changeTab(3)"
-                        >
-                          <span class="d-flex flex-column">
-                            <span
-                              class="icon-looks_one icon-24 m-auto mb-1"
-                            ></span>
-                            <span class="fs-6 fw-bold">
-                              <codx-label
-                                Name="lblUsbToken"
-                                default="USB Token"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                            <span class="fs-6">
-                              <codx-label
-                                Name="lblDeveloping"
-                                default="Đang phát triển"
-                                [formModel]=""
-                              ></codx-label>
-                            </span>
-                          </span>
-                        </a>
-                      </li>
+                          </button>
+                        </div>
+                      </ng-container>
                     </ul>
                   </div>
 

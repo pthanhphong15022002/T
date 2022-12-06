@@ -28,17 +28,20 @@
 </div>
 
 <ng-template #tab let-tab>
-  <ng-container *ngSwitch="tab.name.toLowerCase()">
+  <ng-container [ngSwitch]="tab.name.toLowerCase()">
     <ng-container *ngSwitchCase="'history'">
       <div class="tab-his">
         <div class="tab_body">
-          <codx-tree-history
+          <!-- <codx-tree-history
             [objectID]="objectID"
+            [id]="id"
+            [formModel]="formModel"
             [objectType]="entityName"
             [viewIcon]="true"
             [funcID]="funcID"
           >
-          </codx-tree-history>
+          </codx-tree-history> -->
+          <codx-history [objectID]="objectID" [formModel]="formModel" [funcID]="funcID"></codx-history>
         </div>
       </div>
     </ng-container>
@@ -59,6 +62,7 @@
         (fileCount)="getfileCount($event)"
         [displayThumb]="displayThumb"
         [isSaveSelected]="1"
+        [isTab]="true"
       >
       </codx-attachment>
     </ng-container>
@@ -70,10 +74,7 @@
             [objectType]="entityName"
             [actionType]="'C'"
             [addNew]="true"
-            [viewIcon]="false"
-            [viewVote]="true"
-            [funcID]="funcID"
-          >
+            [funcID]="funcID">
           </codx-tree-history>
         </div>
       </div>
@@ -108,10 +109,13 @@
       ></codx-references>
     </ng-container>
     <ng-container *ngSwitchCase="'approve'">
-      <ng-container> Comming soon... </ng-container>
+      <ng-container>
+        <codx-approval-step [transID]="transID" [approveStatus]="approveStatus">
+        </codx-approval-step>
+      </ng-container>
     </ng-container>
-    <ng-container *ngSwitchDefault
-      ><ng-container *ngIf="tab.template">
+    <ng-container *ngSwitchDefault>
+      <ng-container *ngIf="tab.template">
         <ng-container
           *ngTemplateOutlet="tab.template; context: { $implicit: tab }"
         >

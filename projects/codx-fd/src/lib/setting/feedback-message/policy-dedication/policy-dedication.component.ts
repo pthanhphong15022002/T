@@ -16,6 +16,7 @@ import { NotificationsService, TenantStore, UIComponent } from 'codx-core';
 export class PolicyDedicationComponent extends UIComponent implements OnInit {
   funcID: any;
   tenant: string;
+  @Input() isGroup: any;
   constructor(
     private change: ChangeDetectorRef,
     private tenantStore: TenantStore,
@@ -87,6 +88,7 @@ export class PolicyDedicationComponent extends UIComponent implements OnInit {
       cardtype: this.typeCard,
       funcID: this.funcID,
       recID: recID,
+      isGroup: this.isGroup
     });
   }
 }

@@ -183,14 +183,14 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="hideImageUpload == '0'" class="overflow-auto pb-3 mh-200px">
+                    <div *ngIf="hideImageUpload == '0'" class="overflow-auto mh-200px">
                         <div *ngFor="let file of sortBy();  index as i;"
                             class="d-flex align-items-center mb-3 has-action-menu">
                             <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
                             <ng-template #simple>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
+                                    [subTitleTmp]="cardImgFooter" [descLine]="1" class="w-100">
                                 </codx-temp-full>
                                 <ng-template #cardImgFooter let-data>
                                     <div *ngIf="hideDes == '0'" class="d-flex flex-column flex-grow-1 file-item w-100">
@@ -207,7 +207,7 @@
                             <ng-template #full>
                                 <codx-temp-full imageSrc="{{file.avatar}}" imgCss="w-20px me-3 cursor-pointer"
                                     title="{{file.fileName}} ({{dmSV.formatBytes(file.fileSize)}})"
-                                    [subTitleTmp]="cardImgFooter" [descLine]="1">
+                                    [subTitleTmp]="cardImgFooter" [descLine]="1" class="w-100">
                                 </codx-temp-full>
                             </ng-template>
                             <ng-template #cardImgFooter let-data>
@@ -244,9 +244,12 @@
         </div>
     </div>
     <div *ngIf="hideImageThumb == '0'">
-        <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data"
-            (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
-            [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)">
-        </codx-thumbnail>
+        <div class="mt-2" style="overflow: auto" [style.maxHeight]="heightScroll + 'px'" (scroll)="scrollFile()">
+            <codx-thumbnail [displayThumb]="displayThumb" [formModel]="formModel" [files]="data" [isScroll]="'1'"
+                (fileCount)="handleDeleteCount($event)" [isDeleteTemp]="isDeleteTemp" [hideDelete]="hideDelete"
+                [hideMoreF]="hideMoreF" (viewFile)="handleView($event)" (fileDelete)="handleDelete($event)" [permissions]="permissions">
+            </codx-thumbnail>
+        </div>
     </div>
+
 </ng-template>

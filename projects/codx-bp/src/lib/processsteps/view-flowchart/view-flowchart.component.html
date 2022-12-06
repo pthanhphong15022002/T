@@ -1,0 +1,41 @@
+<div class="viewfile mb-5" >
+  <div
+    class="viewfile-toolbar h-100 d-flex align-items-center justify-content-between"
+  >
+    <div class="d-flex align-items-center">
+      <span class="icon-24 text-white"></span>
+      <span class="ms-3 text-white font-size-h3"></span>
+    </div>
+    <!-- <div
+      *ngIf="data != null && !data.isDelete"
+      class="d-flex align-items-center"
+    >
+      <div
+        *ngIf="data.download"
+        class="d-flex align-items-center cursor-pointer"
+        (click)="download()"
+      >
+        <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
+        ><codx-label
+          default="Tải về"
+          [fiedName]="'Download'"
+          class="me-2"
+        ></codx-label>
+      </div>
+     
+    </div> -->
+  </div>
+</div>
+<div>
+  <pinch-zoom
+    [properties]="pzProperties"
+    [double-tap]="true"
+    [backgroundColor]="'none'"
+    [draggableImage]="true"
+  >
+    <img [src]="linkFile"  [style]="'height:'+heightFlowChart+'px'"/>
+  </pinch-zoom>
+  <!-- [overflow]="'visible'" -->
+  <div [hidden]="true" id="output"></div>
+</div>
+

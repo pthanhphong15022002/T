@@ -22,6 +22,7 @@ export class CodxTabsComponent implements OnInit {
   @Input() funcID!: string;
   @Input() entityName!: string;
   @Input() objectID!: any;
+  @Input() id!: any;
   @Input() formModel!: any;
   @Input() TabControl: TabModel[] = [];
   //tree task
@@ -38,6 +39,9 @@ export class CodxTabsComponent implements OnInit {
   @Input() displayThumb: string = 'full';
   opened = false;
   @Output() tabChange = new EventEmitter();
+  //ApprovalProcess
+  @Input() transID: string;
+  @Input() approveStatus: string;
 
   private all: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -45,7 +49,7 @@ export class CodxTabsComponent implements OnInit {
     { name: 'Comment', textDefault: 'Bình luận', isActive: false },
     { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
-    // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
+    { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
   ];
   constructor(
     injector: Injector,
@@ -55,8 +59,6 @@ export class CodxTabsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('codx-tabs', this.dataReferences);
-
     if (this.TabControl.length == 0) {
       this.TabControl = this.all;
       // this.all.forEach((res, index) => {

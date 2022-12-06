@@ -48,10 +48,10 @@ export class PopupUpdateProgressComponent implements OnInit {
     this.data = dt?.data;
     this.dialog = dialog;
     this.funcID = this.data.funcID;
-    this.task = this.data?.data;
+    this.task = JSON.parse(JSON.stringify(this.data?.data));
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc.customName;
-    this.task.percentage = this.task.percentage.toFixed(2)
+    this.task.percentage = this.task?.percentage?.toFixed(2)
     this.crrpercentage = this.task.percentage;
   }
 
@@ -61,7 +61,7 @@ export class PopupUpdateProgressComponent implements OnInit {
   }
   changePercentage(data) {
     if (data?.data) {
-      this.task.percentage = data?.data.toFixed(2);
+      this.task.percentage = data?.data?.toFixed(2);
       if (this.task.percentage == 100) this.percentage100 = true;
       else this.percentage100 = false;
       this.changeDetectorRef.detectChanges();
@@ -94,7 +94,6 @@ export class PopupUpdateProgressComponent implements OnInit {
     if(res && res.length > 0){
       this.dialog.close(res) ;
       this.notiService.notifyCode('SYS007');
-     // this.notiService.notify("Cập nhật tiến độ thành công !")
     }
    })
   }

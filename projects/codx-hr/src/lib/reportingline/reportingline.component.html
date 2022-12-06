@@ -1,312 +1,194 @@
-<codx-views #view [autoLoad]="true" idField="positionID" entityName="HR_Positions" [views]="views"
-    (viewChanged)="changeView($event)" [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)"
-    [button]="button" (buttonClick)="click($event)">
+<codx-views #view 
+    [views]="views" 
+    idField="positionID" 
+    [selectedFirst]="true" 
+    (viewChanged)="viewChange($event)"
+    (selectedChange)="onSelectionChanged($event)" 
+    [button]="button" 
+    [service]="'HR'" 
+    [assemblyName]="'ERM.Business.HR'"
+    [className]="'PositionsBusiness'" 
+    [method]="'GetPositionsAsync'" 
+    (buttonClick)="btnClick($event)">
 </codx-views>
 
-<ng-template #templateTree let-data>
-    {{data.positionName}}
-</ng-template>
-
-<ng-template #templateDetail>
-    <ng-container *ngIf="orgUnitID">
-        <lib-orgchart-detail [orgUnitID]="orgUnitID" [formModel]="view.formModel"></lib-orgchart-detail>
-    </ng-container>
-
-</ng-template>
-
-<ng-template #itemViewList>
-    <div class="d-flex flex-row panelmain" style="width: 100%;" *ngIf="dataValue">
-        <div class="d-flex flex-column flex-column-fluid pr-1" data-kt-scroll="true"
-            data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-            data-kt-scroll-wrappers=".panelmain, .wrapper" data-kt-scroll-offset="0">
-            <codx-listview #listview [itemTemplate]="itemTemplate" [funcID]="view.formModel.funcID"
-                [formModel]="view.formModel" service="HR" className="PositionsBusiness"
-                method="GetModelFormPositionsAsync" assemblyName="ERM.Business.HR" entityName="HR_Positions"
-                [predicate]="predicate" [dataService]="dtService" [selectFirst]="false" [dataValue]="dataValue"
-                (clickMF)="clickMF($event)" [typeMF]="'hover'">
-            </codx-listview>
-        </div>
-    </div>
-</ng-template>
-
-<ng-template #itemTemplate let-data>
-    <div class="px-5">
-        <div class="d-flex justify-content-between align-items-center border-bottom px-2 py-3">
-            <div class="justify-content-start">
-                <div class="text-dark font-weight-bold font-size-h6">{{data.positionName}}
-                </div>
-                <div class="text-dark mt-2">{{(data.orgUnitID||'') + (data.departmentID ? ' | ' + data.departmentID: '')
-                    + (data.divisionID ? ' | ' + data.divisionID: '')}}
-                </div>
-                <div class="mr-5 d-flex align-items-center mt-1">
-                    <codx-label class="me-1" name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
-                    </codx-label>
-                    <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async }}</span>
-                </div>
-                <div class="mr-5 d-flex align-items-center mt-1">
-                    <codx-label class="me-1" name="lblReportTo2" formName="Positions" default="Báo cáo gián tiếp:">
-                    </codx-label>
-                    <span #reportTo2>{{ data.reportTo2 | formatvalue: view.formModel:"reportTo2":reportTo2 | async
-                        }}</span>
-                </div>
-            </div>
-
-            <div class="d-flex flex-wrap">
-                <div class="d-flex pos-group">
-                    <div class="d-flex flex-column align-items-center pos-item">
-                        <div class="align-items-center1 fs-7">
-                            <codx-label class="me-1" name="lblJobName" formName="Positions" default="Nhóm chức danh:">
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                                <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
-                            </span>
-                        </div>
-                        <div class="align-items-center1 fs-7">
-                            <codx-label class="me-1" name="lbljobGroup" formName="Positions" default="Chức vụ:">
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                                <span #jobGroupID>{{ data.jobGroupID | formatvalue:
-                                    view.formModel:"jobGroupID":jobGroupID | async }}</span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex flex-wrap">
-                <div class="d-flex pos-group">
-                    <div class="d-flex flex-column align-items-center pos-item w-100px" #h
-                        (click)="loadEmployByCountStatus()">
-                        <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblHeadcounts" formName="Positions" default="Định biên">
-                            </codx-label>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center pos-item w-100px">
-                        <div class="pos-number text-primary fs-2 fw-bold">{{data.currentcounts}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblCurrentcounts" formName="Positions" default="Chính thức">
-                            </codx-label>
-                        </div>
-                        <div *ngIf="data.currentcounts>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.currentEmpID" objectType="HR_Employees"
-                                [numberImages]="2" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500" (click)="loadEmployByCountStatus()" [ngbPopover]="popEmpList"
-                                popoverClass="empPopoverClass" #popoverList="ngbPopover">
-                            </codx-img>
-                            <div *ngIf="data.currentcounts>1" (click)="loadEmployByCountStatus()"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
-                                autoClose="outside"
-                                class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
-                                {{data.currentcounts-1}}+</div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center pos-item w-100px">
-                        <div class="pos-number text-warning fs-2 fw-bold">{{data.onboard}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblOnboard" formName="Positions" default="Onboard">
-                            </codx-label>
-                        </div>
-                        <div *ngIf="data.onboard>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.onboardEmpID" objectType="HR_Employees"
-                                [numberImages]="2" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500">
-                            </codx-img>
-                            <div *ngIf="data.onboard>1" (click)="loadEmployByCountStatus()" [ngbPopover]="popEmpList"
-                                popoverClass="empPopoverClass" #popoverList="ngbPopover" autoClose="outside"
-                                class="symbol w-30px h-30px symbol-circle border-white bg-light justify-content-center d-flex align-items-center">
-                                {{data.onboard-1}}+</div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column align-items-center pos-item w-100px">
-                        <div class="pos-number text-danger fs-2 fw-bold">{{data.offboard}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label name="lblOffboard" formName="Positions" default="Offboard">
-                            </codx-label>
-                        </div>
-                        <div *ngIf="data.offboard>0" class="symbol-group symbol-hover mt-2">
-                            <codx-img [width]="30" [objectId]="data.offboardEmpID" objectType="HR_Employees"
-                                [numberImages]="7" placement="bottom" container="body" autoClose="outside"
-                                [openDelay]="500">
-                            </codx-img>
-                            <div *ngIf="data.offboard>1" (mouseenter)="loadEmployByCountStatus()"
-                                [ngbPopover]="popEmpList" popoverClass="empPopoverClass" #popoverList="ngbPopover"
-                                class="symbol w-30px h-30px border-white symbol-circle">
-                                {{data.offboard-1}}+
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
-            [dataItem]="data" type="hover">
-        </codx-mfunc>
-    </div>
-</ng-template>
-
-<ng-template #popEmpList>
-    <div class="fw-bold">
-        <codx-label name="Resouces" formName="Employees" default="Danh sách nhân viên"></codx-label>
-    </div>
-    <div class="mt-1 mb-2">
-        <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
-    </div>
-    <div class="d-flex align-items-start user-card p-2 mt-1 codx-bghover rounded-1"
-        *ngFor="let item of listEmployeeSearch">
-        <div class="me-3 ms-2">
-            <codx-img [width]="30" [objectId]="item?.employeeID" objectType="HR_Employees">
-            </codx-img>
-        </div>
-        <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark fw-bold fs-6">{{ item?.employeeName }}</div>
-            <div class="text-gray-500 fs-7">{{ item?.positionName }}</div>
-        </div>
-    </div>
-</ng-template>
-
-<!-- ----------------------------------------- -->
-
-
 <ng-template #tmpTree let-data>
-    {{data.positionName}}
+    <div class="d-flex align-items-center py-1">
+        <i class="icon-home me-2"></i><span>{{ data.positionName }}</span>
+      </div>
 </ng-template>
-<ng-template #tmpRightRef>
-    <ng-container *ngTemplateOutlet="currView"></ng-container>
-</ng-template>
+
+
 <ng-template #tmpOrgchart>
-    <lib-reportingline-orgchart></lib-reportingline-orgchart>
+    <lib-reportingline-orgchart [positionID]="positionID"></lib-reportingline-orgchart>
 </ng-template>
-<ng-template #tmpList>
-    <div class="d-flex flex-row panelmain w-100">
-        <div class="d-flex flex-column flex-column-fluid pr-1" data-kt-scroll="true"
-            data-kt-scroll-activate="{default: true}" data-kt-scroll-height="auto"
-            data-kt-scroll-wrappers=".panelmain, .wrapper" data-kt-scroll-offset="0">
-            <codx-listview #codxListView [itemTemplate]="tmpItem_List" [funcID]="view.formModel.funcID" service="HR"
-                className="PositionsBusiness" method="GetModelFormPositionsAsync" assemblyName="ERM.Business.HR"
-                entityName="HR_Positions" [predicate]="predicate" [dataService]="dtService" [selectFirst]="false"
-                [dataValue]="dataValue" (clickMF)="clickMF($event)" [typeMF]="'hover'" [formModel]="view.formModel"
-                (actionEvent)="action($event)">
-            </codx-listview>
-        </div>
-    </div>
-</ng-template>
-<ng-template #tmpItem_List let-data>
-    <div class="p-2">
-        <div (dblclick)="doubleClickItem(data)"
-            class="d-flex justify-content-between align-items-center border-bottom py-3 w-100">
+
+<ng-template #tmpList let-data>
+    <div class="d-flex align-items-center py-4 px-5 border-bottom">
+        <div (dblclick)="doubleClickItem(data)" class="d-flex justify-content-between align-items-center w-100">
             <!-- HR_Positions infor -->
-            <div class="reportingline-cell-positioninfo w-100 mw-500px">
+            <div class="reportingline-cell-positioninfo">
                 <div class="text-start w-100">
-                    <div class="fw-bold">
+                    <div class="fw-bold fs-6">
                         {{data.positionName}}
                     </div>
-                    <div class="text-dark mt-1">
+                    <div class="text-gray-600 mt-2">
                         {{(data.orgUnitID||'') +
                         (data.departmentID ? ' | ' + data.departmentID: '') +
                         (data.divisionID ? ' | ' + data.divisionID: '')}}
                     </div>
-                    <div class="mr-5 d-flex align-items-center">
-                        <codx-label class="me-1 text-nowrap" name="lblReportTo" formName="Positions"
-                            default="Báo cáo trực tiếp:">
-                        </codx-label>
-                        <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async
-                            }}</span>
-                    </div>
-                    <div class="mr-5 d-flex align-items-center">
-                        <codx-label class="me-1 text-nowrap" name="lblReportTo2" formName="Positions"
-                            default="Báo cáo gián tiếp:">
-                        </codx-label>
-                        <span #reportTo2>
-                            {{ data.reportTo2 | formatvalue: view.formModel:"reportTo2":reportTo2 | async}}
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <!-- HR_Positions job -->
-            <div class="reportingline-cell-job w-200px mw-200px min-w-200px mx-6">
-                <div class="text-start w-100">
-                    <div class="align-items-center1 fs-7">
-                        <span class="me-1">
-                            <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
+                    <div class="me-5 float-left mt-1">
+                        <div class="me-2">
+                            <codx-label name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
                             </codx-label>
-                        </span>
-                        <span class="text-dark fw-bolder">
-                            <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
-                        </span>
+                        </div>
+                        <div>
+                            <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async
+                                }}</span>
+                        </div>
                     </div>
-                    <div class="align-items-center1 fs-7">
-                        <span class="me-2">
-                            <codx-label [formModel]="view.formModel" name="lbljobGroup" default="Chức vụ:">
+                    <div class="me-5 float-left mt-1">
+                        <div class="me-2">
+                            <codx-label name="lblReportTo2" formName="Positions" default="Báo cáo gián tiếp:">
                             </codx-label>
-                        </span>
-                        <span class="text-dark fw-bolder">
-                            <span #jobGroupID>
-                                {{ data.jobGroupID | formatvalue: view.formModel: "jobGroupID": jobGroupID | async }}
+                        </div>
+                        <div class="me-2">
+                            <span #reportTo2>
+                                {{ data.reportTo2 | formatvalue: view.formModel:"reportTo2":reportTo2 | async}}
                             </span>
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex align-items-center w-350px mw-350px min-w-350px">
-                <!-- HR_Positions headcounts -->
-                <div class="reportingline-cell-quantily w-25">
-                    <div class="d-flex flex-column align-items-center pos-item" (click)="loadEmployByCountStatus()">
-                        <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label [formModel]="view.formModel" name="lblHeadcounts" default="Định biên">
-                            </codx-label>
-                        </div>
-                    </div>
-                </div>
-                <!-- HR_Positions currentcounts -->
-                <div class="reportingline-cell-quantily w-25">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="pos-number text-primary fs-2 fw-bold">
-                            <span>{{data.currentcounts}}</span>
-                        </div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label [formModel]="view.formModel" name="lblCurrentcounts" default="Chính thức">
-                            </codx-label>
-                        </div>
-                    </div>
-                </div>
-                <!-- HR_Positions Onboard -->
-                <div class="reportingline-cell-quantily w-25">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="pos-number text-warning fs-2 fw-bold">
-                            <span>{{data.onboard}}</span>
-                        </div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label [formModel]="view.formModel" name="lblOnboard" default="Onboard">
-                            </codx-label>
-                        </div>
-                    </div>
-                </div>
-                <!-- HR_Positions Offboard -->
-                <div class="reportingline-cell-quantily w-25">
-                    <div class="d-flex flex-column align-items-center">
-                        <div class="pos-number text-warning fs-2 fw-bold">
-                            <span>{{data.offboard}}</span>
-                        </div>
-                        <div class="text-gray-600 mt-1">
-                            <codx-label [formModel]="view.formModel" name="lblOffboard" default="Offboard">
-                            </codx-label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
+        <!-- HR_Positions job -->
+        <div class="reportingline-cell-job w-250px min-w-250px ms-6">
+            <div class="text-start w-100">
+                <div class="text-gray-700">
+                    <span class="me-1">
+                        <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
+                        </codx-label>
+                    </span>
+                    <span class="text-dark">
+                        <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
+                    </span>
+                </div>
+                <div class="text-gray-700 mt-1">
+                    <span class="me-1">
+                        <codx-label [formModel]="view.formModel" name="lbljobGroup" default="Chức vụ:">
+                        </codx-label>
+                    </span>
+                    <span class="text-dark">
+                        <span #jobGroupID>
+                            {{ data.jobGroupID | formatvalue: view.formModel: "jobGroupID": jobGroupID | async }}
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex align-items-top w-350px mw-350px min-w-350px">
+            <!-- HR_Positions headcounts -->
+            <div class="reportingline-cell-quantily w-25">
+                <div class="d-flex flex-column align-items-center pos-item" (click)="loadEmployByCountStatus()">
+                    <div class="pos-number text-gray-500 fs-2 fw-bold">{{data.headcounts}}</div>
+                    <div class="text-gray-600 mt-1 mb-2">
+                        <codx-label [formModel]="view.formModel" name="lblHeadcounts" default="Định biên">
+                        </codx-label>
+                    </div>
+                </div>
+            </div>
+            <!-- HR_Positions currentcounts -->
+            <div class="reportingline-cell-quantily w-25">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="pos-number text-primary fs-2 fw-bold">
+                        <span>{{(data.filledCounts ? data.filledCounts : 0 )  - (data.onBoard ? data.onBoard : 0) - (data.offBoard ? data.offBoard : 0)}}</span>
+                    </div>
+                    <div class="text-gray-600 mt-1 mb-2">
+                        <codx-label [formModel]="view.formModel" name="lblCurrentcounts" default="Chính thức">
+                        </codx-label>
+                    </div>
+                    <ng-container *ngIf="data.officialStaff">
+                        <ng-container
+                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.officialStaff }">
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+            <!-- HR_Positions Onboard -->
+            <div class="reportingline-cell-quantily w-25">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="pos-number text-warning fs-2 fw-bold">
+                        <span>{{data.onBoard ? data.onBoard : 0}}</span>
+                    </div>
+                    <div class="text-gray-600 mt-1 mb-2">
+                        <codx-label [formModel]="view.formModel" name="lblOnboard" default="Onboard">
+                        </codx-label>
+                    </div>
+                    <ng-container *ngIf="data.onBoardEmp">
+                        <ng-container *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.onBoardEmp }">
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+            <!-- HR_Positions Offboard -->
+            <div class="reportingline-cell-quantily w-25">
+                <div class="d-flex flex-column align-items-center">
+                    <div class="pos-number text-warning fs-2 fw-bold">
+                        <span>{{data.offBoard ? data.offBoard : 0}}</span>
+                    </div>
+                    <div class="text-gray-600 mt-1 mb-2">
+                        <codx-label [formModel]="view.formModel" name="lblOffboard" default="Offboard">
+                        </codx-label>
+                    </div>
+                    <ng-container *ngIf="data.offBoardEmp">
+                        <ng-container
+                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.offBoardEmp }">
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="w-10px min-w-10px">
             <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="false"
                 [dataItem]="data" type="hover">
             </codx-mfunc>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateListEmployee let-employees>
+    <div ngbDropdown class="symbol-more" [container]="'body'">
+        <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            style="padding: 0 !important ; margin-left: 0 !important; border:none">
+            <div class="d-flex align-items-center">
+                <codx-img [objectId]="employees[0].employeeID" [objectName]="employees[0].employeeName"
+                    [objectType]="'HR_Employees'" [width]="30">
+                </codx-img>
+                <span *ngIf="employees.length > 1" class="multiple-employee rounded-circle">
+                    <span class="text-white">+{{(employees.length - 1)}}</span>
+                </span>
+            </div>
+        </div>
+        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <div class="py-2">
+                <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
+                <span class="fw-bold">{{employees.length}}</span>
+            </div>
+            <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar>
+            <div class="hr-list-employee">
+                <ng-container *ngFor="let emp of employees">
+                    <div class="d-flex align-items-center mt-3">
+                        <codx-img [objectId]="emp.employeeID" [objectType]="'HR_Employees'" [cssClass]="'me-3'"
+                            [objectName]="emp.employeeName" [width]="30">
+                        </codx-img>
+                        <div class="d-flex flex-column w-300px">
+                            <span class="fs-6">{{emp.employeeName}}</span>
+                            <span class="text-gray-600">{{emp.positionName}}</span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
         </div>
     </div>
 </ng-template>

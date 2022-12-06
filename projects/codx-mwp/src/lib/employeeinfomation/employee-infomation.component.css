@@ -32,17 +32,6 @@ ngx-skeleton-loader {
     width: initial;
 }
 
-.line {
-    position: absolute;
-    display: block;
-    height: 1px;
-    left: 20px;
-    right: -60px;
-    top: 16px;
-    background-color: #eee;
-    content: "";
-    z-index: 1;
-}
 
 .tagitem {
     border-radius: 15px;
@@ -114,9 +103,10 @@ ngx-skeleton-loader {
     max-width: 1000px;
 }
 
-.pw-menu {
+.employee-info-main .pw-menu {
     height: 42px;
     line-height: 42px;
+
     border-radius: 6px !important;
     background-color: var(--bs-body-bg);
     width: 100%;

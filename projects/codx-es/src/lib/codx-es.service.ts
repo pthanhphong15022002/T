@@ -320,6 +320,16 @@ export class CodxEsService {
     return obj;
   }
 
+  getMoreFunction(funcID: string, formName: string, grvName: string) {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.SYS',
+      'MoreFunctionsBusiness',
+      'GetWithPermSystemAsync',
+      [funcID, formName, grvName]
+    );
+  }
+
   //#endregion
 
   //#region  EP
@@ -419,6 +429,9 @@ export class CodxEsService {
 
   public setupChange = new BehaviorSubject<any>(null);
   isSetupChange = this.setupChange.asObservable();
+
+  public statusChange = new BehaviorSubject<any>(null);
+  isStatusChange = this.statusChange.asObservable();
 
   getAutoNumber(autoNoCode): Observable<any> {
     return this.api.execSv(
@@ -590,6 +603,16 @@ export class CodxEsService {
       [categoryID]
     );
   }
+
+  checkCategoryName(model: any) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'CategoriesBusiness',
+      'CheckCategoryNameAsync',
+      [model]
+    );
+  }
   //#endregion
 
   //#region ES_ApprovalSteps
@@ -618,9 +641,9 @@ export class CodxEsService {
     });
   }
 
-  getApprovalSteps(model: GridModels): Observable<any> {
+  getApprovalSteps(model: GridModels) {
     if (model.dataValue && (model.dataValue != '' || model.dataValue != null)) {
-      return this.api.execSv(
+      return this.api.execSv<any>(
         'es',
         'ERM.Business.ES',
         'ApprovalStepsBusiness',
@@ -745,6 +768,20 @@ export class CodxEsService {
     );
   }
 
+  updateFieldApprovalStepAsync(
+    tranID: string,
+    fieldName: string,
+    value: string
+  ) {
+    return this.api.execSv<any>(
+      'ES',
+      'ES',
+      'ApprovalStepsBusiness',
+      'UpdateFieldAsync',
+      [tranID, fieldName, value]
+    );
+  }
+
   //#endregion
 
   //#region EmailTemplate
@@ -764,7 +801,7 @@ export class CodxEsService {
       'SYS',
       'ERM.Business.AD',
       'EmailTemplatesBusiness',
-      'GetEmailTemplateAsync',
+      'GetViewEmailTemplateAsyncLogic',
       templateID
     );
   }
@@ -872,7 +909,7 @@ export class CodxEsService {
     );
   }
 
-  saveUSBSignPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
+  saveUSBSignedPDF(transRecID, sfID, fileID, fileBase64Content, cmt) {
     let data = [transRecID, sfID, fileID, fileBase64Content, cmt];
     return this.api.execSv(
       'es',
@@ -1044,6 +1081,16 @@ export class CodxEsService {
     );
   }
 
+  undo(transRecID: string) {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UndoAsync',
+      [transRecID]
+    );
+  }
+
   getOneApprovalTrans(recID: string) {
     return this.api.execSv<any>(
       'es',
@@ -1064,6 +1111,16 @@ export class CodxEsService {
     );
   }
 
+  updateTransAwaitingStatus(transID, isFail) {
+    return this.api.execSv(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'UpdateTransAwaitingStatusAsync',
+      [transID, isFail]
+    );
+  }
+
   getApprovalTransActive(sfRecID: string) {
     return this.api.execSv<any>(
       'es',
@@ -1071,6 +1128,16 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'GetTransActiveAsync',
       [sfRecID]
+    );
+  }
+
+  overdue() {
+    return this.api.execSv<any>(
+      'es',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'OverDueAsync',
+      []
     );
   }
 
@@ -1208,8 +1275,30 @@ export class CodxEsService {
     );
   }
 
-  SignAsync(stepNo, isAwait, userID, sfID, mode, comment) {
-    let data = [stepNo, isAwait, userID, sfID, mode, comment];
+  SignAsync(
+    stepNo,
+    isAwait,
+    userID,
+    sfID,
+    signType,
+    supplier,
+    hasCA,
+    mode,
+    comment,
+    transRecID
+  ) {
+    let data = [
+      stepNo,
+      isAwait,
+      userID,
+      sfID,
+      signType,
+      supplier,
+      hasCA,
+      mode,
+      comment,
+      transRecID,
+    ];
     return this.api.execSv(
       'es',
       'ERM.Business.ES',
@@ -1261,6 +1350,16 @@ export class CodxEsService {
       'FileBussiness',
       'GetFilesForOutsideAsync',
       [funcID, objectId, objectType]
+    );
+  }
+
+  getLabels() {
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'GetLabelForESAsync',
+      []
     );
   }
 

@@ -1,11 +1,15 @@
-<codx-views #view [views]="views" [funcID]="funcID" autoLoad="false" idField="recID" [selectedFirst]="true">
+<codx-views #view [views]="views" [funcID]="funcID" [autoLoad]="false">
 </codx-views>
 
 <ng-template #panelLeftRef>
   <div class="survey-home h-100">
     <div class="p-6 bg-body rounded-4 body-survey">
       <div class="title-add-survey">
-        <codx-label fiedName="" formModel="" default="Bắt đầu biểu mẫu mới"></codx-label>
+        <codx-label
+          fiedName=""
+          formModel=""
+          default="Bắt đầu biểu mẫu mới"
+        ></codx-label>
       </div>
       <div class="d-flex align-items-center upper-part">
         <div class="card-survey" (click)="add()">
@@ -31,11 +35,26 @@
     </div>
     <div class="p-6 bg-body rounded-4 list-survey">
       <div class="title-add-survey">
-        <codx-label fiedName="" formModel="" default="Biểu mẫu gần đây"></codx-label>
+        <codx-label
+          fiedName=""
+          formModel=""
+          default="Biểu mẫu gần đây"
+        ></codx-label>
       </div>
-      <div class="d-flex flex-column-fluid home-notebooks hover-scroll-overlay-y">
-        <codx-listview #lstView [itemTemplate]="templateListCard" type="cardView" [funcID]="funcID" [service]="service"
-          [entityName]="functionList?.entityName">
+      <div
+        class="d-flex flex-column-fluid home-notebooks hover-scroll-overlay-y"
+      >
+        <codx-listview
+          #lstView
+          [itemTemplate]="templateListCard"
+          type="cardView"
+          [funcID]="funcID"
+          [service]="service"
+          [assemblyName]="assemblyName"
+          [className]="className"
+          [method]="method"
+          [entityName]="functionList?.entityName"
+        >
         </codx-listview>
       </div>
     </div>
@@ -43,12 +62,24 @@
 </ng-template>
 
 <ng-template #templateListCard let-item>
-  <div>
-    <codx-card-img cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px" (clickMF)="clickMF($event, item)"
-      [imageId]="item.recID" imgCss="h-140px mb-2" icoTitleCss="icon-assignment icon-16" [title]="item.title"
-      cssTitle="line-clamp line-clamp-1" [imgOn]="item?.modifiedOn" [desc2]="item.memo"
-      cssDes2="line-clamp line-clamp-2" imageWidth="223" [imageObjType]="functionList?.entityName" [formModel]=""
-      [dataItem]="item" [imageObjName]="item.title">
+  <div (click)="update(item)">
+    <codx-card-img
+      cardCss="border card-img-mwp rounded-3 img-storage w-225px h-225px"
+      (clickMF)="clickMF($event, item)"
+      [imageId]="item.recID"
+      imgCss="h-140px mb-2"
+      icoTitleCss="icon-assignment icon-16"
+      [title]="item.title"
+      cssTitle="line-clamp line-clamp-1"
+      [imgOn]="item?.modifiedOn"
+      [desc2]="item.memo"
+      cssDes2="line-clamp line-clamp-2"
+      imageWidth="223"
+      [imageObjType]="functionList?.entityName"
+      [formModel]=""
+      [dataItem]="item"
+      [imageObjName]="item.title"
+    >
     </codx-card-img>
   </div>
 </ng-template>
