@@ -133,6 +133,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
 
     this.notificationsService.alert(this.title, this.titleDeleteConfirm, config).closed.subscribe(x => {
       if (x.event.status == "Y") {
+        debugger;
         if (this.isDeleteTemp == '0') {
           this.fileService.deleteFileToTrash(id, "", true).subscribe(item => {
             if (item) {
@@ -146,9 +147,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                   index = list.findIndex(d => d.recID.toString() === id);
                 }
                 if (index > -1) {
+                  this.dataDelete.push(list[index]);
+                  this.fileDelete.emit(this.dataDelete);
                   list.splice(index, 1);//remove element from array
                   this.files = list;
                   this.fileCount.emit(this.files);
+          
                   this.changeDetectorRef.detectChanges();
                 }
               }
