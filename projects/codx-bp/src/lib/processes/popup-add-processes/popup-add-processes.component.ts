@@ -40,6 +40,7 @@ export class PopupAddProcessesComponent implements OnInit {
   revisions: BP_ProcessRevisions[] = [];
   perms: BP_ProcessPermissions[] = [];
   user: any;
+  isCoppyFile:any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -140,6 +141,7 @@ export class PopupAddProcessesComponent implements OnInit {
       });
   }
   async onSave() {
+
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
@@ -189,7 +191,9 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if (this.attachment?.fileUploadList?.length)
+
+    else {
+      if (this.attachment?.fileUploadList?.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           var countAttack = 0;
@@ -199,14 +203,26 @@ export class PopupAddProcessesComponent implements OnInit {
           } else {
             this.process.attachments = countAttack;
           }
-          if (this.action === 'add' || this.action === 'copy') this.onAdd();
+          if (this.action === 'add' || this.action === 'copy') {
+            this.CoppyFile();
+            if(this.isCoppyFile){
+
+            }
+            this.onAdd();
+          }
           else this.onUpdate();
         }
       });
     else {
-      if (this.action === 'add' || this.action === 'copy') this.onAdd();
+      if (this.action === 'add' || this.action === 'copy') {
+        this.CoppyFile();
+        this.onAdd();
+      }
       else this.onUpdate();
     }
+    }
+
+
   }
   //#endregion method
 
@@ -335,5 +351,16 @@ export class PopupAddProcessesComponent implements OnInit {
     let check: boolean;
     this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
     return check;
+  }
+  CoppyFile(){
+    if(this.action ==='copy'){
+      this.notiService.alertCode('BP007').subscribe((x) => {
+        if (x.event.status == 'N') {
+          this.isCoppyFile=false;
+        } else {
+          this.isCoppyFile=true;
+        }
+      });
+    }
   }
 }
