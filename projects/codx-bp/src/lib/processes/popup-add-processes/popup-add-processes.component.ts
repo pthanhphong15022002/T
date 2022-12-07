@@ -106,7 +106,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.phasesOld = this.processOldCopy?.phasesOld;
     this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
-    this.getAvatar(this.process);
+    if (this.action != 'add') this.getAvatar(this.process);
   }
 
   ngOnInit(): void {
