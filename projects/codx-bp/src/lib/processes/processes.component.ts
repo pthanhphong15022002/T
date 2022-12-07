@@ -138,6 +138,7 @@ export class ProcessesComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.showButtonAdd = this.funcID!='BPT6'
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -590,50 +591,35 @@ export class ProcessesComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'BPT206':
       case 'BPT106':
         this.properties(data);
         break;
+      case 'BPT201':
       case 'BPT101':
         this.viewDetailProcessSteps(e?.data, data);
         break;
+      case 'BPT202':
       case 'BPT102':
         this.reName(data);
         break;
       case 'BPT109':
         this.releaseProcess(data);
         break;
+      case 'BPT207':
       case 'BPT107':
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT104':
-      case 'BPT105':
-        this.permission(data);
-        break;
-      case 'BPT108':
-        this.roles(data);
-        break;
-      case 'BPT103':
-        this.revisions(e.data, data);
-        break;
-      case 'BPT206':
-        this.properties(data);
-        break;
-      case 'BPT201':
-        this.viewDetailProcessSteps(e?.data, data);
-        break;
-      case 'BPT202':
-        this.reName(data);
-        break;
-      case 'BPT207':
-        this.Updaterevisions(e?.data, data);
-        break;
-      case 'BPT205':
+      case 'BPT204':
         this.permission(data);
         break;
       case 'BPT208':
+      case 'BPT108':
         this.roles(data);
         break;
       case 'BPT203':
+      case 'BPT103':
         this.revisions(e.data, data);
         break;
     }
@@ -672,11 +658,12 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      let userId = '2207130007';
-      let isAdmin = false
-      // let userId = this.user?.userID;
-      // let isAdmin = this.user?.administrator
-
+      // let userId = '2207130007';
+      // let isAdmin = false
+      let userId = this.user?.userID;
+      let isAdmin = this.user?.administrator
+      let isOwner = data?.permissions.some(x => x.objectID == data?.owner); 
+      let fullRole = isAdmin || isOwner ? true : false;
       e.forEach((res) => {
         if (
           res.functionID == 'SYS005' ||
@@ -688,48 +675,48 @@ export class ProcessesComponent
           /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
             true;
         }
-        if(res.functionID === "BPT109"){        
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.publish) ); 
-          if(data.status === "6" || (checkRole >=0 && !isAdmin)) {
+        if(res.functionID === "BPT109"){ // phat hanh   
+          let isPublish = data?.permissions.some(x => (x.objectID == userId && x.publish) ); 
+          if(data.status === "6" || (!isPublish && !fullRole )) {
             res.disabled = true;
           }
         }
-        if(res.functionID === "SYS04"){ // copy va them
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.create) ); 
-          if(checkRole >=0 && !isAdmin) {
+        if(res.functionID === "SYS04" || res.functionID === "BPT103" || res.functionID === "BPT203"){ // copy, them va them phien ban
+          let isCreate = data?.permissions.some(x => (x.objectID == userId && x.create) ); 
+          if(!isCreate && !fullRole) {
             res.disabled = true;
           }
         }
-        if(res.functionID === "SYS03" || res.functionID === 'BPT102'){ // sua
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.update)); 
-          if(checkRole >=0 && !isAdmin) {
+        if(res.functionID === "SYS03" || res.functionID === 'BPT102' || res.functionID === 'BPT203' || res.functionID === 'BPT103'){ // sua va luu phien ban
+          let isEdit = data?.permissions.some(x => (x.objectID == userId && x.edit)); 
+          if(!isEdit && !fullRole) {
             res.disabled = true;
           }
         }
         if(res.functionID === "SYS02"){ // xoa
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.edit) ); 
-          if(checkRole >=0 && !isAdmin) {
+          let isDelete = data?.permissions.some(x => (x.objectID == userId && x.delete) ); 
+          if(!isDelete && !fullRole) {
             res.disabled = true;
           }
         }
-        if(res.functionID === "BPT101" || res.functionID === "BPT107"){ // xem va quan ly phien ban
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.read)); 
-          if(checkRole >=0 && !isAdmin) {
+        if(res.functionID === "BPT101" || res.functionID === "BPT107" || res.functionID === "BPT207"){ // xem va quan ly phien ban
+          let isRead = data?.permissions.some(x => (x.objectID == userId && x.read)); 
+          if(!isRead && !fullRole) {
             res.disabled = true;
           }
         }
-        if(res.functionID === "BPT105"){ //chia se
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.share)); 
-          if(checkRole >=0 && !isAdmin) {
+        if(res.functionID === "BPT105" || res.functionID === "BPT205"){ //chia se
+          let isShare = data?.permissions.some(x => (x.objectID == userId && x.share)); 
+          if(!isShare && !fullRole) {
             res.disabled = true;
           }
         }
-        if(res.functionID === "BPT108" || res.functionID === "BPT103"){ //phan quyen va them phien ban
-          if(data?.Owner != userId  && !isAdmin) {
+        if(res.functionID === "BPT108" || res.functionID === "BPT208" ){ //phan quyen 
+          let isAssign = data?.permissions.some(x => (x.objectID == userId && x.assign)); 
+          if(!isAssign && !fullRole) {
             res.disabled = true;
           }
         }
-
       });
     }
   }
@@ -865,12 +852,12 @@ export class ProcessesComponent
     })
   }
   checkPermission(data = []){    
-    // let userId = this.user?.userID;   
-    // let isAdmin = this.user?.administrator 
-    let isAdmin = false;
-    let userId = '2207130007';
-    let check = data.findIndex(x => x.read && x.objectID === userId);
-    if(check >= 0  || isAdmin){ // neu co quyen xem hoac admin 
+    let userId = this.user?.userID;   
+    let isAdmin = this.user?.administrator 
+    // let isAdmin = false;
+    // let userId = '2207130007';
+    let check = data.some(x => x.read && x.objectID === userId);
+    if(check || isAdmin){ // neu co quyen xem hoac admin 
       return true;
     }
     return false;
