@@ -1,0 +1,38 @@
+.chat-box{
+    width: 300px;
+    height: 500px;
+}
+.chat-box-header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px;
+}
+.group-avatar{
+    margin-right: 10px;
+}
+.group-infor{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.group-infor_name{
+
+}
+.group-infor_morefc{
+
+}
+.morefc-list{
+    list-style: none;
+    width: 100%;
+}
+.morefc-list_item{
+    display: inline;
+    padding: 4px;
+    height: 40px;
+    line-height: 40px;
+}
+.morefc-list_item:hover{
+    cursor: pointer;
+}
