@@ -153,6 +153,7 @@ export class ProcessesComponent
     };
     this.columnsGrid = [
       { headerTemplate: this.itemProcessName, width: 300 },
+      { headerTemplate: null, width: 100 },
       { headerTemplate: this.itemOwner, width: 300 },
       { headerTemplate: this.itemVersionNo, width: 100 },
       { headerTemplate: this.itemActivedOn, width: 150 },
@@ -671,6 +672,11 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
+      let userId = '2207130007';
+      let isAdmin = false
+      // let userId = this.user?.userID;
+      // let isAdmin = this.user?.administrator
+
       e.forEach((res) => {
         if (
           res.functionID == 'SYS005' ||
@@ -682,10 +688,44 @@ export class ProcessesComponent
           /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
             true;
         }
-        if(res.functionID === "BPT109"){
-          let userId = this.user?.userID;
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && x.publish) || !this.user?.administrator);
-          if(data.status === "6" || checkRole >=0 ) {
+        if(res.functionID === "BPT109"){        
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.publish) ); 
+          if(data.status === "6" || (checkRole >=0 && !isAdmin)) {
+            res.disabled = true;
+          }
+        }
+        if(res.functionID === "SYS04"){ // copy va them
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.create) ); 
+          if(checkRole >=0 && !isAdmin) {
+            res.disabled = true;
+          }
+        }
+        if(res.functionID === "SYS03" || res.functionID === 'BPT102'){ // sua
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.update)); 
+          if(checkRole >=0 && !isAdmin) {
+            res.disabled = true;
+          }
+        }
+        if(res.functionID === "SYS02"){ // xoa
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.edit) ); 
+          if(checkRole >=0 && !isAdmin) {
+            res.disabled = true;
+          }
+        }
+        if(res.functionID === "BPT101" || res.functionID === "BPT107"){ // xem va quan ly phien ban
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.read)); 
+          if(checkRole >=0 && !isAdmin) {
+            res.disabled = true;
+          }
+        }
+        if(res.functionID === "BPT105"){ //chia se
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && !x.share)); 
+          if(checkRole >=0 && !isAdmin) {
+            res.disabled = true;
+          }
+        }
+        if(res.functionID === "BPT108" || res.functionID === "BPT103"){ //phan quyen va them phien ban
+          if(data?.Owner != userId  && !isAdmin) {
             res.disabled = true;
           }
         }
@@ -714,37 +754,44 @@ export class ProcessesComponent
     // let url = 'bp/processstep/BPT11';
     // this.codxService.navigate('', url, { processID: data.recID });
     //view popup
-    let obj = {
-      moreFunc: moreFunc,
-      data: data,
-      formModel: this.view.formModel,
-    };
 
-    let dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    dialogModel.zIndex = 999;
-    var dialog = this.callfc.openForm(
-      PopupViewDetailProcessesComponent,
-      '',
-      this.widthWin,
-      this.heightWin,
-      '',
-      obj,
-      '',
-      dialogModel
-    );
-
-    dialog.closed.subscribe((e) => {
-      if (e && data.recID) {
-        this.bpService.getProcessesByID(data.recID).subscribe((process) => {
-          if (process) {
-            this.view.dataService.update(process).subscribe();
-            this.detectorRef.detectChanges();
-          }
-
-        });
-      }
-    });
+    let userId = this.user?.userID;   
+    let isAdmin = this.user?.administrator 
+    let check = data?.permissions.findIndex(x => x.read && x.objectID === userId);
+    if(check >= 0  || isAdmin){ 
+      let obj = {
+        moreFunc: moreFunc,
+        data: data,
+        formModel: this.view.formModel,
+      };
+  
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
+      var dialog = this.callfc.openForm(
+        PopupViewDetailProcessesComponent,
+        '',
+        this.widthWin,
+        this.heightWin,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+  
+      dialog.closed.subscribe((e) => {
+        if (e && data.recID) {
+          this.bpService.getProcessesByID(data.recID).subscribe((process) => {
+            if (process) {
+              this.view.dataService.update(process).subscribe();
+              this.detectorRef.detectChanges();
+            }
+  
+          });
+        }
+      });
+    }
+    
   }
 
   approval($event) { }
@@ -816,6 +863,17 @@ export class ProcessesComponent
         this.detectorRef.detectChanges();
       }
     })
+  }
+  checkPermission(data = []){    
+    // let userId = this.user?.userID;   
+    // let isAdmin = this.user?.administrator 
+    let isAdmin = false;
+    let userId = '2207130007';
+    let check = data.findIndex(x => x.read && x.objectID === userId);
+    if(check >= 0  || isAdmin){ // neu co quyen xem hoac admin 
+      return true;
+    }
+    return false;
   }
 
 }
