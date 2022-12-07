@@ -68,6 +68,7 @@ export class PopupAddProcessStepsComponent
   crrIndex = 0;
   gridViewSetup: any;
   recIDCopied: any;
+  lockParentId = false
 
   constructor(
     private inject: Injector,
@@ -89,6 +90,9 @@ export class PopupAddProcessStepsComponent
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
     this.recIDCopied = dt?.data[4]
+    if(this.processSteps.parentID && this.action=='add'){
+      this.lockParentId = true;
+    }
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
