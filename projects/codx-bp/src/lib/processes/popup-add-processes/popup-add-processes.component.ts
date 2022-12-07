@@ -51,6 +51,8 @@ export class PopupAddProcessesComponent implements OnInit {
   AttachmentsOld:any;
   processOldCopy:any;
   flowChart: any
+  isCoppyKeyValue:any = '';
+  isAcceptEdit: any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -88,7 +90,7 @@ export class PopupAddProcessesComponent implements OnInit {
         }
       });
     if (this.action === 'add' || this.action === 'copy')
-      this.valueOwner(this.process.owner);
+      this.isAddPermission(this.process.owner);
     this.processOldCopy=dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
     this.phasesOld = this.processOldCopy?.phasesOld;
@@ -97,8 +99,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.isAddPermission(this.process.owner);
+    this.acceptEdit();
     if(this.action==='add' || this.action ==='copy'){
       this.isDisable=true;
     }
@@ -124,11 +125,13 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process.activities = this.action == 'copy'?this.ActivitiesOld:0;
       if(this.action == 'copy'){
         this.process.attachments = this.isCoppyFile?this.AttachmentsOld:0;
+        this.isCoppyKeyValue= this.isCoppyFile?'copyFile':'copyDefault';
+
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      let isCoppyFileValue= this.isCoppyFile?'copyFile':'copyDefault';
-      data = [this.process,isCoppyFileValue,this.idSetValueOld];
+
+      data = [this.process,this.isCoppyKeyValue??'',this.idSetValueOld];
     } else if (this.action == 'edit') {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
@@ -295,37 +298,37 @@ export class PopupAddProcessesComponent implements OnInit {
 
   addPermission(id) {
     if (id != null) {
-      this.valueOwner(id);
+      this.isAddPermission(id);
     }
   }
 
-  valueOwner(id) {
-    this.api
-      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
-      .subscribe((res) => {
-        if (res) {
-          this.perms = [];
-          let emp = res;
-          var tmpPermission = new BP_ProcessPermissions();
-          tmpPermission.objectID = emp?.userID;
-          tmpPermission.objectName = emp?.userName;
-          tmpPermission.objectType = '1';
-          tmpPermission.read = true;
-          tmpPermission.share = true;
-          tmpPermission.full = true;
-          tmpPermission.delete = true;
-          tmpPermission.update = true;
-          tmpPermission.upload = true;
-          tmpPermission.assign = true;
-          tmpPermission.download = true;
-          tmpPermission.memberType = '0';
-          tmpPermission.autoCreate = true;
-          this.perms.push(tmpPermission);
+  // valueOwner(id) {
+  //   this.api
+  //     .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         this.perms = [];
+  //         let emp = res;
+  //         var tmpPermission = new BP_ProcessPermissions();
+  //         tmpPermission.objectID = emp?.userID;
+  //         tmpPermission.objectName = emp?.userName;
+  //         tmpPermission.objectType = '1';
+  //         tmpPermission.read = true;
+  //         tmpPermission.share = true;
+  //         tmpPermission.full = true;
+  //         tmpPermission.delete = true;
+  //         tmpPermission.update = true;
+  //         tmpPermission.upload = true;
+  //         tmpPermission.assign = true;
+  //         tmpPermission.download = true;
+  //         tmpPermission.memberType = '0';
+  //         tmpPermission.autoCreate = true;
+  //         this.perms.push(tmpPermission);
 
-          this.process.permissions = this.perms;
-        }
-      });
-  }
+  //         this.process.permissions = this.perms;
+  //       }
+  //     });
+  // }
 
   addFile(e) {
     this.attachment.uploadFile();
@@ -393,4 +396,17 @@ export class PopupAddProcessesComponent implements OnInit {
   //     }
   //   });
   // }
+
+  acceptEdit() {
+    if(this.user.administrator){
+      this.isAcceptEdit=true;
+    }
+    else if (this.checkAdminOfBP(this.user.id)) {
+      this.isAcceptEdit=true;
+    }
+    else {
+      this.isAcceptEdit=false;
+    }
+
+  }
 }
