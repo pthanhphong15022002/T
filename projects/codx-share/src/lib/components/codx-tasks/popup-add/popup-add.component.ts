@@ -1159,6 +1159,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approveBy;
     this.param.ApproveControl = taskGroup.approveControl;
     this.param.AutoCompleted = taskGroup.autoCompleted;
     this.param.ConfirmControl = taskGroup.confirmControl;

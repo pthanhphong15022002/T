@@ -9,7 +9,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ButtonModel, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { PopupApprovalComponent } from './popup-approval/popup-approval.component';
 
 @Component({
   selector: 'lib-aprpermission',
@@ -24,6 +25,7 @@ export class AprpermissionComponent
   views: Array<ViewModel> = [];
   button?: ButtonModel;
   moreFuncs: Array<ButtonModel> = [];
+  dialog!: DialogRef;
   columnsGrid = [];
   lstPermissions = [];
   popoverList: any;
@@ -56,12 +58,12 @@ export class AprpermissionComponent
     };
     this.columnsGrid = [
       { headerTemplate: this.itemProcessName, width: 300 },
-      { headerTemplate: this.itemOwner, width: 250 },
-      { headerTemplate: this.itemCreatedOn, width: 250 },
-      { headerTemplate: this.itemPermissions, width: 250 },
-      { headerTemplate: this.itemDescription, width: 250 },
+      { headerTemplate: this.itemOwner, width: 200 },
+      { headerTemplate: this.itemCreatedOn, width: 150 },
+      { headerTemplate: this.itemPermissions, width: 150 },
+      { headerTemplate: this.itemDescription, width: 150 },
       { field: '', headerText: '', width: 100 },
-      { field: '', headerText: '', width: 100 },
+      { field: '', headerText: '', width: 50 },
     ];
   }
 
@@ -149,7 +151,21 @@ export class AprpermissionComponent
     // }
   }
 
-  permission($event) {}
+  permission(data) {
+    this.dialog = this.callfc.openForm(
+      PopupApprovalComponent,
+      '',
+      500,
+      350,
+      '',
+      data
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+
+      }
+    });
+  }
 
   clickMF(e: any, data?: any) {}
 }

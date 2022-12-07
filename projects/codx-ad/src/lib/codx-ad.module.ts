@@ -36,7 +36,6 @@ import { SharedModule } from '@shared/shared.module';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
-import { AsideroledetailComponent } from './Roles/asideroledetail/asideroledetail.component';
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
@@ -79,6 +78,7 @@ export const routes: Routes = [
       {
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
+        data: { noReuse: true },
       },
       {
         path: 'systemsetting/:funcID',
@@ -105,7 +105,6 @@ const T_Component: Type<any>[] = [
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
-  AsideroledetailComponent,
   AddUserGroupsComponent,
   SystemsettingsComponent,
   NoSubAsideComponent,

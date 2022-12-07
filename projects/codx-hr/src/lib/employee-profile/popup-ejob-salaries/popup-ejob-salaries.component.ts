@@ -30,7 +30,6 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
-  ;
 
   constructor(
     private injector: Injector,
