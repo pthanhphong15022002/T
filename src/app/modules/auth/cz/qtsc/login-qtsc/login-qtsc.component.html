@@ -6,65 +6,10 @@
         <div class="login-left w-100 ps-9 pe-6">
           <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start py-6">
-              <div class="fw-bolder fs-title ms-5" style="width: 85%">
+              <div class="fw-bolder fs-title ms-5" style="width:85% ;">
                 <codx-label fiedName="Title" formModel=""
                   default="CỔNG THÔNG TIN QUẢN LÝ ĐIỀU HÀNH KHU CÔNG VIÊN PHẦN MỀM QUANG TRUNG"></codx-label>
               </div>
-            </div>
-            <div class="d-flex w-100 my-3">
-              <img src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
-            </div>
-            <!--begin: Aside footer for desktop-->
-            <div class="company-info ms-5">
-              <div class="company-name fw-bold fs-5 text-danger">
-                CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN CÔNG VIÊN PHẦN MỀM QUANG
-                TRUNG
-              </div>
-              <div class="my-1 fw-bold">Phòng Hành chính Quản trị</div>
-              <div class="company-address">
-                <i class="fa fa-circle fs-10 text-danger me-2"></i> Tòa nhà QTSC
-                Building 1, Khu Công viên phần mềm Quang Trung, P.Tân Chánh Hiệp,
-                Q.12, TP.HCM, Việt Nam
-              </div>
-              <div class="company-tel text-gray-600">
-                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">T:
-                  </span>(84-28) 3715
-                  8888<span class="splitter">|</span></span>
-                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">F:
-                  </span>(84-28) 3715
-                  5985<span class="splitter">|</span></span>
-                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">E:
-                  </span><a href="mailto:qtsc@qtsc.com.vn">qtsc@qtsc.com.vn</a><span class="splitter">|</span></span>
-                <span><i class="fa fa-circle fs-10 text-danger me-2"></i><span class="fs-7 fw-bold text-danger">W:
-                  </span><a href="www.qtsc.com.vn"
-                    title="Công ty TNHH Một Thành Viên Phát Triển Công Viên Phần Mềm Quang Trung">www.qtsc.com.vn</a></span>
-              </div>
-            </div>
-            <!--end: Aside footer for desktop-->
-          </div>
-        </div>
-        <!--begin::Content-->
-
-        <div class="login-right">
-          <!--begin::Content body-->
-          <div class="d-flex flex-column">
-            <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="my-9" alt="" />
-            </div>
-
-            <div class="login-signin text-dark">
-              <!--begin::Form-->
-              <form class="form fv-plugins-bootstrap fv-plugins-framework" method="post" (ngSubmit)="submit()"
-                [formGroup]="loginForm" class="form fv-plugins-bootstrap fv-plugins-framework" novalidate="novalidate">
-                <div class="form-group">
-                  <div class="input-icon">
-                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-user.png" />
-                    <input
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      type="text" field="email" placeholder="Nhập tài khoản hoặc email" formControlName="email"
-                      style="width: 100%" />
-                  </div>
-                </div>
             </div>
             <div class="d-flex w-100 my-3">
               <img src="/assets/codx/bg/bgloginQTSC.png" alt="" />
@@ -124,40 +69,44 @@
                   </div>
                 </div>
 
-                <div class="form-group">
-                  <div class="input-icon">
-                    <img class="ic-lock" src="/assets/cz/qtsc/bg/ic-lock.png" />
-                    <input
-                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                      type="password" field="Password" placeholder="Mật khẩu" formControlName="password"
-                      style="width: 100%" (valueChange)="valueChange($event)" />
-                  </div>
+
+                <div class="form-group mb-5 fv-plugins-icon-container form-group-pass">
+                  <!-- <label class="fw-bold">
+                  <codx-label fiedName="Password" formModel="" default="Mật khẩu"></codx-label>
+                </label> -->
+                  <codx-input type="password" field="Password" placeholder="Mật khẩu" formControlName="password"
+                    [class]="'border-0'" (valueChange)="valueChange($event)">
+                  </codx-input>
                 </div>
+
                 <div class="d-flex justify-content-between mt-3 mb-9 px-2">
-                  <span class="text-danger"></span>
+                  <span class="text-danger">Ghi nhớ</span>
                   <a (click)="forgotPass()" tabindex="-1" class="link-dark text-danger text-decoration-none">
                     <codx-label fiedName="ForgotPassword" formModel="" default="Quên mật khẩu?"></codx-label>
                   </a>
                 </div>
                 <div class="mb-5 d-flex justify-content-center">
                   <button type="submit" class="btn-login px-6 py-3">
-                    {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
+                    {{ "Đăng nhập " | lang: "Login":"btnLogin" | async }}
                   </button>
                 </div>
 
                 <div class="login-link mt-9">
                   <div class="login-link-cont">
                     <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/f.png" />
+                      <img src="/assets/codx/bg/f.png">
                     </a>
                     <a href="https://twitter.com/QTSC" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/t.png" />
+                      <img src="/assets/codx/bg/t.png">
                     </a>
                     <a href="https://www.linkedin.com/company/quality-tech-solution-complex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/i.png" />
+                      <img src="/assets/codx/bg/i.png">
                     </a>
                     <a href="https://www.youtube.com/QualityTechSolutionComplex" target="_blank">
-                      <img src="/assets/cz/qtsc/bg/y.png" />
+                      <img src="/assets/codx/bg/y.png">
+                    </a>
+                    <a href="">
+                      <img src="/assets/codx/bg/b.png">
                     </a>
                   </div>
                 </div>
@@ -178,7 +127,7 @@
       *ngIf="mode == 'changePass'">
       <div class="login login-signin-on d-flex flex-row-fluid">
         <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
-          style="background-image: url(/assets/cz/qtsc/bg/bg-login.png)">
+          style="background-image: url(/assets/codx/bg/bg-login.png)">
           <div class="login-container">
             <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
               <div
@@ -248,9 +197,7 @@
                         <div class="form-group d-grid gap-2 mb-5">
                           <button type="submit" id="btn-signin" class="btn btn-primary fw-bold px-6 py-3"
                             [disabled]="changePassForm.invalid">
-                            {{
-                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
-                            }}
+                            {{ "Đăng nhập " | lang: "Login":"btnLogin" | async }}
                           </button>
                         </div>
                         <input type="hidden" />
@@ -270,12 +217,12 @@
                 </div>
               </div>
               <div class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7">
-                <img src="/assets/cz/qtsc/bg/Line-login.png" class="h-100" alt="" />
+                <img src="/assets/codx/bg/Line-login.png" class="h-100" alt="" />
               </div>
               <div class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7">
                 <div class="d-flex flex-column-fluid flex-lg-center">
                   <div class="d-flex flex-column justify-content-center">
-                    <img src="/assets/cz/qtsc/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
+                    <img src="/assets/codx/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
                     <p class="fw-bold fs-4 text-dark align-items-center">
                       Trải nghiệm quản lý doanh nghiệp <br />toàn diện cùng CoDX
                       với 1 tháng<br />
@@ -295,7 +242,7 @@
       *ngIf="mode == 'firstLogin'">
       <div class="login login-signin-on d-flex flex-row-fluid">
         <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid"
-          style="background-image: url(/assets/cz/qtsc/bg/bg-login.png)">
+          style="background-image: url(/assets/codx/bg/bg-login.png)">
           <div class="login-container">
             <div class="d-flex flex-column flex-lg-row bg-white rounded-3 p-15">
               <div
@@ -352,9 +299,7 @@
                         <div class="form-group d-grid gap-2 mb-5">
                           <button type="submit" id="btn-signin" class="btn btn-primary fw-bold px-6 py-3"
                             [disabled]="firstLoginForm.invalid">
-                            {{
-                            "Đăng nhập " | lang : "Login" : "btnLogin" | async
-                            }}
+                            {{ "Đăng nhập " | lang: "Login":"btnLogin" | async }}
                           </button>
                         </div>
                         <input type="hidden" />
@@ -374,12 +319,12 @@
                 </div>
               </div>
               <div class="order-2 order-lg-2 flex-column-auto d-flex flex-column p-7">
-                <img src="/assets/cz/qtsc/bg/Line-login.png" class="h-100" alt="" />
+                <img src="/assets/codx/bg/Line-login.png" class="h-100" alt="" />
               </div>
               <div class="login-image order-1 order-lg-2 flex-column-auto flex-lg-row-fluid d-flex flex-column p-7">
                 <div class="d-flex flex-column-fluid flex-lg-center">
                   <div class="d-flex flex-column justify-content-center">
-                    <img src="/assets/cz/qtsc/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
+                    <img src="/assets/codx/bg/login-right.svg" class="max-h-250px mb-7" alt="" />
                     <p class="fw-bold fs-4 text-dark align-items-center">
                       Trải nghiệm quản lý doanh nghiệp <br />toàn diện cùng CoDX
                       với 1 tháng<br />
@@ -392,7 +337,6 @@
           </div>
         </div>
       </div>
-      <!--end first login-->
     </div>
     <!--end first login-->
   </div>
