@@ -78,14 +78,11 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.signalRSV.signalREmit.subscribe((res: any) => {
-      if (res) {
-        console.log('openGroup: ', res);
-        if (this.codxListView) {
-          (this.codxListView.dataService as CRUDService)
-            .update(res)
-            .subscribe();
-        }
+    this.signalRSV.signalGroup.subscribe((res: any) => {
+      if (res) 
+      {
+        console.log('signalGroup: ', res);
+        (this.codxListView.dataService as CRUDService).add(res).subscribe();
       }
     });
   }
@@ -93,7 +90,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   search(event: any) {}
   // click group chat
   clickGroupChat(group: any) {
-    if (group) {
+    if (group) 
+    {
       this.api
         .execSv(
           'WP',
@@ -104,12 +102,16 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         )
         .subscribe((res: any) => {
           if (res) {
-            this.signalRSV.sendData(res, 'OpenGroupChat');
           }
         });
     }
   }
+  // open group chat
+  openGroupChat(group:any){
+    if(group){
 
+    }
+  }
   // open popup add group chat
   openPopupAddGroup() {
     if (this.function) {
@@ -135,10 +137,11 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       popup.closed.subscribe((res: any) => {
         this.isOpen = true;
         this.isOpenChange.emit(this.isOpen);
-        if (res.event) {
-          let group = res.event;
-          (this.codxListView.dataService as CRUDService).add(group).subscribe();
-        }
+        // if (res.event) 
+        // {
+        //   let group = res.event;
+        //   (this.codxListView.dataService as CRUDService).add(group).subscribe();
+        // }
       });
     }
   }
