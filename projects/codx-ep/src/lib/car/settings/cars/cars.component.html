@@ -1,7 +1,11 @@
 <codx-views #view [funcID]="funcID" [service]="service" [assemblyName]="assemblyName" [entityName]="entityName"
-  [views]="views" [button]="buttons" (buttonClick)="click($event)" [moreFuncs]="moreFuncs" [idField]="idField"
+  [views]="views" [button]="buttons" (buttonClick)="click($event)"  [idField]="idField"
   [className]="className" [method]="method" (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid">
 </codx-views>
+<ng-template #itemAction let-data>
+  <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+  </codx-mfunc>
+</ng-template>
 <ng-template #resourceNameCol let-data>
   <div class="d-flex flex-row align-items-center">
     <codx-img class="me-4" [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'"
@@ -81,17 +85,16 @@
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>
-  <div class="d-flex has-action-menu align-items-center">
+  <div class="d-flex  align-items-center">
     <codx-img [width]="25" [objectId]="data.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data.ownerName }}</div>
     </div>
-    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
-  </div>
+    </div> 
 </ng-template>
 
 <ng-template #linkCol let-data>
-  <div *ngIf="data.linkID" class="d-flex has-action-menu align-items-center">
+  <div *ngIf="data.linkID" class="d-flex align-items-center">
     <codx-img [objectId]="data.driverRecID" [objectName]="data.driverName" imageType="circle" [width]="25"
       [objectType]="'EP_Resources'"></codx-img>
     <div class="ms-2">

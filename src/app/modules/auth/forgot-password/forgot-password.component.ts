@@ -20,7 +20,7 @@ export class ForgotPasswordComponent implements OnInit {
   errorState: ErrorStates = ErrorStates.NotSubmitted;
   errorStates = ErrorStates;
   mode = '';
-  loginTmp: any;
+  layoutCZ: any;
 
   // private fields
   constructor(
@@ -28,7 +28,7 @@ export class ForgotPasswordComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService
   ) {
-    this.loginTmp = environment.loginTmp;
+    this.layoutCZ = environment.layoutCZ;
   }
 
   ngOnInit(): void {

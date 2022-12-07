@@ -33,7 +33,6 @@ import {
 } from 'ngx-extended-pdf-viewer';
 import {
   CodxEsService,
-  UrlUpload,
 } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
@@ -276,7 +275,7 @@ export class PdfComponent
                 fileName: file.fileName,
                 fileRefNum: sf.refNo,
                 fileID: file.fileID,
-                fileUrl: environment.urlUpload + "/" + res.urls[index],
+                fileUrl: environment.urlUpload + '/' + res.urls[index],
                 signers: res?.approvers,
                 areas: file.areas,
               });
@@ -308,7 +307,7 @@ export class PdfComponent
               this.signerInfo = res.approvers[0];
             }
             this.curFileID = sf?.files[0]?.fileID;
-            this.curFileUrl = environment.urlUpload + "/" + res.urls[0];
+            this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? ''
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
@@ -1353,7 +1352,7 @@ export class PdfComponent
     );
     popupSignature.closed.subscribe((res) => {
       if (res?.event[0]) {
-        area.labelValue = UrlUpload + '/' + res.event[0].pathDisk;
+        area.labelValue = environment.urlUpload + '/' + res.event[0].pathDisk;
         this.detectorRef.detectChanges();
         this.changeAnnotPro(area.labelType, area.recID, area.labelValue);
       }
@@ -1462,11 +1461,11 @@ export class PdfComponent
     // switch (type.toString()) {
     let tmpName: tmpAreaName = JSON.parse(this.curSelectedArea?.attrs?.name);
     let textContent = '';
+    let curArea = this.lstAreas.find((area) => area.recID == recID);
 
     if (this.imgConfig.includes(type)) {
       if (!newUrl) return;
       else {
-        let curArea = this.lstAreas.find((area) => area.recID == recID);
         curArea.labelValue = newUrl;
         let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1);
         let curImgEle = document.getElementById(recID) as HTMLImageElement;
@@ -1544,7 +1543,7 @@ export class PdfComponent
       });
       this.curSelectedArea.destroy();
       this.curSelectedArea = textArea;
-      let curLayer = this.lstLayer.get(tmpName.PageNumber); //xoa cho nay ne
+      let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1); //xoa cho nay ne
 
       this.tr?.nodes([this.curSelectedArea]);
       curLayer.add(this.curSelectedArea);
@@ -1577,7 +1576,7 @@ export class PdfComponent
         left: x / this.xScale,
         width: w / this.xScale,
         height: h / this.yScale,
-        pageNumber: tmpName.PageNumber,
+        pageNumber: curArea?.location.pageNumber,
       },
       stepNo: tmpName.StepNo,
       fontStyle: this.imgConfig.includes(type) ? '' : this.curAnnotFontStyle,
@@ -1638,17 +1637,17 @@ export class PdfComponent
         let img = res.event[0];
         switch (img?.referType) {
           case 'S1': // Ky chinh
-            this.signerInfo.signature1 = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature1 = environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.signature1 ?? '';
             break;
           case 'S2': //Ky nhay
-            this.signerInfo.signature2 = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature2 = environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.signature2 ?? '';
             break;
           case 'S3': //Con dau
-            this.signerInfo.stamp = UrlUpload + '/' + img?.pathDisk;
+            this.signerInfo.stamp = environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.stamp ?? '';
             break;

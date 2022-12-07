@@ -197,7 +197,18 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             }
           });
       }
-    });
+    })
+     this.cache
+      .gridViewSetup(
+        'TaskGoals',
+        "grvTaskGoals"
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.planholderTaskGoal = res["Memo"]?.description;
+        }
+      });
+    ;
     // this.functionID = this.dialog.formModel.funcID;
     // this.cache
     //   .gridViewSetup(
@@ -993,46 +1004,52 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   //#endregion
 
   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+  // loadDataReferences() {
+  //   if (this.task.category == '1') {
+  //     this.dataReferences = [];
+  //     return;
+  //   }
+  //   this.dataReferences = [];
+  //   if (this.task.category == '2') {
+  //     this.api
+  //       .execSv<any>(
+  //         'TM',
+  //         'TM',
+  //         'TaskBusiness',
+  //         'GetTaskParentByTaskIDAsync',
+  //         this.task.taskID
+  //       )
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           var ref = new tmpReferences();
+  //           ref.recIDReferences = res.recID;
+  //           ref.refType = 'TM_Tasks';
+  //           ref.createdOn = res.createdOn;
+  //           ref.memo = res.taskName;
+  //           ref.createdBy = res.createdBy;
+  //           var taskParent = res;
+  //           this.api
+  //             .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+  //               res.createdBy,
+  //             ])
+  //             .subscribe((user) => {
+  //               if (user) {
+  //                 ref.createByName = user.userName;
+  //                 this.dataReferences.push(ref);
+  //                 this.getReferencesByCategory3(taskParent);
+  //               }
+  //             });
+  //         }
+  //       });
+  //   } else if (this.task.category == '3') {
+  //     this.getReferencesByCategory3(this.task);
+  //   }
+  // }
+  //referen new
   loadDataReferences() {
-    if (this.task.category == '1') {
-      this.dataReferences = [];
-      return;
-    }
     this.dataReferences = [];
-    if (this.task.category == '2') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'TaskBusiness',
-          'GetTaskParentByTaskIDAsync',
-          this.task.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            var ref = new tmpReferences();
-            ref.recIDReferences = res.recID;
-            ref.refType = 'TM_Tasks';
-            ref.createdOn = res.createdOn;
-            ref.memo = res.taskName;
-            ref.createdBy = res.createdBy;
-            var taskParent = res;
-            this.api
-              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                res.createdBy,
-              ])
-              .subscribe((user) => {
-                if (user) {
-                  ref.createByName = user.userName;
-                  this.dataReferences.push(ref);
-                  this.getReferencesByCategory3(taskParent);
-                }
-              });
-          }
-        });
-    } else if (this.task.category == '3') {
+    if (this.task.refID)
       this.getReferencesByCategory3(this.task);
-    }
   }
 
   getReferencesByCategory3(task) {
@@ -1142,6 +1159,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approveBy;
     this.param.ApproveControl = taskGroup.approveControl;
     this.param.AutoCompleted = taskGroup.autoCompleted;
     this.param.ConfirmControl = taskGroup.confirmControl;

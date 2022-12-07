@@ -400,7 +400,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
     //NagetivePhysical = 0: khong am kho
-
+    debugger;
     if (tmpResource.availableQty == 0) {
       if (this.nagetivePhysical == '0') {
         //không add
@@ -418,7 +418,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
-      this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }

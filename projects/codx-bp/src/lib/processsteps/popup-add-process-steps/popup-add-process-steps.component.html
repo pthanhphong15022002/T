@@ -136,7 +136,7 @@
       <ng-container *ngIf="stepType == 'M' || stepType == 'Q'">
         <div class="form-group">
           <codx-label
-            fiedName=""
+            fiedName="StepName"
             [formModel]="form.formModel"
             [default]="stepType == 'M' ? 'Sự kiện' : 'Tiêu đề'">
           </codx-label>
@@ -314,7 +314,7 @@
             default="Vai trò thực hiện">
           </codx-label>
           <div class="owners">
-            <!-- <codx-input
+            <codx-input
               type="Share"
               [refValue]="vllShare"
               field="Owners"
@@ -324,17 +324,6 @@
               (valueChange)="eventApply($event)"
               [disabled]="readOnly">
               [class]="'click-owner'"
-            </codx-input> -->
-            <!-- gridViewSetup['Owners']['referedType']
-            gridViewSetup['Owners']['referedValue'] -->
-            <codx-input 
-              type="Combobox" 
-              name="combobox" 
-              [refValue]="gridViewSetup['Owners']['referedType']? gridViewSetup['Owners']['referedType']:'Share_Users'"
-              multiple="true" 
-              [showInput]="false" 
-              [refType]="gridViewSetup['Owners']['referedValue']? gridViewSetup['Owners']['referedValue'] : 'P'"
-              (valueChange)="eventApply($event)">
             </codx-input>
             <span class="owners-text">{{gridViewSetup['Owners']?.headerText ??
               'Owners'}}</span>

@@ -70,6 +70,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   user: UserModel;
   grvStationery;
   model?: FormModel;
+  totalStationery = 0;
   groupStationery;
   radioGroupCheck: boolean;
   radioPersonalCheck: boolean;
@@ -79,7 +80,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   title: '';
   dialogAddBookingStationery: FormGroup;
   returnData = [];
-  nagetivePhysical: string = '';
+  negativePhysical: string = '';
 
   constructor(
     private injector: Injector,
@@ -110,19 +111,28 @@ export class PopupRequestStationeryComponent extends UIComponent {
   onInit(): void {
     this.user = this.auth.get();
 
-    this.epService.getStationeryGroup().subscribe((res) => {
-      this.groupStationery = res;
+    this.epService.getStationeryGroup().subscribe((res: any) => {
+      if (res) {
+        this.groupStationery = res;
+        const initialValue = 0;
+        const sumWithInitial = res.reduce(
+          (accumulator, currentValue) =>
+            accumulator + parseInt(currentValue.qtyItems),
+          initialValue
+        );
+        this.totalStationery = sumWithInitial;
+      }
     });
 
     this.epService
-      .getParams('EPParameters', 'NagetivePhysical')
+      .getParams('EPParameters', 'NegativePhysical')
       .subscribe((res: any) => {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
-        this.nagetivePhysical = json.NagetivePhysical;
+        this.negativePhysical = json.NegativePhysical;
       });
 
-    this.cache.functionList('EPS24').subscribe((res) => {
+    this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
         this.cache
           .gridViewSetup(res.formName, res.gridViewName)
@@ -148,6 +158,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.radioGroupCheck = true;
       }
     }
+
+    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit() {
@@ -403,10 +415,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
-    //NagetivePhysical = 0: khong am kho
+    //negativePhysical = 0: khong am kho
 
     if (tmpResource.availableQty == 0) {
-      if (this.nagetivePhysical == '0') {
+      if (this.negativePhysical == '0') {
         //không add
         this.notificationsService.notifyCode('EP013');
         return;
@@ -422,7 +434,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     } else {
       tmpResource.quantity = 1;
       this.cart.push(tmpResource);
-      this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }
@@ -456,6 +467,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
   click(data) {}
 
   clickMF($event, data) {}
+
+  search(e) {
+    this.listView.dataService.search(e).subscribe();
+    this.detectorRef.detectChanges();
+  }
 
   itemByRecID(index, item) {
     return item.recID;
