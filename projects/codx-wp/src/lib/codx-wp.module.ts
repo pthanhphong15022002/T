@@ -20,10 +20,6 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { ApproveDetailComponent } from './approve/approve-detail/approve-detail.component';
 import { ApproveComponent } from './approve/approve.component';
 import { ChatListComponent } from './chat/chat-list/chat-list.component';
-import { ChatBoxComponent } from './chatting/chatbox/chat-box.component';
-import { ChattingComponent } from './chatting/chatting.component';
-import { ListChatBoxComponent } from './chatting/list-chat-box/list-chat-box.component';
-import { PopupGroupComponent } from './chatting/popup-group/popup-group.component';
 import { CodxWpComponent } from './codx-wp.component';
 import { CompanyInforComponent } from './company-infor/company-infor.component';
 import { CompanyEditComponent } from './company-infor/popup-edit/company-edit/company-edit.component';
@@ -49,12 +45,11 @@ import { LayoutComponent } from './_layout/layout.component';
 import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
-import { ChatVoteComponent } from './chatting/chat-vote/chat-vote.component';
 import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
-import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
 import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
 import { LayoutChatComponent } from './layout-chat/layout-chat.component';
+import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 
 
 export const routes: Routes = [
@@ -65,16 +60,6 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: HomeComponent,
-      },
-    ],
-  },
-  {
-    path: 'chat',
-    component: LayoutChatComponent,
-    children: [
-      {
-        path: ':funcID',
-        component: ChattingComponent,
       },
     ],
   },
@@ -188,14 +173,8 @@ const Component: Type<any>[] =
     PopupSearchComponent,
     PopupSearchPostComponent,
     ChatListComponent,
-    ChatBoxComponent,
-    ListChatBoxComponent,
-    PopupGroupComponent,
     CodxChatComponent,
-    ChattingComponent, 
     LayoutComponent,
-    ChatVoteComponent,
-    PopupViewImageComponent,
     PopupAddPostComponent,
     PopupAddGroupComponent,
     LayoutChatComponent,

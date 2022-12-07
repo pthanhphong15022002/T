@@ -210,12 +210,11 @@ export class EmployeesComponent extends UIComponent {
     return moment(value).fromNow(true);
   }
 
-  edit(data?) {
+  edit(data:any) {
     if (data) 
     {
       this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
+      this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
@@ -236,6 +235,8 @@ export class EmployeesComponent extends UIComponent {
           }
         });
       });
+    }
+    
   }
 
   copy(data) {
