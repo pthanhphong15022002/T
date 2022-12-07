@@ -324,15 +324,15 @@ export class CodxHrService {
       'DeleteEmployeeVisaInfoAsync',
       data
     );
-  }
+    }
 
-  getListVisaByEmployeeID(employeeID: string) {
+  getListVisaByEmployeeID(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmpVisasBusiness',
       'GetListByEmployeeIDAsync',
-      [employeeID]
+      data
     );
   }
 
@@ -645,12 +645,51 @@ export class CodxHrService {
   //#endregion
 
   //region #EExperience
-  GetEmployeeExperienceInfo(data){
+  GetListByEmployeeIDAsync(data){
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EExperiencesBusiness',
-      'GetEmployeeExperienceModelAsync',
+      'GetListByEmployeeIDAsync',
+      data
+    )
+  }
+
+  GetEmployeeExperienceModel(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EExperiencesBusiness',
+      'GetEmployeeExperienceModel'
+    )
+  }
+
+  AddEmployeeExperienceInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EExperiencesBusiness',
+      'AddEmployeeExperienceInfoAsync',
+      data
+    )
+  }
+
+  UpdateEmployeeExperienceInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EExperiencesBusiness',
+      'UpdateEmployeeExperienceInfoAsync',
+      data
+    )
+  }
+
+  DeleteEmployeeExperienceInfo(data){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EExperiencesBusiness',
+      'DeleteEmployeeExperienceInfoAsync',
       data
     )
   }

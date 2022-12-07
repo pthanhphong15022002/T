@@ -1,15 +1,18 @@
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector } from '@angular/core';
+import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
+  CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-evisas',
@@ -28,10 +31,12 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   employId;
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
     private notify: NotificationsService,
+    private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
@@ -94,7 +99,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       this.hrService.AddEmployeeVisaInfo(this.data).subscribe(p => {
         if(p != null){
           this.notify.notifyCode('SYS007')
-          this.dialog.close(p)
+          if(this.listView){
+            (this.listView.dataService as CRUDService).add(p).subscribe();
+          }
+          // this.dialog.close(p)
         }
         else this.notify.notifyCode('DM034')
       });
@@ -103,11 +111,29 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       this.hrService.updateEmployeeVisaInfo(this.data).subscribe(p => {
         if(p == true){
           this.notify.notifyCode('SYS007')
-          this.dialog.close(this.data);
+          if(this.listView){
+            (this.listView.dataService as CRUDService).update(p).subscribe()
+          }
+          // this.dialog.close(this.data);
         }
         else this.notify.notifyCode('DM034')
       });
     }
+    
+  }
+
+  click(data) {
+    console.log(data);
+    this.data = data;
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.data)) 
+    this.actionType ='edit'
+    this.formGroup?.patchValue(this.data);
+    this.cr.detectChanges();
+  }
+
+  afterRenderListView(evt){
+    this.listView = evt;
+    console.log(this.listView);
     
   }
 
