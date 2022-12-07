@@ -138,6 +138,7 @@ export class ProcessesComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.showButtonAdd = this.funcID!='BPT6'
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
