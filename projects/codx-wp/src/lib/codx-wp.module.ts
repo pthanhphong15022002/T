@@ -54,6 +54,7 @@ import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
 import { PopupViewImageComponent } from './chatting/popup-view-image/popup-view-image.component';
 import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
 import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
+import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 
 
 export const routes: Routes = [
@@ -69,7 +70,7 @@ export const routes: Routes = [
   },
   {
     path: 'chat',
-    component: LayoutPortalComponent,
+    component: LayoutChatComponent,
     children: [
       {
         path: ':funcID',
@@ -196,7 +197,9 @@ const Component: Type<any>[] =
     ChatVoteComponent,
     PopupViewImageComponent,
     PopupAddPostComponent,
-    PopupAddGroupComponent
+    PopupAddGroupComponent,
+    LayoutChatComponent,
+    ChatBoxComponent
   ];
 
 @NgModule({

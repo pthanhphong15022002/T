@@ -87,7 +87,6 @@ export class CodxApprovalComponent extends UIComponent implements  OnChanges, Af
  
   ngOnChanges(changes: SimpleChanges): void {}
   onInit(): void {
-    throw new Error('Method not implemented.');
   }
   ngAfterViewInit(): void {
     this.tabControl = [
