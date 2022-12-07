@@ -1,5 +1,14 @@
-<codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer"
-  [data]="process" [dialog]="dialog" [openMore]="true" #form>
+<codx-form
+  [headerText]="title"
+  [subHeader]="subHeader"
+  [formModel]="dialog.formModel"
+  [body]="body"
+  [footer]="footer"
+  [data]="process"
+  [dialog]="dialog"
+  [openMore]="true"
+  #form
+>
   <ng-template #body>
     <div class="form-group">
       <div>
@@ -108,26 +117,31 @@
       </div>
     </div>
     <div class="form-group">
+      <codx-label
+        class="fw-bold fs-6"
+        fiedName="Owner"
+        [formModel]="form.formModel"
+        default="Quản lý qui trình"
+      >
+      </codx-label>
+      <codx-input
+        [Group]="form.formGroup"
+        [formModel]="form.formModel"
+        field="owner"
+        (valueChange)="valueChangeUser($event)"
+      >
+      </codx-input>
+    </div>
 
-            <codx-label
-              class="fw-bold fs-6"
-              fiedName="Owner"
-              [formModel]="form.formModel"
-              default="Quản lý qui trình"
-            >
-            </codx-label>
-            <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="owner"
-            (valueChange)="valueChangeUser($event)"
-          >
-        </codx-input>
-<!--
-        <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="owner" [dataShared]="[]"
-          [showInput]="false" multiple="false">
-        </codx-input> -->
-
+    <div class="form-group">
+      <codx-label
+        class="fw-bold fs-6"
+        name="lblAvatarProcess"
+        [formModel]="form.formModel"
+        default="Hình hiển thị"
+      >
+      </codx-label>
+      <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
     </div>
     <ng-container>
       <div
@@ -194,6 +208,59 @@
         ></codx-label>
       </button>
     </div>
+  </ng-template>
+
+  <ng-template #avatarProcess>
+    <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column" (click)="addAvatar()">
+      <div class="dropzone-msg dz-message needsclick">
+        <ng-container  *ngIf="linkAvatar!=''">
+          <img [src]="linkAvatar" />
+        </ng-container>
+        <ng-container *ngIf="linkAvatar==''" >
+          <div class="dropzone-msg-title mb-2">
+            <i class="icon-image icon-30"></i>
+          </div>
+          <div class="dropzone-msg-title mb-2">      
+            <codx-label
+              name="lblContentAddAvatar"
+              [formModel]="form.formModel"
+              default="Chọn hình ảnh"
+              class="fw-bold"
+            >
+            </codx-label>
+          </div>
+          <span class="dropzone-msg-desc">
+            <codx-label
+              name="lblRequiredAvatar"
+              [formModel]="form.formModel"
+              default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
+              class="fw-bold"
+            ></codx-label>
+          </span>
+        </ng-container>
+     
+      </div>
+    </div>
+
+    <codx-attachment
+      #imageAvatar
+      [objectType]="'BP_Processes'"
+      [objectId]="process?.recID"
+      [hideFolder]="1"
+      [hideImageUpload]="1"
+      [hideImageThumb]="1"
+      [hideUploadBtn]="1"
+      [hideDes]="1"
+      [type]="'inline'"
+      [allowMultiFile]="0"
+      [formModel]="form.formModel"
+      [functionID]="funcID"
+      [isSaveSelected]="1"
+      allowExtensions=".jpg,.png"
+      (fileSave)="fileSaveAvatar($event)"
+      displayThumb="full"
+    >
+    </codx-attachment>
   </ng-template>
 </codx-form>
 
