@@ -130,7 +130,17 @@
               #p="ngbPopover"
               (mouseenter)="showPoppoverDeleteRef(p, i)"
               autoClose="outside"
-              placement="right left top bottom">{{ item }}</span>
+              placement="right left top bottom">
+              <span *ngIf="i != editTodo" (click)="editTodoIndex(i)">{{item}}</span>
+              <input 
+                *ngIf="i === editTodo" 
+                style="margin: 0;"
+                type="text" [value]="item" 
+                (blur)="valueChangeRefrenceItem($event,i)"
+                (keydown.enter)="valueChangeRefrenceItem($event,i)"              
+                autofocus
+                >
+            </span>
           </div>
         </div>
       </ng-container>
