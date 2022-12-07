@@ -12,6 +12,7 @@ import {
   AuthStore,
   NotificationsService,
   ApiHttpService,
+  ImageViewerComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
@@ -24,6 +25,7 @@ import { CodxBpService } from '../../codx-bp.service';
 export class PopupAddProcessesComponent implements OnInit {
   @Input() process = new BP_Processes();
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
 
   data: any;
   dialog: any;
@@ -48,6 +50,7 @@ export class PopupAddProcessesComponent implements OnInit {
   ActivitiesOld:any;
   AttachmentsOld:any;
   processOldCopy:any;
+  flowChart: any
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -177,23 +180,6 @@ export class PopupAddProcessesComponent implements OnInit {
       );
       return;
     }
-    if (this.process.activedOn === null) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
-      );
-      return;
-    }
-    if (this.process.expiredOn === null) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
-      );
-      return;
-    }
-
     // if (!this.process.activedOn) {
     //   this.notiService.notifyCode(
     //     'SYS009',
@@ -210,10 +196,13 @@ export class PopupAddProcessesComponent implements OnInit {
     //   );
     //   return;
     // }
-    if (this.process.activedOn >= this.process.expiredOn) {
-      this.notiService.notifyCode('BP003');
-      return;
+    if (this.process.activedOn && this.process.expiredOn) {
+      if (this.process.activedOn >= this.process.expiredOn) {
+        this.notiService.notifyCode('BP003');
+        return;
+      }
     }
+
     // if (this.process.activedOn && this.process.expiredOn) {
     //   // if (this.isCheckFromToDate(this.process.activedOn)) {
     //   //   this.notiService.notify(
@@ -236,11 +225,10 @@ export class PopupAddProcessesComponent implements OnInit {
     });
     switch (this.action) {
       case 'copy': {
-
         this.notiService.alertCode('BP007').subscribe((x) => {
           if (x.event?.status == 'N') {
             this.isCoppyFile = false;
-            this.isUpdateCreateProcess();
+           this.isUpdateCreateProcess();
           } else if (x.event?.status == 'Y'){
             this.isCoppyFile = true;
             this.isUpdateCreateProcess();

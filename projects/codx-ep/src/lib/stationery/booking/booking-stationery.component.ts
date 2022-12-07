@@ -58,7 +58,7 @@ export class BookingStationeryComponent
   formModel: FormModel;
   itemDetail;
   popupClosed = true;
-  listReason: any[];
+  listReason: any[]= [];
 
   constructor(
     private injector: Injector,
@@ -89,7 +89,6 @@ export class BookingStationeryComponent
     };
     this.codxEpService.getListReason('EP_BookingStationery').subscribe((res:any)=>{
       if(res){
-        this.listReason=[];
         this.listReason=res;
       }        
     }); 
@@ -162,6 +161,33 @@ export class BookingStationeryComponent
     });
   }
   changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID == 'EP8T11') {
+      event.forEach((func) => {
+        if (data.approveStatus == '1') {
+          event.forEach((func) => {
+            if (
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'SYS04' /*MF chép*/
+            ) {
+              func.disabled = false;
+            }
+          });
+        } else {
+          event.forEach((func) => {
+            if (func.functionID == 'SYS04' /*MF chép*/) {
+              func.disabled = false;
+            }
+            if (
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ 
+            ) {
+              func.disabled = true;
+            }
+          });
+        }
+      });
+    }
     if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {
         if (
