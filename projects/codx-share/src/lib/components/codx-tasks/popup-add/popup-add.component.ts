@@ -534,6 +534,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     else this.task.taskType = '1';
     if (this.attachment && this.attachment.fileUploadList.length)
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        debugger;
         if (res) {
           let attachments = Array.isArray(res) ? res.length : 1;
           if (this.action == 'edit') {
