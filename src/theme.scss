@@ -79,8 +79,8 @@
     }
 
 
-    .e-tab-text {
-        color: $title-color !important;
+    .e-tab-wrap:hover .e-tab-text {
+        color: $primary-dark !important;
     }
 
     .menu-state-primary {
@@ -153,7 +153,8 @@
 
     .btn.btn-active-primary:focus:not(.btn-active),
     .btn.btn-active-primary:hover:not(.btn-active),
-    .btn.btn-light-primary:hover {
+    .btn.btn-light-primary:hover,
+    .btn.btn-light-primary:focus:not(.btn-active) {
         border-color: $primary !important;
         background-color: $primary !important;
     }
@@ -177,6 +178,57 @@
 
     .e-listview .e-list-item:hover {
         background-color: $primary-lighter;
+    }
+
+    .nav-pills .nav-link.active {
+        color: $primary-dark;
+        background-color: $primary-lighter;
+    }
+
+    .menu-state-title-primary .menu-item .menu-link.active {
+        color: $primary-light !important;
+    }
+
+    .active [class*=icon-] {
+        color: $primary-dark;
+    }
+
+    /*** boostrap ***/
+    .e-calendar .e-btn.e-today.e-flat.e-primary,
+    .e-calendar .e-css.e-btn.e-today.e-flat.e-primary {
+        background-color: $primary-dark;
+        border-color: $primary-dark;
+    }
+
+    .e-switch-wrapper .e-switch-on,
+    .e-switch-wrapper .e-switch-on {
+        background-color: $primary !important;
+    }
+
+    .e-switch-wrapper .e-switch-inner.e-switch-active,
+    .e-switch-wrapper .e-switch-inner.e-switch-active {
+        background-color: $primary!important ;
+        border-color: $primary !important;
+    }
+
+    .e-switch-wrapper .e-switch-on:hover,
+    .e-switch-wrapper .e-switch-on:hover {
+        background-color: $primary-light !important;
+    }
+
+    .e-switch-wrapper .e-switch-off,
+    .e-switch-wrapper .e-switch-off {
+        background-color: $primary-lighter !important;
+    }
+
+    .e-switch-wrapper:hover .e-switch-off,
+    .e-switch-wrapper .e-switch-off:hover {
+        background-color: $primary-light !important;
+    }
+
+    .menu-state-title-primary .menu-item .menu-link.active {
+        transition: color 0.2s ease, background-color 0.2s ease;
+        color: #3699ff;
     }
 }
 
