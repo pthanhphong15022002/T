@@ -26,7 +26,8 @@
       | async
       ">
       <div class="d-flex flex-column w-100 p-3">
-        <div #processName class="fs-6 fw-bold line-clamp-card"
+        <div class="d-flex justify-content-between">
+          <div #processName class="fs-6 fw-bold line-clamp-card"
           [ngbTooltip]="data.processName"> {{
           data?.processName | formatvalue
           : view.formModel
@@ -36,7 +37,9 @@
           : "grvProcesses"
           | async
           }}</div>
-
+          <span *ngIf="!checkPermission(data?.permissions)" class="icon-security text-primary icon-18"></span>
+        </div>
+       
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
@@ -117,26 +120,7 @@
             | async
             }}</div>
         </div>
-        <!-- <div #processName class="fw-bold line-clamp" [ngbTooltip]="data.processName">
-          {{
-          data.processName | formatvalue
-          : view.formModel
-          : "processName"
-          : processName
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
-        </div> -->
-        <!-- <lib-show-more-less
-        [name]="data.processName"
-        [viewFormModel]="view.formModel"
-        [fieldName]="'processName'"
-        [tmpName]="processName"
-        [customName]="'Processes'"
-        [gridViewName]="'grvProcesses'"
-        >
-      </lib-show-more-less> -->
+    
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
@@ -180,6 +164,9 @@
           </div>
         </div>
       </div>
+    </td>
+    <td class="rowphoto" placement="left"  >  
+      <span  *ngIf="!checkPermission(data?.permissions)" class="icon-security text-primary icon-18"></span>
     </td>
     <td class="rowphoto" placement="left">
       <codx-temp-full cardCss="card-template" [imageWidth]="30"

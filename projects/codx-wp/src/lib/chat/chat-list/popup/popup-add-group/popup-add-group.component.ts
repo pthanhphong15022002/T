@@ -3,6 +3,7 @@ import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthStore, CodxListviewComponent, CRUDService, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
 import { WP_Groups } from 'projects/codx-wp/src/lib/models/WP_Groups.model';
 import { WP_Members } from 'projects/codx-wp/src/lib/models/WP_Members.model';
+import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
 
 @Component({
   selector: 'wp-popup-add-group',
@@ -28,6 +29,7 @@ export class PopupAddGroupComponent implements OnInit {
     private notifiSV:NotificationsService,
     private dt:ChangeDetectorRef,
     private auth: AuthStore,
+    private signalRSV: SignalRService,
     @Optional() dialogData?:DialogData,
     @Optional() dialogRef?:DialogRef,
   )
@@ -127,20 +129,25 @@ export class PopupAddGroupComponent implements OnInit {
   }
   // insert group
   insertGroup(){
-    if(this.user)
+    if(this.group)
     {
-      console.log(this.group);
+      if(this.group.members?.length == 0){
+        this.notifiSV.notify("Vui lòng chọn thành viên");
+        return;
+      }
+      this.group.groupType = "2";
       this.api.execSv("WP","ERM.Business.WP","GroupBusiness","InsertGroupAsync",[this.group])
       .subscribe((res:any[]) =>{
         if(Array.isArray(res) && res[0])
         {
-          let data = res[1];
-          if(data.groupType === "2"){
-            this.codxImg.updateFileDirectReload(this.group.groupID).subscribe();
-          }
-          this.dialogRef.close(data);
+          let group = res[1];
+          this.codxImg.updateFileDirectReload(group.groupID).subscribe();
+          this.notifiSV.notifyCode("CHAT001");
+          this.signalRSV.sendData(group,"CreateGroup");
+          this.dialogRef.close(group);
         }
-        else{
+        else
+        {
           this.dialogRef.close();
           this.notifiSV.notify("Thêm không thành công");
         }

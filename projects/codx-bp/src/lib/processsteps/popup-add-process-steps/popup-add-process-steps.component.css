@@ -22,18 +22,13 @@
 .icon-email {
   color: #747474;
 }
-/* ::ng-deep .e-popup-open{
-    z-index: 1005 !important;
-} */
+::ng-deep .e-toast-top-right{
+    z-index: 10050 !important;
+}
 .owners{
-  background: #dcdedf;
-  padding: 7px;
-  border-radius: 20px;
-  padding-left: 12px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
-.owners .owners-text{
-  margin-left: 10px;
-  color: #767676;
-}
+
+/* codx-toast-container e-lib e-toast e-control e-toast-container e-toast-top-right */

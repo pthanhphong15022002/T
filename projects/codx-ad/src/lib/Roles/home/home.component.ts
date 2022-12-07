@@ -46,6 +46,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
   button?: ButtonModel;
   dialog: DialogRef;
   urlDetailRoles: any;
+  headerText = '';
 
   @ViewChild('templateListView') templateListView!: TemplateRef<any>;
 
@@ -72,7 +73,7 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     };
   }
 
-  ngOnDestroy(): void { }
+  ngOnDestroy(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -98,10 +99,10 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
   }
 
-  openFormEdit(data) {
+  openFormEdit(data, type = 'edit') {
     var obj = {
       role: data,
-      mode: 'edit',
+      mode: type,
     };
 
     let option = new SidebarModel();
@@ -109,25 +110,6 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     option.FormModel = this.view?.formModel;
     option.Width = '550px';
     this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
-  }
-
-  delete(data) {
-    // var t = this;
-    // this.confirmSv
-    //   .confirm("Thông báo", "Bạn có muốn xóa?")
-    //   .then((confirmed) => {
-    //     if (confirmed) {
-    //       this.api
-    //         .call("ERM.Business.AD", "RolesBusiness", "DeleteAsync", [
-    //           data.recID,
-    //         ])
-    //         .subscribe((res) => {
-    //           if (res && res.msgBodyData[0]) {
-    //             t.listRoles.removeHandler(data, "recID");
-    //           }
-    //         });
-    //     }
-    //   });
   }
 
   styleObject(elm): Object {
@@ -152,26 +134,113 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.tempService.changeDatasaveas('1');
   }
 
-  openFormAdd(e) {
+  // openFormAdd(e) {
+  //   this.view.dataService.addNew().subscribe((res: any) => {
+  //     var obj = {
+  //       role: res,
+  //       mode: 'add',
+  //     };
+  //     let option = new SidebarModel();
+  //     option.DataService = this.view?.dataService;
+  //     option.FormModel = this.view?.formModel;
+  //     option.Width = '550px';
+  //     this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+  //   });
+  // }
+
+  add(evt) {
+    this.headerText = evt.text + ' ' + this.view?.function?.customName;
     this.view.dataService.addNew().subscribe((res: any) => {
       var obj = {
-        role: res,
-        mode: 'add',
+        formType: 'add',
+        headerText: this.headerText,
       };
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      this.dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+      var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+      // this.dialog.closed.subscribe((e) => {
+      //   if (!e?.event) this.view.dataService.clear();
+      //   if (e?.event) {
+      //     this.view.dataService.update(e.event).subscribe();
+      //     this.changedt.detectChanges();
+      //   }
+      // });
+    });
+  }
+
+  delete(data: any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected])
+      .subscribe((res: any) => {
+        if (res.data) {
+          // this.codxAdService
+          //   .deleteFile(res.data.userID, 'AD_Users', true)
+          //   .subscribe();
+        }
+      });
+  }
+
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        var obj = {
+          formType: 'edit',
+          headerText: this.headerText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+
+        dialog.closed.subscribe((x) => {
+          // if (!x?.event) this.view.dataService.clear();
+          // if (x.event) {
+          //   x.event.modifiedOn = new Date();
+          //   this.view.dataService.update(x.event).subscribe();
+          //   this.changeDetectorRef.detectChanges();
+          // }
+        });
+      });
+  }
+
+  copy(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.copy().subscribe((res: any) => {
+      if (res) {
+        var obj = {
+          formType: 'copy',
+          headerText: this.headerText,
+        };
+        let option = new SidebarModel();
+        option.DataService = this.view?.currentView?.dataService;
+        option.FormModel = this.view?.currentView?.formModel;
+        option.Width = '550px';
+        var dialog = this.callfc.openSide(RoleEditComponent, obj, option);
+      }
     });
   }
 
   clickMF(e, item) {
+    this.headerText = e.text + ' ' + this.view?.function?.customName;
     switch (e.functionID) {
       case 'SYS03':
-        this.openFormEdit(item);
+        this.edit(item);
         break;
       case 'SYS02':
+        this.delete(item);
+        break;
+      case 'SYS04':
+        this.copy(item);
         break;
     }
   }

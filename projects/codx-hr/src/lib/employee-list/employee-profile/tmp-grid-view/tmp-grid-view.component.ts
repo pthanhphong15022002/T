@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import {
@@ -35,25 +36,19 @@ export class TmpGridViewComponent extends UIComponent {
     super(inject);
   }
 
+  @Input() service = 'HR';
+  @Input() assemblyName = 'HR';
+  @Input() entity = '';
+  @Input() className = '';
+  @Input() method = '';
+  @Input() idField = 'employeeID';
+  @Input() predicate = '@EmployeeID=@0';
+  @Input() dataValue;
   @Input() columnsGrid: Array<any>;
-  @Input() rowTemplate;
-
-  @ViewChild('views', { static: true })
-  views: Array<ViewModel> | any = [];
+  @Input() rowTemplate: TemplateRef<any>;
 
   onInit(): void {
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.grid,
-        active: true,
-        sameData: true,
-        model: {
-          panelLeftRef: null,
-          resources: this.columnsGrid,
-        },
-      },
-    ];
+    console.log('datavalues', this.dataValue);
     this.df.detectChanges();
   }
 }

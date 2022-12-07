@@ -70,6 +70,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   user: UserModel;
   grvStationery;
   model?: FormModel;
+  totalStationery = 0;
   groupStationery;
   radioGroupCheck: boolean;
   radioPersonalCheck: boolean;
@@ -79,7 +80,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   title: '';
   dialogAddBookingStationery: FormGroup;
   returnData = [];
-  nagetivePhysical: string = '';
+  negativePhysical: string = '';
 
   constructor(
     private injector: Injector,
@@ -108,18 +109,26 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.epService.getListItems(this.data.recID).subscribe((res: any) => {
+      if (res && !this.isAddNew) {
+        this.cart = [...res];
+      }
+    });
     this.user = this.auth.get();
 
-    this.epService.getStationeryGroup().subscribe((res) => {
-      this.groupStationery = res;
+    this.epService.getStationeryGroup().subscribe((res: any) => {
+      if (res) {
+        this.groupStationery = res[0];
+        this.totalStationery = res[1];
+      }
     });
 
     this.epService
-      .getParams('EPParameters', 'NagetivePhysical')
+      .getParams('EPParameters', 'NegativePhysical')
       .subscribe((res: any) => {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
-        this.nagetivePhysical = json.NagetivePhysical;
+        this.negativePhysical = json.NegativePhysical;
       });
 
     this.cache.functionList('EP8S21').subscribe((res) => {
@@ -137,7 +146,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.isAddNew) {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
-      this.cart = this.data.bookingItems;
+      //this.cart = this.data.bookingItems;
+      this.cart = [];
       this.changeTab(2);
     } else {
       if (this.data?.category == '1') {
@@ -148,6 +158,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.radioGroupCheck = true;
       }
     }
+
+    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit() {
@@ -200,10 +212,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   changeTab(tabNo: number) {
-    if (tabNo == 2 && this.cart.length == 0) {
-      this.notificationsService.notifyCode('EP011');
-      return;
-    }
+    // if (tabNo == 2 && this.cart.length == 0) {
+    //   this.notificationsService.notifyCode('EP011');
+    //   return;
+    // }
     this.currentTab = tabNo;
     this.detectorRef.detectChanges();
   }
@@ -389,6 +401,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     return cart.reduce((acc, item) => acc + item.quantity, 0);
   }
 
+  i = 1;
+
   getItemQty(itemID) {
     let item = this.cart.filter((x) => x.resourceID == itemID);
     if (item.length == 0) {
@@ -401,28 +415,31 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let tmpResource;
     tmpResource = { ...data };
 
-    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
-
-    //NagetivePhysical = 0: khong am kho
+    //negativePhysical = 0: khong am kho
 
     if (tmpResource.availableQty == 0) {
-      if (this.nagetivePhysical == '0') {
+      if (this.negativePhysical == '0') {
         //không add
         this.notificationsService.notifyCode('EP013');
         return;
       }
     }
 
+    //Check có tồn tại trong cart
+    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
     if (isPresent) {
       this.cart.filter((item: any) => {
         if (item.recID == tmpResource.recID) {
           item.quantity = item.quantity + 1;
+          //item.itemName = item.resourceName;
         }
       });
     } else {
       tmpResource.quantity = 1;
+      //tmpResource.itemName = tmpResource.resourceName;
       this.cart.push(tmpResource);
     }
+
     this.detectorRef.detectChanges();
   }
 
@@ -455,6 +472,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
   click(data) {}
 
   clickMF($event, data) {}
+
+  search(e) {
+    this.listView.dataService.search(e).subscribe();
+    this.detectorRef.detectChanges();
+  }
 
   itemByRecID(index, item) {
     return item.recID;

@@ -16,7 +16,6 @@
   (viewChanged)="viewChanged($event)"
   [viewActiveType]="viewMode"
   [toolbarDisplay]="false"
-  [className]=""
 >
 </codx-views>
 
@@ -427,11 +426,11 @@
 
 <ng-template #titleTmp let-data>
   <div
-    class="fw-bold line-clamp line-clamp-1 {{
+    style="width: 90%;" class="fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
     }}">
     <codx-label name="lblStepNo" [default]="data.stepType == 'P'? 'Công đoạn' : 'Bước'"></codx-label>{{ " " + data?.stepNo }}
-    <codx-label name="lblSplit" default=":"></codx-label>{{ " " + data?.stepName }}
+    <codx-label name="lblSplit" default=":"></codx-label><span>{{ " " + data?.stepName }}</span>
   </div>
   <!-- <div  
     *ngIf="data.stepType == 'P' || data.stepType == 'A'"
