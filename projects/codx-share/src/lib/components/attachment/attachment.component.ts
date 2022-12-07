@@ -97,7 +97,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   fileEditingTemp: FileUpload;
   maxFileSizeUpload = 0;
   maxFileSizeUploadMB = 0;
-  referType: string;
   folderID: string;
   isDM: false;
   infoHDD = {
@@ -144,7 +143,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() pageSize = 5;
   @Input() heightScroll = 100;
   @Input() isTab = false;
-
+  @Input() referType: string ="";
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -394,8 +393,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId != '' && this.objectId != undefined) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false';
-      this.dataRequest.dataValue = this.objectId;
+      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && ReferType=@1';
+      this.dataRequest.dataValue = [this.objectId,this.referType].join(";");
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
       this.fileService
@@ -865,7 +864,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
-            debugger;
             if (addList.length > 0) {
               this.fileSave.emit(addList);
               addList.forEach((item) => {
