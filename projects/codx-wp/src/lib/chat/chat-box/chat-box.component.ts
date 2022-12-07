@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { ApiHttpService, AuthStore } from 'codx-core';
+import { ChangeDetectorRef, Component, Input, OnInit, Optional } from '@angular/core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef } from 'codx-core';
 import { SignalRService } from '../../services/signalr.service';
 
 @Component({
@@ -13,20 +13,24 @@ export class ChatBoxComponent implements OnInit {
 
   group:any = {};
   user:any = {};
+  dialogRef:DialogRef = null;
   constructor
   (
     private api:ApiHttpService,
     private auth:AuthStore,
     private signalR: SignalRService,
-    private dt:ChangeDetectorRef
+    private dt:ChangeDetectorRef,
+    @Optional() dialogData?:DialogData,
+    @Optional() dialogRef?:DialogRef,
   ) 
   {
+    this.groupID = dialogData.data;
     this.user = this.auth.get()
   }
 
   ngOnInit(): void 
   {
-
+    this.getGroupInfo(this.groupID);
   }
 
   // get group info
@@ -38,7 +42,18 @@ export class ChatBoxComponent implements OnInit {
         "GroupBusiness",
         "GetGoupChatBydIDAsync",
         [groupID])
-      .subscribe();
+      .subscribe((res:any) =>{
+        if(res){
+          this.group = JSON.parse(JSON.stringify(res));
+        }
+      });
+    }
+  }
+  // close 
+  closeChatBox(){
+    if(this.dialogRef)
+    {
+      this.dialogRef.close()
     }
   }
 }

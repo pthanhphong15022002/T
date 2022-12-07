@@ -19,6 +19,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
+import { ChatBoxComponent } from '../chat-box/chat-box.component';
 import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.component';
 
 @Component({
@@ -92,18 +93,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   clickGroupChat(group: any) {
     if (group) 
     {
-      this.api
-        .execSv(
-          'WP',
-          'ERM.Business.WP',
-          'GroupBusiness',
-          'OpenGroupChatAsync',
-          [group.groupID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-          }
-        });
+      let option = new DialogModel();
+      this.callFCSV.openForm(ChatBoxComponent,"",0,0,"WP",group.groupID,"",option);
     }
   }
   // open group chat
@@ -127,8 +118,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       let popup = this.callFCSV.openForm(
         PopupAddGroupComponent,
         '',
-        600,
-        600,
+        0,
+        0,
         this.function.funcID,
         data,
         '',

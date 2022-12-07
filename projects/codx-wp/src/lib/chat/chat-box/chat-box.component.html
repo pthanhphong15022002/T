@@ -1,1 +1,42 @@
-<p>chat-box works!</p>
+<div class="chat-box">
+    <div class="chat-box-header">
+        <div class="group-avatar">
+            <ng-container *ngIf="group.groupType == '1' ; else group1_n">
+                <codx-img 
+                    [objectId]="group.groupID2" 
+                    [objectName]="group.GroupName2" 
+                    [objectType]="'AD_Users'">
+                </codx-img>
+            </ng-container>
+            <ng-template #group1_n>
+                <codx-img 
+                    [objectId]="group.groupID" 
+                    [objectType]="'WP_Groups'">
+                </codx-img>
+            </ng-template>
+        </div>
+        <div class="group-infor">
+            <div class="group-infor_name">
+                <p class="m-0 fw-bolder">{{group.groupName}}</p>
+                <p class="m-0">
+                    <codx-tag [isEdit]="false"  [value]="group.tagValue" [entityName]="'WP_Groups'">
+                    </codx-tag>
+                </p>
+            </div>
+            <div class="group-infor_morefc">
+                <ul class="morefc-list">
+                    <li class="morefc-list_item">
+                        <span class="icon-launch"></span>
+                    </li>
+                    <li class="morefc-list_item">
+                        <span class="icon-maximize"></span>
+                    </li>
+                    <li class="morefc-list_item" (click)="closeChatBox()">
+                        <span class="icon-close"></span>
+                    </li>
+                </ul>
+            </div>   
+        </div>
+    </div>
+    <div class="chat-box-body"></div>
+</div>
