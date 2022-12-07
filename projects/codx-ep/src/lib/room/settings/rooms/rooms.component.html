@@ -2,6 +2,10 @@
   [views]="views" [button]="buttons" (buttonClick)="click($event)" [idField]="idField" [className]="className"
   [method]="method" (onLoading)="onLoading($event)" [viewActiveType]="viewType.grid"></codx-views>
 
+  <ng-template #itemAction let-data>
+    <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [dataItem]="data">
+    </codx-mfunc>
+  </ng-template>
 <ng-template #resourceNameCol let-data>
   <div class="d-flex flex-row align-items-center">
     <codx-img #avatar [objectId]="data?.recID" [funcId]="funcID" [objectType]="'EP_Resources'" imageType="circle"
@@ -85,7 +89,7 @@
   </div>
 </ng-template>
 <ng-template #ownerCol let-data>
-  <div class="d-flex has-action-menu align-items-center">
+  <div class="d-flex align-items-center">
     <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.ownerName }}</div>
@@ -94,11 +98,10 @@
 </ng-template>
 
 <ng-template #preparatorCol let-data>
-  <div class="d-flex has-action-menu align-items-center">
+  <div class="d-flex  align-items-center">
     <codx-img [width]="25" [objectId]="data?.preparator" ObjectType="AD_Users"></codx-img>
     <div class="ms-2">
       <div class="fw-bold">{{ data?.preparatorName }}</div>
     </div>
-    <codx-mfunc [dataItem]="data" [formModel]="formModel" (clickMF)="clickMF($event, data)" type="hover"></codx-mfunc>
   </div>
 </ng-template>

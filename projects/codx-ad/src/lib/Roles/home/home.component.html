@@ -1,7 +1,17 @@
 <div class="codx-roles h-100">
-    <codx-views #view [funcID]="funcID" [views]="views" [button]="button" (buttonClick)="openFormAdd($event)"
-        idField="recID" entityName="AD_Roles" formName="Roles" gridViewName="grvRoles" service="SYS">
-    </codx-views>
+  <codx-views
+    #view
+    [funcID]="funcID"
+    [views]="views"
+    [button]="button"
+    (buttonClick)="add($event)"
+    idField="recID"
+    entityName="AD_Roles"
+    formName="Roles"
+    gridViewName="grvRoles"
+    service="SYS"
+  >
+  </codx-views>
 </div>
 <!-- <div class="adroles-group qtht border-top-erm">
     <div class="content-center">
@@ -48,20 +58,38 @@
 </div> -->
 
 <ng-template #templateListView let-data>
-    <codx-temp-full (clickMF)="clickMF($event,data)" (click)="LinkDetail(data.recID, data.roleName, data.isSystem)"
-        [typeMF]="'hover'" cardCss="card-template border-bottom border-gray-200 p-3" [formModel]="view.formModel"
-        [title]="data.roleName" [subTitle]="data.description" [baseHeaderRightTmp]="isSystem" [dataItem]="data"
-        [imageId]="data.recID" imageWidth="35" imageObjType="AD_Roles">
-    </codx-temp-full>
+  <codx-temp-full
+    (clickMF)="clickMF($event, data)"
+    (click)="LinkDetail(data.recID, data.roleName, data.isSystem)"
+    [typeMF]="'hover'"
+    cardCss="card-template border-bottom border-gray-200 p-3"
+    [formModel]="view.formModel"
+    [title]="data.roleName"
+    [subTitle]="data.description"
+    [baseHeaderRightTmp]="isSystem"
+    [dataItem]="data"
+    [imageId]="data.recID"
+    imageWidth="35"
+    imageObjType="AD_Roles"
+  >
+  </codx-temp-full>
 </ng-template>
 
 <ng-template #isSystem let-data>
-    <span *ngIf="data.isSystem; else second" class="badge badge-light ms-2">
-        <codx-label name="lblSystem" formName="AD_Roles" default="System"></codx-label>
+  <span *ngIf="data.isSystem; else second" class="badge badge-light ms-2">
+    <codx-label
+      name="lblSystem"
+      formName="AD_Roles"
+      default="System"
+    ></codx-label>
+  </span>
+  <ng-template #second>
+    <span class="badge badge-light ms-2">
+      <codx-label
+        name="lblCustomize"
+        formName="AD_Roles"
+        default="Customize"
+      ></codx-label>
     </span>
-    <ng-template #second>
-        <span class="badge badge-light ms-2">
-            <codx-label name="lblCustomize" formName="AD_Roles" default="Customize"></codx-label>
-        </span>
-    </ng-template>
+  </ng-template>
 </ng-template>

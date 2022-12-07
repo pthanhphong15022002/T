@@ -385,7 +385,7 @@ export class CalendarNotesComponent
         ['WPCalendars', fromDate, toDate]
       )
       .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
+        if (res && res?.msgBodyData[0]) {
           var dt = res.msgBodyData[0];
           this.TM_TasksParam = dt[5]?.TM_Tasks
             ? JSON.parse(dt[5]?.TM_Tasks)

@@ -31,9 +31,7 @@ import {
   pdfDefaultOptions,
   TextLayerRenderedEvent,
 } from 'ngx-extended-pdf-viewer';
-import {
-  CodxEsService,
-} from 'projects/codx-es/src/lib/codx-es.service';
+import { CodxEsService } from 'projects/codx-es/src/lib/codx-es.service';
 import { PopupCaPropsComponent } from 'projects/codx-es/src/lib/sign-file/popup-ca-props/popup-ca-props.component';
 import { PopupSelectLabelComponent } from 'projects/codx-es/src/lib/sign-file/popup-select-label/popup-select-label.component';
 import { PopupSignatureComponent } from 'projects/codx-es/src/lib/setting/signature/popup-signature/popup-signature.component';
@@ -307,7 +305,7 @@ export class PdfComponent
               this.signerInfo = res.approvers[0];
             }
             this.curFileID = sf?.files[0]?.fileID;
-            this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? ''
+            this.curFileUrl = this.lstFiles[0]['fileUrl'] ?? '';
             this.curSignerID = this.signerInfo?.authorID;
             this.curSignerRecID = this.signerInfo?.recID;
           }
@@ -612,6 +610,15 @@ export class PdfComponent
   }
 
   saveToDB(tmpArea: tmpSignArea) {
+    debugger;
+    let es_SignArea = tmpArea;
+    if (this.imgConfig.includes(tmpArea.labelType)) {
+      tmpArea.labelValue = tmpArea.labelValue.replace(
+        environment.urlUpload + '/',
+        ''
+      );
+    }
+    //es_SignArea.labelValue
     this.esService
       .addOrEditSignArea(this.recID, this.curFileID, tmpArea, tmpArea.recID)
       .subscribe((res) => {
@@ -652,7 +659,7 @@ export class PdfComponent
     let tmpArea: tmpSignArea = {
       signer: authorID,
       labelType: labelType,
-      labelValue: url,
+      labelValue: url.replace(environment.urlUpload + '/', ''),
       isLock: false,
       allowEditAreas: this.signerInfo.allowEditAreas,
       signDate: this.curSignDateType == this.lstSignDateType[0] ? false : true,
@@ -676,6 +683,12 @@ export class PdfComponent
       recID: recID,
     };
     if (this.needAddKonva) {
+      if (this.imgConfig.includes(tmpArea.labelType)) {
+        tmpArea.labelValue = tmpArea.labelValue.replace(
+          environment.urlUpload + '/',
+          ''
+        );
+      }
       this.esService
         .addOrEditSignArea(this.recID, this.curFileID, tmpArea, recID)
         .subscribe((res) => {
@@ -899,6 +912,12 @@ export class PdfComponent
             }
             if (isChangeUrl) {
               area.labelValue = url;
+              if (this.imgConfig.includes(area.labelType)) {
+                area.labelValue = area.labelValue.replace(
+                  environment.urlUpload + '/',
+                  ''
+                );
+              }
               this.esService
                 .addOrEditSignArea(this.recID, this.curFileID, area, area.recID)
                 .subscribe((res) => {});
@@ -908,35 +927,41 @@ export class PdfComponent
         });
 
         if (this.inputUrl && !this.gotLstCA) {
-          this.esService.getListCAByBytes(this.curFileUrl).subscribe((res) => {
-            this.lstCA = res;
-            this.lstCA?.forEach((ca) => {
-              this.lstCACollapseState.push({
-                open: false,
-                verifiedFailed: false,
-                detail: false,
+          this.esService
+            .getListCAByBytes(
+              this.curFileUrl.replace(environment.urlUpload + '/', '')
+            )
+            .subscribe((res) => {
+              this.lstCA = res;
+              this.lstCA?.forEach((ca) => {
+                this.lstCACollapseState.push({
+                  open: false,
+                  verifiedFailed: false,
+                  detail: false,
+                });
+              });
+              let lstCAOnPage = this.lstCA?.filter(
+                (childCA) => childCA.signedPosPage == this.curPage
+              );
+              lstCAOnPage?.forEach((ca, idx) => {
+                let caW =
+                  ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) *
+                  this.xScale;
+                let caH =
+                  ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) *
+                  this.yScale;
+                let caRect = new Konva.Rect({
+                  x: (ca.signedPosLeft / 0.75) * this.xScale,
+                  y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
+                  width: caW,
+                  height: caH,
+                  opacity: 0,
+                  id: 'CertificateAuthencation' + idx,
+                  name: ca.certificate?.commonName,
+                });
+                layer.add(caRect);
               });
             });
-            let lstCAOnPage = this.lstCA?.filter(
-              (childCA) => childCA.signedPosPage == this.curPage
-            );
-            lstCAOnPage?.forEach((ca, idx) => {
-              let caW =
-                ((ca?.signedPosRight - ca.signedPosLeft) / 0.75) * this.xScale;
-              let caH =
-                ((ca?.signedPosBottom - ca?.signedPosTop) / 0.75) * this.yScale;
-              let caRect = new Konva.Rect({
-                x: (ca.signedPosLeft / 0.75) * this.xScale,
-                y: this.pageH - (ca?.signedPosTop / 0.75) * this.yScale - caH,
-                width: caW,
-                height: caH,
-                opacity: 0,
-                id: 'CertificateAuthencation' + idx,
-                name: ca.certificate?.commonName,
-              });
-              layer.add(caRect);
-            });
-          });
           this.gotLstCA = true;
         }
         stage.add(layer);
@@ -1563,7 +1588,9 @@ export class PdfComponent
     let tmpArea: tmpSignArea = {
       signer: tmpName.Signer,
       labelType: tmpName.LabelType,
-      labelValue: this.imgConfig.includes(type) ? newUrl : textContent,
+      labelValue: this.imgConfig.includes(type)
+        ? newUrl.replace(environment.urlUpload + '/', '')
+        : textContent,
       isLock: !this.curSelectedArea.draggable(),
       allowEditAreas: this.signerInfo.allowEditAreas,
       signDate:
@@ -1637,12 +1664,14 @@ export class PdfComponent
         let img = res.event[0];
         switch (img?.referType) {
           case 'S1': // Ky chinh
-            this.signerInfo.signature1 = environment.urlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature1 =
+              environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.signature1 ?? '';
             break;
           case 'S2': //Ky nhay
-            this.signerInfo.signature2 = environment.urlUpload + '/' + img?.pathDisk;
+            this.signerInfo.signature2 =
+              environment.urlUpload + '/' + img?.pathDisk;
             this.changeAnnotationItem(this.crrType);
             //this.url = this.signerInfo.signature2 ?? '';
             break;
@@ -2117,7 +2146,7 @@ export class PdfComponent
             let tmpArea: tmpSignArea = {
               signer: person.authorID,
               labelType: 'S1',
-              labelValue: url,
+              labelValue: url.replace(environment.urlUpload + '/', ''),
               isLock: false,
               allowEditAreas: this.signerInfo.allowEditAreas,
               signDate: false,

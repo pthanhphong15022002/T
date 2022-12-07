@@ -1,12 +1,12 @@
 <div *ngIf="viewType=='0'">
     <div class="d-flex align-items-center {{countData>0 ? 'text-success' : 'text-gray-600'}}">
-        <div class="me-1" (click)="openPopup()"><i
+        <div class="me-1" (click)="openViewPopup? openPopup():''"><i
                 class="text-hover-primary icon-attach_file icon-16 text-dark cursor-pointer"></i></div>
         <div>{{countData}}</div>
     </div>
 </div>
 <div *ngIf="viewType=='1'">
-    <div (click)="openPopup()">
+    <div (click)="openViewPopup? openPopup():''">
         <span class="icon-attach_file icon-18"> </span>
         <span class="position-absolute top-0 start-100 translate-middle badge badge-sm badge-circle badge-primary">
             {{ count}}</span>
