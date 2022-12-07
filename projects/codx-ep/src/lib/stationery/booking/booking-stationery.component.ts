@@ -54,15 +54,15 @@ export class BookingStationeryComponent
   idField = 'recID';
   funcIDName = '';
   popupTitle = '';
+  tempReasonName='';
   formModel: FormModel;
   itemDetail;
   popupClosed = true;
+  listReason: any[];
 
   constructor(
     private injector: Injector,
-    private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
-    private cacheService: CacheService,
     private notificationsService: NotificationsService,
     private authService: AuthService
   ) {
@@ -79,6 +79,7 @@ export class BookingStationeryComponent
           res.customName.charAt(0).toLowerCase() + res.customName.slice(1);
       }
     });
+
   }
 
   onInit(): void {
@@ -86,6 +87,12 @@ export class BookingStationeryComponent
       id: 'btnAdd',
       disabled: true,
     };
+    this.codxEpService.getListReason('EP_BookingStationery').subscribe((res:any)=>{
+      if(res){
+        this.listReason=[];
+        this.listReason=res;
+      }        
+    }); 
   }
 
   ngAfterViewInit(): void {
@@ -103,7 +110,15 @@ export class BookingStationeryComponent
 
     this.detectorRef.detectChanges();
   }
-
+  getReasonName(reasonID:any){
+    this.tempReasonName='';
+    this.listReason.forEach(r=>{
+      if(r.reasonID==reasonID){
+        this.tempReasonName= r.description;
+      }      
+    });
+    return this.tempReasonName;
+  }
   click(evt: any) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {

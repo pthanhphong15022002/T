@@ -1,4 +1,213 @@
-<ng-template #footer>
+<layout-list-detail
+    #lstDetail
+    [title]="headerText"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    [leftTemlate]="LeftTemlate"
+    [RightTemlate]="body"
+    *ngIf = "isAfterRender"
+>
+<ng-template #body>
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+                fiedName="VisaNo"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="visaNo"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+                fiedName="VisaType"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="visaType"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+                fiedName="EffectedDate"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="effectedDate"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+                fiedName="ExpiredDate"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="expiredDate"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+                fiedName="StayDays"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="stayDays"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+                fiedName="VisaEntry"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="visaEntry"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+                fiedName="NationalityID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="nationalityID"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+                fiedName="IssuedDate"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="issuedDate"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label
+            fiedName="IssuedPlace"
+        ></codx-label>
+        <codx-input
+            field="issuedPlace"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+                fiedName="PassportNo"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="passportNo"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+                fiedName="PassportNationalityID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="passportNationalityID"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label
+            fiedName="Note"
+        ></codx-label>
+        <codx-input
+            field="note"
+            [formModel]="formModel"
+            [Group]="formGroup"
+        ></codx-input>
+    </div>
+</ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" (click)="onSaveForm()">
+                <i class="icon-save"></i>
+            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</layout-list-detail>
+
+<ng-template #LeftTemlate>
+    <codx-listview
+        #listView
+        class="w-100"
+        [type]="'cardView'"
+        [service]="'HR'"
+        [assemblyName]="'HR'"
+        [entityName]="'HR_Evisas'"
+        [className]="'EmpVisasBusiness'"
+        [method]="'GetListByEmployeeIDAsync'"
+        [predicate]="'EmployeeID=@0'"
+        [dataValue]="employId"
+        [itemTemplate]="itemTemplate"
+        (afterRender) = "afterRenderListView($event)"
+        [selectFirst]="true"
+    ></codx-listview>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    <codx-temp-full
+        [formModel]="formModel"
+        [typeMF]="'hover'"
+        [subTitleTmp]="tmplateEEvisasMenuList"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        [hideMF]="true"
+        typeMF="hover"
+        [dataItem]="data"
+        (click)="click(data)"
+    ></codx-temp-full>
+</ng-template>
+
+<ng-template #tmplateEEvisasMenuList let-data>
+    <div class="d-flex flex-column">
+        <div><i class ="icon-list_alt"></i> {{data.visaNo}}</div>
+        <div><i class ="icon-calendar_today"></i>{{(data.effectiveDate | fmDT) + ' - ' + (data.expiredDate | fmDT)}}</div>
+        <div><i class = "icon-edit_fill"></i>{{data.issuedPlace}}</div>
+    </div>
+</ng-template>
+
+<!-- <ng-template #footer>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" (click)="onSaveForm()">
             <i class="icon-save"></i>
@@ -165,4 +374,4 @@
             ></codx-input>
         </div>
     </ng-template>
-</codx-form>
+</codx-form> -->

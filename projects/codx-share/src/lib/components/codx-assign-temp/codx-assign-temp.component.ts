@@ -21,7 +21,7 @@ import {
 export class CodxAssignTempComponent implements OnInit {
   @Input() formModel: FormModel;
   @Input() objectID = '';
-
+  @Input() openViewPopup = true ;
   @ViewChild('tmpListResource') tmpListResource: TemplateRef<any>;
   @Input() zIndex: number = 0
   countResource = 0;

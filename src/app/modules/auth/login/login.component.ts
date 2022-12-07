@@ -48,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   email = null;
   mode: string = 'login';
   user: any;
-  loginTmp: any;
+  layoutCZ: any;
 
   // private fields
   unsubscribe: Subscription[] = [];
@@ -64,7 +64,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     private dt: ChangeDetectorRef,
     private auth: AuthStore
   ) {
-    this.loginTmp = environment.loginTmp;
+    this.layoutCZ = environment.layoutCZ;
     const tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
     
