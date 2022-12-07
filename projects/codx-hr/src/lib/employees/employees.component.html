@@ -53,7 +53,9 @@
 </ng-template>
 
 <ng-template #itemAction let-data>
-  <codx-mfunc [formModel]="view.formModel" [itemSelected]="itemSelected" (clickMF)="clickMF($event, data)"
+  <codx-mfunc 
+    [formModel]="view.formModel" 
+    (clickMF)="clickMF($event, data)"
     [dataItem]="data" [typeMF]="'hover'">
   </codx-mfunc>
 </ng-template>
