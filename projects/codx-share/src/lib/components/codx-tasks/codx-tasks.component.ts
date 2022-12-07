@@ -841,7 +841,7 @@ export class CodxTasksComponent
               this.tmSv
                 .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
                 .subscribe();
-            if (status == '90' && taskAction.approveControl == '1') {
+            if (status == '90' && this.itemSelected.approveControl == '1') {
               this.tmSv
                 .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
                 .subscribe();
