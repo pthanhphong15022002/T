@@ -99,7 +99,6 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.acceptEdit();
     if(this.action==='add' || this.action ==='copy'){
       this.isDisable=true;
     }
@@ -397,16 +396,4 @@ export class PopupAddProcessesComponent implements OnInit {
   //   });
   // }
 
-  acceptEdit() {
-    if(this.user.administrator){
-      this.isAcceptEdit=true;
-    }
-    else if (this.checkAdminOfBP(this.user.id)) {
-      this.isAcceptEdit=true;
-    }
-    else {
-      this.isAcceptEdit=false;
-    }
-
-  }
 }
