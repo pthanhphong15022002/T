@@ -40,6 +40,7 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -359,7 +360,7 @@ export class CodxTasksComponent
           this.titleAction,
           this.funcID,
           null,
-          this.disabledProject
+          this.disabledProject,
         ],
         option
       );
@@ -438,7 +439,7 @@ export class CodxTasksComponent
           this.titleAction,
           this.funcID,
           data,
-          this.disabledProject
+          this.disabledProject,
         ],
         option
       );
@@ -504,7 +505,13 @@ export class CodxTasksComponent
     option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose, title,data],
+      [
+        this.view.dataService.dataSelected,
+        vllControlShare,
+        vllRose,
+        title,
+        data,
+      ],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -841,14 +848,51 @@ export class CodxTasksComponent
               this.tmSv
                 .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
                 .subscribe();
-            if (status == '90' && taskAction.approveControl == '1') {
-              this.tmSv
-                .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
-                .subscribe();
+            if (status == '90') {
+              if (this.itemSelected.taskGroupID) {
+                this.api
+                  .execSv<any>(
+                    'TM',
+                    'ERM.Business.TM',
+                    'TaskGroupBusiness',
+                    'GetAsync',
+                    taskAction.taskGroupID
+                  )
+                  .subscribe((res) => {
+                    if (res && res.approveControl == '1') {
+                      this.tmSv
+                        .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
+                        .subscribe();
+                    }
+                  });
+              } else {
+                this.api
+                  .execSv<any>(
+                    'SYS',
+                    'ERM.Business.SYS',
+                    'SettingValuesBusiness',
+                    'GetByModuleWithCategoryAsync',
+                    ['TMParameters', '1']
+                  )
+                  .subscribe((res) => {
+                    if (res) {
+                      let param = JSON.parse(res.dataValue);
+                      if (param?.ApproveControl == '1') {
+                        this.tmSv
+                          .sendAlertMail(
+                            taskAction.recID,
+                            'TM_0012',
+                            this.funcID
+                          )
+                          .subscribe();
+                      }
+                    }
+                  });
+              }
+            } else {
+              if (kanban) kanban.updateCard(taskAction);
+              this.notiService.notifyCode('TM008');
             }
-          } else {
-            if (kanban) kanban.updateCard(taskAction);
-            this.notiService.notifyCode('TM008');
           }
         });
     }
