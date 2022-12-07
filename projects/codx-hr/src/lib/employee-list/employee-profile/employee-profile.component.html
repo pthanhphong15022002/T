@@ -1441,14 +1441,14 @@
                   </div>
                   <div class="d-flex flex-column py-3 px-4 process-r">
                     <div class="d-flex flex-column">
-                      <codx-temp-full
+                      <!-- <codx-temp-full
                         [formModel]="view.formModel"
                         [title]="'experences.companyName'"
                         [dataItem]="'experences'"
                         [desc]="'experences.roleName'"
                         [typeMF]="'hover'"
                       >
-                      </codx-temp-full>
+                      </codx-temp-full> -->
                     </div>
                   </div>
                 </div>
@@ -1462,7 +1462,7 @@
                     ></span>
                   </div>
                   <div class="add-process">
-                    <button class="btn btn-sm btn-light" (click)="handlEmployeeExperiences()">
+                    <button class="btn btn-sm btn-light" (click)="handlEmployeeExperiences('add', null)">
                       <i class="icon-add icon-16 ms-n2"></i>
                       <codx-label
                         name="lblAdd"
@@ -1473,6 +1473,22 @@
                     </button>
                   </div>
                 </div>
+                <!-- <codx-gridview-v2
+                  [service]="'HR'"
+                  [gridViewName]="'grvEExperiences'"
+                  [formName]="'EExperiences'"
+                  [assemblyName]="'HR'"
+                  [className]="'EExperiencesBusiness'"
+                  [method] = "'GetListByEmployeeIDAsync'"
+                  [predicates]="'EmployeeID=@0'"
+                  [autoLoad]="true"
+                  [height]="200"
+                  [dataValues]="data.employeeID"
+                  [entityName]="'HR_EExperiences'"
+                  [contentEditable]="false"
+                  [allowResizing]="true"
+                  (clickMF)="clickMF($event, null, 'eexperiences')"
+                  ></codx-gridview-v2> -->
               </ng-container>
             </div>
           </div>
@@ -4048,4 +4064,43 @@
 </ng-template>
 <ng-template #healthPeriodResult let-data>
   {{ infoPersonal.healthPeriodResult }}
+</ng-template>
+
+
+<ng-template #EExperience let-data>
+  <tr class="tr-ip-add-tmp has-action-menu">
+    <td class="w-15">
+      <span>{{data?.fromDate}}</span>
+    </td>
+    <td class="w-20">
+      <span>{{data?.toDate}}</span>
+    </td>
+    <td class="w-15">
+      <span>{{data?.companyName}}</span>
+    </td>
+    <td class="w-15">
+      <span>{{data?.position}}</span>
+    </td>
+    <td class="w-15">
+      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1">
+        <i class="icon-edit text-primary icon-16 mx-1"></i>
+        <i class="icon-close text-danger icon-16 mx-1"></i>
+      </div>
+    </td>
+  </tr>
+</ng-template> 
+
+<ng-template
+#button let-data
+>
+<h1>{{data.companyName}}</h1>
+<button>123</button>
+</ng-template>
+
+<ng-template #tempFromDate let-data>
+  {{data?.fromDate | fmDT}}
+</ng-template>
+
+<ng-template #tempToDate let-data>
+  {{data?.toDate | fmDT}}
 </ng-template>

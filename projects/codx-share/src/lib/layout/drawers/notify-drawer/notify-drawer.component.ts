@@ -37,7 +37,7 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
     this.callFc.openSide(NotifyDrawerSliderComponent, "", option);
   }
 
-  totalNoti = 0;
+  totalNoti:string = "";
   // get noti number
   getNotiNumber(){
     this.api.execSv(
@@ -47,7 +47,16 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
       "GetNotiNumberAsync",
       [])
       .subscribe((res:any) => {
-        this.totalNoti = res;
+        if(res > 0){
+          if(res > 9)
+          {
+            this.totalNoti = res.toString().slice(0,1) + "+";
+          }
+          else
+          {
+            this.totalNoti = res.toString();
+          }
+        }
       });
   }
 }
