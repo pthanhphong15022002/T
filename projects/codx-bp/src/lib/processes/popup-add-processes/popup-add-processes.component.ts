@@ -14,6 +14,7 @@ import {
   ApiHttpService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxBpService } from '../../codx-bp.service';
 
 @Component({
   selector: 'lib-popup-add-processes',
@@ -39,12 +40,21 @@ export class PopupAddProcessesComponent implements OnInit {
   revisions: BP_ProcessRevisions[] = [];
   perms: BP_ProcessPermissions[] = [];
   user: any;
+  isCoppyFile: any;
+  isAction: boolean = false;
+  idSetValueOld:any;
+  isDisable:any;
+  phasesOld:any;
+  ActivitiesOld:any;
+  AttachmentsOld:any;
+  processOldCopy:any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
     private notiService: NotificationsService,
     private api: ApiHttpService,
+    private bpService: CodxBpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -76,9 +86,19 @@ export class PopupAddProcessesComponent implements OnInit {
       });
     if (this.action === 'add' || this.action === 'copy')
       this.valueOwner(this.process.owner);
+    this.processOldCopy=dt?.data[2];
+    this.idSetValueOld = this.processOldCopy?.idOld;
+    this.phasesOld = this.processOldCopy?.phasesOld;
+    this.ActivitiesOld =this.processOldCopy?.actiOld;
+    this.AttachmentsOld = this.processOldCopy?.attachOld;
   }
 
   ngOnInit(): void {
+
+    this.isAddPermission(this.process.owner);
+    if(this.action==='add' || this.action ==='copy'){
+      this.isDisable=true;
+    }
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
@@ -97,11 +117,15 @@ export class PopupAddProcessesComponent implements OnInit {
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
-      this.process.phases = 0;
-      this.process.activities = 0;
+      this.process.phases =  this.action == 'copy'?this.phasesOld:0 ;
+      this.process.activities = this.action == 'copy'?this.ActivitiesOld:0;
+      if(this.action == 'copy'){
+        this.process.attachments = this.isCoppyFile?this.AttachmentsOld:0;
+      }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      data = [this.process];
+      let isCoppyFileValue= this.isCoppyFile?'copyFile':'copyDefault';
+      data = [this.process,isCoppyFileValue,this.idSetValueOld];
     } else if (this.action == 'edit') {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
@@ -153,6 +177,22 @@ export class PopupAddProcessesComponent implements OnInit {
       );
       return;
     }
+    if (this.process.activedOn === null) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.process.expiredOn === null) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
+      );
+      return;
+    }
 
     // if (!this.process.activedOn) {
     //   this.notiService.notifyCode(
@@ -170,42 +210,67 @@ export class PopupAddProcessesComponent implements OnInit {
     //   );
     //   return;
     // }
-
-    if (this.process.activedOn && this.process.expiredOn) {
-      // if (this.isCheckFromToDate(this.process.activedOn)) {
-      //   this.notiService.notify(
-      //     'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
-      //   );
-      //   return;
-      // }
-      if (this.process.activedOn >= this.process.expiredOn) {
-        this.notiService.notifyCode('BP003');
-        return;
-      }
+    if (this.process.activedOn >= this.process.expiredOn) {
+      this.notiService.notifyCode('BP003');
+      return;
     }
-
-
+    // if (this.process.activedOn && this.process.expiredOn) {
+    //   // if (this.isCheckFromToDate(this.process.activedOn)) {
+    //   //   this.notiService.notify(
+    //   //     'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
+    //   //   );
+    //   //   return;
+    //   // }
+    // }
     if (this.attachment?.fileUploadList?.length)
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          var countAttack = 0;
-          countAttack = Array.isArray(res) ? res.length : 1;
-          if (this.action === 'edit') {
-            this.process.attachments += countAttack;
-          } else {
-            this.process.attachments = countAttack;
-          }
-          if (this.action === 'add' || this.action === 'copy') this.onAdd();
-          else this.onUpdate();
+    (await this.attachment.saveFilesObservable()).subscribe((res) => {
+      if (res) {
+        var countAttack = 0;
+        countAttack = Array.isArray(res) ? res.length : 1;
+        if (this.action === 'edit') {
+          this.process.attachments += countAttack;
+        } else {
+          this.process.attachments = countAttack;
         }
-      });
-    else {
-      if (this.action === 'add' || this.action === 'copy') this.onAdd();
-      else this.onUpdate();
+      }
+    });
+    switch (this.action) {
+      case 'copy': {
+
+        this.notiService.alertCode('BP007').subscribe((x) => {
+          if (x.event?.status == 'N') {
+            this.isCoppyFile = false;
+            this.isUpdateCreateProcess();
+          } else if (x.event?.status == 'Y'){
+            this.isCoppyFile = true;
+            this.isUpdateCreateProcess();
+          }
+          else {
+            return;
+          }
+        });
+        break;
+      }
+      case 'add': {
+        this.isUpdateCreateProcess();
+        break;
+      }
+      case 'edit': {
+       this.isUpdateCreateProcess();
+        break;
+      }
+      default: {
+        this.isAction = false;
+        break;
+      }
     }
   }
   //#endregion method
-
+  isUpdateCreateProcess(){
+    if (this.action === 'add' || this.action === 'copy') {
+      this.onAdd();
+    } else this.onUpdate();
+  }
   //#region check date
   isCheckFromToDate(toDate) {
     var to = new Date(toDate);
@@ -227,19 +292,18 @@ export class PopupAddProcessesComponent implements OnInit {
     this.process[e.field] = e.data.fromDate;
   }
 
-  eventApply(e) {
-    console.log(e);
-    var data = e.data[0];
-    var id = '';
-    switch (data.objectType) {
-      case 'U':
-        this.process.owner = data.id;
-        break;
-    }
-    if (this.process.owner) {
-      this.addPermission(this.process.owner);
-    }
-  }
+  // eventApply(e) {
+  //   var data = e.data[0];
+  //   var id = '';
+  //   switch (data.objectType) {
+  //     case 'U':
+  //       this.process.owner = data.id;
+  //       break;
+  //   }
+  //   if (this.process.owner) {
+  //     this.addPermission(this.process.owner);
+  //   }
+  // }
 
   addPermission(id) {
     if (id != null) {
@@ -257,7 +321,7 @@ export class PopupAddProcessesComponent implements OnInit {
           var tmpPermission = new BP_ProcessPermissions();
           tmpPermission.objectID = emp?.userID;
           tmpPermission.objectName = emp?.userName;
-          tmpPermission.objectType = 'U';
+          tmpPermission.objectType = '1';
           tmpPermission.read = true;
           tmpPermission.share = true;
           tmpPermission.full = true;
@@ -266,9 +330,8 @@ export class PopupAddProcessesComponent implements OnInit {
           tmpPermission.upload = true;
           tmpPermission.assign = true;
           tmpPermission.download = true;
-          tmpPermission.nemberType = '1';
+          tmpPermission.memberType = '0';
           tmpPermission.autoCreate = true;
-
           this.perms.push(tmpPermission);
 
           this.process.permissions = this.perms;
@@ -288,4 +351,58 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueCbx(e) {}
   //#endregion event
+
+  valueChangeUser(e) {
+    this.process.owner = e?.data;
+    this.isAddPermission(this.process.owner);
+  }
+  isAddPermission(id) {
+    this.api
+      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
+      .subscribe((res) => {
+        if (res) {
+          this.perms = [];
+          let emp = res;
+          var tmpPermission = new BP_ProcessPermissions();
+
+          tmpPermission.objectID = emp?.userID;
+          tmpPermission.objectName = emp?.userName;
+          tmpPermission.objectType = '1';
+          tmpPermission.memberType = '0';
+          tmpPermission.autoCreate = true;
+          if (emp.administrator) {
+            tmpPermission.objectType = '7';
+          } else if (this.checkAdminOfBP(emp.id)) {
+            tmpPermission.objectType = '7';
+          }
+
+          tmpPermission.read = true;
+          tmpPermission.share = true;
+          tmpPermission.full = true;
+          tmpPermission.delete = true;
+          tmpPermission.update = true;
+          tmpPermission.upload = true;
+          tmpPermission.assign = true;
+          tmpPermission.download = true;
+          tmpPermission.memberType = '0';
+          tmpPermission.autoCreate = true;
+          this.perms.push(tmpPermission);
+
+          this.process.permissions = this.perms;
+        }
+      });
+  }
+  checkAdminOfBP(userid: any) {
+    let check: boolean;
+    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
+    return check;
+  }
+  // checkValiName(nameVersion: string){
+  //   let check=true;
+  //   this.revisions.forEach(element => {
+  //     if(element.versionName == nameVersion.trim()) {
+  //       check= false;
+  //     }
+  //   });
+  // }
 }

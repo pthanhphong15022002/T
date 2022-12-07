@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import { FileService } from '@shared/services/file.service';
 import { AnimationSettingsModel, ButtonPropsModel, DialogComponent } from '@syncfusion/ej2-angular-popups';
-import { AlertConfirmInputConfig, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
+import { AlertConfirmInputConfig, AuthStore, CallFuncService, DialogModel, NotificationsService } from 'codx-core';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { RolesComponent } from 'projects/codx-dm/src/lib/roles/roles.component';
@@ -25,6 +25,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   @Input() hideMoreF = '1';
   @Input() hideHover = '1';
   @Input() isScroll = '0';
+  @Input() permissions :any ; 
   @Output() fileCount = new EventEmitter<any>();
   @Output() fileDelete = new EventEmitter<any>();
   @Output() viewFile = new EventEmitter<any>();
@@ -46,6 +47,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   target: string = '.control-section';
   fileName:any
   visible: boolean = false;
+  userID: any
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private systemDialogService: SystemDialogService,
@@ -53,6 +55,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
     private fileService: FileService,
     public dmSV: CodxDMService,
     private notificationsService: NotificationsService,
+    private authStore: AuthStore
   ) {
     // this.dialog.close = function (e) {
     //   this.dialog.destroy();
@@ -85,6 +88,7 @@ export class ThumbnailComponent implements OnInit, OnChanges {
         }
       });
     }
+    this.userID = this.authStore.get().userID;
   }
 
   openPermission(data) {
@@ -98,7 +102,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   checkDownloadRight(file) {
-    return file.download;;
+    if(this.permissions)
+    {
+      var per = this.permissions.filter(x=>x.userID == this.userID);
+      if(per && per.length>0) return true;
+    }
+    return file.download;
   }
 
   base64ToArrayBuffer(base64) {
@@ -137,9 +146,12 @@ export class ThumbnailComponent implements OnInit, OnChanges {
                   index = list.findIndex(d => d.recID.toString() === id);
                 }
                 if (index > -1) {
+                  this.dataDelete.push(list[index]);
+                  this.fileDelete.emit(this.dataDelete);
                   list.splice(index, 1);//remove element from array
                   this.files = list;
                   this.fileCount.emit(this.files);
+          
                   this.changeDetectorRef.detectChanges();
                 }
               }
@@ -171,13 +183,13 @@ export class ThumbnailComponent implements OnInit, OnChanges {
   }
 
   async download(id): Promise<void> {
+    
     this.fileService.getFile(id).subscribe(file => {
       var id = file.recID;
-      var that = this;
       if (this.checkDownloadRight(file)) {
         this.fileService.downloadFile(id).subscribe(async res => {
           if (res) {
-            fetch(res)
+            fetch(environment.urlUpload + "/" + res)
               .then(response => response.blob())
               .then(blob => {
                 const link = document.createElement("a");

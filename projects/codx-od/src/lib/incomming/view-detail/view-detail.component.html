@@ -102,7 +102,7 @@
     </div>
     <ng-container *ngIf="data && data?.files">
       <codx-thumbnail [files]="data?.files" displayThumb="simple" [hideDelete]="'1'" [hideMoreF]="'0'"
-        (viewFile)="handleViewFile($event)">
+        (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
       </codx-thumbnail>
     </ng-container>
   </ng-template>
@@ -112,8 +112,7 @@
         <li [ngbNavItem]="1">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
-              <i class="fa-solid fa-user-tag me-2 mt-1" [ngClass]="{ 'text-primary': active === 1 }"></i><span>Nơi
-                nhận</span>
+              <i class="fa-solid fa-user-tag me-2 mt-1" [ngClass]="{ 'text-primary': active === 1 }"></i><span><codx-label [default]="formModel.funcID=='ODT31'?'Nơi nhận':'Nơi gửi'" fiedName="lblTitleReceive "></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -208,7 +207,7 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [id]="data?.id" [objectID]="data?.recID"
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.id"
       [funcID]="formModel?.funcID" [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl"
       [transID]="data?.recID" [approveStatus]="data?.approveStatus" [formModel]="formModel"></codx-tabs>
   </ng-template>
@@ -332,7 +331,7 @@
   </div>
   <ng-container *ngIf="data?.filess">
     <codx-thumbnail [files]="data?.filess" displayThumb="simple" [hideDelete]="'0'" [hideMoreF]="'0'"
-      (viewFile)="handleViewFile($event)">
+      (viewFile)="handleViewFile($event)" [permissions]="data?.relations">
     </codx-thumbnail>
   </ng-container>
 </ng-template>

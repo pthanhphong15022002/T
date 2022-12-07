@@ -106,6 +106,8 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.templateTree,
           panelRightRef: this.templateRight,
           template2: this.templateOrgchart,
+          resourceModel: { parentIDField: 'ParentID' }
+
         },
       },
       {
@@ -118,6 +120,7 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.templateTree,
           panelRightRef: this.templateRight,
           template2: this.templateListView,
+          resourceModel: { parentIDField: 'ParentID' }
         },
       },
     ];

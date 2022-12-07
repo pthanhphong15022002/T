@@ -112,15 +112,6 @@ export class ReportinglineComponent extends UIComponent {
   }
 
   viewChange(event: any) {
-    // if (event?.view?.id == "2") 
-    // {
-      
-    //   this.view.dataService.parentIdField = 'ReportTo';
-    //     this.view.dataService.load().subscribe(res=>{
-    //       this.detectorRef.detectChanges();
-    //       console.log(res);
-    //     })
-    // }
   }
   orgChartViewInit(component: any) {
     if (component) {
@@ -259,8 +250,8 @@ export class ReportinglineComponent extends UIComponent {
   onSelectionChanged(event) {
     if (this.view) 
     {
-      let viewActive = this.view.views.find((e) => e.active == true);
-      if (viewActive?.id == '1') return;
+      // let viewActive = this.view.views.find((e) => e.active == true);
+      // if (viewActive?.id == '1') return;
       this.dataSelected = event.data;
       this.positionID = event.data.positionID;
       this.detectorRef.detectChanges();

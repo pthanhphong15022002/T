@@ -34,6 +34,7 @@ import { PopupUpdateRevisionsComponent } from './processes/popup-update-revision
 import { PopupViewDetailProcessesComponent } from './popup-view-detail-processes/popup-view-detail-processes.component';
 import { PopupPhasesActivitiesComponent } from './processes/popup-phases-activities/popup-phases-activities.component';
 import { ShowMoreLessComponent } from './processes/show-more-less/show-more-less.component';
+import { PopupApprovalComponent } from './aprpermission/popup-approval/popup-approval.component';
 
 export const routes: Routes = [
   {
@@ -92,6 +93,7 @@ export const routes: Routes = [
     PopupViewDetailProcessesComponent,
     PopupPhasesActivitiesComponent,
     ShowMoreLessComponent,
+    PopupApprovalComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

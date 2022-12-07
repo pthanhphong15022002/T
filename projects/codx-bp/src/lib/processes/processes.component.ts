@@ -17,6 +17,7 @@ import {
   ButtonModel,
   DialogModel,
   DialogRef,
+  FormModel,
   NotificationsService,
   RequestOption,
   ResourceModel,
@@ -88,8 +89,9 @@ export class ProcessesComponent
   funcID = 'BPT1';
   method = 'GetListProcessesAsync';
   itemSelected: any;
-  dialogPopupReName: DialogRef;
+  dialogPopup: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
+  @ViewChild('viewReleaseProcess', { static: true }) viewReleaseProcess;
   @Input() process = new BP_Processes();
   newName = '';
   crrRecID = '';
@@ -110,6 +112,19 @@ export class ProcessesComponent
   heightWin: any;
   widthWin: any;
   isViewCard: boolean = false;
+  formModelMF :FormModel ;
+
+  statusLable = '';
+  commentLable = '';
+  titleReleaseProcess=''
+  comment = '';
+  processsId = '';
+  objectType = '';
+  entityName = '';
+  statusDefault = '6' ;
+  vllStatus = "BP003";
+  isAdmin =false ;
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -121,21 +136,13 @@ export class ProcessesComponent
     private routers: Router
   ) {
     super(inject);
-
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    // if (this.funcID == 'BPT3') {
-    //   this.method = 'GetListShareByProcessAsync';
-    // }
-    // if (this.funcID == 'BPT2') {
-    //   this.method = 'GetListMyProcessesAsync';
-    // }
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
-
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
   }
@@ -166,14 +173,6 @@ export class ProcessesComponent
       functionType:1,
       gridViewName:"grvProcesses"
     }
-    // this.views.forEach(x=>{
-    //   if (x.type === ViewType.card) {
-    //     this.isViewCard=true;
-    //   }
-    //   else {
-    //     this.isViewCard=false;
-    //   }
-    // })
   }
 
   ngAfterViewInit(): void {
@@ -375,9 +374,15 @@ export class ProcessesComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
+      let objCoppy = {
+        idOld: data.recID,
+        phasesOld: data.phases??0,
+        attachOld: data.attachments??0,
+        actiOld: data.activities??0,
+      }
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
-        ['copy', this.titleAction],
+        ['copy', this.titleAction,objCoppy],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -429,7 +434,12 @@ export class ProcessesComponent
     this.dataSelected = data;
     this.newName = data.processName;
     this.crrRecID = data.recID;
-    this.dialogPopupReName = this.callfc.openForm(this.viewReName, '', 500, 10);
+    this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
+  }
+  releaseProcess(data) {
+      this.statusLable = this.gridViewSetup['Status']['headerText'];
+      this.commentLable = this.gridViewSetup['Comments']['headerText'];
+      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);
   }
 
   Updaterevisions(moreFunc, data) {
@@ -469,7 +479,9 @@ export class ProcessesComponent
       more: more,
       data: data,
       funcIdMain: this.funcID,
+      formModel : this.formModelMF
     };
+
     this.dialog = this.callfc.openForm(
       RevisionsComponent,
       '',
@@ -563,6 +575,7 @@ export class ProcessesComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
+    this.entityName = e?.data?.entityName;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -584,6 +597,9 @@ export class ProcessesComponent
         break;
       case 'BPT102':
         this.reName(data);
+        break;
+      case 'BPT109':
+        this.releaseProcess(data);
         break;
       case 'BPT107':
         this.Updaterevisions(e?.data, data);
@@ -647,7 +663,7 @@ export class ProcessesComponent
           this.notification.notifyCode('SYS007');
           this.changeDetectorRef.detectChanges();
         }
-        this.dialogPopupReName.close();
+        this.dialogPopup.close();
       });
   }
 
@@ -666,6 +682,14 @@ export class ProcessesComponent
           /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
             true;
         }
+        if(res.functionID === "BPT109"){
+          let userId = this.user?.userID;
+          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && x.publish) || !this.user?.administrator);
+          if(data.status === "6" || checkRole >=0 ) {
+            res.disabled = true;
+          }
+        }
+
       });
     }
   }
@@ -766,6 +790,32 @@ export class ProcessesComponent
         }
       });
     }
+  }
+
+  setComment(e){
+    this.comment = e.data;
+  }
+
+  updateReleaseProcess(){
+    let processsId = this.itemSelected?.recID;
+
+    this.bpService.updateReleaseProcess(
+      [
+        processsId,
+        '1',
+        this.comment,
+        this.moreFunc,
+        this.entityName
+      ]
+    )
+    .subscribe((res) => {
+      if(res){
+        this.notification.notifyCode('SYS007');
+        this.dialogPopup.close();
+        this.view.dataService.update(res).subscribe();
+        this.detectorRef.detectChanges();
+      }
+    })
   }
 
 }

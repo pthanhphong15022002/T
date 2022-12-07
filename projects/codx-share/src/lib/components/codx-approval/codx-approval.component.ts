@@ -11,6 +11,7 @@ import {
   Output,
   EventEmitter,
   ViewEncapsulation,
+  Injector,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Thickness } from '@syncfusion/ej2-angular-charts';
@@ -24,6 +25,7 @@ import {
   DialogModel,
   NotificationsService,
   SidebarModel,
+  UIComponent,
   ViewModel,
   ViewsComponent,
   ViewType,
@@ -40,8 +42,8 @@ import { CodxShareService } from '../../codx-share.service';
   styleUrls: ['./codx-approval.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
-  @ViewChild('view') view!: ViewsComponent;
+export class CodxApprovalComponent extends UIComponent implements  OnChanges, AfterViewInit {
+ 
   @ViewChild('itemTemplate') template!: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRight?: TemplateRef<any>;
   @Input() tmpHeader?: TemplateRef<any>;
@@ -64,21 +66,29 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   /**
    *
    */
-  constructor(
-    private router: Router,
-    private api: ApiHttpService,
-    private cache: CacheService,
-    private odService: DispatchService,
-    private detectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private codxService: CodxService,
-    private codxShareService: CodxShareService,
-    private notifySvr: NotificationsService,
-    private callfunc: CallFuncService,
-    private esService: CodxEsService
-  ) {}
+   odService : DispatchService
+   codxShareService : CodxShareService
+   notifySvr: NotificationsService
+   callfunc: CallFuncService
+   esService: CodxEsService
+   routers: Router
+   constructor(
+    inject: Injector,
+   
+  ) {
+    super(inject);
+    this.routers = inject.get(Router);
+    this.odService = inject.get(DispatchService);
+    this.codxShareService = inject.get(CodxShareService),
+    this.notifySvr =  inject.get(NotificationsService),
+    this.callfunc =  inject.get(CallFuncService),
+    this.esService =  inject.get(CodxEsService)
+  }
+ 
   ngOnChanges(changes: SimpleChanges): void {}
-  ngOnInit(): void {}
+  onInit(): void {
+    throw new Error('Method not implemented.');
+  }
   ngAfterViewInit(): void {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
@@ -110,7 +120,6 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
   click(e: any) {}
   openFormFuncID(e: any) {}
   valueChange(dt: any) {
-    debugger;
     this.transID = null;
     if (dt?.data) {
       if (dt?.data[0]) {
@@ -128,19 +137,18 @@ export class CodxApprovalComponent implements OnInit, OnChanges, AfterViewInit {
       this.dataItem = dt;
     }
     this.cache.functionList(this.dataItem?.functionID).subscribe((fuc) => {
-      debugger;
+    debugger;
+      var s = this.routers.url.split("/"); s = s.slice(2 , 5);
+      let r = "/" + s.join("/").toString() + "/";
+     
       if (fuc) {
         var params;
         if (fuc?.url) {
           params = fuc?.url.split('/');
+          var url =  r + params[1] + '/' + fuc?.functionID + '/' + this.dataItem?.transID ;
           this.codxService.navigate(
             '',
-            '/es/approvals/EST021/' +
-              params[1] +
-              '/' +
-              fuc?.functionID +
-              '/' +
-              this.dataItem?.transID
+            url
           );
         }
 

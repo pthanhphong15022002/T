@@ -210,7 +210,8 @@ export class PropertiesComponent implements OnInit {
   }
 
   getThumbnail(data) {
-    if (data?.viewThumb) return environment.urlUpload + '/' + data.thumbnail;
+    if(data.thumbnail)
+      return environment.urlUpload + '/' + data.thumbnail;
     return `../../../assets/codx/dms/` + this.getAvatar(data.extension);
   }
 

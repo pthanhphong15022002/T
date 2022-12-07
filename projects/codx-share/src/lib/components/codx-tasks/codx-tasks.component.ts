@@ -504,7 +504,7 @@ export class CodxTasksComponent
     option.Width = '550px';
     this.dialog = this.callfc.openSide(
       AssignInfoComponent,
-      [this.view.dataService.dataSelected, vllControlShare, vllRose, title],
+      [this.view.dataService.dataSelected, vllControlShare, vllRose, title,data],
       option
     );
     this.dialog.closed.subscribe((e) => {
@@ -973,6 +973,7 @@ export class CodxTasksComponent
   //#region Convert
   convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
     this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approvers;
     this.param.ApproveControl = taskGroup.approveControl;
     this.param.AutoCompleted = taskGroup.autoCompleted;
     this.param.ConfirmControl = taskGroup.confirmControl;
