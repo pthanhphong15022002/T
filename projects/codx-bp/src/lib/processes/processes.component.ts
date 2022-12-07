@@ -148,7 +148,6 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-
     this.button = {
       id: 'btnAdd',
     };
@@ -376,9 +375,15 @@ export class ProcessesComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
+      let objCoppy = {
+        idOld: data.recID,
+        phasesOld: data.phases??0,
+        attachOld: data.attachments??0,
+        actiOld: data.activities??0,
+      }
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
-        ['copy', this.titleAction],
+        ['copy', this.titleAction,objCoppy],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -435,7 +440,7 @@ export class ProcessesComponent
   releaseProcess(data) {
       this.statusLable = this.gridViewSetup['Status']['headerText'];
       this.commentLable = this.gridViewSetup['Comments']['headerText'];
-      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);      
+      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);
   }
 
   Updaterevisions(moreFunc, data) {
@@ -724,7 +729,7 @@ export class ProcessesComponent
             res.disabled = true;
           }
         }
-      
+
       });
     }
   }

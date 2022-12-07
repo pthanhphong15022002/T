@@ -129,7 +129,6 @@ export class PopupAddGroupComponent implements OnInit {
   insertGroup(){
     if(this.user)
     {
-      console.log(this.group);
       this.api.execSv("WP","ERM.Business.WP","GroupBusiness","InsertGroupAsync",[this.group])
       .subscribe((res:any[]) =>{
         if(Array.isArray(res) && res[0])

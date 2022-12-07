@@ -1,3 +1,4 @@
+import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { PopupEexperiencesComponent } from './../../employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
 import { PopupEWorkPermitsComponent } from './../../employee-profile/popup-ework-permits/popup-ework-permits.component';
@@ -59,6 +60,7 @@ import { ActivatedRoute } from '@angular/router';
 // import { EmployeeFamilyRelationshipComponent } from '../../employee-profile/employee-family-relationship/employee-family-relationship.component';
 import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
+import { NoopAnimationPlayer } from '@angular/animations';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -67,6 +69,7 @@ import { PopupEPassportsComponent } from '../../employee-profile/popup-epassport
 })
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
+  @ViewChild('button') button: TemplateRef<any>;
   minType = 'MinRange';
   user;
   constructor(
@@ -103,7 +106,6 @@ export class EmployeeProfileComponent extends UIComponent {
   service = '';
   assemblyName = '';
   entity = '';
-  className = '';
   idField = 'recID';
   functionID: string;
   data: any = {};
@@ -113,16 +115,19 @@ export class EmployeeProfileComponent extends UIComponent {
   lstPassport: any;
   crrPassport: any = {};
   //visa
-  lstVisa: any;
+  lstVisa: any=[];
   crrVisa: any = {};
   //work permit
   lstWorkPermit: any;
   //jobInfo
   jobInfo: any;
   crrJobSalaries: any = {};
-
+  //EExperience
+  lstExperience
   formModel;
   itemDetail;
+  EExperienceColumnsGrid : any;
+  className = 'EExperiencesBusiness';
 
   hrEContract;
   crrTab: number = 0;
@@ -145,7 +150,11 @@ export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('healthType', { static: true }) healthType: TemplateRef<any>;
   @ViewChild('healthPeriodResult', { static: true })
   healthPeriodResult: TemplateRef<any>;
-
+  @ViewChild('EExperience', { static: true })
+  EExperienceTmp: TemplateRef<any>;
+  @ViewChild('tempFromDate', { static: true }) tempFromDate;
+  @ViewChild('tempToDate', { static: true })
+  tempToDate: TemplateRef<any>;
   objCollapes = {
     '1': false,
     '1.1': false,
@@ -192,6 +201,35 @@ export class EmployeeProfileComponent extends UIComponent {
   ];
 
   onInit(): void {
+    this.EExperienceColumnsGrid = [
+      {
+        field:"fromDate",
+        headerText: 'Từ tháng năm',
+        template: this.tempFromDate,
+        width: '200',
+      },
+      {
+        field:"toDate",
+        headerText: 'Đến tháng năm',
+        template: this.tempToDate,
+        width: '200',
+      },
+      {
+        field:"companyName",
+        headerText: 'Đơn vị công tác',
+        width: '250',
+      },
+      {
+        field:"position",
+        headerText: 'Chức danh',
+        width: '250',
+      },
+      // {
+      //   headerText: '',
+      //   width: '250',
+      // },
+    ];
+
     this.formModelVisa = new FormModel();
 
     this.routeActive.queryParams.subscribe((params) => {
@@ -226,16 +264,28 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //Vissa
-        this.hrService
-          .getListVisaByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('visa', res);
+        // this.hrService
+        //   .getListVisaByEmployeeID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('visa', res);
 
-            this.lstVisa = res;
-            if (this.lstVisa.length > 0) {
-              this.crrVisa = this.lstVisa[0];
-            }
-          });
+        //     this.lstVisa = res;
+        //     if (this.lstVisa.length > 0) {
+        //       this.crrVisa = this.lstVisa[0];
+        //     }
+        //   });
+
+        let op2 = new DataRequest();
+        op2.gridViewName = 'grvEVisas'
+        op2.entityName ='HR_Evisas'
+        op2.predicate = 'EmployeeID=@0'
+        op2.dataValue = params.employeeID;
+        this.hrService
+        .getListVisaByEmployeeID(op2)
+        .subscribe((res) => {
+          if(res)
+          this.lstVisa = res;
+        })
 
         //work permit
         this.hrService
@@ -254,6 +304,17 @@ export class EmployeeProfileComponent extends UIComponent {
           .subscribe((res) => {
             this.crrJobSalaries = res;
           });
+
+        //EExperience
+        let op = new DataRequest();
+        op.entityName ='HR_EExperiences'
+        op.dataValue = params.employeeID;
+        this.hrService
+        .GetListByEmployeeIDAsync(op)
+        .subscribe((res) => {
+          console.log('e experience', res);
+          this.lstExperience = res;
+        })
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -270,6 +331,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   clickMF(event: any, data: any, funcID = null) {
+    console.log('click vo MF');
     console.log('data ', data);
     switch (event.functionID) {
       case 'SYS03': //edit
@@ -288,6 +350,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'jobSalary') {
           this.HandleEmployeeJobSalariesInfo('edit', data);
           this.df.detectChanges();
+        } else if(funcID == 'eexperiences'){
+          console.log("event eex",event);
+          
         }
         break;
 
@@ -630,21 +695,28 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
-  handlEmployeeExperiences(){
+  handlEmployeeExperiences(actionType: string, data: any){
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
+    // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       PopupEexperiencesComponent,
       {
         isAdd: true,
+        employeeId: this.data.employeeID,
+        actionType: actionType,
         headerText: 'Kinh nghiệm trước đây',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
+      if(actionType == 'add'){
+        this.lstExperience(res.event);
+        console.log('lst ex', this.lstExperience);
+        this.df.detectChanges();
+      }
       if (!res?.event) this.view.dataService.clear();
     });
   }
@@ -954,4 +1026,6 @@ export class EmployeeProfileComponent extends UIComponent {
       this.objCollapes[id] = !this.objCollapes[id];
     }
   }
+
+
 }
