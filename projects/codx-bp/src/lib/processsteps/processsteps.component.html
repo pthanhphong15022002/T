@@ -25,6 +25,7 @@
     cardCss="border h-100"
     [hideMF]="hideMoreFC"
     (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
     [titleTmp]="cardTitleTmp"
@@ -33,6 +34,7 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
     [rootData]="data"
+    (changeDataMF)="changeDataMF($event)"
   >
   </codx-card-img>
 </ng-template>
@@ -321,6 +323,7 @@
                       [footer]="footerBase"
                       [dataItem]="item"
                       [moreFuncCss]="'me-15'"
+                      (changeDataMF)="changeDataMF($event)"
                     >
                     </codx-temp-full>
                   </div>
@@ -391,6 +394,7 @@
                                 [desc2Tmp]="cardTitleTmp"
                                 [footer]="cardImgFooter"
                                 [moreFuncCss]="'me-15'"
+                                (changeDataMF)="changeDataMF($event)"
                               >
                               </codx-temp-full>
 
@@ -459,7 +463,7 @@
       >&nbsp;
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
-    <div class="moreFC-ver" *ngIf="!hideMoreFC">
+    <div class="moreFC-ver" *ngIf="!hideMoreFC && isEdit">
       <div class="action-menu">
         <ng-container #moreFC>
           <div class="moreFC rounded-4 py-2"  id="{{data?.recID}}">

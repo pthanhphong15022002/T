@@ -9,7 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ButtonModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import { ButtonModel, DialogRef, FormModel, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { PopupApprovalComponent } from './popup-approval/popup-approval.component';
 
 @Component({
@@ -29,6 +29,8 @@ export class AprpermissionComponent
   columnsGrid = [];
   lstPermissions = [];
   popoverList: any;
+  formModelMF: FormModel;
+
   @ViewChild('view') codxview!: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
@@ -152,17 +154,21 @@ export class AprpermissionComponent
   }
 
   permission(data) {
+    let obj = {
+      data: data,
+      formModel: this.view.formModel
+    }
     this.dialog = this.callfc.openForm(
       PopupApprovalComponent,
       '',
       500,
-      350,
+      400,
       '',
-      data
+      obj
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-
+        this.view.dataService.update(e.event)
       }
     });
   }

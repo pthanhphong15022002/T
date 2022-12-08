@@ -40,6 +40,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   childFunc = [] ;
   mfAdd :any
   isShowButton = true ;
+  isEdit = false;
 
 
   constructor(
@@ -54,6 +55,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = dt?.data;
+    this.isEdit = dt?.data?.editRole;
     this.process = JSON.parse(JSON.stringify(this.data.data)) ;
     this.moreFunc = this.data?.moreFunc;
     this.title = this.moreFunc?.customName;
