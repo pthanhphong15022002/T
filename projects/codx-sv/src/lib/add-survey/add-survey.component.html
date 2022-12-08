@@ -134,12 +134,14 @@
           </div>
         </ng-template>
         <ng-template #content class="pd-t-20">
+          <div class="scroll-y ques-scroll">
           <app-questions
             #app_question
             [formModel]="view.formModel"
             [dataService]="view.dataService"
             *ngIf="mode == 'Q'"
           ></app-questions>
+        </div>
         </ng-template>
       </e-tabitem>
       <e-tabitem>
