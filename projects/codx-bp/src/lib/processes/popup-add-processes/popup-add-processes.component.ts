@@ -244,7 +244,7 @@ export class PopupAddProcessesComponent implements OnInit {
     }
     else {
       this.actionSave();
-    }
+   }
 
   }
  async actionSave(){
