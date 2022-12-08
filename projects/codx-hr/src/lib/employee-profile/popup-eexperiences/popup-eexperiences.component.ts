@@ -143,6 +143,5 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   afterRenderListView(evt){
     this.listView = evt;
     console.log(this.listView);
-    
   }
 }
