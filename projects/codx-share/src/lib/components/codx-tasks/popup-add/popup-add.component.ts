@@ -406,7 +406,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
           this.disableDueDate = true;
           if (this.param?.EditControl == '0') this.readOnly = true;
         }
-
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -598,7 +597,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
               .subscribe();
           }
-
+   
           if (task?.category == '1' && task.verifyControl == '1')
             this.tmSv
               .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
@@ -617,7 +616,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
               if (res) {
                 this.dialog.dataService.addDatas.clear();
                 if (res.update) {
-                  var task = res.update[0];
+                  var task = res.update;
                   this.dialog.close(res.update);
                   this.attachment?.clearData();
                   this.tmSv

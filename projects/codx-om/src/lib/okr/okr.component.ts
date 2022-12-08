@@ -180,7 +180,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     
     // let dialogKR = this.callfc.openForm(
     //   PopupShowKRComponent,'',null,null,null,
-    //   [],
+    //   ['','','','','',],
     //   '',
     //   dialogModel
     // );
