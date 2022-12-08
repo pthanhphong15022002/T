@@ -159,7 +159,6 @@
         <span class="text-gray-600 me-1">
           <codx-label name="lblBirthPlace" formName="Employees" default="Nơi sinh: "></codx-label>
         </span>
-
         <span class="text-dark fw-bold">
           <span #birthPlace>{{data.provinceName | formatvalue: view.formModel:"birthPlace":birthPlace | async}}</span>
         </span>
@@ -168,7 +167,6 @@
         <span class="text-gray-600 me-1">
           <codx-label name="lblEducation" formName="Employees" default="Trình độ: "></codx-label>
         </span>
-
         <span class="text-dark fw-bold">
           <span #education>{{
             data.education

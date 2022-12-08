@@ -13,7 +13,9 @@ export class ChatBoxComponent implements OnInit {
 
   group:any = {};
   user:any = {};
+  dialogData:any = {};
   dialogRef:DialogRef = null;
+  message:string = "";
   constructor
   (
     private api:ApiHttpService,
@@ -24,13 +26,18 @@ export class ChatBoxComponent implements OnInit {
     @Optional() dialogRef?:DialogRef,
   ) 
   {
-    this.groupID = dialogData.data;
+    this.dialogData = dialogData;
+    this.dialogRef = dialogRef;
     this.user = this.auth.get()
   }
 
   ngOnInit(): void 
   {
-    this.getGroupInfo(this.groupID);
+    if(this.dialogData){
+      this.groupID = this.dialogData.data;
+      this.getGroupInfo(this.groupID);
+
+    }
   }
 
   // get group info
@@ -55,5 +62,11 @@ export class ChatBoxComponent implements OnInit {
     {
       this.dialogRef.close()
     }
+  }
+
+
+  // value Change
+  valueChange(event:any){
+
   }
 }

@@ -36,3 +36,16 @@
 .morefc-list_item:hover{
     cursor: pointer;
 }
+.chat-box-body{
+    width: 100%;
+    height: 400px;
+    background-color: #ffff;
+    overflow: auto;
+    padding: 8px 4px;
+}
+.chat-box-footer{
+    display: flex;
+    justify-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+}
