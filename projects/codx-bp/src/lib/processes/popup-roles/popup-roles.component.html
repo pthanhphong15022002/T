@@ -100,11 +100,11 @@
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="full" field="full"
-                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'full')">
+                    [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'full')" >
                   </codx-input>
                 </td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Tạo qui trình'" [formModel]="dialog.formModel" [fiedName]="'Create'"></codx-label>
                 </td>
@@ -116,7 +116,7 @@
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
                   </codx-input>
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Xem'" [formModel]="dialog.formModel" [fiedName]="'Read'"></codx-label>
@@ -162,13 +162,13 @@
               </tr>
               <!-- <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Xóa'" [fiedName]="'Delete'"></codx-label>
+                  <codx-label [default]="'Xóa'" [formModel]="dialog.formModel" [fiedName]="'Delete'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xóa folder/file'" [fiedName]="'DescriptionDelete'"></codx-label>
+                  <codx-label [default]="'Cho phép xóa qui trình'" [fiedName]="'DescriptionDelete'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="deletePerm" field="delete"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="deletePerm" field="delete"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'delete')">
                   </codx-input>
                 </td>
@@ -202,13 +202,13 @@
               </tr>
               <!-- <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Upload'" [fiedName]="'Upload'"></codx-label>
+                  <codx-label [default]="'Upload'" [formModel]="dialog.formModel" [fiedName]="'Upload'"></codx-label>
                 </td>
                 <td>
                   <codx-label [default]="'Cho phép upload file'" [fiedName]="'DescriptionUpload'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="upload" field="upload"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="upload" field="upload"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'upload')">
                   </codx-input>
                 </td>
@@ -229,11 +229,42 @@
             </tbody>
           </table>
         </div>
+        <div class="row mt-3">
+          <div class="col-xl-6 col-lg-6 col-md-6">
+            <div class="form-group row">
+              <div class="col-4 pt-2">
+                <codx-label fiedName="StartDate" [formModel]="dialog.formModel" default="Từ ngày" class="text-dark fw-bold">
+                </codx-label>
+              </div>
+              <div class="col-8">
+                <codx-input class="form-control test-datetime"
+                  type="datetime" style="width:100%" format="d" [crrValue]="startDate"
+                  (valueChange)="valueChange($event, 'startDate')" [disabled]="checkAdminUpdate()">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-6">
+            <div class="form-group row">
+              <div class="col-4 pt-2">
+                <codx-label fiedName="EndDate" [formModel]="dialog.formModel" default="Đến ngày" class="text-dark fw-bold">
+                </codx-label>
+              </div>
+              <div class="col-8">
+                <codx-input class="form-control test-datetime"
+                  type="datetime" style="width:100%;" format="d" [crrValue]="endDate"
+                  (valueChange)="valueChange($event, 'endDate')" [disabled]="checkAdminUpdate()">
+                </codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </ng-template>
   <ng-template #footer>
-    <button type="button" (click)="onSave()" class="btn btn-primary">Lưu</button>
+
+    <button type="button" (click)="onSave()" class="btn btn-primary" [disabled]="checkAdminUpdate()">Lưu</button>
   </ng-template>
 
 </codx-form>

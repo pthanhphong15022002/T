@@ -298,6 +298,7 @@ export class IncommingAddComponent implements OnInit {
               //   countError = item2.length - countSusscess;
                
               // }
+              debugger;
               if (item2?.status == 0 || Array.isArray(item2)) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);

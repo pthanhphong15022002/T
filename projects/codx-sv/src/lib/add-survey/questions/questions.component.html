@@ -185,6 +185,7 @@
                                 deleteCard(
                                   itemSession.seqNo,
                                   itemQuestion.seqNo,
+                                  itemQuestion.recID,
                                   'Not-S'
                                 )
                               "
@@ -1495,7 +1496,7 @@
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
+            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, itemQuestion.recID, 'Not-S')"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -1749,7 +1750,7 @@
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
+            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, itemQuestion.recID, 'Not-S')"
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -1835,7 +1836,7 @@
                 </li>
                 <li>
                   <a
-                    (click)="deleteCard(itemSession.seqNo, '', 'S')"
+                    (click)="deleteCard(itemSession.seqNo, '', '', 'S')"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >

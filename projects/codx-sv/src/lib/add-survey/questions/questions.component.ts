@@ -399,7 +399,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion] = data;
     console.log('check question after addAnswer', this.questions);
     this.SVServices.signalSave.next('saving');
-    this.setTimeoutSaveDate(data, false);
+    this.setTimeoutSaveDate([data], false);
   }
 
   deleteAnswer(indexSession, indexQuestion, dataAnswer) {
@@ -418,14 +418,14 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     console.log('check questions', this.questions);
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveDate(
-      this.questions[indexSession].children[indexQuestion],
+      [this.questions[indexSession].children[indexQuestion]],
       false
     );
   }
 
-  deleteCard(seqNoSession, seqNoQuestion, category) {
+  deleteCard(seqNoSession, seqNoQuestion, recIDQuestion, category) {
     if (category == 'S') this.deleteSession(seqNoSession);
-    else this.deleteNoSession(seqNoSession, seqNoQuestion);
+    else this.deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion);
     console.log('check delete card', this.questions);
   }
 
@@ -463,7 +463,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       });
   }
 
-  deleteNoSession(seqNoSession, seqNoQuestion) {
+  deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion) {
     var data = JSON.parse(
       JSON.stringify(this.questions[seqNoSession].children)
     );
@@ -474,6 +474,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     if (seqNoQuestion == 0) this.questions[seqNoSession].active = true;
     else data[seqNoQuestion - 1].active = true;
     this.questions[seqNoSession].children = data;
+    this.SVServices.signalSave.next('saving');
+    // this.setTimeoutDeleteDate(
+    //   [tempQuestion],
+    //   true,
+    //   this.questions[seqNoSession].children
+    // );
   }
 
   addOtherAnswer(indexSession, indexQuestion) {
@@ -919,6 +925,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.SVServices.signalSave.next('saving');
   }
 
+  lstDataAdd: any = [];
   addNoSession(itemActive, seqNoSession, category) {
     this.generateGuid();
     var dataAnswerTemp = {
@@ -952,8 +959,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     );
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveDate(
-      tempQuestion,
-      true,
+      [tempQuestion],
       true,
       this.questions[seqNoSession].children
     );
@@ -1291,51 +1297,56 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   saveDataTimeout = new Map();
-  setTimeoutSaveDate(data, isModeAdd, updateList = false, list = null) {
-    clearTimeout(this.saveDataTimeout?.get(data.recID));
-    this.saveDataTimeout?.delete(this.saveDataTimeout?.get(data.recID));
+  setTimeoutSaveDate(data, isModeAdd, list = null) {
+    this.lstDataAdd.push(data[0]);
+    clearTimeout(this.saveDataTimeout?.get(data[0].recID));
+    this.saveDataTimeout?.delete(this.saveDataTimeout?.get(data[0].recID));
     this.saveDataTimeout.set(
-      data.recID,
+      data[0].recID,
       setTimeout(
-        this.onSave.bind(this, this.recID, data, isModeAdd, updateList, list),
+        this.onSave.bind(this, this.recID, this.lstDataAdd, isModeAdd, list),
         2000
       )
     );
   }
 
-  // saveListDataTimeout = new Map();
-  // setTimeoutUpdateList(lstData) {
-  //   clearTimeout(this.saveListDataTimeout?.get(lstData));
-  //   this.saveListDataTimeout?.delete(this.saveListDataTimeout?.get(lstData));
-  //   this.saveListDataTimeout.set(
-  //     lstData,
-  //     setTimeout(this.onUpdateList.bind(this, lstData), 2000)
-  //   );
-  // }
+  deleteDataTimeout = new Map();
+  setTimeoutDeleteDate(data, isModeAdd, list = null) {
+    this.lstDataAdd.push(data[0]);
+    clearTimeout(this.deleteDataTimeout?.get(data[0].recID));
+    this.deleteDataTimeout?.delete(this.deleteDataTimeout?.get(data[0].recID));
+    this.deleteDataTimeout.set(
+      data[0].recID,
+      setTimeout(
+        this.onSave.bind(this, this.lstDataAdd, isModeAdd, list),
+        2000
+      )
+    );
+  }
 
-  onSave(transID, data, isModeAdd, updateList = false, list = null) {
+  onSave(transID, data, isModeAdd, list) {
     this.api
       .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
         transID,
         data,
         isModeAdd,
+        list,
       ])
       .subscribe((res) => {
-        if (res && updateList && list) {
-          this.onUpdateList(list).subscribe((x) => {
-            if (x) this.SVServices.signalSave.next('done');
-          });
+        if (res) {
+          this.SVServices.signalSave.next('done');
         } else this.notification.alertCode('');
       });
+    this.lstDataAdd = [];
   }
 
-  onUpdateList(data) {
-    return this.api.execSv(
-      'SV',
-      'ERM.Business.SV',
-      'QuestionsBusiness',
-      'UpdateListAsync',
-      [data]
-    );
-  }
+  // onUpdateList(data) {
+  //   return this.api.execSv(
+  //     'SV',
+  //     'ERM.Business.SV',
+  //     'QuestionsBusiness',
+  //     'UpdateListAsync',
+  //     [data]
+  //   );
+  // }
 }
