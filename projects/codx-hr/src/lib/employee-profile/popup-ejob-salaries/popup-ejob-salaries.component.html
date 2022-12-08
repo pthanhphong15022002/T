@@ -1,6 +1,6 @@
 <layout-list-detail
   #lstDetail
-  title="'title'"
+  [title]="headerText"
   [headerText]="headerText"
   [formModel]="formModel"
   [footer]="footer"
@@ -160,6 +160,7 @@
     [icoDateCss]="'icon-access_alarm'"
     [dataItem]="data"
     typeMF="hover"
+    [hideMF]="true"
     [dataItem]="data"
     (click)="click(data)"
   >

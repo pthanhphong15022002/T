@@ -1,6 +1,6 @@
-<div *ngIf="viewType=='0'">
+<div *ngIf="viewType=='0'" (click)="openViewPopup? openPopup():''">
     <div class="d-flex align-items-center {{countData>0 ? 'text-success' : 'text-gray-600'}}">
-        <div class="me-1" (click)="openViewPopup? openPopup():''"><i
+        <div class="me-1" ><i
                 class="text-hover-primary icon-attach_file icon-16 text-dark cursor-pointer"></i></div>
         <div>{{countData}}</div>
     </div>

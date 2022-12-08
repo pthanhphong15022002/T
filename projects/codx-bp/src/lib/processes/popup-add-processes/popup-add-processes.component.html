@@ -214,13 +214,13 @@
     <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column" (click)="addAvatar()">
       <div class="dropzone-msg dz-message needsclick">
         <ng-container  *ngIf="linkAvatar!=''">
-          <img [src]="linkAvatar" />
+          <img [src]="linkAvatar" class="image-maxsize"/>
         </ng-container>
         <ng-container *ngIf="linkAvatar==''" >
           <div class="dropzone-msg-title mb-2">
             <i class="icon-image icon-30"></i>
           </div>
-          <div class="dropzone-msg-title mb-2">      
+          <div class="dropzone-msg-title mb-2">
             <codx-label
               name="lblContentAddAvatar"
               [formModel]="form.formModel"
@@ -238,7 +238,7 @@
             ></codx-label>
           </span>
         </ng-container>
-     
+
       </div>
     </div>
 
