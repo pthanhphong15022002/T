@@ -104,19 +104,19 @@
                   </codx-input>
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td class="font-size-lg text-dark">
-                  <codx-label [default]="'Tạo thư mục'" [fiedName]="'Create'"></codx-label>
+                  <codx-label [default]="'Tạo qui trình'" [formModel]="dialog.formModel" [fiedName]="'Create'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép tạo thư mục'" [fiedName]="'DescriptionCreate'"></codx-label>
+                  <codx-label [default]="'Cho phép tạo qui trình'" [fiedName]="'DescriptionCreate'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="create" field="create"
+                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="create" field="create"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'create')">
                   </codx-input>
                 </td>
-              </tr> -->
+              </tr>
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Xem'" [formModel]="dialog.formModel" [fiedName]="'Read'"></codx-label>
