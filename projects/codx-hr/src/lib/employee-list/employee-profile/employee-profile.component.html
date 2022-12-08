@@ -470,7 +470,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span class="text-dark">
+                        <span class="text-dark fw-bold">
                           : {{ infoPersonal.employeeName2 }}</span
                         >
                       </div>
@@ -478,9 +478,9 @@
                     <!-- Giới tính -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="Gender"
@@ -504,9 +504,9 @@
                     <!-- Tình trạng hôn nhân -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="MaritalStatus"
@@ -514,7 +514,7 @@
                         >
                         </codx-label>
 
-                        <span #maritalStatus>
+                        <span #maritalStatus class="fw-bold">
                           : {{ infoPersonal.maritalStatus }}
                           <!-- <codx-vll
                         [showText]="true"
@@ -543,7 +543,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #birthday
+                        <span #birthday class="fw-bold"
                           >: {{ infoPersonal.birthday | fmDT }}</span
                         >
                       </div>
@@ -551,9 +551,9 @@
                     <!-- Nơi sinh -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="BirthPlace"
@@ -561,7 +561,7 @@
                         >
                         </codx-label>
 
-                        <span #birthPlace
+                        <span #birthPlace class="fw-bold"
                           >: {{ infoPersonal.birthPlaceName }}</span
                         >
                       </div>
@@ -581,7 +581,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #nationality
+                        <span #nationality class="fw-bold"
                           >: {{ infoPersonal.nationalityName }}</span
                         >
                       </div>
@@ -589,16 +589,16 @@
                     <!-- Dân tộc -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="EthnicGroup"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #ethnicGroup
+                        <span #ethnicGroup class="fw-bold"
                           >: {{ infoPersonal.ethnicGroupName }}</span
                         >
                       </div>
@@ -606,16 +606,18 @@
                     <!-- Tôn giáo -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="Religion"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #religion>: {{ infoPersonal.religionName }}</span>
+                        <span #religion class="fw-bold"
+                          >: {{ infoPersonal.religionName }}</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -632,22 +634,24 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #idCardNo>: {{ infoPersonal.idCardNo }}</span>
+                        <span #idCardNo class="fw-bold"
+                          >: {{ infoPersonal.idCardNo }}</span
+                        >
                       </div>
                     </div>
                     <!-- Ngày cấp -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="IssuedOn"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #issuedOn
+                        <span #issuedOn class="fw-bold"
                           >: {{ infoPersonal.issuedOn | fmDT }}</span
                         >
                       </div>
@@ -655,16 +659,16 @@
                     <!-- Nơi cấp -->
                     <div class="col">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-connection-point icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="IssuedBy"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #issuedBy
+                        <span #issuedBy class="fw-bold"
                           >: {{ infoPersonal.issuedByName }}
                         </span>
                       </div>
@@ -683,7 +687,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #education
+                        <span #education class="fw-bold"
                           >:
                           <codx-vll
                             [showText]="true"
@@ -701,16 +705,18 @@
                     <!--  -->
                     <div class="col-8">
                       <div class="d-flex">
-                        <span
+                        <!-- <span
                           class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"
-                        ></span>
+                        ></span> -->
                         <codx-label
                           class="text-gray-600 me-2"
                           fiedName="DegreeName"
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #degreeName>: {{ infoPersonal.degreeName }}</span>
+                        <span #degreeName class="fw-bold"
+                          >: {{ infoPersonal.degreeName }}</span
+                        >
                       </div>
                     </div>
                   </div>
@@ -725,7 +731,7 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #street
+                      <span #street class="fw-bold"
                         >:
                         {{ infoPersonal.street ?? infoPersonal.address }}</span
                       >
@@ -739,7 +745,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #pitNumber>: {{ infoPersonal.fullAddress }}</span>
+                      <span #pitNumber class="fw-bold"
+                        >: {{ infoPersonal.fullAddress }}</span
+                      >
                     </div>
                   </div>
                   <div class="row form-group">
@@ -751,7 +759,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Achievement>: {{ infoPersonal.achievement }}</span>
+                      <span #Achievement class="fw-bold"
+                        >: {{ infoPersonal.achievement }}</span
+                      >
                     </div>
                   </div>
                   <div class="row form-group">
@@ -762,7 +772,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Forte>: {{ infoPersonal.forte }}</span>
+                      <span #Forte class="fw-bold"
+                        >: {{ infoPersonal.forte }}</span
+                      >
                     </div>
                   </div>
                   <div class="row form-group">
@@ -773,7 +785,9 @@
                         [formModel]="view.formModel"
                       >
                       </codx-label>
-                      <span #Hobby>: {{ infoPersonal.hobby }}</span>
+                      <span #Hobby class="fw-bold"
+                        >: {{ infoPersonal.hobby }}</span
+                      >
                     </div>
                   </div>
                 </div>
@@ -883,7 +897,7 @@
                         class="border rounded min-w-250px mw-250px me-4 mb-2"
                       >
                         <codx-temp-full
-                          (clickMF)="clickMF($event,item,'family')"
+                          (clickMF)="clickMF($event, item, 'family')"
                           cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                           [imageId]="'ADMIN'"
                           imageObjType="AD_Users"
@@ -892,7 +906,9 @@
                           [title]="item.relationName"
                           [dataItem]="item"
                           [desc]="
-                            (item.relationType | vll: 'HR006':'text' | async) +
+                            (item.relationType
+                              | vll : 'HR006' : 'text'
+                              | async) +
                             ' | ' +
                             'Năm sinh: ' +
                             (item.birthday | fmDT)
@@ -1408,7 +1424,9 @@
                     <codx-mfunc
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstWorkPermit[0], 'workpermit')"
+                      (clickMF)="
+                        clickMF($event, lstWorkPermit[0], 'workpermit')
+                      "
                       type="hover"
                       [dataItem]="lstWorkPermit[0]"
                     >
@@ -1462,7 +1480,10 @@
                     ></span>
                   </div>
                   <div class="add-process">
-                    <button class="btn btn-sm btn-light" (click)="handlEmployeeExperiences('add', null)">
+                    <button
+                      class="btn btn-sm btn-light"
+                      (click)="handlEmployeeExperiences('add', null)"
+                    >
                       <i class="icon-add icon-16 ms-n2"></i>
                       <codx-label
                         name="lblAdd"
@@ -1479,7 +1500,7 @@
                   [formName]="'EExperiences'"
                   [assemblyName]="'HR'"
                   [className]="'EExperiencesBusiness'"
-                  [method] = "'GetListByEmployeeIDAsync'"
+                  [method]="'GetListByEmployeeIDAsync'"
                   [predicates]="'EmployeeID=@0'"
                   [autoLoad]="true"
                   [height]="200"
@@ -1488,7 +1509,7 @@
                   [contentEditable]="false"
                   [allowResizing]="true"
                   (clickMF)="clickMF($event, null, 'eexperiences')"
-                  ></codx-gridview-v2>
+                ></codx-gridview-v2>
               </ng-container>
             </div>
           </div>
@@ -2689,7 +2710,7 @@
                   </div>
                   <div class="fs-4 fw-bold text-uppercase">
                     <codx-label
-                      name="lblEmployeeDegree"
+                      name="lblSalary&Benefit"
                       [formModel]="view.formModel"
                       default="Mức lương & phụ cấp"
                     >
@@ -2720,6 +2741,12 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
+                    <codx-label
+                      name="lblSalary"
+                      [formModel]="view.formModel"
+                      default="Mức lương"
+                    >
+                    </codx-label>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
                       <span
                         class="icon-edit icon-18"
@@ -2727,54 +2754,114 @@
                       ></span>
                     </a>
                   </div>
-                  <div class="row form-group"></div>
+                  <div class="d-flex d-wrap py-3 px-4">
+                    <div
+                      class="border rounded min-w-250px mw-300px me-4 mb-2"
+                      *ngIf="crrEBSalary != null"
+                    >
+                      <codx-temp-full
+                        (clickMF)="clickMF($event, crrEBSalary, 'basicSalary')"
+                        [dataItem]="crrEBSalary"
+                        [formModel]="view.formModel"
+                        [footer]="footerEBSalaries"
+                        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                        [typeMF]="'hover'"
+                      >
+                      </codx-temp-full>
+                      <ng-template #footerEBSalaries let-data>
+                        <div class="d-flex align-items-center mt-1">
+                          <span class="icon-attach_money"></span>Lương chức
+                          danh: {{ crrEBSalary.jSalary }}
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <span class="icon-calendar_today"></span>Hiệu lực:
+                          {{ crrEBSalary.effectedDate | fmDT }}
+                          -
+                          {{ crrEBSalary.expiredDate | fmDT }}
+                        </div>
+                      </ng-template>
+                    </div>
+                    <div
+                      class="border rounded min-w-250px mw-300px me-4 mb-2"
+                      *ngIf="crrJobSalaries != null"
+                    >
+                      <codx-temp-full
+                        (clickMF)="clickMF($event, crrJobSalaries, 'jobSalary')"
+                        [dataItem]="crrJobSalaries"
+                        [formModel]="view.formModel"
+                        [footer]="footerJobSalaries"
+                        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                        [typeMF]="'hover'"
+                      >
+                      </codx-temp-full>
+                      <ng-template #footerJobSalaries let-data>
+                        <div class="d-flex align-items-center mt-1">
+                          <span class="icon-attach_money"></span>Lương chức
+                          danh: {{ crrJobSalaries.jSalary }}
+                        </div>
+                        <div class="d-flex align-items-center">
+                          <span class="icon-calendar_today"></span>Hiệu lực:
+                          {{
+                            crrJobSalaries.effectedDate | date : "MM/dd/yyyy"
+                          }}
+                          -
+                          {{ crrJobSalaries.expiredDate | date : "MM/dd/yyyy" }}
+                        </div>
+                      </ng-template>
+                    </div>
+                  </div>
                 </div>
-                
 
                 <div class="border mb-3">
+                  <div
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                  >
+                    <codx-label
+                      name="lblBenefit"
+                      [formModel]="view.formModel"
+                      default="Phụ cấp"
+                    >
+                    </codx-label>
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="HandleBebefitInfo('add', null)"
+                      ></span>
+                    </a>
+                  </div>
                   <div class="d-flex flex-wrap py-3 px-4">
+                    <ng-container *ngFor="let benefit of listCrrBenefit">
                       <div
-                      class="border rounded min-w-250px mw-250px me-4 mb-2"
-                      *ngIf="crrJobSalaries != null"
+                        class="border rounded min-w-250px mw-250px me-4 mb-2"
+                        *ngIf="benefit != null"
                       >
                         <codx-temp-full
-                          (clickMF)="clickMF($event, crrJobSalaries,'jobSalary')"
-                          [dataItem]="crrJobSalaries"
+                          (clickMF)="clickMF($event, benefit, 'benefit')"
+                          [dataItem]="benefit"
                           [formModel]="view.formModel"
-                          [footer]="footerJobSalaries"
+                          [footer]="footerBenefit"
                           cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                           [typeMF]="'hover'"
                         >
                         </codx-temp-full>
-                        <ng-template #footerJobSalaries let-data>
-                          <div
-                            class="d-flex align-items-center mt-1"
-                          >
-                            <span
-                              class="icon-attach_money"
-                            ></span
-                            >Lương chức danh: {{crrJobSalaries.jSalary}}
+                        <ng-template #footerBenefit let-data>
+                          <div class="d-flex align-items-center mt-1">
+                            <span class="icon-attach_money"></span>Lương chức
+                            danh: {{ crrJobSalaries.jSalary }}
                           </div>
-                          <div
-                            class="d-flex align-items-center"
-                          >
-                            <span
-                              class="icon-calendar_today"
-                            ></span
-                            >Hiệu lực: {{ crrJobSalaries.effectedDate | date:'MM/dd/yyyy'}} - {{crrJobSalaries.expiredDate | date:'MM/dd/yyyy'}}
+                          <div class="d-flex align-items-center">
+                            <span class="icon-calendar_today"></span>Hiệu lực:
+                            {{
+                              crrJobSalaries.effectedDate | date : "MM/dd/yyyy"
+                            }}
+                            -
+                            {{
+                              crrJobSalaries.expiredDate | date : "MM/dd/yyyy"
+                            }}
                           </div>
                         </ng-template>
                       </div>
-                  </div>
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  >
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="addEmployeeDegreeInfo()"
-                      ></span>
-                    </a>
+                    </ng-container>
                   </div>
                   <div class="row form-group"></div>
                 </div>
@@ -4066,41 +4153,40 @@
   {{ infoPersonal.healthPeriodResult }}
 </ng-template>
 
-
 <ng-template #EExperience let-data>
   <tr class="tr-ip-add-tmp has-action-menu">
     <td class="w-15">
-      <span>{{data?.fromDate}}</span>
+      <span>{{ data?.fromDate }}</span>
     </td>
     <td class="w-20">
-      <span>{{data?.toDate}}</span>
+      <span>{{ data?.toDate }}</span>
     </td>
     <td class="w-15">
-      <span>{{data?.companyName}}</span>
+      <span>{{ data?.companyName }}</span>
     </td>
     <td class="w-15">
-      <span>{{data?.position}}</span>
+      <span>{{ data?.position }}</span>
     </td>
     <td class="w-15">
-      <div class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1">
+      <div
+        class="action-menu d-flex justify-content-center align-items-center cursor-pointer mt-1"
+      >
         <i class="icon-edit text-primary icon-16 mx-1"></i>
         <i class="icon-close text-danger icon-16 mx-1"></i>
       </div>
     </td>
   </tr>
-</ng-template> 
+</ng-template>
 
-<ng-template
-#button let-data
->
-<h1>{{data.companyName}}</h1>
-<button>123</button>
+<ng-template #button let-data>
+  <h1>{{ data.companyName }}</h1>
+  <button>123</button>
 </ng-template>
 
 <ng-template #tempFromDate let-data>
-  {{data?.fromDate | fmDT}}
+  {{ data?.fromDate | fmDT }}
 </ng-template>
 
 <ng-template #tempToDate let-data>
-  {{data?.toDate | fmDT}}
+  {{ data?.toDate | fmDT }}
 </ng-template>
