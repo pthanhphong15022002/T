@@ -57,7 +57,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   templateName: string = ''; // tên template khi chọn lưu thành template
 
-  dialog: DialogRef;
+  dialoRef: DialogRef;
   data: any = {};
   isAfterSaveProcess: boolean = false;
   option: SidebarModel;
@@ -91,14 +91,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
     @Optional() data: DialogData
   ) {
     super(injector);
-    this.dialog = dialog;
+    this.dialoRef = dialog;
     this.formModel = data?.data?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.title = data?.data?.title;
-    this.dialog.dataService = this.option.DataService;
+    this.dialoRef.dataService = this.option.DataService;
     if (!this.isAddNew) {
       if ((this.data.category = '1')) {
         this.radioPersonalCheck = true;
@@ -307,7 +307,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.dialogAddBookingStationery.patchValue({
       title: this.dialogAddBookingStationery.value.note,
     });
-    this.dialog.dataService
+    this.dialoRef.dataService
       .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
       .subscribe((res) => {
         if (res.save || res.update) {
@@ -315,11 +315,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
             this.returnData = res.update;
             this.returnData.forEach((item) => {
               if (item.recID == this.data.recID) {
-                (this.dialog.dataService as CRUDService)
+                (this.dialoRef.dataService as CRUDService)
                   .update(item)
                   .subscribe();
               } else {
-                (this.dialog.dataService as CRUDService)
+                (this.dialoRef.dataService as CRUDService)
                   .add(item, 0)
                   .subscribe();
               }
@@ -328,7 +328,9 @@ export class PopupRequestStationeryComponent extends UIComponent {
             this.returnData = res.save;
 
             this.returnData.forEach((item) => {
-              (this.dialog.dataService as CRUDService).update(item).subscribe();
+              (this.dialoRef.dataService as CRUDService)
+                .update(item)
+                .subscribe();
             });
           }
 
@@ -351,21 +353,21 @@ export class PopupRequestStationeryComponent extends UIComponent {
                         item.status = '3';
                         item.write = false;
                         item.delete = false;
-                        (this.dialog.dataService as CRUDService)
+                        (this.dialoRef.dataService as CRUDService)
                           .update(item)
                           .subscribe();
-                        this.dialog && this.dialog.close();
+                        this.dialoRef && this.dialoRef.close();
                       } else {
                         this.notificationsService.notifyCode(res?.msgCodeError);
                         // Thêm booking thành công nhưng gửi duyệt thất bại
-                        this.dialog && this.dialog.close();
+                        this.dialoRef && this.dialoRef.close();
                       }
                     });
                 });
               });
-            this.dialog && this.dialog.close();
+            this.dialoRef && this.dialoRef.close();
           } else {
-            this.dialog && this.dialog.close();
+            this.dialoRef && this.dialoRef.close();
           }
         } else {
           return;
@@ -374,7 +376,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   close() {
-    this.dialog && this.dialog.close();
+    this.dialoRef && this.dialoRef.close();
   }
 
   //#endregion
@@ -431,12 +433,12 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.cart.filter((item: any) => {
         if (item.recID == tmpResource.recID) {
           item.quantity = item.quantity + 1;
-          //item.itemName = item.resourceName;
+          item.itemName = item.resourceName;
         }
       });
     } else {
       tmpResource.quantity = 1;
-      //tmpResource.itemName = tmpResource.resourceName;
+      tmpResource.itemName = tmpResource.resourceName;
       this.cart.push(tmpResource);
     }
 

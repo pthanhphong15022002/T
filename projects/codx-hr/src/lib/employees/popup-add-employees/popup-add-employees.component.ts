@@ -87,7 +87,10 @@ export class PopupAddEmployeesComponent implements OnInit {
       if (this.action === 'copy') {
         this.titleAction = 'Sao chép';
       }
-      if(this.dialogRef.dataService.dataSelected){
+      if(this.dialogRef.dataService.dataSelected)
+      {
+    debugger
+
         this.data = JSON.parse(JSON.stringify(this.dialogRef.dataService.dataSelected));
         this.employee = this.data;
       }

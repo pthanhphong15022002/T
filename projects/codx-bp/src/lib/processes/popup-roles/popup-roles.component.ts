@@ -53,6 +53,7 @@ export class PopupRolesComponent implements OnInit {
   isAssign: any;
   autoCreate: any;
   nemberType = '';
+  approveStatus = '';
   checkRoles = true;
   constructor(
     private auth: AuthStore,
@@ -92,13 +93,13 @@ export class PopupRolesComponent implements OnInit {
   ngAfterViewInit(): void {
     //Tạo sẵn check quyền, vì db quyền của module này chưa có
     this.api
-    .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
-      this.user.userID,
-      'BP',
-    ])
-    .subscribe((res) => {
-      this.checkRoles = res.msgBodyData[0];
-    });
+      .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
+        this.user.userID,
+        'BP',
+      ])
+      .subscribe((res) => {
+        this.checkRoles = res.msgBodyData[0];
+      });
   }
 
   // ngOnChanges(changes: SimpleChanges): void {
@@ -113,9 +114,10 @@ export class PopupRolesComponent implements OnInit {
   onSave() {
     if (
       this.currentPemission > -1 &&
-      this.process.permissions[this.currentPemission] != null
+      this.process.permissions[this.currentPemission] != null && this.process.permissions[this.currentPemission].objectType != "7"
     ) {
       this.process.permissions[this.currentPemission].full = this.full;
+      this.process.permissions[this.currentPemission].create = this.create;
       this.process.permissions[this.currentPemission].read = this.read;
       this.process.permissions[this.currentPemission].download = this.download;
       this.process.permissions[this.currentPemission].share = this.share;
@@ -152,6 +154,7 @@ export class PopupRolesComponent implements OnInit {
       case 'full':
         this.full = data;
         if (data == true) {
+          this.create = data;
           this.read = data;
           this.share = data;
           this.assign = data;
@@ -159,6 +162,9 @@ export class PopupRolesComponent implements OnInit {
           this.edit = data;
           this.publish = data;
         }
+        break;
+      case 'create':
+        this.create = data;
         break;
       case 'assign':
         this.assign = data;
@@ -186,6 +192,7 @@ export class PopupRolesComponent implements OnInit {
     if (type != 'full' && data == false) this.full = false;
 
     if (
+      this.create &&
       this.assign &&
       this.read &&
       this.share &&
@@ -194,7 +201,6 @@ export class PopupRolesComponent implements OnInit {
       this.publish
     )
       this.full = true;
-
     this.changeDetectorRef.detectChanges();
   }
 
@@ -212,6 +218,7 @@ export class PopupRolesComponent implements OnInit {
         this.process.permissions[oldIndex] != null
       ) {
         this.process.permissions[oldIndex].full = this.full;
+        this.process.permissions[oldIndex].create = this.create;
         this.process.permissions[oldIndex].read = this.read;
         this.process.permissions[oldIndex].share = this.share;
         this.process.permissions[oldIndex].assign = this.assign;
@@ -223,12 +230,14 @@ export class PopupRolesComponent implements OnInit {
 
     if (this.process.permissions[index] != null) {
       this.full =
+        this.process.permissions[index].create &&
         this.process.permissions[index].read &&
         this.process.permissions[index].share &&
         this.process.permissions[index].assign &&
         this.process.permissions[index].download &&
         this.process.permissions[index].edit &&
         this.process.permissions[index].publish;
+      this.create = this.process.permissions[index].create;
       this.read = this.process.permissions[index].read;
       this.share = this.process.permissions[index].share;
       this.assign = this.process.permissions[index].assign;
@@ -238,9 +247,11 @@ export class PopupRolesComponent implements OnInit {
       this.currentPemission = index;
       this.autoCreate = this.process.permissions[index].autoCreate;
       this.nemberType = this.process.permissions[index].memberType;
+      this.approveStatus = this.process.permissions[index].approveStatus;
       this.userID = this.process.permissions[index].objectID;
     } else {
       this.full = false;
+      this.create = false;
       this.read = false;
       this.edit = false;
       this.publish = false;
@@ -256,7 +267,7 @@ export class PopupRolesComponent implements OnInit {
       (this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '2') ||
       (!this.autoCreate && this.nemberType == '3') ||
-      (!this.autoCreate && this.nemberType == '4')
+      (!this.autoCreate && this.nemberType == '4' && this.approveStatus == '5')
     )
       this.isAssign = true;
     else this.isAssign = false;
@@ -300,6 +311,7 @@ export class PopupRolesComponent implements OnInit {
       list = [];
     }
     if (index == -1) {
+      perm.create = false;
       perm.read = false;
       perm.download = false;
       perm.full = false;
@@ -313,6 +325,7 @@ export class PopupRolesComponent implements OnInit {
       // }
 
       if (perm.objectType.toLowerCase() == '7') {
+        perm.create = true;
         perm.read = true;
         perm.download = true;
         perm.full = true;
