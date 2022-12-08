@@ -290,9 +290,14 @@ export class CalendarNotesComponent
     }
   }
 
-  changeDayOfWeek(e, lstView) {
+  changeDayOfWeek(e) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
-    this.setDate(data, lstView);
+    let myInterval = setInterval(() => {
+      if (this.lstView) {
+        clearInterval(myInterval);
+        this.setDate(data, this.lstView);
+      }
+    }, 100);
   }
 
   dateOfMonth: any;
@@ -345,8 +350,7 @@ export class CalendarNotesComponent
     var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
     if (this.showList && lstView) {
       (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
-      (lstView.dataService as CRUDService).predicates =
-        '';
+      (lstView.dataService as CRUDService).predicates = '';
       (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
       lstView.dataService
         .setPredicate(this.predicate, [this.dataValue])
@@ -415,10 +419,9 @@ export class CalendarNotesComponent
           this.CO_Meetings = dt[2];
           this.EP_BookingRooms = dt[3];
           this.EP_BookingCars = dt[4];
-          debugger
           if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
-              if (res.isPin == true || res.isPin == '1') {
+              if (res.IsPin == true || res.IsPin == '1') {
                 this.countNotePin++;
               }
             });
