@@ -48,6 +48,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 export class ProcessesComponent
   extends UIComponent
   implements OnInit, AfterViewInit {
+  @ViewChild('empty') empty: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -127,6 +128,7 @@ export class ProcessesComponent
 
   userId = '';
   isAdmin = false;
+  isAdminBp = false;
 
   constructor(
     inject: Injector,
@@ -181,6 +183,7 @@ export class ProcessesComponent
       gridViewName:"grvProcesses"
     }
     this.acceptEdit();
+    this.isAdminBp = this.checkAdminOfBP(this.userId);
   }
 
   ngAfterViewInit(): void {
@@ -666,11 +669,13 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      this.userId = '2207130007';
-      this.isAdmin = false
+      // this.userId = '2207130007';
+      // this.isAdmin = false
       let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
-      let fullRole = this.isAdmin || isOwner ? true : false;
-      e.forEach((res) => {       
+      let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
+      e.forEach((res) => {
+        console.log(res);
+        
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS004':
@@ -687,31 +692,29 @@ export class ProcessesComponent
             }
             break;
           case 'SYS04':// copy
-            let isCreate4 = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
-            if(!isCreate4 && !fullRole) {
-              res.disabled = true;
-            }
-            break;
           case 'SYS003':// them 
           case 'SYS003':// them phien ban
             let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
             if(!isCreate && !fullRole) {
-              res.isblur = true;
+              if(res.functionID === "SYS04"){
+                res.disabled = true;
+              }else{
+                res.isblur = true;
+              }
             }
             break;
           case 'SYS03'://sua 
-            let isEdit3 = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
-            if(!isEdit3 && !fullRole) {
-              res.disabled = true;
-            }
-          break;
           case 'BPT102'://sua ten
           case 'BPT202'://sua ten
           case 'BPT203'://luu phien ban
           case 'BPT103'://luu phien ban
             let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
             if(!isEdit && !fullRole) {
-              res.isblur = true;
+              if(res.functionID === "SYS03"){
+                res.disabled = true;
+              }else{
+                res.isblur = true;
+              }
             }
             break;
           case 'SYS02':// xoa
