@@ -40,7 +40,6 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { debug } from 'console';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 
@@ -75,6 +74,8 @@ export class ProcessStepsComponent
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
+  @Input() isEdit: false;
+
   showButtonAdd = true;
   dataObj?: any;
   model?: DataRequest;
@@ -148,7 +149,7 @@ export class ProcessStepsComponent
     });
   }
 
-  onInit(): void {
+  onInit(): void {   
     this.actived = this.process?.actived;
     if (!this.actived) {
       this.lockChild = this.lockParent = this.hideMoreFC = true;
@@ -1262,6 +1263,21 @@ export class ProcessStepsComponent
       p.close();
     }
     this.changeDetectorRef.detectChanges()
+  }
+
+  changeDataMF(e){
+    if(e && !this.isEdit){
+      e.forEach(element => {
+        switch(element.functionID){
+          case 'SYS01':
+          case 'SYS02':
+          case 'SYS03':
+          case 'SYS04':
+            element.disabled =true;
+        }
+      });
+    }
+    
   }
 
 }
