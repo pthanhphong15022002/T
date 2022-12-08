@@ -62,7 +62,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     },
   ];
   tempDriver: any;
-  returnData= null;
+  returnData = null;
   title = '';
   cbbData: any;
   driverCheck = false;
@@ -88,7 +88,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     status: string;
     objectType: string;
     objectID: any;
-    icon:any;
+    icon: any;
   };
   carCapacity = 0;
   attendeesList = [];
@@ -118,6 +118,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
   calendarID: any;
   isCopy = false;
   isPopupCbb = false;
+  saveCheck = false;
+
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -132,28 +134,24 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.isAdd = dialogData?.data[1];
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
-    this.isCopy =dialogData?.data[4];
+    this.isCopy = dialogData?.data[4];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    if(this.isAdd){
-
+    if (this.isAdd) {
       this.data.requester = this.authService?.userValue?.userName;
     }
-    if(this.isAdd && this.optionalData!=null){
+    if (this.isAdd && this.optionalData != null) {
       this.data.resourceID = this.optionalData.resourceId;
-      this.data.bookingOn=this.optionalData.startDate;
+      this.data.bookingOn = this.optionalData.startDate;
+    } else if (this.isAdd && this.optionalData == null) {
+      this.data.bookingOn = new Date();
     }
-    else if(this.isAdd && this.optionalData==null){
-      this.data.bookingOn=new Date();
+    if (this.isCopy) {
+      this.data.bookingOn = new Date();
     }
-    if(this.isCopy){
-      this.data.bookingOn=new Date();
-    }
-    
   }
   onInit(): void {
-
     this.cacheService.valueList('EP012').subscribe((res) => {
       this.vllDevices = res.datas;
       this.vllDevices.forEach((item) => {
@@ -181,8 +179,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.tmplstDevice.push(tmpDevice);
         });
       }
-      if(this.isCopy){
-        if(this.data.equipments){
+      if (this.isCopy) {
+        if (this.data.equipments) {
           this.data.equipments.forEach((equip) => {
             let tmpDevice = new Device();
             tmpDevice.id = equip.equipmentID;
@@ -195,14 +193,14 @@ export class PopupAddBookingCarComponent extends UIComponent {
             });
             this.tmplstDevice.push(tmpDevice);
           });
-        }        
+        }
       }
       this.detectorRef.detectChanges();
       if (this.isAdd && this.optionalData != null) {
         this.data.resourceID = this.optionalData.resourceId;
-        this.detectorRef.detectChanges();        
+        this.detectorRef.detectChanges();
         let equips = this.optionalData.resource?.equipments;
-        if(equips){
+        if (equips) {
           equips.forEach((equip) => {
             let tmpDevice = new Device();
             tmpDevice.id = equip.equipmentID;
@@ -215,10 +213,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
             });
             this.tmplstDevice.push(tmpDevice);
           });
+        } else {
+          equips = [];
         }
-        else{
-          equips=[];
-        }        
         this.data.startDate = this.optionalData.startDate;
         this.data.endDate = this.optionalData.startDate;
         this.detectorRef.detectChanges();
@@ -249,10 +246,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
                 [this.calendarID]
               )
               .subscribe((res) => {
-                
                 let tmpDateTime = new Date();
-                if(this.optionalData && this.optionalData?.startDate){
-                  tmpDateTime = this.optionalData.startDate
+                if (this.optionalData && this.optionalData?.startDate) {
+                  tmpDateTime = this.optionalData.startDate;
                 }
                 res.forEach((day) => {
                   if (day?.shiftType == '1') {
@@ -271,11 +267,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     }
                     this.calEndHour = tmpstartTime[0];
                     this.calEndMinutes = tmpstartTime[1];
-                    
                   } else if (day?.shiftType == '2') {
                     let tmpEndTime = day?.endTime.split(':');
                     this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                    if (this.isAdd ) {
+                    if (this.isAdd) {
                       this.data.endDate = new Date(
                         tmpDateTime.getFullYear(),
                         tmpDateTime.getMonth(),
@@ -286,13 +281,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
                       );
                     }
                     this.calEndHour = tmpEndTime[0];
-                    this.calEndMinutes = tmpEndTime[1];                    
+                    this.calEndMinutes = tmpEndTime[1];
                   }
                 });
-                if(this.isAdd && this.optionalData){
+                if (this.isAdd && this.optionalData) {
                   this.driverChangeWithCar(this.optionalData.resourceId);
                 }
-                if(this.isCopy){
+                if (this.isCopy) {
                   this.driverChangeWithCar(this.data.resourceID);
                 }
               });
@@ -339,10 +334,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   this.calStartMinutes = tempStartTime[1];
                   this.calEndHour = tempEndTime[0];
                   this.calEndMinutes = tempEndTime[1];
-                  if(this.isAdd && this.optionalData){
+                  if (this.isAdd && this.optionalData) {
                     this.driverChangeWithCar(this.optionalData.resourceId);
                   }
-                  if(this.isCopy){
+                  if (this.isCopy) {
                     this.driverChangeWithCar(this.data.resourceID);
                   }
                 }
@@ -352,7 +347,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       });
 
-    
     this.cache.valueList('EP010').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         let tmpArr = [];
@@ -369,7 +363,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
             objectType: 'AD_Users',
             roleType: '1',
             objectID: undefined,
-            icon:'',
+            icon: '',
           };
           this.listRoles.forEach((element) => {
             if (element.value == this.tempAtender.roleType) {
@@ -392,7 +386,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     objectType: 'AD_Users',
                     roleType: people.roleType,
                     objectID: undefined,
-                    icon:'',
+                    icon: '',
                   };
                   this.listRoles.forEach((element) => {
                     if (element.value == this.tempAtender.roleType) {
@@ -429,14 +423,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.bookingOn = this.data.startDate;
       this.detectorRef.detectChanges();
     }
-    if((this.isAdd && this.data.resourceID!=null) || !this.isAdd){
-      this.codxEpService.getResourceByID(this.data.resourceID).subscribe((res:any)=>{
-        if(res){
-          this.carCapacity= res.capacity;
-        }
-      })
+    if ((this.isAdd && this.data.resourceID != null) || !this.isAdd) {
+      this.codxEpService
+        .getResourceByID(this.data.resourceID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.carCapacity = res.capacity;
+          }
+        });
     }
-    
   }
 
   initForm() {
@@ -465,78 +460,85 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
-    this.data.reminder=15;
-    this.data.bookingOn=this.data.startDate;
-    this.data.stopOn=this.data.endDate;
-    this.fGroupAddBookingCar.patchValue(this.data);
-    if (this.fGroupAddBookingCar.invalid == true) {
-      this.codxEpService.notifyInvalid(
-        this.fGroupAddBookingCar,
-        this.formModel
-      );
-      return;
-    }
-    if(this.data.phone!=null && this.data.phone!=''){
-      if(!this.validatePhoneNumber(this.data.phone)){
-        this.notificationsService.notify('Số điện thoại không hợp lệ','2',0);// EP_WAIT doi messcode tu BA
+    if (!this.saveCheck) {
+      this.data.reminder = 15;
+      this.data.bookingOn = this.data.startDate;
+      this.data.stopOn = this.data.endDate;
+      this.fGroupAddBookingCar.patchValue(this.data);
+      if (this.fGroupAddBookingCar.invalid == true) {
+        this.codxEpService.notifyInvalid(
+          this.fGroupAddBookingCar,
+          this.formModel
+        );
         return;
-      };
-    }
-    
-
-    if (
-      this.data.startDate != null &&
-      this.data.endDate != null &&
-      this.data.startDate < this.data.endDate
-    ) {
-      let hours = parseInt(
-        ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
-      );
-      if (!isNaN(hours) && hours > 0) {
-        this.data.hours = hours;
       }
+      if (this.data.phone != null && this.data.phone != '') {
+        if (!this.validatePhoneNumber(this.data.phone)) {
+          this.notificationsService.notify(
+            'Số điện thoại không hợp lệ',
+            '2',
+            0
+          ); // EP_WAIT doi messcode tu BA
+          return;
+        }
+      }
+
+      if (
+        this.data.startDate != null &&
+        this.data.endDate != null &&
+        this.data.startDate < this.data.endDate
+      ) {
+        let hours = parseInt(
+          ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
+        );
+        if (!isNaN(hours) && hours > 0) {
+          this.data.hours = hours;
+        }
+      } else {
+        this.notificationsService.notifyCode('TM036');
+        return;
+      }
+      let tmpEquip = [];
+      this.tmplstDevice.forEach((element) => {
+        let tempEquip = new Equipments();
+        tempEquip.equipmentID = element.id;
+        tempEquip.createdBy = this.authService.userValue.userID;
+        tempEquip.isPicked = element.isSelected;
+        tmpEquip.push(tempEquip);
+      });
+      this.data.equipments = tmpEquip;
+
+      this.attendeesList = [];
+      this.attendeesList.push(this.curUser);
+      this.lstPeople.forEach((people) => {
+        this.attendeesList.push(people);
+      });
+      if (this.driver != null) {
+        this.attendeesList.push(this.driver);
+      }
+      this.data.stopOn = this.data.endDate;
+      this.data.bookingOn = this.data.startDate;
+      this.data.category = '2';
+      this.data.approveStatus = '1';
+      this.data.status = '1';
+      this.data.resourceType = '2';
+      this.data.attendees = this.attendeesList.length;
+
+      if (this.data.attendees > this.carCapacity) {
+        this.notificationsService.alertCode('EP010').subscribe((x) => {
+          if (x.event.status == 'N') {
+            return;
+          } else {
+            this.startSave(approval);
+          }
+        });
+      } else {
+        this.startSave(approval);
+      }
+      this.saveCheck = true;
     } else {
-      this.notificationsService.notifyCode('TM036');
       return;
     }
-    let tmpEquip = [];
-    this.tmplstDevice.forEach((element) => {
-      let tempEquip = new Equipments();
-      tempEquip.equipmentID = element.id;
-      tempEquip.createdBy = this.authService.userValue.userID;
-      tempEquip.isPicked = element.isSelected;
-      tmpEquip.push(tempEquip);
-    });    
-    this.data.equipments = tmpEquip;
-
-    this.attendeesList = [];
-    this.attendeesList.push(this.curUser);
-    this.lstPeople.forEach((people) => {
-      this.attendeesList.push(people);
-    });
-    if(this.driver!=null){
-      this.attendeesList.push(this.driver);
-    }
-    this.data.stopOn = this.data.endDate;
-    this.data.bookingOn = this.data.startDate;
-    this.data.category = '2';
-    this.data.approveStatus = '1';    
-    this.data.status = '1';
-    this.data.resourceType = '2';
-    this.data.attendees= this.attendeesList.length;
-
-    if (this.data.attendees > this.carCapacity) {
-      this.notificationsService.alertCode('EP010').subscribe((x) => {
-        if (x.event.status == 'N') {
-          return;
-        } else {
-          this.startSave(approval);
-        }
-      });
-    } else {
-      this.startSave(approval);
-    }
-    this.detectorRef.detectChanges();
   }
   startSave(approval) {
     this.dialogRef.dataService
@@ -623,10 +625,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.detectorRef.detectChanges();
     }
   }
-  deleteAttender(attID:string){
+  deleteAttender(attID: string) {
     var tempDelete;
-    this.lstPeople.forEach(item=>{
-      if(item.userID== attID){
+    this.lstPeople.forEach((item) => {
+      if (item.userID == attID) {
         tempDelete = item;
       }
     });
@@ -642,8 +644,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           status: '1',
           objectType: 'EP_Drivers',
           roleType: '2',
-          objectID: res.msgBodyData[0].recID,          
-          icon:'',
+          objectID: res.msgBodyData[0].recID,
+          icon: '',
         };
         this.listRoles.forEach((element) => {
           if (element.value == this.tempAtender.roleType) {
@@ -660,8 +662,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
         );
       } else {
         this.driver = null;
-        
-        this.notificationsService.notify('Xe hiện tại không có tài xế','3',0);// EP_WAIT doi messcode tu BA
+
+        this.notificationsService.notify('Xe hiện tại không có tài xế', '3', 0); // EP_WAIT doi messcode tu BA
       }
       this.detectorRef.detectChanges();
     });
@@ -813,21 +815,21 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.isPopupCbb = true;
   }
   filterArray(arr) {
-    return [...new Map(arr.map(item => [item["userID"], item])).values()]
+    return [...new Map(arr.map((item) => [item['userID'], item])).values()];
   }
   valueCbxUserChange(event) {
     //this.cbbData=event.id; gán data đã chọn cho combobox
     if (event?.dataSelected) {
       //this.lstPeople = [];
-      event.dataSelected.forEach((people) => {        
+      event.dataSelected.forEach((people) => {
         this.tempAtender = {
           userID: people.UserID,
           userName: people.UserName,
           status: '1',
           objectType: 'AD_Users',
           roleType: '3',
-          objectID: people.UserID,          
-          icon:'',
+          objectID: people.UserID,
+          icon: '',
         };
         this.listRoles.forEach((element) => {
           if (element.value == this.tempAtender.roleType) {
@@ -838,13 +840,13 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.lstPeople.push(this.tempAtender);
         }
       });
-      
-      this.lstPeople=this.filterArray(this.lstPeople);
-      
+
+      this.lstPeople = this.filterArray(this.lstPeople);
+
       if (this.lstPeople.length > 0) {
         this.data.attendees = this.lstPeople.length + 1;
       }
-      
+
       this.isPopupCbb = false;
       this.detectorRef.detectChanges();
     }
