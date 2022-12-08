@@ -920,10 +920,6 @@ export class ProcessesComponent
   }
 
   changeView(event) {
-<<<<<<< HEAD
-    //ham chua dung
-=======
->>>>>>> 931d85fbfad5c243abba5abb04d157b7959e2de2
     this.currView = null;
     this.currView = event.view.model.template2;
     // this.currView = this.templateListCard;
