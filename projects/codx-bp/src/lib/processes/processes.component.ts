@@ -669,8 +669,8 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      this.userId = '2207130007';
-      this.isAdmin = false
+      // this.userId = '2207130007';
+      // this.isAdmin = false
       let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
