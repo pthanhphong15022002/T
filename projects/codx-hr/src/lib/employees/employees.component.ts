@@ -213,6 +213,7 @@ export class EmployeesComponent extends UIComponent {
   edit(data:any) {
     if (data) 
     {
+      debugger
       this.view.dataService.dataSelected = data;
       this.view.dataService
       .edit(this.view.dataService.dataSelected)
@@ -385,6 +386,7 @@ export class EmployeesComponent extends UIComponent {
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
+    debugger
     switch (e.functionID) {
       case 'SYS01': // thêm
         this.add();
