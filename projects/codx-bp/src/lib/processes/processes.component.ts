@@ -48,6 +48,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 export class ProcessesComponent
   extends UIComponent
   implements OnInit, AfterViewInit {
+  @ViewChild('empty') empty: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -123,7 +124,11 @@ export class ProcessesComponent
   entityName = '';
   statusDefault = '6' ;
   vllStatus = "BP003";
-  isAdmin =false ;
+  isAcceptEdit:any;
+
+  userId = '';
+  isAdmin = false;
+  isAdminBp = false;
 
   constructor(
     inject: Injector,
@@ -138,6 +143,7 @@ export class ProcessesComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.showButtonAdd = this.funcID!='BPT6'
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -145,6 +151,8 @@ export class ProcessesComponent
     });
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
+    this.userId = this.user?.userID;
+    this.isAdmin = this.user?.administrator
   }
 
   onInit(): void {
@@ -153,6 +161,7 @@ export class ProcessesComponent
     };
     this.columnsGrid = [
       { headerTemplate: this.itemProcessName, width: 300 },
+      { headerTemplate: null, width: 100 },
       { headerTemplate: this.itemOwner, width: 300 },
       { headerTemplate: this.itemVersionNo, width: 100 },
       { headerTemplate: this.itemActivedOn, width: 150 },
@@ -173,6 +182,8 @@ export class ProcessesComponent
       functionType:1,
       gridViewName:"grvProcesses"
     }
+    this.acceptEdit();
+    this.isAdminBp = this.checkAdminOfBP(this.userId);
   }
 
   ngAfterViewInit(): void {
@@ -589,50 +600,37 @@ export class ProcessesComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'BPT206':
       case 'BPT106':
         this.properties(data);
         break;
+      case 'BPT201':
       case 'BPT101':
         this.viewDetailProcessSteps(e?.data, data);
         break;
+      case 'BPT202':
       case 'BPT102':
         this.reName(data);
         break;
       case 'BPT109':
+      case 'BPT209':
         this.releaseProcess(data);
         break;
+      case 'BPT207':
       case 'BPT107':
         this.Updaterevisions(e?.data, data);
         break;
-      case 'BPT104':
       case 'BPT105':
-        this.permission(data);
-        break;
-      case 'BPT108':
-        this.roles(data);
-        break;
-      case 'BPT103':
-        this.revisions(e.data, data);
-        break;
-      case 'BPT206':
-        this.properties(data);
-        break;
-      case 'BPT201':
-        this.viewDetailProcessSteps(e?.data, data);
-        break;
-      case 'BPT202':
-        this.reName(data);
-        break;
-      case 'BPT207':
-        this.Updaterevisions(e?.data, data);
-        break;
-      case 'BPT205':
+      case 'BPT104':
+      case 'BPT204':
         this.permission(data);
         break;
       case 'BPT208':
+      case 'BPT108':
         this.roles(data);
         break;
       case 'BPT203':
+      case 'BPT103':
         this.revisions(e.data, data);
         break;
     }
@@ -671,26 +669,98 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
+      // this.userId = '2207130007';
+      // this.isAdmin = false
+      let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
+      let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
-        if (
-          res.functionID == 'SYS005' ||
-          res.functionID == 'SYS004' ||
-          res.functionID == 'SYS001' ||
-          res.functionID == 'SYS002' ||
-          res.functionID == 'SYS003'
-        ) {
-          /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
-            true;
+        console.log(res);
+        
+        switch (res.functionID) {
+          case 'SYS005':
+          case 'SYS004':
+          case 'SYS001':
+          case 'SYS002':
+          case 'SYS003':
+            res.disabled =true;
+            break;
+          case 'BPT109':// phat hanh
+          case 'BPT209':// phat hanh
+            let isPublish = data?.permissions.some(x => (x.objectID == this.userId && x.publish) );
+            if(data.status === "6" || (!isPublish && !fullRole )) {
+              res.isblur = true;
+            }
+            break;
+          case 'SYS04':// copy
+          case 'SYS003':// them 
+          case 'SYS003':// them phien ban
+            let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
+            if(!isCreate && !fullRole) {
+              if(res.functionID === "SYS04"){
+                res.disabled = true;
+              }else{
+                res.isblur = true;
+              }
+            }
+            break;
+          case 'SYS03'://sua 
+          case 'BPT102'://sua ten
+          case 'BPT202'://sua ten
+          case 'BPT203'://luu phien ban
+          case 'BPT103'://luu phien ban
+            let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
+            if(!isEdit && !fullRole) {
+              if(res.functionID === "SYS03"){
+                res.disabled = true;
+              }else{
+                res.isblur = true;
+              }
+            }
+            break;
+          case 'SYS02':// xoa
+            let isDelete = data?.permissions.some(x => (x.objectID == this.userId && x.delete) );
+            if(!isDelete && !fullRole) {
+              res.disabled = true;
+            }
+            break;
+          case 'BPT101':// xem 
+          case 'BPT201':// xem 
+          case 'BPT107'://  quan ly phien ban
+          case 'BPT207'://  quan ly phien ban
+            let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
+            if(!isRead && !fullRole) {
+              res.isblur = true;
+            }
+            break;
+          case 'BPT105'://chia se
+          case 'BPT205'://chia se
+            let isShare = data?.permissions.some(x => (x.objectID == this.userId && x.share));
+            if(!isShare && !fullRole) {
+              res.isblur = true;
+            }
+            break;
+          case 'BPT108'://phan quyen
+          case 'BPT208'://phan quyen
+            let isAssign = data?.permissions.some(x => (x.objectID == this.userId && x.assign));
+            if(!isAssign && !fullRole) {
+              res.isblur = true;
+            }
+            break;          
         }
-        if(res.functionID === "BPT109"){
-          let userId = this.user?.userID;
-          let checkRole = data?.permissions.findIndex(x => (x.objectID == userId && x.publish) || !this.user?.administrator);
-          if(data.status === "6" || checkRole >=0 ) {
-            res.disabled = true;
-          }
-        }
-
       });
+    }
+  }
+
+  checkPermission(data){
+    let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
+    let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
+    return (isRead || this.isAdmin || isOwner) ? true : false;
+  }
+
+  doubleClickViewProcessSteps(moreFunc, data){
+    let check = this.checkPermission(data);
+    if(check) {
+      this.viewDetailProcessSteps(moreFunc, data);
     }
   }
 
@@ -705,15 +775,7 @@ export class ProcessesComponent
     return desc + '</div>';
   }
 
-  //#endregion
-
-  //tesst
   viewDetailProcessSteps(moreFunc, data) {
-    //đoi view
-    // this.bpService.viewProcesses.next(data);
-    // let url = 'bp/processstep/BPT11';
-    // this.codxService.navigate('', url, { processID: data.recID });
-    //view popup
     let obj = {
       moreFunc: moreFunc,
       data: data,
@@ -741,7 +803,6 @@ export class ProcessesComponent
             this.view.dataService.update(process).subscribe();
             this.detectorRef.detectChanges();
           }
-
         });
       }
     });
@@ -779,15 +840,12 @@ export class ProcessesComponent
     } else p.close();
   }
 
-
   openPopup() {
     if (this.tmpListItem) {
       let option = new DialogModel();
       let popup = this.callfc.openForm(this.tmpListItem, "", 400, 500, "", null, "", option);
       popup.closed.subscribe((res: any) => {
-        if (res) {
-
-        }
+        if (res) {}
       });
     }
   }
@@ -798,7 +856,6 @@ export class ProcessesComponent
 
   updateReleaseProcess(){
     let processsId = this.itemSelected?.recID;
-
     this.bpService.updateReleaseProcess(
       [
         processsId,
@@ -816,6 +873,38 @@ export class ProcessesComponent
         this.detectorRef.detectChanges();
       }
     })
+  }
+
+  acceptEdit() {
+    if(this.user.administrator){
+      this.isAcceptEdit=true;
+    }
+    else if (this.checkAdminOfBP(this.user.userId)) {
+      this.isAcceptEdit=true;
+    }
+    else if(!this.user.edit){
+      this.isAcceptEdit=false;
+    }
+  }
+  isPermissionEdit(id){
+    this.api
+    .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
+    .subscribe((res) => {
+      if (res) {
+        if(res.edit){
+          this.isAcceptEdit=true;
+        }
+        else {
+          this.isAcceptEdit=false;
+        }
+      }
+    });
+  }
+
+  checkAdminOfBP(userid: any) {
+    let check: boolean;
+    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
+    return check;
   }
 
 }

@@ -32,7 +32,6 @@ import {
   styleUrls: ['./revisions.component.css'],
 })
 export class RevisionsComponent implements OnInit {
-
   @ViewChild('attachment') attachment: AttachmentComponent;
   @Input() process = new BP_Processes();
 
@@ -43,21 +42,21 @@ export class RevisionsComponent implements OnInit {
   more: any;
   comment = '';
   funcID: any;
-  disableTitle =true;
-  versionDefault:string;
-  verName:string;
-  verNameDefault:string
-  verNo:string;
-  entityName:string;
+  disableTitle = true;
+  versionDefault: string;
+  verName: string;
+  verNameDefault: string;
+  verNo: string;
+  entityName: string;
   version = new BP_ProcessRevisions();
-  msgErrorValidExit= 'msgErrorValidExit'; // Check name exist
-  msgErrorValidIsNull= 'msgErrorValidIsNull'; // Check name is null or don't select
+  msgErrorValidExit = 'msgErrorValidExit'; // Check name exist
+  msgErrorValidIsNull = 'msgErrorValidIsNull'; // Check name is null or don't select
   msgSucess = 'msgSucess'; //Condtion sucess
-  isUpdate: boolean;
-  gridViewSetup:any;
-  fucntionIdMain:any;
-  enterComment:any;
-  enterName:any;
+  isUpdate: boolean = false;
+  gridViewSetup: any;
+  fucntionIdMain: any;
+  enterComment: any;
+  enterName: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -73,33 +72,36 @@ export class RevisionsComponent implements OnInit {
     this.funcID = this.more?.functionID;
     this.entityName = this.more?.entityName;
     this.process = this.data?.data;
-    this.fucntionIdMain = this.data?.funcIdMain
+    this.fucntionIdMain = this.data?.funcIdMain;
     this.revisions = this.process?.versions;
-    this.headerText =dt?.data.more.defaultName;
-    this.verNo ='V'+this.revisions.length.toString()+'.0';
+    this.headerText = dt?.data.more.defaultName;
+    this.verNo = 'V' + this.revisions.length.toString() + '.0';
     this.cache.message('BP001').subscribe((res) => {
       if (res) {
-       this.verNameDefault = Util.stringFormat(res.defaultName, '' + this.verNo.toString() + '');
-      }
-    })
-    this.comment=''
-    this.cache.gridViewSetup('ProcessRevisions', 'grvProcessRevisions').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-        this.enterComment =this.gridViewSetup['Comment']?.description;
-        this.enterName = this.gridViewSetup['VersionName']?.headerText;
+        this.verNameDefault = Util.stringFormat(
+          res.defaultName,
+          '' + this.verNo.toString() + ''
+        );
       }
     });
+    this.comment = '';
+    this.cache
+      .gridViewSetup('ProcessRevisions', 'grvProcessRevisions')
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+          this.enterComment = this.gridViewSetup['Comment']?.description;
+          this.enterName = this.gridViewSetup['VersionName']?.headerText;
+        }
+      });
   }
 
-
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   //#region event
   valueChange(e) {
-    if(e?.data)  {
-      this.verName =e?.data;
+    if (e?.data) {
+      this.verName = e?.data;
     }
     this.changeDetectorRef.detectChanges;
   }
@@ -111,52 +113,62 @@ export class RevisionsComponent implements OnInit {
     this.changeDetectorRef.detectChanges;
   }
   //#endregion
-  checkValiName(nameVersion: string){
-    if(nameVersion == null || nameVersion.trim() =='') {
+  checkValiName(nameVersion: string) {
+    if (nameVersion == null || nameVersion.trim() == '') {
       return this.msgErrorValidIsNull;
     }
-    let check=true;
-    this.revisions.forEach(element => {
-      if(element.versionName == nameVersion.trim()) {
-        check= false;
+    let check = true;
+    this.revisions.forEach((element) => {
+      if (element.versionName == nameVersion.trim()) {
+        check = false;
       }
     });
-    return check?this.msgSucess:this.msgErrorValidExit;
+    return check ? this.msgSucess : this.msgErrorValidExit;
   }
 
   onSave() {
-    switch(this.checkValiName(this.verName)) {
-      case this.msgErrorValidIsNull: {
+    switch (this.checkValiName(this.verName)) {
+      case this.msgErrorValidIsNull:
         this.notiService.notifyCode('SYS009', 0, '"' + this.enterName + '"');
-         break;
-      }
-      case this.msgErrorValidExit: {
-
+        break;
+      case this.msgErrorValidExit:
         this.notiService.alertCode('BP004').subscribe((x) => {
-          if (x.event.status == 'N') {
+          if (x.event?.status == 'N') {
             return;
           } else {
             this.isUpdate = true;
+            this.actionSave()
           }
         });
-         break;
-      }
-      case this.msgSucess: {
-        this.isUpdate = true;
         break;
-      }
-   }
-   if(this.isUpdate) {
-      this.bpService.updateRevision(this.funcID,this.process.recID,this.verNo,this.verName,this.comment, this.entityName,this.fucntionIdMain)
-      .subscribe((res) => {
-        if (res) {
+      case this.msgSucess:
+        this.isUpdate = true;
+        this.actionSave()
+        break;
+    }
+
+
+  }
+  actionSave(){
+    if (this.isUpdate) {
+      this.bpService
+        .updateRevision(
+          this.funcID,
+          this.process.recID,
+          this.verNo,
+          this.verName,
+          this.comment,
+          this.entityName,
+          this.fucntionIdMain
+        )
+        .subscribe((res) => {
+          if (res) {
             this.process.versionNo = res.versionNo;
             this.process.versions = res.versions;
             this.dialog.close(this.process);
             this.notiService.notifyCode('SYS007');
-        }
-      });
-   }
-
+          }
+        });
+    }
   }
 }

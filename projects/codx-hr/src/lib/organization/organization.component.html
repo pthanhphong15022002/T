@@ -28,7 +28,7 @@
 </ng-template>
 
 <ng-template #templateListView>
-  <div class="px-5 py-1 card-organization">
+  <div class="px-5 py-1 card-organization h-100 overflow-scroll">
     <ng-container *ngFor="let data of dataCard; let i = index">
       <div class="d-flex flex-column py-4 border-bottom">
         <div class="d-flex align-items-center org-header mt-1 mb-3">
@@ -99,7 +99,8 @@
 
 <ng-template #templateTree let-data>
   <div class="d-flex align-items-center py-1">
-    <i class="icon-home me-2"></i><span>{{ data.orgUnitName }}</span>
+    <i class="icon-home me-2"></i>
+    <span>{{ data.orgUnitName }}</span>
   </div>
 </ng-template>
 

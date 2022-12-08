@@ -49,21 +49,21 @@
     <!-- end list group chat -->
 </div>
 <ng-template #itemTemplate let-item>
-    <div class="row mt-2 p-2" (click)="clickGroupChat(item)">
+    <div class="row mt-2 p-2" (click)="openChatBox(item)">
         <!-- image -->
         <div class="col-2">
-            <ng-container *ngIf="item.groupType == '2' ; else group1_1">
-                <codx-img 
-                    [objectId]="item.groupID" 
-                    [objectName]="item.groupName" 
-                    [objectType]="'WP_Groups'">
-                </codx-img>
-            </ng-container>
-            <ng-template #group1_1>
+            <ng-container *ngIf="item.groupType == '1' ; else group1_n">
                 <codx-img 
                     [objectId]="item.groupID2" 
-                    [objectName]="item.groupName" 
+                    [objectName]="item.GroupName2" 
                     [objectType]="'AD_Users'">
+                </codx-img>
+                
+            </ng-container>
+            <ng-template #group1_n>
+                <codx-img 
+                    [objectId]="item.groupID" 
+                    [objectType]="'WP_Groups'">
                 </codx-img>
             </ng-template>
         </div>

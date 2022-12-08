@@ -210,12 +210,12 @@ export class EmployeesComponent extends UIComponent {
     return moment(value).fromNow(true);
   }
 
-  edit(data?) {
+  edit(data:any) {
     if (data) 
     {
+      debugger
       this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
+      this.view.dataService
       .edit(this.view.dataService.dataSelected)
       .subscribe((res: any) => {
         let option = new SidebarModel();
@@ -236,6 +236,8 @@ export class EmployeesComponent extends UIComponent {
           }
         });
       });
+    }
+    
   }
 
   copy(data) {
@@ -384,6 +386,7 @@ export class EmployeesComponent extends UIComponent {
 
   clickMF(e: any, data?: any) {
     this.itemSelected = data;
+    debugger
     switch (e.functionID) {
       case 'SYS01': // thêm
         this.add();

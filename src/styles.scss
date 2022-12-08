@@ -1020,6 +1020,10 @@ codx-layout-add .card-header {
   width: 20px;
 }
 
+.content-tree .nochild {
+  width: 24px;
+}
+
 /***/
 // .user-mini-nav:hover {
 //   opacity: .75;
@@ -1249,6 +1253,11 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
 
 .dt-aprovel .codx-detail-header.mt-2 {
   margin-top: 1rem !important;
+}
+
+img.symbol-12px.symbol-circle {
+  width: 12px !important;
+  height: 12px !important;
 }
 
 /*** tabs ***/

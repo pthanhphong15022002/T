@@ -1,4 +1,4 @@
-import { CodxEpService } from './../../../codx-ep.service';
+import { CodxEpService, GridModels } from './../../../codx-ep.service';
 import {
   Component,
   Injector,
@@ -19,10 +19,10 @@ import {
   UserModel,
   AuthStore,
   CRUDService,
-  AuthService,
 } from 'codx-core';
-import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
+
 @Component({
   selector: 'popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -70,7 +70,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
   user: UserModel;
   grvStationery;
   model?: FormModel;
-  totalStationery = 0;
   groupStationery;
   radioGroupCheck: boolean;
   radioPersonalCheck: boolean;
@@ -80,7 +79,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
   title: '';
   dialogAddBookingStationery: FormGroup;
   returnData = [];
-  negativePhysical: string = '';
+  nagetivePhysical: string = '';
+  totalStationery = 0;
 
   constructor(
     private injector: Injector,
@@ -109,26 +109,19 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.epService.getListItems(this.data.recID).subscribe((res: any) => {
-      if (res && !this.isAddNew) {
-        this.cart = [...res];
-      }
-    });
     this.user = this.auth.get();
 
-    this.epService.getStationeryGroup().subscribe((res: any) => {
-      if (res) {
-        this.groupStationery = res[0];
-        this.totalStationery = res[1];
-      }
+    this.epService.getStationeryGroup().subscribe((res) => {
+      this.groupStationery = res[0];
+      this.totalStationery = res[1];
     });
 
     this.epService
-      .getParams('EPParameters', 'NegativePhysical')
+      .getParams('EPParameters', 'NagetivePhysical')
       .subscribe((res: any) => {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
-        this.negativePhysical = json.NegativePhysical;
+        this.nagetivePhysical = json.NagetivePhysical;
       });
 
     this.cache.functionList('EP8S21').subscribe((res) => {
@@ -146,8 +139,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     if (!this.isAddNew) {
       this.radioPersonalCheck = true;
       this.radioGroupCheck = false;
-      //this.cart = this.data.bookingItems;
-      this.cart = [];
+      this.cart = this.data.bookingItems;
       this.changeTab(2);
     } else {
       if (this.data?.category == '1') {
@@ -158,8 +150,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.radioGroupCheck = true;
       }
     }
-
-    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit() {
@@ -212,10 +202,10 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   changeTab(tabNo: number) {
-    // if (tabNo == 2 && this.cart.length == 0) {
-    //   this.notificationsService.notifyCode('EP011');
-    //   return;
-    // }
+    if (tabNo == 2 && this.cart.length == 0) {
+      this.notificationsService.notifyCode('EP011');
+      return;
+    }
     this.currentTab = tabNo;
     this.detectorRef.detectChanges();
   }
@@ -380,14 +370,16 @@ export class PopupRequestStationeryComponent extends UIComponent {
   //#endregion
 
   filterStationery(groupID: string = null) {
+    let resourceModel = new GridModels();
+    resourceModel.funcID = 'EP8S21',
+    resourceModel.entityName = 'EP_Resources';
+    resourceModel.pageSize = 20;
     this.groupID = groupID;
     this.api
-      .exec('EP', 'ResourcesBusiness', 'GetListStationeryByGroupIDAsync', [
-        groupID,
-      ])
+      .exec('EP', 'ResourcesBusiness', 'GetListByCbxAsync', [resourceModel, groupID])
       .subscribe((res: any) => {
         this.listView.dataService.data = [];
-        this.listView.dataService.add(res).subscribe();
+        this.listView.dataService.add(res[0]).subscribe();
       });
     this.detectorRef.detectChanges();
   }
@@ -401,8 +393,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     return cart.reduce((acc, item) => acc + item.quantity, 0);
   }
 
-  i = 1;
-
   getItemQty(itemID) {
     let item = this.cart.filter((x) => x.resourceID == itemID);
     if (item.length == 0) {
@@ -415,31 +405,30 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let tmpResource;
     tmpResource = { ...data };
 
-    //negativePhysical = 0: khong am kho
+    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
+
+    //NagetivePhysical = 0: khong am kho
 
     if (tmpResource.availableQty == 0) {
-      if (this.negativePhysical == '0') {
+      if (this.nagetivePhysical == '0') {
         //không add
         this.notificationsService.notifyCode('EP013');
         return;
       }
     }
 
-    //Check có tồn tại trong cart
-    let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
     if (isPresent) {
       this.cart.filter((item: any) => {
         if (item.recID == tmpResource.recID) {
           item.quantity = item.quantity + 1;
-          //item.itemName = item.resourceName;
+          item.itemName = item.resourceName;
         }
       });
     } else {
       tmpResource.quantity = 1;
-      //tmpResource.itemName = tmpResource.resourceName;
+      tmpResource.itemName = tmpResource.resourceName;
       this.cart.push(tmpResource);
     }
-
     this.detectorRef.detectChanges();
   }
 

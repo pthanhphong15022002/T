@@ -21,10 +21,10 @@ export class DetailCalendarComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   funcID: any;
   fields = {
-    id: 'recID',
-    subject: { name: 'memo' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
+    id: 'TransID',
+    subject: { name: 'Title' },
+    startTime: { name: 'StartDate' },
+    endTime: { name: 'EndDate' },
   };
   request?: ResourceModel;
 

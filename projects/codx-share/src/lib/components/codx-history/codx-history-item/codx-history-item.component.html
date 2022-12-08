@@ -198,21 +198,10 @@
                     <span class="ms-3">
                         <ng-container *ngFor="let item of data.sendToObjects">
                             <span [ngbPopover]="tmpTUserHover" triggers="mouseenter:mouseleave">
-                                <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
+                                <codx-img [objectId]="item.objectID" [objectName]="item.objectName" [objectType]="'AD_Users'" [width]="30" [imageType]="'circle'">
                                 </codx-img>
                             </span>
-                            <ng-template #tmpTUserHover>
-                                <div class="d-flex">
-                                    <span>
-                                        <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30"
-                                            [imageType]="'circle'">
-                                        </codx-img>
-                                    </span>
-                                    <span class="ms-2">
-                                        {{item.objectName}}
-                                    </span>
-                                </div>
-                            </ng-template>
+                            
                         </ng-container>
                     </span>
                 </div>
@@ -227,6 +216,18 @@
             </div>
         </div>
     </div>
+    <ng-template #tmpTUserHover let-item>
+        <div class="d-flex">
+            <span>
+                <codx-img [objectId]="item.objectID" [objectName]="item.objectName" [objectType]="'AD_Users'" [width]="30"
+                    [imageType]="'circle'">
+                </codx-img>
+            </span>
+            <span class="ms-2">
+                {{item.objectName}}
+            </span>
+        </div>
+    </ng-template>
 </ng-template>
 <!-- END TASK -->
 <!-- UPDATE -->

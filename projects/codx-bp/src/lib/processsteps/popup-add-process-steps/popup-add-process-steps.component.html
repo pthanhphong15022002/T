@@ -80,7 +80,9 @@
           [formModel]="form.formModel"
           [Group]="form.formGroup"
           [model]="processSteps"
-          (valueChange)="valueChangeCbx($event)">
+          (valueChange)="valueChangeCbx($event)"
+          [disabled]="lockParentId"
+          >
         </codx-input>
       </div>
       <div
@@ -128,7 +130,17 @@
               #p="ngbPopover"
               (mouseenter)="showPoppoverDeleteRef(p, i)"
               autoClose="outside"
-              placement="right left top bottom">{{ item }}</span>
+              placement="right left top bottom">
+              <span *ngIf="i != editTodo" (click)="editTodoIndex(i)">{{item}}</span>
+              <input 
+                *ngIf="i === editTodo" 
+                style="margin: 0;"
+                type="text" [value]="item" 
+                (blur)="valueChangeRefrenceItem($event,i)"
+                (keydown.enter)="valueChangeRefrenceItem($event,i)"              
+                autofocus
+                >
+            </span>
           </div>
         </div>
       </ng-container>
@@ -307,29 +319,25 @@
       </div>
 
       <ng-container>
-        <div class="form-group">
+        <div class="form-group owners">
           <codx-label
             fiedName="Owners"
             [formModel]="form.formModel"
             default="Vai trò thực hiện">
           </codx-label>
-          <div class="owners">
-            <codx-input
-              type="Share"
-              [refValue]="vllShare"
-              field="Owners"
-              [dataShared]="[]"
-              multiple="true"
-              [showInput]="false"
-              (valueChange)="eventApply($event)"
-              [disabled]="readOnly">
-              [class]="'click-owner'"
-            </codx-input>
-            <span class="owners-text">{{gridViewSetup['Owners']?.headerText ??
-              'Owners'}}</span>
-          </div>
-
+          <codx-input
+            type="Share"
+            [refValue]="vllShare"
+            field="Owners"
+            [dataShared]="[]"
+            [multiple]="true"
+            [showInput]="false"
+            (valueChange)="eventApply($event)"
+            [disabled]="readOnly">
+            [class]="'click-owner'"
+          </codx-input>
         </div>
+
         <div *ngIf="listOwnerDetails.length> 0" class="mt-3">
           <ng-container *ngFor="let item of listOwnerDetails; index as i">
             <div

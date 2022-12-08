@@ -15,10 +15,10 @@
     [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
     [dataItem]="data" [formModel]="view.formModel"
-    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
+    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" 
     [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)"
-    (dblclick)="viewDetailProcessSteps(moreFuncDbClick , data)">
+    (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
@@ -26,7 +26,8 @@
       | async
       ">
       <div class="d-flex flex-column w-100 p-3">
-        <div #processName class="fs-6 fw-bold line-clamp-card"
+        <div class="d-flex justify-content-between">
+          <div #processName class="fs-6 fw-bold line-clamp-card"
           [ngbTooltip]="data.processName"> {{
           data?.processName | formatvalue
           : view.formModel
@@ -36,7 +37,9 @@
           : "grvProcesses"
           | async
           }}</div>
-
+          <span *ngIf="!checkPermission(data)" class="icon-security text-primary icon-18"></span>
+        </div>
+       
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
@@ -102,8 +105,7 @@
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <tr class="has-action-menu" (dblclick)="viewDetailProcessSteps(moreFuncDbClick
-    , data)">
+  <tr class="has-action-menu" (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick, data)">
     <td class="rowphoto">
       <div class="d-flex flex-column ">
         <div class="box">
@@ -117,26 +119,7 @@
             | async
             }}</div>
         </div>
-        <!-- <div #processName class="fw-bold line-clamp" [ngbTooltip]="data.processName">
-          {{
-          data.processName | formatvalue
-          : view.formModel
-          : "processName"
-          : processName
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}
-        </div> -->
-        <!-- <lib-show-more-less
-        [name]="data.processName"
-        [viewFormModel]="view.formModel"
-        [fieldName]="'processName'"
-        [tmpName]="processName"
-        [customName]="'Processes'"
-        [gridViewName]="'grvProcesses'"
-        >
-      </lib-show-more-less> -->
+    
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
@@ -180,6 +163,9 @@
           </div>
         </div>
       </div>
+    </td>
+    <td class="rowphoto" placement="left"  >  
+      <span  *ngIf="!checkPermission(data)" class="icon-security text-primary icon-18"></span>
     </td>
     <td class="rowphoto" placement="left">
       <codx-temp-full cardCss="card-template" [imageWidth]="30"
@@ -251,13 +237,6 @@
         [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
-    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
-      <div class="padding">
-        <button class="btn btn-primary" (click)="approval(data)">
-          <codx-label default="Xét duyệt"></codx-label>
-        </button>
-      </div>
-    </td> -->
   </tr>
 </ng-template>
 <!-- view-list -->
@@ -542,4 +521,17 @@
   <button type="button" class="btn btn-primary" (click)="updateReleaseProcess()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+<ng-template #empty>
+  <ng-container *ngIf="data && data[0] != null && data[0].isDelete">
+    <div class="nondata-container w-100 mb-2">
+      <div class="d-flex justify-content-between page-heading align-items-center p-2">
+        <div class="fw-bold ms-2">Du lieu 30 ngay se xoa</div>
+        <div class="cursor-pointer">
+          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" >Xoa thung rac</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </ng-template>

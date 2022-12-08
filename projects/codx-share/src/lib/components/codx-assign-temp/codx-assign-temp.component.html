@@ -1,6 +1,6 @@
-<div>
+<div (click)="countResource>0 && openViewPopup? openPopup():''">
     <div class="d-flex align-items-center {{countResource>0 ? 'text-success' : 'text-gray-600'}}">
-        <div class="me-1" (click)="countResource>0 && openViewPopup? openPopup():''"><i class="text-hover-primary icon-person_outline icon-16 text-dark cursor-pointer"></i></div>
+        <div class="me-1" ><i class="text-hover-primary icon-person_outline icon-16 text-dark cursor-pointer"></i></div>
         <div>{{countResource}}</div>
     </div>
 </div>

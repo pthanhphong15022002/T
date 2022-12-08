@@ -19,6 +19,7 @@ import {
   NotificationsService,
 } from 'codx-core';
 import { SignalRService } from 'projects/codx-wp/src/lib/services/signalr.service';
+import { ChatBoxComponent } from '../chat-box/chat-box.component';
 import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.component';
 
 @Component({
@@ -78,35 +79,23 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.signalRSV.signalREmit.subscribe((res: any) => {
-      if (res) {
-        console.log('openGroup: ', res);
-        if (this.codxListView) {
-          (this.codxListView.dataService as CRUDService)
-            .update(res)
-            .subscribe();
-        }
+    this.signalRSV.signalGroup.subscribe((res: any) => {
+      if (res) 
+      {
+        (this.codxListView.dataService as CRUDService).add(res).subscribe();
       }
     });
   }
   // searrch
-  search(event: any) {}
-  // click group chat
-  clickGroupChat(group: any) {
-    if (group) {
-      this.api
-        .execSv(
-          'WP',
-          'ERM.Business.WP',
-          'GroupBusiness',
-          'OpenGroupChatAsync',
-          [group.groupID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.signalRSV.sendData(res, 'OpenGroupChat');
-          }
-        });
+  search(event: any) {
+
+  }
+  // click group chat - chat box
+  openChatBox(group: any) {
+    if (group?.groupID) 
+    {
+      let option = new DialogModel();
+      this.callFCSV.openForm(ChatBoxComponent,"",0,0,"WP",group.groupID,"",option);
     }
   }
 
@@ -125,8 +114,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       let popup = this.callFCSV.openForm(
         PopupAddGroupComponent,
         '',
-        600,
-        600,
+        300,
+        500,
         this.function.funcID,
         data,
         '',
@@ -135,11 +124,73 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       popup.closed.subscribe((res: any) => {
         this.isOpen = true;
         this.isOpenChange.emit(this.isOpen);
-        if (res.event) {
-          let group = res.event;
-          (this.codxListView.dataService as CRUDService).add(group).subscribe();
-        }
+        // if (res.event) 
+        // {
+        //   let group = res.event;
+        //   (this.codxListView.dataService as CRUDService).add(group).subscribe();
+        // }
       });
     }
+  }
+
+
+  addBoxChat(){
+    //content
+    // if (content instanceof TemplateRef) {
+    //   var viewRef = content.createEmbeddedView({ $implicit: dialogRef });
+    //   this._applicationRef.attachView(viewRef);
+    //   viewRef.detectChanges();
+    //   let contentDialog = viewRef.rootNodes;
+
+    //   if (contentDialog.length > 1) {
+    //     var contain = document.createElement('div');
+    //     contain.classList.add('container-dialog');
+    //     contentDialog.forEach((ele: any) => {
+    //       contain.append(ele);
+    //     });
+    //     contentEle = contain;
+    //   } else {
+    //     contentEle = contentDialog[0] as HTMLElement;
+    //   }
+
+    //   if (contentEle instanceof HTMLElement) {
+    //     if (contentEle.tagName == 'CODX-FORM') {
+    //       var div$ = contentEle.children[0];
+    //       headerEle = div$.children[0] as HTMLElement;
+    //       contentEle = div$.children[1] as HTMLElement;
+    //       footerEle = div$.children[2] as HTMLElement;
+    //     }
+    //   }
+    // } else if (typeof content === 'string') {
+    //   contentEle = content;
+    // } else {
+    //   //const contentCmptFactory =
+    //   // this.componentFactoryResolver.resolveComponentFactory(content);
+    //   let odt: DialogData = { data: data };
+
+    //   const modalContentInjector = Injector.create({
+    //     providers: [
+    //       { provide: DialogData, useValue: odt },
+    //       { provide: DialogRef, useValue: dialogRef },
+    //     ],
+    //   });
+    //   //const componentRef = contentCmptFactory.create(modalContentInjector);
+    //   let componentRef = viewContainerRef.createComponent(content, {
+    //     injector: modalContentInjector,
+    //   });
+    //   componentRef.changeDetectorRef.detectChanges();
+    //   let contentDialog = componentRef.location.nativeElement;
+    //   contentEle = contentDialog;
+
+    //   if (contentDialog.childElementCount > 0) {
+    //     var ele: HTMLElement = contentDialog.children[0];
+    //     if (ele.tagName == 'CODX-FORM') {
+    //       var div$ = ele.children[0];
+    //       headerEle = div$.children[0] as HTMLElement;
+    //       contentEle = div$.children[1] as HTMLElement;
+    //       footerEle = div$.children[2] as HTMLElement;
+    //     }
+    //   }
+    // }
   }
 }
