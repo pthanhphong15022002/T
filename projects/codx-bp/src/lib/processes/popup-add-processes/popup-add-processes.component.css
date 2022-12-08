@@ -44,3 +44,7 @@
   /* Text/Muted */
   color: #6C757D;
 }
+.image-maxsize{
+  width: 494px !important;
+  height: 242px !important;
+}
