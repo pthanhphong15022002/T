@@ -47,7 +47,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('templateRight') empty: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
@@ -63,7 +64,6 @@ export class ProcessesComponent
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
-
   currView?: TemplateRef<any>;
 
   itemMemo: TemplateRef<any>;
@@ -170,20 +170,24 @@ export class ProcessesComponent
       { headerTemplate: this.itemMemo, width: 300 },
       { field: '', headerText: '', width: 100 },
     ];
-    this.moreFuncDbClick = {
-      customName:"Chi tiết quy trình",
-      dataValue:null,
-      defaultName:"Chi tiết quy trình",
-      delete:true,
-      description:"Chi tiết quy trình",
-      displayField:"",
-      displayMode:"3",
-      entityName:"BP_Processes",
-      formName:"Processes",
-      functionID:"BPT101",
-      functionType:1,
-      gridViewName:"grvProcesses"
-    }
+
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res && res.length > 0) {
+            this.moreFuncDbClick = res.find(
+              (obj) =>
+                obj.functionID == 'BPT101' ||
+                obj.functionID == 'BPT201' ||
+                obj.functionID == 'BPT301' ||
+                obj.functionID == 'BPT401' ||
+                obj.functionID == 'BPT501' ||
+                obj.functionID == 'BPT601'
+            );
+          }
+        });
+    });
+
     this.acceptEdit();
     this.isAdminBp = this.checkAdminOfBP(this.userId);
   }
@@ -205,7 +209,7 @@ export class ProcessesComponent
         sameData: true,
         active: true,
         model: {
-          template:this.templateListCard,
+          template: this.templateListCard,
         },
       },
       // {
@@ -759,7 +763,7 @@ export class ProcessesComponent
 
   doubleClickViewProcessSteps(moreFunc, data){
     let check = this.checkPermission(data);
-    if(check) {
+    if (check && this.moreFuncDbClick ) {
       this.viewDetailProcessSteps(moreFunc, data);
     }
   }
@@ -776,15 +780,18 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
-    let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
+    let isEdit = data?.permissions.some(
+      (x) => x.objectID == this.userId && x.edit
+    );
     let isOwner = data?.owner == this.userId ? true : false;
-    let editRole = this.isAdmin || isOwner || this.isAdminBp || isEdit ? true : false;
+    let editRole =
+      this.isAdmin || isOwner || this.isAdminBp || isEdit ? true : false;
 
     let obj = {
       moreFunc: moreFunc,
       data: data,
       formModel: this.view.formModel,
-      editRole
+      editRole,
     };
 
     let dialogModel = new DialogModel();
@@ -918,5 +925,4 @@ export class ProcessesComponent
     // this.currView = this.templateListCard;
     //  this.data = [];
   }
-
 }

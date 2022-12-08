@@ -135,11 +135,13 @@
           [imageWidth]="20"
           imgCss="w-30px p-3 me-3 user-mini-icon"
           [imageWidth]="30"
-          [subTitle]="item.approver | vll: 'ES014':'text' | async"
-          [title]="item.name ?? (item.approver | vll: 'ES014':'text' | async)"
+          [subTitle]="item.approver | vll : 'ES014' : 'text' | async"
+          [title]="
+            item.name ?? (item.approver | vll : 'ES014' : 'text' | async)
+          "
           [subTitle]="
             item.position ??
-            (item.approver | vll: 'ES014':'text' | async) ??
+            (item.approver | vll : 'ES014' : 'text' | async) ??
             positionDefault
           "
           [titleLine]="3"
@@ -274,6 +276,16 @@
         >
         </codx-input>
       </div>
+      <div class="form-group col-6">
+        <codx-label fiedName="RedoControl" [formModel]="formModel">
+        </codx-label>
+        <codx-input
+          [formModel]="formModel"
+          [Group]="dialogApprovalStep"
+          field="redoControl"
+        >
+        </codx-input>
+      </div>
     </div>
   </div>
 </ng-template>
@@ -330,7 +342,7 @@
       <div class="row">
         <div class="col-6">
           <div class="fw-bold">
-            {{ item?.emailType | vll: "ES012":"text" | async }}
+            {{ item?.emailType | vll : "ES012" : "text" | async }}
           </div>
         </div>
         <div class="col-6">
