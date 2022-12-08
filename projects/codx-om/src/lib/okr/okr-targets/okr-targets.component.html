@@ -24,6 +24,33 @@
       [className]="chartData?.className"
       [method]="chartData?.method"
     ></codx-chart>
+
+    <div class="d-flex justify-content-between">
+      <codx-chart
+        [title]="chartData1?.title"
+        [enableCrossHair]="true"
+        [primaryXAxis]="chartData1?.primaryXAxis"
+        [primaryYAxis]="chartData1?.primaryYAxis"
+        [seriesSetting]="chartData1?.seriesSetting"
+        [service]="chartData1?.service"
+        [assemblyName]="chartData1?.assembly"
+        [className]="chartData1?.className"
+        [method]="chartData1?.method"
+      >
+      </codx-chart>
+      <codx-chart
+        [title]="chartData1?.title"
+        [enableCrossHair]="true"
+        [primaryXAxis]="chartData1?.primaryXAxis"
+        [primaryYAxis]="chartData1?.primaryYAxis"
+        [seriesSetting]="chartData1?.seriesSetting"
+        [service]="chartData1?.service"
+        [assemblyName]="chartData1?.assembly"
+        [className]="chartData1?.className"
+        [method]="chartData1?.method"
+      >
+      </codx-chart>
+    </div>
   </div>
   <!-- Title OKR -->
   <div class="d-flex align-items-center justify-content-between" #titleOKR>
