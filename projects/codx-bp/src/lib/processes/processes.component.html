@@ -15,7 +15,7 @@
     [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
     [dataItem]="data" [formModel]="view.formModel"
-    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
+    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" 
     [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)"
     (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
@@ -237,13 +237,6 @@
         [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
-    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
-      <div class="padding">
-        <button class="btn btn-primary" (click)="approval(data)">
-          <codx-label default="Xét duyệt"></codx-label>
-        </button>
-      </div>
-    </td> -->
   </tr>
 </ng-template>
 <!-- view-list -->
