@@ -48,7 +48,7 @@ import { RevisionsComponent } from './revisions/revisions.component';
 export class ProcessesComponent
   extends UIComponent
   implements OnInit, AfterViewInit {
-  @ViewChild('empty') empty: TemplateRef<any>;
+  @ViewChild('templateRight') empty: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -63,6 +63,8 @@ export class ProcessesComponent
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
+
+  currView?: TemplateRef<any>;
 
   itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
@@ -203,7 +205,7 @@ export class ProcessesComponent
         sameData: true,
         active: true,
         model: {
-          template: this.templateListCard,
+          template:this.templateListCard,
         },
       },
       // {
@@ -669,13 +671,11 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      // this.userId = '2207130007';
-      // this.isAdmin = false
-      let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
+      this.userId = '2207130007';
+      this.isAdmin = false
+      let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
-        console.log(res);
-        
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS004':
@@ -776,10 +776,15 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
+    let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
+    let isOwner = data?.owner == this.userId ? true : false;
+    let editRole = this.isAdmin || isOwner || this.isAdminBp || isEdit ? true : false;
+
     let obj = {
       moreFunc: moreFunc,
       data: data,
       formModel: this.view.formModel,
+      editRole
     };
 
     let dialogModel = new DialogModel();
@@ -905,6 +910,13 @@ export class ProcessesComponent
     let check: boolean;
     this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
     return check;
+  }
+
+  changeView(event) {
+    this.currView = null;
+    this.currView = event.view.model.template2;
+    // this.currView = this.templateListCard;
+    //  this.data = [];
   }
 
 }

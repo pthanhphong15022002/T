@@ -88,6 +88,7 @@
               type="button"
               class="btn btn-primary"
               (click)="clickButtonAdd()"
+              [disabled]="!isEdit"
             >
               <i class="icon-add"></i>
               <codx-label
@@ -113,6 +114,7 @@
                   style="align-items: center"
                   *ngFor="let item of childFunc"
                   (click)="clickButton(item)"
+                  [disabled]="!isEdit"
                 >
                   <div class="text-hover-primary d-flex">
                     <i class="{{ item.icon }}"></i>
@@ -163,6 +165,7 @@
               [funcID]="funcID"
               [childFunc]="childFunc"
               [formModel]="formModelFlowChart"
+              [isEdit]="isEdit"
             ></codx-processsteps>
           </ng-container>
         </ng-container>
