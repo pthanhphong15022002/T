@@ -227,7 +227,7 @@ export class PopupAddProcessesComponent implements OnInit {
     //   //   return;
     //   // }
     // }
-    if (this.process.processName && this.nameOld.trim() === this.process.processName.trim() ) {
+    if (this.process.processName && this.nameOld?.trim() === this.process.processName.trim() ) {
       this.bpService
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
