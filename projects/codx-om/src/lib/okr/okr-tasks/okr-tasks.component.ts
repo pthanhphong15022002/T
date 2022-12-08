@@ -95,7 +95,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    //this.resourceKanban.dataObj = '125125';
+    this.resourceKanban.dataObj = '125125';
 
     //resource Schedule
     this.requestSchedule = new ResourceModel();

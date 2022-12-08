@@ -133,7 +133,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
       .subscribe((res) => {
-        console.log(res);
         this.isRoom = res.msgBodyData[0];
       });
 
@@ -153,7 +152,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
-        console.log(res.datas);
         this.listRoles = res.datas;
       }
     });
@@ -235,7 +233,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               this.listRoom.push(re);
             }
           });
-          console.log(this.listRoom);
           this.changDetec.detectChanges();
         }
       });
@@ -647,18 +644,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
-    console.log(e);
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     //this.changDetec.detectChanges();
   }
   cbxChange(e) {
-    console.log(e);
     this.meeting.location = e;
   }
 
   valueCbx(id, e) {
-    console.log(e);
     this.meeting.resources.forEach((res) => {
       if (res.resourceID == id) res.taskControl = e.data;
     });
@@ -839,7 +833,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     );
     this.dialog1.closed.subscribe((e) => {
       if (e?.event) {
-        console.log(e);
         this.meeting.templateID = e.event;
         if (this.meeting.templateID) {
           this.api
@@ -1023,7 +1016,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   fileAdded(e) {
-    console.log(e);
   }
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
@@ -1140,7 +1132,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         bookingAttendees,
       ])
       .subscribe((res) => {
-        console.log(res);
       });
   }
 }
