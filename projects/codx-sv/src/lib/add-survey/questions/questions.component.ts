@@ -423,9 +423,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     );
   }
 
-  deleteCard(seqNoSession, seqNoQuestion, category) {
+  deleteCard(seqNoSession, seqNoQuestion, recIDQuestion, category) {
     if (category == 'S') this.deleteSession(seqNoSession);
-    else this.deleteNoSession(seqNoSession, seqNoQuestion);
+    else this.deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion);
     console.log('check delete card', this.questions);
   }
 
@@ -463,7 +463,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       });
   }
 
-  deleteNoSession(seqNoSession, seqNoQuestion) {
+  deleteNoSession(seqNoSession, seqNoQuestion, recIDQuestion) {
     var data = JSON.parse(
       JSON.stringify(this.questions[seqNoSession].children)
     );
@@ -474,6 +474,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     if (seqNoQuestion == 0) this.questions[seqNoSession].active = true;
     else data[seqNoQuestion - 1].active = true;
     this.questions[seqNoSession].children = data;
+    this.SVServices.signalSave.next('saving');
+    // this.setTimeoutDeleteDate(
+    //   [tempQuestion],
+    //   true,
+    //   this.questions[seqNoSession].children
+    // );
   }
 
   addOtherAnswer(indexSession, indexQuestion) {
@@ -1304,15 +1310,19 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     );
   }
 
-  // saveListDataTimeout = new Map();
-  // setTimeoutUpdateList(lstData) {
-  //   clearTimeout(this.saveListDataTimeout?.get(lstData));
-  //   this.saveListDataTimeout?.delete(this.saveListDataTimeout?.get(lstData));
-  //   this.saveListDataTimeout.set(
-  //     lstData,
-  //     setTimeout(this.onUpdateList.bind(this, lstData), 2000)
-  //   );
-  // }
+  deleteDataTimeout = new Map();
+  setTimeoutDeleteDate(data, isModeAdd, list = null) {
+    this.lstDataAdd.push(data[0]);
+    clearTimeout(this.deleteDataTimeout?.get(data[0].recID));
+    this.deleteDataTimeout?.delete(this.deleteDataTimeout?.get(data[0].recID));
+    this.deleteDataTimeout.set(
+      data[0].recID,
+      setTimeout(
+        this.onSave.bind(this, this.lstDataAdd, isModeAdd, list),
+        2000
+      )
+    );
+  }
 
   onSave(transID, data, isModeAdd, list) {
     this.api
