@@ -691,12 +691,12 @@ export class ProcessesComponent
               res.isblur = true;
             }
             break;
-          case 'SYS04':// copy
-          case 'SYS003':// them
-          case 'SYS003':// them phien ban
-            let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
-            if(!isCreate && !fullRole) {
-              if(res.functionID === "SYS04"){
+          // case 'SYS04':// copy
+          // case 'SYS003':// them
+          // case 'SYS003':// them phien ban
+          //   let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
+          //   if(!isCreate && !fullRole) {
+          //     if(res.functionID === "SYS04"){
           case 'SYS04': // copy
           case 'SYS003': // them
           case 'SYS003': // them phien ban
@@ -711,14 +711,14 @@ export class ProcessesComponent
               }
             }
             break;
-          case 'SYS03'://sua
-          case 'BPT102'://sua ten
-          case 'BPT202'://sua ten
-          case 'BPT203'://luu phien ban
-          case 'BPT103'://luu phien ban
-            let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
-            if(!isEdit && !fullRole) {
-              if(res.functionID === "SYS03"){
+          // case 'SYS03'://sua
+          // case 'BPT102'://sua ten
+          // case 'BPT202'://sua ten
+          // case 'BPT203'://luu phien ban
+          // case 'BPT103'://luu phien ban
+          //   let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
+          //   if(!isEdit && !fullRole) {
+          //     if(res.functionID === "SYS03"){
           case 'SYS03': //sua
           case 'BPT102': //sua ten
           case 'BPT202': //sua ten
@@ -743,12 +743,12 @@ export class ProcessesComponent
               res.disabled = true;
             }
             break;
-          case 'BPT101':// xem
-          case 'BPT201':// xem
-          case 'BPT107'://  quan ly phien ban
-          case 'BPT207'://  quan ly phien ban
-            let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
-            if(!isRead && !fullRole) {
+          // case 'BPT101':// xem
+          // case 'BPT201':// xem
+          // case 'BPT107'://  quan ly phien ban
+          // case 'BPT207'://  quan ly phien ban
+          //   let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
+          //   if(!isRead && !fullRole) {
           case 'BPT101': // xem
           case 'BPT201': // xem
           case 'BPT107': //  quan ly phien ban
