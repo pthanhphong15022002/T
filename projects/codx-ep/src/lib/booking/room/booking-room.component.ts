@@ -126,7 +126,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
       resourceId: { name: 'resourceID' },
-      status: 'approveStatus',
+      status: 'status',
     };
 
     this.resourceField = {
@@ -240,7 +240,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       // event.forEach((func) => {
       //   func.disabled = true;
       // });
-      if (data.approveStatus == '1') {
+      if (data.status == '1') {
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
