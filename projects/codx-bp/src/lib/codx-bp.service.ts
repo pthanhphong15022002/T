@@ -198,4 +198,9 @@ export class CodxBpService {
     return this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
   }
+
+  isCheckExitName(nameProcess):  Observable<any>{
+    return this.api
+    .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'isExitNameProcessAsync', [nameProcess]);
+  }
 }

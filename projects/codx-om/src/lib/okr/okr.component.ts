@@ -22,6 +22,8 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
+import { PopupDistributeKRComponent } from '../popup/popup-distribute-kr/popup-distribute-kr.component';
+import { PopupShowKRComponent } from '../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 
@@ -173,6 +175,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       option
     );
     
+    // var dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    
+    // let dialogKR = this.callfc.openForm(
+    //   PopupShowKRComponent,'',null,null,null,
+    //   ['','','','','',],
+    //   '',
+    //   dialogModel
+    // );
+
   }
 
   getOKRPlans(periodID: any , interval: any , year: any)

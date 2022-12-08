@@ -43,7 +43,101 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="btn btn-primary" (click)="checkIn($event,dataKR)">Check In</div>
+              <ng-container class="d-flex flex-row">
+
+                <ng-container class="d-flex flex-row">
+                  <div class="d-flex flex-row justify-content-between">
+                    <div class="d-flex flex-row align-items-center">
+                      <div class=" bg-success d-flex rounded-circle justify-content-center align-items-center"
+                        style="height:30px;width:30px;"><i
+                          class="icon-edit_square justify-content-center align-items-center text-light"></i></div>
+                      <codx-label name="lbl" default="Thực hiện và kế hoạch" class="ps-2 fs-5 fw-bolder">
+                      </codx-label>
+                    </div>
+                    <span type="button" (click)="checkIn($event,dataKR)"
+                      class=" w-110px d-flex py-2 px-4 btn-primary rounded justify-content-center">
+                      <span class="icon-edit_fill btn-text-primary text-light me-1"></span>
+                      <codx-label fiedName="lbl" default="Chỉnh sửa"></codx-label>
+                    </span>
+                  </div>
+                </ng-container>
+
+                <ng-container class="d-flex flex-row">
+                  <div class="d-flex flex-row justify-content-between">
+                    <div class="d-flex flex-row align-items-center">
+                      <div class=" bg-danger d-flex rounded-circle justify-content-center align-items-center"
+                        style="height:30px;width:30px;"><i
+                          class="icon-history justify-content-center align-items-center text-light"></i></div>
+                      <codx-label name="lbl" default="Lịch sử cập nhật" class="ps-2 fs-5 fw-bolder"></codx-label>
+                    </div>
+                    <span type="button" (click)="checkIn($event,dataKR)"
+                      class="w-110px d-flex py-2 px-4 btn-primary rounded justify-content-center">
+                      <span class="icon-edit_square btn-text-primary text-light me-1"></span>
+                      <codx-label fiedName="lbl" default="Cập nhật"></codx-label>
+                    </span>
+                  </div>
+
+                  <div class="d-flex flex-row flex-grow-1 justify-content-between">
+                    <div class="d-flex flex-row flex-grow-1">
+                      <div class="d-flex flex-column align-items-center justify-content-between">
+                        <div class="step-number border-success">W1</div>
+                        <span style="width:1px;" class="me-15px h-100 border border-secondary"></span>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <span>dd/MM/YYYY</span>
+                        <span class="text-danger">Latest check-in</span>
+                      </div>
+                      <div class=" ms-5 d-flex flex-row flex-grow-1 justify-content-between">
+                        
+                          <div class="d-flex align-items-center">
+                            <codx-img
+                              [objectId]="'ADMIN'"
+                              [objectName]="'ADMIN'"
+                              objectType="AD_Users"
+                              [width]="40"
+                              imageType="circle"
+                            >
+                            </codx-img>
+                            <div class="ms-2">
+                              <div>{{ 'Admin' }}</div>
+                              <div class="text-black-50">{{ 'Developer' }}</div>
+                            </div>
+                          </div>
+                          <div class="d-flex flex-row">
+                            
+                              <div class="d-flex align-items-center kr-process w-300px min-w-300px ms-3 mt-2 mb-5">
+                                <div class="h-15px w-100 bg-gray-200 rounded-4">
+                                  <div class="bg-primary rounded-4 h-15px" role="progressbar" [style.width]="(dataKR.progress + '%')"
+                                    aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <div class="process-per position-absolute top-0 fs-8" style="left:72%">{{dataKR.progress}}%</div>
+                                <div class="pic-local" style="left:77%;">
+                                  <span class="icon-language text-primary icon-20"></span>
+                                </div>
+                                <div *ngIf="dataKR.confidence" class="pic-face" style="left:90%;">
+                                  <img class="w-18px h-18px"
+                                    [src]="'assets/themes/wp/default/img/'+(dataKR.confidence == '2'?'L1480_4':'L1480_3')+'.svg'">
+                                </div>
+                        
+                              </div>
+                              <span>
+                                4090
+                              </span>
+                              <span class="icon-attach_file">
+
+                              </span>
+                          </div>                        
+                      </div>
+                    </div>
+                  </div>
+                  
+
+                </ng-container>
+
+
+
+              </ng-container>
+
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -259,8 +353,6 @@
             <ng-template #content>
               <codx-tree-history [objectID]="dataOKR[0].recID" [objectType]="'OM_OKRCompany'" [actionType]="'C'"
                 [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="'OMT01'">
-
-                >
               </codx-tree-history>
 
             </ng-template>
@@ -307,29 +399,29 @@
         <div class="d-flex flex-row form-group">
           <div class="col-4">
             <codx-label name="lblResult" default="Kết quả thực hiện"></codx-label>
-            <codx-input type="number" ></codx-input>
+            <codx-input type="number"></codx-input>
             <codx-label name="lbl" default="(*)" class="text-primary"></codx-label>
           </div>
           <div class="col-4 ms-5">
             <codx-label name="lblStatus" default="Tình trạng"></codx-label>
-            <codx-input type="number" ></codx-input>
-          </div>        
+            <codx-input type="number"></codx-input>
+          </div>
         </div>
         <div>
           <codx-label name="Note" default="Ghi chú"></codx-label>
           <codx-input type="text"></codx-input>
         </div>
         <div class="flex-nowrap">
-          <codx-attachment #attachment [objectType]="'OM_OKRs'" hideBtnSave="1" hideFolder="1"
-            hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="'OMT01'"
-            [objectId]="dataKR.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
-            (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
+          <codx-attachment #attachment [objectType]="'OM_OKRs'" hideBtnSave="1" hideFolder="1" hideUploadBtn="1"
+            hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="'OMT01'" [objectId]="dataKR.recID"
+            [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full" (fileAdded)="fileAdded($event)"
+            (fileCount)="fileCount($event)">
           </codx-attachment>
         </div>
       </div>
     </div>
-    
-    
+
+
     <!--Footer-->
     <div class="d-flex justify-content-between w-80">
       <div (click)="popupUploadFile($event)"
