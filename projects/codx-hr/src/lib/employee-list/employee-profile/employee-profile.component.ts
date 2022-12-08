@@ -277,14 +277,19 @@ export class EmployeeProfileComponent extends UIComponent {
 
         let op2 = new DataRequest();
         op2.gridViewName = 'grvEVisas'
-        op2.entityName ='HR_Evisas'
+        op2.entityName ='HR_EVisas'
         op2.predicate = 'EmployeeID=@0'
         op2.dataValue = params.employeeID;
+        op2.page = 1,
         this.hrService
         .getListVisaByEmployeeID(op2)
         .subscribe((res) => {
           if(res)
-          this.lstVisa = res;
+            this.lstVisa = res[0];
+            if (this.lstVisa.length > 0) {
+              
+              this.crrVisa = this.lstVisa[0];
+            }
         })
 
         //work permit
@@ -309,6 +314,7 @@ export class EmployeeProfileComponent extends UIComponent {
         let op = new DataRequest();
         op.entityName ='HR_EExperiences'
         op.dataValue = params.employeeID;
+        op.predicate = 'EmployeeID=@0'
         this.hrService
         .GetListByEmployeeIDAsync(op)
         .subscribe((res) => {
@@ -394,6 +400,8 @@ export class EmployeeProfileComponent extends UIComponent {
               let i = this.lstVisa.indexOf(data);
               if (i != -1) {
                 this.lstVisa.splice(i, 1);
+                console.log('delete visa', this.lstVisa);
+                
               }
               this.df.detectChanges();
             } else {
@@ -726,7 +734,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel()
     option.DataService = this.view.dataService
     option.FormModel = this.view.formModel
-    option.Width = '550px'
+    option.Width = '850px'
     let dialogAdd = this.callfunc.openSide(
       PopupEJobSalariesComponent,
       {
@@ -859,14 +867,21 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (actionType != 'edit') {
-        this.lstVisa.push(res?.event);
-      } else {
-        let index = this.lstVisa.indexOf(data);
-        this.lstVisa[index] = res.event;
+      if(res.event != null){
+        if (actionType != 'edit') {
+          console.log('tra ve sau add', res);
+          this.lstVisa.push(res?.event);
+          console.log(this.lstVisa);
+          
+        } else {
+          let index = this.lstVisa.indexOf(data);
+          if(index > -1)
+          this.lstVisa[index] = res.event;
+        }
+        console.log(this.lstVisa);
+        if (!res?.event) this.view.dataService.clear();
+        this.df.detectChanges()
       }
-      console.log(this.lstVisa);
-      if (!res?.event) this.view.dataService.clear();
     });
   }
 

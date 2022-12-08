@@ -26,6 +26,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   data;
   actionType
+  actionSuccess: boolean = false
   headerText: ''
   funcID;
   employId;
@@ -66,6 +67,15 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     console.log('formmdel', this.formModel);
   }
 
+  ngAfterViewInit(){
+    this.dialog && this.dialog.closed.subscribe(res => {
+      if(!res.event && this.actionSuccess == true){
+        this.actionSuccess = false
+        this.data.actionTypeFinal = this.actionType
+        this.dialog.close(this.data);
+      }
+    })
+  }
     initForm(){
       this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -98,23 +108,26 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     if(this.actionType === 'add' || this.actionType === 'copy'){
       this.hrService.AddEmployeeVisaInfo(this.data).subscribe(p => {
         if(p != null){
+          this.data.recID = p.recID;
           this.notify.notifyCode('SYS007')
           if(this.listView){
             (this.listView.dataService as CRUDService).add(p).subscribe();
           }
+          this.actionSuccess = true
           // this.dialog.close(p)
         }
         else this.notify.notifyCode('DM034')
       });
     }
     else{
-      this.hrService.updateEmployeeVisaInfo(this.data).subscribe(p => {
-        if(p == true){
+      this.hrService.updateEmployeeVisaInfo(this.formModel.currentData).subscribe(p => {
+        if(p != null){
           this.notify.notifyCode('SYS007')
           if(this.listView){
             (this.listView.dataService as CRUDService).update(p).subscribe()
           }
-          // this.dialog.close(this.data);
+          this.actionSuccess = true
+          // this.dialog.close(this.data, actionType);
         }
         else this.notify.notifyCode('DM034')
       });
@@ -123,7 +136,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   click(data) {
-    console.log(data);
+    console.log('formdata', data);
     this.data = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.data)) 
     this.actionType ='edit'
@@ -134,7 +147,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   afterRenderListView(evt){
     this.listView = evt;
     console.log(this.listView);
-    
   }
 
 }
