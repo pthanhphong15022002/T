@@ -39,4 +39,22 @@
         </div>
     </div>
     <div class="chat-box-body"></div>
+    <div class="chat-box-footer">
+        <div class="footer-emoji">
+            <span class="icon-tag_faces icon-16 text-primary"></span>
+        </div>
+        <div class="footer-attachments">
+            <span class="icon-photo icon-16 text-primary"></span>
+        </div>
+        <div class="footer-message">
+            <codx-input 
+                type="text" 
+                placeholder="Type your text" 
+                [crrValue]="message" (valueChange)="valueChange($event)">
+            </codx-input>
+        </div>
+        <div class="footer-button">
+            <span class="icon-send icon-16"></span>
+        </div>
+    </div>
 </div>
