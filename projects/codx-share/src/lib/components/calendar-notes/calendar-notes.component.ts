@@ -419,6 +419,9 @@ export class CalendarNotesComponent
           this.CO_Meetings = dt[2];
           this.EP_BookingRooms = dt[3];
           this.EP_BookingCars = dt[4];
+          this.CO_Meetings.forEach(x => {
+            console.log("check data", x.Resources[0])
+          })
           if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
               if (res.IsPin == true || res.IsPin == '1') {
