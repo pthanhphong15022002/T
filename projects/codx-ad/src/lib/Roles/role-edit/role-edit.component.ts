@@ -65,6 +65,7 @@ export class RoleEditComponent
     super(injector);
     this.dialog = dialog;
     this.tenant = this.tenantStore.get()?.tenant;
+    this.data = dialog.dataService!.dataSelected;
     this.cache
       .moreFunction(
         this.dialog.formModel.formName,
@@ -82,9 +83,9 @@ export class RoleEditComponent
         if (res) this.gridViewSetup = res;
       });
     if (dt && dt.data) {
-      this.data = dt.data.role;
-      this.formType = dt.data.mode;
+      this.formType = dt.data.formType;
       this.roleID = this.data?.recID;
+      this.header = dt.data.headerText;
       this.tempService.roleName.next(this.data?.roleName);
       //this.tempService.roleName = roleName;
     }
@@ -130,26 +131,17 @@ export class RoleEditComponent
     //   this.SaveRole(true, false, false);
     // }
 
-    if (this.formType == 'edit' || this.formType == 'add')
-      this.SaveRole(true, false, false);
+    if (this.formType == 'edit' || this.formType == 'add') this.SaveRole(true);
     else {
+      this.SaveRole(false);
     }
   }
-  SaveRole(
-    isLoadDetail = false,
-    isCopyPermision: boolean,
-    isRedirectPage: boolean = true
-  ) {
-    var isNew;
-    if (this.formType == 'add') isNew = true;
-    else isNew = false;
+  SaveRole(isCopyPermision: boolean) {
     //var listview = this.adsv.listview;
     this.api
       .call('ERM.Business.AD', 'RolesBusiness', 'SaveRoleAsync', [
-        this.roleID,
-        this.data.roleName,
-        this.data.description,
-        isNew,
+        this.data,
+        this.formType,
         isCopyPermision,
       ])
       .subscribe((res) => {
@@ -166,9 +158,13 @@ export class RoleEditComponent
   valueChange(e) {
     if (e) {
       var field = e.field;
-      var value = e.data;
+      var data = e.data;
       if (field) {
-        this.data[field] = value;
+        if (field == 'modules' && data.value)
+          this.data[field] = Array.isArray(data.value)
+            ? data.value.join(';')
+            : data.value;
+        else this.data[field] = data;
       }
     }
   }

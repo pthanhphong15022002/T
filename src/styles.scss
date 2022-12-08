@@ -75,7 +75,7 @@ textarea:focus,
 }
 
 .codx-search.codx-focus {
-  border-color: var(--primary) !important;
+  border-color: $primary !important;
 }
 
 .e-input[readonly]:focus {
@@ -1251,6 +1251,11 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   margin-top: 1rem !important;
 }
 
+img.symbol-12px.symbol-circle {
+  width: 12px !important;
+  height: 12px !important;
+}
+
 /*** tabs ***/
 .tab-item {
   padding: 7px;
@@ -1264,6 +1269,11 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   cursor: pointer;
   color: var(--text-primary) !important;
   border-color: var(--text-primary);
+}
+
+.e-toolbar .e-tbar-btn:focus span,
+.e-toolbar .e-tbar-btn:hover span {
+  color: var(--text-primary) !important;
 }
 
 /******* tam ***/

@@ -42,7 +42,4 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     this.dialog.closed.subscribe()
   }
 
-
-  openFormAlertRule(){
-  }
 }
