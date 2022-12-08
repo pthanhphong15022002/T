@@ -290,9 +290,14 @@ export class CalendarNotesComponent
     }
   }
 
-  changeDayOfWeek(e, lstView) {
+  changeDayOfWeek(e) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
-    this.setDate(data, lstView);
+    let myInterval = setInterval(() => {
+      if (this.lstView) {
+        clearInterval(myInterval);
+        this.setDate(data, this.lstView);
+      }
+    }, 100);
   }
 
   dateOfMonth: any;
@@ -345,8 +350,7 @@ export class CalendarNotesComponent
     var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
     if (this.showList && lstView) {
       (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
-      (lstView.dataService as CRUDService).predicates =
-        '';
+      (lstView.dataService as CRUDService).predicates = '';
       (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
       lstView.dataService
         .setPredicate(this.predicate, [this.dataValue])
@@ -375,6 +379,7 @@ export class CalendarNotesComponent
     }
   }
 
+  countButton = 0;
   getParam(fromDate, toDate, updateCheck = true) {
     this.api
       .callSv(
@@ -387,6 +392,7 @@ export class CalendarNotesComponent
       .subscribe((res) => {
         if (res && res?.msgBodyData[0]) {
           var dt = res.msgBodyData[0];
+          this.countButton = JSON.parse(JSON.stringify(dt[6]));
           this.TM_TasksParam = dt[5]?.TM_Tasks
             ? JSON.parse(dt[5]?.TM_Tasks)
             : null;
@@ -415,10 +421,9 @@ export class CalendarNotesComponent
           this.CO_Meetings = dt[2];
           this.EP_BookingRooms = dt[3];
           this.EP_BookingCars = dt[4];
-          debugger
           if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
-              if (res.isPin == true || res.isPin == '1') {
+              if (res.IsPin == true || res.IsPin == '1') {
                 this.countNotePin++;
               }
             });
@@ -434,6 +439,7 @@ export class CalendarNotesComponent
     let calendarEP_Room = 0;
     let calendarEP_Car = 0;
     let countShowCalendar = 0;
+    let countTmp = 0;
     if (args) {
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
@@ -458,10 +464,11 @@ export class CalendarNotesComponent
           ) {
             if (this.TM_TasksParam?.ShowEvent == '1') {
               for (let y = 0; y < this.TM_Tasks?.length; y++) {
-                var dateParse = new Date(this.TM_Tasks[y]?.StartDate);
+                var dateParse = new Date(this.TM_Tasks[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarTM++;
+                  countTmp++;
                   break;
                 }
               }
@@ -473,10 +480,11 @@ export class CalendarNotesComponent
           ) {
             if (this.CO_MeetingsParam?.ShowEvent == '1') {
               for (let y = 0; y < this.CO_Meetings?.length; y++) {
-                var dateParse = new Date(this.CO_Meetings[y]?.StartDate);
+                var dateParse = new Date(this.CO_Meetings[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarCO++;
+                  countTmp++;
                   break;
                 }
               }
@@ -489,11 +497,12 @@ export class CalendarNotesComponent
             if (this.WP_NotesParam?.ShowEvent == '1') {
               for (let y = 0; y < this.WP_Notes?.length; y++) {
                 var dateParse = new Date(
-                  Date.parse(this.WP_Notes[y]?.StartDate)
+                  Date.parse(this.WP_Notes[y]?.CalendarDate)
                 );
                 if (date == dateParse.toLocaleDateString()) {
                   if (this.WP_Notes[y]?.ShowCalendar == true) {
                     calendarWP++;
+                    countTmp++;
                     if (this.WP_Notes[y]?.ShowCalendar == false) {
                       countShowCalendar += 1;
                     } else {
@@ -511,10 +520,11 @@ export class CalendarNotesComponent
           ) {
             if (this.EP_BookingRoomsParam?.ShowEvent == '1') {
               for (let y = 0; y < this.EP_BookingRooms?.length; y++) {
-                var dateParse = new Date(this.EP_BookingRooms[y]?.StartDate);
+                var dateParse = new Date(this.EP_BookingRooms[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarEP_Room++;
+                  countTmp++;
                   break;
                 }
               }
@@ -526,20 +536,32 @@ export class CalendarNotesComponent
           ) {
             if (this.EP_BookingCarsParam?.ShowEvent == '1') {
               for (let y = 0; y < this.EP_BookingCars?.length; y++) {
-                var dateParse = new Date(this.EP_BookingCars[y]?.StartDate);
+                var dateParse = new Date(this.EP_BookingCars[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarEP_Car++;
+                  countTmp++;
                   break;
                 }
               }
             }
           }
+          var day = moment(date).date();
+          var month = moment(date).month();
+          var year = moment(date).year();
+          var classDate = `${day}-${month}-${year}`;
+
           var spanWP: HTMLElement = document.createElement('span');
+          spanWP.className = `note-pointed-${classDate}`;
           var spanTM: HTMLElement = document.createElement('span');
+          spanTM.className = `note-pointed-${classDate}`;
           var spanCO: HTMLElement = document.createElement('span');
+          spanCO.className = `note-pointed-${classDate}`;
           var spanEP_Room: HTMLElement = document.createElement('span');
+          spanEP_Room.className = `note-pointed-${classDate}`;
           var spanEP_Car: HTMLElement = document.createElement('span');
+          spanEP_Car.className = `note-pointed-${classDate}`;
+          var spanPlus: HTMLElement = document.createElement('span');
           var flex: HTMLElement = document.createElement('span');
           flex.className = 'd-flex note-point';
           ele.append(flex);
@@ -672,6 +694,32 @@ export class CalendarNotesComponent
             flex.append(spanEP_Room);
             flex.append(spanEP_Car);
           }
+          var eleTest = document.querySelectorAll(`.note-pointed-${classDate}`);
+          let interVal = setInterval(() => {
+            if (eleTest) {
+              clearInterval(interVal);
+              var plusNo = 0;
+              if (eleTest.length > 2) {
+                eleTest.forEach((x, index) => {
+                  if (index > 2) {
+                    x.remove();
+                    if (index == eleTest.length - 1) {
+                      spanPlus.insertAdjacentText(
+                        'afterbegin',
+                        `+${eleTest.length - 3}`
+                      );
+                      spanPlus.setAttribute(
+                        'style',
+                        `font-size: 10px; margin-left: 2px; margin-top: -3px;`
+                      );
+                      flex.append(spanPlus);
+                    }
+                  }
+                });
+                this.change.detectChanges();
+              }
+            }
+          });
         }
       }, 1000);
     }

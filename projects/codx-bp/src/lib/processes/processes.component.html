@@ -5,7 +5,9 @@
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
-  (searchChanged)="searchChange($event)">
+  (searchChanged)="searchChange($event)"
+  (viewChanged)="changeView($event)"
+  >
 </codx-views>
 
 <ng-template #templateListCard let-data>
@@ -15,7 +17,7 @@
     [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
     [dataItem]="data" [formModel]="view.formModel"
-    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
+    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)" 
     [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)"
     (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
@@ -237,13 +239,6 @@
         [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
-    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
-      <div class="padding">
-        <button class="btn btn-primary" (click)="approval(data)">
-          <codx-label default="Xét duyệt"></codx-label>
-        </button>
-      </div>
-    </td> -->
   </tr>
 </ng-template>
 <!-- view-list -->
@@ -528,4 +523,27 @@
   <button type="button" class="btn btn-primary" (click)="updateReleaseProcess()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+<ng-template #empty>
+  <ng-container >
+    <div class="nondata-container w-100 mb-2">
+      <div class="d-flex justify-content-between page-heading align-items-center p-2">
+        <div class="fw-bold ms-2">Du lieu 30 ngay se xoa</div>
+        <div class="cursor-pointer">
+          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" >Xoa thung rac</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #templateRight>
+  <div  appDragDropFileUpload 
+    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
+    data-kt-scroll-offset="0">
+    <ng-container *ngTemplateOutlet="empty"></ng-container>
+    <ng-container *ngTemplateOutlet="currView"></ng-container>
+  </div>
 </ng-template>

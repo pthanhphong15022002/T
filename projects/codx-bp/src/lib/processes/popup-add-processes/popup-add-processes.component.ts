@@ -62,6 +62,8 @@ export class PopupAddProcessesComponent implements OnInit {
   isCoppyKeyValue: any = '';
   isAcceptEdit: any;
   linkAvatar = '';
+  isCheckNameProcess: any;
+  nameOld:any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -106,6 +108,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.phasesOld = this.processOldCopy?.phasesOld;
     this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
+    this.nameOld = this.process.processName;
     if (this.action != 'add') this.getAvatar(this.process);
   }
 
@@ -224,46 +227,70 @@ export class PopupAddProcessesComponent implements OnInit {
     //   //   return;
     //   // }
     // }
-    if (this.attachment?.fileUploadList?.length)
-      (await this.attachment.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          var countAttack = 0;
-          countAttack = Array.isArray(res) ? res.length : 1;
-          if (this.action === 'edit') {
-            this.process.attachments += countAttack;
-          } else {
-            this.process.attachments = countAttack;
-          }
-        }
-      });
-    switch (this.action) {
-      case 'copy': {
-        this.notiService.alertCode('BP007').subscribe((x) => {
-          if (x.event?.status == 'N') {
-            this.isCoppyFile = false;
-            this.isUpdateCreateProcess();
-          } else if (x.event?.status == 'Y') {
-            this.isCoppyFile = true;
-            this.isUpdateCreateProcess();
-          } else {
-            return;
+    if (this.process.processName.trim() === this.nameOld?.trim()) {
+      this.bpService
+        .isCheckExitName(this.process.processName)
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.alertCode('BP004').subscribe((x) => {
+              if (x.event?.status == 'N') {
+                return;
+              } else if (x.event?.status == 'Y') {
+                this.actionSave();
+              }
+            });
           }
         });
-        break;
-      }
-      case 'add': {
-        this.isUpdateCreateProcess();
-        break;
-      }
-      case 'edit': {
-        this.isUpdateCreateProcess();
-        break;
-      }
-      default: {
-        this.isAction = false;
-        break;
-      }
     }
+    else {
+      this.actionSave();
+    }
+  }
+ async actionSave(){
+    if (this.attachment?.fileUploadList?.length)
+    (await this.attachment.saveFilesObservable()).subscribe((res) => {
+      if (res) {
+        var countAttack = 0;
+        countAttack = Array.isArray(res) ? res.length : 1;
+        if (this.action === 'edit') {
+          this.process.attachments += countAttack;
+        } else {
+          this.process.attachments = countAttack;
+        }
+      }
+    });
+  switch (this.action) {
+    case 'copy': {
+      this.notiService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
+        if (x.event?.status == 'N') {
+          this.isCoppyFile = false;
+          this.isUpdateCreateProcess();
+          this.isAddPermission(this.process.owner);
+        } else if (x.event?.status == 'Y') {
+          this.isCoppyFile = true;
+          this.isUpdateCreateProcess();
+          this.isAddPermission(this.process.owner);
+        } else {
+          return;
+        }
+      });
+      break;
+    }
+    case 'add': {
+      this.isUpdateCreateProcess();
+      this.isAddPermission(this.process.owner);
+      break;
+    }
+    case 'edit': {
+      this.isUpdateCreateProcess();
+      this.isAddPermission(this.process.owner);
+      break;
+    }
+    default: {
+      this.isAction = false;
+      break;
+    }
+  }
   }
   //#endregion method
   isUpdateCreateProcess() {
@@ -354,7 +381,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-    this.isAddPermission(this.process.owner);
+
   }
   isAddPermission(id) {
     this.api
@@ -409,7 +436,7 @@ export class PopupAddProcessesComponent implements OnInit {
   acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.id)) {
+    } else if (this.checkAdminOfBP(this.user.userId)) {
       this.isAcceptEdit = true;
     } else {
       this.isAcceptEdit = false;
