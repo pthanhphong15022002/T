@@ -1150,7 +1150,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     this.atSV.fileListAdded.push(Object.assign({}, item2));
                     this.data.push(Object.assign({}, item2));
                     this.fileUploadList = [];
-                    return item2;
+                    return of(item2);
                   } else if (item2.status == 6) {
                     // ghi đè
                     fileItem.recID = item2.data.recID;
@@ -1158,7 +1158,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     var config = new AlertConfirmInputConfig();
                     config.type = 'YesNo';
                     // var objs = from(
-                    //   this.notificationsService.alert(this.title, item.message, config).closed
+                    //   this.notificationsService.alert(this.title, item2.message, config).closed
                     // )
                     return  this.fileService
                     .addFileObservable(
