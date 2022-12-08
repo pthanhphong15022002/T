@@ -227,7 +227,7 @@ export class PopupAddProcessesComponent implements OnInit {
     //   //   return;
     //   // }
     // }
-    if (this.process?.processName.trim() == this.nameOld.trim()) {
+    if (this.process.processName.trim() === this.nameOld?.trim()) {
       this.bpService
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
@@ -245,7 +245,6 @@ export class PopupAddProcessesComponent implements OnInit {
     else {
       this.actionSave();
     }
-
   }
  async actionSave(){
     if (this.attachment?.fileUploadList?.length)

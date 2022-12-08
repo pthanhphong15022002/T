@@ -670,9 +670,7 @@ export class ProcessesComponent
       this.isAdmin = false
       let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
       let fullRole = this.isAdmin || isOwner ? true : false;
-      e.forEach((res) => {
-        console.log(res);
-        
+      e.forEach((res) => {       
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS004':
