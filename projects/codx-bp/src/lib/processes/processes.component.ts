@@ -47,7 +47,8 @@ import { RevisionsComponent } from './revisions/revisions.component';
 })
 export class ProcessesComponent
   extends UIComponent
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit
+{
   @ViewChild('empty') empty: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
@@ -63,7 +64,6 @@ export class ProcessesComponent
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
-
   itemMemo: TemplateRef<any>;
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
@@ -113,18 +113,24 @@ export class ProcessesComponent
   heightWin: any;
   widthWin: any;
   isViewCard: boolean = false;
-  formModelMF :FormModel ;
+  formModelMF: FormModel;
 
   statusLable = '';
   commentLable = '';
-  titleReleaseProcess=''
+  titleReleaseProcess = '';
   comment = '';
   processsId = '';
   objectType = '';
   entityName = '';
-  statusDefault = '6' ;
-  vllStatus = "BP003";
-  isAcceptEdit:any;
+
+  // statusDefault = '6';
+  // vllStatus = 'BP003';
+  // isAdmin: any;
+  // isAcceptEdit: any;
+
+  statusDefault = '6';
+  vllStatus = 'BP003';
+  isAcceptEdit: any;
 
   userId = '';
   isAdmin = false;
@@ -143,7 +149,7 @@ export class ProcessesComponent
     super(inject);
     this.user = this.authStore.get();
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.showButtonAdd = this.funcID!='BPT6'
+    this.showButtonAdd = this.funcID != 'BPT6';
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
@@ -152,7 +158,7 @@ export class ProcessesComponent
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.userId = this.user?.userID;
-    this.isAdmin = this.user?.administrator
+    this.isAdmin = this.user?.administrator;
   }
 
   onInit(): void {
@@ -169,19 +175,19 @@ export class ProcessesComponent
       { field: '', headerText: '', width: 100 },
     ];
     this.moreFuncDbClick = {
-      customName:"Chi tiết quy trình",
-      dataValue:null,
-      defaultName:"Chi tiết quy trình",
-      delete:true,
-      description:"Chi tiết quy trình",
-      displayField:"",
-      displayMode:"3",
-      entityName:"BP_Processes",
-      formName:"Processes",
-      functionID:"BPT101",
-      functionType:1,
-      gridViewName:"grvProcesses"
-    }
+      customName: 'Chi tiết quy trình',
+      dataValue: null,
+      defaultName: 'Chi tiết quy trình',
+      delete: true,
+      description: 'Chi tiết quy trình',
+      displayField: '',
+      displayMode: '3',
+      entityName: 'BP_Processes',
+      formName: 'Processes',
+      functionID: 'BPT101',
+      functionType: 1,
+      gridViewName: 'grvProcesses',
+    };
     this.acceptEdit();
     this.isAdminBp = this.checkAdminOfBP(this.userId);
   }
@@ -387,13 +393,13 @@ export class ProcessesComponent
       option.Width = '550px';
       let objCoppy = {
         idOld: data.recID,
-        phasesOld: data.phases??0,
-        attachOld: data.attachments??0,
-        actiOld: data.activities??0,
-      }
+        phasesOld: data.phases ?? 0,
+        attachOld: data.attachments ?? 0,
+        actiOld: data.activities ?? 0,
+      };
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
-        ['copy', this.titleAction,objCoppy],
+        ['copy', this.titleAction, objCoppy],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -448,9 +454,14 @@ export class ProcessesComponent
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
   releaseProcess(data) {
-      this.statusLable = this.gridViewSetup['Status']['headerText'];
-      this.commentLable = this.gridViewSetup['Comments']['headerText'];
-      this.dialogPopup = this.callfc.openForm(this.viewReleaseProcess, '', 500, 260);
+    this.statusLable = this.gridViewSetup['Status']['headerText'];
+    this.commentLable = this.gridViewSetup['Comments']['headerText'];
+    this.dialogPopup = this.callfc.openForm(
+      this.viewReleaseProcess,
+      '',
+      500,
+      260
+    );
   }
 
   Updaterevisions(moreFunc, data) {
@@ -490,7 +501,7 @@ export class ProcessesComponent
       more: more,
       data: data,
       funcIdMain: this.funcID,
-      formModel : this.formModelMF
+      formModel: this.formModelMF,
     };
 
     this.dialog = this.callfc.openForm(
@@ -622,6 +633,7 @@ export class ProcessesComponent
         break;
       case 'BPT105':
       case 'BPT104':
+      case 'BPT105':
       case 'BPT204':
         this.permission(data);
         break;
@@ -672,20 +684,122 @@ export class ProcessesComponent
       // this.userId = '2207130006';
        //this.isAdmin = false
       let isOwner = data?.owner == this.userId ? true : false;
+      //CỦA AI TỰ SỬA
+
+      // let userId = '2207130007';
+      // let isAdmin = false
+      // let userId = this.user?.userID;
+      // let isAdmin = this.user?.administrator;
+      // let isOwner = data?.permissions.some((x) => x.objectID == data?.owner);
+      // let fullRole = isAdmin || isOwner ? true : false;
+      // e.forEach((res) => {
+      //   if (
+      //     res.functionID == 'SYS005' ||
+      //     res.functionID == 'SYS004' ||
+      //     res.functionID == 'SYS001' ||
+      //     res.functionID == 'SYS002' ||
+      //     res.functionID == 'SYS003'
+      //   ) {
+      //     /*Giao việc || Nhập khẩu, xuất khẩu, gửi mail, đính kèm file */ res.disabled =
+      //       true;
+      //   }
+      //   if (res.functionID === 'BPT109') {
+      //     // phat hanh
+      //     let isPublish = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.publish
+      //     );
+      //     if (data.status === '6' || (!isPublish && !fullRole)) {
+      //       res.disabled = true;
+      //     }
+      //   }
+      //   if (
+      //     res.functionID === 'SYS04' ||
+      //     res.functionID === 'BPT103' ||
+      //     res.functionID === 'BPT203'
+      //   ) {
+      //     // copy, them va them phien ban
+      //     let isCreate = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.create
+      //     );
+      //     if (!isCreate && !fullRole) {
+      //       res.disabled = true;
+      //     }
+      //   }
+      //   if (
+      //     res.functionID === 'SYS03' ||
+      //     res.functionID === 'BPT102' ||
+      //     res.functionID === 'BPT203' ||
+      //     res.functionID === 'BPT103'
+      //   ) {
+      //     // sua va luu phien ban
+      //     let isEdit = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.edit
+      //     );
+      //     if (!isEdit && !fullRole) {
+      //       res.disabled = true;
+      //     }
+      //   }
+      //   if (res.functionID === 'SYS02') {
+      //     // xoa
+      //     let isDelete = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.delete
+      //     );
+      //     if (!isDelete && !fullRole) {
+      //       res.disabled = true;
+      //     }
+      //   }
+      //   if (
+      //     res.functionID === 'BPT101' ||
+      //     res.functionID === 'BPT107' ||
+      //     res.functionID === 'BPT207'
+      //   ) {
+      //     // xem va quan ly phien ban
+      //     let isRead = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.read
+      //     );
+      //     if (!isRead && !fullRole) {
+      //       res.disabled = true;
+      //     }
+      //   }
+      //   if (res.functionID === 'BPT105' || res.functionID === 'BPT205') {
+      //     //chia se
+      //     let isShare = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.share
+      //     );
+      //     if (!isShare && !fullRole) {
+      //       res.disabled = true;
+      //     }
+      //   }
+      //   if (res.functionID === 'BPT108' || res.functionID === 'BPT208') {
+      //     //phan quyen
+      //     let isAssign = data?.permissions.some(
+      //       (x) => x.objectID == userId && x.assign
+      //     );
+      //     if (!isAssign && !fullRole) {
+      //       res.disabled = true;
+      //     }
+
+      // this.userId = '2207130007';
+      // this.isAdmin = false
+      let isOwner = data?.permissions.some((x) => x.objectID == data?.owner);
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
+        console.log(res);
+
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS004':
           case 'SYS001':
           case 'SYS002':
           case 'SYS003':
-            res.disabled =true;
+            res.disabled = true;
             break;
-          case 'BPT109':// phat hanh
-          case 'BPT209':// phat hanh
-            let isPublish = data?.permissions.some(x => (x.objectID == this.userId && x.publish) );
-            if(data.status === "6" || (!isPublish && !fullRole )) {
+          case 'BPT109': // phat hanh
+          case 'BPT209': // phat hanh
+            let isPublish = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.publish
+            );
+            if (data.status === '6' || (!isPublish && !fullRole)) {
               res.isblur = true;
             }
             break;
@@ -695,8 +809,16 @@ export class ProcessesComponent
             let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
             if(!isCreate && !fullRole) {
               if(res.functionID === "SYS04"){
+          case 'SYS04': // copy
+          case 'SYS003': // them
+          case 'SYS003': // them phien ban
+            let isCreate = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.create
+            );
+            if (!isCreate && !fullRole) {
+              if (res.functionID === 'SYS04') {
                 res.disabled = true;
-              }else{
+              } else {
                 res.isblur = true;
               }
             }
@@ -709,15 +831,27 @@ export class ProcessesComponent
             let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
             if(!isEdit && !fullRole) {
               if(res.functionID === "SYS03"){
+          case 'SYS03': //sua
+          case 'BPT102': //sua ten
+          case 'BPT202': //sua ten
+          case 'BPT203': //luu phien ban
+          case 'BPT103': //luu phien ban
+            let isEdit = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.edit
+            );
+            if (!isEdit && !fullRole) {
+              if (res.functionID === 'SYS03') {
                 res.disabled = true;
-              }else{
+              } else {
                 res.isblur = true;
               }
             }
             break;
-          case 'SYS02':// xoa
-            let isDelete = data?.permissions.some(x => (x.objectID == this.userId && x.delete) );
-            if(!isDelete && !fullRole) {
+          case 'SYS02': // xoa
+            let isDelete = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.delete
+            );
+            if (!isDelete && !fullRole) {
               res.disabled = true;
             }
             break;
@@ -727,20 +861,32 @@ export class ProcessesComponent
           case 'BPT207'://  quan ly phien ban
             let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
             if(!isRead && !fullRole) {
+          case 'BPT101': // xem
+          case 'BPT201': // xem
+          case 'BPT107': //  quan ly phien ban
+          case 'BPT207': //  quan ly phien ban
+            let isRead = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.read
+            );
+            if (!isRead && !fullRole) {
               res.isblur = true;
             }
             break;
-          case 'BPT105'://chia se
-          case 'BPT205'://chia se
-            let isShare = data?.permissions.some(x => (x.objectID == this.userId && x.share));
-            if(!isShare && !fullRole) {
+          case 'BPT105': //chia se
+          case 'BPT205': //chia se
+            let isShare = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.share
+            );
+            if (!isShare && !fullRole) {
               res.isblur = true;
             }
             break;
-          case 'BPT108'://phan quyen
-          case 'BPT208'://phan quyen
-            let isAssign = data?.permissions.some(x => (x.objectID == this.userId && x.assign));
-            if(!isAssign && !fullRole) {
+          case 'BPT108': //phan quyen
+          case 'BPT208': //phan quyen
+            let isAssign = data?.permissions.some(
+              (x) => x.objectID == this.userId && x.assign
+            );
+            if (!isAssign && !fullRole) {
               res.isblur = true;
             }
             break;
@@ -749,15 +895,17 @@ export class ProcessesComponent
     }
   }
 
-  checkPermission(data){
-    let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
-    let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
-    return (isRead || this.isAdmin || isOwner) ? true : false;
+  checkPermission(data) {
+    let isRead = data?.permissions.some(
+      (x) => x.objectID == this.userId && x.read
+    );
+    let isOwner = data?.permissions.some((x) => x.objectID == data?.owner);
+    return isRead || this.isAdmin || isOwner ? true : false;
   }
 
-  doubleClickViewProcessSteps(moreFunc, data){
+  doubleClickViewProcessSteps(moreFunc, data) {
     let check = this.checkPermission(data);
-    if(check) {
+    if (check) {
       this.viewDetailProcessSteps(moreFunc, data);
     }
   }
@@ -779,6 +927,46 @@ export class ProcessesComponent
       data: data,
       formModel: this.view.formModel,
     };
+
+    //của ai tự mở tự sửa.
+
+    // let userId = this.user?.userID;
+    // let isAdmin = this.user?.administrator;
+    // let check = data?.permissions.findIndex(
+    //   (x) => x.read && x.objectID === userId
+    // );
+    // if (check >= 0 || isAdmin) {
+    //   let obj = {
+    //     moreFunc: moreFunc,
+    //     data: data,
+    //     formModel: this.view.formModel,
+    //   };
+
+    //   let dialogModel = new DialogModel();
+    //   dialogModel.IsFull = true;
+    //   dialogModel.zIndex = 999;
+    //   var dialog = this.callfc.openForm(
+    //     PopupViewDetailProcessesComponent,
+    //     '',
+    //     this.widthWin,
+    //     this.heightWin,
+    //     '',
+    //     obj,
+    //     '',
+    //     dialogModel
+    //   );
+
+    //   dialog.closed.subscribe((e) => {
+    //     if (e && data.recID) {
+    //       this.bpService.getProcessesByID(data.recID).subscribe((process) => {
+    //         if (process) {
+    //           this.view.dataService.update(process).subscribe();
+    //           this.detectorRef.detectChanges();
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
 
     let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
@@ -806,7 +994,7 @@ export class ProcessesComponent
     });
   }
 
-  approval($event) { }
+  approval($event) {}
   //tesst
   getFlowchart(data) {
     this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
@@ -841,62 +1029,83 @@ export class ProcessesComponent
   openPopup() {
     if (this.tmpListItem) {
       let option = new DialogModel();
-      let popup = this.callfc.openForm(this.tmpListItem, "", 400, 500, "", null, "", option);
+      let popup = this.callfc.openForm(
+        this.tmpListItem,
+        '',
+        400,
+        500,
+        '',
+        null,
+        '',
+        option
+      );
       popup.closed.subscribe((res: any) => {
-        if (res) {}
+        if (res) {
+        }
       });
     }
   }
 
-  setComment(e){
+  setComment(e) {
     this.comment = e.data;
   }
 
-  updateReleaseProcess(){
+  updateReleaseProcess() {
     let processsId = this.itemSelected?.recID;
-    this.bpService.updateReleaseProcess(
-      [
+    this.bpService
+      .updateReleaseProcess([
         processsId,
         '1',
         this.comment,
         this.moreFunc,
-        this.entityName
-      ]
-    )
-    .subscribe((res) => {
-      if(res){
-        this.notification.notifyCode('SYS007');
-        this.dialogPopup.close();
-        this.view.dataService.update(res).subscribe();
-        this.detectorRef.detectChanges();
-      }
-    })
+        this.entityName,
+      ])
+      .subscribe((res) => {
+        if (res) {
+          this.notification.notifyCode('SYS007');
+          this.dialogPopup.close();
+          this.view.dataService.update(res).subscribe();
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 
+  //của ai sai tự sửa
+
+  // checkPermission(data = []) {
+  //   let userId = this.user?.userID;
+  //   let isAdmin = this.user?.administrator;
+  //   // let isAdmin = false;
+  //   // let userId = '2207130007';
+  //   let check = data.some((x) => x.read && x.objectID === userId);
+  //   if (check || isAdmin) {
+  //     // neu co quyen xem hoac admin
+  //     return true;
+  //   }
+  //   return false;
+  // }
+
   acceptEdit() {
-    if(this.user.administrator){
-      this.isAcceptEdit=true;
-    }
-    else if (this.checkAdminOfBP(this.user.userId)) {
-      this.isAcceptEdit=true;
-    }
-    else if(!this.user.edit){
-      this.isAcceptEdit=false;
+    if (this.user.administrator) {
+      this.isAcceptEdit = true;
+    } else if (this.checkAdminOfBP(this.user.userId)) {
+      this.isAcceptEdit = true;
+    } else if (!this.user.edit) {
+      this.isAcceptEdit = false;
     }
   }
-  isPermissionEdit(id){
+  isPermissionEdit(id) {
     this.api
-    .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
-    .subscribe((res) => {
-      if (res) {
-        if(res.edit){
-          this.isAcceptEdit=true;
+      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
+      .subscribe((res) => {
+        if (res) {
+          if (res.edit) {
+            this.isAcceptEdit = true;
+          } else {
+            this.isAcceptEdit = false;
+          }
         }
-        else {
-          this.isAcceptEdit=false;
-        }
-      }
-    });
+      });
   }
 
   checkAdminOfBP(userid: any) {
@@ -904,5 +1113,4 @@ export class ProcessesComponent
     this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
     return check;
   }
-
 }
