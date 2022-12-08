@@ -5,7 +5,9 @@
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
-  (searchChanged)="searchChange($event)">
+  (searchChanged)="searchChange($event)"
+  (viewChanged)="changeView($event)"
+  >
 </codx-views>
 
 <ng-template #templateListCard let-data>
@@ -524,7 +526,7 @@
 </ng-template>
 
 <ng-template #empty>
-  <ng-container *ngIf="data && data[0] != null && data[0].isDelete">
+  <ng-container >
     <div class="nondata-container w-100 mb-2">
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
         <div class="fw-bold ms-2">Du lieu 30 ngay se xoa</div>
@@ -534,4 +536,14 @@
       </div>
     </div>
   </ng-container>
+</ng-template>
+
+<ng-template #templateRight>
+  <div  appDragDropFileUpload 
+    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
+    data-kt-scroll-offset="0">
+    <ng-container *ngTemplateOutlet="empty"></ng-container>
+    <ng-container *ngTemplateOutlet="currView"></ng-container>
+  </div>
 </ng-template>
