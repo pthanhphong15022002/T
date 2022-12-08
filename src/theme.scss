@@ -60,6 +60,11 @@
     $bg-color: #fd492a;
     $border-light: #ffdac8;
 
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #dfdfdf !important;
+    }
+
     .aside {
         &.aside-light {
             background-color: $primary-darker;
@@ -79,8 +84,8 @@
     }
 
 
-    .e-tab-text {
-        color: $title-color !important;
+    .e-tab-wrap:hover .e-tab-text {
+        color: $primary-dark !important;
     }
 
     .menu-state-primary {
@@ -153,7 +158,8 @@
 
     .btn.btn-active-primary:focus:not(.btn-active),
     .btn.btn-active-primary:hover:not(.btn-active),
-    .btn.btn-light-primary:hover {
+    .btn.btn-light-primary:hover,
+    .btn.btn-light-primary:focus:not(.btn-active) {
         border-color: $primary !important;
         background-color: $primary !important;
     }
@@ -165,8 +171,10 @@
     }
 
     a {
+        color: $primary-dark;
+
         &:hover {
-            color: $link-hover-color;
+            color: $primary;
             text-decoration: $link-hover-decoration;
         }
     }
@@ -177,6 +185,107 @@
 
     .e-listview .e-list-item:hover {
         background-color: $primary-lighter;
+    }
+
+    .nav-pills .nav-link.active {
+        color: $primary-dark;
+        background-color: $primary-lighter;
+    }
+
+    .menu-state-title-primary .menu-item .menu-link.active {
+        color: $primary-light !important;
+    }
+
+    .active [class*=icon-] {
+        color: $primary-dark;
+    }
+
+    /*** boostrap ***/
+    .e-calendar .e-btn.e-today.e-flat.e-primary,
+    .e-calendar .e-css.e-btn.e-today.e-flat.e-primary {
+        background-color: $primary-dark;
+        border-color: $primary-dark;
+    }
+
+    .e-switch-wrapper .e-switch-on,
+    .e-switch-wrapper .e-switch-on {
+        background-color: $primary !important;
+    }
+
+    .e-switch-wrapper .e-switch-inner.e-switch-active,
+    .e-switch-wrapper .e-switch-inner.e-switch-active {
+        background-color: $primary!important ;
+        border-color: $primary !important;
+    }
+
+    .e-switch-wrapper .e-switch-on:hover,
+    .e-switch-wrapper .e-switch-on:hover {
+        background-color: $primary-light !important;
+    }
+
+    .e-switch-wrapper .e-switch-off,
+    .e-switch-wrapper .e-switch-off {
+        background-color: #cbcbcb !important;
+    }
+
+    .e-switch-wrapper:hover .e-switch-off,
+    .e-switch-wrapper .e-switch-off:hover {
+        background-color: $primary-light !important;
+    }
+
+    .e-checkbox-wrapper .e-frame.e-check,
+    .e-css.e-checkbox-wrapper .e-frame.e-check {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .e-checkbox-wrapper .e-frame.e-check:focus,
+    .e-css.e-checkbox-wrapper .e-frame.e-check:hover {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .e-checkbox-wrapper:hover .e-frame.e-check,
+    .e-css.e-checkbox-wrapper:hover .e-frame.e-check {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .e-checkbox-wrapper .e-checkbox:focus+.e-frame,
+    .e-css.e-checkbox-wrapper .e-checkbox:focus+.e-frame {
+        border-color: $primary !important;
+        box-shadow: 0 0 0 4px $primary-lighter !important;
+    }
+
+    .e-input-group:active,
+    .e-input-group.e-input-focus,
+    .e-input:focus,
+    .e-control.e-focused,
+    .codx-textarea:focus,
+    textarea:focus,
+    .codx-input[type=textarea] {
+        border-color: $primary !important;
+    }
+
+    ///////////////
+
+    .menu-state-title-primary .menu-item .menu-link.active {
+        transition: color 0.2s ease, background-color 0.2s ease;
+        color: $primary !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
+        color: $primary !important;
+    }
+
+    /// svg
+    .btn:hover .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: $primary !important;
+    }
+
+    .btn.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: $primary ;
     }
 }
 

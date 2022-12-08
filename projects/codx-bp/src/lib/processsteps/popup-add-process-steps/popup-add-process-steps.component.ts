@@ -68,7 +68,8 @@ export class PopupAddProcessStepsComponent
   crrIndex = 0;
   gridViewSetup: any;
   recIDCopied: any;
-  lockParentId = false
+  lockParentId = false;
+  editTodo = -1;
 
   constructor(
     private inject: Injector,
@@ -311,6 +312,15 @@ export class PopupAddProcessStepsComponent
       this.getOwnerByParentID(parentID, true);
     }
   }
+
+  valueChangeRefrenceItem(e,i){
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.referenceText.splice(i,1,value);
+    }
+    this.editTodo = -1;
+  }
+
   valueChangeRefrence(e) {
     let value = e.target.value;
     if (value && value.trim() != '') {
@@ -331,7 +341,7 @@ export class PopupAddProcessStepsComponent
     if (i == null) return;
     if (this.popover) this.popover.close();
     this.crrIndex = i;
-    p.open();
+    p.open();    
     this.popover = p;
   }
 
@@ -433,5 +443,9 @@ export class PopupAddProcessStepsComponent
       }
       this.getListUser();
     });
+  }
+
+  editTodoIndex(i){
+    this.editTodo = i;
   }
 }

@@ -3,7 +3,14 @@ import {
   BP_ProcessPermissions,
   BP_ProcessRevisions,
 } from './../../models/BP_Processes.model';
-import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import {
   DialogData,
   DialogRef,
@@ -16,6 +23,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'lib-popup-add-processes',
@@ -25,7 +33,7 @@ import { CodxBpService } from '../../codx-bp.service';
 export class PopupAddProcessesComponent implements OnInit {
   @Input() process = new BP_Processes();
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
+  @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
 
   data: any;
   dialog: any;
@@ -44,15 +52,18 @@ export class PopupAddProcessesComponent implements OnInit {
   user: any;
   isCoppyFile: any;
   isAction: boolean = false;
-  idSetValueOld:any;
-  isDisable:any;
-  phasesOld:any;
-  ActivitiesOld:any;
-  AttachmentsOld:any;
-  processOldCopy:any;
-  flowChart: any
-  isCoppyKeyValue:any = '';
+  idSetValueOld: any;
+  isDisable: any;
+  phasesOld: any;
+  ActivitiesOld: any;
+  AttachmentsOld: any;
+  processOldCopy: any;
+  flowChart: any;
+  isCoppyKeyValue: any = '';
   isAcceptEdit: any;
+  linkAvatar = '';
+  isCheckNameProcess: any;
+  nameOld:any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -60,6 +71,7 @@ export class PopupAddProcessesComponent implements OnInit {
     private notiService: NotificationsService,
     private api: ApiHttpService,
     private bpService: CodxBpService,
+    private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -91,17 +103,19 @@ export class PopupAddProcessesComponent implements OnInit {
       });
     if (this.action === 'add' || this.action === 'copy')
       this.isAddPermission(this.process.owner);
-    this.processOldCopy=dt?.data[2];
+    this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
     this.phasesOld = this.processOldCopy?.phasesOld;
-    this.ActivitiesOld =this.processOldCopy?.actiOld;
+    this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
+    this.nameOld = this.process.processName;
+    if (this.action != 'add') this.getAvatar(this.process);
   }
 
   ngOnInit(): void {
     this.acceptEdit();
-    if(this.action==='add' || this.action ==='copy'){
-      this.isDisable=true;
+    if (this.action === 'add' || this.action === 'copy') {
+      this.isDisable = true;
     }
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
@@ -121,17 +135,16 @@ export class PopupAddProcessesComponent implements OnInit {
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
-      this.process.phases =  this.action == 'copy'?this.phasesOld:0 ;
-      this.process.activities = this.action == 'copy'?this.ActivitiesOld:0;
-      if(this.action == 'copy'){
-        this.process.attachments = this.isCoppyFile?this.AttachmentsOld:0;
-        this.isCoppyKeyValue= this.isCoppyFile?'copyFile':'copyDefault';
-
+      this.process.phases = this.action == 'copy' ? this.phasesOld : 0;
+      this.process.activities = this.action == 'copy' ? this.ActivitiesOld : 0;
+      if (this.action == 'copy') {
+        this.process.attachments = this.isCoppyFile ? this.AttachmentsOld : 0;
+        this.isCoppyKeyValue = this.isCoppyFile ? 'copyFile' : 'copyDefault';
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
 
-      data = [this.process,this.isCoppyKeyValue??'',this.idSetValueOld];
+      data = [this.process, this.isCoppyKeyValue ?? '', this.idSetValueOld];
     } else if (this.action == 'edit') {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
@@ -214,6 +227,26 @@ export class PopupAddProcessesComponent implements OnInit {
     //   //   return;
     //   // }
     // }
+    if (this.process.processName.trim() === this.nameOld?.trim()) {
+      this.bpService
+        .isCheckExitName(this.process.processName)
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.alertCode('BP004').subscribe((x) => {
+              if (x.event?.status == 'N') {
+                return;
+              } else if (x.event?.status == 'Y') {
+                this.actionSave();
+              }
+            });
+          }
+        });
+    }
+    else {
+      this.actionSave();
+    }
+  }
+ async actionSave(){
     if (this.attachment?.fileUploadList?.length)
     (await this.attachment.saveFilesObservable()).subscribe((res) => {
       if (res) {
@@ -226,38 +259,37 @@ export class PopupAddProcessesComponent implements OnInit {
         }
       }
     });
-    switch (this.action) {
-      case 'copy': {
-        this.notiService.alertCode('BP007').subscribe((x) => {
-          if (x.event?.status == 'N') {
-            this.isCoppyFile = false;
-           this.isUpdateCreateProcess();
-          } else if (x.event?.status == 'Y'){
-            this.isCoppyFile = true;
-            this.isUpdateCreateProcess();
-          }
-          else {
-            return;
-          }
-        });
-        break;
-      }
-      case 'add': {
-        this.isUpdateCreateProcess();
-        break;
-      }
-      case 'edit': {
-       this.isUpdateCreateProcess();
-        break;
-      }
-      default: {
-        this.isAction = false;
-        break;
-      }
+  switch (this.action) {
+    case 'copy': {
+      this.notiService.alertCode('BP007').subscribe((x) => {
+        if (x.event?.status == 'N') {
+          this.isCoppyFile = false;
+          this.isUpdateCreateProcess();
+        } else if (x.event?.status == 'Y') {
+          this.isCoppyFile = true;
+          this.isUpdateCreateProcess();
+        } else {
+          return;
+        }
+      });
+      break;
+    }
+    case 'add': {
+      this.isUpdateCreateProcess();
+      break;
+    }
+    case 'edit': {
+      this.isUpdateCreateProcess();
+      break;
+    }
+    default: {
+      this.isAction = false;
+      break;
     }
   }
+  }
   //#endregion method
-  isUpdateCreateProcess(){
+  isUpdateCreateProcess() {
     if (this.action === 'add' || this.action === 'copy') {
       this.onAdd();
     } else this.onUpdate();
@@ -398,15 +430,71 @@ export class PopupAddProcessesComponent implements OnInit {
   // }
 
   acceptEdit() {
-    if(this.user.administrator){
-      this.isAcceptEdit=true;
+    if (this.user.administrator) {
+      this.isAcceptEdit = true;
+    } else if (this.checkAdminOfBP(this.user.id)) {
+      this.isAcceptEdit = true;
+    } else {
+      this.isAcceptEdit = false;
     }
-    else if (this.checkAdminOfBP(this.user.id)) {
-      this.isAcceptEdit=true;
-    }
-    else {
-      this.isAcceptEdit=false;
-    }
+  }
 
+  //add Avtarar
+  addAvatar() {
+    this.imageAvatar.referType = 'avt';
+    this.imageAvatar.uploadFile();
+  }
+  fileSaveAvatar(e) {
+    if (e && typeof e === 'object') {
+      this.linkAvatar = environment.urlUpload + '/' + e?.pathDisk;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  getAvatar(process) {
+    let avatar = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    let flowChart = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'Flowchart',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .subscribe((res) => {
+        if (res && res?.url) {
+          this.linkAvatar = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        } else {
+          this.api
+            .execSv<any>(
+              'DM',
+              'DM',
+              'FileBussiness',
+              'GetAvatarAsync',
+              flowChart
+            )
+            .subscribe((res) => {
+              if (res && res?.url) {
+                this.linkAvatar = environment.urlUpload + '/' + res?.url;
+                this.changeDetectorRef.detectChanges();
+              }
+            });
+        }
+      });
   }
 }

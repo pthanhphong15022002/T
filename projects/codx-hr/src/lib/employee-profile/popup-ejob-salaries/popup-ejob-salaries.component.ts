@@ -102,19 +102,23 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
         } else this.notify.notifyCode('DM034');
       });
     } else {
-      this.hrSevice.UpdateEmployeeJobSalariesInfo(this.data).subscribe((p) => {
-        if (p == true) {
+      this.hrSevice.UpdateEmployeeJobSalariesInfo(this.formModel.currentData).subscribe((p) => {
+        if (p != null) {
           this.notify.notifyCode('SYS007');
-          this.dialog.close(this.data);
+          if (this.listView) {
+            (this.listView.dataService as CRUDService).update(p).subscribe();
+          }
+          // this.dialog.close(this.data);
         } else this.notify.notifyCode('DM034');
       });
     }
   }
 
   click(data) {
-    debugger;
     console.log(data);
     this.data = data;
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.data)) 
+    this.actionType ='edit'
     this.formGroup?.patchValue(this.data);
     this.cr.detectChanges();
   }

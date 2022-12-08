@@ -67,9 +67,9 @@
 
     <div class="stepper-body pt-2 w-100">
       <div class="container card shadow-none border-0 rounded-0 mx-auto h-100">
-        <div class="mb-10 mt-5 text-center tab-pane-header h-100">
+        <div class="mb-10 mt-10 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
-            <div class="d-flex justify-content-between container mb-20 mt-10">
+            <div class="d-flex justify-content-between container mb-10 mt-10">
               <ul class="nav">
                 <li class="nav-item">
                   <span
@@ -116,7 +116,7 @@
                 ></a>
               </div>
             </div>
-            <div class="container h-75 py-5">
+            <div class="container h-75">
               <codx-listview
                 #listView
                 [type]="'cardView'"
@@ -124,7 +124,7 @@
                 [assemblyName]="'EP'"
                 [entityName]="'EP_Resources'"
                 [className]="'ResourcesBusiness'"
-                [method]="'GetListAsync'"
+                [method]="'GetListByCbxAsync'"
                 [predicate]="'ResourceType=@0'"
                 [dataValue]="6"
                 [funcId]="'EP8S21'"
