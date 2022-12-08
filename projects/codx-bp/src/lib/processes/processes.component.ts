@@ -669,13 +669,11 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      // this.userId = '2207130007';
-      // this.isAdmin = false
-      let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
+      // this.userId = '2207130006';
+       //this.isAdmin = false
+      let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
-        console.log(res);
-        
         switch (res.functionID) {
           case 'SYS005':
           case 'SYS004':
@@ -692,7 +690,7 @@ export class ProcessesComponent
             }
             break;
           case 'SYS04':// copy
-          case 'SYS003':// them 
+          case 'SYS003':// them
           case 'SYS003':// them phien ban
             let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
             if(!isCreate && !fullRole) {
@@ -703,7 +701,7 @@ export class ProcessesComponent
               }
             }
             break;
-          case 'SYS03'://sua 
+          case 'SYS03'://sua
           case 'BPT102'://sua ten
           case 'BPT202'://sua ten
           case 'BPT203'://luu phien ban
@@ -723,8 +721,8 @@ export class ProcessesComponent
               res.disabled = true;
             }
             break;
-          case 'BPT101':// xem 
-          case 'BPT201':// xem 
+          case 'BPT101':// xem
+          case 'BPT201':// xem
           case 'BPT107'://  quan ly phien ban
           case 'BPT207'://  quan ly phien ban
             let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
@@ -745,7 +743,7 @@ export class ProcessesComponent
             if(!isAssign && !fullRole) {
               res.isblur = true;
             }
-            break;          
+            break;
         }
       });
     }
