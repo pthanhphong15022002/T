@@ -227,24 +227,24 @@ export class PopupAddProcessesComponent implements OnInit {
     //   //   return;
     //   // }
     // }
-    // if (this.process.processName) {
-    //   this.bpService
-    //     .isCheckExitName(this.process.processName)
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.notiService.alertCode('BP004').subscribe((x) => {
-    //           if (x.event?.status == 'N') {
-    //             return;
-    //           } else if (x.event?.status == 'Y') {
-    //             this.actionSave();
-    //           }
-    //         });
-    //       }
-    //     });
-    // }
-    // else {
+    if (this.process?.processName.trim() == this.nameOld.trim()) {
+      this.bpService
+        .isCheckExitName(this.process.processName)
+        .subscribe((res) => {
+          if (res) {
+            this.notiService.alertCode('BP004').subscribe((x) => {
+              if (x.event?.status == 'N') {
+                return;
+              } else if (x.event?.status == 'Y') {
+                this.actionSave();
+              }
+            });
+          }
+        });
+    }
+    else {
       this.actionSave();
-   // }
+    }
 
   }
  async actionSave(){
