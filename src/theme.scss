@@ -60,6 +60,11 @@
     $bg-color: #fd492a;
     $border-light: #ffdac8;
 
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #dfdfdf !important;
+    }
+
     .aside {
         &.aside-light {
             background-color: $primary-darker;
@@ -166,8 +171,10 @@
     }
 
     a {
+        color: $primary-dark;
+
         &:hover {
-            color: $link-hover-color;
+            color: $primary;
             text-decoration: $link-hover-decoration;
         }
     }
@@ -218,7 +225,7 @@
 
     .e-switch-wrapper .e-switch-off,
     .e-switch-wrapper .e-switch-off {
-        background-color: $primary-lighter !important;
+        background-color: #cbcbcb !important;
     }
 
     .e-switch-wrapper:hover .e-switch-off,
@@ -226,9 +233,59 @@
         background-color: $primary-light !important;
     }
 
+    .e-checkbox-wrapper .e-frame.e-check,
+    .e-css.e-checkbox-wrapper .e-frame.e-check {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .e-checkbox-wrapper .e-frame.e-check:focus,
+    .e-css.e-checkbox-wrapper .e-frame.e-check:hover {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .e-checkbox-wrapper:hover .e-frame.e-check,
+    .e-css.e-checkbox-wrapper:hover .e-frame.e-check {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+
+    .e-checkbox-wrapper .e-checkbox:focus+.e-frame,
+    .e-css.e-checkbox-wrapper .e-checkbox:focus+.e-frame {
+        border-color: $primary !important;
+        box-shadow: 0 0 0 4px $primary-lighter !important;
+    }
+
+    .e-input-group:active,
+    .e-input-group.e-input-focus,
+    .e-input:focus,
+    .e-control.e-focused,
+    .codx-textarea:focus,
+    textarea:focus,
+    .codx-input[type=textarea] {
+        border-color: $primary !important;
+    }
+
+    ///////////////
+
     .menu-state-title-primary .menu-item .menu-link.active {
         transition: color 0.2s ease, background-color 0.2s ease;
-        color: #3699ff;
+        color: $primary !important;
+    }
+
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
+        color: $primary !important;
+    }
+
+    /// svg
+    .btn:hover .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: $primary !important;
+    }
+
+    .btn.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+        fill: $primary ;
     }
 }
 
