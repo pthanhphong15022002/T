@@ -933,10 +933,22 @@ export class ProcessStepsComponent
               this.kanban.columns &&
               this.kanban.columns.length
             ) {
-              let temp = this.kanban.columns[event.currentIndex];
-              this.kanban.columns[event.currentIndex] =
-                this.kanban.columns[event.previousIndex];
-              this.kanban.columns[event.previousIndex] = temp;
+              let crr = event.currentIndex ;
+              let pre = event.previousIndex ;
+              let arrCl = this.kanban.columns ;
+              let temp = arrCl[pre] ;
+              if(crr > pre){
+                for(var i= pre ; i<crr ;i++ ){
+                  arrCl[i]= arrCl[i+1]
+                }
+                arrCl[crr] =temp
+              }else if(crr < pre){
+                for(var j= pre ; j>crr ;j-- ){
+                  arrCl[j]= arrCl[j-1]
+                }
+                arrCl[crr] =temp
+              }             
+              this.kanban.columns = arrCl;
               this.kanban.refresh();
             }
             this.notiService.notifyCode('SYS007');
