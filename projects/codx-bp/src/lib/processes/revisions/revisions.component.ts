@@ -133,7 +133,7 @@ export class RevisionsComponent implements OnInit {
         break;
       case this.msgErrorValidExit:
         this.notiService.alertCode('BP004').subscribe((x) => {
-          if (x.event.status == 'N') {
+          if (x.event?.status == 'N') {
             return;
           } else {
             this.isUpdate = true;

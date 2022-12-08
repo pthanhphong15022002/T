@@ -96,19 +96,17 @@
                 default="Thêm"
               ></codx-label>
             </button>
-            <div
-              class="btn-group"
-              ngbDropdown
-              role="group"
-              aria-label="Button group with nested dropdown "
-              container="body"
-            >
-              <button
-                style="border-radius: 0 3px 3px 0 !important"
+            <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown "
+              container="body">
+              <button 
+                id="show_menu"
+                style="border-radius: 0 3px 3px 0 !important" 
                 type="button"
                 class="btn btn-primary dropdown-toggle-split dropdown-toggle-click"
                 ngbDropdownToggle
-              ></button>
+              >
+                <i class="icon-arrow_drop_down icon-25"></i>
+              </button>
               <div class="dropdown-menu" ngbDropdownMenu>
                 <button
                   ngbDropdownItem

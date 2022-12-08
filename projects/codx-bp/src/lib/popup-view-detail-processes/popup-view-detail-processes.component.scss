@@ -72,13 +72,22 @@
     .sprints-task-detail {
         height: calc(100vh - 186px) !important;
         overflow: hidden;
+    }      
+
+}
+
+#show_menu{
+    padding: 5px !important;
+    .icon-arrow_drop_down{
+        padding: 0 !important;
+        margin: 0 !important;
     }
-    .dropdown-toggle-click::before{
-        content: "";
-        border-left: 1px solid var(--bs-border-color);
-        height: 50%;
-        position: absolute;
-        left: 0px;
-        top: 25%;
-    }
+}
+#show_menu::before{
+    content: "";
+    border-left: 1px solid var(--bs-border-color);
+    height: 60%;
+    position: absolute;
+    left: 0px;
+    top: 25%;
 }
