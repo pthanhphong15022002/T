@@ -158,6 +158,9 @@ export class ProcessesComponent
   }
 
   onInit(): void {
+    // this.userId = '2207130007';
+    // this.isAdmin = false
+
     this.button = {
       id: 'btnAdd',
     };
@@ -675,8 +678,6 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      // this.userId = '2207130007';
-      // this.isAdmin = false
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
@@ -731,8 +732,8 @@ export class ProcessesComponent
           case 'BPT201':// xem 
           case 'BPT107'://  quan ly phien ban
           case 'BPT207'://  quan ly phien ban
-            let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
-            if(!isRead && !fullRole) {
+            let isRead = this.checkPermissionRead(data)
+             if(!isRead) {
               res.isblur = true;
             }
             break;
@@ -755,14 +756,14 @@ export class ProcessesComponent
     }
   }
 
-  checkPermission(data){
+  checkPermissionRead(data){
     let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
-    let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
-    return (isRead || this.isAdmin || isOwner) ? true : false;
+    let isOwner = data?.owner == this.userId ? true : false;
+    return (isRead || this.isAdmin || isOwner || this.isAdminBp) ? true : false;
   }
 
   doubleClickViewProcessSteps(moreFunc, data){
-    let check = this.checkPermission(data);
+    let check = this.checkPermissionRead(data);
     if (check && this.moreFuncDbClick ) {
       this.viewDetailProcessSteps(moreFunc, data);
     }
