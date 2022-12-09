@@ -801,13 +801,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueDateChange(event: any) {
     if (event.data) {
       this.data.bookingOn = event.data.fromDate;
-      // if (!this.bookingOnCheck()) {
-      //   this.checkLoop = !this.checkLoop;
-      //   if (!this.checkLoop) {
-      //     this.notificationsService.notifyCode('EP001');
-      //   }
-      //   return;
-      // }
+      
+      if (!this.bookingOnCheck()) {
+        this.checkLoop = !this.checkLoop;
+        if (!this.checkLoop) {
+          this.notificationsService.notifyCode('EP001');
+        }
+        return;
+      }
       // if (!this.validateStartEndTime(this.startTime, this.endTime)) {
       //   this.checkLoop = !this.checkLoop;
       //   if (!this.checkLoop) {

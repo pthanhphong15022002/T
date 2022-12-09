@@ -49,22 +49,19 @@
       <div class="container card shadow-none border-0 rounded-3 h-100">
         <div class="py-5 px-2 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
-            <div class="container">
-              <div class="d-flex justify-content-end align-items-center">
-                <codx-searchbar [width]="300" iconPos="right" (searchEvent)="search($event)"></codx-searchbar>
-                <button class="btn btn-icon btn-tran position-relative mx-5">
-                  <span class="icon-shopping_cart icon-24"></span>
-                  <span *ngIf="getCartQty(this.cart) != 0"
-                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{
-                    getCartQty(this.cart) }}</span>
-                </button>
-                <a (click)="changeTab(2)"
-                  class="btn btn-flex btn-outline btn-outline-solid btn-outline-dark btn-active-primary"><span
-                    class="icon-double_arrow me-2"></span>
-                  <codx-label name="lblContinue" default="Tiếp theo"></codx-label></a>
-              </div>
+            <div class="d-flex justify-content-end align-items-center mb-2">
+              <codx-searchbar class="w-200px" iconPos="right" (searchEvent)="search($event)"></codx-searchbar>
+              <button class="btn btn-icon btn-tran position-relative mx-5">
+                <span class="icon-shopping_cart icon-20"></span>
+                <span *ngIf="getCartQty(this.cart) != 0"
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{
+                  getCartQty(this.cart) }}</span>
+              </button>
+              <a (click)="changeTab(2)" class="btn btn-light-primary">
+                <i class="icon-double_arrow icon-16"></i>
+                <codx-label name="lblContinue" default="Tiếp theo"></codx-label></a>
             </div>
-            <div class="container mb-10 mt-10">
+            <div class="mb-3">
               <div class="d-flex flex-wrap">
                 <ul class="nav">
                   <li class="nav-item">
@@ -83,7 +80,7 @@
                 </ul>
               </div>
             </div>
-            <div class="container h-75">
+            <div class="list-stationery">
               <codx-listview #listView [type]="'cardView'" [service]="'EP'" [assemblyName]="'EP'"
                 [entityName]="'EP_Resources'" [className]="'ResourcesBusiness'" [method]="'GetListByCbxAsync'"
                 [predicate]="'ResourceType=@0'" [dataValue]="6" [funcId]="'EP8S21'" [itemTemplate]="templateListCard">
@@ -115,60 +112,29 @@
       : (data?.costPrice | currency : "VND" : "symbol" : "3.0")
       }}
     </div>
-    <div
-      class="d-flex justify-content-between align-items-end mt-2 flex-nowrap"
-    >
+    <div class="d-flex justify-content-between align-items-end mt-2 flex-nowrap">
       <div class="d-flex justify-content-start mb-2">
-        <div
-          class="d-flex align-items-center position-relative me-2"
-          [title]="grvStationery['CurrentQty'].headerText"
-        >
-          <span class="icon-view_agenda icon-20 text-gray-400"></span>
-          <span
-            [class.truncate]="data?.currentQty >= 1000"
-            [title]="data?.currentQty"
-            >{{ data?.currentQty }}</span
-          >
+        <div class="d-flex align-items-center position-relative me-2" [title]="grvStationery['CurrentQty'].headerText">
+          <span class="icon-view_agenda icon-16 text-gray-500 me-1"></span>
+          <span [class.truncate]="data?.currentQty >= 1000" [title]="data?.currentQty">{{ data?.currentQty }}</span>
         </div>
-        <div
-          class="d-flex align-items-center position-relative me-2"
-          [title]="grvStationery['ReservedQty'].headerText"
-        >
-          <span
-            class="icon-shopping_cart icon-20 text-gray-400 reservedQty_card"
-          ></span>
-          <span
-            [class.truncate]="data?.reservedQty >= 1000"
-            [title]="data?.reservedQty"
-            >{{ data?.reservedQty }}</span
-          >
+        <div class="d-flex align-items-center position-relative me-2" [title]="grvStationery['ReservedQty'].headerText">
+          <span class="icon-shopping_cart icon-16 text-gray-500 me-1 reservedQty_card"></span>
+          <span [class.truncate]="data?.reservedQty >= 1000" [title]="data?.reservedQty">{{ data?.reservedQty }}</span>
         </div>
-        <div
-          class="d-flex align-items-center position-relative"
-          [title]="grvStationery['AvailableQty'].headerText"
-        >
-          <span
-            class="icon-brightness_auto icon-20 text-gray-400 availableQty_card"
-          ></span>
-          <span
-            [class.truncate]="data?.availableQty >= 1000"
-            [title]="data?.availableQty"
-            >{{ data?.availableQty }}</span
-          >
+        <div class="d-flex align-items-center position-relative" [title]="grvStationery['AvailableQty'].headerText">
+          <span class="icon-brightness_auto icon-16 text-gray-500 me-1 availableQty_card"></span>
+          <span [class.truncate]="data?.availableQty >= 1000" [title]="data?.availableQty">{{ data?.availableQty
+            }}</span>
         </div>
       </div>
       <div class="d-flex justify-content-end">
         <div class="position-relative">
-          <span
-            type="button"
-            class="icon-shopping_cart icon-20 text-gray-400 cart"
-            (click)="addCart($event, data)"
-          ></span>
-          <span
-            *ngIf="getItemQty(data?.resourceID) != 0"
-            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger"
-            >{{ getItemQty(data?.resourceID) }}</span
-          >
+          <span type="button" class="icon-shopping_cart icon-18 text-gray-500 cart"
+            (click)="addCart($event, data)"></span>
+          <span *ngIf="getItemQty(data?.resourceID) != 0"
+            class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{
+            getItemQty(data?.resourceID) }}</span>
         </div>
       </div>
     </div>
@@ -176,7 +142,7 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <div *ngIf="isAfterRender && dialogAddBookingStationery" class="row h-100">
+  <div *ngIf="isAfterRender && dialogAddBookingStationery" class="row request-step2">
     <div class="left col-6">
       <div class="d-flex justify-content-start mb-4">
         <h3 class="h3-title">
@@ -184,15 +150,17 @@
         </h3>
       </div>
       <div class="d-flex justify-content-between mb-4">
-        <div class="d-flex">
-          <codx-img [objectId]="
+        <div class="d-flex align-items-center">
+          <div class="me-3">
+            <codx-img [objectId]="
               isAddNew ? user?.userID : dialogAddBookingStationery?.value?.owner
             " [objectName]="
               isAddNew
                 ? user?.userName
                 : dialogAddBookingStationery?.value?.requester
             " [objectType]="'AD_Users'"></codx-img>
-          <div class="ms-2">
+          </div>
+          <div class="me-2">
             <div class="fw-bold text-start">
               {{
               isAddNew
@@ -275,9 +243,9 @@
         <codx-label class="fw-bold fs-5 text-dark" name="lblStationeryList"
           default="Danh sách văn phòng phẩm"></codx-label>
       </div>
-      <div class="scroll-y liststationery-request pt-3">
+      <div class="scroll-y liststationery-request pt-3 pe-3">
         <div *ngFor="let item of cart; trackBy: itemByRecID">
-          <div class="d-flex mb-4 pe-3 justify-content-between w-100 bg-hover">
+          <div class="d-flex align-items-center mb-2 me-5 p-1 rounded-2 justify-content-between w-100 bg-hover">
             <div class="d-flex flex-row">
               <div class="me-3">
                 <codx-img [objectId]="item.recID" imageType="circle" width="35" objectType="EP_Resources"
@@ -290,13 +258,13 @@
                     }}</span>
                 </div>
 
-                <div class="d-flex flex-row flex-grow-1 text-gray-600">
+                <div class="d-flex flex-row flex-grow-1 text-gray-600 lh-1">
                   <codx-label name="lblUMID" default="Đơn vị tính"></codx-label>:
                   <span class="d-block ms-2 fw-bold">{{ item?.umName }}</span>
                 </div>
               </div>
             </div>
-            <codx-input class="me-2" [cusButton]="true" [min]="1" [max]="50" type="number" field="quantity"
+            <codx-input class="bg-white" [cusButton]="true" [min]="1" [max]="50" type="number" field="quantity"
               [crrValue]="item?.quantity" (valueChange)="valueChangeQtyStationery($event, item?.resourceID)">
             </codx-input>
           </div>

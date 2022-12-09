@@ -103,7 +103,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         if(res){
           let data = JSON.parse(JSON.stringify(this.message));
           this.message.message = "";
-          this.signalR.sendData(data,"SendMessage");
+          this.signalR.sendData(data,"SendMessageToGroup");
         }
       })
     }
