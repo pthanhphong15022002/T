@@ -49,7 +49,7 @@ export class ProcessesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @ViewChild('templateRight') empty: TemplateRef<any>;
+  @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -925,5 +925,9 @@ export class ProcessesComponent
     this.currView = event.view.model.template2;
     // this.currView = this.templateListCard;
     //  this.data = [];
+  }
+
+  deleteBin(){
+    this.view.dataService
   }
 }
