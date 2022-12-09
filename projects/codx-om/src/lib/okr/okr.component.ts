@@ -103,7 +103,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   click(event: any) {
     switch (event.id) {
       case 'btnAdd': {
-        this.addOKR();
+        this.addOKRPlans();
         break;
       }
       case 'btnAddKR': {
@@ -111,7 +111,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-        this.addOKRPlans();
+        this.addOKR();
         break;
       }
       case 'Calendar': {
@@ -147,7 +147,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.gridView,
       this.formModelKR,
       "Thêm mới mục tiêu"
-    ]);
+    ]
+    );    
   }
   //Lấy data danh sách mục tiêu
   getGridViewSetup() {
@@ -163,27 +164,25 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Thêm KR
   addKR(o: any=null) {
     // Tạo FormModel cho OKRs
-    
-   
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.formModelKR;
 
-    let dialogKR = this.callfc.openSide(
-      PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
-      option
-    );
-    
-    // var dialogModel = new DialogModel();
-    // dialogModel.IsFull = true;
-    
-    // let dialogKR = this.callfc.openForm(
-    //   PopupShowKRComponent,'',null,null,null,
-    //   ['','','','','',],
-    //   '',
-    //   dialogModel
+    // let dialogKR = this.callfc.openSide(
+    //   PopupAddKRComponent,
+    //   [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
+    //   option
     // );
+    
+    var dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    
+    let dialogKR = this.callfc.openForm(
+      PopupShowKRComponent,'',null,null,null,
+      ['','','','','',],
+      '',
+      dialogModel
+    );
 
   }
 
