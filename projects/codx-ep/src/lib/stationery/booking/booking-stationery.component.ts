@@ -372,22 +372,6 @@ export class BookingStationeryComponent
     }
   }
 
-  getDetailBooking(id: any) {
-    this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetBookingByIDAsync',
-        this.itemDetail?.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
@@ -397,7 +381,6 @@ export class BookingStationeryComponent
       recID = event.recID;
       this.itemDetail = event;
     }
-    this.getDetailBooking(recID);
   }
 
   closeAddForm(event) {}

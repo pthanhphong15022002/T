@@ -708,7 +708,9 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       case 'ODT110':
       case 'ODT209':
       case 'ODT111':
-      case 'ODT210': {
+      case 'ODT210':
+      case 'ODT3009':
+      case 'ODT3010': {
         this.odService.bookMark(datas.recID).subscribe((item) => {
           if (item.status == 0) {
             this.view.dataService.onAction.next({
@@ -829,7 +831,8 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
         break;
       }
       //Hủy xét duyệt
-      case 'ODT212': {
+      case 'ODT212':
+      case 'ODT3012': {
         var config = new AlertConfirmInputConfig();
         config.type = 'YesNo';
         this.notifySvr
@@ -1098,47 +1101,56 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.view.dataService.data[index] = data;
   }
   changeDataMF(e: any, data: any) {
+    //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT110' || x.functionID == 'ODT209'
+        x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009"
     );
+    //Unbookmark
     var unbm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT111' || x.functionID == 'ODT210'
+        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010"
     );
     if (data?.isBookmark) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
-    } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if(bm[0]) bm[0].disabled = true;
+      if(unbm[0]) unbm[0].disabled = false;
+    } else  {
+      if(unbm[0]) unbm[0].disabled = true;
+      if(bm[0]) bm[0].disabled = false;
     }
     if (
       this.formModel.funcID == 'ODT41' &&
       data?.approveStatus != '1' &&
-      data?.approveStatus != '2'
+      data?.approveStatus != '2' && data?.approveStatus != '2'
     ) {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
       if(approvel[0]) approvel[0].disabled = true;
     }
-    if (this.formModel.funcID == 'ODT41') {
+    if (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') {
+
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212'
+        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
       );
-      if(approvel[0]) approvel[0].disabled = true;
+      for(var i = 0 ; i< approvel.length ; i++)
+      {
+        approvel[i].disabled = true;
+      }
     }
 
     if (
-      this.formModel.funcID == 'ODT41' &&
+    (this.formModel.funcID == 'ODT41' || this.formModel.funcID == 'ODT51') &&
       data?.approveStatus == '3' &&
       data?.createdBy == this.userID
     ) {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212'
+        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
       );
-      if(approvel[0]) approvel[0].disabled = false;
+      for(var i = 0 ; i< approvel.length ; i++)
+      {
+        approvel[i].disabled = false;
+      }
     }
     if (data?.status == '7') {
       var completed = e.filter(

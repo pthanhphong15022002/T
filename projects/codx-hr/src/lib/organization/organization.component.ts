@@ -53,10 +53,12 @@ export class OrgorganizationComponent extends UIComponent {
   start = '<span class="opacity-50">';
   end = '</span>';
   funcID: any;
-  @ViewChild('templateTree') templateTree: TemplateRef<any>;
-  @ViewChild('templateRight') templateRight: TemplateRef<any>;
-  @ViewChild('templateDetail') templateOrgchart: TemplateRef<any>;
-  @ViewChild('templateListView') templateListView: TemplateRef<any>;
+  @ViewChild('tempTree') tempTree: TemplateRef<any>;
+  @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
+  @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
+  @ViewChild('tmpList') tmpList: TemplateRef<any>;
+  @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
+
   constructor(
     inject: Injector,
     private hrservice: CodxHrService,
@@ -103,9 +105,9 @@ export class OrgorganizationComponent extends UIComponent {
         active: false,
         model: {
           resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.templateRight,
-          template2: this.templateOrgchart,
+          template: this.tempTree,
+          panelRightRef: this.panelRightLef,
+          template2: this.tmpOrgChart,
           resourceModel: { parentIDField: 'ParentID' }
 
         },
@@ -117,12 +119,24 @@ export class OrgorganizationComponent extends UIComponent {
         active: true,
         model: {
           resizable: true,
-          template: this.templateTree,
-          panelRightRef: this.templateRight,
-          template2: this.templateListView,
+          template: this.tempTree,
+          panelRightRef: this.panelRightLef,
+          template2: this.tmpList,
           resourceModel: { parentIDField: 'ParentID' }
         },
       },
+      {
+        id: '3',
+        type: ViewType.treedetail,
+        sameData: true,
+        active: false,
+        model: {
+          resizable: true,
+          template: this.tempTree,
+          panelRightRef: this.panelRightLef,
+          template2: this.tmpMasterDetail,
+        }
+      }
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
@@ -137,34 +151,35 @@ export class OrgorganizationComponent extends UIComponent {
     if (data && this.orgUnitID != data.orgUnitID) {
       this.orgUnitID = data.orgUnitID;
       this.parentID = data.parentID;
-      this.hrservice
-        .loadOrgchart(
-          this.orgUnitID,
-          this.parentID,
-          this.numberLV,
-          this.onlyDepartment
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.dataDetail = res.Data as any[];
-            var dataTemp = JSON.parse(JSON.stringify(this.dataDetail)) as any[];
-            this.dataCard = dataTemp.filter((item) => {
-              if (
-                item.departmentCode === this.orgUnitID ||
-                item.parentID === this.orgUnitID
-              )
-                return item;
-            });
-            var data = JSON.parse(JSON.stringify(this.dataCard));
-            if (data.length > 1) {
-              var index = data.findIndex((x) => x.orgUnitType == '1');
-              var dataCompany = data[index];
-              data.splice(index, 1);
-              data.unshift(dataCompany);
-            }
-            this.dataCard = data;
-          }
-        });
+      // this.hrservice
+      //   .loadOrgchart(
+      //     this.orgUnitID,
+      //     this.parentID,
+      //     this.numberLV,
+      //     this.onlyDepartment
+      //   )
+      //   .subscribe((res) => {
+      //     if (res) {
+      //       console.log(res);
+      //       this.dataDetail = res.Data as any[];
+      //       var dataTemp = JSON.parse(JSON.stringify(this.dataDetail)) as any[];
+      //       this.dataCard = dataTemp.filter((item) => {
+      //         if (
+      //           item.departmentCode === this.orgUnitID ||
+      //           item.parentID === this.orgUnitID
+      //         )
+      //           return item;
+      //       });
+      //       var data = JSON.parse(JSON.stringify(this.dataCard));
+      //       if (data.length > 1) {
+      //         var index = data.findIndex((x) => x.orgUnitType == '1');
+      //         var dataCompany = data[index];
+      //         data.splice(index, 1);
+      //         data.unshift(dataCompany);
+      //       }
+      //       this.dataCard = data;
+      //     }
+      //   });
       this.detectorRef.detectChanges();
     }
   }
