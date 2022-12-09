@@ -1054,13 +1054,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //#region
   HandleBebefitInfo(actionType, s) {
     this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'EBasicSalariesBusiness',
-        'AddAsync',
-        null
-      )
+      .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness', 'AddAsync', null)
       .subscribe((res) => {
         console.log(res);
       });

@@ -1294,8 +1294,14 @@ codx-vll {
   border-radius: 20px !important;
 }
 
-
+.btn.btn-outline-primary:hover {
+  color: white;
+}
 
 .bg-hover:hover {
   background-color: var(--gray-100);
+}
+
+.content-tree li.menu-item>.d-flex.align-items-center {
+  align-items: start !important;
 }
