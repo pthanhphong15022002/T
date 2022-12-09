@@ -337,22 +337,6 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
 
-  getDetailBooking(id: any) {
-    this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetBookingByIDAsync',
-        this.itemDetail?.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
   addNew(evt?) {
     if (evt != null) {
       this.optionalData = evt;
