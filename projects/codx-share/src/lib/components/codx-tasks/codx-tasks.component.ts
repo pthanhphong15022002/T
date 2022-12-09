@@ -170,6 +170,7 @@ export class CodxTasksComponent
   //#region Init
   onInit(): void {
     console.log(this.funcID);
+    if (!this.funcID) this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else this.vllStatus = this.vllStatusTasks;
