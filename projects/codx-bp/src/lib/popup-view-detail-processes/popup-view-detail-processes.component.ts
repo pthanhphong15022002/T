@@ -76,6 +76,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
           this.childFunc = datas;         
         }
       })
+    this.bpService.updateHistoryViewProcessesAsync(this.process.recID).subscribe() ;
   }
 
   ngOnInit(): void {
