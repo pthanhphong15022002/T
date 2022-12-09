@@ -1,12 +1,16 @@
 import {
   AfterViewInit,
+  ApplicationRef,
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -28,6 +32,7 @@ import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.
   styleUrls: ['./chat-list.component.css'],
 })
 export class ChatListComponent implements OnInit, AfterViewInit {
+  
   @Input() isOpen: boolean; // check open dropdown
   @Output() isOpenChange = new EventEmitter<boolean>();
   funcID: string = 'WPT11';
@@ -36,13 +41,15 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   grdViewSetUp: any = null;
   moreFC: any = null;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
+  @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
     private api: ApiHttpService,
     private signalRSV: SignalRService,
     private callFCSV: CallFuncService,
     private cache: CacheService,
     private notifySV: NotificationsService,
-    private dt: ChangeDetectorRef
+    private dt: ChangeDetectorRef,
+    private _applicationRef: ApplicationRef,
   ) {}
 
   ngOnInit(): void {
@@ -94,8 +101,7 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   openChatBox(group: any) {
     if (group?.groupID) 
     {
-      let option = new DialogModel();
-      this.callFCSV.openForm(ChatBoxComponent,"",0,0,"WP",group.groupID,"",option);
+      this.addBoxChat(group);
     }
   }
 
@@ -114,8 +120,8 @@ export class ChatListComponent implements OnInit, AfterViewInit {
       let popup = this.callFCSV.openForm(
         PopupAddGroupComponent,
         '',
-        300,
-        500,
+        0,
+        0,
         this.function.funcID,
         data,
         '',
@@ -134,63 +140,31 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   }
 
 
-  addBoxChat(){
-    //content
-    // if (content instanceof TemplateRef) {
-    //   var viewRef = content.createEmbeddedView({ $implicit: dialogRef });
-    //   this._applicationRef.attachView(viewRef);
-    //   viewRef.detectChanges();
-    //   let contentDialog = viewRef.rootNodes;
-
-    //   if (contentDialog.length > 1) {
-    //     var contain = document.createElement('div');
-    //     contain.classList.add('container-dialog');
-    //     contentDialog.forEach((ele: any) => {
-    //       contain.append(ele);
-    //     });
-    //     contentEle = contain;
-    //   } else {
-    //     contentEle = contentDialog[0] as HTMLElement;
-    //   }
-
-    //   if (contentEle instanceof HTMLElement) {
-    //     if (contentEle.tagName == 'CODX-FORM') {
-    //       var div$ = contentEle.children[0];
-    //       headerEle = div$.children[0] as HTMLElement;
-    //       contentEle = div$.children[1] as HTMLElement;
-    //       footerEle = div$.children[2] as HTMLElement;
-    //     }
-    //   }
-    // } else if (typeof content === 'string') {
-    //   contentEle = content;
-    // } else {
-    //   //const contentCmptFactory =
-    //   // this.componentFactoryResolver.resolveComponentFactory(content);
-    //   let odt: DialogData = { data: data };
-
-    //   const modalContentInjector = Injector.create({
-    //     providers: [
-    //       { provide: DialogData, useValue: odt },
-    //       { provide: DialogRef, useValue: dialogRef },
-    //     ],
-    //   });
-    //   //const componentRef = contentCmptFactory.create(modalContentInjector);
-    //   let componentRef = viewContainerRef.createComponent(content, {
-    //     injector: modalContentInjector,
-    //   });
-    //   componentRef.changeDetectorRef.detectChanges();
-    //   let contentDialog = componentRef.location.nativeElement;
-    //   contentEle = contentDialog;
-
-    //   if (contentDialog.childElementCount > 0) {
-    //     var ele: HTMLElement = contentDialog.children[0];
-    //     if (ele.tagName == 'CODX-FORM') {
-    //       var div$ = ele.children[0];
-    //       headerEle = div$.children[0] as HTMLElement;
-    //       contentEle = div$.children[1] as HTMLElement;
-    //       footerEle = div$.children[2] as HTMLElement;
-    //     }
-    //   }
-    // }
+  addBoxChat(group:any){
+    let viewRef = this.chatBox.createEmbeddedView({ $implicit: group });
+    this._applicationRef.attachView(viewRef);
+    viewRef.detectChanges();
+    let html = viewRef.rootNodes[0];
+     let elementContainer = document.querySelector(".container-chat");
+     if(elementContainer)
+     {
+      let length = elementContainer.children.length;
+      if(length < 3) // add box chat
+      {
+        html.setAttribute('style',`
+        position: fixed!important;
+        bottom: 0px;
+        right: ${(length*320 + 100)}px;
+        margin-top: -500px;
+        background-color: white;`)
+        html.setAttribute('id',group.groupID)
+        elementContainer.append(html);
+      }
+      else // tạo bong bóng chat
+      {
+        
+      }
+      
+    }
   }
 }

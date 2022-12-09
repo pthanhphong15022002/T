@@ -8,7 +8,7 @@ export class WP_Messages{
     public message : string;
     public messageType : string;
     public fileName : string;
-    public fileSize : string;
+    public fileSize : number;
     public fileType : string;
     public votes : any[];
     public refID : string;
@@ -24,7 +24,7 @@ export class WP_Messages{
         this.message = "";
         this.messageType = "";
         this.fileName = "";
-        this.fileSize = "";
+        this.fileSize = 0;
         this.fileType = "";
         this.votes = [];
         this.refID = "";

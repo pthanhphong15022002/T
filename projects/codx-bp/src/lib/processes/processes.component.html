@@ -39,7 +39,7 @@
           : "grvProcesses"
           | async
           }}</div>
-          <span *ngIf="!checkPermission(data)" class="icon-security text-primary icon-18"></span>
+          <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
         </div>
        
         <div class="d-flex align-items-center mt-1">
@@ -167,7 +167,7 @@
       </div>
     </td>
     <td class="rowphoto" placement="left"  >  
-      <span  *ngIf="!checkPermission(data)" class="icon-security text-primary icon-18"></span>
+      <span  *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
     </td>
     <td class="rowphoto" placement="left">
       <codx-temp-full cardCss="card-template" [imageWidth]="30"

@@ -34,7 +34,7 @@
     <div class="form-group">
       <codx-label fiedName="UserName" [formModel]="form?.formModel">
       </codx-label>
-      <codx-input field="userName" (valueChange)="valueChangeU($event)" [Group]="form.formGroup"
+      <codx-input field="userName" [crrValue]="adUser.userName" (valueChange)="valueChangeU($event)" [Group]="form.formGroup"
         [formModel]="form.formModel">
       </codx-input>
     </div>
