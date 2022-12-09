@@ -165,14 +165,6 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f)
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-          if (res) {
-            this.moreFunction = res;
-          }
-        });
-    });
   }
 
   //#region Init
@@ -184,6 +176,15 @@ export class CodxTasksComponent
 
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
+
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res) {
+            this.moreFunction = res;
+          }
+        });
+    });
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011') {
@@ -946,12 +947,12 @@ export class CodxTasksComponent
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    if (this.funcID == 'TMT0206') {
+    if (this.crrStatus == data?.status) return;
+    if (this.funcID == 'TMT0206' || this.moreFunction?.length == 0) {
       data.status = this.crrStatus;
       return;
     }
-    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
-      return;
+
     var moreFun = this.moreFunction.find(
       (x) =>
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&

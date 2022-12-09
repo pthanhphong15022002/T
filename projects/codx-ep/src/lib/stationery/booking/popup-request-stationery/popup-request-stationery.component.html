@@ -69,29 +69,8 @@
       <div class="container card shadow-none border-0 rounded-0 mx-auto h-100">
         <div class="mb-10 mt-10 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
-            <div class="d-flex justify-content-between container mb-10 mt-10">
-              <ul class="nav">
-                <li class="nav-item">
-                  <span
-                    class="nav-link fw-bold cursor-pointer"
-                    [ngClass]="{ active: !groupID }"
-                    (click)="filterStationery()"
-                  >
-                    <codx-label name="lblAll" default="Tất cả"></codx-label>
-                    <span>({{ totalStationery }})</span>
-                  </span>
-                </li>
-                <li class="nav-item" *ngFor="let item of groupStationery">
-                  <span
-                    class="nav-link fw-bold cursor-pointer active"
-                    [ngClass]="{ active: item?.resourceID == groupID }"
-                    (click)="filterStationery(item?.resourceID)"
-                    >{{ item?.resourceName }} ({{ item?.qtyItems }})</span
-                  >
-                </li>
-              </ul>
-
-              <div class="d-flex justify-content-between align-items-center">
+            <div class="container">
+              <div class="d-flex justify-content-end align-items-center">
                 <codx-searchbar
                   [width]="300"
                   iconPos="right"
@@ -114,6 +93,30 @@
                     default="Tiếp theo"
                   ></codx-label
                 ></a>
+              </div>
+            </div>
+            <div class="container mb-10 mt-10">
+              <div class="d-flex flex-wrap">
+                <ul class="nav">
+                  <li class="nav-item">
+                    <span
+                      class="nav-link fw-bold cursor-pointer"
+                      [ngClass]="{ active: !groupID }"
+                      (click)="filterStationery()"
+                    >
+                      <codx-label name="lblAll" default="Tất cả"></codx-label>
+                      <span>({{ totalStationery }})</span>
+                    </span>
+                  </li>
+                  <li class="nav-item" *ngFor="let item of groupStationery">
+                    <span
+                      class="nav-link fw-bold cursor-pointer active"
+                      [ngClass]="{ active: item?.resourceID == groupID }"
+                      (click)="filterStationery(item?.resourceID)"
+                      >{{ item?.resourceName }} ({{ item?.qtyItems }})</span
+                    >
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="container h-75">

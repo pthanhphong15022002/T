@@ -232,7 +232,7 @@ export class PopupAddProcessesComponent implements OnInit {
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
           if (res) {
-            this.notiService.alertCode('BP004').subscribe((x) => {
+            this.notiService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
               if (x.event?.status == 'N') {
                 return;
               } else if (x.event?.status == 'Y') {
@@ -261,13 +261,15 @@ export class PopupAddProcessesComponent implements OnInit {
     });
   switch (this.action) {
     case 'copy': {
-      this.notiService.alertCode('BP007').subscribe((x) => {
+      this.notiService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
         if (x.event?.status == 'N') {
           this.isCoppyFile = false;
           this.isUpdateCreateProcess();
+          this.isAddPermission(this.process.owner);
         } else if (x.event?.status == 'Y') {
           this.isCoppyFile = true;
           this.isUpdateCreateProcess();
+          this.isAddPermission(this.process.owner);
         } else {
           return;
         }
@@ -276,10 +278,12 @@ export class PopupAddProcessesComponent implements OnInit {
     }
     case 'add': {
       this.isUpdateCreateProcess();
+      this.isAddPermission(this.process.owner);
       break;
     }
     case 'edit': {
       this.isUpdateCreateProcess();
+      this.isAddPermission(this.process.owner);
       break;
     }
     default: {
@@ -377,7 +381,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-    this.isAddPermission(this.process.owner);
+
   }
   isAddPermission(id) {
     this.api
@@ -432,7 +436,7 @@ export class PopupAddProcessesComponent implements OnInit {
   acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.id)) {
+    } else if (this.checkAdminOfBP(this.user.userId)) {
       this.isAcceptEdit = true;
     } else {
       this.isAcceptEdit = false;
