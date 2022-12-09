@@ -36,6 +36,13 @@
   color: #005dc7;
 }
 
+.truncate {
+  max-width: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 ::ng-deep {
   .codx-card-custom {
     .codx-stepper {
@@ -178,10 +185,13 @@
   .liststationery-request {
     height: calc(100% - 40px);
     overflow: auto;
-    border: 1px aqua solid;
   }
 
   .list-stationery {
     height: calc(100% - 72px);
+  }
+
+  .request-step2 {
+    height: calc(100% - 35px);
   }
 }
