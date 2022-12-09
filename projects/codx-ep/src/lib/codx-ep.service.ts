@@ -316,13 +316,13 @@ export class CodxEpService {
     );
   }
 
-  getQuotaByResourceID(resourceID: string) {
+  getQuota(resourceID: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourceQuotaBusiness',
-      'GetQuotaByResourceIDAsync',
-      [resourceID]
+      'GetListQuotaAsync',
+      []
     );
   }
 
