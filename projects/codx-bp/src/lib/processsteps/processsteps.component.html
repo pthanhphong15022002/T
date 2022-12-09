@@ -23,9 +23,8 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
-    [hideMF]="hideMoreFC"
+    [hideMF]="!isEdit"
     (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
     [titleTmp]="cardTitleTmp"
@@ -34,7 +33,6 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
     [rootData]="data"
-    (changeDataMF)="changeDataMF($event)"
   >
   </codx-card-img>
 </ng-template>
@@ -314,7 +312,7 @@
                     </div> -->
 
                     <codx-temp-full
-                      [hideMF]="hideMoreFC"
+                      [hideMF]="!isEdit"
                       (clickMF)="clickMF($event, item)"
                       [typeMF]="'hover'"
                       [formModel]="view.formModel"
@@ -323,7 +321,6 @@
                       [footer]="footerBase"
                       [dataItem]="item"
                       [moreFuncCss]="'me-15'"
-                      (changeDataMF)="changeDataMF($event)"
                     >
                     </codx-temp-full>
                   </div>
@@ -384,7 +381,7 @@
                                 <span class="icon-reorder"></span>
                               </div> -->
                               <codx-temp-full
-                                [hideMF]="hideMoreFC"
+                                [hideMF]="!isEdit"
                                 (clickMF)="clickMF($event, item1)"
                                 [typeMF]="'hover'"
                                 [formModel]="view.formModel"
@@ -394,7 +391,6 @@
                                 [desc2Tmp]="cardTitleTmp"
                                 [footer]="cardImgFooter"
                                 [moreFuncCss]="'me-15'"
-                                (changeDataMF)="changeDataMF($event)"
                               >
                               </codx-temp-full>
 
