@@ -1265,19 +1265,4 @@ export class ProcessStepsComponent
     this.changeDetectorRef.detectChanges()
   }
 
-  changeDataMF(e){
-    if(e && !this.isEdit){
-      e.forEach(element => {
-        switch(element.functionID){
-          case 'SYS01':
-          case 'SYS02':
-          case 'SYS03':
-          case 'SYS04':
-            element.disabled =true;
-        }
-      });
-    }
-    
-  }
-
 }

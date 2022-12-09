@@ -46,18 +46,17 @@ export class SignalRService {
   //#region  get data from server
   public registerOnServerEvents() {
     this.hubConnection.on('onConnect', (data) => {
+      console.log(data);
       this.connectionId = data;
       this.userConnect.emit(data);
     });
 
     // chat emit
     this.hubConnection.on('ChatEmit', (data) => {
-      this.connectionId = data;
       this.signalChat.emit(data);
     });
     // group emit
     this.hubConnection.on('GroupEmit', (data) => {
-      this.connectionId = data;
       this.signalGroup.emit(data);
     });
   }
