@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
 import { FileService } from '@shared/services/file.service';
 import {
+  AlertConfirmInputConfig,
   AuthStore,
   ButtonModel,
   DialogModel,
@@ -95,6 +96,7 @@ export class ProcessesComponent
   dialogPopup: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
   @ViewChild('viewReleaseProcess', { static: true }) viewReleaseProcess;
+
   @Input() process = new BP_Processes();
   newName = '';
   crrRecID = '';
@@ -140,7 +142,8 @@ export class ProcessesComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
-    private routers: Router
+    private routers: Router,
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -159,8 +162,7 @@ export class ProcessesComponent
 
   onInit(): void {
     // this.userId = '2207130007';
-    // this.isAdmin = false
-
+    // this.isAdmin = false   
     this.button = {
       id: 'btnAdd',
     };
@@ -232,7 +234,7 @@ export class ProcessesComponent
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
-    this.view.dataService.methodDelete = 'DeleteProcessesAsync';
+    this.view.dataService.methodDelete = 'UpdateDeletedProcessesAsync';
     //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
@@ -430,9 +432,10 @@ export class ProcessesComponent
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteProcessesAsync';
-
-    opt.data = itemSelected.recID;
+    opt.methodName = 'UpdateDeletedProcessesAsync';
+    opt.data = [itemSelected.recID,true];
+    // opt.methodName = 'DeleteProcessesAsync';
+    // opt.data = [itemSelected.recID];
     return true;
   }
 
@@ -676,7 +679,7 @@ export class ProcessesComponent
 
   onDragDrop(e: any) {}
 
-  changeDataMF(e, data) {
+  changeDataMF(e, data) { 
     if (e != null && data != null) {
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
@@ -928,6 +931,21 @@ export class ProcessesComponent
   }
 
   deleteBin(){
-    this.view.dataService
+    if(this.view.dataService?.data.length >0){
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      let title = `Bạn có muốn xóa hẳn ${this.view.dataService?.data.length} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?`
+      this.notificationsService
+      .alert('Thông báo', title, config)
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.bpService.deleteBin([true]).subscribe((res) =>{
+              if(res){
+                this.notification.notifyCode('SYS008');
+              }
+            });
+          };
+        })
+    }
   }
 }
