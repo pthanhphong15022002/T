@@ -33,7 +33,7 @@
 </ng-template>
 <ng-template #footer>
     <div class="d-flex justify-content-between ">
-        <codx-input type="Share" [refValue]="vllShare" [dataShared]="[]" multiple="true" [showInput]="false"
+        <codx-input type="Share" [refValue]="vllShare" [dataShared]="[]" [multiple]="true" [showInput]="false"
             (valueChange)="eventApply($event)"></codx-input>
         <button style="float: right;" type="button" class="btn btn-primary" (click)="saveData()">
             <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>

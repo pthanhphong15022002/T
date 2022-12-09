@@ -166,6 +166,15 @@ export class CodxBpService {
     );
   }
 
+  updateHistoryViewProcessesAsync(id: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateHistoryViewAsync',
+      id
+    );
+  }
+
   public listTags = new BehaviorSubject<any>(null);
   isListTags = this.listTags.asObservable();
 

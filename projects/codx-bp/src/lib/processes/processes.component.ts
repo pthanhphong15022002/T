@@ -49,7 +49,7 @@ export class ProcessesComponent
   extends UIComponent
   implements OnInit, AfterViewInit
 {
-  @ViewChild('templateRight') empty: TemplateRef<any>;
+  @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
@@ -158,6 +158,9 @@ export class ProcessesComponent
   }
 
   onInit(): void {
+    // this.userId = '2207130007';
+    // this.isAdmin = false
+
     this.button = {
       id: 'btnAdd',
     };
@@ -675,8 +678,6 @@ export class ProcessesComponent
 
   changeDataMF(e, data) {
     if (e != null && data != null) {
-      // this.userId = '2207130007';
-      // this.isAdmin = false
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       e.forEach((res) => {
@@ -696,7 +697,7 @@ export class ProcessesComponent
             }
             break;
           case 'SYS04':// copy
-          case 'SYS003':// them 
+          case 'SYS003':// them
           case 'SYS003':// them phien ban
             let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
             if(!isCreate && !fullRole) {
@@ -707,7 +708,7 @@ export class ProcessesComponent
               }
             }
             break;
-          case 'SYS03'://sua 
+          case 'SYS03'://sua
           case 'BPT102'://sua ten
           case 'BPT202'://sua ten
           case 'BPT203'://luu phien ban
@@ -727,12 +728,12 @@ export class ProcessesComponent
               res.disabled = true;
             }
             break;
-          case 'BPT101':// xem 
-          case 'BPT201':// xem 
+          case 'BPT101':// xem
+          case 'BPT201':// xem
           case 'BPT107'://  quan ly phien ban
           case 'BPT207'://  quan ly phien ban
-            let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
-            if(!isRead && !fullRole) {
+            let isRead = this.checkPermissionRead(data)
+             if(!isRead) {
               res.isblur = true;
             }
             break;
@@ -749,20 +750,20 @@ export class ProcessesComponent
             if(!isAssign && !fullRole) {
               res.isblur = true;
             }
-            break;          
+            break;
         }
       });
     }
   }
 
-  checkPermission(data){
+  checkPermissionRead(data){
     let isRead = data?.permissions.some(x => (x.objectID == this.userId && x.read));
-    let isOwner = data?.permissions.some(x => x.objectID == data?.owner);
-    return (isRead || this.isAdmin || isOwner) ? true : false;
+    let isOwner = data?.owner == this.userId ? true : false;
+    return (isRead || this.isAdmin || isOwner || this.isAdminBp) ? true : false;
   }
 
   doubleClickViewProcessSteps(moreFunc, data){
-    let check = this.checkPermission(data);
+    let check = this.checkPermissionRead(data);
     if (check && this.moreFuncDbClick ) {
       this.viewDetailProcessSteps(moreFunc, data);
     }
@@ -924,5 +925,9 @@ export class ProcessesComponent
     this.currView = event.view.model.template2;
     // this.currView = this.templateListCard;
     //  this.data = [];
+  }
+
+  deleteBin(){
+    this.view.dataService
   }
 }

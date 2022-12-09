@@ -71,7 +71,7 @@ export class LoginQTSCComponent implements OnInit, OnDestroy {
     this.destroyEven.emit();
   }
 
-  @Input() checkPasswords: ValidatorFn = (
+  checkPasswords: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
     let pass = group.get('password').value;
