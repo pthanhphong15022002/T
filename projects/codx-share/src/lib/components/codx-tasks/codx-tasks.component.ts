@@ -170,6 +170,7 @@ export class CodxTasksComponent
   //#region Init
   onInit(): void {
     console.log(this.funcID);
+    if (!this.funcID) this.funcID = this.activedRouter.snapshot.params['funcID'];
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else this.vllStatus = this.vllStatusTasks;
@@ -947,12 +948,12 @@ export class CodxTasksComponent
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    if (this.funcID == 'TMT0206' || this.crrStatus == data?.status || this.moreFunction?.length == 0) {
+    if (this.crrStatus == data?.status) return;
+    if (this.funcID == 'TMT0206' || this.moreFunction?.length == 0) {
       data.status = this.crrStatus;
       return;
     }
-    // if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
-    //   return;
+
     var moreFun = this.moreFunction.find(
       (x) =>
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&

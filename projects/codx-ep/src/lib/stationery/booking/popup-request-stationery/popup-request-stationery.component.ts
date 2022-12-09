@@ -423,7 +423,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
     //NagetivePhysical = 0: khong am kho
-
     if (tmpResource.availableQty == 0) {
       if (this.nagetivePhysical == '0') {
         //không add

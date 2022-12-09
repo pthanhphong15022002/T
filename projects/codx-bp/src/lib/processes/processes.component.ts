@@ -697,7 +697,7 @@ export class ProcessesComponent
             }
             break;
           case 'SYS04':// copy
-          case 'SYS003':// them 
+          case 'SYS003':// them
           case 'SYS003':// them phien ban
             let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create) );
             if(!isCreate && !fullRole) {
@@ -708,7 +708,7 @@ export class ProcessesComponent
               }
             }
             break;
-          case 'SYS03'://sua 
+          case 'SYS03'://sua
           case 'BPT102'://sua ten
           case 'BPT202'://sua ten
           case 'BPT203'://luu phien ban
@@ -728,8 +728,8 @@ export class ProcessesComponent
               res.disabled = true;
             }
             break;
-          case 'BPT101':// xem 
-          case 'BPT201':// xem 
+          case 'BPT101':// xem
+          case 'BPT201':// xem
           case 'BPT107'://  quan ly phien ban
           case 'BPT207'://  quan ly phien ban
             let isRead = this.checkPermissionRead(data)
@@ -750,7 +750,7 @@ export class ProcessesComponent
             if(!isAssign && !fullRole) {
               res.isblur = true;
             }
-            break;          
+            break;
         }
       });
     }

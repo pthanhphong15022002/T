@@ -56,7 +56,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
   selector: 'codx-processsteps',
   templateUrl: './processsteps.component.html',
   styleUrls: ['./processsteps.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  //encapsulation: ViewEncapsulation.None,
 })
 export class ProcessStepsComponent
   extends UIComponent
@@ -149,7 +149,7 @@ export class ProcessStepsComponent
     });
   }
 
-  onInit(): void {   
+  onInit(): void {
     this.actived = this.process?.actived;
     if (!this.actived) {
       this.lockChild = this.lockParent = this.hideMoreFC = true;
@@ -510,7 +510,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
-            data.recID
+            data.recID,
           ],
           option
         );
@@ -556,11 +556,11 @@ export class ProcessStepsComponent
                 ? this.kanban?.columns?.length
                 : 0;
               this.kanban.addColumn(column, index);
-              if(processStep.items.length>0 ){
-                processStep.items.forEach(obj=>{
+              if (processStep.items.length > 0) {
+                processStep.items.forEach((obj) => {
                   if (this.kanban) this.kanban.addCard(obj);
-                })            
-              }          
+                });
+              }
             }
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
@@ -703,7 +703,6 @@ export class ProcessStepsComponent
             this.formModelMenu.entityName = funcMenu.entityName;
             this.add();
           });
-          
       });
     }
   }
@@ -733,7 +732,6 @@ export class ProcessStepsComponent
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
 
-
             switch (e.functionID) {
               case 'SYS01':
                 this.add();
@@ -750,7 +748,6 @@ export class ProcessStepsComponent
           });
       });
     }
-  
   }
   clickMenu(data, funcMenu) {
     const isdata = data.items.length;
@@ -934,21 +931,21 @@ export class ProcessStepsComponent
               this.kanban.columns &&
               this.kanban.columns.length
             ) {
-              let crr = event.currentIndex ;
-              let pre = event.previousIndex ;
-              let arrCl = this.kanban.columns ;
-              let temp = arrCl[pre] ;
-              if(crr > pre){
-                for(var i= pre ; i<crr ;i++ ){
-                  arrCl[i]= arrCl[i+1]
+              let crr = event.currentIndex;
+              let pre = event.previousIndex;
+              let arrCl = this.kanban.columns;
+              let temp = arrCl[pre];
+              if (crr > pre) {
+                for (var i = pre; i < crr; i++) {
+                  arrCl[i] = arrCl[i + 1];
                 }
-                arrCl[crr] =temp
-              }else if(crr < pre){
-                for(var j= pre ; j>crr ;j-- ){
-                  arrCl[j]= arrCl[j-1]
+                arrCl[crr] = temp;
+              } else if (crr < pre) {
+                for (var j = pre; j > crr; j--) {
+                  arrCl[j] = arrCl[j - 1];
                 }
-                arrCl[crr] =temp
-              }             
+                arrCl[crr] = temp;
+              }
               this.kanban.columns = arrCl;
               this.kanban.refresh();
             }
@@ -1255,14 +1252,13 @@ export class ProcessStepsComponent
     if (data != null) {
       // var element = document.getElementById(data?.parentID);
       // if (element ) {
-      //  element.classList.add('hiden') ;  
+      //  element.classList.add('hiden') ;
       // }
       this.dataHover = data;
       p.open();
     } else {
       p.close();
     }
-    this.changeDetectorRef.detectChanges()
+    this.changeDetectorRef.detectChanges();
   }
-
 }
