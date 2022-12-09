@@ -28,7 +28,7 @@ export class CodxTMService {
   taskGroupComponent = false;
   aside = new BehaviorSubject<any>(null);
   toolbar = new BehaviorSubject<any>(null);
-  menuClick = new BehaviorSubject<any>(null);
+  childMenuClick = new BehaviorSubject<any>(null);
   urlback = '';
   functionParent = "TMT0301"
   constructor(

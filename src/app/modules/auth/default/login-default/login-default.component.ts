@@ -69,7 +69,7 @@ export class LoginDefaultComponent implements OnInit, OnDestroy {
     this.destroyEven.emit();
   }
 
-  @Input() checkPasswords: ValidatorFn = (
+  checkPasswords: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
     let pass = group.get('password').value;

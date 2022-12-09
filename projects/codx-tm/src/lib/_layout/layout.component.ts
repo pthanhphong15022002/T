@@ -32,8 +32,11 @@ export class LayoutComponent extends LayoutBaseComponent {
 
   onInit(): void { }
 
-  menuClick(e) {
-    this.tmService.menuClick.next(e);
+  childMenuClick(e) {
+    this.tmService.childMenuClick.next(e);
+  }
+  menuClick(e){
+    
   }
   onAfterViewInit(): void {
 

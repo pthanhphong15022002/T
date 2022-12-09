@@ -2,7 +2,7 @@
   <ng-container *ngIf="user">
     <div class="d-flex flex-column flex-root">
       <div class=" page d-flex flex-row flex-column-fluid">
-        <codx-aside *ngIf="asideDisplay" (menuClick)="menuClick($event)"></codx-aside>
+        <codx-aside *ngIf="asideDisplay" (menuClick)="menuClick($event)" (childMenuClick)="childMenuClick($event)"></codx-aside>
 
         <div class="wrapper d-flex flex-column flex-row-fluid">
           <codx-header [class]="headerCSSClasses" [headerBar]="null" class="header align-items-stretch"
