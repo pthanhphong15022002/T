@@ -26,13 +26,21 @@
 }
 
 .cart {
-  padding: 10px;
+  padding: 8px;
   color: #fc1302 !important;
   background-color: rgba($color: #bbf4dc, $alpha: 0.5) !important;
   border-radius: 50% !important;
 }
+
 .active {
   color: #005dc7;
+}
+
+.truncate {
+  max-width: 25px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 ::ng-deep {
@@ -54,21 +62,26 @@
         left: 50%;
         border: 1px solid black;
       }
+
       .stepper-item:last-child:before {
         right: 50%;
         border: 1px solid rgb(18, 64, 190);
       }
+
       .stepper-item:last-child:before:hover {
         content: none !important;
       }
+
       .stepper-icon {
         position: relative;
         z-index: 10;
       }
+
       .stepper-item {
         padding-left: 20px;
         padding-right: 20px;
         position: relative;
+
         .stepper-default {
           display: block;
         }
@@ -157,10 +170,40 @@
       }
     }
   }
+
   .card-vpp {
     .codx-image {
       display: unset !important;
       max-height: 120px !important;
     }
+
+    .card-body .p-3 {
+      padding: 0 !important;
+    }
+  }
+
+  .liststationery-request {
+    height: calc(100% - 40px);
+    overflow: auto;
+  }
+
+  .list-stationery {
+    height: calc(100% - 72px);
+  }
+
+  .request-step2 {
+    height: calc(100% - 35px);
+  }
+
+  .input-number .btn#btn-right {
+    margin-left: 0px !important;
+  }
+
+  .list-stationery .container-fluid {
+    padding: 0;
+  }
+
+  .codx-search input {
+    width: 100% !important;
   }
 }

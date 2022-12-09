@@ -47,7 +47,7 @@ export class PopupRolesComponent implements OnInit {
   listRoles: any;
   startDate: Date;
   endDate: Date;
-  isSetFull = true;
+  isSetFull = false;
   currentPemission = 0;
   idUserSelected: any;
   popover: any;
@@ -83,7 +83,8 @@ export class PopupRolesComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
-
+    this.startDate = null;
+    this.endDate = null;
   }
 
   ngOnInit(): void {
@@ -152,12 +153,13 @@ export class PopupRolesComponent implements OnInit {
   //#endregion
 
   //#region event
-  valueChange(e: any, type: string) {
-    var data = e.data;
+  valueChange($event, type) {
+    var data = $event.data;
+    // this.isSetFull = data;
     switch (type) {
       case 'full':
         this.full = data;
-        if (data == true) {
+        if (this.isSetFull) {
           this.read = data;
           this.share = data;
           this.assign = data;
@@ -165,24 +167,7 @@ export class PopupRolesComponent implements OnInit {
           this.edit = data;
           this.publish = data;
         }
-        break;
-      case 'assign':
-        this.assign = data;
-        break;
-      case 'read':
-        this.read = data;
-        break;
-      case 'share':
-        this.share = data;
-        break;
-      case 'download':
-        this.download = data;
-        break;
-      case 'edit':
-        this.edit = data;
-        break;
-      case 'publish':
-        this.publish = data;
+
         break;
       case 'startDate':
         if (data != null) this.startDate = data.fromDate;
@@ -190,10 +175,10 @@ export class PopupRolesComponent implements OnInit {
       case 'endDate':
         if (data != null) this.endDate = data.fromDate;
         break;
-      // default:
-      //   this.isSetFull = false;
-      //   this[type] = data;
-      //   break;
+      default:
+        this.isSetFull = false;
+        this[type] = data;
+        break;
     }
     if (type != 'full' && data == false) this.full = false;
 
@@ -319,7 +304,7 @@ export class PopupRolesComponent implements OnInit {
       list = [];
     }
     if (index == -1) {
-      perm.read = false;
+      perm.read = true;
       perm.download = false;
       perm.full = false;
       perm.share = false;
@@ -405,17 +390,20 @@ export class PopupRolesComponent implements OnInit {
   //#endregion
 
   //#region roles
-  showPopover(p, userID) {
-    if (this.popover) this.popover.close();
-    if (userID) this.idUserSelected = userID;
-    p.open();
-    this.popover = p;
+  showPopover(p, data) {
+    if (data.objectType !== '7' || data.memberType != '0') {
+      if (this.popover) this.popover.close();
+      if (data.objectID) this.idUserSelected = data.objectID;
+
+      p.open();
+      this.popover = p;
+    }
   }
 
   selectRoseType(idUserSelected, value) {
     this.process.permissions.forEach((res) => {
       if (res.objectID != null && res.objectID != '') {
-        if (res.objectID == idUserSelected) res.memberType = value;
+        if (res.objectID == idUserSelected && value != '0') res.memberType = value;
       }
     });
     this.changeDetectorRef.detectChanges();

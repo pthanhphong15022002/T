@@ -52,15 +52,15 @@ export class ApprovalRoomsComponent extends UIComponent {
   dataSelected: any;
   dialog!: DialogRef;
   viewType = ViewType;
-  listRoom=[];  
-  listReason=[];  
-  listAttendees=[];  
-  listItem=[];
-  tempReasonName='';
-  tempRoomName='';  
-  tempAttendees='';
-  selectBookingItems=[];  
-  selectBookingAttendees='';
+  listRoom = [];
+  listReason = [];
+  listAttendees = [];
+  listItem = [];
+  tempReasonName = '';
+  tempRoomName = '';
+  tempAttendees = '';
+  selectBookingItems = [];
+  selectBookingAttendees = '';
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -82,7 +82,6 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
     this.request.idField = 'recID';
-    
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -112,18 +111,20 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
-    this.codxEpService.getListResource('1').subscribe((res:any)=>{
-      if(res){
-        this.listRoom=[];
-        this.listRoom=res;
-      }        
+    this.codxEpService.getListResource('1').subscribe((res: any) => {
+      if (res) {
+        this.listRoom = [];
+        this.listRoom = res;
+      }
     });
-    this.codxEpService.getListReason('EP_BookingRooms').subscribe((res:any)=>{
-      if(res){
-        this.listReason=[];
-        this.listReason=res;
-      }        
-    });  
+    this.codxEpService
+      .getListReason('EP_BookingRooms')
+      .subscribe((res: any) => {
+        if (res) {
+          this.listReason = [];
+          this.listReason = res;
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -150,7 +151,7 @@ export class ApprovalRoomsComponent extends UIComponent {
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
-          template:this.cardTemplate,
+          template: this.cardTemplate,
           resourceModel: this.resourceField, //resource
           //template2:this.titleTmp,
           template4: this.resourceHeader,
@@ -166,41 +167,42 @@ export class ApprovalRoomsComponent extends UIComponent {
   }
 
   click(event) {}
-  getResourceName(resourceID:any){
-    this.tempRoomName='';
-    this.listRoom.forEach(r=>{
-      if(r.resourceID==resourceID){
-        this.tempRoomName= r.resourceName;
-      }      
+  getResourceName(resourceID: any) {
+    this.tempRoomName = '';
+    this.listRoom.forEach((r) => {
+      if (r.resourceID == resourceID) {
+        this.tempRoomName = r.resourceName;
+      }
     });
     return this.tempRoomName;
   }
-  getReasonName(reasonID:any){
-    this.tempReasonName='';
-    this.listReason.forEach(r=>{
-      if(r.reasonID==reasonID){
-        this.tempReasonName= r.description;
-      }      
+  getReasonName(reasonID: any) {
+    this.tempReasonName = '';
+    this.listReason.forEach((r) => {
+      if (r.reasonID == reasonID) {
+        this.tempReasonName = r.description;
+      }
     });
     return this.tempReasonName;
   }
-  getMoreInfo(recID:any){  
-    this.selectBookingItems=[];  
-    this.selectBookingAttendees='';
+  getMoreInfo(recID: any) {
+    this.selectBookingItems = [];
+    this.selectBookingAttendees = '';
 
-    this.codxEpService.getListItems(recID).subscribe((item:any)=>{
-      if(item){
+    this.codxEpService.getListItems(recID).subscribe((item: any) => {
+      if (item) {
         this.selectBookingItems = item;
-      }        
+      }
     });
-    this.codxEpService.getListAttendees(recID).subscribe((attendees:any)=>{
-      if(attendees){
-        let lstAttendees=attendees;
-        lstAttendees.forEach(element => {
-          this.selectBookingAttendees=this.selectBookingAttendees +element.userID+';';
+    this.codxEpService.getListAttendees(recID).subscribe((attendees: any) => {
+      if (attendees) {
+        let lstAttendees = attendees;
+        lstAttendees.forEach((element) => {
+          this.selectBookingAttendees =
+            this.selectBookingAttendees + element.userID + ';';
         });
         this.selectBookingAttendees;
-      }        
+      }
     });
   }
   clickMF(value, datas: any = null) {
@@ -349,69 +351,5 @@ export class ApprovalRoomsComponent extends UIComponent {
       recID = event.recID;
       this.itemDetail = event;
     }
-    this.getDetailApprovalBooking(recID);
-  }
-
-  getDetailApprovalBooking(id: any) {
-    this.api
-      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
-        this.itemDetail?.recID,
-        this.itemDetail?.approvalTransRecID,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
-  setStyles(resourceType) {
-    let styles = {};
-    switch (resourceType) {
-      case '1':
-        styles = {
-          backgroundColor: '#104207',
-          color: 'white',
-        };
-        break;
-      case '2':
-        styles = {
-          backgroundColor: '#29b112',
-          color: 'white',
-        };
-        break;
-      case '6':
-        styles = {
-          backgroundColor: '#053b8b',
-          color: 'white',
-        };
-        break;
-      default:
-        styles = {};
-        break;
-    }
-
-    return styles;
-  }
-
-  setIcon(resourceType) {
-    let icon: string = '';
-    switch (resourceType) {
-      case '1':
-        icon = 'icon-calendar_today';
-        break;
-      case '2':
-        icon = 'icon-directions_car';
-        break;
-      case '6':
-        icon = 'icon-desktop_windows';
-        break;
-      default:
-        icon = '';
-        break;
-    }
-
-    return icon;
   }
 }

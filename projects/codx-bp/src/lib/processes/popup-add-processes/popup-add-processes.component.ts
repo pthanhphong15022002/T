@@ -101,7 +101,7 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.action === 'add' || this.action === 'copy')
+   if (this.action === 'add' || this.action === 'copy')
       this.isAddPermission(this.process.owner);
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
@@ -227,7 +227,7 @@ export class PopupAddProcessesComponent implements OnInit {
     //   //   return;
     //   // }
     // }
-    if (this.process.processName.trim() === this.nameOld?.trim()) {
+    if (this.process.processName.trim() === this.nameOld?.trim() && this.action==='copy') {
       this.bpService
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
@@ -265,11 +265,9 @@ export class PopupAddProcessesComponent implements OnInit {
         if (x.event?.status == 'N') {
           this.isCoppyFile = false;
           this.isUpdateCreateProcess();
-          this.isAddPermission(this.process.owner);
         } else if (x.event?.status == 'Y') {
           this.isCoppyFile = true;
           this.isUpdateCreateProcess();
-          this.isAddPermission(this.process.owner);
         } else {
           return;
         }
@@ -295,8 +293,13 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion method
   isUpdateCreateProcess() {
     if (this.action === 'add' || this.action === 'copy') {
+      this.isAddPermission(this.process.owner);
       this.onAdd();
-    } else this.onUpdate();
+
+    } else {
+      this.isAddPermission(this.process.owner);
+      this.onUpdate();
+    }
   }
   //#region check date
   isCheckFromToDate(toDate) {
@@ -399,10 +402,12 @@ export class PopupAddProcessesComponent implements OnInit {
           tmpPermission.autoCreate = true;
           if (emp.administrator) {
             tmpPermission.objectType = '7';
-          } else if (this.checkAdminOfBP(emp.id)) {
+          } else if (this.checkAdminOfBP(emp.userID)) {
             tmpPermission.objectType = '7';
           }
-
+          tmpPermission.edit=true;
+          tmpPermission.create=true;
+          tmpPermission.publish=true;
           tmpPermission.read = true;
           tmpPermission.share = true;
           tmpPermission.full = true;
@@ -446,6 +451,8 @@ export class PopupAddProcessesComponent implements OnInit {
   //add Avtarar
   addAvatar() {
     this.imageAvatar.referType = 'avt';
+    // gán tạm để test hiển thị nha
+    this.process.flowchart = 'avt';
     this.imageAvatar.uploadFile();
   }
   fileSaveAvatar(e) {
