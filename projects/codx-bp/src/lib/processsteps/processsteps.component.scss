@@ -288,6 +288,6 @@ codx-views {
   height: 100%;
 }
 
-// ::ng-deep .container-fluid{
-//   height: auto !important;
-// }
+:host ::ng-deep .container-fluid{
+  height: 78vh !important;
+}

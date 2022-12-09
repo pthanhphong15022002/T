@@ -95,9 +95,7 @@
                   </div>
                 </div>
 
-                <div
-                  class="form-group mb-5 fv-plugins-icon-container form-group-pass"
-                >
+                <div class="form-group mb-5 fv-plugins-icon-container">
                   <!-- <codx-input
                     type="password"
                     field="Password"
@@ -107,14 +105,17 @@
                     (valueChange)="valueChange($event)"
                   >
                   </codx-input> -->
-                  <input
-                    class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
-                    type="password"
-                    field="Password"
-                    placeholder="Mật khẩu"
-                    formControlName="password"
-                    style="width: 100%"
-                  />
+                  <div class="input-icon">
+                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
+                    <input
+                      class="form-control placeholder-no-fix ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched"
+                      type="password"
+                      field="Password"
+                      placeholder="Mật khẩu"
+                      formControlName="password"
+                      style="width: 100%"
+                    />
+                  </div>
                 </div>
 
                 <div class="d-flex justify-content-between mt-3 mb-9 px-2">
@@ -238,16 +239,16 @@
           </div>
         </div>
         <!--begin::Content-->
-        <div class="login-right">
+        <div class="login-right pt-0">
           <!--begin::Content body-->
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="my-9" alt="" />
+              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="mb-2" alt="" />
             </div>
 
             <div class="login-signin text-dark">
               <!--begin::Form-->
-              <div class="text-start mb-10">
+              <div class="text-start mb-3">
                 <h3 class="fw-bolder">
                   <codx-label
                     fiedName="ChangePassword"
@@ -279,7 +280,8 @@
                   </div>
                 </div>
                 <div class="form-group" #groupoldpass>
-                  <div class="">
+                  <div class="input-icon">
+                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
                     <input
                       type="password"
                       field="PasswordOld"
@@ -291,7 +293,8 @@
                   </div>
                 </div>
                 <div class="form-group" #groupnewpass>
-                  <div class="">
+                  <div class="input-icon">
+                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
                     <input
                       type="password"
                       field="Password"
@@ -303,7 +306,8 @@
                   </div>
                 </div>
                 <div class="form-group" #confirmpass>
-                  <div class="">
+                  <div class="input-icon">
+                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
                     <input
                       type="password"
                       field="Password"
@@ -323,7 +327,7 @@
                     {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
                   </button>
                 </div>
-                <div class="login-link mt-9">
+                <div class="login-link mt-5">
                   <div class="login-link-cont">
                     <a
                       href="https://www.facebook.com/QualityTechSolutionComplex"
@@ -428,7 +432,7 @@
           <!--begin::Content body-->
           <div class="d-flex flex-column">
             <div class="d-flex align-items-center justify-content-center">
-              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="my-9" alt="" />
+              <img src="/assets/cz/qtsc/bg/logoQTSC.PNG" class="mb-6" alt="" />
             </div>
 
             <div class="login-signin text-dark">
@@ -459,7 +463,8 @@
                   </div>
                 </div>
                 <div class="form-group" #groupnewpass>
-                  <div class="">
+                  <div class="input-icon">
+                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
                     <input
                       type="password"
                       field="Password"
@@ -471,7 +476,8 @@
                   </div>
                 </div>
                 <div class="form-group" #confirmpass>
-                  <div class="">
+                  <div class="input-icon">
+                    <img class="ic-user" src="/assets/cz/qtsc/bg/ic-lock.png" />
                     <input
                       type="password"
                       field="Password"
