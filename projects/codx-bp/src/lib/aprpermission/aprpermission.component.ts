@@ -1,3 +1,5 @@
+import { NotificationsService } from 'codx-core';
+import { CodxBpService } from './../codx-bp.service';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -9,7 +11,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ButtonModel, DialogRef, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  ButtonModel,
+  DialogRef,
+  FormModel,
+  UIComponent,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import { BP_ProcessPermissions } from '../models/BP_Processes.model';
 import { PopupApprovalComponent } from './popup-approval/popup-approval.component';
 
 @Component({
@@ -29,6 +40,13 @@ export class AprpermissionComponent
   columnsGrid = [];
   lstPermissions = [];
   popoverList: any;
+  formModelMF: FormModel;
+  user: any;
+  userID: any;
+  gridViewSetup: any;
+  vllStatus: any;
+  tmpPerm = new BP_ProcessPermissions();
+
   @ViewChild('view') codxview!: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
@@ -43,25 +61,30 @@ export class AprpermissionComponent
   itemPermissions: TemplateRef<any>;
   @ViewChild('itemDescription', { static: true })
   itemDescription: TemplateRef<any>;
-
+  @ViewChild('itemStatus', { static: true })
+  itemStatus: TemplateRef<any>;
   constructor(
     inject: Injector,
+    private bpSv: CodxBpService,
+    private auth: AuthStore,
+    private noti: NotificationsService,
     private changeDetectorRef: ChangeDetectorRef,
     private activedRouter: ActivatedRoute
   ) {
     super(inject);
+    this.user = this.auth.get();
+    this.userID = this.user.userID;
+
   }
 
   onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-    };
     this.columnsGrid = [
       { headerTemplate: this.itemProcessName, width: 300 },
       { headerTemplate: this.itemOwner, width: 200 },
       { headerTemplate: this.itemCreatedOn, width: 150 },
       { headerTemplate: this.itemPermissions, width: 150 },
       { headerTemplate: this.itemDescription, width: 150 },
+      { headerTemplate: this.itemStatus, width: 150 },
       { field: '', headerText: '', width: 100 },
       { field: '', headerText: '', width: 50 },
     ];
@@ -98,28 +121,25 @@ export class AprpermissionComponent
   toggleContent(p, data) {
     this.lstPermissions = [];
     var read = '';
-    if(data != null){
+    if (data != null) {
       this.popoverList?.close();
       if (data.read == true) {
         read = 'Xem';
         this.lstPermissions.push(read);
       }
-      if (data.download ) {
+      if (data.download) {
         read = 'Download';
         this.lstPermissions.push(read);
       }
-      if (data.create) {
-        read = 'Tạo thư mục';
-        this.lstPermissions.push(read);
-      }
-      if (data.update) {
+      if (data.edit) {
         read = 'Chỉnh sửa';
         this.lstPermissions.push(read);
       }
-      if (data.delete) {
-        read = 'Xóa';
+      if (data.publish) {
+        read = 'Phát hành';
         this.lstPermissions.push(read);
       }
+
       if (data.share) {
         read = 'Chia sẻ';
         this.lstPermissions.push(read);
@@ -128,16 +148,11 @@ export class AprpermissionComponent
         read = 'Chia sẻ quyền';
         this.lstPermissions.push(read);
       }
-      if (data.upload) {
-        read = 'Upload';
-        this.lstPermissions.push(read);
-      }
+
       if (this.lstPermissions.length > 0) {
         p.open();
       }
-    }
-
-     else {
+    } else {
       p.close();
     }
   }
@@ -152,20 +167,65 @@ export class AprpermissionComponent
   }
 
   permission(data) {
+    let obj = {
+      data: data,
+      formModel: this.view.formModel,
+    };
     this.dialog = this.callfc.openForm(
       PopupApprovalComponent,
       '',
       500,
-      350,
+      400,
       '',
-      data
+      obj
     );
     this.dialog.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
-
+        this.view.dataService.update(e.event);
       }
     });
   }
 
-  clickMF(e: any, data?: any) {}
+  clickMF(e: any, data?: any) {
+    this.tmpPerm = data;
+    switch(e.functionID){
+      case 'BPT5101':
+        this.tmpPerm.approveStatus = '5';
+        this.tmpPerm.approvedBy = this.userID;
+        this.setApproveStatus(data.recIDProcess, this.tmpPerm, e.functionID, e.data.entityName);
+        break;
+      case 'BPT5102':
+        this.tmpPerm.approveStatus = '4';
+        this.tmpPerm.approvedBy = this.userID;
+        this.setApproveStatus(data.recIDProcess, this.tmpPerm, e.functionID, e.data.entityName);
+        break;
+    }
+  }
+
+  changeDataMF(e, data) {
+    console.log(e);
+    e.forEach((res) => {
+      switch (res.functionID) {
+        case 'SYS005':
+        case 'SYS004':
+        case 'SYS001':
+        case 'SYS002':
+        case 'SYS003':
+        case 'SYS04':
+          res.disabled = true;
+          break;
+      }
+    });
+  }
+
+  setApproveStatus(recID: string, permission: BP_ProcessPermissions, funcID: string, entity: string){
+    this.bpSv.setApproveStatus(recID, permission, funcID, entity).subscribe((res)=>{
+      if(res){
+        if(this.tmpPerm.approveStatus == '5')
+          this.noti.notifyCode('WP005');
+        else if(this.tmpPerm.approveStatus == '4')
+          this.noti.notifyCode('WP007');
+      }
+    });
+  }
 }

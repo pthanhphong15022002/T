@@ -115,7 +115,7 @@ export class EmployeeProfileComponent extends UIComponent {
   lstPassport: any;
   crrPassport: any = {};
   //visa
-  lstVisa: any=[];
+  lstVisa: any = [];
   crrVisa: any = {};
   //work permit
   lstWorkPermit: any;
@@ -124,14 +124,17 @@ export class EmployeeProfileComponent extends UIComponent {
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
   //EExperience
-  lstExperience
+  lstExperience;
   formModel;
   itemDetail;
-  EExperienceColumnsGrid : any;
+  EExperienceColumnsGrid: any;
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 0;
+  crrTab: number = 2;
+
+  crrEBSalary: any;
+  listCrrBenefit: any;
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -204,24 +207,24 @@ export class EmployeeProfileComponent extends UIComponent {
   onInit(): void {
     this.EExperienceColumnsGrid = [
       {
-        field:"fromDate",
+        field: 'fromDate',
         headerText: 'Từ tháng năm',
         template: this.tempFromDate,
         width: '200',
       },
       {
-        field:"toDate",
+        field: 'toDate',
         headerText: 'Đến tháng năm',
         template: this.tempToDate,
         width: '200',
       },
       {
-        field:"companyName",
+        field: 'companyName',
         headerText: 'Đơn vị công tác',
         width: '250',
       },
       {
-        field:"position",
+        field: 'position',
         headerText: 'Chức danh',
         width: '250',
       },
@@ -294,21 +297,17 @@ export class EmployeeProfileComponent extends UIComponent {
         //   });
 
         let op2 = new DataRequest();
-        op2.gridViewName = 'grvEVisas'
-        op2.entityName ='HR_EVisas'
-        op2.predicate = 'EmployeeID=@0'
+        op2.gridViewName = 'grvEVisas';
+        op2.entityName = 'HR_EVisas';
+        op2.predicate = 'EmployeeID=@0';
         op2.dataValue = params.employeeID;
-        op2.page = 1,
-        this.hrService
-        .getListVisaByEmployeeID(op2)
-        .subscribe((res) => {
-          if(res)
-            this.lstVisa = res[0];
+        (op2.page = 1),
+          this.hrService.getListVisaByEmployeeID(op2).subscribe((res) => {
+            if (res) this.lstVisa = res[0];
             if (this.lstVisa.length > 0) {
-              
               this.crrVisa = this.lstVisa[0];
             }
-        })
+          });
 
         //work permit
         this.hrService
@@ -346,15 +345,29 @@ export class EmployeeProfileComponent extends UIComponent {
 
         //EExperience
         let op = new DataRequest();
-        op.entityName ='HR_EExperiences'
+        op.entityName = 'HR_EExperiences';
         op.dataValue = params.employeeID;
-        op.predicate = 'EmployeeID=@0'
-        this.hrService
-        .GetListByEmployeeIDAsync(op)
-        .subscribe((res) => {
+        op.predicate = 'EmployeeID=@0';
+        this.hrService.GetListByEmployeeIDAsync(op).subscribe((res) => {
           console.log('e experience', res);
           this.lstExperience = res;
-        })
+        });
+
+        // Salary
+        this.hrService
+          .GetCurrentEBasicSalaries(params.employeeID)
+          .subscribe((res) => {
+            if (res) {
+              this.crrEBSalary = res;
+            }
+          });
+
+        // Benefit
+        this.hrService.GetCurrentBenefit(params.employeeID).subscribe((res) => {
+          if (res?.length) {
+            this.listCrrBenefit = res;
+          }
+        });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -390,9 +403,8 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'jobSalary') {
           this.HandleEmployeeJobSalariesInfo('edit', data);
           this.df.detectChanges();
-        } else if(funcID == 'eexperiences'){
-          console.log("event eex",event);
-          
+        } else if (funcID == 'eexperiences') {
+          console.log('event eex', event);
         }
         break;
 
@@ -435,7 +447,6 @@ export class EmployeeProfileComponent extends UIComponent {
               if (i != -1) {
                 this.lstVisa.splice(i, 1);
                 console.log('delete visa', this.lstVisa);
-                
               }
               this.df.detectChanges();
             } else {
@@ -737,7 +748,7 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
-  handlEmployeeExperiences(actionType: string, data: any){
+  handlEmployeeExperiences(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.DataService = this.view.dataService;
@@ -754,7 +765,7 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if(actionType == 'add'){
+      if (actionType == 'add') {
         this.lstExperience(res.event);
         console.log('lst ex', this.lstExperience);
         this.df.detectChanges();
@@ -911,7 +922,7 @@ export class EmployeeProfileComponent extends UIComponent {
         // this.lstVisa = res?.event;
         console.log('sau khi dong form', this.lstVisa);
         if (!res?.event) this.view.dataService.clear();
-        this.df.detectChanges()
+        this.df.detectChanges();
       }
     });
   }
@@ -1109,5 +1120,13 @@ export class EmployeeProfileComponent extends UIComponent {
     }
   }
 
-
+  //#region
+  HandleBebefitInfo(actionType, s) {
+    this.api
+      .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness', 'AddAsync', null)
+      .subscribe((res) => {
+        console.log(res);
+      });
+  }
+  //#endregion
 }

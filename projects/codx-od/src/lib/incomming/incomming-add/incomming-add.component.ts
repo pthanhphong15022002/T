@@ -375,7 +375,6 @@ export class IncommingAddComponent implements OnInit {
       var name = arr.join(" , ");
       return this.notifySvr.notifyCode('SYS009', 0, name);
     }
-    debugger;
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;

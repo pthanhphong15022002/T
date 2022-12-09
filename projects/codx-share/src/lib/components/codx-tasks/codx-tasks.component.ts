@@ -59,7 +59,7 @@ export class CodxTasksComponent
   @Input() showMoreFunc = true;
   @Input() refID?: any;
   @Input() refType?: any;
-
+  @Input() isLoadCheckAfter = true ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
@@ -149,7 +149,7 @@ export class CodxTasksComponent
   moreFunction = [];
   crrStatus = '';
   disabledProject = false;
-
+  
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -165,40 +165,14 @@ export class CodxTasksComponent
         this.listRoles = res.datas;
       }
     });
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f)
-        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
-          if (res) {
-            this.moreFunction = res;
-          }
-        });
-    });
   }
 
   //#region Init
   onInit(): void {
-    console.log(this.funcID);
-    if (this.funcID == 'TMT0203') {
-      this.vllStatus = this.vllStatusAssignTasks;
-    } else this.vllStatus = this.vllStatusTasks;
 
+    if (!this.funcID) this.funcID = this.activedRouter.snapshot.params['funcID'];
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
-
-    this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011') {
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
-    } else {
-      //xu ly khi truyeefn vao 1 list resourece
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserByResourceAsync';
-      this.modelResource.dataValue = this.dataObj?.resources;
-    }
 
     this.resourceKanban = new ResourceModel();
     this.resourceKanban.service = 'SYS';
@@ -222,6 +196,48 @@ export class CodxTasksComponent
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
 
+    this.requestTree = new ResourceModel();
+    this.requestTree.service = 'TM';
+    this.requestTree.assemblyName = 'TM';
+    this.requestTree.className = 'TaskBusiness';
+    this.requestTree.method = 'GetListTreeDetailTasksAsync';
+    this.requestTree.idField = 'taskID';
+
+    this.afterLoad() ;
+    this.getParams();
+    this.dataObj = JSON.stringify(this.dataObj);
+    this.detectorRef.detectChanges();
+  }
+
+  afterLoad(){
+    if (this.funcID == 'TMT0203') {
+      this.vllStatus = this.vllStatusAssignTasks;
+    } else this.vllStatus = this.vllStatusTasks;
+
+    this.cache.functionList(this.funcID).subscribe((f) => {
+      if (f)
+        this.cache.moreFunction(f.formName, f.gridViewName).subscribe((res) => {
+          if (res) {
+            this.moreFunction = res;
+          }
+        });
+    });
+
+    this.modelResource = new ResourceModel();
+    if (this.funcID != 'TMT03011') {
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+    } else {
+      //xu ly khi truyeefn vao 1 list resourece
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserByResourceAsync';
+      this.modelResource.dataValue = this.dataObj?.resources;
+    }
+
     if (this.funcID != 'TMT0201' && this.funcID != 'TMT0206') {
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
@@ -234,17 +250,6 @@ export class CodxTasksComponent
       this.requestSchedule.predicate = '';
       this.requestSchedule.dataValue = '';
     }
-
-    this.requestTree = new ResourceModel();
-    this.requestTree.service = 'TM';
-    this.requestTree.assemblyName = 'TM';
-    this.requestTree.className = 'TaskBusiness';
-    this.requestTree.method = 'GetListTreeDetailTasksAsync';
-    this.requestTree.idField = 'taskID';
-    this.getParams();
-
-    this.dataObj = JSON.stringify(this.dataObj);
-    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -946,12 +951,12 @@ export class CodxTasksComponent
   requestEnded(evt: any) {}
 
   onDragDrop(data) {
-    if (this.funcID == 'TMT0206') {
+    if (this.crrStatus == data?.status) return;
+    if (this.funcID == 'TMT0206' || this.moreFunction?.length == 0) {
       data.status = this.crrStatus;
       return;
     }
-    if (this.crrStatus == data?.status || this.moreFunction?.length == 0)
-      return;
+
     var moreFun = this.moreFunction.find(
       (x) =>
         UrlUtil.getUrl('defaultValue', x?.url) == data.status &&

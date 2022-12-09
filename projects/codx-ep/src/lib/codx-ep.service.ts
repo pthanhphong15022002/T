@@ -29,14 +29,15 @@ export class AddGridData {
 }
 
 export class GridModels {
-  pageSize: number;
-  entityName: string;
-  entityPermission: string;
-  formName: string;
-  gridViewName: string;
-  funcID: string;
-  dataValue: string;
-  predicate: string;
+  pageSize?: number;
+  entityName?: string;
+  entityPermission?: string;
+  formName?: string;
+  gridViewName?: string;
+  funcID?: string;
+  dataValues?: string;
+  predicates?: string;
+  comboboxName?: string;
 }
 @Injectable({
   providedIn: 'root',
@@ -315,13 +316,13 @@ export class CodxEpService {
     );
   }
 
-  getQuotaByResourceID(resourceID: string) {
+  getQuota(resourceID: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourceQuotaBusiness',
-      'GetQuotaByResourceIDAsync',
-      [resourceID]
+      'GetListQuotaAsync',
+      []
     );
   }
 

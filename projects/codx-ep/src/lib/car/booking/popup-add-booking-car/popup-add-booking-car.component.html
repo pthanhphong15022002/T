@@ -4,6 +4,32 @@
 </codx-layout-add>
 <ng-template #tabGeneralInfo>
   <ng-container *ngIf="form && form.formGroup">
+    
+    <div class="row">
+      <div class="col-6 form-group">
+        <codx-label fiedName="StartDate" [formModel]="form.formModel">
+        </codx-label>
+        <!-- <codx-input
+      ControlName="startDate"
+      format="f"
+      type="datetime"
+      class="test-datetime"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    >
+    </codx-input> -->
+        <codx-input field="startDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
+          (valueChange)="startDateChange($event)">
+        </codx-input>
+      </div>
+      <div class="col-6 form-group">
+        <codx-label fiedName="EndDate" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
+          (valueChange)="endDateChange($event)">
+        </codx-input>
+      </div>
+    </div>
     <div class="form-group">
       <div class="d-flex justify-content-between align-items-center">
         <codx-label fiedName="ResourceID" [formModel]="form.formModel">
@@ -31,31 +57,6 @@
             </button>
           </span>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6 form-group">
-        <codx-label fiedName="StartDate" [formModel]="form.formModel">
-        </codx-label>
-        <!-- <codx-input
-      ControlName="startDate"
-      format="f"
-      type="datetime"
-      class="test-datetime"
-      [formModel]="form.formModel"
-      [Group]="form.formGroup"
-    >
-    </codx-input> -->
-        <codx-input field="startDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
-          (valueChange)="startDateChange($event)">
-        </codx-input>
-      </div>
-      <div class="col-6 form-group">
-        <codx-label fiedName="EndDate" [formModel]="form.formModel">
-        </codx-label>
-        <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
-          (valueChange)="endDateChange($event)">
-        </codx-input>
       </div>
     </div>
     <div class="row form-group d-flex flex-row justify-content-start align-items-center">

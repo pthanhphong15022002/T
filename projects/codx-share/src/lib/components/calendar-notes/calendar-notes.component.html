@@ -218,7 +218,7 @@
       <div *ngIf="typeCalendar == 'week'">
         <selectweek
           (onChangeWeek)="setEventWeek()"
-          (onChangeValue)="changeDayOfWeek($event, listview)"
+          (onChangeValue)="changeDayOfWeek($event)"
           (onChangeNewWeek)="changeNewWeek($event)"
         >
         </selectweek>
@@ -399,7 +399,7 @@
       </div>
     </div>
   </ng-container>
-  <div class="lstView">
+  <div class="lstView" *ngIf="showList">
     <codx-listview
       #listview
       service="SYS"
@@ -606,7 +606,7 @@
     <div
       *ngIf="
         (checkTM_TasksParam == true || checkTM_TasksParam == '1') &&
-        item?.TransType == 'TM_Tasks'
+        item?.TransType == 'TM_MyTasks'
       "
     >
       <div
@@ -617,7 +617,7 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.Title"></span>
+            <span [innerHTML]="item.Description"></span>
           </div>
         </div>
       </div>

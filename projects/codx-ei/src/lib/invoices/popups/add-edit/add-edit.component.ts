@@ -45,7 +45,7 @@ export class AddEditComponent implements OnInit {
   active = true;
   gridHeight: number;
   fmInvoiceLines: FormModel = {
-    formName: 'EIInvoiceLines',
+    formName: 'EIInvoices',
     gridViewName: 'grvEIInvoiceLines',
     entityName: 'EI_InvoiceLines',
   };
@@ -103,6 +103,7 @@ export class AddEditComponent implements OnInit {
     this.invoices = dialog.dataService!.dataSelected;
     this.action = dialogData.data[0];
     this.headerText = dialogData.data[1];
+    this.fmInvoiceLines.funcID = dialog.dataService.formModel.funcID;
   }
   //#endregion
 

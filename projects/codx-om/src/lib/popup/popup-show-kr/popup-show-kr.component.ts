@@ -26,6 +26,7 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
+import { ChartData } from '../../model/chart.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 
 
@@ -48,6 +49,49 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   dataOKR=[];
   openAccordion = [];
   dataKR:any;
+  loremArr=[1,2,3,4];
+  chartData: ChartData = {
+    title: '15 Objectives',
+    primaryXAxis: {
+      valueType: 'Category',
+      majorGridLines: { width: 0 },
+      edgeLabelPlacement: 'Shift',
+    },
+    primaryYAxis: {
+      minimum: 0,
+      maximum: 100,
+      interval: 10,
+    },
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'name',
+        yName: 'value',
+        innerRadius: '80%',
+        radius: '70%',
+        startAngle: 0,
+        explodeIndex: 1,
+        explodeOffset: '10%',
+        explode: true,
+        endAngle: 360,
+        groupTo: '2',
+        groupMode: 'Value',
+        dataLabel: {
+          name: 'text',
+          visible: true,
+          position: 'Inside',
+          font: {
+            fontWeight: '600',
+          },
+        },
+      },
+    ],
+    service: 'OM',
+    assembly: 'ERM.Business.OM',
+    className: 'OKRBusiness',
+    method: 'GetChartData1Async',
+  };
+
   dialogCheckIn: DialogRef;
   constructor(
     private injector: Injector,

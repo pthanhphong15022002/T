@@ -5,7 +5,9 @@
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
-  (searchChanged)="searchChange($event)">
+  (searchChanged)="searchChange($event)"
+  (viewChanged)="changeView($event)"
+  >
 </codx-views>
 
 <ng-template #templateListCard let-data>
@@ -13,12 +15,13 @@
     w-225px card-no-body"
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px"
     [imageObjName]="data?.processName" [imageId]="data?.recID"
-    [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
+    [imgOn]="data?.modifiedOn"
+    [imageWidth]="1000" [imageReferType]="data?.flowchart" [rootData]="data"
     [dataItem]="data" [formModel]="view.formModel"
     [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
     [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)"
-    (dblclick)="viewDetailProcessSteps(moreFuncDbClick , data)">
+    (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>
   <ng-template #footerbg let-data>
     <div class="d-flex bg-footer m-n3 mt-0" [style.background]="data.status
@@ -37,9 +40,9 @@
           : "grvProcesses"
           | async
           }}</div>
-          <span *ngIf="!checkPermission(data?.permissions)" class="icon-security text-primary icon-18"></span>
+          <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
         </div>
-       
+
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
@@ -105,8 +108,7 @@
 
 <!-- view-list -->
 <ng-template #itemViewList let-data>
-  <tr class="has-action-menu" (dblclick)="viewDetailProcessSteps(moreFuncDbClick
-    , data)">
+  <tr class="has-action-menu" (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick, data)">
     <td class="rowphoto">
       <div class="d-flex flex-column ">
         <div class="box">
@@ -120,7 +122,7 @@
             | async
             }}</div>
         </div>
-    
+
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
@@ -165,8 +167,8 @@
         </div>
       </div>
     </td>
-    <td class="rowphoto" placement="left"  >  
-      <span  *ngIf="!checkPermission(data?.permissions)" class="icon-security text-primary icon-18"></span>
+    <td class="rowphoto" placement="left"  >
+      <span  *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
     </td>
     <td class="rowphoto" placement="left">
       <codx-temp-full cardCss="card-template" [imageWidth]="30"
@@ -238,13 +240,6 @@
         [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
-    <!-- <td class="rowphoto" *ngIf="funcID == 'BPT4'">
-      <div class="padding">
-        <button class="btn btn-primary" (click)="approval(data)">
-          <codx-label default="Xét duyệt"></codx-label>
-        </button>
-      </div>
-    </td> -->
   </tr>
 </ng-template>
 <!-- view-list -->
@@ -505,10 +500,10 @@
 </ng-template>
 
 <ng-template #viewReleaseProcess let-dialog="dialogPopupReleaseProcess">
-  <codx-form 
-    [headerText]="titleAction" 
+  <codx-form
+    [headerText]="titleAction"
     [body]="bodyReleaseProcess"
-    [footer]="footerReleaseProcess" 
+    [footer]="footerReleaseProcess"
     [dialog]="dialogPopup">
   </codx-form>
 </ng-template>
@@ -529,4 +524,27 @@
   <button type="button" class="btn btn-primary" (click)="updateReleaseProcess()">
     <codx-label fiedName="lblSave" default="Lưu"></codx-label>
   </button>
+</ng-template>
+
+<ng-template #empty>
+  <ng-container >
+    <div class="nondata-container w-100 mb-2">
+      <div class="d-flex justify-content-between page-heading align-items-center p-2">
+        <div class="fw-bold ms-2">Du lieu 30 ngay se xoa</div>
+        <div class="cursor-pointer">
+          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" >Xoa thung rac</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #templateRight>
+  <div 
+    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
+    data-kt-scroll-offset="0">
+    <ng-container  *ngTemplateOutlet="empty"></ng-container>
+    <ng-container *ngTemplateOutlet="currView"></ng-container>
+  </div>
 </ng-template>

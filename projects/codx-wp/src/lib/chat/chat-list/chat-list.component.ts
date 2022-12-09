@@ -1,12 +1,16 @@
 import {
   AfterViewInit,
+  ApplicationRef,
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  HostBinding,
   Input,
   OnInit,
   Output,
+  TemplateRef,
   ViewChild,
+  ViewContainerRef,
 } from '@angular/core';
 import {
   ApiHttpService,
@@ -28,6 +32,7 @@ import { PopupAddGroupComponent } from './popup/popup-add-group/popup-add-group.
   styleUrls: ['./chat-list.component.css'],
 })
 export class ChatListComponent implements OnInit, AfterViewInit {
+  
   @Input() isOpen: boolean; // check open dropdown
   @Output() isOpenChange = new EventEmitter<boolean>();
   funcID: string = 'WPT11';
@@ -36,13 +41,15 @@ export class ChatListComponent implements OnInit, AfterViewInit {
   grdViewSetUp: any = null;
   moreFC: any = null;
   @ViewChild('codxListView') codxListView: CodxListviewComponent;
+  @ViewChild("chatBox") chatBox:TemplateRef<any>;
   constructor(
     private api: ApiHttpService,
     private signalRSV: SignalRService,
     private callFCSV: CallFuncService,
     private cache: CacheService,
     private notifySV: NotificationsService,
-    private dt: ChangeDetectorRef
+    private dt: ChangeDetectorRef,
+    private _applicationRef: ApplicationRef,
   ) {}
 
   ngOnInit(): void {
@@ -82,27 +89,22 @@ export class ChatListComponent implements OnInit, AfterViewInit {
     this.signalRSV.signalGroup.subscribe((res: any) => {
       if (res) 
       {
-        console.log('signalGroup: ', res);
         (this.codxListView.dataService as CRUDService).add(res).subscribe();
       }
     });
   }
   // searrch
-  search(event: any) {}
-  // click group chat
-  clickGroupChat(group: any) {
-    if (group) 
-    {
-      let option = new DialogModel();
-      this.callFCSV.openForm(ChatBoxComponent,"",0,0,"WP",group.groupID,"",option);
-    }
-  }
-  // open group chat
-  openGroupChat(group:any){
-    if(group){
+  search(event: any) {
 
+  }
+  // click group chat - chat box
+  openChatBox(group: any) {
+    if (group?.groupID) 
+    {
+      this.addBoxChat(group);
     }
   }
+
   // open popup add group chat
   openPopupAddGroup() {
     if (this.function) {
@@ -134,6 +136,35 @@ export class ChatListComponent implements OnInit, AfterViewInit {
         //   (this.codxListView.dataService as CRUDService).add(group).subscribe();
         // }
       });
+    }
+  }
+
+
+  addBoxChat(group:any){
+    let viewRef = this.chatBox.createEmbeddedView({ $implicit: group });
+    this._applicationRef.attachView(viewRef);
+    viewRef.detectChanges();
+    let html = viewRef.rootNodes[0];
+     let elementContainer = document.querySelector(".container-chat");
+     if(elementContainer)
+     {
+      let length = elementContainer.children.length;
+      if(length < 3) // add box chat
+      {
+        html.setAttribute('style',`
+        position: fixed!important;
+        bottom: 0px;
+        right: ${(length*320 + 100)}px;
+        margin-top: -500px;
+        background-color: white;`)
+        html.setAttribute('id',group.groupID)
+        elementContainer.append(html);
+      }
+      else // tạo bong bóng chat
+      {
+        
+      }
+      
     }
   }
 }

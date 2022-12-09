@@ -185,6 +185,7 @@
                                 deleteCard(
                                   itemSession.seqNo,
                                   itemQuestion.seqNo,
+                                  itemQuestion.recID,
                                   'Not-S'
                                 )
                               "
@@ -906,7 +907,7 @@
     </ng-container>
   </div>
   <div #contentByImage *ngIf="itemQuestion?.qPicture" class="pb-12">
-    <div *ngFor="let item of lstEditIV">
+    <div *ngFor="let item of lstEditIV" class="min-h-253px">
       <div class="w-100" *ngIf="item.objectID == itemQuestion.recID">
         <div
           [ngClass]="
@@ -1495,7 +1496,14 @@
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
+            (click)="
+              deleteCard(
+                seqNoSession,
+                itemQuestion.seqNo,
+                itemQuestion.recID,
+                'Not-S'
+              )
+            "
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -1749,7 +1757,14 @@
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
-            (click)="deleteCard(seqNoSession, itemQuestion.seqNo, 'Not-S')"
+            (click)="
+              deleteCard(
+                seqNoSession,
+                itemQuestion.seqNo,
+                itemQuestion.recID,
+                'Not-S'
+              )
+            "
             class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
@@ -1835,7 +1850,7 @@
                 </li>
                 <li>
                   <a
-                    (click)="deleteCard(itemSession.seqNo, '', 'S')"
+                    (click)="deleteCard(itemSession.seqNo, '', '', 'S')"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >

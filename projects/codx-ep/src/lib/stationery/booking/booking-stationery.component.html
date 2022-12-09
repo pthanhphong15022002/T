@@ -58,7 +58,6 @@
     (edit)="edit($event)"
     (delete)="delete($event)"
     (setPopupTitle)="setPopupTitle($event)"
-    (uploaded)="getDetailBooking($event)"
   ></booking-stationery-view-detail>
 </ng-template>
 
@@ -69,7 +68,7 @@
         [showText]="true"
         [showBgColor]="true"
         [name]="'EP022'"
-        [value]="data?.approveStatus"
+        [value]="data?.status"
         class="badge badge-light badge-md fs-7"
       >
       </codx-vll>
