@@ -131,18 +131,15 @@ export class AprpermissionComponent
         read = 'Download';
         this.lstPermissions.push(read);
       }
-      if (data.create) {
-        read = 'Tạo thư mục';
-        this.lstPermissions.push(read);
-      }
-      if (data.update) {
+      if (data.edit) {
         read = 'Chỉnh sửa';
         this.lstPermissions.push(read);
       }
-      if (data.delete) {
-        read = 'Xóa';
+      if (data.publish) {
+        read = 'Phát hành';
         this.lstPermissions.push(read);
       }
+
       if (data.share) {
         read = 'Chia sẻ';
         this.lstPermissions.push(read);
@@ -151,10 +148,7 @@ export class AprpermissionComponent
         read = 'Chia sẻ quyền';
         this.lstPermissions.push(read);
       }
-      if (data.upload) {
-        read = 'Upload';
-        this.lstPermissions.push(read);
-      }
+
       if (this.lstPermissions.length > 0) {
         p.open();
       }

@@ -94,6 +94,8 @@ import { PopupEAssetsComponent } from './employee-profile/popup-eassets/popup-ea
 import { PopupEPassportsComponent } from './employee-profile/popup-epassports/popup-epassports.component';
 import { PopupEexperiencesComponent } from './employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { OrganizationOrgchartComponent } from './organization/organization-orgchart/organization-orgchart.component';
+import { OrganizationMasterDetailComponent } from './organization/organization-master-detail/organization-master-detail.component';
+import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
 
 export const routes: Routes = [
   {
@@ -298,7 +300,9 @@ const T_Component: Type<any>[] = [
   PopupEJobSalariesComponent,
   PopupEBasicSalariesComponent,
   PopupEexperiencesComponent,
-  OrganizationOrgchartComponent
+  OrganizationOrgchartComponent,
+  OrganizationMasterDetailComponent,
+  OrganizationListComponent
 ];
 @NgModule({
   imports: [
