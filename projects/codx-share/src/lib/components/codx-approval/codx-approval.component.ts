@@ -234,6 +234,10 @@ export class CodxApprovalComponent extends UIComponent implements  OnChanges, Af
         list2[i].disabled = true;
       }
     }
+    var bm = data.filter(
+      (x: { functionID: string }) => x.functionID == 'SYS207'
+    );
+    bm[0].disabled = false;
     if (datas.status != '3') {
       this.api
         .execSv<any>(
@@ -244,14 +248,16 @@ export class CodxApprovalComponent extends UIComponent implements  OnChanges, Af
           datas.recID
         )
         .subscribe((item) => {
-          if (item) {
+          if (!item) {
             var bm = data.filter(
               (x: { functionID: string }) => x.functionID == 'SYS207'
             );
-            bm[0].disabled = false;
+            bm[0].disabled = true;
+            this.detectorRef.detectChanges();
           }
         });
     }
+   
   }
   clickMF(e: any, data: any) {
     //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
