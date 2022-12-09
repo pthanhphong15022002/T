@@ -1286,13 +1286,15 @@ img.symbol-12px.symbol-circle {
   line-height: 20px;
 }
 
+a {
+  text-decoration: none;
+}
+
 codx-vll {
   border-radius: 20px !important;
 }
 
-.btn-outline-primary:hover {
-  color: #fff;
-}
+
 
 .bg-hover:hover {
   background-color: var(--gray-100);
