@@ -70,16 +70,6 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
     else {
       tempRecID = this.itemDetail?.currentValue?.recID
     }
-    this.api
-      .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
-        tempRecID,
-      ])
-      .subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.detectorRef.detectChanges();
-        }
-      });
     this.detectorRef.detectChanges();
     this.setHeight();
   }

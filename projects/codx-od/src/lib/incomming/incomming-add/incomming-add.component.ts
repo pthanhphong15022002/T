@@ -298,7 +298,6 @@ export class IncommingAddComponent implements OnInit {
               //   countError = item2.length - countSusscess;
                
               // }
-              debugger;
               if (item2?.status == 0 || Array.isArray(item2)) {
                 this.dialog.close(item.data);
                 this.notifySvr.notify(item.message);
@@ -376,7 +375,6 @@ export class IncommingAddComponent implements OnInit {
       var name = arr.join(" , ");
       return this.notifySvr.notifyCode('SYS009', 0, name);
     }
-    debugger;
     if (!this.fileCount || this.fileCount == 0)
       return this.notifySvr.notifyCode('OD022');
     return true;
