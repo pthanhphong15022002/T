@@ -255,8 +255,8 @@ export class IncommingComponent
     if (
       this.view.formModel.funcID == 'ODT41' &&
       data?.status != '1' &&
-      data?.status != '2'
-    ) {
+      data?.status != '2' && data?.approveStatus != '2')
+    {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
