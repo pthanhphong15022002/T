@@ -232,7 +232,7 @@ export class PopupAddProcessesComponent implements OnInit {
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
           if (res) {
-            this.notiService.alertCode('BP004').subscribe((x) => {
+            this.notiService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
               if (x.event?.status == 'N') {
                 return;
               } else if (x.event?.status == 'Y') {
