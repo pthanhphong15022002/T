@@ -5,7 +5,13 @@ import {
   ViewChild,
   AfterViewInit,
 } from '@angular/core';
-import { NotificationsService, UIComponent, ViewModel, ViewType, FormModel } from 'codx-core';
+import {
+  NotificationsService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+  FormModel,
+} from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
 
 @Component({
@@ -35,13 +41,13 @@ export class ApprovalStationeryComponent
   preStepNo;
   button;
   itemSelected: any;
-  formModel:FormModel;
+  formModel: FormModel;
 
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
-    private notificationsService: NotificationsService,
-    ) {
+    private notificationsService: NotificationsService
+  ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
     this.codxEpService.getFormModel(this.funcID).then((res) => {
@@ -75,7 +81,6 @@ export class ApprovalStationeryComponent
   click(event) {}
 
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
@@ -88,13 +93,13 @@ export class ApprovalStationeryComponent
       case 'EPT40301':
         {
           //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
+        break;
       case 'EPT40302':
         {
           //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
         break;
       default:
@@ -102,17 +107,17 @@ export class ApprovalStationeryComponent
         break;
     }
   }
-  approve(data:any, status:string){
+  approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
-            status,
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
+            status
           )
-          .subscribe((res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
               if (status == '5') {
                 this.notificationsService.notifyCode('SYS034'); //đã duyệt
                 data.approveStatus = '5';
@@ -122,7 +127,7 @@ export class ApprovalStationeryComponent
                 this.notificationsService.notifyCode('SYS034'); //bị hủy
                 data.approveStatus = '4';
                 data.status = '4';
-              }              
+              }
               this.view.dataService.update(data).subscribe();
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
@@ -130,34 +135,35 @@ export class ApprovalStationeryComponent
           });
       });
   }
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {       
-        if(func.functionID == "SYS04"/*Copy*/) 
-        {
-          func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (func.functionID == 'SYS04' /*Copy*/) {
+          func.disabled = true;
         }
       });
-      if(data.approveStatus=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40301' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40302' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
-          {
-            func.disabled=true;
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40301' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40302' /*MF từ chối*/
+          ) {
+            func.disabled = true;
           }
-        }); 
+        });
       }
     }
   }
-  updateStatus(data:any)
-  {
+  updateStatus(data: any) {
     this.view.dataService.update(data).subscribe();
   }
 
@@ -172,23 +178,6 @@ export class ApprovalStationeryComponent
       recID = event.recID;
       this.itemDetail = event;
     }
-    this.getDetailApprovalBooking(recID);
-  }
-
-  getDetailApprovalBooking(id: any) {
-    this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetApprovalBookingByIDAsync',
-        [this.itemDetail?.recID,this.itemDetail?.approvalTransRecID]
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.detectorRef.detectChanges();
-        }
-      });
   }
 
   setStyles(resourceType) {
