@@ -259,9 +259,9 @@ export class EmployeeProfileComponent extends UIComponent {
           .GetListPassportByEmpID(params.employeeID)
           .subscribe((res) => {
             console.log('passport', res);
-
-            this.lstPassport = res;
-            if (this.lstPassport.length > 0) {
+            this.lstPassport = [];
+            if (this.lstPassport?.length > 0) {
+              this.lstPassport = res;
               this.crrPassport = this.lstPassport[0];
             }
           });
