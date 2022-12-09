@@ -27,11 +27,11 @@ export class TasksComponent implements OnInit, OnChanges {
     console.log( this.funcID)
   }
   changeFunction(){
-    this.tmService.menuClick.subscribe((res) => {
+    this.tmService.childMenuClick.subscribe((res) => {
       if (res && res.func) {
         if (this.funcID != res.func.functionID)
           this.funcID = res.func.functionID;
-        this.tmService.menuClick.next(null);
+        this.tmService.childMenuClick.next(null);
       }
     });
   }
