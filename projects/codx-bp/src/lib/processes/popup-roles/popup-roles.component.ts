@@ -47,7 +47,7 @@ export class PopupRolesComponent implements OnInit {
   listRoles: any;
   startDate: Date;
   endDate: Date;
-  isSetFull = true;
+  isSetFull = false;
   currentPemission = 0;
   idUserSelected: any;
   popover: any;
@@ -83,7 +83,8 @@ export class PopupRolesComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
-
+    this.startDate = null;
+    this.endDate = null;
   }
 
   ngOnInit(): void {
@@ -152,8 +153,9 @@ export class PopupRolesComponent implements OnInit {
   //#endregion
 
   //#region event
-  valueChange(e: any, type: string) {
-    var data = e.data;
+  valueChange($event, type) {
+    var data = $event.data;
+    // this.isSetFull = data;
     switch (type) {
       case 'full':
         this.full = data;
@@ -165,25 +167,8 @@ export class PopupRolesComponent implements OnInit {
           this.edit = data;
           this.publish = data;
         }
+
         break;
-      // case 'assign':
-      //   this.assign = data;
-      //   break;
-      // case 'read':
-      //   this.read = data;
-      //   break;
-      // case 'share':
-      //   this.share = data;
-      //   break;
-      // case 'download':
-      //   this.download = data;
-      //   break;
-      // case 'edit':
-      //   this.edit = data;
-      //   break;
-      // case 'publish':
-      //   this.publish = data;
-      //   break;
       case 'startDate':
         if (data != null) this.startDate = data.fromDate;
         break;
@@ -319,7 +304,7 @@ export class PopupRolesComponent implements OnInit {
       list = [];
     }
     if (index == -1) {
-      perm.read = false;
+      perm.read = true;
       perm.download = false;
       perm.full = false;
       perm.share = false;
