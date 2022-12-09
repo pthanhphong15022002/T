@@ -49,22 +49,19 @@
       <div class="container card shadow-none border-0 rounded-3 h-100">
         <div class="py-5 px-2 text-center tab-pane-header h-100">
           <ng-container *ngIf="currentTab == 1; else addNewRequest">
-            <div class="container">
-              <div class="d-flex justify-content-end align-items-center">
-                <codx-searchbar [width]="300" iconPos="right" (searchEvent)="search($event)"></codx-searchbar>
-                <button class="btn btn-icon btn-tran position-relative mx-5">
-                  <span class="icon-shopping_cart icon-24"></span>
-                  <span *ngIf="getCartQty(this.cart) != 0"
-                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{
-                    getCartQty(this.cart) }}</span>
-                </button>
-                <a (click)="changeTab(2)"
-                  class="btn btn-flex btn-outline btn-outline-solid btn-outline-dark btn-active-primary"><span
-                    class="icon-double_arrow me-2"></span>
-                  <codx-label name="lblContinue" default="Tiếp theo"></codx-label></a>
-              </div>
+            <div class="d-flex justify-content-end align-items-center mb-2">
+              <codx-searchbar class="w-200px" iconPos="right" (searchEvent)="search($event)"></codx-searchbar>
+              <button class="btn btn-icon btn-tran position-relative mx-5">
+                <span class="icon-shopping_cart icon-20"></span>
+                <span *ngIf="getCartQty(this.cart) != 0"
+                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-danger">{{
+                  getCartQty(this.cart) }}</span>
+              </button>
+              <a (click)="changeTab(2)" class="btn btn-light-primary">
+                <i class="icon-double_arrow icon-16"></i>
+                <codx-label name="lblContinue" default="Tiếp theo"></codx-label></a>
             </div>
-            <div class="container mb-10 mt-10">
+            <div class="mb-3">
               <div class="d-flex flex-wrap">
                 <ul class="nav">
                   <li class="nav-item">
@@ -83,7 +80,7 @@
                 </ul>
               </div>
             </div>
-            <div class="container h-75">
+            <div class="list-stationery">
               <codx-listview #listView [type]="'cardView'" [service]="'EP'" [assemblyName]="'EP'"
                 [entityName]="'EP_Resources'" [className]="'ResourcesBusiness'" [method]="'GetListByCbxAsync'"
                 [predicate]="'ResourceType=@0'" [dataValue]="6" [funcId]="'EP8S21'" [itemTemplate]="templateListCard">
@@ -142,7 +139,7 @@
 </ng-template>
 
 <ng-template #addNewRequest let-dialogSaveToTemplate>
-  <div *ngIf="isAfterRender && dialogAddBookingStationery" class="row h-100">
+  <div *ngIf="isAfterRender && dialogAddBookingStationery" class="row request-step2">
     <div class="left col-6">
       <div class="d-flex justify-content-start mb-4">
         <h3 class="h3-title">
@@ -243,7 +240,7 @@
       </div>
       <div class="scroll-y liststationery-request pt-3">
         <div *ngFor="let item of cart; trackBy: itemByRecID">
-          <div class="d-flex mb-4 pe-3 justify-content-between w-100 bg-hover">
+          <div class="d-flex mb-2 me-2 p-1 rounded-2 justify-content-between w-100 bg-hover">
             <div class="d-flex flex-row">
               <div class="me-3">
                 <codx-img [objectId]="item.recID" imageType="circle" width="35" objectType="EP_Resources"
