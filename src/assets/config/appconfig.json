@@ -6,7 +6,7 @@
   "appName": "hps-file-test",
   "office365": "",
   "saas": 1,
-  "layoutCZ": "qtsc",
+  "layoutCZ": "",
   "SureMeet": {
     "baseUrl": "https://api.suremeet.vn/",
     "tokenUrl": "api/auth/token",
