@@ -28,5 +28,7 @@ export class OkrAddComponent implements OnInit {
   ngOnInit(): void {
     
   }
-
+  onSaveForm(){
+    
+  }
 }

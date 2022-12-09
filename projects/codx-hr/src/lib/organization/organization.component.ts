@@ -57,6 +57,8 @@ export class OrgorganizationComponent extends UIComponent {
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('templateDetail') templateOrgchart: TemplateRef<any>;
   @ViewChild('templateListView') templateListView: TemplateRef<any>;
+  @ViewChild('tempMasterDetail') tempMasterDetail: TemplateRef<any>;
+
   constructor(
     inject: Injector,
     private hrservice: CodxHrService,
@@ -123,6 +125,18 @@ export class OrgorganizationComponent extends UIComponent {
           resourceModel: { parentIDField: 'ParentID' }
         },
       },
+      {
+        id: '3',
+        type: ViewType.treedetail,
+        sameData: false,
+        active: true,
+        model: {
+          resizable: true,
+          template: this.templateTree,
+          panelRightRef: this.templateRight,
+          template2: this.tempMasterDetail,
+        }
+      }
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
