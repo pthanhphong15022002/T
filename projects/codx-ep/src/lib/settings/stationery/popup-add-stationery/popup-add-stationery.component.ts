@@ -119,7 +119,7 @@ export class PopupAddStationeryComponent extends UIComponent {
       // },
     ];
     this.epService
-      .getQuotaByResourceID(this.data.resourceID)
+      .getQuota(this.data.resourceID)
       .subscribe((res) => {
         this.quota = res;
       });
