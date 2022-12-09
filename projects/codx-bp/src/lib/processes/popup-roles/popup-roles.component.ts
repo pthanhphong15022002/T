@@ -32,7 +32,7 @@ export class PopupRolesComponent implements OnInit {
   data: any;
   title = '';
   //#region permissions
-  full: boolean = false;
+  full: boolean = true;
   create: boolean;
   read: boolean;
   edit: boolean;
@@ -157,7 +157,7 @@ export class PopupRolesComponent implements OnInit {
     switch (type) {
       case 'full':
         this.full = data;
-        if (data == true) {
+        if (this.isSetFull) {
           this.read = data;
           this.share = data;
           this.assign = data;
@@ -166,34 +166,34 @@ export class PopupRolesComponent implements OnInit {
           this.publish = data;
         }
         break;
-      case 'assign':
-        this.assign = data;
-        break;
-      case 'read':
-        this.read = data;
-        break;
-      case 'share':
-        this.share = data;
-        break;
-      case 'download':
-        this.download = data;
-        break;
-      case 'edit':
-        this.edit = data;
-        break;
-      case 'publish':
-        this.publish = data;
-        break;
+      // case 'assign':
+      //   this.assign = data;
+      //   break;
+      // case 'read':
+      //   this.read = data;
+      //   break;
+      // case 'share':
+      //   this.share = data;
+      //   break;
+      // case 'download':
+      //   this.download = data;
+      //   break;
+      // case 'edit':
+      //   this.edit = data;
+      //   break;
+      // case 'publish':
+      //   this.publish = data;
+      //   break;
       case 'startDate':
         if (data != null) this.startDate = data.fromDate;
         break;
       case 'endDate':
         if (data != null) this.endDate = data.fromDate;
         break;
-      // default:
-      //   this.isSetFull = false;
-      //   this[type] = data;
-      //   break;
+      default:
+        this.isSetFull = false;
+        this[type] = data;
+        break;
     }
     if (type != 'full' && data == false) this.full = false;
 
