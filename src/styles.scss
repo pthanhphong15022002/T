@@ -1280,8 +1280,16 @@ img.symbol-12px.symbol-circle {
   color: var(--text-primary) !important;
 }
 
-/******* tam ***/
+/******* bug ***/
 
 codx-vll {
   border-radius: 20px !important;
+}
+
+.bg-hover {
+  background-color: var(--gray-100);
+}
+
+.list-stationery .container-fluid {
+  padding: 0;
 }
