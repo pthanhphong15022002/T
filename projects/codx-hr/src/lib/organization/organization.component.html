@@ -9,32 +9,32 @@
   (buttonClick)="btnClick($event)" 
   (viewChanged)="changeView($event)" >
 </codx-views>
-
-<ng-template #templateRight>
+<!-- panel right lef -->
+<ng-template #panelRightLef>
   <ng-container *ngTemplateOutlet="currView"></ng-container>
 </ng-template>
-<ng-template #tempMasterDetail>
-
+<!-- tree -->
+<ng-template #tempTree let-data>
+  <div class="d-flex align-items-center py-1">
+    <i class="icon-home me-2"></i>
+    <span>{{ data.orgUnitName }}</span>
+  </div>
+</ng-template> 
+<!-- tree master detail -->
+<ng-template #tmpMasterDetail>
+  <lib-organization-master-detail [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-master-detail>
 </ng-template>
-<ng-template #templateDetail>
-  <!-- <ng-container *ngIf="orgUnitID">
-    <lib-organize-detail 
-      [orgUnitID]="orgUnitID" 
-      [data]="dataDetail" 
-      [formModel]="view.formModel" 
-      [numberLV]="numberLV"
-      (afterInit)="orgChartAfterView($event)">
-    </lib-organize-detail>
-  </ng-container> -->
+<!-- tree orgChart -->
+<ng-template #tmpOrgChart>
   <hr-organization-orgchart [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
 </ng-template>
-
-<ng-template #templateListView>
-  <div class="px-5 py-1 card-organization h-100 overflow-scroll">
+<!-- tree list -->
+<ng-template #tmpList>
+  <!-- <div class="px-5 py-1 card-organization h-100 overflow-scroll">
     <ng-container *ngFor="let data of dataCard; let i = index">
       <div class="d-flex flex-column py-4 border-bottom">
         <div class="d-flex align-items-center org-header mt-1 mb-3">
-          <div class="text-dark fw-bold fs-6 me-3">
+          <div *ngIf="data.departmentName" class="text-dark fw-bold fs-6 me-3">
             {{ data.departmentName }}
           </div>
           <codx-vll [name]="'L0605'" [value]="data.orgUnitType" [showText]="true" [showBgColor]="true" [showIcon]="true"
@@ -96,17 +96,10 @@
         </div>
       </div>
     </ng-container>
-  </div>
+  </div> -->
+  <lib-organization-list [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
-
-<ng-template #templateTree let-data>
-  <div class="d-flex align-items-center py-1">
-    <i class="icon-home me-2"></i>
-    <span>{{ data.orgUnitName }}</span>
-  </div>
-</ng-template>
-
-<ng-template #infoEmployee let-data>
+<!-- <ng-template #infoEmployee let-data>
   <div class="d-flex align-items-start">
     <codx-img *ngIf="data.employeeID" [width]="40" class="me-3" [objectName]="data.employeeName"
       [objectId]="data.employeeID" objectType="HR_Employees">
@@ -161,4 +154,6 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
+
+
