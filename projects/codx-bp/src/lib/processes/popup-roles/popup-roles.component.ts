@@ -32,7 +32,7 @@ export class PopupRolesComponent implements OnInit {
   data: any;
   title = '';
   //#region permissions
-  full: boolean = true;
+  full: boolean = false;
   create: boolean;
   read: boolean;
   edit: boolean;
@@ -390,17 +390,20 @@ export class PopupRolesComponent implements OnInit {
   //#endregion
 
   //#region roles
-  showPopover(p, userID) {
-    if (this.popover) this.popover.close();
-    if (userID) this.idUserSelected = userID;
-    p.open();
-    this.popover = p;
+  showPopover(p, data) {
+    if (data.objectType !== '7' || data.memberType != '0') {
+      if (this.popover) this.popover.close();
+      if (data.objectID) this.idUserSelected = data.objectID;
+
+      p.open();
+      this.popover = p;
+    }
   }
 
   selectRoseType(idUserSelected, value) {
     this.process.permissions.forEach((res) => {
       if (res.objectID != null && res.objectID != '') {
-        if (res.objectID == idUserSelected) res.memberType = value;
+        if (res.objectID == idUserSelected && value != '0') res.memberType = value;
       }
     });
     this.changeDetectorRef.detectChanges();

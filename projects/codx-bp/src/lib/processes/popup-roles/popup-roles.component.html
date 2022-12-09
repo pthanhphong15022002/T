@@ -21,7 +21,7 @@
                     <ng-template #elsethenAvatar1>
                       <div class="me-3 d-flex align-items-center" popoverClass="userPopoverClass"
                         [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
-                        (mouseenter)="showPopover(p, perm.objectID)" autoClose="outside">
+                        (mouseenter)="showPopover(p, perm)" autoClose="outside">
                         <div class="d-flex align-items-center position-relative">
                           <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">
                           </codx-img>
