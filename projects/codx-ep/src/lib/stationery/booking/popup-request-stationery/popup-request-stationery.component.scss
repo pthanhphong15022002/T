@@ -194,4 +194,16 @@
   .request-step2 {
     height: calc(100% - 35px);
   }
+
+  .input-number .btn#btn-right {
+    margin-left: 0px !important;
+  }
+
+  .list-stationery .container-fluid {
+    padding: 0;
+  }
+
+  .codx-search input {
+    width: 100% !important;
+  }
 }
