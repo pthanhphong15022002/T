@@ -122,6 +122,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //jobInfo
   jobInfo: any;
   crrJobSalaries: any = {};
+  lstJobSalaries: any = [];
   //EExperience
   lstExperience
   formModel;
@@ -252,16 +253,33 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //Passport
-        this.hrService
-          .GetListPassportByEmpID(params.employeeID)
-          .subscribe((res) => {
-            console.log('passport', res);
+        // this.hrService
+        //   .GetListPassportByEmpID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('passport', res);
 
-            this.lstPassport = res;
+        //     this.lstPassport = res;
+        //     if (this.lstPassport.length > 0) {
+        //       this.crrPassport = this.lstPassport[0];
+        //     }
+        //   });
+
+        let opPassport = new DataRequest()
+        opPassport.gridViewName = 'grvEPassports'
+        opPassport.entityName ='HR_EPassports'
+        opPassport.predicate = 'EmployeeID=@0'
+        opPassport.dataValue = params.employeeID;
+        opPassport.page = 1,
+        this.hrService
+        .getListVisaByEmployeeID(opPassport)
+        .subscribe((res) => {
+          if(res)
+            this.lstPassport = res[0];
             if (this.lstPassport.length > 0) {
+              
               this.crrPassport = this.lstPassport[0];
             }
-          });
+        })
 
         //Vissa
         // this.hrService
@@ -309,6 +327,22 @@ export class EmployeeProfileComponent extends UIComponent {
           .subscribe((res) => {
             this.crrJobSalaries = res;
           });
+
+        let op3 = new DataRequest()
+        op3.entityName ='HR_EJobSalaries'
+        op3.dataValue = params.employeeID;
+        op3.predicate = 'EmployeeID=@0'
+        op3.page = 1,
+
+        this.hrService
+        .getListJobSalariesByEmployeeID(op3)
+        .subscribe((res) => {
+          if(res){
+            this.lstJobSalaries = res[0];
+            console.log('e salaries', this.lstJobSalaries);
+          }
+        })
+
 
         //EExperience
         let op = new DataRequest();
@@ -732,26 +766,28 @@ export class EmployeeProfileComponent extends UIComponent {
   HandleEmployeeJobSalariesInfo(actionType: string, data: any){
     this.view.dataService.dataSelected = this.data
     let option = new SidebarModel()
-    option.DataService = this.view.dataService
-    option.FormModel = this.view.formModel
+    // option.FormModel = this.view.formModel
     option.Width = '850px'
     let dialogAdd = this.callfunc.openSide(
       PopupEJobSalariesComponent,
       {
         actionType: actionType,
-        employeeId: this.data.employeeID,
-        headerText: 'Lương chức danh',
         salarySelected: data,
+        headerText: 'Lương chức danh',
+        employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res != null) {
-        this.hrService
-          .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-          .subscribe((p) => {
-            this.crrJobSalaries = p;
-          });
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges()
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -792,28 +828,29 @@ export class EmployeeProfileComponent extends UIComponent {
     console.log('datas', option.DataService);
 
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       PopupEPassportsComponent,
       {
         actionType: actionType,
+        indexSelected : this.lstPassport.indexOf(data),
+        lstPassports : this.lstPassport,
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
-        passPortSelected: data,
       },
       option
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (actionType != 'edit') {
-        this.lstPassport.push(res.event);
-      } else {
-        let index = this.lstPassport.indexOf(data);
-        this.lstPassport[index] = res.event;
-      }
+      // if (actionType != 'edit') {
+      //   this.lstPassport.push(res.event);
+      // } else {
+      //   let index = this.lstPassport.indexOf(data);
+      //   this.lstPassport[index] = res.event;
+      // }
 
-      console.log('data tra ve', res.event);
-      console.log('lst passport', this.lstPassport);
+      // console.log('data tra ve', res.event);
+      // console.log('lst passport', this.lstPassport);
 
       if (!res?.event) this.view.dataService.clear();
     });
@@ -830,26 +867,28 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEWorkPermitsComponent,
       {
         actionType: actionType,
-        selectedWorkPermit: data,
+        indexSelected : this.lstWorkPermit.indexOf(data),
+        lstWorkPermit : this.lstWorkPermit,
+        // selectedWorkPermit: data,
         headerText: 'Giấy phép lao động',
         employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      console.log('work permit', res?.event);
-      if (actionType != 'edit') {
-        this.lstWorkPermit.push(res?.event);
-      } else {
-        let index = this.lstWorkPermit.indexOf(data);
-        this.lstWorkPermit[index] = res.event;
-      }
-      console.log(this.lstWorkPermit);
+      // console.log('work permit', res?.event);
+      // if (actionType != 'edit') {
+      //   this.lstWorkPermit.push(res?.event);
+      // } else {
+      //   let index = this.lstWorkPermit.indexOf(data);
+      //   this.lstWorkPermit[index] = res.event;
+      // }
+      // console.log(this.lstWorkPermit);
       if (!res?.event) this.view.dataService.clear();
     });
   }
 
-  handleEmployeeVisaInfo(actionType: string, data: any) {
+    handleEmployeeVisaInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -860,7 +899,8 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEVisasComponent,
       {
         actionType: actionType,
-        visaSelected: data,
+        indexSelected : this.lstVisa.indexOf(data),
+        lstVisas : this.lstVisa,
         headerText: 'Thị thực',
         employeeId: this.data.employeeID,
       },
@@ -868,22 +908,49 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if(res.event != null){
-        if (actionType != 'edit') {
-          console.log('tra ve sau add', res);
-          this.lstVisa.push(res?.event);
-          console.log(this.lstVisa);
-          
-        } else {
-          let index = this.lstVisa.indexOf(data);
-          if(index > -1)
-          this.lstVisa[index] = res.event;
-        }
-        console.log(this.lstVisa);
+        // this.lstVisa = res?.event;
+        console.log('sau khi dong form', this.lstVisa);
         if (!res?.event) this.view.dataService.clear();
         this.df.detectChanges()
       }
     });
   }
+
+  // handleEmployeeVisaInfo(actionType: string, data: any) {
+  //   this.view.dataService.dataSelected = this.data;
+  //   let option = new SidebarModel();
+  //   option.DataService = this.view.dataService;
+  //   option.FormModel = this.view.formModel;
+  //   option.Width = '800px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     // EmployeeVisaFormComponent,
+  //     PopupEVisasComponent,
+  //     {
+  //       actionType: actionType,
+  //       visaSelected: data,
+  //       headerText: 'Thị thực',
+  //       employeeId: this.data.employeeID,
+  //     },
+  //     option
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if(res.event != null){
+  //       if (actionType != 'edit') {
+  //         console.log('tra ve sau add', res);
+  //         this.lstVisa.push(res?.event);
+  //         console.log(this.lstVisa);
+          
+  //       } else {
+  //         let index = this.lstVisa.indexOf(data);
+  //         if(index > -1)
+  //         this.lstVisa[index] = res.event;
+  //       }
+  //       console.log(this.lstVisa);
+  //       if (!res?.event) this.view.dataService.clear();
+  //       this.df.detectChanges()
+  //     }
+  //   });
+  // }
 
   addEmployeeDisciplinesInfo() {
     this.view.dataService.dataSelected = this.data;
