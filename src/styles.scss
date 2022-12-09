@@ -1281,15 +1281,21 @@ img.symbol-12px.symbol-circle {
 }
 
 /******* bug ***/
+.e-schedule .e-month-view .e-date-header {
+  height: 20px;
+  line-height: 20px;
+}
+
+a {
+  text-decoration: none;
+}
 
 codx-vll {
   border-radius: 20px !important;
 }
 
+
+
 .bg-hover:hover {
   background-color: var(--gray-100);
-}
-
-.list-stationery .container-fluid {
-  padding: 0;
 }
