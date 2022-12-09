@@ -86,6 +86,7 @@ export class AprpermissionComponent
       { headerTemplate: this.itemDescription, width: 150 },
       { headerTemplate: this.itemStatus, width: 150 },
       { field: '', headerText: '', width: 100 },
+      { field: '', headerText: '', width: 50 },
     ];
   }
 
