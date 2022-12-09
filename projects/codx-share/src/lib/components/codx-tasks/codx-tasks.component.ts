@@ -59,7 +59,7 @@ export class CodxTasksComponent
   @Input() showMoreFunc = true;
   @Input() refID?: any;
   @Input() refType?: any;
-
+  @Input() isLoadCheckAfter = true ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
@@ -149,7 +149,7 @@ export class CodxTasksComponent
   moreFunction = [];
   crrStatus = '';
   disabledProject = false;
-
+  
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -169,14 +169,50 @@ export class CodxTasksComponent
 
   //#region Init
   onInit(): void {
-    console.log(this.funcID);
+
     if (!this.funcID) this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.projectID = this.dataObj?.projectID;
+    this.viewMode = this.dataObj?.viewMode;
+
+    this.resourceKanban = new ResourceModel();
+    this.resourceKanban.service = 'SYS';
+    this.resourceKanban.assemblyName = 'SYS';
+    this.resourceKanban.className = 'CommonBusiness';
+    this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    this.resourceKanban.dataObj = '125125';
+
+    this.request = new ResourceModel();
+    this.request.service = 'TM';
+    this.request.assemblyName = 'TM';
+    this.request.className = 'TaskBusiness';
+    this.request.method = 'GetTasksAsync';
+    this.request.idField = 'taskID';
+    this.request.dataObj = this.dataObj;
+
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+
+    this.requestTree = new ResourceModel();
+    this.requestTree.service = 'TM';
+    this.requestTree.assemblyName = 'TM';
+    this.requestTree.className = 'TaskBusiness';
+    this.requestTree.method = 'GetListTreeDetailTasksAsync';
+    this.requestTree.idField = 'taskID';
+
+    this.afterLoad() ;
+    this.getParams();
+    this.dataObj = JSON.stringify(this.dataObj);
+    this.detectorRef.detectChanges();
+  }
+
+  afterLoad(){
     if (this.funcID == 'TMT0203') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else this.vllStatus = this.vllStatusTasks;
-
-    this.projectID = this.dataObj?.projectID;
-    this.viewMode = this.dataObj?.viewMode;
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f)
@@ -202,28 +238,6 @@ export class CodxTasksComponent
       this.modelResource.dataValue = this.dataObj?.resources;
     }
 
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'SYS';
-    this.resourceKanban.assemblyName = 'SYS';
-    this.resourceKanban.className = 'CommonBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = '125125';
-
-    this.request = new ResourceModel();
-    this.request.service = 'TM';
-    this.request.assemblyName = 'TM';
-    this.request.className = 'TaskBusiness';
-    this.request.method = 'GetTasksAsync';
-    this.request.idField = 'taskID';
-    this.request.dataObj = this.dataObj;
-
-    this.requestSchedule = new ResourceModel();
-    this.requestSchedule.service = 'TM';
-    this.requestSchedule.assemblyName = 'TM';
-    this.requestSchedule.className = 'TaskBusiness';
-    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    this.requestSchedule.idField = 'taskID';
-
     if (this.funcID != 'TMT0201' && this.funcID != 'TMT0206') {
       if (this.funcID == 'TMT0203') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
@@ -236,17 +250,6 @@ export class CodxTasksComponent
       this.requestSchedule.predicate = '';
       this.requestSchedule.dataValue = '';
     }
-
-    this.requestTree = new ResourceModel();
-    this.requestTree.service = 'TM';
-    this.requestTree.assemblyName = 'TM';
-    this.requestTree.className = 'TaskBusiness';
-    this.requestTree.method = 'GetListTreeDetailTasksAsync';
-    this.requestTree.idField = 'taskID';
-    this.getParams();
-
-    this.dataObj = JSON.stringify(this.dataObj);
-    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
