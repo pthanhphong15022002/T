@@ -136,7 +136,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         "SYS", 
         "ERM.Business.AD",
         "AutoNumbersBusiness",
-        "GenAutoNumberAsync",
+        "GenAutoNumberAsync", // hòa kêu note lại
         [funcID, entityName, fieldName, null])
         .subscribe((res:any) =>{
           if(res)

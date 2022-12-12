@@ -127,7 +127,7 @@ export class OrgorganizationComponent extends UIComponent {
       },
       {
         id: '3',
-        type: ViewType.treedetail,
+        type: ViewType.tree_masterdetail,
         sameData: true,
         active: false,
         model: {
