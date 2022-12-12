@@ -977,4 +977,26 @@ export class ProcessesComponent
       });
     }
   }
+  // getAvatar(process) {
+  //   let avatar = [
+  //     '',
+  //     this.funcID,
+  //     process?.recID,
+  //     'BP_Processes',
+  //     'inline',
+  //     1000,
+  //     process?.processName,
+  //     'avt',
+  //     false,
+  //   ];
+  //   this.api
+  //     .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         // this.linkAvatar = environment.urlUpload + '/' + res?.url;
+  //         this.changeDetectorRef.detectChanges();
+  //       } else {
+  //       }
+  //     });
+  // }
 }
