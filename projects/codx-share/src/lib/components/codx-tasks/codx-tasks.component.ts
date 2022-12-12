@@ -148,8 +148,8 @@ export class CodxTasksComponent
   moreFunction = [];
   crrStatus = '';
   disabledProject = false;
-  crrFuncID ='';
-  
+  crrFuncID = '';
+
   constructor(
     inject: Injector,
     private authStore: AuthStore,
@@ -169,9 +169,9 @@ export class CodxTasksComponent
 
   //#region Init
   onInit(): void {
-
-    if (!this.funcID) this.funcID = this.activedRouter.snapshot.params['funcID'];
-    this.crrFuncID = this.funcID ;
+    if (!this.funcID)
+      this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.crrFuncID = this.funcID;
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
 
@@ -204,14 +204,15 @@ export class CodxTasksComponent
     this.requestTree.method = 'GetListTreeDetailTasksAsync';
     this.requestTree.idField = 'taskID';
 
-    this.afterLoad() ;
+    this.afterLoad();
     this.getParams();
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
 
-  afterLoad(){
-    if (this.funcID == 'TMT0203') {
+  afterLoad() {
+    //cai này có thể gọi grvSetup
+    if (this.funcID == 'TMT0203' || this.funcID == 'TMT0206' || this.funcID == 'MWP0062' || this.funcID == 'MWP0063') {
       this.vllStatus = this.vllStatusAssignTasks;
     } else this.vllStatus = this.vllStatusTasks;
 
@@ -222,9 +223,18 @@ export class CodxTasksComponent
             this.moreFunction = res;
           }
         });
+        this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+          if (grv) {
+            this.vllStatus = grv?.Status.data;
+          }
+        });
     });
 
-    this.showButtonAdd = this.funcID!='TMT0206' && this.funcID!='TMT0202'
+    this.showButtonAdd =
+      this.funcID != 'TMT0206' &&
+      this.funcID != 'TMT0202' &&
+      this.funcID != 'MWP0063' &&
+      this.funcID != 'MWP0064';
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011') {
@@ -241,8 +251,13 @@ export class CodxTasksComponent
       this.modelResource.dataValue = this.dataObj?.resources;
     }
 
-    if (this.funcID != 'TMT0201' && this.funcID != 'TMT0206') {
-      if (this.funcID == 'TMT0203') {
+    if (
+      this.funcID != 'TMT0201' &&
+      this.funcID != 'TMT0206' &&
+      this.funcID != 'MWP0061' &&
+      this.funcID != 'MWP0063'
+    ) {
+      if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
       } else {
@@ -950,9 +965,9 @@ export class CodxTasksComponent
   //#endregion
   //#region Event đã có dùng clickChildrenMenu truyền về
   changeView(evt: any) {
-    if(this.crrFuncID != this.funcID){
-        this.afterLoad();
-        this.crrFuncID = this.funcID
+    if (this.crrFuncID != this.funcID) {
+      this.afterLoad();
+      this.crrFuncID = this.funcID;
     }
   }
 
@@ -1498,7 +1513,7 @@ export class CodxTasksComponent
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-          this.funcID == 'TMT0206'
+          (this.funcID == 'TMT0206' || this.funcID != 'MWP0063')
         ) {
           x.disabled = true;
         }
@@ -1508,7 +1523,7 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if (this.funcID == 'TMT0203') this.isAssignTask = true;
+    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') this.isAssignTask = true;
     else this.isAssignTask = false;
     switch (evt.id) {
       case 'btnAdd':
