@@ -223,11 +223,11 @@ export class CodxTasksComponent
             this.moreFunction = res;
           }
         });
-        this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
-          if (grv) {
-            this.vllStatus = grv?.Status.data;
-          }
-        });
+        // this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+        //   if (grv) {
+        //     this.vllStatus = grv?.Status?.;
+        //   }
+        // });
     });
 
     this.showButtonAdd =
