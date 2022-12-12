@@ -530,12 +530,12 @@
     [formName]="fmInvoiceLines.formName"
     [gridViewName]="fmInvoiceLines.gridViewName"
     [entityName]="fmInvoiceLines.entityName"
+    [templateMore]="morefunction"
     [dataSource]="data"
     [height]="gridHeight"
     [autoLoad]="false"
     rowHeight="40"
     (created)="gridCreated($event)"
-    []
   ></codx-gridview-v2>
 </ng-template>
 
@@ -591,4 +591,18 @@
     [funcID]="form.formModel.funcID"
     [TabControl]="tabs"
   ></codx-tabs>
+</ng-template>
+
+<!-- More function -->
+<ng-template #morefunction let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <!-- <div class="action-menu"> -->
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="dialog.formModel"
+      (clickMF)="clickMF($event)"
+      type="hover"
+    ></codx-mfunc>
+    <!-- </div> -->
+  </div>
 </ng-template>

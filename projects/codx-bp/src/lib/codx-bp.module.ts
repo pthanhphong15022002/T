@@ -44,14 +44,17 @@ export const routes: Routes = [
       {
         path: 'processes/:funcID',
         component: ProcessesComponent,
+        data: { noReuse: true },
       },
       {
         path: 'approvals/:funcID',
         component: ProcessesComponent,
+        data: { noReuse: true },
       },
       {
         path: 'aprpermission/:funcID',
         component: AprpermissionComponent,
+        data: { noReuse: true },
       },
       {
         path: 'testhtml',
