@@ -1,4 +1,250 @@
-<ng-template #footer>
+<layout-list-detail
+    #lstDetail
+    [title]="headerText"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    [leftTemlate]="LeftTemlate"
+    [RightTemlate]="body"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="WorkPermitNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="workPermitNo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="PassportNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="passportNo"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Qualification"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="qualification"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="form-group row">
+            <codx-label
+                fiedName="CompanyName"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="companyName"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+        <div class="form-group row">
+            <codx-label
+                fiedName="Location"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="location"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="JobAssign"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="jobAssign"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="WorkingForm"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="workingForm"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="FromDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="fromDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ToDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="toDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="WorkPermitType"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="workPermitType"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ReissuedNum"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="reissuedNum"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="NationalityID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="nationalityID"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="IssuedDate"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field="issuedDate"
+                    [formModel]="formModel"
+                    [Group]="formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="IssuedPlace"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="issuedPlace"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="Note"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="note"
+                [formModel]="formModel"
+                [Group]="formGroup"
+            ></codx-input>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" (click)="onSaveForm()">
+                <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</layout-list-detail>
+
+<ng-template #LeftTemlate>
+    <codx-listview
+        #listView
+        [type]="'cardView'"
+        [service]="'HR'"
+        [assemblyName]="'HR'"
+        [entityName]="'HR_EWorkPermits'"
+        [className]="'EWorkPermitsBusiness'"
+        [method]="'GetListWorkPermitsByEmployeeIDAsync'"
+        [predicate]="'EmployeeID=@0'"
+        [dataValue]="employId"
+        [itemTemplate]="itemTemplate"
+        (afterRender)="afterRenderListView($event)"
+        [selectFirst]="true"
+    ></codx-listview>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    <codx-temp-full
+        [formModel]="formModel"
+        [typeMF]="'hover'"
+        [title]="data.passportNo"
+        [icoTitleCss]="'icon-list_alt'"
+        [subTitleTmp]="tmplateEWorkPermitMenuList"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        [hideMF]="true"
+        typeMF="hover"
+        [dataItem]="data"
+        (click)="click(data)"
+    >
+    </codx-temp-full>
+</ng-template>
+
+<ng-template #tmplateEWorkPermitMenuList let-data>
+    <div class="d-flex flex-column">
+        <div><i class="icon-calendar_today"></i>{{(data.fromDate | fmDT) + ' - ' + (data.toDate | fmDT)}}</div>
+        <div><i class="icon-call_made"></i>{{data.issuedPlace}}</div>
+    </div>
+</ng-template>
+
+<!-- <ng-template #footer>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" (click)="onSaveForm()">
             <i class="icon-save"></i>
@@ -201,4 +447,4 @@
             ></codx-input>
         </div>
     </ng-template>
-</codx-form>
+</codx-form> -->
