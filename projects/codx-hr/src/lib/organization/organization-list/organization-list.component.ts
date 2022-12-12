@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { ApiHttpService, FormModel } from 'codx-core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ApiHttpService, CodxListviewComponent, FormModel } from 'codx-core';
 
 @Component({
   selector: 'lib-organization-list',
@@ -11,6 +11,9 @@ export class OrganizationListComponent implements OnInit,OnChanges {
   @Input() orgUnitID:string = "";
   @Input() formModel:FormModel = null;
   data:any[] = [];
+  predicate:string = "OrgUnitID = @0";
+  dataValue:string = "";
+  @ViewChild("codxListView") codxListView:CodxListviewComponent;
   constructor
   (
     private api:ApiHttpService,
@@ -25,6 +28,11 @@ export class OrganizationListComponent implements OnInit,OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
       this.orgUnitID = changes.orgUnitID.currentValue;
+      this.dataValue = this.orgUnitID;
+      if(this.codxListView)
+      {
+        this.codxListView.dataService.setPredicate("",[this.dataValue]).subscribe();
+      }
       this.getOrgUnitByID(this.orgUnitID);
       this.dt.detectChanges();
     }
@@ -33,20 +41,20 @@ export class OrganizationListComponent implements OnInit,OnChanges {
   getOrgUnitByID(orgUnitID:string){
     if(orgUnitID)
     {
-      this.api
-      .execSv(
-        'HR',
-        'ERM.Business.HR',
-        'OrganizationUnitsBusiness',
-        'GetDataTreeListAssync',
-        [orgUnitID]
-      ).subscribe((res:any) => {
-          if(res)
-          {
-              this.data = JSON.parse(JSON.stringify(res));
-              this.dt.detectChanges();
-          }
-        });
+      // this.api
+      // .execSv(
+      //   'HR',
+      //   'ERM.Business.HR',
+      //   'OrganizationUnitsBusiness',
+      //   'GetDataTreeListAssync',
+      //   [orgUnitID]
+      // ).subscribe((res:any) => {
+      //     if(res)
+      //     {
+      //         this.data = JSON.parse(JSON.stringify(res));
+      //         this.dt.detectChanges();
+      //     }
+      //   });
     }
   }
 
