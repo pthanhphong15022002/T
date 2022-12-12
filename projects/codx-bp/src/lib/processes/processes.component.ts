@@ -162,8 +162,8 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-     this.userId = '2207130007';
-     this.isAdmin = false
+    // this.userId = '2207130007';
+   //  this.isAdmin = false
     this.button = {
       id: 'btnAdd',
     };
