@@ -117,8 +117,9 @@
 	background: white;
 	display: flex;
 	justify-content: center;
-	align-self: center;
+	align-items: center;
 	height: 100%;
+	overflow: auto;
 
 	.form-control {
 		background-color: #e8f0fe !important;
@@ -136,4 +137,7 @@
 			font-size: 20px;
 		}
 	}
+
+
+
 }

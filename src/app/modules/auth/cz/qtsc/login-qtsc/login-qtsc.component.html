@@ -1,8 +1,8 @@
 ﻿<ng-container>
   <div class="login-qtsc">
     <!--Begin Login-->
-    <div class="d-flex align-items-center justify-content-between h-100" *ngIf="mode == 'login'">
-      <div class="d-flex bg-white rounded-3 px-6 py-12 login-content">
+    <div class="d-flex align-items-center justify-content-between h-100 qtsc-form1" *ngIf="mode == 'login'">
+      <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
           <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start py-6">
@@ -15,7 +15,7 @@
               <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
             </div>
             <!--begin: Aside footer for desktop-->
-            <div class="company-info ms-5">
+            <div class="company-info ms-5 pb-5">
               <div class="company-name fw-bold fs-5 text-danger">
                 CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN CÔNG VIÊN PHẦN MỀM QUANG
                 TRUNG
@@ -87,7 +87,8 @@
 
                 <div class="d-flex justify-content-between mt-3 mb-9 px-2">
                   <span class="text-danger"></span>
-                  <a (click)="forgotPass()" tabindex="-1" class="link-dark text-danger text-decoration-none">
+                  <a (click)="forgotPass()" tabindex="-1"
+                    class="link-dark text-danger text-decoration-none cursor-pointer">
                     <codx-label fiedName="ForgotPassword" formModel="" default="Quên mật khẩu?"></codx-label>
                   </a>
                 </div>
@@ -97,7 +98,7 @@
                   </button>
                 </div>
 
-                <div class="login-link mt-9">
+                <div class="login-link mt-7 pb-3">
                   <div class="login-link-cont">
                     <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/f.png" />
@@ -126,9 +127,8 @@
     </div>
     <!--end::Login-->
     <!--Begin Doi PW-->
-    <div class="d-flex align-items-center justify-content-between h-100" style="display: none"
-      *ngIf="mode == 'changePass'">
-      <div class="d-flex bg-white rounded-3 px-6 py-12 login-content">
+    <div class="d-flex align-items-center justify-content-between" style="display: none" *ngIf="mode == 'changePass'">
+      <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
           <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start py-6">
@@ -141,7 +141,7 @@
               <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
             </div>
             <!--begin: Aside footer for desktop-->
-            <div class="company-info ms-5">
+            <div class="company-info ms-5 pb-5">
               <div class="company-name fw-bold fs-5 text-danger">
                 CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN CÔNG VIÊN PHẦN MỀM QUANG
                 TRUNG
@@ -225,7 +225,7 @@
                     {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
                   </button>
                 </div>
-                <div class="login-link mt-5">
+                <div class="login-link mt-7 pb-3">
                   <div class="login-link-cont">
                     <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/f.png" />
@@ -254,9 +254,8 @@
     </div>
     <!--end Doi PW-->
     <!--Begin first login-->
-    <div class="d-flex align-items-center justify-content-between h-100" style="display: none"
-      *ngIf="mode == 'firstLogin'">
-      <div class="d-flex bg-white rounded-3 px-6 py-12 login-content">
+    <div class="d-flex align-items-center justify-content-between" style="display: none" *ngIf="mode == 'firstLogin'">
+      <div class="d-flex bg-white rounded-3 px-6 py-3 login-content">
         <div class="login-left w-100 ps-9 pe-6">
           <div class="d-flex flex-row-fluid flex-column justify-content-between">
             <div class="text-start py-6">
@@ -269,7 +268,7 @@
               <img class="w-100" src="/assets/cz/qtsc/bg/bgloginQTSC.png" alt="" />
             </div>
             <!--begin: Aside footer for desktop-->
-            <div class="company-info ms-5">
+            <div class="company-info ms-5 pb-5">
               <div class="company-name fw-bold fs-5 text-danger">
                 CÔNG TY TNHH MỘT THÀNH VIÊN PHÁT TRIỂN CÔNG VIÊN PHẦN MỀM QUANG
                 TRUNG
@@ -343,7 +342,7 @@
                     {{ "Đăng nhập " | lang : "Login" : "btnLogin" | async }}
                   </button>
                 </div>
-                <div class="login-link mt-9">
+                <div class="login-link mt-7 pb-3">
                   <div class="login-link-cont">
                     <a href="https://www.facebook.com/QualityTechSolutionComplex" target="_blank">
                       <img src="/assets/cz/qtsc/bg/f.png" />
