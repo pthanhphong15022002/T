@@ -201,7 +201,6 @@ export class ProcessesComponent
   ngAfterViewInit(): void {
     this.views = [
       {
-        id: '1',
         type: ViewType.grid,
         sameData: true,
         model: {
@@ -211,7 +210,6 @@ export class ProcessesComponent
         },
       },
       {
-        id: '2',
         type: ViewType.card,
         sameData: true,
         active: true,
