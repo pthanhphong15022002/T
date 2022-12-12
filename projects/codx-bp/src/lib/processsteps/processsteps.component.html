@@ -23,7 +23,7 @@
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
-    [hideMF]="!isEdit"
+    [hideMF]="hideMoreFC"
     (clickMF)="clickMF($event, data)"
     cardCss="card-template border-bottom px-2 pt-4 pb-2"
     [typeMF]="'hover'"
@@ -54,7 +54,7 @@
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
             <div class="d-flex" #p="ngbPopover"
-            [ngbPopover]="hoverMoreFunction" (mouseenter)="openMF(item,p)"
+            [ngbPopover]="this.isEdit ? hoverMoreFunction:''" (mouseenter)="openMF(item,p)"
              autoClose="outside" placement="right">
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
@@ -312,7 +312,7 @@
                     </div> -->
 
                     <codx-temp-full
-                      [hideMF]="!isEdit"
+                      [hideMF]="hideMoreFC"
                       (clickMF)="clickMF($event, item)"
                       [typeMF]="'hover'"
                       [formModel]="view.formModel"
@@ -381,7 +381,7 @@
                                 <span class="icon-reorder"></span>
                               </div> -->
                               <codx-temp-full
-                                [hideMF]="!isEdit"
+                                [hideMF]="hideMoreFC"
                                 (clickMF)="clickMF($event, item1)"
                                 [typeMF]="'hover'"
                                 [formModel]="view.formModel"
@@ -459,7 +459,7 @@
       >&nbsp;
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
-    <div class="moreFC-ver" *ngIf="!hideMoreFC && isEdit">
+    <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
           <div class="moreFC rounded-4 py-2"  id="{{data?.recID}}">
