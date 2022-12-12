@@ -53,6 +53,7 @@ export class ProcessesComponent
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
   @ViewChild('itemOwner', { static: true })
@@ -206,6 +207,7 @@ export class ProcessesComponent
         model: {
           resources: this.columnsGrid,
           template: this.itemViewList,
+          headerTemplate : this.headerTemplate
         },
       },
       {
@@ -215,6 +217,7 @@ export class ProcessesComponent
         active: true,
         model: {
           template: this.templateListCard,
+          headerTemplate : this.headerTemplate
         },
       },
       // {
