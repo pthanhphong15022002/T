@@ -1,14 +1,12 @@
 <codx-layout-add #form 
-  [title]="title" 
+  (setTitle)="setTile($event,form)" 
   [tabInfo]="tabInfo" 
   [formModel]="dialogRef.formModel" 
-  [subHeader]=""
   [footer]="footer" 
   [dialog]="dialogRef" 
   [openMore]="true" 
   (buttonClick)="buttonClick($event)"
   [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]" 
-  (setTitle)="setTitle($event)"
   [data]="data">
 </codx-layout-add>
 
@@ -20,22 +18,22 @@
     </div>
   </div>
   <div class="row-group">
-    <div *ngIf="isNew;else edit" class="row">
+    <div>
       <div class="col">
         <div class="form-group">
           <codx-label [formModel]="dialogRef.formModel" name="lblEmployeeID" fiedName="EmployeeID" default="Mã nhân viên">
           </codx-label>
           <codx-input class="form-control" 
-            [disabled]="paramaterHR?.stop?false:true"
+            [disabled]="paramaterHR?.stop ? false:true"
             type="text" 
-            [crrValue]="defaultEmployeeID" 
+            [crrValue]="employee.employeeID" 
             field="employeeID"
             (valueChange)="valueChange($event)">
           </codx-input>
         </div>
       </div>
     </div>
-    <ng-template #edit>
+    <!-- <ng-template #edit>
       <div class="row">
         <div class="col">
           <div class="form-group">
@@ -50,7 +48,7 @@
           </div>
         </div>
       </div>
-    </ng-template>
+    </ng-template> -->
     <div class="row">
       <div class="col">
         <div class="form-group">
@@ -170,7 +168,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="OrganizationID" default="Bộ phận">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="OrgUnitID" default="Bộ phận">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.organizationID"
             field="organizationID" refValue="OrganizationUnits" service="HR" placeholder="Bộ phận"
@@ -182,7 +180,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="DepartmentID" default="Phòng ban">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="DepartmentID" default="Phòng ban">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.departmentID"
             field="departmentID" refValue="HRDepartments" service="HR" placeholder="Phòng ban"
@@ -194,7 +192,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="DivisionID" default="Khối">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="DivisionID" default="Khối">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.divisionID"
             placeholder="khối" field="divisionID" refValue="HRDivisions" service="HR"
@@ -206,7 +204,7 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
+          <codx-label [formModel]="dialogRef.formModel" fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
           <codx-input type="datetime" class="test-datetime" field="joinedOn" format="d" placeholder="datetime"
             [crrValue]="employee?.joinedOn" (valueChange)="changeTime($event)" placeholder="datetime">
           </codx-input>
@@ -214,7 +212,7 @@
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
           </codx-label>
           <codx-input 
             type="datetime" 
@@ -243,7 +241,7 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="IdCardNo" default="CMND/CCCD">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="IdCardNo" default="CMND/CCCD">
           </codx-label>
           <codx-input class="form-control" type="text" field="idCardNo" (valueChange)="dataChange($event, 'idCardNo')"
             [crrValue]="employee?.idCardNo" placeholder="Số CMNN/CCCD">
@@ -252,7 +250,7 @@
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label fiedName="IssuedOn" default="Ngày cấp"></codx-label>
+          <codx-label [formModel]="dialogRef.formModel" fiedName="IssuedOn" default="Ngày cấp"></codx-label>
           <codx-input type="datetime" class="test-datetime" field="issuedOn" format="d" placeholder="datetime"
             [crrValue]="employee?.issuedOn" (valueChange)="changeTime($event)">
           </codx-input>
@@ -262,7 +260,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="IssuedBy" default="Nơi cấp"></codx-label>
+          <codx-label [formModel]="dialogRef.formModel" fiedName="IssuedBy" default="Nơi cấp"></codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.issuedBy"
             field="issuedBy" (valueChange)="dataChange($event, 'issuedBy')" refValue="ProvinceOfCountry" service="HR"
             ngDefaultControl placeholder="Nơi cấp" loadFull="true">
@@ -273,7 +271,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="MaritalStatus" default="Tình trạng hôn nhân">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="MaritalStatus" default="Tình trạng hôn nhân">
           </codx-label>
           <codx-input type="valuelist" class="form-control noBorder cotrol-vll" [crrValue]="employee?.maritalStatus"
             field="maritalStatus" (valueChange)="dataChange($event, 'maritalStatus')" ngDefaultControl refValue="L0226">
@@ -282,7 +280,7 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="Nationality" default="Quốc tịch">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="Nationality" default="Quốc tịch">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.nationality"
             field="nationality" refValue="Nationalities" service="BS" (valueChange)="dataChange($event, 'nationality')"
@@ -294,7 +292,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="EthnicGroup" default="Dân tộc">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="EthnicGroup" default="Dân tộc">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.ethnicGroup"
             field="ethnicGroup" refValue="EthnicGroups" service="BS" (valueChange)="dataChange($event, 'ethnicGroup')"
@@ -304,7 +302,7 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="Religion" default="Tôn giáo"></codx-label>
+          <codx-label [formModel]="dialogRef.formModel" fiedName="Religion" default="Tôn giáo"></codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.religion"
             field="religion" refValue="Religions" service="BS" (valueChange)="dataChange($event, 'religion')"
             loadFull="true">
@@ -315,7 +313,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="Education" default="Trình độ văn hóa">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="Education" default="Trình độ văn hóa">
           </codx-label>
           <codx-input type="valuelist" class="form-control noBorder cotrol-vll" [crrValue]="employee?.education"
             field="education" (valueChange)="dataChange($event, 'education')" ngDefaultControl refValue="L1033">
@@ -324,7 +322,7 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="Degree" default="Trình độ chuyên môn">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="Degree" default="Trình độ chuyên môn">
           </codx-label>
           <codx-input type="combobox" class="form-control borderless p-0" [crrValue]="employee?.degree" field="degree"
             refValue="Degrees" service="BS" (valueChange)="dataChange($event, 'degree')" loadFull="true">
@@ -338,7 +336,7 @@
 <ng-template #tabInfoLaw>
   <div id="InfoLaw">
     <div class="text-primary mb-3 fw-bold">
-      <codx-label name="lblJuridical" default="Thông tin pháp lý">
+      <codx-label [formModel]="dialogRef.formModel" name="lblJuridical" default="Thông tin pháp lý">
       </codx-label>
     </div>
   </div>
@@ -346,7 +344,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="PitNumber" default="Mã số thuế">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="PitNumber" default="Mã số thuế">
           </codx-label>
           <codx-input class="form-control" type="text" field="pitNumber" (valueChange)="dataChange($event, 'pitNumber')"
             [crrValue]="employee?.pitNumber">
@@ -355,7 +353,7 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="PitIssuedOn" default="Ngày cấp">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="PitIssuedOn" default="Ngày cấp">
           </codx-label>
           <codx-input type="datetime" class="test-datetime" field="pitIssuedOn" format="d" placeholder="datetime"
             [crrValue]="employee?.pitIssuedOn" (valueChange)="changeTime($event)">
@@ -366,7 +364,7 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="SiRegisterNo" default="Mã số BHXH">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="SiRegisterNo" default="Mã số BHXH">
           </codx-label>
           <codx-input class="form-control" type="text" field="siRegisterNo"
             (valueChange)="dataChange($event, 'siRegisterNo')" [crrValue]="employee?.siRegisterNo">
@@ -375,7 +373,7 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label fiedName="SiRegisterOn" default="Ngày cấp">
+          <codx-label [formModel]="dialogRef.formModel" fiedName="SiRegisterOn" default="Ngày cấp">
           </codx-label>
           <codx-input type="datetime" class="test-datetime" field="siRegisterOn" format="d" placeholder="datetime"
             [crrValue]="employee?.siRegisterOn" (valueChange)="changeTime($event)">
@@ -388,6 +386,9 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" (click)="OnSaveForm()">Lưu</button>
+    <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
+      <codx-label [formModel]="dialogRef.formModel" fiedName="lblSave" default="Lưu">
+      </codx-label>
+    </button>
   </div>
 </ng-template>

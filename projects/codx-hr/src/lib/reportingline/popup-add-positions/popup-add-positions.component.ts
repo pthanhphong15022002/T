@@ -38,7 +38,6 @@ export class PopupAddPositionsComponent implements OnInit {
     private notiService: NotificationsService,
     private auth: AuthService,
     private api: ApiHttpService,
-    private reportingLine: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
