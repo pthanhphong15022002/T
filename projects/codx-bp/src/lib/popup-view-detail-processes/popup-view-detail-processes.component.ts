@@ -25,12 +25,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   data: any;
   moreFunc: any;
   title = '';
-  tabControl: TabModel[] = [];
+  // tabControl: TabModel[] = [];
   active = 0 ;
   dataFile : any
   formModel :any
   linkFile : any;
-  all: TabModel[] = [
+  tabControl: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
     { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 9 },
@@ -80,15 +80,15 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.tabControl.length == 0) {
-      this.tabControl = this.all;
-    }
-    else {
-      this.active = this.tabControl.findIndex(
-        (x: TabModel) => x.isActive == true
-      );
-    }
-    this.changeDetectorRef.detectChanges();
+    // if (this.tabControl.length == 0) {
+    //  this.tabControl = this.all;
+    // }
+    // else {
+    //   this.active = this.tabControl.findIndex(
+    //     (x: TabModel) => x.isActive == true
+    //   );
+    // }
+    //this.changeDetectorRef.detectChanges();
   }
 
   clickMenu(item) {
