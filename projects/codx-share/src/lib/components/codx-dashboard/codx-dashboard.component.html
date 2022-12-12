@@ -1,57 +1,1112 @@
-<button class="btn btn-danger" (click)="addPanel()">ét be nồ đát bo</button>
-  <ejs-dashboardlayout
-    #dashboard
-    id="defaultLayout"
-    [columns]="5"
-    [cellSpacing]="cellSpacing"
-    [cellAspectRatio]="cellAspectRatio"
-    [allowResizing]="true"
-    (resizeStop)="onResizeStop($event)"
-    (created)="onCreate($event)"
-  >
-    <!-- <e-panels>
-    <e-panel [sizeX]="2" [sizeY]="3" [row]="0" [col]="0">
-      <ng-template #content>
-        <button class="btn btn-sm btn-primary" (click)="addChart()">Thêm chart</button>
-        <div class="w-100">
-          <codx-chart [legendSettings]="{visible:true}" title="BACCCCCC" [chartArea]="chartArea" [marker]="marker"  [enableCrossHair]="true"  [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis" [seriesSetting]="seriesSetting" ></codx-chart>
-        </div>
+<codx-form [body]="body" [subToolbar]="toolbar" [dialog]="dialog"></codx-form>
+<ng-template #body>
+  <div class="h-100 w-100">
+    <!-- <button class="btn btn-danger" (click)="addPanel()">ét be nồ đát bo</button> -->
+    <ejs-dashboardlayout
+      #dashboard
+      id="defaultLayoutDashBoard"
+      style="height: 100% ;"
+      [columns]="columns"
+      [cellSpacing]="cellSpacing"
+      [cellAspectRatio]="cellAspectRatio"
+      [allowResizing]="true"
+      (resizeStart)="onResizeStart($event)"
+      (resize)="onResize($event)"
+      (resizeStop)="onResizeStop($event)"
+      (created)="onCreate($event)"
+    >
+    </ejs-dashboardlayout>
+  </div>
+</ng-template>
 
-      </ng-template>
-    </e-panel>
-    <e-panel [sizeX]="2" [sizeY]="3" [row]="0" [col]="1">
-      <ng-template #content>
-        <div class="w-100">
-          <codx-chart [legendSettings]="{visible:true}" title="fffff" [chartArea]="chartArea" [marker]="marker"  [enableCrossHair]="false"  [primaryXAxis]="primaryXAxis" [primaryYAxis]="primaryYAxis" [seriesSetting]="seriesSetting1" ></codx-chart>
-        </div>
+<ng-template #chart>
+  <div class="w-100 h-100 chart-item">
+    <codx-chart
+      [legendSettings]="legendSetting"
+      [chartArea]="chartArea"
+      [marker]="marker"
+      [enableCrossHair]="enableCrosshair"
+      [primaryXAxis]="primaryXAxis"
+      [primaryYAxis]="primaryYAxis"
+      [seriesSetting]="seriesSetting"
+      [assemblyName]="assembly"
+      [service]="service"
+      [className]="className"
+      [method]="method"
+    ></codx-chart>
+  </div>
+</ng-template>
 
-      </ng-template>
-    </e-panel>
-  </e-panels> -->
-  </ejs-dashboardlayout>
-  <ng-template #panelLayout>
-    <layout-panel (addNew)="addChart($event)" (delete)="deletePanel($event)"></layout-panel>
-  </ng-template>
-  <ng-template #chart>
-    <div class="w-100 h-100 chart-item">
-      <codx-chart
-        [legendSettings]="{ visible: true, enableHighlight : true }"
-        title="BACCCCCC"
-        [chartArea]="chartArea"
-        [marker]="marker"
-        [enableCrossHair]="true"
-        [primaryXAxis]="primaryXAxis"
-        [primaryYAxis]="primaryYAxis"
-        [seriesSetting]="seriesSetting"
-      ></codx-chart>
+<ng-template #panelLayout>
+  <layout-panel
+    #eleLayout
+    (addNew)="addChart($event, eleLayout)"
+    (delete)="deletePanel($event)"
+    [body]="templates"
+  ></layout-panel>
+</ng-template>
+
+<ng-template #dfLine>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      [title]="titleLine"
+      [primaryXAxis]="xAxisLine"
+      [primaryYAxis]="yAxisLine"
+      [tooltip]="tooltip"
+      [chartArea]="chartArea"
+      [width]="width"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="data"
+          type="Line"
+          xName="Period"
+          yName="Viet_Growth"
+          name="Vietnam"
+          width="2"
+          [marker]="circleMarker"
+          opacity="1"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="data"
+          type="Line"
+          xName="Period"
+          yName="Can_Growth"
+          name="Canada"
+          width="2"
+          [marker]="triangleMarker"
+          opacity="1"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="data"
+          type="Line"
+          xName="Period"
+          yName="Mal_Growth"
+          name="Malaysia"
+          width="2"
+          [marker]="diamondMarker"
+          opacity="1"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="data"
+          type="Line"
+          xName="Period"
+          yName="Egy_Growth"
+          name="Egypt"
+          width="2"
+          [marker]="rectangleMarker"
+          opacity="1"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="data"
+          type="Line"
+          xName="Period"
+          yName="Ind_Growth"
+          name="Indonesia"
+          width="2"
+          [marker]="pentagonMarker"
+          opacity="1"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStepLine>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisStepLine"
+      [primaryYAxis]="yAxisStepLine"
+      [tooltip]="tooltipStepLine"
+      [legendSettings]="legendStepLine"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStepLine"
+          type="StepLine"
+          xName="Period"
+          yName="AUS_UnemploymentRate"
+          width="5"
+          opacity="1"
+          [marker]="markerStepLine"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingLine>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisStackingLine"
+      [primaryYAxis]="yAxisStackingLine"
+      [tooltip]="tooltipStackingLine"
+      [legendSettings]="legendStepLine"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingLine0"
+          type="StackingLine"
+          xName="x"
+          yName="y"
+          name="John"
+          width="2"
+          [marker]="markerStackingLine0"
+          dashArray="5,1"
+          opacity="1"
+        >
+        </e-series>
+        <!-- <e-series
+          [dataSource]="dataStackingLine1"
+          type="StackingLine"
+          xName="x"
+          yName="y"
+          name="Peter"
+          width="2"
+          [marker]="markerStackingLine1"
+          dashArray="5,1"
+          opacity="1"
+        >
+        </e-series> -->
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingLine100>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisStackingLine100"
+      [primaryYAxis]="yAxisStackingLine100"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingline100_0"
+          type="StackingLine100"
+          xName="x"
+          yName="y"
+          name="John"
+          width="2"
+          [marker]="markerStackingLine0"
+          opacity="1"
+        >
+        </e-series>
+        <!-- <e-series
+          [dataSource]="dataStackingline100_1"
+          type="StackingLine100"
+          xName="x"
+          yName="y"
+          name="Peter"
+          width="2"
+          [marker]="markerStackingLine1"
+          opacity="1"
+        >
+        </e-series> -->
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfSpLine>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      align="center"
+      [chartArea]="chartArea"
+      [width]="width"
+      style="display: block"
+      [primaryXAxis]="xAxisSpLine"
+      [primaryYAxis]="yAxisSpLine"
+      [tooltip]="tooltipSpLine"
+      [legendSettings]="legendStepLine"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataSpLine"
+          type="Spline"
+          xName="x"
+          yName="y"
+          name="Max Temp"
+          width="2"
+          [marker]="markerSpLine"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfSpLineArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisSplineArea"
+      [primaryYAxis]="yAxisSplineArea"
+      [tooltip]="tooltipSpLine"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataSplineArea"
+          type="SplineArea"
+          xName="Period"
+          yName="US_InflationRate"
+          [marker]="circleMarker"
+          name="US"
+          opacity="0.5"
+          width="2"
+          [border]="borderSplineArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataSplineArea"
+          type="SplineArea"
+          xName="Period"
+          yName="FR_InflationRate"
+          [marker]="diamondMarker"
+          name="France"
+          opacity="0.5"
+          width="2"
+          [border]="borderSplineArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfMultiColoredLine>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      align="center"
+      (load)="load($event)"
+      [primaryXAxis]="xAxisMultiColoredLine"
+      [primaryYAxis]="yAxisMultiColoredLine"
+      [tooltip]="tooltip"
+      [chartArea]="chartArea"
+      [width]="width"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataMultiColoredLine"
+          type="MultiColoredLine"
+          xName="XValue"
+          yName="YValue"
+          name="Rainfall"
+          width="1.5"
+          pointColorMapping="color"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisArea"
+      [primaryYAxis]="yAxisArea"
+    >
+      <e-series-collection>
+
+        <e-series
+          [dataSource]="dataArea1"
+          type="Area"
+          xName="Period"
+          yName="USD"
+          [marker]="markerArea"
+          [border]="borderArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfRangeArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      style="display: block; width: 92%"
+      [primaryXAxis]="xAxisRangeArea"
+      [primaryYAxis]="yAxisRangeArea"
+      [tooltip]="tooltipRangeArea"
+      [zoomSettings]="zoomSettings"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataRangeArea"
+          [border]="{ width: 0 }"
+          [opacity]="opacity"
+          type="RangeArea"
+          xName="Period"
+          high="HighTemp"
+          low="LowTemp"
+          [enableTooltip]="false"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfSplineRangeArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      style="display: block; width: 92%"
+      [primaryXAxis]="xAxisSplineRangeArea"
+      [primaryYAxis]="yAxisSplineRangeArea"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataSplineRangeArea"
+          [border]="borderArea"
+          [marker]="markerArea"
+          [opacity]="opacity"
+          type="SplineRangeArea"
+          xName="x"
+          high="high"
+          low="low"
+          name="England"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisStackingArea"
+      [primaryYAxis]="yAxisStackingArea"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingArea"
+          type="StackingArea"
+          xName="Period"
+          yName="OrganicSales"
+          name="Bank Transfer"
+          [border]="borderArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingArea"
+          type="StackingArea"
+          xName="Period"
+          yName="FairTradeSales"
+          name="Credit Card"
+          [border]="borderArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingArea"
+          type="StackingArea"
+          xName="Period"
+          yName="VegAlternativesSales"
+          name="Debit Card"
+          [border]="borderArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingArea"
+          type="StackingArea"
+          xName="Period"
+          yName="OtherSales"
+          name="Cash"
+          [border]="borderArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingArea100>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisStackingArea100"
+      [primaryYAxis]="yAxisStackingArea100"
+      [tooltip]="tooltip"
+      (load)="load($event)"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingArea100_0"
+          type="StackingArea100"
+          xName="x"
+          yName="y"
+          name="Bank Transfer"
+          [border]="borderArea"
+        >
+        </e-series>
+        <!-- <e-series
+          [dataSource]="dataStackingArea100_1"
+          type="StackingArea100"
+          xName="x"
+          yName="y"
+          name="Credit Card"
+          [border]="borderArea"
+        >
+        </e-series> -->
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStepArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisStepArea"
+      [primaryYAxis]="yAxisStepArea"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStepArea"
+          type="StepArea"
+          [marker]="marker"
+          xName="x"
+          yName="y"
+          name="Renewable"
+          width="2"
+          opacity="0.6"
+          [border]="borderStepArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingStepArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisStackingStepArea"
+      [primaryYAxis]="yAxisStackingStepArea"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingStepArea"
+          type="StackingStepArea"
+          xName="x"
+          yName="y"
+          name="Renewable"
+          [opacity]="opacity"
+          fill="#56CCF2"
+          [border]="borderStepArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfMultiColoredArea>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [primaryXAxis]="xAxisMultiColoredArea"
+      [primaryYAxis]="yAxisMultiColoredArea"
+      [tooltip]="tooltipMultiColoredArea"
+      (load)="load($event)"
+      [chartArea]="chartArea"
+      [width]="width"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataValues"
+          type="MultiColoredArea"
+          xName="XValue"
+          segmentAxis="X"
+          yName="YValue"
+          name="US"
+          width="2"
+          [segments]="segments"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfColumn>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisColumn"
+      [primaryYAxis]="yAxisColumn"
+      [tooltip]="tooltipColumn"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataColumn"
+          type="Column"
+          xName="Country"
+          yName="GoldMedal"
+          name="Gold"
+          width="2"
+          [marker]="markerColumn"
+          columnSpacing="0.1"
+          tooltipMappingName="MappingName"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfRangeColumn>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      [chartArea]="chartArea"
+      [width]="width"
+      style="display: block"
+      [primaryXAxis]="xAxisRangeColumn"
+      [primaryYAxis]="yAxisRangeColumn"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataRangeColumn"
+          type="RangeColumn"
+          xName="Days"
+          high="IND_HighTemp"
+          low="IND_LowTemp"
+          name="India"
+          columnSpacing="0.1"
+          [marker]="markerRangeColumn"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingColumn>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisStackingColumn"
+      [primaryYAxis]="yAxisStackingColumn"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingColum"
+          type="StackingColumn"
+          xName="Year"
+          yName="General"
+          name="General Motors"
+          width="2"
+          columnWidth="0.5"
+          [border]="borderArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingColumn100>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisStackingColumn100"
+      [primaryYAxis]="yAxisStackingColumn100"
+      [tooltip]="tooltipStackingColumn100"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingColumn100"
+          type="StackingColumn100"
+          xName="Year"
+          yName="General"
+          name="General Motors"
+          width="2"
+          [border]="borderArea"
+          columnWidth="0.5"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingColumn100"
+          type="StackingColumn100"
+          xName="Year"
+          yName="Honda"
+          name="Honda"
+          width="2"
+          [border]="borderArea"
+          columnWidth="0.5"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfBar>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisBar"
+      [primaryYAxis]="yAxisBar"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataBar"
+          type="Bar"
+          xName="Country"
+          yName="GDP"
+          name="GDP"
+          [marker]="markerBar"
+          columnSpacing="0.1"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingBar>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisStackingbar"
+      [primaryYAxis]="yAxisStackingbar"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingBar"
+          type="StackingBar"
+          xName="Month"
+          yName="AppleSales"
+          name="Apple"
+          width="2"
+          columnWidth="0.6"
+          [border]="borderArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingBar"
+          type="StackingBar"
+          xName="Month"
+          yName="OrangeSales"
+          name="Orange"
+          width="2"
+          columnWidth="0.6"
+          [border]="borderArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfStackingBar100>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisStackingBar100"
+      [primaryYAxis]="yAxisStackingBar100"
+      [tooltip]="tooltipStackingColumn100"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataStackingBar100"
+          type="StackingBar100"
+          xName="Month"
+          yName="AppleSales"
+          name="Apple"
+          width="2"
+          columnWidth="0.6"
+          [border]="borderArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingBar100"
+          type="StackingBar100"
+          xName="Month"
+          yName="OrangeSales"
+          name="Orange"
+          width="2"
+          columnWidth="0.6"
+          [border]="borderArea"
+        >
+        </e-series>
+        <e-series
+          [dataSource]="dataStackingBar100"
+          type="StackingBar100"
+          xName="Month"
+          yName="Wastage"
+          name="Wastage"
+          width="2"
+          columnWidth="0.6"
+          [border]="borderArea"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfScatter>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      [primaryXAxis]="xAxisScatter"
+      [primaryYAxis]="xAxisScatter"
+      [tooltip]="tooltip"
+      [legendSettings]="legend"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="cluster1Value"
+          type="Scatter"
+          xName="Breadth"
+          yName="Circumference"
+          name="18-20 Years"
+          width="2"
+          [marker]="markerScatter"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfPolar>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      #chart
+      style="display: block"
+      [primaryXAxis]="xAxisPolar"
+      [primaryYAxis]="yAxisPolar"
+      [tooltip]="tooltip"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataPolar"
+          type="Polar"
+          drawType="Line"
+          xName="x"
+          yName="y"
+          name="Warmest"
+          width="2"
+          [marker]="markerPolar"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfRadar>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      #chart
+      style="display: block"
+      [primaryXAxis]="xAxisPolar"
+      [primaryYAxis]="yAxisPolar"
+      [tooltip]="tooltip"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataPolar"
+          type="Radar"
+          drawType="Line"
+          xName="x"
+          yName="y"
+          name="Warmest"
+          width="2"
+          [marker]="markerPolar"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfHilo>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      [chartArea]="chartArea"
+      [width]="width"
+      style="display: block"
+      [primaryXAxis]="xAxisHilo"
+      [primaryYAxis]="yAxisHilo"
+      [tooltip]="tooltipHilo"
+      [crosshair]="crosshairHilo"
+      [legendSettings]="legendHilo"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataHilo"
+          type="Hilo"
+          xName="x"
+          high="high"
+          low="low"
+          [marker]="markerHilo"
+          name="Apple Inc"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfHistogram>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisHistogram"
+      [primaryYAxis]="yAxisHistogram"
+      [tooltip]="tooltip"
+      [legendSettings]="legendHilo"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataHistogram"
+          type="Histogram"
+          yName="y"
+          name="Score"
+          width="2"
+          [marker]="markerHistogram"
+          [binInterval]="binInterval"
+          [showNormalDistribution]="showNormalDistribution"
+          [columnWidth]="columnWidth"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfPareto>
+  <div class="chart-item w-100 h-100">
+    <ejs-chart
+      style="display: block"
+      [chartArea]="chartArea"
+      [width]="width"
+      align="center"
+      [primaryXAxis]="xAxisPareto"
+      [primaryYAxis]="yAxisPareto"
+      [legendSettings]="legend"
+      [tooltip]="tooltip"
+    >
+      <e-series-collection>
+        <e-series
+          [dataSource]="dataPareto"
+          type="Pareto"
+          xName="x"
+          yName="y"
+          name="Defect"
+          [marker]="markerPareto"
+          width="2"
+        >
+        </e-series>
+      </e-series-collection>
+    </ejs-chart>
+  </div>
+</ng-template>
+
+<ng-template #dfPie>
+  <div class="chart-item w-100 h-100">
+    <ejs-accumulationchart
+      #pie
+      style="display: block; width: 92%"
+      [legendSettings]="legend"
+      [tooltip]="tooltip"
+      [enableAnimation]="enableAnimation"
+      [enableBorderOnMouseMove]="false"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          name="Browser"
+          [dataSource]="dataPie"
+          xName="Browser"
+          yName="Users"
+          [startAngle]="startAngle"
+          innerRadius="0%"
+          radius="60%"
+          [explode]="explode"
+          explodeOffset="10%"
+          [explodeIndex]="0"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
+  </div>
+</ng-template>
+
+<ng-template #dfPyramid>
+  <div class="chart-item w-100 h-100">
+    <ejs-accumulationchart
+      #pyramid
+      style="display: block; width: 92%"
+      [legendSettings]="legend"
+      [tooltip]="tooltipPyramid"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          name="Food"
+          [dataSource]="dataPyramid"
+          xName="Foods"
+          yName="Calories"
+          [neckWidth]="neckWidth"
+          [gapRatio]="gapRatio"
+          [emptyPointSettings]="emptyPointSettings"
+          width="45%"
+          height="80%"
+          [explode]="explode"
+          type="Pyramid"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
+  </div>
+</ng-template>
+
+<ng-template #dfFunnel>
+  <div class="chart-item w-100 h-100">
+    <ejs-accumulationchart
+      [legendSettings]="legend"
+      [tooltip]="tooltipFunnel"
+      [enableAnimation]="enableAnimation"
+    >
+      <e-accumulation-series-collection>
+        <e-accumulation-series
+          [dataSource]="dataFunnel"
+          xName="InterviewProcess"
+          yName="Candidates"
+          [neckWidth]="neckWidth"
+          [neckHeight]="neckHeight"
+          width="45%"
+          [explode]="explode"
+          type="Funnel"
+        >
+        </e-accumulation-series>
+      </e-accumulation-series-collection>
+    </ejs-accumulationchart>
+  </div>
+</ng-template>
+
+<ng-template #toolbar>
+  <div class="d-flex justify-content-between">
+    <!-- <div class="float-start w-100">
+
+    </div> -->
+    <div class="float-start d-flex justify-content-between">
+      <button
+        class="btn btn-sm btn-light-info"
+        title="thêm be nồ"
+        (click)="addPanel()"
+      >
+        <i class="icon-i-collection icon-16"></i>
+      </button>
+      <button
+        class="btn btn-sm btn-light-primary"
+        title="thêm chạc"
+        (click)="addPanelAuto()"
+      >
+        <i class="icon-addchart icon-16"></i>
+      </button>
+      <button
+        class="btn btn-sm btn-light-warning"
+        title="lưu chạc"
+        (click)="savePanel($event)"
+      >
+        <i class="icon-fact_check icon-16"></i>
+      </button>
     </div>
-  </ng-template>
-
-  <ng-template #templateContainer let-data *ngIf="template">
-    <ng-container
-    *ngTemplateOutlet="
-    template;
-      context: { $implicit: data }
-    "
-  ></ng-container>
-  </ng-template>
+  </div>
+</ng-template>

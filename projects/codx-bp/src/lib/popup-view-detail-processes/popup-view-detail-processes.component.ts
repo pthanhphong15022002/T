@@ -25,12 +25,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   data: any;
   moreFunc: any;
   title = '';
-  tabControl: TabModel[] = [];
+  // tabControl: TabModel[] = [];
   active = 0 ;
   dataFile : any
   formModel :any
   linkFile : any;
-  all: TabModel[] = [
+  tabControl: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
     { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 9 },
@@ -66,7 +66,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
         this.formModelFlowChart = f.formModel
       }
     })
-    this.getFlowChart(this.process)
+    // this.getFlowChart(this.process)
     this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
 
     this.bpService
@@ -80,15 +80,15 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.tabControl.length == 0) {
-      this.tabControl = this.all;
-    }
-    else {
-      this.active = this.tabControl.findIndex(
-        (x: TabModel) => x.isActive == true
-      );
-    }
-    this.changeDetectorRef.detectChanges();
+    // if (this.tabControl.length == 0) {
+    //  this.tabControl = this.all;
+    // }
+    // else {
+    //   this.active = this.tabControl.findIndex(
+    //     (x: TabModel) => x.isActive == true
+    //   );
+    // }
+    //this.changeDetectorRef.detectChanges();
   }
 
   clickMenu(item) {
@@ -106,91 +106,91 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  getFlowChart(process) {
-    let paras = [
-      '',
-      this.funcID,
-      process?.recID,
-      'BP_Processes',
-      'inline',
-      1000,
-      process?.processName,
-      'Flowchart',
-      false,
-    ];
-    this.api
-      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
-      .subscribe((res) => {
-        if (res&& res?.url) {
-          let obj = { pathDisk: res?.url, fileName: process?.processName };
-          this.dataFile = obj;
-        }
-      });
-  }
-  async addFile(evt: any) {
-    this.addFlowchart.referType = 'Flowchart';
-    this.addFlowchart.uploadFile();
-  }
-  fileAdded(e) {
-    if (e && e?.data?.length > 0) {
-      this.dataFile = e.data[0];
-      this.linkFile = environment.urlUpload+"/"+this.dataFile?.pathDisk;
-    }
-    this.changeDetectorRef.detectChanges();
-  }
+  // getFlowChart(process) {
+  //   let paras = [
+  //     '',
+  //     this.funcID,
+  //     process?.recID,
+  //     'BP_Processes',
+  //     'inline',
+  //     1000,
+  //     process?.processName,
+  //     'Flowchart',
+  //     false,
+  //   ];
+  //   this.api
+  //     .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+  //     .subscribe((res) => {
+  //       if (res&& res?.url) {
+  //         let obj = { pathDisk: res?.url, fileName: process?.processName };
+  //         this.dataFile = obj;
+  //       }
+  //     });
+  // }
+  // async addFile(evt: any) {
+  //   this.addFlowchart.referType = 'Flowchart';
+  //   this.addFlowchart.uploadFile();
+  // }
+  // fileAdded(e) {
+  //   if (e && e?.data?.length > 0) {
+  //     this.dataFile = e.data[0];
+  //     this.linkFile = environment.urlUpload+"/"+this.dataFile?.pathDisk;
+  //   }
+  //   this.changeDetectorRef.detectChanges();
+  // }
 
-  fileSave(e) {
-    if (e && typeof e === 'object') {
-      this.dataFile = e;
-      this.changeDetectorRef.detectChanges();
-    }
-  }
+  // fileSave(e) {
+  //   if (e && typeof e === 'object') {
+  //     this.dataFile = e;
+  //     this.changeDetectorRef.detectChanges();
+  //   }
+  // }
 
-  print() {
-    if (this.linkFile)
-    {
-     const output = document.getElementById("output");
-     const img = document.createElement("img");
-     img.src = this.linkFile;
-     output.appendChild(img);
-     const br = document.createElement("br");
-     output.appendChild(br);
-     window.print();
+  // print() {
+  //   if (this.linkFile)
+  //   {
+  //    const output = document.getElementById("output");
+  //    const img = document.createElement("img");
+  //    img.src = this.linkFile;
+  //    output.appendChild(img);
+  //    const br = document.createElement("br");
+  //    output.appendChild(br);
+  //    window.print();
 
-     document.body.removeChild(output);
-    }
-    else
-      window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
-   }
+  //    document.body.removeChild(output);
+  //   }
+  //   else
+  //     window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
+  //  }
 
-   checkDownloadRight() {
-    return this.dataFile.download;
-  }
-   async download(): Promise<void> {
-    var id = this.dataFile?.recID;
-    var fullName = this.dataFile.fileName;
-    var that = this;
+  //  checkDownloadRight() {
+  //   return this.dataFile.download;
+  // }
+  //  async download(): Promise<void> {
+  //   var id = this.dataFile?.recID;
+  //   var fullName = this.dataFile.fileName;
+  //   var that = this;
 
-    if (this.checkDownloadRight()) {
-      ///lấy hàm của chung dang fail
-      this.fileService.downloadFile(id).subscribe(async res => {
-        if (res) {
-          let blob = await fetch(res).then(r => r.blob());
-          let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", fullName);
-          link.style.display = "none";
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        }
-      });
-    }
-    else {
-      this.notificationsService.notifyCode("SYS018");
-    }
-  }
+  //   if (this.checkDownloadRight()) {
+  //     ///lấy hàm của chung dang fail
+  //     this.fileService.downloadFile(id).subscribe(async res => {
+  //       if (res) {
+  //         let blob = await fetch(res).then(r => r.blob());
+  //         let url = window.URL.createObjectURL(blob);
+  //         var link = document.createElement("a");
+  //         link.setAttribute("href", url);
+  //         link.setAttribute("download", fullName);
+  //         link.style.display = "none";
+  //         document.body.appendChild(link);
+  //         link.click();
+  //         document.body.removeChild(link);
+  //       }
+  //     });
+  //   }
+  //   else {
+  //     this.notificationsService.notifyCode("SYS018");
+  //   }
+  // }
   openPopUp(){
 
   }

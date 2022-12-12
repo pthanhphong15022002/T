@@ -74,7 +74,7 @@ export class ProcessStepsComponent
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
-  @Input() isEdit: false;
+  @Input() isEdit :boolean = false;
 
   showButtonAdd = true;
   dataObj?: any;
@@ -151,7 +151,7 @@ export class ProcessStepsComponent
 
   onInit(): void {
     this.actived = this.process?.actived;
-    if (!this.actived) {
+    if (!this.actived || !this.isEdit) {
       this.lockChild = this.lockParent = this.hideMoreFC = true;
     }
     this.processID = this.process?.recID ? this.process?.recID : '';
@@ -802,7 +802,7 @@ export class ProcessStepsComponent
   }
 
   onDragDrop(data) {
-    if (!this.actived) {
+    if (!this.actived || !this.isEdit) {
       data.parentID = this.crrParentID;
       return;
     }

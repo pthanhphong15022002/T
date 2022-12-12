@@ -115,9 +115,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   ngOnInit(): void {
     this.acceptEdit();
-    if (this.action === 'add' || this.action === 'copy') {
-      this.isDisable = true;
-    }
+    this.isDisable = true;
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
@@ -219,7 +217,7 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if (this.process.processName.trim() === this.nameOld?.trim()) {
+    if (this.process.processName.trim() === this.nameOld?.trim() && this.action != 'edit') {
       this.bpService
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
