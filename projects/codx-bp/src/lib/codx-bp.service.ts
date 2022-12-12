@@ -221,4 +221,12 @@ export class CodxBpService {
       data
     );
   }
+  restoreBinById(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateDeletedProcessesAsync',
+      data
+    );
+  }
 }
