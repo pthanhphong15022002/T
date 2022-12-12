@@ -190,12 +190,12 @@ export class CodxTasksComponent
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
-    this.requestSchedule = new ResourceModel();
-    this.requestSchedule.service = 'TM';
-    this.requestSchedule.assemblyName = 'TM';
-    this.requestSchedule.className = 'TaskBusiness';
-    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
-    this.requestSchedule.idField = 'taskID';
+    // this.requestSchedule = new ResourceModel();
+    // this.requestSchedule.service = 'TM';
+    // this.requestSchedule.assemblyName = 'TM';
+    // this.requestSchedule.className = 'TaskBusiness';
+    // this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    // this.requestSchedule.idField = 'taskID';
 
     this.requestTree = new ResourceModel();
     this.requestTree.service = 'TM';
@@ -212,9 +212,9 @@ export class CodxTasksComponent
 
   afterLoad() {
     //cai này có thể gọi grvSetup
-    if (this.funcID == 'TMT0203' || this.funcID == 'TMT0206' || this.funcID == 'MWP0062' || this.funcID == 'MWP0063') {
-      this.vllStatus = this.vllStatusAssignTasks;
-    } else this.vllStatus = this.vllStatusTasks;
+    // if (this.funcID == 'TMT0203' || this.funcID == 'TMT0206' || this.funcID == 'MWP0062' || this.funcID == 'MWP0063') {
+    //   this.vllStatus = this.vllStatusAssignTasks;
+    // } else this.vllStatus = this.vllStatusTasks;
 
     this.cache.functionList(this.funcID).subscribe((f) => {
       if (f)
@@ -223,11 +223,15 @@ export class CodxTasksComponent
             this.moreFunction = res;
           }
         });
-        // this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
-        //   if (grv) {
-        //     this.vllStatus = grv?.Status?.;
-        //   }
-        // });
+        this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+          if (grv) {
+            this.vllStatus = grv?.Status?.referedValue;
+            this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
+            this.vllExtendStatus = grv?.ExtendStatus?.referedValue ;
+            this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
+            this.vllPriority = grv?.Priority.referedValue;
+          }
+        });
     });
 
     this.showButtonAdd =
@@ -250,6 +254,13 @@ export class CodxTasksComponent
       this.modelResource.method = 'GetListUserByResourceAsync';
       this.modelResource.dataValue = this.dataObj?.resources;
     }
+    
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
 
     if (
       this.funcID != 'TMT0201' &&
