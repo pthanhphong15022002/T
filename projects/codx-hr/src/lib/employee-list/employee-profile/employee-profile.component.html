@@ -36,6 +36,205 @@
                   class="icon-arrow_forward_ios icon-16 text-hover-primary text-gray-800 ms-1"
                 ></span>
               </div>
+              <!-- ngPopup -->
+              <div
+                ngbDropdown
+                class="badge badge-circle badge-light cursor-pointer text-hover-primary"
+              >
+                <span
+                  class="icon-keyboard_arrow_down icon-18 text-dark-75"
+                  ngbDropdownToggle
+                >
+                </span>
+
+                <div ngbDropdownMenu class="" style="min-width: 350px">
+                  <div class="card card-flush">
+                    <div class="card-body pt-0">
+                      <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center mb-2">
+                          <span
+                            class="icon-cake icon-16 text-gray-800 me-1"
+                          ></span>
+                          <span class="text-dark fw-bold">
+                            <span>{{ infoPersonal.birthday | fmDT }}</span>
+                          </span>
+                          <span #gender>
+                            <codx-vll
+                              [showText]="true"
+                              [showBgColor]="true"
+                              [showIcon]="true"
+                              [formModel]="view.formModel"
+                              [field]="'Gender'"
+                              [value]="data?.gender"
+                              class="badge badge-light badge-square badge-md fs-7"
+                            >
+                            </codx-vll>
+                          </span>
+                          <span
+                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+                          ></span>
+                          <span #maritalStatus class="fw-bold">
+                            {{ infoPersonal.maritalStatus }}
+                            <!-- <codx-vll
+                          [showText]="true"
+                          [showBgColor]="false"
+                          [showIcon]="false"
+                          [formModel]="view.formModel"
+                          [field]="'MaritalStatus'"
+                          [value]="data?.maritalStatus"
+                          class="text-dark"
+                        >
+                        </codx-vll> -->
+                          </span>
+                        </div>
+                        <div class="d-flex align-items-center mb-4">
+                          <span
+                            class="icon-portrait icon-16 text-gray-800 me-1"
+                          ></span>
+                          <span class="text-dark">
+                            <span>{{ infoPersonal.personalEmail }}</span>
+                          </span>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              fiedName="PITNumber"
+                              [formModel]="view.formModel"
+                            >
+                            </codx-label>
+                            <span>{{ infoPersonal.pitNumber }}</span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex d-flex justify-content-between">
+                            <codx-label
+                              fiedName="SIRegisterNo"
+                              [formModel]="view.formModel"
+                            >
+                            </codx-label>
+                            <span class="text-dark">
+                              {{ infoPersonal.siRegisterNo }}</span
+                            >
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="joinedOn"
+                            >
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.joinedOn }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="hiredOn"
+                            >
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.hiredOn }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="EmployeeTypeID"
+                            >
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.employeeTypeID }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="userID"
+                            >
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.userID }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="lineManager"
+                            >
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.lineManager }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="timeCardNo"
+                            >
+                            </codx-label>
+
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.timeCardNo }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="shiftCalendarID"
+                            >
+                            </codx-label>
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.shiftCalendarID }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="aLObjectID"
+                            >
+                            </codx-label>
+
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.aLObjectID }}</span>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="d-flex justify-content-between">
+                            <codx-label
+                              [formModel]="view.formModel"
+                              fiedName="payrollGroupID"
+                            >
+                            </codx-label>
+
+                            <span class="text-dark fw-bold">
+                              <span>{{ infoPersonal.timeCardNo }}</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- end ngpopup -->
               <div class="font-weight-bold font-size-h5 mb-2">
                 {{ infoPersonal.employeeName }}
               </div>
@@ -50,21 +249,25 @@
               <span class="text-danger w-bold">
                 <span #id>{{ infoPersonal.employeeID }}</span>
               </span>
-
               <span
-                class="icon-date_range icon-16 text-gray-800 me-1 ms-2"
+                class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
               ></span>
+              <span class="icon-date_range icon-16 text-gray-800"></span>
               <span class="text-dark fw-bold">
                 <span #joinedOn>{{ infoPersonal.joinedOn | fmDT }}</span>
               </span>
+              <span
+                class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+              ></span>
+              <codx-vll
+                [field]="'Status'"
+                [value]="infoPersonal.status"
+                [formModel]="view.formModel"
+                [showText]="true"
+                [showBgColor]="true"
+              ></codx-vll>
             </div>
-            <codx-vll
-              [field]="'Status'"
-              [value]="infoPersonal.status"
-              [formModel]="view.formModel"
-              [showText]="true"
-              [showBgColor]="true"
-            ></codx-vll>
+
             <div class="d-flex align-items-center mb-2">
               <span
                 class="icon-connection-point icon-16 text-gray-800 me-1"
@@ -129,7 +332,7 @@
                   (click)="clickTab(1)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-assignment_ind icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -150,7 +353,7 @@
                   (click)="clickTab(2)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-attach_money icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -192,7 +395,7 @@
                   (click)="clickTab(4)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-school icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -386,16 +589,16 @@
             <div class="border rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                  <div class="user-status d-flex align-items-center ms-3">
+                  <div class="user-status d-flex align-items-center">
                     <span
-                      class="icon-person icon-18 me-1"
+                      class="icon-person icon-20 me-1"
                       [class]="
                         objCollapes['1.1'] ? 'text-danger' : 'text-primary'
                       "
                     ></span>
                   </div>
                   <div
-                    class="fs-4 fw-bold text-uppercase"
+                    class="fs-5 fw-bold text-uppercase"
                     [class]="
                       objCollapes['1.1'] ? 'text-danger' : 'text-primary '
                     "
@@ -946,16 +1149,16 @@
             <div class="border rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                  <div class="user-status d-flex align-items-center ms-3">
+                  <div class="user-status d-flex align-items-center">
                     <span
-                      class="icon-folder_special icon-18 me-1"
+                      class="icon-folder_special icon-20 me-1"
                       [class]="
                         objCollapes['1.2'] ? 'text-danger' : 'text-primary'
                       "
                     ></span>
                   </div>
                   <div
-                    class="fs-4 fw-bold text-uppercase"
+                    class="fs-5 fw-bold text-uppercase"
                     [class]="
                       objCollapes['1.2'] ? 'text-danger' : 'text-primary '
                     "
@@ -1085,7 +1288,7 @@
                           [formModel]="view.formModel"
                         >
                         </codx-label>
-                        <span #PITNumber>: {{ infoPersonal.pitNumber }}</span>
+                        <span>: {{ infoPersonal.pitNumber }}</span>
                       </div>
                     </div>
                     <!-- Ngày cấp -->
@@ -1624,9 +1827,6 @@
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div class="d-flex justify-content-between mb-2 mt-6">
-            <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-              <span class="icon-edit icon-18"></span>
-            </a>
             <div class="fw-bold fs-4 text-primary">
               <codx-label
                 name="lblInfoPersonal"
@@ -1661,16 +1861,16 @@
             <div class="border rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
-                  <div class="user-status d-flex align-items-center ms-3">
+                  <div class="user-status d-flex align-items-center">
                     <span
-                      class="icon-check icon-18 me-1"
+                      class="icon-assignment_ind icon-20 me-1"
                       [class]="
                         objCollapes['2.1'] ? 'text-danger' : 'text-primary'
                       "
                     ></span>
                   </div>
                   <div
-                    class="fs-4 fw-bold"
+                    class="fs-5 fw-bold"
                     [class]="
                       objCollapes['2.1'] ? 'text-danger' : 'text-primary'
                     "
@@ -2162,13 +2362,13 @@
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div
-                    class="d-flex fs-4 fw-bold"
+                    class="d-flex fs-5 fw-bold"
                     [class]="
                       objCollapes['2.2'] ? 'text-danger' : 'text-primary'
                     "
                   >
-                    <div class="user-status d-flex align-items-center ms-3">
-                      <span class="icon-check icon-18 me-1"></span>
+                    <div class="user-status d-flex align-items-center">
+                      <span class="icon-assignment icon-20 me-1"></span>
                     </div>
                     <codx-label
                       [formModel]="view.formModel"
@@ -2678,6 +2878,7 @@
               >
               </codx-label>
             </div>
+            <hr />
             <div class="d-flex">
               <a
                 class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
@@ -2700,16 +2901,16 @@
             </div>
           </div>
           <div id="3" #3="ngbCollapse" [(ngbCollapse)]="objCollapes['3']">
-            <div class="border rounded-2 p-6">
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['3.1'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-attach_money icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblSalary&Benefit"
                       [formModel]="view.formModel"
@@ -2738,9 +2939,9 @@
                 #legalInformation="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['3.1']"
               >
-                <div class="border mb-3">
+                <div class="mb-1">
                   <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3 ms-5"
                   >
                     <codx-label
                       name="lblSalary"
@@ -2812,10 +3013,10 @@
                     </div>
                   </div>
                 </div>
-
-                <div class="border mb-3">
+                <hr />
+                <div class="mb-1">
                   <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
+                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3 ms-5"
                   >
                     <codx-label
                       name="lblBenefit"
@@ -2823,12 +3024,24 @@
                       default="Phụ cấp"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
+                    <div class="d-flex align-items-center ms-5">
+                      <button
+                        class="btn btn-icon btn-sm position-relative ms-2"
                         (click)="HandleBebefitInfo('add', null)"
-                      ></span>
-                    </a>
+                      >
+                        <span
+                          class="icon-add icon-20 text-gray-600 text-hover-primary"
+                        ></span>
+                      </button>
+                      <span class="text-gray-500 ms-2">|</span>
+                      <button
+                        class="btn btn-icon btn-sm position-relative ms-1"
+                      >
+                        <span
+                          class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                        ></span>
+                      </button>
+                    </div>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
                     <ng-container *ngFor="let benefit of listCrrBenefit">
@@ -2869,17 +3082,17 @@
                 </div>
               </div>
             </div>
-
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['3.2'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-add_circle_outline icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-add_circle_outline icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblOtherIncome"
                       [formModel]="view.formModel"
@@ -2923,19 +3136,19 @@
                 </div>
               </div>
             </div>
-
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['3.3'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
+                  <div class="user-status d-flex align-items-center">
                     <span
-                      class="icon-remove_circle_outline icon-18 me-1"
+                      class="icon-remove_circle_outline icon-20 me-1"
                     ></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblOtherDeduction"
                       [formModel]="view.formModel"
@@ -2980,19 +3193,17 @@
                 </div>
               </div>
             </div>
-
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['3.4'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span
-                      class="icon-remove_circle_outline icon-18 me-1"
-                    ></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-handyman icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblDistributedAssets"
                       [formModel]="view.formModel"
@@ -3037,6 +3248,7 @@
                 </div>
               </div>
             </div>
+            <hr />
           </div>
         </div>
       </ng-container>
@@ -3088,17 +3300,18 @@
               </a>
             </div>
           </div>
+          <hr />
           <div id="4" #4="ngbCollapse" [(ngbCollapse)]="objCollapes['4']">
-            <div class="border rounded-2 p-6">
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['4.1'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-check icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeeCurContract"
                       [formModel]="view.formModel"
@@ -3107,51 +3320,57 @@
                     </codx-label>
                   </div>
                 </div>
-                <a
-                  class="btn btn-xs btn-icon btn-hover-primary"
-                  (click)="collapse('4.1')"
-                  [attr.aria-expanded]="!objCollapes['4.1']"
-                >
-                  <span
-                    class="icon-24"
-                    [class]="
-                      objCollapes['4.1']
-                        ? 'icon-arrow_drop_down text-danger'
-                        : 'icon-arrow_drop_up'
-                    "
-                  ></span>
-                </a>
+                <div class="d-flex align-items-center ms-5">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-2"
+                    (click)="editEmployeeSelfInfo()"
+                  >
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                    <span
+                      class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('4.1')"
+                    [attr.aria-expanded]="!objCollapes['4.1']"
+                  >
+                    <span
+                      class="icon-22 text-hover-primary"
+                      [class]="
+                        objCollapes['4.1']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up text-gray-600'
+                      "
+                    ></span>
+                  </button>
+                </div>
               </div>
               <div
                 id="41"
                 #41="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['4.1']"
               >
-                <div class="border mb-3">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  >
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editEmployeeSelfInfo()"
-                      ></span>
-                    </a>
-                  </div>
-                  <div class="row form-group"></div>
-                </div>
+                <div class="mb-1"></div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['4.2'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-assignment_ind icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeePosition"
                       [formModel]="view.formModel"
@@ -3160,20 +3379,28 @@
                     </codx-label>
                   </div>
                 </div>
-                <a
-                  class="btn btn-xs btn-icon btn-hover-primary"
-                  (click)="collapse('4.2')"
-                  [attr.aria-expanded]="!objCollapes['4.2']"
-                >
-                  <span
-                    class="icon-24"
-                    [class]="
-                      objCollapes['4.2']
-                        ? 'icon-arrow_drop_down text-danger'
-                        : 'icon-arrow_drop_up'
-                    "
-                  ></span>
-                </a>
+                <div class="d-flex align-items-center ms-5">
+                  <button class="btn btn-icon btn-sm position-relative ms-2">
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('4.2')"
+                    [attr.aria-expanded]="!objCollapes['4.2']"
+                  >
+                    <span
+                      class="icon-22 text-hover-primary"
+                      [class]="
+                        objCollapes['4.2']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up text-gray-600'
+                      "
+                    ></span>
+                  </button>
+                </div>
               </div>
               <div
                 id="42"
@@ -3198,16 +3425,17 @@
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['4.3'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-deck icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeeHolidays"
                       [formModel]="view.formModel"
@@ -3216,20 +3444,34 @@
                     </codx-label>
                   </div>
                 </div>
-                <a
-                  class="btn btn-xs btn-icon btn-hover-primary"
-                  (click)="collapse('4.3')"
-                  [attr.aria-expanded]="!objCollapes['4.3']"
-                >
-                  <span
-                    class="icon-24"
-                    [class]="
-                      objCollapes['4.3']
-                        ? 'icon-arrow_drop_down text-danger'
-                        : 'icon-arrow_drop_up'
-                    "
-                  ></span>
-                </a>
+                <div class="d-flex align-items-center ms-5">
+                  <button class="btn btn-icon btn-sm position-relative ms-2">
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                    <span
+                      class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('4.3')"
+                    [attr.aria-expanded]="!objCollapes['4.3']"
+                  >
+                    <span
+                      class="icon-22 text-hover-primary"
+                      [class]="
+                        objCollapes['4.3']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up text-gray-600'
+                      "
+                    ></span>
+                  </button>
+                </div>
               </div>
               <div
                 id="43"
@@ -3255,16 +3497,17 @@
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['4.4'] ? 'text-danger' : 'text-primary '"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-local_taxi icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblWorkDiary"
                       [formModel]="view.formModel"
@@ -3273,20 +3516,34 @@
                     </codx-label>
                   </div>
                 </div>
-                <a
-                  class="btn btn-xs btn-icon btn-hover-primary"
-                  (click)="collapse('4.4')"
-                  [attr.aria-expanded]="!objCollapes['4.4']"
-                >
-                  <span
-                    class="icon-24"
-                    [class]="
-                      objCollapes['4.4']
-                        ? 'icon-arrow_drop_down text-danger'
-                        : 'icon-arrow_drop_up'
-                    "
-                  ></span>
-                </a>
+                <div class="d-flex align-items-center ms-5">
+                  <button class="btn btn-icon btn-sm position-relative ms-2">
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                    <span
+                      class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('4.4')"
+                    [attr.aria-expanded]="!objCollapes['4.4']"
+                  >
+                    <span
+                      class="icon-22 text-hover-primary"
+                      [class]="
+                        objCollapes['4.4']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up text-gray-600'
+                      "
+                    ></span>
+                  </button>
+                </div>
               </div>
               <div
                 id="44"
@@ -3311,16 +3568,17 @@
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['4.5'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-check icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblExperience"
                       [formModel]="view.formModel"
@@ -3329,20 +3587,28 @@
                     </codx-label>
                   </div>
                 </div>
-                <a
-                  class="btn btn-xs btn-icon btn-hover-primary"
-                  (click)="collapse('4.5')"
-                  [attr.aria-expanded]="!objCollapes['4.5']"
-                >
-                  <span
-                    class="icon-24"
-                    [class]="
-                      objCollapes['4.5']
-                        ? 'icon-arrow_drop_down text-danger'
-                        : 'icon-arrow_drop_up'
-                    "
-                  ></span>
-                </a>
+                <div class="d-flex align-items-center ms-5">
+                  <button class="btn btn-icon btn-sm position-relative ms-2">
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
+                    class="btn btn-xs btn-icon btn-hover-primary"
+                    (click)="collapse('4.5')"
+                    [attr.aria-expanded]="!objCollapes['4.5']"
+                  >
+                    <span
+                      class="icon-22 text-hover-primary"
+                      [class]="
+                        objCollapes['4.5']
+                          ? 'icon-arrow_drop_down text-danger'
+                          : 'icon-arrow_drop_up text-gray-600'
+                      "
+                    ></span>
+                  </button>
+                </div>
               </div>
               <div
                 id="45"
@@ -3368,6 +3634,7 @@
                 </div>
               </div>
             </div>
+            <hr />
           </div>
         </div>
       </ng-container>
@@ -3427,10 +3694,10 @@
                   class="d-flex align-items-center"
                   [class]="objCollapes['5.1'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-school icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeeDegree"
                       [formModel]="view.formModel"
@@ -3482,10 +3749,10 @@
                   class="d-flex align-items-center"
                   [class]="objCollapes['5.2'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-class icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeeCertificate"
                       [formModel]="view.formModel"
@@ -3537,10 +3804,10 @@
                   class="d-flex align-items-center"
                   [class]="objCollapes['5.3'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-fitness_center icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeeSkill"
                       [formModel]="view.formModel"
@@ -3593,10 +3860,10 @@
                   class="d-flex align-items-center"
                   [class]="objCollapes['5.4'] ? 'text-danger' : 'text-primary '"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-local_library icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblEmployeeTraining"
                       [formModel]="view.formModel"
@@ -3698,16 +3965,16 @@
           ></ngx-skeleton-loader>
 
           <div id="6" #6="ngbCollapse" [(ngbCollapse)]="objCollapes['6']">
-            <div class="border rounded-2 p-6">
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['6.1'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-sentiment_satisfied icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblReward"
                       [formModel]="view.formModel"
@@ -3716,24 +3983,30 @@
                     </codx-label>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                    <span class="icon-add icon-24"></span>
-                  </a>
-                  <a
+                <div class="d-flex align-items-center ms-5">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-2"
+                    (click)="addEmployeeAwardsInfo()"
+                  >
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
                     class="btn btn-xs btn-icon btn-hover-primary"
                     (click)="collapse('6.1')"
                     [attr.aria-expanded]="!objCollapes['6.1']"
                   >
                     <span
-                      class="icon-24"
+                      class="icon-22 text-hover-primary"
                       [class]="
                         objCollapes['6.1']
                           ? 'icon-arrow_drop_down text-danger'
-                          : 'icon-arrow_drop_up'
+                          : 'icon-arrow_drop_up text-gray-600'
                       "
                     ></span>
-                  </a>
+                  </button>
                 </div>
               </div>
               <div
@@ -3741,35 +4014,41 @@
                 #61="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['6.1']"
               >
-                <div class="border mb-3">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  >
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="addEmployeeAwardsInfo()"
-                      ></span>
-                    </a>
-                  </div>
-                  <div class="row form-group">
-                    <!-- <lib-tmp-grid-view
-                    [columnsGrid]="healthColumnsGrid"
-                  ></lib-tmp-grid-view> -->
-                  </div>
+                <div class="mb-1">
+                  <codx-gridview-v2
+                    idField="recID"
+                    [columnsGrid]="rewardColumnsGrid"
+                    [service]="'HR'"
+                    [gridViewName]="'grvEAwards'"
+                    [formName]="'EAwards'"
+                    [assemblyName]="'CM'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadDataAsync'"
+                    [predicates]="'EmployeeID=@0'"
+                    [autoLoad]="true"
+                    [height]="200"
+                    [dataValues]="data.employeeID"
+                    [entityName]="'HR_EAwards'"
+                    [contentEditable]="false"
+                    [allowResizing]="true"
+                    (clickMF)="clickMF($event, null, 'eAwards')"
+                  ></codx-gridview-v2>
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['6.2'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span
+                      class="icon-sentiment_dissatisfied icon-20 me-1"
+                    ></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblDiscipline"
                       [formModel]="view.formModel"
@@ -3778,24 +4057,30 @@
                     </codx-label>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                    <span class="icon-add icon-24"></span>
-                  </a>
-                  <a
+                <div class="d-flex align-items-center ms-5">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-2"
+                    (click)="addEmployeeDisciplinesInfo()"
+                  >
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
                     class="btn btn-xs btn-icon btn-hover-primary"
                     (click)="collapse('6.2')"
                     [attr.aria-expanded]="!objCollapes['6.2']"
                   >
                     <span
-                      class="icon-24"
+                      class="icon-22 text-hover-primary"
                       [class]="
                         objCollapes['6.2']
                           ? 'icon-arrow_drop_down text-danger'
-                          : 'icon-arrow_drop_up'
+                          : 'icon-arrow_drop_up text-gray-600'
                       "
                     ></span>
-                  </a>
+                  </button>
                 </div>
               </div>
               <div
@@ -3803,22 +4088,25 @@
                 #legalInformation="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['6.2']"
               >
-                <div class="border mb-3">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  >
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="addEmployeeDisciplinesInfo()"
-                      ></span>
-                    </a>
-                  </div>
-                  <div class="row form-group">
-                    <!-- <lib-tmp-grid-view
-                    [columnsGrid]="healthColumnsGrid"
-                  ></lib-tmp-grid-view> -->
-                  </div>
+                <div class="mb-1">
+                  <codx-gridview-v2
+                    idField="recID"
+                    [service]="'HR'"
+                    [gridViewName]="'grvEDisciplines'"
+                    [formName]="'EDisciplines'"
+                    [assemblyName]="'CM'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadDataAsync'"
+                    [predicates]="'EmployeeID=@0'"
+                    [autoLoad]="true"
+                    [height]="200"
+                    [dataValues]="data.employeeID"
+                    [entityName]="'HR_EDisciplines'"
+                    [contentEditable]="false"
+                    [allowResizing]="true"
+                    (clickMF)="clickMF($event, null, 'eDisciplines')"
+                    [columnsGrid]="disciplineColumnGrid"
+                  ></codx-gridview-v2>
                 </div>
               </div>
             </div>
@@ -3852,6 +4140,7 @@
               >
               </codx-label>
             </div>
+
             <div class="d-flex">
               <a
                 class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
@@ -3873,22 +4162,18 @@
               </a>
             </div>
           </div>
-          <ngx-skeleton-loader
-            count="5"
-            animation="progress"
-          ></ngx-skeleton-loader>
-
+          <hr />
           <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
-            <div class="border rounded-2 p-6">
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['7.1'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-accessibility icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblPhysicalExamination"
                       [formModel]="view.formModel"
@@ -3897,24 +4182,30 @@
                     </codx-label>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                    <span class="icon-add icon-24"></span>
-                  </a>
-                  <a
+                <div class="d-flex align-items-center ms-5">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-2"
+                    (click)="addEmployeeAwardsInfo()"
+                  >
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
                     class="btn btn-xs btn-icon btn-hover-primary"
                     (click)="collapse('7.1')"
                     [attr.aria-expanded]="!objCollapes['7.1']"
                   >
                     <span
-                      class="icon-24"
+                      class="icon-22 text-hover-primary"
                       [class]="
                         objCollapes['7.1']
                           ? 'icon-arrow_drop_down text-danger'
-                          : 'icon-arrow_drop_up'
+                          : 'icon-arrow_drop_up text-gray-600'
                       "
                     ></span>
-                  </a>
+                  </button>
                 </div>
               </div>
               <div
@@ -3922,62 +4213,77 @@
                 #71="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['7.1']"
               >
-                <div class="border mb-3">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  >
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="addEmployeeAwardsInfo()"
-                      ></span>
-                    </a>
-                  </div>
-                  <div class="row form-group">
-                    <!-- <lib-tmp-grid-view
-                    [columnsGrid]="healthColumnsGrid"
-                  ></lib-tmp-grid-view> -->
-                  </div>
+                <div class="mb-3">
+                  <!-- <codx-gridview-v2
+                    idField="recID"
+                    [columnsGrid]=""
+                    [service]="'HR'"
+                    [gridViewName]="'grvEHealths'"
+                    [formName]="'EHealths'"
+                    [assemblyName]="'CM'"
+                    [className]="'DataBusiness'"
+                    [method]="'LoadDataAsync'"
+                    [predicates]="'EmployeeID=@0'"
+                    [autoLoad]="true"
+                    [height]="200"
+                    [dataValues]="data.employeeID"
+                    [entityName]="'HR_EHealths'"
+                    [contentEditable]="false"
+                    [allowResizing]="true"
+                    (clickMF)="clickMF($event, null, 'eHealths')"
+                  ></codx-gridview-v2> -->
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['7.2'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-colorize icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
-                      name="lbl
-                      Vaccination"
+                      name="lblVaccination"
                       [formModel]="view.formModel"
                       default="Tiêm Vaccine"
                     >
                     </codx-label>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                    <span class="icon-add icon-24"></span>
-                  </a>
-                  <a
+                <div class="d-flex align-items-center ms-5">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-2"
+                    (click)="addEmployeeDisciplinesInfo()"
+                  >
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                    <span
+                      class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
                     class="btn btn-xs btn-icon btn-hover-primary"
                     (click)="collapse('7.2')"
                     [attr.aria-expanded]="!objCollapes['7.2']"
                   >
                     <span
-                      class="icon-24"
+                      class="icon-22 text-hover-primary"
                       [class]="
                         objCollapes['7.2']
                           ? 'icon-arrow_drop_down text-danger'
-                          : 'icon-arrow_drop_up'
+                          : 'icon-arrow_drop_up text-gray-600'
                       "
                     ></span>
-                  </a>
+                  </button>
                 </div>
               </div>
               <div
@@ -3985,35 +4291,66 @@
                 #72="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['7.2']"
               >
-                <div class="border mb-3">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  >
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="addEmployeeDisciplinesInfo()"
-                      ></span>
-                    </a>
-                  </div>
-                  <div class="row form-group">
-                    <!-- <lib-tmp-grid-view
-                    [columnsGrid]="healthColumnsGrid"
-                  ></lib-tmp-grid-view> -->
+                <div class="mb-1">
+                  <div class="d-flex d-wrap mt-6 mb-3">
+                    <div class="mw-300px min-w-300px">
+                      <div
+                        class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
+                      >
+                        <span
+                          class="icon-i-arrow-down-left-circle-fill icon-14 me-2"
+                          style="color: blueviolet"
+                        ></span
+                        ><span>VaccinnA</span>
+                      </div>
+                      <div class="pf-process">
+                        <div
+                          class="d-flex align-items-center pf-process-item py-2"
+                        >
+                          <span
+                            class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
+                          ></span
+                          ><span
+                            class="icon-date_range icon-16 me-2 text-gray-600"
+                          ></span
+                          ><span class="text-gray-600 me-3">02/02/2022</span
+                          ><span
+                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
+                          ></span>
+                          <div class="text-primary">Pfizer</div>
+                        </div>
+                        <div
+                          class="d-flex align-items-center pf-process-item py-2"
+                        >
+                          <span
+                            class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
+                          ></span
+                          ><span
+                            class="icon-date_range icon-16 me-2 text-gray-600"
+                          ></span
+                          ><span class="text-gray-600 me-3">02/02/2022</span
+                          ><span
+                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
+                          ></span>
+                          <div class="text-primary">Astra silicon</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['7.3'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-sick icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblOccupationalDisease"
                       [formModel]="view.formModel"
@@ -4022,24 +4359,33 @@
                     </codx-label>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                    <span class="icon-add icon-24"></span>
-                  </a>
-                  <a
+                <div class="d-flex align-items-center ms-5">
+                  <button class="btn btn-icon btn-sm position-relative ms-2">
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                    <span
+                      class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
                     class="btn btn-xs btn-icon btn-hover-primary"
                     (click)="collapse('7.3')"
                     [attr.aria-expanded]="!objCollapes['7.3']"
                   >
                     <span
-                      class="icon-24"
+                      class="icon-22 text-hover-primary"
                       [class]="
                         objCollapes['7.3']
                           ? 'icon-arrow_drop_down text-danger'
-                          : 'icon-arrow_drop_up'
+                          : 'icon-arrow_drop_up text-gray-600'
                       "
                     ></span>
-                  </a>
+                  </button>
                 </div>
               </div>
               <div
@@ -4066,16 +4412,17 @@
                 </div>
               </div>
             </div>
-            <div class="border rounded-2 p-6">
+            <hr />
+            <div class="rounded-2 p-6">
               <div class="d-flex align-items-center justify-content-between">
                 <div
                   class="d-flex align-items-center"
                   [class]="objCollapes['7.4'] ? 'text-danger' : 'text-primary'"
                 >
-                  <div class="user-status d-flex align-items-center ms-3">
-                    <span class="icon-check icon-18 me-1"></span>
+                  <div class="user-status d-flex align-items-center">
+                    <span class="icon-wheelchair_pickup icon-20 me-1"></span>
                   </div>
-                  <div class="fs-4 fw-bold text-uppercase">
+                  <div class="fs-5 fw-bold text-uppercase">
                     <codx-label
                       name="lblLaborAccident"
                       [formModel]="view.formModel"
@@ -4084,24 +4431,27 @@
                     </codx-label>
                   </div>
                 </div>
-                <div class="d-flex">
-                  <a class="btn btn-xs btn-icon btn-hover-primary me-3">
-                    <span class="icon-add icon-24"></span>
-                  </a>
-                  <a
+                <div class="d-flex align-items-center ms-5">
+                  <button class="btn btn-icon btn-sm position-relative ms-2">
+                    <span
+                      class="icon-add icon-20 text-gray-600 text-hover-primary"
+                    ></span>
+                  </button>
+                  <span class="text-gray-500 ms-2">|</span>
+                  <button
                     class="btn btn-xs btn-icon btn-hover-primary"
                     (click)="collapse('7.4')"
                     [attr.aria-expanded]="!objCollapes['7.4']"
                   >
                     <span
-                      class="icon-24"
+                      class="icon-22 text-hover-primary"
                       [class]="
                         objCollapes['7.4']
                           ? 'icon-arrow_drop_down text-danger'
-                          : 'icon-arrow_drop_up'
+                          : 'icon-arrow_drop_up text-gray-600'
                       "
                     ></span>
-                  </a>
+                  </button>
                 </div>
               </div>
               <div
@@ -4128,6 +4478,7 @@
                 </div>
               </div>
             </div>
+            <hr />
           </div>
         </div>
       </ng-container>
@@ -4191,4 +4542,13 @@
 
 <ng-template #tempToDate let-data>
   {{ data?.toDate | fmDT }}
+</ng-template>
+
+<ng-template #itemAction let-data>
+  <codx-mfunc
+    [formModel]="view.formModel"
+    (clickMF)="clickMF($event, data)"
+    [dataItem]="data"
+  >
+  </codx-mfunc>
 </ng-template>

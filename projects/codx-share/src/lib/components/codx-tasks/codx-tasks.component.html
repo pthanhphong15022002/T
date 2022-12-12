@@ -580,7 +580,7 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd && funcID!='TMT0206' ? button : ''"
+  [button]="showButtonAdd && funcID!='TMT0206' && funcID!='TMT0202' ? button : ''"
   (buttonClick)="click($event)"
   (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj"

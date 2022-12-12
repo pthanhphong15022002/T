@@ -53,6 +53,7 @@ export class ProcessesComponent
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
   @ViewChild('itemOwner', { static: true })
@@ -161,8 +162,8 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-    // this.userId = '2207130007';
-    // this.isAdmin = false   
+    //  this.userId = '2207130007';
+    //  this.isAdmin = false
     this.button = {
       id: 'btnAdd',
     };
@@ -200,21 +201,21 @@ export class ProcessesComponent
   ngAfterViewInit(): void {
     this.views = [
       {
-        id: '1',
         type: ViewType.grid,
         sameData: true,
         model: {
           resources: this.columnsGrid,
           template: this.itemViewList,
+          headerTemplate : this.headerTemplate
         },
       },
       {
-        id: '2',
         type: ViewType.card,
         sameData: true,
         active: true,
         model: {
           template: this.templateListCard,
+          headerTemplate : this.headerTemplate
         },
       },
       // {
@@ -679,7 +680,7 @@ export class ProcessesComponent
 
   onDragDrop(e: any) {}
 
-  changeDataMF(e, data) { 
+  changeDataMF(e, data) {
     if (e != null && data != null) {
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
@@ -948,4 +949,55 @@ export class ProcessesComponent
         })
     }
   }
+  deleteProcessesById(data) { //delete
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        {
+          var itemSelected = opt.data[0];
+          opt.methodName = 'DeleteProcessesAsync';
+          opt.data = [itemSelected.recID];
+          return true;
+        }
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+  }
+
+  restoreBinById(data){
+    if(data.recId){
+      this.view.dataService.dataSelected = data;
+      this.bpService.restoreBinById(data.recId).subscribe((res) => {
+        if (res) {
+          this.notification.notifyCode('SYS008');
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    }
+  }
+  // getAvatar(process) {
+  //   let avatar = [
+  //     '',
+  //     this.funcID,
+  //     process?.recID,
+  //     'BP_Processes',
+  //     'inline',
+  //     1000,
+  //     process?.processName,
+  //     'avt',
+  //     false,
+  //   ];
+  //   this.api
+  //     .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+  //     .subscribe((res) => {
+  //       if (res) {
+  //         // this.linkAvatar = environment.urlUpload + '/' + res?.url;
+  //         this.changeDetectorRef.detectChanges();
+  //       } else {
+  //       }
+  //     });
+  // }
 }

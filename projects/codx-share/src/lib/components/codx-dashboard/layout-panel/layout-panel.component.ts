@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, TemplateRef } from "@angular/core";
+import { Component, EventEmitter, Input, Output, QueryList, TemplateRef } from "@angular/core";
 
 
 @Component({
@@ -7,14 +7,22 @@ import { Component, EventEmitter, Input, Output, TemplateRef } from "@angular/co
   styleUrls: ['layout-panel.component.scss']
 })
 export class LayoutPanelComponent {
-  @Input() body?: TemplateRef<any>;
+  @Input() body?: QueryList<any>;
   @Output() addNew = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
+  @Input() selectedTemplate!: TemplateRef<any>;
+  @Input() isChart: boolean = false;
   close(evt:any){
     this.delete.emit(evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id)
   }
   add(evt:any){
-    this.addNew.emit(evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id);
+    if(this.body && !this.isChart){
+      this.addNew.emit({panelID: evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id,template:this.body});
+    }
+    else{
+      this.addNew.emit({panelID:evt.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.id});
+    }
+
 
   }
   scroll(evt:any){

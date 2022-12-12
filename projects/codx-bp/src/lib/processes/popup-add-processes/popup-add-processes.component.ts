@@ -65,6 +65,7 @@ export class PopupAddProcessesComponent implements OnInit {
   isCheckNameProcess: any;
   nameOld: any;
   avatarProcess: any;
+  entity: any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -82,6 +83,8 @@ export class PopupAddProcessesComponent implements OnInit {
     this.titleAction = dt.data[1];
     this.action = dt.data[0];
     this.funcID = this.dialog.formModel.funcID;
+    this.entity = this.dialog.formModel.entityName;
+
     this.user = this.authStore.get();
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
@@ -115,11 +118,10 @@ export class PopupAddProcessesComponent implements OnInit {
 
   ngOnInit(): void {
     this.acceptEdit();
-    if (this.action === 'add' || this.action === 'copy') {
-      this.isDisable = true;
-    }
+    this.isDisable = true;
     if (this.action === 'edit') {
-      this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
+    //  this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
+      this.showLabelAttachment = true;
     }
   }
 
@@ -145,11 +147,11 @@ export class PopupAddProcessesComponent implements OnInit {
       this.revisions.push(versions);
       this.process.versions = this.revisions;
 
-      data = [this.process, this.isCoppyKeyValue ?? '', this.idSetValueOld];
+      data = [this.process, this.isCoppyKeyValue ?? '', this.idSetValueOld, this.funcID, this.entity];
     } else if (this.action == 'edit') {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
-      data = [this.process];
+      data = [this.process, this.funcID, this.entity];
     }
 
     op.data = data;
@@ -178,67 +180,18 @@ export class PopupAddProcessesComponent implements OnInit {
       });
   }
   async onSave() {
-    if (
-      this.process.processName == null ||
-      this.process.processName.trim() == ''
-    ) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['ProcessName']?.headerText + '"'
-      );
-      return;
-    }
-    if (this.process.owner == null || this.process.owner.trim() == '') {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + this.gridViewSetup['Owner']?.headerText + '"'
-      );
-      return;
-    }
-    // if (!this.process.activedOn) {
-    //   this.notiService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['ActivedOn']?.headerText + '"'
-    //   );
-    //   return;
-    // }
-    // if (!this.process.expiredOn) {
-    //   this.notiService.notifyCode(
-    //     'SYS009',
-    //     0,
-    //     '"' + this.gridViewSetup['ExpiredOn']?.headerText + '"'
-    //   );
-    //   return;
-    // }
+
     if (this.process.activedOn && this.process.expiredOn) {
       if (this.process.activedOn >= this.process.expiredOn) {
         this.notiService.notifyCode('BP003');
         return;
       }
     }
-    if (this.process.processName.trim() === this.nameOld?.trim()) {
-      this.bpService
-        .isCheckExitName(this.process.processName)
-        .subscribe((res) => {
-          if (res) {
-            this.notiService
-              .alertCode(
-                'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
-              )
-              .subscribe((x) => {
-                if (x.event?.status == 'N') {
-                  return;
-                } else if (x.event?.status == 'Y') {
-                  this.actionSave();
-                }
-              });
-          }
-        });
-    } else {
-      this.actionSave();
+    if(this.process.processName.trim() === this.nameOld?.trim()) {
+      this.CheckExistNameProccess();
+    }
+    else {
+      this.CheckAllExistNameProccess();
     }
   }
   async actionSave() {
@@ -292,6 +245,31 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
 
+  CheckAllExistNameProccess() {
+    this.bpService
+        .isCheckExitName(this.process.processName)
+        .subscribe((res) => {
+          if (res) {
+            this.CheckExistNameProccess();
+          }
+          else {
+            this.actionSave();
+          }
+        });
+  }
+  CheckExistNameProccess(){
+    this.notiService
+    .alertCode(
+      'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+    )
+    .subscribe((x) => {
+      if (x.event?.status == 'N') {
+        return;
+      } else if (x.event?.status == 'Y') {
+        this.actionSave();
+      }
+    });
+  }
   //#endregion method
   isUpdateCreateProcess() {
     if (this.action === 'add' || this.action === 'copy') {

@@ -45,9 +45,13 @@
                     <div class="text-dark fw-bold fs-6 me-2 text-nowrap">
                         {{data.employeeName}}
                     </div>
-                    <div class="badge badge-success badge-sm badge-inline flex-wrap" *ngIf="data.gender"
-                        [style.background]="data.genderColor">
-                        {{data.gender}}</div>
+                    <ng-container *ngIf="data.gender">
+                        <codx-vll class="badge badge-sm" [name]="'HR001'" [value]="data.gender" 
+                            [showText]="true"
+                            [showBgColor]="true">
+                        </codx-vll>
+                    </ng-container>
+                    
                 </div>
 
                 <div class="text-gray-800 fw-bold" *ngIf="data.positionName">
