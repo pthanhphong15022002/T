@@ -440,8 +440,17 @@
       [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"
     ></codx-label
     >{{ " " + data?.stepNo }}
-    <codx-label name="lblSplit" default=":"></codx-label
-    ><span>{{ " " + data?.stepName }}</span>
+    <codx-label name="lblSplit" default=":"></codx-label>
+    {{data?.stepName.length}}
+    <span  
+      #p="ngbPopover" 
+      [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
+      [openDelay]="500" (mouseenter)="p.open()"
+      (mouseleave)="p.close()" placement="top bottom "
+    >
+      {{ " " + data?.stepName }}
+    </span>
+   
   </div>
   <!-- <div  
     *ngIf="data.stepType == 'P' || data.stepType == 'A'"
@@ -742,4 +751,7 @@
     [dataItem]="dataHover"
   >
   </codx-mfunc>
+</ng-template>
+<ng-template #showAllparentName let-text>
+  <span>{{text}}</span>
 </ng-template>

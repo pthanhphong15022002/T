@@ -1262,4 +1262,13 @@ export class ProcessStepsComponent
     }
     this.changeDetectorRef.detectChanges();
   }
+  showAllparent(text) {
+    return (
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+    );
+  }
+  setWidth(data){
+    let width = document.getElementsByTagName("body")[0].offsetWidth;    
+    return width < data.length*11 ? true :  false;
+  }
 }

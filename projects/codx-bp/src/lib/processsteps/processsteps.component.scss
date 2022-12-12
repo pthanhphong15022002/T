@@ -291,3 +291,7 @@ codx-views {
 :host ::ng-deep .container-fluid{
   height: 78vh !important;
 }
+
+:host ::ng-deep .popover {
+  max-width: 500px !important;
+  }
