@@ -429,7 +429,7 @@
   <div
     style="width: 90%;" class="fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
-    }}">
+    }}" [ngbTooltip]="data?.stepName">
     <codx-label name="lblStepNo" [default]="data.stepType == 'P'? 'Công đoạn' : 'Bước'"></codx-label>{{ " " + data?.stepNo }}
     <codx-label name="lblSplit" default=":"></codx-label><span>{{ " " + data?.stepName }}</span>
   </div>
