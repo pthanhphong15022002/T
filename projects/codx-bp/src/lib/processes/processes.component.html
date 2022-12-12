@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP"
   entityName="BP_Processes"
   className="ProcessesBusiness" [method]="method" [views]="views"
-  [button]="showButtonAdd && view.formModel.funcID !='BPT6' ? button : null"
+  [button]="showButtonAdd && view.formModel.funcID !='BPT6' && view.formModel.funcID !='BPT7' ? button : null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
@@ -16,10 +16,9 @@
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px"
     [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imgOn]="data?.modifiedOn"
-    [imageWidth]="1000" [imageReferType]="'flowchart'" [rootData]="data"
+    [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
     [dataItem]="data" [formModel]="view.formModel"
     [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-    [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)"
     (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>

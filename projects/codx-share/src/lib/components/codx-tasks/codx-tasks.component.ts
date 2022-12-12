@@ -59,7 +59,6 @@ export class CodxTasksComponent
   @Input() showMoreFunc = true;
   @Input() refID?: any;
   @Input() refType?: any;
-  @Input() isLoadCheckAfter = true ;
   @Input() calendarID: string;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
@@ -149,6 +148,7 @@ export class CodxTasksComponent
   moreFunction = [];
   crrStatus = '';
   disabledProject = false;
+  crrFuncID ='';
   
   constructor(
     inject: Injector,
@@ -171,6 +171,7 @@ export class CodxTasksComponent
   onInit(): void {
 
     if (!this.funcID) this.funcID = this.activedRouter.snapshot.params['funcID'];
+    this.crrFuncID = this.funcID ;
     this.projectID = this.dataObj?.projectID;
     this.viewMode = this.dataObj?.viewMode;
 
@@ -222,6 +223,8 @@ export class CodxTasksComponent
           }
         });
     });
+
+    this.showButtonAdd = this.funcID!='TMT0206' && this.funcID!='TMT0202'
 
     this.modelResource = new ResourceModel();
     if (this.funcID != 'TMT03011') {
@@ -945,8 +948,13 @@ export class CodxTasksComponent
     });
   }
   //#endregion
-  //#region Event
-  changeView(evt: any) {}
+  //#region Event đã có dùng clickChildrenMenu truyền về
+  changeView(evt: any) {
+    if(this.crrFuncID != this.funcID){
+        this.afterLoad();
+        this.crrFuncID = this.funcID
+    }
+  }
 
   requestEnded(evt: any) {}
 
