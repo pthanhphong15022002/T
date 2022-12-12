@@ -37,6 +37,7 @@ export class PopupAddPermissionComponent implements OnInit {
   gridViewSetup: any;
   data: any;
   funcID: any;
+  entity: any;
   per = new tmpPermission();
   permission: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
@@ -59,6 +60,7 @@ export class PopupAddPermissionComponent implements OnInit {
     this.fullName = this.process.processName;
     this.isShare = dt.data[2];
     this.funcID = this.dialog.formModel.funcID;
+    this.entity = this.dialog.formModel.entityName;
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -125,7 +127,7 @@ export class PopupAddPermissionComponent implements OnInit {
         'BP',
         'ProcessesBusiness',
         'RequestOrShareProcessAsync',
-        [this.per, this.funcID]
+        [this.per, this.funcID, this.entity]
       )
       .subscribe((res) => {
         if (res) {

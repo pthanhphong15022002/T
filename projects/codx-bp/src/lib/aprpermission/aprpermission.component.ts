@@ -166,38 +166,23 @@ export class AprpermissionComponent
     // }
   }
 
-  permission(data) {
-    let obj = {
-      data: data,
-      formModel: this.view.formModel,
-    };
-    this.dialog = this.callfc.openForm(
-      PopupApprovalComponent,
-      '',
-      500,
-      400,
-      '',
-      obj
-    );
-    this.dialog.closed.subscribe((e) => {
-      if (e?.event && e?.event != null) {
-        this.view.dataService.update(e.event);
-      }
-    });
-  }
+
 
   clickMF(e: any, data?: any) {
+    var status = '';
     this.tmpPerm = data;
     switch(e.functionID){
       case 'BPT5101':
-        this.tmpPerm.approveStatus = '5';
-        this.tmpPerm.approvedBy = this.userID;
-        this.setApproveStatus(data.recIDProcess, this.tmpPerm, e.functionID, e.data.entityName);
+        status = '5';
+        // this.tmpPerm.approvedBy = this.userID;
+        // this.setApproveStatus(data.recIDProcess, this.tmpPerm, e.functionID, e.data.entityName);
+        this.permission(data, status);
         break;
       case 'BPT5102':
-        this.tmpPerm.approveStatus = '4';
-        this.tmpPerm.approvedBy = this.userID;
-        this.setApproveStatus(data.recIDProcess, this.tmpPerm, e.functionID, e.data.entityName);
+        status = '4';
+        // this.tmpPerm.approvedBy = this.userID;
+        // this.setApproveStatus(data.recIDProcess, this.tmpPerm, e.functionID, e.data.entityName);
+        this.permission(data, status);
         break;
     }
   }
@@ -214,6 +199,35 @@ export class AprpermissionComponent
         case 'SYS04':
           res.disabled = true;
           break;
+      }
+    });
+  }
+
+  permission(data, status) {
+    let obj = {
+      data: data,
+      status: status,
+      formModel: this.view.formModel,
+    };
+    this.dialog = this.callfc.openForm(
+      PopupApprovalComponent,
+      '',
+      500,
+      400,
+      '',
+      obj
+    );
+    this.dialog.closed.subscribe((e) => {
+      if (e?.event && e?.event != null) {
+        this.view.dataService.clear();
+        // this.view.dataService.update(e?.event).subscribe();
+        e?.event.forEach(res => {
+          if(res){
+            this.view.dataService.update(res).subscribe();
+            // this.tmpPerm = res;
+          }
+        });
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
