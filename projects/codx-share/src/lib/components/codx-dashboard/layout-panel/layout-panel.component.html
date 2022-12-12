@@ -1,5 +1,5 @@
 <div class="codx-form card w-100 h-100 rounded-0 border-0">
-  <div class="card-header flex-column">
+  <div class="card-header flex-column position-absolute w-100">
     <div class="d-flex align-items-center justify-content-between w-100">
       <div class="card-title">
         <div class="d-flex flex-column">
@@ -33,7 +33,7 @@
   </div>
   <div class="card-body scroll-y" (scroll)="scroll($event)">
     <ng-container *ngIf="body">
-      <ng-container *ngTemplateOutlet="body"></ng-container>
+      <ng-container *ngTemplateOutlet="selectedTemplate"></ng-container>
     </ng-container>
   </div>
 

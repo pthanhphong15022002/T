@@ -65,7 +65,6 @@ import { PopupAddPositionsComponent } from './reportingline/popup-add-positions/
 import { ReportinglineDetailComponent } from './reportingline/reportingline-detail/reportingline-detail.component';
 import { ReportinglineOrgChartComponent } from './reportingline/reportingline-orgchart/reportingline-orgchart.component';
 import { ReportinglineComponent } from './reportingline/reportingline.component';
-import { LayoutComponent } from './_layout/layout.component';
 import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-add-new-hr.component';
@@ -226,7 +225,6 @@ export const routes: Routes = [
 ];
 
 const T_Component: Type<any>[] = [
-  LayoutComponent,
   EmpContactsComponent,
   EmployeesComponent,
   PopupAddEmployeesComponent,

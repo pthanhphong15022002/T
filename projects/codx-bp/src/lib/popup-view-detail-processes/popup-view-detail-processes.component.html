@@ -97,11 +97,16 @@
                 default="Thêm"
               ></codx-label>
             </button>
-            <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown "
-              container="body">
-              <button 
+            <div
+              class="btn-group"
+              ngbDropdown
+              role="group"
+              aria-label="Button group with nested dropdown "
+              container="body"
+            >
+              <button
                 id="show_menu"
-                style="border-radius: 0 3px 3px 0 !important" 
+                style="border-radius: 0 3px 3px 0 !important"
                 type="button"
                 class="btn btn-primary dropdown-toggle-split dropdown-toggle-click"
                 ngbDropdownToggle
@@ -158,7 +163,9 @@
         [attr.data-kt-scroll-offset]="'68px'"
       >
         <ng-container>
-          <ng-container *ngIf="process && childFunc?.length > 0">
+          <ng-container
+            *ngIf="process && childFunc?.length > 0"
+          >
             <codx-processsteps
               #viewProcessSteps
               [process]="process"
@@ -169,65 +176,58 @@
             ></codx-processsteps>
           </ng-container>
         </ng-container>
+
         <!-- <ng-container *ngIf="name == 'Flowchart'">
           <div class="d-flex justify-content-between mb-5">
-            <h1 #processName>
-              {{
-                process?.processName
-                  | formatvalue
-                    : formModelFlowChart
-                    : "processName"
-                    : processName
-                    : "Processes"
-                    : "grvProcesses"
-                  | async
-              }}
-            </h1>
+            <h1 #processName></h1>
             <div>
-              <div class="d-flex flex-row-reverse bd-highlight">
-                <div class="p-2 bd-highlight">
-                  <button
-                    type="button"
-                    class="btn btn-light-primary"
-                    (click)="addFile($event)"
-                  >
-                    <i class="icon-cloud_upload fs-5"></i
-                    ><span
-                      ><codx-label
-                        name="UploadFile"
-                        formName="Processes"
-                        gridViewName="grvProcesses"
-                        default="Tải ảnh"
-                      ></codx-label>
-                    </span>
-                  </button>
-                </div>
+              <div class="d-flex bd-highlight">
                 <div
-                  class="p-2 bd-highlight align-self-center cursor-pointer text-primary text-hover-danger"
-                  (click)="print()"
-                >
-                  <span class="fa-solid fa-lg fa-print mx-2"></span
-                  ><codx-label
-                    default="In"
-                    [fiedName]="'Print'"
-                    class="me-2"
-                  ></codx-label>
-                </div>
-                <div
-                  class="p-2 bd-highlight align-self-center cursor-pointer text-primary text-hover-danger"
+                  type="button"
+                  class="me-2 btn btn-sm btn-white d-flex align-items-center"
                   (click)="download()"
                 >
-                  <span class="fa-solid fa-lg fa-arrow-down mx-2"></span
-                  ><codx-label
+                  <span class="icon-arrow_downward icon-20 me-2"></span>
+                  <codx-label
                     default="Tải về"
                     [fiedName]="'Download'"
                     class="me-2"
                   ></codx-label>
                 </div>
+
+                <div
+                  type="button"
+                  class="me-2 btn btn-sm btn-white d-flex align-items-center"
+                  (click)="printFlowchart()"
+                >
+                  <span class="icon-print icon-20 me-2"></span>
+                  <codx-label
+                    default="In"
+                    [fiedName]="'Print'"
+                    class="me-2"
+                  ></codx-label>
+                </div>
+                <div class="me-2" *ngIf="process.actived && isEdit">
+                  <div
+                    type="button"
+                    class="btn btn-sm btn-light-primary d-flex align-items-center"
+                    (click)="addFile($event)"
+                  >
+                    <i class="icon-upload icon-20"></i
+                    ><span>
+                      <codx-label
+                        name="UploadFile"
+                        formName="Processes"
+                        gridViewName="grvProcesses"
+                        default="Tải ảnh"
+                      >
+                      </codx-label>
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        
           <ng-container>
             <codx-attachment
               #addFlowchart
@@ -240,12 +240,11 @@
               [hideDes]="1"
               [type]="'inline'"
               [allowMultiFile]="0"
-              [formModel]="formModelFlowChart"
+              [formModel]="formModel"
               [functionID]="funcID"
               [isSaveSelected]="1"
               allowExtensions=".jpg,.png"
-              (fileAdded)="fileAdded($event)"
-              (fileCount)="getfileCount($event)"
+              (fileSave)="fileSave($event)"
               displayThumb="full"
             >
             </codx-attachment>
