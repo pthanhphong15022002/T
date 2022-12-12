@@ -115,9 +115,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   ngOnInit(): void {
     this.acceptEdit();
-    if (this.action === 'add' || this.action === 'copy') {
-      this.isDisable = true;
-    }
+    this.isDisable = true;
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
