@@ -1,1 +1,74 @@
-<p>organization-master-detail works!</p>
+<div class="p-2 h-100" >
+  <div class="d-flex w-100">
+      <div class="me-4">
+          <codx-img 
+              [objectId]="employeeManager?.employeeID" 
+              [objectName]="employeeManager?.employeeName"
+              [objectType]="'HR_Employees'"
+              [width]="90"
+              [imageType]="'circle'">
+          </codx-img>
+      </div>
+      <div class="d-flex align-items-center justify-content-between w-100 p-2">
+          <div>
+            <div>
+              <ng-container *ngIf="employeeManager?.employeeName ; else lblEmployeeName">
+                <span class="fw-bolder">{{employeeManager.employeeName}}</span>
+              </ng-container>  
+              <ng-template #lblEmployeeName>
+                <codx-label  [className]="'fw-bolder'" [formModel]="formModel" name="lblEmployeeName" default="Tên nhân viên"></codx-label>
+              </ng-template>
+            </div>
+            <div>
+              <ng-container *ngIf="employeeManager?.positionName ; else lblPositionName">
+                <span class="text-dark-400">{{employeeManager.positionName}}</span>
+              </ng-container>
+              <ng-template #lblPositionName>
+                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblPositionName" default="Chức vụ"></codx-label>
+              </ng-template>
+              <span class="ms-2 me-2">|</span>
+              <ng-container *ngIf="employeeManager?.orgUnitName ; else lblOrgUnitName">
+                  <span class="text-dark-400">{{employeeManager.orgUnitName}}</span>
+                </ng-container>
+                <ng-template #lblOrgUnitName>
+                  <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblOrgUnitName" default="Phòng ban"></codx-label>
+                </ng-template>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <ng-container *ngIf="employeeManager?.phone ; else lblPhone">
+                <span class="text-dark-400">{{employeeManager?.phone}}</span>
+              </ng-container>
+              <ng-template #lblPhone>
+                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmployeePhone" default="SĐT"></codx-label>
+              </ng-template>
+              <ng-container *ngIf="employeeManager?.email ; else lblEmail">
+                <span class="text-dark-400">{{employeeManager.email}}</span>
+              </ng-container>
+              <ng-template #lblEmail>
+                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmail" default="Email"></codx-label>
+              </ng-template>
+            </div>
+          </div>
+          <div>
+            <p>{{totalEmployee}}</p>
+            <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
+          </div>
+      </div>
+  </div>
+  <div>
+    <codx-listview 
+      #codxListView 
+      [formModel]="formModel" 
+      service="HR" 
+      entityName="HR_Employees"
+      assemblyName="ERM.Business.HR"
+      className="OrganizationUnitsBusiness"
+      method="GetEmployeesMasterDetailAsync"
+      [dataValue]="orgUnitID"
+      [itemTemplate]="itemTemplate">
+    </codx-listview>
+  </div>
+</div>
+<ng-template #itemTemplate let-item>
+
+</ng-template>

@@ -19,7 +19,6 @@
 >
 </codx-views>
 
-
 <ng-template #cardKanban let-data let-setting="setting">
   <codx-card-img
     cardCss="border h-100"
@@ -53,9 +52,14 @@
         </label>
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
-            <div class="d-flex" #p="ngbPopover"
-            [ngbPopover]="this.isEdit ? hoverMoreFunction:''" (mouseenter)="openMF(item,p)"
-             autoClose="outside" placement="right">
+            <div
+              class="d-flex"
+              #p="ngbPopover"
+              [ngbPopover]="this.isEdit ? hoverMoreFunction : ''"
+              (mouseenter)="openMF(item, p)"
+              autoClose="outside"
+              placement="right"
+            >
               <i
                 class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"
               ></i>
@@ -158,7 +162,6 @@
       </div>
     </div>
   </div>
-  
 </ng-template>
 <ng-template #cardImgFooter let-data>
   <div
@@ -427,11 +430,18 @@
 
 <ng-template #titleTmp let-data>
   <div
-    style="width: 90%;" class="fw-bold line-clamp line-clamp-1 {{
+    style="width: 90%"
+    class="fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
-    }}">
-    <codx-label name="lblStepNo" [default]="data.stepType == 'P'? 'Công đoạn' : 'Bước'"></codx-label>{{ " " + data?.stepNo }}
-    <codx-label name="lblSplit" default=":"></codx-label><span>{{ " " + data?.stepName }}</span>
+    }}"
+  >
+    <codx-label
+      name="lblStepNo"
+      [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"
+    ></codx-label
+    >{{ " " + data?.stepNo }}
+    <codx-label name="lblSplit" default=":"></codx-label
+    ><span>{{ " " + data?.stepName }}</span>
   </div>
   <!-- <div  
     *ngIf="data.stepType == 'P' || data.stepType == 'A'"
@@ -462,7 +472,7 @@
     <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
-          <div class="moreFC rounded-4 py-2"  id="{{data?.recID}}">
+          <div class="moreFC rounded-4 py-2" id="{{ data?.recID }}">
             <ng-container *ngIf="data.stepType == 'P'">
               <ng-container *ngFor="let menu of childFuncOfP">
                 <div
@@ -649,7 +659,7 @@
         <div
           type="button"
           class="me-2 btn btn-sm btn-white d-flex align-items-center"
-          (click)="print()"
+          (click)="printFlowchart()"
         >
           <span class="icon-print icon-20 me-2"></span>
           <codx-label

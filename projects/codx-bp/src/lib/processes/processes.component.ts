@@ -53,6 +53,7 @@ export class ProcessesComponent
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
   @ViewChild('itemOwner', { static: true })
@@ -200,21 +201,21 @@ export class ProcessesComponent
   ngAfterViewInit(): void {
     this.views = [
       {
-        id: '1',
         type: ViewType.grid,
         sameData: true,
         model: {
           resources: this.columnsGrid,
           template: this.itemViewList,
+          headerTemplate : this.headerTemplate
         },
       },
       {
-        id: '2',
         type: ViewType.card,
         sameData: true,
         active: true,
         model: {
           template: this.templateListCard,
+          headerTemplate : this.headerTemplate
         },
       },
       // {

@@ -75,9 +75,19 @@ export class OrganizationOrgchartComponent implements OnInit {
         [orgUnitID])
         .subscribe((res:any) =>{
           if(res){
-            console.log(res);
-            this.data = JSON.parse(JSON.stringify(res));
-            this.setDataOrg(this.data);
+            console.log(res,orgUnitID);
+            let orgChartSelected = res.find(x => x.orgUnitID == this.orgUnitID);
+            if(orgChartSelected)
+            {
+              res.forEach(x => {
+                if(x.orgUnitID == orgChartSelected.parentID){
+                  x.parentID = null;
+                  return;
+                }
+              });
+              this.data = JSON.parse(JSON.stringify(res));
+              this.setDataOrg(this.data);
+            }
           }
         });
     }
