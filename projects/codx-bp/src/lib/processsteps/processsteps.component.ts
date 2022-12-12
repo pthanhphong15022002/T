@@ -258,12 +258,12 @@ export class ProcessStepsComponent
       this.view.dataService.dataSelected.processID = this.processID;
       if (this.parentID != '')
         this.view.dataService.dataSelected.parentID = this.parentID;
-      this.dialog = this.callfc.openSide(
+       var dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         ['add', this.titleAction, this.stepType, this.formModelMenu],
         option
       );
-      this.dialog.closed.subscribe((e) => {
+      dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
@@ -338,7 +338,7 @@ export class ProcessStepsComponent
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
         option.zIndex = 1001;
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
             'edit',
@@ -348,7 +348,7 @@ export class ProcessStepsComponent
           ],
           option
         );
-        this.dialog.closed.subscribe((e) => {
+        dialog.closed.subscribe((e) => {
           if (!e?.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
@@ -504,7 +504,7 @@ export class ProcessStepsComponent
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
         option.zIndex = 1001;
-        this.dialog = this.callfc.openSide(
+        var dialog = this.callfc.openSide(
           PopupAddProcessStepsComponent,
           [
             'copy',
@@ -516,7 +516,7 @@ export class ProcessStepsComponent
           option
         );
       }
-      this.dialog.closed.subscribe((e) => {
+      dialog.closed.subscribe((e) => {
         if (!e?.event) this.view.dataService.clear();
         if (e?.event == null)
           this.view.dataService.delete(
@@ -673,24 +673,15 @@ export class ProcessStepsComponent
         ' ' +
         p?.text.charAt(0).toLocaleLowerCase() +
         p?.text.slice(1);
-      // this.add();
     } else {
       this.stepType = evt.id;
-      // let customName = '';
-      // // this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
-      // //   if (mf) {
-      // //     var mfAdd = mf.find((f) => f.functionID == 'SYS01');
-      // if (this.titleAdd) customName = this.titleAdd + ' ';
-      // }
       this.titleAction =
         this.titleAdd +
         ' ' +
         evt?.text.charAt(0).toLocaleLowerCase() +
         evt?.text.slice(1);
-      // this.add();
-      // });
     }
-    this.formModelMenu = this.view?.formModel;
+ 
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
 
     if (funcMenu) {
@@ -698,6 +689,7 @@ export class ProcessStepsComponent
         this.cache
           .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
           .subscribe((res) => {
+            this.formModelMenu = this.view?.formModel;
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
@@ -721,13 +713,13 @@ export class ProcessStepsComponent
     this.stepType = data.stepType;
     this.titleAction = this.getTitleAction(e.text, data.stepType);
     //test
-    this.formModelMenu = this.view?.formModel;
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
     if (funcMenu) {
       this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
         this.cache
           .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
           .subscribe((res) => {
+            this.formModelMenu = this.view?.formModel;
             this.formModelMenu.formName = funcMenu.formName;
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
@@ -759,16 +751,18 @@ export class ProcessStepsComponent
       this.parentID =
         this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
       this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
-      this.formModelMenu = this.view?.formModel;
-      this.add();
+     
       if (funcMenu) {
         this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
           this.cache
             .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
             .subscribe((res) => {
+              this.formModelMenu = this.view?.formModel;
               this.formModelMenu.formName = funcMenu.formName;
               this.formModelMenu.gridViewName = funcMenu.gridViewName;
               this.formModelMenu.funcID = funcMenu.funcID;
+              this.formModelMenu.entityName = funcMenu.entityName;
+              this.add();
             });
         });
       }
@@ -1261,5 +1255,14 @@ export class ProcessStepsComponent
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+  showAllparent(text) {
+    return (
+      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+    );
+  }
+  setWidth(data){
+    let width = document.getElementsByTagName("body")[0].offsetWidth;    
+    return width < data.length*11 ? true :  false;
   }
 }

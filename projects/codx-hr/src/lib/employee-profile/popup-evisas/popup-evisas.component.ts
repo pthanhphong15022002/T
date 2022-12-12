@@ -43,8 +43,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    
-    
     if(!this.formModel){
       this.formModel = new FormModel();
       this.formModel.formName = 'EVisas';
@@ -78,6 +76,8 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
+        console.log('form group vua lay ra', item);
+        
         this.formGroup = item;  
         if(this.actionType === 'add'){
           this.hrService.getEmployeeVisaModel().subscribe(p => {
@@ -138,7 +138,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     this.visaObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj)) 
     // this.indexSelected = this.lstVisas.indexOf(this.visaObj)
-    this.indexSelected = this.lstVisas.findIndex(p => p.recID = this.visaObj.recID);
+    this.indexSelected = this.lstVisas.findIndex(p => p.recID == this.visaObj.recID);
     this.actionType ='edit'
     this.formGroup?.patchValue(this.visaObj);
     this.cr.detectChanges();

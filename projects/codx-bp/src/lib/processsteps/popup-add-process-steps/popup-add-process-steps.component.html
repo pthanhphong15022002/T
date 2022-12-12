@@ -8,7 +8,8 @@
   [dialog]="dialog"
   [formModel]="formModelMenu"
   [data]="processSteps"
-  [openMore]="true">
+  [openMore]="true"
+>
   <ng-template #subHeader>
     <div class="ms-4" *ngIf="stepType == 'A'">
       <codx-input
@@ -18,7 +19,8 @@
         [modeSwitcher]="false"
         [crrValue]="processSteps?.color"
         field="color"
-        (valueChange)="valueChange($event)">
+        (valueChange)="valueChange($event)"
+      >
       </codx-input>
     </div>
   </ng-template>
@@ -29,14 +31,16 @@
           <codx-label
             fiedName="StepName"
             [formModel]="form.formModel"
-            default="Tên công đoạn">
+            default="Tên công đoạn"
+          >
           </codx-label>
         </div>
         <codx-input
           field="stepName"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
       <div class="form-group row" *ngIf="stepType == 'P'">
@@ -44,7 +48,8 @@
           <codx-label
             fiedName="Duration"
             [formModel]="form.formModel"
-            default="Thời gian chuẩn">
+            default="Thời gian chuẩn"
+          >
           </codx-label>
           <codx-input
             field="duration"
@@ -52,20 +57,23 @@
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
             [showSpinButton]="false"
-            [min]="0">
+            [min]="0"
+          >
           </codx-input>
         </div>
         <div class="col-3">
           <codx-label
             fiedName="Interval"
             [formModel]="form.formModel"
-            default="Đơn vị thời gian">
+            default="Đơn vị thời gian"
+          >
           </codx-label>
           <codx-input
             field="interval"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
       </div>
@@ -73,7 +81,8 @@
         <codx-label
           fiedName="ParentID"
           [formModel]="form.formModel"
-          [default]="stepType == 'A' ? 'Công đoạn' : 'Bước công việc'">
+          [default]="stepType == 'A' ? 'Công đoạn' : 'Bước công việc'"
+        >
         </codx-label>
         <codx-input
           field="parentID"
@@ -82,64 +91,82 @@
           [model]="processSteps"
           (valueChange)="valueChangeCbx($event)"
           [disabled]="lockParentId"
-          >
+        >
         </codx-input>
       </div>
       <div
         class="form-group"
         *ngIf="
-        stepType != 'P' &&
-        stepType != 'E' &&
-        stepType != 'M' &&
-        stepType != 'Q'
-        ">
+          stepType != 'P' &&
+          stepType != 'E' &&
+          stepType != 'M' &&
+          stepType != 'Q'
+        "
+      >
         <codx-label
           name="StepName"
           [formModel]="form.formModel"
-          [default]="stepType == 'A' ? 'Tên bước công việc' : 'Tên công việc'"></codx-label>
+          [default]="stepType == 'A' ? 'Tên bước công việc' : 'Tên công việc'"
+        ></codx-label>
         <codx-input
           field="stepName"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
       <div
         class="form-group"
         *ngIf="stepType == 'C'"
-        (keyup.enter)="enterRefrence()">
+        (keyup.enter)="enterRefrence()"
+      >
         <codx-label
           name="Reference"
           [formModel]="form.formModel"
-          default="Đầu mục thực hiện">
+          default="Đầu mục thực hiện"
+        >
         </codx-label>
-        <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus
+        <input
+          type="text"
+          #txtTodoEdit
+          name="txtTodoEdit"
+          matInput
+          autofocus
           (blur)="valueChangeRefrence($event)"
-          (keydown.enter)="valueChangeRefrence($event)" class="form-control"
+          (keydown.enter)="valueChangeRefrence($event)"
+          class="form-control"
           [(ngModel)]="textChange"
           placeholder="Nhập đầu mục danh sách..."
-          style=" border: none; margin-top: 3px; outline: none;"/>
+          style="border: none; margin-top: 3px; outline: none"
+        />
       </div>
 
-      <ng-container *ngIf="referenceText?.length> 0">
-        <div *ngFor="let item of referenceText; let i= index" class="m-5">
+      <ng-container *ngIf="referenceText?.length > 0">
+        <div *ngFor="let item of referenceText; let i = index" class="m-5">
           <div class="text-hover-primary cursor-pointer">
-            <span>{{ i + 1 }}</span><span>
-              <codx-label name="lblSymboy" default="."></codx-label> </span><span
+            <span>{{ i + 1 }}</span
+            ><span>
+              <codx-label name="lblSymboy" default="."></codx-label> </span
+            ><span
               [ngbPopover]="deleteReference"
               #p="ngbPopover"
               (mouseenter)="showPoppoverDeleteRef(p, i)"
               autoClose="outside"
-              placement="right left top bottom">
-              <span *ngIf="i != editTodo" (click)="editTodoIndex(i)">{{item}}</span>
-              <input 
-                *ngIf="i === editTodo" 
-                style="margin: 0;"
-                type="text" [value]="item" 
-                (blur)="valueChangeRefrenceItem($event,i)"
-                (keydown.enter)="valueChangeRefrenceItem($event,i)"              
+              placement="right left top bottom"
+            >
+              <span *ngIf="i != editTodo" (click)="editTodoIndex(i)">{{
+                item
+              }}</span>
+              <input
+                *ngIf="i === editTodo"
+                style="margin: 0"
+                type="text"
+                [value]="item"
+                (blur)="valueChangeRefrenceItem($event, i)"
+                (keydown.enter)="valueChangeRefrenceItem($event, i)"
                 autofocus
-                >
+              />
             </span>
           </div>
         </div>
@@ -150,14 +177,16 @@
           <codx-label
             fiedName="StepName"
             [formModel]="form.formModel"
-            [default]="stepType == 'M' ? 'Sự kiện' : 'Tiêu đề'">
+            [default]="stepType == 'M' ? 'Sự kiện' : 'Tiêu đề'"
+          >
           </codx-label>
           <codx-input
             field="stepName"
             [height]="'50'"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
       </ng-container>
@@ -166,7 +195,8 @@
         <codx-label
           name="Memo"
           [formModel]="form.formModel"
-          default="Mô tả"></codx-label>
+          default="Mô tả"
+        ></codx-label>
 
         <div class="d-flex justify-content-between align-items-center">
           <div style="width: 100%">
@@ -174,14 +204,16 @@
               [field]="stepType == 'E' ? 'stepName' : 'memo'"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
-              (valueChange)="valueChange($event)">
+              (valueChange)="valueChange($event)"
+            >
             </codx-input>
           </div>
 
           <button
             class="button-mail"
             *ngIf="stepType == 'E'"
-            (click)="handelMail()">
+            (click)="handelMail()"
+          >
             <span class="icon-email icon-20 text-primary-600 py-2"></span>
           </button>
         </div>
@@ -192,7 +224,8 @@
           <codx-label
             fiedName="Duration"
             [formModel]="form.formModel"
-            default="Thời gian chuẩn">
+            default="Thời gian chuẩn"
+          >
           </codx-label>
           <codx-input
             field="duration"
@@ -200,33 +233,38 @@
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
             [showSpinButton]="false"
-            [min]="0">
+            [min]="0"
+          >
           </codx-input>
         </div>
         <div class="col-4">
           <codx-label
             fiedName="Interval"
             [formModel]="form.formModel"
-            default="Đơn vị thời gian">
+            default="Đơn vị thời gian"
+          >
           </codx-label>
           <codx-input
             field="interval"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
         <div class="col-4" *ngIf="stepType == 'E'">
           <codx-label
             fiedName="Reminder"
             [formModel]="form.formModel"
-            default="Nhắc nhở">
+            default="Nhắc nhở"
+          >
           </codx-label>
           <codx-input
             field="reminder"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
       </div>
@@ -235,13 +273,15 @@
         <codx-label
           fiedName="Location"
           [formModel]="form.formModel"
-          default="Địa điểm">
+          default="Địa điểm"
+        >
         </codx-label>
         <codx-input
           field="location"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
-          (valueChange)="valueChange($event)">
+          (valueChange)="valueChange($event)"
+        >
         </codx-input>
       </div>
 
@@ -250,13 +290,15 @@
           <codx-label
             fiedName="Reminder"
             [formModel]="form.formModel"
-            default="Nhắc nhở">
+            default="Nhắc nhở"
+          >
           </codx-label>
           <codx-input
             field="reminder"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
         <div class="col-6 form-group row">
@@ -266,13 +308,15 @@
               class="test-check"
               [checked]="this.processSteps?.isAlert"
               field="isAlert"
-              (valueChange)="valueChangeAlert($event)">
+              (valueChange)="valueChangeAlert($event)"
+            >
             </codx-input>
             <span class="m-3">
               <codx-label
                 name="lblAlert"
                 [formModel]="form.formModel"
-                default="isAlert">
+                default="isAlert"
+              >
               </codx-label>
             </span>
           </div>
@@ -282,13 +326,15 @@
               class="test-check"
               [checked]="this.processSteps?.isEmail"
               field="isEmail"
-              (valueChange)="valueChangeAlert($event)">
+              (valueChange)="valueChangeAlert($event)"
+            >
             </codx-input>
             <span class="m-3">
               <codx-label
                 name="lblEmail"
                 [formModel]="form.formModel"
-                default="isEmail">
+                default="isEmail"
+              >
               </codx-label>
             </span>
             <span class="icon-email icon-20 text-primary-600 py-2 mb-2"></span>
@@ -301,19 +347,29 @@
           <codx-label
             name="Reference"
             [formModel]="form.formModel"
-            default="Bảng khảo sát"></codx-label>
+            default="Bảng khảo sát"
+          ></codx-label>
           <a
             class="d-flex justify-content-end align-items-center"
             *ngIf="stepType === 'Q'"
-            (click)="viewDetailSurveys($event)">
+            (click)="viewDetailSurveys($event)"
+          >
             <span
-              class="icon-insert_link icon-20 text-primary-600 me-2 m-2"></span>
+              class="icon-insert_link icon-20 text-primary-600 me-2 m-2"
+            ></span>
           </a>
         </div>
-
+        <codx-input
+          field="reference"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
         <a href="http://localhost:4200/tester/sv/surveys/SVT01">
           http://localhost:4200/tester/sv/surveys/SVT01 (Đang đợi trang khảo
-          sát)</a>
+          sát)</a
+        >
         <!-- <codx-input type="text" [crrValue]="textChange" (valueChange)="valueChangeRefrence($event)">
         </codx-input> -->
       </div>
@@ -323,7 +379,8 @@
           <codx-label
             fiedName="Owners"
             [formModel]="form.formModel"
-            default="Vai trò thực hiện">
+            default="Vai trò thực hiện"
+          >
           </codx-label>
           <codx-input
             type="Share"
@@ -333,28 +390,34 @@
             [multiple]="true"
             [showInput]="false"
             (valueChange)="eventApply($event)"
-            [disabled]="readOnly">
+            [disabled]="readOnly"
+          >
             [class]="'click-owner'"
           </codx-input>
         </div>
 
-        <div *ngIf="listOwnerDetails.length> 0" class="mt-3">
+        <div *ngIf="listOwnerDetails.length > 0" class="mt-3">
           <ng-container *ngFor="let item of listOwnerDetails; index as i">
             <div
-              class="d-flex justify-content-between user-mini-nav
-              align-items-center"
-              style="background-color: #f4f7ff">
+              class="d-flex justify-content-between user-mini-nav align-items-center"
+              style="background-color: #f4f7ff"
+            >
               <span>
                 <codx-img
                   [width]="25"
                   class="me-2"
                   [objectId]="item?.id"
-                  objectType="AD_Users">
-                </codx-img> </span><span class="text-dark fw-bold"> {{
-                item?.name }} </span><span class="mt-1"><a
+                  objectType="AD_Users"
+                >
+                </codx-img> </span
+              ><span class="text-dark fw-bold"> {{ item?.name }} </span
+              ><span class="mt-1"
+                ><a
                   (click)="onDeleteOwner(item?.id, i)"
-                  style="cursor: pointer">
-                  <span class="icon-close icon-16 text-danger ms-3"></span> </a></span>
+                  style="cursor: pointer"
+                >
+                  <span class="icon-close icon-16 text-danger ms-3"></span> </a
+              ></span>
             </div>
           </ng-container>
         </div>
@@ -366,15 +429,17 @@
             <codx-label
               fiedName="note-label"
               [formModel]="form.formModel"
-              default="Ghi chú">
+              default="Ghi chú"
+            >
             </codx-label>
           </div>
           <codx-input
             field="note"
-            [height]="100"
+            [height]="'100'"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
+            (valueChange)="valueChange($event)"
+          >
           </codx-input>
         </div>
       </ng-container>
@@ -382,13 +447,15 @@
         <div
           class="d-flex align-items-center justify-content-between mt-4"
           *ngIf="showLabelAttachment"
-          style="float: left; clear: left">
+          style="float: left; clear: left"
+        >
           <div class="d-flex align-items-center mb-2">
             <div class="fw-bold text-primary">
               <codx-label
                 fiedName="lblAttachments"
                 [formModel]="form.formModel"
-                default="Tài liệu">
+                default="Tài liệu"
+              >
               </codx-label>
             </div>
           </div>
@@ -410,7 +477,8 @@
             (fileAdded)="fileAdded($event)"
             (fileCount)="getfileCount($event)"
             displayThumb="full"
-            showMessage="0">
+            showMessage="0"
+          >
           </codx-attachment>
         </div>
       </ng-container>
@@ -422,12 +490,15 @@
       type="button"
       class="btn btn-light-primary me-3"
       [disabled]="readOnly"
-      (click)="addFile($event)">
-      <i class="icon-cloud_upload fs-5"></i><span>
+      (click)="addFile($event)"
+    >
+      <i class="icon-cloud_upload fs-5"></i
+      ><span>
         <codx-label
           name="UploadFile"
           formName="Tasks"
-          default="Đính kèm"></codx-label>
+          default="Đính kèm"
+        ></codx-label>
       </span>
     </button>
     <button type="button" class="btn btn-primary" (click)="saveData()">
@@ -441,12 +512,14 @@
       <a
         class="d-flex align-item-center"
         (click)="clickDelete(crrIndex)"
-        style="cursor: pointer">
+        style="cursor: pointer"
+      >
         <span class="icon-close icon-16 text-danger"></span>
         <codx-label
           class="text-danger"
           name="Delete"
-          default="Xóa"></codx-label>
+          default="Xóa"
+        ></codx-label>
       </a>
     </ng-container>
   </ng-template>
