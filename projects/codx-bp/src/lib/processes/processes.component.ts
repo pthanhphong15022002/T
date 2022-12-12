@@ -948,4 +948,33 @@ export class ProcessesComponent
         })
     }
   }
+  deleteProcessesById(data) { //delete 
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        {
+          var itemSelected = opt.data[0];
+          opt.methodName = 'DeleteProcessesAsync';
+          opt.data = [itemSelected.recID];
+          return true;
+        }
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+  }
+
+  restoreBinById(data){
+    if(data.recId){
+      this.view.dataService.dataSelected = data;
+      this.bpService.restoreBinById(data.recId).subscribe((res) => {
+        if (res) {
+          this.notification.notifyCode('SYS008');
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    }
+  }
 }
