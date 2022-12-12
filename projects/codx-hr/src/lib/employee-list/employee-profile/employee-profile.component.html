@@ -1627,6 +1627,7 @@
                     <codx-mfunc
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
+                      
                       (clickMF)="
                         clickMF($event, lstWorkPermit[0], 'workpermit')
                       "

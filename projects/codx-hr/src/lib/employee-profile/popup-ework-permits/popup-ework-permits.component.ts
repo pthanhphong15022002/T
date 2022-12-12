@@ -63,7 +63,9 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     this.lstWorkPermit = data?.data?.lstWorkPermit
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
     if(this.actionType === 'edit' || this.actionType === 'copy'){
-      this.data = JSON.parse(JSON.stringify(data?.data?.selectedWorkPermit));
+      this.data = JSON.parse(JSON.stringify(this.lstWorkPermit[this.indexSelected]));
+      console.log('dataselected ', this.data);
+      
       this.formModel.currentData = this.data
     }
     console.log('employeeId', this.employId);
@@ -76,7 +78,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
     .then((item) => {
       this.formGroup = item;
       console.log('formGroup', this.formGroup);
-      if(this.actionType == 'add'){
+      if(this.actionType === 'add'){
         this.hrService.getEmployeeWorkingLisenceModel().subscribe(p => {
           console.log('thong tin giay phep lao dong', p);
           this.data = p;
@@ -114,8 +116,8 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
       })
     }
     else{
-      this.hrService.updateEmployeeWorkPermitDetail(this.data).subscribe(p => {
-        if(p == true){
+      this.hrService.updateEmployeeWorkPermitDetail(this.formModel.currentData).subscribe(p => {
+        if(p != null){
           this.notify.notifyCode('SYS007')
           this.lstWorkPermit[this.indexSelected] = p;
           if(this.listView){
@@ -129,4 +131,18 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
 
   }
 
+  afterRenderListView(evt){
+    this.listView = evt;
+    console.log(this.listView);
+  }
+  
+  click(data) {
+    console.log('formdata', data);
+    this.data = data;
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.data)) 
+    this.indexSelected = this.lstWorkPermit.findIndex(p => p.recID == this.data.recID);
+    this.actionType ='edit'
+    this.formGroup?.patchValue(this.data);
+    this.cr.detectChanges();
+  }
 }
