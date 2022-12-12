@@ -159,7 +159,7 @@ export class EmployeesComponent extends UIComponent {
           this.view.dataService.add(data, 0).subscribe();
           this.detectorRef.detectChanges();
         }
-      })
+      });
     }
   }
   click(evt: ButtonModel) {
