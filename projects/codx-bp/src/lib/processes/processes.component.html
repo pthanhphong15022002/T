@@ -1,7 +1,7 @@
 <codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP"
   entityName="BP_Processes"
   className="ProcessesBusiness" [method]="method" [views]="views"
-  [button]="showButtonAdd && view.formModel.funcID !='BPT6' && view.formModel.funcID !='BPT7' ? button : null"
+  [button]="showButtonAdd && view.formModel.funcID !='BPT6' && view.formModel.funcID !='BPT7'  ? button : null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
@@ -89,7 +89,7 @@
                 [openDelay]="500" (mouseenter)="p.open()"
                 (mouseleave)="p.close()" placement="right">
                 <codx-attachment-temp [objectID]="data?.recID"
-                  [formModel]="view.formModel" [count]="data.attachments">
+                  [formModel]="view.formModel" [count]="data.attachments" [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
               </span>
             </div>
@@ -529,9 +529,11 @@
   <ng-container *ngIf="view.formModel.funcID=='BPT7'">
     <div class="nondata-container w-100 mb-2">
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
-        <div class="fw-bold ms-2">Du lieu 30 ngay se xoa</div>
+        <codx-label fiedName="lbl" default="Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày"></codx-label>
         <div class="cursor-pointer">
-          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="deleteBin()" >Xoa thung rac</span>
+          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="deleteBin()" >
+            <codx-label fiedName="lbl" default="Xoa thung rac"></codx-label>
+          </span>
         </div>
       </div>
     </div>

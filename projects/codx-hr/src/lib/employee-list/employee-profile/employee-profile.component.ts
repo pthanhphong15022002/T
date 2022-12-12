@@ -313,12 +313,25 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //work permit
-        this.hrService
-          .getListWorkPermitByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('w permit', res);
-            this.lstWorkPermit = res;
-          });
+        let op4 = new DataRequest();
+        op4.gridViewName = 'grvEWorkPermits'
+        op4.entityName = 'HR_EWorkPermits'
+        op4.predicate = 'EmployeeID=@0'
+        op4.dataValue = params.employeeID;
+        (op4.page = 1),
+        this.hrService.getListWorkPermitByEmployeeID(op4).subscribe((res) => {
+          if(res){
+            this.lstWorkPermit = res[0];
+            console.log('lstWorkPermit',this.lstWorkPermit);
+          }
+        })
+
+        // this.hrService
+        //   .getListWorkPermitByEmployeeID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('w permit', res);
+        //     this.lstWorkPermit = res;
+        //   });
 
         //Job info
         //this.hrService.getJobInfo()
@@ -485,7 +498,6 @@ export class EmployeeProfileComponent extends UIComponent {
               }
             });
         }
-
         break;
 
       case 'SYS04': //copy
@@ -1007,7 +1019,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeWorkingLisenceDetailComponent,
       PopupEWorkPermitsComponent,
@@ -1031,6 +1043,7 @@ export class EmployeeProfileComponent extends UIComponent {
       // }
       // console.log(this.lstWorkPermit);
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 

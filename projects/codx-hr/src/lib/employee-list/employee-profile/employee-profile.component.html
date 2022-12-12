@@ -70,6 +70,9 @@
                             >
                             </codx-vll>
                           </span>
+                          <span
+                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+                          ></span>
                           <span #maritalStatus class="fw-bold">
                             {{ infoPersonal.maritalStatus }}
                             <!-- <codx-vll
@@ -246,21 +249,25 @@
               <span class="text-danger w-bold">
                 <span #id>{{ infoPersonal.employeeID }}</span>
               </span>
-
               <span
-                class="icon-date_range icon-16 text-gray-800 me-1 ms-2"
+                class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
               ></span>
+              <span class="icon-date_range icon-16 text-gray-800"></span>
               <span class="text-dark fw-bold">
                 <span #joinedOn>{{ infoPersonal.joinedOn | fmDT }}</span>
               </span>
+              <span
+                class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+              ></span>
+              <codx-vll
+                [field]="'Status'"
+                [value]="infoPersonal.status"
+                [formModel]="view.formModel"
+                [showText]="true"
+                [showBgColor]="true"
+              ></codx-vll>
             </div>
-            <codx-vll
-              [field]="'Status'"
-              [value]="infoPersonal.status"
-              [formModel]="view.formModel"
-              [showText]="true"
-              [showBgColor]="true"
-            ></codx-vll>
+
             <div class="d-flex align-items-center mb-2">
               <span
                 class="icon-connection-point icon-16 text-gray-800 me-1"
@@ -1620,6 +1627,7 @@
                     <codx-mfunc
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
+                      
                       (clickMF)="
                         clickMF($event, lstWorkPermit[0], 'workpermit')
                       "
