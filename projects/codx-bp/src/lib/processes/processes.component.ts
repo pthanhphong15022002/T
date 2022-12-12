@@ -13,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DataRequest } from '@shared/models/data.request';
 import { FileService } from '@shared/services/file.service';
 import {
+  AlertConfirmInputConfig,
   AuthStore,
   ButtonModel,
   DialogModel,
@@ -52,6 +53,7 @@ export class ProcessesComponent
   @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('tmpListItem') tmpListItem: TemplateRef<any>;
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   @ViewChild('itemProcessName', { static: true })
   itemProcessName: TemplateRef<any>;
   @ViewChild('itemOwner', { static: true })
@@ -95,6 +97,7 @@ export class ProcessesComponent
   dialogPopup: DialogRef;
   @ViewChild('viewReName', { static: true }) viewReName;
   @ViewChild('viewReleaseProcess', { static: true }) viewReleaseProcess;
+
   @Input() process = new BP_Processes();
   newName = '';
   crrRecID = '';
@@ -140,7 +143,8 @@ export class ProcessesComponent
     private activedRouter: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
-    private routers: Router
+    private routers: Router,
+    private notificationsService: NotificationsService
   ) {
     super(inject);
     this.user = this.authStore.get();
@@ -158,9 +162,8 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-    // this.userId = '2207130007';
-    // this.isAdmin = false
-
+    //  this.userId = '2207130007';
+    //  this.isAdmin = false
     this.button = {
       id: 'btnAdd',
     };
@@ -204,6 +207,7 @@ export class ProcessesComponent
         model: {
           resources: this.columnsGrid,
           template: this.itemViewList,
+          headerTemplate : this.headerTemplate
         },
       },
       {
@@ -213,6 +217,7 @@ export class ProcessesComponent
         active: true,
         model: {
           template: this.templateListCard,
+          headerTemplate : this.headerTemplate
         },
       },
       // {
@@ -232,7 +237,7 @@ export class ProcessesComponent
     ];
     this.view.dataService.methodSave = 'AddProcessesAsync';
     this.view.dataService.methodUpdate = 'UpdateProcessesAsync';
-    this.view.dataService.methodDelete = 'DeleteProcessesAsync';
+    this.view.dataService.methodDelete = 'UpdateDeletedProcessesAsync';
     //   this.view.dataService.searchText='GetProcessesByKeyAsync';
     this.changeDetectorRef.detectChanges();
   }
@@ -430,9 +435,10 @@ export class ProcessesComponent
 
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteProcessesAsync';
-
-    opt.data = itemSelected.recID;
+    opt.methodName = 'UpdateDeletedProcessesAsync';
+    opt.data = [itemSelected.recID,true];
+    // opt.methodName = 'DeleteProcessesAsync';
+    // opt.data = [itemSelected.recID];
     return true;
   }
 
@@ -928,6 +934,50 @@ export class ProcessesComponent
   }
 
   deleteBin(){
+    if(this.view.dataService?.data.length >0){
+      var config = new AlertConfirmInputConfig();
+      config.type = 'YesNo';
+      let title = `Bạn có muốn xóa hẳn ${this.view.dataService?.data.length} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?`
+      this.notificationsService
+      .alert('Thông báo', title, config)
+      .closed.subscribe((x) => {
+        if (x.event.status == 'Y') {
+          this.bpService.deleteBin([true]).subscribe((res) =>{
+              if(res){
+                this.notification.notifyCode('SYS008');
+              }
+            });
+          };
+        })
+    }
+  }
+  deleteProcessesById(data) { //delete
+    this.view.dataService.dataSelected = data;
     this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        {
+          var itemSelected = opt.data[0];
+          opt.methodName = 'DeleteProcessesAsync';
+          opt.data = [itemSelected.recID];
+          return true;
+        }
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+  }
+
+  restoreBinById(data){
+    if(data.recId){
+      this.view.dataService.dataSelected = data;
+      this.bpService.restoreBinById(data.recId).subscribe((res) => {
+        if (res) {
+          this.notification.notifyCode('SYS008');
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    }
   }
 }

@@ -1,13 +1,6 @@
-<codx-views #view 
-  [autoLoad]="true" 
-  entityName="HR_OrganizationUnits" 
-  idField="orgUnitID"
-  [views]="views" 
-  [selectedFirst]="true" 
-  (selectedChange)="onSelectionChanged($event)" 
-  [button]="button"
-  (buttonClick)="btnClick($event)" 
-  (viewChanged)="changeView($event)" >
+<codx-views #view [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID" [views]="views"
+  [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button"
+  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)">
 </codx-views>
 <!-- panel right lef -->
 <ng-template #panelRightLef>
@@ -15,11 +8,11 @@
 </ng-template>
 <!-- tree -->
 <ng-template #tempTree let-data>
-  <div class="d-flex align-items-center py-1">
+  <div class="d-flex align-items-top py-1">
     <i class="icon-home me-2"></i>
     <span>{{ data.orgUnitName }}</span>
   </div>
-</ng-template> 
+</ng-template>
 <!-- tree master detail -->
 <ng-template #tmpMasterDetail>
   <lib-organization-master-detail [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-master-detail>
@@ -32,5 +25,3 @@
 <ng-template #tmpList>
   <lib-organization-list [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
-
-

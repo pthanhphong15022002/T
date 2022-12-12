@@ -694,19 +694,19 @@ export class CalendarNotesComponent
             flex.append(spanEP_Room);
             flex.append(spanEP_Car);
           }
-          var eleTest = document.querySelectorAll(`.note-pointed-${classDate}`);
+          var eleTest = ele.querySelectorAll(`.note-pointed-${classDate}`);
           let interVal = setInterval(() => {
-            if (eleTest) {
+            if (eleTest && eleTest.length > 0) {
               clearInterval(interVal);
               var plusNo = 0;
-              if (eleTest.length > 2) {
+              if (eleTest.length > 3) {
                 eleTest.forEach((x, index) => {
-                  if (index > 2) {
+                  if (index >= 2) {
                     x.remove();
-                    if (index == eleTest.length - 1) {
+                    if (index == eleTest.length - 2) {
                       spanPlus.insertAdjacentText(
                         'afterbegin',
-                        `+${eleTest.length - 3}`
+                        `+${eleTest.length - 2}`
                       );
                       spanPlus.setAttribute(
                         'style',
@@ -724,6 +724,10 @@ export class CalendarNotesComponent
       }, 1000);
     }
   }
+
+  onCreated(e, eleCalendar) {
+    debugger
+  } 
 
   openFormUpdateNote(data) {
     var obj = {

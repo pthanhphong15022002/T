@@ -1,0 +1,64 @@
+<codx-form subname="" [body]="body" [footer]="footer" [dialog]="dialog">
+  <ng-template popup adde #body>
+    <ng-container>
+      <div class="container">
+        <div class="row  h-75">
+          <div class="d-flex flex-wrap h-100 w-100 drag-wrapper">
+            <div class="ratio ratio-1x1 border-box-rarius border rounded m-3 bg-white"*ngFor="let data of chartTypes" [id]="data.value"
+             (click)="cellClick($event,data)"
+              cdkDrag (cdkDragEnded)="dragEnd($event,data)"
+              (cdkDragStarted)="dragStart($event,data)"
+              cdkDragLockAxis="x"
+              cdkDragBoundary=".drag-wrapper"
+              >
+              <div class="d-flex justify-content-center flex-column">
+                <div class="m-auto">
+                  <i class="{{data.iconCss}}"  style="font-size: 50px !important;"></i>
+                </div>
+                <div class="fs-5 font-weight-bold text-center mb-3">
+                  {{data.text}}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row h-25">
+          <!-- <codx-label name="lblChartType" default="Biểu đồ" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"></codx-label>
+            <div style="padding-bottom: 40px" class="mt-3">
+              <ejs-dropdownlist
+                [dataSource]="chartTypes"
+                (change)="onChange($event)"
+                [value]="chartType"
+              ></ejs-dropdownlist>
+            </div> -->
+            <codx-label name="lblOther" default="Khác" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"  *ngIf="listTemplate && listTemplate.length > 0"></codx-label>
+            <div class="w-100">
+              <ejs-dropdownlist
+                (change)="valueChange($event)"
+                [fields]="fields"
+                [value]="value"
+                [dataSource]="listTemplate"
+                *ngIf="listTemplate && listTemplate.length > 0"
+              ></ejs-dropdownlist>
+            </div>
+        </div>
+      </div>
+
+
+
+    </ng-container>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <!-- <button class="btn btn-light-primary" (click)="addChart()">
+        <codx-label name="lblAddChart" default="Thêm biểu đồ"></codx-label>
+      </button> -->
+      <div class="float-end">
+        <button class="btn btn-light-primary" (click)="saveForm()">
+          <codx-label name="lblChoose" default="Chọn"></codx-label>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</codx-form>

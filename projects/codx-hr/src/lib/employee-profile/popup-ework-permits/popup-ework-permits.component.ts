@@ -1,9 +1,11 @@
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { Injector } from '@angular/core';
+import { Injector, ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
+  CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -21,6 +23,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
 
   formModel: FormModel;
   dialog: DialogRef;
+  lstWorkPermit: any;
   data;
   actionType;
   formGroup: FormGroup
@@ -29,18 +32,19 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   isAfterRender = false;
   headerText: ''
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('listView') listView: CodxListviewComponent
+  indexSelected: any;
 
   constructor(
     private injector: Injector,
     private notify: NotificationsService,
+    private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) { 
     super(injector);
-    this.dialog = dialog;
     // this.formModel = dialog?.formModel;
-    this.headerText = data?.data?.headerText;
     // if(this.formModel){
     //   this.isAfterRender = true
     // }
@@ -51,9 +55,13 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
       this.formModel.entityName = 'HR_EWorkPermits'
       this.formModel.gridViewName = 'grvEWorkPermits'
     }
+    this.dialog = dialog;
+    this.headerText = data?.data?.headerText;
     this.funcID = this.dialog.formModel.funcID
-    this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.employId = data?.data?.employeeId;
+    this.lstWorkPermit = data?.data?.lstWorkPermit
+    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
     if(this.actionType === 'edit' || this.actionType === 'copy'){
       this.data = JSON.parse(JSON.stringify(data?.data?.selectedWorkPermit));
       this.formModel.currentData = this.data
@@ -86,15 +94,21 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
-    if(this.actionType == 'copy'){
+    if(this.actionType == 'copy' || this.actionType === 'add'){
       delete this.data.recID
     }
     this.data.employeeID = this.employId
     if(this.actionType == 'add' || this.actionType == 'copy'){
       this.hrService.addEmployeeWorkPermitDetail(this.data).subscribe(p => {
         if(p != null){
+          this.data.recID = p.recID
           this.notify.notifyCode('SYS007')
-          this.dialog.close(p);
+          this.lstWorkPermit.push(JSON.parse(JSON.stringify(this.data)));
+                    
+          if(this.listView){
+            (this.listView.dataService as CRUDService).add(this.data).subscribe();
+          }
+          // this.dialog.close(p);
         }
         else this.notify.notifyCode('DM034')
       })
@@ -103,7 +117,11 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
       this.hrService.updateEmployeeWorkPermitDetail(this.data).subscribe(p => {
         if(p == true){
           this.notify.notifyCode('SYS007')
-          this.dialog.close(this.data)
+          this.lstWorkPermit[this.indexSelected] = p;
+          if(this.listView){
+            (this.listView.dataService as CRUDService).update(this.lstWorkPermit[this.indexSelected]).subscribe()
+          }
+          // this.dialog.close(this.data)
         }
         else this.notify.notifyCode('DM034')
       });

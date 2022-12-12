@@ -63,7 +63,8 @@ export class PopupAddProcessesComponent implements OnInit {
   isAcceptEdit: any;
   linkAvatar = '';
   isCheckNameProcess: any;
-  nameOld:any;
+  nameOld: any;
+  avatarProcess: any;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -101,7 +102,7 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-   if (this.action === 'add' || this.action === 'copy')
+    if (this.action === 'add' || this.action === 'copy')
       this.isAddPermission(this.process.owner);
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
@@ -114,9 +115,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   ngOnInit(): void {
     this.acceptEdit();
-    if (this.action === 'add' || this.action === 'copy') {
-      this.isDisable = true;
-    }
+    this.isDisable = true;
     if (this.action === 'edit') {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
@@ -218,84 +217,84 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-
-    // if (this.process.activedOn && this.process.expiredOn) {
-    //   // if (this.isCheckFromToDate(this.process.activedOn)) {
-    //   //   this.notiService.notify(
-    //   //     'Vui lòng chọn ngày hiệu lực lớn hơn ngày hiện tại!'
-    //   //   );
-    //   //   return;
-    //   // }
-    // }
-    if (this.process.processName.trim() === this.nameOld?.trim() && this.action==='copy') {
+    if (this.process.processName.trim() === this.nameOld?.trim() && this.action != 'edit') {
       this.bpService
         .isCheckExitName(this.process.processName)
         .subscribe((res) => {
           if (res) {
-            this.notiService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
-              if (x.event?.status == 'N') {
-                return;
-              } else if (x.event?.status == 'Y') {
-                this.actionSave();
-              }
-            });
+            this.notiService
+              .alertCode(
+                'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+              )
+              .subscribe((x) => {
+                if (x.event?.status == 'N') {
+                  return;
+                } else if (x.event?.status == 'Y') {
+                  this.actionSave();
+                }
+              });
           }
         });
-    }
-    else {
+    } else {
       this.actionSave();
     }
   }
- async actionSave(){
-    if (this.attachment?.fileUploadList?.length)
-    (await this.attachment.saveFilesObservable()).subscribe((res) => {
-      if (res) {
-        var countAttack = 0;
-        countAttack = Array.isArray(res) ? res.length : 1;
-        if (this.action === 'edit') {
-          this.process.attachments += countAttack;
-        } else {
-          this.process.attachments = countAttack;
+  async actionSave() {
+    if (this.imageAvatar?.fileUploadList?.length > 0) {
+      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          var countAttack = 1;
+          if (this.action !== 'edit') {
+            this.process.attachments = countAttack;
+          }
         }
-      }
-    });
-  switch (this.action) {
-    case 'copy': {
-      this.notiService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
-        if (x.event?.status == 'N') {
-          this.isCoppyFile = false;
-          this.isUpdateCreateProcess();
-        } else if (x.event?.status == 'Y') {
-          this.isCoppyFile = true;
-          this.isUpdateCreateProcess();
-        } else {
-          return;
+        this.actionSaveBeforeSaveAttachment();
+      });
+    } else this.actionSaveBeforeSaveAttachment();
+  }
+
+  async actionSaveBeforeSaveAttachment() {
+    if (this.attachment?.fileUploadList?.length)
+      (await this.attachment.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          var countAttack = 0;
+          countAttack = Array.isArray(res) ? res.length : 1;
+          if (this.action === 'edit') {
+            this.process.attachments += countAttack;
+          } else {
+            this.process.attachments = countAttack;
+          }
         }
       });
-      break;
-    }
-    case 'add': {
-      this.isUpdateCreateProcess();
-      this.isAddPermission(this.process.owner);
-      break;
-    }
-    case 'edit': {
-      this.isUpdateCreateProcess();
-      this.isAddPermission(this.process.owner);
-      break;
-    }
-    default: {
-      this.isAction = false;
-      break;
+    //dang sai
+    switch (this.action) {
+      case 'copy': {
+        this.isUpdateCreateProcess();
+        this.isAddPermission(this.process.owner);
+        break;
+      }
+      case 'add': {
+        this.isUpdateCreateProcess();
+        this.isAddPermission(this.process.owner);
+        break;
+      }
+      case 'edit': {
+        this.isUpdateCreateProcess();
+        this.isAddPermission(this.process.owner);
+        break;
+      }
+      default: {
+        this.isAction = false;
+        break;
+      }
     }
   }
-  }
+
   //#endregion method
   isUpdateCreateProcess() {
     if (this.action === 'add' || this.action === 'copy') {
       this.isAddPermission(this.process.owner);
       this.onAdd();
-
     } else {
       this.isAddPermission(this.process.owner);
       this.onUpdate();
@@ -341,33 +340,6 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
 
-  // valueOwner(id) {
-  //   this.api
-  //     .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
-  //     .subscribe((res) => {
-  //       if (res) {
-  //         this.perms = [];
-  //         let emp = res;
-  //         var tmpPermission = new BP_ProcessPermissions();
-  //         tmpPermission.objectID = emp?.userID;
-  //         tmpPermission.objectName = emp?.userName;
-  //         tmpPermission.objectType = '1';
-  //         tmpPermission.read = true;
-  //         tmpPermission.share = true;
-  //         tmpPermission.full = true;
-  //         tmpPermission.delete = true;
-  //         tmpPermission.update = true;
-  //         tmpPermission.upload = true;
-  //         tmpPermission.assign = true;
-  //         tmpPermission.download = true;
-  //         tmpPermission.memberType = '0';
-  //         tmpPermission.autoCreate = true;
-  //         this.perms.push(tmpPermission);
-
-  //         this.process.permissions = this.perms;
-  //       }
-  //     });
-  // }
 
   addFile(e) {
     this.attachment.uploadFile();
@@ -384,7 +356,6 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-
   }
   isAddPermission(id) {
     this.api
@@ -405,9 +376,9 @@ export class PopupAddProcessesComponent implements OnInit {
           } else if (this.checkAdminOfBP(emp.userID)) {
             tmpPermission.objectType = '7';
           }
-          tmpPermission.edit=true;
-          tmpPermission.create=true;
-          tmpPermission.publish=true;
+          tmpPermission.edit = true;
+          tmpPermission.create = true;
+          tmpPermission.publish = true;
           tmpPermission.read = true;
           tmpPermission.share = true;
           tmpPermission.full = true;
@@ -429,14 +400,6 @@ export class PopupAddProcessesComponent implements OnInit {
     this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
     return check;
   }
-  // checkValiName(nameVersion: string){
-  //   let check=true;
-  //   this.revisions.forEach(element => {
-  //     if(element.versionName == nameVersion.trim()) {
-  //       check= false;
-  //     }
-  //   });
-  // }
 
   acceptEdit() {
     if (this.user.administrator) {
@@ -448,16 +411,16 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
 
-  //add Avtarar
   addAvatar() {
     this.imageAvatar.referType = 'avt';
     // gán tạm để test hiển thị nha
     this.process.flowchart = 'avt';
     this.imageAvatar.uploadFile();
   }
-  fileSaveAvatar(e) {
-    if (e && typeof e === 'object') {
-      this.linkAvatar = environment.urlUpload + '/' + e?.pathDisk;
+  fileImgAdded(e) {
+
+    if (e?.data && e?.data?.length > 0) {
+      this.linkAvatar = e?.data[0].avatar;
       this.changeDetectorRef.detectChanges();
     }
   }

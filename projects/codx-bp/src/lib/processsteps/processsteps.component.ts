@@ -74,7 +74,7 @@ export class ProcessStepsComponent
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
-  @Input() isEdit: false;
+  @Input() isEdit :boolean = false;
 
   showButtonAdd = true;
   dataObj?: any;
@@ -125,6 +125,7 @@ export class ProcessStepsComponent
   parentID = '';
   linkFile: any;
   crrPopper: any;
+  idCrrView = "9"
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message
@@ -151,7 +152,7 @@ export class ProcessStepsComponent
 
   onInit(): void {
     this.actived = this.process?.actived;
-    if (!this.actived) {
+    if (!this.actived || !this.isEdit) {
       this.lockChild = this.lockParent = this.hideMoreFC = true;
     }
     this.processID = this.process?.recID ? this.process?.recID : '';
@@ -226,7 +227,7 @@ export class ProcessStepsComponent
         id: '9',
         type: ViewType.content,
         active: false,
-        sameData: true,
+        sameData: false,
         model: {
           panelLeftRef: this.flowChart,
         },
@@ -802,7 +803,7 @@ export class ProcessStepsComponent
   }
 
   onDragDrop(data) {
-    if (!this.actived) {
+    if (!this.actived || !this.isEdit) {
       data.parentID = this.crrParentID;
       return;
     }
@@ -1138,7 +1139,7 @@ export class ProcessStepsComponent
         }
       });
   }
-  async addFile(evt: any) {
+  addFile(evt: any) {
     this.addFlowchart.referType = 'Flowchart';
     this.addFlowchart.uploadFile();
   }
@@ -1184,7 +1185,7 @@ export class ProcessStepsComponent
     p.open();
   }
 
-  print() {
+  printFlowchart() {
     if (this.linkFile) {
       const output = document.getElementById('output');
       const img = document.createElement('img');
@@ -1196,7 +1197,7 @@ export class ProcessStepsComponent
 
       document.body.removeChild(output);
     } else
-      window.frames[0].postMessage(
+      window.frames[0]?.postMessage(
         JSON.stringify({ MessageId: 'Action_Print' }),
         '*'
       );

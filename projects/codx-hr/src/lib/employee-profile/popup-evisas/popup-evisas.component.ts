@@ -12,7 +12,6 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { P } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-evisas',
@@ -24,11 +23,12 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
-  data;
+  lstVisas: any;
+  visaObj
   actionType
-  actionSuccess: boolean = false
   headerText: ''
   funcID;
+  indexSelected
   employId;
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -43,39 +43,37 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    this.dialog = dialog;
-    //this.formModel = dialog?.formModel;
-    this.headerText = data?.data?.headerText;
-    // if(this.formModel){
-    //   this.isAfterRender = true
-    // }
-
+    
+    
     if(!this.formModel){
       this.formModel = new FormModel();
       this.formModel.formName = 'EVisas';
       this.formModel.entityName = 'HR_EVisas';
       this.formModel.gridViewName = 'grvEVisas';
     }
+    this.dialog = dialog;
+    this.headerText = data?.data?.headerText;
     this.funcID = this.dialog.formModel.funcID;
     this.actionType = data?.data?.actionType;
     this.employId = data?.data?.employeeId;
+    this.lstVisas = data?.data?.lstVisas
+    console.log('lst visa constructor',this.lstVisas) ;
+    
+    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+
     if(this.actionType === 'edit' || this.actionType === 'copy'){
-      this.data = JSON.parse(JSON.stringify(data?.data?.visaSelected));
-      this.formModel.currentData = this.data
+      this.visaObj = JSON.parse(JSON.stringify(this.lstVisas[this.indexSelected]));
+      this.formModel.currentData = this.visaObj
     }
-    console.log('employid', this.employId)
-    console.log('formmdel', this.formModel);
   }
 
-  ngAfterViewInit(){
-    this.dialog && this.dialog.closed.subscribe(res => {
-      if(!res.event && this.actionSuccess == true){
-        this.actionSuccess = false
-        this.data.actionTypeFinal = this.actionType
-        this.dialog.close(this.data);
-      }
-    })
-  }
+  // ngAfterViewInit(){
+  //   this.dialog && this.dialog.closed.subscribe(res => {
+  //     if(!res.event){
+  //       this.dialog.close(this.lstVisas);
+  //     }
+  //   })
+  // }
     initForm(){
       this.hrService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -83,14 +81,12 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
         this.formGroup = item;  
         if(this.actionType === 'add'){
           this.hrService.getEmployeeVisaModel().subscribe(p => {
-            console.log('thong tin ho chieu', p);
-            this.data = p;
-            this.formModel.currentData = this.data
+            this.visaObj = p;
+            this.formModel.currentData = this.visaObj
             // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
         })
         }
-        this.formGroup.patchValue(this.data)
+        this.formGroup.patchValue(this.visaObj)
         this.isAfterRender = true
     });
   }
@@ -100,20 +96,22 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
-    if(this.actionType === 'copy'){
-      delete this.data.recID
+    if(this.actionType === 'copy' || this.actionType === 'add'){
+      delete this.visaObj.recID
     }
-    this.data.employeeID = this.employId 
+    this.visaObj.employeeID = this.employId 
     
     if(this.actionType === 'add' || this.actionType === 'copy'){
-      this.hrService.AddEmployeeVisaInfo(this.data).subscribe(p => {
+      this.hrService.AddEmployeeVisaInfo(this.visaObj).subscribe(p => {
         if(p != null){
-          this.data.recID = p.recID;
+          this.visaObj.recID = p.recID;
           this.notify.notifyCode('SYS007')
+          this.lstVisas.push(JSON.parse(JSON.stringify(this.visaObj)));
+          console.log('list visa', this.lstVisas);
+          
           if(this.listView){
-            (this.listView.dataService as CRUDService).add(p).subscribe();
+            (this.listView.dataService as CRUDService).add(this.visaObj).subscribe();
           }
-          this.actionSuccess = true
           // this.dialog.close(p)
         }
         else this.notify.notifyCode('DM034')
@@ -123,11 +121,11 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       this.hrService.updateEmployeeVisaInfo(this.formModel.currentData).subscribe(p => {
         if(p != null){
           this.notify.notifyCode('SYS007')
+          this.lstVisas[this.indexSelected] = p;
           if(this.listView){
-            (this.listView.dataService as CRUDService).update(p).subscribe()
+            (this.listView.dataService as CRUDService).update(this.lstVisas[this.indexSelected]).subscribe()
           }
-          this.actionSuccess = true
-          // this.dialog.close(this.data, actionType);
+          // this.dialog.close(this.data);
         }
         else this.notify.notifyCode('DM034')
       });
@@ -137,10 +135,12 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
 
   click(data) {
     console.log('formdata', data);
-    this.data = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.data)) 
+    this.visaObj = data;
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj)) 
+    // this.indexSelected = this.lstVisas.indexOf(this.visaObj)
+    this.indexSelected = this.lstVisas.findIndex(p => p.recID = this.visaObj.recID);
     this.actionType ='edit'
-    this.formGroup?.patchValue(this.data);
+    this.formGroup?.patchValue(this.visaObj);
     this.cr.detectChanges();
   }
 

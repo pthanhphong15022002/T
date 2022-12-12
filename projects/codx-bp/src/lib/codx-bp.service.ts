@@ -212,4 +212,21 @@ export class CodxBpService {
     return this.api
     .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'isExitNameProcessAsync', [nameProcess]);
   }
+
+  deleteBin(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'DeleteProcessesBinAsync',
+      data
+    );
+  }
+  restoreBinById(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateDeletedProcessesAsync',
+      data
+    );
+  }
 }
