@@ -174,7 +174,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //   option
     // );
     
-    var dialogModel = new DialogModel();
+    let dialogModel = new DialogModel();
     dialogModel.IsFull = true;
     
     let dialogKR = this.callfc.openForm(
@@ -183,6 +183,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       '',
       dialogModel
     );
+    dialogKR.closed.subscribe(res=>{
+      dialogKR=null;
+    })
 
   }
 
