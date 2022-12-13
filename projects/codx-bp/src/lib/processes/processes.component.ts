@@ -134,6 +134,7 @@ export class ProcessesComponent
   isAdmin = false;
   isAdminBp = false;
   oldName='';
+  idProccess='';
 
   constructor(
     inject: Injector,
@@ -458,6 +459,7 @@ export class ProcessesComponent
     this.dataSelected = data;
     this.newName = data.processName;
     this.oldName = data.processName;
+    this.idProccess = data.recID;
     this.crrRecID = data.recID;
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
@@ -673,16 +675,21 @@ export class ProcessesComponent
       );
       return;
     }
-    if(this.oldName.trim().toLocaleUpperCase() === this.newName.trim().toLocaleUpperCase()) {
+    if(this.oldName.trim()===this.newName.trim()) {
+      this.notification.notifyCode('SYS007');
+      this.changeDetectorRef.detectChanges();
+      this.dialogPopup.close();
+    }
+    else if(this.oldName.trim().toLocaleUpperCase() === this.newName.trim().toLocaleUpperCase()) {
       this.CheckExistNameProccess(this.oldName);
     }
     else {
-      this.CheckAllExistNameProccess(this.newName);
+      this.CheckAllExistNameProccess(this.newName,this.idProccess);
     }
   }
-  CheckAllExistNameProccess(newName) {
+  CheckAllExistNameProccess(newName,idProccess) {
     this.bpService
-        .isCheckExitName(newName)
+        .isCheckExitName(newName,idProccess)
         .subscribe((res) => {
           if (res) {
             this.CheckExistNameProccess(newName);
