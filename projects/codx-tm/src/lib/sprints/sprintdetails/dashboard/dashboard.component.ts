@@ -208,11 +208,11 @@ export class DashboardComponent
     var resources = this.resources; //replaceAll(';', ',');
     if (projectID == null) {
       this.model.predicates =
-        '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID = null';
+        '(Category=@0 or Category=@1)and @2.Contains(Owner) and ProjectID = null';
       this.model.dataValues = '1;2;[' + resources + ']';
     } else {
       this.model.predicates =
-        '(Category=@0 or Category=@1)and @2.Contains(outerIt.Owner) and ProjectID=@3';
+        '(Category=@0 or Category=@1)and @2.Contains(Owner) and ProjectID=@3';
       this.model.dataValues = '1;2;[' + resources + '];' + projectID;
     }
     if(resources == null) return ;
