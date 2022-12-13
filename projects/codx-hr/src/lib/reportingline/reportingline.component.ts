@@ -150,12 +150,10 @@ export class ReportinglineComponent extends UIComponent {
             this.funcID
           );
           form.closed.subscribe((res:any) => {
-            debugger
             if(res?.event?.save)
             {
               let node = res.event.save.data;
               this.codxTreeView.setNodeTree(node);
-              console.log(this.codxTreeView);
             }
           });
         }
@@ -231,6 +229,14 @@ export class ReportinglineComponent extends UIComponent {
             option,
             this.view.formModel.funcID
           );
+          // popup.closed.subscribe((res:any) => {
+          //   debugger
+          //   if(res?.event?.save)
+          //   {
+          //     let node = res.event.save.data;
+          //     this.codxTreeView.setNodeTree(node);
+          //   }
+          // });
         });
     }
   }

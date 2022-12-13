@@ -1113,7 +1113,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
     booking.reasonID = null;
-    booking.refID = data.recID; //mã lí do cuộc họp
+    booking.refID = data.meetingID; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {

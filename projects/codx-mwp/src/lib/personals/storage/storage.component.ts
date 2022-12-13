@@ -254,7 +254,7 @@ export class StorageComponent
       this.generateGuid();
       this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
     } else {
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(outerIt.RecID))`;
+      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(RecID))`;
       this.a.instance.dataValueWP = `[${arr.join(';')}]`;
     }
     this.a.instance.isShowCreate = false;

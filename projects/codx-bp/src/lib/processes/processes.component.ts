@@ -163,7 +163,7 @@ export class ProcessesComponent
 
   onInit(): void {
     // this.userId = '2207130007';
-   //  this.isAdmin = false
+    // this.isAdmin = false
     this.button = {
       id: 'btnAdd',
     };
@@ -620,6 +620,7 @@ export class ProcessesComponent
         break;
       case 'BPT201':
       case 'BPT101':
+      case 'BPT701':
         this.viewDetailProcessSteps(e?.data, data);
         break;
       case 'BPT202':
@@ -646,6 +647,9 @@ export class ProcessesComponent
       case 'BPT203':
       case 'BPT103':
         this.revisions(e.data, data);
+        break;
+      case 'BPT702':
+        this.restoreBinById(data);
         break;
     }
   }
@@ -744,8 +748,8 @@ export class ProcessesComponent
           case 'SYS003':// them
           case 'SYS003':// them phien ban
             let isCreate = data?.permissions.some(x => (x.objectID == this.userId && x.create));
-            if (!isCreate && !fullRole) {
-              if (res.functionID === "SYS04") {
+            if ((!isCreate && !fullRole) || data.deleted) {
+              if (res.functionID === "SYS04" ) {
                 res.disabled = true;
               } else {
                 res.isblur = true;
@@ -758,7 +762,7 @@ export class ProcessesComponent
           case 'BPT203'://luu phien ban
           case 'BPT103'://luu phien ban
             let isEdit = data?.permissions.some(x => (x.objectID == this.userId && x.edit));
-            if (!isEdit && !fullRole) {
+            if ((!isEdit && !fullRole) || data.deleted) {
               if (res.functionID === "SYS03") {
                 res.disabled = true;
               } else {
@@ -768,10 +772,11 @@ export class ProcessesComponent
             break;
           case 'SYS02':// xoa
             let isDelete = data?.permissions.some(x => (x.objectID == this.userId && x.delete));
-            if (!isDelete && !fullRole) {
+            if ((!isDelete && !fullRole) || data.deleted) {
               res.disabled = true;
             }
             break;
+          case 'BPT701':// xem
           case 'BPT101':// xem
           case 'BPT201':// xem
           case 'BPT107'://  quan ly phien ban
@@ -795,6 +800,11 @@ export class ProcessesComponent
               res.isblur = true;
             }
             break;
+          case 'BPT702'://Khoi phuc
+          let isRestore = data?.permissions.some(x => (x.objectID == this.userId && x.delete));
+          if ((!isRestore && !fullRole)) {
+            res.isblur = true;
+          }
         }
       });
     }
@@ -808,7 +818,8 @@ export class ProcessesComponent
 
   doubleClickViewProcessSteps(moreFunc, data) {
     let check = this.checkPermissionRead(data);
-    if (check && this.moreFuncDbClick) {
+    // if (check && this.moreFuncDbClick) {
+    if (check) {
       this.viewDetailProcessSteps(moreFunc, data);
     }
   }
@@ -829,8 +840,7 @@ export class ProcessesComponent
       (x) => x.objectID == this.userId && x.edit
     );
     let isOwner = data?.owner == this.userId ? true : false;
-    let editRole =
-      this.isAdmin || isOwner || this.isAdminBp || isEdit ? true : false;
+    let editRole = (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !data.deleted? true : false;
 
     let obj = {
       moreFunc: moreFunc,
@@ -943,20 +953,6 @@ export class ProcessesComponent
       this.isAcceptEdit = false;
     }
   }
-  isPermissionEdit(id) {
-    this.api
-      .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
-      .subscribe((res) => {
-        if (res) {
-          if (res.edit) {
-            this.isAcceptEdit = true;
-          }
-          else {
-            this.isAcceptEdit = false;
-          }
-        }
-      });
-  }
 
   checkAdminOfBP(userid: any) {
     let check: boolean;
@@ -964,18 +960,11 @@ export class ProcessesComponent
     return check;
   }
 
-  changeView(event) {
-    this.currView = null;
-    this.currView = event.view.model.template2;
-    // this.currView = this.templateListCard;
-    //  this.data = [];
-  }
-
-  deleteBin() {
+  deleteBin() { // xoa toan bo thung rac ham nay chưa dung
     if (this.view.dataService?.data.length > 0) {
       var config = new AlertConfirmInputConfig();
       config.type = 'YesNo';
-      let title = `Bạn có muốn xóa hẳn ${this.view.dataService?.data.length} không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?`
+      let title = `Bạn có muốn xóa hẳn ${this.view.dataService?.data.length} hai quy trình này không, bạn sẽ không phục hồi được nếu xóa hẳn khỏi thùng rác ?`
       this.notificationsService
         .alert('Thông báo', title, config)
         .closed.subscribe((x) => {
@@ -991,7 +980,7 @@ export class ProcessesComponent
         })
     }
   }
-  deleteProcessesById(data) { //delete
+  deleteProcessesById(data) { //delete ham nay chua dung
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) => {
@@ -1009,12 +998,13 @@ export class ProcessesComponent
   }
 
   restoreBinById(data) {
-    if (data.recId) {
+    if (data.recID) {
       this.view.dataService.dataSelected = data;
-      this.bpService.restoreBinById(data.recId).subscribe((res) => {
+      this.bpService.restoreBinById(data.recID).subscribe((res) => {
         if (res) {
-          this.notification.notifyCode('SYS008');
-          this.view.dataService.onAction.next({ type: 'delete', data: data });
+          this.notification.notifyCode('SYS034');
+          this.view.dataService.remove(data).subscribe();
+          this.detectorRef.detectChanges();
         }
       });
     }
