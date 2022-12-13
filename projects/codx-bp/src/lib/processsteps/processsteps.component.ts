@@ -76,6 +76,7 @@ export class ProcessStepsComponent
   @Input() childFunc = [];
   @Input() formModel: FormModel;
   @Input() isEdit :boolean = false;
+  @Output() getObjectFile = new EventEmitter();
 
   showButtonAdd = true;
   dataObj?: any;
@@ -1142,7 +1143,8 @@ export class ProcessStepsComponent
 
   fileSave(e) {
     if (e && typeof e === 'object') {
-      this.dataFile = e;
+      this.dataFile = e;   
+      this.getObjectFile.emit(e);
       this.changeDetectorRef.detectChanges();
     }
   }

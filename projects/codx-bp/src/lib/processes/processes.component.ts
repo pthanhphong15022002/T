@@ -943,8 +943,13 @@ export class ProcessesComponent
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
           if (process) {
-            this.view.dataService.update(process).subscribe();
-            this.detectorRef.detectChanges();
+            this.bpService.getFlowChartNew.subscribe(dt=>{
+              process.modifiedOn = dt?.createdOn;
+              debugger
+              this.view.dataService.update(process).subscribe();
+              this.detectorRef.detectChanges();
+           })
+          
           }
         });
       }
@@ -953,14 +958,14 @@ export class ProcessesComponent
 
   approval($event) {}
   //tesst
-  getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
-      if (dt) {
-        let link = environment.urlUpload + '/' + dt?.pathDisk;
-        return link;
-      } else return '../assets/media/img/codx/default/card-default.svg';
-    });
-  }
+  // getFlowchart(data) {
+  //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
+  //     if (dt) {
+  //       let link = environment.urlUpload + '/' + dt?.pathDisk;
+  //       return link;
+  //     } else return '../assets/media/img/codx/default/card-default.svg';
+  //   });
+  // }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {

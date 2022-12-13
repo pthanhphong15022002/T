@@ -19,6 +19,9 @@ export class CodxBpService {
   constructor(private api: ApiHttpService) {}
   public bpProcesses = new BehaviorSubject<BP_Processes>(null);
   isProcess = this.bpProcesses.asObservable();
+  getFlowChartNew = new BehaviorSubject<any>(null);
+  crrFlowChart = this.getFlowChartNew.asObservable();
+
   getListFunctionMenuCreatedStepAsync(funcID) {
     return this.api.exec<any>(
       'BP',
