@@ -187,17 +187,16 @@ export class OrgorganizationComponent extends UIComponent {
             option,
             this.funcID
           );
-          popup.closed.subscribe((res:any) => {
-            if(res?.event?.save)
-            { 
-              let node = res.event.save.data;
-              if(this.codxTreeView)
-              {
-                this.view.dataService.removeIndex(0).subscribe();
-                this.codxTreeView.setNodeTree(node);
-              }
-            }
-          });
+          // popup.closed.subscribe((res:any) => {
+          //   if(res?.event?.save)
+          //   { 
+          //     let node = res.event.save.data;
+          //     if(this.codxTreeView)
+          //     {
+                
+          //     }
+          //   }
+          // });
         }
       });
     }
