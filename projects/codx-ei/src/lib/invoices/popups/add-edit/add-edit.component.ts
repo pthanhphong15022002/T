@@ -182,6 +182,12 @@ export class AddEditComponent implements OnInit {
     this.grid.addRow(null, idx);
   }
 
+  cellChanged(e) {
+    if (e.field === 'itemDesc') {
+      //this.api.exec<any>('EI','GoodsBusiness',);
+    }
+  }
+
   clickMF(e) {}
   //#endregion
 
