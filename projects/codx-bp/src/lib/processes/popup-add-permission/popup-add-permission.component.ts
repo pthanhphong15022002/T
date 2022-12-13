@@ -37,6 +37,7 @@ export class PopupAddPermissionComponent implements OnInit {
   gridViewSetup: any;
   data: any;
   funcID: any;
+  entity: any;
   per = new tmpPermission();
   permission: BP_ProcessPermissions[];
   toPermission: BP_ProcessPermissions[];
@@ -59,6 +60,7 @@ export class PopupAddPermissionComponent implements OnInit {
     this.fullName = this.process.processName;
     this.isShare = dt.data[2];
     this.funcID = this.dialog.formModel.funcID;
+    this.entity = this.dialog.formModel.entityName;
     this.cache
       .gridViewSetup(
         this.dialog.formModel.formName,
@@ -104,13 +106,11 @@ export class PopupAddPermissionComponent implements OnInit {
         this.per.toPermission[i].startDate = this.startDate;
         this.per.toPermission[i].endDate = this.endDate;
       }
-      this.per.toPermission[i].reason = this.requestTitle;
-      this.per.toPermission[i].memo = this.shareContent;
+
       this.per.toPermission[i].share = this.share;
       this.per.toPermission[i].download = this.download;
       this.per.toPermission[i].autoCreate = false;
       if (!this.isShare) {
-
         this.per.toPermission[i].memberType = '4';
         this.per.toPermission[i].approveStatus = '3';
       } else {
@@ -119,13 +119,17 @@ export class PopupAddPermissionComponent implements OnInit {
       this.per.urlShare = this.getPath();
       this.per.urlPath = this.getPath();
     }
+    if (!this.isShare) this.per.form = '4';
+    else this.per.form = '3';
+    this.per.titleEmail = this.requestTitle;
+    this.per.contentEmail = this.shareContent;
     this.api
       .execSv<any>(
         'BP',
         'BP',
         'ProcessesBusiness',
         'RequestOrShareProcessAsync',
-        [this.per, this.funcID]
+        [this.per, this.funcID, this.entity]
       )
       .subscribe((res) => {
         if (res) {
@@ -264,9 +268,7 @@ export class PopupAddPermissionComponent implements OnInit {
             .subscribe((res) => {
               if (res != null) {
                 this.requestTitle = res[0].subject;
-              }else
-              this.requestTitle = $event.data;
-
+              } else this.requestTitle = $event.data;
             });
         }
         break;

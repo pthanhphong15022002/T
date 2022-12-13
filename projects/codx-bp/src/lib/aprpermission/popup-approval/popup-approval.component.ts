@@ -29,8 +29,9 @@ export class PopupApprovalComponent implements OnInit {
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef) {
     this.dialog = dialog;
-    this.dg = dt?.data;
-    this.data = JSON.parse(JSON.stringify(dt?.data.data));
+    this.dg = JSON.parse(JSON.stringify(dt?.data));
+    this.data = JSON.parse(JSON.stringify(this.dg.data));
+    this.statusDefault = this.dg.status;
     this.recIDProcess = this.data.recIDProcess;
     this.funcID = this.dg.formModel.funcID;
     this.entity = this.dg.formModel.entityName;
@@ -47,10 +48,9 @@ export class PopupApprovalComponent implements OnInit {
   }
 
   onSave() {
-    debugger
     this.process.recID = this.recIDProcess;
-    this.permission.approveStatus = '3';
     this.permission.approvedBy = this.user.userID;
+    this.permission.approveStatus = this.statusDefault;
     // this.process.permissions.push(this.permission);
     this.bpSv.setApproveStatus(this.recIDProcess, this.permission, this.funcID, this.entity).subscribe(res =>{
       if(res){

@@ -29,6 +29,19 @@ export class InvoicesComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    let g = {
+      itemID: '0.3-SK5-30',
+      itemName: 'SK5 ROLL-METAL SPRING "T"',
+      itemGroupID: 'ACCESSORIES',
+      itemType: '1',
+      UMID: 'KG',
+      VATControl: '1',
+      Owner: 'ADMIN',
+      CreatedBy: 'ADMIN',
+    };
+
+    // this.api.exec<any>('EI', 'GoodsBusiness', 'SaveAsync', g).subscribe();
+
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');

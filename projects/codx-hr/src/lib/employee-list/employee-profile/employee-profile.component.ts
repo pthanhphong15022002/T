@@ -1,3 +1,5 @@
+import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
+import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { PopupEexperiencesComponent } from './../../employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
@@ -14,21 +16,6 @@ import { PopupEAwardsComponent } from './../../employee-profile/popup-eawards/po
 import { PopupEAssurTaxBankComponent } from './../../employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
 import { PopupEAssetsComponent } from './../../employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEmployeePartyInfoComponent } from './../../employee-profile/popup-employee-party-info/popup-employee-party-info.component';
-// import { EmployeeFamilyRelationshipDetailComponent } from './../../employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
-// import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
-// import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
-// import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
-// import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
-// import { EmployeeTraincoursesComponent } from './../../employee-profile/employee-traincourses/employee-traincourses.component';
-// import { EmployeeSkillDetailComponent } from './../../employee-profile/employee-skill-detail/employee-skill-detail.component';
-// import { EmployeeDegreeDetailComponent } from './../../employee-profile/employee-degree-detail/employee-degree-detail.component';
-// import { EmployeeCertificateDetailComponent } from './../../employee-profile/employee-certificate-detail/employee-certificate-detail.component';
-// import { EmployeeVisaFormComponent } from './../../employee-profile/employee-visa-form/employee-visa-form.component';
-// import { EmployeeAllocatedPropertyComponent } from './../../employee-profile/employee-allocated-property/employee-allocated-property.component';
-// import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
-// import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
-// import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
-// import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 // import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CheckBox } from '@syncfusion/ej2-angular-buttons';
@@ -313,12 +300,25 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //work permit
-        this.hrService
-          .getListWorkPermitByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('w permit', res);
-            this.lstWorkPermit = res;
-          });
+        let op4 = new DataRequest();
+        op4.gridViewName = 'grvEWorkPermits'
+        op4.entityName = 'HR_EWorkPermits'
+        op4.predicate = 'EmployeeID=@0'
+        op4.dataValue = params.employeeID;
+        (op4.page = 1),
+        this.hrService.getListWorkPermitByEmployeeID(op4).subscribe((res) => {
+          if(res){
+            this.lstWorkPermit = res[0];
+            console.log('lstWorkPermit',this.lstWorkPermit);
+          }
+        })
+
+        // this.hrService
+        //   .getListWorkPermitByEmployeeID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('w permit', res);
+        //     this.lstWorkPermit = res;
+        //   });
 
         //Job info
         //this.hrService.getJobInfo()
@@ -485,7 +485,6 @@ export class EmployeeProfileComponent extends UIComponent {
               }
             });
         }
-
         break;
 
       case 'SYS04': //copy
@@ -883,6 +882,37 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
+  editEmployeeTimeCardInfo(){
+    
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogEdit = this.callfunc.openSide(
+      PopupETimeCardComponent,
+    {
+      headerText : "Thông tin chấm công",
+    },
+    option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    })
+  }
+
+  editEmployeeCaculateSalaryInfo(){
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService
+    option.FormModel = this.view.formModel
+    option.Width = '550px'
+    let dialogEdit = this.callfc.openSide(
+        PopupECalculateSalaryComponent,
+      {
+        headerText: "Thông tin tính lương",
+      }
+    )
+  }
+
   handlEmployeeExperiences(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
@@ -1007,7 +1037,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeWorkingLisenceDetailComponent,
       PopupEWorkPermitsComponent,
@@ -1031,6 +1061,7 @@ export class EmployeeProfileComponent extends UIComponent {
       // }
       // console.log(this.lstWorkPermit);
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
