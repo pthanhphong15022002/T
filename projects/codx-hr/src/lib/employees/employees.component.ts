@@ -415,6 +415,8 @@ export class EmployeesComponent extends UIComponent {
   }
 
   doubleClick(data) {
+    // this.codxService.navigate('HRT0301', '', {employeeID: data.employeeID});
+    debugger
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'HR0032') this.urlView = obj.url;

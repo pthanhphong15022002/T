@@ -1340,8 +1340,7 @@ codx-vll {
   align-items: start !important;
 }
 
-ngb-popover-window[role="tooltip"] {
-  display: block;
+.step-rignt ngb-popover-window[role="tooltip"] {
   white-space: nowrap;
 }
 
