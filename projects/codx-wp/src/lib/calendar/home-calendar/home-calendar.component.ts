@@ -34,9 +34,11 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     subject: { name: 'Title' },
     startTime: { name: 'StartDate' },
     endTime: { name: 'EndDate' },
+    status: 'TransType'
   };
   request?: ResourceModel;
   tmpCalendarNote: any;
+  resources: any;
 
   @ViewChild('calendar_notes', { read: ViewContainerRef })
   calendar_notes!: ViewContainerRef;
@@ -85,31 +87,109 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
         },
       },
     ];
-    let myInterval = setInterval(() => {
-      if (this.calendar_notes && this.calendar_setting) {
-        clearInterval(myInterval);
+    let myInterval_Calendar = setInterval(() => {
+      if (this.calendar_notes) {
+        clearInterval(myInterval_Calendar);
         this.getCalendarNotes();
-        this.getCalendarSetting();
       }
     }, 200);
+    // let myInterval_SettingCalendar = setInterval(() => {
+    //   if (this.calendar_notes) {
+    //     clearInterval(myInterval_SettingCalendar);
+    //     this.getCalendarSetting();
+    //   }
+    // }, 200);
   }
 
   getCalendarNotes() {
-    this.tmpCalendarNote = this.calendar_notes.createComponent(CalendarNotesComponent);
+    this.tmpCalendarNote = this.calendar_notes.createComponent(
+      CalendarNotesComponent
+    );
     this.tmpCalendarNote.instance.showHeader = false;
     this.tmpCalendarNote.instance.typeCalendar = 'month';
     this.tmpCalendarNote.instance.showList = false;
     this.tmpCalendarNote.instance.showListParam = true;
+    let myInterval = setInterval(() => {
+      if (this.tmpCalendarNote.instance.settingValue) {
+        clearInterval(myInterval);
+        var TM_Params = [
+          {
+            color: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.TM_Tasks
+            ).ShowBackground,
+            borderColor: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.TM_Tasks
+            ).ShowColor,
+            text: 'TM_Tasks',
+            status: 'TM_MyTasks',
+          },
+        ];
+        var WP_Params = [
+          {
+            color: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.WP_Notes
+            ).ShowBackground,
+            borderColor: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.WP_Notes
+            ).ShowColor,
+            text: 'WP_Notes',
+            status: 'WP_Notes',
+          },
+        ];
+        var CO_Params = [
+          {
+            color: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.CO_Meetings
+            ).ShowBackground,
+            borderColor: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.CO_Meetings
+            ).ShowColor,
+            text: 'CO_Meetings',
+            status: 'CO_Meetings'
+          },
+        ];
+        var EP_BookingRoomParams = [
+          {
+            color: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.EP_BookingRooms
+            ).ShowBackground,
+            borderColor: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.EP_BookingRooms
+            ).ShowColor,
+            text: 'EP_BookingRooms',
+            status: 'EP_BookingRooms',
+          },
+        ];
+        var EP_BookingCarParams = [
+          {
+            color: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.EP_BookingCars
+            ).ShowBackground,
+            borderColor: JSON.parse(
+              this.tmpCalendarNote.instance.settingValue.EP_BookingCars
+            ).ShowColor,
+            text: 'EP_BookingCars',
+            status: 'EP_BookingCars',
+          },
+        ];
+        this.resources = [
+          ...TM_Params,
+          ...WP_Params,
+          ...CO_Params,
+          ...EP_BookingRoomParams,
+          ...EP_BookingCarParams,
+        ];
+        this.getCalendarSetting(this.resources);
+      }
+    });
   }
 
-  getCalendarSetting() {
+  getCalendarSetting(resource) {
     var a = this.calendar_setting.createComponent(SettingCalendarComponent);
     a.instance.funcID = this.funcID;
     a.instance.fields = this.fields;
     a.instance.request = this.request;
     a.instance.showHeader = false;
-    a.instance.resources = {
-      
-    }
+    a.instance.resources = resource;
   }
 }
