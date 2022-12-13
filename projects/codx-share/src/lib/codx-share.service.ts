@@ -21,6 +21,7 @@ import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-
 export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
   dataRefreshImage = new BehaviorSubject<any>(null);
+  dataUpdateShowEvent = new BehaviorSubject<any>(null);
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,

@@ -1,11 +1,12 @@
 <codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP"
   entityName="BP_Processes"
   className="ProcessesBusiness" [method]="method" [views]="views"
-  [button]="showButtonAdd && view.formModel.funcID !='BPT6' && view.formModel.funcID !='BPT7'  ? button : null"
+  [button]="showButtonAdd? button : null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
   (searchChanged)="searchChange($event)"
+  (viewChanged)="viewChanged($event)"
   >
 </codx-views>
 

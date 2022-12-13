@@ -248,7 +248,7 @@ export class FileService implements OnDestroy {
 
       //  return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", file);
     }
-
+  
     addFileTemp(folderID: string, objectID: string, objectType: string, cate: string, fileName: string, data: ArrayBuffer): Observable<any> {
         var bytes = new Int8Array(data as ArrayBuffer);
         var item = this.arrayBufferToBase64(data);

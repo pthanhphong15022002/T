@@ -1132,6 +1132,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           }
           if (isAddFile)
           {
+            fileItem.createdOn = new Date();
             var obj2 = from(this.fileService
               .addFileObservable(
                 fileItem,
