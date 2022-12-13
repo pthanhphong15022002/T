@@ -90,8 +90,6 @@ export class ViewDetailComponent implements OnInit {
         .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
         .subscribe((gv) => {
           if (gv) this.gridViewSetup = gv;
-          console.log(this.gridViewSetup);
-
           this.initForm();
         });
     } else {
@@ -102,8 +100,6 @@ export class ViewDetailComponent implements OnInit {
             .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
             .subscribe((gv) => {
               if (gv) this.gridViewSetup = gv;
-              console.log(this.gridViewSetup);
-
               this.initForm();
             });
         }
@@ -130,8 +126,6 @@ export class ViewDetailComponent implements OnInit {
           this.formModel = formModel;
           this.esService.setCacheFormModel(this.formModel);
         }
-        console.log(this.formModel);
-
         this.initForm();
       });
     }
@@ -171,9 +165,7 @@ export class ViewDetailComponent implements OnInit {
     if (this.itemDetailTemplate && !this.itemDetailTemplate?.formModel) {
       this.itemDetailTemplate.formModel = this.formModel;
     }
-    this.cache.valueList('TM018').subscribe((res) => {
-      console.log('TM018', res);
-    });
+    this.cache.valueList('TM018').subscribe((res) => {});
     if (this.itemDetail?.recID) {
       this.esService.getTask(this.itemDetail?.recID).subscribe((res) => {
         this.taskViews = res;
@@ -186,8 +178,6 @@ export class ViewDetailComponent implements OnInit {
         this.esService
           .getLstFileByID(this.itemDetail.files.map((x) => x.fileID))
           .subscribe((res) => {
-            console.log('get file', res);
-
             if (res) {
               this.files = res;
             }
@@ -215,7 +205,6 @@ export class ViewDetailComponent implements OnInit {
                         this.df.detectChanges();
                       });
                   }
-                  console.log(oEntity);
                 });
             }
             this.itemDetail = res;
@@ -490,7 +479,6 @@ export class ViewDetailComponent implements OnInit {
                   this.oCancelSF = datas;
                   this.callfunc.openForm(this.addCancelComment, '', 650, 380);
                 }
-                console.log(lstTrans);
                 return;
               }
             });
@@ -620,9 +608,7 @@ export class ViewDetailComponent implements OnInit {
     return true;
   }
 
-  clickMF(e) {
-    console.log(e);
-  }
+  clickMF(e) {}
 
   saveFile() {
     this.attachment.saveFiles();
