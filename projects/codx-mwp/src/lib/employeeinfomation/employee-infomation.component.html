@@ -55,7 +55,7 @@
         <div class="pw-content w-100 pw-lg scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
           data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
           data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px">
-          <div class="user-content flex-row-fluid" (sectionChange)="onSectionChange($event)">
+          <div class="user-content flex-row-fluid px-2" (sectionChange)="onSectionChange($event)">
             <ng-container>
               <!-- thong tin chung -->
               <div class="user-profile overview d-block mb-3" id="MWP00201">
@@ -543,14 +543,8 @@
                         </button>
                       </div>
                       <ng-container *ngIf="showCBB">
-                        <codx-combobox-popup 
-                          comboboxName="Skills" 
-                          field="skill" 
-                          [multiple]="true" 
-                          [width]="width"
-                          [height]="height" 
-                          (clickSave)="saveAddSkill($event)" 
-                          title="Kỹ năng">
+                        <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
+                          [height]="height" (clickSave)="saveAddSkill($event)" title="Kỹ năng">
                         </codx-combobox-popup>
                       </ng-container>
                     </ng-container>
@@ -567,8 +561,7 @@
                   </codx-label>
                 </div>
                 <div class="border rounded-2 p-6">
-                  <div
-                    class="text-dark fw-bold text-uppercase mt-8 mb-4">
+                  <div *ngIf="educations.length" class="text-dark fw-bold text-uppercase mt-8 mb-4">
                     <codx-label [formModel]="view.formModel" name="lblOutSide" default="Bên ngoài công ty">
                     </codx-label>
                   </div>
@@ -587,7 +580,7 @@
                         </button>
                       </div>
                     </ng-container>
-                    
+
                   </div>
                 </div>
               </div>

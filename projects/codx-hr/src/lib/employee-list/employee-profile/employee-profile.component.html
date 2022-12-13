@@ -558,7 +558,7 @@
 <!-- pane_0 -->
 <ng-template #info>
   <div
-    class="pw-content w-100 pw-lg scroll-y"
+    class="pw-content w-100 pw-lg scroll-y aqua"
     data-kt-scroll="true"
     data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto"
@@ -1672,11 +1672,7 @@
       <!-- <div class="col d-flex" id="MWP00202" class="d-block mt-6">
         <div class="user-profile overview">
           <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-            <codx-label
-              name="lblExperencies"
-              [formModel]="view.formModel"
-              default="Kinh nghiệm trước đây"
-            >
+            <codx-label name="lblExperencies" [formModel]="view.formModel" default="Kinh nghiệm trước đây">
             </codx-label>
           </div>
           <div class="border rounded-2 p-4 pb-0">
@@ -1697,41 +1693,21 @@
                 <div class="process-item d-flex mb-4">
                   <div class="yeartoyear mt-3"></div>
                   <div class="mx-3 mt-3 process-line">
-                    <span
-                      class="icon-add_circle_outline icon-16 text-success"
-                    ></span>
+                    <span class="icon-add_circle_outline icon-16 text-success"></span>
                   </div>
                   <div class="add-process">
-                    <button
-                      class="btn btn-sm btn-light"
-                      (click)="handlEmployeeExperiences('add', null)"
-                    >
+                    <button class="btn btn-sm btn-light" (click)="handlEmployeeExperiences('add', null)">
                       <i class="icon-add icon-16 ms-n2"></i>
-                      <codx-label
-                        name="lblAdd"
-                        [formModel]="view.formModel"
-                        default="Thêm mới kinh nghiệm"
-                      >
+                      <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới kinh nghiệm">
                       </codx-label>
                     </button>
                   </div>
                 </div>
-                <codx-gridview-v2
-                  [service]="'HR'"
-                  [gridViewName]="'grvEExperiences'"
-                  [formName]="'EExperiences'"
-                  [assemblyName]="'HR'"
-                  [className]="'EExperiencesBusiness'"
-                  [method]="'GetListByEmployeeIDAsync'"
-                  [predicates]="'EmployeeID=@0'"
-                  [autoLoad]="true"
-                  [height]="200"
-                  [dataValues]="data.employeeID"
-                  [entityName]="'HR_EExperiences'"
-                  [contentEditable]="false"
-                  [allowResizing]="true"
-                  (clickMF)="clickMF($event, null, 'eexperiences')"
-                ></codx-gridview-v2>
+                <codx-gridview-v2 [service]="'HR'" [gridViewName]="'grvEExperiences'" [formName]="'EExperiences'"
+                  [assemblyName]="'HR'" [className]="'EExperiencesBusiness'" [method]="'GetListByEmployeeIDAsync'"
+                  [predicates]="'EmployeeID=@0'" [autoLoad]="true" [height]="200" [dataValues]="data.employeeID"
+                  [entityName]="'HR_EExperiences'" [contentEditable]="false" [allowResizing]="true"
+                  (clickMF)="clickMF($event, null, 'eexperiences')"></codx-gridview-v2>
               </ng-container>
             </div>
           </div>
@@ -1740,11 +1716,7 @@
       <div class="col d-flex" id="MWP00205" class="d-block mb-3">
         <div class="user-profile overview">
           <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-            <codx-label
-              name="lblRelationShip"
-              [formModel]="view.formModel"
-              default="Quan hệ gia đình"
-            >
+            <codx-label name="lblRelationShip" [formModel]="view.formModel" default="Quan hệ gia đình">
             </codx-label>
             <ngx-skeleton-loader count="5" animation="progress">
             </ngx-skeleton-loader>
@@ -1753,15 +1725,9 @@
             <div class="row">
               <ng-container>
                 <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                  <codx-card-center
-                    cardCss="border h-100"
-                    [imageId]="'relationship.recID'"
-                    [formModel]="view.formModel"
-                    [title]="'relationship.relationName'"
-                    [dataItem]="'relationship'"
-                    [typeMF]="'hover'"
-                    [desc]="'relationship.relationType' + ' | ' + 'Năm sinh: '"
-                  >
+                  <codx-card-center cardCss="border h-100" [imageId]="'relationship.recID'" [formModel]="view.formModel"
+                    [title]="'relationship.relationName'" [dataItem]="'relationship'" [typeMF]="'hover'"
+                    [desc]="'relationship.relationType' + ' | ' + 'Năm sinh: '">
                   </codx-card-center>
                 </div>
               </ng-container>
@@ -1771,11 +1737,7 @@
                     <div class="add-process">
                       <button class="btn btn-sm btn-light">
                         <i class="icon-add icon-16 ms-n2"></i>
-                        <codx-label
-                          name="lblAdd"
-                          [formModel]="view.formModel"
-                          default="Thêm mới"
-                        >
+                        <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                         </codx-label>
                       </button>
                     </div>
@@ -1791,18 +1753,11 @@
       <!-- <div class="col d-flex" id="MWP00206" class="d-block mb-5">
         <div class="user-profile overview">
           <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-            <codx-label
-              name="lblHobbie"
-              [formModel]="view.formModel"
-              default="Sở thích"
-            >
+            <codx-label name="lblHobbie" [formModel]="view.formModel" default="Sở thích">
             </codx-label>
           </div>
         </div>
-        <ngx-skeleton-loader
-          count="5"
-          animation="progress"
-        ></ngx-skeleton-loader>
+        <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
         <div class="border rounded-2 p-4">
           <div class="list-hoppy">
             <div class="d-flex align-items-center user-item tagitem">
@@ -1814,11 +1769,7 @@
             <div class="add-process">
               <button class="btn btn-sm btn-light">
                 <i class="icon-add icon-16 ms-n2"></i>
-                <codx-label
-                  name="lblAdd"
-                  [formModel]="view.formModel"
-                  default="Thêm mới"
-                >
+                <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                 </codx-label>
               </button>
             </div>
@@ -2536,7 +2487,7 @@
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
                     <div
-                      class="border border-gray-300 rounded min-w-250px mw-300px me-4 mb-2"
+                      class="border rounded min-w-250px mw-300px me-4 mb-2"
                       *ngIf="crrEBSalary != null"
                     >
                       <codx-temp-full
@@ -2544,7 +2495,7 @@
                         [dataItem]="crrEBSalary"
                         [formModel]="view.formModel"
                         [footer]="footerEBSalaries"
-                        cardCss="card-template px-2 pt-4 pb-2"
+                        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                         [typeMF]="'hover'"
                       >
                       </codx-temp-full>
@@ -2562,7 +2513,7 @@
                       </ng-template>
                     </div>
                     <div
-                      class="border border-gray-300 rounded min-w-250px mw-300px me-4 mb-2"
+                      class="border rounded min-w-250px mw-300px me-4 mb-2"
                       *ngIf="crrJobSalaries != null"
                     >
                       <codx-temp-full
@@ -2570,7 +2521,7 @@
                         [dataItem]="crrJobSalaries"
                         [formModel]="view.formModel"
                         [footer]="footerJobSalaries"
-                        cardCss="card-template px-2 pt-4 pb-2"
+                        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                         [typeMF]="'hover'"
                       >
                       </codx-temp-full>
@@ -2624,7 +2575,7 @@
                   <div class="d-flex flex-wrap py-3 px-4">
                     <ng-container *ngFor="let benefit of listCrrBenefit">
                       <div
-                        class="border border-gray-300 rounded min-w-250px mw-250px me-4 mb-2"
+                        class="border rounded min-w-250px mw-250px me-4 mb-2"
                         *ngIf="benefit != null"
                       >
                         <codx-temp-full
@@ -2632,16 +2583,16 @@
                           [dataItem]="benefit"
                           [formModel]="view.formModel"
                           [footer]="footerBenefit"
-                          cardCss="card-template px-2 pt-4 pb-2"
+                          cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                           [typeMF]="'hover'"
                         >
                         </codx-temp-full>
                         <ng-template #footerBenefit let-data>
-                          <div class="d-flex align-items-center">
+                          <div class="d-flex align-items-center mt-1">
                             <span class="icon-attach_money"></span
                             >{{ data.benefitID }}
                           </div>
-                          <div class="d-flex align-items-center mt-3">
+                          <div class="d-flex align-items-center mt-1">
                             <span class="icon-attach_money"></span
                             >{{ data.benefitAmt }}
                           </div>

@@ -1,57 +1,33 @@
 <ng-template #footer>
     <div class="d-flex justify-content-end">
         <button class="btn btn-primary" (click)="onSaveForm()">
-        <i class="icon-save"></i>
-        <codx-label
-            default="Lưu"
-            name="lblSave"
-            [formModel]="formModel"
-        ></codx-label>
+            <i class="icon-save"></i>
+            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
         </button>
     </div>
 </ng-template>
 
-<codx-form
-    #form
-    [headerText] = "headerText"
-    [body]="body"
-    [formModel]="formModel"
-    [footer]="footer"
-    [dialog]="dialog"
-    [data]="data"
-    *ngIf="isAfterRender"
->
+<codx-form #form [headerText]="headerText" [body]="body" [formModel]="formModel" [footer]="footer" [dialog]="dialog"
+    [data]="data" *ngIf="isAfterRender">
     <ng-template #body>
         <div class="form-group">
             <codx-label fiedName="AssetID" [formModel]="formModel">
             </codx-label>
-            <codx-input
-                field="assetID"
-                [formModel]="formModel"
-                [Group]="formGroup"
-                >
+            <codx-input field="assetID" [formModel]="formModel" [Group]="formGroup">
             </codx-input>
         </div>
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label  fiedName="AssetCategory" [formModel]="formModel"></codx-label>
+                <codx-label fiedName="AssetCategory" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        field="assetCategory"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
+                    <codx-input field="assetCategory" [formModel]="formModel" [Group]="formGroup"></codx-input>
                 </div>
             </div>
             <div class="col-6">
                 <codx-label fiedName="IsAllowReturn" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                        field="isAllowReturn"
-                    ></codx-input>
+                    <codx-input [formModel]="formModel" [Group]="formGroup" field="isAllowReturn"></codx-input>
                 </div>
             </div>
 
@@ -60,33 +36,21 @@
         <div class="form-group">
             <codx-label fiedName="AssetNo" [formModel]="formModel">
             </codx-label>
-            <codx-input
-                field="assetNo"
-                [formModel]="formModel"
-                [Group]="formGroup"
-                >
+            <codx-input field="assetNo" [formModel]="formModel" [Group]="formGroup">
             </codx-input>
         </div>
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label  fiedName="IsReturned" [formModel]="formModel"></codx-label>
+                <codx-label fiedName="IsReturned" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        field="isReturned"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
+                    <codx-input field="isReturned" [formModel]="formModel" [Group]="formGroup"></codx-input>
                 </div>
             </div>
             <div class="col-6">
                 <codx-label fiedName="ReturnedDate" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                        field="returnedDate"
-                    ></codx-input>
+                    <codx-input [formModel]="formModel" [Group]="formGroup" field="returnedDate"></codx-input>
                 </div>
             </div>
 
@@ -95,33 +59,21 @@
         <div class="form-group">
             <codx-label fiedName="Note" [formModel]="formModel">
             </codx-label>
-            <codx-input
-                field="note"
-                [formModel]="formModel"
-                [Group]="formGroup"
-                >
+            <codx-input field="note" [formModel]="formModel" [Group]="formGroup">
             </codx-input>
         </div>
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label  fiedName="IssuedDate" [formModel]="formModel"></codx-label>
+                <codx-label fiedName="IssuedDate" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        field="issuedDate"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
+                    <codx-input field="issuedDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
                 </div>
             </div>
             <div class="col-6">
                 <codx-label fiedName="IssuedBy" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                        field="issuedBy"
-                    ></codx-input>
+                    <codx-input [formModel]="formModel" [Group]="formGroup" field="issuedBy"></codx-input>
                 </div>
             </div>
 
@@ -129,23 +81,15 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label  fiedName="ReceivedDate" [formModel]="formModel"></codx-label>
+                <codx-label fiedName="ReceivedDate" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        field="receivedDate"
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                    ></codx-input>
+                    <codx-input field="receivedDate" [formModel]="formModel" [Group]="formGroup"></codx-input>
                 </div>
             </div>
             <div class="col-6">
                 <codx-label fiedName="ReceivedBy" [formModel]="formModel"></codx-label>
                 <div>
-                    <codx-input
-                        [formModel]="formModel"
-                        [Group]="formGroup"
-                        field="receivedBy"
-                    ></codx-input>
+                    <codx-input [formModel]="formModel" [Group]="formGroup" field="receivedBy"></codx-input>
                 </div>
             </div>
         </div>
