@@ -60,24 +60,24 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
 
   ngAfterViewInit() {
     if(this.listView){
-      console.log('list salaries', this.listView.dataService.data);
-      for(let i = 0; i < this.listView.dataService.data.length; i++){
-        if(this.listView.dataService.data[i].isCurrent == 'true'){
-          this.currentEJobSalaries = this.listView.dataService.data[i];
-          break;
-        }
-      }
-
-      
+    console.log('list salaries', this.listView.dataService.data);
     }
+
     this.dialog.closed.subscribe(res => {
       console.log('res khi close', res);
       if(!res.event){
+        for(let i = 0; i < this.listView.dataService.data.length; i++){
+          if(this.listView.dataService.data[i].isCurrent == true){
+            this.currentEJobSalaries = this.listView.dataService.data[i];
+            break;
+          }
+        }
         this.dialog && this.dialog.close(this.currentEJobSalaries);
       }
     })
   }
 
+  
 
   initForm() {
     this.hrSevice
@@ -164,9 +164,7 @@ export class PopupEJobSalariesComponent extends UIComponent implements OnInit {
   }
 
   afterRenderListView(evt) {
-
     this.listView = evt;
-    console.log(this.listView);
-
+    console.log('lst view data', this.listView);
   }
 }

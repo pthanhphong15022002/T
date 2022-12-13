@@ -3,7 +3,7 @@
 <ng-template #body>
   <div class="form-group mt-3">
     <codx-label fiedName="ApproveStatus" [formModel]="dialog.formModel" [default]="'Trạng thái'"></codx-label>
-    <codx-input type="valuelist" field="approveStatus" [crrValue]="permission.approveStatus" [refValue]="vllStatus"
+    <codx-input type="valuelist" field="approveStatus" [crrValue]="statusDefault" [refValue]="vllStatus"
     placeholder="" [disabled]="true"></codx-input>
   </div>
   <div class="form-group mt-3">

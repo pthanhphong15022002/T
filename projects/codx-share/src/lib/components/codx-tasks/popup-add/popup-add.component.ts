@@ -229,7 +229,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
-      if (this.functionID == 'TMT0203') {
+      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062') {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -237,7 +237,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.openTask();
     } else if (this.action == 'copy') {
       this.task.status = '10';
-      if (this.functionID == 'TMT0203') {
+      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062') {
         this.task.category = '3';
       } else {
         this.task.category = '1';

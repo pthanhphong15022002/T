@@ -23,6 +23,7 @@ import { CodxBpService } from '../codx-bp.service';
 import { B } from '@angular/cdk/keycodes';
 import { CodxTreeHistoryComponent } from 'projects/codx-share/src/lib/components/codx-tree-history/codx-tree-history.component';
 import { environment } from 'src/environments/environment';
+import { CodxHistoryComponent } from 'projects/codx-share/src/lib/components/codx-history/codx-history.component';
 
 @Component({
   selector: 'lib-properties',
@@ -30,8 +31,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./properties.component.css'],
 })
 export class PropertiesComponent implements OnInit {
-  @ViewChild(CodxTreeHistoryComponent, { static: true })
-  history: CodxTreeHistoryComponent;
+  @ViewChild('history') history: CodxHistoryComponent;
 
   process = new BP_Processes();
   rattings: BP_ProcessesRating[] = [];
@@ -239,7 +239,10 @@ export class PropertiesComponent implements OnInit {
           );
           this.getRating(res.rattings);
           this.notificationsService.notifyCode('DM010');
-          // this.history.getDataAsync(this.process.recID, '');bp
+          // this.history.objectID = this.id;
+          // this.history.funcID = this.funcID;
+          // this.history.formModel = this.dialog.formModel;
+          // this.history.getDataAsync(this.process.recID);
           this.dialog.dataService.update(this.process).subscribe();
           this.changeDetectorRef.detectChanges();
         }

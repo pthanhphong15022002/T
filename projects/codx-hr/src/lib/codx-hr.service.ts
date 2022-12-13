@@ -378,13 +378,23 @@ export class CodxHrService {
     );
   }
   //#region EWorkPermitsBusiness
-  getListWorkPermitByEmployeeID(employeeID: string) {
+  // getListWorkPermitByEmployeeID(employeeID: string) {
+  //   return this.api.execSv<any>(
+  //     'HR',
+  //     'HR',
+  //     'EWorkPermitsBusiness',
+  //     'GetListWorkPermitsByEmployeeIDAsync',
+  //     [employeeID]
+  //   );
+  // }
+
+  getListWorkPermitByEmployeeID(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EWorkPermitsBusiness',
-      'GetListByEmployeeIDAsync',
-      [employeeID]
+      'GetListWorkPermitsByEmployeeIDAsync',
+      data
     );
   }
 
