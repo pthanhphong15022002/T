@@ -313,7 +313,6 @@
     ></codx-label
     >{{ " " + data?.stepNo }}
     <codx-label name="lblSplit" default=":"></codx-label>
-    {{data?.stepName.length}}
     <span  
       #p="ngbPopover" 
       [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
