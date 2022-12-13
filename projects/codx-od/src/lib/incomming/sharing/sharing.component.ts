@@ -70,9 +70,12 @@ export class SharingComponent implements OnInit {
     this.dataDis.share = this.shareForm.get('share').value == null ? false :this.shareForm.get('share').value;
     this.dataDis.formDate = this.shareForm.get('formDate').value == null ? new Date : this.shareForm.get('formDate').value;
     this.dataDis.toDate = this.shareForm.get('toDate').value == null ? new Date : this.shareForm.get('formDate').value; */
-    if(this.shareForm.value.formDate == null) this.shareForm.value.formDate = new Date();
-    if(this.shareForm.value.toDate == null) this.shareForm.value.toDate = new Date();
+    var idFile = "";
+    if(this.data.files) this.data.files.forEach(elm => {
+      idFile += elm.recID + ";"
+    });
     this.shareForm.value.recID = this.dialog.dataService.dataSelected.recID;
+    this.shareForm.value.idFile = idFile;
     this.odService.shareDispatch(this.shareForm.value).subscribe((item)=>{
       if(item.status==0)
       {
