@@ -84,17 +84,17 @@
               <div class="d-flex flex-row align-items-start">
                 <codx-vll *ngIf="
                     itemSelected?.extendStatus != null &&
-                    itemSelected?.extendStatus >= '3'
+                    itemSelected?.extendStatus >= '3'  && vllExtendStatus
                   " [name]="vllExtendStatus" [field]="'ExtendStatus'" [value]="itemSelected?.extendStatus"
                   [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
                 <codx-vll *ngIf="
                     itemSelected?.approveStatus != null &&
-                    itemSelected?.approveStatus >= '2'
+                    itemSelected?.approveStatus >= '2' && vllApproveStatus
                   " [name]="vllApproveStatus" [field]="'ApproveStatus'" [value]="itemSelected?.approveStatus"
                   [showText]="true" [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
-                <codx-vll [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
+                <codx-vll *ngIf="vllStatus" [name]="vllStatus" [field]="'Status'" [value]="itemSelected?.status" [showText]="true"
                   [showBgColor]="true" class="badge badge-light badge-md fs-7">
                 </codx-vll>
               </div>

@@ -133,6 +133,7 @@ export class ProcessesComponent
   userId = '';
   isAdmin = false;
   isAdminBp = false;
+  oldName='';
 
   constructor(
     inject: Injector,
@@ -456,6 +457,7 @@ export class ProcessesComponent
   reName(data) {
     this.dataSelected = data;
     this.newName = data.processName;
+    this.oldName = data.processName;
     this.crrRecID = data.recID;
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
@@ -653,6 +655,12 @@ export class ProcessesComponent
   }
 
   valueChange(e) {
+    // if(this.oldName =='' || this.oldName==null) {
+    //   this.oldName = e.data;
+    // }
+    // else {
+    //   this.newName = e.data;
+    // }
     this.newName = e.data;
   }
 
@@ -665,14 +673,47 @@ export class ProcessesComponent
       );
       return;
     }
+    if(this.oldName.trim().toLocaleUpperCase() === this.newName.trim().toLocaleUpperCase()) {
+      this.CheckExistNameProccess(this.oldName);
+    }
+    else {
+      this.CheckAllExistNameProccess(this.newName);
+    }
+  }
+  CheckAllExistNameProccess(newName) {
+    this.bpService
+        .isCheckExitName(newName)
+        .subscribe((res) => {
+          if (res) {
+            this.CheckExistNameProccess(newName);
+          }
+          else {
+            this.actionReName(newName);
+          }
+        });
+  }
+  CheckExistNameProccess(newName){
+    this.notificationsService
+    .alertCode(
+      'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+    )
+    .subscribe((x) => {
+      if (x.event?.status == 'N') {
+        return;
+      } else if (x.event?.status == 'Y') {
+        this.actionReName(newName);
+      }
+    });
+  }
+  actionReName(newName){
     this.api
       .exec('BP', 'ProcessesBusiness', 'UpdateProcessNameAsync', [
         this.crrRecID,
-        this.newName,
+        newName,
       ])
       .subscribe((res) => {
         if (res) {
-          this.dataSelected.processName = this.newName;
+          this.dataSelected.processName = newName;
           this.view.dataService.update(this.dataSelected).subscribe();
           this.notification.notifyCode('SYS007');
           this.changeDetectorRef.detectChanges();
@@ -933,7 +974,7 @@ export class ProcessesComponent
                 this.notification.notifyCode('SYS008');
                 this.view.dataService.data = []
                 this.detectorRef.detectChanges();
-              }           
+              }
             });
           };
         })
