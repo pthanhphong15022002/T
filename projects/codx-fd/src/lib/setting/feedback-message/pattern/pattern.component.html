@@ -3,8 +3,8 @@
 
 <ng-template #panelLeftRef>
   <div class="ms-20 me-6 gift-list">
-    <div class="d-flex">
-      <div class="gift-card w-100px card-with-dropdown-item ms-9"
+    <div class="float-left">
+      <div class="gift-card w-100px card-with-dropdown-item ms-9 mb-9"
         *ngFor="let item of lstPattern; trackBy: trackByfn; let i = index">
         <div class="card-img has-action-menu cursor-pointer" #elm *ngIf="i < lstPattern.length - 1; else template">
           <div class="action-menu d-flex">
