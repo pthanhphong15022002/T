@@ -103,7 +103,6 @@ export class AddEditComponent implements OnInit {
     this.invoices = dialog.dataService!.dataSelected;
     this.action = dialogData.data[0];
     this.headerText = dialogData.data[1];
-    this.fmInvoiceLines.funcID = dialog.dataService.formModel.funcID;
   }
   //#endregion
 
@@ -131,6 +130,7 @@ export class AddEditComponent implements OnInit {
         }
       });
   }
+
   ngAfterViewInit() {
     if (this.action != 'add') this.form.formGroup.patchValue(this.invoices);
     else {
@@ -179,9 +179,10 @@ export class AddEditComponent implements OnInit {
 
   addRow() {
     let idx = this.data.length;
-    this.grid.gridRef?.addRecord();
+    this.grid.addRow(null, idx);
   }
 
+  clickMF(e) {}
   //#endregion
 
   //#region CRUD
@@ -198,6 +199,7 @@ export class AddEditComponent implements OnInit {
       .subscribe();
   }
   //#endregion
+
   //#region Function
   bindingTaxInfor(data) {
     this.form.formGroup.patchValue({ custName: data['custName'] });

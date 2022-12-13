@@ -278,3 +278,14 @@
   white-space: nowrap !important;
   padding: 8px 15px !important;
 }
+codx-views {
+  height: 100%;
+}
+
+:host ::ng-deep .container-fluid{
+  height: 78vh !important;
+}
+
+:host ::ng-deep .popover {
+  max-width: 500px !important;
+  }

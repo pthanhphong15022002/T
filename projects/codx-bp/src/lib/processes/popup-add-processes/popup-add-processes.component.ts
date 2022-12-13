@@ -187,7 +187,7 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if(this.process.processName.trim() === this.nameOld?.trim()) {
+    if(this.process.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase()) {
       this.CheckExistNameProccess();
     }
     else {

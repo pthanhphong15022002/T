@@ -305,10 +305,24 @@
 <ng-template #titleTmp let-data>
   <div style="width: 90%" class="fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
-    }}">
-    <codx-label name="lblStepNo" [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"></codx-label>{{ " " +
-    data?.stepNo }}
-    <codx-label name="lblSplit" default=":"></codx-label><span>{{ " " + data?.stepName }}</span>
+    }}"
+  >
+    <codx-label
+      name="lblStepNo"
+      [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"
+    ></codx-label
+    >{{ " " + data?.stepNo }}
+    <codx-label name="lblSplit" default=":"></codx-label>
+    {{data?.stepName.length}}
+    <span  
+      #p="ngbPopover" 
+      [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
+      [openDelay]="500" (mouseenter)="p.open()"
+      (mouseleave)="p.close()" placement="top bottom "
+    >
+      {{ " " + data?.stepName }}
+    </span>
+   
   </div>
   <!-- <div  
     *ngIf="data.stepType == 'P' || data.stepType == 'A'"
@@ -499,4 +513,7 @@
   <codx-mfunc type="hover" [formModel]="view.formModel" (clickMF)="clickMF($event, dataHover)" [isBookMark]="false"
     [dataItem]="dataHover">
   </codx-mfunc>
+</ng-template>
+<ng-template #showAllparentName let-text>
+  <span>{{text}}</span>
 </ng-template>
