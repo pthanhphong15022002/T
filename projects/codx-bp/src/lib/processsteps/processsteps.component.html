@@ -135,7 +135,7 @@
 
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
 <ng-template #itemViewList>
-  <div class="card">
+  <div class="card" >
     <div>
       <!-- <div> -->
       <!-- <div class="mb-5">
@@ -301,7 +301,6 @@
     </div>
   </div>
 </ng-template>
-
 <ng-template #titleTmp let-data>
   <div style="width: 90%" class="fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
@@ -516,3 +515,9 @@
 <ng-template #showAllparentName let-text>
   <span>{{text}}</span>
 </ng-template>
+
+<!-- <ng-template #templateView>
+  <ng-container *ngIf="idView=='16'" [ngTemplateOutlet]="itemViewList"></ng-container>
+  
+  <ng-container *ngIf="idView=='9'" [ngTemplateOutlet]="flowChart"></ng-container>
+</ng-template> -->
