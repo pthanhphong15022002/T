@@ -23,7 +23,7 @@
   [service]="service"
   [entityName]="entityName"
   [idField]="idField"
-  [funcID]="funcID"
+  [funcID]="'TMT0201'"
   [assemblyName]="assemblyName"
   [className]="className"
   [method]="method"
@@ -161,18 +161,26 @@
   </div>
   <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
     <div *ngIf="data?.priority">
-      <span class="icon-14 me-1" [class]="data?.priority | vll: 'TM005':'icon' | async"
-        [style.color]="data?.priority | vll: 'TM005':'textColor' | async">
+      <span
+        class="icon-14 me-1"
+        [class]="data?.priority | vll : 'TM005' : 'icon' | async"
+        [style.color]="data?.priority | vll : 'TM005' : 'textColor' | async"
+      >
       </span>
       <span class="text-gray-700">{{
-        data?.priority | vll: 'TM005':"text" | async
-        }}</span>
+        data?.priority | vll : "TM005" : "text" | async
+      }}</span>
     </div>
     <div #priority *ngIf="!data?.priority">
       {{
-      data?.priority
-      | formatvalue: view.formModel:"priority":priority:"Tasks":"grvTasks"
-      | async
+        data?.priority
+          | formatvalue
+            : view.formModel
+            : "priority"
+            : priority
+            : "Tasks"
+            : "grvTasks"
+          | async
       }}
     </div>
   </div>
@@ -182,13 +190,18 @@
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
         <span *ngIf="data.dueDate" class="text-gray-700">{{
-          data.dueDate | date: "dd/MM/yyyy"
-          }}</span>
+          data.dueDate | date : "dd/MM/yyyy"
+        }}</span>
         <span #dueDate *ngIf="!data.dueDate">{{
           data?.dueDate
-          | formatvalue: view.formModel:"dueDate":dueDate:"Tasks":"grvTasks"
-          | async
-          }}</span>
+            | formatvalue
+              : view.formModel
+              : "dueDate"
+              : dueDate
+              : "Tasks"
+              : "grvTasks"
+            | async
+        }}</span>
       </span>
     </div>
   </div>
@@ -197,7 +210,12 @@
 
   <div class="mb-2 text-dark me-6">
     <span>
-      <codx-label default="Nội dung công việc :" name="lblMemo" [formModel]="view.formModel" class="text-gray-600">
+      <codx-label
+        default="Nội dung công việc :"
+        name="lblMemo"
+        [formModel]="view.formModel"
+        class="text-gray-600"
+      >
       </codx-label>
     </span>
 
@@ -209,11 +227,21 @@
   </div>
   <div class="d-flex mb-2">
     <div class="d-flex text-dark me-6">
-      <codx-label fiedName="Owner" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện"
-        class="text-gray-600 me-4">
+      <codx-label
+        fiedName="Owner"
+        formName="Tasks"
+        gridViewName="grvTasks"
+        default="Người thực hiện"
+        class="text-gray-600 me-4"
+      >
       </codx-label>
       <div class="d-flex justify-content-end">
-        <codx-imgs [objectId]="data?.owner" objectType="AD_Users" [numberImages]="4" [width]="30">
+        <codx-imgs
+          [objectId]="data?.owner"
+          objectType="AD_Users"
+          [numberImages]="4"
+          [width]="30"
+        >
         </codx-imgs>
       </div>
     </div>
@@ -221,25 +249,44 @@
 
   <ng-template #tempHtml>
     <ng-container *ngIf="data?.category == '2'">
-      <span [innerHTML]="data?.memo2" (mouseenter)="popoverMemo2.open()" (mouseover)="popoverMemo2.close()"
-        [ngbPopover]="tooltipMemo2" popoverClass="empPopoverClass" #popoverMemo2="ngbPopover"
-        placement="left bottom top right" container="body"></span>
+      <span
+        [innerHTML]="data?.memo2"
+        (mouseenter)="popoverMemo2.open()"
+        (mouseover)="popoverMemo2.close()"
+        [ngbPopover]="tooltipMemo2"
+        popoverClass="empPopoverClass"
+        #popoverMemo2="ngbPopover"
+        placement="left bottom top right"
+        container="body"
+      ></span>
       <span #memo2 *ngIf="!data?.memo2">{{
         data?.memo2
-        | formatvalue: view.formModel:"memo2":memo2:"Tasks":"grvTasks"
-        | async
-        }}</span>
+          | formatvalue
+            : view.formModel
+            : "memo2"
+            : memo2
+            : "Tasks"
+            : "grvTasks"
+          | async
+      }}</span>
     </ng-container>
 
     <ng-container *ngIf="data?.category != '2'">
-      <span [innerHTML]="data?.memo" (mouseenter)="popoverMemo.open()" (mouseover)="popoverMemo.close()"
-        [ngbPopover]="tooltipMemo" popoverClass="empPopoverClass" #popoverMemo="ngbPopover"
-        placement="left bottom top right" container="body"></span>
+      <span
+        [innerHTML]="data?.memo"
+        (mouseenter)="popoverMemo.open()"
+        (mouseover)="popoverMemo.close()"
+        [ngbPopover]="tooltipMemo"
+        popoverClass="empPopoverClass"
+        #popoverMemo="ngbPopover"
+        placement="left bottom top right"
+        container="body"
+      ></span>
       <span #memo *ngIf="!data?.memo">{{
         data?.memo
-        | formatvalue: view.formModel:"memo":memo:"Tasks":"grvTasks"
-        | async
-        }}</span>
+          | formatvalue : view.formModel : "memo" : memo : "Tasks" : "grvTasks"
+          | async
+      }}</span>
     </ng-container>
   </ng-template>
 
@@ -253,8 +300,12 @@
 
 <ng-template #resourceHeader let-data>
   <div class="container">
-    <codx-temp-full [imageId]="data.resourceData?.owner" [title]="data.resourceData.userName"
-      [subTitle]="data.resourceData.postionName" [content]="'(' + data.resourceData.events + ')'">
+    <codx-temp-full
+      [imageId]="data.resourceData?.owner"
+      [title]="data.resourceData.userName"
+      [subTitle]="data.resourceData.postionName"
+      [content]="'(' + data.resourceData.events + ')'"
+    >
     </codx-temp-full>
   </div>
 </ng-template>

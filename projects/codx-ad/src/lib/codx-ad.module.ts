@@ -45,6 +45,7 @@ import { NoSubAsideComponent } from './_noSubAside/_noSubAside.component';
 import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
 import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
 import { PleaseUseComponent } from './users/please-use/please-use.component';
+import { PopupInfoComponent } from './company-setting/popup-info/popup-info.component';
 
 export const routes: Routes = [
   {
@@ -113,6 +114,7 @@ const T_Component: Type<any>[] = [
   BindPipe,
   ActiveTemplatePipe,
   PleaseUseComponent,
+  PopupInfoComponent,
 ];
 @NgModule({
   imports: [
