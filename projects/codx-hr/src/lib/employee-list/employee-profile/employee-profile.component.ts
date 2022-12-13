@@ -883,7 +883,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editEmployeeTimeCardInfo(){
-    
+    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -891,6 +891,7 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogEdit = this.callfunc.openSide(
       PopupETimeCardComponent,
     {
+      isAdd:false,
       headerText : "Thông tin chấm công",
     },
     option
@@ -901,6 +902,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editEmployeeCaculateSalaryInfo(){
+    this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService
     option.FormModel = this.view.formModel
@@ -908,9 +910,14 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogEdit = this.callfc.openSide(
         PopupECalculateSalaryComponent,
       {
+        isAdd:false,
         headerText: "Thông tin tính lương",
-      }
-    )
+      },
+      option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    })
   }
 
   handlEmployeeExperiences(actionType: string, data: any) {

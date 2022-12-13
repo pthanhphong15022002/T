@@ -34,8 +34,7 @@ export class PopupECalculateSalaryComponent extends UIComponent implements OnIni
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    console.log('formModel', this.formModel);
-    
+    console.log('formModel ecalculate salary', this.formModel);
     this.headerText = data?.data?.headerText;
     if(this.formModel){
       this.isAfterRender = true

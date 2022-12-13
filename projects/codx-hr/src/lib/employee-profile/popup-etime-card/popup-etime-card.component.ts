@@ -34,18 +34,17 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.formModel = dialog?.formModel;
-    console.log('formModel', this.formModel);
+    console.log('formModel e time', this.formModel);
     
     this.headerText = data?.data?.headerText;
     if(this.formModel){
       this.isAfterRender = true
-      this.data = dialog?.dataService?.dataSelected
-      console.log('du lieu form e time',this.data);
-      
-  }
+    }
+    this.data = dialog?.dataService?.dataSelected
 }
 
   onInit(): void {
+    
   }
 
   onSaveForm(){
