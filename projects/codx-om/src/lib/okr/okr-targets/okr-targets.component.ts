@@ -177,17 +177,17 @@ export class OkrTargetsComponent implements OnInit {
 
   //Xem chi tiết KR
   showKR(kr: any, o: any) {
-    var dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    let dialog = this.callfunc.openForm(
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    let dialogShowKR = this.callfunc.openForm(
       PopupShowKRComponent,
       '',
       null,
       null,
       null,
-      [kr, o, this.formModel],
+      [kr, o,],
       '',
-      dialogModel
+      dModel
     );
   }
 }
