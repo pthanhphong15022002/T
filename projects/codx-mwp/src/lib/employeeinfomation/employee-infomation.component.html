@@ -543,14 +543,8 @@
                         </button>
                       </div>
                       <ng-container *ngIf="showCBB">
-                        <codx-combobox-popup 
-                          comboboxName="Skills" 
-                          field="skill" 
-                          [multiple]="true" 
-                          [width]="width"
-                          [height]="height" 
-                          (clickSave)="saveAddSkill($event)" 
-                          title="Kỹ năng">
+                        <codx-combobox-popup comboboxName="Skills" field="skill" [multiple]="true" [width]="width"
+                          [height]="height" (clickSave)="saveAddSkill($event)" title="Kỹ năng">
                         </codx-combobox-popup>
                       </ng-container>
                     </ng-container>
@@ -586,7 +580,7 @@
                         </button>
                       </div>
                     </ng-container>
-                    
+
                   </div>
                 </div>
               </div>
