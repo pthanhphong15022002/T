@@ -1,1 +1,108 @@
-<p>popup-etime-card works!</p>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+    </div>
+</ng-template>
+
+<codx-form
+    #form
+    [headerText] = "headerText"
+    [body] = "body"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="data"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="TimeCardNo"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field = "timeCardNo"
+                    [formModel]="form.formModel"
+                    [Group] = "form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="ShiftCalendarID"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "shiftCalendarID"
+                [formModel]="form.formModel"
+                [Group] = "form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label
+                fiedName="ALObjectID"
+                [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+                field="alObjectID"
+                [formModel]="form.formModel"
+                [Group] = "form.formGroup"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="IsNotScan"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field = "isNotScan"
+                    [formModel]="form.formModel"
+                    [Group] = "form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="IsNotLateEarly"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "isNotLateEarly"
+                [formModel]="form.formModel"
+                [Group] = "form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label
+                    fiedName="IsNotOTKow"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                    field = "isNotOTKow"
+                    [formModel]="form.formModel"
+                    [Group] = "form.formGroup"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label
+                    fiedName="IsNotCLeaveKow"
+                    [formModel]="formModel"
+                ></codx-label>
+                <codx-input
+                field = "isNotCLeaveKow"
+                [formModel]="form.formModel"
+                [Group] = "form.formGroup"
+                ></codx-input>
+            </div>
+        </div>
+    </ng-template>
+</codx-form>

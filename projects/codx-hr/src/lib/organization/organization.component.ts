@@ -33,7 +33,7 @@ import { PopupAddOrganizationComponent } from './popup-add-organization/popup-ad
 })
 export class OrgorganizationComponent extends UIComponent {
   views: Array<ViewModel> = [];
-  button?: ButtonModel;
+  button: ButtonModel;
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;
@@ -42,7 +42,6 @@ export class OrgorganizationComponent extends UIComponent {
   treeComponent?: CodxTreeviewComponent;
   currentView: any;
   currView?: TemplateRef<any>;
-  dtService: CRUDService;
   numberLV: string = '3';
   onlyDepartment?: boolean = false;
   formModelEmployee: FormModel = {
@@ -52,28 +51,23 @@ export class OrgorganizationComponent extends UIComponent {
   setupEmp?: any;
   start = '<span class="opacity-50">';
   end = '</span>';
-  funcID: any;
+  funcID: string = "";
+  codxTreeView:CodxTreeviewComponent= null;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
-  constructor(
-    inject: Injector,
-    private hrservice: CodxHrService,
-    private change: ChangeDetectorRef
-  ) {
+  constructor(private inject: Injector) 
+  {
     super(inject);
-    this.dtService = new CRUDService(inject);
-    this.router.params.subscribe((params) => {
-      if (params) this.funcID = params['funcID'];
-    });
   }
 
   onInit(): void {
     this.router.params.subscribe((params) => {
-      if (params) {
+      if (params['funcID']) 
+      {
         this.funcID = params['funcID'];
         if (!this.funcID.includes('WP')) {
           this.button = {
@@ -82,18 +76,18 @@ export class OrgorganizationComponent extends UIComponent {
         }
       }
     });
-    if (!this.setupEmp) {
-      this.cache
-        .gridViewSetup(
-          this.formModelEmployee.formName,
-          this.formModelEmployee.gridViewName
-        )
-        .subscribe((res) => {
-          if (res) {
-            this.setupEmp = res;
-          }
-        });
-    }
+    // if (!this.setupEmp) {
+    //   this.cache
+    //     .gridViewSetup(
+    //       this.formModelEmployee.formName,
+    //       this.formModelEmployee.gridViewName
+    //     )
+    //     .subscribe((res) => {
+    //       if (res) {
+    //         this.setupEmp = res;
+    //       }
+    //     });
+    // }
   }
 
   ngAfterViewInit(): void {
@@ -141,57 +135,44 @@ export class OrgorganizationComponent extends UIComponent {
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
   }
+  // change view
+  changeView(evt: any) {
+    this.currView = null;
+    if (evt.view) {
+      this.currView = evt.view.model.template2;
+    }
+  }
 
   orgChartAfterView(evt: any) {
     this.detailComponent = evt;
   }
 
+  // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;
     if (data && this.orgUnitID != data.orgUnitID) {
       this.orgUnitID = data.orgUnitID;
       this.parentID = data.parentID;
-      // this.hrservice
-      //   .loadOrgchart(
-      //     this.orgUnitID,
-      //     this.parentID,
-      //     this.numberLV,
-      //     this.onlyDepartment
-      //   )
-      //   .subscribe((res) => {
-      //     if (res) {
-      //       console.log(res);
-      //       this.dataDetail = res.Data as any[];
-      //       var dataTemp = JSON.parse(JSON.stringify(this.dataDetail)) as any[];
-      //       this.dataCard = dataTemp.filter((item) => {
-      //         if (
-      //           item.departmentCode === this.orgUnitID ||
-      //           item.parentID === this.orgUnitID
-      //         )
-      //           return item;
-      //       });
-      //       var data = JSON.parse(JSON.stringify(this.dataCard));
-      //       if (data.length > 1) {
-      //         var index = data.findIndex((x) => x.orgUnitType == '1');
-      //         var dataCompany = data[index];
-      //         data.splice(index, 1);
-      //         data.unshift(dataCompany);
-      //       }
-      //       this.dataCard = data;
-      //     }
-      //   });
       this.detectorRef.detectChanges();
     }
   }
-
+  // button add toolbar
   btnClick(e) {
-    if (this.view) {
+    if (this.view) 
+    {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      this.view.dataService.addNew().subscribe((result: any) => {
+      let currentView:any = this.view.currentView;
+      if(currentView)
+      {
+        this.codxTreeView = currentView.currentComponent?.treeView;
+      }
+      this.view.dataService.addNew()
+      .subscribe((result: any) => {
         if (result) {
+          result.parentID = this.view.dataService.dataSelected.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -200,71 +181,72 @@ export class OrgorganizationComponent extends UIComponent {
             isAddMode: true,
             titleMore: e.text,
           };
-          this.callfc.openSide(
-            CodxFormDynamicComponent,
-            data,
-            option,
-            this.funcID
-          );
-        }
-      });
-    }
-  }
-
-  add(headerText) {
-    this.currentView = this.view.currentView;
-    if (this.currentView) {
-      let option = new SidebarModel();
-      option.Width = '550px';
-      option.DataService = this.view?.currentView?.dataService;
-      option.FormModel = this.view?.formModel;
-      this.treeComponent = this.currentView.currentComponent?.treeView;
-      // this.view.dataService.addNew().subscribe(() => {
-      //   let option = new SidebarModel();
-      //   option.Width = '550px';
-      //   option.DataService = this.view?.currentView?.dataService;
-      //   option.FormModel = this.view?.formModel;
-      //   var dialog = this.callfc.openSide(
-      //     PopupAddOrganizationComponent,
-      //     {
-      //       function: this.funcID,
-      //       orgUnitID: this.orgUnitID,
-      //       detailComponent: this.detailComponent,
-      //       treeComponent: this.treeComponent,
-      //       headerText: headerText,
-      //       isModeAdd: true,
-      //     },
-      //     option
-      //   );
-      //   dialog.closed.subscribe((res) => {
-      //     var data = res.event?.save;
-      //     if (data) {
-      //       this.dataCard.forEach((res) => {
-      //         if (res.orgUnitID == data.orgUnitID) res['modifiedOn'] = new Date();
-      //       });
-      //     }
-      //   });
-      // });
-      this.view.dataService.addNew().subscribe((result: any) => {
-        if (result) {
-          let data = {
-            dataService: this.view.dataService,
-            formModel: this.view.formModel,
-            data: result,
-            function: this.funcID,
-            isAddMode: true,
-          };
           let popup = this.callfc.openSide(
             CodxFormDynamicComponent,
             data,
             option,
             this.funcID
           );
+          // popup.closed.subscribe((res:any) => {
+          //   if(res?.event?.save)
+          //   { 
+          //     let node = res.event.save.data;
+          //     if(this.codxTreeView)
+          //     {
+                
+          //     }
+          //   }
+          // });
         }
       });
     }
   }
-
+  //add data 
+  add() {
+    if(this.view)
+    {
+      this.currentView = this.view.currentView;
+      if (this.currentView) {
+        let option = new SidebarModel();
+        option.Width = '550px';
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
+        this.treeComponent = this.currentView.currentComponent?.treeView;
+        this.view.dataService.addNew().subscribe((result: any) => {
+          if (result) {
+            let data = {
+              dataService: this.view.dataService,
+              formModel: this.view.formModel,
+              data: result,
+              function: this.funcID,
+              isAddMode: true,
+            };
+            let popup = this.callfc.openSide(
+              CodxFormDynamicComponent,
+              data,
+              option,
+              this.funcID
+            );
+          }
+        });
+      }
+    }
+  }
+  // more function
+  clickMF(evt: any, data: any) {
+    if (evt)
+    {
+      switch (evt.functionID) {
+        case 'SYS03':
+          this.edit(data, evt.text);
+          break;
+        case 'SYS02':
+          this.delete(data);
+          break;
+      }
+    } 
+  }
+  //edit data
   edit(data, headerText) {
     if (data) {
       this.view.dataService.dataSelected = data;
@@ -294,12 +276,6 @@ export class OrgorganizationComponent extends UIComponent {
         dialog.closed.subscribe((res) => {
           var data = res.event?.update;
           if (data && this.dataCard) {
-            // this.dataCard.forEach((x) => {
-            //   if (x.orgUnitID == data.orgUnitID) {
-            //     x.departmentName = data.departmentName;
-            //     x['modifiedOn'] = new Date();
-            //   }
-            // });
             var index = this.dataCard.findIndex(
               (x) => x.orgUnitID == data.orgUnitID
             );
@@ -309,7 +285,7 @@ export class OrgorganizationComponent extends UIComponent {
         });
       });
   }
-
+  //delete data
   delete(data) {
     if (data) this.view.dataService.dataSelected = data;
     this.view.dataService
@@ -323,9 +299,8 @@ export class OrgorganizationComponent extends UIComponent {
           );
         }
       });
-    this.change.detectChanges();
+    this.detectorRef.detectChanges();
   }
-
   beforeDelete(op: any, data) {
     op.assemblyName = 'ERM.Business.HR';
     op.className = 'OrganizationUnitsBusiness';
@@ -333,28 +308,7 @@ export class OrgorganizationComponent extends UIComponent {
     op.data = data?.orgUnitID;
     return true;
   }
-
-  clickMF(evt: any, data: any) {
-    var headerText = '';
-    if (evt.text) headerText = evt.text;
-    switch (evt.functionID) {
-      case 'SYS03':
-        this.edit(data, headerText);
-        break;
-      case 'SYS02':
-        this.delete(data);
-        break;
-    }
-  }
-
-  changeDataMF(e: any, data: any) {}
-
-  changeView(evt: any) {
-    this.currView = null;
-    if (evt.view) {
-      this.currView = evt.view.model.template2;
-    }
-  }
+  
 
   loadEmployList(e, orgid, status) {}
 }
