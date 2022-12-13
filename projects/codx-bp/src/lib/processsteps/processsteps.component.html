@@ -310,7 +310,7 @@
     data?.stepNo }}
     <codx-label name="lblSplit" default=":"></codx-label>
     <span #p="ngbPopover" [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
-      [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="top bottom ">
+      [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="top right ">
       {{ " " + data?.stepName }}
     </span>
 
