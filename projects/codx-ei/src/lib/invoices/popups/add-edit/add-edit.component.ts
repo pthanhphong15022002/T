@@ -182,6 +182,10 @@ export class AddEditComponent implements OnInit {
     this.grid.addRow(null, idx);
   }
 
+  cellChanged(e) {
+    console.log(e);
+  }
+
   clickMF(e) {}
   //#endregion
 

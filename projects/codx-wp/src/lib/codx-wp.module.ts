@@ -50,6 +50,7 @@ import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post
 import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
 import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
+import { HomeCalendarComponent } from './calendar/home-calendar/home-calendar.component';
 
 
 export const routes: Routes = [
@@ -131,6 +132,16 @@ export const routes: Routes = [
     ],
   },
   {
+    path: 'calendar',
+    component: LayoutComponent,
+    children: [
+      {
+        path: ':funcID',
+        component: HomeCalendarComponent,
+      },
+    ],
+  },
+  {
     path: 'wp/portal/wp',
     redirectTo: 'portal/WP',
     pathMatch: 'full',
@@ -178,7 +189,8 @@ const Component: Type<any>[] =
     PopupAddPostComponent,
     PopupAddGroupComponent,
     LayoutChatComponent,
-    ChatBoxComponent
+    ChatBoxComponent,
+    HomeCalendarComponent
   ];
 
 @NgModule({
@@ -196,7 +208,7 @@ const Component: Type<any>[] =
     RouterModule.forChild(routes),
   ],
   exports: [RouterModule],
-  declarations: [Component ],
+  declarations: [Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   
 })

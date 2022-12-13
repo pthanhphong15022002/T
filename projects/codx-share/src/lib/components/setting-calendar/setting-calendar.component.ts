@@ -29,6 +29,7 @@ export class SettingCalendarComponent
 {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
+  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   calendarID: string;
@@ -43,6 +44,8 @@ export class SettingCalendarComponent
     endTime: { name: 'endDate' },
   };
   @Input() request?: ResourceModel;
+  @Input() resources!: any;
+  @Input() showHeader = true;
 
   constructor(
     private injector: Injector,
@@ -68,6 +71,8 @@ export class SettingCalendarComponent
         model: {
           eventModel: this.fields,
           template3: this.cellTemplate,
+          resources: this.resources,
+          template6: this.mfButton
         },
       },
     ];
