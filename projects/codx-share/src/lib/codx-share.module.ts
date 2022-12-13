@@ -134,6 +134,8 @@ import { AddEditApprovalStepComponent } from './components/codx-approve-steps/ad
 import { PopupAddApproverComponent } from './components/codx-approve-steps/popup-add-approver/popup-add-approver.component';
 import { CodxHistoryComponent } from './components/codx-history/codx-history.component';
 import { CodxHistoryItemComponent } from './components/codx-history/codx-history-item/codx-history-item.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { PopupSelectTemplateComponent } from './components/codx-dashboard/popup-select-template/popup-select-template.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -227,6 +229,7 @@ const T_Component: Type<any>[] = [
   LayoutListDetailComponent,
   CodxHistoryComponent,
   CodxHistoryItemComponent,
+  PopupSelectTemplateComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -271,6 +274,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     DashboardLayoutAllModule,
     SliderModule,
     LazyLoadImageModule,
+    DragDropModule,
   ],
   exports: [T_Component, T_Pipe],
 })

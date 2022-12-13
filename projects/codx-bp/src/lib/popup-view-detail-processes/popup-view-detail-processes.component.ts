@@ -25,12 +25,12 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   data: any;
   moreFunc: any;
   title = '';
-  tabControl: TabModel[] = [];
+  // tabControl: TabModel[] = [];
   active = 0 ;
   dataFile : any
   formModel :any
   linkFile : any;
-  all: TabModel[] = [
+  tabControl: TabModel[] = [
     { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id : 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false,id : 6  },
     { name: 'Flowchart', textDefault: 'Flowchart', isActive: false,id : 9 },
@@ -49,7 +49,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private fileService: FileService,
     private bpService: CodxBpService,
-    private notificationsService : NotificationsService,
+    private notiService : NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -66,8 +66,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
         this.formModelFlowChart = f.formModel
       }
     })
-    this.getFlowChart(this.process)
-    this.linkFile = environment.urlUpload+"/"+this.data?.pathDisk;
+    //this.getFlowChart(this.process)
 
     this.bpService
       .getListFunctionMenuCreatedStepAsync(this.funcID)
@@ -80,15 +79,15 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.tabControl.length == 0) {
-      this.tabControl = this.all;
-    }
-    else {
-      this.active = this.tabControl.findIndex(
-        (x: TabModel) => x.isActive == true
-      );
-    }
-    this.changeDetectorRef.detectChanges();
+    // if (this.tabControl.length == 0) {
+    //  this.tabControl = this.all;
+    // }
+    // else {
+    //   this.active = this.tabControl.findIndex(
+    //     (x: TabModel) => x.isActive == true
+    //   );
+    // }
+    //this.changeDetectorRef.detectChanges();
   }
 
   clickMenu(item) {
@@ -121,22 +120,16 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
       .subscribe((res) => {
-        if (res&& res?.url) {
+        if (res && res?.url) {
           let obj = { pathDisk: res?.url, fileName: process?.processName };
           this.dataFile = obj;
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
   async addFile(evt: any) {
     this.addFlowchart.referType = 'Flowchart';
     this.addFlowchart.uploadFile();
-  }
-  fileAdded(e) {
-    if (e && e?.data?.length > 0) {
-      this.dataFile = e.data[0];
-      this.linkFile = environment.urlUpload+"/"+this.dataFile?.pathDisk;
-    }
-    this.changeDetectorRef.detectChanges();
   }
 
   fileSave(e) {
@@ -146,49 +139,49 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     }
   }
 
-  print() {
-    if (this.linkFile)
-    {
-     const output = document.getElementById("output");
-     const img = document.createElement("img");
-     img.src = this.linkFile;
-     output.appendChild(img);
-     const br = document.createElement("br");
-     output.appendChild(br);
-     window.print();
+  printFlowchart() {
+    if (this.linkFile) {
+      const output = document.getElementById('output');
+      const img = document.createElement('img');
+      img.src = this.linkFile;
+      output.appendChild(img);
+      const br = document.createElement('br');
+      output.appendChild(br);
+      window.print();
 
-     document.body.removeChild(output);
-    }
-    else
-      window.frames[0].postMessage(JSON.stringify({ 'MessageId': 'Action_Print' }), '*');
-   }
+      document.body.removeChild(output);
+    } else
+      window.frames[0]?.postMessage(
+        JSON.stringify({ MessageId: 'Action_Print' }),
+        '*'
+      );
+  }
 
-   checkDownloadRight() {
+  checkDownloadRight() {
     return this.dataFile.download;
   }
-   async download(): Promise<void> {
+  async download(): Promise<void> {
     var id = this.dataFile?.recID;
     var fullName = this.dataFile.fileName;
     var that = this;
 
     if (this.checkDownloadRight()) {
       ///lấy hàm của chung dang fail
-      this.fileService.downloadFile(id).subscribe(async res => {
+      this.fileService.downloadFile(id).subscribe(async (res) => {
         if (res) {
-          let blob = await fetch(res).then(r => r.blob());
+          let blob = await fetch(res).then((r) => r.blob());
           let url = window.URL.createObjectURL(blob);
-          var link = document.createElement("a");
-          link.setAttribute("href", url);
-          link.setAttribute("download", fullName);
-          link.style.display = "none";
+          var link = document.createElement('a');
+          link.setAttribute('href', url);
+          link.setAttribute('download', fullName);
+          link.style.display = 'none';
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
         }
       });
-    }
-    else {
-      this.notificationsService.notifyCode("SYS018");
+    } else {
+      this.notiService.notifyCode('SYS018');
     }
   }
   openPopUp(){

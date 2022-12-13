@@ -1,12 +1,11 @@
 <codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP"
   entityName="BP_Processes"
   className="ProcessesBusiness" [method]="method" [views]="views"
-  [button]="showButtonAdd ? button : null"
+  [button]="showButtonAdd && view.formModel.funcID !='BPT6' && view.formModel.funcID !='BPT7'  ? button : null"
   (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
   [autoLoad]="true" idField="recID"
   (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
   (searchChanged)="searchChange($event)"
-  (viewChanged)="changeView($event)"
   >
 </codx-views>
 
@@ -16,10 +15,9 @@
     [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px"
     [imageObjName]="data?.processName" [imageId]="data?.recID"
     [imgOn]="data?.modifiedOn"
-    [imageWidth]="1000" [imageReferType]="data?.flowchart" [rootData]="data"
+    [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
     [dataItem]="data" [formModel]="view.formModel"
     [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-    [imageWidth]="600"
     (changeDataMF)="changeDataMF($event, data)"
     (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>
@@ -90,7 +88,7 @@
                 [openDelay]="500" (mouseenter)="p.open()"
                 (mouseleave)="p.close()" placement="right">
                 <codx-attachment-temp [objectID]="data?.recID"
-                  [formModel]="view.formModel" [count]="data.attachments">
+                  [formModel]="view.formModel" [count]="data.attachments" [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
               </span>
             </div>
@@ -526,25 +524,17 @@
   </button>
 </ng-template>
 
-<ng-template #empty>
-  <ng-container >
+<ng-template #headerTemplate>
+  <ng-container *ngIf="view.formModel.funcID=='BPT7'">
     <div class="nondata-container w-100 mb-2">
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
-        <div class="fw-bold ms-2">Du lieu 30 ngay se xoa</div>
+        <codx-label fiedName="lbl" default="Các mục trong thùng rác sẽ xóa vĩnh viễn trong 30 ngày"></codx-label>
         <div class="cursor-pointer">
-          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="deleteBin()" >Xoa thung rac</span>
+          <!-- <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="deleteBin()" >
+            <codx-label fiedName="lbl" default="Xoa thung rac"></codx-label>
+          </span> -->
         </div>
       </div>
     </div>
   </ng-container>
-</ng-template>
-
-<ng-template #templateRight>
-  <div 
-    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
-    data-kt-scroll-offset="0">
-    <ng-container  *ngTemplateOutlet="empty"></ng-container>
-    <ng-container *ngTemplateOutlet="currView"></ng-container>
-  </div>
 </ng-template>

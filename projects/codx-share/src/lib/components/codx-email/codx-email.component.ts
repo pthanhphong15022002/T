@@ -306,6 +306,10 @@ export class CodxEmailComponent implements OnInit {
   }
 
   onSaveForm(dialog1: DialogRef) {
+    if (this.dialogETemplate.invalid) {
+      this.codxService.notifyInvalid(this.dialogETemplate, this.formModel);
+      return;
+    }
     this.data.message = this.setMessage(this.data.message);
     this.dialogETemplate.patchValue({ message: this.data.message });
     let lstSento = [

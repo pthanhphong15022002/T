@@ -58,9 +58,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   //onChange orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
-      this.orgUnitID = changes.orgUnitID.currentValue;
       this.getOrgUnitByID(this.orgUnitID);
-      this.dt.detectChanges();
     }
   }
   // get data orgUnit by orgUnitID
@@ -75,7 +73,13 @@ export class OrganizationOrgchartComponent implements OnInit {
         [orgUnitID])
         .subscribe((res:any) =>{
           if(res){
-            console.log(res);
+            console.log(res,this.orgUnitID);
+            res.forEach(x => {
+              if(x.orgUnitID === orgUnitID){
+                x.parentID = null;
+                return;
+              }
+            });
             this.data = JSON.parse(JSON.stringify(res));
             this.setDataOrg(this.data);
           }
@@ -130,6 +134,7 @@ export class OrganizationOrgchartComponent implements OnInit {
           if(element.orgUnitID == node.orgUnitID)
           {
             element.loadChildren = false;
+            return;
           }
         });
         this.data = JSON.parse(JSON.stringify(result))
@@ -143,7 +148,7 @@ export class OrganizationOrgchartComponent implements OnInit {
           "HR",
           "ERM.Business.HR",
           "OrganizationUnitsBusiness",
-          "GetDataChildOrgChartAsync",
+          "GetChildOrgChartAsync",
           [node.orgUnitID]
           )
           .subscribe((res:any) =>{
@@ -156,6 +161,7 @@ export class OrganizationOrgchartComponent implements OnInit {
                   if(element.orgUnitID == node.orgUnitID)
                   {
                     element.loadChildren = true;
+                    return;
                   }
                 });
               }
