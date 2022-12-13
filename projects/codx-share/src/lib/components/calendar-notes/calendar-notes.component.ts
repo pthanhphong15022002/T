@@ -1,22 +1,11 @@
-import { CO_Meetings } from './../../../../../codx-tm/src/lib/models/CO_Meetings.model';
-import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
-import { type } from 'os';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Output } from '@angular/core';
 import {
-  ApiHttpService,
-  CallFuncService,
-  CacheService,
   UIComponent,
-  SidebarModel,
   DialogRef,
   DialogModel,
-  FormModel,
   AuthStore,
   CRUDService,
   CodxListviewComponent,
-  RequestOption,
-  DataService,
-  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -28,15 +17,18 @@ import {
   Injector,
   TemplateRef,
   ChangeDetectorRef,
+  OnDestroy,
+  OnChanges,
+  ComponentRef,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
-import { T } from '@angular/cdk/keycodes';
 import moment from 'moment';
-import { DetailCalendarComponent } from './detail-calendar/detail-calendar.component';
+import { CodxShareService } from '../../codx-share.service';
+import console from 'console';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -61,11 +53,11 @@ export class CalendarNotesComponent
   CO_Meetings: any = new Array();
   EP_BookingRooms: any = new Array();
   EP_BookingCars: any = new Array();
-  TM_TasksParam: any;
-  WP_NotesParam: any;
-  CO_MeetingsParam: any;
-  EP_BookingRoomsParam: any;
-  EP_BookingCarsParam: any;
+  @Output() TM_TasksParam: any;
+  @Output() WP_NotesParam: any;
+  @Output() CO_MeetingsParam: any;
+  @Output() EP_BookingRoomsParam: any;
+  @Output() EP_BookingCarsParam: any;
   checkTM_TasksParam: any;
   checkWP_NotesParam: any;
   checkCO_MeetingsParam: any;
@@ -90,16 +82,18 @@ export class CalendarNotesComponent
   @Input() showHeader = true;
   @Input() typeCalendar = 'week';
   @Input() showList = true;
-  @Input() showListParam = false;
+  @Input() showListParam = false; 
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
   @ViewChild('calendar') calendar: any;
+  componentRef!: ComponentRef<CalendarNotesComponent>;
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
-    private noteService: NoteServices
+    private noteService: NoteServices,
+    private codxShareSV: CodxShareService
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
@@ -215,6 +209,11 @@ export class CalendarNotesComponent
         this.change.detectChanges();
       }
     });
+    // this.codxShareSV.dataUpdateShowEvent.subscribe((res) => {
+    //   if (res) {
+    //     debugger;
+    //   }
+    // });
   }
 
   getFirstParam() {
@@ -725,10 +724,6 @@ export class CalendarNotesComponent
     }
   }
 
-  onCreated(e, eleCalendar) {
-    debugger
-  } 
-
   openFormUpdateNote(data) {
     var obj = {
       data: this.WP_Notes,
@@ -831,13 +826,7 @@ export class CalendarNotesComponent
   valueChangeSetting(e) {
     if (e) {
       var field = e.field;
-      if (field == 'WP_Notes_ShowEvent') {
-        this.updateSettingValue('WP_Notes', e.data);
-      } else if (field == 'TM_Tasks_ShowEvent') {
-        this.updateSettingValue('TM_Tasks', e.data);
-      } else if (field == 'CO_Meetings_ShowEvent') {
-        this.updateSettingValue('CO_Meetings', e.data);
-      }
+      this.updateSettingValue(field, e.data);
     }
   }
 
@@ -869,7 +858,13 @@ export class CalendarNotesComponent
             }
           }
           this.setEventWeek();
-          if (value == true) {
+          // var obj = {
+          //   transType: transType,
+          //   value: value,
+          // };
+          // this.codxShareSV.dataUpdateShowEvent.next(obj);
+          this.componentRef.destroy();
+          if (value == true && this.showList) {
             (this.lstView.dataService as CRUDService).dataObj = `WPCalendars`;
             (this.lstView.dataService as CRUDService).predicates =
               'CreatedOn >= @0 && CreatedOn < @1';
@@ -879,7 +874,9 @@ export class CalendarNotesComponent
             this.lstView.dataService
               .setPredicate(this.predicate, [this.dataValue])
               .subscribe((res) => {
-                this.change.detectChanges();
+                if (res) {
+                  this.change.detectChanges();
+                }
               });
           }
         }
@@ -960,24 +957,5 @@ export class CalendarNotesComponent
         note,
       ])
       .subscribe();
-  }
-
-  openFormDetail() {
-    var obj = {
-      funcID: 'WPT08',
-    };
-    let option = new DialogModel();
-    option.DataService = this.view?.currentView?.dataService;
-    option.FormModel = this.view?.currentView?.formModel;
-    var dialog = this.callfc.openForm(
-      DetailCalendarComponent,
-      '',
-      1438,
-      775,
-      '',
-      obj,
-      '',
-      option
-    );
   }
 }
