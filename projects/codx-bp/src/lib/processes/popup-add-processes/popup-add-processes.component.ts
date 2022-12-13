@@ -181,13 +181,13 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   async onSave() {
 
-    if (this.process.activedOn && this.process.expiredOn) {
-      if (this.process.activedOn >= this.process.expiredOn) {
+    if (this.process?.activedOn && this.process?.expiredOn) {
+      if (this.process?.activedOn >= this.process?.expiredOn) {
         this.notiService.notifyCode('BP003');
         return;
       }
     }
-    if(this.process.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase()) {
+    if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase()) {
       this.CheckExistNameProccess();
     }
     else {
