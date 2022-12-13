@@ -1,3 +1,4 @@
+import { OMCONST } from './codx-om.constant';
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -246,5 +247,15 @@ export class CodxOmService {
     );
     this.cachedObservables.set(key, observable);
     return observable;
+  }
+
+  checkInKR(recID:string,checkIn:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'CheckInKRAsync',
+      [recID,checkIn]
+    );
   }
 }

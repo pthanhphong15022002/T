@@ -22,7 +22,7 @@
             <div class="form-group">
                 <codx-label fiedName="Estimated" formName="Tasks" gridViewName="grvTask" default="Thời gian hoàn tất">
                 </codx-label>
-                <codx-input class="form-control" type="number" [min]="0" field="estimated" [crrValue]="completed"
+                <codx-input class="form-control" type="number" [min]="0" field="estimated" [crrValue]="completed"  [showSpinButton]="false"
                     (valueChange)="changeEstimated($event)"></codx-input>
             </div>
         </div>

@@ -1,3 +1,5 @@
+import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
+import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
 import { PopupEexperiencesComponent } from './../../employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { PopupEJobSalariesComponent } from './../../employee-profile/popup-ejob-salaries/popup-ejob-salaries.component';
@@ -14,21 +16,6 @@ import { PopupEAwardsComponent } from './../../employee-profile/popup-eawards/po
 import { PopupEAssurTaxBankComponent } from './../../employee-profile/popup-eassur-tax-bank/popup-eassur-tax-bank.component';
 import { PopupEAssetsComponent } from './../../employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEmployeePartyInfoComponent } from './../../employee-profile/popup-employee-party-info/popup-employee-party-info.component';
-// import { EmployeeFamilyRelationshipDetailComponent } from './../../employee-profile/employee-family-relationship-detail/employee-family-relationship-detail.component';
-// import { EmployeeAllocatedPropertyDetailComponent } from './../../employee-profile/employee-allocated-property-detail/employee-allocated-property-detail.component';
-// import { EmployeeDisciplinesDetailComponent } from './../../employee-profile/employee-disciplines-detail/employee-disciplines-detail.component';
-// import { EmployeeAwardsDetailComponent } from './../../employee-profile/employee-awards-detail/employee-awards-detail.component';
-// import { EmployeeWorkingLisenceDetailComponent } from './../../employee-profile/employee-working-lisence-detail/employee-working-lisence-detail.component';
-// import { EmployeeTraincoursesComponent } from './../../employee-profile/employee-traincourses/employee-traincourses.component';
-// import { EmployeeSkillDetailComponent } from './../../employee-profile/employee-skill-detail/employee-skill-detail.component';
-// import { EmployeeDegreeDetailComponent } from './../../employee-profile/employee-degree-detail/employee-degree-detail.component';
-// import { EmployeeCertificateDetailComponent } from './../../employee-profile/employee-certificate-detail/employee-certificate-detail.component';
-// import { EmployeeVisaFormComponent } from './../../employee-profile/employee-visa-form/employee-visa-form.component';
-// import { EmployeeAllocatedPropertyComponent } from './../../employee-profile/employee-allocated-property/employee-allocated-property.component';
-// import { EmployeeAwardsInfoComponent } from './../../employee-profile/employee-awards-info/employee-awards-info.component';
-// import { EmployeeDisciplinesInfoComponent } from './../../employee-profile/employee-disciplines-info/employee-disciplines-info.component';
-// import { EmployeeVisaInfoComponent } from './../../employee-profile/employee-visa-info/employee-visa-info.component';
-// import { EmployeeWorkingLisenceComponent } from './../../employee-profile/employee-working-lisence/employee-working-lisence.component';
 import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
 // import { EmployeeAssurTaxBankaccInfoComponent } from './../../employee-profile/employee-assur-tax-bankacc-info/employee-assur-tax-bankacc-info.component';
 import { CheckBox } from '@syncfusion/ej2-angular-buttons';
@@ -44,6 +31,7 @@ import {
 } from '@angular/core';
 import {
   AuthStore,
+  CacheService,
   CallFuncService,
   DialogData,
   DialogRef,
@@ -81,6 +69,7 @@ export class EmployeeProfileComponent extends UIComponent {
     private callfunc: CallFuncService,
     private codxMwpService: CodxMwpService,
     private notify: NotificationsService,
+    private cacheSv: CacheService,
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -92,6 +81,7 @@ export class EmployeeProfileComponent extends UIComponent {
 
   @ViewChild('itemTemplate') template: TemplateRef<any>;
   @ViewChild('paneRight') panelRight: TemplateRef<any>;
+  @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
 
   views: Array<ViewModel> | any = [];
 
@@ -122,6 +112,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //jobInfo
   jobInfo: any;
   crrJobSalaries: any = {};
+  lstJobSalaries: any = [];
   //EExperience
   lstExperience;
   formModel;
@@ -130,7 +121,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 2;
+  crrTab: number = 6;
 
   crrEBSalary: any;
   listCrrBenefit: any;
@@ -142,6 +133,8 @@ export class EmployeeProfileComponent extends UIComponent {
   positionColumnsGrid;
   holidayColumnsGrid;
   workDiaryColumnGrid;
+  rewardColumnsGrid;
+  disciplineColumnGrid;
   expColumnGrid;
 
   @ViewChild('healthPeriodID', { static: true })
@@ -255,16 +248,31 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //Passport
-        this.hrService
-          .GetListPassportByEmpID(params.employeeID)
-          .subscribe((res) => {
-            console.log('passport', res);
-            this.lstPassport = [];
-            if (this.lstPassport?.length > 0) {
-              this.lstPassport = res;
-              this.crrPassport = this.lstPassport[0];
-            }
-          });
+        // this.hrService
+        //   .GetListPassportByEmpID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('passport', res);
+
+        //     this.lstPassport = res;
+        //     if (this.lstPassport.length > 0) {
+        //       this.crrPassport = this.lstPassport[0];
+        //     }
+        //   });
+
+        let opPassport = new DataRequest();
+        opPassport.gridViewName = 'grvEPassports';
+        opPassport.entityName = 'HR_EPassports';
+        opPassport.predicate = 'EmployeeID=@0';
+        opPassport.dataValue = params.employeeID;
+        (opPassport.page = 1),
+          this.hrService
+            .getListVisaByEmployeeID(opPassport)
+            .subscribe((res) => {
+              if (res) this.lstPassport = res[0];
+              if (this.lstPassport.length > 0) {
+                this.crrPassport = this.lstPassport[0];
+              }
+            });
 
         //Vissa
         // this.hrService
@@ -292,12 +300,25 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //work permit
-        this.hrService
-          .getListWorkPermitByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('w permit', res);
-            this.lstWorkPermit = res;
-          });
+        let op4 = new DataRequest();
+        op4.gridViewName = 'grvEWorkPermits'
+        op4.entityName = 'HR_EWorkPermits'
+        op4.predicate = 'EmployeeID=@0'
+        op4.dataValue = params.employeeID;
+        (op4.page = 1),
+        this.hrService.getListWorkPermitByEmployeeID(op4).subscribe((res) => {
+          if(res){
+            this.lstWorkPermit = res[0];
+            console.log('lstWorkPermit',this.lstWorkPermit);
+          }
+        })
+
+        // this.hrService
+        //   .getListWorkPermitByEmployeeID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('w permit', res);
+        //     this.lstWorkPermit = res;
+        //   });
 
         //Job info
         //this.hrService.getJobInfo()
@@ -308,6 +329,20 @@ export class EmployeeProfileComponent extends UIComponent {
           .subscribe((res) => {
             this.crrJobSalaries = res;
           });
+
+        let op3 = new DataRequest();
+        op3.entityName = 'HR_EJobSalaries';
+        op3.dataValue = params.employeeID;
+        op3.predicate = 'EmployeeID=@0';
+        (op3.page = 1),
+          this.hrService
+            .getListJobSalariesByEmployeeID(op3)
+            .subscribe((res) => {
+              if (res) {
+                this.lstJobSalaries = res[0];
+                console.log('e salaries', this.lstJobSalaries);
+              }
+            });
 
         //EExperience
         let op = new DataRequest();
@@ -450,7 +485,6 @@ export class EmployeeProfileComponent extends UIComponent {
               }
             });
         }
-
         break;
 
       case 'SYS04': //copy
@@ -509,6 +543,140 @@ export class EmployeeProfileComponent extends UIComponent {
       },
     ];
     this.formModel = this.view.formModel;
+    // this.cacheSv
+    //   .gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+    //   .subscribe((gv) => {
+    //     this.rewardColumnsGrid = [
+    //       {
+    //         field: '',
+    //         headerText: '',
+    //         width: 30,
+    //         template: this.itemAction,
+    //         textAlign: 'center',
+    //       },
+    //       {
+    //         field: 'categoryID',
+    //         headerText: gv
+    //           ? gv['CategoryID'].headerText || 'categoryID'
+    //           : 'categoryID',
+    //         template: '',
+    //         width: 100,
+    //       },
+    //       {
+    //         field: 'categoryName',
+    //         headerText: gv
+    //           ? gv['CategoryName'].headerText || 'CategoryName'
+    //           : 'CategoryName',
+    //         template: '',
+    //         width: 180,
+    //       },
+    //       // {
+    //       //   field: 'parentID',
+    //       //   headerText: gv['ParentID'].headerText,
+    //       //   template: this.parentID,
+    //       //   width: 120,
+    //       // },
+    //       {
+    //         field: 'icon',
+    //         headerText: gv ? gv['Icon'].headerText || 'Icon' : 'Icon',
+    //         template: '',
+    //         width: 80,
+    //       },
+    //       {
+    //         field: 'memo',
+    //         headerText: gv ? gv['Memo'].headerText || 'Memo' : 'Memo',
+    //         template: '',
+    //         width: 180,
+    //       },
+    //       {
+    //         field: 'eSign',
+    //         headerText: gv ? gv['ESign'].headerText || 'ESign' : 'ESign',
+    //         template: '',
+    //         width: 80,
+    //       },
+    //       {
+    //         field: 'processID',
+    //         headerText: 'Quy trình duyệt',
+    //         template: '',
+    //         width: 220,
+    //       },
+    //     ];
+    //   });
+
+    //Khen thưởng
+    this.rewardColumnsGrid = [
+      {
+        field: '',
+        headerText: '',
+        width: 30,
+        template: this.itemAction,
+        textAlign: 'center',
+      },
+      {
+        field: 'inYear',
+        headerText: 'InYear',
+        template: '',
+        width: 100,
+      },
+      {
+        field: 'awardDate',
+        headerText: 'AwardDate',
+        template: '',
+        width: 180,
+      },
+      {
+        field: 'awardID',
+        headerText: 'AwardID',
+        template: '',
+        width: 80,
+      },
+      {
+        field: 'signedDate',
+        headerText: 'SignedDate',
+        template: '',
+        width: 180,
+      },
+      {
+        field: 'decisionNo',
+        headerText: 'DecisionNo',
+        template: '',
+        width: 80,
+      },
+    ];
+
+    this.disciplineColumnGrid = [
+      {
+        field: '',
+        headerText: '',
+        width: 30,
+        template: this.itemAction,
+        textAlign: 'center',
+      },
+      {
+        field: 'disciplineDate',
+        headerText: 'DisciplineDate',
+        template: '',
+        width: 100,
+      },
+      {
+        field: 'disciplineDate',
+        headerText: 'DisciplineDate',
+        template: '',
+        width: 180,
+      },
+      {
+        field: 'disciplineFormCategory',
+        headerText: 'DisciplineFormCategory',
+        template: '',
+        width: 80,
+      },
+      {
+        field: 'reason',
+        headerText: 'Reason',
+        template: '',
+        width: 180,
+      },
+    ];
     console.log('afterview init', this.formModel);
 
     //processingInfo
@@ -714,6 +882,44 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
+  editEmployeeTimeCardInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogEdit = this.callfunc.openSide(
+      PopupETimeCardComponent,
+    {
+      isAdd:false,
+      headerText : "Thông tin chấm công",
+    },
+    option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    })
+  }
+
+  editEmployeeCaculateSalaryInfo(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService
+    option.FormModel = this.view.formModel
+    option.Width = '550px'
+    let dialogEdit = this.callfc.openSide(
+        PopupECalculateSalaryComponent,
+      {
+        isAdd:false,
+        headerText: "Thông tin tính lương",
+      },
+      option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if(!res?.event) this.view.dataService.clear();
+    })
+  }
+
   handlEmployeeExperiences(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
@@ -743,26 +949,28 @@ export class EmployeeProfileComponent extends UIComponent {
   HandleEmployeeJobSalariesInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    option.DataService = this.view.dataService;
-    option.FormModel = this.view.formModel;
+    // option.FormModel = this.view.formModel
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEJobSalariesComponent,
       {
         actionType: actionType,
-        employeeId: this.data.employeeID,
-        headerText: 'Lương chức danh',
         salarySelected: data,
+        headerText: 'Lương chức danh',
+        employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (res != null) {
-        this.hrService
-          .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-          .subscribe((p) => {
-            this.crrJobSalaries = p;
-          });
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
     });
@@ -803,28 +1011,29 @@ export class EmployeeProfileComponent extends UIComponent {
     console.log('datas', option.DataService);
 
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '800px';
     let dialogAdd = this.callfunc.openSide(
       PopupEPassportsComponent,
       {
         actionType: actionType,
+        indexSelected: this.lstPassport.indexOf(data),
+        lstPassports: this.lstPassport,
         headerText: 'Hộ chiếu',
         employeeId: this.data.employeeID,
-        passPortSelected: data,
       },
       option
     );
 
     dialogAdd.closed.subscribe((res) => {
-      if (actionType != 'edit') {
-        this.lstPassport.push(res.event);
-      } else {
-        let index = this.lstPassport.indexOf(data);
-        this.lstPassport[index] = res.event;
-      }
+      // if (actionType != 'edit') {
+      //   this.lstPassport.push(res.event);
+      // } else {
+      //   let index = this.lstPassport.indexOf(data);
+      //   this.lstPassport[index] = res.event;
+      // }
 
-      console.log('data tra ve', res.event);
-      console.log('lst passport', this.lstPassport);
+      // console.log('data tra ve', res.event);
+      // console.log('lst passport', this.lstPassport);
 
       if (!res?.event) this.view.dataService.clear();
     });
@@ -835,28 +1044,31 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       // EmployeeWorkingLisenceDetailComponent,
       PopupEWorkPermitsComponent,
       {
         actionType: actionType,
-        selectedWorkPermit: data,
+        indexSelected: this.lstWorkPermit.indexOf(data),
+        lstWorkPermit: this.lstWorkPermit,
+        // selectedWorkPermit: data,
         headerText: 'Giấy phép lao động',
         employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      console.log('work permit', res?.event);
-      if (actionType != 'edit') {
-        this.lstWorkPermit.push(res?.event);
-      } else {
-        let index = this.lstWorkPermit.indexOf(data);
-        this.lstWorkPermit[index] = res.event;
-      }
-      console.log(this.lstWorkPermit);
+      // console.log('work permit', res?.event);
+      // if (actionType != 'edit') {
+      //   this.lstWorkPermit.push(res?.event);
+      // } else {
+      //   let index = this.lstWorkPermit.indexOf(data);
+      //   this.lstWorkPermit[index] = res.event;
+      // }
+      // console.log(this.lstWorkPermit);
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -871,7 +1083,8 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEVisasComponent,
       {
         actionType: actionType,
-        visaSelected: data,
+        indexSelected: this.lstVisa.indexOf(data),
+        lstVisas: this.lstVisa,
         headerText: 'Thị thực',
         employeeId: this.data.employeeID,
       },
@@ -879,20 +1092,49 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (res.event != null) {
-        if (actionType != 'edit') {
-          console.log('tra ve sau add', res);
-          this.lstVisa.push(res?.event);
-          console.log(this.lstVisa);
-        } else {
-          let index = this.lstVisa.indexOf(data);
-          if (index > -1) this.lstVisa[index] = res.event;
-        }
-        console.log(this.lstVisa);
+        // this.lstVisa = res?.event;
+        console.log('sau khi dong form', this.lstVisa);
         if (!res?.event) this.view.dataService.clear();
         this.df.detectChanges();
       }
     });
   }
+
+  // handleEmployeeVisaInfo(actionType: string, data: any) {
+  //   this.view.dataService.dataSelected = this.data;
+  //   let option = new SidebarModel();
+  //   option.DataService = this.view.dataService;
+  //   option.FormModel = this.view.formModel;
+  //   option.Width = '800px';
+  //   let dialogAdd = this.callfunc.openSide(
+  //     // EmployeeVisaFormComponent,
+  //     PopupEVisasComponent,
+  //     {
+  //       actionType: actionType,
+  //       visaSelected: data,
+  //       headerText: 'Thị thực',
+  //       employeeId: this.data.employeeID,
+  //     },
+  //     option
+  //   );
+  //   dialogAdd.closed.subscribe((res) => {
+  //     if(res.event != null){
+  //       if (actionType != 'edit') {
+  //         console.log('tra ve sau add', res);
+  //         this.lstVisa.push(res?.event);
+  //         console.log(this.lstVisa);
+
+  //       } else {
+  //         let index = this.lstVisa.indexOf(data);
+  //         if(index > -1)
+  //         this.lstVisa[index] = res.event;
+  //       }
+  //       console.log(this.lstVisa);
+  //       if (!res?.event) this.view.dataService.clear();
+  //       this.df.detectChanges()
+  //     }
+  //   });
+  // }
 
   addEmployeeDisciplinesInfo() {
     this.view.dataService.dataSelected = this.data;

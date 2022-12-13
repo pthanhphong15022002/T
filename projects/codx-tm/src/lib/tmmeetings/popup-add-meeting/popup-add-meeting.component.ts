@@ -378,9 +378,16 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
     var re = Number(this.meeting.reminder);
 
-    if (re <= 0 && re >= 60) {
+    if (re <= 0) {
       this.notiService.notify(
-        'Vui lòng chỉ được nhập trong khoảng từ 0 đến 60'
+        'Vui lòng chỉ được nhập số lớn hơn hoặc bằng 0'
+      );
+      return;
+    }
+
+    if (re % 2 != 0) {
+      this.notiService.notify(
+        'Vui lòng không nhập số lẻ'
       );
       return;
     }
@@ -389,13 +396,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM034');
       return;
     }
-    //Chưa có mssg code
-    if (this.isCheckFromToDate(this.meeting.toDate)) {
-      this.notiService.notify(
-        'Vui lòng chọn ngày kết thúc nhỏ hơn ngày hiện tại!'
-      );
-      return;
-    }
+    // //Chưa có mssg code
+    // if (this.isCheckFromToDate(this.meeting.toDate)) {
+    //   this.notiService.notify(
+    //     'Vui lòng chọn ngày kết thúc nhỏ hơn ngày hiện tại!'
+    //   );
+    //   return;
+    // }
     this.listTime.forEach((res) => {
       var d1 = new Date(res.startDate).toLocaleDateString();
       var d2 = new Date(this.meeting.endDate).toLocaleDateString();
@@ -1113,7 +1120,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
     booking.reasonID = null;
-    booking.refID = data.recID; //mã lí do cuộc họp
+    booking.refID = data.meetingID; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {

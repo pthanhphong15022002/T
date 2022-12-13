@@ -1,0 +1,60 @@
+<codx-form
+  [headerText]="title"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+</codx-form>
+<ng-template #body>
+  <div class="form-group w-40">
+    <div class="fw-bold text-dark mb-1">
+      <codx-label
+        fiedName="LegalName"
+        formName="SystemSetting"
+        gridViewName=""
+        default="Tên công ty"
+      >
+      </codx-label>
+    </div>
+    <codx-input
+      type="text"
+      field="legalName"
+      [crrValue]="data?.legalName"
+      placeholder="Tên công ty"
+      (valueChange)="valueChange($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="form-group w-40">
+    <div class="fw-bold text-dark mb-1">
+      <codx-label
+        fiedName="TaxCode"
+        formName="SystemSetting"
+        gridViewName=""
+        default="Mã số thuế"
+      >
+      </codx-label>
+    </div>
+    <div class="col-6">
+      <codx-input
+        type="text"
+        class="form-control"
+        field="taxCode"
+        [crrValue]="data.taxCode"
+        (valueChange)="valueChange($event)"
+      ></codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="update()">
+      <codx-label
+        fiedName="Save"
+        formName="SystemSetting"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
