@@ -178,7 +178,6 @@ export class ProcessStepsComponent
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
     this.listCountPhases = this.process.phases;
-
     var items = [];
     if (this.childFunc && this.childFunc.length > 0) {
       items = this.childFunc.map((obj) => {
@@ -1245,6 +1244,7 @@ export class ProcessStepsComponent
   }
 
   openMF(data, p) {
+  
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
@@ -1254,10 +1254,15 @@ export class ProcessStepsComponent
       // }
       this.dataHover = data;
       p.open();
+     // this.hideMoreFC = true;
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+  moveOut(){
+    // if(this.hideMoreFC)
+    // this.hideMoreFC = false
   }
   showAllparent(text) {
     return (

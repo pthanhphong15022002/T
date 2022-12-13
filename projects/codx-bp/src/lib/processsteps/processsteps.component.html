@@ -24,7 +24,7 @@
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
             <div class="d-flex" #p="ngbPopover" [ngbPopover]="this.isEdit ? hoverMoreFunction : ''"
-              (mouseenter)="openMF(item, p)" autoClose="outside" placement="right">
+              (mouseenter)="openMF(item, p)" autoClose="outside" placement="right" >
               <i class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"></i>
               <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
             </div>
@@ -302,7 +302,7 @@
   </div>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <div class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
+  <div id = "bodyaaaaaa" class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
     }}">
     <codx-label name="lblStepNo" [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"></codx-label>{{ " " +
