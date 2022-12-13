@@ -115,6 +115,21 @@ export class PopupRolesComponent implements OnInit {
 
   //#region save
   onSave() {
+    if (this.startDate != null && this.endDate != null) {
+      if (this.startDate >= this.endDate) {
+        this.notifi.notify(
+          'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
+        );
+        return;
+      }
+      //Chưa có mssg code
+      if (!this.isCheckFromToDate(this.startDate)) {
+        this.notifi.notify(
+          'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
+        );
+        return;
+      }
+    }
     if (
       this.currentPemission > -1 &&
       this.process.permissions[this.currentPemission] != null &&
@@ -150,9 +165,17 @@ export class PopupRolesComponent implements OnInit {
       });
     }
   }
+
+
   //#endregion
 
   //#region event
+
+  isCheckFromToDate(toDate) {
+    var to = new Date(toDate);
+    if (to >= new Date()) return true;
+    else return false;
+  }
   valueChange($event, type) {
     var data = $event.data;
     // this.isSetFull = data;
