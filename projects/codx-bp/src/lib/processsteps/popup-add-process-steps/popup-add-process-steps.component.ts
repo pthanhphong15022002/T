@@ -219,7 +219,7 @@ export class PopupAddProcessStepsComponent
       let value = [this.processSteps['processID'],this.processSteps['parentID'],this.processSteps['stepType'],this.processSteps['stepName'],]
     this.bpService.CheckExitStepName(value).subscribe((res) => {
       if(res){
-        this.notificationsService.alertCode('Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
+        this.notificationsService.alertCode('Tên này đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
           if (x.event?.status == 'N') {
             return;
           } else if (x.event?.status == 'Y') {
