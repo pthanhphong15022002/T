@@ -183,14 +183,15 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
               if (data) {
                 if (this.taskExtends.status == '5') {
                   this.tmSv
-                    .sendAlertMail(data, 'TM_0006', this.funcID)
+                    .sendAlertMail(data, 'TM_0013', this.funcID)
                     .subscribe();
                 } else if (this.taskExtends.status == '4') {
                   this.tmSv
-                    .sendAlertMail(data, 'TM_0006', this.funcID)
+                    .sendAlertMail(data, 'TM_0014', this.funcID)
                     .subscribe();
                 }
               }
+              this.dialog.close();
             });
         } else this.dialog.close();
       });
