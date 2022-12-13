@@ -1340,11 +1340,14 @@ codx-vll {
   align-items: start !important;
 }
 
-ngb-popover-window[role="tooltip"] {
-  display: block;
+.step-rignt ngb-popover-window[role="tooltip"] {
   white-space: nowrap;
 }
 
 .btn-30px .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
   padding: 0.375rem calc(0.45rem + 1px) !important;
+}
+
+.popup-attachment .fw-bold.line-clamp.line-clamp-1 {
+  word-break: break-word;
 }

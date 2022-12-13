@@ -53,11 +53,12 @@ export class CalendarNotesComponent
   CO_Meetings: any = new Array();
   EP_BookingRooms: any = new Array();
   EP_BookingCars: any = new Array();
-  @Output() TM_TasksParam: any;
-  @Output() WP_NotesParam: any;
-  @Output() CO_MeetingsParam: any;
-  @Output() EP_BookingRoomsParam: any;
-  @Output() EP_BookingCarsParam: any;
+  TM_TasksParam: any;
+  WP_NotesParam: any;
+  CO_MeetingsParam: any;
+  EP_BookingRoomsParam: any;
+  EP_BookingCarsParam: any;
+  @Output() settingValue: any;
   checkTM_TasksParam: any;
   checkWP_NotesParam: any;
   checkCO_MeetingsParam: any;
@@ -82,7 +83,7 @@ export class CalendarNotesComponent
   @Input() showHeader = true;
   @Input() typeCalendar = 'week';
   @Input() showList = true;
-  @Input() showListParam = false; 
+  @Input() showListParam = false;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
@@ -407,6 +408,7 @@ export class CalendarNotesComponent
           this.EP_BookingCarsParam = dt[5]?.EP_BookingCars
             ? JSON.parse(dt[5]?.EP_BookingCars)
             : null;
+          this.settingValue = dt[5]
           if (updateCheck == true) {
             this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
             this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;

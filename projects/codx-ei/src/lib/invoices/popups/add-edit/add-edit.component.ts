@@ -183,7 +183,9 @@ export class AddEditComponent implements OnInit {
   }
 
   cellChanged(e) {
-    console.log(e);
+    if (e.field === 'itemDesc') {
+      //this.api.exec<any>('EI','GoodsBusiness',);
+    }
   }
 
   clickMF(e) {}

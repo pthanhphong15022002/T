@@ -302,25 +302,17 @@
   </div>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <div style="width: 90%" class="fw-bold line-clamp line-clamp-1 {{
+  <div class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
-    }}"
-  >
-    <codx-label
-      name="lblStepNo"
-      [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"
-    ></codx-label
-    >{{ " " + data?.stepNo }}
+    }}">
+    <codx-label name="lblStepNo" [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"></codx-label>{{ " " +
+    data?.stepNo }}
     <codx-label name="lblSplit" default=":"></codx-label>
-    <span  
-      #p="ngbPopover" 
-      [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
-      [openDelay]="500" (mouseenter)="p.open()"
-      (mouseleave)="p.close()" placement="top bottom "
-    >
+    <span #p="ngbPopover" [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
+      [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="top right ">
       {{ " " + data?.stepName }}
     </span>
-   
+
   </div>
   <!-- <div  
     *ngIf="data.stepType == 'P' || data.stepType == 'A'"
@@ -329,7 +321,7 @@
   >
     <span class="icon-reorder"></span>
   </div> -->
-  <div>
+  <div class="step-rignt w-100px">
     <span class="text-danger" *ngIf="data.stepType == 'P' || data.stepType == 'A'">
       <span #duration>
         {{
