@@ -1,4 +1,5 @@
 <codx-form
+  #form
   [headerText]="headerText"
   [dialog]="dialogRef"
   [body]="body"
@@ -6,39 +7,93 @@
 ></codx-form>
 
 <ng-template #body>
+  <!-- <codx-tag
+    [entityName]="'grvTasks'"
+    [disabled]="true"
+    [value]="data.tags"
+  ></codx-tag> -->
   <div class="form-group">
-    <codx-label name="lblStartDate" default="Tên công việc"></codx-label>
-    <codx-input type="text"></codx-input>
+    <codx-label fiedName="TaskName" [formModel]="formModel"></codx-label>
+    <codx-input
+      ControlName="taskName"
+      [Group]="fGroupAddTask"
+      [formModel]="formModel"
+    ></codx-input>
   </div>
 
   <div class="row">
     <div class="form-group col-4">
-      <codx-label name="lblStartDate" default="Ngày bắt đầu"></codx-label>
-      <codx-input type="datetime" format="d"></codx-input>
+      <codx-label fiedName="StartDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        type="datetime"
+        format="d"
+        ControlName="startDate"
+        [Group]="fGroupAddTask"
+        [formModel]="formModel"
+      ></codx-input>
     </div>
 
     <div class="form-group col-4">
-      <codx-label name="lblEndDate" default="Ngày kết thúc"></codx-label>
-      <codx-input type="datetime" format="d"></codx-input>
+      <codx-label fiedName="EndDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        type="datetime"
+        format="d"
+        ControlName="endDate"
+        [Group]="fGroupAddTask"
+        [formModel]="formModel"
+      ></codx-input>
     </div>
 
     <div class="form-group col-4">
-      <codx-label name="lblDueDate" default="Ngày hết hạn"></codx-label>
-      <codx-input type="datetime" format="d"></codx-input>
+      <codx-label fiedName="DueDate" [formModel]="formModel"></codx-label>
+      <codx-input
+        type="datetime"
+        format="d"
+        ControlName="dueDate"
+        [Group]="fGroupAddTask"
+        [formModel]="formModel"
+      ></codx-input>
     </div>
   </div>
 
   <div class="form-group">
-    <codx-label name="lblNote" default="Ghi chú"></codx-label>
-    <codx-input type="textarea"></codx-input>
+    <codx-label fiedName="Memo" [formModel]="formModel"></codx-label>
+    <codx-input
+      type="textarea"
+      format="ed"
+      height="150"
+      ControlName="memo"
+      [Group]="fGroupAddTask"
+      [formModel]="formModel"
+    ></codx-input>
   </div>
 
   <div class="form-group" style="margin-top: 24px">
-    <codx-label name="lblAssignee" default="Người thực hiện"></codx-label>
+    <div class="d-flex justify-content-between">
+      <codx-label name="lblAssignee" default="Người thực hiện"></codx-label>
+      <div class="mx-2">
+        <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
+          <span class="icon-group_add text-primary icon-18"></span>
+        </button>
+      </div>
+    </div>
+    <ng-container *ngIf="isPopupUserCbb">
+      <codx-combobox-popup
+        [comboboxName]="'Users'"
+        [field]="'cbbUser'"
+        [multiple]="true"
+        [width]="700"
+        [height]="600"
+        [value]=""
+        [formModel]="formModel"
+        (clickSave)="valueCbxUserChange($event)"
+      >
+      </codx-combobox-popup>
+    </ng-container>
     <codx-imgs
-      [objectId]="'NVHAO;ADMIN;HPHOA'"
+      [objectId]="this.lstUser.join(';')"
       objectType="AD_Users"
-      [numberImages]="3"
+      [numberImages]="this.lstUser.length > 0 ? 3 : 0"
       [width]="30"
     ></codx-imgs>
   </div>
@@ -69,7 +124,7 @@
       hideDes="1"
       hideImageUpload="0"
       hideImageThumb="0"
-      [functionID]="funcID"
+      [functionID]="'TMT0201'"
       [objectId]="data?.recID"
       [allowMultiFile]="0"
       [idBrowse]="'add'"
