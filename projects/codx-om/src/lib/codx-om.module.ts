@@ -25,6 +25,7 @@ import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
 import { PopupSaveVersionComponent } from './popup/popup-save-version/popup-save-version.component';
 import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
 import { PopupCheckInComponent } from './popup/popup-check-in/popup-check-in.component';
+import { PopupKRWeightComponent } from './popup/popup-kr-weight/popup-kr-weight.component';
 
 const routes: Routes = [
   {
@@ -83,6 +84,7 @@ const routes: Routes = [
     PopupSaveVersionComponent,
     PopupViewVersionComponent,
     OKRTasksComponent,
+    PopupKRWeightComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
