@@ -118,7 +118,7 @@ export class PopupAddProcessStepsComponent
       if (this.stepType === 'A') {
         this.getOwnerByParentID(this.processSteps['recID']);
       }
-      if (this.stepType === 'E' && this.processSteps.reference) {
+      if ((this.stepType === 'E' || this.stepType === 'M') && this.processSteps.reference) {
         this.isNewEmails = false;
         this.recIdEmail = this.processSteps.reference;
       }
@@ -446,5 +446,9 @@ export class PopupAddProcessStepsComponent
 
   editTodoIndex(i){
     this.editTodo = i;
+  }
+  buttonClick(e){
+    console.log(e);
+    
   }
 }
