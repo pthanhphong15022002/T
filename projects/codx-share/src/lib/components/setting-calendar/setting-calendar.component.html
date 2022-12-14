@@ -29,13 +29,3 @@
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data?.date)"></div>
 </ng-template>
-
-<ng-template #mfButton let-data>
-  <div class="mt-1 me-1">
-    <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      type="hover"
-    ></codx-mfunc>
-  </div>
-</ng-template>

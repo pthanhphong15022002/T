@@ -4,8 +4,8 @@
   <ng-template #header>
     <div class="d-flex justify-content-between mt-4">
       <div class="w-100">
-        <div>
-          <codx-temp-full [title]="data?.title" [titleCss]="'fs-5'"
+        <div class="mb-1">
+          <codx-temp-full [title]="data?.title" [titleCss]="'fs-5 mb-2'"
             [desc]="convertHtmlAgency(data?.agencyName, data?.deptName)" [bookmark]="false" [titleLine]="2">
           </codx-temp-full>
         </div>
@@ -112,7 +112,10 @@
         <li [ngbNavItem]="1">
           <a ngbNavLink>
             <div class="d-flex align-item-center">
-              <i class="fa-solid fa-user-tag me-2 mt-1" [ngClass]="{ 'text-primary': active === 1 }"></i><span><codx-label [default]="formModel.funcID=='ODT31'?'Nơi nhận':'Nơi gửi'" fiedName="lblTitleReceive "></codx-label></span>
+              <i class="fa-solid fa-user-tag me-2 mt-1"
+                [ngClass]="{ 'text-primary': active === 1 }"></i><span><codx-label
+                  [default]="formModel.funcID=='ODT31'?'Nơi nhận':'Nơi gửi'"
+                  fiedName="lblTitleReceive "></codx-label></span>
             </div>
           </a>
           <ng-template ngbNavContent>
@@ -207,9 +210,9 @@
     </div>
   </ng-template>
   <ng-template #footer>
-    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID"
-      [funcID]="formModel?.funcID" [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl"
-      [transID]="data?.recID" [approveStatus]="data?.approveStatus" [formModel]="formModel" [referType]="'2'"></codx-tabs>
+    <codx-tabs [entityName]="formModel?.entityName" [objectID]="data?.recID" [funcID]="formModel?.funcID"
+      [dataTree]="data?.tasks ? data.tasks : []" [TabControl]="tabControl" [transID]="data?.recID"
+      [approveStatus]="data?.approveStatus" [formModel]="formModel" [referType]="'2'"></codx-tabs>
   </ng-template>
 
   <ng-template #templateorg let-item>

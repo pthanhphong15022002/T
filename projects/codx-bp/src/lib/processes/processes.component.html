@@ -1,25 +1,16 @@
-<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP"
-  entityName="BP_Processes"
-  className="ProcessesBusiness" [method]="method" [views]="views"
-  [button]="showButtonAdd? button : null"
-  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs"
-  [autoLoad]="true" idField="recID"
-  (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch"
-  (searchChanged)="searchChange($event)"
-  (viewChanged)="viewChanged($event)"
-  >
+<codx-views #view [funcID]="funcID" service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes"
+  className="ProcessesBusiness" [method]="method" [views]="views" [button]="showButtonAdd? button : null"
+  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="recID"
+  (onDragDrop)="onDragDrop($event)" [autoSearch]="isSearch" (searchChanged)="searchChange($event)"
+  (viewChanged)="viewChanged($event)">
 </codx-views>
 
 <ng-template #templateListCard let-data>
   <codx-card-img cardCss="card-process border border-gray-200 rounded-2 h-100
-    w-225px card-no-body"
-    [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px"
-    [imageObjName]="data?.processName" [imageId]="data?.recID"
-    [imgOn]="data?.modifiedOn"
-    [imageWidth]="1000" [imageReferType]="'Flowchart'" [rootData]="data"
-    [dataItem]="data" [formModel]="view.formModel"
-    [footer]="footerbg" [typeMF]="'hover'" (clickMF)="clickMF($event, data)"
-    (changeDataMF)="changeDataMF($event, data)"
+    w-225px card-no-body" [imageObjType]="'BP_Processes'" imgCss="w-100 h-150px" [imageObjName]="data?.processName"
+    [imageId]="data?.recID" [imgOn]="data?.modifiedOn" [imageWidth]="1000" [imageReferType]="'avt'"
+    [rootData]="data" [dataItem]="data" [formModel]="view.formModel" [footer]="footerbg" [typeMF]="'hover'"
+    (clickMF)="clickMF($event, data)" (changeDataMF)="changeDataMF($event, data)"
     (dblclick)="doubleClickViewProcessSteps(moreFuncDbClick , data)">
   </codx-card-img>
   <ng-template #footerbg let-data>
@@ -29,24 +20,22 @@
       ">
       <div class="d-flex flex-column w-100 p-3">
         <div class="d-flex justify-content-between">
-          <div #processName class="fs-6 fw-bold line-clamp-card"
-          [ngbTooltip]="data.processName"> {{
-          data?.processName | formatvalue
-          : view.formModel
-          : "processName"
-          : processName
-          : "Processes"
-          : "grvProcesses"
-          | async
-          }}</div>
+          <div #processName class="fs-6 fw-bold line-clamp-card" [ngbTooltip]="data.processName"> {{
+            data?.processName | formatvalue
+            : view.formModel
+            : "processName"
+            : processName
+            : "Processes"
+            : "grvProcesses"
+            | async
+            }}</div>
           <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
         </div>
 
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
           <div class="d-flex align-items-center card-icon-nowrap">
-            <span class="me-1 icon-16 icon-access_alarm"></span><span
-              class="line-clamp" #activedOn>
+            <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" #activedOn>
               {{
               data.activedOn | formatvalue
               : view.formModel
@@ -63,10 +52,8 @@
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
               <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'P'"></lib-popup-phases-activities> -->
-              <span class="icon-server text-dark icon-14 me-1"
-                #phases="ngbPopover" [ngbPopover]="popperPhases"
-                [openDelay]="500" (mouseenter)="phases.open()"
-                (mouseleave)="phases.close()" placement="right"></span>
+              <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"
+                [openDelay]="500" (mouseenter)="phases.open()" (mouseleave)="phases.close()" placement="right"></span>
               <span #phases class="">
                 {{
                 data.phases
@@ -75,29 +62,25 @@
             </div>
             <div class="d-flex me-3 align-items-center">
               <!-- <lib-popup-phases-activities [formModel]="view.formModel" [processID]="data.recID" [type]="'A'"></lib-popup-phases-activities> -->
-              <span class="icon-format_list_numbered text-danger icon-16 me-1"
-                #activitiest="ngbPopover"
-                [ngbPopover]="popperActivitiest" [openDelay]="500"
-                (mouseenter)="activitiest.open()"
+              <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover"
+                [ngbPopover]="popperActivitiest" [openDelay]="500" (mouseenter)="activitiest.open()"
                 (mouseleave)="activitiest.close()" placement="right "></span>
               <span #activities class="">
                 {{data.activities}}
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span [ngbPopover]="popperAttachment" #p="ngbPopover"
-                [openDelay]="500" (mouseenter)="p.open()"
+              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
                 (mouseleave)="p.close()" placement="right">
-                <codx-attachment-temp [objectID]="data?.recID"
-                  [formModel]="view.formModel" [count]="data.attachments" [openViewPopup]="checkPermissionRead(data)">
+                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
+                  [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
               </span>
             </div>
           </div>
           <!-- <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
           </codx-img> -->
-          <codx-imgs [width]="25" [objectId]="data?.owner" objectType="AD_Users"
-            [numberImages]="3">
+          <codx-imgs [width]="25" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="3">
           </codx-imgs>
         </div>
       </div>
@@ -125,10 +108,8 @@
         <div class="d-flex flex-wrap justify-content-between mt-2">
           <div class="d-flex align-items-center">
             <div class="d-flex me-3 align-items-center">
-              <span class="icon-server text-dark icon-14 me-1"
-                #phases="ngbPopover" [ngbPopover]="popperPhases"
-                [openDelay]="500" (mouseenter)="phases.open()"
-                (mouseleave)="phases.close()"
+              <span class="icon-server text-dark icon-14 me-1" #phases="ngbPopover" [ngbPopover]="popperPhases"
+                [openDelay]="500" (mouseenter)="phases.open()" (mouseleave)="phases.close()"
                 placement="bottom top right left"></span>
               <span #phases class="">
                 {{
@@ -137,10 +118,8 @@
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span class="icon-format_list_numbered text-danger icon-16 me-1"
-                #activitiest="ngbPopover"
-                [ngbPopover]="popperActivitiest" [openDelay]="500"
-                (mouseenter)="activitiest.open()"
+              <span class="icon-format_list_numbered text-danger icon-16 me-1" #activitiest="ngbPopover"
+                [ngbPopover]="popperActivitiest" [openDelay]="500" (mouseenter)="activitiest.open()"
                 (mouseleave)="activitiest.close()" placement="bottom top right
                 left"></span>
               <span #activities class="">
@@ -148,13 +127,10 @@
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover"
-                [openDelay]="500"
-                (mouseenter)="attachments.open()"
-                (mouseleave)="attachments.close()" placement="bottom top right
+              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
+                (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right
                 left">
-                <codx-attachment-temp [objectID]="data?.recID"
-                  [formModel]="view.formModel" [count]="data.attachments">
+                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments">
                 </codx-attachment-temp>
               </span>
             </div>
@@ -166,14 +142,12 @@
         </div>
       </div>
     </td>
-    <td class="rowphoto" placement="left"  >
-      <span  *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
+    <td class="rowphoto" placement="left">
+      <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
     </td>
     <td class="rowphoto" placement="left">
-      <codx-temp-full cardCss="card-template" [imageWidth]="30"
-        [imageId]="data.owner" imageObjType="AD_Users"
-        [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)"
-        [dataItem]="data">
+      <codx-temp-full cardCss="card-template" [imageWidth]="30" [imageId]="data.owner" imageObjType="AD_Users"
+        [titleTmp]="titleTmp" [desc]="convertHtmlAgency(data.positionName)" [dataItem]="data">
       </codx-temp-full>
     </td>
     <td class="rowphoto">
@@ -203,10 +177,8 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div *ngIf="data.memo" class="" [class.dropdown-customv2]="data.memo"
-        [ngbPopover]="popDetail" #p="ngbPopover"
-        [openDelay]="500" (mouseenter)="PopoverDetail(p, data)"
-        (mouseleave)="PopoverDetail(p, null)"
+      <div *ngIf="data.memo" class="" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail" #p="ngbPopover"
+        [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
         placement="bottom right top" autoClose="outside">
         <div class="line-clamp" #memo>
           {{
@@ -234,8 +206,7 @@
           <codx-label default="Xét duyệt"></codx-label>
         </button>
       </div>
-      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
-        [isBookMark]="true" [dataItem]="data"
+      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
         [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
       </codx-mfunc>
     </td>
@@ -279,14 +250,12 @@
   </div>
 </ng-template>
 <ng-template #itemProcessName let-data>
-  <codx-label fiedName="ProcessName" formName="Processes"
-    gridViewName="grvProcesses" default="Tên qui trình">
+  <codx-label fiedName="ProcessName" formName="Processes" gridViewName="grvProcesses" default="Tên qui trình">
   </codx-label>
 </ng-template>
 
 <ng-template #itemOwner let-data>
-  <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses"
-    default="Chủ qui trình">
+  <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses" default="Chủ qui trình">
   </codx-label>
 </ng-template>
 
@@ -297,38 +266,32 @@
 </ng-template>
 
 <ng-template #itemActivedOn let-data>
-  <codx-label fiedName="ActivedOn" formName="Processes"
-    gridViewName="grvProcesses" default="Ngày hiệu lực">
+  <codx-label fiedName="ActivedOn" formName="Processes" gridViewName="grvProcesses" default="Ngày hiệu lực">
   </codx-label>
 </ng-template>
 
 <ng-template #itemMemo let-data>
-  <codx-label fiedName="Memo" formName="Processes" gridViewName="grvProcesses"
-    default="Mô tả">
+  <codx-label fiedName="Memo" formName="Processes" gridViewName="grvProcesses" default="Mô tả">
   </codx-label>
 </ng-template>
 
 <ng-template #itemPetitioner let-data>
-  <codx-label fiedName="Petitioner" formName="AprPermissions"
-    gridViewName="grvAprPermissions" default="Người yêu cầu">
+  <codx-label fiedName="Petitioner" formName="AprPermissions" gridViewName="grvAprPermissions" default="Người yêu cầu">
   </codx-label>
 </ng-template>
 
 <ng-template #itemRequestDate let-data>
-  <codx-label fiedName="RequestDate" formName="AprPermissions"
-    gridViewName="grvAprPermissions" default="Ngày yêu cầu">
+  <codx-label fiedName="RequestDate" formName="AprPermissions" gridViewName="grvAprPermissions" default="Ngày yêu cầu">
   </codx-label>
 </ng-template>
 
 <ng-template #itemPermission let-data>
-  <codx-label fiedName="Permission" formName="AprPermissions"
-    gridViewName="grvAprPermissions" default="Quyền">
+  <codx-label fiedName="Permission" formName="AprPermissions" gridViewName="grvAprPermissions" default="Quyền">
   </codx-label>
 </ng-template>
 
 <ng-template #itemDescription let-data>
-  <codx-label fiedName="Description" formName="AprPermissions"
-    gridViewName="grvAprPermissions" default="Ghi chú">
+  <codx-label fiedName="Description" formName="AprPermissions" gridViewName="grvAprPermissions" default="Ghi chú">
   </codx-label>
 </ng-template>
 
@@ -338,8 +301,7 @@
   <ng-container *ngIf="listProcess !=null; else tmpEmpty">
     <div class="card rounded-0 p-10">
       <div class="fw-semibold fw-base text-gray-600" *ngIf="totalRecordSearch>0">{{totalRecordSearch}}
-        <codx-label
-          default="kết quả được tìm thấy"></codx-label>
+        <codx-label default="kết quả được tìm thấy"></codx-label>
       </div>
       <div class="card-body" *ngFor="let item of listProcess">
         <div class="mt-6">
@@ -360,8 +322,7 @@
             <!--begin::Author-->
             <div class="d-flex align-items-center justify-content-center">
               <div class="d-flex align-items-center card-icon-nowrap me-3">
-                <span class="me-1 icon-16 icon-access_alarm"></span><span
-                  class="line-clamp" #activedOn>
+                <span class="me-1 icon-16 icon-access_alarm"></span><span class="line-clamp" #activedOn>
                   {{ item?.activedOn | formatvalue:
                   view.formModel:"activedOn":activedOn
                   | async }}
@@ -369,8 +330,7 @@
                 </span>
               </div>
               <div class="d-flex align-items-center card-icon-nowrap px-4 me-2">
-                <span class="me-1">{{item.views}}</span><span
-                  class="line-clamp">
+                <span class="me-1">{{item.views}}</span><span class="line-clamp">
                   <codx-label default="lượt xem"></codx-label>
                 </span>
               </div>
@@ -426,13 +386,10 @@
             </a>
           </li>
           <div *ngFor="let number of listNumberPage">
-            <li class="page-item m-1"
-              [ngClass]="number==pageNumberCliked?'active':''"><a
-                class="page-link"
+            <li class="page-item m-1" [ngClass]="number==pageNumberCliked?'active':''"><a class="page-link"
                 (click)="PageClick($event,number)">{{number}}</a></li>
           </div>
-          <li class="page-item next m-1"
-            [ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' :
+          <li class="page-item next m-1" [ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' :
             ''">
             <a (click)="nextPage($event)" class="page-link px-0">
               <!--begin::Svg Icon | path: icons/duotune/arrows/arr071.svg-->
@@ -440,8 +397,7 @@
               <!--end::Svg Icon-->
             </a>
           </li>
-          <li class="page-item last m-1"
-            [ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' :
+          <li class="page-item last m-1" [ngClass]="pageNumberCliked==listNumberPage.length? 'disabled' :
             ''">
             <a (click)="lastPage($event)" class="page-link px-0">
               <!--begin::Svg Icon | path: icons/duotune/arrows/arr080.svg-->
@@ -459,8 +415,7 @@
   <div class="w-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg"
-          class="w-200px" />
+        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
         <div class="fs-5 text-dark fw-bold mt-2 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
@@ -470,15 +425,13 @@
 </ng-template>
 
 <ng-template #viewReName let-dialog="dialogPopupReName">
-  <codx-form headerText="Thay đổi tên" [body]="bodyFormReName"
-    [footer]="footerFormReName" [dialog]="dialogPopup">
+  <codx-form headerText="Thay đổi tên" [body]="bodyFormReName" [footer]="footerFormReName" [dialog]="dialogPopup">
   </codx-form>
 </ng-template>
 
 <ng-template #bodyFormReName>
   <div class="form-group mt-3">
-    <codx-input field="processName" type="text" [crrValue]="newName"
-      (valueChange)="valueChange($event)">
+    <codx-input field="processName" type="text" [crrValue]="newName" (valueChange)="valueChange($event)">
     </codx-input>
   </div>
 </ng-template>
@@ -494,15 +447,12 @@
     kèm">
   </codx-form>
   <ng-template #body>
-    <codx-thumbnail class="popup-attachment" [files]="[]" [formModel]="null"></codx-thumbnail>
+    <codx-thumbnail class="popup-attachment aqua" [files]="[]" [formModel]="null"></codx-thumbnail>
   </ng-template>
 </ng-template>
 
 <ng-template #viewReleaseProcess let-dialog="dialogPopupReleaseProcess">
-  <codx-form
-    [headerText]="titleAction"
-    [body]="bodyReleaseProcess"
-    [footer]="footerReleaseProcess"
+  <codx-form [headerText]="titleAction" [body]="bodyReleaseProcess" [footer]="footerReleaseProcess"
     [dialog]="dialogPopup">
   </codx-form>
 </ng-template>
@@ -510,8 +460,8 @@
 <ng-template #bodyReleaseProcess>
   <div class="form-group mt-3">
     <codx-label fiedName="status" [formModel]="view.formModel" [default]="statusLable"></codx-label>
-    <codx-input type="valuelist" field="status" [crrValue]="statusDefault" [refValue]="vllStatus"
-    placeholder="" [disabled]="true"></codx-input>
+    <codx-input type="valuelist" field="status" [crrValue]="statusDefault" [refValue]="vllStatus" placeholder=""
+      [disabled]="true"></codx-input>
   </div>
   <div class="form-group mt-3">
     <codx-label fiedName="comment" [formModel]="view.formModel" [default]="commentLable"></codx-label>

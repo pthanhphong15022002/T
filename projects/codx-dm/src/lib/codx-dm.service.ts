@@ -264,6 +264,7 @@ export class CodxDMService {
   public breadcumbChange = new BehaviorSubject<any>(null);
   isChangeBreadCumb = this.breadcumbChange.asObservable();
 
+
   // public listFolder = new BehaviorSubject<FolderInfo[]>(null);
   // isListFolder = this.listFolder.asObservable();
 
@@ -597,8 +598,8 @@ export class CodxDMService {
           }
           //  this.isBookmark = !this.isBookmark;
           this.listFiles = list;
-          this.ChangeData.next(true);
-          this.ChangeDataViewFile.next(res);
+          this.addFile.next(true);
+          //this.ChangeDataViewFile.next(res);
           //   that.changeDetectorRef.detectChanges();
         }
       });
