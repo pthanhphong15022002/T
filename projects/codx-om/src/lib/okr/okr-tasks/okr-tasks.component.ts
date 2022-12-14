@@ -89,20 +89,20 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
       }
     });
 
-    this.request = new ResourceModel();
-    this.request.service = 'TM';
-    this.request.assemblyName = 'TM';
-    this.request.className = 'TaskBusiness';
-    this.request.method = 'GetTasksAsync';
-    this.request.idField = 'taskID';
-    this.request.dataObj = this.dataObj;
+    // this.request = new ResourceModel();
+    // this.request.service = 'TM';
+    // this.request.assemblyName = 'TM';
+    // this.request.className = 'TaskBusiness';
+    // this.request.method = 'GetTasksAsync';
+    // this.request.idField = 'taskID';
+    // this.request.dataObj = this.dataObj;
 
-    this.resourceKanban = new ResourceModel();
-    this.resourceKanban.service = 'SYS';
-    this.resourceKanban.assemblyName = 'SYS';
-    this.resourceKanban.className = 'CommonBusiness';
-    this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    this.resourceKanban.dataObj = '125125';
+    // this.resourceKanban = new ResourceModel();
+    // this.resourceKanban.service = 'SYS';
+    // this.resourceKanban.assemblyName = 'SYS';
+    // this.resourceKanban.className = 'CommonBusiness';
+    // this.resourceKanban.method = 'GetColumnsKanbanAsync';
+    // this.resourceKanban.dataObj = '125125';
 
     //resource Schedule
     this.requestSchedule = new ResourceModel();
@@ -135,7 +135,41 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.modelResource.service = 'HR';
     this.modelResource.method = 'GetListUserByResourceAsync';
     this.modelResource.dataValue = this.dataObj?.resources;
+    
+    //lấy list booking để vẽ schedule
+    this.request = new ResourceModel();
+    this.request.assemblyName = 'EP';
+    this.request.className = 'BookingsBusiness';
+    this.request.service = 'EP';
+    this.request.method = 'GetListBookingAsync';
+    this.request.predicate = 'ResourceType=@0';
+    this.request.dataValue = '1';
+    this.request.idField = 'recID';
+    //lấy list resource vẽ header schedule
+    this.modelResource = new ResourceModel();
+    this.modelResource.assemblyName = 'EP';
+    this.modelResource.className = 'BookingsBusiness';
+    this.modelResource.service = 'EP';
+    this.modelResource.method = 'GetResourceAsync';
+    this.modelResource.predicate = 'ResourceType=@0';
+    this.modelResource.dataValue = '1';
 
+    // this.fields = {
+    //   id: 'bookingNo',
+    //   subject: { name: 'title' },
+    //   startTime: { name: 'startDate' },
+    //   endTime: { name: 'endDate' },
+    //   resourceId: { name: 'resourceID' },
+    //   status: 'approveStatus',
+    // };
+
+    // this.resourceField = {
+    //   Name: 'Resources',
+    //   Field: 'resourceID',
+    //   IdField: 'resourceID',
+    //   TextField: 'resourceName',
+    //   Title: 'Resources',
+    // };
     this.button = {
       id: 'btnAdd',
     };
