@@ -353,6 +353,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
+    this.isAddPermission(this.process.owner);
   }
  isAddPermission(id) {
     this.api

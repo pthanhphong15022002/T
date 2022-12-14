@@ -611,7 +611,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.data.equipments = [];
       this.data.equipments = tmpEquip;
       this.data.stopOn = this.data.endDate;
-      this.data.category = '1';
       this.data.resourceType = '1';
       this.data.approveStatus = '1';
       this.data.status = '1';
