@@ -1273,6 +1273,6 @@ export class ProcessStepsComponent
   }
   setWidth(data){
     let width = document.getElementsByTagName("body")[0].offsetWidth;    
-    return width < data.length*11 ? true :  false;
+    return width < data.length*12 ? true :  false;
   }
 }

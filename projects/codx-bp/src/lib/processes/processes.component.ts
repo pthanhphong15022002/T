@@ -547,7 +547,7 @@ export class ProcessesComponent
   }
 
   permission(data) {
-    if (this.moreFunc == 'BPT104') {
+    if (this.moreFunc == 'BPT104' || this.moreFunc == 'BPT205' || this.moreFunc == 'BPT305' || this.moreFunc == 'BPT605' || this.moreFunc == 'BPT204') {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -668,6 +668,9 @@ export class ProcessesComponent
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT105':
+      case 'BPT605':
+      case 'BPT305':
+      case 'BPT205':
       case 'BPT104':
       case 'BPT204':
       case 'BPT304':
@@ -882,9 +885,7 @@ export class ProcessesComponent
   }
 
   checkPermissionRead(data) {
-    let isRead = data?.permissions.some(
-      (x) => x.objectID == this.userId && x.read
-    );
+    let isRead = data?.permissions.some((x) => x.objectID == this.userId && x.read && x.approveStatus !== '3' && x.approveStatus !== '4');
     let isOwner = data?.owner == this.userId ? true : false;
     return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
   }
