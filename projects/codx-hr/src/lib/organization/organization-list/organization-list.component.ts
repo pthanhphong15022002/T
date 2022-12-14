@@ -62,7 +62,9 @@ export class OrganizationListComponent implements OnInit,OnChanges {
   deleteData(data:any){
     if(data)
     {
-      (this.codxListView.dataService as CRUDService).delete([data],true,(option:RequestOption) => this.beforeDelete(option)).subscribe();
+      (this.codxListView.dataService as CRUDService)
+      .delete([data],true,(option:RequestOption) => this.beforeDelete(option))
+      .subscribe();
     }
   }
   // before delete

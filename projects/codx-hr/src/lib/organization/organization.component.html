@@ -1,6 +1,13 @@
-<codx-views #view [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID" [views]="views"
-  [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button"
-  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)">
+<codx-views #view 
+  [autoLoad]="true" 
+  entityName="HR_OrganizationUnits" 
+  idField="orgUnitID" 
+  [views]="views"
+  [selectedFirst]="true" 
+  (selectedChange)="onSelectionChanged($event)" 
+  [button]="button"
+  (buttonClick)="btnClick($event)" 
+  (viewChanged)="changeView($event)">
 </codx-views>
 <!-- panel right lef -->
 <ng-template #panelRightLef>
