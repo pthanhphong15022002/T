@@ -161,30 +161,40 @@ export class AddEditComponent implements OnInit {
   }
 
   cellChanged(e) {
-    if (e.input.field === 'itemDesc') {
-      if (this.dicCbx.has(e.input.data)) {
-        let good = this.dicCbx.get(e.input.data);
-        this.updateLine(good, e.fg, e.idx);
+    if (e.field === 'itemDesc') {
+      if (this.dicCbx.has(e.value)) {
+        let good = this.dicCbx.get(e.value);
+        this.updateLine(good, e.data, e.idx);
       } else {
         this.api
-          .exec<any>('EI', 'GoodsBusiness', 'GetAsync', e.input.data)
+          .exec<any>('EI', 'GoodsBusiness', 'GetAsync', e.value)
           .subscribe((res) => {
             if (res) {
-              this.dicCbx.set(e.input.data, res);
-              this.updateLine(res, e.fg, e.idx);
+              this.dicCbx.set(e.field, res);
+              this.updateLine(res, e.data, e.idx);
             }
           });
       }
     }
+
+    if (
+      e.field === 'quantity' &&
+      (e.data.salesPrice !== '' ||
+        e.data.salesPrice !== undefined ||
+        e.data.salesPrice >= 0)
+    ) {
+      let salesPrice = parseInt(e.input.data) * parseFloat(e.fg.salesPrice);
+      console.log(salesPrice);
+    }
   }
 
-  updateLine(data, fData, idx: number) {
-    console.log('data: ', data);
-    fData.umid = data.umid;
-    fData.quantity = 1;
-    fData.salesPrice = data.salesPrice;
-    fData.vatid = data.vatPct;
-    this.grid.updateRow(idx, fData);
+  updateLine(data, rowData, idx: number) {
+    console.log('data: ', rowData);
+    rowData.umid = data.umid;
+    rowData.quantity = 1;
+    rowData.salesPrice = data.salesPrice;
+    rowData.vatid = data.vatPct;
+    this.grid.updateRow(idx, rowData);
   }
 
   clickMF(e) {}

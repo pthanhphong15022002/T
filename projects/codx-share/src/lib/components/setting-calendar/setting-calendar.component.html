@@ -23,7 +23,7 @@
   </div>
 </div>
 
-<codx-views #view [views]="views" [autoLoad]="false" [funcID]="funcID">
+<codx-views #view [views]="views" [autoLoad]="false" [funcID]="funcID" (onActions)="onAction($event)">
 </codx-views>
 
 <ng-template #cellTemplate let-data>
