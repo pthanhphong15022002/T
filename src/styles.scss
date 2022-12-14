@@ -1376,7 +1376,7 @@ codx-vll {
 
 codx-processsteps .e-kanban-content {
   height: calc(100vh - 250px);
-  overflow: hidden !important;
+  overflow-y: hidden !important;
 }
 
 codx-processsteps .e-card-wrapper {
