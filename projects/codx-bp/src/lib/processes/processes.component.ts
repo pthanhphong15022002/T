@@ -136,6 +136,7 @@ export class ProcessesComponent
   isAdminBp = false;
   oldName = '';
   crrFunID = '';
+  idProccess='';
 
   constructor(
     inject: Injector,
@@ -473,6 +474,7 @@ export class ProcessesComponent
     this.dataSelected = data;
     this.newName = data.processName;
     this.oldName = data.processName;
+    this.idProccess = data.recID;
     this.crrRecID = data.recID;
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
@@ -709,23 +711,29 @@ export class ProcessesComponent
       );
       return;
     }
-    if (
-      this.oldName.trim().toLocaleUpperCase() ===
-      this.newName.trim().toLocaleUpperCase()
-    ) {
+    if(this.oldName.trim()===this.newName.trim()) {
+      this.notification.notifyCode('SYS007');
+      this.changeDetectorRef.detectChanges();
+      this.dialogPopup.close();
+    }
+    else if(this.oldName.trim().toLocaleUpperCase() === this.newName.trim().toLocaleUpperCase()) {
       this.CheckExistNameProccess(this.oldName);
-    } else {
-      this.CheckAllExistNameProccess(this.newName);
+    }
+    else {
+      this.CheckAllExistNameProccess(this.newName,this.idProccess);
     }
   }
-  CheckAllExistNameProccess(newName) {
-    this.bpService.isCheckExitName(newName).subscribe((res) => {
-      if (res) {
-        this.CheckExistNameProccess(newName);
-      } else {
-        this.actionReName(newName);
-      }
-    });
+  CheckAllExistNameProccess(newName,idProccess) {
+    this.bpService
+        .isCheckExitName(newName,idProccess)
+        .subscribe((res) => {
+          if (res) {
+            this.CheckExistNameProccess(newName);
+          }
+          else {
+            this.actionReName(newName);
+          }
+        });
   }
   CheckExistNameProccess(newName) {
     this.notificationsService
@@ -935,8 +943,13 @@ export class ProcessesComponent
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
           if (process) {
-            this.view.dataService.update(process).subscribe();
-            this.detectorRef.detectChanges();
+            this.bpService.getFlowChartNew.subscribe(dt=>{
+              process.modifiedOn = dt?.createdOn;
+              debugger
+              this.view.dataService.update(process).subscribe();
+              this.detectorRef.detectChanges();
+           })
+          
           }
         });
       }
@@ -945,14 +958,14 @@ export class ProcessesComponent
 
   approval($event) {}
   //tesst
-  getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
-      if (dt) {
-        let link = environment.urlUpload + '/' + dt?.pathDisk;
-        return link;
-      } else return '../assets/media/img/codx/default/card-default.svg';
-    });
-  }
+  // getFlowchart(data) {
+  //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
+  //     if (dt) {
+  //       let link = environment.urlUpload + '/' + dt?.pathDisk;
+  //       return link;
+  //     } else return '../assets/media/img/codx/default/card-default.svg';
+  //   });
+  // }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {
