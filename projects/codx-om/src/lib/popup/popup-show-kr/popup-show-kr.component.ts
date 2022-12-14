@@ -145,7 +145,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     this.cache.valueList('OM002').subscribe(item=>{
-      if(item?.datas) this.dtStatus = item?.datas;
+      var x= item;
     })
     
   }
@@ -200,7 +200,9 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     );
     this.dialogCheckIn.closed.subscribe(res=>{
       if(res && res.event){
-        this.dataKR=res.event;
+        this.dataKR=res.event;        
+        this.totalProgress=this.dataKR.progress;
+        this.progressHistory.unshift(this.totalProgress);
         this.dataOKR.map((item:any)=>{
           if(item.recID==res.event.parentID){
             item=res.event;       
@@ -211,5 +213,21 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     })
   }
   
+  calculatorProgress(){
+    this.totalProgress= this.dataKR.progress;
+    if(this.dataKR?.checkIns){    
+      this.dataKR.checkIns=  Array.from(this.dataKR?.checkIns).reverse();
+      this.krCheckIn=Array.from(this.dataKR?.checkIns);
+      this.krCheckIn.forEach(element => {
+        if(this.krCheckIn.indexOf(element)==0){
+          this.progressHistory.push(this.totalProgress)
+        }
+        else{
+          this.totalProgress-=this.krCheckIn[this.krCheckIn.indexOf(element)-1].value;
+          this.progressHistory.push(this.totalProgress);
+        }
+      });
+    }
+  }
   
 }
