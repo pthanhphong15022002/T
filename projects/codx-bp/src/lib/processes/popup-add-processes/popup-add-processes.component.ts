@@ -218,12 +218,6 @@ export class PopupAddProcessesComponent implements OnInit {
   async actionSave() {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        // if (res) {
-          // var countAttack = 1;
-          // if (this.action !== 'edit') {
-          //   this.process.attachments = countAttack;
-          // }
-       //}
         this.actionSaveBeforeSaveAttachment();
       });
     } else  {this.actionSaveBeforeSaveAttachment();}
@@ -244,8 +238,17 @@ export class PopupAddProcessesComponent implements OnInit {
       });
     switch (this.action) {
       case 'copy': {
-        this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+        this.notiService.alertCode('BP007').subscribe((x) => {
+          if (x.event.status == 'N') {
+            this.isCoppyFile = false;
+            this.isUpdateCreateProcess();
+            this.isAddPermission(this.process.owner);
+          } else {
+            this.isCoppyFile = true;
+            this.isUpdateCreateProcess();
+            this.isAddPermission(this.process.owner);
+          }
+        });
         break;
       }
       case 'add': {
