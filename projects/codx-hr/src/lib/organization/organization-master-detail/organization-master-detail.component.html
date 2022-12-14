@@ -51,7 +51,7 @@
             </div>
           </div>
           <div>
-            <p>{{totalEmployee}}</p>
+            <p>{{codxListView.dataService.data.length}}</p>
             <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
           </div>
       </div>
@@ -137,7 +137,7 @@
     <!-- Trạng thái -->
     <div class="col-2">
       <ng-container *ngIf="item.status">
-        <codx-vll [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
+        <codx-vll [formModel]="formModel" [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
       </ng-container>
     </div>
     <!-- Sở thích -->
