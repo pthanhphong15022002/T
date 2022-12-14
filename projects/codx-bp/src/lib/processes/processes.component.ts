@@ -852,7 +852,7 @@ export class ProcessesComponent
           case 'BPT305': //chia se
           case 'BPT605': //chia se
             let isShare = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.share
+              (x) => (x.objectID == this.userId) && x.share && x.approveStatus !== '3' && x.approveStatus != "4"
             );
             if (!isShare && !fullRole) {
               res.isblur = true;
@@ -883,7 +883,7 @@ export class ProcessesComponent
 
   checkPermissionRead(data) {
     let isRead = data?.permissions.some(
-      (x) => x.objectID == this.userId && x.read
+      (x)=> x.objectID == this.userId && x.read && x.approveStatus != "3" && x.approveStatus != "4"
     );
     let isOwner = data?.owner == this.userId ? true : false;
     return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
@@ -943,8 +943,13 @@ export class ProcessesComponent
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
           if (process) {
-            this.view.dataService.update(process).subscribe();
-            this.detectorRef.detectChanges();
+            this.bpService.getFlowChartNew.subscribe(dt=>{
+              process.modifiedOn = dt?.createdOn;
+              debugger
+              this.view.dataService.update(process).subscribe();
+              this.detectorRef.detectChanges();
+           })
+
           }
         });
       }
@@ -953,14 +958,14 @@ export class ProcessesComponent
 
   approval($event) {}
   //tesst
-  getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
-      if (dt) {
-        let link = environment.urlUpload + '/' + dt?.pathDisk;
-        return link;
-      } else return '../assets/media/img/codx/default/card-default.svg';
-    });
-  }
+  // getFlowchart(data) {
+  //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
+  //     if (dt) {
+  //       let link = environment.urlUpload + '/' + dt?.pathDisk;
+  //       return link;
+  //     } else return '../assets/media/img/codx/default/card-default.svg';
+  //   });
+  // }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {

@@ -366,6 +366,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
         this.changeDetectorRef.detectChanges();
       }
     });
+   
     this.dmSV.isAddFolder.subscribe((item) => {
       if (item) {
         var tree = this.codxview?.currentView?.currentComponent?.treeView;
