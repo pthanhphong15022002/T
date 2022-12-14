@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { ConnectorModel, Diagram, DiagramTools, NodeModel, SnapConstraints, SnapSettingsModel } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
-import { ApiHttpService, FormModel } from 'codx-core';
+import { ApiHttpService, CallFuncService, CodxFormDynamicComponent, CRUDService, FormModel, SidebarModel, ViewsComponent } from 'codx-core';
 
 @Component({
   selector: 'hr-organization-orgchart',
@@ -9,19 +9,6 @@ import { ApiHttpService, FormModel } from 'codx-core';
   styleUrls: ['./organization-orgchart.component.css']
 })
 export class OrganizationOrgchartComponent implements OnInit {
-
-  // setting orgChart
-  public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
-    connector.targetDecorator!.shape = 'None';
-    connector.type = 'Orthogonal';
-    connector.constraints = 0;
-    connector.cornerRadius = 5;
-    connector.style!.strokeColor = '#6d6d6d';
-    return connector;
-  }
-  public nodeDefaults(obj: NodeModel): NodeModel {
-    return obj;
-  }
   datasetting: any = null;
   layout: Object = {
     type: 'HierarchicalTree',
@@ -36,6 +23,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   // end setting orgChart
   @Input() formModel:FormModel;
   @Input() orgUnitID:string; 
+  @Input() view:ViewsComponent = null; 
+
   data:any[] = [];
   width = 250;
   height = 350;
@@ -48,7 +37,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   headerColor:string = "#03a9f4";
   constructor(
     private api:ApiHttpService,
-    private dt:ChangeDetectorRef
+    private dt:ChangeDetectorRef,
+    private callFC:CallFuncService
   ) 
   { }
 
@@ -86,6 +76,8 @@ export class OrganizationOrgchartComponent implements OnInit {
         });
     }
   }
+
+  //#region  setting orgChart
   setDataOrg(data: any[]) {
     if (data?.length > 0) 
     {
@@ -95,6 +87,7 @@ export class OrganizationOrgchartComponent implements OnInit {
       this.dt.detectChanges();
     }
   }
+
   newDataManager(): any {
     return {
       id: 'orgUnitID',
@@ -118,7 +111,20 @@ export class OrganizationOrgchartComponent implements OnInit {
     };
   }
 
+  public connDefaults(connector: ConnectorModel,diagram: Diagram): ConnectorModel {
+    connector.targetDecorator!.shape = 'None';
+    connector.type = 'Orthogonal';
+    connector.constraints = 0;
+    connector.cornerRadius = 5;
+    connector.style!.strokeColor = '#6d6d6d';
+    return connector;
+  }
 
+  public nodeDefaults(obj: NodeModel): NodeModel {
+    return obj;
+  }
+  //#endregion
+  
   //orgClick
   orgClick(event:any){
 
@@ -176,5 +182,53 @@ export class OrganizationOrgchartComponent implements OnInit {
   // show employee infor
   showEmploy(pemp, emp){
 
+  }
+
+  // click moreFC
+  clickMF(event:any, node:any){
+    if(event){
+      switch(event.functionID){
+        case "SYS02": //delete
+          break;
+        case "SYS03": // edit
+          this.editData(node,event.text)
+          break;
+        case "SYS04": // copy
+          break;
+        default:
+          break;  
+      }
+    }
+  }
+
+  // edit data
+  editData(node,text:string){
+    if (this.view) 
+    {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.view.dataService;
+      option.FormModel = this.formModel;
+      this.view.dataService
+      .edit(node)
+      .subscribe((result: any) => {
+        if (result) {
+          let data = {
+            dataService: this.view.dataService,
+            formModel: this.view.formModel,
+            data: result,
+            function: this.formModel.funcID,
+            isAddMode: false,
+            titleMore: text,
+          };
+          let popup = this.callFC.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.formModel.funcID
+          );
+        }
+      });
+    }
   }
 }

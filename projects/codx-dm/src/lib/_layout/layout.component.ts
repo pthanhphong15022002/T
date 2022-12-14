@@ -188,7 +188,7 @@ db.DM_FolderInfo.updateMany(
   }
 
   getHDDInformaton(item: any) {
-    if (item != null) {
+    if (item != null && typeof item === 'object') {
       this.itemHdd = item;
       this.percentUsed = 100 * (item.totalUsedBytes / item.totalHdd);
       this.titleHddUsed_small = this.percentUsed.toFixed(1);
@@ -245,6 +245,8 @@ db.DM_FolderInfo.updateMany(
         ];
       }
     }
+    else if(typeof item === 'string')
+      this.titleHddUsed = item;
   }
 
   //Pie Chart
