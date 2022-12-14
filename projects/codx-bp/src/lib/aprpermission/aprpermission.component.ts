@@ -46,7 +46,7 @@ export class AprpermissionComponent
   gridViewSetup: any;
   vllStatus: any;
   tmpPerm = new BP_ProcessPermissions();
-
+  popoverDetail: any;
   @ViewChild('view') codxview!: any;
   @Input() dataObj?: any;
   @Input() showButtonAdd = true;
@@ -241,5 +241,13 @@ export class AprpermissionComponent
           this.noti.notifyCode('WP007');
       }
     });
+  }
+
+  PopoverDetail(p: any, emp) {
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null) p.open();
+    } else p.close();
   }
 }
