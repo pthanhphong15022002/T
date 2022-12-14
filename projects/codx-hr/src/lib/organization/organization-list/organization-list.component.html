@@ -129,14 +129,18 @@
   </div>
 </ng-template>
 <div class="p-2 h-100">
-  <codx-listview #codxListView
+  <codx-listview 
+    #codxListView
     [itemTemplate]="itemTemplate"
     [formModel]="formModel"
     [service]="'HR'"
     [assemblyName]="'ERM.Business.HR'"
     [className]="'OrganizationUnitsBusiness'"
     [method]="'GetDataTreeListAssync'"
-    [entityName]="'HR_OrganizationUnits'">
+    [funcId]="formModel.funcID"
+    [entityName]="formModel.entityName"
+    [predicate]="predicate"
+    [dataValue]="orgUnitID">
   </codx-listview>
 </div>
 <ng-template #itemTemplate let-item>
@@ -152,9 +156,9 @@
         <codx-label [formModel]="formModel" 
           default="Trực thuộc:">
         </codx-label>
-      </div>
-      <div *ngIf="item.parentID" class="text-dark">
-        {{ item.parentName }}
+        <span class="text-dark">
+          {{ item.parentName }}
+        </span>
       </div>
     </div>
     <div class="d-flex justify-content-between align-items-top list-action-menu">
@@ -243,6 +247,15 @@
           </span>
         </div>
       </div>
+    </div>
+    <div>
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMF($event)"
+        [isBookMark]="false"
+        [dataItem]="item"
+        type="hover">
+      </codx-mfunc>
     </div>
   </div>
 </ng-template>
