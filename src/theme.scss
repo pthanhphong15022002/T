@@ -190,14 +190,6 @@
         }
     }
 
-    a {
-
-        &:hover {
-            color: $primary;
-            text-decoration: $link-hover-decoration;
-        }
-    }
-
     .e-listview .e-list-item.e-active {
         background-color: $primary-lightest;
     }
@@ -228,7 +220,7 @@
     }
 
     .dropdown-item:hover {
-        background-color: $primary-lightest;
+        background-color: $primary;
     }
 
     .btn-check:checked+.btn.btn-active-light-primary,
@@ -282,7 +274,6 @@
     .e-bigger.e-small .e-calendar .e-content td.e-today span.e-day,
     .e-bigger.e-small .e-calendar .e-content td.e-focused-date.e-today span.e-day {
         border-color: $primary-dark !important;
-        color: $primary-dark !important;
     }
 
     .e-date-wrapper span.e-input-group-icon.e-date-icon.e-icons.e-active {
@@ -390,9 +381,9 @@
         fill: #fff !important;
     }
 
-    .btn.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
-        fill: $primary ;
-    }
+    // .btn.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+    //     fill: $primary-dark ;
+    // }
 
     ////
     codx-header .icon-arrow_back {
@@ -417,6 +408,10 @@
     .list-item a:hover .icon-edit-one,
     .setting-btnright a:hover span {
         color: $primary;
+    }
+
+    .user-mini-nav a {
+        color: $primary-light;
     }
 }
 

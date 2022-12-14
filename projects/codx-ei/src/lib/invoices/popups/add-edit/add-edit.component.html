@@ -252,12 +252,12 @@
               default="Email"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               field="email"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
       </div>
@@ -313,12 +313,12 @@
               default="Hình thức thanh toán"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               field="pmtMethodID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
         <!-- Số tài khoản -->
@@ -368,12 +368,12 @@
               default="Tiền tệ"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               field="currencyID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
         <!-- Tỷ giá -->
@@ -536,6 +536,7 @@
     [autoLoad]="false"
     rowHeight="40"
     (created)="gridCreated($event)"
+    (cellChanged)="cellChanged($event)"
   ></codx-gridview-v2>
 </ng-template>
 

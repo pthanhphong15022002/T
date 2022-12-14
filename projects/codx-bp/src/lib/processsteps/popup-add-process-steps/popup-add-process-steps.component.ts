@@ -70,6 +70,7 @@ export class PopupAddProcessStepsComponent
   recIDCopied: any;
   lockParentId = false;
   editTodo = -1;
+  stepNameOld = ''
 
   constructor(
     private inject: Injector,
@@ -78,6 +79,7 @@ export class PopupAddProcessStepsComponent
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -85,7 +87,7 @@ export class PopupAddProcessStepsComponent
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );
-
+    this.stepNameOld = this.processSteps['stepName'];
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
@@ -134,6 +136,8 @@ export class PopupAddProcessStepsComponent
   }
 
   onInit(): void {
+    console.log(this.processSteps);
+    
     this.loadData();
     this.getListUser();
 
@@ -183,7 +187,7 @@ export class PopupAddProcessStepsComponent
     this.codxService.navigate('', url);
   }
 
-  checkValidate() {
+  async checkValidate() {
     let headerText = [];
     if (
       this.stepType != 'P' &&
@@ -204,16 +208,11 @@ export class PopupAddProcessStepsComponent
   }
 
   async saveData() {
-    let headerText = this.checkValidate();
+    let headerText = await this.checkValidate();
     if (headerText.length > 0) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + headerText.join(', ') + '"'
-      );
+      this.notiService.notifyCode('SYS009',0,'"' + headerText.join(', ') + '"');
       return;
     }
-
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)

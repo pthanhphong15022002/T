@@ -42,8 +42,10 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
   formModel: FormModel;
   headerText: string;
 
+  data:any;
   dataKR:any;
-
+  fCheckinKR: FormGroup;
+  isAfterRender: boolean;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -57,24 +59,46 @@ export class PopupCheckInComponent extends UIComponent implements AfterViewInit 
     this.dialogRef = dialogRef;    
     this.dataKR = dialogData.data[0];    
     this.formModel = dialogData.data[1];    
-    
   }
 
   ngAfterViewInit(): void {
   }
 
   onInit(): void {
-    
+    this.initForm();
   }
   click(event: any) {
     switch (event) {
       
     }
   }
-
+  initForm() {
+    this.codxOmService
+      .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
+      .then((item) => {
+        this.fCheckinKR = item;  
+        this.data=this.fCheckinKR.value;             
+        this.isAfterRender = true;
+      });    
+  }
 
   checkinSave(){
-
+    this.data.checkIn=new Date();
+    // this.data.modifiedOn=new Date();
+    this.data.oKRID=this.dataKR.recID;
+    // this.data.modifiedBy= this.authService.userValue.userID;
+    // this.fCheckinKR.patchValue(this.data);
+    // if (this.fCheckinKR.invalid == true) {
+    //   this.codxOmService.notifyInvalid(this.fCheckinKR, this.formModel);
+    //   return;
+    // }
+    this.codxOmService.checkInKR(this.dataKR.recID, this.data).subscribe((res:any)=>{
+      if(res){
+        this.notificationsService.notifyCode('SYS034');
+        res.checkIns=Array.from(res.checkIns).reverse();
+        this.dialogRef && this.dialogRef.close(res)
+      }
+    })
   }
   checkinCancel(){
     this.dialogRef.close();

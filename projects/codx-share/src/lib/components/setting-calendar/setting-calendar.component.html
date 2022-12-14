@@ -1,4 +1,4 @@
-<div class="d-flex justify-content-start mb-3">
+<div class="d-flex justify-content-start mb-3" *ngIf="showHeader">
   <div class="d-flex align-items-center">
     <div class="me-1 setting-box-search">
       <codx-input
@@ -23,7 +23,8 @@
   </div>
 </div>
 
-<codx-views #view [views]="views" [autoLoad]="false" [funcID]="funcID"> </codx-views>
+<codx-views #view [views]="views" [autoLoad]="false" [funcID]="funcID">
+</codx-views>
 
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data?.date)"></div>

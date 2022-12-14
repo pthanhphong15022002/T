@@ -652,6 +652,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         // await this.serviceAddFile(fileItem);
         this.fileUploadList[i].avatar = null;
         this.fileUploadList[i].data = '';
+        this.fileUploadList[i].createdOn = new Date();
         if (total > 1)
           this.fileUploadList[i] = await this.addFileLargeLong(
             this.fileUploadList[i],
@@ -664,7 +665,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         //   });
         // }
       }
-
+      let countFile = this.fileUploadList.length;
       if (total > 1) {
         return this.fileService
           .addMultiFileObservable(
@@ -687,7 +688,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
                 }
 
-                if (addList.length == this.fileUploadList.length) {
+                if (addList.length == countFile) {
                   this.atSV.fileList.next(this.fileUploadList);
                   this.atSV.fileListAdded = addList;
                   if (this.showMessage == '1')
@@ -1132,6 +1133,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           }
           if (isAddFile)
           {
+            fileItem.createdOn = new Date();
             var obj2 = from(this.fileService
               .addFileObservable(
                 fileItem,

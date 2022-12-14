@@ -223,15 +223,15 @@ export class CodxTasksComponent
             this.moreFunction = res;
           }
         });
-        this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
-          if (grv) {
-            this.vllStatus = grv?.Status?.referedValue;
-            this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
-            this.vllExtendStatus = grv?.ExtendStatus?.referedValue ;
-            this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
-            this.vllPriority = grv?.Priority.referedValue;
-          }
-        });
+      this.cache.gridViewSetup(f.formName, f.gridViewName).subscribe((grv) => {
+        if (grv) {
+          this.vllStatus = grv?.Status?.referedValue;
+          this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
+          this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
+          this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
+          this.vllPriority = grv?.Priority.referedValue;
+        }
+      });
     });
 
     this.showButtonAdd =
@@ -254,7 +254,7 @@ export class CodxTasksComponent
       this.modelResource.method = 'GetListUserByResourceAsync';
       this.modelResource.dataValue = this.dataObj?.resources;
     }
-    
+
     this.requestSchedule = new ResourceModel();
     this.requestSchedule.service = 'TM';
     this.requestSchedule.assemblyName = 'TM';
@@ -1287,21 +1287,46 @@ export class CodxTasksComponent
     if (data.extendStatus == '3') {
       this.notiService.alertCode('TM055').subscribe((confirm) => {
         if (confirm?.event && confirm?.event?.status == 'Y') {
-          this.confirmExtend(data, moreFunc);
+          this.api
+            .execSv<any>(
+              'TM',
+              'TM',
+              'TaskExtendsBusiness',
+              'GetExtendDateByTaskIDAsync',
+              [data.taskID]
+            )
+            .subscribe((res) => {
+              if (res) {
+                this.taskExtend = res;
+              } else {
+                if (data.createdBy != data.owner)
+                  this.taskExtend.extendApprover = data.createdBy;
+                else this.taskExtend.extendApprover = data.verifyBy;
+                this.taskExtend.dueDate = moment(
+                  new Date(data.dueDate)
+                ).toDate();
+                this.taskExtend.reason = '';
+                this.taskExtend.taskID = data?.taskID;
+                this.taskExtend.extendDate = moment(
+                  new Date(data.dueDate)
+                ).toDate();
+              }
+              this.confirmExtend(data, moreFunc);
+            });
         }
       });
     } else {
+      if (data.createdBy != data.owner)
+        this.taskExtend.extendApprover = data.createdBy;
+      else this.taskExtend.extendApprover = data.verifyBy;
+      this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+      this.taskExtend.reason = '';
+      this.taskExtend.taskID = data?.taskID;
+      this.taskExtend.extendDate = moment(new Date(data.dueDate)).toDate();
       this.confirmExtend(data, moreFunc);
     }
   }
   confirmExtend(data, moreFunc) {
-    if (data.createdBy != data.owner)
-      this.taskExtend.extendApprover = data.createdBy;
-    else this.taskExtend.extendApprover = data.verifyBy;
-    this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
-    this.taskExtend.reason = '';
-    this.taskExtend.taskID = data?.taskID;
-    this.taskExtend.extendDate = moment(new Date(data.dueDate)).toDate();
     this.api
       .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
         this.taskExtend.extendApprover,
@@ -1319,7 +1344,7 @@ export class CodxTasksComponent
             PopupExtendComponent,
             '',
             500,
-            400,
+            425,
             '',
             obj
           );
@@ -1534,7 +1559,8 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') this.isAssignTask = true;
+    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062')
+      this.isAssignTask = true;
     else this.isAssignTask = false;
     switch (evt.id) {
       case 'btnAdd':

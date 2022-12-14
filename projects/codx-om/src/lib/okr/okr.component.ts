@@ -168,21 +168,24 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     option.Width = '550px';
     option.FormModel = this.formModelKR;
 
-    // let dialogKR = this.callfc.openSide(
-    //   PopupAddKRComponent,
-    //   [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
-    //   option
-    // );
-    
-    var dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    
-    let dialogKR = this.callfc.openForm(
-      PopupShowKRComponent,'',null,null,null,
-      ['','','','','',],
-      '',
-      dialogModel
+    let dialogKR = this.callfc.openSide(
+      PopupAddKRComponent,
+      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
+      option
     );
+    
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    
+    // let dialogKR = this.callfc.openForm(
+    //   PopupShowKRComponent,'',null,null,null,
+    //   ['','','','','',],
+    //   '',
+    //   dialogModel
+    // );
+    dialogKR.closed.subscribe(res=>{
+      dialogKR=null;
+    })
 
   }
 

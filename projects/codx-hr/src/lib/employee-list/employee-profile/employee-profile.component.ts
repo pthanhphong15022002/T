@@ -122,7 +122,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 6;
+  crrTab: number = 0;
 
   crrEBSalary: any;
   listCrrBenefit: any;
@@ -314,17 +314,17 @@ export class EmployeeProfileComponent extends UIComponent {
 
         //work permit
         let op4 = new DataRequest();
-        op4.gridViewName = 'grvEWorkPermits'
-        op4.entityName = 'HR_EWorkPermits'
-        op4.predicate = 'EmployeeID=@0'
+        op4.gridViewName = 'grvEWorkPermits';
+        op4.entityName = 'HR_EWorkPermits';
+        op4.predicate = 'EmployeeID=@0';
         op4.dataValue = params.employeeID;
         (op4.page = 1),
-        this.hrService.getListWorkPermitByEmployeeID(op4).subscribe((res) => {
-          if(res){
-            this.lstWorkPermit = res[0];
-            console.log('lstWorkPermit',this.lstWorkPermit);
-          }
-        })
+          this.hrService.getListWorkPermitByEmployeeID(op4).subscribe((res) => {
+            if (res) {
+              this.lstWorkPermit = res[0];
+              console.log('lstWorkPermit', this.lstWorkPermit);
+            }
+          });
 
         // this.hrService
         //   .getListWorkPermitByEmployeeID(params.employeeID)
@@ -899,7 +899,7 @@ export class EmployeeProfileComponent extends UIComponent {
     // })
   }
 
-  editEmployeeTimeCardInfo(){
+  editEmployeeTimeCardInfo() {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -907,34 +907,34 @@ export class EmployeeProfileComponent extends UIComponent {
     option.Width = '550px';
     let dialogEdit = this.callfunc.openSide(
       PopupETimeCardComponent,
-    {
-      isAdd:false,
-      headerText : "Thông tin chấm công",
-    },
-    option
-    );
-    dialogEdit.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
-    })
-  }
-
-  editEmployeeCaculateSalaryInfo(){
-    this.view.dataService.dataSelected = this.data;
-    let option = new SidebarModel();
-    option.DataService = this.view.dataService
-    option.FormModel = this.view.formModel
-    option.Width = '550px'
-    let dialogEdit = this.callfc.openSide(
-        PopupECalculateSalaryComponent,
       {
-        isAdd:false,
-        headerText: "Thông tin tính lương",
+        isAdd: false,
+        headerText: 'Thông tin chấm công',
       },
       option
     );
     dialogEdit.closed.subscribe((res) => {
-      if(!res?.event) this.view.dataService.clear();
-    })
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  editEmployeeCaculateSalaryInfo() {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '550px';
+    let dialogEdit = this.callfc.openSide(
+      PopupECalculateSalaryComponent,
+      {
+        isAdd: false,
+        headerText: 'Thông tin tính lương',
+      },
+      option
+    );
+    dialogEdit.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
   }
 
   handlEmployeeExperiences(actionType: string, data: any) {

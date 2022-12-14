@@ -66,6 +66,8 @@ export class PopupAddProcessesComponent implements OnInit {
   nameOld: any;
   avatarProcess: any;
   entity: any;
+  ownerOld: String = '';
+  isTurnPermiss: boolean = false;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -105,8 +107,8 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.action === 'add' || this.action === 'copy')
-      this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
+    this.ownerOld= this.process.owner;
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
     this.phasesOld = this.processOldCopy?.phasesOld;
@@ -120,8 +122,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.acceptEdit();
     this.isDisable = true;
     if (this.action === 'edit') {
-    //  this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
-      this.showLabelAttachment = true;
+    this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
   }
 
@@ -180,32 +181,47 @@ export class PopupAddProcessesComponent implements OnInit {
       });
   }
   async onSave() {
-
-    if (this.process.activedOn && this.process.expiredOn) {
-      if (this.process.activedOn >= this.process.expiredOn) {
+    if (
+      this.process.processName == null ||
+      this.process.processName.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ProcessName']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.process.owner == null || this.process.owner.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.process?.activedOn && this.process?.expiredOn) {
+      if (this.process?.activedOn >= this.process?.expiredOn) {
         this.notiService.notifyCode('BP003');
         return;
       }
     }
-    if(this.process.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase()) {
-      this.CheckExistNameProccess();
+    this.isTurnPermiss=true;
+    if(this.ownerOld===this.process?.owner) {
+        this.callActionSave();
     }
     else {
-      this.CheckAllExistNameProccess();
+      this.isAddPermission(this.process.owner);
     }
+
+
   }
   async actionSave() {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          var countAttack = 1;
-          if (this.action !== 'edit') {
-            this.process.attachments = countAttack;
-          }
-        }
         this.actionSaveBeforeSaveAttachment();
       });
-    } else this.actionSaveBeforeSaveAttachment();
+    } else  {this.actionSaveBeforeSaveAttachment();}
   }
 
   async actionSaveBeforeSaveAttachment() {
@@ -221,21 +237,29 @@ export class PopupAddProcessesComponent implements OnInit {
           }
         }
       });
-    //dang sai
     switch (this.action) {
       case 'copy': {
-        this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+        this.notiService.alertCode('BP007').subscribe((x) => {
+          if (x.event.status == 'N') {
+            this.isCoppyFile = false;
+            this.isUpdateCreateProcess();
+
+          } else {
+            this.isCoppyFile = true;
+            this.isUpdateCreateProcess();
+
+          }
+        });
         break;
       }
       case 'add': {
         this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+
         break;
       }
       case 'edit': {
         this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+
         break;
       }
       default: {
@@ -245,9 +269,9 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
 
-  CheckAllExistNameProccess() {
+  CheckAllExistNameProccess(id:string) {
     this.bpService
-        .isCheckExitName(this.process.processName)
+        .isCheckExitName(this.process.processName,id)
         .subscribe((res) => {
           if (res) {
             this.CheckExistNameProccess();
@@ -260,7 +284,7 @@ export class PopupAddProcessesComponent implements OnInit {
   CheckExistNameProccess(){
     this.notiService
     .alertCode(
-      'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+      'BP008'
     )
     .subscribe((x) => {
       if (x.event?.status == 'N') {
@@ -273,10 +297,8 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion method
   isUpdateCreateProcess() {
     if (this.action === 'add' || this.action === 'copy') {
-      this.isAddPermission(this.process.owner);
       this.onAdd();
     } else {
-      this.isAddPermission(this.process.owner);
       this.onUpdate();
     }
   }
@@ -314,11 +336,6 @@ export class PopupAddProcessesComponent implements OnInit {
   //   }
   // }
 
-  addPermission(id) {
-    if (id != null) {
-      this.isAddPermission(id);
-    }
-  }
 
 
   addFile(e) {
@@ -336,8 +353,9 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
+    this.isAddPermission(this.process.owner);
   }
-  isAddPermission(id) {
+ isAddPermission(id) {
     this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
@@ -372,8 +390,22 @@ export class PopupAddProcessesComponent implements OnInit {
           this.perms.push(tmpPermission);
 
           this.process.permissions = this.perms;
+          if(this.isTurnPermiss){
+            this.callActionSave();
+          }
         }
       });
+  }
+  callActionSave(){
+    if(this.process?.processName.trim() === this.nameOld?.trim() && this.action =='edit') {
+      this.actionSave();
+    }
+    else if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase() ) {
+      this.CheckExistNameProccess();
+    }
+    else {
+        this.CheckAllExistNameProccess(this.process.recID);
+    }
   }
   checkAdminOfBP(userid: any) {
     let check: boolean;

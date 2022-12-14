@@ -45,11 +45,14 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   dialogRef: DialogRef;
   formModel: FormModel;
   headerText: string;
+  formModelCheckin = new FormModel;
   dtStatus:any;
   dataOKR=[];
   openAccordion = [];
   dataKR:any;
-  loremArr=[1,2,3,4];
+  progressHistory=[];
+  krCheckIn=[];
+  
   chartData: ChartData = {
     title: '15 Objectives',
     primaryXAxis: {
@@ -93,6 +96,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   };
 
   dialogCheckIn: DialogRef;
+  totalProgress: number;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -103,20 +107,27 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);
     this.headerText= "Xem chi tiết - Kết quả chính"//dialogData?.data[2];
-    this.dialogRef = dialogRef;
-    this.formModel = dialogData.data[2];    
+    this.dialogRef = dialogRef;   
     this.dataOKR.push(dialogData.data[1]);
     this.dataKR=dialogData.data[0];
     
+    //tính giá trị progress theo các lần checkIn
+    this.totalProgress= this.dataKR.progress;
+    if(this.dataKR?.checkIns){    
+      this.dataKR.checkIns=  Array.from(this.dataKR?.checkIns).reverse();
+      this.krCheckIn=Array.from(this.dataKR?.checkIns);
+      this.krCheckIn.forEach(element => {
+        if(this.krCheckIn.indexOf(element)==0){
+          this.progressHistory.push(this.totalProgress)
+        }
+        else{
+          this.totalProgress-=this.krCheckIn[this.krCheckIn.indexOf(element)-1].value;
+          this.progressHistory.push(this.totalProgress);
+        }
+      });
+    }
   }
-  getItemOKR(i:any,recID:any)
-  {
-    this.openAccordion[i] = !this.openAccordion[i];
-    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
-    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-    //     if(item) this.dataOKR[i].child = item
-    //   });
-  }
+  //----Base Function
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -134,23 +145,31 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     this.cache.valueList('OM002').subscribe(item=>{
-      if(item?.datas) this.dtStatus = item?.datas;
+      var x= item;
     })
+    
   }
+
+  //----Base Event function
   click(event: any) {
     switch (event) {
       
     }
   }
-  //Check-in region
-  checkIn(evt:any, kr:any){   
 
-      this.dialogCheckIn = this.callfc.openForm(
-        PopupCheckInComponent,'',800,500,"OMT01",
-        [kr,this.formModel]          
-      );
+  
+
+  //----Get Data Function
+  getItemOKR(i:any,recID:any)
+  {
+    this.openAccordion[i] = !this.openAccordion[i];
+    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
+    //     if(item) this.dataOKR[i].child = item
+    //   });
   }
 
+  //----Custom Event
   checkinSave(){
 
   }
@@ -161,11 +180,54 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   popupUploadFile(evt: any) {
     this.attachment.uploadFile();
   }
-  fileCount(evt:any){
-    
+  fileCount(evt:any){    
   }
 
   fileAdded(evt:any){
 
   }
+
+  //----Logic Function
+  
+  checkIn(evt:any, kr:any){     
+    this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
+    this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
+    this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
+    this.formModelCheckin.formName = 'OKRs.CheckIns';      
+    this.dialogCheckIn = this.callfc.openForm(
+      PopupCheckInComponent,'',800,500,"OMT01",
+      [kr,this.formModelCheckin]          
+    );
+    this.dialogCheckIn.closed.subscribe(res=>{
+      if(res && res.event){
+        this.dataKR=res.event;        
+        this.totalProgress=this.dataKR.progress;
+        this.progressHistory.unshift(this.totalProgress);
+        this.dataOKR.map((item:any)=>{
+          if(item.recID==res.event.parentID){
+            item=res.event;       
+          }
+        })
+      }
+      this.detectorRef.detectChanges();
+    })
+  }
+  
+  calculatorProgress(){
+    this.totalProgress= this.dataKR.progress;
+    if(this.dataKR?.checkIns){    
+      this.dataKR.checkIns=  Array.from(this.dataKR?.checkIns).reverse();
+      this.krCheckIn=Array.from(this.dataKR?.checkIns);
+      this.krCheckIn.forEach(element => {
+        if(this.krCheckIn.indexOf(element)==0){
+          this.progressHistory.push(this.totalProgress)
+        }
+        else{
+          this.totalProgress-=this.krCheckIn[this.krCheckIn.indexOf(element)-1].value;
+          this.progressHistory.push(this.totalProgress);
+        }
+      });
+    }
+  }
+  
 }
