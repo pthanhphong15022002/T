@@ -290,3 +290,7 @@ codx-views {
 :host ::ng-deep .popover {
   max-width: 500px !important;
 }
+
+.list-empty.card {
+  height: calc(100vh - 245px) !important;
+}
