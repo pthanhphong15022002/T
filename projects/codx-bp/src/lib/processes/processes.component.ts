@@ -741,7 +741,7 @@ export class ProcessesComponent
   CheckExistNameProccess(newName) {
     this.notificationsService
       .alertCode(
-        'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+        'BP008'
       )
       .subscribe((x) => {
         if (x.event?.status == 'N') {
