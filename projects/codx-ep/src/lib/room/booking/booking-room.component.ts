@@ -338,6 +338,13 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     }
   }
   reschedule(data: any, title: any) {
+    if (
+      this.authService.userValue.userID != data?.owner &&
+      !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
     let dialogReschedule = this.callfc.openForm(
       PopupRescheduleBookingComponent,
       '',
@@ -362,6 +369,13 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     });
   }
   invite(data: any, title: any) {
+    if (
+      this.authService.userValue.userID != data?.owner &&
+      !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
     let dialogInvite = this.callfc.openForm(
       PopupAddAttendeesComponent,
       '',

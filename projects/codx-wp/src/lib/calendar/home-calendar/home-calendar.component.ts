@@ -34,7 +34,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     subject: { name: 'Title' },
     startTime: { name: 'StartDate' },
     endTime: { name: 'EndDate' },
-    status: 'TransType'
+    status: 'TransType',
   };
   request?: ResourceModel;
   tmpCalendarNote: any;
@@ -67,13 +67,13 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
-    this.request = new ResourceModel();
-    this.request.assemblyName = 'SYS';
-    this.request.className = 'SettingValuesBusiness';
-    this.request.service = 'SYS';
-    this.request.method = 'GetDataByDateAsync';
-    this.request.idField = 'recID';
-    this.request.dataObj = 'WPCalendars';
+    // this.request = new ResourceModel();
+    // this.request.assemblyName = 'SYS';
+    // this.request.className = 'SettingValuesBusiness';
+    // this.request.service = 'SYS';
+    // this.request.method = 'GetDataByDateAsync';
+    // this.request.idField = 'recID';
+    // this.request.dataObj = 'WPCalendars';
   }
 
   ngAfterViewInit() {
@@ -145,7 +145,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
               this.tmpCalendarNote.instance.settingValue.CO_Meetings
             ).ShowColor,
             text: 'CO_Meetings',
-            status: 'CO_Meetings'
+            status: 'CO_Meetings',
           },
         ];
         var EP_BookingRoomParams = [
@@ -191,5 +191,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     a.instance.request = this.request;
     a.instance.showHeader = false;
     a.instance.resources = resource;
+    a.instance.resourceModel = this.tmpCalendarNote.instance.dataResourceModel;
+    debugger
   }
 }
