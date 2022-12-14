@@ -54,10 +54,21 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   kanban: any;
 
   requestSchedule: ResourceModel;
-  fields: any;
-  resourceField: any;
   modelResource: ResourceModel;
-
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'owner' }, //trung voi idField của resourceField
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'owner',
+    IdField: 'owner',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
   dayoff = [];
   constructor(
     inject: Injector,
@@ -135,41 +146,23 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.modelResource.service = 'HR';
     this.modelResource.method = 'GetListUserByResourceAsync';
     this.modelResource.dataValue = this.dataObj?.resources;
+
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+    this.requestSchedule.dataValue = '1;2';
+
+    this.modelResource = new ResourceModel();
     
-    // //lấy list booking để vẽ schedule
-    // this.request = new ResourceModel();
-    // this.request.assemblyName = 'EP';
-    // this.request.className = 'BookingsBusiness';
-    // this.request.service = 'EP';
-    // this.request.method = 'GetListBookingAsync';
-    // this.request.predicate = 'ResourceType=@0';
-    // this.request.dataValue = '1';
-    // this.request.idField = 'recID';
-    // //lấy list resource vẽ header schedule
-    // this.modelResource = new ResourceModel();
-    // this.modelResource.assemblyName = 'EP';
-    // this.modelResource.className = 'BookingsBusiness';
-    // this.modelResource.service = 'EP';
-    // this.modelResource.method = 'GetResourceAsync';
-    // this.modelResource.predicate = 'ResourceType=@0';
-    // this.modelResource.dataValue = '1';
-
-    // this.fields = {
-    //   id: 'bookingNo',
-    //   subject: { name: 'title' },
-    //   startTime: { name: 'startDate' },
-    //   endTime: { name: 'endDate' },
-    //   resourceId: { name: 'resourceID' },
-    //   status: 'approveStatus',
-    // };
-
-    // this.resourceField = {
-    //   Name: 'Resources',
-    //   Field: 'resourceID',
-    //   IdField: 'resourceID',
-    //   TextField: 'resourceName',
-    //   Title: 'Resources',
-    // };
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+     
     this.button = {
       id: 'btnAdd',
     };
