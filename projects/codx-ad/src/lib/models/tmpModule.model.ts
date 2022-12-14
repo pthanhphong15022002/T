@@ -1,18 +1,19 @@
 export class TN_OrderModule {
   expiredOn: string;
   boughtModule: {
-    ModuleID: string;
-    ModuleName: string;
-    ModuleType: string;
-    Category: string;
-    Description: string;
-    RefID: string;
-    ParentID: string;
-    Image: string;
-    Color: string;
-    Quantity: string;
-    Price: string;
-    UMID: string;
+    moduleID: string;
+    moduleName: string;
+    moduleType: string;
+    category: string;
+    description: string;
+    refID: string;
+    parentID: string;
+    image: string;
+    color: string;
+    quantity: number;
+    price: number;
+    interval: string;
+    uMID: string;
   };
   bought: boolean;
 }

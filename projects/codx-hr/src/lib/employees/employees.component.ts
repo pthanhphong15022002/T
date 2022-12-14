@@ -26,6 +26,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { CodxHrService } from '../codx-hr.service';
@@ -52,32 +53,39 @@ export class EmployeesComponent extends UIComponent {
   employStatus: any;
   urlView: string;
   listMoreFunc = [];
+  isCorporation = false;
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
-  @ViewChild('itemInfoPersonal', { static: true }) itemInfoPersonal: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
+  @ViewChild('itemInfoPersonal', { static: true })
+  itemInfoPersonal: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true })
+  itemStatusName: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
 
-
   constructor(
     private injector: Injector,
     private notifiSV: NotificationsService,
+    private adService: CodxAdService
   ) {
     super(injector);
-
   }
+
   onInit(): void {
     this.cache.moreFunction('Employees', 'grvEmployees').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
 
-
+    this.adService.getListCompanySettings().subscribe((res) => {
+      if (res) {
+        this.isCorporation = res.isCorporation;
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -113,7 +121,7 @@ export class EmployeesComponent extends UIComponent {
         field: '',
         headerText: '',
         width: 30,
-        template: this.itemAction
+        template: this.itemAction,
       },
     ];
     this.views = [
@@ -150,7 +158,10 @@ export class EmployeesComponent extends UIComponent {
       option.Width = '800px';
       let popup = this.callfc.openSide(
         PopupAddEmployeesComponent,
-        "add",
+        {
+          action: 'add',
+          isCorporation: this.isCorporation,
+        },
         option
       );
       popup.closed.subscribe((res: any) => {
@@ -159,7 +170,7 @@ export class EmployeesComponent extends UIComponent {
           this.view.dataService.add(data, 0).subscribe();
           this.detectorRef.detectChanges();
         }
-      })
+      });
     }
   }
   click(evt: ButtonModel) {
@@ -177,13 +188,8 @@ export class EmployeesComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '800px';
-      this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        null,
-        option
-      );
+      this.callfc.openSide(PopupAddEmployeesComponent, null, option);
     }
-
   }
   add() {
     this.view.dataService.addNew().subscribe((res: any) => {
@@ -350,14 +356,20 @@ export class EmployeesComponent extends UIComponent {
   }
 
   updateStatus(data: any, funcID: string) {
-    let popup = this.callfc.openForm(UpdateStatusComponent, 'Cập nhật tình trạng', 350, 200, funcID, data);
+    let popup = this.callfc.openForm(
+      UpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
     popup.closed.subscribe((e) => {
       if (e?.event) {
         var emp = e.event;
         if (emp.status == '90') {
           this.view.dataService.remove(emp).subscribe();
-        }
-        else this.view.dataService.update(emp).subscribe();
+        } else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });
@@ -429,7 +441,11 @@ export class EmployeesComponent extends UIComponent {
     }
   }
 
-  placeholder(value: string, formModel: FormModel, field: string): Observable<string> {
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
     if (value) {
       return of(`<span>${value}</span>`);
     } else {

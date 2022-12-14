@@ -10,6 +10,7 @@ import {
   ApiHttpService,
   AuthService,
   AuthStore,
+  CacheService,
   DialogData,
   DialogRef,
   NotificationsService,
@@ -31,6 +32,8 @@ export class PopupAddPositionsComponent implements OnInit {
   action = '';
   position: HR_Positions = new HR_Positions();
   data: any;
+  isCorporation;
+  formModel;
   @Output() Savechange = new EventEmitter();
 
   constructor(
@@ -38,6 +41,7 @@ export class PopupAddPositionsComponent implements OnInit {
     private notiService: NotificationsService,
     private auth: AuthService,
     private api: ApiHttpService,
+    private cacheService: CacheService,
     private reportingLine: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
@@ -47,6 +51,10 @@ export class PopupAddPositionsComponent implements OnInit {
     this.data = dt.data.data;
     this.dialogRef = dialog;
     this.functionID = this.dialogRef.formModel.funcID;
+    this.formModel = this.dialogRef.formModel;
+    console.log('dialog ref', this.dialogRef, this.data);
+    this.isCorporation = dt.data.isCorporation;
+
     this.position = this.data;
   }
 
@@ -55,6 +63,14 @@ export class PopupAddPositionsComponent implements OnInit {
     if (this.action != 'edit') {
       this.getParamerAsync(this.functionID);
     }
+    this.cacheService
+      .gridViewSetup(
+        this.dialogRef.formModel.formName,
+        this.dialogRef.formModel.gridViewName
+      )
+      .subscribe((gv: any) => {
+        console.log('form', gv);
+      });
   }
 
   paramaterHR: any = null;

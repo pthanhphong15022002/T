@@ -305,5 +305,14 @@ export class CodxAdService {
       ''
     );
   }
-  //get the rest lst module
+
+  getTenantDefaultSetting() {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetTenantDefaultSettingAsync',
+      ''
+    );
+  }
 }
