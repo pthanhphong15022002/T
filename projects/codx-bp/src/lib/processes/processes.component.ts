@@ -855,7 +855,7 @@ export class ProcessesComponent
           case 'BPT305': //chia se
           case 'BPT605': //chia se
             let isShare = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.share
+              (x) => (x.objectID == this.userId) && x.share && x.approveStatus !== '3' && x.approveStatus != "4"
             );
             if (!isShare && !fullRole) {
               res.isblur = true;
@@ -950,7 +950,7 @@ export class ProcessesComponent
               this.view.dataService.update(process).subscribe();
               this.detectorRef.detectChanges();
            })
-          
+
           }
         });
       }
