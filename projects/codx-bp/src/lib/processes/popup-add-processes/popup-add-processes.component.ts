@@ -24,6 +24,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
+import { tmpUser } from '../../models/BP_UserPermission.model';
 
 @Component({
   selector: 'lib-popup-add-processes',
@@ -68,6 +69,8 @@ export class PopupAddProcessesComponent implements OnInit {
   entity: any;
   ownerOld: String = '';
   isTurnPermiss: boolean = false;
+  isExitUserPermiss: boolean = false;
+  tmpPermission = new BP_ProcessPermissions();
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -353,7 +356,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-    this.isAddPermission(this.process.owner);
+  //  this.isAddPermission(this.process.owner);
   }
  isAddPermission(id) {
     this.api
@@ -362,39 +365,83 @@ export class PopupAddProcessesComponent implements OnInit {
         if (res) {
           this.perms = [];
           let emp = res;
-          var tmpPermission = new BP_ProcessPermissions();
+          // var tmpPermission = new BP_ProcessPermissions();
 
-          tmpPermission.objectID = emp?.userID;
-          tmpPermission.objectName = emp?.userName;
-          tmpPermission.objectType = '1';
-          tmpPermission.memberType = '0';
-          tmpPermission.autoCreate = true;
-          if (emp.administrator) {
-            tmpPermission.objectType = '7';
-          } else if (this.checkAdminOfBP(emp.userID)) {
-            tmpPermission.objectType = '7';
-          }
-          tmpPermission.edit = true;
-          tmpPermission.create = true;
-          tmpPermission.publish = true;
-          tmpPermission.read = true;
-          tmpPermission.share = true;
-          tmpPermission.full = true;
-          tmpPermission.delete = true;
-          tmpPermission.update = true;
-          tmpPermission.upload = true;
-          tmpPermission.assign = true;
-          tmpPermission.download = true;
-          tmpPermission.memberType = '0';
-          tmpPermission.autoCreate = true;
-          this.perms.push(tmpPermission);
+          // this.tmpPermission.objectID = emp?.userID;
+          // this.tmpPermission.objectName = emp?.userName;
+          // this.tmpPermission.objectType = '1';
+          // this.tmpPermission.memberType = '0';
+          // this.tmpPermission.autoCreate = true;
+          // if (emp.administrator) {
+          //   this.tmpPermission.objectType = '7';
+          // } else if (this.checkAdminOfBP(emp.userID)) {
+          //   this.tmpPermission.objectType = '7';
+          // }
+          // this.tmpPermission.edit = true;
+          // this.tmpPermission.create = true;
+          // this.tmpPermission.publish = true;
+          // this.tmpPermission.read = true;
+          // this.tmpPermission.share = true;
+          // this.tmpPermission.full = true;
+          // this.tmpPermission.delete = true;
+          // this.tmpPermission.update = true;
+          // this.tmpPermission.upload = true;
+          // this.tmpPermission.assign = true;
+          // this.tmpPermission.download = true;
+          // this.tmpPermission.memberType = '0';
+          // this.tmpPermission.autoCreate = true;
+          // var tmpPermission = new BP_ProcessPermissions();
+          this.updatePermission(emp,this.tmpPermission);
 
-          this.process.permissions = this.perms;
           if(this.isTurnPermiss){
+
+
+            if(this.process.permissions.length>0) {
+              this.process.permissions.forEach(element => {
+                if( element.objectID === this.tmpPermission.objectID) {
+                  // element = this.tmpPermission;
+                  this.updatePermission(emp,element);
+                  this.isExitUserPermiss = true;
+                }
+               });
+
+               if(!this.isExitUserPermiss){
+                this.process.permissions.push(this.tmpPermission);
+               }
+            }
+            else {
+                this.perms.push(this.tmpPermission);
+                this.process.permissions = this.perms;
+            }
             this.callActionSave();
           }
         }
       });
+  }
+  updatePermission(emp:tmpUser,tmpPermission: BP_ProcessPermissions ){
+    tmpPermission.objectID = emp?.userID;
+    tmpPermission.objectName = emp?.userName;
+    tmpPermission.objectType = '1';
+    tmpPermission.memberType = '0';
+    tmpPermission.autoCreate = true;
+    if (emp.administrator) {
+      tmpPermission.objectType = '7';
+    } else if (this.checkAdminOfBP(emp.userID)) {
+      tmpPermission.objectType = '7';
+    }
+    tmpPermission.edit = true;
+    tmpPermission.create = true;
+    tmpPermission.publish = true;
+    tmpPermission.read = true;
+    tmpPermission.share = true;
+    tmpPermission.full = true;
+    tmpPermission.delete = true;
+    tmpPermission.update = true;
+    tmpPermission.upload = true;
+    tmpPermission.assign = true;
+    tmpPermission.download = true;
+    tmpPermission.memberType = '0';
+    tmpPermission.autoCreate = true;
   }
   callActionSave(){
     if(this.process?.processName.trim() === this.nameOld?.trim() && this.action =='edit') {
