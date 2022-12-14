@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ApiHttpService, CallFuncService, CodxFormDynamicComponent, CodxListviewComponent, CRUDService, FormModel, RequestOption, SidebarModel } from 'codx-core';
 
 @Component({
@@ -6,7 +6,7 @@ import { ApiHttpService, CallFuncService, CodxFormDynamicComponent, CodxListview
   templateUrl: './organization-list.component.html',
   styleUrls: ['./organization-list.component.css']
 })
-export class OrganizationListComponent implements OnInit,OnChanges {
+export class OrganizationListComponent implements OnInit,OnChanges,AfterViewInit {
 
   @Input() orgUnitID:string = "";
   @Input() formModel:FormModel = null;
@@ -21,7 +21,11 @@ export class OrganizationListComponent implements OnInit,OnChanges {
   )
   { }
 
+
   ngOnInit(): void {
+  }
+  ngAfterViewInit(): void {
+    this.codxListView.dataService.idField = "orgUnitID";
   }
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
@@ -40,17 +44,17 @@ export class OrganizationListComponent implements OnInit,OnChanges {
 
   }
   // click moreFC
-  clickMF(event:any){
+  clickMF(event:any, data:any){
     if(event){
       switch(event.functionID){
         case "SYS02": //delete
-          this.deleteData(event.data);
+          this.deleteData(data);
           break;
         case "SYS03": // edit
-          this.editData(event.data,event.text);
+          this.editData(data,event.text);
           break;
         case "SYS04": // copy
-          this.copyData(event.data,event.text);
+          this.copyData(data,event.text);
           break;
         default:
           break;  
@@ -73,7 +77,7 @@ export class OrganizationListComponent implements OnInit,OnChanges {
     opt.assemblyName = 'ERM.Business.HR';
     opt.className = 'OrganizationUnitsBusiness';
     opt.methodName = 'DeleteOrgUnitAsync';
-    opt.data = this.codxListView.dataService.dataSelected.orgUnitID
+    opt.data = [this.codxListView.dataService.dataSelected.orgUnitID]
     return true;
   }
   // edit data 

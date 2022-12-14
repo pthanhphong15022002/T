@@ -12,7 +12,7 @@ export class PopupApprovalComponent implements OnInit {
   dialog: any;
   title = 'Xét duyệt'; //Đang gắn cứng
   comment = '';
-  statusDefault = '3';
+  statusDefault = '4';
   vllStatus = 'BP003';
   data: any;
   recIDProcess: any;
