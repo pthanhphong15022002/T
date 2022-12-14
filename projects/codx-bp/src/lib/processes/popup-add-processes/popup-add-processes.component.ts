@@ -205,7 +205,7 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if(this.process?.processName.trim() === this.nameOld?.trim()) {
+    if(this.process?.processName.trim() === this.nameOld?.trim() && this.action =='edit') {
       this.actionSave();
     }
     else if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase() ) {
@@ -282,7 +282,7 @@ export class PopupAddProcessesComponent implements OnInit {
   CheckExistNameProccess(){
     this.notiService
     .alertCode(
-      'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+      'BP008'
     )
     .subscribe((x) => {
       if (x.event?.status == 'N') {
