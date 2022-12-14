@@ -178,8 +178,8 @@
             </ng-template>
           </div>
           <div>
-            <ng-container *ngIf="item.employeeManager?.positionName ; else lblPositionName">
-              <span class="text-dark-400">{{item.employeeManager.positionName}}</span>
+            <ng-container *ngIf="item.positionName ; else lblPositionName">
+              <span class="text-dark-400">{{item.positionName}}</span>
             </ng-container>
             <ng-template #lblPositionName>
               <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblPositionName" default="Chức vụ"></codx-label>
@@ -193,10 +193,12 @@
               <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmployeePhone" default="SĐT"></codx-label>
             </ng-template>
             <ng-container *ngIf="item.employeeManager?.email ; else lblEmail">
+              <span class="mx-2">|</span>
               <span class="text-dark-400">{{item.employeeManager.email}}</span>
             </ng-container>
             <ng-template #lblEmail>
-              <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmail" default="Email"></codx-label>
+              <span class="mx-2">|</span>
+              <codx-label [className]="'text-dark-400 ms-2'" [formModel]="formModel" name="lblEmail" default="Email"></codx-label>
             </ng-template>
           </div>
         </div>

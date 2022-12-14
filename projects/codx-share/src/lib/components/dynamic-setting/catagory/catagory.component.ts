@@ -72,8 +72,9 @@ export class CatagoryComponent implements OnInit {
   ) {
     this.dialog = dialog;
     if (data) {
-      this.settingFull = data.data?.settingFull as [];
-      this.setting = this.settingFull.filter((res) => res.isVisible == true);
+      this.settingFull = (data.data?.settingFull as []) || [];
+      this.setting =
+        this.settingFull.filter((res) => res.isVisible == true) || [];
       this.valuelist = data.data?.valuelist;
       this.category = data.data?.category;
       this.function = data.data?.function;
@@ -127,7 +128,7 @@ export class CatagoryComponent implements OnInit {
         console.log('func', this.function);
 
         // this.cacheService.functionList(this.lstFuncID)
-        this.labels = format?.Label.filter((label) => {
+        this.labels = format?.Label?.filter((label) => {
           return label.Language == this.function?.language;
         });
 

@@ -136,6 +136,7 @@ export class ProcessesComponent
   isAdminBp = false;
   oldName = '';
   crrFunID = '';
+  idProccess='';
 
   constructor(
     inject: Injector,
@@ -473,6 +474,7 @@ export class ProcessesComponent
     this.dataSelected = data;
     this.newName = data.processName;
     this.oldName = data.processName;
+    this.idProccess = data.recID;
     this.crrRecID = data.recID;
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
@@ -634,23 +636,33 @@ export class ProcessesComponent
       case 'SYS02':
         this.delete(data);
         break;
+      case 'BPT606':
+      case 'BPT306':
       case 'BPT206':
       case 'BPT106':
         this.properties(data);
         break;
+      case 'BPT601':
+      case 'BPT301':
       case 'BPT201':
       case 'BPT101':
       case 'BPT701':
         this.viewDetailProcessSteps(e?.data, data);
         break;
+      case 'BPT602':
+      case 'BPT302':
       case 'BPT202':
       case 'BPT102':
         this.reName(data);
         break;
+      case 'BPT609':
+      case 'BPT309':
       case 'BPT109':
       case 'BPT209':
         this.releaseProcess(data);
         break;
+      case 'BPT607':
+      case 'BPT307':
       case 'BPT207':
       case 'BPT107':
         this.Updaterevisions(e?.data, data);
@@ -658,12 +670,18 @@ export class ProcessesComponent
       case 'BPT105':
       case 'BPT104':
       case 'BPT204':
+      case 'BPT304':
+      case 'BPT604':
         this.permission(data);
         break;
+      case 'BPT608':
+      case 'BPT308':
       case 'BPT208':
       case 'BPT108':
         this.roles(data);
         break;
+      case 'BPT603':
+      case 'BPT303':
       case 'BPT203':
       case 'BPT103':
         this.revisions(e.data, data);
@@ -693,23 +711,29 @@ export class ProcessesComponent
       );
       return;
     }
-    if (
-      this.oldName.trim().toLocaleUpperCase() ===
-      this.newName.trim().toLocaleUpperCase()
-    ) {
+    if(this.oldName.trim()===this.newName.trim()) {
+      this.notification.notifyCode('SYS007');
+      this.changeDetectorRef.detectChanges();
+      this.dialogPopup.close();
+    }
+    else if(this.oldName.trim().toLocaleUpperCase() === this.newName.trim().toLocaleUpperCase()) {
       this.CheckExistNameProccess(this.oldName);
-    } else {
-      this.CheckAllExistNameProccess(this.newName);
+    }
+    else {
+      this.CheckAllExistNameProccess(this.newName,this.idProccess);
     }
   }
-  CheckAllExistNameProccess(newName) {
-    this.bpService.isCheckExitName(newName).subscribe((res) => {
-      if (res) {
-        this.CheckExistNameProccess(newName);
-      } else {
-        this.actionReName(newName);
-      }
-    });
+  CheckAllExistNameProccess(newName,idProccess) {
+    this.bpService
+        .isCheckExitName(newName,idProccess)
+        .subscribe((res) => {
+          if (res) {
+            this.CheckExistNameProccess(newName);
+          }
+          else {
+            this.actionReName(newName);
+          }
+        });
   }
   CheckExistNameProccess(newName) {
     this.notificationsService
@@ -756,6 +780,8 @@ export class ProcessesComponent
           case 'SYS003':
             res.disabled = true;
             break;
+          case 'BPT609': // phat hanh
+          case 'BPT309': // phat hanh
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
             let isPublish = data?.permissions.some(
@@ -782,8 +808,12 @@ export class ProcessesComponent
           case 'SYS03': //sua
           case 'BPT102': //sua ten
           case 'BPT202': //sua ten
+          case 'BPT302': //sua ten
+          case 'BPT602': //sua ten
           case 'BPT203': //luu phien ban
           case 'BPT103': //luu phien ban
+          case 'BPT303': //luu phien ban
+          case 'BPT603': //luu phien ban
             let isEdit = data?.permissions.some(
               (x) => x.objectID == this.userId && x.edit
             );
@@ -806,8 +836,12 @@ export class ProcessesComponent
           case 'BPT701': // xem
           case 'BPT101': // xem
           case 'BPT201': // xem
+          case 'BPT301': // xem
+          case 'BPT601': // xem
           case 'BPT107': //  quan ly phien ban
           case 'BPT207': //  quan ly phien ban
+          case 'BPT307': //  quan ly phien ban
+          case 'BPT607': //  quan ly phien ban
             let isRead = this.checkPermissionRead(data);
             if (!isRead) {
               res.isblur = true;
@@ -815,6 +849,8 @@ export class ProcessesComponent
             break;
           case 'BPT105': //chia se
           case 'BPT205': //chia se
+          case 'BPT305': //chia se
+          case 'BPT605': //chia se
             let isShare = data?.permissions.some(
               (x) => x.objectID == this.userId && x.share
             );
@@ -824,6 +860,8 @@ export class ProcessesComponent
             break;
           case 'BPT108': //phan quyen
           case 'BPT208': //phan quyen
+          case 'BPT308': //phan quyen
+          case 'BPT608': //phan quyen
             let isAssign = data?.permissions.some(
               (x) => x.objectID == this.userId && x.assign
             );
@@ -905,8 +943,13 @@ export class ProcessesComponent
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
           if (process) {
-            this.view.dataService.update(process).subscribe();
-            this.detectorRef.detectChanges();
+            this.bpService.getFlowChartNew.subscribe(dt=>{
+              process.modifiedOn = dt?.createdOn;
+              debugger
+              this.view.dataService.update(process).subscribe();
+              this.detectorRef.detectChanges();
+           })
+          
           }
         });
       }
@@ -915,14 +958,14 @@ export class ProcessesComponent
 
   approval($event) {}
   //tesst
-  getFlowchart(data) {
-    this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
-      if (dt) {
-        let link = environment.urlUpload + '/' + dt?.pathDisk;
-        return link;
-      } else return '../assets/media/img/codx/default/card-default.svg';
-    });
-  }
+  // getFlowchart(data) {
+  //   this.fileService.getFile('636341e8e82afdc6f9a4ab54').subscribe((dt) => {
+  //     if (dt) {
+  //       let link = environment.urlUpload + '/' + dt?.pathDisk;
+  //       return link;
+  //     } else return '../assets/media/img/codx/default/card-default.svg';
+  //   });
+  // }
 
   // Confirm if Date language ENG show MM/dđ/YYYY else Date language VN show dd/MM/YYYY
   // formatAMPM(date) {

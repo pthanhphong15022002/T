@@ -24,7 +24,7 @@
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
             <div class="d-flex" #p="ngbPopover" [ngbPopover]="this.isEdit ? hoverMoreFunction : ''"
-              (mouseenter)="openMF(item, p)" autoClose="outside" placement="right">
+              (mouseenter)="openMF(item, p)" autoClose="outside" placement="right" >
               <i class="{{ showIconByStepType(item.stepType) }} me-2 icon-16"></i>
               <div class="test-check me-4 mb-2">{{ item.stepName }}</div>
             </div>
@@ -135,7 +135,7 @@
 
 <!-- viewlist-content -detail-Process tesssssssssssssssssssssssss  -->
 <ng-template #itemViewList>
-  <div class="card">
+  <div class="card" >
     <div>
       <!-- <div> -->
       <!-- <div class="mb-5">
@@ -301,16 +301,15 @@
     </div>
   </div>
 </ng-template>
-
 <ng-template #titleTmp let-data>
-  <div class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
+  <div id = "bodyaaaaaa" class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
       data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
     }}">
     <codx-label name="lblStepNo" [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"></codx-label>{{ " " +
     data?.stepNo }}
     <codx-label name="lblSplit" default=":"></codx-label>
     <span #p="ngbPopover" [ngbPopover]="setWidth(data?.stepName) ? showAllparent(data?.stepName) : null"
-      [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="top bottom ">
+      [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()" placement="top right ">
       {{ " " + data?.stepName }}
     </span>
 
@@ -508,3 +507,9 @@
 <ng-template #showAllparentName let-text>
   <span>{{text}}</span>
 </ng-template>
+
+<!-- <ng-template #templateView>
+  <ng-container *ngIf="idView=='16'" [ngTemplateOutlet]="itemViewList"></ng-container>
+  
+  <ng-container *ngIf="idView=='9'" [ngTemplateOutlet]="flowChart"></ng-container>
+</ng-template> -->
