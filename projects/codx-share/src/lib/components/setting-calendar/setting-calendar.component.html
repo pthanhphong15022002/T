@@ -29,39 +29,3 @@
 <ng-template #cellTemplate let-data>
   <div [innerHtml]="getCellContent(data?.date)"></div>
 </ng-template>
-
-<ng-template #mfButton let-data>
-  <div class="mt-3 me-3">
-    <!-- <codx-mfunc
-      [dataItem]="data"
-      [formModel]="formModel"
-      type="hover"
-    ></codx-mfunc> -->
-    <div class="d-flex justify-content-end">
-      <span (click)="moreMF('edit', data)"
-        class="cursor-pointer icon-16 mx-2 icon-edit"
-        style="color: rgb(0, 93, 199)"
-      >
-      </span>
-      <span (click)="moreMF('copy', data)"
-        class="cursor-pointer icon-16 mx-2 icon-file_copy"
-        style="color: rgb(255, 168, 0)"
-      >
-      </span>
-      <span (click)="moreMF('delete', data)"
-        class="cursor-pointer icon-16 mx-2 icon-close"
-        style="color: rgb(246, 78, 96)"
-      >
-      </span>
-    </div>
-    <!-- <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1" class="MF">
-        <li>
-          <a ngbDropdownItem href="javascript:void(0)" class="mt-30px">
-            <div class="d-flex">
-              <span class="icon-check icon-24 ps-6 pe-6"></span>
-            </div>
-          </a>
-        </li>
-      </ul> -->
-  </div>
-</ng-template>

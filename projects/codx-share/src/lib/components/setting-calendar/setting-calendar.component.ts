@@ -29,7 +29,6 @@ export class SettingCalendarComponent
 {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
-  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   calendarID: string;
@@ -72,7 +71,6 @@ export class SettingCalendarComponent
           eventModel: this.fields,
           template3: this.cellTemplate,
           resources: this.resources,
-          template6: this.mfButton,
         },
       },
     ];
