@@ -183,7 +183,7 @@ export class AddEditComponent implements OnInit {
         e.data.salesPrice !== undefined ||
         e.data.salesPrice >= 0)
     ) {
-      let salesPrice = parseInt(e.input.data) * parseFloat(e.fg.salesPrice);
+      let salesPrice = parseInt(e.value) * parseFloat(e.data.salesPrice);
       console.log(salesPrice);
     }
   }
@@ -195,6 +195,15 @@ export class AddEditComponent implements OnInit {
     rowData.salesPrice = data.salesPrice;
     rowData.vatid = data.vatPct;
     this.grid.updateRow(idx, rowData);
+  }
+
+  updateAmount(quantity: number, price: any, vat: any) {
+    let q: number, p: number, v: number, amount: number;
+    if (typeof quantity == 'string') q = parseFloat(quantity);
+    if (typeof price == 'string') parseFloat(price);
+    if (typeof vat == 'string') parseFloat(vat);
+
+    // if(q > 0 || price)
   }
 
   clickMF(e) {}
