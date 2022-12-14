@@ -1,6 +1,13 @@
-<codx-views #view [autoLoad]="true" entityName="HR_OrganizationUnits" idField="orgUnitID" [views]="views"
-  [selectedFirst]="true" (selectedChange)="onSelectionChanged($event)" [button]="button"
-  (buttonClick)="btnClick($event)" (viewChanged)="changeView($event)">
+<codx-views #view 
+  [autoLoad]="true" 
+  entityName="HR_OrganizationUnits" 
+  idField="orgUnitID" 
+  [views]="views"
+  [selectedFirst]="true" 
+  (selectedChange)="onSelectionChanged($event)" 
+  [button]="button"
+  (buttonClick)="btnClick($event)" 
+  (viewChanged)="changeView($event)">
 </codx-views>
 <!-- panel right lef -->
 <ng-template #panelRightLef>
@@ -19,7 +26,7 @@
 </ng-template>
 <!-- tree orgChart -->
 <ng-template #tmpOrgChart>
-  <hr-organization-orgchart [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
+  <hr-organization-orgchart [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
 </ng-template>
 <!-- tree list -->
 <ng-template #tmpList>

@@ -72,6 +72,7 @@ export class TMMeetingsComponent
   model?: DataRequest;
   resourceKanban?: ResourceModel;
   modelResource: ResourceModel;
+  requestSchedule: ResourceModel;
   dialog!: DialogRef;
   selectedDate = new Date();
   startDate: Date;
@@ -166,6 +167,13 @@ export class TMMeetingsComponent
     this.request.className = 'MeetingsBusiness';
     this.request.method = 'GetListMeetingsAsync';
     this.request.idField = 'meetingID';
+
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'CO';
+    this.requestSchedule.assemblyName = 'CO';
+    this.requestSchedule.className = 'MeetingsBusiness';
+    this.requestSchedule.method = 'GetListMeetingsAsync';
+    this.requestSchedule.idField = 'meetingID';
   }
 
   receiveMF(e: any) {
@@ -185,7 +193,8 @@ export class TMMeetingsComponent
       {
         type: ViewType.calendar,
         active: false,
-        sameData: true,
+        sameData: false,
+        request: this.requestSchedule,
         model: {
           eventModel: this.fields,
           resourceModel: this.resourceField,

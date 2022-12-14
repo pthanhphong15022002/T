@@ -76,18 +76,6 @@ export class OrgorganizationComponent extends UIComponent {
         }
       }
     });
-    // if (!this.setupEmp) {
-    //   this.cache
-    //     .gridViewSetup(
-    //       this.formModelEmployee.formName,
-    //       this.formModelEmployee.gridViewName
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.setupEmp = res;
-    //       }
-    //     });
-    // }
   }
 
   ngAfterViewInit(): void {
@@ -142,11 +130,6 @@ export class OrgorganizationComponent extends UIComponent {
       this.currView = evt.view.model.template2;
     }
   }
-
-  orgChartAfterView(evt: any) {
-    this.detailComponent = evt;
-  }
-
   // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;
@@ -187,128 +170,9 @@ export class OrgorganizationComponent extends UIComponent {
             option,
             this.funcID
           );
-          // popup.closed.subscribe((res:any) => {
-          //   if(res?.event?.save)
-          //   { 
-          //     let node = res.event.save.data;
-          //     if(this.codxTreeView)
-          //     {
-                
-          //     }
-          //   }
-          // });
         }
       });
     }
   }
-  //add data 
-  add() {
-    if(this.view)
-    {
-      this.currentView = this.view.currentView;
-      if (this.currentView) {
-        let option = new SidebarModel();
-        option.Width = '550px';
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        this.treeComponent = this.currentView.currentComponent?.treeView;
-        this.view.dataService.addNew().subscribe((result: any) => {
-          if (result) {
-            let data = {
-              dataService: this.view.dataService,
-              formModel: this.view.formModel,
-              data: result,
-              function: this.funcID,
-              isAddMode: true,
-            };
-            let popup = this.callfc.openSide(
-              CodxFormDynamicComponent,
-              data,
-              option,
-              this.funcID
-            );
-          }
-        });
-      }
-    }
-  }
-  // more function
-  clickMF(evt: any, data: any) {
-    if (evt)
-    {
-      switch (evt.functionID) {
-        case 'SYS03':
-          this.edit(data, evt.text);
-          break;
-        case 'SYS02':
-          this.delete(data);
-          break;
-      }
-    } 
-  }
-  //edit data
-  edit(data, headerText) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.currentView = this.view.currentView;
-    if (this.currentView)
-      this.treeComponent = this.currentView.currentComponent?.treeView;
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe(() => {
-        let option = new SidebarModel();
-        option.Width = '550px';
-        option.DataService = this.view?.currentView?.dataService;
-        option.FormModel = this.view?.formModel;
-        var dialog = this.callfc.openSide(
-          PopupAddOrganizationComponent,
-          {
-            function: this.view.function,
-            orgUnitID: this.orgUnitID,
-            detailComponent: this.detailComponent,
-            treeComponent: this.treeComponent,
-            headerText: headerText,
-            isModeAdd: false,
-          },
-          option
-        );
-        dialog.closed.subscribe((res) => {
-          var data = res.event?.update;
-          if (data && this.dataCard) {
-            var index = this.dataCard.findIndex(
-              (x) => x.orgUnitID == data.orgUnitID
-            );
-            this.dataCard[index] = data;
-            this.dataCard[index]['modifiedOn'] = new Date();
-          }
-        });
-      });
-  }
-  //delete data
-  delete(data) {
-    if (data) this.view.dataService.dataSelected = data;
-    this.view.dataService
-      .delete([this.view.dataService.dataSelected], true, (option: any) =>
-        this.beforeDelete(option, this.view.dataService.dataSelected)
-      )
-      .subscribe((res: any) => {
-        if (res) {
-          this.dataCard = this.dataCard.filter(
-            (x) => x.orgUnitID != data.orgUnitID
-          );
-        }
-      });
-    this.detectorRef.detectChanges();
-  }
-  beforeDelete(op: any, data) {
-    op.assemblyName = 'ERM.Business.HR';
-    op.className = 'OrganizationUnitsBusiness';
-    op.methodName = 'DeleteAsync';
-    op.data = data?.orgUnitID;
-    return true;
-  }
-  
-
   loadEmployList(e, orgid, status) {}
 }
