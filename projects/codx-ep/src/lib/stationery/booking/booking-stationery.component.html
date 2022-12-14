@@ -31,7 +31,7 @@
     [title]="data?.requester"
     [subTitle]="data?.positionName"
     [subTitleCss]="'text-gray-600'"
-    [content]="data?.reasonName"
+    [content]="data?.reasonID"
     [footer]="footerTmp"
     [icoCss]="
       'w-40 h-40 fs-4 d-flex justify-content-center align-items-center rounded-circle me-2 '
@@ -58,7 +58,6 @@
     (edit)="edit($event)"
     (delete)="delete($event)"
     (setPopupTitle)="setPopupTitle($event)"
-    (uploaded)="getDetailBooking($event)"
   ></booking-stationery-view-detail>
 </ng-template>
 
@@ -69,7 +68,7 @@
         [showText]="true"
         [showBgColor]="true"
         [name]="'EP022'"
-        [value]="data?.approveStatus"
+        [value]="data?.status"
         class="badge badge-light badge-md fs-7"
       >
       </codx-vll>
@@ -83,6 +82,7 @@
       </codx-vll>
       <!-- đợi vll issueStatus -->
     </div>
+
     <div>{{ data?.bookingOn | fmDT }}</div>
   </div>
 </ng-template>

@@ -350,6 +350,7 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
   }
   getData()
   {
+    
     this.id = this.dataFile?.recID;
     let baseurlExcel: string = environment.apiUrl+'/api/documenteditor/openexcel';
     baseurlExcel += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
@@ -357,13 +358,13 @@ export class ViewFileDialogComponent implements OnInit , OnChanges {
     let baseurl: string = environment.apiUrl+'/api/documenteditor/import';
     baseurl += "?sk="+ btoa(this.auth.userValue.userID+"|"+this.auth.userValue.securityKey);
     this.serviceUrl = baseurl;
-    this.dmSV.isChangeDataViewFile.subscribe(item => {
-      if (item) {
-        this.data = item;
-        this.getBookmark();
-        this.changeDetectorRef.detectChanges();
-      }
-    })
+    // this.dmSV.isChangeDataViewFile.subscribe(item => {
+    //   if (item) {
+    //     this.data = item;
+    //     this.getBookmark();
+    //     this.changeDetectorRef.detectChanges();
+    //   }
+    // })
     this.ext = (this.data.extension || "").toLocaleLowerCase();
     this.fullName = this.data.fileName;
     this.fMoreAction = this.data.moreAction;

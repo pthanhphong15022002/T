@@ -11,10 +11,10 @@
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
-      <h3>{{ itemDetail?.reasonName }}</h3>
+      <h3>{{ itemDetail?.reasonID }}</h3>
       <codx-vll
         [name]="'EP022'"
-        [value]="itemDetail?.approveStatus"
+        [value]="itemDetail?.status"
         [showText]="true"
         [showBgColor]="true"
         class="badge badge-light badge-square badge-md fs-7 p-2"
@@ -41,9 +41,7 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{
-            itemDetail.orgUnitName ? itemDetail.orgUnitName : itemDetail.buid
-          }}
+          {{ itemDetail.orgUnitName ? itemDetail.orgUnitName : "" }}
         </span>
       </div>
     </div>
@@ -57,7 +55,7 @@
         ></codx-label>
         <span class="me-1 fw-bold">:</span>
         <span class="text-gray-600">
-          {{ itemDetail?.category | vll: "EP018":"text" | async }}
+          {{ itemDetail?.category | vll : "EP018" : "text" | async }}
         </span>
       </div>
       <div class="d-flex text-dark me-6">
@@ -106,7 +104,7 @@
         </li>
       </ul>
       <div class="w-100 h-100">
-        <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaulEmpt">
+        <div *ngIf="itemDetail?.bookingItems?.length > 0; else defaultEmpt">
           <div *ngFor="let item of itemDetail?.bookingItems">
             <div
               class="d-flex mb-4 mt-4 ms-4 me-4 justify-content-between w-75"
@@ -118,7 +116,7 @@
                     imageType="circle"
                     width="35"
                     objectType="EP_Resources"
-                    [objectName]="item.resourceName"
+                    [objectName]="item.itemName"
                   ></codx-img>
                 </div>
                 <div class="ms-2">
@@ -160,7 +158,7 @@
     [TabControl]="tabControl"
   ></codx-tabs>
 </ng-template>
-<ng-template #defaulEmpt>
+<ng-template #defaultEmpt>
   <div class="w-100 h-100 container">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">

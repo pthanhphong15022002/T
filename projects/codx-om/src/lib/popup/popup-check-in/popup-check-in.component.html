@@ -1,83 +1,94 @@
-<codx-form
-  #form
-    [body]="body"
-    [footer]="footer"
-    [dialog]="dialogRef"
->
-<ng-template #subHeader>
-<div class="d-flex justify-content-center">
-  <codx-label default="Check-in" name="lblCheckin"></codx-label>
-</div>
-</ng-template>
-<ng-template #body> 
-  <div class="d-flex flex-column px-5 py-5 justify-content-between align-items-center h-100">
-    <!--Header-->
-    <div class="d-flex flex-column justify-content-center align-items-center">
-      <span><codx-label default="Check-in" name="lblCheckin" class="fs-2 fw-bold"></codx-label></span>
-      <codx-label [default]="'KR: '+ dataKR.okrName" class="fs-5 fw-bold mt-2"></codx-label>
-      <div class="d-flex align-items-center kr-process w-300px min-w-300px ms-3 mt-2 mb-5">
-        <div class="h-15px w-100 bg-gray-200 rounded-4">
-          <div class="bg-primary rounded-4 h-15px" role="progressbar" [style.width]="(dataKR.progress + '%')"
-            aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
-        <div class="process-per position-absolute top-0 fs-8" style="left:72%">{{dataKR.progress}}%</div>
-        <div class="pic-local" style="left:77%;">
+<codx-form #form [body]="body" [footer]="footer" [dialog]="dialogRef" [dialog]="dialogRef" [formModel]="formModel"
+  [data]="data" 
+  [showHeader]="false" *ngIf="isAfterRender" >
+  <ng-template #subHeader>
+    <div class="d-flex justify-content-center">
+      <codx-label default="Check-in" name="lblCheckin"></codx-label>
+    </div>
+  </ng-template>
+  <ng-template #body>
+    <div class="d-flex flex-column px-5 py-5 justify-content-between align-items-center h-100">
+      <!--Header-->
+      <div class="d-flex flex-column justify-content-center align-items-center w-80">
+        <span><codx-label default="Check-in" name="lblCheckin" class="fs-2 fw-bold"></codx-label></span>
+        <codx-label [default]="'KR: '+ dataKR?.okrName" class="fs-5 fw-bold mt-2"></codx-label>
+        <div class="d-flex align-items-center kr-process w-300px min-w-300px ms-3 mt-2 mb-5">
+          <div class="h-15px w-100 bg-secondary rounded-4">
+            <div class="bg-primary rounded-4 h-15px" role="progressbar" [style.width]="(dataKR?.progress + '%')"
+              aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <div class="process-per position-absolute top-0 fs-8 text-light" style="left:50%">{{dataKR?.progress}}%</div>
+          <!-- <div class="pic-local" style="left:77%;">
           <span class="icon-language text-primary icon-20"></span>
         </div>
-        <div *ngIf="dataKR.confidence" class="pic-face" style="left:90%;">
+        <div *ngIf="dataKR?.confidence" class="pic-face" style="left:90%;">
           <img class="w-18px h-18px"
-            [src]="'assets/themes/wp/default/img/'+(dataKR.confidence == '2'?'L1480_4':'L1480_3')+'.svg'">
-        </div>
+            [src]="'assets/themes/wp/default/img/'+(dataKR?.confidence == '2'?'L1480_4':'L1480_3')+'.svg'">
+        </div> -->
 
-      </div>
-      <!--Body-->
-      <div class="d-flex flex-column mt-5">
-        <div class="d-flex flex-row form-group">
-          <div class="col-4">
-            <codx-label name="lblResult" default="Kết quả thực hiện"></codx-label>
-            <codx-input type="number" ></codx-input>
-            <codx-label name="lbl" default="(*)" class="text-primary"></codx-label>
+        </div>
+        <!--Body-->
+        <div class="d-flex flex-column mt-5 w-100">
+          <div class="d-flex flex-row">
+            <div class="col-3">
+              <codx-label default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
+              <codx-input [showSpinButton]="false" ControlName="value" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+            </div>
+            <div class="col-5 ms-5">
+              <codx-label default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>
+              <codx-input ControlName="status" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+            </div>
+
           </div>
-          <div class="col-4 ms-5">
-            <codx-label name="lblStatus" default="Tình trạng"></codx-label>
-            <codx-input type="number" ></codx-input>
-          </div>        
-        </div>
-        <div>
-          <codx-label name="Note" default="Ghi chú"></codx-label>
-          <codx-input type="text"></codx-input>
-        </div>
-        <div class="flex-nowrap overflow-auto h-100px">
-          <codx-attachment #attachment [objectType]="'OM_OKRs'" hideBtnSave="1" hideFolder="1"
+          <div class="form-group mt-1">
+            <codx-label *ngIf="dataKR?.checkInMode=='1'" name="lbl"
+              default="(*)Kết quả thực hiện là kết quả sau cùng" class="text-primary"></codx-label>
+            <codx-label *ngIf="dataKR?.checkInMode=='2'" name="lbl"
+              default="(*)Kết quả thực hiện sẽ được cộng dồn để tính kết quả sau cùng"
+              class="text-primary"></codx-label>
+
+          </div>
+          <div>
+            <codx-label default="Ghi chú" fiedName="Comment" [formModel]="form.formModel"></codx-label>
+            <codx-input ControlName="comment" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+          </div>
+          <div class="flex-nowrap overflow-auto h-100px">
+            <!-- <codx-attachment #attachment [objectType]="'OM_OKRs'" hideBtnSave="1" hideFolder="1"
             hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="'OMT01'"
-            [objectId]="dataKR.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
+            [objectId]="dataKR?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
             (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
-          </codx-attachment>
+          </codx-attachment> -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </ng-template>
+
+  <ng-template #footer>
+    <!--Footer-->
+    <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-between w-80">
+        <span type="button" (click)="popupUploadFile($event)"
+          class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
+          <span class="icon-cloud_upload btn-text-primary me-2"></span>
+          <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="formModel"></codx-label>
+        </span>
+  
+        <div class="btn-group"> 
+          <span type="button" (click)="checkinCancel()"
+            class="me-2 btn d-flex py-2 px-4 btn-sm btn-outline btn-outline-primary btn-active-light-primary  rounded justify-content-center">
+            <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3" [formModel]="formModel"></codx-label>
+          </span>
+          <span type="button" (click)="checkinSave()"
+            class="d-flex py-2 px-4 btn-primary rounded justify-content-center ">
+            <codx-label name="lblSave" class=" px-3 fw-bold" default="Lưu" [formModel]="formModel"></codx-label>
+          </span>
         </div>
       </div>
     </div>
     
-</div>
-    
-    
-</ng-template>
-
-<ng-template #footer>
-<!--Footer-->
-<div class="d-flex justify-content-between">
-  <div (click)="popupUploadFile($event)"
-    class="btn btn-sm btn-outline btn-outline-primary btn-active-light-primary d-flex flex-row">
-    <span class="icon-cloud_upload btn-text-primary me-2"></span>
-    <codx-label fiedName="lblUploadFile" default="Đính kèm" [formModel]="formModel"></codx-label>
-  </div>
-  <div class="btn-group">
-    <button class="btn btn-outline-primary me-2" (click)="checkinCancel()">
-      <codx-label name="lblCancel" default="Huỷ" class=" px-3" [formModel]="formModel"></codx-label>
-    </button>
-    <button class="btn btn-primary" (click)="checkinSave()">
-      <codx-label name="lblSave" class=" px-3" default="Lưu" [formModel]="formModel"></codx-label>
-    </button>
-  </div>
-</div>
-</ng-template>
+  </ng-template>
 </codx-form>

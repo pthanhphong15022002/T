@@ -21,6 +21,7 @@ import { PopupCommentComponent } from 'projects/codx-es/src/lib/sign-file/popup-
 export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
   dataRefreshImage = new BehaviorSubject<any>(null);
+  dataUpdateShowEvent = new BehaviorSubject<any>(null);
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
@@ -34,7 +35,8 @@ export class CodxShareService {
     data: any,
     afterSave?: Function,
     formModel?: any,
-    dataService?: any
+    dataService?: any,
+    that:any = null
   ) {
     var funcID = val?.functionID;
     switch (funcID) {
@@ -62,7 +64,7 @@ export class CodxShareService {
               result: e?.event,
               data: data,
             };
-            afterSave(result);
+            afterSave(result , that);
           }
         });
         break;

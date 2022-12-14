@@ -6,9 +6,6 @@ import { CommonModule } from '@angular/common';
 
 import { MomentModule } from 'ngx-moment';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { ChatListComponent } from './layout/components/chat-list/chat-list.component';
-import { ListChatBoxComponent } from './layout/components/list-chat-box/list-chat-box.component';
-import { ChatBoxComponent } from './layout/components/chatbox/chat-box.component';
 import { ERMModule } from './erm.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
@@ -16,9 +13,6 @@ import { CoreModule } from '@core/core.module';
 import { DateRangePickerModule } from '@syncfusion/ej2-angular-calendars';
 
 const T_Component: Type<any>[] = [
-  ChatListComponent,
-  ListChatBoxComponent,
-  ChatBoxComponent,
 ];
 
 const T_Moudule: Type<any>[] = [

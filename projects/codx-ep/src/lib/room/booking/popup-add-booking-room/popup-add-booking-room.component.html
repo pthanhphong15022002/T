@@ -3,35 +3,7 @@
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo, tabReminder]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
-      <div class="form-group">
-        <div class="d-flex justify-content-between align-items-center">
-          <codx-label fiedName="ResourceID" [formModel]="form.formModel">
-          </codx-label>
-        </div>
-        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
-          (valueChange)="valueCbxRoomChange($event)">
-        </codx-input>
-        <div class="row">
-          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
-            <div class="d-flex flex-wrap">
-              <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-                <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                  <span class="me-1 ps-2" [className]="item.icon" [ngClass]="[
-                      item.isSelected ? 'text-primary' : 'text-muted'
-                    ]">
-                  </span>{{ item.text }}
-                </li>
-              </div>
-            </div>
-            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
-              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
-                (click)="openPopupDevice(popupDevice)">
-                <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
-              </button>
-            </span>
-          </div>
-        </div>
-      </div>
+      
 
       <div class="row">
         <div class="col-4 form-group">
@@ -64,7 +36,35 @@
           </codx-input>
         </div>
       </div>
-
+      <div class="form-group">
+        <div class="d-flex justify-content-between align-items-center">
+          <codx-label fiedName="ResourceID" [formModel]="form.formModel">
+          </codx-label>
+        </div>
+        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueCbxRoomChange($event)">
+        </codx-input>
+        <div class="row">
+          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
+            <div class="d-flex flex-wrap">
+              <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
+                <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
+                  <span class="me-1 ps-2" [className]="item.icon" [ngClass]="[
+                      item.isSelected ? 'text-primary' : 'text-muted'
+                    ]">
+                  </span>{{ item.text }}
+                </li>
+              </div>
+            </div>
+            <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
+              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+                (click)="openPopupDevice(popupDevice)">
+                <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
       <div class="form-group">
         <codx-label fiedName="ReasonID" [formModel]="form.formModel">
         </codx-label>
@@ -190,7 +190,7 @@
             </a> -->
         </div>
         <div class="AttachmentFile-group flex-nowrap">
-          <codx-attachment #attachment [objectType]="formModel?.entityName" hideBtnSave="1" hideFolder="1"
+          <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1" hideFolder="1"
             hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
             [objectId]="data?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
             (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">

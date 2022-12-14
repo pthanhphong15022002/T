@@ -36,15 +36,15 @@ export class TmpGridViewComponent extends UIComponent {
     super(inject);
   }
 
-  @Input() columnsGrid: Array<any>;
   @Input() service = 'HR';
   @Input() assemblyName = 'HR';
-  @Input() entity = 'HR_EAppointions';
-  @Input() className = 'EAppointionsBusiness';
-  @Input() method = 'GetLstAppointionByEIDAsync';
+  @Input() entity = '';
+  @Input() className = '';
+  @Input() method = '';
   @Input() idField = 'employeeID';
   @Input() predicate = '@EmployeeID=@0';
   @Input() dataValue;
+  @Input() columnsGrid: Array<any>;
   @Input() rowTemplate: TemplateRef<any>;
 
   onInit(): void {

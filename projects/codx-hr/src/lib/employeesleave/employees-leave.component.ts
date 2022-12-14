@@ -33,12 +33,9 @@ export class EmployeesLeaveComponent implements OnInit {
     private callfunc: CallFuncService,
     private codxService: CodxService,
     private hrService: CodxHrService,
-  ) {
-    this.hrService.getMoreFunction(['HRT04', null, null]).subscribe((res) => {
-      if (res) {
-        this.urlDetail = res[1].url;
-      }
-    });
+  ) 
+  {
+    
   }
 
   ngOnInit(): void {

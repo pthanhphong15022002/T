@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { FileUpload, View } from '@shared/models/file.model';
 import { FileService } from '@shared/services/file.service';
 import { Day } from '@syncfusion/ej2-angular-schedule';
@@ -45,6 +46,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     private callfc: CallFuncService,
     private authStore: AuthStore,
     private change: ChangeDetectorRef,
+    public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {

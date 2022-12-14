@@ -1,4 +1,4 @@
-﻿<ng-container *ngIf="loginTmp == 'qtsc'; else default">
+﻿<ng-container *ngIf="layoutCZ == 'qtsc'; else default">
   <qtsc-login
     [loginForm]="loginForm"
     [changePassForm]="changePassForm"
@@ -12,12 +12,11 @@
     [mode]="mode"
     [user]="user"
     [unsubscribe]="unsubscribe"
-    [checkPasswords]="checkPasswords"
     [f]="f"
     [c]="c"
     [fl]="fl"
     (submitEvent)="submit()"
-    (submitChangeEvent)="submitChangePass()"
+    (submitChangePassEvent)="submitChangePass()"
     (submitFirstLoginEvent)="submitFirstLogin()"
     (destroyEven)="ngOnDestroy()"
     (forgotPassEven)="forgotPass()"
@@ -37,12 +36,11 @@
     [mode]="mode"
     [user]="user"
     [unsubscribe]="unsubscribe"
-    [checkPasswords]="checkPasswords"
     [f]="f"
     [c]="c"
     [fl]="fl"
     (submitEvent)="submit()"
-    (submitChangeEvent)="submitChangePass()"
+    (submitChangePassEvent)="submitChangePass()"
     (submitFirstLoginEvent)="submitFirstLogin()"
     (destroyEven)="ngOnDestroy()"
     (forgotPassEven)="forgotPass()"

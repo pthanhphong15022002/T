@@ -24,6 +24,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { PopupRequestStationeryComponent } from './popup-request-stationery/popup-request-stationery.component';
+import { FuncID } from '../../models/enum/enum';
 
 @Component({
   selector: 'stationery',
@@ -54,15 +55,15 @@ export class BookingStationeryComponent
   idField = 'recID';
   funcIDName = '';
   popupTitle = '';
+  tempReasonName = '';
   formModel: FormModel;
   itemDetail;
   popupClosed = true;
+  listReason: any[] = [];
 
   constructor(
     private injector: Injector,
-    private callFuncService: CallFuncService,
     private codxEpService: CodxEpService,
-    private cacheService: CacheService,
     private notificationsService: NotificationsService,
     private authService: AuthService
   ) {
@@ -82,10 +83,13 @@ export class BookingStationeryComponent
   }
 
   onInit(): void {
-    this.button = {
-      id: 'btnAdd',
-      disabled: true,
-    };
+    this.codxEpService
+      .getListReason('EP_BookingStationery')
+      .subscribe((res: any) => {
+        if (res) {
+          this.listReason = res;
+        }
+      });
   }
 
   ngAfterViewInit(): void {
@@ -103,7 +107,15 @@ export class BookingStationeryComponent
 
     this.detectorRef.detectChanges();
   }
-
+  getReasonName(reasonID: any) {
+    this.tempReasonName = '';
+    this.listReason.forEach((r) => {
+      if (r.reasonID == reasonID) {
+        this.tempReasonName = r.description;
+      }
+    });
+    return this.tempReasonName;
+  }
   click(evt: any) {
     this.popupTitle = evt?.text + ' ' + this.funcIDName;
     switch (evt.id) {
@@ -134,6 +146,13 @@ export class BookingStationeryComponent
   }
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
+    if (this.funcID == FuncID.BookingStationery) {
+      this.button = {
+        id: 'btnAdd',
+      };
+    } else {
+      this.button = null;
+    }
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -145,8 +164,36 @@ export class BookingStationeryComponent
           res.customName.charAt(0).toLowerCase() + res.customName.slice(1);
       }
     });
+    this.detectorRef.detectChanges();
   }
   changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID == 'EP8T11') {
+      event.forEach((func) => {
+        if (data.approveStatus == '1') {
+          event.forEach((func) => {
+            if (
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'SYS04' /*MF chép*/
+            ) {
+              func.disabled = false;
+            }
+          });
+        } else {
+          event.forEach((func) => {
+            if (func.functionID == 'SYS04' /*MF chép*/) {
+              func.disabled = false;
+            }
+            if (
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/
+            ) {
+              func.disabled = true;
+            }
+          });
+        }
+      });
+    }
     if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {
         if (
@@ -325,22 +372,6 @@ export class BookingStationeryComponent
     }
   }
 
-  getDetailBooking(id: any) {
-    this.api
-      .exec<any>(
-        'EP',
-        'BookingsBusiness',
-        'GetBookingByIDAsync',
-        this.itemDetail?.recID
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.itemDetail = res;
-          this.detectorRef.detectChanges();
-        }
-      });
-  }
-
   changeItemDetail(event) {
     let recID = '';
     if (event?.data) {
@@ -350,7 +381,6 @@ export class BookingStationeryComponent
       recID = event.recID;
       this.itemDetail = event;
     }
-    this.getDetailBooking(recID);
   }
 
   closeAddForm(event) {}

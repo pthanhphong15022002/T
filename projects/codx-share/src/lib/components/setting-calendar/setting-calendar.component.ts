@@ -43,6 +43,8 @@ export class SettingCalendarComponent
     endTime: { name: 'endDate' },
   };
   @Input() request?: ResourceModel;
+  @Input() resources!: any;
+  @Input() showHeader = true;
 
   constructor(
     private injector: Injector,
@@ -68,6 +70,7 @@ export class SettingCalendarComponent
         model: {
           eventModel: this.fields,
           template3: this.cellTemplate,
+          resources: this.resources,
         },
       },
     ];
@@ -176,4 +179,24 @@ export class SettingCalendarComponent
     alert('trigger');
     (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
   }
+
+  moreMF(functionID, data) {
+    switch (functionID) {
+      case 'edit':
+        this.onUpdate(data);
+        break;
+      case 'delete':
+        this.onDelete(data);
+        break;
+      case 'copy':
+        this.onCopy(data);
+        break;
+    }
+  }
+
+  onUpdate(data) {}
+
+  onDelete(data) {}
+
+  onCopy(data) {}
 }

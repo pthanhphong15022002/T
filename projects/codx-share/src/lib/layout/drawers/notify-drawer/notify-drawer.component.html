@@ -10,7 +10,7 @@
     class="svg-icon"
     [ngClass]="codxService.toolbarButtonIconSizeClass"
   ></span>
-  <!-- <span
-    class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"
-  ></span> -->
+  <span *ngIf="totalNoti" class="position-absolute topbar-badge translate-middle badge rounded-pill bg-danger p-1 top-0 start-100">
+    {{totalNoti}}
+  </span>
 </div>

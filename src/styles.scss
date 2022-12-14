@@ -49,7 +49,7 @@ textarea.e-input,
 
 .popover-body {
   padding: 1rem;
-  max-height: 300px;
+  max-height: 340px;
   overflow: auto;
 }
 
@@ -75,7 +75,7 @@ textarea:focus,
 }
 
 .codx-search.codx-focus {
-  border-color: var(--primary) !important;
+  border-color: $primary !important;
 }
 
 .e-input[readonly]:focus {
@@ -1020,6 +1020,10 @@ codx-layout-add .card-header {
   width: 20px;
 }
 
+.content-tree .nochild {
+  width: 24px;
+}
+
 /***/
 // .user-mini-nav:hover {
 //   opacity: .75;
@@ -1251,6 +1255,11 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   margin-top: 1rem !important;
 }
 
+img.symbol-12px.symbol-circle {
+  width: 12px !important;
+  height: 12px !important;
+}
+
 /*** tabs ***/
 .tab-item {
   padding: 7px;
@@ -1266,8 +1275,111 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   border-color: var(--text-primary);
 }
 
-/******* tam ***/
+.e-toolbar .e-tbar-btn:focus span,
+.e-toolbar .e-tbar-btn:hover span {
+  color: var(--text-primary) !important;
+}
+
+/////
+///
+.pf-process {
+  margin-left: 9px;
+}
+
+.fs-icon.fs-10 {
+  font-size: 0.5rem !important;
+}
+
+.pf-process-item {
+  position: relative;
+}
+
+.pf-circle {
+  z-index: 99;
+}
+
+.pf-circle {
+  background-color: white;
+}
+
+.pf-process-item::before {
+  display: block;
+  content: "";
+  width: 1px;
+  background-color: var(--gray-200);
+  position: absolute;
+  top: -15px;
+  left: 5px;
+  bottom: 10px;
+  z-index: 1;
+}
+
+/******* bug ***/
+.e-schedule .e-month-view .e-date-header {
+  height: 20px;
+  line-height: 20px;
+}
+
+a {
+  text-decoration: none;
+}
 
 codx-vll {
   border-radius: 20px !important;
+}
+
+.btn.btn-outline-primary:hover {
+  color: white;
+}
+
+.bg-hover:hover {
+  background-color: var(--gray-100);
+}
+
+.content-tree li.menu-item>.d-flex.align-items-center {
+  align-items: start !important;
+}
+
+.step-rignt ngb-popover-window[role="tooltip"] {
+  white-space: nowrap;
+}
+
+.btn-30px .btn:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
+  padding: 0.375rem calc(0.45rem + 1px) !important;
+}
+
+.popup-attachment .fw-bold.line-clamp.line-clamp-1 {
+  word-break: break-word;
+}
+
+.tab-content>.active {
+  height: 100%;
+}
+
+.label-colon {
+  position: relative;
+  padding-right: 10px;
+
+}
+
+.label-colon::after {
+  content: ":";
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  height: 16px;
+}
+
+.codx-label.required::after {
+  margin-left: -5px;
+}
+
+codx-processsteps .e-kanban-content {
+  height: calc(100vh - 250px);
+  overflow-y: hidden !important;
+}
+
+codx-processsteps .e-card-wrapper {
+  max-height: calc(100vh - 259px);
+  overflow: auto;
 }

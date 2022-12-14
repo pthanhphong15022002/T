@@ -29,6 +29,7 @@ export class OkrTargetsComponent implements OnInit {
   chartData: ChartData = {
     title: '',
     primaryXAxis: {
+      valueType: 'Category',
       majorGridLines: { width: 0 },
       edgeLabelPlacement: 'Shift',
     },
@@ -51,11 +52,58 @@ export class OkrTargetsComponent implements OnInit {
         xName: 'month',
         yName: 'percent',
       },
+      {
+        type: 'StackingArea',
+        xName: 'month',
+        yName: 'percent',
+      },
     ],
     service: 'OM',
     assembly: 'ERM.Business.OM',
     className: 'OKRBusiness',
     method: 'GetChartDataAsync',
+  };
+
+  chartData1: ChartData = {
+    title: '15 Objectives',
+    primaryXAxis: {
+      valueType: 'Category',
+      majorGridLines: { width: 0 },
+      edgeLabelPlacement: 'Shift',
+    },
+    primaryYAxis: {
+      minimum: 0,
+      maximum: 100,
+      interval: 10,
+    },
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'name',
+        yName: 'value',
+        innerRadius: '80%',
+        radius: '70%',
+        startAngle: 0,
+        explodeIndex: 1,
+        explodeOffset: '10%',
+        explode: true,
+        endAngle: 360,
+        groupTo: '2',
+        groupMode: 'Value',
+        dataLabel: {
+          name: 'text',
+          visible: true,
+          position: 'Inside',
+          font: {
+            fontWeight: '600',
+          },
+        },
+      },
+    ],
+    service: 'OM',
+    assembly: 'ERM.Business.OM',
+    className: 'OKRBusiness',
+    method: 'GetChartData1Async',
   };
 
   constructor(private callfunc: CallFuncService, private cache: CacheService) {}
@@ -129,17 +177,17 @@ export class OkrTargetsComponent implements OnInit {
 
   //Xem chi tiết KR
   showKR(kr: any, o: any) {
-    var dialogModel = new DialogModel();
-    dialogModel.IsFull = true;
-    let dialog = this.callfunc.openForm(
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    let dialogShowKR = this.callfunc.openForm(
       PopupShowKRComponent,
       '',
       null,
       null,
       null,
-      [kr, o, this.formModel],
+      [kr, o,],
       '',
-      dialogModel
+      dModel
     );
   }
 }

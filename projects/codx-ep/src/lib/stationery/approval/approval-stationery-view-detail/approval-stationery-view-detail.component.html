@@ -11,7 +11,7 @@
 >
   <ng-template #header>
     <div class="d-flex justify-content-between">
-      <h3>{{ itemDetail?.reasonName }}</h3>
+      <h3>{{ itemDetail?.reasonID }}</h3>
       <codx-vll
         [name]="'EP022'"
         [value]="itemDetail?.approveStatus"
@@ -42,7 +42,7 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{ itemDetail?.category | vll: "EP018":"text" | async }}
+          {{ itemDetail?.category | vll : "EP018" : "text" | async }}
         </span>
       </div>
     </div>
@@ -57,9 +57,7 @@
         </codx-label>
         <span class="text-gray-600">
           :
-          {{
-            itemDetail.orgUnitName ? itemDetail.orgUnitName : itemDetail.buid
-          }}
+          {{ itemDetail.orgUnitName ? itemDetail.orgUnitName : "" }}
         </span>
       </div>
     </div>
@@ -104,7 +102,7 @@
                     [objectId]="item.recID"
                     imageType="circle"
                     width="35"
-                    objectType="EP_Resources"                    
+                    objectType="EP_Resources"
                     [objectName]="item.itemName"
                   ></codx-img>
                 </div>
@@ -137,10 +135,14 @@
       </div>
     </div>
   </ng-template>
-
 </codx-detail-tmp>
 <ng-template #footer>
-  <codx-tabs [entityName]="formModel?.entityName" [objectID]="itemDetail?.recID" [funcID]="formModel?.funcID"  [TabControl]="tabControl"></codx-tabs>
+  <codx-tabs
+    [entityName]="formModel?.entityName"
+    [objectID]="itemDetail?.recID"
+    [funcID]="formModel?.funcID"
+    [TabControl]="tabControl"
+  ></codx-tabs>
 </ng-template>
 <ng-template #defaulEmpt>
   <div class="w-100 h-100 container">

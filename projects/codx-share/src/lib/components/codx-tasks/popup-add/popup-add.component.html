@@ -246,7 +246,7 @@
         [refValue]="vllShare"
         field="AssignTo"
         [dataShared]="[]"
-        multiple="true"
+        [multiple]="true"
         [showInput]="false"
         (valueChange)="eventApply($event)"
         [disabled]="readOnly"
@@ -354,7 +354,7 @@
       [refValue]="vllShare"
       field="AssignTo"
       [dataShared]="[]"
-      multiple="true"
+      [multiple]="true"
       [showInput]="false"
       (valueChange)="eventApply($event)"
       [disabled]="readOnly"
@@ -612,6 +612,7 @@
         [dataReferences]="dataReferences"
         [vllRefType]="vllRefType"
         [zIndex]="this.disabledProject ? 1010 : 0"
+        [openViewPopup]="false"
       >
       </codx-references>
     </ng-container>

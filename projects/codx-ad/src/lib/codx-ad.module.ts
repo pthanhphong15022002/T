@@ -36,7 +36,6 @@ import { SharedModule } from '@shared/shared.module';
 import { RolesComponent } from './Roles/home/home.component';
 import { RoleEditComponent } from './Roles/role-edit/role-edit.component';
 import { RoleDetailComponent } from './Roles/detail/detail.component';
-import { AsideroledetailComponent } from './Roles/asideroledetail/asideroledetail.component';
 import { UserGroupsComponent } from './user-groups/user-group.component';
 import { AddUserGroupsComponent } from './user-groups/add-user-groups/add-user-groups.component';
 import { SystemsettingsComponent } from './systemsettings/systemsettings.component';
@@ -47,6 +46,7 @@ import { BindPipe } from './Roles/detail/pipes/bindValue.pipe';
 import { ActiveTemplatePipe } from './Roles/detail/pipes/activeTemplate.pipe';
 import { PleaseUseComponent } from './users/please-use/please-use.component';
 import { PopupModuleDetailComponent } from './company-setting/popup-module-detail/popup-module-detail.component';
+import { PopupInfoComponent } from './company-setting/popup-info/popup-info.component';
 
 export const routes: Routes = [
   {
@@ -80,6 +80,7 @@ export const routes: Routes = [
       {
         path: 'roledetails/:funcID',
         component: RoleDetailComponent,
+        data: { noReuse: true },
       },
       {
         path: 'systemsetting/:funcID',
@@ -106,7 +107,6 @@ const T_Component: Type<any>[] = [
   RolesComponent,
   RoleEditComponent,
   RoleDetailComponent,
-  AsideroledetailComponent,
   AddUserGroupsComponent,
   SystemsettingsComponent,
   NoSubAsideComponent,
@@ -116,6 +116,7 @@ const T_Component: Type<any>[] = [
   ActiveTemplatePipe,
   PleaseUseComponent,
   PopupModuleDetailComponent,
+  PopupInfoComponent,
 ];
 @NgModule({
   imports: [

@@ -22,6 +22,8 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
+import { PopupDistributeKRComponent } from '../popup/popup-distribute-kr/popup-distribute-kr.component';
+import { PopupShowKRComponent } from '../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 
@@ -101,7 +103,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   click(event: any) {
     switch (event.id) {
       case 'btnAdd': {
-        this.addOKR();
+        this.addOKRPlans();
         break;
       }
       case 'btnAddKR': {
@@ -109,7 +111,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       }
       case 'btnAddO': {
-        this.addOKRPlans();
+        this.addOKR();
         break;
       }
       case 'Calendar': {
@@ -145,7 +147,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.gridView,
       this.formModelKR,
       "Thêm mới mục tiêu"
-    ]);
+    ]
+    );    
   }
   //Lấy data danh sách mục tiêu
   getGridViewSetup() {
@@ -161,8 +164,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Thêm KR
   addKR(o: any=null) {
     // Tạo FormModel cho OKRs
-    
-   
     let option = new SidebarModel();
     option.Width = '550px';
     option.FormModel = this.formModelKR;
@@ -173,6 +174,19 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       option
     );
     
+    // let dialogModel = new DialogModel();
+    // dialogModel.IsFull = true;
+    
+    // let dialogKR = this.callfc.openForm(
+    //   PopupShowKRComponent,'',null,null,null,
+    //   ['','','','','',],
+    //   '',
+    //   dialogModel
+    // );
+    dialogKR.closed.subscribe(res=>{
+      dialogKR=null;
+    })
+
   }
 
   getOKRPlans(periodID: any , interval: any , year: any)

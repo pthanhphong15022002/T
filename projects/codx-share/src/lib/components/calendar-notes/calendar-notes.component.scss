@@ -63,21 +63,6 @@ app-notes-home {
   min-height: 34px;
 }
 
-.note-content {
-  background-color: #fff4de;
-  border-left: 3px #ffa800 solid;
-}
-
-.task-content {
-  background-color: #ffe2e5;
-  border-left: 3px #ff1f00 solid;
-}
-
-.meeting-content {
-  background-color: #c9f7f5;
-  border-left: 3px #1bc5bd solid;
-}
-
 .pd-left-10 {
   padding-left: 10px;
 }
@@ -116,7 +101,7 @@ app-notes-home {
 
 .show-list-event {
   margin-left: 10px;
-  width: 174px;
+  width: 82%;
 }
 
 .show-event-check {

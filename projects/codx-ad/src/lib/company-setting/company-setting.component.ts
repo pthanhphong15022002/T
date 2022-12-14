@@ -1,3 +1,4 @@
+import { PopupInfoComponent } from './popup-info/popup-info.component';
 import { I } from '@angular/cdk/keycodes';
 import {
   AfterContentInit,
@@ -159,6 +160,24 @@ export class CompanySettingComponent
           this.notiService.notifyCode('SYS021');
         }
       });
+    this.changeDetectorRef.detectChanges();
+  }
+
+  clickEditInfo(data) {
+    var dialog = this.callfc.openForm(
+      PopupInfoComponent,
+      '',
+      650,
+      300,
+      '',
+      data
+    );
+    dialog.closed.subscribe((res) => {
+      if (res.event) {
+        this.data.legalName = res.event?.legalName;
+        this.data.taxCode = res.event?.taxCode;
+      }
+    });
     this.changeDetectorRef.detectChanges();
   }
 

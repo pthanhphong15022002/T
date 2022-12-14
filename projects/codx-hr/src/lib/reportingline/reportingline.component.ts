@@ -160,7 +160,6 @@ export class ReportinglineComponent extends UIComponent {
             if (res?.event?.save) {
               let node = res.event.save.data;
               this.codxTreeView.setNodeTree(node);
-              console.log(this.codxTreeView);
             }
           });
         }
@@ -175,7 +174,7 @@ export class ReportinglineComponent extends UIComponent {
           this.edit(event, data);
           break;
         case 'SYS04':
-          this.copy(data);
+          this.copy(event, data);
           break;
         case 'SYS02':
           this.delete(data);
@@ -192,41 +191,56 @@ export class ReportinglineComponent extends UIComponent {
       option.Width = '550px';
       this.view.dataService
         .edit(this.view.dataService.dataSelected)
-        .subscribe(() => {
-          let data = {
+        .subscribe((res) => {
+          let object = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
-            data: this.view.dataService.dataSelected,
+            data: res,
             function: this.view.formModel.funcID,
             isAddMode: false,
             titleMore: event.text,
           };
           this.callfc.openSide(
             CodxFormDynamicComponent,
-            data,
+            object,
             option,
             this.view.formModel.funcID
           );
         });
     }
   }
-  copy(data) {
-    if (data) {
+  copy(event: any, data: any) {
+    if (event && data) {
       this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+      this.view.dataService.copy(data).subscribe((res) => {
         let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
+        option.DataService = this.view.dataService;
+        option.FormModel = this.view.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
-          PopupAddPositionsComponent,
-          'copy',
-          option
+        let object = {
+          dataService: this.view.dataService,
+          formModel: this.view.formModel,
+          data: res,
+          function: this.view.formModel.funcID,
+          isAddMode: true,
+          titleMore: event.text,
+        };
+        this.callfc.openSide(
+          CodxFormDynamicComponent,
+          object,
+          option,
+          this.view.formModel.funcID
         );
+        // popup.closed.subscribe((res:any) => {
+        //   debugger
+        //   if(res?.event?.save)
+        //   {
+        //     let node = res.event.save.data;
+        //     this.codxTreeView.setNodeTree(node);
+        //   }
+        // });
       });
+    }
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
@@ -254,8 +268,8 @@ export class ReportinglineComponent extends UIComponent {
   // selected data
   onSelectionChanged(event) {
     if (this.view) {
-      let viewActive = this.view.views.find((e) => e.active == true);
-      if (viewActive?.id == '1') return;
+      // let viewActive = this.view.views.find((e) => e.active == true);
+      // if (viewActive?.id == '1') return;
       this.dataSelected = event.data;
       this.positionID = event.data.positionID;
       this.detectorRef.detectChanges();

@@ -10,8 +10,15 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  ApiHttpService,
 } from 'codx-core';
-import { Component, OnInit, Optional, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Optional,
+  ChangeDetectorRef,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'lib-popup-roles',
@@ -28,8 +35,8 @@ export class PopupRolesComponent implements OnInit {
   full: boolean = false;
   create: boolean;
   read: boolean;
-  updatePerm: boolean;
-  deletePerm: boolean;
+  edit: boolean;
+  publish: boolean;
   share: boolean;
   assign: boolean;
   upload: boolean;
@@ -38,7 +45,9 @@ export class PopupRolesComponent implements OnInit {
   user: any;
   userID: any;
   listRoles: any;
-  isSetFull = true;
+  startDate: Date;
+  endDate: Date;
+  isSetFull = false;
   currentPemission = 0;
   idUserSelected: any;
   popover: any;
@@ -46,12 +55,15 @@ export class PopupRolesComponent implements OnInit {
   isAssign: any;
   autoCreate: any;
   nemberType = '';
+  approveStatus = '';
+  checkRoles = true;
   constructor(
     private auth: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
     private notifi: NotificationsService,
     private bpSv: CodxBpService,
     private cache: CacheService,
+    private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -62,20 +74,17 @@ export class PopupRolesComponent implements OnInit {
     console.log(dt.data[1]);
     this.process = this.data;
     if (this.process.permissions.length > 0 && this.process.permissions != null)
-      this.permissions = this.process?.permissions;
+      this.permissions = this.process?.permissions.sort(
+        (a, b) => parseInt(a.memberType) - parseInt(b.memberType)
+      );
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
         this.listRoles = res.datas;
       }
     });
-    this.cache.valueList('BP020').subscribe((res) => {
-      if (res && res?.datas.length > 0) {
-        console.log(res.datas);
-        this.autoName = res.datas[0].text;
-      }
-    });
-    // this.showOwner(this.data);
+    this.startDate = null;
+    this.endDate = null;
   }
 
   ngOnInit(): void {
@@ -84,33 +93,58 @@ export class PopupRolesComponent implements OnInit {
     }
   }
 
-  // showOwner(data){
-  //   var perm = new BP_ProcessPermissions();
-  //   perm.objectID = data.owner;
-  //   perm.objectName = data.userName;
-  //   perm.nemberType = '1';
-  //   perm.autoCreate = false;
-  //   perm.isActive = true;
-  //   // perm.read = true;
-  //   perm.objectType = "U";
-  //   this.process.permissions = this.checkUserPermission(
-  //     this.process.permissions,
-  //     perm
+  ngAfterViewInit(): void {
+    //Tạo sẵn check quyền, vì db quyền của module này chưa có
+    this.api
+      .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
+        this.user.userID,
+        'BP',
+      ])
+      .subscribe((res) => {
+        this.checkRoles = res.msgBodyData[0];
+      });
+  }
+
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+  //   //Add '${implements OnChanges}' to the class.
+  //   this.permissions = this.process?.permissions.sort(
+  //     (a, b) => parseInt(a.memberType) - parseInt(b.memberType)
   //   );
-  //   this.changePermission(this.currentPemission);
   // }
 
   //#region save
   onSave() {
+    if (this.startDate != null && this.endDate != null) {
+      if (this.startDate >= this.endDate) {
+        this.notifi.notify(
+          'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
+        );
+        return;
+      }
+      //Chưa có mssg code
+      if (!this.isCheckFromToDate(this.startDate)) {
+        this.notifi.notify(
+          'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
+        );
+        return;
+      }
+    }
     if (
       this.currentPemission > -1 &&
-      this.process.permissions[this.currentPemission] != null
+      this.process.permissions[this.currentPemission] != null &&
+      this.process.permissions[this.currentPemission].objectType != '7'
     ) {
       this.process.permissions[this.currentPemission].full = this.full;
+      this.process.permissions[this.currentPemission].startDate =
+        this.startDate;
+      this.process.permissions[this.currentPemission].endDate = this.endDate;
       this.process.permissions[this.currentPemission].read = this.read;
       this.process.permissions[this.currentPemission].download = this.download;
       this.process.permissions[this.currentPemission].share = this.share;
       this.process.permissions[this.currentPemission].assign = this.assign;
+      this.process.permissions[this.currentPemission].edit = this.edit;
+      this.process.permissions[this.currentPemission].publish = this.publish;
     }
 
     this.bpSv.bpProcesses.next(this.process);
@@ -131,42 +165,54 @@ export class PopupRolesComponent implements OnInit {
       });
     }
   }
+
+
   //#endregion
 
   //#region event
-  valueChange(e: any, type: string) {
-    console.log(e, type);
-    var data = e.data;
+
+  isCheckFromToDate(toDate) {
+    var to = new Date(toDate);
+    if (to >= new Date()) return true;
+    else return false;
+  }
+  valueChange($event, type) {
+    var data = $event.data;
+    // this.isSetFull = data;
     switch (type) {
       case 'full':
         this.full = data;
-        if (data == true) {
+        if (this.isSetFull) {
           this.read = data;
           this.share = data;
           this.assign = data;
           this.download = data;
+          this.edit = data;
+          this.publish = data;
         }
+
         break;
-      case 'assign':
-        this.assign = data;
+      case 'startDate':
+        if (data != null) this.startDate = data.fromDate;
         break;
-      case 'read':
-        this.read = data;
+      case 'endDate':
+        if (data != null) this.endDate = data.fromDate;
         break;
-      case 'share':
-        this.share = data;
+      default:
+        this.isSetFull = false;
+        this[type] = data;
         break;
-      case 'download':
-        this.download = data;
-        break;
-      // default:
-      //   this.isSetFull = false;
-      //   this[type] = data;
-      //   break;
     }
     if (type != 'full' && data == false) this.full = false;
 
-    if (this.assign && this.read && this.share && this.download)
+    if (
+      this.assign &&
+      this.read &&
+      this.share &&
+      this.download &&
+      this.edit &&
+      this.publish
+    )
       this.full = true;
 
     this.changeDetectorRef.detectChanges();
@@ -190,6 +236,10 @@ export class PopupRolesComponent implements OnInit {
         this.process.permissions[oldIndex].share = this.share;
         this.process.permissions[oldIndex].assign = this.assign;
         this.process.permissions[oldIndex].download = this.download;
+        this.process.permissions[oldIndex].edit = this.edit;
+        this.process.permissions[oldIndex].publish = this.publish;
+        this.process.permissions[oldIndex].startDate = this.startDate;
+        this.process.permissions[oldIndex].endDate = this.endDate;
       }
     }
 
@@ -198,18 +248,27 @@ export class PopupRolesComponent implements OnInit {
         this.process.permissions[index].read &&
         this.process.permissions[index].share &&
         this.process.permissions[index].assign &&
-        this.process.permissions[index].download;
+        this.process.permissions[index].download &&
+        this.process.permissions[index].edit &&
+        this.process.permissions[index].publish;
       this.read = this.process.permissions[index].read;
       this.share = this.process.permissions[index].share;
       this.assign = this.process.permissions[index].assign;
       this.download = this.process.permissions[index].download;
+      this.edit = this.process.permissions[index].edit;
+      this.publish = this.process.permissions[index].publish;
+      this.startDate = this.process.permissions[index].startDate;
+      this.endDate = this.process.permissions[index].endDate;
       this.currentPemission = index;
+      this.approveStatus = this.process.permissions[index].approveStatus;
       this.autoCreate = this.process.permissions[index].autoCreate;
       this.nemberType = this.process.permissions[index].memberType;
       this.userID = this.process.permissions[index].objectID;
     } else {
       this.full = false;
       this.read = false;
+      this.edit = false;
+      this.publish = false;
       this.share = false;
       this.assign = false;
       this.download = false;
@@ -222,7 +281,7 @@ export class PopupRolesComponent implements OnInit {
       (this.autoCreate && this.nemberType == '1') ||
       (!this.autoCreate && this.nemberType == '2') ||
       (!this.autoCreate && this.nemberType == '3') ||
-      (!this.autoCreate && this.nemberType == '4')
+      (!this.autoCreate && this.nemberType == '4' && this.approveStatus == '5')
     )
       this.isAssign = true;
     else this.isAssign = false;
@@ -235,12 +294,12 @@ export class PopupRolesComponent implements OnInit {
       for (var i = 0; i < value.length; i++) {
         var data = value[i];
         var perm = new BP_ProcessPermissions();
+        perm.startDate = this.startDate;
+        perm.endDate = this.endDate;
         perm.objectName = data.text != null ? data.text : data.objectName;
         perm.objectID = data.id;
         perm.memberType = '2';
         perm.autoCreate = false;
-        perm.isActive = true;
-        // perm.read = true;
         perm.objectType = data.objectType;
         this.process.permissions = this.checkUserPermission(
           this.process.permissions,
@@ -268,30 +327,35 @@ export class PopupRolesComponent implements OnInit {
       list = [];
     }
     if (index == -1) {
-      perm.read = false;
+      perm.read = true;
       perm.download = false;
       perm.full = false;
       perm.share = false;
       perm.assign = false;
+      perm.edit = false;
+      perm.publish = false;
 
       // if (perm.objectType.toLowerCase() == '9') {
       //   perm.download = true;
       // }
 
-      // if (perm.objectType.toLowerCase() == '7') {
-      //   perm.download = true;
-      //   perm.full = true;
-      //   perm.share = true;
-      //   perm.update = true;
-      //   perm.read = true;
-      //   perm.delete = true;
-      //   perm.upload = true;
-      // }
+      if (perm.objectType.toLowerCase() == '7') {
+        perm.read = true;
+        perm.download = true;
+        perm.full = true;
+        perm.share = true;
+        perm.assign = true;
+        perm.edit = true;
+        perm.publish = true;
+      }
 
       list.push(Object.assign({}, perm));
-      this.currentPemission = list.length - 1;
+      var i = list
+        .sort((a, b) => parseInt(a.memberType) - parseInt(b.memberType))
+        .findIndex((x) => x.objectID == perm.objectID);
+      this.currentPemission = i;
     }
-    return list;
+    return list.sort((a, b) => parseInt(a.memberType) - parseInt(b.memberType));
   }
   //#endregion
 
@@ -349,17 +413,20 @@ export class PopupRolesComponent implements OnInit {
   //#endregion
 
   //#region roles
-  showPopover(p, userID) {
-    if (this.popover) this.popover.close();
-    if (userID) this.idUserSelected = userID;
-    p.open();
-    this.popover = p;
+  showPopover(p, data) {
+    if (data.objectType !== '7' || data.memberType != '0') {
+      if (this.popover) this.popover.close();
+      if (data.objectID) this.idUserSelected = data.objectID;
+
+      p.open();
+      this.popover = p;
+    }
   }
 
   selectRoseType(idUserSelected, value) {
     this.process.permissions.forEach((res) => {
       if (res.objectID != null && res.objectID != '') {
-        if (res.objectID == idUserSelected) res.memberType = value;
+        if (res.objectID == idUserSelected && value != '0') res.memberType = value;
       }
     });
     this.changeDetectorRef.detectChanges();

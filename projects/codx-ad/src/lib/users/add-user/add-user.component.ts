@@ -525,9 +525,14 @@ export class AddUserComponent extends UIComponent implements OnInit {
           this.adUser.buid = employee.organizationID;
           this.adUser['positionName'] = employee.positionName;
           if (this.formType == 'add' || this.formType == 'copy') {
-            this.adUser.email = employee.email;
             this.adUser.phone = employee.phone;
           } else this.adUser['phone'] = this.adUser.mobile;
+          this.form.formGroup.patchValue({
+            employeeID: this.adUser.employeeID,
+            userName: this.adUser.userName,
+            buid: this.adUser.buid,
+            mobile: this.adUser.phone,
+          });
           this.changeDetector.detectChanges();
         }
       });

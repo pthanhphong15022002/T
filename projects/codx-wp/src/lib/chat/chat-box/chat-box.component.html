@@ -1,0 +1,83 @@
+<div class="chat-box">
+    <div class="chat-box-header">
+        <div class="group-avatar">
+            <ng-container *ngIf="group.groupType == '1' ; else group1_n">
+                <codx-img 
+                    [objectId]="group.groupID2" 
+                    [objectName]="group.groupName2" 
+                    [width]="35"
+                    [objectType]="'AD_Users'">
+                </codx-img>
+            </ng-container>
+            <ng-template #group1_n>
+                <codx-img 
+                    [objectId]="group.groupID" 
+                    isDefaulImg="true"
+                    [width]="35"
+                    [objectType]="'WP_Groups'">
+                </codx-img>
+            </ng-template>
+            <div class="group-avatar_status">
+                <span class="group-avatar_status-icon"></span>
+            </div>
+        </div>
+        <div class="group-infor">
+            <div class="group-infor_name">
+                <p class="m-0 fw-bolder">{{group.groupType == '1' ? group.groupName2 : group.groupName}}</p>
+                <p class="m-0">
+                    <codx-tag [isEdit]="false"  [value]="group.tagValue" [entityName]="'WP_Groups'">
+                    </codx-tag>
+                </p>
+            </div>
+            <div class="group-infor_morefc">
+                <ul class="morefc-list">
+                    <li class="morefc-list_item">
+                        <span class="icon-launch"></span>
+                    </li>
+                    <li class="morefc-list_item">
+                        <span class="icon-horizontal_rule"></span>
+                    </li>
+                    <li class="morefc-list_item" (click)="closeChatBox(group.groupID)">
+                        <span class="icon-close"></span>
+                    </li>
+                </ul>
+            </div>   
+        </div>
+    </div>
+    <div class="chat-box-body">
+        <ng-container *ngFor="let item of messages; let index = i">
+            <div class="codx-message d-flex" [class.justify-content-end]="item.userID == user.userID">
+                <span class="message-content" [class.my-message]="item.userID == user.userID">
+                    {{item.message}}
+                </span>
+                <span class="message-img" *ngIf="item.userID != user.userID">
+                    <codx-img 
+                        [objectId]="item.userID" 
+                        [width]="30"
+                        [objectType]="'AD_Users'">
+                    </codx-img>
+                </span>
+            </div>
+        </ng-container>
+    </div>
+    <div class="chat-box-footer">
+        <div class="footer-emoji">
+            <span class="icon-tag_faces icon-16 text-primary"></span>
+        </div>
+        <div class="footer-attachments">
+            <span class="icon-photo icon-16 text-primary"></span>
+        </div>
+        <div class="footer-message" (keyup.enter)="sendMessage()">
+            <codx-input 
+                type="text"
+                [class]="'border-0 bg-light rounded-pill px-4'" 
+                placeholder="Type your text" 
+                [crrValue]="message.message"
+                (valueChange)="valueChange($event)">
+            </codx-input>
+        </div>
+        <div class="footer-button" (click)="sendMessage()">
+            <span class="icon-send icon-16" ></span>
+        </div>
+    </div>
+</div>

@@ -11,6 +11,36 @@
         <div class="col-xl-12 col-md-12">
           <div class="form-group">
             <codx-label
+              name="lblModules"
+              [formName]="dialog.formModel.entityName"
+              default="Phân hệ"
+            >
+            </codx-label>
+            <codx-input
+              type="combobox"
+              field="modules"
+              refValue="Modules"
+              [multiple]="true"
+              refType="P"
+              [showInput]="true"
+              [crrValue]="data?.modules"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+            <!-- <codx-input
+              type="text"
+              class="form-control"
+              field="roleName"
+              [placeholder]="gridViewSetup?.RoleName?.description"
+              [crrValue]="data?.modules"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input> -->
+          </div>
+        </div>
+        <div class="col-xl-12 col-md-12">
+          <div class="form-group">
+            <codx-label
               name="lblRoleName"
               [formName]="dialog.formModel.entityName"
               default="Tên vai trò"
@@ -20,7 +50,7 @@
               type="text"
               class="form-control"
               field="roleName"
-              [placeholder]="gridViewSetup?.RoleName?.headerText"
+              [placeholder]="gridViewSetup?.RoleName?.description"
               [crrValue]="data?.roleName"
               (valueChange)="valueChange($event)"
             >
@@ -42,7 +72,7 @@
               rows="5"
               [crrValue]="data?.description"
               format="ed2"
-              [placeholder]="gridViewSetup?.Description?.headerText"
+              [placeholder]="gridViewSetup?.Description?.description"
               (valueChange)="valueChange($event)"
             >
             </codx-input>

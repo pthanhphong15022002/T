@@ -1,22 +1,11 @@
-import { CO_Meetings } from './../../../../../codx-tm/src/lib/models/CO_Meetings.model';
-import { BackgroundImagePipe } from './../../../../../../src/core/pipes/background-image.pipe';
-import { type } from 'os';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Output } from '@angular/core';
 import {
-  ApiHttpService,
-  CallFuncService,
-  CacheService,
   UIComponent,
-  SidebarModel,
   DialogRef,
   DialogModel,
-  FormModel,
   AuthStore,
   CRUDService,
   CodxListviewComponent,
-  RequestOption,
-  DataService,
-  NotificationsService,
 } from 'codx-core';
 import {
   Component,
@@ -28,15 +17,18 @@ import {
   Injector,
   TemplateRef,
   ChangeDetectorRef,
+  OnDestroy,
+  OnChanges,
+  ComponentRef,
 } from '@angular/core';
 import { Notes } from '@shared/models/notes.model';
 import { AddNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/add-note.component';
 import { UpdateNotePinComponent } from 'projects/codx-wp/src/lib/dashboard/home/update-note-pin/update-note-pin.component';
 import { SaveNoteComponent } from 'projects/codx-wp/src/lib/dashboard/home/add-note/save-note/save-note.component';
 import { NoteServices } from 'projects/codx-wp/src/lib/services/note.services';
-import { T } from '@angular/cdk/keycodes';
 import moment from 'moment';
-import { DetailCalendarComponent } from './detail-calendar/detail-calendar.component';
+import { CodxShareService } from '../../codx-share.service';
+import console from 'console';
 @Component({
   selector: 'app-calendar-notes',
   templateUrl: './calendar-notes.component.html',
@@ -66,6 +58,7 @@ export class CalendarNotesComponent
   CO_MeetingsParam: any;
   EP_BookingRoomsParam: any;
   EP_BookingCarsParam: any;
+  @Output() settingValue: any;
   checkTM_TasksParam: any;
   checkWP_NotesParam: any;
   checkCO_MeetingsParam: any;
@@ -95,11 +88,13 @@ export class CalendarNotesComponent
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
   @ViewChild('calendar') calendar: any;
+  componentRef!: ComponentRef<CalendarNotesComponent>;
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
     private auth: AuthStore,
-    private noteService: NoteServices
+    private noteService: NoteServices,
+    private codxShareSV: CodxShareService
   ) {
     super(injector);
     this.userID = this.auth.get().userID;
@@ -215,6 +210,11 @@ export class CalendarNotesComponent
         this.change.detectChanges();
       }
     });
+    // this.codxShareSV.dataUpdateShowEvent.subscribe((res) => {
+    //   if (res) {
+    //     debugger;
+    //   }
+    // });
   }
 
   getFirstParam() {
@@ -292,7 +292,12 @@ export class CalendarNotesComponent
 
   changeDayOfWeek(e) {
     var data = JSON.parse(JSON.stringify(e.daySelected));
-    this.setDate(data, this.lstView);
+    let myInterval = setInterval(() => {
+      if (this.lstView) {
+        clearInterval(myInterval);
+        this.setDate(data, this.lstView);
+      }
+    }, 100);
   }
 
   dateOfMonth: any;
@@ -345,8 +350,7 @@ export class CalendarNotesComponent
     var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
     if (this.showList && lstView) {
       (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
-      (lstView.dataService as CRUDService).predicates =
-        'CreatedOn >= @0 && CreatedOn < @1';
+      (lstView.dataService as CRUDService).predicates = '';
       (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
       lstView.dataService
         .setPredicate(this.predicate, [this.dataValue])
@@ -362,10 +366,10 @@ export class CalendarNotesComponent
     if (e) {
       if (e.data == true) {
         this.typeCalendar = 'week';
-        this.checkWeek = true;
+        // this.checkWeek = true;
       } else {
         this.typeCalendar = 'month';
-        this.checkWeek = false;
+        // this.checkWeek = false;
         var date = new Date();
         if (this.dateOfMonth) date = this.dateOfMonth;
         var fDayOfMonth = moment(date).startOf('month').toISOString();
@@ -375,6 +379,7 @@ export class CalendarNotesComponent
     }
   }
 
+  countButton = 0;
   getParam(fromDate, toDate, updateCheck = true) {
     this.api
       .callSv(
@@ -385,8 +390,9 @@ export class CalendarNotesComponent
         ['WPCalendars', fromDate, toDate]
       )
       .subscribe((res) => {
-        if (res && res.msgBodyData[0]) {
+        if (res && res?.msgBodyData[0]) {
           var dt = res.msgBodyData[0];
+          this.countButton = JSON.parse(JSON.stringify(dt[6]));
           this.TM_TasksParam = dt[5]?.TM_Tasks
             ? JSON.parse(dt[5]?.TM_Tasks)
             : null;
@@ -402,6 +408,7 @@ export class CalendarNotesComponent
           this.EP_BookingCarsParam = dt[5]?.EP_BookingCars
             ? JSON.parse(dt[5]?.EP_BookingCars)
             : null;
+          this.settingValue = dt[5]
           if (updateCheck == true) {
             this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
             this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
@@ -417,7 +424,7 @@ export class CalendarNotesComponent
           this.EP_BookingCars = dt[4];
           if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
-              if (res.isPin == true || res.isPin == '1') {
+              if (res.IsPin == true || res.IsPin == '1') {
                 this.countNotePin++;
               }
             });
@@ -433,6 +440,7 @@ export class CalendarNotesComponent
     let calendarEP_Room = 0;
     let calendarEP_Car = 0;
     let countShowCalendar = 0;
+    let countTmp = 0;
     if (args) {
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
@@ -457,10 +465,11 @@ export class CalendarNotesComponent
           ) {
             if (this.TM_TasksParam?.ShowEvent == '1') {
               for (let y = 0; y < this.TM_Tasks?.length; y++) {
-                var dateParse = new Date(this.TM_Tasks[y]?.dueDate);
+                var dateParse = new Date(this.TM_Tasks[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarTM++;
+                  countTmp++;
                   break;
                 }
               }
@@ -472,10 +481,11 @@ export class CalendarNotesComponent
           ) {
             if (this.CO_MeetingsParam?.ShowEvent == '1') {
               for (let y = 0; y < this.CO_Meetings?.length; y++) {
-                var dateParse = new Date(this.CO_Meetings[y]?.startDate);
+                var dateParse = new Date(this.CO_Meetings[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarCO++;
+                  countTmp++;
                   break;
                 }
               }
@@ -488,12 +498,13 @@ export class CalendarNotesComponent
             if (this.WP_NotesParam?.ShowEvent == '1') {
               for (let y = 0; y < this.WP_Notes?.length; y++) {
                 var dateParse = new Date(
-                  Date.parse(this.WP_Notes[y]?.createdOn)
+                  Date.parse(this.WP_Notes[y]?.CalendarDate)
                 );
                 if (date == dateParse.toLocaleDateString()) {
-                  if (this.WP_Notes[y]?.showCalendar == true) {
+                  if (this.WP_Notes[y]?.ShowCalendar == true) {
                     calendarWP++;
-                    if (this.WP_Notes[y]?.showCalendar == false) {
+                    countTmp++;
+                    if (this.WP_Notes[y]?.ShowCalendar == false) {
                       countShowCalendar += 1;
                     } else {
                       countShowCalendar = 0;
@@ -510,10 +521,11 @@ export class CalendarNotesComponent
           ) {
             if (this.EP_BookingRoomsParam?.ShowEvent == '1') {
               for (let y = 0; y < this.EP_BookingRooms?.length; y++) {
-                var dateParse = new Date(this.EP_BookingRooms[y]?.startDate);
+                var dateParse = new Date(this.EP_BookingRooms[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarEP_Room++;
+                  countTmp++;
                   break;
                 }
               }
@@ -525,20 +537,32 @@ export class CalendarNotesComponent
           ) {
             if (this.EP_BookingCarsParam?.ShowEvent == '1') {
               for (let y = 0; y < this.EP_BookingCars?.length; y++) {
-                var dateParse = new Date(this.EP_BookingCars[y]?.startDate);
+                var dateParse = new Date(this.EP_BookingCars[y]?.CalendarDate);
                 var dataLocal = dateParse.toLocaleDateString();
                 if (date == dataLocal) {
                   calendarEP_Car++;
+                  countTmp++;
                   break;
                 }
               }
             }
           }
+          var day = moment(date).date();
+          var month = moment(date).month();
+          var year = moment(date).year();
+          var classDate = `${day}-${month}-${year}`;
+
           var spanWP: HTMLElement = document.createElement('span');
+          spanWP.className = `note-pointed-${classDate}`;
           var spanTM: HTMLElement = document.createElement('span');
+          spanTM.className = `note-pointed-${classDate}`;
           var spanCO: HTMLElement = document.createElement('span');
+          spanCO.className = `note-pointed-${classDate}`;
           var spanEP_Room: HTMLElement = document.createElement('span');
+          spanEP_Room.className = `note-pointed-${classDate}`;
           var spanEP_Car: HTMLElement = document.createElement('span');
+          spanEP_Car.className = `note-pointed-${classDate}`;
+          var spanPlus: HTMLElement = document.createElement('span');
           var flex: HTMLElement = document.createElement('span');
           flex.className = 'd-flex note-point';
           ele.append(flex);
@@ -551,7 +575,7 @@ export class CalendarNotesComponent
             } else {
               spanWP.setAttribute(
                 'style',
-                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};border-radius: 50%`
+                `width: 6px;height: 6px;background-color: ${this.WP_NotesParam?.ShowColor};margin-left: 2px;border-radius: 50%`
               );
             }
             flex.append(spanWP);
@@ -566,7 +590,7 @@ export class CalendarNotesComponent
             } else {
               spanTM.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.TM_TasksParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanTM);
@@ -581,7 +605,7 @@ export class CalendarNotesComponent
             } else {
               spanCO.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.CO_MeetingsParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanCO);
@@ -595,7 +619,7 @@ export class CalendarNotesComponent
             } else {
               spanEP_Room.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.EP_BookingRoomsParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanEP_Room);
@@ -609,12 +633,11 @@ export class CalendarNotesComponent
             } else {
               spanEP_Car.setAttribute(
                 'style',
-                `width: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};height: 6px;border-radius: 50%;`
+                `width: 6px;background-color: ${this.EP_BookingCarsParam?.ShowColor};height: 6px;margin-left: 2px;border-radius: 50%;`
               );
             }
             flex.append(spanEP_Car);
           }
-
           if (
             calendarWP >= 1 &&
             calendarTM >= 1 &&
@@ -672,8 +695,34 @@ export class CalendarNotesComponent
             flex.append(spanEP_Room);
             flex.append(spanEP_Car);
           }
+          var eleTest = ele.querySelectorAll(`.note-pointed-${classDate}`);
+          let interVal = setInterval(() => {
+            if (eleTest && eleTest.length > 0) {
+              clearInterval(interVal);
+              var plusNo = 0;
+              if (eleTest.length > 3) {
+                eleTest.forEach((x, index) => {
+                  if (index >= 2) {
+                    x.remove();
+                    if (index == eleTest.length - 2) {
+                      spanPlus.insertAdjacentText(
+                        'afterbegin',
+                        `+${eleTest.length - 2}`
+                      );
+                      spanPlus.setAttribute(
+                        'style',
+                        `font-size: 10px; margin-left: 2px; margin-top: -3px;`
+                      );
+                      flex.append(spanPlus);
+                    }
+                  }
+                });
+                this.change.detectChanges();
+              }
+            }
+          });
         }
-      }, 500);
+      }, 1000);
     }
   }
 
@@ -779,13 +828,7 @@ export class CalendarNotesComponent
   valueChangeSetting(e) {
     if (e) {
       var field = e.field;
-      if (field == 'WP_Notes_ShowEvent') {
-        this.updateSettingValue('WP_Notes', e.data);
-      } else if (field == 'TM_Tasks_ShowEvent') {
-        this.updateSettingValue('TM_Tasks', e.data);
-      } else if (field == 'CO_Meetings_ShowEvent') {
-        this.updateSettingValue('CO_Meetings', e.data);
-      }
+      this.updateSettingValue(field, e.data);
     }
   }
 
@@ -817,7 +860,13 @@ export class CalendarNotesComponent
             }
           }
           this.setEventWeek();
-          if (value == true) {
+          // var obj = {
+          //   transType: transType,
+          //   value: value,
+          // };
+          // this.codxShareSV.dataUpdateShowEvent.next(obj);
+          this.componentRef.destroy();
+          if (value == true && this.showList) {
             (this.lstView.dataService as CRUDService).dataObj = `WPCalendars`;
             (this.lstView.dataService as CRUDService).predicates =
               'CreatedOn >= @0 && CreatedOn < @1';
@@ -827,7 +876,9 @@ export class CalendarNotesComponent
             this.lstView.dataService
               .setPredicate(this.predicate, [this.dataValue])
               .subscribe((res) => {
-                this.change.detectChanges();
+                if (res) {
+                  this.change.detectChanges();
+                }
               });
           }
         }
@@ -908,24 +959,5 @@ export class CalendarNotesComponent
         note,
       ])
       .subscribe();
-  }
-
-  openFormDetail() {
-    var obj = {
-      funcID: 'WPT08',
-    };
-    let option = new DialogModel();
-    option.DataService = this.view?.currentView?.dataService;
-    option.FormModel = this.view?.currentView?.formModel;
-    var dialog = this.callfc.openForm(
-      DetailCalendarComponent,
-      '',
-      1438,
-      775,
-      '',
-      obj,
-      '',
-      option
-    );
   }
 }

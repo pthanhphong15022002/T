@@ -22,6 +22,7 @@ import { FileService } from '@shared/services/file.service';
 import { FolderService } from '@shared/services/folder.service';
 import {
   AlertConfirmInputConfig,
+  ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
@@ -48,7 +49,7 @@ import {
 } from '@syncfusion/ej2-angular-inputs';
 import { EditFileComponent } from 'projects/codx-dm/src/lib/editFile/editFile.component';
 import { CodxDMService } from 'projects/codx-dm/src/lib/codx-dm.service';
-import { from, map, mergeMap, Observable, Observer } from 'rxjs';
+import { from, map, mergeMap, Observable, Observer, of } from 'rxjs';
 import { lvFileClientAPI } from '@shared/services/lv.component';
 import { environment } from 'src/environments/environment';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -96,7 +97,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   fileEditingTemp: FileUpload;
   maxFileSizeUpload = 0;
   maxFileSizeUploadMB = 0;
-  referType: string;
   folderID: string;
   isDM: false;
   infoHDD = {
@@ -109,6 +109,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   date = new Date();
   isScroll = true;
   dataRequest = new DataRequest();
+  @Input() idField :any ; 
   @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
   @Input() isDeleteTemp = '0';
@@ -132,7 +133,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() showMessage = '1';
   @Input() hideMoreF = '1';
   @Input() displayThumb: string;
-  @Input() category: string;
   ////////////////////////////////////////////////////
   @Input() fdID: any = ''; //Folder ID truyền vào
   @Input() fdName: any = ''; //Folder Name truyền vào
@@ -143,7 +143,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() pageSize = 5;
   @Input() heightScroll = 100;
   @Input() isTab = false;
-
+  @Input() referType: string ="";
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -173,6 +173,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   )[0] as HTMLElement;
 
   constructor(
+    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     public modalService: NgbModal,
     private auth: AuthStore,
@@ -392,8 +393,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
     if (this.objectId != '' && this.objectId != undefined) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
-      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false';
-      this.dataRequest.dataValue = this.objectId;
+      this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && ReferType=@1';
+      this.dataRequest.dataValue = [this.objectId,this.referType].join(";");
       this.dataRequest.entityName = 'DM_FileInfo';
       this.dataRequest.funcID = 'DMT02';
       this.fileService
@@ -454,8 +455,17 @@ export class AttachmentComponent implements OnInit, OnChanges {
       // totalHdd: any;
       // this.getHDDInformaton(item);
     });
+    //this.getFolderNameByFuncList();
   }
 
+  getFolderNameByFuncList()
+  {
+   
+    // this.cache.functionList(this.functionID).subscribe(item=>{
+    //   if(item && item.subFolderControl && item.subFolderControl != "" && item.subFolderControl != "1" && item.subFolderControl != "2" && item.subFolderControl != "3"  && item.subFolderControl != "4" && !this.fdName) 
+    //     this.fdName = item.subFolderControl;
+    // })
+  }
   ngOnDestroy() {
     //   this.atSV.openForm.unsubscribe();
     // if (this.interval?.length > 0) {
@@ -642,6 +652,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         // await this.serviceAddFile(fileItem);
         this.fileUploadList[i].avatar = null;
         this.fileUploadList[i].data = '';
+        this.fileUploadList[i].createdOn = new Date();
         if (total > 1)
           this.fileUploadList[i] = await this.addFileLargeLong(
             this.fileUploadList[i],
@@ -654,7 +665,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         //   });
         // }
       }
-
+      let countFile = this.fileUploadList.length;
       if (total > 1) {
         return this.fileService
           .addMultiFileObservable(
@@ -662,7 +673,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
             this.isDM,
             this.fdID,
             this.fdName,
-            this.parentID
+            this.parentID,
+            this.idField
           )
           .pipe(
             map((res) => {
@@ -676,7 +688,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                   this.atSV.fileListAdded.push(Object.assign({}, addList[i]));
                 }
 
-                if (addList.length == this.fileUploadList.length) {
+                if (addList.length == countFile) {
                   this.atSV.fileList.next(this.fileUploadList);
                   this.atSV.fileListAdded = addList;
                   if (this.showMessage == '1')
@@ -729,7 +741,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                                   this.isDM,
                                   this.fdID,
                                   this.fdName,
-                                  this.parentID
+                                  this.parentID,
+                                  this.idField
                                 )
                                 .pipe()
                                 .subscribe((result) => {
@@ -843,7 +856,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
           this.isDM,
           this.fdID,
           this.fdName,
-          this.parentID
+          this.parentID,
+          this.idField
         )
         .toPromise()
         .then((res) => {
@@ -851,7 +865,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
             var newlist = res.filter((x) => x.status == 6);
             var newlistNot = res.filter((x) => x.status == -1);
             var addList = res.filter((x) => x.status == 0 || x.status == 9);
-            debugger;
             if (addList.length > 0) {
               this.fileSave.emit(addList);
               addList.forEach((item) => {
@@ -956,7 +969,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
                             this.isDM,
                             this.fdID,
                             this.fdName,
-                            this.parentID
+                            this.parentID,
+                            this.idField
                           )
                           .toPromise()
                           .then((result) => {
@@ -1053,7 +1067,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
     fileItem: any,
     isAddFile: boolean = true,
     index: number = -1
-  ): Observable<any[]> {
+  ): Observable<any> {
     try {
       fileItem.uploadId = '';
       fileItem.objectId = this.objectId;
@@ -1118,38 +1132,93 @@ export class AttachmentComponent implements OnInit, OnChanges {
             } catch (ex) {}
           }
           if (isAddFile)
-            return this.fileService
+          {
+            fileItem.createdOn = new Date();
+            var obj2 = from(this.fileService
               .addFileObservable(
                 fileItem,
                 this.isDM,
                 this.fdID,
                 this.fdName,
-                this.parentID
-              )
-              .pipe(
-                map((item) => {
-                  if (item.status == 0) {
+                this.parentID,
+                this.idField
+              ));
+              return obj2.pipe(
+                mergeMap(item2=>{
+                  if (item2.status == 0) {
                     if (this.showMessage == '1')
-                      this.notificationsService.notify(item.message);
-                    this.fileUploadList[0].recID = item.data.recID;
-                    this.atSV.fileListAdded.push(Object.assign({}, item));
-                    this.data.push(Object.assign({}, item));
+                      this.notificationsService.notify(item2.message);
+                    this.fileUploadList[0].recID = item2.data.recID;
+                    this.atSV.fileListAdded.push(Object.assign({}, item2));
+                    this.data.push(Object.assign({}, item2));
                     this.fileUploadList = [];
-                    return item;
-                  } else if (item.status == 6) {
+                    return of(item2);
+                  } else if (item2.status == 6) {
                     // ghi đè
-                    fileItem.recID = item.data.recID;
-                    return this.rewriteFileObservable(
-                      this.titlemessage,
-                      item.message,
-                      fileItem
+                    fileItem.recID = item2.data.recID;
+                    fileItem.fileName = item2.data.fileName;
+                    var config = new AlertConfirmInputConfig();
+                    config.type = 'YesNo';
+                    // var objs = from(
+                    //   this.notificationsService.alert(this.title, item2.message, config).closed
+                    // )
+                    return  this.fileService
+                    .addFileObservable(
+                      fileItem,
+                      this.isDM,
+                      this.fdID,
+                      this.fdName,
+                      this.parentID,
+                      this.idField
+                    )
+                    .pipe(
+                      map((item) => {
+                        if (item.status == 0) {
+                          if (this.showMessage == '1')
+                            this.notificationsService.notify(item.message);
+                          this.fileUploadList[0].recID = item.data.recID;
+                          this.atSV.fileListAdded.push(Object.assign({}, item));
+                          this.data.push(Object.assign({}, item));
+                          this.fileUploadList = [];
+                          return item;
+                         
+                        } else {
+                          this.notificationsService.notify(item.message);
+                        }
+                        return null;
+                      })
                     );
+                    // return this.notificationsService.alert(this.title, item.message, config).beforeClose.pipe(map(res=>{
+                    //   if(res.event.status == 'Y') return this.addFileObservable(item,isAddFile,index);
+                    //   return of('');
+                    // }))
+                    //.closed.subscribe({next:(item) => resolve(item)})
+                    // var a = from(this.getConform(this.titlemessage,item.message))
+                    // return this.getConform(this.titlemessage,item.message).then(item=>{
+                    //   debugger;
+                    // });
+    
+                    // return obj.pipe(
+                    //   mergeMap((item3,i)=>{
+                    //     debugger;
+                    //     //if (item3 == 'Y') return this.addFileObservable(item,isAddFile,index);
+                    //     return null;
+                    //   })
+                    // )
+                    //return this.createFileDiffrentNameObservable(this.titlemessage,item.message).pipe();
+                    // return this.rewriteFileObservable(
+                    //   this.titlemessage,
+                    //   item.message,
+                    //   fileItem
+                    // );
                   } else {
-                    this.notificationsService.notify(item.message);
+                    this.notificationsService.notify(item2.message);
                   }
                   return null;
                 })
-              );
+              )
+          }
+          
           else {
             if (index != -1) this.fileUploadList[index] = fileItem;
             return null;
@@ -1187,6 +1256,21 @@ export class AttachmentComponent implements OnInit, OnChanges {
         return null;
       })
     );
+  }
+
+  async getConform(title:any , message:any)
+  {
+    return await this.createFileDiffrentNameObservable(title , message);
+  }
+  async createFileDiffrentNameObservable(
+    title: any,
+    message: any,
+  ): Promise<any> {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    return await new Promise((resolve, reject) => {
+      this.notificationsService.alert(title, message, config).closed.subscribe({next:(item) => resolve(item)})
+    });
   }
 
   displayThumbnail(data) {
@@ -1351,7 +1435,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
           } else if (item.status == 6) {
             // ghi đè
             fileItem.recID = item.data.recID;
-            this.rewriteFile(this.titlemessage, item.message, fileItem);
+            fileItem.fileName = item.data.fileName;
+            //this.addFile(fileItem);
+            this.createFileDiffrentName(this.titlemessage, item.message, fileItem);
           } else this.notificationsService.notify(item.message);
         })
         .catch((error) => {
@@ -1403,6 +1489,25 @@ export class AttachmentComponent implements OnInit, OnChanges {
           }
         }
       });
+  }
+
+ 
+  createFileDiffrentName(
+    title: any,
+    message: any,
+    item: FileUpload,
+  ) {
+    var config = new AlertConfirmInputConfig();
+    config.type = 'YesNo';
+    return this.notificationsService.alert(title, message, config).closed.subscribe(
+      (x) => {
+        if (x.event.status == 'Y') {
+          // return null;
+          return this.addFile(item);
+        }
+        return null;
+      }
+    );
   }
 
   closeFileDialog(form): void {}
@@ -2981,7 +3086,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
         //fileUpload.folderId = this.folderId;
         fileUpload.folderID = this.dmSV.folderId.getValue();
 
-        if (this.category) fileUpload.category = this.category;
 
         fileUpload.permissions = this.addPermissionForRoot(
           fileUpload.permissions

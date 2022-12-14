@@ -20,7 +20,6 @@ export class SignalRService {
   signalDelChat = new EventEmitter<any>();
   signalVoteType = new EventEmitter<any>();
   //signalR emit data
-  signalREmit = new EventEmitter<any>();
 
   constructor(private authStore: AuthStore) {
     this.createConnection();
@@ -47,39 +46,19 @@ export class SignalRService {
   //#region  get data from server
   public registerOnServerEvents() {
     this.hubConnection.on('onConnect', (data) => {
+      console.log(data);
       this.connectionId = data;
       this.userConnect.emit(data);
     });
 
-    // sendMessage
-    this.hubConnection.on('openGroupChat', (data) => {
-      this.signalREmit.emit(data);
+    // chat emit
+    this.hubConnection.on('ChatEmit', (data) => {
+      this.signalChat.emit(data);
     });
-
-    // this.hubConnection.on('dataResponse', (data) => {
-    //   this.signalData.emit(data);
-    // });
-
-    // this.hubConnection.on('SignalIncontroller', (data) => {
-    //   this.signalData.emit(data);
-    // });
-
-    // this.hubConnection.on('VotePost', (obj) => {
-    //   this.signalObject.emit(obj);
-    // });
-
-    // this.hubConnection.on('receiveChatMessage', (obj) => {
-    //
-    //   this.signalChat.emit(obj);
-    // });
-    // this.hubConnection.on('voteChatMessage', (obj, obj1, obj2) => {
-    //   this.signaDataVote.emit(obj);
-    //   this.signalVote.emit(obj1);
-    //   this.signalVoteType.emit(obj2);
-    // });
-    // this.hubConnection.on('delChatMessage', (obj) => {
-    //   this.signalDelChat.emit(obj);
-    // });
+    // group emit
+    this.hubConnection.on('GroupEmit', (data) => {
+      this.signalGroup.emit(data);
+    });
   }
   //#endregion
 

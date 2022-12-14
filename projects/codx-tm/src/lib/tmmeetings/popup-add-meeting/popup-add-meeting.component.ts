@@ -133,7 +133,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.api
       .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
       .subscribe((res) => {
-        console.log(res);
         this.isRoom = res.msgBodyData[0];
       });
 
@@ -153,7 +152,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     }
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
-        console.log(res.datas);
         this.listRoles = res.datas;
       }
     });
@@ -235,7 +233,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
               this.listRoom.push(re);
             }
           });
-          console.log(this.listRoom);
           this.changDetec.detectChanges();
         }
       });
@@ -315,7 +312,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         if (res) {
           this.dialog.close([res.save]);
           //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
-          if(this.meeting.location != null){
+          if(this.isRoom && this.meeting.location != null){
             this.bookingRoomEP(res.save);
           }
           this.tmSv
@@ -381,9 +378,16 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
     var re = Number(this.meeting.reminder);
 
-    if (re <= 0 && re >= 60) {
+    if (re <= 0) {
       this.notiService.notify(
-        'Vui lòng chỉ được nhập trong khoảng từ 0 đến 60'
+        'Vui lòng chỉ được nhập số lớn hơn hoặc bằng 0'
+      );
+      return;
+    }
+
+    if (re % 1 != 0) {
+      this.notiService.notify(
+        'Vui lòng không nhập số lẻ'
       );
       return;
     }
@@ -392,13 +396,13 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       this.notiService.notifyCode('TM034');
       return;
     }
-    //Chưa có mssg code
-    if (this.isCheckFromToDate(this.meeting.toDate)) {
-      this.notiService.notify(
-        'Vui lòng chọn ngày kết thúc nhỏ hơn ngày hiện tại!'
-      );
-      return;
-    }
+    // //Chưa có mssg code
+    // if (this.isCheckFromToDate(this.meeting.toDate)) {
+    //   this.notiService.notify(
+    //     'Vui lòng chọn ngày kết thúc nhỏ hơn ngày hiện tại!'
+    //   );
+    //   return;
+    // }
     this.listTime.forEach((res) => {
       var d1 = new Date(res.startDate).toLocaleDateString();
       var d2 = new Date(this.meeting.endDate).toLocaleDateString();
@@ -647,18 +651,15 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   ];
 
   setTitle(e: any) {
-    console.log(e);
     this.title =
       this.titleAction + ' ' + e.charAt(0).toLocaleLowerCase() + e.slice(1);
     //this.changDetec.detectChanges();
   }
   cbxChange(e) {
-    console.log(e);
     this.meeting.location = e;
   }
 
   valueCbx(id, e) {
-    console.log(e);
     this.meeting.resources.forEach((res) => {
       if (res.resourceID == id) res.taskControl = e.data;
     });
@@ -839,7 +840,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     );
     this.dialog1.closed.subscribe((e) => {
       if (e?.event) {
-        console.log(e);
         this.meeting.templateID = e.event;
         if (this.meeting.templateID) {
           this.api
@@ -1023,7 +1023,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   fileAdded(e) {
-    console.log(e);
   }
   getfileCount(e) {
     if (e.data.length > 0) this.isHaveFile = true;
@@ -1121,7 +1120,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
     booking.reasonID = null;
-    booking.refID = data.recID; //mã lí do cuộc họp
+    booking.refID = data.meetingID; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {
@@ -1140,7 +1139,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         bookingAttendees,
       ])
       .subscribe((res) => {
-        console.log(res);
       });
   }
 }

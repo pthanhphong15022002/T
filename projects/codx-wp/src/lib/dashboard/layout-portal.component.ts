@@ -3,6 +3,7 @@ import { Component, OnInit, Injector } from '@angular/core';
 import { CallFuncService, LayoutBaseComponent, SidebarModel } from 'codx-core';
 import { NoteDrawerComponent } from 'projects/codx-share/src/lib/layout/drawers/note-drawer/note-drawer.component';
 import { ActivatedRoute } from '@angular/router';
+import { SignalRService } from '../services/signalr.service';
 
 @Component({
   selector: 'lib-layout-portal',
@@ -10,6 +11,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./layout-portal.component.scss']
 })
 export class LayoutPortalComponent extends LayoutBaseComponent {
+  
   module = 'WP';
   funcID:string = "";
   override asideFixed = false;
@@ -19,17 +21,20 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
 
   constructor(inject: Injector,
     private route:ActivatedRoute,
-    private callfc: CallFuncService) {
+    private callfc: CallFuncService,
+    private signalRSV: SignalRService  
+  )
+  {
     super(inject);
   }
 
-  onInit() { 
-  }
-
-  onAfterViewInit() {
+  onInit() 
+  {
 
   }
-
+  onAfterViewInit(): void {
+    
+  }
   openFormNoteDrawer() {
     let option = new SidebarModel();
     option.Width = '550px';
@@ -37,7 +42,4 @@ export class LayoutPortalComponent extends LayoutBaseComponent {
     this.dialog.closed.subscribe()
   }
 
-
-  openFormAlertRule(){
-  }
 }

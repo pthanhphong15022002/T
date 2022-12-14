@@ -55,7 +55,7 @@ export class PopupAddProcessStepsComponent
   textChange = '';
   titleActon = '';
   stepType = 'C';
-  vllShare = 'TM003';
+  vllShare = 'BP021';
   readOnly = false;
   isHaveFile = false;
   isNewEmails = true;
@@ -68,6 +68,9 @@ export class PopupAddProcessStepsComponent
   crrIndex = 0;
   gridViewSetup: any;
   recIDCopied: any;
+  lockParentId = false;
+  editTodo = -1;
+  stepNameOld = ''
 
   constructor(
     private inject: Injector,
@@ -76,6 +79,7 @@ export class PopupAddProcessStepsComponent
     private notiService: NotificationsService,
     private changeDef: ChangeDetectorRef,
     private callfunc: CallFuncService,
+    private notificationsService: NotificationsService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -83,12 +87,15 @@ export class PopupAddProcessStepsComponent
     this.processSteps = JSON.parse(
       JSON.stringify(dialog.dataService!.dataSelected)
     );
-
+    this.stepNameOld = this.processSteps['stepName'];
     this.action = dt?.data[0];
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
     this.recIDCopied = dt?.data[4]
+    if(this.processSteps.parentID && this.action=='add'){
+      this.lockParentId = true;
+    }
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
@@ -123,12 +130,14 @@ export class PopupAddProcessStepsComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.gridViewSetup = res;
+          this.gridViewSetup = res;          
         }
       });
   }
 
   onInit(): void {
+    console.log(this.processSteps);
+    
     this.loadData();
     this.getListUser();
 
@@ -178,7 +187,7 @@ export class PopupAddProcessStepsComponent
     this.codxService.navigate('', url);
   }
 
-  checkValidate() {
+  async checkValidate() {
     let headerText = [];
     if (
       this.stepType != 'P' &&
@@ -199,16 +208,11 @@ export class PopupAddProcessStepsComponent
   }
 
   async saveData() {
-    let headerText = this.checkValidate();
+    let headerText = await this.checkValidate();
     if (headerText.length > 0) {
-      this.notiService.notifyCode(
-        'SYS009',
-        0,
-        '"' + headerText.join(', ') + '"'
-      );
+      this.notiService.notifyCode('SYS009',0,'"' + headerText.join(', ') + '"');
       return;
     }
-
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)
@@ -307,6 +311,15 @@ export class PopupAddProcessStepsComponent
       this.getOwnerByParentID(parentID, true);
     }
   }
+
+  valueChangeRefrenceItem(e,i){
+    let value = e.target.value;
+    if (value && value.trim() != '') {
+      this.referenceText.splice(i,1,value);
+    }
+    this.editTodo = -1;
+  }
+
   valueChangeRefrence(e) {
     let value = e.target.value;
     if (value && value.trim() != '') {
@@ -327,7 +340,7 @@ export class PopupAddProcessStepsComponent
     if (i == null) return;
     if (this.popover) this.popover.close();
     this.crrIndex = i;
-    p.open();
+    p.open();    
     this.popover = p;
   }
 
@@ -374,17 +387,17 @@ export class PopupAddProcessStepsComponent
         index = this.owners.findIndex(
           (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
         );
-      if (index == -1) {
-        var owner = new BP_ProcessOwners();
-        owner.objectType = dt.objectType;
-        owner.objectID = dt.id;
-        owner.objectName = dt.text;
-        owner.rAIC = 'R';
-        this.owners.push(owner);
-        this.listOwnerDetails.push({
-          id: dt.id,
-          name: dt.text,
-        });
+      if (index == -1 && dt?.id && dt?.objectName) {      
+          var owner = new BP_ProcessOwners();
+          owner.objectType = dt.objectType;
+          owner.objectID = dt.id;
+          owner.objectName = dt.text;
+          owner.rAIC = 'R';
+          this.owners.push(owner);
+          this.listOwnerDetails.push({
+            id: dt.id,
+            name: dt.text,
+          });  
       }
     });
   }
@@ -429,5 +442,9 @@ export class PopupAddProcessStepsComponent
       }
       this.getListUser();
     });
+  }
+
+  editTodoIndex(i){
+    this.editTodo = i;
   }
 }

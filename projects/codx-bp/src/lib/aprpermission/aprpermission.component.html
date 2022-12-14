@@ -1,6 +1,6 @@
 <codx-views #view service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes" className="ProcessesBusiness"
-  method="GetListPersionsByOwnerAsync" [views]="views" [button]="showButtonAdd ? button : null"
-  (buttonClick)="click($event)" [dataObj]="dataObj" [moreFuncs]="moreFuncs" [autoLoad]="true" idField="recID">
+  method="GetListPersionsByOwnerAsync" [views]="views" [dataObj]="dataObj" [autoLoad]="true"
+  idField="recID">
 </codx-views>
 
 <ng-template #itemViewList let-data>
@@ -8,7 +8,7 @@
     <td class="rowphoto">
       <div class="padding">
         <div class="d-flex flex-column w-100">
-          <div class="fw-bold lh-base mb-2">{{ data.processName }}</div>
+          <div class="fw-bold lh-base mb-2 line-clamp">{{ data.processName }}</div>
           <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center">
               <div class="d-flex me-3">
@@ -63,24 +63,54 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.memo"></div>
+        <div *ngIf="data.memo" class="" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetailMemo" #p="ngbPopover"
+        [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+        placement="bottom right top" autoClose="outside">
+        <div class="line-clamp" [innerHTML]="data.memo" #memo>
+
+        </div>
+      </div>
       </div>
     </td>
     <td class="rowphoto">
-      <button class="btn btn-primary" (click)="permission(data)">
-        <codx-label default="Xét duyệt"></codx-label>
-      </button>
-      <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
-        [type]="'hover'">
-      </codx-mfunc>
+      <div class="padding">
+        <codx-vll [name]="'VL003'" [value]="data?.approveStatus" [showText]="true" [showBgColor]="true"
+        class="badge badge-light badge-square badge-md fs-7 p-2">
+      </codx-vll>
+      </div>
+    </td>
+    <td class="rowphoto">
+      <div *ngIf="(data.approveStatus !='5' || data.approveStatus !='4') && data.approvedBy != userID">
+        <button class="btn btn-primary" (click)="permission(data, '3')">
+          <codx-label default="Xét duyệt"></codx-label>
+        </button>
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"
+          [type]="'hover'" (changeDataMF)="changeDataMF($event, data)">
+        </codx-mfunc>
+      </div>
+
     </td>
   </tr>
+
+
 </ng-template>
 
 <ng-template #titleTmp let-data>
   <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
     {{ data.objectName }}
   </div>
+</ng-template>
+
+<ng-template #popDetailMemo>
+  <div>
+    <ng-container>
+      <div class="d-flex flex-column w-100">
+        <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
 </ng-template>
 
 <ng-template #popDetail>
@@ -92,7 +122,8 @@
 </ng-template>
 
 
-<ng-template #itemProcessName let-data>
+<!--Header-->
+<ng-template #itemProcessName >
   <div class="padding">
     <codx-label fiedName="ProcessName" formName="AprPermissions" gridViewName="grvAprPermissions"
       default="Tên qui trình">
@@ -100,7 +131,7 @@
   </div>
 </ng-template>
 
-<ng-template #itemOwner let-data>
+<ng-template #itemOwner >
   <div class="padding">
     <codx-label fiedName="Petitioner" formName="AprPermissions" gridViewName="grvAprPermissions"
       default="Người yêu cầu">
@@ -108,7 +139,7 @@
   </div>
 </ng-template>
 
-<ng-template #itemCreatedOn let-data>
+<ng-template #itemCreatedOn >
   <div class="padding">
     <codx-label fiedName="RequestDate" formName="AprPermissions" gridViewName="grvAprPermissions"
       default="Ngày yêu cầu">
@@ -116,16 +147,24 @@
   </div>
 </ng-template>
 
-<ng-template #itemPermissions let-data>
+<ng-template #itemPermissions >
   <div class="padding">
     <codx-label fiedName="Permission" formName="AprPermissions" gridViewName="grvAprPermissions" default="Quyền">
     </codx-label>
   </div>
 </ng-template>
 
-<ng-template #itemDescription let-data>
+<ng-template #itemDescription >
   <div class="padding">
     <codx-label fiedName="Description" formName="AprPermissions" gridViewName="grvAprPermissions" default="Ghi chú">
+    </codx-label>
+  </div>
+</ng-template>
+
+<ng-template #itemStatus let-data>
+  <div >
+    <codx-label fiedName="ApproveStatus" formName="AprPermissions" gridViewName="grvAprPermissions"
+      default="Trạng thái">
     </codx-label>
   </div>
 </ng-template>

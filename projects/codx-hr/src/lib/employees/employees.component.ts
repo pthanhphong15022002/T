@@ -53,7 +53,7 @@ export class EmployeesComponent extends UIComponent {
   employStatus: any;
   urlView: string;
   listMoreFunc = [];
-  isCorporation = false;
+  functionName: string = '';
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
@@ -77,13 +77,13 @@ export class EmployeesComponent extends UIComponent {
   }
 
   onInit(): void {
-    this.cache.moreFunction('Employees', 'grvEmployees').subscribe((res) => {
-      if (res) this.listMoreFunc = res;
-    });
-
-    this.adService.getListCompanySettings().subscribe((res) => {
-      if (res) {
-        this.isCorporation = res.isCorporation;
+    this.router.params.subscribe((param: any) => {
+      if (param) {
+        let funcID = param['funcID'];
+        if (funcID) {
+          this.functionID = funcID;
+          this.getSetup(funcID);
+        }
       }
     });
   }
@@ -150,63 +150,21 @@ export class EmployeesComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  btnClick() {
-    if (this.view) {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      let popup = this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        {
-          action: 'add',
-          isCorporation: this.isCorporation,
-        },
-        option
-      );
-      popup.closed.subscribe((res: any) => {
-        if (res && res.event) {
-          let data = res.event;
-          this.view.dataService.add(data, 0).subscribe();
-          this.detectorRef.detectChanges();
+  getSetup(functionID: string) {
+    if (functionID) {
+      this.cache.functionList(functionID).subscribe((func: any) => {
+        if (func) {
+          this.functionName = func.description;
+          this.cache
+            .moreFunction(func.formName, func.gridViewName)
+            .subscribe((res) => {
+              if (res) {
+                this.listMoreFunc = res;
+              }
+            });
         }
       });
     }
-  }
-  click(evt: ButtonModel) {
-    switch (evt.id) {
-      case 'btnAdd':
-        // this.add();
-        this.openPopupAdd();
-        break;
-    }
-  }
-
-  openPopupAdd() {
-    if (this.view) {
-      let option = new SidebarModel();
-      option.DataService = this.view.dataService;
-      option.FormModel = this.view.formModel;
-      option.Width = '800px';
-      this.callfc.openSide(PopupAddEmployeesComponent, null, option);
-    }
-  }
-  add() {
-    this.view.dataService.addNew().subscribe((res: any) => {
-      let option = new SidebarModel();
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-      option.Width = '800px';
-      this.dialog = this.callfc.openSide(
-        PopupAddEmployeesComponent,
-        this.view.dataService.dataSelected,
-        option
-      );
-      this.dialog.closed.subscribe((e) => {
-        console.log(e);
-        this.detectorRef.detectChanges();
-      });
-    });
   }
 
   senioritydate(value: string) {
@@ -216,61 +174,89 @@ export class EmployeesComponent extends UIComponent {
     return moment(value).fromNow(true);
   }
 
-  edit(data?) {
-    if (data) {
-      this.view.dataService.dataSelected = data;
-    }
-    this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view?.dataService;
-        option.FormModel = this.view?.formModel;
-        option.Width = '800px';
-        var dialog = this.callfc.openSide(
-          PopupAddEmployeesComponent,
-          'edit',
-          option
-        );
-        dialog.closed.subscribe((e) => {
-          if (e?.event == null)
-            this.view.dataService.delete(
-              [this.view.dataService.dataSelected],
-              false
-            );
-          if (e?.event && e?.event != null) {
-            this.view.dataService
-              .update(e.event.update.InfoPersonal)
-              .subscribe();
-            // this.view.dataService.update(e.event.update.Employees).subscribe();
-            // e?.event.update.forEach((obj) => {
-            //   this.view.dataService.update(obj).subscribe();
-            // });
-            this.detectorRef.detectChanges();
-          }
-        });
+  btnClick(event: any) {
+    if (event?.text) {
+      this.view.dataService.addNew().subscribe((res: any) => {
+        if (res) {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
+          let object = {
+            employee: res,
+            action: 'add',
+            title: `${event.text}  ${this.functionName}`,
+          };
+          debugger;
+          let popup = this.callfc.openSide(
+            PopupAddEmployeesComponent,
+            object,
+            option
+          );
+          popup.closed.subscribe((res: any) => {
+            if (res?.event) {
+              let data = res.event;
+              this.view.dataService.add(data, 0).subscribe();
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
       });
-    // this.detectorRef.detectChanges();
+    }
   }
 
-  copy(data) {
-    if (data) {
+  edit(event: any, data: any) {
+    if (event && data) {
       this.view.dataService.dataSelected = data;
+      this.view.dataService
+        .edit(this.view.dataService.dataSelected)
+        .subscribe((res: any) => {
+          let option = new SidebarModel();
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
+          option.Width = '800px';
+          let object = {
+            employee: data,
+            action: 'edit',
+            title: `${event.text}  ${this.functionName}`,
+          };
+          let popup = this.callfc.openSide(
+            PopupAddEmployeesComponent,
+            object,
+            option
+          );
+          popup.closed.subscribe((result) => {
+            if (result?.event) {
+              let dataUpdate = result.event;
+              this.view.dataService.update(dataUpdate).subscribe();
+            }
+          });
+        });
     }
-    this.view.dataService
-      .copy(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
+  }
+
+  copy(event: any, data: any) {
+    if (event && data) {
+      this.view.dataService.dataSelected = data;
+      this.view.dataService.copy(0).subscribe((res: any) => {
         let option = new SidebarModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '800px';
-        this.dialog = this.callfc.openSide(
+        let object = {
+          employee: res,
+          action: 'copy',
+          title: `${event.text}  ${this.functionName}`,
+        };
+        debugger;
+        let popup = this.callfc.openSide(
           PopupAddEmployeesComponent,
-          'copy',
+          object,
           option
         );
       });
-    this.detectorRef.detectChanges();
+      this.detectorRef.detectChanges();
+    }
   }
 
   delete(data: any) {
@@ -403,26 +389,23 @@ export class EmployeesComponent extends UIComponent {
     );
   }
 
-  clickMF(e: any, data?: any) {
+  clickMF(event: any, data?: any) {
     this.itemSelected = data;
-    switch (e.functionID) {
-      case 'SYS01': // thêm
-        this.add();
-        break;
+    switch (event.functionID) {
       case 'SYS02': // xóa
         this.delete(data);
         break;
       case 'SYS03': // edit
-        this.edit(data);
+        this.edit(event, data);
         break;
       case 'SYS04': // sao chép
-        this.copy(data);
+        this.copy(event, data);
         break;
       case 'HR0031': // cập nhật tình trạng
-        this.updateStatus(data, e.functionID);
+        this.updateStatus(data, event.functionID);
         break;
       case 'HR0032': // xem chi tiết
-        this.viewEmployeeInfo(e.data, data);
+        this.viewEmployeeInfo(event.data, data);
         break;
       case 'SYS002':
         this.exportFile();
@@ -431,6 +414,8 @@ export class EmployeesComponent extends UIComponent {
   }
 
   doubleClick(data) {
+    // this.codxService.navigate('HRT0301', '', {employeeID: data.employeeID});
+    debugger;
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'HR0032') this.urlView = obj.url;

@@ -23,12 +23,13 @@ export class BookingStationeryViewDetailComponent
   extends UIComponent
   implements OnChanges
 {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('attachment') attachment;
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -48,38 +49,27 @@ export class BookingStationeryViewDetailComponent
   constructor(private injector: Injector, private epService: CodxEpService) {
     super(injector);
     this.routerRecID = this.router.snapshot.params['id'];
-    if(this.routerRecID!=null){
-      this.hideFooter=true
+    if (this.routerRecID != null) {
+      this.hideFooter = true;
     }
   }
 
   onInit(): void {
     this.itemDetailStt = 1;
-    let tempRecID:any;
-    if(this.routerRecID!=null){
-      tempRecID=this.routerRecID;
+    let tempRecID: any;
+    if (this.routerRecID != null) {
+      tempRecID = this.routerRecID;
+    } else {
+      tempRecID = this.itemDetail?.currentValue?.recID;
     }
-    else{
-      tempRecID=this.itemDetail?.currentValue?.recID
-    }
-    this.api
-        .exec<any>('EP', 'BookingsBusiness', 'GetBookingByIDAsync', [
-          tempRecID,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.itemDetail = res;
-            this.detectorRef.detectChanges();
-          }
-        });
-      this.detectorRef.detectChanges();
-      this.setHeight();
+    this.detectorRef.detectChanges();
+    this.setHeight();
   }
   ngAfterViewInit(): void {
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },      
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
@@ -139,6 +129,33 @@ export class BookingStationeryViewDetailComponent
   }
 
   changeDataMF(event, data: any) {
+    if (event != null && data != null && this.funcID == 'EP8T11') {
+      event.forEach((func) => {
+        if (data.approveStatus == '1') {
+          event.forEach((func) => {
+            if (
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'SYS04' /*MF chép*/
+            ) {
+              func.disabled = false;
+            }
+          });
+        } else {
+          event.forEach((func) => {
+            if (func.functionID == 'SYS04' /*MF chép*/) {
+              func.disabled = false;
+            }
+            if (
+              func.functionID == 'SYS02' /*MF sửa*/ ||
+              func.functionID == 'SYS03' /*MF xóa*/
+            ) {
+              func.disabled = true;
+            }
+          });
+        }
+      });
+    }
     if (event != null && data != null && this.funcID == 'EP8T12') {
       event.forEach((func) => {
         if (
@@ -150,11 +167,9 @@ export class BookingStationeryViewDetailComponent
         }
       });
     }
-    if(event != null && data != null && data.issueStatus == 3){
+    if (event != null && data != null && data.issueStatus == 3) {
       event.forEach((func) => {
-        if (
-          func.functionID == 'EPT40303' /*MF cấp phát*/ 
-        ) {
+        if (func.functionID == 'EPT40303' /*MF cấp phát*/) {
           func.disabled = true;
         }
       });

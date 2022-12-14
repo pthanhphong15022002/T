@@ -252,12 +252,12 @@
               default="Email"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               field="email"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
       </div>
@@ -313,12 +313,12 @@
               default="Hình thức thanh toán"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               field="pmtMethodID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
         <!-- Số tài khoản -->
@@ -368,12 +368,12 @@
               default="Tiền tệ"
             >
             </codx-label>
-            <codx-input
+            <!-- <codx-input
               field="currencyID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input>
+            </codx-input> -->
           </div>
         </div>
         <!-- Tỷ giá -->
@@ -530,11 +530,13 @@
     [formName]="fmInvoiceLines.formName"
     [gridViewName]="fmInvoiceLines.gridViewName"
     [entityName]="fmInvoiceLines.entityName"
+    [templateMore]="morefunction"
     [dataSource]="data"
     [height]="gridHeight"
-    [autoLoad]="true"
+    [autoLoad]="false"
     rowHeight="40"
     (created)="gridCreated($event)"
+    (cellChanged)="cellChanged($event)"
   ></codx-gridview-v2>
 </ng-template>
 
@@ -590,4 +592,18 @@
     [funcID]="form.formModel.funcID"
     [TabControl]="tabs"
   ></codx-tabs>
+</ng-template>
+
+<!-- More function -->
+<ng-template #morefunction let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <!-- <div class="action-menu"> -->
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="dialog.formModel"
+      (clickMF)="clickMF($event)"
+      type="hover"
+    ></codx-mfunc>
+    <!-- </div> -->
+  </div>
 </ng-template>

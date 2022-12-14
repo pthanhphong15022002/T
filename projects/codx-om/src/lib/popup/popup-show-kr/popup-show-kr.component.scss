@@ -1,3 +1,8 @@
+.bgEDEDED
+{
+    background-color: #EDEDED !important;
+}
+
 #om-tab .e-tab-header
 {
     text-align: center;
@@ -15,27 +20,12 @@
     border-bottom: solid 2px #0379FF !important;
 }
 
-.bgEDEDED
-{
-    background-color: #EDEDED;
-}
+
 .okr-add-body
 {
     padding: 30px 20rem 0 20rem !important;
 }
-.om-input
-{
-    border : solid 1px white !important;
-}
-.om-input:focus
-{
-    border:solid 1px white;
-    border-bottom-color: #9ACCFF !important;
-}
-.om-border-bottom-add
-{
-    border-bottom: solid 1px #9ACCFF;
-}
+// 
 .w-50
 {
     width: 50%;
@@ -60,44 +50,56 @@
 {
     width: 95%;
 }
+//.om-input
+// {
+//     border : solid 1px white !important;
+// }
+// .om-input:focus
+// {
+//     border:solid 1px white;
+//     border-bottom-color: #9ACCFF !important;
+// }
+// .om-border-bottom-add
+// {
+//     border-bottom: solid 1px #9ACCFF;
+// }
+// .om-add-btn i , .check-with-label:checked + .icon-language
+// {
+//     color: #3699FF;
+// }
+// .om-add-btn span
+// {
+//     color: #5EADFF;
+// }
+// .om-fs-3
+// {
+//     font-size: 1.5rem !important;
+// }
+// .om-h-header
+// {
+//     height: 100px;
+// }
+// .om-h-body
+// {
+//     overflow: auto;
+//     height: calc(100% - 145px);
+// }
+// .om-select { font-family: 'FontAwesome', Verdana }
 
-.om-add-btn i , .check-with-label:checked + .icon-language
-{
-    color: #3699FF;
-}
-.om-add-btn span
-{
-    color: #5EADFF;
-}
-.om-fs-3
-{
-    font-size: 1.5rem !important;
-}
-.om-h-header
-{
-    height: 100px;
-}
-.om-h-body
-{
-    overflow: auto;
-    height: calc(100% - 145px);
-}
-.om-select { font-family: 'FontAwesome', Verdana }
-
-.p-om-okr
-{
-    height: calc(100% - 94px);
-    -webkit-tap-highlight-color: transparent;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-.p-om-okr:focus {
-    outline: none !important;
-}
+// .p-om-okr
+// {
+//     height: calc(100% - 94px);
+//     -webkit-tap-highlight-color: transparent;
+//     -webkit-touch-callout: none;
+//     -webkit-user-select: none;
+//     -khtml-user-select: none;
+//     -moz-user-select: none;
+//     -ms-user-select: none;
+//     user-select: none;
+// }
+// .p-om-okr:focus {
+//     outline: none !important;
+// }
 .h-100vh {
     border: 1px aqua solid;
     height: calc(100vh - 40px);
@@ -170,7 +172,20 @@
 {
     width: 22px;
 }
+.w-150px
+{
+    width: 150px !important;
+}
+.w-110px
+{
+    width: 110px !important;
+}
 .h-18px
 {
     height: 18px;
 }
+.me-15px
+{
+    margin-right: 15px;
+}
+

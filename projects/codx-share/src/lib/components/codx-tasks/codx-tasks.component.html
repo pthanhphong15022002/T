@@ -209,18 +209,23 @@
     <div *ngIf="data?.priority">
       <span
         class="icon-14 me-1"
-        [class]="data?.priority | vll: vllPriority:'icon' | async"
-        [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
+        [class]="data?.priority | vll : vllPriority : 'icon' | async"
+        [style.color]="data?.priority | vll : vllPriority : 'textColor' | async"
       >
       </span>
       <span class="text-gray-700">{{
-        data?.priority | vll: vllPriority:"text" | async
+        data?.priority | vll : vllPriority : "text" | async
       }}</span>
     </div>
     <div #priority *ngIf="!data?.priority">
       {{
         data?.priority
-          | formatvalue: view.formModel:"priority":priority:"Tasks":"grvTasks"
+          | formatvalue
+            : view.formModel
+            : "priority"
+            : priority
+            : "Tasks"
+            : "grvTasks"
           | async
       }}
     </div>
@@ -231,11 +236,16 @@
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
         <span *ngIf="data.dueDate" class="text-gray-700">{{
-          data.dueDate | date: "dd/MM/yyyy"
+          data.dueDate | date : "dd/MM/yyyy"
         }}</span>
         <span #dueDate *ngIf="!data.dueDate">{{
           data?.dueDate
-            | formatvalue: view.formModel:"dueDate":dueDate:"Tasks":"grvTasks"
+            | formatvalue
+              : view.formModel
+              : "dueDate"
+              : dueDate
+              : "Tasks"
+              : "grvTasks"
             | async
         }}</span>
       </span>
@@ -297,7 +307,12 @@
       ></span>
       <span #memo2 *ngIf="!data?.memo2">{{
         data?.memo2
-          | formatvalue: view.formModel:"memo2":memo2:"Tasks":"grvTasks"
+          | formatvalue
+            : view.formModel
+            : "memo2"
+            : memo2
+            : "Tasks"
+            : "grvTasks"
           | async
       }}</span>
     </ng-container>
@@ -315,7 +330,7 @@
       ></span>
       <span #memo *ngIf="!data?.memo">{{
         data?.memo
-          | formatvalue: view.formModel:"memo":memo:"Tasks":"grvTasks"
+          | formatvalue : view.formModel : "memo" : memo : "Tasks" : "grvTasks"
           | async
       }}</span>
     </ng-container>
@@ -331,7 +346,7 @@
 
 <ng-template #eventTemplate let-data>
   <div
-    [style.color]="data.status | vll: vllStatus:'textColor' | async"
+    [style.color]="data.status | vll : vllStatus : 'textColor' | async"
     (dblclick)="viewTask(data)"
   >
     <div>{{ data.taskName }}</div>
@@ -419,7 +434,7 @@
       </ng-container>
       <span>
         <span class="fs-7 text-gray-600">{{
-          data.dueDate | date: "dd/MM/yyyy"
+          data.dueDate | date : "dd/MM/yyyy"
         }}</span>
       </span>
     </div>
@@ -441,6 +456,16 @@
         [objectId]="data?.assignTo"
         objectType="AD_Users"
         [numberImages]="3"
+      >
+      </codx-imgs>
+    </div>
+    <div *ngIf="data.category == '2'">
+      <codx-imgs
+        [isToolTip]="true"
+        [width]="25"
+        [objectId]="data?.owner"
+        objectType="AD_Users"
+        [numberImages]="1"
       >
       </codx-imgs>
     </div>
@@ -512,7 +537,7 @@
             </span>
             <span>
               <span class="text-gray-700">{{
-                item.dueDate | date: "dd/MM/yyyy"
+                item.dueDate | date : "dd/MM/yyyy"
               }}</span>
             </span>
           </div>
@@ -536,8 +561,8 @@
     </span>
     <span
       class="icon-18 me-1"
-      [class]="data?.priority | vll: vllPriority:'icon' | async"
-      [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
+      [class]="data?.priority | vll : vllPriority : 'icon' | async"
+      [style.color]="data?.priority | vll : vllPriority : 'textColor' | async"
       [ngbPopover]="popDetailPriority"
       #p="ngbPopover"
       [openDelay]="500"
@@ -555,7 +580,7 @@
         default="Độ ưu tiên:"
       ></codx-label> </span
     ><span>
-      {{ data?.priority | vll: vllPriority:"text" | async }}
+      {{ data?.priority | vll : vllPriority : "text" | async }}
     </span>
   </ng-template>
 
@@ -580,12 +605,13 @@
   [className]="className"
   [method]="method"
   [views]="views"
-  [button]="showButtonAdd && funcID!='TMT0206' ? button : ''"
+  [button]="showButtonAdd ? button : ''"
   (buttonClick)="click($event)"
   (requestEnded)="requestEnded($event)"
   [dataObj]="dataObj"
   (selectedChange)="selectedChange($event)"
   (onActions)="onActions($event)"
+  (viewChanged)="changeView($event)"
   [selectedFirst]="true"
   [autoLoad]="true"
   [viewActiveType]="viewMode"

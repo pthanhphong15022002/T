@@ -239,12 +239,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region  tree
   loadTreeView() {
     this.dataTree = [];
-    if (
-      !this.itemSelected ||
-      !this.itemSelected?.taskID ||
-      !this.itemSelected.isAssign
-    )
-      return;
+    if (!this.itemSelected || !this.itemSelected?.taskID || (this.itemSelected.category=='1'&& !this.itemSelected.isAssign)) return;
     this.api
       .execSv<any>(
         'TM',
@@ -261,48 +256,54 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#endregion
 
   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+  // loadDataReferences() {
+  //   if (this.itemSelected.category == '1') {
+  //     this.dataReferences = [];
+  //     return;
+  //   }
+  //   this.dataReferences = [];
+  //   if (this.itemSelected.category == '2') {
+  //     this.api
+  //       .execSv<any>(
+  //         'TM',
+  //         'TM',
+  //         'TaskBusiness',
+  //         'GetTaskParentByTaskIDAsync',
+  //         this.itemSelected.taskID
+  //       )
+  //       .subscribe((res) => {
+  //         if (res) {
+  //           var ref = new tmpReferences();
+  //           ref.recIDReferences = res.recID;
+  //           ref.refType = 'TM_Tasks';
+  //           ref.createdOn = res.createdOn;
+  //           ref.memo = res.taskName;
+  //           ref.createdBy = res.createdBy;
+  //           ref.attachments = res.attachments;
+  //           ref.comments = res.comments;
+  //           var taskParent = res;
+  //           this.api
+  //             .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
+  //               res.createdBy,
+  //             ])
+  //             .subscribe((user) => {
+  //               if (user) {
+  //                 ref.createByName = user.userName;
+  //                 this.dataReferences.push(ref);
+  //                 this.getReferencesByCategory3(taskParent);
+  //               }
+  //             });
+  //         }
+  //       });
+  //   } else if (this.itemSelected.category == '3') {
+  //     this.getReferencesByCategory3(this.itemSelected);
+  //   }
+  // }
+  //referen new
   loadDataReferences() {
-    if (this.itemSelected.category == '1') {
-      this.dataReferences = [];
-      return;
-    }
-    this.dataReferences = [];
-    if (this.itemSelected.category == '2') {
-      this.api
-        .execSv<any>(
-          'TM',
-          'TM',
-          'TaskBusiness',
-          'GetTaskParentByTaskIDAsync',
-          this.itemSelected.taskID
-        )
-        .subscribe((res) => {
-          if (res) {
-            var ref = new tmpReferences();
-            ref.recIDReferences = res.recID;
-            ref.refType = 'TM_Tasks';
-            ref.createdOn = res.createdOn;
-            ref.memo = res.taskName;
-            ref.createdBy = res.createdBy;
-            ref.attachments = res.attachments;
-            ref.comments = res.comments;
-            var taskParent = res;
-            this.api
-              .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-                res.createdBy,
-              ])
-              .subscribe((user) => {
-                if (user) {
-                  ref.createByName = user.userName;
-                  this.dataReferences.push(ref);
-                  this.getReferencesByCategory3(taskParent);
-                }
-              });
-          }
-        });
-    } else if (this.itemSelected.category == '3') {
+    this.dataReferences = []
+    if (this.itemSelected.refID)
       this.getReferencesByCategory3(this.itemSelected);
-    }
   }
 
   getReferencesByCategory3(task) {

@@ -1,0 +1,150 @@
+<div class="p-2 h-100" >
+  <!-- master -->
+  <div class="d-flex w-100">
+      <div class="me-4">
+          <codx-img 
+              [objectId]="employeeManager?.employeeID" 
+              [objectName]="employeeManager?.employeeName"
+              [objectType]="'HR_Employees'"
+              [width]="90"
+              [imageType]="'circle'">
+          </codx-img>
+      </div>
+      <div class="d-flex align-items-center justify-content-between w-100 p-2">
+          <div>
+            <div>
+              <ng-container *ngIf="employeeManager?.employeeName ; else lblEmployeeName">
+                <span class="fw-bolder">{{employeeManager.employeeName}}</span>
+              </ng-container>  
+              <ng-template #lblEmployeeName>
+                <codx-label  [className]="'fw-bolder'" [formModel]="formModel" name="lblEmployeeName" default="Tên nhân viên"></codx-label>
+              </ng-template>
+            </div>
+            <div>
+              <ng-container *ngIf="employeeManager?.positionName ; else lblPositionName">
+                <span class="text-dark-400">{{employeeManager.positionName}}</span>
+              </ng-container>
+              <ng-template #lblPositionName>
+                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblPositionName" default="Chức vụ"></codx-label>
+              </ng-template>
+              <span class="ms-2 me-2">|</span>
+              <ng-container *ngIf="employeeManager?.orgUnitName ; else lblOrgUnitName">
+                  <span class="text-dark-400">{{employeeManager.orgUnitName}}</span>
+                </ng-container>
+                <ng-template #lblOrgUnitName>
+                  <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblOrgUnitName" default="Phòng ban"></codx-label>
+                </ng-template>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <ng-container *ngIf="employeeManager?.phone ; else lblPhone">
+                <span class="text-dark-400">{{employeeManager?.phone}}</span>
+              </ng-container>
+              <ng-template #lblPhone>
+                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmployeePhone" default="SĐT"></codx-label>
+              </ng-template>
+              <ng-container *ngIf="employeeManager?.email ; else lblEmail">
+                <span class="text-dark-400">{{employeeManager.email}}</span>
+              </ng-container>
+              <ng-template #lblEmail>
+                <codx-label [className]="'text-dark-400'" [formModel]="formModel" name="lblEmail" default="Email"></codx-label>
+              </ng-template>
+            </div>
+          </div>
+          <div>
+            <p>{{codxListView.dataService.data.length}}</p>
+            <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
+          </div>
+      </div>
+  </div>
+  <!-- list detail -->
+  <div class="p-2 h-100 w-100">
+    <codx-listview 
+      #codxListView 
+      [formModel]="formModel" 
+      service="HR" 
+      entityName="HR_Employees"
+      assemblyName="ERM.Business.HR"
+      className="OrganizationUnitsBusiness"
+      method="GetEmployeesMasterDetailAsync"
+      [dataValue]="orgUnitID"
+      [headerTemplate]="headerTemplate"
+      [itemTemplate]="itemTemplate">
+    </codx-listview>
+  </div>
+</div>
+<ng-template #headerTemplate>
+  <div class="row bg-secondary p-2 w-100">
+    <!-- Họ và tên -->
+    <div class="col-3 text-center">
+      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeName" [default]="'Họ và tên'"></codx-label>
+    </div>
+    <!-- Ngày sinh -->
+    <div class="col-1 text-center">
+      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeBirthday" [default]="'Ngày sinh'"></codx-label>
+    </div>
+    <!-- Di động -->
+    <div class="col-2 text-center">
+      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeePhone" [default]="'Di động'"></codx-label>
+    </div>
+    <!-- Email -->
+    <div class="col-2 text-center">
+      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeMail" [default]="'EMail'"></codx-label>
+    </div>
+    <!-- Ngày vào làm -->
+    <div class="col-2 text-center">
+      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeJoinredOn" [default]="'Ngày vào làm'"></codx-label>
+    </div>
+    <!-- Trạng thái -->
+    <div class="col-2 text-center">
+      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeStatus" [default]="'Trạng thái'"></codx-label>
+    </div>
+  </div>
+</ng-template>
+<ng-template #itemTemplate let-item let-index>
+  <div class="row p-2">
+    <!-- Họ và tên -->
+    <div class="col-3">
+      <div>
+        <codx-img 
+          [objectId]="item.employeeID" 
+          [objectName]="item.objectName" 
+          [objectType]="'HR_Employees'" 
+          [width]="30"
+          [imageType]="'circle'">
+        </codx-img>
+      </div>
+      <div>
+        <p class="m-0 fw-bolder" *ngIf="item.employeeName">{{item.employeeName}}</p>
+        <p class="m-0 text-dark-500" *ngIf="item.positionName">{{item.positionName}}</p>
+      </div>
+    </div>  
+    <!-- Ngày sinh -->
+    <div class="col-1">
+      <p class="m-0" *ngIf="item.birthday">{{item.birthday}}</p>
+    </div>
+    <!-- Phone -->
+    <div class="col-2">
+      <p class="m-0" *ngIf="item.phone">{{item.phone}}</p>
+    </div>
+    <!-- Email -->
+    <div class="col-2">
+      <p class="m-0" *ngIf="item.email">{{item.email}}</p>
+    </div>
+    <!-- Ngày vào làm -->
+    <div class="col-2">
+      <p class="m-0" *ngIf="item.joinedOn">{{item.joinedOn}}</p>
+    </div>
+    <!-- Trạng thái -->
+    <div class="col-2">
+      <ng-container *ngIf="item.status">
+        <codx-vll [formModel]="formModel" [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
+      </ng-container>
+    </div>
+    <!-- Sở thích -->
+    <!-- <div class="col-1">
+      <ng-container *ngIf="item.status">
+        <codx-vll [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
+      </ng-container>
+    </div> -->
+  </div>
+</ng-template>

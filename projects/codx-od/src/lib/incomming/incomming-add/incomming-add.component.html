@@ -27,7 +27,7 @@
       (fileGet)="getfileCount($event)" isDeleteTemp="1" [objectId]="dispatch?.recID" [allowMultiFile]="0"
       [idBrowse]="'add'" [hideDelete]="
         this.dispatch?.status == '1' || this.dispatch?.status == '2' || this.dispatch?.status == '4' ? '0' : '1'
-      " hideMoreF="0" [category]="'5'" [fdName]="dispatch?.dispatchNo" [permissions]="dispatch?.relations">
+      " hideMoreF="0" [permissions]="dispatch?.relations" [idField]="'RecID'" >
     </codx-attachment>
   </div>
   <div class="tab-horizone form-group">
@@ -136,7 +136,7 @@
   </div>
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="departmentID" class="fw-bold"></codx-label>
-    <div class="d-flex mt-2 border-bottom pb-2">
+    <div class="d-flex mt-2 pb-2">
       <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['DepartmentID']['referedValue'] : null
         " refType="P" field="departmentID" [showInput]="true" [crrValue]="dispatch?.departmentID" [ngClass]="'w-100'"
@@ -147,7 +147,7 @@
   <div class="form-group">
     <codx-label [formModel]="form.formModel" fiedName="Owner"
       [default]="form.formModel.funcID == 'ODT41' ? 'Người gửi' : null"></codx-label>
-    <div class="d-flex border-bottom mt-2 pb-2">
+    <div class="d-flex mt-2 pb-2">
       <codx-input type="Combobox" name="combobox" [refValue]="
           gridViewSetup != null ? gridViewSetup['Owner']['referedValue'] : null
         " [multiple]="false" [crrValue]="this.dispatch.owner" [showInput]="true" refType="P" field="popup"

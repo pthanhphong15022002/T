@@ -68,7 +68,7 @@
           </codx-label>
         </div>
       </div>
-      <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" multiple="true"
+      <codx-input type="Share" [refValue]="vllShare" field="AssignTo" [dataShared]="[]" [multiple]="true"
         [showInput]="false" (valueChange)="eventApply($event)" [disabled]="readOnly">
       </codx-input>
     </div>
@@ -204,21 +204,20 @@
       <!-- <codx-input service="SYS" type="combobox" name="combobox" class="form-control borderless p-0" style="border: none"
       placeholder="Tham chiếu" ngDefaultControl refValue="" loadFull="true" field="refNo"
       (valueChange)="cbxChange($event)" [disabled]="readOnly"></codx-input> -->
-      <codx-input field="refNo" [type]="gridViewSetup['RefNo']['controlType']"
+      <!-- <codx-input field="refNo" [type]="gridViewSetup['RefNo']['controlType']"
         [placeholder]="gridViewSetup['RefNo']['headerText']" [refValue]="gridViewSetup['RefNo']['referedValue']"
         [refType]="gridViewSetup['RefNo']['referedType']" (valueChange)="cbxChange($event)" [crrValue]="task?.refNo"
         [showInput]="true" [disabled]="readOnly">
-      </codx-input>
+      </codx-input> -->
     </div>
-    <!-- <div class="form-group mt-5" *ngIf="dataReferences.length > 0">
-      <ng-container>
+    <div class="form-group mt-5" *ngIf="dataReferences.length > 0">
         <codx-references
           [funcID]="functionID"
           [dataReferences]="dataReferences"
           [vllRefType]="vllRefType"
+          [openViewPopup]="false"
         ></codx-references>
-      </ng-container>
-    </div> -->
+    </div>
   </ng-container>
 </ng-template>
 

@@ -18,7 +18,7 @@
 }
 
 .card.border-primary .bg-footer {
-  background-color: #3699FF;
+  background-color: #3699ff;
 }
 
 .card.border-secondary .bg-footer {
@@ -47,16 +47,16 @@
 
 .card-steplist {
   .steplist-hearder {
-    background: #F0F3F6;
-    border: 1px solid #E2E3EE;
+    background: #f0f3f6;
+    border: 1px solid #e2e3ee;
     border-radius: 3px;
-    border-left-color: #3699FF !important;
+    border-left-color: #3699ff !important;
     border-left-width: 4px !important;
   }
 
   .steplist-item {
     background-color: #fff;
-    border: 1px solid #E2E3EE;
+    border: 1px solid #e2e3ee;
     border-left-width: 4px;
     padding: 20px;
     margin-bottom: 15px;
@@ -65,19 +65,19 @@
   }
 
   .step-primary {
-    border-left-color: #3699FF;
+    border-left-color: #3699ff;
   }
 
   .step-danger {
-    border-left-color: #F64E60;
+    border-left-color: #f64e60;
   }
 
   .step-succes {
-    border-left-color: #1BC5BD;
+    border-left-color: #1bc5bd;
   }
 
   .step-warning {
-    border-left-color: #FFA800;
+    border-left-color: #ffa800;
   }
 
   .step-items {
@@ -90,8 +90,6 @@
     border-radius: 0px 3px 3px 0px;
     box-shadow: none;
   }
-
-
 }
 
 .kanban-board {
@@ -99,7 +97,7 @@
   flex-shrink: 0;
   margin-bottom: 1.25rem;
   margin-right: 1.25rem !important;
-  background-color: #F3F6F9;
+  background-color: #f3f6f9;
   border-radius: 0.42rem;
 
   .kanban-board-header {
@@ -111,7 +109,7 @@
   .kanban-board-body {
     min-height: 200px;
     padding: 8px 5px 8px 5px;
-    background: #F0F2F5;
+    background: #f0f2f5;
   }
 
   .processStep {
@@ -121,9 +119,7 @@
   .bg-footer {
     margin-left: -12px;
     margin-right: -8px;
-
   }
-
 }
 
 .card-survey {
@@ -214,7 +210,6 @@
   margin-top: -10px;
 }
 
-
 .size-input {
   width: 100% !important;
   height: 30px;
@@ -244,14 +239,14 @@
   padding: 20px;
   text-align: center;
   cursor: pointer;
-  border: 0.5px dashed #6C757D;
+  border: 0.5px dashed #6c757d;
   border-radius: 0.42rem;
   height: 50px;
-  background: #F5F8FA;
+  background: #f5f8fa;
 }
 
 .dropzone.dropzone-default.dropzone-primary {
-  border-color: #3699FF;
+  border-color: #3699ff;
 }
 
 .dropzone-msg-title {
@@ -272,7 +267,7 @@
   align-items: center;
   text-align: center;
   /* Text/Muted */
-  color: #6C757D;
+  color: #6c757d;
 }
 
 .moreFC-ver .action-menu {
@@ -282,4 +277,20 @@
 .moreFC-ver .action-menu ngb-popover-window .popover-body {
   white-space: nowrap !important;
   padding: 8px 15px !important;
+}
+
+codx-views {
+  height: 100%;
+}
+
+:host ::ng-deep .container-fluid {
+  height: auto !important;
+}
+
+:host ::ng-deep .popover {
+  max-width: 500px !important;
+}
+
+.list-empty.card {
+  height: calc(100vh - 245px) !important;
 }

@@ -1,4 +1,4 @@
-import { CodxEpService } from './../../../codx-ep.service';
+import { CodxEpService, GridModels } from './../../../codx-ep.service';
 import {
   Component,
   Injector,
@@ -19,10 +19,10 @@ import {
   UserModel,
   AuthStore,
   CRUDService,
-  AuthService,
 } from 'codx-core';
-import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { ApprovalStepComponent } from 'projects/codx-es/src/lib/setting/approval-step/approval-step.component';
+
 @Component({
   selector: 'popup-request-stationery',
   templateUrl: './popup-request-stationery.component.html',
@@ -57,7 +57,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   templateName: string = ''; // tên template khi chọn lưu thành template
 
-  dialog: DialogRef;
+  dialogRef: DialogRef;
   data: any = {};
   isAfterSaveProcess: boolean = false;
   option: SidebarModel;
@@ -80,24 +80,26 @@ export class PopupRequestStationeryComponent extends UIComponent {
   dialogAddBookingStationery: FormGroup;
   returnData = [];
   nagetivePhysical: string = '';
+  totalStationery = 0;
+  saveCheck = false;
 
   constructor(
     private injector: Injector,
     private auth: AuthStore,
     private epService: CodxEpService,
     private notificationsService: NotificationsService,
-    @Optional() dialog: DialogRef,
+    @Optional() dialogRef: DialogRef,
     @Optional() data: DialogData
   ) {
     super(injector);
-    this.dialog = dialog;
+    this.dialogRef = dialogRef;
     this.formModel = data?.data?.formModel;
     this.funcID = this.formModel?.funcID;
     this.data = data?.data?.option?.DataService.dataSelected || {};
     this.isAddNew = data?.data?.isAddNew ?? true;
     this.option = data?.data?.option;
     this.title = data?.data?.title;
-    this.dialog.dataService = this.option.DataService;
+    this.dialogRef.dataService = this.option.DataService;
     if (!this.isAddNew) {
       if ((this.data.category = '1')) {
         this.radioPersonalCheck = true;
@@ -111,7 +113,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.user = this.auth.get();
 
     this.epService.getStationeryGroup().subscribe((res) => {
-      this.groupStationery = res;
+      this.groupStationery = res[0];
+      this.totalStationery = res[1];
     });
 
     this.epService
@@ -122,7 +125,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
         this.nagetivePhysical = json.NagetivePhysical;
       });
 
-    this.cache.functionList('EPS24').subscribe((res) => {
+    this.cache.functionList('EP8S21').subscribe((res) => {
       if (res) {
         this.cache
           .gridViewSetup(res.formName, res.gridViewName)
@@ -280,102 +283,118 @@ export class PopupRequestStationeryComponent extends UIComponent {
     return true;
   }
 
+  saveClick = false;
+
   onSaveForm(approval: boolean = false) {
-    if (this.dialogAddBookingStationery.invalid == true) {
-      this.epService.notifyInvalid(
-        this.dialogAddBookingStationery,
-        this.formModel
-      );
-    }
-    if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
+    if (!this.saveCheck) {
+      if (this.dialogAddBookingStationery.invalid == true) {
+        this.epService.notifyInvalid(
+          this.dialogAddBookingStationery,
+          this.formModel
+        );
+      }
+      if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
+        this.dialogAddBookingStationery.patchValue({
+          reasonID: this.dialogAddBookingStationery.value.reasonID[0],
+        });
+      }
       this.dialogAddBookingStationery.patchValue({
-        reasonID: this.dialogAddBookingStationery.value.reasonID[0],
+        title: this.dialogAddBookingStationery.value.note,
       });
-    }
-    this.dialogAddBookingStationery.patchValue({
-      title: this.dialogAddBookingStationery.value.note,
-    });
-    this.dialog.dataService
-      .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
-      .subscribe((res) => {
-        if (res.save || res.update) {
-          if (!res.save) {
-            this.returnData = res.update;
-            this.returnData.forEach((item) => {
-              if (item.recID == this.data.recID) {
-                (this.dialog.dataService as CRUDService)
+      this.dialogRef.dataService
+        .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
+        .subscribe((res) => {
+          if (res.save || res.update) {
+            if (!res.save) {
+              this.returnData = res.update;
+              this.returnData.forEach((item) => {
+                if (item.recID == this.data.recID) {
+                  (this.dialogRef.dataService as CRUDService)
+                    .update(item)
+                    .subscribe();
+                } else {
+                  (this.dialogRef.dataService as CRUDService)
+                    .add(item, 0)
+                    .subscribe();
+                }
+              });
+            } else {
+              this.returnData = res.save;
+
+              this.returnData.forEach((item) => {
+                (this.dialogRef.dataService as CRUDService)
                   .update(item)
                   .subscribe();
-              } else {
-                (this.dialog.dataService as CRUDService)
-                  .add(item, 0)
-                  .subscribe();
-              }
-            });
-          } else {
-            this.returnData = res.save;
-
-            this.returnData.forEach((item) => {
-              (this.dialog.dataService as CRUDService).update(item).subscribe();
-            });
-          }
-
-          if (approval) {
-            this.epService
-              .getCategoryByEntityName(this.formModel.entityName)
-              .subscribe((category: any) => {
-                this.returnData.forEach((item) => {
-                  this.epService
-                    .release(
-                      item,
-                      category.processID,
-                      'EP_Bookings',
-                      this.formModel.funcID
-                    )
-                    .subscribe((res) => {
-                      if (res?.msgCodeError == null && res?.rowCount >= 0) {
-                        this.notificationsService.notifyCode('ES007');
-                        item.approveStatus = '3';
-                        item.status = '3';
-                        item.write = false;
-                        item.delete = false;
-                        (this.dialog.dataService as CRUDService)
-                          .update(item)
-                          .subscribe();
-                        this.dialog && this.dialog.close();
-                      } else {
-                        this.notificationsService.notifyCode(res?.msgCodeError);
-                        // Thêm booking thành công nhưng gửi duyệt thất bại
-                        this.dialog && this.dialog.close();
-                      }
-                    });
-                });
               });
-            this.dialog && this.dialog.close();
+            }
+
+            if (approval) {
+              this.epService
+                .getCategoryByEntityName(this.formModel.entityName)
+                .subscribe((category: any) => {
+                  this.returnData.forEach((item) => {
+                    this.epService
+                      .release(
+                        item,
+                        category.processID,
+                        'EP_Bookings',
+                        this.formModel.funcID
+                      )
+                      .subscribe((res) => {
+                        if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                          this.notificationsService.notifyCode('ES007');
+                          item.approveStatus = '3';
+                          item.status = '3';
+                          item.write = false;
+                          item.delete = false;
+                          (this.dialogRef.dataService as CRUDService)
+                            .update(item)
+                            .subscribe();
+                          this.dialogRef && this.dialogRef.close();
+                        } else {
+                          this.notificationsService.notifyCode(
+                            res?.msgCodeError
+                          );
+                          // Thêm booking thành công nhưng gửi duyệt thất bại
+                          this.dialogRef && this.dialogRef.close();
+                        }
+                      });
+                  });
+                });
+              this.dialogRef && this.dialogRef.close();
+            } else {
+              this.dialogRef && this.dialogRef.close();
+            }
           } else {
-            this.dialog && this.dialog.close();
+            return;
           }
-        } else {
-          return;
-        }
-      });
+        });
+      this.saveCheck = true;
+    } else {
+      return;
+    }
   }
 
   close() {
-    this.dialog && this.dialog.close();
+    this.dialogRef && this.dialogRef.close();
   }
 
   //#endregion
 
   filterStationery(groupID: string = null) {
+    let resourceModel = new GridModels();
+    (resourceModel.funcID = 'EP8S21'),
+      (resourceModel.entityName = 'EP_Resources');
+    resourceModel.pageSize = 20;
     this.groupID = groupID;
     this.api
-      .exec('EP', 'ResourcesBusiness', 'GetListStationeryByGroupIDAsync', [
+      .exec('EP', 'ResourcesBusiness', 'GetListByCbxAsync', [
+        resourceModel,
         groupID,
       ])
       .subscribe((res: any) => {
         this.listView.dataService.data = [];
-        this.listView.dataService.add(res).subscribe();
+        this.listView.dataService.add(res[0]).subscribe();
       });
     this.detectorRef.detectChanges();
   }
@@ -404,8 +423,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
     //NagetivePhysical = 0: khong am kho
-
-    if (tmpResource.availableQty == 0) {
+    if (tmpResource.currentQty <= 0) {
       if (this.nagetivePhysical == '0') {
         //không add
         this.notificationsService.notifyCode('EP013');
@@ -417,12 +435,13 @@ export class PopupRequestStationeryComponent extends UIComponent {
       this.cart.filter((item: any) => {
         if (item.recID == tmpResource.recID) {
           item.quantity = item.quantity + 1;
+          item.itemName = item.resourceName;
         }
       });
     } else {
       tmpResource.quantity = 1;
+      tmpResource.itemName = tmpResource.resourceName;
       this.cart.push(tmpResource);
-      this.notificationsService.notifyCode('SYS006');
     }
     this.detectorRef.detectChanges();
   }
@@ -456,6 +475,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
   click(data) {}
 
   clickMF($event, data) {}
+
+  search(e) {
+    this.listView.dataService.search(e).subscribe();
+    this.detectorRef.detectChanges();
+  }
 
   itemByRecID(index, item) {
     return item.recID;

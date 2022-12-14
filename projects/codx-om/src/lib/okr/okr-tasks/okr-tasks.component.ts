@@ -12,6 +12,7 @@ import {
   ButtonModel,
   FormModel,
   ResourceModel,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewsComponent,
@@ -38,7 +39,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   assemblyName = 'TM';
   className = 'TaskBusiness';
   method = 'GetTasksAsync';
-  funcID = 'TMT0201';
+  funcID: string = '';
   dataObj;
   formModel: FormModel;
   button?: ButtonModel;
@@ -53,16 +54,27 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   kanban: any;
 
   requestSchedule: ResourceModel;
-  fields:any;
-  resourceField: any;
   modelResource: ResourceModel;
-
+  fields = {
+    id: 'taskID',
+    subject: { name: 'taskName' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    resourceId: { name: 'owner' }, //trung voi idField của resourceField
+  };
+  resourceField = {
+    Name: 'Resources',
+    Field: 'owner',
+    IdField: 'owner',
+    TextField: 'userName',
+    Title: 'Resources',
+  };
   dayoff = [];
   constructor(
-    inject: Injector, 
+    inject: Injector,
     private omService: CodxOmService,
-    private activatedRoute:ActivatedRoute,
-    ) {
+    private activatedRoute: ActivatedRoute
+  ) {
     super(inject);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.api
@@ -82,6 +94,12 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.omService.getFormModel('TMT0201').then((res) => {
+      if (res) {
+        this.formModel = res;
+      }
+    });
+
     this.request = new ResourceModel();
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
@@ -95,7 +113,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.resourceKanban.assemblyName = 'SYS';
     this.resourceKanban.className = 'CommonBusiness';
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
-    //this.resourceKanban.dataObj = '125125';
+    this.resourceKanban.dataObj = '125125';
 
     //resource Schedule
     this.requestSchedule = new ResourceModel();
@@ -120,7 +138,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
       TextField: 'userName',
       Title: 'Resources',
     };
-    
+
     this.modelResource = new ResourceModel();
     //xu ly khi truyeefn vao 1 list resourece
     this.modelResource.assemblyName = 'HR';
@@ -128,7 +146,23 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.modelResource.service = 'HR';
     this.modelResource.method = 'GetListUserByResourceAsync';
     this.modelResource.dataValue = this.dataObj?.resources;
+
+    this.requestSchedule = new ResourceModel();
+    this.requestSchedule.service = 'TM';
+    this.requestSchedule.assemblyName = 'TM';
+    this.requestSchedule.className = 'TaskBusiness';
+    this.requestSchedule.method = 'GetTasksWithScheduleAsync';
+    this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+    this.requestSchedule.dataValue = '1;2';
+
+    this.modelResource = new ResourceModel();
     
+      this.modelResource.assemblyName = 'HR';
+      this.modelResource.className = 'OrganizationUnitsBusiness';
+      this.modelResource.service = 'HR';
+      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+     
     this.button = {
       id: 'btnAdd',
     };
@@ -148,8 +182,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    
-    if(this.funcID!='OMT01' && this.funcID!='OMT04'){
+    if (this.funcID != 'OMT01' && this.funcID != 'OMT04') {
       this.views = [
         {
           type: ViewType.kanban,
@@ -182,8 +215,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
           },
         },
       ];
-    } 
-    else{
+    } else {
       this.views = [
         {
           type: ViewType.kanban,
@@ -195,10 +227,10 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
             template: this.cardKanban,
           },
         },
-      ]
+      ];
     }
-    
   }
+
   getCellContent(evt: any) {
     if (this.dayoff.length > 0) {
       for (let i = 0; i < this.dayoff.length; i++) {
@@ -232,6 +264,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
 
     return ``;
   }
+
   clickMF(e: any, data?: any) {}
 
   changeDataMF(e, data) {
@@ -291,8 +324,11 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
   }
 
   buttonClick(event: any) {
-    // this.click.emit(event);
-    this.callfc.openSide(PopupAddTaskComponent);
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.DataService = this.viewTask?.dataService;
+    option.FormModel = this.formModel;
+    this.callfc.openSide(PopupAddTaskComponent, [], option);
   }
 
   viewChange(event) {

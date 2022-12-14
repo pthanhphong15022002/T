@@ -8,6 +8,7 @@ import {
   Input,
   Output,
   EventEmitter,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -33,6 +34,7 @@ import {
   selector: 'qtsc-login',
   templateUrl: './login-qtsc.component.html',
   styleUrls: ['./login-qtsc.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class LoginQTSCComponent implements OnInit, OnDestroy {
   @ViewChild('Error') error: ElementRef;
@@ -61,15 +63,15 @@ export class LoginQTSCComponent implements OnInit, OnDestroy {
   @Output() forgotPassEven = new EventEmitter();
   // private fields
   @Input() unsubscribe: Subscription[] = [];
-  constructor(private dt: ChangeDetectorRef) {}
+  constructor(private dt: ChangeDetectorRef) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   ngOnDestroy() {
     this.destroyEven.emit();
   }
 
-  @Input() checkPasswords: ValidatorFn = (
+  checkPasswords: ValidatorFn = (
     group: AbstractControl
   ): ValidationErrors | null => {
     let pass = group.get('password').value;

@@ -190,7 +190,6 @@ export class IncommingComponent
     ];
     this.view.dataService.methodSave = 'SaveDispatchAsync';
     this.view.dataService.methodDelete = 'DeleteDispatchByIDAsync';
-
     this.getGridViewSetup(this.view.formModel.funcID);
     this.button = {
       id: 'btnAdd',
@@ -218,6 +217,7 @@ export class IncommingComponent
           subHeaderText: 'Tạo & Upload File văn bản',
           type: 'add',
           formModel: this.view.formModel,
+          service: this.view.service,
           dispatchType: this.funcList?.dataValue,
         },
         option
@@ -237,57 +237,76 @@ export class IncommingComponent
     });
   }
   changeDataMF(e: any, data: any) {
+    //Bookmark
     var bm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT110' || x.functionID == 'ODT209'
+        x.functionID == 'ODT110' || x.functionID == 'ODT209' || x.functionID == "ODT3009"
     );
+    //Unbookmark
     var unbm = e.filter(
       (x: { functionID: string }) =>
-        x.functionID == 'ODT111' || x.functionID == 'ODT210'
+        x.functionID == 'ODT111' || x.functionID == 'ODT210' || x.functionID == "ODT3010"
     );
     if (data?.isBookmark) {
-      bm[0].disabled = true;
-      unbm[0].disabled = false;
-    } else {
-      unbm[0].disabled = true;
-      bm[0].disabled = false;
+      if(bm[0]) bm[0].disabled = true;
+      if(unbm[0]) unbm[0].disabled = false;
+    } else  {
+      if(unbm[0]) unbm[0].disabled = true;
+      if(bm[0]) bm[0].disabled = false;
     }
     if (
       this.view.formModel.funcID == 'ODT41' &&
       data?.status != '1' &&
-      data?.status != '2'
-    ) {
+      data?.status != '2' && data?.approveStatus != '2')
+    {
       var approvel = e.filter(
         (x: { functionID: string }) => x.functionID == 'ODT201'
       );
       if(approvel[0]) approvel[0].disabled = true;
     }
 
-    if (this.view.formModel.funcID == 'ODT41') {
+    //Hủy yêu cầu duyệt
+    if (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212'
+        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
       );
-      if(approvel[0]) approvel[0].disabled = true;
+      for(var i = 0 ; i< approvel.length ; i++)
+      {
+        approvel[i].disabled = true;
+      }
     }
 
     if (
-      this.view.formModel.funcID == 'ODT41' &&
-       data?.approveStatus == '3' &&
+    (this.view.formModel.funcID == 'ODT41' || this.view.formModel.funcID == 'ODT51') &&
+      data?.approveStatus == '3' &&
       data?.createdBy == this.userID
     ) {
       var approvel = e.filter(
-        (x: { functionID: string }) => x.functionID == 'ODT212'
+        (x: { functionID: string }) => x.functionID == 'ODT212' || x.functionID == "ODT3012"
       );
-      if(approvel[0]) approvel[0].disabled = false;
+      for(var i = 0 ; i< approvel.length ; i++)
+      {
+        approvel[i].disabled = false;
+      }
     }
-     //Từ chối , Bị đóng 
-     if(data?.status == "9" || data?.approveStatus == "4")
-     {
-       var approvel = e.filter(
-         (x: { functionID: string }) => x.functionID == 'ODT112' || x.functionID == 'ODT211'
-       );
-       if(approvel[0]) approvel[0].disabled = true;
-     }
+    //Từ chối , Bị đóng 
+    if(data?.status == "9" || data?.approveStatus == "4")
+    {
+      var approvel = e.filter(
+        (x: { functionID: string }) => 
+          x.functionID == 'ODT112' || 
+          x.functionID == 'ODT211' || 
+          x.functionID == 'ODT103' || 
+          x.functionID == 'ODT202' ||
+          x.functionID == 'SYS03'  ||
+          x.functionID == 'ODT103' ||
+          x.functionID == 'ODT202'
+      );
+      if(approvel && approvel.length > 0)
+        for (var i = 0; i < approvel.length; i++) {
+          approvel[i].disabled = true;
+        }
+    }
     //Hoàn tất
     if (data?.status == '7') {
       var completed = e.filter(

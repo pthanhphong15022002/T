@@ -9,7 +9,7 @@ import {
   Observable,
   of,
 } from 'rxjs';
-import { BP_Processes, tmpInforSentEMail } from './models/BP_Processes.model';
+import { BP_Processes, tmpInforSentEMail, BP_ProcessPermissions } from './models/BP_Processes.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,7 +18,10 @@ export class CodxBpService {
   viewProcesses = new BehaviorSubject<any>(null);
   constructor(private api: ApiHttpService) {}
   public bpProcesses = new BehaviorSubject<BP_Processes>(null);
-  isFileEditing = this.bpProcesses.asObservable();
+  isProcess = this.bpProcesses.asObservable();
+  getFlowChartNew = new BehaviorSubject<any>(null);
+  crrFlowChart = this.getFlowChartNew.asObservable();
+
   getListFunctionMenuCreatedStepAsync(funcID) {
     return this.api.exec<any>(
       'BP',
@@ -148,6 +151,33 @@ export class CodxBpService {
     );
   }
 
+  loadProcess(id: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'GetAsync',
+      id
+    );
+  }
+
+  setApproveStatus(recID: string, permission: BP_ProcessPermissions, funcID: string, entity: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'SetAprroveStatusPermissionsAsync',
+      [recID, permission, funcID, entity]
+    );
+  }
+
+  updateHistoryViewProcessesAsync(id: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateHistoryViewAsync',
+      id
+    );
+  }
+
   public listTags = new BehaviorSubject<any>(null);
   isListTags = this.listTags.asObservable();
 
@@ -167,8 +197,39 @@ export class CodxBpService {
     return this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName,fucntionIdMain]);
   }
+
+  updateReleaseProcess(data){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateReleaseProcess',
+      data
+    );
+  }
   checkAdminOfBP(userId ): Observable<any> {
     return this.api
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
+  }
+
+  isCheckExitName(nameProcess: String, id: String):  Observable<any>{
+    return this.api
+    .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'isExitNameProcessAsync', [nameProcess,id]);
+  }
+
+  deleteBin(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'DeleteProcessesBinAsync',
+      data
+    );
+  }
+  restoreBinById(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'UpdateDeletedProcessesAsync',
+      data
+    );
   }
 }
