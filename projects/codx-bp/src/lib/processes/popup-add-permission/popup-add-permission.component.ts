@@ -81,7 +81,7 @@ export class PopupAddPermissionComponent implements OnInit {
   onShare() {
     this.per.recIDProcess = this.id;
     if (this.toPermission == null) {
-      this.notificationsService.notifyCode('SYS009');
+      this.notificationsService.notifyCode('Không được phép bỏ trống');
       return;
     }
     this.per.toPermission = this.toPermission;
