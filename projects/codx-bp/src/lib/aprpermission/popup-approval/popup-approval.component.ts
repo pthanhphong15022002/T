@@ -51,6 +51,7 @@ export class PopupApprovalComponent implements OnInit {
     this.process.recID = this.recIDProcess;
     this.permission.approvedBy = this.user.userID;
     this.permission.approveStatus = this.statusDefault;
+
     // this.process.permissions.push(this.permission);
     this.bpSv.setApproveStatus(this.recIDProcess, this.permission, this.funcID, this.entity).subscribe(res =>{
       if(res){

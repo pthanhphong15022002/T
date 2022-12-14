@@ -76,18 +76,6 @@ export class OrgorganizationComponent extends UIComponent {
         }
       }
     });
-    // if (!this.setupEmp) {
-    //   this.cache
-    //     .gridViewSetup(
-    //       this.formModelEmployee.formName,
-    //       this.formModelEmployee.gridViewName
-    //     )
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         this.setupEmp = res;
-    //       }
-    //     });
-    // }
   }
 
   ngAfterViewInit(): void {

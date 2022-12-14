@@ -66,6 +66,7 @@ export class ProcessStepsComponent
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('cardKanban') cardKanban!: TemplateRef<any>;
+  @ViewChild('templateView') templateView!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
 
@@ -75,6 +76,7 @@ export class ProcessStepsComponent
   @Input() childFunc = [];
   @Input() formModel: FormModel;
   @Input() isEdit :boolean = false;
+  @Output() getObjectFile = new EventEmitter();
 
   showButtonAdd = true;
   dataObj?: any;
@@ -109,7 +111,6 @@ export class ProcessStepsComponent
   lockParent = false;
   lockChild = false;
   hideMoreFC = false;
-  // childFunc = [];
   formModelMenu: FormModel;
   vllInterval = 'VL004';
   dataFile: any;
@@ -125,13 +126,14 @@ export class ProcessStepsComponent
   parentID = '';
   linkFile: any;
   crrPopper: any;
-  idCrrView = "9"
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message
   listCountPhases: any;
   actived = false;
   isBlock: any = true;
+  idView ='' ;
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -177,7 +179,6 @@ export class ProcessStepsComponent
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
     this.listCountPhases = this.process.phases;
-
     var items = [];
     if (this.childFunc && this.childFunc.length > 0) {
       items = this.childFunc.map((obj) => {
@@ -242,8 +243,10 @@ export class ProcessStepsComponent
 
   //Thay doi viewModel
   chgViewModel(type) {
+   // this.idView = type ;
     let view = this.views.find((x) => x.id == type);
     if (view) this.view.viewChange(view);
+    this.changeDetectorRef.detectChanges();
   }
 
   //#region CRUD bước công việc
@@ -839,7 +842,7 @@ export class ProcessStepsComponent
 
   viewChanged(e) {
     // test
-    if (e?.view.type == 16) {
+    if (e?.view.id == 16) {
       this.isKanban = false;
       this.dataTreeProcessStep = this.view.dataService.data;
       this.listPhaseName = [];
@@ -848,7 +851,7 @@ export class ProcessStepsComponent
       });
       this.changeDetectorRef.detectChanges();
     }
-    if (e?.view.type == 6) {
+    if (e?.view.id == 6) {
       this.isKanban = true;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
@@ -1140,7 +1143,8 @@ export class ProcessStepsComponent
 
   fileSave(e) {
     if (e && typeof e === 'object') {
-      this.dataFile = e;
+      this.dataFile = e;   
+      this.getObjectFile.emit(e);
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -1242,6 +1246,7 @@ export class ProcessStepsComponent
   }
 
   openMF(data, p) {
+  
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
@@ -1251,10 +1256,15 @@ export class ProcessStepsComponent
       // }
       this.dataHover = data;
       p.open();
+     // this.hideMoreFC = true;
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+  moveOut(){
+    // if(this.hideMoreFC)
+    // this.hideMoreFC = false
   }
   showAllparent(text) {
     return (
@@ -1263,6 +1273,6 @@ export class ProcessStepsComponent
   }
   setWidth(data){
     let width = document.getElementsByTagName("body")[0].offsetWidth;    
-    return width < data.length*11 ? true :  false;
+    return width < data.length*12 ? true :  false;
   }
 }

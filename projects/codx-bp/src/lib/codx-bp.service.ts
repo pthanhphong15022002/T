@@ -19,6 +19,9 @@ export class CodxBpService {
   constructor(private api: ApiHttpService) {}
   public bpProcesses = new BehaviorSubject<BP_Processes>(null);
   isProcess = this.bpProcesses.asObservable();
+  getFlowChartNew = new BehaviorSubject<any>(null);
+  crrFlowChart = this.getFlowChartNew.asObservable();
+
   getListFunctionMenuCreatedStepAsync(funcID) {
     return this.api.exec<any>(
       'BP',
@@ -208,9 +211,9 @@ export class CodxBpService {
       .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
   }
 
-  isCheckExitName(nameProcess):  Observable<any>{
+  isCheckExitName(nameProcess: String, id: String):  Observable<any>{
     return this.api
-    .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'isExitNameProcessAsync', [nameProcess]);
+    .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'isExitNameProcessAsync', [nameProcess,id]);
   }
 
   deleteBin(data) {
@@ -226,14 +229,6 @@ export class CodxBpService {
       'BP',
       'ProcessesBusiness',
       'UpdateDeletedProcessesAsync',
-      data
-    );
-  }
-  CheckExitStepName(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'CheckExitStepNameAsync',
       data
     );
   }

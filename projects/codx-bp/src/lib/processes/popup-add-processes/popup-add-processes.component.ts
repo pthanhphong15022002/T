@@ -120,8 +120,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.acceptEdit();
     this.isDisable = true;
     if (this.action === 'edit') {
-    //  this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
-      this.showLabelAttachment = true;
+    this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
   }
 
@@ -180,32 +179,54 @@ export class PopupAddProcessesComponent implements OnInit {
       });
   }
   async onSave() {
-
+    if (
+      this.process.processName == null ||
+      this.process.processName.trim() == ''
+    ) {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['ProcessName']?.headerText + '"'
+      );
+      return;
+    }
+    if (this.process.owner == null || this.process.owner.trim() == '') {
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + this.gridViewSetup['Owner']?.headerText + '"'
+      );
+      return;
+    }
     if (this.process?.activedOn && this.process?.expiredOn) {
       if (this.process?.activedOn >= this.process?.expiredOn) {
         this.notiService.notifyCode('BP003');
         return;
       }
     }
-    if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase()) {
+    if(this.process?.processName.trim() === this.nameOld?.trim() && this.action =='edit') {
+      this.actionSave();
+    }
+    else if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase() ) {
       this.CheckExistNameProccess();
     }
     else {
-      this.CheckAllExistNameProccess();
+        this.CheckAllExistNameProccess(this.process.recID);
     }
+
   }
   async actionSave() {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          var countAttack = 1;
-          if (this.action !== 'edit') {
-            this.process.attachments = countAttack;
-          }
-        }
+        // if (res) {
+          // var countAttack = 1;
+          // if (this.action !== 'edit') {
+          //   this.process.attachments = countAttack;
+          // }
+       //}
         this.actionSaveBeforeSaveAttachment();
       });
-    } else this.actionSaveBeforeSaveAttachment();
+    } else  {this.actionSaveBeforeSaveAttachment();}
   }
 
   async actionSaveBeforeSaveAttachment() {
@@ -221,7 +242,6 @@ export class PopupAddProcessesComponent implements OnInit {
           }
         }
       });
-    //dang sai
     switch (this.action) {
       case 'copy': {
         this.isUpdateCreateProcess();
@@ -245,9 +265,9 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
 
-  CheckAllExistNameProccess() {
+  CheckAllExistNameProccess(id:string) {
     this.bpService
-        .isCheckExitName(this.process.processName)
+        .isCheckExitName(this.process.processName,id)
         .subscribe((res) => {
           if (res) {
             this.CheckExistNameProccess();
@@ -260,7 +280,7 @@ export class PopupAddProcessesComponent implements OnInit {
   CheckExistNameProccess(){
     this.notiService
     .alertCode(
-      'Tên quy trình đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?'
+      'BP008'
     )
     .subscribe((x) => {
       if (x.event?.status == 'N') {
