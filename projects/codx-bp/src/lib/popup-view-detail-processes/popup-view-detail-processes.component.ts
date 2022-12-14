@@ -59,7 +59,8 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   childFunc = [];
   mfAdd: any;
   isShowButton = true;
-  isEdit = false;
+  isEdit = true;
+  avata = "";
 
   constructor(
     private api: ApiHttpService,
@@ -108,6 +109,10 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     //   );
     // }
     //this.changeDetectorRef.detectChanges();
+    this.avata = this.process.permissions.map(value => {return value.objectID}).join(";");
+    console.log(this.avata);
+    
+
   }
 
   clickMenu(item) {

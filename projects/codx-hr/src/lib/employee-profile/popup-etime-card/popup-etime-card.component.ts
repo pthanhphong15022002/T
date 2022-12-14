@@ -48,6 +48,12 @@ export class PopupETimeCardComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
-
+    this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
+      if(p === "True"){
+        this.notify.notifyCode('SYS007')
+        this.dialog.close()
+      }
+      else this.notify.notifyCode('DM034')
+    })
   }
 }
