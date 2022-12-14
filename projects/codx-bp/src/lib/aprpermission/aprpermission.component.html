@@ -8,7 +8,7 @@
     <td class="rowphoto">
       <div class="padding">
         <div class="d-flex flex-column w-100">
-          <div class="fw-bold lh-base mb-2">{{ data.processName }}</div>
+          <div class="fw-bold lh-base mb-2 line-clamp">{{ data.processName }}</div>
           <div class="d-flex flex-wrap justify-content-between">
             <div class="d-flex align-items-center">
               <div class="d-flex me-3">
@@ -63,7 +63,13 @@
     </td>
     <td class="rowphoto">
       <div class="padding">
-        <div [innerHTML]="data.memo"></div>
+        <div *ngIf="data.memo" class="" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetailMemo" #p="ngbPopover"
+        [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+        placement="bottom right top" autoClose="outside">
+        <div class="line-clamp" [innerHTML]="data.memo" #memo>
+
+        </div>
+      </div>
       </div>
     </td>
     <td class="rowphoto">
@@ -93,6 +99,18 @@
   <div class="text-dark fw-bolder line-clamp line-clamp-1 me-2">
     {{ data.objectName }}
   </div>
+</ng-template>
+
+<ng-template #popDetailMemo>
+  <div>
+    <ng-container>
+      <div class="d-flex flex-column w-100">
+        <div class="text-gray-800 " [innerHTML]="popoverDetail?.memo">
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
 </ng-template>
 
 <ng-template #popDetail>

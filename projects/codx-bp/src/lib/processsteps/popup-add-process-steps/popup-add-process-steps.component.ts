@@ -207,33 +207,12 @@ export class PopupAddProcessStepsComponent
     return headerText;
   }
 
-  async afterSave(){
+  async saveData() {
     let headerText = await this.checkValidate();
     if (headerText.length > 0) {
       this.notiService.notifyCode('SYS009',0,'"' + headerText.join(', ') + '"');
       return;
     }
-    if(this.stepNameOld === this.processSteps['stepName'] && this.action ==="edit"){
-      this.saveData();
-    }else{
-      let value = [this.processSteps['processID'],this.processSteps['parentID'],this.processSteps['stepType'],this.processSteps['stepName'],]
-    this.bpService.CheckExitStepName(value).subscribe((res) => {
-      if(res){
-        this.notificationsService.alertCode('Tên này đã tồn tại, bạn có muốn tiếp tục lưu trùng tên không?').subscribe((x) => {
-          if (x.event?.status == 'N') {
-            return;
-          } else if (x.event?.status == 'Y') {
-            this.saveData();
-          }
-        });
-      }else{
-        this.saveData();
-      }
-    });
-    }    
-  }
-
-  async saveData() {
     this.processSteps.owners = this.owners;
     this.convertReference();
     if (this.attachment && this.attachment.fileUploadList.length)

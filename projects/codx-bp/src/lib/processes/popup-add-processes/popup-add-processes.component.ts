@@ -120,8 +120,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.acceptEdit();
     this.isDisable = true;
     if (this.action === 'edit') {
-    //  this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
-      this.showLabelAttachment = true;
+    this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
   }
 
@@ -219,15 +218,15 @@ export class PopupAddProcessesComponent implements OnInit {
   async actionSave() {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        if (res) {
-          var countAttack = 1;
-          if (this.action !== 'edit') {
-            this.process.attachments = countAttack;
-          }
-        }
+        // if (res) {
+          // var countAttack = 1;
+          // if (this.action !== 'edit') {
+          //   this.process.attachments = countAttack;
+          // }
+       //}
         this.actionSaveBeforeSaveAttachment();
       });
-    } else this.actionSaveBeforeSaveAttachment();
+    } else  {this.actionSaveBeforeSaveAttachment();}
   }
 
   async actionSaveBeforeSaveAttachment() {
@@ -243,7 +242,6 @@ export class PopupAddProcessesComponent implements OnInit {
           }
         }
       });
-    //dang sai
     switch (this.action) {
       case 'copy': {
         this.isUpdateCreateProcess();
