@@ -58,35 +58,13 @@ export class AddEditComponent implements OnInit {
   };
   selectedItem: any;
   selectedIndex: number = 0;
-  data = [
-    //   {
-    //     itemDesc: 'Sản phẩm A',
-    //     umid: 'CAI',
-    //     quantity: 2,
-    //     salesPrice: 40000,
-    //     salesAmt: 80000,
-    //     vatid: 2,
-    //     vatAmt: 1600,
-    //     totalAmt: 78400,
-    //     lineType: 'Gia dụng',
-    //   },
-    //   {
-    //     itemDesc: 'Sản phẩm A',
-    //     umid: 'CAI',
-    //     quantity: 2,
-    //     salesPrice: 40000,
-    //     salesAmt: 80000,
-    //     vatid: 2,
-    //     vatAmt: 1600,
-    //     totalAmt: 78400,
-    //     lineType: 'Gia dụng',
-    //   },
-  ];
+  data: Array<any> = [];
   tabs: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
   ];
   dicMST: Map<string, any> = new Map<string, any>();
+  dicCbx: Map<string, any> = new Map<string, any>();
 
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
@@ -183,9 +161,30 @@ export class AddEditComponent implements OnInit {
   }
 
   cellChanged(e) {
-    if (e.field === 'itemDesc') {
-      //this.api.exec<any>('EI','GoodsBusiness',);
+    if (e.input.field === 'itemDesc') {
+      if (this.dicCbx.has(e.input.data)) {
+        let good = this.dicCbx.get(e.input.data);
+        this.updateLine(good, e.fg, e.idx);
+      } else {
+        this.api
+          .exec<any>('EI', 'GoodsBusiness', 'GetAsync', e.input.data)
+          .subscribe((res) => {
+            if (res) {
+              this.dicCbx.set(e.input.data, res);
+              this.updateLine(res, e.fg, e.idx);
+            }
+          });
+      }
     }
+  }
+
+  updateLine(data, fData, idx: number) {
+    console.log('data: ', data);
+    fData.umid = data.umid;
+    fData.quantity = 1;
+    fData.salesPrice = data.salesPrice;
+    fData.vatid = data.vatPct;
+    this.grid.updateRow(idx, fData);
   }
 
   clickMF(e) {}

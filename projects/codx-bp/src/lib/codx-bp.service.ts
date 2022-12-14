@@ -232,12 +232,4 @@ export class CodxBpService {
       data
     );
   }
-  CheckExitStepName(data) {
-    return this.api.exec<any>(
-      'BP',
-      'ProcessStepsBusiness',
-      'CheckExitStepNameAsync',
-      data
-    );
-  }
 }
