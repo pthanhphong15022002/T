@@ -385,12 +385,12 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (re % 2 != 0) {
-      this.notiService.notify(
-        'Vui lòng không nhập số lẻ'
-      );
-      return;
-    }
+    // if (re % 2 != 0) {
+    //   this.notiService.notify(
+    //     'Vui lòng không nhập số lẻ'
+    //   );
+    //   return;
+    // }
 
     if (this.meeting.fromDate >= this.meeting.toDate) {
       this.notiService.notifyCode('TM034');
