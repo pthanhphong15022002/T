@@ -36,7 +36,7 @@ export class CodxShareService {
     afterSave?: Function,
     formModel?: any,
     dataService?: any,
-    that:any = null
+    that: any = null
   ) {
     var funcID = val?.functionID;
     switch (funcID) {
@@ -64,7 +64,7 @@ export class CodxShareService {
               result: e?.event,
               data: data,
             };
-            afterSave(result , that);
+            afterSave(result, that);
           }
         });
         break;
@@ -402,7 +402,7 @@ export class CodxShareService {
     funcControl: string,
     funcID: string,
     title: string,
-    formModel: FormModel,
+    formModel: FormModel
   ) {
     let dialogComment = this.callfunc.openForm(
       PopupCommentComponent,
@@ -418,6 +418,19 @@ export class CodxShareService {
       }
     );
     return dialogComment;
+  }
+
+  getDataTM_Tasks(requestData) {
+    return this.api.execSv('TM', 'TM', 'TaskBusiness', 'GetTasksWithScheduleAsync', [requestData, true]);
+  }
+  getDataWP_Notes(requestData) {
+    return this.api.execSv('WP', 'WP', '', '', requestData);
+  }
+  getDataCO_Meetings(requestData) {
+    return this.api.execSv('CO', 'CO', '', '', requestData);
+  }
+  getDataEP_Bookings(requestData) {
+    return this.api.execSv('EP', 'EP', '', '', requestData);
   }
 }
 

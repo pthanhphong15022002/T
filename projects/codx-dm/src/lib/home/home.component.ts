@@ -1250,7 +1250,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   getPUser(data)
   {
     var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
-    if(item) return item?.createdBy;
+    if(item) return item?.objectID;
     return ""
   }
   getDUser(data)

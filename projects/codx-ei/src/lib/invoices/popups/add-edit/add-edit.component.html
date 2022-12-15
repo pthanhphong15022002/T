@@ -252,12 +252,12 @@
               default="Email"
             >
             </codx-label>
-            <!-- <codx-input
+            <codx-input
               field="email"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input> -->
+            </codx-input>
           </div>
         </div>
       </div>
@@ -313,12 +313,12 @@
               default="Hình thức thanh toán"
             >
             </codx-label>
-            <!-- <codx-input
+            <codx-input
               field="pmtMethodID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input> -->
+            </codx-input>
           </div>
         </div>
         <!-- Số tài khoản -->
@@ -541,10 +541,10 @@
 </ng-template>
 
 <!-- Add Line template -->
-<ng-template #addLine>
+<ng-template #addLine let-data>
   <table class="e-table e-inline-edit boder-0">
     <colgroup>
-      <col style="width: 200px" />
+      <col style="width: 100px" />
       <col style="width: 100px" />
       <col style="width: 100px" />
       <col style="width: 100px" />
@@ -570,13 +570,13 @@
           ></codx-label>
         </td>
         <td class="e-rowcell text-end">
-          <span>30</span>
+          <span>{{ invoices?.quantity }}</span>
         </td>
         <td class="e-rowcell">
-          <span>30</span>
+          <span>{{ invoices?.salesAmt }}</span>
         </td>
         <td class="e-rowcell">
-          <span>230.000.000</span>
+          <span>{{ invoices?.totalAmt }}</span>
         </td>
       </tr>
     </tbody>

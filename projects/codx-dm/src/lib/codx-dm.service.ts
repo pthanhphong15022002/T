@@ -1155,13 +1155,14 @@ export class CodxDMService {
   clickMF($event, data: any, view: any = null) {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
+    debugger;
     switch ($event.functionID) {
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
         this.setRequest(
           type,
           data.recID,
-          data.perm[0].id,
+          data.permissions[0].id,
           this.idMenuActive == 'DMT06' ? '5' : '6',
           true
         );
@@ -1171,7 +1172,7 @@ export class CodxDMService {
         this.setRequest(
           type,
           data.recID,
-          data.perm[0].id,
+          data.permissions[0].id,
           this.idMenuActive == 'DMT06' ? '4' : '8',
           false
         );
