@@ -17,6 +17,7 @@ import {
   CallFuncService,
   NotificationsService,
   UIComponent,
+  Util,
 } from 'codx-core';
 import { FormControlName } from '@angular/forms';
 import { CodxBpService } from '../../codx-bp.service';
@@ -27,6 +28,8 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 //import { PopupAddEmailTemplateComponent } from 'projects/codx-es/src/lib/setting/approval-step/popup-add-email-template/popup-add-email-template.component';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
+import { ActivatedRoute } from '@angular/router';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-popup-add-process-steps',
@@ -70,8 +73,9 @@ export class PopupAddProcessStepsComponent
   recIDCopied: any;
   lockParentId = false;
   editTodo = -1;
-  stepNameOld = ''
-
+  stepNameOld = '';
+  linkQuesiton = '';
+  hideExtend = false;
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
@@ -80,6 +84,7 @@ export class PopupAddProcessStepsComponent
     private changeDef: ChangeDetectorRef,
     private callfunc: CallFuncService,
     private notificationsService: NotificationsService,
+    private activedRouter: ActivatedRoute,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -92,8 +97,8 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-    this.recIDCopied = dt?.data[4]
-    if(this.processSteps.parentID && this.action=='add'){
+    this.recIDCopied = dt?.data[4];
+    if (this.processSteps.parentID && this.action == 'add') {
       this.lockParentId = true;
     }
     if (this.stepType) this.processSteps.stepType = this.stepType;
@@ -118,7 +123,10 @@ export class PopupAddProcessStepsComponent
       if (this.stepType === 'A') {
         this.getOwnerByParentID(this.processSteps['recID']);
       }
-      if ((this.stepType === 'E' || this.stepType === 'M') && this.processSteps.reference) {
+      if (
+        (this.stepType === 'E' || this.stepType === 'M') &&
+        this.processSteps.reference
+      ) {
         this.isNewEmails = false;
         this.recIdEmail = this.processSteps.reference;
       }
@@ -130,14 +138,14 @@ export class PopupAddProcessStepsComponent
       )
       .subscribe((res) => {
         if (res) {
-          this.gridViewSetup = res;          
+          this.gridViewSetup = res;
         }
       });
   }
 
   onInit(): void {
     console.log(this.processSteps);
-    
+
     this.loadData();
     this.getListUser();
 
@@ -182,11 +190,6 @@ export class PopupAddProcessStepsComponent
     });
   }
 
-  viewDetailSurveys(e) {
-    let url = 'sv/surveys/SVT01';
-    this.codxService.navigate('', url);
-  }
-
   async checkValidate() {
     let headerText = [];
     if (
@@ -210,7 +213,11 @@ export class PopupAddProcessStepsComponent
   async saveData() {
     let headerText = await this.checkValidate();
     if (headerText.length > 0) {
-      this.notiService.notifyCode('SYS009',0,'"' + headerText.join(', ') + '"');
+      this.notiService.notifyCode(
+        'SYS009',
+        0,
+        '"' + headerText.join(', ') + '"'
+      );
       return;
     }
     this.processSteps.owners = this.owners;
@@ -312,10 +319,10 @@ export class PopupAddProcessStepsComponent
     }
   }
 
-  valueChangeRefrenceItem(e,i){
+  valueChangeRefrenceItem(e, i) {
     let value = e.target.value;
     if (value && value.trim() != '') {
-      this.referenceText.splice(i,1,value);
+      this.referenceText.splice(i, 1, value);
     }
     this.editTodo = -1;
   }
@@ -340,7 +347,7 @@ export class PopupAddProcessStepsComponent
     if (i == null) return;
     if (this.popover) this.popover.close();
     this.crrIndex = i;
-    p.open();    
+    p.open();
     this.popover = p;
   }
 
@@ -387,17 +394,17 @@ export class PopupAddProcessStepsComponent
         index = this.owners.findIndex(
           (obj) => obj.objectID == dt.id && obj.objectType == dt.objectType
         );
-      if (index == -1 && dt?.id && dt?.objectName) {      
-          var owner = new BP_ProcessOwners();
-          owner.objectType = dt.objectType;
-          owner.objectID = dt.id;
-          owner.objectName = dt.text;
-          owner.rAIC = 'R';
-          this.owners.push(owner);
-          this.listOwnerDetails.push({
-            id: dt.id,
-            name: dt.text,
-          });  
+      if (index == -1 && dt?.id && dt?.objectName) {
+        var owner = new BP_ProcessOwners();
+        owner.objectType = dt.objectType;
+        owner.objectID = dt.id;
+        owner.objectName = dt.text;
+        owner.rAIC = 'R';
+        this.owners.push(owner);
+        this.listOwnerDetails.push({
+          id: dt.id,
+          name: dt.text,
+        });
       }
     });
   }
@@ -444,11 +451,56 @@ export class PopupAddProcessStepsComponent
     });
   }
 
-  editTodoIndex(i){
+  editTodoIndex(i) {
     this.editTodo = i;
   }
-  buttonClick(e){
+  buttonClick(e) {
     console.log(e);
-    
+  }
+
+  changeQuestion(e) {
+    this.processSteps['reference'] = e?.data;
+    console.log(window.location.href);
+    let url = window.location.href;
+    let index = url.indexOf('/bp/');
+    if (index != -1)
+      this.linkQuesiton =
+        url.substring(0, index) +
+        Util.stringFormat(
+          '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+          'SVT01',
+          '',
+          e?.data
+        );
+    this.changeDef.detectChanges();
+  }
+  viewDetailSurveys() {
+    // let url = 'sv/surveys/SVT01';
+    // this.codxService.navigate('', url);
+    // this.codxService.navigate('', 'sv/add-survey', {
+    //   funcID: 'SVT01',
+    //   title: '',
+    //   recID: e,
+    // });
+    if (this.linkQuesiton) window.open(this.linkQuesiton);
+  }
+  extendShow(): void {
+    this.hideExtend = !this.hideExtend;
+    var doc = document.getElementsByClassName('extend-more')[0];
+    var ext = document.getElementsByClassName('ext_button')[0];
+
+    if (!this.hideExtend) {
+      document
+        .getElementsByClassName('codx-dialog-container')[0]
+        .setAttribute('style', 'width: 550px; z-index: 1000;');
+      doc.setAttribute('style', 'display: none');
+      ext.classList.remove('rotate-back');
+    } else {
+      document
+        .getElementsByClassName('codx-dialog-container')[0]
+        .setAttribute('style', 'width: 900px; z-index: 1000;');
+      ext.classList.add('rotate-back');
+    }
+
   }
 }
