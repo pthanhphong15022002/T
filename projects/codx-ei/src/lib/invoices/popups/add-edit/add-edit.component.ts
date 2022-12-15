@@ -130,7 +130,6 @@ export class AddEditComponent implements OnInit {
     if (this.noteRef) hNote = this.noteRef.nativeElement.clientHeight;
 
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
-    this.grid.editSettings!.mode = 'Normal';
   }
 
   valueChanged(e) {
