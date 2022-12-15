@@ -25,7 +25,6 @@ import {
   styleUrls: ['./popup-epassports.component.css']
 })
 export class PopupEPassportsComponent extends UIComponent implements OnInit {
-
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
@@ -43,7 +42,6 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
   onInit(): void {
     this.initForm();
   }
-
   constructor(
     private injector: Injector,
     private notify: NotificationsService,

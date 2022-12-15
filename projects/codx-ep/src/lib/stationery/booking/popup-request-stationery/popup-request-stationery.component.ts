@@ -118,7 +118,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     });
 
     this.epService
-      .getParams('EPParameters', 'NagetivePhysical')
+      .getParams('EPStationeryParameters', 'NagetivePhysical')
       .subscribe((res: any) => {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
@@ -423,7 +423,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     let isPresent = this.cart.find((item) => item.recID == tmpResource.recID);
 
     //NagetivePhysical = 0: khong am kho
-    if (tmpResource.availableQty == 0) {
+    if (tmpResource.currentQty <= 0) {
       if (this.nagetivePhysical == '0') {
         //không add
         this.notificationsService.notifyCode('EP013');

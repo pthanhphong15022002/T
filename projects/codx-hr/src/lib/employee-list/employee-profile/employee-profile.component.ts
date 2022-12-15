@@ -49,6 +49,8 @@ import { ActivatedRoute } from '@angular/router';
 import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
 import { NoopAnimationPlayer } from '@angular/animations';
+import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
+import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -70,6 +72,7 @@ export class EmployeeProfileComponent extends UIComponent {
     private codxMwpService: CodxMwpService,
     private notify: NotificationsService,
     private cacheSv: CacheService,
+    private notifySvr: NotificationsService,
 
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -86,7 +89,7 @@ export class EmployeeProfileComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
 
   infoPersonal: any = {};
-
+  
   formModelVisa: FormModel;
   formModelPassport: FormModel;
   formModelWPermit: FormModel;
@@ -102,26 +105,27 @@ export class EmployeeProfileComponent extends UIComponent {
   //family
   lstFamily: any;
   //passport
-  lstPassport: any;
+  lstPassport: any = [];
   crrPassport: any = {};
   //visa
   lstVisa: any = [];
   crrVisa: any = {};
   //work permit
-  lstWorkPermit: any;
+  lstWorkPermit: any = [];
   //jobInfo
   jobInfo: any;
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
   //EExperience
-  lstExperience;
+  lstExperience: any = [];
+  lstVaccine: any = [];
   formModel;
   itemDetail;
   EExperienceColumnsGrid: any;
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 0;
+  crrTab: number = 6;
 
   crrEBSalary: any;
   listCrrBenefit: any;
@@ -240,12 +244,24 @@ export class EmployeeProfileComponent extends UIComponent {
         });
 
         //Quan he gia dinh
+        // this.hrService
+        //   .getFamilyByEmployeeID(params.employeeID)
+        //   .subscribe((res) => {
+        //     console.log('family', res);
+        //     this.lstFamily = res;
+        //   });
+
+        let opFamily = new DataRequest()
+        opFamily.gridViewName = 'grvEFamilies'
+        opFamily.entityName = 'HR_EFamilies'
+        opFamily.predicate = 'EmployeeID=@0'
+        opFamily.dataValue = params.employeeID
+        opFamily.page = 1
         this.hrService
-          .getFamilyByEmployeeID(params.employeeID)
-          .subscribe((res) => {
-            console.log('family', res);
-            this.lstFamily = res;
-          });
+        .getEFamilyWithDataRequest(opFamily)
+        .subscribe((res) => {
+          if(res) this.lstFamily = res[0];
+        })
 
         //Passport
         // this.hrService
@@ -369,6 +385,19 @@ export class EmployeeProfileComponent extends UIComponent {
             this.listCrrBenefit = res;
           }
         });
+
+        //Vaccine
+        let rqVaccine = new DataRequest();
+        rqVaccine.entityName = 'HR_EVaccines';
+        rqVaccine.dataValues = params.employeeID;
+        rqVaccine.predicates = 'EmployeeID=@0';
+        rqVaccine.page = 1;
+        rqVaccine.pageSize = 20;
+        this.hrService.loadDataEVaccine(rqVaccine).subscribe((res) => {
+          console.log('e Vaccine', res);
+          this.lstVaccine = res;
+          //this.lstExperience = res;
+        });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -410,82 +439,86 @@ export class EmployeeProfileComponent extends UIComponent {
         break;
 
       case 'SYS02': //delete
-        if (funcID == 'passport') {
-          this.hrService
-            .DeleteEmployeePassportInfo(data.recID)
-            .subscribe((p) => {
-              if (p == true) {
-                this.notify.notifyCode('SYS008');
-                let i = this.lstPassport.indexOf(data);
-                if (i != -1) {
-                  this.lstPassport.splice(i, 1);
+      this.notifySvr.alertCode('SYS030').subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            if (funcID == 'passport') {
+              this.hrService
+                .DeleteEmployeePassportInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstPassport.indexOf(data);
+                    if (i != -1) {
+                      this.lstPassport.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == 'workpermit') {
+              this.hrService
+                .DeleteEmployeeWorkPermitInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstWorkPermit.indexOf(data);
+                    if (i != -1) {
+                      this.lstWorkPermit.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == 'visa') {
+              this.hrService.DeleteEmployeeVisaInfo(data.recID).subscribe((p) => {
+                if (p == true) {
+                  this.notify.notifyCode('SYS008');
+                  let i = this.lstVisa.indexOf(data);
+                  if (i != -1) {
+                    this.lstVisa.splice(i, 1);
+                    console.log('delete visa', this.lstVisa);
+                  }
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
                 }
-                this.df.detectChanges();
-              } else {
-                this.notify.notifyCode('SYS022');
-              }
-            });
-        } else if (funcID == 'workpermit') {
-          this.hrService
-            .DeleteEmployeeWorkPermitInfo(data.recID)
-            .subscribe((p) => {
-              if (p == true) {
-                this.notify.notifyCode('SYS008');
-                let i = this.lstWorkPermit.indexOf(data);
-                if (i != -1) {
-                  this.lstWorkPermit.splice(i, 1);
+              });
+            } else if (funcID == 'family') {
+              this.hrService.DeleteEmployeeFamilyInfo(data.recID).subscribe((p) => {
+                if (p == true) {
+                  this.notify.notifyCode('SYS008');
+                  let i = this.lstFamily.indexOf(data);
+                  if (i != -1) {
+                    this.lstFamily.splice(i, 1);
+                  }
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
                 }
-                this.df.detectChanges();
-              } else {
-                this.notify.notifyCode('SYS022');
-              }
-            });
-        } else if (funcID == 'visa') {
-          this.hrService.DeleteEmployeeVisaInfo(data.recID).subscribe((p) => {
-            if (p == true) {
-              this.notify.notifyCode('SYS008');
-              let i = this.lstVisa.indexOf(data);
-              if (i != -1) {
-                this.lstVisa.splice(i, 1);
-                console.log('delete visa', this.lstVisa);
-              }
-              this.df.detectChanges();
-            } else {
-              this.notify.notifyCode('SYS022');
+              });
+            } else if (funcID == 'jobSalary') {
+              this.hrService
+                .DeleteEmployeeJobsalaryInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.hrService
+                      .GetCurrentJobSalaryByEmployeeID(data.employeeID)
+                      .subscribe((p) => {
+                        console.log('current employee EJob', p);
+                        this.crrJobSalaries = p;
+                      });
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             }
-          });
-        } else if (funcID == 'family') {
-          this.hrService.DeleteEmployeeFamilyInfo(data.recID).subscribe((p) => {
-            if (p == true) {
-              this.notify.notifyCode('SYS008');
-              let i = this.lstFamily.indexOf(data);
-              if (i != -1) {
-                this.lstFamily.splice(i, 1);
-              }
-              this.df.detectChanges();
-            } else {
-              this.notify.notifyCode('SYS022');
-            }
-          });
-        } else if (funcID == 'jobSalary') {
-          this.hrService
-            .DeleteEmployeeJobsalaryInfo(data.recID)
-            .subscribe((p) => {
-              if (p == true) {
-                this.notify.notifyCode('SYS008');
-                this.hrService
-                  .GetCurrentJobSalaryByEmployeeID(data.employeeID)
-                  .subscribe((p) => {
-                    console.log('current employee EJob', p);
-                    this.crrJobSalaries = p;
-                  });
-                this.df.detectChanges();
-              } else {
-                this.notify.notifyCode('SYS022');
-              }
-            });
-        }
-        break;
+          }
+      })
+      break;
 
       case 'SYS04': //copy
         if (funcID == 'passport') {
@@ -973,6 +1006,8 @@ export class EmployeeProfileComponent extends UIComponent {
         this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
+
     });
   }
 
@@ -989,18 +1024,21 @@ export class EmployeeProfileComponent extends UIComponent {
         actionType: actionType,
         employeeId: this.data.employeeID,
         headerText: 'Quan hệ gia đình',
-        familyMemberSelected: data,
+        lstFamilyMembers : this.lstFamily,
+        indexSelected : this.lstFamily.indexOf(data)
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (actionType == 'add' || actionType == 'copy') {
-        this.lstFamily.push(res?.event);
-      } else {
-        let index = this.lstFamily.indexOf(data);
-        this.lstFamily[index] = res?.event;
-      }
+      // if (actionType == 'add' || actionType == 'copy') {
+      //   this.lstFamily.push(res?.event);
+      // } else {
+      //   let index = this.lstFamily.indexOf(data);
+      //   this.lstFamily[index] = res?.event;
+      // }
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
+
     });
   }
 
@@ -1036,6 +1074,8 @@ export class EmployeeProfileComponent extends UIComponent {
       // console.log('lst passport', this.lstPassport);
 
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
+
     });
   }
 
@@ -1178,7 +1218,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeAllocatedPropertyInfo() {
+  HandlemployeeAssetInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1301,5 +1341,72 @@ export class EmployeeProfileComponent extends UIComponent {
         console.log(res);
       });
   }
-  //#endregion
+
+  //#endregion HR_EHealths
+  addEHealths(actionType: string, data: any) {
+    // this.hrService.addEHealth(null).subscribe();
+    // return;
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEhealthsComponent,
+      {
+        actionType: actionType,
+        salarySelected: data,
+        headerText: 'Khám sức khỏe',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+  //#region
+
+  //#endregion HR_EVaccines
+  addEVaccines(actionType: string, data: any) {
+    // this.hrService.addEVaccine(null).subscribe();
+    // return;
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEVaccineComponent,
+      {
+        actionType: actionType,
+        salarySelected: data,
+        headerText: 'Tiêm Vaccine',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+  //#region
 }

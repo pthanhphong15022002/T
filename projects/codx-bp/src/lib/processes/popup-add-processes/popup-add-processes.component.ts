@@ -24,6 +24,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
+import { tmpUser } from '../../models/BP_UserPermission.model';
 
 @Component({
   selector: 'lib-popup-add-processes',
@@ -66,6 +67,10 @@ export class PopupAddProcessesComponent implements OnInit {
   nameOld: any;
   avatarProcess: any;
   entity: any;
+  ownerOld: String = '';
+  isTurnPermiss: boolean = false;
+  isExitUserPermiss: boolean = false;
+  tmpPermission = new BP_ProcessPermissions();
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -105,8 +110,8 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    if (this.action === 'add' || this.action === 'copy')
-      this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
+    this.ownerOld= this.process.owner;
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
     this.phasesOld = this.processOldCopy?.phasesOld;
@@ -204,26 +209,19 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if(this.process?.processName.trim() === this.nameOld?.trim() && this.action =='edit') {
-      this.actionSave();
-    }
-    else if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase() ) {
-      this.CheckExistNameProccess();
+    this.isTurnPermiss=true;
+    if(this.ownerOld===this.process?.owner && this.action ==='edit') {
+        this.callActionSave();
     }
     else {
-        this.CheckAllExistNameProccess(this.process.recID);
+      this.isAddPermission(this.process.owner);
     }
+
 
   }
   async actionSave() {
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
-        // if (res) {
-          // var countAttack = 1;
-          // if (this.action !== 'edit') {
-          //   this.process.attachments = countAttack;
-          // }
-       //}
         this.actionSaveBeforeSaveAttachment();
       });
     } else  {this.actionSaveBeforeSaveAttachment();}
@@ -244,18 +242,27 @@ export class PopupAddProcessesComponent implements OnInit {
       });
     switch (this.action) {
       case 'copy': {
-        this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+        this.notiService.alertCode('BP007').subscribe((x) => {
+          if (x.event.status == 'N') {
+            this.isCoppyFile = false;
+            this.isUpdateCreateProcess();
+
+          } else {
+            this.isCoppyFile = true;
+            this.isUpdateCreateProcess();
+
+          }
+        });
         break;
       }
       case 'add': {
         this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+
         break;
       }
       case 'edit': {
         this.isUpdateCreateProcess();
-        this.isAddPermission(this.process.owner);
+
         break;
       }
       default: {
@@ -293,10 +300,8 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion method
   isUpdateCreateProcess() {
     if (this.action === 'add' || this.action === 'copy') {
-      this.isAddPermission(this.process.owner);
       this.onAdd();
     } else {
-      this.isAddPermission(this.process.owner);
       this.onUpdate();
     }
   }
@@ -334,11 +339,6 @@ export class PopupAddProcessesComponent implements OnInit {
   //   }
   // }
 
-  addPermission(id) {
-    if (id != null) {
-      this.isAddPermission(id);
-    }
-  }
 
 
   addFile(e) {
@@ -356,44 +356,101 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
+  //  this.isAddPermission(this.process.owner);
   }
-  isAddPermission(id) {
+ isAddPermission(id) {
     this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
         if (res) {
           this.perms = [];
           let emp = res;
-          var tmpPermission = new BP_ProcessPermissions();
+          // var tmpPermission = new BP_ProcessPermissions();
 
-          tmpPermission.objectID = emp?.userID;
-          tmpPermission.objectName = emp?.userName;
-          tmpPermission.objectType = '1';
-          tmpPermission.memberType = '0';
-          tmpPermission.autoCreate = true;
-          if (emp.administrator) {
-            tmpPermission.objectType = '7';
-          } else if (this.checkAdminOfBP(emp.userID)) {
-            tmpPermission.objectType = '7';
+          // this.tmpPermission.objectID = emp?.userID;
+          // this.tmpPermission.objectName = emp?.userName;
+          // this.tmpPermission.objectType = '1';
+          // this.tmpPermission.memberType = '0';
+          // this.tmpPermission.autoCreate = true;
+          // if (emp.administrator) {
+          //   this.tmpPermission.objectType = '7';
+          // } else if (this.checkAdminOfBP(emp.userID)) {
+          //   this.tmpPermission.objectType = '7';
+          // }
+          // this.tmpPermission.edit = true;
+          // this.tmpPermission.create = true;
+          // this.tmpPermission.publish = true;
+          // this.tmpPermission.read = true;
+          // this.tmpPermission.share = true;
+          // this.tmpPermission.full = true;
+          // this.tmpPermission.delete = true;
+          // this.tmpPermission.update = true;
+          // this.tmpPermission.upload = true;
+          // this.tmpPermission.assign = true;
+          // this.tmpPermission.download = true;
+          // this.tmpPermission.memberType = '0';
+          // this.tmpPermission.autoCreate = true;
+          // var tmpPermission = new BP_ProcessPermissions();
+          this.updatePermission(emp,this.tmpPermission);
+          if(this.isTurnPermiss){
+
+            if( this.process?.permissions !=null && this.process?.permissions.length>0) {
+              this.process.permissions.forEach(element => {
+                if( element.objectID === this.tmpPermission.objectID) {
+                  // element = this.tmpPermission;
+                  this.updatePermission(emp,element);
+                  this.isExitUserPermiss = true;
+                }
+               });
+
+               if(!this.isExitUserPermiss){
+                this.process.permissions.push(this.tmpPermission);
+               }
+            }
+            else {
+                this.perms.push(this.tmpPermission);
+                this.process.permissions = this.perms;
+            }
+            this.callActionSave();
           }
-          tmpPermission.edit = true;
-          tmpPermission.create = true;
-          tmpPermission.publish = true;
-          tmpPermission.read = true;
-          tmpPermission.share = true;
-          tmpPermission.full = true;
-          tmpPermission.delete = true;
-          tmpPermission.update = true;
-          tmpPermission.upload = true;
-          tmpPermission.assign = true;
-          tmpPermission.download = true;
-          tmpPermission.memberType = '0';
-          tmpPermission.autoCreate = true;
-          this.perms.push(tmpPermission);
-
-          this.process.permissions = this.perms;
         }
       });
+  }
+  updatePermission(emp:tmpUser,tmpPermission: BP_ProcessPermissions ){
+    tmpPermission.objectID = emp?.userID;
+    tmpPermission.objectName = emp?.userName;
+    tmpPermission.objectType = '1';
+    tmpPermission.memberType = '0';
+    tmpPermission.autoCreate = true;
+    if (emp.administrator) {
+      tmpPermission.objectType = '7';
+    } else if (this.checkAdminOfBP(emp.userID)) {
+      tmpPermission.objectType = '7';
+    }
+    tmpPermission.edit = true;
+    tmpPermission.create = true;
+    tmpPermission.publish = true;
+    tmpPermission.read = true;
+    tmpPermission.share = true;
+    tmpPermission.full = true;
+    tmpPermission.delete = true;
+    tmpPermission.update = true;
+    tmpPermission.upload = true;
+    tmpPermission.assign = true;
+    tmpPermission.download = true;
+    tmpPermission.memberType = '0';
+    tmpPermission.autoCreate = true;
+  }
+  callActionSave(){
+    if(this.process?.processName.trim() === this.nameOld?.trim() && this.action =='edit') {
+      this.actionSave();
+    }
+    else if(this.process?.processName.trim().toLocaleLowerCase() === this.nameOld?.trim().toLocaleLowerCase() ) {
+      this.CheckExistNameProccess();
+    }
+    else {
+        this.CheckAllExistNameProccess(this.process.recID);
+    }
   }
   checkAdminOfBP(userid: any) {
     let check: boolean;

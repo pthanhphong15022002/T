@@ -190,7 +190,7 @@
             </a> -->
         </div>
         <div class="AttachmentFile-group flex-nowrap">
-          <codx-attachment #attachment [objectType]="formModel?.entityName" hideBtnSave="1" hideFolder="1"
+          <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1" hideFolder="1"
             hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
             [objectId]="data?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
             (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">

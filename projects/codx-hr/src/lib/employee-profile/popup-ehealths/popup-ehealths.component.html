@@ -10,7 +10,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <div class="form-group row">
+    <!-- <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
         <codx-input
@@ -106,7 +106,7 @@
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div>
+    </div> -->
   </ng-template>
 
   <ng-template #footer>
@@ -128,14 +128,14 @@
     #listView
     [type]="'cardView'"
     [service]="'HR'"
-    [assemblyName]="'HR'"
-    [entityName]="'HR_EJobSalaries'"
-    [className]="'EJobSalariesBusiness'"
-    [method]="'GetListAsync'"
+    [assemblyName]="'CM'"
+    [entityName]="'HR_EHealths'"
+    [className]="'DataBusiness'"
+    [method]="'LoadDataAsync'"
     [predicate]="'EmployeeID=@0'"
     [dataValue]="employeeId"
     [itemTemplate]="itemTemplate"
-    (afterRender) = "afterRenderListView($event)"
+    (afterRender)="afterRenderListView($event)"
     [selectFirst]="true"
   >
   </codx-listview>
@@ -145,7 +145,7 @@
   <codx-temp-full
     [formModel]="formModel"
     [typeMF]="'hover'"
-    [title]="data.jSalary"
+    [title]="data.employeeID"
     [icoTitleCss]="'icon-attach_money'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     [subTitleTmp]="tmplateEJobSalaries"
@@ -159,118 +159,13 @@
 
 <ng-template #tmplateEJobSalaries let-data1>
   <div class="d-flex flex-column">
-    <div><i class="icon-edit_fill"></i>{{(data1.effectedDate | fmDT) + ' - ' + (data1.expiredDate | fmDT)}}</div>
-    <div><i class="icon-list_alt"></i>{{(data1.decisionNo)}} <i class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"></i> {{(data1.signedDate | fmDT)}}</div>
+    <div>
+      <i class="icon-edit_fill"></i
+      >{{ (data1.effectedDate | fmDT) + " - " + (data1.expiredDate | fmDT) }}
+    </div>
+    <div>
+      <i class="icon-list_alt"></i
+      >{{ data1.decisionNo + "*" + (data1.signedDate | fmDT) }}
+    </div>
   </div>
 </ng-template>
-
-<!-- <codx-form
-  #form
-  [headerText]="headerText"
-  [body]="body"
-  [formModel]="formModel"
-  [footer]="footer"
-  [dialog]="dialog"
-  [data]="data"
-  *ngIf="isAfterRender"
->
-  <ng-template #body>
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="decisionNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
-        <codx-input
-          disabled="true"
-          field="isCurrent"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-    </div>
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label
-          fiedName="EffectedDate"
-          [formModel]="formModel"
-        ></codx-label>
-        <codx-input
-          field="effectedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="expiredDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-    </div>
-    <div class="form-group row">
-      <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="jSalary"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="signedDate"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="signStatus"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-    </div>
-
-    <div class="form-group row">
-      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="signerID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group row">
-      <codx-label
-        fiedName="SignerPosition"
-        [formModel]="formModel"
-      ></codx-label>
-      <codx-input
-        field="signerPosition"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group rpw">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="note"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-  </ng-template>
-</codx-form> -->

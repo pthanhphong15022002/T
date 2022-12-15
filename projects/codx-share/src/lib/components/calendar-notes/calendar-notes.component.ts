@@ -1,4 +1,4 @@
-import { Output } from '@angular/core';
+import { EventEmitter, Output } from '@angular/core';
 import {
   UIComponent,
   DialogRef,
@@ -84,6 +84,7 @@ export class CalendarNotesComponent
   @Input() typeCalendar = 'week';
   @Input() showList = true;
   @Input() showListParam = false;
+  @Output() dataResourceModel: any;
 
   @ViewChild('listview') lstView: CodxListviewComponent;
   @ViewChild('dataPara') dataPara: TemplateRef<any>;
@@ -114,12 +115,21 @@ export class CalendarNotesComponent
   }
 
   onInit(): void {
-    if (this.typeCalendar == 'month') this.getFirstParam();
+    this.getParamCalendar();
     this.getMaxPinNote();
     this.loadData();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+    if (this.typeCalendar == 'month') var a = this.calendar.element;
+    var htmlE = a as HTMLElement;
+    var date =
+      htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes[0]
+        ?.childNodes[0]?.childNodes[0]?.textContent;
+    var strMonthYear = htmlE.childNodes[0].childNodes[0].textContent;
+    debugger;
+    //this.getFirstParam();
+  }
 
   loadData() {
     this.noteService.data.subscribe((res) => {
@@ -379,7 +389,19 @@ export class CalendarNotesComponent
     }
   }
 
-  countButton = 0;
+  getParamCalendar() {
+    this.api
+      .execSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetParamCalendarAsync',
+        'WPCalendars'
+      )
+      .subscribe((res) => {
+        if (res) debugger;
+      });
+  }
   getParam(fromDate, toDate, updateCheck = true) {
     this.api
       .callSv(
@@ -392,7 +414,6 @@ export class CalendarNotesComponent
       .subscribe((res) => {
         if (res && res?.msgBodyData[0]) {
           var dt = res.msgBodyData[0];
-          this.countButton = JSON.parse(JSON.stringify(dt[6]));
           this.TM_TasksParam = dt[5]?.TM_Tasks
             ? JSON.parse(dt[5]?.TM_Tasks)
             : null;
@@ -408,7 +429,7 @@ export class CalendarNotesComponent
           this.EP_BookingCarsParam = dt[5]?.EP_BookingCars
             ? JSON.parse(dt[5]?.EP_BookingCars)
             : null;
-          this.settingValue = dt[5]
+          this.settingValue = dt[5];
           if (updateCheck == true) {
             this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
             this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
@@ -422,6 +443,13 @@ export class CalendarNotesComponent
           this.CO_Meetings = dt[2];
           this.EP_BookingRooms = dt[3];
           this.EP_BookingCars = dt[4];
+          this.dataResourceModel = [
+            ...this.WP_Notes,
+            ...this.TM_Tasks,
+            ...this.CO_Meetings,
+            ...this.EP_BookingRooms,
+            ...this.EP_BookingCars,
+          ];
           if (this.WP_Notes && this.WP_Notes.length > 0) {
             this.WP_Notes.forEach((res) => {
               if (res.IsPin == true || res.IsPin == '1') {

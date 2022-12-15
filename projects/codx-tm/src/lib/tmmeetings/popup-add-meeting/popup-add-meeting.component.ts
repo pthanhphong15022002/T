@@ -378,19 +378,22 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
     var re = Number(this.meeting.reminder);
 
-    if (re <= 0) {
+    if (re < 0) {
       this.notiService.notify(
         'Vui lòng chỉ được nhập số lớn hơn hoặc bằng 0'
       );
       return;
     }
 
-    if (re % 2 != 0) {
-      this.notiService.notify(
-        'Vui lòng không nhập số lẻ'
-      );
-      return;
+    if(re > 0){
+      if (re % 1 != 0) {
+        this.notiService.notify(
+          'Vui lòng không nhập số lẻ'
+        );
+        return;
+      }
     }
+
 
     if (this.meeting.fromDate >= this.meeting.toDate) {
       this.notiService.notifyCode('TM034');

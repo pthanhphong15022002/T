@@ -96,7 +96,6 @@
 
 .prod-body {
     height: calc(100vh - 200px) !important;
-
     overflow: auto;
     padding-left: 15px !important;
     padding-right: 15px !important;
@@ -104,4 +103,16 @@
     // codx-view-kanban {
     //     border: 1px red solid;
     // }
+}
+.left-button{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+    position: relative;
+    .button-add{
+        width: 112px;
+        position: absolute;
+        top: 85%;
+    }
 }

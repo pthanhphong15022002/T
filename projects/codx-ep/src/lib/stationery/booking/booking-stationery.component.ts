@@ -329,18 +329,29 @@ export class BookingStationeryComponent
   }
 
   allocate(evt: any) {
-    this.api
-      .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [evt.recID])
-      .subscribe((dataItem) => {
-        if (dataItem) {
-          this.view.dataService.update(dataItem).subscribe((res) => {
-            if (res) {
-              this.notificationsService.notify('Cấp phát thành công', '1', 0);
+    let warehouseID: string = evt.warehouseID;
+    this.codxEpService.getWarehousesOwner(warehouseID).subscribe((res) => {
+      if (
+        res[0] == this.authService.userValue.userID &&
+        !this.authService.userValue.administrator
+      ) {
+        this.api
+          .exec('EP', 'ResourceTransBusiness', 'AllocateAsync', [evt.recID])
+          .subscribe((dataItem) => {
+            if (dataItem) {
+              this.view.dataService.update(dataItem).subscribe((res) => {
+                if (res) {
+                  this.notificationsService.notify('Cấp phát thành công', '1', 0);
+                }
+              });
+              this.detectorRef.detectChanges();
             }
           });
-          this.detectorRef.detectChanges();
-        }
-      });
+      } else {
+        this.notificationsService.notifyCode('TM052');
+        return;
+      }
+    });
   }
 
   setPopupTitle(mfunc) {
