@@ -1355,3 +1355,32 @@ codx-vll {
 .tab-content>.active {
   height: 100%;
 }
+
+.label-colon {
+  position: relative;
+  padding-right: 10px;
+  min-height: 18px;
+  display: inherit;
+}
+
+.label-colon::after {
+  content: ":";
+  position: absolute;
+  right: 6px;
+  bottom: 0;
+  height: 18px;
+}
+
+.codx-label.required::after {
+  margin-left: -5px;
+}
+
+codx-processsteps .e-kanban-content {
+  height: calc(100vh - 250px);
+  overflow-y: hidden !important;
+}
+
+codx-processsteps .e-card-wrapper {
+  max-height: calc(100vh - 259px);
+  overflow: auto;
+}

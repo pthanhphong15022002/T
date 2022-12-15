@@ -29,7 +29,6 @@ export class SettingCalendarComponent
 {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
-  @ViewChild('mfButton') mfButton?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   funcID: string;
   calendarID: string;
@@ -46,6 +45,7 @@ export class SettingCalendarComponent
   @Input() request?: ResourceModel;
   @Input() resources!: any;
   @Input() showHeader = true;
+  @Input() resourceModel!: any;
 
   constructor(
     private injector: Injector,
@@ -67,12 +67,11 @@ export class SettingCalendarComponent
         type: ViewType.calendar,
         active: true,
         sameData: false,
-        request: this.request,
         model: {
           eventModel: this.fields,
           template3: this.cellTemplate,
           resources: this.resources,
-          template6: this.mfButton,
+          resourceModel: this.resourceModel,
         },
       },
     ];
@@ -201,4 +200,8 @@ export class SettingCalendarComponent
   onDelete(data) {}
 
   onCopy(data) {}
+
+  onAction(event) {
+    if (event) debugger;
+  }
 }

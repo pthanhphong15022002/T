@@ -145,7 +145,7 @@
   <codx-temp-full
     [formModel]="formModel"
     [typeMF]="'hover'"
-    [title]="data.effectedDate"
+    [title]="data.jSalary"
     [icoTitleCss]="'icon-attach_money'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     [subTitleTmp]="tmplateEJobSalaries"
@@ -160,7 +160,7 @@
 <ng-template #tmplateEJobSalaries let-data1>
   <div class="d-flex flex-column">
     <div><i class="icon-edit_fill"></i>{{(data1.effectedDate | fmDT) + ' - ' + (data1.expiredDate | fmDT)}}</div>
-    <div><i class="icon-list_alt"></i>{{(data1.decisionNo) + '*' + (data1.signedDate | fmDT)}}</div>
+    <div><i class="icon-list_alt"></i>{{(data1.decisionNo)}} <i class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"></i> {{(data1.signedDate | fmDT)}}</div>
   </div>
 </ng-template>
 

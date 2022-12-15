@@ -58,35 +58,13 @@ export class AddEditComponent implements OnInit {
   };
   selectedItem: any;
   selectedIndex: number = 0;
-  data = [
-    //   {
-    //     itemDesc: 'Sản phẩm A',
-    //     umid: 'CAI',
-    //     quantity: 2,
-    //     salesPrice: 40000,
-    //     salesAmt: 80000,
-    //     vatid: 2,
-    //     vatAmt: 1600,
-    //     totalAmt: 78400,
-    //     lineType: 'Gia dụng',
-    //   },
-    //   {
-    //     itemDesc: 'Sản phẩm A',
-    //     umid: 'CAI',
-    //     quantity: 2,
-    //     salesPrice: 40000,
-    //     salesAmt: 80000,
-    //     vatid: 2,
-    //     vatAmt: 1600,
-    //     totalAmt: 78400,
-    //     lineType: 'Gia dụng',
-    //   },
-  ];
+  data: Array<any> = [];
   tabs: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
   ];
   dicMST: Map<string, any> = new Map<string, any>();
+  dicCbx: Map<string, any> = new Map<string, any>();
 
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
@@ -184,8 +162,48 @@ export class AddEditComponent implements OnInit {
 
   cellChanged(e) {
     if (e.field === 'itemDesc') {
-      //this.api.exec<any>('EI','GoodsBusiness',);
+      if (this.dicCbx.has(e.value)) {
+        let good = this.dicCbx.get(e.value);
+        this.updateLine(good, e.data, e.idx);
+      } else {
+        this.api
+          .exec<any>('EI', 'GoodsBusiness', 'GetAsync', e.value)
+          .subscribe((res) => {
+            if (res) {
+              this.dicCbx.set(e.field, res);
+              this.updateLine(res, e.data, e.idx);
+            }
+          });
+      }
     }
+
+    if (
+      e.field === 'quantity' &&
+      (e.data.salesPrice !== '' ||
+        e.data.salesPrice !== undefined ||
+        e.data.salesPrice >= 0)
+    ) {
+      let salesPrice = parseInt(e.value) * parseFloat(e.data.salesPrice);
+      console.log(salesPrice);
+    }
+  }
+
+  updateLine(data, rowData, idx: number) {
+    console.log('data: ', rowData);
+    rowData.umid = data.umid;
+    rowData.quantity = 1;
+    rowData.salesPrice = data.salesPrice;
+    rowData.vatid = data.vatPct;
+    this.grid.updateRow(idx, rowData);
+  }
+
+  updateAmount(quantity: number, price: any, vat: any) {
+    let q: number, p: number, v: number, amount: number;
+    if (typeof quantity == 'string') q = parseFloat(quantity);
+    if (typeof price == 'string') parseFloat(price);
+    if (typeof vat == 'string') parseFloat(vat);
+
+    // if(q > 0 || price)
   }
 
   clickMF(e) {}

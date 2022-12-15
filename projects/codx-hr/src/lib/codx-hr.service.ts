@@ -551,6 +551,16 @@ export class CodxHrService {
     );
   }
 
+  getEFamilyWithDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EFamiliesBusiness',
+      'GetListEFamiliesInfoByDataRequestAsync',
+      data
+    );
+  }
+
   getEFamilyModel() {
     return this.api.execSv<any>(
       'HR',
