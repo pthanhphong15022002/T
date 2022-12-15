@@ -49,6 +49,8 @@ import { ActivatedRoute } from '@angular/router';
 import { E, I } from '@angular/cdk/keycodes';
 import { PopupEPassportsComponent } from '../../employee-profile/popup-epassports/popup-epassports.component';
 import { NoopAnimationPlayer } from '@angular/animations';
+import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
+import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -109,20 +111,21 @@ export class EmployeeProfileComponent extends UIComponent {
   lstVisa: any = [];
   crrVisa: any = {};
   //work permit
-  lstWorkPermit: any;
+  lstWorkPermit: any = [];
   //jobInfo
   jobInfo: any;
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
   //EExperience
-  lstExperience = [];
+  lstExperience: any = [];
+  lstVaccine: any = [];
   formModel;
   itemDetail;
   EExperienceColumnsGrid: any;
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 0;
+  crrTab: number = 6;
 
   crrEBSalary: any;
   listCrrBenefit: any;
@@ -382,6 +385,19 @@ export class EmployeeProfileComponent extends UIComponent {
           if (res?.length) {
             this.listCrrBenefit = res;
           }
+        });
+
+        //Vaccine
+        let rqVaccine = new DataRequest();
+        rqVaccine.entityName = 'HR_EVaccines';
+        rqVaccine.dataValues = params.employeeID;
+        rqVaccine.predicates = 'EmployeeID=@0';
+        rqVaccine.page = 1;
+        rqVaccine.pageSize = 20;
+        this.hrService.loadDataEVaccine(rqVaccine).subscribe((res) => {
+          console.log('e Vaccine', res);
+          this.lstVaccine = res;
+          //this.lstExperience = res;
         });
       }
     });
@@ -1326,5 +1342,72 @@ export class EmployeeProfileComponent extends UIComponent {
         console.log(res);
       });
   }
-  //#endregion
+
+  //#endregion HR_EHealths
+  addEHealths(actionType: string, data: any) {
+    // this.hrService.addEHealth(null).subscribe();
+    // return;
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEhealthsComponent,
+      {
+        actionType: actionType,
+        salarySelected: data,
+        headerText: 'Khám sức khỏe',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+  //#region
+
+  //#endregion HR_EVaccines
+  addEVaccines(actionType: string, data: any) {
+    // this.hrService.addEVaccine(null).subscribe();
+    // return;
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEVaccineComponent,
+      {
+        actionType: actionType,
+        salarySelected: data,
+        headerText: 'Tiêm Vaccine',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+  //#region
 }
