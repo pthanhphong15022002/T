@@ -911,7 +911,19 @@ export class ProcessesComponent
               if (res.objectID == this.employee?.orgUnitID)
                 isCheck = res.objectID;
               break;
+            case 'D':
+              if (res.objectID == this.employee?.departmentID)
+                isCheck = res.objectID;
+              break;
             case 'P':
+              if (res.objectID == this.employee?.positionID)
+                isCheck = res.objectID;
+              break;
+            case 'R':
+              if (res.objectID == this.employee?.positionID)
+                isCheck = res.objectID;
+              break;
+            case 'G':
               if (res.objectID == this.employee?.positionID)
                 isCheck = res.objectID;
               break;
