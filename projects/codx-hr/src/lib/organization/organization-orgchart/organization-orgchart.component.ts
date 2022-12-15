@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@ang
 import { ConnectorModel, Diagram, DiagramTools, NodeModel, SnapConstraints, SnapSettingsModel } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, CallFuncService, CodxFormDynamicComponent, CRUDService, FormModel, SidebarModel, ViewsComponent } from 'codx-core';
+import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 @Component({
   selector: 'hr-organization-orgchart',
@@ -185,7 +186,8 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
 
   // click moreFC
-  clickMF(event:any, node:any){
+  clickMF(event:any, node:any)
+  {
     if(event){
       switch(event.functionID){
         case "SYS02": //delete
@@ -211,22 +213,25 @@ export class OrganizationOrgchartComponent implements OnInit {
       option.FormModel = this.formModel;
       this.view.dataService
       .edit(node)
-      .subscribe((result: any) => {
-        if (result) {
+      .subscribe((HR_Org: any) => {
+        if (HR_Org) {
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
-            data: result,
-            function: this.formModel.funcID,
-            isAddMode: false,
-            titleMore: text,
+            data: HR_Org,
+            funcID: this.formModel.funcID,
+            isModeAdd: false,
+            action: text,
           };
           let popup = this.callFC.openSide(
-            CodxFormDynamicComponent,
+            PopupAddOrganizationComponent,
             data,
             option,
             this.formModel.funcID
           );
+          popup.closed.subscribe((res:any) => {
+            console.log(res);
+          });
         }
       });
     }
