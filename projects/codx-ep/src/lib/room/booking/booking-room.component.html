@@ -180,8 +180,8 @@
 
 <ng-template #panelRightRef>
   <booking-room-view-detail #viewdetail [itemDetail]="itemDetail" [funcID]="funcID" [formModel]="formModel"
-    [view]="views" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (delete)="delete($event)"
-    (setPopupTitle)="setPopupTitle($event)"></booking-room-view-detail>
+    [view]="views" (reschedule)="reschedule($event)" (invite)="invite($event)" (edit)="edit($event)" (copy)="copy($event)" (release)="release($event)" (delete)="delete($event)"
+    (setPopupTitle)="setPopupTitle($event)" (setPopupTitleOption)="setPopupTitleOption($event)"></booking-room-view-detail>
 </ng-template>
 
 <!-- Other -->
