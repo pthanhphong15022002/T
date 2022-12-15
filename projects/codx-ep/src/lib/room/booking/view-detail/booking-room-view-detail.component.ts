@@ -34,6 +34,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @Output('invite') invite: EventEmitter<any> = new EventEmitter();
   @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  
+  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -158,15 +160,15 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
 
   lviewReschedule(data?, mfuncName?) {
     if (data) {
-      this.setPopupTitle.emit(mfuncName);
-      this.edit.emit(data);
+      this.setPopupTitleOption.emit(mfuncName);
+      this.reschedule.emit(data);
     }
   }
 
   lviewInvite(data?, mfuncName?) {
     if (data) {
-      this.setPopupTitle.emit(mfuncName);
-      this.edit.emit(data);
+      this.setPopupTitleOption.emit(mfuncName);
+      this.invite.emit(data);
     }
   }
   lviewEdit(data?, mfuncName?) {

@@ -122,7 +122,7 @@
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <div class="check-list text-dark" #reference>
+            <!-- <div class="check-list text-dark" #reference>
               {{
                 item.reference
                   | formatvalue
@@ -133,7 +133,8 @@
                     : "grvBPQuestionnaires"
                   | async
               }}
-            </div>
+            </div> -->
+             <div *ngIf="item.reference" [innerHtml]="viewQuestion(item.reference)"></div>
           </ng-container>
         </ng-container>
       </ng-container>
@@ -651,18 +652,7 @@
 
 <ng-template #flowChart>
   <div class="d-flex justify-content-between mb-5">
-    <h1 #processName>
-      <!-- {{
-        process?.processName
-          | formatvalue
-            : formModel
-            : "processName"
-            : processName
-            : "Processes"
-            : "grvProcesses"
-          | async
-      }} -->
-    </h1>
+     <div ></div> 
     <div>
       <div class="d-flex bd-highlight">
         <div type="button" class="me-1 btn btn-sm btn-white d-flex align-items-center" (click)="download()">
