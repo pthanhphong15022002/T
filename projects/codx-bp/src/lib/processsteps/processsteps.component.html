@@ -24,7 +24,7 @@
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.items">
             <div class="d-flex align-item-center p-1 mb-2 bg-hover cursor-pointer" #p="ngbPopover"
-              [ngbPopover]="hideMoreFC ? hoverMoreFunction : ''" (mouseenter)="openMF(item, p)" autoClose="outside"
+              [ngbPopover]="!hideMoreFC ? hoverMoreFunction : ''" (mouseenter)="openMF(item, p)" autoClose="outside"
               placement="right">
               <i class="{{ showIconByStepType(item.stepType) }} me-2 ms-1 icon-16"></i>
               <div class="test-check me-4">{{ item.stepName }}</div>
