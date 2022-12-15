@@ -168,16 +168,42 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
+          } 
+
+          if (            
+            func.functionID == 'EP4T1102' /*MF sửa*/ ||
+            func.functionID == 'EP4T1101' /*MF xóa*/ 
+          ) {
+            func.disabled = true;
+          }
+
+        });
+      } else if(data.approveStatus == '5' || data.approveStatus == '3'){
+        event.forEach((func) => {
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ 
+          ) {
+            func.disabled = true;
+          }
+          if (            
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
+            func.functionID == 'SYS04' /*MF chép*/
+          ) {
+            func.disabled = false;
           }
         });
-      } else {
+      } else{
         event.forEach((func) => {
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
           }
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ 
           ) {
             func.disabled = true;
           }
