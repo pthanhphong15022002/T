@@ -244,7 +244,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ 
           ) {
             func.disabled = false;
           }
@@ -256,7 +257,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
           }
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ 
           ) {
             func.disabled = true;
           }
@@ -336,7 +338,40 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
   }
+  release(data: any) {
+    if (
+      this.authService.userValue.userID != data?.owner 
+      //&& !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
+    
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .release(
+            data,
+            res?.processID,
+            'EP_Bookings',
+            this.funcID
+          )
+          .subscribe((res) => {
+            if (res?.msgCodeError == null && res?.rowCount) {
+              this.notificationsService.notifyCode('ES007');
+              data.approveStatus = '3';
+              data.status = '3';
+              data.write = false;
+              data.delete = false;
+              this.view.dataService.update(data).subscribe();    
 
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);              
+            }
+          });
+      });
+  }
   addNew(evt?) {
     if (evt != null) {
       this.optionalData = evt;
@@ -474,6 +509,9 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
         break;
       case 'SYS04':
         this.copy(data);
+        break;
+      case 'EP7T1101':
+        this.release(data);
         break;
     }
   }
