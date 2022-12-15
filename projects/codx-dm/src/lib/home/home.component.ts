@@ -578,7 +578,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
     let item = $data.data;
-    if (item?.read) {
+    if (item?.read ) {
       if (item.extension) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
