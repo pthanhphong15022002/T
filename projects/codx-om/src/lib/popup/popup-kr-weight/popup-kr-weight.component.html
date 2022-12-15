@@ -26,7 +26,10 @@
               <span class="fs-5">{{kr.okrName}}</span>
             </div>
               <div class="col-4 d-flex">
-                <div class="col-4 border border-2 border-secondary py-4 ms-2 text-center"><span class="fs-5 fw-bold">{{kr.weight}}</span></div>
+                <!-- <div class="col-4 border border-2 border-secondary py-4 ms-2 text-center"><span class="fs-5 fw-bold">{{kr.weight}}</span></div> -->
+                <div class="col-4 border border-2 border-secondary py-4 ms-2 text-center">
+                  <codx-inplace [type]="'text'" emptyText="" cssClass="fs-3 fw-bold" [value]="kr.weight"> </codx-inplace>
+                </div>
                 <div class="col-4 border border-2 border-secondary py-4 ms-2 text-center"><span class="fs-5 fw-bold">{{kr.progress}}%</span></div>
                 <div class="col-4 border border-2 border-secondary py-4 ms-2 text-center"><span class="fs-5 fw-bold">{{pbyw[i]}}%</span></div>            
               </div>          

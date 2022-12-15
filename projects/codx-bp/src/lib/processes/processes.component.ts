@@ -509,6 +509,9 @@ export class ProcessesComponent
           {
             title: this.titleAction,
             moreFunc: moreFunc,
+            userId: this.userId,
+            isAdmin: this.isAdmin,
+            isAdminBp: this.isAdminBp,
           },
           option
         );
@@ -530,9 +533,6 @@ export class ProcessesComponent
       data: data,
       funcIdMain: this.funcID,
       formModel: this.formModelMF,
-      userId: this.userId,
-      isAdmin: this.isAdmin,
-      isAdminBp: this.isAdminBp,
     };
 
     this.dialog = this.callfc.openForm(
@@ -889,7 +889,7 @@ export class ProcessesComponent
       });
     }
   }
-
+  
   checkPermissionRead(data) {
     let isRead = data?.permissions.some((x) => x.objectID == this.userId && x.read && x.approveStatus !== '3' && x.approveStatus !== '4');
     let isOwner = data?.owner == this.userId ? true : false;
@@ -952,7 +952,6 @@ export class ProcessesComponent
           if (process) {
             this.bpService.getFlowChartNew.subscribe(dt=>{
               process.modifiedOn = dt?.createdOn;
-              debugger
               this.view.dataService.update(process).subscribe();
               this.detectorRef.detectChanges();
            })
