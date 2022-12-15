@@ -75,7 +75,8 @@
           </codx-label>
           <input type="text" #txtTodoEdit name="txtTodoEdit" matInput autofocus (blur)="valueChangeRefrence($event)"
             (keydown.enter)="valueChangeRefrence($event)" class="form-control" [(ngModel)]="textChange"
-            placeholder="Nhập đầu mục danh sách..." />
+            placeholder="Nhập đầu mục danh sách..." 
+            style="border: none;"/>
         </div>
   
         <ng-container *ngIf="referenceText?.length > 0">
