@@ -1,3 +1,4 @@
+import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
 import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
 import { DataRequest } from './../../../../../../src/shared/models/data.request';
@@ -128,6 +129,7 @@ export class EmployeeProfileComponent extends UIComponent {
   crrTab: number = 6;
 
   crrEBSalary: any;
+  lstEBSalary: any = [];
   listCrrBenefit: any;
 
   healthColumnsGrid;
@@ -281,6 +283,7 @@ export class EmployeeProfileComponent extends UIComponent {
         opPassport.entityName = 'HR_EPassports';
         opPassport.predicate = 'EmployeeID=@0';
         opPassport.dataValue = params.employeeID;
+        // opPassport.srtColumns = 'Ten field';
         (opPassport.page = 1),
           this.hrService
             .getListVisaByEmployeeID(opPassport)
@@ -371,14 +374,28 @@ export class EmployeeProfileComponent extends UIComponent {
           this.lstExperience = res;
         });
 
-        // Salary
+        // basic Salary
         this.hrService
-          .GetCurrentEBasicSalaries(params.employeeID)
+          .GetCurrentEBasicSalariesByEmployeeID(params.employeeID)
           .subscribe((res) => {
             if (res) {
               this.crrEBSalary = res;
             }
           });
+
+        let rqEBasic = new DataRequest();
+        rqEBasic.entityName = 'HR_EBasicSalaries';
+        rqEBasic.dataValue = params.employeeID;
+        rqEBasic.predicate = 'EmployeeID=@0';
+        (rqEBasic.page = 1),
+          this.hrService
+            .getListBasicSalariesByDataRequest(rqEBasic)
+            .subscribe((res) => {
+              if (res) {
+                this.lstEBSalary = res[0];
+                console.log('e salaries', this.lstEBSalary);
+              }
+            });
 
         // Benefit
         this.hrService.GetCurrentBenefit(params.employeeID).subscribe((res) => {
@@ -438,6 +455,9 @@ export class EmployeeProfileComponent extends UIComponent {
           console.log('event eex', event);
         } else if (funcID == 'evaccines') {
           this.addEditEVaccines('edit', data);
+        } else if (funcID == 'basicSalary') {
+          this.HandleEmployeeBasicSalariesInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -527,6 +547,22 @@ export class EmployeeProfileComponent extends UIComponent {
                 if (res) {
                 }
               });
+            } else if (funcID == 'basicSalary') {
+              this.hrService
+                .DeleteEmployeeBasicsalaryInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.hrService
+                      .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
+                      .subscribe((p) => {
+                        this.crrEBSalary = p;
+                      });
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             }
           }
         });
@@ -547,6 +583,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'jobSalary') {
           this.HandleEmployeeJobSalariesInfo('copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'basicSalary') {
+          this.HandleEmployeeBasicSalariesInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -983,7 +1022,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (actionType == 'add') {
-        this.lstExperience(res.event);
+        this.lstExperience = res.event;
         console.log('lst ex', this.lstExperience);
         this.df.detectChanges();
       }
@@ -1015,6 +1054,37 @@ export class EmployeeProfileComponent extends UIComponent {
         //   });
         console.log('current val', res.event);
         this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
+    });
+  }
+
+  HandleEmployeeBasicSalariesInfo(actionType: string, data: any) {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEBasicSalariesComponent,
+      {
+        actionType: actionType,
+        salarySelected: data,
+        headerText: 'Lương cơ bản',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrEBSalary = res.event;
         this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
