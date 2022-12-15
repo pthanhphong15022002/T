@@ -889,7 +889,7 @@ export class ProcessesComponent
       });
     }
   }
-
+  
   checkPermissionRead(data) {
     let isRead = data?.permissions.some((x) => x.objectID == this.userId && x.read && x.approveStatus !== '3' && x.approveStatus !== '4');
     let isOwner = data?.owner == this.userId ? true : false;
