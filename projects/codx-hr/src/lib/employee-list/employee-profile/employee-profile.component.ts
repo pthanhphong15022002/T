@@ -103,7 +103,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //family
   lstFamily: any;
   //passport
-  lstPassport: any;
+  lstPassport: any = [];
   crrPassport: any = {};
   //visa
   lstVisa: any = [];
@@ -115,7 +115,7 @@ export class EmployeeProfileComponent extends UIComponent {
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
   //EExperience
-  lstExperience;
+  lstExperience = [];
   formModel;
   itemDetail;
   EExperienceColumnsGrid: any;
@@ -277,6 +277,7 @@ export class EmployeeProfileComponent extends UIComponent {
         opPassport.entityName = 'HR_EPassports';
         opPassport.predicate = 'EmployeeID=@0';
         opPassport.dataValue = params.employeeID;
+        opPassport.srtColumns = 'Ten field';
         (opPassport.page = 1),
           this.hrService
             .getListVisaByEmployeeID(opPassport)
@@ -955,7 +956,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (actionType == 'add') {
-        this.lstExperience(res.event);
+        this.lstExperience = res.event;
         console.log('lst ex', this.lstExperience);
         this.df.detectChanges();
       }
