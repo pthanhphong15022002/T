@@ -58,6 +58,8 @@ export class ProcessesComponent
   itemProcessName: TemplateRef<any>;
   @ViewChild('itemOwner', { static: true })
   itemOwner: TemplateRef<any>;
+  @ViewChild('itemStatus', { static: true })
+  itemStatus: TemplateRef<any>;
   @ViewChild('itemVersionNo', { static: true })
   itemVersionNo: TemplateRef<any>;
   @ViewChild('itemActivedOn', { static: true }) itemActivedOn: TemplateRef<any>;
@@ -66,9 +68,7 @@ export class ProcessesComponent
   @ViewChild('templateSearch') templateSearch: TemplateRef<any>;
   @ViewChild('view') codxview!: any;
   @ViewChild('itemMemo', { static: true })
-  currView?: TemplateRef<any>;
-
-  itemMemo: TemplateRef<any>;
+  itemMemo?: TemplateRef<any>;
   @Input() showButtonAdd = true;
   @Input() dataObj?: any;
   dialog!: DialogRef;
@@ -156,6 +156,7 @@ export class ProcessesComponent
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
+        console.log(this.gridViewSetup);
       }
     });
     this.heightWin = Util.getViewPort().height - 100;
@@ -165,8 +166,8 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-    // this.userId = '2207130007';
-    // this.isAdmin = false
+    this.userId = '2207130007';
+    this.isAdmin = false
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
       this.crrFunID = this.funcID;
@@ -179,6 +180,7 @@ export class ProcessesComponent
       { headerTemplate: this.itemProcessName, width: 300 },
       { headerTemplate: null, width: 100 },
       { headerTemplate: this.itemOwner, width: 300 },
+      { headerTemplate: this.itemStatus, width: 100 },
       { headerTemplate: this.itemVersionNo, width: 100 },
       { headerTemplate: this.itemActivedOn, width: 150 },
       { headerTemplate: this.itemMemo, width: 300 },
@@ -186,7 +188,7 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    this.isAdminBp = this.checkAdminOfBP(this.userId);
+    this.isAdminBp = this.checkAdminOfBP(this.userId);    
   }
 
   afterLoad() {
