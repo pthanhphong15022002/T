@@ -949,7 +949,6 @@ export class ProcessesComponent
           if (process) {
             this.bpService.getFlowChartNew.subscribe(dt=>{
               process.modifiedOn = dt?.createdOn;
-              debugger
               this.view.dataService.update(process).subscribe();
               this.detectorRef.detectChanges();
            })

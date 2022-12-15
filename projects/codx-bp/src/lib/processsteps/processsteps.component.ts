@@ -112,6 +112,7 @@ export class ProcessStepsComponent
   lockParent = false;
   lockChild = false;
   hideMoreFC = false;
+  hideMoreFCChild = false;
   formModelMenu: FormModel;
   vllInterval = 'VL004';
   dataFile: any;
@@ -157,7 +158,7 @@ export class ProcessStepsComponent
   onInit(): void {
     this.actived = this.process?.actived;
     if (!this.actived || !this.isEdit) {
-      this.lockChild = this.lockParent = this.hideMoreFC = true;
+      this.lockChild = this.lockParent = this.hideMoreFC = this.hideMoreFCChild = true;
     }
     this.processID = this.process?.recID ? this.process?.recID : '';
     this.numberColums = this.process?.phases ? this.process?.phases : 0;
@@ -1264,9 +1265,9 @@ export class ProcessStepsComponent
       // if (element ) {
       //  element.classList.add('hiden') ;
       // }
-      this.dataHover = data;
+      this.dataHover = data;     
       p.open();
-     // this.hideMoreFC = true;
+    // this.hideMoreFC = true;
     } else {
       p.close();
     }
