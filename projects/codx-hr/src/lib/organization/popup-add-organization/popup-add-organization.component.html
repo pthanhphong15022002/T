@@ -18,6 +18,7 @@
           <codx-input
             [formModel]="dialogRef.formModel"
             field="orgUnitID"
+            [disabled]="!parameterHR?.stop"
             [crrValue]="data.orgUnitID"
             (valueChange)="valueChange($event)">
           </codx-input>
@@ -93,7 +94,7 @@
         </codx-label>
         <codx-input
           [formModel]="dialogRef.formModel"
-          fiedName="manager2"
+          field="manager2"
           [crrValue]="data.manager2"
           (valueChange)="valueChange($event)">
         </codx-input>

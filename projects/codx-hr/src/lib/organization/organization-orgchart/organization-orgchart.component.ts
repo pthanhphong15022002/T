@@ -230,7 +230,20 @@ export class OrganizationOrgchartComponent implements OnInit {
             this.formModel.funcID
           );
           popup.closed.subscribe((res:any) => {
-            console.log(res);
+            if(res.event){
+              let orgUnit = res.event[0];
+              let orgChart = res.event[1];
+              this.view.dataService.update(orgUnit).subscribe();
+              this.data.forEach(x => {
+                if(x.orgUnitID === orgChart.orgUnitID)
+                {
+                  x = JSON.parse(JSON.stringify(orgChart));
+                  return;
+                }
+              });
+              this.setDataOrg(this.data);
+              this.dt.detectChanges();
+            }
           });
         }
       });
