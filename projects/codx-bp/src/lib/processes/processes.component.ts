@@ -136,8 +136,9 @@ export class ProcessesComponent
   isAdminBp = false;
   oldName = '';
   crrFunID = '';
-  idProccess='';
-
+  idProccess = '';
+  employee: any;
+  checkGroupPerm = '';
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -151,6 +152,7 @@ export class ProcessesComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
+    if (this.user?.employee) this.employee = this.user?.employee;
     this.userGroupID = this.user.groupID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     //this.showButtonAdd = this.funcID != 'BPT6'
@@ -553,7 +555,13 @@ export class ProcessesComponent
   }
 
   permission(data) {
-    if (this.moreFunc == 'BPT104' || this.moreFunc == 'BPT205' || this.moreFunc == 'BPT305' || this.moreFunc == 'BPT605' || this.moreFunc == 'BPT204') {
+    if (
+      this.moreFunc == 'BPT104' ||
+      this.moreFunc == 'BPT205' ||
+      this.moreFunc == 'BPT305' ||
+      this.moreFunc == 'BPT605' ||
+      this.moreFunc == 'BPT204'
+    ) {
       let option = new SidebarModel();
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
@@ -720,42 +728,36 @@ export class ProcessesComponent
       );
       return;
     }
-    if(this.oldName.trim()===this.newName.trim()) {
+    if (this.oldName.trim() === this.newName.trim()) {
       this.notification.notifyCode('SYS007');
       this.changeDetectorRef.detectChanges();
       this.dialogPopup.close();
-    }
-    else if(this.oldName.trim().toLocaleUpperCase() === this.newName.trim().toLocaleUpperCase()) {
+    } else if (
+      this.oldName.trim().toLocaleUpperCase() ===
+      this.newName.trim().toLocaleUpperCase()
+    ) {
       this.CheckExistNameProccess(this.oldName);
-    }
-    else {
-      this.CheckAllExistNameProccess(this.newName,this.idProccess);
+    } else {
+      this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
   }
-  CheckAllExistNameProccess(newName,idProccess) {
-    this.bpService
-        .isCheckExitName(newName,idProccess)
-        .subscribe((res) => {
-          if (res) {
-            this.CheckExistNameProccess(newName);
-          }
-          else {
-            this.actionReName(newName);
-          }
-        });
+  CheckAllExistNameProccess(newName, idProccess) {
+    this.bpService.isCheckExitName(newName, idProccess).subscribe((res) => {
+      if (res) {
+        this.CheckExistNameProccess(newName);
+      } else {
+        this.actionReName(newName);
+      }
+    });
   }
   CheckExistNameProccess(newName) {
-    this.notificationsService
-      .alertCode(
-        'BP008'
-      )
-      .subscribe((x) => {
-        if (x.event?.status == 'N') {
-          return;
-        } else if (x.event?.status == 'Y') {
-          this.actionReName(newName);
-        }
-      });
+    this.notificationsService.alertCode('BP008').subscribe((x) => {
+      if (x.event?.status == 'N') {
+        return;
+      } else if (x.event?.status == 'Y') {
+        this.actionReName(newName);
+      }
+    });
   }
   actionReName(newName) {
     this.api
@@ -776,10 +778,14 @@ export class ProcessesComponent
 
   onDragDrop(e: any) {}
 
-  changeDataMF(e, data) {
+  async changeDataMF(e, data) {
     if (e != null && data != null) {
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
+      var checkGroup = '';
+
+      checkGroup = await this.checkGroupId(data);
+      this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':
@@ -794,7 +800,7 @@ export class ProcessesComponent
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
             let isPublish = data?.permissions.some(
-              (x) => x.objectID == this.userId  && x.publish
+              (x) => x.objectID == checkGroup && x.publish
             );
             if (data.status === '6' || (!isPublish && !fullRole)) {
               res.isblur = true;
@@ -804,7 +810,7 @@ export class ProcessesComponent
           case 'SYS003': // them
           case 'SYS003': // them phien ban
             let isCreate = data?.permissions.some(
-              (x) => x.objectID == this.userId  && x.create
+              (x) => x.objectID == checkGroup && x.create
             );
             if ((!isCreate && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS04') {
@@ -824,7 +830,7 @@ export class ProcessesComponent
           case 'BPT303': //luu phien ban
           case 'BPT603': //luu phien ban
             let isEdit = data?.permissions.some(
-              (x) => x.objectID == this.userId  && x.edit
+              (x) => x.objectID == checkGroup && x.edit
             );
             if ((!isEdit && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS03') {
@@ -836,7 +842,7 @@ export class ProcessesComponent
             break;
           case 'SYS02': // xoa
             let isDelete = data?.permissions.some(
-              (x) => x.objectID == this.userId  &&  x.delete
+              (x) => x.objectID == checkGroup && x.delete
             );
             if ((!isDelete && !fullRole) || data.deleted) {
               res.disabled = true;
@@ -861,7 +867,11 @@ export class ProcessesComponent
           case 'BPT305': //chia se
           case 'BPT605': //chia se
             let isShare = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.share && x.approveStatus !== '3' && x.approveStatus != "4"
+              (x) =>
+                x.objectID == checkGroup &&
+                x.share &&
+                x.approveStatus !== '3' &&
+                x.approveStatus != '4'
             );
             if (!isShare && !fullRole) {
               res.isblur = true;
@@ -872,15 +882,16 @@ export class ProcessesComponent
           case 'BPT308': //phan quyen
           case 'BPT608': //phan quyen
             let isAssign = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.assign
+              (x) => x.objectID == checkGroup && x.assign
             );
             if (!isAssign && !fullRole) {
               res.isblur = true;
             }
+
             break;
           case 'BPT702': //Khoi phuc
             let isRestore = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.delete
+              (x) => x.objectID == checkGroup && x.delete
             );
             if (!isRestore && !fullRole) {
               res.isblur = true;
@@ -889,9 +900,39 @@ export class ProcessesComponent
       });
     }
   }
-  
+
+  async checkGroupId(data) {
+    var isCheck = '';
+    if (data.permissions != null) {
+      data.permissions.forEach((res) => {
+        if (res) {
+          switch (res.objectType) {
+            case 'O':
+              if (res.objectID == this.employee?.orgUnitID)
+                isCheck = res.objectID;
+              break;
+            case 'P':
+              if (res.objectID == this.employee?.positionID)
+                isCheck = res.objectID;
+              break;
+            case 'U':
+              if (res.objectID == this.user.userID) isCheck = res.objectID;
+              break;
+          }
+        }
+      });
+    }
+    return isCheck;
+  }
+
   checkPermissionRead(data) {
-    let isRead = data?.permissions.some((x) => x.objectID == this.userId && x.read && x.approveStatus !== '3' && x.approveStatus !== '4');
+    let isRead = data?.permissions.some(
+      (x) =>
+        x.objectID == this.checkGroupPerm &&
+        x.read &&
+        x.approveStatus !== '3' &&
+        x.approveStatus !== '4'
+    );
     let isOwner = data?.owner == this.userId ? true : false;
     return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
   }
@@ -917,7 +958,7 @@ export class ProcessesComponent
 
   viewDetailProcessSteps(moreFunc, data) {
     let isEdit = data?.permissions.some(
-      (x) => x.objectID == this.userId && x.edit
+      (x) => x.objectID == this.checkGroupPerm && x.edit
     );
     let isOwner = data?.owner == this.userId ? true : false;
     let editRole =
@@ -950,13 +991,11 @@ export class ProcessesComponent
       if (e && data.recID) {
         this.bpService.getProcessesByID(data.recID).subscribe((process) => {
           if (process) {
-            this.bpService.getFlowChartNew.subscribe(dt=>{
+            this.bpService.getFlowChartNew.subscribe((dt) => {
               process.modifiedOn = dt?.createdOn;
-              debugger
               this.view.dataService.update(process).subscribe();
               this.detectorRef.detectChanges();
-           })
-
+            });
           }
         });
       }
@@ -1132,7 +1171,7 @@ export class ProcessesComponent
   viewChanged(e) {
     var funcIDClick = this.activedRouter.snapshot.params['funcID'];
     if (this.crrFunID != funcIDClick) {
-      this.funcID = funcIDClick
+      this.funcID = funcIDClick;
       this.afterLoad();
       this.crrFunID = this.funcID;
       this.changeDetectorRef.detectChanges();
