@@ -357,7 +357,12 @@ export class EmployeeListComponent extends UIComponent {
 
   viewEmployeeInfo(func, data) {
     if (func.url)
-      this.codxService.navigate('', func.url, { employeeID: data.employeeID });
+      this.codxService.navigate(
+        '',
+        func.url,
+        { employeeID: data.employeeID },
+        { lv: 'saaaaaaaaaaa' }
+      );
   }
 
   exportFile() {
