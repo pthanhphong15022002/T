@@ -391,7 +391,7 @@ export class PopupRolesComponent implements OnInit {
 
   //#region assign
   checkAdminUpdate() {
-    if (this.user.administrator || this.user.userID == this.process.owner) {
+    if (this.user.administrator || this.user.userID == this.process.owner || this.process.permissions[this.currentPemission].objectType == '1' || this.process.permissions[this.currentPemission].objectType == '7') {
       if (this.isAssign) return false;
       else return true;
     } else return false;

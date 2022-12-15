@@ -232,4 +232,12 @@ export class CodxBpService {
       data
     );
   }
+  getUserByProcessId(data) {
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'GetAllUserPermissionAsync',
+      data
+    );
+  }
 }

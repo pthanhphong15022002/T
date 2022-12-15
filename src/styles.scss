@@ -1384,3 +1384,45 @@ codx-processsteps .e-card-wrapper {
   max-height: calc(100vh - 259px);
   overflow: auto;
 }
+
+a.dropdown-item:focus span {
+  color: white !important;
+}
+
+.dropdown-item.cursor-pointer.border-top {
+  border-top: 0 !important;
+  position: relative;
+  padding-top: 0.35rem !important;
+  margin-top: 10px !important;
+}
+
+.dropdown-item.cursor-pointer.border-top::before {
+  border-top: 1px #e6e7e9 solid;
+  content: "";
+  height: 5px;
+  display: block;
+  position: absolute;
+  top: -5px;
+  left: 8px;
+  right: 8px;
+
+  background-color: white;
+}
+
+.e-kanban .e-kanban-header .e-header-cells .e-header-wrap .e-header-title .header-template-wrap {
+  width: 100%;
+}
+
+.e-kanban .e-kanban-header .e-header-cells .e-header-wrap .e-header-title .header-template-wrap .header-text {
+  width: 100%;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: normal;
+  -webkit-line-clamp: 1;
+}
+
+codx-filter-form .e-item.e-active .card.w-100.rounded-0 {
+  height: auto !important;
+}
