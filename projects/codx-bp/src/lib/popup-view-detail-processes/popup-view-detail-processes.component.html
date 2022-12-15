@@ -140,7 +140,7 @@
         <ng-container>
           <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps #viewProcessSteps [process]="process" [funcID]="funcID" [childFunc]="childFunc"
-              [formModel]="formModelFlowChart" [isEdit]="isEdit" (getObjectFile)="getObjectFile($event)"></codx-processsteps>
+              [formModel]="formModelFlowChart" [isEdit]="isEdit" (getObjectFile)="getObjectFile($event)" (isClosePopup)="getListUser()"></codx-processsteps>
           </ng-container>
         </ng-container>
 

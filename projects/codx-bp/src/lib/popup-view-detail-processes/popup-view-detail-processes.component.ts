@@ -109,10 +109,16 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     //   );
     // }
     //this.changeDetectorRef.detectChanges();
-    this.avata = this.process.permissions.map(value => {return value.objectID}).join(";");
-    console.log(this.avata);
-    
+    this.getListUser();
+  }
 
+  getListUser(){
+    this.bpService.getUserByProcessId(this.process.recID).subscribe((res) => {
+      if(res){
+        debugger
+        this.avata =res;
+      }
+    });
   }
 
   clickMenu(item) {
