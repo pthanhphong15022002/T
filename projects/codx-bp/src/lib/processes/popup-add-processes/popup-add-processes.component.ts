@@ -19,7 +19,6 @@ import {
   AuthStore,
   NotificationsService,
   ApiHttpService,
-  ImageViewerComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
@@ -146,7 +145,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process.phases = this.action == 'copy' ? this.phasesOld : 0;
       this.process.activities = this.action == 'copy' ? this.ActivitiesOld : 0;
       if (this.action == 'copy') {
-        this.process.attachments = this.isCoppyFile ? this.AttachmentsOld : 0;
+        this.process.attachments = this.isCoppyFile? (this.process.attachments >0? this.process.attachments+this.AttachmentsOld: this.AttachmentsOld ): this.process.attachments;
         this.isCoppyKeyValue = this.isCoppyFile ? 'copyFile' : 'copyDefault';
       }
       this.revisions.push(versions);
@@ -230,18 +229,27 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   async actionSaveBeforeSaveAttachment() {
-    if (this.attachment?.fileUploadList?.length)
+    if (this.attachment?.fileUploadList?.length>0) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           var countAttack = 0;
           countAttack = Array.isArray(res) ? res.length : 1;
-          if (this.action === 'edit') {
-            this.process.attachments += countAttack;
-          } else {
-            this.process.attachments = countAttack;
-          }
+          this.process.attachments = this.action==='edit'?this.process.attachments +countAttack:countAttack;
+          // if (this.action === 'edit') {
+          //   this.process.attachments += countAttack;
+          // } else {
+          //   this.process.attachments = countAttack;
+          // }
+            this.selectedAction();
         }
       });
+    }
+    else {
+      this.selectedAction();
+    }
+
+  }
+  selectedAction(){
     switch (this.action) {
       case 'copy': {
         this.notiService.alertCode('BP007').subscribe((x) => {
@@ -347,9 +355,9 @@ export class PopupAddProcessesComponent implements OnInit {
     this.attachment.uploadFile();
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e?.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
   }
   fileAdded(e) {}
 
