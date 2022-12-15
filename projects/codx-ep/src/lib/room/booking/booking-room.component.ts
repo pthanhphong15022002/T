@@ -359,10 +359,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.copy(data);
         break;
       case 'EP4T1101': //Dời
-        this.reschedule(data, event?.text);
+        this.popupTitle = event?.text;
+        this.reschedule(data);
         break;
-      case 'EP4T1102': //Mời
-        this.invite(data, event?.text);
+      case 'EP4T1102': //Mời      
+        this.popupTitle = event?.text;
+        this.invite(data);
         break;
       case 'EP4T1103': //Gửi duyệt
         this.release(data);
@@ -403,7 +405,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           });
       });
   }
-  reschedule(data: any, title: any) {
+  reschedule(data: any) {
     if (
       this.authService.userValue.userID != data?.owner &&
       !this.authService.userValue.administrator
@@ -417,7 +419,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       550,
       300,
       this.funcID,
-      [data, this.formModel, title]
+      [data, this.formModel, this.popupTitle]
     );
     dialogReschedule.closed.subscribe((x) => {
       this.popupClosed = true;
@@ -434,7 +436,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  invite(data: any, title: any) {
+  invite(data: any) {
     if (
       this.authService.userValue.userID != data?.owner &&
       !this.authService.userValue.administrator
@@ -448,7 +450,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       800,
       500,
       this.funcID,
-      [data, this.formModel, title]
+      [data, this.formModel, this.popupTitle]
     );
     dialogInvite.closed.subscribe((x) => {
       if (!x.event) this.view.dataService.clear();
@@ -467,6 +469,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   setPopupTitle(mfunc) {
     this.popupTitle = mfunc + ' ' + this.funcIDName;
+  }
+
+  setPopupTitleOption(mfunc) {
+    this.popupTitle = mfunc;
   }
 
   addNew(evt?) {
