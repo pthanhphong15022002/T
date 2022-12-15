@@ -43,6 +43,7 @@ import {
 } from 'codx-core';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
 
 import { CodxBpService } from '../codx-bp.service';
 import {
@@ -137,6 +138,7 @@ export class ProcessStepsComponent
   isBlock: any = true;
   idView = '';
   loadingData = false;
+  heightFlowChart = 0;
 
   constructor(
     inject: Injector,
@@ -1199,16 +1201,15 @@ export class ProcessStepsComponent
   }
 
   printFlowchart() {
-    if (this.linkFile) {
+    let linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
+    if (linkFile) {
       const output = document.getElementById('output');
       const img = document.createElement('img');
-      img.src = this.linkFile;
+      img.src = linkFile;
       output.appendChild(img);
       const br = document.createElement('br');
       output.appendChild(br);
       window.print();
-
-      document.body.removeChild(output);
     } else
       window.frames[0]?.postMessage(
         JSON.stringify({ MessageId: 'Action_Print' }),
@@ -1264,10 +1265,6 @@ export class ProcessStepsComponent
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
-      // var element = document.getElementById(data?.parentID);
-      // if (element ) {
-      //  element.classList.add('hiden') ;
-      // }
       this.dataHover = data;
       p.open();
       // this.hideMoreFC = true;
@@ -1276,10 +1273,7 @@ export class ProcessStepsComponent
     }
     this.changeDetectorRef.detectChanges();
   }
-  moveOut() {
-    // if(this.hideMoreFC)
-    // this.hideMoreFC = false
-  }
+
   showAllparent(text) {
     return (
       this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
