@@ -14,32 +14,16 @@
             </div>
 
             <div class="d-flex flex-wrap mb-2">
-              <div class="d-flex align-items-center me-4">
+              <div class="d-flex align-items-center me-5">
               <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
               <span class="fw-bold me-1">
                 <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses" default="Chủ quy trình"></codx-label>: 
               </span>
               <span class="text-gray-600">{{ process?.userName}}</span>
               </div>
-              <div class="d-flex align-items-center me-4">
-                <span class="fw-bold me-1">
-                  <codx-label name="lblVersionNo" [formName]="'ProcessRevisions'" [gridViewName]="'grvProcessRevisions'"
-                    default="Phiên bản:">
-                  </codx-label>
-                </span>
-                <span class="text-gray-600" #versionNo>{{
-                  process?.versionNo
-                  | formatvalue
-                  : formModel
-                  : "versionNo"
-                  : versionNo
-                  : "ProcessRevisions"
-                  : "grvProcessRevisions"
-                  | async
-                  }}</span>
-              </div>
-              <div class="d-flex align-items-center">
-                <span class="fw-bold me-1">
+              <div class="d-flex align-items-center me-5">
+                <span class="icon-calendar_today icon-18 me-1 text-gray-600"></span>
+                <span class="fw-bold me-1">              
                   <codx-label name="lblActivedOn" default="Ngày hiệu lực:">
                   </codx-label>
                 </span>
@@ -56,6 +40,25 @@
                   }}
                 </span>
               </div>
+              <div class="d-flex align-items-center me-5">
+                <span class="icon-assignment icon-18 me-1 text-gray-600"></span>
+                <span class="fw-bold me-1">               
+                  <codx-label name="lblVersionNo" [formName]="'ProcessRevisions'" [gridViewName]="'grvProcessRevisions'"
+                    default="Phiên bản:">
+                  </codx-label>
+                </span>
+                <span class="text-gray-600" #versionNo>{{
+                  process?.versionNo
+                  | formatvalue
+                  : formModel
+                  : "versionNo"
+                  : versionNo
+                  : "ProcessRevisions"
+                  : "grvProcessRevisions"
+                  | async
+                  }}</span>
+              </div>
+            
             </div>
 
             <!-- <div class="d-flex flex-wrap mb-2" *ngIf="listPhaseName?.length > 0">
@@ -82,7 +85,7 @@
           </div>
         </div>
         <div class="justify-content-end">
-          <div class="left-button">
+          <div class="left-button me-3" >
             <div class="d-flex justify-content-end">
               <codx-imgs
                 class=""
@@ -136,11 +139,11 @@
       <div class="card-body px-0 prod-body" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto" data-kt-scroll-dependencies=".view-details-header"
         data-kt-scroll-wrappers=".stepper-body, .no-header, .view-details-content"
-        [attr.data-kt-scroll-offset]="'68px'">
+        [attr.data-kt-scroll-offset]="'60px'">
         <ng-container>
           <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps #viewProcessSteps [process]="process" [funcID]="funcID" [childFunc]="childFunc"
-              [formModel]="formModelFlowChart" [isEdit]="isEdit" (getObjectFile)="getObjectFile($event)"></codx-processsteps>
+              [formModel]="formModelFlowChart" [isEdit]="isEdit" (getObjectFile)="getObjectFile($event)" (isClosePopup)="getListUser()"></codx-processsteps>
           </ng-container>
         </ng-container>
 

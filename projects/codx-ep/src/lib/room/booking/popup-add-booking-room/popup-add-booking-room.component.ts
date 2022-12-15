@@ -411,10 +411,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                     this.attendeesList.push(tempAttender);
                   }
                   if (
-                    tempAttender.userID == this.authService.userValue.userID
+                    tempAttender.userID == this.authService.userValue.userID 
                   ) {
                     this.curUser = tempAttender;
-                  } else if (people.optional == false) {
+                  } else if (people.optional == false) {//EP_WAIT xóa sau khi debug lại
                     this.lstUser.push(tempAttender);
                   } else {
                     this.lstUserOptional.push(tempAttender);
@@ -570,7 +570,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   onSaveForm(approval: boolean = false) {
     if (!this.saveCheck) {
-      this.data.requester = this.authService?.userValue?.userName;
+      if(this.isAdd){
+        this.data.requester = this.authService?.userValue?.userName;
+      }
       this.fGroupAddBookingRoom.patchValue(this.data);
       if (this.fGroupAddBookingRoom.invalid == true) {
         this.codxEpService.notifyInvalid(

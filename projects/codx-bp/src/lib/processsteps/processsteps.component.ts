@@ -77,6 +77,7 @@ export class ProcessStepsComponent
   @Input() formModel: FormModel;
   @Input() isEdit :boolean = false;
   @Output() getObjectFile = new EventEmitter();
+  @Output() isClosePopup = new EventEmitter();
 
   showButtonAdd = true;
   dataObj?: any;
@@ -194,8 +195,12 @@ export class ProcessStepsComponent
       id: 'btnAdd',
       items: items,
     };
+    // this.childFunc.forEach((obj) => {
+    //   if (obj.id != 'P') this.childFuncOfP.push(obj);
+    // });
+    //p chỉ lấy a
     this.childFunc.forEach((obj) => {
-      if (obj.id != 'P') this.childFuncOfP.push(obj);
+      if (obj.id == 'A') this.childFuncOfP.push(obj);
     });
     this.childFunc.map((obj) => {
       if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
@@ -320,6 +325,7 @@ export class ProcessStepsComponent
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
+          this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
           this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.notiService.notifyCode('SYS006');
@@ -407,6 +413,7 @@ export class ProcessStepsComponent
               if (index != -1)
                 this.listPhaseName[index] = processStep.processName;
             }
+            this.isClosePopup.emit(true);
             this.dataTreeProcessStep = this.view.dataService.data;
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -569,6 +576,7 @@ export class ProcessStepsComponent
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
+          this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
           this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
@@ -635,7 +643,7 @@ export class ProcessStepsComponent
               });
               break;
           }
-
+          this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
           this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
