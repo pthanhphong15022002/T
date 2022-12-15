@@ -1,4 +1,379 @@
-<ng-template #footer>
+<layout-list-detail
+    #lstDetail
+    [title]="headerText"
+    [formModel]="formModel"
+    [footer]="footer"
+    [dialog]="dialog"
+    [data]="familyMemberObj"
+    [leftTemlate]="LeftTemlate"
+    [RightTemlate]="formbody"
+    *ngIf="isAfterRender"
+>
+    <ng-template #formbody>
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-img
+                    class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
+                    [imageType]="'circle'"
+                    [width]="80"
+                    [objectId]="familyMemberObj?.employeeID"
+                    [objectType]=""
+                    data-kt-menu-trigger="click"
+                    data-kt-menu-attach="parent"
+                    data-kt-menu-placement="bottom-end"
+                    data-kt-menu-flip="bottom"
+                    [funcId]="funcID"
+                    [isAllowEdit]="true"
+                >
+                </codx-img>
+            </div>
+            <div class="col-6">
+                <div class="form-group" >
+                    <codx-input 
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                        field="isEmployee"
+                    ></codx-input>               
+                    <codx-label [formModel]="formModel" fiedName="IsEmployee"></codx-label>
+                </div>
+
+                <div class="form-group">
+                    <codx-label [formModel]="formModel" fiedName="RefEmployeeID"></codx-label>
+                    <codx-input
+                        [Group]="formGroup"
+                        [formModel]="formModel"
+                        field="refEmployeeID"
+                    ></codx-input>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label [formModel]="formModel" fiedName="RelationName"></codx-label>
+            <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="relationName"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label [formModel]="formModel" fiedName="Gender"></codx-label>
+                <codx-input 
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                    field="gender"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label [formModel]="formModel" fiedName="RelationType"></codx-label>
+                <codx-input
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                    field="relationType"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="Birthday" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="birthday"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="NationalityID" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="nationalityID"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="Mobile" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="mobile"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PersonalEmail" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="personalEmail"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label [formModel]="formModel" fiedName="Address"></codx-label>
+            <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="address"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <codx-label [formModel]="formModel" fiedName="JobProfession"></codx-label>
+            <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="jobProfession"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="IsInherit" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="isInherit"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="IsEmergency" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="isEmergency"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="IDCardNo" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="iDCardNo"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="IDIssuedOn" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="iDIssuedOn"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label [formModel]="formModel" fiedName="IDIssuedBy"></codx-label>
+            <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="iDIssuedBy"
+            ></codx-input>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PassportNo" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="passportNo"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="PassportIssuedOn" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="passportIssuedOn"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="PITNumber" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="pITNumber"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="SIRegisterNo" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="sIRegisterNo"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <codx-label
+            default="Giảm trừ gia cảnh"
+            [formModel]="formModel"
+        >
+        </codx-label>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="IsDependent" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="isDependent"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="RegisterNo" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="registerNo"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-6">
+                <codx-label fiedName="RegisterFrom" [formModel]="formModel"></codx-label>
+                <codx-input 
+                    field="registerFrom"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+            <div class="col-6">
+                <codx-label fiedName="RegisterTo" [formModel]="formModel"></codx-label>
+                <codx-input
+                    field="registerTo"
+                    [Group]="formGroup"
+                    [formModel]="formModel"
+                ></codx-input>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <codx-label [formModel]="formModel" fiedName="Note"></codx-label>
+            <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="note"
+            ></codx-input>
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+            <i class="icon-save"></i>
+            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+        </button>
+        </div>
+    </ng-template>
+</layout-list-detail>
+
+<ng-template #LeftTemlate>
+    <codx-listview
+        #listView
+        [type]="'cardView'"
+        [service]="'HR'"
+        [assemblyName]="'HR'"
+        [entityName]="'HR_EFamilies'"
+        [className]="'EFamiliesBusiness'"
+        [method]="'GetListEFamiliesInfoByDataRequestAsync'"
+        [predicate]="'EmployeeID=@0'"
+        [dataValue]="employId"
+        [itemTemplate]="itemTemplate"
+        (afterRender)="afterRenderListView($event)"
+        [selectFirst] = "true"
+    ></codx-listview>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    <!-- <codx-temp-full
+        [formModel]="formModel"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+        [typeMF]="'hover'"
+        [title]="data.relationName"
+        [subTitleTmp]="tmplateEFamiliesMenuList"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        [hideMF]="true"
+        typeMF="hover"
+        [dataItem]="data"
+        (click)="click(data)"
+    ></codx-temp-full> -->
+
+    <codx-temp-full
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        [imageId]="'ADMIN'"
+        imageObjType="AD_Users"
+        [imageWidth]="40"
+        [title]="data.relationName"
+        [dataItem]="data"
+        [desc]="
+        (data.relationType
+            | vll : 'HR006' : 'text'
+            | async) +
+        ' | ' +
+        'Năm sinh: ' +
+        (data.birthday | date:'yyyy')
+        "
+        [hideMF]="true"
+        [typeMF]="'hover'"
+        [footer]="tmplateEFamiliesMenuList"
+        (click)="click(data)"
+    >
+    </codx-temp-full>
+</ng-template>
+
+<ng-template #tmplateEFamiliesMenuList let-data>
+    <div
+    class="d-flex align-items-center mt-1"
+    *ngIf="data.isDependent"
+>
+    <span
+    class="icon-check icon-14 me-1 text-success"
+    ></span
+    >Phụ thuộc giảm trừ gia cảnh
+</div>
+<div
+    class="d-flex align-items-center"
+    *ngIf="data.isEmergency"
+>
+    <span
+    class="icon-check icon-14 me-1 text-danger"
+    ></span
+    >Liên hệ khẩn cấp: <i class="icon-phone_android"></i>{{ data.mobile }}
+</div>
+</ng-template>
+
+<!-- <ng-template #tmplateEFamiliesMenuList let-data>
+    <div>
+        <div class="d-flex flex-column">
+            <div>{{data.relationName}} </div>
+            <div>{{(data.birthday | date:'yyyy')}}</div>
+            <div *ngIf="data.isDependent == 1"></div>
+            <div *ngIf="data.isEmergency == 1"></div>
+            <div><i></i></div>
+        </div>
+    </div>
+</ng-template> -->
+
+
+
+
+
+<!-- <ng-template #footer>
     <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="onSaveForm()">
         <i class="icon-save"></i>
@@ -277,4 +652,4 @@
             ></codx-input>
         </div>
     </ng-template>
-</codx-form>
+</codx-form> -->

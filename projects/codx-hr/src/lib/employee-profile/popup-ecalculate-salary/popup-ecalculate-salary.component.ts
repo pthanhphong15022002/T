@@ -10,7 +10,6 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
-import { onSave } from '@syncfusion/ej2-angular-spreadsheet';
 
 @Component({
   selector: 'lib-popup-ecalculate-salary',
@@ -46,6 +45,12 @@ export class PopupECalculateSalaryComponent extends UIComponent implements OnIni
   }
 
   onSaveForm(){
-
+    this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
+      if(p === "True"){
+        this.notify.notifyCode('SYS007')
+        this.dialog.close()
+      }
+      else this.notify.notifyCode('DM034')
+    })
   }
 }
