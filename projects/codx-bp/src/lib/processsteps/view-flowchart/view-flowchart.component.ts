@@ -25,17 +25,17 @@ export class ViewFlowchartComponent
   implements OnInit, AfterViewInit, OnChanges
 {
   @Input() dataFile: any;
-  heightFlowChart= 600;
+  heightFlowChart = 600;
   data: any;
   linkFile: any;
   isShow = true;
-
-  pzProperties = {
-    zoomControlScale: 2,
-    minScale: 2,
-    limitPan: true,
-    wheelZoomFactor: 1,
-  };
+   
+  // pzProperties = {
+  //   zoomControlScale: 2,
+  //   minScale: 2,
+  //   limitPan: true,
+  //   wheelZoomFactor: 1,
+  // };
   constructor(
     private fileService: FileService,
     private notificationsService: NotificationsService,
@@ -57,4 +57,9 @@ export class ViewFlowchartComponent
       viewContent.offsetHeight - viewMenu.offsetHeight - 100;
     this.changeRef.detectChanges();
   }
+
+  //chu thich
+  // [transition-duration]="500" do tre
+  ///[limit-zoom]="2" lan chuot
+  //[auto-zoom-out]="true" khoi phuc sau khi click 2 ngon tay [draggableImage]="true"//dùng lia đủ chỗ
 }

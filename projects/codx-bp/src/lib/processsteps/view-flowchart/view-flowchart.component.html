@@ -11,14 +11,27 @@
 
 <div class="dropzone dropzone-default dropzone-primary">
   <pinch-zoom
-    [properties]="pzProperties"
-    [double-tap]="true"
+    #myPinch="pinchZoom"
+    [limit-zoom]="2"
+    [transition-duration]="500"
     [backgroundColor]="'none'"
     [draggableImage]="true"
   >
-    <img [src]="linkFile" [style]="'height:'+heightFlowChart+'px'" /> 
+    <img
+      [src]="linkFile"
+      [draggable]="true"
+      [style]="'height:' + heightFlowChart + 'px'"
+    />
   </pinch-zoom>
-  <!-- [overflow]="'visible'" -->
+
+  <!-- <div class="actions">
+    <button
+      class="btn btn-small btn-outline btn-rounded"
+      (click)="myPinch.toggleZoom()"
+    >
+      toggleZoom()
+    </button>
+  </div> -->
+
   <div [hidden]="true" id="output"></div>
 </div>
-
