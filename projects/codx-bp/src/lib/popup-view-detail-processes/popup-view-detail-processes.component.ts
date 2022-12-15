@@ -115,7 +115,6 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   getListUser(){
     this.bpService.getUserByProcessId(this.process.recID).subscribe((res) => {
       if(res){
-        debugger
         this.avata =res;
       }
     });
