@@ -632,6 +632,7 @@ export class CodxHrService {
       data
     );
   }
+  
 
   GetEmployeeJobSalariesModel() {
     return this.api.execSv<any>(
@@ -715,13 +716,63 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_EBasicSalaries
-  GetCurrentEBasicSalaries(empID: string) {
+  GetCurrentEBasicSalariesByEmployeeID(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBasicSalariesBusiness',
-      'GetCurrentEBSalaryAsync',
+      'GetCurrentBasicSalariesByEmployeeIDAsync',
       [empID]
+    );
+  }
+
+  getListBasicSalariesByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetListEBasicSalariesAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeBasicsalaryInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'DeleteEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+  
+
+  GetEmployeeBasicSalariesModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetEmployeeBasicSalariesModelAsync'
+    );
+  }
+
+  AddEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'AddEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+
+  UpdateEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'UpdateEmployeeBasicSalariesInfoAsync',
+      data
     );
   }
   //#endregion

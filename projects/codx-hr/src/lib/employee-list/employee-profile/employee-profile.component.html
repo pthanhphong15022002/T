@@ -1400,7 +1400,7 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstPassport[0]?.passportNo }}</span
+                            : {{ lstPassport?.length > 0 ? lstPassport[0]?.passportNo : '' }}</span
                           >
                         </div>
                       </div>
@@ -1416,7 +1416,7 @@
                           >
                           </codx-label>
                           <span #IssuedPlace
-                            >: {{ lstPassport[0]?.issuedPlace }}</span
+                            >: {{ lstPassport?.length > 0 ? lstPassport[0]?.issuedPlace : '' }}</span
                           >
                         </div>
                       </div>
@@ -1434,7 +1434,7 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstPassport[0]?.issuedDate | fmDT }}</span
+                            >: {{ lstPassport?.length > 0 ? (lstPassport[0]?.issuedDate | fmDT) : (''| fmDT) }}</span
                           >
                         </div>
                       </div>
@@ -2482,7 +2482,14 @@
                       <span
                         class="icon-edit icon-18"
                         (click)="HandleEmployeeJobSalariesInfo('add', null)"
-                      ></span>
+                      >Add Ejob</span>
+                    </a>
+
+                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                      <span
+                        class="icon-edit icon-18"
+                        (click)="HandleEmployeeBasicSalariesInfo('add', null)"
+                      >Add Ebasic</span>
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -2501,8 +2508,12 @@
                       </codx-temp-full>
                       <ng-template #footerEBSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương chức
-                          danh: {{ crrEBSalary.jSalary }}
+                          <span class="icon-attach_money"></span>Lương cơ
+                          bản: {{ crrEBSalary.bSalary }}
+                        </div>
+                        <div class="d-flex align-items-center mt-1">
+                          <span class="icon-attach_money"></span>Lương đóng 
+                          BH: {{ crrEBSalary.siSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-3">
                           <span class="icon-calendar_today"></span>Hiệu lực:
