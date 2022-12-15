@@ -210,7 +210,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
     }
     this.isTurnPermiss=true;
-    if(this.ownerOld===this.process?.owner) {
+    if(this.ownerOld===this.process?.owner && this.action ==='edit') {
         this.callActionSave();
     }
     else {
@@ -365,38 +365,10 @@ export class PopupAddProcessesComponent implements OnInit {
         if (res) {
           this.perms = [];
           let emp = res;
-          // var tmpPermission = new BP_ProcessPermissions();
-
-          // this.tmpPermission.objectID = emp?.userID;
-          // this.tmpPermission.objectName = emp?.userName;
-          // this.tmpPermission.objectType = '1';
-          // this.tmpPermission.memberType = '0';
-          // this.tmpPermission.autoCreate = true;
-          // if (emp.administrator) {
-          //   this.tmpPermission.objectType = '7';
-          // } else if (this.checkAdminOfBP(emp.userID)) {
-          //   this.tmpPermission.objectType = '7';
-          // }
-          // this.tmpPermission.edit = true;
-          // this.tmpPermission.create = true;
-          // this.tmpPermission.publish = true;
-          // this.tmpPermission.read = true;
-          // this.tmpPermission.share = true;
-          // this.tmpPermission.full = true;
-          // this.tmpPermission.delete = true;
-          // this.tmpPermission.update = true;
-          // this.tmpPermission.upload = true;
-          // this.tmpPermission.assign = true;
-          // this.tmpPermission.download = true;
-          // this.tmpPermission.memberType = '0';
-          // this.tmpPermission.autoCreate = true;
-          // var tmpPermission = new BP_ProcessPermissions();
           this.updatePermission(emp,this.tmpPermission);
-
           if(this.isTurnPermiss){
 
-
-            if(this.process.permissions.length>0) {
+            if( this.process?.permissions !=null && this.process?.permissions.length>0) {
               this.process.permissions.forEach(element => {
                 if( element.objectID === this.tmpPermission.objectID) {
                   // element = this.tmpPermission;

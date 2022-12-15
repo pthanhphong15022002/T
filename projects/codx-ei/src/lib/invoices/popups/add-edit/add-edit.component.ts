@@ -183,29 +183,11 @@ export class AddEditComponent implements OnInit {
         e.data.salesPrice !== undefined ||
         e.data.salesPrice >= 0)
     ) {
-      let salesPrice = parseInt(e.value) * parseFloat(e.data.salesPrice);
-      console.log(salesPrice);
+      debugger;
+      e.data.salesAmt = this.salesAmount(e.value, e.data.salesPrice);
+      e.data.totalAmount = this.updateVATAtm(e.data.salesAmt, e.data.vatid);
     }
   }
-
-  updateLine(data, rowData, idx: number) {
-    console.log('data: ', rowData);
-    rowData.umid = data.umid;
-    rowData.quantity = 1;
-    rowData.salesPrice = data.salesPrice;
-    rowData.vatid = data.vatPct;
-    this.grid.updateRow(idx, rowData);
-  }
-
-  updateAmount(quantity: number, price: any, vat: any) {
-    let q: number, p: number, v: number, amount: number;
-    if (typeof quantity == 'string') q = parseFloat(quantity);
-    if (typeof price == 'string') parseFloat(price);
-    if (typeof vat == 'string') parseFloat(vat);
-
-    // if(q > 0 || price)
-  }
-
   clickMF(e) {}
   //#endregion
 
@@ -232,5 +214,58 @@ export class AddEditComponent implements OnInit {
     this.form.formGroup.patchValue({ bankName: data['bankName'] });
     this.form.formGroup.patchValue({ bankAccount: data['bankAccount'] });
   }
+
+  updateLine(data, rowData, idx: number) {
+    rowData.umid = data.umid;
+    rowData.quantity = 1;
+    rowData.salesPrice = data.salesPrice;
+    rowData.vatid = data.vatPct;
+    this.grid.updateRow(idx, rowData);
+  }
+
+  salesAmount(quantity: number, price?: any) {
+    let q: number,
+      p: number,
+      v: number,
+      totalPrice: number = 0;
+    if (quantity && typeof quantity == 'string') q = parseFloat(quantity);
+    else q = quantity;
+
+    if (price && typeof price == 'string') p = parseFloat(price);
+    else p = price;
+
+    if (q > 0 || price) {
+      totalPrice = q * p;
+    }
+
+    return totalPrice;
+  }
+
+  updateVATAtm(amount: number, vat?: any) {
+    let v: number, a: number;
+    if (amount && typeof amount == 'string') a = parseFloat(amount);
+    else a = amount;
+
+    if (vat && typeof vat == 'string') v = parseFloat(vat);
+    else v = vat;
+
+    if (a >= 0 && v >= 0) return a * (vat / 100);
+
+    return 0;
+  }
+
+  updateTotalAtm(amount: number, vat?: any) {
+    let v: number, a: number;
+    if (amount && typeof amount == 'string') a = parseFloat(amount);
+    else a = amount;
+
+    if (vat && typeof vat == 'string') v = parseFloat(vat);
+    else v = vat;
+
+    if (a >= 0 && v >= 0) return a * (vat / 100);
+
+    return 0;
+  }
+
   //#endregion
 }
