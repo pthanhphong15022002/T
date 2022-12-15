@@ -419,7 +419,10 @@
                         field="categoryID"
                         [crrValue]="data?.categoryID"
                         [placeholder]="gvSetup['CategoryID']['description']"
-                        [refValue]="gvSetup['CategoryID']['referedValue']"
+                        [refValue]="
+                          this.cbxCategory ??
+                          gvSetup['CategoryID']['referedValue']
+                        "
                         type="combobox"
                         (valueChange)="valueChange($event)"
                         [disabled]="disableCateID"

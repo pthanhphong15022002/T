@@ -29,7 +29,10 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
+  @Output('release') release: EventEmitter<any> = new EventEmitter();
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
+  @Output('invite') invite: EventEmitter<any> = new EventEmitter();
+  @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
@@ -136,6 +139,34 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       case 'SYS04': //copy.
         this.lviewCopy(data, event.text);
         break;
+      case 'EP4T1101': //Dời
+        this.lviewReschedule(data, event?.text);
+        break;
+      case 'EP4T1102': //Mời
+        this.lviewInvite(data, event?.text);
+        break;
+      case 'EP4T1103': //Gửi duyệt
+        this.lviewRelease(data);
+        break;
+    }
+  }
+  lviewRelease(data?) {
+    if (data) {      
+      this.release.emit(data);
+    }
+  }
+
+  lviewReschedule(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
+      this.edit.emit(data);
+    }
+  }
+
+  lviewInvite(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitle.emit(mfuncName);
+      this.edit.emit(data);
     }
   }
   lviewEdit(data?, mfuncName?) {
@@ -144,6 +175,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       this.edit.emit(data);
     }
   }
+
+  
   lviewDelete(data?) {
     if (data) {
       this.delete.emit(data);
@@ -165,19 +198,48 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'SYS04' /*MF chép*/||            
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
+          ) {
+            func.disabled = false;
+          } 
+
+          if (            
+            func.functionID == 'EP4T1102' /*MF sửa*/ ||
+            func.functionID == 'EP4T1101' /*MF xóa*/ 
+          ) {
+            func.disabled = true;
+          }
+
+        });
+      } else if(data.approveStatus == '5' || data.approveStatus == '3'){
+        event.forEach((func) => {
+          if (
+            func.functionID == 'SYS02' /*MF sửa*/ ||
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
+          ) {
+            func.disabled = true;
+          }
+          if (            
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
           ) {
             func.disabled = false;
           }
         });
-      } else {
+      } else{
         event.forEach((func) => {
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
           }
-          if (
+          if (                
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1102' /*MF mời*/ ||
+            func.functionID == 'EP4T1101' /*MF dời*/ 
           ) {
             func.disabled = true;
           }

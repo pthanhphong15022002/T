@@ -95,6 +95,8 @@ export class PopupAddSignFileComponent implements OnInit {
   showPlan: boolean = true;
   oldSfRecID: string;
 
+  cbxCategory: string;
+
   constructor(
     private auth: AuthStore,
     private esService: CodxEsService,
@@ -119,6 +121,7 @@ export class PopupAddSignFileComponent implements OnInit {
     this.option = data?.data?.option;
     this.oSignFile = data?.data?.oSignFile;
     this.disableCateID = data?.data?.disableCateID ?? false;
+    this.cbxCategory = data?.data?.cbxCategory ?? null; // Ten CBB
     this.headerText = data?.data?.headerText ?? '';
 
     if (this.modeView == '2') {
@@ -259,7 +262,7 @@ export class PopupAddSignFileComponent implements OnInit {
 
   initForm() {
     this.esService.loadDataCbx('ES');
-    const user = this.auth.get();
+    this.user = this.auth.get();
     this.esService.getEmployee(this.user?.userID).subscribe((emp) => {
       if (emp) {
         this.user.employee = emp;
@@ -347,11 +350,11 @@ export class PopupAddSignFileComponent implements OnInit {
                 });
             }
             if (this.isAddNew && this.type != 'copy') {
-              this.data.employeeID = user.employee?.employeeID;
-              this.data.orgUnitID = user.employee?.orgUnitID;
-              this.data.deptID = user.employee?.departmentID;
-              this.data.divisionID = user.employee?.divisionID;
-              this.data.companyID = user.employee?.companyID;
+              this.data.employeeID = this.user.employee?.employeeID;
+              this.data.orgUnitID = this.user.employee?.orgUnitID;
+              this.data.deptID = this.user.employee?.departmentID;
+              this.data.divisionID = this.user.employee?.divisionID;
+              this.data.companyID = this.user.employee?.companyID;
               this.data.approveControl = '3';
               this.data.refDate = new Date();
 
@@ -623,11 +626,12 @@ export class PopupAddSignFileComponent implements OnInit {
               employee = emp;
             }
             this.data.employeeID = employee?.employeeID;
-            this.data.deptID = employee?.departmentID;
+            if (employee?.departmentID)
+              this.data.deptID = employee?.departmentID;
             this.data.divisionID = employee?.divisionID;
             this.data.companyID = employee?.companyID;
 
-            if (employee?.orgUnitID != null) {
+            if (employee?.orgUnitID) {
               this.data.orgUnitID = employee?.orgUnitID;
             }
 
