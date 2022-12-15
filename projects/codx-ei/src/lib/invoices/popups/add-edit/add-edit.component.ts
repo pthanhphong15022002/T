@@ -220,6 +220,9 @@ export class AddEditComponent implements OnInit {
     rowData.quantity = 1;
     rowData.salesPrice = data.salesPrice;
     rowData.vatid = data.vatPct;
+    rowData.salesAmt = data.salesPrice;
+    rowData.vatAmt = this.updateVATAtm(data.salesPrice, data.vatPct);
+    rowData.totalAmt = this.updateTotalAtm(rowData.salesAmt, rowData.vatAmt);
     this.grid.updateRow(idx, rowData);
   }
 
@@ -254,15 +257,16 @@ export class AddEditComponent implements OnInit {
     return 0;
   }
 
-  updateTotalAtm(amount: number, vat?: any) {
-    let v: number, a: number;
-    if (amount && typeof amount == 'string') a = parseFloat(amount);
-    else a = amount;
+  updateTotalAtm(totalPrice: number, totalAmt: any) {
+    let p: number = 0,
+      a: number = 0;
+    if (totalPrice && typeof totalPrice == 'string') p = parseFloat(totalPrice);
+    else p = totalPrice;
 
-    if (vat && typeof vat == 'string') v = parseFloat(vat);
-    else v = vat;
+    if (totalAmt && typeof totalAmt == 'string') a = parseFloat(totalAmt);
+    else a = totalAmt;
 
-    if (a >= 0 && v >= 0) return a * (vat / 100);
+    if (p >= 0 && a >= 0 && p > a) return p - a;
 
     return 0;
   }

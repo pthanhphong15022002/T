@@ -292,7 +292,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/
+            func.functionID == 'SYS04' /*MF chép*/||            
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
           } 
@@ -309,7 +310,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = true;
           }
@@ -326,7 +328,8 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
           }
-          if (
+          if (                
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1102' /*MF mời*/ ||
@@ -361,7 +364,44 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       case 'EP4T1102': //Mời
         this.invite(data, event?.text);
         break;
+      case 'EP4T1103': //Gửi duyệt
+        this.release(data);
+        break;
     }
+  }
+  release(data: any) {
+    if (
+      this.authService.userValue.userID != data?.owner 
+      //&& !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
+    
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((res: any) => {
+        this.codxEpService
+          .release(
+            data,
+            res?.processID,
+            'EP_Bookings',
+            this.funcID
+          )
+          .subscribe((res) => {
+            if (res?.msgCodeError == null && res?.rowCount) {
+              this.notificationsService.notifyCode('ES007');
+              data.approveStatus = '3';
+              data.status = '3';
+              data.write = false;
+              data.delete = false;
+              this.view.dataService.update(data).subscribe();    
+
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);              
+            }
+          });
+      });
   }
   reschedule(data: any, title: any) {
     if (

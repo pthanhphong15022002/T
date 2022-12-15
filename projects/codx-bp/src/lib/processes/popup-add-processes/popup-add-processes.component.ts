@@ -71,6 +71,7 @@ export class PopupAddProcessesComponent implements OnInit {
   isTurnPermiss: boolean = false;
   isExitUserPermiss: boolean = false;
   tmpPermission = new BP_ProcessPermissions();
+  emp:tmpUser;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -214,7 +215,8 @@ export class PopupAddProcessesComponent implements OnInit {
         this.callActionSave();
     }
     else {
-      this.isAddPermission(this.process.owner);
+    //  this.isAddPermission(this.process.owner);
+      this.updateOrCreatProccess(this.emp);
     }
 
 
@@ -356,7 +358,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-  //  this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
   }
  isAddPermission(id) {
     this.api
@@ -364,31 +366,31 @@ export class PopupAddProcessesComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.perms = [];
-          let emp = res;
-          this.updatePermission(emp,this.tmpPermission);
-          if(this.isTurnPermiss){
-
-            if( this.process?.permissions !=null && this.process?.permissions.length>0) {
-              this.process.permissions.forEach(element => {
-                if( element.objectID === this.tmpPermission.objectID) {
-                  // element = this.tmpPermission;
-                  this.updatePermission(emp,element);
-                  this.isExitUserPermiss = true;
-                }
-               });
-
-               if(!this.isExitUserPermiss){
-                this.process.permissions.push(this.tmpPermission);
-               }
-            }
-            else {
-                this.perms.push(this.tmpPermission);
-                this.process.permissions = this.perms;
-            }
-            this.callActionSave();
-          }
+          this.emp =res;
+          this.updatePermission(this.emp,this.tmpPermission);
         }
       });
+  }
+  updateOrCreatProccess(emp: tmpUser){
+    if(this.isTurnPermiss){
+      if( this.process?.permissions !=null && this.process?.permissions.length>0) {
+        this.process.permissions.forEach(element => {
+          if( element.objectID === this.tmpPermission.objectID) {
+            this.updatePermission(emp,element);
+            this.isExitUserPermiss = true;
+          }
+         });
+
+         if(!this.isExitUserPermiss){
+          this.process.permissions.push(this.tmpPermission);
+         }
+      }
+      else {
+          this.perms.push(this.tmpPermission);
+          this.process.permissions = this.perms;
+      }
+    }
+    this.callActionSave();
   }
   updatePermission(emp:tmpUser,tmpPermission: BP_ProcessPermissions ){
     tmpPermission.objectID = emp?.userID;

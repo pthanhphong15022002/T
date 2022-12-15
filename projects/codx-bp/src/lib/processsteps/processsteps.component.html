@@ -665,45 +665,19 @@
     </h1>
     <div>
       <div class="d-flex bd-highlight">
-        <div
-          type="button"
-          class="me-2 btn btn-sm btn-white d-flex align-items-center"
-          (click)="download()"
-        >
-          <span class="icon-arrow_downward icon-20 me-2"></span>
-          <codx-label
-            default="Tải về"
-            [fiedName]="'Download'"
-            class="me-2"
-          ></codx-label>
+        <div type="button" class="me-1 btn btn-sm btn-white d-flex align-items-center" (click)="download()">
+          <span class="icon-arrow_downward icon-16 me-1"></span>
+          <codx-label default="Tải về" [fiedName]="'Download'" class="me-2"></codx-label>
         </div>
 
-        <div
-          type="button"
-          class="me-2 btn btn-sm btn-white d-flex align-items-center"
-          (click)="printFlowchart()"
-        >
-          <span class="icon-print icon-20 me-2"></span>
-          <codx-label
-            default="In"
-            [fiedName]="'Print'"
-            class="me-2"
-          ></codx-label>
+        <div type="button" class="me-1 btn btn-sm btn-white d-flex align-items-center" (click)="printFlowchart()">
+          <span class="icon-print icon-16 me-1"></span>
+          <codx-label default="In" [fiedName]="'Print'" class="me-2"></codx-label>
         </div>
-        <div class="me-2" *ngIf="!hideMoreFC">
-          <div
-            type="button"
-            class="btn btn-sm btn-light-primary d-flex align-items-center"
-            (click)="addFile($event)"
-          >
-            <i class="icon-upload icon-20"></i
-            ><span>
-              <codx-label
-                name="UploadFile"
-                formName="Processes"
-                gridViewName="grvProcesses"
-                default="Tải ảnh"
-              >
+        <div class="me-1" *ngIf="!hideMoreFC">
+          <div type="button" class="btn btn-sm btn-light-primary d-flex align-items-center" (click)="addFile($event)">
+            <i class="icon-upload icon-16"></i><span>
+              <codx-label name="UploadFile" formName="Processes" gridViewName="grvProcesses" default="Tải ảnh">
               </codx-label>
             </span>
           </div>
