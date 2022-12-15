@@ -203,7 +203,33 @@ export class EmployeesComponent extends UIComponent {
       });
     }
   }
- 
+
+  
+  clickMF(event: any, data: any) {
+    if(event && data){
+      this.view.dataService.dataSelected = data;
+      switch (event.functionID) {
+        case 'SYS02': // xóa
+          this.delete(data);
+          break;
+        case 'SYS03': // edit
+          this.edit(event,data);
+          break;
+        case 'SYS04': // sao chép
+          this.copy(event,data);
+          break;
+        case 'HR0031': // cập nhật tình trạng
+          this.updateStatus(data, event.functionID);
+          break;
+        case 'HR0032': // xem chi tiết
+          this.viewEmployeeInfo(event.data, data);
+          break;
+        case 'SYS002':
+          this.exportFile();
+          break;
+      }
+    }
+  }
   edit(event:any,data:any) {
     if (event && data) 
     {
@@ -266,24 +292,11 @@ export class EmployeesComponent extends UIComponent {
     }
   }
 
-  delete(data: any) {
-    if (data.status != '10') {
-      this.notifiSV.notifyCode('E0760');
-      return;
-    }
-    this.view.dataService.dataSelected = data;
+  delete(data:any) 
+  {
     this.view.dataService
-      .delete(
-        [this.view.dataService.dataSelected],
-        true,
-        (opt) => this.beforeDel(opt),
-        'Thông báo'
-      )
-      .subscribe((res) => {
-        if (res[0]) {
-          this.itemSelected = this.view.dataService.data[0];
-        }
-      });
+      .delete([data],true,(option:any) => this.beforeDel(option),null,null,null,null,false)
+      .subscribe();
     this.detectorRef.detectChanges();
   }
 
@@ -336,10 +349,12 @@ export class EmployeesComponent extends UIComponent {
   }
 
   beforeDel(opt: RequestOption) {
-    var itemSelected = opt.data[0];
-    opt.methodName = 'DeleteAsync';
+    debugger
+    opt.service = "HR";
+    opt.assemblyName = "ERM.Business.HR";
     opt.className = 'EmployeesBusiness';
-    opt.data = itemSelected.employeeID;
+    opt.methodName = 'DeleteAsync';
+    opt.data = this.view.dataService.dataSelected.employeeID;
     return true;
   }
 
@@ -390,29 +405,7 @@ export class EmployeesComponent extends UIComponent {
     );
   }
 
-  clickMF(event: any, data?: any) {
-    this.itemSelected = data;
-    switch (event.functionID) {
-      case 'SYS02': // xóa
-        this.delete(data);
-        break;
-      case 'SYS03': // edit
-        this.edit(event,data);
-        break;
-      case 'SYS04': // sao chép
-        this.copy(event,data);
-        break;
-      case 'HR0031': // cập nhật tình trạng
-        this.updateStatus(data, event.functionID);
-        break;
-      case 'HR0032': // xem chi tiết
-        this.viewEmployeeInfo(event.data, data);
-        break;
-      case 'SYS002':
-        this.exportFile();
-        break;
-    }
-  }
+  
 
   doubleClick(data) {
     // this.codxService.navigate('HRT0301', '', {employeeID: data.employeeID});

@@ -35,7 +35,7 @@ import { CodxBpService } from '../codx-bp.service';
 export class PopupViewDetailProcessesComponent implements OnInit {
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   @ViewChild('viewProcessSteps') viewProcessSteps: ProcessStepsComponent;
-  process: BP_Processes;
+  process: any;
   viewMode = '16';
   funcID = 'BPT11'; //testsau klaay từ more ra
   name = 'ViewList';

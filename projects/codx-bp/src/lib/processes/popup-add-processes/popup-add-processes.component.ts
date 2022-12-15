@@ -210,7 +210,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
     }
     this.isTurnPermiss=true;
-    if(this.ownerOld===this.process?.owner) {
+    if(this.ownerOld===this.process?.owner && this.action ==='edit') {
         this.callActionSave();
     }
     else {
@@ -392,11 +392,9 @@ export class PopupAddProcessesComponent implements OnInit {
           // this.tmpPermission.autoCreate = true;
           // var tmpPermission = new BP_ProcessPermissions();
           this.updatePermission(emp,this.tmpPermission);
-
           if(this.isTurnPermiss){
 
-
-            if(this.process.permissions.length>0) {
+            if( this.process?.permissions !=null && this.process?.permissions.length>0) {
               this.process.permissions.forEach(element => {
                 if( element.objectID === this.tmpPermission.objectID) {
                   // element = this.tmpPermission;
