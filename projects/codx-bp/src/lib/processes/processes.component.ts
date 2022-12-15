@@ -167,8 +167,8 @@ export class ProcessesComponent
   }
 
   onInit(): void {
-    this.userId = '2207130007';
-    this.isAdmin = false
+    // this.userId = '2207130007';
+    // this.isAdmin = false
     if (!this.funcID) {
       this.funcID = this.activedRouter.snapshot.params['funcID'];
       this.crrFunID = this.funcID;
