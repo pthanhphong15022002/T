@@ -22,13 +22,13 @@ import {
   providers: [ToolbarService, PrintService],
 })
 export class ViewFlowchartComponent
-  implements OnInit, AfterViewInit,OnChanges
+  implements OnInit, AfterViewInit, OnChanges
 {
   @Input() dataFile: any;
+  heightFlowChart= 600;
   data: any;
   linkFile: any;
   isShow = true;
-  heightFlowChart = 600;
 
   pzProperties = {
     zoomControlScale: 2,
@@ -39,24 +39,22 @@ export class ViewFlowchartComponent
   constructor(
     private fileService: FileService,
     private notificationsService: NotificationsService,
-    private changeRef : ChangeDetectorRef
-  ) {
-    // if (this.dataFile) {
-    //   this.data = this.dataFile;
-    //   this.linkFile = environment.urlUpload + '/' + this.data?.pathDisk;
-    //   //this.heightFlowChart = screen.height;
-    // }
-  }
+    private changeRef: ChangeDetectorRef
+  ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataFile) {
       this.data = this.dataFile;
       this.linkFile = environment.urlUpload + '/' + this.data?.pathDisk;
-      this.changeRef.detectChanges()
+      this.changeRef.detectChanges();
     }
   }
-  ngAfterViewInit(): void {   
-  }
+  ngAfterViewInit(): void {}
 
   ngOnInit(): void {
+    let viewContent = document.getElementById('view-detail-processstep');
+    let viewMenu = document.getElementById('menu-flowchart');
+    this.heightFlowChart =
+      viewContent.offsetHeight - viewMenu.offsetHeight - 100;
+    this.changeRef.detectChanges();
   }
 }
