@@ -75,7 +75,7 @@ export class PopupAddProcessStepsComponent
   editTodo = -1;
   stepNameOld = '';
   linkQuesiton = '';
-
+  hideExtend = false;
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
@@ -483,5 +483,24 @@ export class PopupAddProcessStepsComponent
     //   recID: e,
     // });
     if (this.linkQuesiton) window.open(this.linkQuesiton);
+  }
+  extendShow(): void {
+    this.hideExtend = !this.hideExtend;
+    var doc = document.getElementsByClassName('extend-more')[0];
+    var ext = document.getElementsByClassName('ext_button')[0];
+
+    if (!this.hideExtend) {
+      document
+        .getElementsByClassName('codx-dialog-container')[0]
+        .setAttribute('style', 'width: 550px; z-index: 1000;');
+      doc.setAttribute('style', 'display: none');
+      ext.classList.remove('rotate-back');
+    } else {
+      document
+        .getElementsByClassName('codx-dialog-container')[0]
+        .setAttribute('style', 'width: 900px; z-index: 1000;');
+      ext.classList.add('rotate-back');
+    }
+
   }
 }

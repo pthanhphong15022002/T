@@ -18,7 +18,12 @@
       | vll: gridViewSetup['Status'].referedValue:'color'
       | async
       ">
-      <div class="d-flex flex-column w-100 p-3">
+      <div class="d-flex flex-column w-100 p-3 pt-0">
+        <div class="status">
+          <codx-vll [name]="gridViewSetup['Status'].referedValue" [value]="data?.status" [showText]="true" [showBgColor]="true"
+            class="badge badge-light badge-square badge-md fs-7 p-2">
+          </codx-vll>
+        </div>
         <div class="d-flex justify-content-between">
           <div #processName class="fs-6 fw-bold line-clamp-card" [ngbTooltip]="data.processName"> {{
             data?.processName | formatvalue
@@ -31,6 +36,15 @@
             }}</div>
           <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
         </div>
+        
+        <!-- <div class="d-flex flex-column w-100 p-3">
+          <div class="d-flex justify-content-between">
+            <div #memo class="fs-6 fw-bold line-clamp-card" [ngbTooltip]="data.processName"> 
+              {{data?.memo | formatvalue: view.formModel: "memo": memo: "Processes": "grvProcesses"| async}}
+            </div>
+            <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
+          </div>
+        </div> -->
 
         <div class="d-flex align-items-center mt-1">
           <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
