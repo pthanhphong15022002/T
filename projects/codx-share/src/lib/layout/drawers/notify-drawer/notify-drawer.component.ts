@@ -34,10 +34,13 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
   openFormNotify(){
     let option = new SidebarModel();
     option.Width = '550px';
-    this.callFc.openSide(NotifyDrawerSliderComponent, "", option);
+    let slider = this.callFc.openSide(NotifyDrawerSliderComponent, "", option);
+    slider.closed.subscribe(() => {
+      this.getNotiNumber();
+    })
   }
 
-  totalNoti:string = "";
+  totalNoti:number = 0;
   // get noti number
   getNotiNumber(){
     this.api.execSv(
@@ -45,18 +48,12 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
       "ERM.Business.BG",
       "NotificationBusinesss",
       "GetNotiNumberAsync",
-      [])
-      .subscribe((res:any) => {
-        if(res > 0){
-          if(res > 9)
-          {
-            this.totalNoti = res.toString().slice(0,1) + "+";
-          }
-          else
-          {
-            this.totalNoti = res.toString();
-          }
+      []).subscribe((res:any) => {
+        if(res > 0) 
+        {
+          this.totalNoti = res;
         }
+        else this.totalNoti = 0;
       });
   }
 }

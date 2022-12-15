@@ -578,7 +578,7 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.clearWaitingThumbnail();
     let id = $data?.data?.recID;
     let item = $data.data;
-    if (item?.read) {
+    if (item?.read ) {
       if (item.extension) {
         var dialogModel = new DialogModel();
         dialogModel.IsFull = true;
@@ -824,10 +824,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   changeView(event) {
-    this.currView = null;
-    this.currView = event.view.model.template2;
-    this.dmSV.page = 1;
-    this.getDataFile(this.dmSV.folderID);
+    if(event.text != 'Search')
+    {
+      this.currView = null;
+      this.currView = event.view.model.template2;
+      this.dmSV.page = 1;
+      //this.getDataFile(this.dmSV.folderID);
+    }
     //  this.data = [];
   }
   viewChanging(event) {
@@ -1244,4 +1247,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
   }
+  getPUser(data)
+  {
+    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    if(item) return item?.createdBy;
+    return ""
+  }
+  getDUser(data)
+  {
+    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    if(item) return  item?.createdOn;
+    return ""
+  }
+  
 }

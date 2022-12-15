@@ -35,7 +35,7 @@ import { CodxBpService } from '../codx-bp.service';
 export class PopupViewDetailProcessesComponent implements OnInit {
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
   @ViewChild('viewProcessSteps') viewProcessSteps: ProcessStepsComponent;
-  process: BP_Processes;
+  process: any;
   viewMode = '16';
   funcID = 'BPT11'; //testsau klaay từ more ra
   name = 'ViewList';
@@ -59,7 +59,8 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   childFunc = [];
   mfAdd: any;
   isShowButton = true;
-  isEdit = false;
+  isEdit = true;
+  avata = "";
 
   constructor(
     private api: ApiHttpService,
@@ -108,6 +109,15 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     //   );
     // }
     //this.changeDetectorRef.detectChanges();
+    this.getListUser();
+  }
+
+  getListUser(){
+    this.bpService.getUserByProcessId(this.process.recID).subscribe((res) => {
+      if(res){
+        this.avata =res;
+      }
+    });
   }
 
   clickMenu(item) {

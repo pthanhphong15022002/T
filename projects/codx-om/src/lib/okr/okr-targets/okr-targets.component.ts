@@ -9,6 +9,7 @@ import {
 import { ChartData } from '../../model/chart.model';
 import { OKRs } from '../../model/okr.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
+import { PopupKRWeightComponent } from '../../popup/popup-kr-weight/popup-kr-weight.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 
@@ -186,6 +187,21 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       [kr, o,],
+      '',
+      dModel
+    );
+  }
+  //Sửa trọng số KR
+  editKRWeight(o: any) {
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    let dialogShowKR = this.callfunc.openForm(
+      PopupKRWeightComponent,
+      '',
+      null,
+      null,
+      null,
+      [o,],
       '',
       dModel
     );

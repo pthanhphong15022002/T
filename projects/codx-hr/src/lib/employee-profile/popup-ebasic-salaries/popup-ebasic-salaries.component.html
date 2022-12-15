@@ -1,1 +1,68 @@
-<p>popup-ebasic-salaries works!</p>
+<layout-list-detail
+    #lstDetail
+    [title]="headerText"
+    [formModel] = "formModel"
+    [footer]="footer"
+    [dialog] = "dialog"
+    [data] = "data"
+    [leftTemlate]="LeftTemlate"
+    [RightTemlate]="body"
+    *ngIf="isAfterRender"
+>
+    <ng-template #body>
+
+    </ng-template>
+    <ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary" (click)="onSaveForm()">
+        <i class="icon-save"></i>
+        <codx-label
+            default="Lưu"
+            name="lblSave"
+            [formModel]="formModel"
+        ></codx-label>
+        </button>
+    </div>
+    </ng-template>
+</layout-list-detail>
+
+<ng-template #LeftTemlate>
+<codx-listview
+    #listView
+    [type]="'cardView'"
+    [service]="'HR'"
+    [assemblyName]="'HR'"
+    [entityName]="'HR_EBasicSalaries'"
+    [className]="'EBasicSalariesBusiness'"
+    [method]="'GetListEBasicSalariesAsync'"
+    [predicate]="'EmployeeID=@0'"
+    [dataValue]="employeeId"
+    [itemTemplate]="itemTemplate"
+    (afterRender) = "afterRenderListView($event)"
+    [selectFirst]="true"
+>
+</codx-listview>
+</ng-template>
+
+    <ng-template #itemTemplate let-data>
+    <codx-temp-full
+        [formModel]="formModel"
+        [typeMF]="'hover'"
+        [titleTmp]="tmplateEBasicSalaries"
+        [icoTitleCss]="'icon-attach_money'"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        [dataItem]="data"
+        typeMF="hover"
+        [hideMF]="true"
+        (click)="click(data)"
+    >
+    </codx-temp-full>
+    </ng-template>
+
+<ng-template #tmplateEBasicSalaries let-data1>
+<div class="d-flex flex-column">
+    <div><i class="icon-attach_money"></i>data1.bSalary<i class="icon-attach_money"></i>data1.siSalary</div>
+    <div><i class="icon-edit_fill"></i>{{(data1.effectedDate | fmDT) + ' - ' + (data1.expiredDate | fmDT)}}</div>
+    <div><i class="icon-format_list_bulleted"></i>{{(data1.decisionNo)}} <i class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"></i> {{(data1.signedDate | fmDT)}}</div>
+</div>
+</ng-template>

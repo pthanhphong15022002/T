@@ -9,45 +9,77 @@
         <div class="p-2"> -->
           <!-- ///noi dung -->
           <div class="process-detail-header">
-            <div class="fw-bold text-dark fs-4 mb-1">
-              {{ process?.processName }}
+            <div class="fw-bold text-dark fs-4 mb-2" #processName>
+              {{
+                process?.processName
+                  | formatvalue
+                    : formModel
+                    : "processName"
+                    : processName
+                    : "Processes"
+                    : "grvProcesses"
+                  | async
+              }}
             </div>
 
             <div class="d-flex flex-wrap mb-2">
-              <div class="d-flex align-items-center me-4">
+              <div class="d-flex align-items-center me-5">
+                <span
+                  class="icon-account_circle icon-14 me-1 text-gray-600"
+                ></span>
                 <span class="fw-bold me-1">
-                  <codx-label name="lblVersionNo" [formName]="'ProcessRevisions'" [gridViewName]="'grvProcessRevisions'"
-                    default="Phiên bản:">
-                  </codx-label>
+                  <codx-label
+                    fiedName="Owner"
+                    formName="Processes"
+                    gridViewName="grvProcesses"
+                    default="Chủ quy trình"
+                  ></codx-label
+                  >:
                 </span>
-                <span class="text-gray-600" #versionNo>{{
-                  process?.versionNo
-                  | formatvalue
-                  : formModel
-                  : "versionNo"
-                  : versionNo
-                  : "ProcessRevisions"
-                  : "grvProcessRevisions"
-                  | async
-                  }}</span>
+                <span class="text-gray-600">{{ process?.userName }}</span>
               </div>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center me-5">
+                <span
+                  class="icon-calendar_today icon-14 me-1 text-gray-600"
+                ></span>
                 <span class="fw-bold me-1">
                   <codx-label name="lblActivedOn" default="Ngày hiệu lực:">
                   </codx-label>
                 </span>
                 <span class="text-gray-600" #activedOn>
                   {{
-                  process?.activedOn
-                  | formatvalue
-                  : formModel
-                  : "activedOn"
-                  : activedOn
-                  : "Processes"
-                  : "grvProcesses"
-                  | async
+                    process?.activedOn
+                      | formatvalue
+                        : formModel
+                        : "activedOn"
+                        : activedOn
+                        : "Processes"
+                        : "grvProcesses"
+                      | async
                   }}
                 </span>
+              </div>
+              <div class="d-flex align-items-center me-5">
+                <span class="icon-assignment icon-14 me-1 text-gray-600"></span>
+                <span class="fw-bold me-1">
+                  <codx-label
+                    name="lblVersionNo"
+                    [formName]="'ProcessRevisions'"
+                    [gridViewName]="'grvProcessRevisions'"
+                    default="Phiên bản:"
+                  >
+                  </codx-label>
+                </span>
+                <span class="text-gray-600" #versionNo>{{
+                  process?.versionNo
+                    | formatvalue
+                      : formModel
+                      : "versionNo"
+                      : versionNo
+                      : "ProcessRevisions"
+                      : "grvProcessRevisions"
+                    | async
+                }}</span>
               </div>
             </div>
 
@@ -75,26 +107,64 @@
           </div>
         </div>
         <div class="justify-content-end">
-          <div class="overflow-hidden btn-group me-3" *ngIf="process.actived && name != 'Flowchart'">
-            <button style="border-radius: 3px 0 0 3px !important" type="button" class="btn btn-primary"
-              (click)="clickButtonAdd()" [disabled]="!isEdit">
-              <i class="icon-add"></i>
-              <codx-label name="Add" [formModel]="formModel" default="Thêm"></codx-label>
-            </button>
-            <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown "
-              container="body">
-              <button id="show_menu" style="border-radius: 0 3px 3px 0 !important" type="button"
-                class="btn btn-primary dropdown-toggle-split dropdown-toggle-click" ngbDropdownToggle>
-                <i class="icon-arrow_drop_down icon-25"></i>
+          <div class="left-button me-3">
+            <div class="d-flex justify-content-end">
+              <codx-imgs
+                class=""
+                [objectId]="avata"
+                objectType="AD_Users"
+                [numberImages]="6"
+              >
+              </codx-imgs>
+            </div>
+            <div
+              class="overflow-hidden btn-group me-3 button-add"
+              *ngIf="process.actived && name != 'Flowchart'"
+            >
+              <button
+                style="border-radius: 3px 0 0 3px !important"
+                type="button"
+                class="btn btn-primary"
+                (click)="clickButtonAdd()"
+                [disabled]="!isEdit"
+              >
+                <i class="icon-add"></i>
+                <codx-label
+                  name="Add"
+                  [formModel]="formModel"
+                  default="Thêm"
+                ></codx-label>
               </button>
-              <div class="dropdown-menu" ngbDropdownMenu>
-                <button ngbDropdownItem style="align-items: center" *ngFor="let item of childFunc"
-                  (click)="clickButton(item)" [disabled]="!isEdit">
-                  <div class="text-hover-primary d-flex">
-                    <i class="{{ item.icon }}"></i>
-                    <span class="ms-2">{{ item.text }}</span>
-                  </div>
+              <div
+                class="btn-group"
+                ngbDropdown
+                role="group"
+                aria-label="Button group with nested dropdown "
+                container="body"
+              >
+                <button
+                  id="show_menu"
+                  style="border-radius: 0 3px 3px 0 !important"
+                  type="button"
+                  class="btn btn-primary dropdown-toggle-split dropdown-toggle-click"
+                  ngbDropdownToggle
+                >
+                  <i class="icon-arrow_drop_down icon-25"></i>
                 </button>
+                <div class="dropdown-menu" ngbDropdownMenu>
+                  <button
+                    ngbDropdownItem
+                    style="align-items: center"
+                    *ngFor="let item of childFunc"
+                    (click)="clickButton(item)"
+                    [disabled]="!isEdit"
+                  >
+                    <div class="text-hover-primary d-flex">
+                      <i class="{{ item.icon }}"></i>
+                      <span class="ms-2">{{ item.text }}</span>
+                    </div>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -102,26 +172,47 @@
       </div>
       <div class="d-flex tab-header">
         <ng-container *ngFor="let item of tabControl; let i = index">
-          <a [class]=" 
+          <a
+            [class]="
               ' text-dark fw-bold tab-item' +
               ' ' +
               (item.isActive ? 'tab-active' : '')
-            " (click)="clickMenu(item)">
-            <codx-vll name="SYS025" [value]="item.id" [showText]="true" class="" >
+            "
+            (click)="clickMenu(item)"
+          >
+            <codx-vll
+              name="SYS025"
+              [value]="item.id"
+              [showText]="true"
+              class=""
+            >
             </codx-vll>
           </a>
         </ng-container>
       </div>
     </div>
     <div class="view-details-content rounded-3 bg-body scroll-y p-3 pb-0 mt-4">
-      <div class="card-body px-0 prod-body" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto" data-kt-scroll-dependencies=".view-details-header"
+      <div
+        class="card-body px-0 prod-body"
+        data-kt-scroll="true"
+        data-kt-scroll-activate="{default: true}"
+        data-kt-scroll-height="auto"
+        data-kt-scroll-dependencies=".view-details-header"
         data-kt-scroll-wrappers=".stepper-body, .no-header, .view-details-content"
-        [attr.data-kt-scroll-offset]="'68px'">
+        [attr.data-kt-scroll-offset]="'60px'"
+      >
         <ng-container>
           <ng-container *ngIf="process && childFunc?.length > 0">
-            <codx-processsteps #viewProcessSteps [process]="process" [funcID]="funcID" [childFunc]="childFunc"
-              [formModel]="formModelFlowChart" [isEdit]="isEdit" (getObjectFile)="getObjectFile($event)"></codx-processsteps>
+            <codx-processsteps
+              #viewProcessSteps
+              [process]="process"
+              [funcID]="funcID"
+              [childFunc]="childFunc"
+              [formModel]="formModelFlowChart"
+              [isEdit]="isEdit"
+              (getObjectFile)="getObjectFile($event)"
+              (isClosePopup)="getListUser()"
+            ></codx-processsteps>
           </ng-container>
         </ng-container>
 
@@ -212,7 +303,10 @@
   <div class="w-100 h-100">
     <div class="list-empty card card-flush h-100">
       <div class="d-flex flex-column flex-center justify-content-center">
-        <img src="../assets/themes/sys/default/img/DataEmpty.svg" class="w-200px" />
+        <img
+          src="../assets/themes/sys/default/img/DataEmpty.svg"
+          class="w-200px"
+        />
         <div class="text-dark fw-bold mt-2 mb-5 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
