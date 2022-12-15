@@ -778,13 +778,13 @@ export class ProcessesComponent
 
   onDragDrop(e: any) {}
 
-  changeDataMF(e, data) {
+  async changeDataMF(e, data) {
     if (e != null && data != null) {
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
       var checkGroup = '';
 
-      checkGroup = this.checkGroupId(data);
+      checkGroup = await this.checkGroupId(data);
       this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
@@ -800,7 +800,7 @@ export class ProcessesComponent
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
             let isPublish = data?.permissions.some(
-              (x) => x.objectID == this.checkGroupPerm && x.publish
+              (x) => x.objectID == checkGroup && x.publish
             );
             if (data.status === '6' || (!isPublish && !fullRole)) {
               res.isblur = true;
@@ -810,7 +810,7 @@ export class ProcessesComponent
           case 'SYS003': // them
           case 'SYS003': // them phien ban
             let isCreate = data?.permissions.some(
-              (x) => x.objectID == this.checkGroupPerm && x.create
+              (x) => x.objectID == checkGroup && x.create
             );
             if ((!isCreate && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS04') {
@@ -830,7 +830,7 @@ export class ProcessesComponent
           case 'BPT303': //luu phien ban
           case 'BPT603': //luu phien ban
             let isEdit = data?.permissions.some(
-              (x) => x.objectID == this.checkGroupPerm && x.edit
+              (x) => x.objectID == checkGroup && x.edit
             );
             if ((!isEdit && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS03') {
@@ -842,7 +842,7 @@ export class ProcessesComponent
             break;
           case 'SYS02': // xoa
             let isDelete = data?.permissions.some(
-              (x) => x.objectID == this.checkGroupPerm && x.delete
+              (x) => x.objectID == checkGroup && x.delete
             );
             if ((!isDelete && !fullRole) || data.deleted) {
               res.disabled = true;
@@ -868,7 +868,7 @@ export class ProcessesComponent
           case 'BPT605': //chia se
             let isShare = data?.permissions.some(
               (x) =>
-                x.objectID == this.checkGroupPerm &&
+                x.objectID == checkGroup &&
                 x.share &&
                 x.approveStatus !== '3' &&
                 x.approveStatus != '4'
@@ -882,7 +882,7 @@ export class ProcessesComponent
           case 'BPT308': //phan quyen
           case 'BPT608': //phan quyen
             let isAssign = data?.permissions.some(
-              (x) => x.objectID == this.checkGroupPerm && x.assign
+              (x) => x.objectID == checkGroup && x.assign
             );
             if (!isAssign && !fullRole) {
               res.isblur = true;
@@ -891,7 +891,7 @@ export class ProcessesComponent
             break;
           case 'BPT702': //Khoi phuc
             let isRestore = data?.permissions.some(
-              (x) => x.objectID == this.checkGroupPerm && x.delete
+              (x) => x.objectID == checkGroup && x.delete
             );
             if (!isRestore && !fullRole) {
               res.isblur = true;
@@ -901,7 +901,7 @@ export class ProcessesComponent
     }
   }
 
-  checkGroupId(data) {
+  async checkGroupId(data) {
     var isCheck = '';
     if (data.permissions != null) {
       data.permissions.forEach((res) => {
