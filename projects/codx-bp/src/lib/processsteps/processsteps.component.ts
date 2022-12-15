@@ -194,8 +194,12 @@ export class ProcessStepsComponent
       id: 'btnAdd',
       items: items,
     };
+    // this.childFunc.forEach((obj) => {
+    //   if (obj.id != 'P') this.childFuncOfP.push(obj);
+    // });
+    //p chỉ lấy a
     this.childFunc.forEach((obj) => {
-      if (obj.id != 'P') this.childFuncOfP.push(obj);
+      if (obj.id == 'A') this.childFuncOfP.push(obj);
     });
     this.childFunc.map((obj) => {
       if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
