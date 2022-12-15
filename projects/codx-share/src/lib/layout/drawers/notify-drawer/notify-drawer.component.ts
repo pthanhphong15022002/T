@@ -51,7 +51,7 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
       []).subscribe((res:any) => {
         if(res > 0) 
         {
-          this.totalNoti = (res > 9) ? 9 : res;
+          this.totalNoti = res;
         }
         else this.totalNoti = 0;
       });
