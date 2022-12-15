@@ -142,6 +142,9 @@ export class BookingStationeryComponent
       case 'EPT40303': //Cap phat
         this.allocate(data);
         break;
+      case 'EP8T1101': //Gui duyet
+        this.release(data);
+        break;
     }
   }
   viewChanged(evt: any) {
@@ -174,7 +177,8 @@ export class BookingStationeryComponent
             if (
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'SYS04' /*MF chép*/
+              func.functionID == 'SYS04' /*MF chép*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
             ) {
               func.disabled = false;
             }
@@ -186,7 +190,8 @@ export class BookingStationeryComponent
             }
             if (
               func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
             ) {
               func.disabled = true;
             }
@@ -341,7 +346,11 @@ export class BookingStationeryComponent
             if (dataItem) {
               this.view.dataService.update(dataItem).subscribe((res) => {
                 if (res) {
-                  this.notificationsService.notify('Cấp phát thành công', '1', 0);
+                  this.notificationsService.notify(
+                    'Cấp phát thành công',
+                    '1',
+                    0
+                  );
                 }
               });
               this.detectorRef.detectChanges();
@@ -352,6 +361,41 @@ export class BookingStationeryComponent
         return;
       }
     });
+  }
+
+  release(evt) {
+    let data = evt;
+    if (
+      this.authService.userValue.userID != data?.owner
+      //&& !this.authService.userValue.administrator
+    ) {
+      this.notificationsService.notifyCode('TM052');
+      return;
+    }
+
+    this.codxEpService
+      .getCategoryByEntityName(this.formModel.entityName)
+      .subscribe((category: any) => {
+        this.codxEpService
+          .release(
+            data,
+            category.processID,
+            'EP_Bookings',
+            this.formModel.funcID
+          )
+          .subscribe((res) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              this.notificationsService.notifyCode('ES007');
+              data.approveStatus = '3';
+              data.status = '3';
+              data.write = false;
+              data.delete = false;
+              this.view.dataService.update(data).subscribe();
+            } else {
+              this.notificationsService.notifyCode(res?.msgCodeError);
+            }
+          });
+      });
   }
 
   setPopupTitle(mfunc) {
