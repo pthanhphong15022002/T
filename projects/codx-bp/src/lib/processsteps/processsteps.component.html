@@ -486,14 +486,6 @@
     </span>
     <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
-        <codx-mfunc
-          type="hover"
-          [formModel]="view.formModel"
-          (clickMF)="clickMF($event, dataHover)"
-          [isBookMark]="false"
-          [dataItem]="data"
-        >
-        </codx-mfunc>
         <ng-container #moreFC>
           <div class="moreFC rounded-4 py-2" id="{{ data?.recID }}">
             <ng-container *ngIf="data.stepType == 'P'">
