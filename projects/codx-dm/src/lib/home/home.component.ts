@@ -824,10 +824,13 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   changeView(event) {
-    this.currView = null;
-    this.currView = event.view.model.template2;
-    this.dmSV.page = 1;
-    this.getDataFile(this.dmSV.folderID);
+    if(event.text != 'Search')
+    {
+      this.currView = null;
+      this.currView = event.view.model.template2;
+      this.dmSV.page = 1;
+      //this.getDataFile(this.dmSV.folderID);
+    }
     //  this.data = [];
   }
   viewChanging(event) {
