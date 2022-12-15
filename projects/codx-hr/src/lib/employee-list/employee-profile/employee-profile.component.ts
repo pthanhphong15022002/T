@@ -436,6 +436,8 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eexperiences') {
           console.log('event eex', event);
+        } else if (funcID == 'evaccines') {
+          this.addEditEVaccines('edit', data);
         }
         break;
 
@@ -520,6 +522,11 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'evaccines') {
+              this.hrService.deleteEVaccine(data).subscribe((res) => {
+                if (res) {
+                }
+              });
             }
           }
         });
@@ -1379,7 +1386,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //#region
 
   //#endregion HR_EVaccines
-  addEVaccines(actionType: string, data: any) {
+  addEditEVaccines(actionType: string, data: any) {
     // this.hrService.addEVaccine(null).subscribe();
     // return;
     this.view.dataService.dataSelected = this.data;
