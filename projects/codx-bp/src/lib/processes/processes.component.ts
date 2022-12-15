@@ -189,7 +189,7 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    this.isAdminBp = this.checkAdminOfBP(this.userId);    
+    this.isAdminBp = this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -791,7 +791,7 @@ export class ProcessesComponent
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
             let isPublish = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.publish
+              (x) => x.objectID == this.userId  && x.publish
             );
             if (data.status === '6' || (!isPublish && !fullRole)) {
               res.isblur = true;
@@ -801,7 +801,7 @@ export class ProcessesComponent
           case 'SYS003': // them
           case 'SYS003': // them phien ban
             let isCreate = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.create
+              (x) => x.objectID == this.userId  && x.create
             );
             if ((!isCreate && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS04') {
@@ -821,7 +821,7 @@ export class ProcessesComponent
           case 'BPT303': //luu phien ban
           case 'BPT603': //luu phien ban
             let isEdit = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID  && x.edit
+              (x) => x.objectID == this.userId  && x.edit
             );
             if ((!isEdit && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS03') {
@@ -833,7 +833,7 @@ export class ProcessesComponent
             break;
           case 'SYS02': // xoa
             let isDelete = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID  &&  x.delete
+              (x) => x.objectID == this.userId  &&  x.delete
             );
             if ((!isDelete && !fullRole) || data.deleted) {
               res.disabled = true;
@@ -858,7 +858,7 @@ export class ProcessesComponent
           case 'BPT305': //chia se
           case 'BPT605': //chia se
             let isShare = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.share && x.approveStatus !== '3' && x.approveStatus != "4"
+              (x) => x.objectID == this.userId && x.share && x.approveStatus !== '3' && x.approveStatus != "4"
             );
             if (!isShare && !fullRole) {
               res.isblur = true;
@@ -869,7 +869,7 @@ export class ProcessesComponent
           case 'BPT308': //phan quyen
           case 'BPT608': //phan quyen
             let isAssign = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.assign
+              (x) => x.objectID == this.userId && x.assign
             );
             if (!isAssign && !fullRole) {
               res.isblur = true;
@@ -877,7 +877,7 @@ export class ProcessesComponent
             break;
           case 'BPT702': //Khoi phuc
             let isRestore = data?.permissions.some(
-              (x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.delete
+              (x) => x.objectID == this.userId && x.delete
             );
             if (!isRestore && !fullRole) {
               res.isblur = true;
@@ -888,7 +888,7 @@ export class ProcessesComponent
   }
 
   checkPermissionRead(data) {
-    let isRead = data?.permissions.some((x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.read && x.approveStatus !== '3' && x.approveStatus !== '4');
+    let isRead = data?.permissions.some((x) => x.objectID == this.userId && x.read && x.approveStatus !== '3' && x.approveStatus !== '4');
     let isOwner = data?.owner == this.userId ? true : false;
     return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
   }
@@ -914,7 +914,7 @@ export class ProcessesComponent
 
   viewDetailProcessSteps(moreFunc, data) {
     let isEdit = data?.permissions.some(
-      (x) => x.objectID == this.userId && x.objectID == this.userGroupID && x.edit
+      (x) => x.objectID == this.userId && x.edit
     );
     let isOwner = data?.owner == this.userId ? true : false;
     let editRole =
