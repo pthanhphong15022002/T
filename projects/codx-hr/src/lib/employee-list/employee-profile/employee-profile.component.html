@@ -3834,7 +3834,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeAwardsInfo()"
+                    (click)="addEHealths('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3906,7 +3906,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEVaccines('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3942,49 +3942,52 @@
               >
                 <div class="mb-1">
                   <div class="d-flex flex-wrap mt-6 mb-3">
-                    <div class="mw-300px min-w-300px">
-                      <div
-                        class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
-                      >
-                        <span
-                          class="icon-i-arrow-down-left-circle-fill icon-14 me-2"
-                          style="color: blueviolet"
-                        ></span
-                        ><span>VaccinnA</span>
-                      </div>
-                      <div class="pf-process">
-                        <div
-                          class="d-flex align-items-center pf-process-item py-2"
-                        >
-                          <span
-                            class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
-                          ></span
-                          ><span
-                            class="icon-date_range icon-16 me-2 text-gray-600"
-                          ></span
-                          ><span class="text-gray-600 me-3">02/02/2022</span
-                          ><span
-                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
-                          ></span>
-                          <div class="text-primary">Pfizer</div>
+                    <ng-container *ngFor="let item of lstVaccine">
+                      <div class="has-action-menu">
+                        <div class="mw-300px min-w-300px me-5">
+                          <div
+                            class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
+                          >
+                            <span
+                              class="icon-i-arrow-down-left-circle-fill icon-14 me-2"
+                              style="color: blueviolet"
+                            ></span
+                            ><span>{{ item?.vaccineTypeID }}</span>
+                          </div>
+                          <div class="pf-process">
+                            <ng-container *ngFor="let vaccine of item.vaccines">
+                              <div
+                                class="d-flex align-items-center pf-process-item py-2"
+                              >
+                                <span
+                                  class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
+                                ></span
+                                ><span
+                                  class="icon-date_range icon-16 me-2 text-gray-600"
+                                ></span
+                                ><span class="text-gray-600 me-3">{{
+                                  vaccine.injectDate | fmDT
+                                }}</span
+                                ><span
+                                  *ngIf="vaccine?.vaccineName != null"
+                                  class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
+                                ></span>
+                                <div class="text-primary">
+                                  {{ vaccine?.vaccineName }}
+                                </div>
+                              </div>
+                            </ng-container>
+                          </div>
                         </div>
-                        <div
-                          class="d-flex align-items-center pf-process-item py-2"
+                        <codx-mfunc
+                          [formModel]="formModel"
+                          (clickMF)="clickMF($event, data)"
+                          type="hover"
+                          [dataItem]="item"
                         >
-                          <span
-                            class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
-                          ></span
-                          ><span
-                            class="icon-date_range icon-16 me-2 text-gray-600"
-                          ></span
-                          ><span class="text-gray-600 me-3">02/02/2022</span
-                          ><span
-                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
-                          ></span>
-                          <div class="text-primary">Astra silicon</div>
-                        </div>
+                        </codx-mfunc>
                       </div>
-                    </div>
+                    </ng-container>
                   </div>
                 </div>
               </div>
