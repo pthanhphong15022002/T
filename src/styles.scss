@@ -1359,7 +1359,8 @@ codx-vll {
 .label-colon {
   position: relative;
   padding-right: 10px;
-
+  min-height: 18px;
+  display: inherit;
 }
 
 .label-colon::after {
@@ -1367,7 +1368,7 @@ codx-vll {
   position: absolute;
   right: 6px;
   bottom: 0;
-  height: 16px;
+  height: 18px;
 }
 
 .codx-label.required::after {
