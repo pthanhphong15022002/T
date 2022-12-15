@@ -133,6 +133,7 @@ export class ProcessStepsComponent
   actived = false;
   isBlock: any = true;
   idView ='' ;
+  loadingData = false;
 
   constructor(
     inject: Injector,
@@ -838,6 +839,7 @@ export class ProcessStepsComponent
             if (this.kanban) this.kanban.updateCard(data);
           }
           this.notiService.notifyCode('SYS007');
+          
         } else {
           this.notiService.notifyCode(' SYS021');
         }
@@ -925,7 +927,7 @@ export class ProcessStepsComponent
               event.previousIndex,
               event.currentIndex
             );
-
+           
             this.dataTreeProcessStep = this.view.dataService.data;
             //edit kéo Phase
             if (
