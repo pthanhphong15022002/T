@@ -1247,4 +1247,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
   }
+  getPUser(data)
+  {
+    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    if(item) return item?.objectID;
+    return ""
+  }
+  getDUser(data)
+  {
+    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    if(item) return  item?.createdOn;
+    return ""
+  }
+  
 }

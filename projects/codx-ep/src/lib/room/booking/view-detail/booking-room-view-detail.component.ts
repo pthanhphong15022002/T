@@ -29,8 +29,13 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
   @ViewChild('bookingRoom') bookingRoom: BookingRoomComponent;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
-  @Output('delete') delete: EventEmitter<any> = new EventEmitter();
+  @Output('release') release: EventEmitter<any> = new EventEmitter();
+  @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
+  @Output('invite') invite: EventEmitter<any> = new EventEmitter();
+  @Output('reschedule') reschedule: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  
+  @Output('setPopupTitleOption') setPopupTitleOption: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -136,6 +141,34 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       case 'SYS04': //copy.
         this.lviewCopy(data, event.text);
         break;
+      case 'EP4T1101': //Dời
+        this.lviewReschedule(data, event?.text);
+        break;
+      case 'EP4T1102': //Mời
+        this.lviewInvite(data, event?.text);
+        break;
+      case 'EP4T1103': //Gửi duyệt
+        this.lviewRelease(data);
+        break;
+    }
+  }
+  lviewRelease(data?) {
+    if (data) {      
+      this.release.emit(data);
+    }
+  }
+
+  lviewReschedule(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitleOption.emit(mfuncName);
+      this.reschedule.emit(data);
+    }
+  }
+
+  lviewInvite(data?, mfuncName?) {
+    if (data) {
+      this.setPopupTitleOption.emit(mfuncName);
+      this.invite.emit(data);
     }
   }
   lviewEdit(data?, mfuncName?) {
@@ -144,6 +177,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
       this.edit.emit(data);
     }
   }
+
+  
   lviewDelete(data?) {
     if (data) {
       this.delete.emit(data);
@@ -165,7 +200,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/
+            func.functionID == 'SYS04' /*MF chép*/||            
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
           } 
@@ -182,7 +218,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = true;
           }
@@ -199,7 +236,8 @@ export class BookingRoomViewDetailComponent extends UIComponent implements OnCha
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
           }
-          if (
+          if (                
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1102' /*MF mời*/ ||

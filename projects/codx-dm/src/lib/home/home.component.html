@@ -135,32 +135,43 @@
 </ng-template>
 <ng-template #templateList>
   <ng-container *ngIf="data && data.length > 0">
-    <div class="dms-listview h-100 p-2">
+    <div class="dms-listview h-100 p-2" style="overflow-x:auto;">
       <table class="table tb-dm">
         <thead class="border-top">
           <tr>
+            <th scope="col" class="w-5">
+            </th>
             <th scope="col" class="w-30">
               <div class="fw-bold text-dark">{{ titleFileName }}</div>
-            </th>
-            <th scope="col" class="w-20">
-              <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
-            </th>
-            <th scope="col" class="w-10">
-              <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
             </th>
             <th scope="col" class="w-10">
               <div class="fw-bold text-dark">{{ titleLength }}</div>
             </th>
-            <th scope="col">
+            <th scope="col" class="w-30">
+              <div class="fw-bold text-dark">Người yêu cầu</div>
+            </th>
+            <th scope="col" class="w-30">
+              <div class="fw-bold text-dark">Ngày yêu cầu</div>
+            </th>
+            <th scope="col" class="w-30">
+              <div class="fw-bold text-dark">{{ titleCreatedBy }}</div>
+            </th>
+            <th scope="col" class="w-30">
+              <div class="fw-bold text-dark">{{ titleCreatedOn }}</div>
+            </th>
+            <th scope="col" class="w-30">
               <div class="fw-bold text-dark">{{ titleDisc }}</div>
             </th>
           </tr>
         </thead>
         <tbody>
-          <tr (dblclick)="dbView(item)" class="border-top dms-list" *ngFor="let item of data" [title]="
+          <tr  class="border-top dms-list" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
-            <td class="w-30">
+            <td class="w-5">
+              <codx-mfunc (clickMF)="dmSV.clickMF($event, item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)" type="hover"  [formModel]="view.formModel"></codx-mfunc>
+            </td>
+            <td class="w-30" (dblclick)="dbView(item)">
               <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
                 (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
                 [imageWidth]="20" [imageSrc]="dmSV.getImage(item)" imgCss="w-20px me-3 cursor-pointer" [title]="
@@ -171,24 +182,26 @@
                 <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
               </ng-template>
             </td>
-            <td class="w-20">
+            <td class="w-10">
+              {{dmSV.getSizeKB(item)}}
+            </td>
+            <td class="w-30">
+              {{getPUser(item)}}
+            </td>
+            <td class="w-30">
+              {{getDUser(item) | date: "dd/MM/yyyy"}}
+            </td>
+            <td class="w-30">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"
                 [imageWidth]="25" [subTitle]="item.userName">
               </codx-temp-full>
             </td>
-            <td class="w-10">
+            <td class="w-30">
               <div class="erm-date">
                 {{ item.createdOn | date: "dd/MM/yyyy" }}
               </div>
             </td>
-            <td class="w-10">
-              <codx-temp-full class="float-start" imgCss="me-3" (clickMF)="dmSV.clickMF($event, item)"
-                [formModel]="view.formModel" [typeMF]="'hover'" [title]="dmSV.getSizeKB(item)"
-                (changeDataMF)="dmSV.filterMoreFunction($event, item)" cardCss="d-flex justify-content-end">
-              </codx-temp-full>
-            </td>
-            <td>
-
+            <td class="w-30">
               <span>{{item.description}}</span><!-- item.revisionNote -->
             </td>
           </tr>
