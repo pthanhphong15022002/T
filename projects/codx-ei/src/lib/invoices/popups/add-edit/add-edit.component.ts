@@ -185,7 +185,7 @@ export class AddEditComponent implements OnInit {
         e.data.salesPrice >= 0)
     ) {
       let data = this.calculateLine(e.data);
-      this.grid.updateRow(e.idx, data);
+      // this.grid.updateRow(e.idx, data);
       this.updateInvoices();
     }
   }
@@ -224,7 +224,7 @@ export class AddEditComponent implements OnInit {
     rowData.vatid = data.vatPct;
     rowData.salesAmt = 0;
     rowData.totalAmt = 0;
-    this.grid.updateRow(idx, rowData);
+    // this.grid.updateRow(idx, rowData);
   }
 
   updateInvoices() {

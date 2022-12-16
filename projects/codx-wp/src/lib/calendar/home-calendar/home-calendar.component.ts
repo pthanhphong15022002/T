@@ -30,11 +30,11 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   funcID: any;
   fields = {
-    id: 'TransID',
-    subject: { name: 'Title' },
-    startTime: { name: 'StartDate' },
-    endTime: { name: 'EndDate' },
-    status: 'TransType',
+    id: 'transID',
+    subject: { name: 'title' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    status: 'transType',
   };
   request?: ResourceModel;
   tmpCalendarNote: any;
@@ -179,7 +179,10 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     a.instance.showHeader = false;
     a.instance.resources = resource;
     let myInterval = setInterval(() => {
-      if (this.tmpCalendarNote.instance.dataResourceModel) {
+      if (
+        this.tmpCalendarNote.instance.dataResourceModel &&
+        this.tmpCalendarNote.instance.dataResourceModel.length > 0
+      ) {
         clearInterval(myInterval);
         a.instance.resourceModel =
           this.tmpCalendarNote.instance.dataResourceModel;

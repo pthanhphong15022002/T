@@ -421,16 +421,36 @@ export class CodxShareService {
   }
 
   getDataTM_Tasks(requestData) {
-    return this.api.execSv('TM', 'TM', 'TaskBusiness', 'GetTasksWithScheduleAsync', [requestData, true]);
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetTasksWithScheduleWPAsync',
+      [requestData, true]
+    );
   }
-  getDataWP_Notes(requestData) {
-    return this.api.execSv('WP', 'WP', '', '', requestData);
+
+  getDataWP_Notes(predicate, dataValue) {
+    return this.api.execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NotesBusiness',
+      'GetListAsync',
+      [predicate, dataValue]
+    );
   }
   getDataCO_Meetings(requestData) {
-    return this.api.execSv('CO', 'CO', '', '', requestData);
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'GetListMeetingsAsync',
+      requestData
+    );
   }
+
   getDataEP_Bookings(requestData) {
-    return this.api.execSv('EP', 'EP', '', '', requestData);
+    return this.api.execSv('EP', 'EP', 'BookingsBusiness', 'GetListBookingAsync', requestData);
   }
 }
 
