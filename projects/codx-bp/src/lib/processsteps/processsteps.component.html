@@ -631,7 +631,7 @@
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
     <codx-mfunc
-      *ngIf="isEdit"
+      *ngIf="hideMoreFC"
       type="hover"
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"

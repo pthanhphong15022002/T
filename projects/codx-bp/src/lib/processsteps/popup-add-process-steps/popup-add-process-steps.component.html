@@ -145,28 +145,30 @@
       <ng-container *ngIf="referenceText?.length > 0">
         <div *ngFor="let item of referenceText; let i = index" class="m-5">
           <div class="text-hover-primary cursor-pointer">
-            <span>{{ i + 1 }}</span
-            ><span>
-              <codx-label name="lblSymboy" default="."></codx-label> </span
-            ><span
+            <span 
               [ngbPopover]="deleteReference"
               #p="ngbPopover"
               (mouseenter)="showPoppoverDeleteRef(p, i)"
               autoClose="outside"
               placement="right left top bottom"
             >
-              <span *ngIf="i != editTodo" (click)="editTodoIndex(i)">{{
-                item
-              }}</span>
-              <input
-                *ngIf="i === editTodo"
-                style="margin: 0"
-                type="text"
-                [value]="item"
-                (blur)="valueChangeRefrenceItem($event, i)"
-                (keydown.enter)="valueChangeRefrenceItem($event, i)"
-                autofocus
-              />
+              <span>{{ i + 1 }}</span
+                ><span>
+                  <codx-label name="lblSymboy" default="."></codx-label> </span
+                ><span>
+                  <span *ngIf="i != editTodo" (click)="editTodoIndex(i)">{{
+                    item
+                  }}</span>
+                  <input
+                    *ngIf="i === editTodo"
+                    style="margin: 0"
+                    type="text"
+                    [value]="item"
+                    (blur)="valueChangeRefrenceItem($event, i)"
+                    (keydown.enter)="valueChangeRefrenceItem($event, i)"
+                    autofocus
+                  />
+                </span>
             </span>
           </div>
         </div>
