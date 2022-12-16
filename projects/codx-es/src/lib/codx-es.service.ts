@@ -1286,6 +1286,16 @@ export class CodxEsService {
     );
   }
 
+  highlightText(fileUrl, lstHLArea) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'HighlightTextAsync',
+      [fileUrl, lstHLArea]
+    );
+  }
+
   SignAsync(
     stepNo,
     isAwait,

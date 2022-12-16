@@ -113,7 +113,7 @@ export class PdfComponent
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
-  isInteractPDF = false;
+  isInteractPDF = true;
   lstHighlightTextArea: Array<highLightTextArea> = [];
 
   //vll
@@ -2266,63 +2266,92 @@ export class PdfComponent
     this.detectorRef.detectChanges();
   }
 
-  findText() {
+  highlightText() {
+    this.hideActions = true;
+    this.hideThumbnail = true;
     var selection = window.getSelection().getRangeAt(0);
-    var selectedText = selection.extractContents();
-    // Array.from(selectedText.children).forEach((element: HTMLElement) => {
-    //   element.style.cssText = element.style.cssText + `color: red;`;
-    // });
 
-    let selectedChildren = Array.from(selectedText.children).sort(
-      (a: HTMLElement, b: HTMLElement) => {
-        return a.style.top < b.style.top ? 1 : -1;
-      }
-    );
-    selectedChildren.forEach((ele: HTMLSpanElement) => {
-      if (ele.classList.contains('main-center')) {
-        let textLayer = document
-          .querySelectorAll('.textLayer')
-          .item(this.curPage - 1);
-        let lstSpan = ele.querySelectorAll(
-          '.textLayer span[role="presentation"]'
-        );
+    var rects = selection.getClientRects();
+    let textLayer = document
+      .getElementsByClassName('textLayer')
+      .item(this.curPage - 1);
 
-        let subSelectedChildren = Array.from(lstSpan).sort(
-          (a: HTMLElement, b: HTMLElement) => {
-            return a.style.top < b.style.top ? 1 : -1;
-          }
-        );
-        subSelectedChildren.forEach((subEle: HTMLElement) => {
-          subEle.style.cssText += `background-color: red;`;
-          subEle.classList.add('highlighted');
-          // selection.insertNode(subEle);
-          textLayer.appendChild(subEle);
-        });
-      } else if (ele.tagName == 'SPAN') {
-        ele.style.cssText += `background-color: red;`;
-        ele.classList.add('highlighted');
-        selection.insertNode(ele);
+    let textLayerRect = textLayer?.getBoundingClientRect();
+    let top = textLayerRect.top;
+    let left = textLayerRect.left;
+    let width = textLayerRect.width;
+    let height = textLayerRect.height;
+
+    Array.from(rects).forEach((rect) => {
+      let span = document.createElement('span');
+      // spand.style.border = '1px black solid';
+      span.style.height = rect.height + 'px';
+      span.style.width = rect.width + 'px';
+      span.style.top = rect.top - top + 'px';
+      span.style.left = rect.left - left + 'px';
+      span.style.zIndex = '999';
+      span.style.backgroundColor = 'yellow';
+      if (textLayer) {
+        textLayer.appendChild(span);
+        let spanRect = span.getBoundingClientRect();
+        let tmpHLA: highLightTextArea = {
+          color: span.style.backgroundColor,
+          location: {
+            top: spanRect.top,
+            left: spanRect.left,
+            width: spanRect.width,
+            height: spanRect.height,
+            pageNumber: this.curPage,
+          },
+        };
+
+        this.lstHighlightTextArea.push(tmpHLA);
       }
     });
+    if (this.lstHighlightTextArea.length > 0) {
+      this.esService
+        .highlightText(
+          this.curFileUrl.replace(environment.urlUpload + '/', ''),
+          this.lstHighlightTextArea
+        )
+        .subscribe((res) => {
+          console.log('res', res);
+          this.lstHighlightTextArea = [];
+        });
+    }
+    // var selectedText = selection.extractContents();
 
-    // let lstTmpHighlight:Array<highLightTextArea> =
-  }
+    // let selectedChildren = Array.from(selectedText.children).sort(
+    //   (a: HTMLElement, b: HTMLElement) => {
+    //     return a.style.top < b.style.top ? 1 : -1;
+    //   }
+    // );
+    // selectedChildren.forEach((ele: HTMLSpanElement) => {
+    //   if (ele.classList.contains('main-center')) {
+    //     let textLayer = document
+    //       .querySelectorAll('.textLayer')
+    //       .item(this.curPage - 1);
+    //     let lstSpan = ele.querySelectorAll(
+    //       '.textLayer span[role="presentation"]'
+    //     );
 
-  highlightText() {
-    // this.changeEditMode();
-    // let curLayer = document.getElementById('layer2') as Element;
-    // let curLayerBounding = curLayer.getBoundingClientRect();
-    // let range = window.getSelection().getRangeAt(0).getBoundingClientRect();
-    // let highlight = document.createElement('span');
-    // highlight.style.top = range.top - curLayerBounding.top + 'px';
-    // highlight.style.left = range.left - curLayerBounding.left + 'px';
-    // highlight.style.width = range.width + 'px';
-    // highlight.style.height = range.height + 'px';
-    // highlight.style.backgroundColor = 'yellow';
-    // highlight.style.position = 'absolute';
-    // highlight.style.opacity = '0.2';
-    // curLayer?.appendChild(highlight);
-    this.findText();
+    //     let subSelectedChildren = Array.from(lstSpan).sort(
+    //       (a: HTMLElement, b: HTMLElement) => {
+    //         return a.style.top < b.style.top ? 1 : -1;
+    //       }
+    //     );
+    //     subSelectedChildren.forEach((subEle: HTMLElement) => {
+    //       subEle.style.cssText += `background-color: red;`;
+    //       subEle.classList.add('highlighted');
+    //       // selection.insertNode(subEle);
+    //       textLayer.appendChild(subEle);
+    //     });
+    //   } else if (ele.tagName == 'SPAN') {
+    //     ele.style.cssText += `background-color: red;`;
+    //     ele.classList.add('highlighted');
+    //     selection.insertNode(ele);
+    //   }
+    // });
   }
 
   addComment() {}
