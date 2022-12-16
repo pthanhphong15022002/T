@@ -1,6 +1,7 @@
+import { Goods } from './../../../models/goods.model';
 import { mode } from 'crypto-js';
 import { TabModel } from './../../../../../../codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { InvoicesLine } from '../../../models/invoice.model';
+import { InvoiceLine, Invoices } from '../../../models/invoice.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -40,7 +41,7 @@ export class AddEditComponent implements OnInit {
   //#region Contructor
   @Input() headerText: string;
   dialog: DialogRef;
-  invoices: any;
+  invoices: Invoices;
   action: string;
   active = true;
   gridHeight: number;
@@ -64,7 +65,7 @@ export class AddEditComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
   ];
   dicMST: Map<string, any> = new Map<string, any>();
-  dicCbx: Map<string, any> = new Map<string, any>();
+  dicCbx: Map<string, Goods> = new Map<string, Goods>();
 
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
@@ -110,8 +111,8 @@ export class AddEditComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.action != 'add') this.form.formGroup.patchValue(this.invoices);
-    else {
+    this.form.formGroup.patchValue(this.invoices);
+    if (this.action == 'add') {
       this.form.formGroup.patchValue({
         invoiceDate: new Date(),
         invoiceType: '1',
@@ -156,7 +157,7 @@ export class AddEditComponent implements OnInit {
   }
 
   addRow() {
-    let idx = this.data.length;
+    let idx = this.grid.dataSource.length;
     this.grid.addRow(null, idx);
   }
 
@@ -183,11 +184,12 @@ export class AddEditComponent implements OnInit {
         e.data.salesPrice !== undefined ||
         e.data.salesPrice >= 0)
     ) {
-      debugger;
-      e.data.salesAmt = this.salesAmount(e.value, e.data.salesPrice);
-      e.data.totalAmount = this.updateVATAtm(e.data.salesAmt, e.data.vatid);
+      let data = this.calculateLine(e.data);
+      this.grid.updateRow(e.idx, data);
+      this.updateInvoices();
     }
   }
+
   clickMF(e) {}
   //#endregion
 
@@ -215,15 +217,59 @@ export class AddEditComponent implements OnInit {
     this.form.formGroup.patchValue({ bankAccount: data['bankAccount'] });
   }
 
-  updateLine(data, rowData, idx: number) {
+  updateLine(data: Goods, rowData: InvoiceLine, idx: number) {
     rowData.umid = data.umid;
-    rowData.quantity = 1;
+    rowData.quantity = 0;
     rowData.salesPrice = data.salesPrice;
     rowData.vatid = data.vatPct;
-    rowData.salesAmt = data.salesPrice;
-    rowData.vatAmt = this.updateVATAtm(data.salesPrice, data.vatPct);
-    rowData.totalAmt = this.updateTotalAtm(rowData.salesAmt, rowData.vatAmt);
+    rowData.salesAmt = 0;
+    rowData.totalAmt = 0;
     this.grid.updateRow(idx, rowData);
+  }
+
+  updateInvoices() {
+    let lines = this.grid.dataSource;
+    let salesAmt: number = 0,
+      quantity: number = 0,
+      totalAmt: number = 0;
+
+    lines.forEach((e: InvoiceLine) => {
+      let q: number, s: number, t: number;
+      if (e.quantity && typeof e.quantity == 'string')
+        q = parseFloat(e.quantity);
+      else q = e.quantity;
+
+      quantity += q;
+
+      if (e.salesAmt && typeof e.salesAmt == 'string')
+        s = parseFloat(e.salesAmt);
+      else s = e.salesAmt;
+
+      salesAmt += s;
+
+      if (e.totalAmt && typeof e.totalAmt == 'string')
+        t = parseFloat(e.totalAmt);
+      else t = e.totalAmt;
+
+      totalAmt += t;
+    });
+
+    //Clear
+    this.invoices.quantity = 0;
+    this.invoices.salesAmt = 0;
+    this.invoices.totalAmt = 0;
+
+    //Set
+    this.invoices.quantity = quantity;
+    this.invoices.salesAmt = salesAmt;
+    this.invoices.totalAmt = totalAmt;
+  }
+
+  calculateLine(data: InvoiceLine) {
+    data.salesAmt = this.salesAmount(data.quantity, data.salesPrice);
+    data.vatAmt = this.updateVATAtm(data.salesPrice, data.vatid);
+    data.totalAmt = this.updateTotalAtm(data.salesAmt, data.vatAmt);
+    return data;
   }
 
   salesAmount(quantity: number, price?: any) {

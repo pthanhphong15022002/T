@@ -186,10 +186,10 @@
               {{dmSV.getSizeKB(item)}}
             </td>
             <td class="w-30">
-              {{dmSV.getSizeKB(item)}}
+              {{getPUser(item)}}
             </td>
             <td class="w-30">
-              {{dmSV.getSizeKB(item)}}
+              {{getDUser(item) | date: "dd/MM/yyyy"}}
             </td>
             <td class="w-30">
               <codx-temp-full [imageId]="item.createdBy" imageObjType="AD_Users" imgCss="me-3 cursor-pointer"

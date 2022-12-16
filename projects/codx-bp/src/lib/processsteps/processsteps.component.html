@@ -122,7 +122,7 @@
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <div class="check-list text-dark" #reference>
+            <!-- <div class="check-list text-dark" #reference>
               {{
                 item.reference
                   | formatvalue
@@ -133,7 +133,8 @@
                     : "grvBPQuestionnaires"
                   | async
               }}
-            </div>
+            </div> -->
+             <div *ngIf="item.reference" [innerHtml]="viewQuestion(item.reference)"></div>
           </ng-container>
         </ng-container>
       </ng-container>
@@ -485,14 +486,6 @@
     </span>
     <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
-        <codx-mfunc
-          type="hover"
-          [formModel]="view.formModel"
-          (clickMF)="clickMF($event, dataHover)"
-          [isBookMark]="false"
-          [dataItem]="data"
-        >
-        </codx-mfunc>
         <ng-container #moreFC>
           <div class="moreFC rounded-4 py-2" id="{{ data?.recID }}">
             <ng-container *ngIf="data.stepType == 'P'">
@@ -650,19 +643,8 @@
 </ng-template>
 
 <ng-template #flowChart>
-  <div class="d-flex justify-content-between mb-5">
-    <h1 #processName>
-      <!-- {{
-        process?.processName
-          | formatvalue
-            : formModel
-            : "processName"
-            : processName
-            : "Processes"
-            : "grvProcesses"
-          | async
-      }} -->
-    </h1>
+  <div id="menu-flowchart" class="d-flex justify-content-between mb-5">
+     <div ></div> 
     <div>
       <div class="d-flex bd-highlight">
         <div type="button" class="me-1 btn btn-sm btn-white d-flex align-items-center" (click)="download()">
