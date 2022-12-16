@@ -228,7 +228,7 @@ export class CodxTasksComponent
           this.vllStatus = grv?.Status?.referedValue;
           this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
           this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
-          this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;         
+          this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
           this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
           this.vllPriority = grv?.Priority.referedValue;
         }
@@ -319,7 +319,7 @@ export class CodxTasksComponent
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          //resourceModel: this.resourceField, //ko có thang nay
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
@@ -1286,36 +1286,35 @@ export class CodxTasksComponent
     }
 
     if (data.extendStatus == '3') {
-      this.notiService.alertCode('TM055').subscribe((confirm) => {
-        if (confirm?.event && confirm?.event?.status == 'Y') {
-          this.api
-            .execSv<any>(
-              'TM',
-              'TM',
-              'TaskExtendsBusiness',
-              'GetExtendDateByTaskIDAsync',
-              [data.taskID]
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.taskExtend = res;
-              } else {
-                if (data.createdBy != data.owner)
-                  this.taskExtend.extendApprover = data.createdBy;
-                else this.taskExtend.extendApprover = data.verifyBy;
-                this.taskExtend.dueDate = moment(
-                  new Date(data.dueDate)
-                ).toDate();
-                this.taskExtend.reason = '';
-                this.taskExtend.taskID = data?.taskID;
-                this.taskExtend.extendDate = moment(
-                  new Date(data.dueDate)
-                ).toDate();
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TaskExtendsBusiness',
+          'GetExtendDateByTaskIDAsync',
+          [data.taskID]
+        )
+        .subscribe((dt) => {
+          if (dt) {
+            this.notiService.alertCode('TM055').subscribe((confirm) => {
+              if (confirm?.event && confirm?.event?.status == 'Y') {
+                this.taskExtend = dt;
+                this.confirmExtend(data, moreFunc);
               }
-              this.confirmExtend(data, moreFunc);
             });
-        }
-      });
+          } else {
+            if (data.createdBy != data.owner)
+              this.taskExtend.extendApprover = data.createdBy;
+            else this.taskExtend.extendApprover = data.verifyBy;
+            this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+            this.taskExtend.reason = '';
+            this.taskExtend.taskID = data?.taskID;
+            this.taskExtend.extendDate = moment(
+              new Date(data.dueDate)
+            ).toDate();
+            this.confirmExtend(data, moreFunc);
+          }
+        });
     } else {
       if (data.createdBy != data.owner)
         this.taskExtend.extendApprover = data.createdBy;

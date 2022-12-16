@@ -429,8 +429,14 @@
         }}</span>&nbsp;
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
-    <codx-mfunc *ngIf="isEdit" type="hover" [formModel]="view.formModel" (clickMF)="clickMF($event, data)"
-      [isBookMark]="false" [dataItem]="data">
+    <codx-mfunc
+      *ngIf="hideMoreFC"
+      type="hover"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      [isBookMark]="false"
+      [dataItem]="data"
+    >
     </codx-mfunc>
   </div>
 </ng-template>
