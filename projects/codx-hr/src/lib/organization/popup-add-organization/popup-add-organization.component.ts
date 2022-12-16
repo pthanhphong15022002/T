@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { updateCell } from '@syncfusion/ej2-angular-spreadsheet';
 import {
+  ApiHttpService,
   AuthService,
   CacheService,
   DialogData,
@@ -29,10 +30,14 @@ export class PopupAddOrganizationComponent implements OnInit{
   grdViewSetup:any = null;
   user:any = null;
   data:any = null;
+  parameterHR: any = null;
+
   constructor(
     private auth: AuthService,
     private cache:CacheService,
     private notifiSV: NotificationsService,
+    private api: ApiHttpService,
+
     @Optional() dt?: DialogData,
     @Optional() dialogRef?: DialogRef,
   ) 
@@ -44,7 +49,6 @@ export class PopupAddOrganizationComponent implements OnInit{
   ngOnInit(): void {
     if(this.dialogData)
     {
-      debugger
       this.funcID = this.dialogData.funcID;
       this.action = this.dialogData.action;
       this.data = this.dialogData.data;
@@ -52,6 +56,7 @@ export class PopupAddOrganizationComponent implements OnInit{
       if(this.funcID)
       {
         this.getSetup(this.funcID);
+        this.getParamerAsync(this.funcID);
       }
     }
   }
@@ -64,15 +69,14 @@ export class PopupAddOrganizationComponent implements OnInit{
       .subscribe((func:any) => {
         if(func)
         {
-          console.log(func);
           this.func = func;
           this.headerText = this.action +" "+ func.description;
           if(func?.formName && func?.gridViewName){
             this.cache.gridViewSetup(func.formName,func.gridViewName)
             .subscribe((grd:any) => {
               if(grd){
-                this.grdViewSetup = grd;
                 console.log(grd);
+                this.grdViewSetup = grd;
               }
             });
           }
@@ -80,18 +84,46 @@ export class PopupAddOrganizationComponent implements OnInit{
       });
     }
   }
-
+  // get parameter auto number
+  getParamerAsync(funcID: string) {
+    if (funcID) {
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.AD',
+          'AutoNumberDefaultsBusiness',
+          'GenAutoDefaultAsync',
+          [funcID]
+        ).subscribe((res: any) => {
+          if (res) {
+            this.parameterHR = JSON.parse(JSON.stringify(res));
+          }
+        });
+    }
+  }
   // value change
   valueChange(event:any){
-    debugger
     if(event)
     {
       this.data[event.field] = event.data;
     }
   }
   // btn save
-  onSave() {
-
+  onSave() 
+  {
+    console.log(this.data);
+    this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","InsertOrgUnitAsync",[this.data])
+    .subscribe((res:any[]) => {
+      if(res[0]){
+        let result = [res[1],res[2]];
+        this.notifiSV.notifyCode("SYS007");
+        this.dialogRef.close(result);
+      }
+      else
+      {
+        this.notifiSV.notifyCode("SYS021");
+      }
+    });
   }
 
 }

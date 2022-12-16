@@ -56,3 +56,13 @@ codx-view-list-card .codx_cardcenter .text-gray-700.line-clamp {
 codx-view-list-card .codx_cardcenter .h-60px {
   height: 50px !important;
 }
+
+.e-kanban .e-kanban-content {
+  padding-bottom: 0;
+}
+
+.e-kanban-table.e-content-table {
+  .e-card-wrapper {
+    height: calc(100vh - 185px) !important;
+  }
+}
