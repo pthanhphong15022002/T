@@ -92,13 +92,13 @@ export class CodxTasksService {
   }
 
   //sendMail
-  sendAlertMail(recID: string, valueRuleNo: string, funcID: string) {
+  sendAlertMail(recID: string, valueRuleNo: string, funcID: string, recIDTaskExtend : string =null) {
     return this.api.execSv<any>(
       'TM',
       'TM',
       'TaskBusiness',
       'SendAlertMailAsync',
-      [recID,valueRuleNo,funcID]
+      [recID,valueRuleNo,funcID,recIDTaskExtend]
     );
   }
 
