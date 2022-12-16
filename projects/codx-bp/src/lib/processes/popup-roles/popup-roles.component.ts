@@ -41,6 +41,7 @@ export class PopupRolesComponent implements OnInit {
   assign: boolean;
   upload: boolean;
   download: boolean;
+  deletePerm: boolean;
   //#endregion
   user: any;
   userID: any;
@@ -117,16 +118,12 @@ export class PopupRolesComponent implements OnInit {
   onSave() {
     if (this.startDate != null && this.endDate != null) {
       if (this.startDate >= this.endDate) {
-        this.notifi.notify(
-          'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
-        );
+        this.notifi.notify('Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!');
         return;
       }
       //Chưa có mssg code
       if (!this.isCheckFromToDate(this.startDate)) {
-        this.notifi.notify(
-          'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
-        );
+        this.notifi.notify('Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!');
         return;
       }
     }
@@ -143,6 +140,7 @@ export class PopupRolesComponent implements OnInit {
       this.process.permissions[this.currentPemission].download = this.download;
       this.process.permissions[this.currentPemission].share = this.share;
       this.process.permissions[this.currentPemission].assign = this.assign;
+      this.process.permissions[this.currentPemission].delete = this.deletePerm;
       this.process.permissions[this.currentPemission].edit = this.edit;
       this.process.permissions[this.currentPemission].publish = this.publish;
     }
@@ -166,7 +164,6 @@ export class PopupRolesComponent implements OnInit {
     }
   }
 
-
   //#endregion
 
   //#region event
@@ -189,6 +186,7 @@ export class PopupRolesComponent implements OnInit {
           this.download = data;
           this.edit = data;
           this.publish = data;
+          this.deletePerm = data;
         }
 
         break;
@@ -197,6 +195,9 @@ export class PopupRolesComponent implements OnInit {
         break;
       case 'endDate':
         if (data != null) this.endDate = data.fromDate;
+        break;
+      case 'delete':
+        if (data != null) this.deletePerm = data;
         break;
       default:
         this.isSetFull = false;
@@ -211,7 +212,8 @@ export class PopupRolesComponent implements OnInit {
       this.share &&
       this.download &&
       this.edit &&
-      this.publish
+      this.publish &&
+      this.deletePerm
     )
       this.full = true;
 
@@ -236,6 +238,7 @@ export class PopupRolesComponent implements OnInit {
         this.process.permissions[oldIndex].share = this.share;
         this.process.permissions[oldIndex].assign = this.assign;
         this.process.permissions[oldIndex].download = this.download;
+        this.process.permissions[oldIndex].delete = this.deletePerm;
         this.process.permissions[oldIndex].edit = this.edit;
         this.process.permissions[oldIndex].publish = this.publish;
         this.process.permissions[oldIndex].startDate = this.startDate;
@@ -250,10 +253,12 @@ export class PopupRolesComponent implements OnInit {
         this.process.permissions[index].assign &&
         this.process.permissions[index].download &&
         this.process.permissions[index].edit &&
+        this.process.permissions[index].delete &&
         this.process.permissions[index].publish;
       this.read = this.process.permissions[index].read;
       this.share = this.process.permissions[index].share;
       this.assign = this.process.permissions[index].assign;
+      this.deletePerm = this.process.permissions[index].delete;
       this.download = this.process.permissions[index].download;
       this.edit = this.process.permissions[index].edit;
       this.publish = this.process.permissions[index].publish;
@@ -270,6 +275,7 @@ export class PopupRolesComponent implements OnInit {
       this.edit = false;
       this.publish = false;
       this.share = false;
+      this.deletePerm = false;
       this.assign = false;
       this.download = false;
       this.currentPemission = index;
@@ -334,6 +340,7 @@ export class PopupRolesComponent implements OnInit {
       perm.assign = false;
       perm.edit = false;
       perm.publish = false;
+      perm.delete = false;
 
       // if (perm.objectType.toLowerCase() == '9') {
       //   perm.download = true;
@@ -347,6 +354,7 @@ export class PopupRolesComponent implements OnInit {
         perm.assign = true;
         perm.edit = true;
         perm.publish = true;
+        perm.delete = true;
       }
 
       list.push(Object.assign({}, perm));
@@ -391,7 +399,12 @@ export class PopupRolesComponent implements OnInit {
 
   //#region assign
   checkAdminUpdate() {
-    if (this.user.administrator || this.user.userID == this.process.owner || this.process.permissions[this.currentPemission].objectType == '1' || this.process.permissions[this.currentPemission].objectType == '7') {
+    if (
+      this.user.administrator ||
+      this.user.userID == this.process.owner ||
+      this.process.permissions[this.currentPemission].objectType == '1' ||
+      this.process.permissions[this.currentPemission].objectType == '7'
+    ) {
       if (this.isAssign) return false;
       else return true;
     } else return false;
@@ -426,7 +439,8 @@ export class PopupRolesComponent implements OnInit {
   selectRoseType(idUserSelected, value) {
     this.process.permissions.forEach((res) => {
       if (res.objectID != null && res.objectID != '') {
-        if (res.objectID == idUserSelected && value != '0') res.memberType = value;
+        if (res.objectID == idUserSelected && value != '0')
+          res.memberType = value;
       }
     });
     this.changeDetectorRef.detectChanges();

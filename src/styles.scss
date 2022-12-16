@@ -744,10 +744,6 @@ codx-toolbar-button {
   display: flex;
 }
 
-codx-toolbar-button>span.btn {
-  border-radius: 3px 0 0 3px !important;
-}
-
 codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   border-radius: 0 3px 3px 0 !important;
 }
@@ -1354,7 +1350,8 @@ codx-vll {
   position: relative;
   padding-right: 10px;
   min-height: 18px;
-  display: inherit;
+  display: block;
+  line-height: 18px;
 }
 
 .label-colon::after {

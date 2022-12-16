@@ -10,40 +10,25 @@
       </div>
     </div>
     <div class="d-flex align-items-center justify-content-end">
-      <a
-        class="btn btn-icon btn-sm btn-secondary btn-circle me-2 bg"
-        (click)="changeWeek(-7)"
-      >
+      <a class="btn btn-icon btn-sm btn-secondary btn-circle me-2 bg" (click)="changeWeek(-7)">
         <i class="icon-arrow_back_ios icon-14"></i>
       </a>
-      <a
-        class="btn btn-icon btn-sm btn-secondary btn-circle bg"
-        (click)="changeWeek(7)"
-      >
+      <a class="btn btn-icon btn-sm btn-secondary btn-circle bg" (click)="changeWeek(7)">
         <i class="icon-arrow_forward_ios icon-14"></i>
       </a>
     </div>
   </div>
   <div class="d-flex justify-content-end">
     <div class="no-textbox">
-      <codx-input
-        datatype="datetime"
-        dataformat="d"
-        (valueChange)="changeTimeByControl($event)"
-        [crrValue]="daySelected"
-      >
+      <codx-input datatype="datetime" dataformat="d" (valueChange)="changeTimeByControl($event)"
+        [crrValue]="daySelected">
       </codx-input>
     </div>
   </div>
-  <div class="d-flex row-week mt-3">
-    <div
-      class="week-item"
-      [attr.data-date]="item.toLocaleDateString()"
-      *ngFor="let item of lstDateInWeek; let i = index"
-      [class.active]="item.getDate() == daySelected.getDate()"
-      [attr.loadFished]="i == lstDateInWeek.length - 1 && LoadFinished(i)"
-      (click)="changeDaySelected(item)"
-    >
+  <div class="d-flex row-week mt-2">
+    <div class="week-item" [attr.data-date]="item.toLocaleDateString()"
+      *ngFor="let item of lstDateInWeek; let i = index" [class.active]="item.getDate() == daySelected.getDate()"
+      [attr.loadFished]="i == lstDateInWeek.length - 1 && LoadFinished(i)" (click)="changeDaySelected(item)">
       <div class="text-dark fs-7">{{ item | date: "ccccc" }}</div>
       <div class="fs-5 fw-bold">{{ item | date: "dd" }}</div>
       <div class="week-item-event d-flex justify-content-center"></div>
