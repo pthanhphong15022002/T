@@ -263,22 +263,44 @@ export class CodxTasksComponent
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
 
-    if (
-      this.funcID != 'TMT0201' &&
-      this.funcID != 'TMT0206' &&
-      this.funcID != 'MWP0061' &&
-      this.funcID != 'MWP0063'
-    ) {
-      if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
+    // if (
+    //   this.funcID != 'TMT0201' &&
+    //   this.funcID != 'TMT0206' &&
+    //   this.funcID != 'MWP0061' &&
+    //   this.funcID != 'MWP0063'
+    // ) {
+    //   if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
+    //     this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
+    //     this.requestSchedule.dataValue = '2;' + this.user.userID;
+    //   } else {
+    //     this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+    //     this.requestSchedule.dataValue = '1;2';
+    //   }
+    // } else {
+    //   this.requestSchedule.predicate = '';
+    //   this.requestSchedule.dataValue = '';
+    // }
+    switch (this.funcID) {
+      case 'MWP0061':
+      case 'TMT0201':
+        this.requestSchedule.predicate =
+          '(Category=@0 or Category=@1) and Owner=@2';
+        this.requestSchedule.dataValue = '1;2;' + this.user.userID;
+        break;
+      case 'TMT0203':
+      case 'MWP0062':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
-      } else {
+        break;
+      case 'MWP0064':
+      case 'TMT0202':
         this.requestSchedule.predicate = 'Category=@0 or Category=@1';
         this.requestSchedule.dataValue = '1;2';
-      }
-    } else {
-      this.requestSchedule.predicate = '';
-      this.requestSchedule.dataValue = '';
+        break;
+      default:
+        this.requestSchedule.predicate = '';
+        this.requestSchedule.dataValue = '';
+        break;
     }
   }
 
