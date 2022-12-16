@@ -23,7 +23,7 @@
           class="badge badge-light badge-md fs-7 ms-2">
         </codx-vll>
       </div>
-      <div class="w-120px min-w-120px">
+      <div class="w-125px min-w-125px">
         <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
           #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
           placement="bottom right top" autoClose="outside">
@@ -50,16 +50,16 @@
         </div>
       </div>
 
-      <div class="w-50px min-w-50px">
+      <div class="w-100px min-w-100px">
         <div *ngIf="data.category == '3'" class="">
           <codx-imgs [isToolTip]="false" [width]="30" [objectId]="data?.assignTo" objectType="AD_Users"
-            [numberImages]="4" (click)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
+            [numberImages]="2" (click)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
             popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
             autoClose="outside" [openDelay]="500">
           </codx-imgs>
         </div>
         <div *ngIf="data.category == '1' || data.category == '2'" class="">
-          <codx-imgs [width]="30" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="4">
+          <codx-imgs [width]="30" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="2">
           </codx-imgs>
         </div>
         <!-- <div class="d-flex">

@@ -117,20 +117,24 @@ export class CalendarNotesComponent
   onInit(): void {
     // this.getParamCalendar('fDayOfMonth', 'lDayOfMonth');
     if (this.typeCalendar == 'month') {
-      let myInterVal = setInterval(() => {
-        if (this.calendar) {
-          clearInterval(myInterVal);
-          var tempCalendar = this.calendar.element;
-          var htmlE = tempCalendar as HTMLElement;
-          var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
-          const fDayOfMonth = new Date(eleFromDate.title).toISOString();
-          var eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
-          const lDayOfMonth = new Date(eleToDate.title).toISOString();
-          this.getFirstParam(fDayOfMonth, lDayOfMonth);
-        }
-      }, 200);
+      let date = new Date();
+      let fDayOfMonth = moment(date).startOf('month').toISOString();
+      let lDayOfMonth = moment(date).endOf('month').toISOString();
+      this.getParam(fDayOfMonth, lDayOfMonth);
+      // let myInterVal = setInterval(() => {
+      //   if (this.calendar) {
+      //     clearInterval(myInterVal);
+      //     var tempCalendar = this.calendar.element;
+      //     var htmlE = tempCalendar as HTMLElement;
+      //     var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+      //       ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+      //     const fDayOfMonth = new Date(eleFromDate.title).toISOString();
+      //     var eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+      //       ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+      //     const lDayOfMonth = new Date(eleToDate.title).toISOString();
+      //     this.getFirstParam(fDayOfMonth, lDayOfMonth);
+      //   }
+      // }, 200);
     }
     this.getMaxPinNote();
     this.loadData();
@@ -536,77 +540,63 @@ export class CalendarNotesComponent
   }
 
   getParam(fromDate, toDate, updateCheck = true) {
-    // this.api
-    //   .callSv(
-    //     'SYS',
-    //     'ERM.Business.SYS',
-    //     'SettingValuesBusiness',
-    //     'GetDataInCalendarAsync',
-    //     ['WPCalendars', fromDate, toDate]
-    //   )
-    //   .subscribe((res) => {
-    //     if (res && res?.msgBodyData[0]) {
-    //       var dt = res.msgBodyData[0];
-    //       this.TM_TasksParam = dt[5]?.TM_Tasks
-    //         ? JSON.parse(dt[5]?.TM_Tasks)
-    //         : null;
-    //       this.WP_NotesParam = dt[5]?.WP_Notes
-    //         ? JSON.parse(dt[5]?.WP_Notes)
-    //         : null;
-    //       this.CO_MeetingsParam = dt[5]?.CO_Meetings
-    //         ? JSON.parse(dt[5]?.CO_Meetings)
-    //         : null;
-    //       this.EP_BookingRoomsParam = dt[5]?.EP_BookingRooms
-    //         ? JSON.parse(dt[5]?.EP_BookingRooms)
-    //         : null;
-    //       this.EP_BookingCarsParam = dt[5]?.EP_BookingCars
-    //         ? JSON.parse(dt[5]?.EP_BookingCars)
-    //         : null;
-    //       this.settingValue = dt[5];
-    //       if (updateCheck == true) {
-    //         this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
-    //         this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
-    //         this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
-    //         this.checkEP_BookingRoomsParam =
-    //           this.EP_BookingRoomsParam?.ShowEvent;
-    //         this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
-    //       }
-    //       this.WP_Notes = dt[0];
-    //       this.TM_Tasks = dt[1];
-    //       this.CO_Meetings = dt[2];
-    //       this.EP_BookingRooms = dt[3];
-    //       this.EP_BookingCars = dt[4];
-    //       this.dataResourceModel = [
-    //         ...this.WP_Notes,
-    //         ...this.TM_Tasks,
-    //         ...this.CO_Meetings,
-    //         ...this.EP_BookingRooms,
-    //         ...this.EP_BookingCars,
-    //       ];
-    //       if (this.WP_Notes && this.WP_Notes.length > 0) {
-    //         this.WP_Notes.forEach((res) => {
-    //           if (res.IsPin == true || res.IsPin == '1') {
-    //             this.countNotePin++;
-    //           }
-    //         });
-    //       }
-    //     }
-    //   });
+    this.api
+      .callSv(
+        'SYS',
+        'ERM.Business.SYS',
+        'SettingValuesBusiness',
+        'GetDataInCalendarAsync',
+        ['WPCalendars', fromDate, toDate]
+      )
+      .subscribe((res) => {
+        if (res && res?.msgBodyData[0]) {
+          var dt = res.msgBodyData[0];
+          this.TM_TasksParam = dt[5]?.TM_Tasks
+            ? JSON.parse(dt[5]?.TM_Tasks)
+            : null;
+          this.WP_NotesParam = dt[5]?.WP_Notes
+            ? JSON.parse(dt[5]?.WP_Notes)
+            : null;
+          this.CO_MeetingsParam = dt[5]?.CO_Meetings
+            ? JSON.parse(dt[5]?.CO_Meetings)
+            : null;
+          this.EP_BookingRoomsParam = dt[5]?.EP_BookingRooms
+            ? JSON.parse(dt[5]?.EP_BookingRooms)
+            : null;
+          this.EP_BookingCarsParam = dt[5]?.EP_BookingCars
+            ? JSON.parse(dt[5]?.EP_BookingCars)
+            : null;
+          this.settingValue = dt[5];
+          if (updateCheck == true) {
+            this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
+            this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
+            this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
+            this.checkEP_BookingRoomsParam =
+              this.EP_BookingRoomsParam?.ShowEvent;
+            this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
+          }
+          this.WP_Notes = dt[0];
+          this.TM_Tasks = dt[1];
+          this.CO_Meetings = dt[2];
+          this.EP_BookingRooms = dt[3];
+          this.EP_BookingCars = dt[4];
+          this.dataResourceModel = [
+            ...this.WP_Notes,
+            ...this.TM_Tasks,
+            ...this.CO_Meetings,
+            ...this.EP_BookingRooms,
+            ...this.EP_BookingCars,
+          ];
+          if (this.WP_Notes && this.WP_Notes.length > 0) {
+            this.WP_Notes.forEach((res) => {
+              if (res.IsPin == true || res.IsPin == '1') {
+                this.countNotePin++;
+              }
+            });
+          }
+        }
+      });
   }
-
-  // ||
-  //         (this.checkCO_MeetingsParam &&
-  //           this.CO_MeetingsParam &&
-  //           this.CO_Meetings) ||
-  //         (this.checkWP_NotesParam &&
-  //           this.WP_NotesParam &&
-  //           this.WP_Notes.length > 0) ||
-  //         (this.checkEP_BookingRoomsParam &&
-  //           this.EP_BookingRoomsParam &&
-  //           this.EP_BookingRooms.length > 0) ||
-  //         (this.checkEP_BookingCarsParam &&
-  //           this.EP_BookingCarsParam &&
-  //           this.EP_BookingCars.length > 0)
 
   setEvent(ele = null, args = null) {
     let calendarWP = 0;
@@ -621,9 +611,21 @@ export class CalendarNotesComponent
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
       let myInterval = setInterval(() => {
         if (
-          this.checkTM_TasksParam &&
-          this.TM_TasksParam &&
-          this.TM_Tasks.length > 0
+          (this.checkTM_TasksParam &&
+            this.TM_TasksParam &&
+            this.TM_Tasks.length > 0) ||
+          (this.checkCO_MeetingsParam &&
+            this.CO_MeetingsParam &&
+            this.CO_Meetings) ||
+          (this.checkWP_NotesParam &&
+            this.WP_NotesParam &&
+            this.WP_Notes.length > 0) ||
+          (this.checkEP_BookingRoomsParam &&
+            this.EP_BookingRoomsParam &&
+            this.EP_BookingRooms.length > 0) ||
+          (this.checkEP_BookingCarsParam &&
+            this.EP_BookingCarsParam &&
+            this.EP_BookingCars.length > 0)
         ) {
           clearInterval(myInterval);
           if (
