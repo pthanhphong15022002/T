@@ -45,8 +45,8 @@
                 <ng-container>
                   <div class="d-flex align-items-center">
                     <div class="d-flex align-items-center me-4">
-                      <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
-                      <div div class="text-gray-600">
+                      <span class="icon-phone_android icon-16 text-gray-700 me-2"></span>
+                      <div div class="text-gray-700">
                         <span #phone>{{
                           taskExtends
                           ? itemSelected?.phone
@@ -62,7 +62,7 @@
                       </div>
                     </div>
                     <div class="d-flex align-items-center">
-                      <span class="icon-email icon-16 text-gray-600 me-2"></span>
+                      <span class="icon-email icon-16 text-gray-700 me-2"></span>
                       <div div class="font-size-sm">
                         <span #email>{{
                           taskExtends
@@ -116,7 +116,7 @@
                         gridViewName="grvTaskExtends" default="Ngày hết hạn hiện hành">
                       </codx-label>
                     </span>
-                    <span *ngIf="taskExtends.dueDate" class="text-gray-600">{{
+                    <span *ngIf="taskExtends.dueDate" class="text-gray-700">{{
                       taskExtends.dueDate | date: "dd/MM/yyyy"
                       }}</span>
                     <span #dueDate *ngIf="!taskExtends?.dueDate">{{
@@ -136,7 +136,7 @@
                         gridViewName="grvTaskExtends" default="Ngày gia hạn">
                       </codx-label>
                     </span>
-                    <span *ngIf="taskExtends.extendDate" class="text-gray-600">{{ taskExtends.extendDate | date:
+                    <span *ngIf="taskExtends.extendDate" class="text-gray-700">{{ taskExtends.extendDate | date:
                       "dd/MM/yyyy" }}</span>
                     <span #extendDate *ngIf="!taskExtends.extendDate">{{
                       taskExtends.extendDate
@@ -156,7 +156,7 @@
                       gridViewName="grvTaskExtends" default="Lý do yêu cầu">
                     </codx-label>
                   </span>
-                  <span class="text-gray-600" #reason>{{
+                  <span class="text-gray-700" #reason>{{
                     taskExtends.reason
                     | formatvalue
                     : formModel
@@ -174,7 +174,7 @@
                     default="Ngày hết hạn">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected.dueDate" class="text-gray-600">{{
+                <span *ngIf="itemSelected.dueDate" class="text-gray-700">{{
                   itemSelected.dueDate | date: "dd/MM/yyyy"
                   }}</span>
                 <span #dueDate *ngIf="!itemSelected?.dueDate">{{
@@ -203,7 +203,7 @@
                         | async
                     ">
                   </span>
-                  <span class="text-gray-600">{{
+                  <span class="text-gray-700">{{
                     itemSelected?.priority | vll: vllPriority:"text" | async
                     }}</span>
                 </div>
@@ -225,7 +225,7 @@
                   <codx-label class="label-colon" name="lblTaskGroupName" formName="Tasks" default="Nhóm công việc">
                   </codx-label>
                 </div>
-                <div *ngIf="itemSelected?.taskGroupName" class="text-gray-600">
+                <div *ngIf="itemSelected?.taskGroupName" class="text-gray-700">
                   {{ itemSelected?.taskGroupName }}
                 </div>
                 <div *ngIf="!itemSelected?.taskGroupName" #taskGroupName>
@@ -248,7 +248,7 @@
                   <codx-label class="label-colon" fiedName="StartDate" formName="Tasks" gridViewName="grvTasks">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected?.startDate" class="text-gray-600">{{
+                <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{
                   itemSelected?.startDate | date: "dd/MM/yyyy"
                   }}</span>
                 <span #startDate *ngIf="!itemSelected?.startDate">{{
@@ -263,12 +263,12 @@
                   }}</span>
               </div>
               <div class="d-flex align-items-center text-dark me-6">
-                <div class="me-1">
-                  <codx-label class="label-colon" fiedName="EndDate" formName="Tasks" gridViewName="grvTasks"
+                <div class="d-flex">
+                  <codx-label class="label-colon fw-bold" fiedName="EndDate" formName="Tasks" gridViewName="grvTasks"
                     default="Ngày kết thúc">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected?.endDate" class="text-gray-600">{{
+                <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{
                   itemSelected?.endDate | date: "dd/MM/yyyy"
                   }}</span>
                 <span #endDate *ngIf="!itemSelected?.endDate">{{
@@ -288,7 +288,7 @@
                     default="Ngày hoàn tất">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected?.completedOn" class="text-gray-600">{{ itemSelected?.completedOn | date:
+                <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{ itemSelected?.completedOn | date:
                   "dd/MM/yyyy" }} |
                   {{ itemSelected.completed }} <span>h</span>
                 </span>
@@ -314,7 +314,7 @@
               </codx-label> -->
                 <codx-label class="label-colon" name="lblProjectName" formName="Projects" default="Dự án"></codx-label>
               </span>
-              <span *ngIf="itemSelected?.projectName" class="text-gray-600">{{
+              <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{
                 itemSelected?.projectName
                 }}</span>
               <span *ngIf="!itemSelected?.projectName" #projectName>{{
@@ -334,8 +334,8 @@
                   default="Địa điểm">
                 </codx-label>
               </span>
-              <!-- <span class="text-gray-600">{{ itemSelected?.location }}</span> -->
-              <span *ngIf="itemSelected?.location" class="text-gray-600">{{
+              <!-- <span class="text-gray-700">{{ itemSelected?.location }}</span> -->
+              <span *ngIf="itemSelected?.location" class="text-gray-700">{{
                 itemSelected?.location
                 }}</span>
               <span #location *ngIf="!itemSelected?.location">{{
@@ -402,19 +402,19 @@
       <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
-      <div class="text-gray-600" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected.memo"></div>
+      <div class="text-gray-700" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected.memo"></div>
       <div *ngIf="itemSelected?.memo2">
-        <span class="text-gray-600">
+        <span class="text-gray-700">
           <codx-label class="label-colon" name="lblMemo2" formName="Tasks" gridViewName="grvTasks"
             default="Ghi chú phân công">
           </codx-label>
         </span>
-        <div class="text-gray-600" [innerHTML]="itemSelected.memo2"></div>
+        <div class="text-gray-700" [innerHTML]="itemSelected.memo2"></div>
       </div>
 
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
         <!-- <div class="text-primary fw-bold"> -->
-        <!-- <div class="text-gray-600">
+        <!-- <div class="text-gray-700">
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm"></codx-label>:
         </div> -->
         <div class="checkbox-list mt-2 ms-6 text-dark">
@@ -423,7 +423,7 @@
               <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
                 [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
               <codx-input type="checkbox" class="me-2" [crrValue]="item.status == '90'" [disabled]="true"></codx-input>
-              <span class="text-gray-600">
+              <span class="text-gray-700">
                 {{ item.memo }}
               </span>
             </div>
@@ -465,7 +465,7 @@
       </div>
       <div class="d-flex flex-column flex-grow-1">
         <div class="text-dark fw-bold">{{ item?.resourceName }}</div>
-        <div class="text-gray-600 fs-7">{{ item?.positionName }}</div>
+        <div class="text-gray-700 fs-7">{{ item?.positionName }}</div>
         <div class="text-dark">
           {{ item?.memo }}
         </div>
