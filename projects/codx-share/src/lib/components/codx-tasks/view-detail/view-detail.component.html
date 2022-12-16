@@ -169,7 +169,7 @@
                 </div>
               </div>
               <div class="d-flex me-6 mb-1">
-                <div class="fw-bold me-1">
+                <div class="fw-bold">
                   <codx-label class="label-colon" fiedName="DueDate" formName="Tasks" gridViewName="grvTasks"
                     default="Ngày hết hạn">
                   </codx-label>
@@ -189,7 +189,7 @@
                   }}</span>
               </div>
               <div class="d-flex align-items-center text-dark me-6 mb-1">
-                <div class="me-1 fw-bold">
+                <div class="fw-bold">
                   <codx-label class="label-colon" fiedName="Priority" formName="Tasks" gridViewName="grvTasks"
                     default="Ưu tiên">
                   </codx-label>
@@ -221,7 +221,7 @@
                 </div>
               </div>
               <div class="d-flex me-6 mb-1">
-                <div class="fw-bold me-1">
+                <div class="fw-bold">
                   <codx-label class="label-colon" name="lblTaskGroupName" formName="Tasks" default="Nhóm công việc">
                   </codx-label>
                 </div>
@@ -244,7 +244,7 @@
             </div>
             <div class="float-left mb-1">
               <div class="d-flex me-6">
-                <div class="fw-bold me-1">
+                <div class="fw-bold">
                   <codx-label class="label-colon" fiedName="StartDate" formName="Tasks" gridViewName="grvTasks">
                   </codx-label>
                 </div>
@@ -263,7 +263,7 @@
                   }}</span>
               </div>
               <div class="d-flex align-items-center text-dark me-6">
-                <div class="me-1 fw-bold">
+                <div class="me-1">
                   <codx-label class="label-colon" fiedName="EndDate" formName="Tasks" gridViewName="grvTasks"
                     default="Ngày kết thúc">
                   </codx-label>
@@ -283,7 +283,7 @@
                   }}</span>
               </div>
               <div class="d-flex me-6">
-                <div class="fw-bold me-1">
+                <div class="fw-bold">
                   <codx-label class="label-colon" fiedName="CompletedOn" formName="Tasks" gridViewName="grvTasks"
                     default="Ngày hoàn tất">
                   </codx-label>
@@ -309,10 +309,10 @@
               param?.ProjectControl != '0' || param?.LocationControl != '0'
             ">
             <div class="d-flex mb-1" *ngIf="param?.ProjectControl != '0'">
-              <span class="fw-bold me-2">
+              <span class="fw-bold">
                 <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
               </codx-label> -->
-                <codx-label name="lblProjectName" formName="Projects" default="Dự án"></codx-label>:
+                <codx-label class="label-colon" name="lblProjectName" formName="Projects" default="Dự án"></codx-label>
               </span>
               <span *ngIf="itemSelected?.projectName" class="text-gray-600">{{
                 itemSelected?.projectName
@@ -329,7 +329,7 @@
                 }}</span>
             </div>
             <div class="d-flex" *ngIf="param?.LocationControl != '0'">
-              <span class="fw-bold me-2">
+              <span class="fw-bold">
                 <codx-label class="label-colon" fiedName="Location" formName="Tasks" gridViewName="grvTasks"
                   default="Địa điểm">
                 </codx-label>
