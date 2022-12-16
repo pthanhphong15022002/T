@@ -11,7 +11,13 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, NotificationsService, UIComponent, ViewsComponent, DialogRef } from 'codx-core';
+import {
+  DataRequest,
+  NotificationsService,
+  UIComponent,
+  ViewsComponent,
+  DialogRef,
+} from 'codx-core';
 import moment from 'moment';
 import { CodxEpService } from '../../../codx-ep.service';
 import { DriverModel } from '../../../models/bookingAttendees.model';
@@ -22,12 +28,17 @@ import { PopupDriverAssignComponent } from '../popup-driver-assign/popup-driver-
   templateUrl: 'approval-car-view-detail.component.html',
   styleUrls: ['approval-car-view-detail.component.scss'],
 })
-export class ApprovalCarViewDetailComponent extends UIComponent implements OnChanges {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+export class ApprovalCarViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
-  @Output('driverAssigned') driverAssigned: EventEmitter<any> = new EventEmitter();
-  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
+  @Output('driverAssigned') driverAssigned: EventEmitter<any> =
+    new EventEmitter();
+  @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
+    new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
   @Input() funcID;
@@ -40,18 +51,18 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
   id: string;
   itemDetailDataStt: any;
   itemDetailStt: any;
-  active = 1;  
+  active = 1;
   cbbDriver: any[];
-  listDriver=[];
+  listDriver = [];
   popupDialog: DialogRef;
   popupTitle: any;
-  dialog:any;
+  dialog: any;
   tabControl: TabModel[] = [];
   fields: Object = { text: 'driverName', value: 'driverID' };
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,    
-    private notificationsService: NotificationsService,
+    private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService
   ) {
     super(injector);
   }
@@ -63,7 +74,7 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     this.tabControl = [
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
-      { name: 'Comment', textDefault: 'Bình luận', isActive: false },      
+      { name: 'Comment', textDefault: 'Bình luận', isActive: false },
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
@@ -74,9 +85,10 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
         changes.itemDetail?.currentValue?.recID
     ) {
       this.api
-      .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
-        changes.itemDetail?.currentValue?.recID,changes.itemDetail?.currentValue?.approvalTransRecID,
-      ])
+        .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
+          changes.itemDetail?.currentValue?.recID,
+          changes.itemDetail?.currentValue?.approvalTransRecID,
+        ])
         .subscribe((res) => {
           if (res) {
             this.itemDetail = res;
@@ -88,19 +100,18 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
     this.setHeight();
     this.active = 1;
   }
-  sameDayCheck(sDate:any, eDate:any){
-    return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  sameDayCheck(sDate: any, eDate: any) {
+    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
   }
-  showHour(date:any){
-    let temp= new Date(date);
+  showHour(date: any) {
+    let temp = new Date(date);
     let time =
-          ('0' + temp.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + temp.getMinutes()).toString().slice(-2);
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
@@ -113,56 +124,57 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
       case 'EPT40201':
         {
           //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
+        break;
       case 'EPT40205':
         {
           //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
         break;
       case 'EPT40204':
         {
-          this.popupTitle=value.text;       
+          this.popupTitle = value.text;
           this.lviewSetPopupTitle(this.popupTitle);
           this.lviewDriverAssign(datas);
         }
         break;
-      
+
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+  approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
             status,
+            '',
+            ''
           )
-          .subscribe((res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('SYS034');//đã duyệt
-                data.approveStatus="5"
+          .subscribe((res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              if (status == '5') {
+                this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                data.approveStatus = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('SYS034');//bị hủy
-                data.approveStatus="4";
-              }              
+              if (status == '4') {
+                this.notificationsService.notifyCode('SYS034'); //bị hủy
+                data.approveStatus = '4';
+              }
               this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);
             }
           });
       });
-  } 
+  }
 
-  
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
@@ -194,9 +206,9 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if(data.approveStatus==5 && data.driverName==null)
+            if (data.approveStatus == 5 && data.driverName == null)
               func.disabled = false;
-            else{
+            else {
               func.disabled = true;
             }
           }
@@ -204,13 +216,13 @@ export class ApprovalCarViewDetailComponent extends UIComponent implements OnCha
       }
     }
   }
-  lviewSetPopupTitle(data){
-    if(data){
+  lviewSetPopupTitle(data) {
+    if (data) {
       this.setPopupTitle.emit(data);
     }
   }
   lviewDriverAssign(data) {
-    if (data) {    
+    if (data) {
       this.driverAssigned.emit(data);
     }
   }

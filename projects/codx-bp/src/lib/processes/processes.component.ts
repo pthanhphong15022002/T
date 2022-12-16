@@ -901,7 +901,7 @@ export class ProcessesComponent
     }
   }
 
-  async checkGroupId(data) {
+  checkGroupId(data) {
     var isCheck = '';
     if (data.permissions != null) {
       data.permissions.forEach((res) => {
@@ -911,7 +911,21 @@ export class ProcessesComponent
               if (res.objectID == this.employee?.orgUnitID)
                 isCheck = res.objectID;
               break;
+            case 'D':
+              if (res.objectID == this.employee?.departmentID)
+                isCheck = res.objectID;
+              break;
             case 'P':
+              if (res.objectID == this.employee?.positionID)
+                isCheck = res.objectID;
+              break;
+            //Mai sửa lại
+            case 'R':
+              if (res.objectID == this.employee?.positionID)
+                isCheck = res.objectID;
+              break;
+            //Mai sửa lại
+            case 'G':
               if (res.objectID == this.employee?.positionID)
                 isCheck = res.objectID;
               break;
@@ -926,9 +940,11 @@ export class ProcessesComponent
   }
 
   checkPermissionRead(data) {
+    var group = '';
+    group = this.checkGroupId(data);
     let isRead = data?.permissions.some(
       (x) =>
-        x.objectID == this.checkGroupPerm &&
+        x.objectID == group &&
         x.read &&
         x.approveStatus !== '3' &&
         x.approveStatus !== '4'
@@ -937,9 +953,8 @@ export class ProcessesComponent
     return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
   }
 
-  doubleClickViewProcessSteps(moreFunc, data) {
-    let check = this.checkPermissionRead(data);
-    // if (check && this.moreFuncDbClick) {
+  async doubleClickViewProcessSteps(moreFunc, data) {
+    var check = this.checkPermissionRead(data);
     if (check) {
       this.viewDetailProcessSteps(moreFunc, data);
     }
@@ -957,9 +972,9 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
-    let isEdit = data?.permissions.some(
-      (x) => x.objectID == this.checkGroupPerm && x.edit
-    );
+    var group = '';
+    group = this.checkGroupId(data);
+    let isEdit = data?.permissions.some((x) => x.objectID == group && x.edit);
     let isOwner = data?.owner == this.userId ? true : false;
     let editRole =
       (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !data.deleted

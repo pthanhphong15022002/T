@@ -114,7 +114,9 @@ export class ApprovalStationeryComponent
         this.codxEpService
           .approve(
             data?.approvalTransRecID, //ApprovelTrans.RecID
-            status
+            status,
+            '',
+            ''
           )
           .subscribe((res: any) => {
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
