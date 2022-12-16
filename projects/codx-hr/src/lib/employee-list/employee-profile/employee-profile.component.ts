@@ -127,7 +127,11 @@ export class EmployeeProfileComponent extends UIComponent {
 
   hrEContract;
   crrTab: number = 6;
+  
+  //EAsset salary
+  lstAsset: any = []
 
+  //Basic salary
   crrEBSalary: any;
   lstEBSalary: any = [];
   listCrrBenefit: any;
@@ -264,6 +268,17 @@ export class EmployeeProfileComponent extends UIComponent {
         opFamily.page = 1;
         this.hrService.getEFamilyWithDataRequest(opFamily).subscribe((res) => {
           if (res) this.lstFamily = res[0];
+        });
+
+        //Asset
+        let rqAsset = new DataRequest();
+        rqAsset.gridViewName = 'grvEAssets';
+        rqAsset.entityName = 'HR_EAssets';
+        rqAsset.predicate = 'EmployeeID=@0';
+        rqAsset.dataValue = params.employeeID;
+        rqAsset.page = 1;
+        this.hrService.getListAssetByDataRequest(rqAsset).subscribe((res) => {
+          if (res) this.lstAsset = res[0];
         });
 
         //Passport
@@ -458,6 +473,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'basicSalary') {
           this.HandleEmployeeBasicSalariesInfo('edit', data);
           this.df.detectChanges();
+        } else if(funcID == 'Assets'){
+          this.HandlemployeeAssetInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -525,6 +543,21 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'Assets') {
+              this.hrService
+                .DeleteEmployeeAssetInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstAsset.indexOf(data);
+                    if (i != -1) {
+                      this.lstAsset.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             } else if (funcID == 'jobSalary') {
               this.hrService
                 .DeleteEmployeeJobsalaryInfo(data.recID)
@@ -586,6 +619,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'basicSalary') {
           this.HandleEmployeeBasicSalariesInfo('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'Assets'){
+          this.HandlemployeeAssetInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1308,7 +1344,9 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeAllocatedPropertyDetailComponent,
       PopupEAssetsComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstAsset.indexOf(data),
+        lstAssets : this.lstAsset,
         employeeId: this.data.employeeID,
         headerText: 'Tài sản cấp phát',
       },
