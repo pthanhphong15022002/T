@@ -118,3 +118,7 @@ export class OKRs {
     modifiedBy:string;
   }
 
+  export class EditWeight{
+    recID:string;
+    weight:number;
+  }

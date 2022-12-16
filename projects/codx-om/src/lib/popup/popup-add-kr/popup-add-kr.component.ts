@@ -1,3 +1,4 @@
+import { OMCONST } from './../../codx-om.constant';
 import {
   Component,
   EventEmitter,
@@ -46,6 +47,7 @@ export class PopupAddKRComponent extends UIComponent {
   months=['1','2','3','4','5','6','7','8','9','10','11','12'];
   quarters =['1','2','3','4'];
 
+  typePlan='';
   planMonth=[];
   planQuarter=[];
 
@@ -56,6 +58,7 @@ export class PopupAddKRComponent extends UIComponent {
   o:any;
   oParentID:any;
   dialogTargets: DialogRef;
+  funcID: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -69,11 +72,14 @@ export class PopupAddKRComponent extends UIComponent {
     this.o = dialogData.data[1]; 
     this.formModel = dialogData.data[2];  
     this.isAdd = dialogData?.data[3];
-    this.headerText= dialogData?.data[4];
+    this.headerText= dialogData?.data[4];    
+    this.funcID= dialogData?.data[5];
     this.dialogRef = dialogRef;
     //
   }
-
+  
+  
+  //-----------------------Base Func-----------------------//
   ngAfterViewInit(): void {}
 
   onInit(): void {
@@ -88,6 +94,7 @@ export class PopupAddKRComponent extends UIComponent {
     })
     this.initForm();
   }
+
   initForm() {
     this.codxOmService
       .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
@@ -100,10 +107,24 @@ export class PopupAddKRComponent extends UIComponent {
         this.isAfterRender = true;
       });    
   }
-  
 
-  
+  //-----------------------Base Event-----------------------//
+  valueChange(evt:any){
+    if(evt && evt.field)
+    {
+      if(this.kr.plan==OMCONST.VLL.Plan.Month){
+        this.planMonth[evt.field]=evt.data;
+      }
+      if(this.kr.plan==OMCONST.VLL.Plan.Month){
+        this.planQuarter[evt.field]=evt.data;
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+  //-----------------------Get Data Func-----------------------//
 
+
+  //-----------------------Logic Func-----------------------//
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddKR.value;
     option.methodName = '';
@@ -112,51 +133,70 @@ export class PopupAddKRComponent extends UIComponent {
   }
 
   onSaveForm(){
+    this.kr.parentID='2fe69da4-7217-11ed-b6e9-d89ef34ba7ae';
+    this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
+
     //tính lại Targets cho KR
     if(this.kr.targets?.length==0 || this.kr.targets==null){
       this.calculatorTarget();
     }
+    if(this.isAdd){
+      this.methodAdd(this.kr);
+    }
+    else{      
+      this.methodEdit(this.kr);
+    }
+  }
+  methodAdd(kr:any){
+    this.codxOmService.addKR(this.kr).subscribe((res:any)=>{
+      if(res){
+        var x= res;       
+        this.afterSave(res); 
+      }
+      
+    })
   }
 
-  typePlan='';
+  methodEdit(kr:any){
+    this.codxOmService.editKR(this.kr).subscribe((res:any)=>{
+      if(res){
+        var x= res;      
+        this.afterSave(res);
+      }      
+    })
+  }
+  afterSave(kr:any){
+    if(this.isAdd)
+    {
+      this.notificationsService.notifyCode('SYS006');
+    }
+    else
+    {
+      this.notificationsService.notifyCode('SYS007');
+    }
+    this.dialogRef && this.dialogRef.close(kr);
+  }
 
-  openPopupTarget(template: any) {   
-    
-
-    if((this.kr.targets?.length==0 || this.kr.targets==null) || this.kr.plan!=this.typePlan){
-      this.calculatorTarget();
-      if( this.kr.plan=='M'){
-        this.typePlan='M';
-      }
-      else if( this.kr.plan=='Q'){      
-        this.typePlan='Q';
-      }
-    }
-    else{
-      if( this.kr?.plan=='M'){
-        
-      this.typePlan='M';
-        this.planMonth=[];
-        this.kr.targets.forEach(element => {
-          this.planMonth.push(element.target);
-        });
-      }
-      else if( this.kr?.plan=='Q'){
-            
-      this.typePlan='Q';
-        this.planQuarter=[];
-        this.kr.targets.forEach(element => {
-          this.planQuarter.push(element.target);
-        });
-      }
-    }
-    
-    if( this.kr?.plan=='M'){
-      this.dialogTargets = this.callfc.openForm(template, '', 550, 800, null,);
-    }
-    else if( this.kr?.plan=='Q'){
-      this.dialogTargets = this.callfc.openForm(template, '', 550, 420 , null,);
+  
+  //-----------------------Logic Event-----------------------//
+  
+  //-----------------------Custom Func-----------------------//
+  //Thiết lập OKRLevel theo funcID
+  OKRLevel(){
+    switch(this.funcID){
+      case OMCONST.FUNCID.Company:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Company;
+        break;
+      case OMCONST.FUNCID.Department:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Department;
+        break;
+      case OMCONST.FUNCID.Team:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Team;
+        break;
+      case OMCONST.FUNCID.Person:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Person;
+        break;
     }
     this.detectorRef.detectChanges();
   }
@@ -165,12 +205,12 @@ export class PopupAddKRComponent extends UIComponent {
     if(this.kr.target && this.kr.plan){
       this.planMonth=[];
       this.planQuarter=[];
-      if(this.kr.plan=='M'){
+      if(this.kr.plan==OMCONST.VLL.Plan.Month){
         for (let i = 1; i <= 12; i++) {
           this.planMonth.push(this.kr.target/12)
         }
       }
-      else if(this.kr.plan=='Q'){
+      else if(this.kr.plan==OMCONST.VLL.Plan.Quarter){
         for (let i = 1; i <= 4; i++) {
           this.planQuarter.push(this.kr.target/4)
         }
@@ -178,19 +218,56 @@ export class PopupAddKRComponent extends UIComponent {
     }
     this.detectorRef.detectChanges();
   }
-
+  //-----------------------Popup-----------------------//
+  openPopupTarget(template: any) {
+    if((this.kr.targets?.length==0 || this.kr.targets==null) || this.kr.plan!=this.typePlan){
+      this.calculatorTarget();
+      if( this.kr.plan==OMCONST.VLL.Plan.Month){
+        this.typePlan=OMCONST.VLL.Plan.Month;
+      }
+      else if( this.kr.plan==OMCONST.VLL.Plan.Quarter){      
+        this.typePlan=OMCONST.VLL.Plan.Quarter;
+      }
+    }
+    else{
+      if( this.kr?.plan==OMCONST.VLL.Plan.Month){
+        
+      this.typePlan=OMCONST.VLL.Plan.Month;
+        this.planMonth=[];
+        this.kr.targets.forEach(element => {
+          this.planMonth.push(element.target);
+        });
+      }
+      else if( this.kr?.plan==OMCONST.VLL.Plan.Quarter){
+            
+      this.typePlan=OMCONST.VLL.Plan.Quarter;
+        this.planQuarter=[];
+        this.kr.targets.forEach(element => {
+          this.planQuarter.push(element.target);
+        });
+      }
+    }
+    
+    if( this.kr?.plan==OMCONST.VLL.Plan.Month){
+      this.dialogTargets = this.callfc.openForm(template, '', 550, 800, null,);
+    }
+    else if( this.kr?.plan==OMCONST.VLL.Plan.Quarter){
+      this.dialogTargets = this.callfc.openForm(template, '', 550, 420 , null,);
+    }
+    this.detectorRef.detectChanges();
+  }
   onSaveTarget(){
     this.kr.targets=[];
     let krTarget=[];
     let type ='';
-    if(this.kr.plan=='M'){
-      type='M';
+    if(this.kr.plan==OMCONST.VLL.Plan.Month){
+      type=OMCONST.VLL.Plan.Month;
       this.planMonth.forEach(item=>{
         krTarget.push(item);
       });
     }
-    else if(this.kr.plan=='Q'){
-      type='Q';
+    else if(this.kr.plan==OMCONST.VLL.Plan.Quarter){
+      type=OMCONST.VLL.Plan.Quarter;
       this.planQuarter.forEach(item=>{
         krTarget.push(item);
       });
@@ -208,16 +285,5 @@ export class PopupAddKRComponent extends UIComponent {
     this.dialogTargets=null;
   }
 
-  valueChange(evt:any){
-    if(evt && evt.field)
-    {
-      if(this.kr.plan=='M'){
-        this.planMonth[evt.field]=evt.data;
-      }
-      if(this.kr.plan=='Q'){
-        this.planQuarter[evt.field]=evt.data;
-      }
-    }
-    this.detectorRef.detectChanges();
-  }
+  
 }

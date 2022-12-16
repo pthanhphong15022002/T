@@ -137,7 +137,7 @@
                   <codx-label [default]="'Chỉnh sửa'" [formModel]="dialog.formModel" [fiedName]="'Edit'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chỉnh sửa qui trình'" [formModel]="dialog.formModel"
+                  <codx-label [default]="'Cho phép chỉnh sửa quy trình'" [formModel]="dialog.formModel"
                     [fiedName]="'Edit'"></codx-label>
                 </td>
                 <td class="text-center">
@@ -151,7 +151,7 @@
                   <codx-label [default]="'Phát hành'" [formModel]="dialog.formModel" [fiedName]="'Publish'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép phát hành qui trình'" [formModel]="dialog.formModel"
+                  <codx-label [default]="'Cho phép phát hành quy trình'" [formModel]="dialog.formModel"
                     [fiedName]="'Publish'"></codx-label>
                 </td>
                 <td class="text-center">
@@ -160,25 +160,25 @@
                   </codx-input>
                 </td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Xóa'" [formModel]="dialog.formModel" [fiedName]="'Delete'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép xóa qui trình'" [fiedName]="'DescriptionDelete'"></codx-label>
+                  <codx-label [default]="'Cho phép xóa quy trình'" [fiedName]="'DescriptionDelete'"></codx-label>
                 </td>
                 <td class="text-center">
-                  <codx-input class="test-check" type="checkbox" style="width:100%" [checked]="deletePerm" field="delete"
+                  <codx-input class="test-check" type="switch" style="width:100%" [checked]="deletePerm" field="delete"
                     [disabled]="checkAdminUpdate()" (valueChange)="valueChange($event, 'delete')">
                   </codx-input>
                 </td>
-              </tr> -->
+              </tr>
               <tr>
                 <td class="font-size-lg text-dark">
                   <codx-label [default]="'Chia sẻ'" [formModel]="dialog.formModel" [fiedName]="'Share'"></codx-label>
                 </td>
                 <td>
-                  <codx-label [default]="'Cho phép chia sẻ qui trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionShare'"></codx-label>
+                  <codx-label [default]="'Cho phép chia sẻ quy trình'" [formModel]="dialog.formModel" [fiedName]="'DescriptionShare'"></codx-label>
                 </td>
                 <td class="text-center">
                   <codx-input class="test-check" type="switch" style="width:100%" [checked]="share" field="share"

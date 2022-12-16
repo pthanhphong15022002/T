@@ -55,7 +55,7 @@ export class AddEditComponent implements OnInit {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
-    mode: 'Batch',
+    mode: 'Normal',
   };
   selectedItem: any;
   selectedIndex: number = 0;

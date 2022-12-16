@@ -240,4 +240,8 @@ export class CodxBpService {
       data
     );
   }
+
+  getRoles(recID: String){
+    return this.api.exec<any>('AD','RolesBusiness','GetAsync', recID);
+  }
 }
