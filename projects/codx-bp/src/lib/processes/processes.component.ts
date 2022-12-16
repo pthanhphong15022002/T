@@ -806,8 +806,6 @@ export class ProcessesComponent
               res.isblur = true;
             }
             break;
-          case 'SYS04': // copy
-          case 'SYS003': // them
           case 'SYS003': // them phien ban
             let isCreate = data?.permissions.some(
               (x) => x.objectID == checkGroup && x.create
@@ -901,6 +899,7 @@ export class ProcessesComponent
     }
   }
 
+  //check user trong group
   checkGroupId(data) {
     var isCheck = '';
     if (data.permissions != null) {
@@ -939,6 +938,7 @@ export class ProcessesComponent
     return isCheck;
   }
 
+  //Check quyền đọc, icon đọc, check quyền xem chi tiết doubleClick
   checkPermissionRead(data) {
     var group = '';
     group = this.checkGroupId(data);
