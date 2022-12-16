@@ -31,8 +31,8 @@
               <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
               <codx-img 
                 [width]="30" 
-                [isDefaulImg]="true" 
                 [objectId]="item.userID" 
+                [objectName]="item.userName"
                 [objectType]="'AD_Users'">
               </codx-img>
             </div>
