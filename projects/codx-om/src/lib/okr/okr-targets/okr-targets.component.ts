@@ -110,11 +110,14 @@ export class OkrTargetsComponent implements OnInit {
     method: 'GetChartData1Async',
   };
   funcID: any;
+  progress: any;
 
   constructor(
     private callfunc: CallFuncService, 
     private cache: CacheService,
     private activatedRoute:ActivatedRoute,
+    private api:ApiHttpService,
+    
   ) 
   {
     
