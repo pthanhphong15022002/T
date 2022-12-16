@@ -280,6 +280,7 @@ export class CodxTasksComponent
     //   this.requestSchedule.predicate = '';
     //   this.requestSchedule.dataValue = '';
     // }
+    //fix theo core mới schedule bỏ resoure
     switch (this.funcID) {
       case 'MWP0061':
       case 'TMT0201':
