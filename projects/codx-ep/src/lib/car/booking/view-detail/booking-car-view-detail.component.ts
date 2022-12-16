@@ -27,6 +27,7 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();  
+  @Output('release') release: EventEmitter<any> = new EventEmitter();  
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();  
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> = new EventEmitter();
   @Input() itemDetail: any;
@@ -111,6 +112,14 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
       case 'SYS04': //copy.
         this.lviewCopy(data,event.text);
         break;
+      case 'EP7T1101': //Gửi duyệt
+        this.lviewRelease(data);
+        break;
+    }
+  }
+  lviewRelease(data?) {
+    if (data) {      
+      this.release.emit(data);
     }
   }
   lviewEdit(data?,mfuncName?) {
@@ -135,12 +144,13 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
       // event.forEach(func => {
       //   func.disabled=true;
       // });
-      if (data.approveStatus == '1') {
+      if (data.status == '1') {
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/
+            func.functionID == 'SYS04' /*MF chép*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ 
           ) {
             func.disabled = false;
           }
@@ -152,7 +162,8 @@ export class BookingCarViewDetailComponent extends UIComponent implements OnChan
           }
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
-            func.functionID == 'SYS03' /*MF xóa*/ 
+            func.functionID == 'SYS03' /*MF xóa*/ ||
+            func.functionID == 'EP7T1101' /*MF gửi duyệt*/ 
           ) {
             func.disabled = true;
           }

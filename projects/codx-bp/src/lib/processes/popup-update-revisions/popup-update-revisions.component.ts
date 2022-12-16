@@ -41,6 +41,9 @@ export class PopupUpdateRevisionsComponent implements OnInit {
   user: any;
   dateLanguage: any;
   moreFunc: any;
+  userId = "";
+  isAdmin: false;
+  isAdminBp: false;
   constructor(
     private bpService: CodxBpService,
     private callfc: CallFuncService,
@@ -55,8 +58,9 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.getProcess = this.data;
     this.titleAction = dt.data.title;
     this.moreFunc = dt.data.moreFunc;
-    // this.action = dt.data[0];
-    // this.dateLanguage=dt.data[1].more;
+    this.userId = dt.data.userId;
+    this.isAdmin = dt.data.isAdmin;
+    this.isAdminBp = dt.data.isAdminBp;
     this.funcID = this.dialog.formModel.funcID;
     this.user = this.authStore.get();
     this.revisions = this.getProcess.versions.sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
@@ -76,7 +80,14 @@ export class PopupUpdateRevisionsComponent implements OnInit {
       .subscribe(proesses => {
         if (proesses) {
           this.dialog.close();
-          // this.bpService.viewProcesses.next(proesses);
+          let isEdit = proesses?.permissions.some((x) => x.objectID == this.userId  && x.edit);
+          let isOwner = proesses?.owner == this.userId ? true : false;
+          let editRole =
+            (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !proesses.deleted
+              ? true
+              : false;
+      
+
           let obj = {
             moreFunc: this.moreFunc,
             data: proesses,
@@ -88,6 +99,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
               gridViewName: "grvProcesses",
               userPermission: null,
             },
+            editRole,
           };
 
           let dialogModel = new DialogModel();

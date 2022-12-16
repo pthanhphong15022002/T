@@ -19,7 +19,6 @@ import {
   AuthStore,
   NotificationsService,
   ApiHttpService,
-  ImageViewerComponent,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
@@ -71,6 +70,7 @@ export class PopupAddProcessesComponent implements OnInit {
   isTurnPermiss: boolean = false;
   isExitUserPermiss: boolean = false;
   tmpPermission = new BP_ProcessPermissions();
+  emp:tmpUser;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -145,7 +145,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process.phases = this.action == 'copy' ? this.phasesOld : 0;
       this.process.activities = this.action == 'copy' ? this.ActivitiesOld : 0;
       if (this.action == 'copy') {
-        this.process.attachments = this.isCoppyFile ? this.AttachmentsOld : 0;
+        this.process.attachments = this.isCoppyFile? (this.process.attachments >0? this.process.attachments+this.AttachmentsOld: this.AttachmentsOld ): this.process.attachments;
         this.isCoppyKeyValue = this.isCoppyFile ? 'copyFile' : 'copyDefault';
       }
       this.revisions.push(versions);
@@ -210,11 +210,12 @@ export class PopupAddProcessesComponent implements OnInit {
       }
     }
     this.isTurnPermiss=true;
-    if(this.ownerOld===this.process?.owner) {
+    if(this.ownerOld===this.process?.owner && this.action ==='edit') {
         this.callActionSave();
     }
     else {
-      this.isAddPermission(this.process.owner);
+    //  this.isAddPermission(this.process.owner);
+      this.updateOrCreatProccess(this.emp);
     }
 
 
@@ -228,18 +229,27 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   async actionSaveBeforeSaveAttachment() {
-    if (this.attachment?.fileUploadList?.length)
+    if (this.attachment?.fileUploadList?.length>0) {
       (await this.attachment.saveFilesObservable()).subscribe((res) => {
         if (res) {
           var countAttack = 0;
           countAttack = Array.isArray(res) ? res.length : 1;
-          if (this.action === 'edit') {
-            this.process.attachments += countAttack;
-          } else {
-            this.process.attachments = countAttack;
-          }
+          this.process.attachments = this.action==='edit'?this.process.attachments +countAttack:countAttack;
+          // if (this.action === 'edit') {
+          //   this.process.attachments += countAttack;
+          // } else {
+          //   this.process.attachments = countAttack;
+          // }
+            this.selectedAction();
         }
       });
+    }
+    else {
+      this.selectedAction();
+    }
+
+  }
+  selectedAction(){
     switch (this.action) {
       case 'copy': {
         this.notiService.alertCode('BP007').subscribe((x) => {
@@ -345,9 +355,9 @@ export class PopupAddProcessesComponent implements OnInit {
     this.attachment.uploadFile();
   }
   getfileCount(e) {
-    if (e.data.length > 0) this.isHaveFile = true;
+    if (e?.data.length > 0) this.isHaveFile = true;
     else this.isHaveFile = false;
-    if (this.action != 'edit') this.showLabelAttachment = this.isHaveFile;
+    this.showLabelAttachment = this.isHaveFile;
   }
   fileAdded(e) {}
 
@@ -356,7 +366,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   valueChangeUser(e) {
     this.process.owner = e?.data;
-  //  this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
   }
  isAddPermission(id) {
     this.api
@@ -364,59 +374,31 @@ export class PopupAddProcessesComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.perms = [];
-          let emp = res;
-          // var tmpPermission = new BP_ProcessPermissions();
-
-          // this.tmpPermission.objectID = emp?.userID;
-          // this.tmpPermission.objectName = emp?.userName;
-          // this.tmpPermission.objectType = '1';
-          // this.tmpPermission.memberType = '0';
-          // this.tmpPermission.autoCreate = true;
-          // if (emp.administrator) {
-          //   this.tmpPermission.objectType = '7';
-          // } else if (this.checkAdminOfBP(emp.userID)) {
-          //   this.tmpPermission.objectType = '7';
-          // }
-          // this.tmpPermission.edit = true;
-          // this.tmpPermission.create = true;
-          // this.tmpPermission.publish = true;
-          // this.tmpPermission.read = true;
-          // this.tmpPermission.share = true;
-          // this.tmpPermission.full = true;
-          // this.tmpPermission.delete = true;
-          // this.tmpPermission.update = true;
-          // this.tmpPermission.upload = true;
-          // this.tmpPermission.assign = true;
-          // this.tmpPermission.download = true;
-          // this.tmpPermission.memberType = '0';
-          // this.tmpPermission.autoCreate = true;
-          // var tmpPermission = new BP_ProcessPermissions();
-          this.updatePermission(emp,this.tmpPermission);
-
-          if(this.isTurnPermiss){
-
-
-            if(this.process.permissions.length>0) {
-              this.process.permissions.forEach(element => {
-                if( element.objectID === this.tmpPermission.objectID) {
-                  // element = this.tmpPermission;
-                  this.updatePermission(emp,element);
-                  this.isExitUserPermiss = true;
-                }
-               });
-
-               if(!this.isExitUserPermiss){
-                this.process.permissions.push(this.tmpPermission);
-               }
-            }
-            else {
-                this.perms.push(this.tmpPermission);
-                this.process.permissions = this.perms;
-            }
-            this.callActionSave();
-          }
+          this.emp =res;
+          this.updatePermission(this.emp,this.tmpPermission);
         }
       });
+  }
+  updateOrCreatProccess(emp: tmpUser){
+    if(this.isTurnPermiss){
+      if( this.process?.permissions !=null && this.process?.permissions.length>0) {
+        this.process.permissions.forEach(element => {
+          if( element.objectID === this.tmpPermission.objectID) {
+            this.updatePermission(emp,element);
+            this.isExitUserPermiss = true;
+          }
+         });
+
+         if(!this.isExitUserPermiss){
+          this.process.permissions.push(this.tmpPermission);
+         }
+      }
+      else {
+          this.perms.push(this.tmpPermission);
+          this.process.permissions = this.perms;
+      }
+    }
+    this.callActionSave();
   }
   updatePermission(emp:tmpUser,tmpPermission: BP_ProcessPermissions ){
     tmpPermission.objectID = emp?.userID;

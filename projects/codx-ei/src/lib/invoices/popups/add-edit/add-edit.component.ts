@@ -1,6 +1,7 @@
+import { Goods } from './../../../models/goods.model';
 import { mode } from 'crypto-js';
 import { TabModel } from './../../../../../../codx-share/src/lib/components/codx-tabs/model/tabControl.model';
-import { InvoicesLine } from '../../../models/invoice.model';
+import { InvoiceLine, Invoices } from '../../../models/invoice.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
@@ -40,7 +41,7 @@ export class AddEditComponent implements OnInit {
   //#region Contructor
   @Input() headerText: string;
   dialog: DialogRef;
-  invoices: any;
+  invoices: Invoices;
   action: string;
   active = true;
   gridHeight: number;
@@ -64,7 +65,7 @@ export class AddEditComponent implements OnInit {
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
   ];
   dicMST: Map<string, any> = new Map<string, any>();
-  dicCbx: Map<string, any> = new Map<string, any>();
+  dicCbx: Map<string, Goods> = new Map<string, Goods>();
 
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @ViewChild('form') public form: CodxFormComponent;
@@ -110,8 +111,8 @@ export class AddEditComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    if (this.action != 'add') this.form.formGroup.patchValue(this.invoices);
-    else {
+    this.form.formGroup.patchValue(this.invoices);
+    if (this.action == 'add') {
       this.form.formGroup.patchValue({
         invoiceDate: new Date(),
         invoiceType: '1',
@@ -156,7 +157,7 @@ export class AddEditComponent implements OnInit {
   }
 
   addRow() {
-    let idx = this.data.length;
+    let idx = this.grid.dataSource.length;
     this.grid.addRow(null, idx);
   }
 
@@ -183,27 +184,10 @@ export class AddEditComponent implements OnInit {
         e.data.salesPrice !== undefined ||
         e.data.salesPrice >= 0)
     ) {
-      let salesPrice = parseInt(e.value) * parseFloat(e.data.salesPrice);
-      console.log(salesPrice);
+      let data = this.calculateLine(e.data);
+      this.grid.updateRow(e.idx, data);
+      this.updateInvoices();
     }
-  }
-
-  updateLine(data, rowData, idx: number) {
-    console.log('data: ', rowData);
-    rowData.umid = data.umid;
-    rowData.quantity = 1;
-    rowData.salesPrice = data.salesPrice;
-    rowData.vatid = data.vatPct;
-    this.grid.updateRow(idx, rowData);
-  }
-
-  updateAmount(quantity: number, price: any, vat: any) {
-    let q: number, p: number, v: number, amount: number;
-    if (typeof quantity == 'string') q = parseFloat(quantity);
-    if (typeof price == 'string') parseFloat(price);
-    if (typeof vat == 'string') parseFloat(vat);
-
-    // if(q > 0 || price)
   }
 
   clickMF(e) {}
@@ -232,5 +216,106 @@ export class AddEditComponent implements OnInit {
     this.form.formGroup.patchValue({ bankName: data['bankName'] });
     this.form.formGroup.patchValue({ bankAccount: data['bankAccount'] });
   }
+
+  updateLine(data: Goods, rowData: InvoiceLine, idx: number) {
+    rowData.umid = data.umid;
+    rowData.quantity = 0;
+    rowData.salesPrice = data.salesPrice;
+    rowData.vatid = data.vatPct;
+    rowData.salesAmt = 0;
+    rowData.totalAmt = 0;
+    this.grid.updateRow(idx, rowData);
+  }
+
+  updateInvoices() {
+    let lines = this.grid.dataSource;
+    let salesAmt: number = 0,
+      quantity: number = 0,
+      totalAmt: number = 0;
+
+    lines.forEach((e: InvoiceLine) => {
+      let q: number, s: number, t: number;
+      if (e.quantity && typeof e.quantity == 'string')
+        q = parseFloat(e.quantity);
+      else q = e.quantity;
+
+      quantity += q;
+
+      if (e.salesAmt && typeof e.salesAmt == 'string')
+        s = parseFloat(e.salesAmt);
+      else s = e.salesAmt;
+
+      salesAmt += s;
+
+      if (e.totalAmt && typeof e.totalAmt == 'string')
+        t = parseFloat(e.totalAmt);
+      else t = e.totalAmt;
+
+      totalAmt += t;
+    });
+
+    //Clear
+    this.invoices.quantity = 0;
+    this.invoices.salesAmt = 0;
+    this.invoices.totalAmt = 0;
+
+    //Set
+    this.invoices.quantity = quantity;
+    this.invoices.salesAmt = salesAmt;
+    this.invoices.totalAmt = totalAmt;
+  }
+
+  calculateLine(data: InvoiceLine) {
+    data.salesAmt = this.salesAmount(data.quantity, data.salesPrice);
+    data.vatAmt = this.updateVATAtm(data.salesPrice, data.vatid);
+    data.totalAmt = this.updateTotalAtm(data.salesAmt, data.vatAmt);
+    return data;
+  }
+
+  salesAmount(quantity: number, price?: any) {
+    let q: number,
+      p: number,
+      v: number,
+      totalPrice: number = 0;
+    if (quantity && typeof quantity == 'string') q = parseFloat(quantity);
+    else q = quantity;
+
+    if (price && typeof price == 'string') p = parseFloat(price);
+    else p = price;
+
+    if (q > 0 || price) {
+      totalPrice = q * p;
+    }
+
+    return totalPrice;
+  }
+
+  updateVATAtm(amount: number, vat?: any) {
+    let v: number, a: number;
+    if (amount && typeof amount == 'string') a = parseFloat(amount);
+    else a = amount;
+
+    if (vat && typeof vat == 'string') v = parseFloat(vat);
+    else v = vat;
+
+    if (a >= 0 && v >= 0) return a * (vat / 100);
+
+    return 0;
+  }
+
+  updateTotalAtm(totalPrice: number, totalAmt: any) {
+    let p: number = 0,
+      a: number = 0;
+    if (totalPrice && typeof totalPrice == 'string') p = parseFloat(totalPrice);
+    else p = totalPrice;
+
+    if (totalAmt && typeof totalAmt == 'string') a = parseFloat(totalAmt);
+    else a = totalAmt;
+
+    if (p >= 0 && a >= 0 && p > a) return p - a;
+
+    return 0;
+  }
+
   //#endregion
 }

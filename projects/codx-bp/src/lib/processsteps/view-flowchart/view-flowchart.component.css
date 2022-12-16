@@ -1,0 +1,13 @@
+.dropzone.dropzone-default {
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    border: 0.5px dashed #6C757D;
+    border-radius: 0.42rem;
+    background: #fdfeff;
+    height: 100%;
+  }
+  
+  .dropzone.dropzone-default.dropzone-primary {
+    border-color: #090913;
+  }

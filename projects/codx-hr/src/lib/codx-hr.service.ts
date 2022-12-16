@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataRequest } from '@shared/models/data.request';
 import { LayoutModel } from '@shared/models/layout.model';
 import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
 import {
@@ -613,7 +614,7 @@ export class CodxHrService {
 
   //#endregion
 
-  //region #EJobSalaries
+  //#region #EJobSalaries
   GetCurrentJobSalaryByEmployeeID(data) {
     return this.api.execSv<any>(
       'HR',
@@ -643,6 +644,7 @@ export class CodxHrService {
       data
     );
   }
+  
 
   GetEmployeeJobSalariesModel() {
     return this.api.execSv<any>(
@@ -726,13 +728,63 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_EBasicSalaries
-  GetCurrentEBasicSalaries(empID: string) {
+  GetCurrentEBasicSalariesByEmployeeID(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBasicSalariesBusiness',
-      'GetCurrentEBSalaryAsync',
+      'GetCurrentBasicSalariesByEmployeeIDAsync',
       [empID]
+    );
+  }
+
+  getListBasicSalariesByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetListEBasicSalariesAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeBasicsalaryInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'DeleteEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+  
+
+  GetEmployeeBasicSalariesModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetEmployeeBasicSalariesModelAsync'
+    );
+  }
+
+  AddEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'AddEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+
+  UpdateEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'UpdateEmployeeBasicSalariesInfoAsync',
+      data
     );
   }
   //#endregion
@@ -746,6 +798,102 @@ export class CodxHrService {
       'GetCurrentBenefitAsync',
       [empID]
     );
+  }
+  //#endregion
+
+  //#region HR_EHealths
+
+  loadDataEHealths(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'LoadDataEHealthsAsync',
+      dataRequest
+    );
+  }
+
+  addEHealth(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'AddEHealthsAsync',
+      [data]
+    );
+  }
+
+  editEHealth(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'EditEHealthsAsync',
+      data
+    );
+  }
+
+  deleteEHealth(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'DeleteEHealthsAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+  //#region HR_EVaccines
+  loadDataEVaccine(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'LoadDataEVaccineAsync',
+      dataRequest
+    );
+  }
+
+  addEVaccine(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'AddEVaccineAsync',
+      [data]
+    );
+  }
+
+  editEVaccine(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'EditEVaccineAsync',
+      data
+    );
+  }
+
+  deleteEVaccine(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'DeleteEVaccineAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region FunctionList
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
   }
   //#endregion
 }
