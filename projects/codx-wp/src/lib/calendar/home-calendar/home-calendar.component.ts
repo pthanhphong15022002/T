@@ -66,15 +66,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     });
   }
 
-  onInit(): void {
-    // this.request = new ResourceModel();
-    // this.request.assemblyName = 'SYS';
-    // this.request.className = 'SettingValuesBusiness';
-    // this.request.service = 'SYS';
-    // this.request.method = 'GetDataByDateAsync';
-    // this.request.idField = 'recID';
-    // this.request.dataObj = 'WPCalendars';
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     this.views = [
@@ -112,62 +104,57 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     let myInterval = setInterval(() => {
       if (this.tmpCalendarNote.instance.settingValue) {
         clearInterval(myInterval);
+        let TM_ = JSON.parse(
+          this.tmpCalendarNote.instance.settingValue.TM_Tasks[1]
+        );
+        let WP_ = JSON.parse(
+          this.tmpCalendarNote.instance.settingValue.WP_Notes[1]
+        );
+        let CO_ = JSON.parse(
+          this.tmpCalendarNote.instance.settingValue.CO_Meetings[1]
+        );
+        let EP_BookingRooms_ = JSON.parse(
+          this.tmpCalendarNote.instance.settingValue.EP_BookingRooms[1]
+        );
+        let EP_BookingCars_ = JSON.parse(
+          this.tmpCalendarNote.instance.settingValue.EP_BookingCars[1]
+        );
         var TM_Params = [
           {
-            color: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.TM_Tasks
-            ).ShowBackground,
-            borderColor: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.TM_Tasks
-            ).ShowColor,
+            color: TM_.ShowBackground,
+            borderColor: TM_.ShowColor,
             text: 'TM_Tasks',
             status: 'TM_MyTasks',
           },
         ];
         var WP_Params = [
           {
-            color: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.WP_Notes
-            ).ShowBackground,
-            borderColor: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.WP_Notes
-            ).ShowColor,
+            color: WP_.ShowBackground,
+            borderColor: WP_.ShowColor,
             text: 'WP_Notes',
             status: 'WP_Notes',
           },
         ];
         var CO_Params = [
           {
-            color: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.CO_Meetings
-            ).ShowBackground,
-            borderColor: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.CO_Meetings
-            ).ShowColor,
+            color: CO_.ShowBackground,
+            borderColor: CO_.ShowColor,
             text: 'CO_Meetings',
             status: 'CO_Meetings',
           },
         ];
         var EP_BookingRoomParams = [
           {
-            color: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.EP_BookingRooms
-            ).ShowBackground,
-            borderColor: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.EP_BookingRooms
-            ).ShowColor,
+            color: EP_BookingRooms_.ShowBackground,
+            borderColor: EP_BookingRooms_.ShowColor,
             text: 'EP_BookingRooms',
             status: 'EP_BookingRooms',
           },
         ];
         var EP_BookingCarParams = [
           {
-            color: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.EP_BookingCars
-            ).ShowBackground,
-            borderColor: JSON.parse(
-              this.tmpCalendarNote.instance.settingValue.EP_BookingCars
-            ).ShowColor,
+            color: EP_BookingCars_.ShowBackground,
+            borderColor: EP_BookingCars_.ShowColor,
             text: 'EP_BookingCars',
             status: 'EP_BookingCars',
           },
@@ -191,7 +178,13 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     a.instance.request = this.request;
     a.instance.showHeader = false;
     a.instance.resources = resource;
-    a.instance.resourceModel = this.tmpCalendarNote.instance.dataResourceModel;
-    debugger
+    let myInterval = setInterval(() => {
+      if (this.tmpCalendarNote.instance.dataResourceModel) {
+        clearInterval(myInterval);
+        a.instance.resourceModel =
+          this.tmpCalendarNote.instance.dataResourceModel;
+        debugger;
+      }
+    });
   }
 }

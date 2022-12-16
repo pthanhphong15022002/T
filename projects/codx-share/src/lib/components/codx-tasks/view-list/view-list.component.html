@@ -1,135 +1,68 @@
 <div class="tm-viewlist w-100">
-  <div
-    class="d-flex flex-row align-items-top p-3 border-bottom w-100"
-    (dblclick)="dbClick(data)"
-  >
-    <div class="w-450px min-w-350px ps-3">
+  <div class="d-flex justify-content-between align-items-top p-3 border-bottom w-100" (dblclick)="dbClick(data)">
+    <div class="w-100 ps-3">
       <div class="a" [ngbTooltip]="data.taskName">
         {{ data?.taskName }}
       </div>
     </div>
-    <div class="w-50px min-w-50px">
-      <div class="d-flex align-items-center">
-        <span
-          [ngClass]="data?.isTimeOut ? 'icon-notifications expired' : ''"
-          [ngbPopover]="popOverDue"
-          #popOver="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="popOver.open()"
-          (mouseleave)="popOver.close()"
-          placement="top right bottom"
-        ></span>
-        <span
-          [class]="data?.priority | vll: vllPriority:'icon' | async"
-          [style.color]="data?.priority | vll: vllPriority:'textColor' | async"
-          [ngbPopover]="popDetailPriority"
-          #p="ngbPopover"
-          [openDelay]="500"
-          (mouseenter)="p.open()"
-          (mouseleave)="p.close()"
-          placement="top right bottom"
-        >
-        </span>
+    <div class="d-flex align-items-start">
+      <div class="w-50px min-w-50px">
+        <div class="d-flex align-items-center">
+          <span [ngClass]="data?.isTimeOut ? 'icon-notifications expired' : ''" [ngbPopover]="popOverDue"
+            #popOver="ngbPopover" [openDelay]="500" (mouseenter)="popOver.open()" (mouseleave)="popOver.close()"
+            placement="top right bottom"></span>
+          <span [class]="data?.priority | vll: vllPriority:'icon' | async"
+            [style.color]="data?.priority | vll: vllPriority:'textColor' | async" [ngbPopover]="popDetailPriority"
+            #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()" (mouseleave)="p.close()"
+            placement="top right bottom">
+          </span>
+        </div>
       </div>
-    </div>
-    <div class="w-120px min-w-120px">
-      <codx-vll
-        [name]="vllStatus"
-        [field]="'Status'"
-        [value]="data?.status"
-        [showText]="true"
-        [showBgColor]="true"
-        class="badge badge-light badge-md fs-7 ms-2"
-      >
-      </codx-vll>
-    </div>
-    <div class="w-150px min-w-150px">
-      <div
-        *ngIf="data.memo"
-        class="dropdown"
-        [class.dropdown-customv2]="data.memo"
-        [ngbPopover]="popDetail"
-        #p="ngbPopover"
-        [openDelay]="500"
-        (mouseenter)="PopoverDetail(p, data)"
-        (mouseleave)="PopoverDetail(p, null)"
-        placement="bottom right top"
-        autoClose="outside"
-      >
-        <button
-          [disabled]="!data.memo"
-          class="btn"
-          type="button"
-          id="dropdownShowDescription"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <div class="d-flex">
-            <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
-            <div
-              class="b text-start"
-              *ngIf="data.memo"
-              style="font-style: italic; color: #0000ff"
-            >
-              <codx-label name="lblNoMemo" default="Xem thêm..."></codx-label>
+      <div class="w-120px min-w-120px">
+        <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true" [showBgColor]="true"
+          class="badge badge-light badge-md fs-7 ms-2">
+        </codx-vll>
+      </div>
+      <div class="w-125px min-w-125px">
+        <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
+          #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
+          placement="bottom right top" autoClose="outside">
+          <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <div class="d-flex">
+              <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
+              <div class="b text-start" *ngIf="data.memo" style="font-style: italic; color: #0000ff">
+                <codx-label name="lblNoMemo" default="Xem thêm..."></codx-label>
+              </div>
             </div>
-          </div>
-        </button>
+          </button>
+        </div>
+        <div *ngIf="!data.memo">
+          <button [disabled]="!data.memo" class="btn" type="button" id="dropdownShowDescription" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            <div class="d-flex">
+              <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
+              <span *ngIf="!data.memo" class="b text-start">
+                <codx-label name="lblNoMemo" [formModel]="formModel" default="Không có mô tả"></codx-label>
+              </span>
+            </div>
+          </button>
+        </div>
       </div>
-      <div *ngIf="!data.memo">
-        <button
-          [disabled]="!data.memo"
-          class="btn"
-          type="button"
-          id="dropdownShowDescription"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          <div class="d-flex">
-            <span class="icon-assignment icon-16 text-gray-600 me-1"></span>
-            <span *ngIf="!data.memo" class="b text-start">
-              <codx-label
-                name="lblNoMemo"
-                [formModel]="formModel"
-                default="Không có mô tả"
-              ></codx-label>
-            </span>
-          </div>
-        </button>
-      </div>
-    </div>
 
-    <div class="w-150px min-w-150px">
-      <div *ngIf="data.category == '3'" class="">
-        <codx-imgs
-          [isToolTip]="false"
-          [width]="30"
-          [objectId]="data?.assignTo"
-          objectType="AD_Users"
-          [numberImages]="4"
-          (click)="popoverEmpList(popoverList, data)"
-          [ngbPopover]="popEmpList"
-          popoverClass="empPopoverClass"
-          #popoverList="ngbPopover"
-          placement="right bottom"
-          container="body"
-          autoClose="outside"
-          [openDelay]="500"
-        >
-        </codx-imgs>
-      </div>
-      <div *ngIf="data.category == '1' || data.category == '2'" class="">
-        <codx-imgs
-          [width]="30"
-          [objectId]="data?.owner"
-          objectType="AD_Users"
-          [numberImages]="4"
-        >
-        </codx-imgs>
-      </div>
-      <!-- <div class="d-flex">
+      <div class="w-100px min-w-100px">
+        <div *ngIf="data.category == '3'" class="">
+          <codx-imgs [isToolTip]="false" [width]="30" [objectId]="data?.assignTo" objectType="AD_Users"
+            [numberImages]="2" (click)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
+            popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
+            autoClose="outside" [openDelay]="500">
+          </codx-imgs>
+        </div>
+        <div *ngIf="data.category == '1' || data.category == '2'" class="">
+          <codx-imgs [width]="30" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="2">
+          </codx-imgs>
+        </div>
+        <!-- <div class="d-flex">
       <div class=" symbol-hover justify-content-end" *ngIf="data?.category == '3' || data?.category == '4'">
         <codx-img popoverClass="userPopoverClass" [ngbPopover]="popContent" placement="bottom" #empPopover="ngbPopover"
           [openDelay]="500" (mouseenter)="PopoverEmp(empPopover, data)" (mouseleave)="PopoverEmp(empPopover, null)"
@@ -141,77 +74,59 @@
         </codx-img>
       </div>
     </div> -->
-    </div>
-    <div class="w-100px min-w-100px">
-      <div class="text-gray-600 fs-7">
-        <codx-label
-          name="DueDate"
-          [formModel]="formModel"
-          default="Ngày hết hạn:"
-        ></codx-label>
       </div>
-      <div class="text-dark" #duaDate>
-        <!-- {{data.dueDate|date:'dd/MM/yyyy'}} -->
-        {{
+      <div class="w-100px min-w-100px">
+        <div class="text-gray-600 fs-7">
+          <codx-label name="DueDate" [formModel]="formModel" default="Ngày hết hạn:"></codx-label>
+        </div>
+        <div class="text-dark" #duaDate>
+          <!-- {{data.dueDate|date:'dd/MM/yyyy'}} -->
+          {{
           data?.dueDate
-            | formatvalue: formModel:"dueDate":duaDate:"Tasks":"grvTasks"
-            | async
-        }}
+          | formatvalue: formModel:"dueDate":duaDate:"Tasks":"grvTasks"
+          | async
+          }}
+        </div>
       </div>
-    </div>
-    <div class="w-120px min-w-120px">
-      <div class="d-flex align-items-center">
-        <!-- <div class="d-flex align-items-center me-3 {{data?.comments  ? 'text-success' : 'text-gray-600'}}">
+      <div class="w-150px min-w-150px">
+        <div class="d-flex align-items-center">
+          <!-- <div class="d-flex align-items-center me-3 {{data?.comments  ? 'text-success' : 'text-gray-600'}}">
           <span class="text-hover-primary icon-chat_bubble_outline icon-16"></span>
           <span class="ms-1"> {{data?.comments}}</span>
         </div> -->
-        <span class="me-4">
-          <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
-        </span>
-        <div
-          class="d-flex align-items-center me-4 {{
+          <span class="me-3">
+            <codx-comment-temp [objectID]="data.recID"></codx-comment-temp>
+          </span>
+          <div class="d-flex align-items-center me-3 {{
             data?.todo ? 'text-success' : 'text-gray-600'
-          }}"
-        >
-          <span class="text-hover-primary icon-check-correct icon-16"></span>
-          <span class="ms-1"> {{ data?.todo }}</span>
-        </div>
-        <!-- <div class="d-flex align-items-center me-3 {{data?.attachments ? 'text-success' : 'text-gray-600'}}">
+          }}">
+            <span class="text-hover-primary icon-check-correct icon-16"></span>
+            <span class="ms-1"> {{ data?.todo }}</span>
+          </div>
+          <!-- <div class="d-flex align-items-center me-3 {{data?.attachments ? 'text-success' : 'text-gray-600'}}">
           <span class="text-hover-primary icon-attach_file icon-16"></span>
           <span>
             {{data?.attachments}}
           </span>
         </div> -->
-        <span class="me-4">
-          <codx-attachment-temp
-            [objectID]="data.recID"
-            [formModel]="formModel"
-          ></codx-attachment-temp>
-        </span>
-      </div>
-    </div>
-    <div class="w-50px min-w-50px">
-      <div class="d-flex flex-column justify-content-start">
-        <div class="text-gray-500 mb-1">{{ data?.percentage.toFixed(2) }}%</div>
-        <div class="progress w-100 h-5px">
-          <div
-            class="progress-bar progress-bar-done"
-            role="progressbar"
-            [style.width.%]="data?.percentage"
-          ></div>
+          <span class="me-3">
+            <codx-attachment-temp [objectID]="data.recID" [formModel]="formModel"></codx-attachment-temp>
+          </span>
         </div>
       </div>
-    </div>
-    <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
-      <codx-mfunc
-        [formModel]="formModel"
-        (clickMF)="clickMF($event, data)"
-        (changeDataMF)="changeDataMF($event, data)"
-        [isBookMark]="false"
-        [dataItem]="data"
-        type="hover"
-      >
-      </codx-mfunc>
+      <div class="w-50px min-w-50px">
+        <div class="d-flex flex-column justify-content-start">
+          <div class="text-gray-500 mb-1">{{ data?.percentage.toFixed(2) }}%</div>
+          <div class="progress w-100 h-5px">
+            <div class="progress-bar progress-bar-done" role="progressbar" [style.width.%]="data?.percentage"></div>
+          </div>
+        </div>
+      </div>
+      <div class="w-10px min-w-10px" *ngIf="showMoreFunc">
+        <codx-mfunc [formModel]="formModel" (clickMF)="clickMF($event, data)"
+          (changeDataMF)="changeDataMF($event, data)" [isBookMark]="false" [dataItem]="data" type="hover">
+        </codx-mfunc>
+      </div>
     </div>
   </div>
 </div>
@@ -223,10 +138,7 @@
           <div class="d-flex align-items-center mt-2">
             <div class="d-flex align-items-center me-2">
               <span class="icon-create icon-18 text-gray-600"></span>
-              <span
-                class="text-gray-600 text-italic"
-                [innerHTML]="popoverDetail?.memo2"
-              >
+              <span class="text-gray-600 text-italic" [innerHTML]="popoverDetail?.memo2">
               </span>
             </div>
           </div>
@@ -238,40 +150,22 @@
 
 <ng-template #popEmpList>
   <div class="fw-bold">
-    <codx-label
-      name="AssignmentList"
-      formName="Tasks"
-      default="Danh sách phân công cho"
-    ></codx-label>
+    <codx-label name="AssignmentList" formName="Tasks" default="Danh sách phân công cho"></codx-label>
     <span>{{ "(" + countResource + ")" }}</span>
   </div>
   <div class="my-1">
-    <codx-searchbar
-      *ngIf="countResource > 0"
-      (searchEvent)="searchName($event)"
-    ></codx-searchbar>
+    <codx-searchbar *ngIf="countResource > 0" (searchEvent)="searchName($event)"></codx-searchbar>
   </div>
   <div class="userlist mh-300px overflow-auto">
-    <div
-      class="d-flex align-items-start user-card p-3"
-      *ngFor="let item of listTaskResousceSearch"
-    >
+    <div class="d-flex align-items-start user-card p-3" *ngFor="let item of listTaskResousceSearch">
       <div class="me-3">
         <div style="position: relative">
-          <codx-img
-            class=""
-            [objectId]="item?.resourceID"
-            objectType="AD_Users"
-          >
+          <codx-img class="" [objectId]="item?.resourceID" objectType="AD_Users">
           </codx-img>
           <div style="position: absolute; right: 0px; bottom: 0px">
             <ng-container *ngFor="let role of listRoles">
               <ng-container *ngIf="role.value == item.roleType">
-                <span
-                  ><img
-                    src="/assets/themes/tm/default/img/{{ role.icon }}"
-                    alt=""
-                /></span>
+                <span><img src="/assets/themes/tm/default/img/{{ role.icon }}" alt="" /></span>
               </ng-container>
             </ng-container>
           </div>
@@ -283,23 +177,14 @@
         <div class="text-dark">
           {{ item?.memo }}
         </div>
-        <div
-          class="d-flex align-items-center"
-          *ngIf="item?.roleType == 'R' || item?.roleType == 'A'"
-        >
+        <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
           <div class="d-flex align-items-end me-2 codx-badge">
-            <codx-vll
-              [name]="vllStatus"
-              [field]="'Status'"
-              [value]="data?.status"
-              [showText]="true"
-              [showBgColor]="true"
-              class="badge badge-light badge-md fs-7 me-2"
-            >
+            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true"
+              [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
             </codx-vll>
             <span class="text-gray-700">{{
               item?.dueDate | date: "dd/MM/yyyy"
-            }}</span>
+              }}</span>
           </div>
         </div>
       </div>
@@ -309,22 +194,13 @@
 
 <ng-template #popDetailPriority>
   <span>
-    <codx-label
-      name="lblPriority"
-      [formModel]="formModel"
-      default="Độ ưu tiên:"
-    ></codx-label> </span
-  ><span>
+    <codx-label name="lblPriority" [formModel]="formModel" default="Độ ưu tiên:"></codx-label> </span><span>
     {{ data?.priority | vll: vllPriority:"text" | async }}
   </span>
 </ng-template>
 
 <ng-template #popOverDue>
   <span>
-    <codx-label
-      name="lblOverDue"
-      [formModel]="formModel"
-      default="Đã quá hạn!"
-    ></codx-label>
+    <codx-label name="lblOverDue" [formModel]="formModel" default="Đã quá hạn!"></codx-label>
   </span>
 </ng-template>

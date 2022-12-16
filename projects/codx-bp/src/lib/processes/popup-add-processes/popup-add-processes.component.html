@@ -27,12 +27,6 @@
       </codx-input>
     </div>
     <div class="form-group">
-      <!-- <div>
-        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Mô tả">
-        </codx-label>
-      </div>
-      <codx-input field="memo" [Group]="form.formGroup" [formModel]="form.formModel">
-      </codx-input> -->
       <div class="row">
         <div class="col-6">
           <div class="form-group">
@@ -259,7 +253,9 @@
     [isSaveSelected]="0"
     (fileAdded)="fileImgAdded($event)"
     displayThumb="full"
-    showMessage="0">
+    showMessage="0"
+    category="0"
+  >
   </codx-attachment>
 
   </ng-template>

@@ -824,12 +824,12 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
   }
 
   changeView(event) {
-    if(event.text != 'Search')
+    this.currView = null;
+    this.currView = event.view.model.template2;
+    this.dmSV.page = 1;
+    if(event.view.text != 'Search')
     {
-      this.currView = null;
-      this.currView = event.view.model.template2;
-      this.dmSV.page = 1;
-      //this.getDataFile(this.dmSV.folderID);
+      this.getDataFile(this.dmSV.folderID);
     }
     //  this.data = [];
   }
@@ -1247,4 +1247,17 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     this.visible = false;
     this.changeDetectorRef.detectChanges();
   }
+  getPUser(data)
+  {
+    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    if(item) return item?.objectID;
+    return ""
+  }
+  getDUser(data)
+  {
+    var item = data.permissions.filter(x=>x.approvalStatus == "3")[0];
+    if(item) return  item?.createdOn;
+    return ""
+  }
+  
 }
