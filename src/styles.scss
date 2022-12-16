@@ -744,8 +744,13 @@ codx-toolbar-button {
   display: flex;
 }
 
-codx-toolbar-button>span.btn {
-  border-radius: 3px 0 0 3px !important;
+codx-toolbar-button .btn.btn-primary .icon-add {
+  font-size: 15px !important;
+}
+
+codx-toolbar-button .btn.btn-primary .icon-add+span {
+  margin-left: -3px;
+  margin-right: 3px;
 }
 
 codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
@@ -1245,10 +1250,6 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
   background-color: var(--gray-100);
 }
 
-.dt-aprovel .codx-detail-header.mt-2 {
-  margin-top: 1rem !important;
-}
-
 img.symbol-12px.symbol-circle {
   width: 12px !important;
   height: 12px !important;
@@ -1354,7 +1355,8 @@ codx-vll {
   position: relative;
   padding-right: 10px;
   min-height: 18px;
-  display: inherit;
+  display: block;
+  line-height: 18px;
 }
 
 .label-colon::after {

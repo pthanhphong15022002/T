@@ -66,20 +66,22 @@ codx-view-list-detail .codx-detail-main {
   height: calc(100vh - 203px) !important;
   overflow: hidden !important;
 }
-.dt-es-view div.codx-detail-body
-{
+
+.dt-es-view div.codx-detail-body {
   height: calc(100vh - 466px) !important;
   overflow: hidden !important;
   //border: 1px aqua solid;
 }
+
 .dt-es .codx-detail-body .tab-content {
   height: calc(100vh - 430px) !important;
   overflow: auto !important;
 }
-.dt-es .codx-detail-main
-{
-  position: relative !important ;
+
+.dt-es .codx-detail-main {
+  position: relative !important;
 }
+
 .h-od-tab .tab-content {
   height: 100% !important;
   overflow: auto;
@@ -87,4 +89,27 @@ codx-view-list-detail .codx-detail-main {
 
 .float-left>div {
   float: left;
+}
+
+.codx-detail-main.px-6 .codx-detail-main.px-6 {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.codx-detail-body.mt-2 .codx-detail-header.mt-2 {
+  margin-top: 0 !important;
+
+}
+
+.es-icon-title {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 2px;
+}
+
+.dt-es-view .codx-detail-toolbar {
+  margin-bottom: 2px;
 }
