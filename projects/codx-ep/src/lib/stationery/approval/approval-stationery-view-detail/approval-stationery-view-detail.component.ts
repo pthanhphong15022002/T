@@ -51,7 +51,7 @@ export class ApprovalStationeryViewDetailComponent
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      
+
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
@@ -104,7 +104,9 @@ export class ApprovalStationeryViewDetailComponent
     this.codxEpService
       .approve(
         data?.approvalTransRecID, //ApprovelTrans.RecID
-        status
+        status,
+        '',
+        ''
       )
       .subscribe(async (res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
@@ -122,29 +124,31 @@ export class ApprovalStationeryViewDetailComponent
         }
       });
   }
-  changeDataMF(event, data:any) {        
-    if(event!=null && data!=null){
-      event.forEach(func => {       
-        if(func.functionID == "SYS04"/*Copy*/) 
-        {
-          func.disabled=true;        
+  changeDataMF(event, data: any) {
+    if (event != null && data != null) {
+      event.forEach((func) => {
+        if (func.functionID == 'SYS04' /*Copy*/) {
+          func.disabled = true;
         }
       });
-      if(data.approveStatus=='3'){
-        event.forEach(func => {
-          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
-          {
-            func.disabled=false;
+      if (data.approveStatus == '3') {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40301' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40302' /*MF từ chối*/
+          ) {
+            func.disabled = false;
           }
-        });  
-      }
-      else{
-        event.forEach(func => {
-          if(func.functionID == "EPT40301" /*MF Duyệt*/ || func.functionID == "EPT40302"/*MF từ chối*/ )
-          {
-            func.disabled=true;
+        });
+      } else {
+        event.forEach((func) => {
+          if (
+            func.functionID == 'EPT40301' /*MF Duyệt*/ ||
+            func.functionID == 'EPT40302' /*MF từ chối*/
+          ) {
+            func.disabled = true;
           }
-        }); 
+        });
       }
     }
   }

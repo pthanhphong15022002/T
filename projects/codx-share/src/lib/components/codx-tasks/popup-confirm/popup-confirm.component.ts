@@ -161,7 +161,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
                 }
               });
             } else this.actionExtends();
-          }
+          }else this.actionExtends();
         });
     } else this.actionExtends();
   }
@@ -172,6 +172,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
         this.taskExtends.taskID,
         this.taskExtends.status,
         this.comment,
+        this.taskExtends.recID
       ])
       .subscribe((res) => {
         if (res) {
@@ -183,15 +184,14 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
               if (data) {
                 if (this.taskExtends.status == '5') {
                   this.tmSv
-                    .sendAlertMail(data, 'TM_0013', this.funcID)
+                    .sendAlertMail(data, 'TM_0013', this.funcID,this.taskExtends.recID)
                     .subscribe();
                 } else if (this.taskExtends.status == '4') {
                   this.tmSv
-                    .sendAlertMail(data, 'TM_0014', this.funcID)
+                    .sendAlertMail(data, 'TM_0014', this.funcID,this.taskExtends.recID)
                     .subscribe();
                 }
               }
-              this.dialog.close();
             });
         } else this.dialog.close();
       });

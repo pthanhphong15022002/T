@@ -10,78 +10,78 @@
           </codx-temp-full>
         </div>
         <div class="d-flex flex-wrap mt-3">
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefNo"
               ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-600">{{
+            <span class="text-gray-700">{{
               data?.refNo ? data?.refNo : gridViewSetup?.RefNo?.headerText
               }}</span>
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="DispatchNo" ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-600">{{
+            <span class="text-gray-700">{{
               data?.dispatchNo ? data?.dispatchNo : gridViewSetup?.dispatchNo?.headerText
               }}</span>
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="CategoryID" class="fw-bold label-colon"></codx-label>
-            <span [class.text-gray-600]="!data?.category">{{
+            <span [class.text-gray-700]="!data?.category">{{
               data?.category
               ? data?.category
               : gridViewSetup["CategoryID"]["headerText"]
               }}</span>
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="Urgency"
               [ngClass]="'fw-bold label-colon'"></codx-label>
             <codx-vll [formModel]="formModel" [field]="'Urgency'" [value]="data?.urgency" [showText]="true"
-              [showIcon]="true" class="text-gray-600 d-flex">
+              [showIcon]="true" class="text-gray-700 d-flex">
             </codx-vll>
             <!-- icon-flag -->
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="Security" [ngClass]="'fw-bold label-colon'"></codx-label>
             <codx-vll [formModel]="formModel" [field]="'Security'" [value]="data?.security" [showText]="true"
-              [showIcon]="true" class="text-gray-600 d-flex">
+              [showIcon]="true" class="text-gray-700 d-flex">
             </codx-vll>
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="CreatedOn" ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-600">{{
+            <span class="text-gray-700">{{
               data?.createdOn
               ? (data?.createdOn | date: "dd/MM/yyyy")
               : gridViewSetup?.CreatedOn?.headerText
               }}</span>
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="DispatchOn" ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-600">{{
+            <span class="text-gray-700">{{
               data?.dispatchOn
               ? (data?.dispatchOn | date: "dd/MM/yyyy")
               : gridViewSetup?.DispatchOn?.headerText
               }}</span>
-            <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-600"></codx-label> -->
+            <!-- <codx-label [default]="data?.dispatchOn | date:'dd/MM/yyyy'" ngClass="text-gray-700"></codx-label> -->
           </div>
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']"
               fiedName="Deadline" ngClass="fw-bold label-colon"></codx-label>
-            <span class="text-gray-600">{{
+            <span class="text-gray-700">{{
               data?.deadline
               ? (data?.deadline | date: "dd/MM/yyyy")
               : gridViewSetup?.Deadline?.headerText
               }}</span>
           </div>
 
-          <div class="d-flex align-items-center me-5 mb-3">
+          <div class="d-flex align-items-center me-5 mb-1">
             <codx-label [gridViewName]="formModel['gridViewName']" [formName]="formModel['formName']" fiedName="RefDate"
               ngClass="fw-bold label-colon"></codx-label>
-            <!--             <span class="text-gray-600">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
-            <span class="text-gray-600">{{
+            <!--             <span class="text-gray-700">{{data?.refDate | formatvalue:formModel:'refDate':'headerText' | async | date: 'dd/MM/yyyy'}}</span> -->
+            <span class="text-gray-700">{{
               data?.refDate
               ? (data?.refDate | date: "dd/MM/yyyy")
               : gridViewSetup?.RefDate?.headerText
@@ -225,7 +225,7 @@
       <div class="mt-5 ms-5 justify-content-end w-120px text-center">
         <codx-vll [name]="item?.category == '3' ? vllStatusAssign : vllStatus" [value]="item?.status" [showText]="true"
           [showBgColor]="true" class="badge badge-light badge-md fs-7 ms-2"></codx-vll>
-        <div class="fs-7 text-gray-600 mt-1">
+        <div class="fs-7 text-gray-700 mt-1">
           {{ data?.percentage.toFixed(2) }}%
         </div>
         <div class="progress d-flex flex-column w-100 h-5px">
@@ -234,7 +234,7 @@
           </div>
         </div>
         <div class="d-flex justify-content-center align-item-center mt-2">
-          <!-- <span class="icon-schedule icon-16 text-gray-600"></span> -->
+          <!-- <span class="icon-schedule icon-16 text-gray-700"></span> -->
           <span *ngIf="data?.isTimeOut" class="icon-notifications expired icon-16 ms-1"></span>
           <span class="ms-2 text-dark" #dueDate>{{
             item?.dueDate

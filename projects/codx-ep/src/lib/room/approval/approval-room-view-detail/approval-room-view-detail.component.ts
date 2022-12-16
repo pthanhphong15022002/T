@@ -10,7 +10,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DataRequest, NotificationsService, UIComponent, ViewsComponent } from 'codx-core';
+import {
+  DataRequest,
+  NotificationsService,
+  UIComponent,
+  ViewsComponent,
+} from 'codx-core';
 import { CodxEpService } from '../../../codx-ep.service';
 import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model/tabControl.model';
 @Component({
@@ -18,10 +23,13 @@ import { TabModel } from 'projects/codx-share/src/lib/components/codx-tabs/model
   templateUrl: 'approval-room-view-detail.component.html',
   styleUrls: ['approval-room-view-detail.component.scss'],
 })
-export class ApprovalRoomViewDetailComponent extends UIComponent implements OnChanges {
-  @ViewChild('itemDetailTemplate') itemDetailTemplate;  
+export class ApprovalRoomViewDetailComponent
+  extends UIComponent
+  implements OnChanges
+{
+  @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('subTitleHeader') subTitleHeader;
-  @ViewChild('attachment') attachment;  
+  @ViewChild('attachment') attachment;
   @Output('updateStatus') updateStatus: EventEmitter<any> = new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
   @Input() itemDetail: any;
@@ -41,8 +49,8 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
   tabControl: TabModel[] = [];
   constructor(
     private injector: Injector,
-    private codxEpService: CodxEpService,    
-    private notificationsService: NotificationsService,
+    private codxEpService: CodxEpService,
+    private notificationsService: NotificationsService
   ) {
     super(injector);
   }
@@ -55,7 +63,7 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       { name: 'History', textDefault: 'Lịch sử', isActive: true },
       { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
       { name: 'Comment', textDefault: 'Bình luận', isActive: false },
-      
+
       { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
   }
@@ -67,7 +75,8 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
     ) {
       this.api
         .exec<any>('EP', 'BookingsBusiness', 'GetApprovalBookingByIDAsync', [
-          changes.itemDetail?.currentValue?.recID,changes.itemDetail?.currentValue?.approvalTransRecID,
+          changes.itemDetail?.currentValue?.recID,
+          changes.itemDetail?.currentValue?.approvalTransRecID,
         ])
         .subscribe((res) => {
           if (res) {
@@ -75,17 +84,19 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
             this.detectorRef.detectChanges();
           }
         });
-        this.files=[];
-        this.api.execSv(
+      this.files = [];
+      this.api
+        .execSv(
           'DM',
           'ERM.Business.DM',
           'FileBussiness',
           'GetFilesForOutsideAsync',
           [this.funcID, this.itemDetail.recID, 'EP_Bookings']
-        ).subscribe((res:[])=>{
-          if(res){
+        )
+        .subscribe((res: []) => {
+          if (res) {
             console.log(res);
-            this.files=res;
+            this.files = res;
           }
         });
 
@@ -95,16 +106,15 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
     this.active = 1;
   }
 
-  showHour(date:any){
-    let temp= new Date(date);
+  showHour(date: any) {
+    let temp = new Date(date);
     let time =
-          ('0' + temp.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + temp.getMinutes()).toString().slice(-2);
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
   clickMF(value, datas: any = null) {
-    
     let funcID = value?.functionID;
     // if (!datas) datas = this.data;
     // else {
@@ -119,41 +129,43 @@ export class ApprovalRoomViewDetailComponent extends UIComponent implements OnCh
       case 'EPT40301':
         {
           //alert('Duyệt');
-          this.approve(datas,"5")
+          this.approve(datas, '5');
         }
-        break;      
+        break;
       case 'EPT40105':
       case 'EPT40205':
       case 'EPT40305':
         {
           //alert('Từ chối');
-          this.approve(datas,"4")
+          this.approve(datas, '4');
         }
-        break;      
+        break;
       default:
         '';
         break;
     }
   }
-  approve(data:any, status:string){
+  approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
-          .approve(            
-            data?.approvalTransRecID,//ApprovelTrans.RecID
+          .approve(
+            data?.approvalTransRecID, //ApprovelTrans.RecID
             status,
+            '',
+            ''
           )
-          .subscribe(async (res:any) => {
-            if (res?.msgCodeError == null && res?.rowCount>=0) {
-              if(status=="5"){
-                this.notificationsService.notifyCode('SYS034');//đã duyệt
-                data.approveStatus="5"
+          .subscribe(async (res: any) => {
+            if (res?.msgCodeError == null && res?.rowCount >= 0) {
+              if (status == '5') {
+                this.notificationsService.notifyCode('SYS034'); //đã duyệt
+                data.approveStatus = '5';
               }
-              if(status=="4"){
-                this.notificationsService.notifyCode('SYS034');//bị hủy
-                data.approveStatus="4";
-              }                           
+              if (status == '4') {
+                this.notificationsService.notifyCode('SYS034'); //bị hủy
+                data.approveStatus = '4';
+              }
               this.updateStatus.emit(data);
             } else {
               this.notificationsService.notifyCode(res?.msgCodeError);

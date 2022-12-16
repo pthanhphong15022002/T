@@ -36,10 +36,10 @@
             }}</div>
           <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
         </div>
-        
+
         <!-- <div class="d-flex flex-column w-100 p-3">
           <div class="d-flex justify-content-between">
-            <div #memo class="fs-6 fw-bold line-clamp-card" [ngbTooltip]="data.processName"> 
+            <div #memo class="fs-6 fw-bold line-clamp-card" [ngbTooltip]="data.processName">
               {{data?.memo | formatvalue: view.formModel: "memo": memo: "Processes": "grvProcesses"| async}}
             </div>
             <span *ngIf="!checkPermissionRead(data)" class="icon-security text-primary icon-18"></span>
@@ -271,12 +271,12 @@
   </div>
 </ng-template>
 <ng-template #itemProcessName let-data>
-  <codx-label fiedName="ProcessName" formName="Processes" gridViewName="grvProcesses" default="Tên qui trình">
+  <codx-label fiedName="ProcessName" formName="Processes" gridViewName="grvProcesses" default="Tên quy trình">
   </codx-label>
 </ng-template>
 
 <ng-template #itemOwner let-data>
-  <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses" default="Chủ qui trình">
+  <codx-label fiedName="Owner" formName="Processes" gridViewName="grvProcesses" default="Chủ quy trình">
   </codx-label>
 </ng-template>
 <ng-template #itemStatus let-data>
