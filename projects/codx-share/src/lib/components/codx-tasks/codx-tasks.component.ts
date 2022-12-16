@@ -319,7 +319,7 @@ export class CodxTasksComponent
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          //resourceModel: this.resourceField,
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
