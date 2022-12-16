@@ -161,7 +161,7 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
                 }
               });
             } else this.actionExtends();
-          }
+          }else this.actionExtends();
         });
     } else this.actionExtends();
   }
@@ -191,7 +191,6 @@ export class PopupConfirmComponent implements OnInit, AfterViewInit {
                     .subscribe();
                 }
               }
-              this.dialog.close();
             });
         } else this.dialog.close();
       });
