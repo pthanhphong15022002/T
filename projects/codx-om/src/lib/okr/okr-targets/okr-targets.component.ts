@@ -5,6 +5,7 @@ import {
   SidebarModel,
   FormModel,
   DialogModel,
+  ApiHttpService,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { OKRs } from '../../model/okr.model';
@@ -19,6 +20,7 @@ import { OkrAddComponent } from '../okr-add/okr-add.component';
   styleUrls: ['./okr-targets.component.css'],
 })
 export class OkrTargetsComponent implements OnInit {
+  @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
   @Input() gridView: any;
@@ -87,7 +89,7 @@ export class OkrTargetsComponent implements OnInit {
   };
 
   chartSettings2: ChartSettings = {
-    title: '15 Objectives',
+    title: '15 KRs',
     seriesSetting: [
       {
         type: 'Pie',
@@ -107,9 +109,38 @@ export class OkrTargetsComponent implements OnInit {
     method: 'GetChartData1Async',
   };
 
-  constructor(private callfunc: CallFuncService, private cache: CacheService) {}
+  ObjQty = 0;
+  KrQty = 0;
+
+  progress: number = 0;
+
+  constructor(
+    private callfunc: CallFuncService,
+    private cache: CacheService,
+    private api: ApiHttpService
+  ) {}
 
   ngOnInit(): void {
+    this.progress = this.dataOKRPlans?.progress;
+    this.api
+      .exec('OM', 'OKRBusiness', 'GetOKRByPlanAsync', [
+        this.dataOKRPlans?.periodID,
+      ])
+      .subscribe((res: any) => {
+        res.map((res) => {
+          if (res.okrType == 'O') {
+            this.ObjQty = this.ObjQty + 1;
+          }
+          if (res.okrType == 'R') {
+            this.KrQty = this.KrQty + 1;
+          }
+        });
+        this.chartSettings1.title =
+          this.ObjQty.toString() + (this.ObjQty > 1 ? ' Objectives' : ' Objective');
+        this.chartSettings2.title =
+          this.KrQty.toString() + (this.KrQty > 1 ? ' KRs' : ' KR');
+      });
+
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
