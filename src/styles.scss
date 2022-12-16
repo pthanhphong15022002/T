@@ -744,6 +744,15 @@ codx-toolbar-button {
   display: flex;
 }
 
+codx-toolbar-button .btn.btn-primary .icon-add {
+  font-size: 15px !important;
+}
+
+codx-toolbar-button .btn.btn-primary .icon-add+span {
+  margin-left: -3px;
+  margin-right: 3px;
+}
+
 codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   border-radius: 0 3px 3px 0 !important;
 }
@@ -1239,10 +1248,6 @@ ejs-timepicker .e-clear-icon.e-clear-icon-hide {
 
 .role-group .content-tree .menu-item:hover {
   background-color: var(--gray-100);
-}
-
-.dt-aprovel .codx-detail-header.mt-2 {
-  margin-top: 1rem !important;
 }
 
 img.symbol-12px.symbol-circle {
