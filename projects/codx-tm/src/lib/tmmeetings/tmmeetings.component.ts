@@ -197,7 +197,7 @@ export class TMMeetingsComponent
         request: this.requestSchedule,
         model: {
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          //resourceModel: this.resourceField,
           // template: this.eventTemplate,
           // template4: this.resourceHeader,// schenmoi can
           template6: this.mfButton, //header
