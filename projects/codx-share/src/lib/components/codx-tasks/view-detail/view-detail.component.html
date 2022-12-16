@@ -104,15 +104,15 @@
         <div class="d-flex flex-column mb-3">
           <div class="task-info">
             <div class="float-left">
-              <div *ngIf="taskExtends" class="w-100 border border-gray-300 rounded-2 p-4 mb-5">
-                <div class="mb-3 text-dark fw-bold">
+              <div *ngIf="taskExtends" class="w-100 border border-gray-300 rounded-2 py-3 px-4 mb-4">
+                <div class="mb-2 text-primary fs-6 fw-bold">
                   <codx-label name="lblExtends" formName="Tasks" default="Yêu cầu gia hạn">
                   </codx-label>
                 </div>
                 <div class="row">
                   <div class="col-6">
-                    <span class="text-dark me-1">
-                      <codx-label class="label-colon" fiedName="DueDate" formName="TaskExtends"
+                    <span class="text-dark me-1 d-flex">
+                      <codx-label class="label-colon fw-bold" fiedName="DueDate" formName="TaskExtends"
                         gridViewName="grvTaskExtends" default="Ngày hết hạn hiện hành">
                       </codx-label>
                     </span>
@@ -131,8 +131,8 @@
                       }}</span>
                   </div>
                   <div class="col-6">
-                    <span class="text-dark me-1">
-                      <codx-label class="label-colon" fiedName="ExtendDate" formName="TaskExtends"
+                    <span class="text-dark me-1 d-flex">
+                      <codx-label class="label-colon fw-bold" fiedName="ExtendDate" formName="TaskExtends"
                         gridViewName="grvTaskExtends" default="Ngày gia hạn">
                       </codx-label>
                     </span>
@@ -151,8 +151,8 @@
                   </div>
                 </div>
                 <div class="mt-1">
-                  <span class="text-dark me-1">
-                    <codx-label class="label-colon" fiedName="Reason" formName="TaskExtends"
+                  <span class="text-dark me-1 d-flex">
+                    <codx-label class="label-colon fw-bold" fiedName="Reason" formName="TaskExtends"
                       gridViewName="grvTaskExtends" default="Lý do yêu cầu">
                     </codx-label>
                   </span>
@@ -168,13 +168,13 @@
                     }}</span>
                 </div>
               </div>
-              <div class="d-flex me-6">
+              <div class="d-flex me-6 mb-1">
                 <div class="fw-bold me-1">
                   <codx-label class="label-colon" fiedName="DueDate" formName="Tasks" gridViewName="grvTasks"
                     default="Ngày hết hạn">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected.dueDate" class="text-gray-700">{{
+                <span *ngIf="itemSelected.dueDate" class="text-gray-600">{{
                   itemSelected.dueDate | date: "dd/MM/yyyy"
                   }}</span>
                 <span #dueDate *ngIf="!itemSelected?.dueDate">{{
@@ -188,7 +188,7 @@
                   | async
                   }}</span>
               </div>
-              <div class="d-flex align-items-center text-dark me-6">
+              <div class="d-flex align-items-center text-dark me-6 mb-1">
                 <div class="me-1 fw-bold">
                   <codx-label class="label-colon" fiedName="Priority" formName="Tasks" gridViewName="grvTasks"
                     default="Ưu tiên">
@@ -203,7 +203,7 @@
                         | async
                     ">
                   </span>
-                  <span class="text-gray-700">{{
+                  <span class="text-gray-600">{{
                     itemSelected?.priority | vll: vllPriority:"text" | async
                     }}</span>
                 </div>
@@ -220,12 +220,12 @@
                   }}
                 </div>
               </div>
-              <div class="d-flex me-6">
+              <div class="d-flex me-6 mb-1">
                 <div class="fw-bold me-1">
                   <codx-label class="label-colon" name="lblTaskGroupName" formName="Tasks" default="Nhóm công việc">
                   </codx-label>
                 </div>
-                <div *ngIf="itemSelected?.taskGroupName" class="text-gray-700">
+                <div *ngIf="itemSelected?.taskGroupName" class="text-gray-600">
                   {{ itemSelected?.taskGroupName }}
                 </div>
                 <div *ngIf="!itemSelected?.taskGroupName" #taskGroupName>
@@ -242,13 +242,13 @@
                 </div>
               </div>
             </div>
-            <div class="float-left mt-1">
+            <div class="float-left mb-1">
               <div class="d-flex me-6">
                 <div class="fw-bold me-1">
                   <codx-label class="label-colon" fiedName="StartDate" formName="Tasks" gridViewName="grvTasks">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected?.startDate" class="text-gray-700">{{
+                <span *ngIf="itemSelected?.startDate" class="text-gray-600">{{
                   itemSelected?.startDate | date: "dd/MM/yyyy"
                   }}</span>
                 <span #startDate *ngIf="!itemSelected?.startDate">{{
@@ -268,7 +268,7 @@
                     default="Ngày kết thúc">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected?.endDate" class="text-gray-700">{{
+                <span *ngIf="itemSelected?.endDate" class="text-gray-600">{{
                   itemSelected?.endDate | date: "dd/MM/yyyy"
                   }}</span>
                 <span #endDate *ngIf="!itemSelected?.endDate">{{
@@ -288,7 +288,7 @@
                     default="Ngày hoàn tất">
                   </codx-label>
                 </div>
-                <span *ngIf="itemSelected?.completedOn" class="text-gray-700">{{ itemSelected?.completedOn | date:
+                <span *ngIf="itemSelected?.completedOn" class="text-gray-600">{{ itemSelected?.completedOn | date:
                   "dd/MM/yyyy" }} |
                   {{ itemSelected.completed }} <span>h</span>
                 </span>
@@ -314,7 +314,7 @@
               </codx-label> -->
                 <codx-label name="lblProjectName" formName="Projects" default="Dự án"></codx-label>:
               </span>
-              <span *ngIf="itemSelected?.projectName" class="text-gray-700">{{
+              <span *ngIf="itemSelected?.projectName" class="text-gray-600">{{
                 itemSelected?.projectName
                 }}</span>
               <span *ngIf="!itemSelected?.projectName" #projectName>{{
@@ -334,8 +334,8 @@
                   default="Địa điểm">
                 </codx-label>
               </span>
-              <!-- <span class="text-gray-700">{{ itemSelected?.location }}</span> -->
-              <span *ngIf="itemSelected?.location" class="text-gray-700">{{
+              <!-- <span class="text-gray-600">{{ itemSelected?.location }}</span> -->
+              <span *ngIf="itemSelected?.location" class="text-gray-600">{{
                 itemSelected?.location
                 }}</span>
               <span #location *ngIf="!itemSelected?.location">{{
@@ -362,8 +362,7 @@
     <ng-template #body>
       <ng-container *ngIf="!taskExtends">
         <div class="mt-2 mb-3 text-primary fw-bold">
-          <codx-label class="label-colon" fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks"
-            default="Người thực hiện">
+          <codx-label fiedName="AssignTo" formName="Tasks" gridViewName="grvTasks" default="Người thực hiện">
           </codx-label>
         </div>
         <div class="d-flex">
@@ -397,25 +396,25 @@
       </ng-container>
 
       <div class="mt-6 mb-3 text-primary fw-bold">
-        <codx-label class="label-colon" name="lblTaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc">
+        <codx-label name="lblTaskName" formName="Tasks" gridViewName="grvTasks" default="Công việc">
         </codx-label>
       </div>
       <div class="task-name fw-bold fs-6 text-dark mt-2 mb-2">
         {{ itemSelected?.taskName }}
       </div>
-      <div class="text-gray-700" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected.memo"></div>
+      <div class="text-gray-600" *ngIf="itemSelected?.memo" [innerHTML]="itemSelected.memo"></div>
       <div *ngIf="itemSelected?.memo2">
-        <span class="text-gray-700">
+        <span class="text-gray-600">
           <codx-label class="label-colon" name="lblMemo2" formName="Tasks" gridViewName="grvTasks"
             default="Ghi chú phân công">
           </codx-label>
         </span>
-        <div class="text-gray-700" [innerHTML]="itemSelected.memo2"></div>
+        <div class="text-gray-600" [innerHTML]="itemSelected.memo2"></div>
       </div>
 
       <div class="mt-6 mb-3" *ngIf="itemSelected?.listTaskGoals.length > 0">
         <!-- <div class="text-primary fw-bold"> -->
-        <!-- <div class="text-gray-700">
+        <!-- <div class="text-gray-600">
           <codx-label name="lblListTaskBoard" formName="Tasks" default="Danh sách việc cần làm"></codx-label>:
         </div> -->
         <div class="checkbox-list mt-2 ms-6 text-dark">
@@ -424,7 +423,7 @@
               <!-- <codx-input type="checkbox" class="me-6" label="{{ item.memo }}" labelPosition="After"
                 [crrValue]="item.status == '90'" [disabled]="true"></codx-input> -->
               <codx-input type="checkbox" class="me-2" [crrValue]="item.status == '90'" [disabled]="true"></codx-input>
-              <span class="text-gray-700">
+              <span class="text-gray-600">
                 {{ item.memo }}
               </span>
             </div>
