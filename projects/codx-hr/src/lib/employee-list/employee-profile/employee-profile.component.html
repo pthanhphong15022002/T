@@ -632,10 +632,10 @@
             </div>
           </div>
           <div class="d-flex flex-column" *ngIf="crrTab == 2">
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeBasicSalariesInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
+                ></span>
               <codx-label
                 fiedName="lbl"
                 default="Lương cơ bản"
@@ -643,7 +643,7 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeJobSalariesInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -687,7 +687,7 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandlemployeeAssetInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -1757,7 +1757,12 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstPassport?.length > 0 ? lstPassport[0]?.passportNo : '' }}</span
+                            :
+                            {{
+                              lstPassport?.length > 0
+                                ? lstPassport[0]?.passportNo
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1773,7 +1778,12 @@
                           >
                           </codx-label>
                           <span #IssuedPlace
-                            >: {{ lstPassport?.length > 0 ? lstPassport[0]?.issuedPlace : '' }}</span
+                            >:
+                            {{
+                              lstPassport?.length > 0
+                                ? lstPassport[0]?.issuedPlace
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1791,7 +1801,12 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstPassport?.length > 0 ? (lstPassport[0]?.issuedDate | fmDT) : (''| fmDT) }}</span
+                            >:
+                            {{
+                              lstPassport?.length > 0
+                                ? (lstPassport[0]?.issuedDate | fmDT)
+                                : ("" | fmDT)
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1807,7 +1822,13 @@
                           >
                           </codx-label>
                           <span #ExpiredDate
-                            >: {{ lstPassport[0]?.expiredDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstPassport?.length > 0
+                                ? lstPassport[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1815,9 +1836,15 @@
                     <codx-mfunc
                       *ngIf="lstPassport?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstPassport[0], 'passport')"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstPassport?.length > 0 ? lstPassport[0] : {},
+                          'passport'
+                        )
+                      "
                       type="hover"
-                      [dataItem]="lstPassport[0]"
+                      [dataItem]="lstPassport?.length > 0 ? lstPassport[0] : {}"
                     >
                     </codx-mfunc>
                   </div>
@@ -1855,7 +1882,10 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstVisa[0]?.visaNo }}</span
+                            :
+                            {{
+                              lstVisa?.length > 0 ? lstVisa[0]?.visaNo : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1870,7 +1900,12 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ lstVisa[0]?.issuedPlace }} </span>
+                          <span
+                            >:
+                            {{
+                              lstVisa?.length > 0 ? lstVisa[0]?.issuedPlace : ""
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1887,7 +1922,13 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstVisa[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1903,8 +1944,20 @@
                           >
                           </codx-label>
                           <span #issuedOn
-                            >: {{ lstVisa[0]?.effectedDate | fmDT }} -
-                            {{ lstVisa[0]?.expiredDate | fmDT }}
+                            >:
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.effectedDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}
                           </span>
                         </div>
                       </div>
@@ -1912,9 +1965,15 @@
                     <codx-mfunc
                       *ngIf="lstVisa?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstVisa[0], 'visa')"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstVisa?.length > 0 ? lstVisa[0] : null,
+                          'visa'
+                        )
+                      "
                       type="hover"
-                      [dataItem]="lstVisa[0]"
+                      [dataItem]="lstVisa?.length > 0 ? lstVisa[0] : {}"
                     >
                     </codx-mfunc>
                   </div>
@@ -1953,7 +2012,12 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstWorkPermit[0]?.workPermitNo }}</span
+                            :
+                            {{
+                              lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.workPermitNo
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1968,7 +2032,14 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ lstWorkPermit[0]?.issuedPlace }} </span>
+                          <span
+                            >:
+                            {{
+                              lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.issuedPlace
+                                : ""
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1985,7 +2056,13 @@
                           >
                           </codx-label>
                           <span
-                            >: {{ lstWorkPermit[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -2001,8 +2078,20 @@
                           >
                           </codx-label>
                           <span
-                            >: {{ lstWorkPermit[0]?.fromDate | fmDT }} -
-                            {{ lstWorkPermit[0]?.toDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.fromDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.toDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -2011,10 +2100,16 @@
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
                       (clickMF)="
-                        clickMF($event, lstWorkPermit[0], 'workpermit')
+                        clickMF(
+                          $event,
+                          lstWorkPermit?.length > 0 ? lstWorkPermit[0] : null,
+                          'workpermit'
+                        )
                       "
                       type="hover"
-                      [dataItem]="lstWorkPermit[0]"
+                      [dataItem]="
+                        lstWorkPermit?.length > 0 ? lstWorkPermit[0] : {}
+                      "
                     >
                     </codx-mfunc>
                   </div>
@@ -2728,17 +2823,6 @@
                     >
                     </codx-label>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeJobSalariesInfo('add', null)"
-                      >Add Ejob</span>
-                    </a>
-
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeBasicSalariesInfo('add', null)"
-                      >Add Ebasic</span>
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -2757,12 +2841,12 @@
                       </codx-temp-full>
                       <ng-template #footerEBSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương cơ
-                          bản: {{ crrEBSalary.bSalary }}
+                          <span class="icon-attach_money"></span>Lương cơ bản:
+                          {{ crrEBSalary.bSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương đóng 
-                          BH: {{ crrEBSalary.siSalary }}
+                          <span class="icon-attach_money"></span>Lương đóng BH:
+                          {{ crrEBSalary.siSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-3">
                           <span class="icon-calendar_today"></span>Hiệu lực:
@@ -3056,6 +3140,23 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
+                  <div class="d-flex flex-wrap mt-6 mb-3" >
+                    <div [style.background] = "'black'" class="badge border-0 me-2" 
+                    *ngFor="let asset of lstAsset">
+                      <div class="has-action-menu">
+                        {{asset.assetCategory}} gan cung
+                        <codx-mfunc
+                        [formModel]="formModel"
+                        (clickMF)="
+                          clickMF($event, asset, 'Assets')
+                        "
+                        type="hover"
+                        [dataItem]="asset"
+                      >
+                      </codx-mfunc> 
+                      </div>
+                  </div>
+                  </div>
                   <div class="row form-group"></div>
                 </div>
               </div>

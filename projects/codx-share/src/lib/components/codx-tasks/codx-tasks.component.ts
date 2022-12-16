@@ -228,6 +228,7 @@ export class CodxTasksComponent
           this.vllStatus = grv?.Status?.referedValue;
           this.vllApproveStatus = grv?.ApproveStatus?.referedValue;
           this.vllExtendStatus = grv?.ExtendStatus?.referedValue;
+          this.vllVerifyStatus = grv?.VerifyStatus?.referedValue;
           this.vllConfirmStatus = grv?.ConfirmStatus?.referedValue;
           this.vllPriority = grv?.Priority.referedValue;
         }
@@ -262,22 +263,44 @@ export class CodxTasksComponent
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
 
-    if (
-      this.funcID != 'TMT0201' &&
-      this.funcID != 'TMT0206' &&
-      this.funcID != 'MWP0061' &&
-      this.funcID != 'MWP0063'
-    ) {
-      if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
+    // if (
+    //   this.funcID != 'TMT0201' &&
+    //   this.funcID != 'TMT0206' &&
+    //   this.funcID != 'MWP0061' &&
+    //   this.funcID != 'MWP0063'
+    // ) {
+    //   if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062') {
+    //     this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
+    //     this.requestSchedule.dataValue = '2;' + this.user.userID;
+    //   } else {
+    //     this.requestSchedule.predicate = 'Category=@0 or Category=@1';
+    //     this.requestSchedule.dataValue = '1;2';
+    //   }
+    // } else {
+    //   this.requestSchedule.predicate = '';
+    //   this.requestSchedule.dataValue = '';
+    // }
+    switch (this.funcID) {
+      case 'MWP0061':
+      case 'TMT0201':
+        this.requestSchedule.predicate =
+          '(Category=@0 or Category=@1) and Owner=@2';
+        this.requestSchedule.dataValue = '1;2;' + this.user.userID;
+        break;
+      case 'TMT0203':
+      case 'MWP0062':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
-      } else {
+        break;
+      case 'MWP0064':
+      case 'TMT0202':
         this.requestSchedule.predicate = 'Category=@0 or Category=@1';
         this.requestSchedule.dataValue = '1;2';
-      }
-    } else {
-      this.requestSchedule.predicate = '';
-      this.requestSchedule.dataValue = '';
+        break;
+      default:
+        this.requestSchedule.predicate = '';
+        this.requestSchedule.dataValue = '';
+        break;
     }
   }
 
@@ -318,7 +341,7 @@ export class CodxTasksComponent
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          resourceModel: this.resourceField,
+          //resourceModel: this.resourceField, //ko có thang nay
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
@@ -1285,36 +1308,35 @@ export class CodxTasksComponent
     }
 
     if (data.extendStatus == '3') {
-      this.notiService.alertCode('TM055').subscribe((confirm) => {
-        if (confirm?.event && confirm?.event?.status == 'Y') {
-          this.api
-            .execSv<any>(
-              'TM',
-              'TM',
-              'TaskExtendsBusiness',
-              'GetExtendDateByTaskIDAsync',
-              [data.taskID]
-            )
-            .subscribe((res) => {
-              if (res) {
-                this.taskExtend = res;
-              } else {
-                if (data.createdBy != data.owner)
-                  this.taskExtend.extendApprover = data.createdBy;
-                else this.taskExtend.extendApprover = data.verifyBy;
-                this.taskExtend.dueDate = moment(
-                  new Date(data.dueDate)
-                ).toDate();
-                this.taskExtend.reason = '';
-                this.taskExtend.taskID = data?.taskID;
-                this.taskExtend.extendDate = moment(
-                  new Date(data.dueDate)
-                ).toDate();
+      this.api
+        .execSv<any>(
+          'TM',
+          'TM',
+          'TaskExtendsBusiness',
+          'GetExtendDateByTaskIDAsync',
+          [data.taskID]
+        )
+        .subscribe((dt) => {
+          if (dt) {
+            this.notiService.alertCode('TM055').subscribe((confirm) => {
+              if (confirm?.event && confirm?.event?.status == 'Y') {
+                this.taskExtend = dt;
+                this.confirmExtend(data, moreFunc);
               }
-              this.confirmExtend(data, moreFunc);
             });
-        }
-      });
+          } else {
+            if (data.createdBy != data.owner)
+              this.taskExtend.extendApprover = data.createdBy;
+            else this.taskExtend.extendApprover = data.verifyBy;
+            this.taskExtend.dueDate = moment(new Date(data.dueDate)).toDate();
+            this.taskExtend.reason = '';
+            this.taskExtend.taskID = data?.taskID;
+            this.taskExtend.extendDate = moment(
+              new Date(data.dueDate)
+            ).toDate();
+            this.confirmExtend(data, moreFunc);
+          }
+        });
     } else {
       if (data.createdBy != data.owner)
         this.taskExtend.extendApprover = data.createdBy;
