@@ -11,10 +11,24 @@ export const OMCONST = {
         Reports: 'ReportsBusiness',
     },
     FUNCID: {
-        
+        Company:'OMT01',
+        Department:'OMT02',
+        Team:'OMT03',
+        Person:'OMT04',
     },
     VLL: {
-        
+        OKRLevel:{
+            Company:'1',
+            Department:'3',
+            Team:'4',
+            Person:'5',
+        },
+
+        Plan:{
+            Month:'M',
+            Quarter:'Q',
+        }
+
     },
     GRVNAME: {
         
@@ -26,5 +40,32 @@ export const OMCONST = {
     // FUNCID: {
         
     // },
+
+
+
+    //region format
     
+    //-----------------------Base Func-----------------------//
+
+
+    //-----------------------Base Event-----------------------//
+
+
+
+    //-----------------------Get Data Func-----------------------//
+
+
+    //-----------------------Validate Func-----------------------//
+
+
+    //-----------------------Logic Func-----------------------//
+
+
+    //-----------------------Logic Event-----------------------//
+
+
+    //-----------------------Custom Func-----------------------//
+
+    
+    //-----------------------Popup-----------------------//
 }
