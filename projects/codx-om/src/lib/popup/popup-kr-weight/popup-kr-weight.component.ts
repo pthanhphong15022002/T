@@ -1,33 +1,24 @@
 import {
   AfterViewInit,
   Component,
-  EventEmitter,
   Injector,
-  Input,
   Optional,
-  Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 import {
   AuthService,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
-  ImageViewerComponent,
   NotificationsService,
-  RequestOption,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
-import { ChartData } from '../../model/chart.model';
-import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 
 
 @Component({
