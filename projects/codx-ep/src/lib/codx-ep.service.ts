@@ -55,17 +55,18 @@ export class CodxEpService {
   // hiện đang ko đọc đc biến enviroment từ file
   // khi sửa đc replace: this.environment. thành environment.
   //temp environment
-  environment=  {SureMeet: {
-    baseUrl: 'https://api.suremeet.vn/',
-    tokenUrl: 'api/auth/token',
-    addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
-    connectMettingUrl: 'PublicMeeting/Verify',
-    client_id: 'portal',
-    client_secret: 'lacviet@2022@$%!$$!(@',
-    app_id: 'demo.suremeet@gmail.com',
-    app_secret: '123456',
-  },
-}
+  environment = {
+    SureMeet: {
+      baseUrl: 'https://api.suremeet.vn/',
+      tokenUrl: 'api/auth/token',
+      addUpdateMeetingUrl: 'PublicMeeting/AddUpdate',
+      connectMettingUrl: 'PublicMeeting/Verify',
+      client_id: 'portal',
+      client_secret: 'lacviet@2022@$%!$$!(@',
+      app_id: 'demo.suremeet@gmail.com',
+      app_secret: '123456',
+    },
+  };
   //#region Get from FunctionList
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
@@ -201,7 +202,7 @@ export class CodxEpService {
       [formName, null, fieldName]
     );
   }
-  getListResource(resourceType:string) {
+  getListResource(resourceType: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -210,7 +211,7 @@ export class CodxEpService {
       [resourceType]
     );
   }
-  getListAttendees(recID:any) {
+  getListAttendees(recID: any) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -218,8 +219,8 @@ export class CodxEpService {
       'GetAsync',
       [recID]
     );
-  }  
-  getListItems(recID:any) {
+  }
+  getListItems(recID: any) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -228,7 +229,7 @@ export class CodxEpService {
       [recID]
     );
   }
-  getListReason(entity:string) {
+  getListReason(entity: string) {
     return this.api.execSv(
       'BS',
       'ERM.Business.BS',
@@ -257,22 +258,22 @@ export class CodxEpService {
       [resourceID]
     );
   }
-  rescheduleBooking(recID:string,startDate:any,endDate:any) {
+  rescheduleBooking(recID: string, startDate: any, endDate: any) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
       'RescheduleAsync',
-      [recID,startDate,endDate]
+      [recID, startDate, endDate]
     );
   }
-  inviteAttendees(recID:string,attendees: any[]) {
+  inviteAttendees(recID: string, attendees: any[]) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'BookingsBusiness',
       'InviteAttendeesAfterApprovedAsync',
-      [recID,attendees]
+      [recID, attendees]
     );
   }
 
@@ -470,13 +471,13 @@ export class CodxEpService {
     );
   }
 
-  approve(recID: string, status: string) {
+  approve(recID: string, status: string, reasonID: string, comment: string) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'ApproveAsync',
-      [recID, status, '', '', '']
+      [recID, status, reasonID, comment, '']
     );
   }
 
@@ -651,7 +652,7 @@ export class CodxEpService {
       })
       .catch((err: any) => {});
   }
-    
+
   // createMeeting(
   //   meetingUrl,
   //   meetingTitle,
@@ -665,7 +666,7 @@ export class CodxEpService {
   //     return meetingUrl;
   //   }
   //   return axios
-  
+
   //     .create({
   //       baseURL: 'https://api.suremeet.vn/',
   //     })
@@ -737,9 +738,6 @@ export class CodxEpService {
   //     ).then((url) => {
   //       return url;
   //     }));
-      
-      
-      
 
   //   return axios
   //     .create({
