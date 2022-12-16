@@ -27,6 +27,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxOmService } from '../../codx-om.service';
 import { ChartData } from '../../model/chart.model';
+import { EditWeight } from '../../model/okr.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 
 
@@ -46,6 +47,7 @@ export class PopupKRWeightComponent extends UIComponent implements AfterViewInit
   formModel: FormModel;
   headerText: string;
   dataOKR: any;
+  listWeight=[];
   pbyw=[];
   constructor(
     private injector: Injector,
@@ -61,7 +63,7 @@ export class PopupKRWeightComponent extends UIComponent implements AfterViewInit
     this.dataOKR=dialogData.data[0];
     
   }
-  //----Base Function
+  //-----------------------Base Func-----------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -84,33 +86,51 @@ export class PopupKRWeightComponent extends UIComponent implements AfterViewInit
         if(item.weight && item.progress){
           let pw=item.weight *item.progress;
           this.pbyw.push((+pw.toFixed(2))*1);
+          let newWeight= new EditWeight();
+          newWeight.recID= item.recID;
+          newWeight.weight=item.weight;
+          this.listWeight.push(newWeight);
         }
         else{
           this.pbyw.push(0);
         }
       })
       this.detectorRef.detectChanges();
-    }
-    
+    }    
   }
 
-  //----Base Event function
+  //-----------------------Base Event-----------------------//
+
   click(event: any) {
     switch (event) {
       
     }
   }
+  valueChange(evt){
+    
+  }
+
+  //-----------------------Get Data Func-----------------------//
+
+
+  //-----------------------Validate Func-----------------------//
+
+
+  //-----------------------Logic Func-----------------------//
+
+  onSaveForm(){
+
+  }
+
+  //-----------------------Logic Event-----------------------//
+
+
+  //-----------------------Custom Func-----------------------//
 
   
-
-  //----Get Data Function
+  //-----------------------Popup-----------------------//
   
 
-  //----Custom Event
-  
-
-  //----Logic Function
-  
   
   
 }

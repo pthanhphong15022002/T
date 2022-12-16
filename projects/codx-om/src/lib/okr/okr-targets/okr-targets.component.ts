@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import {
   CacheService,
   CallFuncService,
@@ -106,8 +107,17 @@ export class OkrTargetsComponent implements OnInit {
     className: 'OKRBusiness',
     method: 'GetChartData1Async',
   };
+  funcID: any;
 
-  constructor(private callfunc: CallFuncService, private cache: CacheService) {}
+  constructor(
+    private callfunc: CallFuncService, 
+    private cache: CacheService,
+    private activatedRoute:ActivatedRoute,
+  ) 
+  {
+    
+  this.funcID = this.activatedRoute.snapshot.params['funcID'];
+  }
 
   ngOnInit(): void {
     this.cache.valueList('OM002').subscribe((item) => {
@@ -148,7 +158,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
+      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.funcID],
       option
     );
   }
@@ -160,7 +170,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [kr, o, this.formModelKR, false, popupTitle],
+      [kr, o, this.formModelKR, false, popupTitle ,this.funcID],
       option
     );
   }

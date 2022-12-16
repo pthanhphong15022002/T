@@ -248,7 +248,7 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-
+  //region: KR
   checkInKR(recID:string,checkIn:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -258,4 +258,23 @@ export class CodxOmService {
       [recID,checkIn]
     );
   }
+  addKR(kr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'AddKRAsync',
+      [kr]
+    );
+  }
+  editKR(kr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'EditKRAsync',
+      [kr]
+    );
+  }
+  //endregion: KR
 }
