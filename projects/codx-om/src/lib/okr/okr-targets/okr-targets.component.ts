@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import {
   CacheService,
   CallFuncService,
@@ -109,30 +108,39 @@ export class OkrTargetsComponent implements OnInit {
     className: 'OKRBusiness',
     method: 'GetChartData1Async',
   };
-  funcID: any;
-  progress: any;
+
+  ObjQty = 0;
+  KrQty = 0;
+
+  progress: number = 0;
 
   constructor(
-    private callfunc: CallFuncService, 
+    private callfunc: CallFuncService,
     private cache: CacheService,
-    private activatedRoute:ActivatedRoute,
-    private api:ApiHttpService,
-    
-  ) 
-  {
-    
-  this.funcID = this.activatedRoute.snapshot.params['funcID'];
-  }
+    private api: ApiHttpService
+  ) {}
 
   ngOnInit(): void {
     this.progress = this.dataOKRPlans?.progress;
     this.api
-      .exec('OM', 'OKRBusiness', 'GetOKRByPlanRAsync', [
+      .exec('OM', 'OKRBusiness', 'GetOKRByPlanAsync', [
         this.dataOKRPlans?.periodID,
       ])
-      .subscribe((res) => {
-        res
+      .subscribe((res: any) => {
+        res.map((res) => {
+          if (res.okrType == 'O') {
+            this.ObjQty = this.ObjQty + 1;
+          }
+          if (res.okrType == 'R') {
+            this.KrQty = this.KrQty + 1;
+          }
+        });
+        this.chartSettings1.title =
+          this.ObjQty.toString() + (this.ObjQty > 1 ? ' Objectives' : ' Objective');
+        this.chartSettings2.title =
+          this.KrQty.toString() + (this.KrQty > 1 ? ' KRs' : ' KR');
       });
+
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
@@ -171,7 +179,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.funcID],
+      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
       option
     );
   }
@@ -183,7 +191,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [kr, o, this.formModelKR, false, popupTitle ,this.funcID],
+      [kr, o, this.formModelKR, false, popupTitle],
       option
     );
   }
