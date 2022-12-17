@@ -353,7 +353,11 @@ export class CalendarNotesComponent
   }
 
   changeNewWeek(args: any) {
-    this.getParam(args.fromDate, args.toDate);
+    // this.getParam(args.fromDate, args.toDate);
+    this.getParamCalendar(
+      args.fromDate.toISOString(),
+      args.toDate.toISOString()
+    );
     this.fDayOfWeek = args.fromDate;
     this.lDayOfWeek = args.toDate;
     this.change.detectChanges();
@@ -587,8 +591,7 @@ export class CalendarNotesComponent
             var value = Util.camelize(paramValue[keyValue]);
             if (data[value] || typeof data[value] == 'boolean')
               paramValue[keyValue] = data[value];
-          } 
-          else {
+          } else {
             paramValue['data'][key] = data[key];
           }
         }
@@ -1101,19 +1104,33 @@ export class CalendarNotesComponent
       .subscribe((res) => {
         if (res) {
           if (this.typeCalendar == 'week') {
-            this.getParam(this.fDayOfWeek, this.lDayOfWeek, false);
+            // this.getParam(this.fDayOfWeek, this.lDayOfWeek, false);
+            this.getParamCalendar(this.fDayOfWeek, this.lDayOfWeek, false);
           } else {
-            var date = new Date();
-            if (this.dateOfMonth) date = this.dateOfMonth;
-            var fDayOfMonth = moment(date).startOf('month').toISOString();
-            var lDayOfMonth = moment(date).endOf('month').toISOString();
-            this.getParam(fDayOfMonth, lDayOfMonth);
-            var today: any = document.querySelector(
-              ".e-footer-container button[aria-label='Today']"
-            );
-            if (today) {
-              today.click();
-            }
+            let myInterVal = setInterval(() => {
+              if (this.calendar) {
+                clearInterval(myInterVal);
+                var tempCalendar = this.calendar.element;
+                var htmlE = tempCalendar as HTMLElement;
+                var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[0]?.childNodes[0]
+                  ?.childNodes[0] as HTMLElement;
+                const fDayOfMonth = new Date(eleFromDate.title).toISOString();
+                var eleToDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[4]?.childNodes[6]
+                  .childNodes[0] as HTMLElement;
+                const lDayOfMonth = new Date(eleToDate.title).toISOString();
+                debugger
+                this.getParamCalendar(fDayOfMonth, lDayOfMonth);
+                var today: any = document.querySelector(
+                  ".e-footer-container button[aria-label='Today']"
+                );
+                if (today) {
+                  today.click();
+                }
+              }
+            });
+            // this.getParam(fDayOfMonth, lDayOfMonth);
           }
           this.setEventWeek();
           // var obj = {
