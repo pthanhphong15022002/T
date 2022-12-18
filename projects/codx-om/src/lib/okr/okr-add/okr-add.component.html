@@ -20,38 +20,78 @@
         </codx-input>
       </div>    
     </div>
-      
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="OKRName"></codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="okrName" >
-        </codx-input>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="OKRName"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="okrName" >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note" >
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Owner"></codx-label>
+      <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="owner">
+      </codx-input>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" fiedName="Shares"></codx-label>
+      <div class="row">
+        <div class="col-3">
+          <codx-input
+            type="radio"
+            name="radio-dtexport"
+            class="me-4 mb-2"
+            label="Tất cả"
+            [Group]="form.formGroup"
+            ControlName="shares"
+            crrValue="all"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-input
+            type="radio"
+            name="radio-dtexport"
+            class="me-4 mb-2"
+            label="Phòng & Quản lý của tôi"
+            [Group]="form.formGroup"
+            ControlName="shares"
+            crrValue="all"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-input
+            type="radio"
+            name="radio-dtexport"
+            class="me-4 mb-2"
+            label="Phòng của tôi"
+            [Group]="form.formGroup"
+            ControlName="shares"
+            crrValue="all"
+          >
+          </codx-input>
+        </div>
+        <div class="col-3">
+          <codx-input
+            type="radio"
+            name="radio-dtexport"
+            class="me-4 mb-2"
+            label="Quản lý của tôi"
+            [Group]="form.formGroup"
+            ControlName="shares"
+            crrValue="all"
+          >
+          </codx-input>
+        </div>
       </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Mục tiêu chiến lược"></codx-label>
-        <codx-input type="combobox">
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="Note"></codx-label>
-        <codx-input [formModel]="form.formModel" [Group]="form.formGroup" ControlName="note" >
-        </codx-input>
-      </div>
-      
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Người chịu trách nhiệm"></codx-label>
-        <codx-input type="combobox">
-        </codx-input>
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Chia sẻ"></codx-label>
-        
-      </div>
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" default="Liên kết mục tiêu"></codx-label>
-        
-      </div>
+    </div>
+    <div class="form-group">
+      <codx-label [formModel]="form.formModel" default="Liên kết mục tiêu"></codx-label>
+    </div>
   </ng-container>
-  
 </ng-template>
 <ng-template #footer>
   <div class="d-flex justify-content-end">
