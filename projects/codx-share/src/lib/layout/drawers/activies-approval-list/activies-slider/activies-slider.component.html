@@ -20,7 +20,7 @@
       <ng-container *ngFor="let item of lstApproval">
         <div class="row p-2">
           <div [style]="setStyles(item.title | vll:'ES022':'color'|async)" class="col-1 w-30px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle">
-            <codx-vll [name]="'ES022'" [value]="item.title" [showIcon]="true"></codx-vll>
+            <codx-vll [name]="'ES022'" [value]="item.entityName" [showIcon]="true"></codx-vll>
           </div>
           <div class="col-10">
             <div>
@@ -31,8 +31,8 @@
               <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
               <codx-img 
                 [width]="30" 
-                [isDefaulImg]="true" 
                 [objectId]="item.userID" 
+                [objectName]="item.userName"
                 [objectType]="'AD_Users'">
               </codx-img>
             </div>

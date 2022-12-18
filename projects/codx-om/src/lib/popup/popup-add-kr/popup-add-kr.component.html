@@ -23,8 +23,9 @@
       <codx-label default="Tên KR" fiedName="OKRName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
-        type="text"
-        [crrValue]="kr.okrName"
+        ControlName="oKRName"
+        [formModel]="form.formModel"
+        [Group]="form.formGroup"
       >
       </codx-input>
     </div>

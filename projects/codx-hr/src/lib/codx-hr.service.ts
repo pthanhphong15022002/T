@@ -428,16 +428,6 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeAssetsInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAssetsBusiness',
-      'GetEmployeeAssetsInfoAsync',
-      data
-    );
-  }
-
   updateEmployeePassportInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -528,16 +518,57 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeAssetsInfo(data) {
+  //#endregion
+
+  //#region EAssetBusiness
+  getEmployeeAssetsModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
-      'AddEmployeeAssetsInfoAsync',
+      'GetEAssetsModelAsync'
+    );
+  }
+
+  UpdateEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'UpdateEAssetsInfoAsync',
       data
     );
   }
 
+  AddEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'AddEAssetsInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'DeleteEAssetsInfoAsync',
+      data
+    );
+  }
+
+  getListAssetByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'GetListAssetsByDataRequestAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EFamiliesBusiness

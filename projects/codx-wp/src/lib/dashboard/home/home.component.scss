@@ -2,10 +2,7 @@
   max-width: 980px;
   margin: 0 auto;
 
-  [data-kt-aside-minimize="on"]
-    .aside:not(.aside-hoverable)
-    .aside-menu
-    .menu-title,
+  [data-kt-aside-minimize="on"] .aside:not(.aside-hoverable) .aside-menu .menu-title,
   [data-kt-aside-minimize="on"] .aside:not(:hover) .aside-menu .menu-title {
     opacity: 1;
     margin-left: 10px;
@@ -117,7 +114,7 @@
 }
 
 /*** 1 - 5 pic ***/
-.feed-5pic .col-xl-5.pl-0 div + div {
+.feed-5pic .col-xl-5.pl-0 div+div {
   margin-top: 3px;
 }
 

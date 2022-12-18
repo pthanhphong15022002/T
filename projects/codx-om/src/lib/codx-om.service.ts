@@ -2,12 +2,19 @@ import { OMCONST } from './codx-om.constant';
 import { DatePipe } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ApiHttpService, AuthStore, CacheService, DataRequest, FormModel, NotificationsService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  DataRequest,
+  FormModel,
+  NotificationsService,
+} from 'codx-core';
 import { ModelPage } from 'projects/codx-ep/src/public-api';
 import { finalize, map, Observable, share } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CodxOmService {
   public caches = new Map<string, Map<string, any>>();
@@ -18,10 +25,8 @@ export class CodxOmService {
     private fb: FormBuilder,
     private datePipe: DatePipe,
     private api: ApiHttpService,
-    private notificationsService: NotificationsService,
-  ){ 
-    
-  }
+    private notificationsService: NotificationsService
+  ) {}
   //#region Get from FunctionList
   getFormModel(functionID): Promise<FormModel> {
     return new Promise<FormModel>((resolve, rejects) => {
@@ -172,20 +177,28 @@ export class CodxOmService {
   }
 
   //Lấy danh sách mục tiêu
-  getOKR(dataRequest: DataRequest)
-  {
-    return this.api.execSv("OM","OM","OKRBusiness","GetAsync",dataRequest);
+  getOKR(dataRequest: DataRequest) {
+    return this.api.execSv('OM', 'OM', 'OKRBusiness', 'GetAsync', dataRequest);
   }
 
   //Lấy danh sách Bộ mục tiêu
-  getOKRPlans(periodID: string , interval: string , year: any)
-  {
-    return this.api.execSv("OM","OM","OKRPlansBusiness","GetAsync",[periodID,interval,year]);
+  getOKRPlans(periodID: string, interval: string, year: any) {
+    periodID = '2022'; //Tạm để cứng chờ khi tạo được periodID
+    return this.api.execSv('OM', 'OM', 'OKRPlansBusiness', 'GetAsync', [
+      periodID,
+      interval,
+      year,
+    ]);
   }
   //Lấy danh sách chi tiết KR từ recID OKR
-  getKRByOKR(recID : any)
-  {
-    return this.api.execSv("OM","OM","OKRBusiness","GetChildByIDAsync",recID);
+  getKRByOKR(recID: any) {
+    return this.api.execSv(
+      'OM',
+      'OM',
+      'OKRBusiness',
+      'GetChildByIDAsync',
+      recID
+    );
   }
   
   loadFunctionList(funcID:any): Observable<any>
@@ -200,17 +213,16 @@ export class CodxOmService {
       }
     }
     if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key)
+      this.cachedObservables.get(key);
     }
-    let observable = this.cache.functionList(funcID)
-    .pipe(
+    let observable = this.cache.functionList(funcID).pipe(
       map((res) => {
         if (res) {
           let c = this.caches.get(keyRoot);
           c?.set(key, res);
           return res;
         }
-        return null
+        return null;
       }),
       share(),
       finalize(() => this.cachedObservables.delete(key))
@@ -219,9 +231,8 @@ export class CodxOmService {
     return observable;
   }
 
-  loadGridView(formName:any, gridViewName:any): Observable<any>
-  {
-    let paras = [formName,gridViewName];
+  loadGridView(formName: any, gridViewName: any): Observable<any> {
+    let paras = [formName, gridViewName];
     let keyRoot = formName + gridViewName;
     let key = JSON.stringify(paras).toLowerCase();
     if (this.caches.has(keyRoot)) {
@@ -231,17 +242,16 @@ export class CodxOmService {
       }
     }
     if (this.cachedObservables.has(key)) {
-      this.cachedObservables.get(key)
+      this.cachedObservables.get(key);
     }
-    let observable = this.cache.gridViewSetup(formName,gridViewName)
-    .pipe(
+    let observable = this.cache.gridViewSetup(formName, gridViewName).pipe(
       map((res) => {
         if (res) {
           let c = this.caches.get(keyRoot);
           c?.set(key, res);
           return res;
         }
-        return null
+        return null;
       }),
       share(),
       finalize(() => this.cachedObservables.delete(key))
@@ -249,14 +259,33 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-
+  //region: KR
   checkInKR(recID:string,checkIn:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
       'CheckInKRAsync',
-      [recID,checkIn]
+      [recID, checkIn]
     );
   }
+  addKR(kr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'AddKRAsync',
+      [kr]
+    );
+  }
+  editKR(kr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'EditKRAsync',
+      [kr]
+    );
+  }
+  //endregion: KR
 }
