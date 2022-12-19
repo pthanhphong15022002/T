@@ -62,7 +62,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
 })
 export class ProcessStepsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnChanges
 {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
@@ -74,7 +74,7 @@ export class ProcessStepsComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
 
   @Input() process: BP_Processes;
-  @Input() viewMode = '16';
+  @Input() viewMode :any;
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
@@ -160,6 +160,11 @@ export class ProcessStepsComponent
       }
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.chgViewModel(this.viewMode);
+    this.changeDetectorRef.detectChanges()
+  }
+  
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -263,7 +268,7 @@ export class ProcessStepsComponent
   chgViewModel(type) {
     // this.idView = type ;
     let view = this.views.find((x) => x.id == type);
-    if (view) this.view.viewChange(view);
+    if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
 
