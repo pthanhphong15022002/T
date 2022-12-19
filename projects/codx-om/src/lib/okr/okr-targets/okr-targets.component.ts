@@ -8,9 +8,8 @@ import {
   ApiHttpService,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
-import { OKRs } from '../../model/okr.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
-import { PopupKRWeightComponent } from '../../popup/popup-kr-weight/popup-kr-weight.component';
+import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 
@@ -72,7 +71,7 @@ export class OkrTargetsComponent implements OnInit {
     seriesSetting: [
       {
         type: 'Pie',
-        xName: 'name',
+        xName: 'status',
         yName: 'value',
         innerRadius: '80%',
         radius: '70%',
@@ -93,7 +92,7 @@ export class OkrTargetsComponent implements OnInit {
     seriesSetting: [
       {
         type: 'Pie',
-        xName: 'name',
+        xName: 'status',
         yName: 'value',
         innerRadius: '80%',
         radius: '70%',
@@ -109,7 +108,9 @@ export class OkrTargetsComponent implements OnInit {
     method: 'GetChartData1Async',
   };
 
+  Objs = [];
   ObjQty = 0;
+  Krs = [];
   KrQty = 0;
 
   progress: number = 0;
@@ -123,22 +124,28 @@ export class OkrTargetsComponent implements OnInit {
   ngOnInit(): void {
     this.progress = this.dataOKRPlans?.progress;
     this.api
-      .exec('OM', 'OKRBusiness', 'GetOKRByPlanAsync', [
+      .exec('OM', 'OKRBusiness', 'GetOKRDashboardByPlanAsync', [
         this.dataOKRPlans?.periodID,
       ])
       .subscribe((res: any) => {
-        res.map((res) => {
-          if (res.okrType == 'O') {
-            this.ObjQty = this.ObjQty + 1;
-          }
-          if (res.okrType == 'R') {
-            this.KrQty = this.KrQty + 1;
+        res[1].map((res) => {
+          let qty = res.quantity;
+          let type = res.okrType;
+          let items = res.items;
+          switch (type) {
+            case 'O':
+              this.chartSettings1.title =
+                qty + (qty > 1 ? ' Objectives' : ' Objective');
+              this.Objs = items;
+              break;
+            case 'R':
+              this.chartSettings2.title = qty + (qty > 1 ? ' KRs' : ' KR');
+              this.Krs = items;
+              break;
+            default:
+              break;
           }
         });
-        this.chartSettings1.title =
-          this.ObjQty.toString() + (this.ObjQty > 1 ? ' Objectives' : ' Objective');
-        this.chartSettings2.title =
-          this.KrQty.toString() + (this.KrQty > 1 ? ' KRs' : ' KR');
       });
 
     this.cache.valueList('OM002').subscribe((item) => {
@@ -223,16 +230,19 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   //Sửa trọng số KR
-  editKRWeight(o: any) {
+  editWeight(okr: any, child:any) {
+    //OM_WAIT: tiêu đề tạm thời gán cứng
+    let popupTitle='Thay đổi trọng số cho KRs';
+    let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowKR = this.callfunc.openForm(
-      PopupKRWeightComponent,
+      PopupOKRWeightComponent,
       '',
       null,
       null,
       null,
-      [o],
+      [okr,child,popupTitle,subTitle],
       '',
       dModel
     );

@@ -10,7 +10,6 @@ import { FormGroup } from '@angular/forms';
 import {
   CodxFormComponent,
   CodxListviewComponent,
-  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -18,12 +17,13 @@ import {
   UIComponent,
 } from 'codx-core';
 import { CodxHrService } from '../../codx-hr.service';
+
 @Component({
-  selector: 'lib-popup-evaccine',
-  templateUrl: './popup-evaccine.component.html',
-  styleUrls: ['./popup-evaccine.component.scss'],
+  selector: 'lib-popup-ediseases',
+  templateUrl: './popup-ediseases.component.html',
+  styleUrls: ['./popup-ediseases.component.scss'],
 })
-export class PopupEVaccineComponent extends UIComponent implements OnInit {
+export class PopupEDiseasesComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
@@ -48,9 +48,9 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     super(injector);
     if (!this.formModel) {
       this.formModel = new FormModel();
-      this.formModel.entityName = 'HR_EVaccines';
-      this.formModel.formName = 'EVaccines';
-      this.formModel.gridViewName = 'grvEVaccines';
+      this.formModel.entityName = 'HR_EHealths';
+      this.formModel.formName = 'EHealths';
+      this.formModel.gridViewName = 'grvEHealths';
     }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
@@ -66,31 +66,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.isAfterRender = true;
   }
 
-  onSaveForm(isClose: boolean) {
-    if (this.actionType == 'add' || this.actionType == 'copy') {
-      this.hrSevice.addEVaccine(this.data).subscribe((res) => {
-        if (res) {
-          this.data = res;
-          (this.listView.dataService as CRUDService).add(res).subscribe();
-          this.actionType = 'edit';
-          if (isClose) {
-            this.dialog && this.dialog.close();
-          }
-        }
-      });
-    } else if (this.actionType == 'edit') {
-      this.hrSevice.editEVaccine(this.data).subscribe((res) => {
-        if (res) {
-          (this.listView.dataService as CRUDService).update(res).subscribe();
-          if (isClose) {
-            this.dialog && this.dialog.close();
-          }
-        }
-      });
-    }
-
-    this.cr.detectChanges();
-  }
+  onSaveForm() {}
 
   afterRenderListView(event: any) {
     this.listView = event;

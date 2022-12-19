@@ -96,25 +96,26 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   totalProgress: number;
 
   //#region gauge chart
-
-  majorTicks: Object = {
-    width: 0,
-    interval: 1,
+  pointerBorder = {
+    color: '#007DD1',
+    width: 2,
   };
 
-  minorTicks: Object = {
-    width: 0,
-  };
-
-  lineStyle: Object = {
-    width: 0,
+  rangeLinearGradient: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#9e40dc', offset: '0%', opacity: 1 },
+      { color: '#d93c95', offset: '70%', opacity: 1 },
+    ],
   };
 
   labelStyle: Object = {
+    position: 'Outside',
     font: {
       fontFamily: 'inherit',
     },
-    offset: 10,
+    offset: 0,
   };
 
   load(args: ILoadedEventArgs): void {
@@ -160,7 +161,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
-  //----Base Function
+  //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -183,13 +184,17 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.getChartData();
   }
 
-  //----Base Event function
+  //-----------------------End-------------------------------//
+
+  //-----------------------Base Event------------------------//
   click(event: any) {
     switch (event) {
     }
   }
 
-  //----Get Data Function
+  //-----------------------End-------------------------------//
+
+  //-----------------------Get Data Func---------------------//
   getItemOKR(i: any, recID: any) {
     this.openAccordion[i] = !this.openAccordion[i];
     // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
@@ -216,10 +221,12 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   getCheckInsByYear(data: any) {
     const checkIns = data.checkIns;
+    const progressHistory = this.progressHistory;
+    const progressHistoryReverse = [...progressHistory].reverse();
     if (checkIns && checkIns.length > 0) {
       checkIns.map((checkIn, index) => {
         let tmpCheckIn: any = {};
-        tmpCheckIn.percent = this.progressHistory.reverse()[index];
+        tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `Q${index + 1}`;
         this.chartData.checkIns.push(tmpCheckIn);
       });
@@ -228,10 +235,12 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   getCheckInsByQuarter(data: any) {
     const checkIns = data.checkIns;
+    const progressHistory = this.progressHistory;
+    const progressHistoryReverse = [...progressHistory].reverse();
     if (checkIns && checkIns.length > 0) {
       checkIns.map((checkIn, index) => {
         let tmpCheckIn: any = {};
-        tmpCheckIn.percent = this.progressHistory.reverse()[index];
+        tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `M${index + 1}`;
         this.chartData.checkIns.push(tmpCheckIn);
       });
@@ -240,10 +249,12 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   getCheckInsByMonth(data: any) {
     const checkIns = data.checkIns;
+    const progressHistory = this.progressHistory;
+    const progressHistoryReverse = [...progressHistory].reverse();
     if (checkIns && checkIns.length > 0) {
       checkIns.map((checkIn, index) => {
         let tmpCheckIn: any = {};
-        tmpCheckIn.percent = this.progressHistory.reverse()[index];
+        tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `W${index + 1}`;
         this.chartData.checkIns.push(tmpCheckIn);
       });
@@ -251,22 +262,13 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
   //#endregion Chart
 
-  //----Custom Event
-  checkinSave() {}
+  //-----------------------End-------------------------------//
 
-  checkinCancel() {
-    this.dialogCheckIn.close();
-  }
+  //-----------------------Validate Func---------------------//
 
-  popupUploadFile(evt: any) {
-    this.attachment.uploadFile();
-  }
-  fileCount(evt: any) {}
+  //-----------------------End-------------------------------//
 
-  fileAdded(evt: any) {}
-
-  //----Logic Function
-
+  //-----------------------Logic Func------------------------//
   checkIn(evt: any, kr: any) {
     this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
     this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
@@ -311,4 +313,34 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
       });
     }
   }
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Logic Event-----------------------//
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Custom Func-----------------------//
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Custom Event-----------------------//
+  checkinSave() {}
+
+  checkinCancel() {
+    this.dialogCheckIn.close();
+  }
+
+  popupUploadFile(evt: any) {
+    this.attachment.uploadFile();
+  }
+  fileCount(evt: any) {}
+
+  fileAdded(evt: any) {}
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Popup-----------------------------//
+
+  //-----------------------End-------------------------------//
 }
