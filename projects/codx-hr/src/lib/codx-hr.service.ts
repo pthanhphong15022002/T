@@ -235,15 +235,7 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeDegreeInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EDegreesBusiness',
-      'AddEmployeeDegreeInfoAsync',
-      data
-    );
-  }
+
   saveEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -285,6 +277,57 @@ export class CodxHrService {
     );
   }
 
+  //#endregion
+
+  //#regin EDegrees
+  getEmployeeDegreeModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'GetEmployeeDegreesModelAsync'
+    );
+  }
+
+  updateEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'UpdateEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  AddEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'AddEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'DeleteEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  getEDegreesWithDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'LoadEDegreesAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EmpVisasBusiness
@@ -364,7 +407,7 @@ export class CodxHrService {
       'HR',
       'HR',
       'EDegreesBusiness',
-      'GetEmployeeDegreeInfoAsync',
+      'LoadEDegreesAsync',
       data
     );
   }

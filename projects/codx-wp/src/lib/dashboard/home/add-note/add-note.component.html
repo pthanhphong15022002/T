@@ -87,7 +87,7 @@
         <!-- <div class="mb-3">
             <div *ngIf="formType == 'edit'">
                 <div class="attachment">
-                    <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.recID" hideBtnSave="1"
+                    <codx-attachment #attachment objectType="WP_Notes" [objectId]="note?.transID" hideBtnSave="1"
                         hideFolder="1" hideUploadBtn="1" functionID="WPT03941" type="inline" idBrowse="btn2" hideDes="1"
                         allowExtensions=".jpg,.png" allowMultiFile="1" (fileCount)="getfile($event)">
                     </codx-attachment>
@@ -166,7 +166,7 @@
 <ng-template #edit>
     <ng-container *ngIf="note">
         <div class="my-3">
-            <codx-file #codxFileEdit [objectID]="note.recID" [edit]='true' (evtAddFile)="addFile($event)"
+            <codx-file #codxFileEdit [objectID]="note.transID" [edit]='true' (evtAddFile)="addFile($event)"
                 (evtRemoveFile)="removeFile($event)" (evtGetFiles)="evtGetFiles($event)"></codx-file>
             <div class="d-none">
                 <codx-attachment #attachmentEdit [objectType]="functionList?.entityName" hideFolder="1"
