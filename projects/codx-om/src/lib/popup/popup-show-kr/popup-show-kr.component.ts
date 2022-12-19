@@ -221,22 +221,26 @@ getChartData() {
 
 getCheckInsByYear(data: any) {
   const checkIns = data.checkIns;
-  if (checkIns && checkIns.length > 0) {
-    checkIns.map((checkIn, index) => {
-      let tmpCheckIn: any = {};
-      tmpCheckIn.percent = this.progressHistory.reverse()[index];
-      tmpCheckIn.period = `Q${index + 1}`;
-      this.chartData.checkIns.push(tmpCheckIn);
-    });
-  }
+    const progressHistory = this.progressHistory;
+    const progressHistoryReverse = [...progressHistory].reverse();
+    if (checkIns && checkIns.length > 0) {
+      checkIns.map((checkIn, index) => {
+        let tmpCheckIn: any = {};
+        tmpCheckIn.percent = progressHistoryReverse[index];
+        tmpCheckIn.period = `Q${index + 1}`;
+        this.chartData.checkIns.push(tmpCheckIn);
+      });
+    }
 }
 
 getCheckInsByQuarter(data: any) {
   const checkIns = data.checkIns;
+  const progressHistory = this.progressHistory;
+  const progressHistoryReverse = [...progressHistory].reverse();
   if (checkIns && checkIns.length > 0) {
     checkIns.map((checkIn, index) => {
       let tmpCheckIn: any = {};
-      tmpCheckIn.percent = this.progressHistory.reverse()[index];
+      tmpCheckIn.percent = progressHistoryReverse[index];
       tmpCheckIn.period = `M${index + 1}`;
       this.chartData.checkIns.push(tmpCheckIn);
     });
@@ -245,14 +249,16 @@ getCheckInsByQuarter(data: any) {
 
 getCheckInsByMonth(data: any) {
   const checkIns = data.checkIns;
-  if (checkIns && checkIns.length > 0) {
-    checkIns.map((checkIn, index) => {
-      let tmpCheckIn: any = {};
-      tmpCheckIn.percent = this.progressHistory.reverse()[index];
-      tmpCheckIn.period = `W${index + 1}`;
-      this.chartData.checkIns.push(tmpCheckIn);
-    });
-  }
+    const progressHistory = this.progressHistory;
+    const progressHistoryReverse = [...progressHistory].reverse();
+    if (checkIns && checkIns.length > 0) {
+      checkIns.map((checkIn, index) => {
+        let tmpCheckIn: any = {};
+        tmpCheckIn.percent = progressHistoryReverse[index];
+        tmpCheckIn.period = `W${index + 1}`;
+        this.chartData.checkIns.push(tmpCheckIn);
+      });
+    }
 }
 //#endregion Chart
 
