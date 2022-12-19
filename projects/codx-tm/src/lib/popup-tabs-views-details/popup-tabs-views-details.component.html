@@ -28,7 +28,7 @@
           <div class="d-flex align-items-center mb-1">
             <span class="icon-calendar_today icon-16 text-gray-600 me-1"></span>
             <span class="text-gray-600 me-6" #createdOn>
-              {{ data?.createdOn | date: "dd/MM/yyyy" }}</span>
+              {{ data?.createdOn | formatvalue: dialog?.formModel :'createdOn':createdOn |async  }}</span>
             <span class="icon-account_circle icon-18 me-1 text-gray-600"></span>
             <span class="text-gray-600">{{ createdByName }}</span>
           </div>
@@ -37,8 +37,8 @@
               <codx-label name="lblTimeReview" [default]="'Thời gian review dữ liệu:'"></codx-label>
             </div>
             <div class="d-flex align-items-center me-2">
-              {{ data.fromDate | date: "dd/MM/yyyy" }} -
-              {{ data.toDate | date: "dd/MM/yyyy" }}
+             <span #fromDate>{{ data.fromDate | formatvalue: dialog?.formModel :'fromDate':fromDate |async  }}</span>  - 
+             <span #toDate>{{ data.toDate | formatvalue: dialog?.formModel :'toDate':toDate |async  }}</span> 
             </div>
           </div>
         </div>

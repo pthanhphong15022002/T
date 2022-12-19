@@ -352,6 +352,7 @@ export class SprintsComponent extends UIComponent {
         };
 
         let dialogModel = new DialogModel();
+        dialogModel.FormModel= this.view.formModel
         dialogModel.IsFull = true;
         dialogModel.zIndex = 900;
         var dialog = this.callfc.openForm(

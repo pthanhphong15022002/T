@@ -460,7 +460,6 @@ export class PopupAddProcessStepsComponent
 
   changeQuestion(e) {
     this.processSteps['reference'] = e?.data;
-    console.log(window.location.href);
     let url = window.location.href;
     let index = url.indexOf('/bp/');
     if (index != -1)

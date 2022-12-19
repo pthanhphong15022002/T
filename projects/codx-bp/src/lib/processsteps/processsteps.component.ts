@@ -875,7 +875,9 @@ export class ProcessStepsComponent
     if (e?.view.id == 6) {
       this.isKanban = true;
       this.widthElement =
-        document.getElementsByClassName(' e-header-cells').item[0].offsetHeight;
+        document.getElementsByClassName(
+          '.e-header-cells'
+        )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
@@ -1326,14 +1328,18 @@ export class ProcessStepsComponent
   setWidthTextColumm(text) {
     return this.widthElement < text.length * 3;
   }
-//chuwa xong
-  clickColums(recIDPhase) {
-    this.dataClick = null;
+  //chuwa xong
+  dataColums(recIDPhase) :any {
     this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
-      if (dt) {
-        this.dataClick = dt;
-        this.changeDetectorRef.detectChanges();
-      }
+     return dt;
     });
+  }
+
+  clickMFColums(e,recID){
+    this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
+     if(dt){
+      this.clickMF(e,dt)
+     }
+     });
   }
 }

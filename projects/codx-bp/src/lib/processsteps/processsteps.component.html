@@ -754,26 +754,21 @@
   <span>{{ text }}</span>
 </ng-template>
 
-<ng-template #viewColumKaban let-data>
-  <div class="d-flex align-items-center justify-content-between w-100">
-    <div class="cursor-pointer">{{ data.headerText }}</div>
-    <div class="icon-more_vert icon-18 has-actions-menu" (click)="clickColums(data?.keyField)">
-      <div class="action-menu">
-        <codx-mfunc
-          type="hover"
+<ng-template #viewColumKaban let-item>
+  <div
+    class="d-flex align-items-center justify-content-between cursor-pointer w-100"
+  >
+    <div class="line-colums">{{ item.headerText }}</div>
+    <div class="icon-more_vert icon-18 has-actions-menu">
+      <div class="action-menu ">
+        <!-- <codx-mfunc
           [formModel]="view.formModel"
-          (clickMF)="clickMF($event,dataClick)"
+          (clickMF)="clickMFColums($event, item.keyField)"
           [isBookMark]="true"
-          [dataItem]="dataClick"
+          [dataItem]="dataColums(item.keyField)"
         >
-        </codx-mfunc>
+        </codx-mfunc> -->
       </div>
     </div>
   </div>
 </ng-template>
-
-<!-- <ng-template #templateView>
-  <ng-container *ngIf="idView=='16'" [ngTemplateOutlet]="itemViewList"></ng-container>
-  
-  <ng-container *ngIf="idView=='9'" [ngTemplateOutlet]="flowChart"></ng-container>
-</ng-template> -->
