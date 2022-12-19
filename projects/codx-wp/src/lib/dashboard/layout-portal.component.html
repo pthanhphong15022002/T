@@ -1,7 +1,10 @@
+<div codxcontainer></div>
+<div modifyLang></div>
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" [hasSecond]="false" class="wp-portal"> </codx-aside>
+      <codx-aside *ngIf="asideDisplay" [hasSecond]="false" class="wp-portal">
+      </codx-aside>
       <div class="wrapper d-flex flex-column flex-row-fluid">
         <codx-header
           [class]="headerCSSClasses"
@@ -34,11 +37,13 @@
       class="d-flex align-items-center"
       [ngClass]="codxService.toolbarButtonMarginClass"
     >
-    <codx-chat></codx-chat>  
-      
+      <codx-chat></codx-chat>
     </div>
     <!-- NOTES -->
-    <div class="d-flex align-items-center ms-1 ms-lg-3" (click)="openFormNoteDrawer()">
+    <div
+      class="d-flex align-items-center ms-1 ms-lg-3"
+      (click)="openFormNoteDrawer()"
+    >
       <!-- begin::Menu wrapper -->
       <div
         class="btn btn-icon btn-active-light-primary position-relative"
@@ -55,8 +60,8 @@
       <!-- end::Menu wrapper -->
     </div>
     <!-- NOTIFICATIONS -->
-      <codx-notify-drawer></codx-notify-drawer>
-      <codx-activies-approval-list></codx-activies-approval-list>
+    <codx-notify-drawer></codx-notify-drawer>
+    <codx-activies-approval-list></codx-activies-approval-list>
     <!-- <div
       class="d-flex align-items-center"
       [ngClass]="codxService.toolbarButtonMarginClass"
