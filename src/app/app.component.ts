@@ -8,6 +8,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import {
+  LayoutService,
   NotificationsFCMService,
   NotificationsService,
   TenantService,
@@ -30,7 +31,8 @@ export class AppComponent implements OnInit, OnDestroy {
     // private angularFireMessaging: AngularFireMessaging,
     private ns: NotificationsFCMService,
     private notify: NotificationsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit() {
@@ -63,18 +65,26 @@ export class AppComponent implements OnInit, OnDestroy {
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
     // sự kiện khi ấn nút back của trình duyệt
-    this.closeDialog();
+    this.closeDialog(event);
   }
 
-  closeDialog() {
-    var dialogContain = document.querySelector('.codx-dialog-container');
-    dialogContain.innerHTML = '';
-    var dialog = document.querySelectorAll('.e-dialog');
-    if (dialog && dialog.length > 0) {
-      dialog.forEach((box) => {
-        if (box.tagName.toLowerCase() !== 'ejs-dialog') box = box.parentElement;
-        box.remove();
-      });
-    }
+  closeDialog(event) {
+    // var over = document.querySelector('.e-sidebar-overlay');
+    // if (over) over.remove();
+    var lstDialog = this.layoutService.listDialog;
+    lstDialog.forEach((element) => {
+      // var a = element;
+      if (element && element.hide) element.hide();
+    });
+    // this.layoutService.listDialog = [];
+    // var dialogContain = document.querySelector('.codx-dialog-container');
+    // dialogContain.innerHTML = '';
+    // var dialog = document.querySelectorAll('.e-dialog');
+    // if (dialog && dialog.length > 0) {
+    //   dialog.forEach((box) => {
+    //     if (box.tagName.toLowerCase() !== 'ejs-dialog') box = box.parentElement;
+    //     box.remove();
+    //   });
+    // }
   }
 }

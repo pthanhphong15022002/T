@@ -52,6 +52,7 @@ import { PopupEPassportsComponent } from '../../employee-profile/popup-epassport
 import { NoopAnimationPlayer } from '@angular/animations';
 import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
+import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -105,6 +106,8 @@ export class EmployeeProfileComponent extends UIComponent {
   data: any = {};
   //family
   lstFamily: any;
+  //degree
+  lstEDegrees: any = []
   //passport
   lstPassport: any = [];
   crrPassport: any = {};
@@ -127,9 +130,9 @@ export class EmployeeProfileComponent extends UIComponent {
 
   hrEContract;
   crrTab: number = 6;
-  
+
   //EAsset salary
-  lstAsset: any = []
+  lstAsset: any = [];
 
   //Basic salary
   crrEBSalary: any;
@@ -333,6 +336,20 @@ export class EmployeeProfileComponent extends UIComponent {
               this.crrVisa = this.lstVisa[0];
             }
           });
+          //Edegrees
+          let rqDegrees = new DataRequest();
+          rqDegrees.gridViewName = 'grvEDegrees';
+          rqDegrees.entityName = 'HR_EDegrees';
+          rqDegrees.predicate = 'EmployeeID=@0';
+          rqDegrees.dataValue = params.employeeID;
+          (rqDegrees.page = 1),
+          this.hrService.getEmployeeDregreesInfo(rqDegrees).subscribe((res) => {
+            console.log('ret trả về', res);
+            
+            if (res) this.lstEDegrees = res[0];
+            console.log('lít e đì gri', this.lstEDegrees);
+            
+          });
 
         //work permit
         let op4 = new DataRequest();
@@ -473,7 +490,7 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'basicSalary') {
           this.HandleEmployeeBasicSalariesInfo('edit', data);
           this.df.detectChanges();
-        } else if(funcID == 'Assets'){
+        } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('edit', data);
           this.df.detectChanges();
         }
@@ -596,6 +613,22 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'basicSalary') {
+              this.hrService
+                .DeleteEmployeeBasicsalaryInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    this.hrService
+                      .GetCurrentEBasicSalariesByEmployeeID(data.employeeID)
+                      .subscribe((p) => {
+                        this.crrEBSalary = p;
+                      });
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             }
           }
         });
@@ -620,10 +653,27 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'basicSalary') {
           this.HandleEmployeeBasicSalariesInfo('copy', data);
           this.df.detectChanges();
-        } else if(funcID == 'Assets'){
+        } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('copy', data);
           this.df.detectChanges();
         }
+        break;
+    }
+  }
+
+  clickMFVaccine(event: any, data: any, vaccineGroup: any) {
+    switch (event.functionID) {
+      case 'SYS03': //edit
+        this.addEditEVaccines('edit', data);
+        break;
+      case 'SYS02': //delete
+        this.notifySvr.alertCode('SYS030').subscribe((x) => {
+          if (x.event?.status == 'Y') {
+            this.deleteEVaccine(data, vaccineGroup);
+          }
+        });
+        break;
+      case 'SYS04': //copy
         break;
     }
   }
@@ -1330,6 +1380,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1346,7 +1397,7 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         indexSelected: this.lstAsset.indexOf(data),
-        lstAssets : this.lstAsset,
+        lstAssets: this.lstAsset,
         employeeId: this.data.employeeID,
         headerText: 'Tài sản cấp phát',
       },
@@ -1354,6 +1405,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1378,7 +1430,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeDegreeInfo() {
+  HandleEmployeeDegreeInfo(actionType: string, data: any ) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1388,7 +1440,10 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeDegreeDetailComponent,
       PopupEDegreesComponent,
       {
-        isAdd: true,
+        // isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstEDegrees.indexOf(data),
+        lstEDegrees : this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
       },
@@ -1441,16 +1496,32 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  collapse(id: string, isCollapse: string = '-1') {
-    if (isCollapse != '-1') {
-      let value = isCollapse == '0' ? false : true;
-      this.objCollapes[id] = value;
-    } else {
-      this.objCollapes[id] = !this.objCollapes[id];
+  collapse(id: any, isCollapse: string = '-1') {
+    let numberID = Number(id);
+    if (numberID) {
+      if (numberID % 1 == 0) {
+        for (let i = numberID + 0.1; i < numberID + 1; i = i + 0.1) {
+          id = i.toFixed(1);
+          if (this.objCollapes[id] != undefined) {
+            if (isCollapse != '-1') {
+              let value = isCollapse == '0' ? false : true;
+              this.objCollapes[id] = value;
+            } else {
+              this.objCollapes[id] = !this.objCollapes[id];
+            }
+          }
+        }
+      } else {
+        if (isCollapse != '-1') {
+          let value = isCollapse == '0' ? false : true;
+          this.objCollapes[id] = value;
+        } else {
+          this.objCollapes[id] = !this.objCollapes[id];
+        }
+      }
     }
   }
 
-  //#region
   HandleBebefitInfo(actionType, s) {
     this.api
       .execSv('HR', 'ERM.Business.HR', 'EBenefitsBusiness', 'AddAsync', null)
@@ -1459,7 +1530,8 @@ export class EmployeeProfileComponent extends UIComponent {
       });
   }
 
-  //#endregion HR_EHealths
+  //#region HR_EHealths
+
   addEHealths(actionType: string, data: any) {
     // this.hrService.addEHealth(null).subscribe();
     // return;
@@ -1491,9 +1563,10 @@ export class EmployeeProfileComponent extends UIComponent {
       if (res?.event) this.view.dataService.clear();
     });
   }
-  //#region
+  //#endregion
 
-  //#endregion HR_EVaccines
+  //#region HR_EVaccines
+
   addEditEVaccines(actionType: string, data: any) {
     // this.hrService.addEVaccine(null).subscribe();
     // return;
@@ -1525,5 +1598,61 @@ export class EmployeeProfileComponent extends UIComponent {
       if (res?.event) this.view.dataService.clear();
     });
   }
-  //#region
+
+  deleteEVaccine(data: any, vaccineGroup: any) {
+    this.hrService.deleteEVaccine(data).subscribe((res) => {
+      if (res) {
+        let indexGrp = this.lstVaccine.findIndex(
+          (p) => p.vaccineTypeID == vaccineGroup.vaccineTypeID
+        );
+        if (indexGrp > -1) {
+          let listVaccine = this.lstVaccine[indexGrp].vaccines;
+          if (listVaccine) {
+            let index = listVaccine.findIndex((p) => p.recID == data.recID);
+            if (index > -1) {
+              listVaccine.splice(index, 1);
+              if (listVaccine.length == 0) {
+                this.lstVaccine.splice(indexGrp, 1);
+              }
+            }
+          }
+        }
+      }
+      this.df.detectChanges();
+    });
+  }
+  //#endregion
+
+  //#region HR_EDesisease
+  addEDisease() {
+    let data;
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEDiseasesComponent,
+      {
+        actionType: 'add',
+        salarySelected: data,
+        headerText: 'Tiêm Vaccine',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+  //#endregion
 }
