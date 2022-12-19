@@ -11,11 +11,11 @@
       <!-- Content Dasboard -->
       <div class="d-flex justify-content-center">
         <div class="d-flex align-items-center kr-process w-200px ms-3">
-          <div class="h-20px w-100 bg-gray-200 rounded-4">
+          <div class="h-15px w-100 bg-gray-200 rounded-4">
             <div class="bg-primary rounded-4 h-15px" role="progressbar" [style.width]="progress + '%'"
               aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-          <span class="process-per position-absolute top-0 fs-8" style="color: '#ffffff'">
+          <span class="process-per position-absolute top-0 fs-8">
             {{ progress }}%
           </span>
         </div>
@@ -30,13 +30,11 @@
         </div>
         <div class="col-lg-5 om-p-chart">
           <codx-chart height="180" [title]="chartSettings1?.title" [seriesSetting]="chartSettings1?.seriesSetting"
-            [service]="chartSettings1?.service" [assemblyName]="chartSettings1?.assembly"
-            [className]="chartSettings1?.className" [method]="chartSettings1?.method">
+            [dataSource]="Objs">
           </codx-chart>
 
           <codx-chart height="180" [title]="chartSettings2?.title" [seriesSetting]="chartSettings2?.seriesSetting"
-            [service]="chartSettings2?.service" [assemblyName]="chartSettings2?.assembly"
-            [className]="chartSettings2?.className" [method]="chartSettings2?.method">
+            [dataSource]="Krs">
           </codx-chart>
         </div>
       </div>
