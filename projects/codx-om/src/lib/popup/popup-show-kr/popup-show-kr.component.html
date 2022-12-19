@@ -60,16 +60,75 @@
             <ng-template #content>
               <div class="d-flex flex-column container h-100">
                 <ng-container>
-                  <div class="w-100">
-                    <ejs-circulargauge
-                      (load)="load($event)"
-                      background="transparent"
-                      style="display: block"
-                      background="transparent"
-                      (load)="load($event)"
-                      id="range-container"
-                      #circulargauge=""
-                    ></ejs-circulargauge>
+                  <div class="d-flex justify-content-center align-items-center">
+                    <div style="width: 650px; height: 350px">
+                      <ejs-circulargauge
+                        style="display: block"
+                        background="transparent"
+                        (load)="load($event)"
+                      >
+                        <e-axes>
+                          <e-axis
+                            radius="50%"
+                            startAngle="210"
+                            endAngle="150"
+                            minimum="0"
+                            maximum="100"
+                            [majorTicks]="{
+                              position: 'Outside',
+                              width: 1,
+                              height: 3,
+                              interval: 25
+                            }"
+                            [minorTicks]="{
+                              position: 'Outside',
+                              width: 1,
+                              height: 3,
+                              interval: 5
+                            }"
+                            [lineStyle]="{ width: 0 }"
+                            [labelStyle]="labelStyle"
+                          >
+                            <e-pointers>
+                              <e-pointer
+                                type="Marker"
+                                markerShape="Circle"
+                                radius="100%"
+                                [value]="
+                                  progressHistory[progressHistory.length - 1]
+                                "
+                                color="white"
+                                [markerHeight]="20"
+                                [markerWidth]="20"
+                                [border]="pointerBorder"
+                              >
+                              </e-pointer>
+                            </e-pointers>
+                            <e-ranges>
+                              <e-range
+                                color="#E63B86"
+                                start="0"
+                                [end]="
+                                  progressHistory[progressHistory.length - 1]
+                                "
+                                startWidth="20"
+                                endWidth="20"
+                                [linearGradient]="rangeLinearGradient"
+                              ></e-range>
+                              <e-range
+                                color="#E0E0E0"
+                                [start]="
+                                  progressHistory[progressHistory.length - 1]
+                                "
+                                end="100"
+                                startWidth="20"
+                                endWidth="20"
+                              ></e-range>
+                            </e-ranges>
+                          </e-axis>
+                        </e-axes>
+                      </ejs-circulargauge>
+                    </div>
                   </div>
                 </ng-container>
                 <ng-container class="d-flex flex-row">
@@ -104,15 +163,17 @@
                       ></codx-label>
                     </span>
                   </div>
-                  <codx-chart
-                    [title]=""
-                    [enableCrossHair]="true"
-                    [legendSettings]="{ visible: false }"
-                    [primaryXAxis]="chartSettings?.primaryXAxis"
-                    [primaryYAxis]="chartSettings?.primaryYAxis"
-                    [seriesSetting]="chartSettings?.seriesSetting"
-                    [dataSource]="chartData.checkIns"
-                  ></codx-chart>
+                  <div class="container">
+                    <codx-chart
+                      [title]=""
+                      [enableCrossHair]="true"
+                      [legendSettings]="{ visible: false }"
+                      [primaryXAxis]="chartSettings?.primaryXAxis"
+                      [primaryYAxis]="chartSettings?.primaryYAxis"
+                      [seriesSetting]="chartSettings?.seriesSetting"
+                      [dataSource]="chartData.checkIns"
+                    ></codx-chart>
+                  </div>
                 </ng-container>
                 <ng-container class="container">
                   <div class="d-flex flex-row justify-content-between my-3">
