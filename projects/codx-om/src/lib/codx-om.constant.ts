@@ -3,6 +3,7 @@ export const OMCONST = {
     ASSEMBLY: 'ERM.Business.OM',
     BUSINESS: {
         DashBoard: 'DashBoardBusiness',
+        OKR : 'OKRBusiness',
         KR : 'KRBusiness',
         OB: 'OBBusiness',
         OKRPlan: 'OKRPlanBusiness',
@@ -17,6 +18,12 @@ export const OMCONST = {
         Person:'OMT04',
     },
     VLL: {
+        OKRType:{
+            Obj:'O',
+            KResult:'KR',
+            SKResult:'S',
+        },
+
         OKRLevel:{
             Company:'1',
             Department:'3',

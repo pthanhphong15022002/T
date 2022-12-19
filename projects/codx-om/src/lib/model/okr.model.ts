@@ -72,6 +72,7 @@ export class OKRs {
     oKRStatus:string;
     checkIn:Date;
     value:number;
+    cummulated:number;
     status:string;
     comment:string;
     positionName:string;
@@ -120,5 +121,8 @@ export class OKRs {
 
   export class EditWeight{
     recID:string;
+    index:number;
     weight:number;
+    pbyw:number;
+    progress:number;
   }

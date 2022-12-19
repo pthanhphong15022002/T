@@ -96,25 +96,26 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   totalProgress: number;
 
   //#region gauge chart
-
-  majorTicks: Object = {
-    width: 0,
-    interval: 1,
+  pointerBorder = {
+    color: '#007DD1',
+    width: 2,
   };
 
-  minorTicks: Object = {
-    width: 0,
-  };
-
-  lineStyle: Object = {
-    width: 0,
+  rangeLinearGradient: Object = {
+    startValue: '0%',
+    endValue: '100%',
+    colorStop: [
+      { color: '#9e40dc', offset: '0%', opacity: 1 },
+      { color: '#d93c95', offset: '70%', opacity: 1 },
+    ],
   };
 
   labelStyle: Object = {
+    position: 'Outside',
     font: {
       fontFamily: 'inherit',
     },
-    offset: 10,
+    offset: 0,
   };
 
   load(args: ILoadedEventArgs): void {
@@ -183,44 +184,43 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.getChartData();
   }
 
-//-----------------------End-------------------------------//
+  //-----------------------End-------------------------------//
 
-//-----------------------Base Event------------------------//
-click(event: any) {
-  switch (event) {
+  //-----------------------Base Event------------------------//
+  click(event: any) {
+    switch (event) {
+    }
   }
-}
 
+  //-----------------------End-------------------------------//
 
-//-----------------------End-------------------------------//
-
-//-----------------------Get Data Func---------------------//
-getItemOKR(i: any, recID: any) {
-  this.openAccordion[i] = !this.openAccordion[i];
-  // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
-  //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
-  //     if(item) this.dataOKR[i].child = item
-  //   });
-}
-
-//#region Chart
-getChartData() {
-  let krDetail = this.dataKR;
-  switch (krDetail.interval) {
-    case 'Y':
-      this.getCheckInsByYear(krDetail);
-      break;
-    case 'Q':
-      this.getCheckInsByQuarter(krDetail);
-      break;
-    case 'M':
-      this.getCheckInsByMonth(krDetail);
-      break;
+  //-----------------------Get Data Func---------------------//
+  getItemOKR(i: any, recID: any) {
+    this.openAccordion[i] = !this.openAccordion[i];
+    // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
+    //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
+    //     if(item) this.dataOKR[i].child = item
+    //   });
   }
-}
 
-getCheckInsByYear(data: any) {
-  const checkIns = data.checkIns;
+  //#region Chart
+  getChartData() {
+    let krDetail = this.dataKR;
+    switch (krDetail.interval) {
+      case 'Y':
+        this.getCheckInsByYear(krDetail);
+        break;
+      case 'Q':
+        this.getCheckInsByQuarter(krDetail);
+        break;
+      case 'M':
+        this.getCheckInsByMonth(krDetail);
+        break;
+    }
+  }
+
+  getCheckInsByYear(data: any) {
+    const checkIns = data.checkIns;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
     if (checkIns && checkIns.length > 0) {
@@ -231,24 +231,24 @@ getCheckInsByYear(data: any) {
         this.chartData.checkIns.push(tmpCheckIn);
       });
     }
-}
-
-getCheckInsByQuarter(data: any) {
-  const checkIns = data.checkIns;
-  const progressHistory = this.progressHistory;
-  const progressHistoryReverse = [...progressHistory].reverse();
-  if (checkIns && checkIns.length > 0) {
-    checkIns.map((checkIn, index) => {
-      let tmpCheckIn: any = {};
-      tmpCheckIn.percent = progressHistoryReverse[index];
-      tmpCheckIn.period = `M${index + 1}`;
-      this.chartData.checkIns.push(tmpCheckIn);
-    });
   }
-}
 
-getCheckInsByMonth(data: any) {
-  const checkIns = data.checkIns;
+  getCheckInsByQuarter(data: any) {
+    const checkIns = data.checkIns;
+    const progressHistory = this.progressHistory;
+    const progressHistoryReverse = [...progressHistory].reverse();
+    if (checkIns && checkIns.length > 0) {
+      checkIns.map((checkIn, index) => {
+        let tmpCheckIn: any = {};
+        tmpCheckIn.percent = progressHistoryReverse[index];
+        tmpCheckIn.period = `M${index + 1}`;
+        this.chartData.checkIns.push(tmpCheckIn);
+      });
+    }
+  }
+
+  getCheckInsByMonth(data: any) {
+    const checkIns = data.checkIns;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
     if (checkIns && checkIns.length > 0) {
@@ -259,79 +259,73 @@ getCheckInsByMonth(data: any) {
         this.chartData.checkIns.push(tmpCheckIn);
       });
     }
-}
-//#endregion Chart
+  }
+  //#endregion Chart
 
-//-----------------------End-------------------------------//
+  //-----------------------End-------------------------------//
 
-//-----------------------Validate Func---------------------//
+  //-----------------------Validate Func---------------------//
 
+  //-----------------------End-------------------------------//
 
+  //-----------------------Logic Func------------------------//
+  checkIn(evt: any, kr: any) {
+    this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
+    this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
+    this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
+    this.formModelCheckin.formName = 'OKRs.CheckIns';
+    this.dialogCheckIn = this.callfc.openForm(
+      PopupCheckInComponent,
+      '',
+      800,
+      500,
+      'OMT01',
+      [kr, this.formModelCheckin]
+    );
+    this.dialogCheckIn.closed.subscribe((res) => {
+      if (res && res.event) {
+        this.dataKR = res.event;
+        this.totalProgress = this.dataKR.progress;
+        this.progressHistory.unshift(this.totalProgress);
+        this.dataOKR.map((item: any) => {
+          if (item.recID == res.event.parentID) {
+            item = res.event;
+          }
+        });
+      }
+      this.detectorRef.detectChanges();
+    });
+  }
 
-//-----------------------End-------------------------------//
-
-//-----------------------Logic Func------------------------//
-checkIn(evt: any, kr: any) {
-  this.formModelCheckin.entityName = 'OM_OKRs.CheckIns';
-  this.formModelCheckin.entityPer = 'OM_OKRs.CheckIns';
-  this.formModelCheckin.gridViewName = 'grvOKRs.CheckIns';
-  this.formModelCheckin.formName = 'OKRs.CheckIns';
-  this.dialogCheckIn = this.callfc.openForm(
-    PopupCheckInComponent,
-    '',
-    800,
-    500,
-    'OMT01',
-    [kr, this.formModelCheckin]
-  );
-  this.dialogCheckIn.closed.subscribe((res) => {
-    if (res && res.event) {
-      this.dataKR = res.event;
-      this.totalProgress = this.dataKR.progress;
-      this.progressHistory.unshift(this.totalProgress);
-      this.dataOKR.map((item: any) => {
-        if (item.recID == res.event.parentID) {
-          item = res.event;
+  calculatorProgress() {
+    this.totalProgress = this.dataKR.progress;
+    if (this.dataKR?.checkIns) {
+      this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
+      this.krCheckIn = Array.from(this.dataKR?.checkIns);
+      this.krCheckIn.forEach((element) => {
+        if (this.krCheckIn.indexOf(element) == 0) {
+          this.progressHistory.push(this.totalProgress);
+        } else {
+          this.totalProgress -=
+            this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
+          this.progressHistory.push(this.totalProgress);
         }
       });
     }
-    this.detectorRef.detectChanges();
-  });
-}
-
-calculatorProgress() {
-  this.totalProgress = this.dataKR.progress;
-  if (this.dataKR?.checkIns) {
-    this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
-    this.krCheckIn = Array.from(this.dataKR?.checkIns);
-    this.krCheckIn.forEach((element) => {
-      if (this.krCheckIn.indexOf(element) == 0) {
-        this.progressHistory.push(this.totalProgress);
-      } else {
-        this.totalProgress -=
-          this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
-        this.progressHistory.push(this.totalProgress);
-      }
-    });
   }
-}
 
-//-----------------------End-------------------------------//
+  //-----------------------End-------------------------------//
 
+  //-----------------------Logic Event-----------------------//
 
-//-----------------------Logic Event-----------------------//
+  //-----------------------End-------------------------------//
 
+  //-----------------------Custom Func-----------------------//
 
-//-----------------------End-------------------------------//
+  //-----------------------End-------------------------------//
 
-
-//-----------------------Custom Func-----------------------//
-
-
-//-----------------------End-------------------------------//
-
-//-----------------------Custom Event-----------------------//
-checkinSave() {}
+  //-----------------------Custom Event-----------------------//
+  checkinSave() {}
 
   checkinCancel() {
     this.dialogCheckIn.close();
@@ -344,13 +338,9 @@ checkinSave() {}
 
   fileAdded(evt: any) {}
 
-//-----------------------End-------------------------------//
+  //-----------------------End-------------------------------//
 
-//-----------------------Popup-----------------------------//
+  //-----------------------Popup-----------------------------//
 
-
-//-----------------------End-------------------------------//
-
-
-  
+  //-----------------------End-------------------------------//
 }

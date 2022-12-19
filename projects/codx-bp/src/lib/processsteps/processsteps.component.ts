@@ -71,6 +71,7 @@ export class ProcessStepsComponent
   @ViewChild('templateView') templateView!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
 
   @Input() process: BP_Processes;
   @Input() viewMode = '16';
@@ -139,6 +140,8 @@ export class ProcessStepsComponent
   idView = '';
   loadingData = false;
   heightFlowChart = 0;
+  widthElement = 300;
+  dataClick: any;
 
   constructor(
     inject: Injector,
@@ -236,6 +239,7 @@ export class ProcessStepsComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
+          template2: this.viewColumKaban,
         },
       },
       {
@@ -870,6 +874,8 @@ export class ProcessStepsComponent
     }
     if (e?.view.id == 6) {
       this.isKanban = true;
+      this.widthElement =
+        document.getElementsByClassName(' e-header-cells').item[0].offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
@@ -897,7 +903,7 @@ export class ProcessStepsComponent
 
   dropPhase(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
-    this.lockChild =this.lockParent = true;
+    this.lockChild = this.lockParent = true;
     var ps = this.view.dataService.data[event.previousIndex];
     if (ps) {
       this.bpService
@@ -967,10 +973,10 @@ export class ProcessStepsComponent
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
-            this.lockChild =this.lockParent = false;
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
-            this.lockChild =this.lockParent = false;
+            this.lockChild = this.lockParent = false;
           }
         });
     }
@@ -978,7 +984,7 @@ export class ProcessStepsComponent
 
   dropStepChild(event: CdkDragDrop<string[]>, currentID) {
     if (event.previousIndex == event.currentIndex) return;
-    this.lockChild =this.lockParent = true;
+    this.lockChild = this.lockParent = true;
     var index = this.view.dataService.data.findIndex(
       (x) => x.recID == currentID
     );
@@ -1034,17 +1040,17 @@ export class ProcessStepsComponent
 
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
-            this.lockChild =this.lockParent = false;
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
-            this.lockChild =this.lockParent = false;
+            this.lockChild = this.lockParent = false;
           }
         });
     }
   }
 
   dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
-    this.lockChild =this.lockParent = true;
+    this.lockChild = this.lockParent = true;
     var psMoved = event.item?.data;
 
     var indexPrevious = this.view.dataService.data.findIndex(
@@ -1112,10 +1118,10 @@ export class ProcessStepsComponent
             // );
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
-            this.lockChild =this.lockParent = false;
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
-            this.lockChild =this.lockParent = false;
+            this.lockChild = this.lockParent = false;
           }
         });
     }
@@ -1161,11 +1167,7 @@ export class ProcessStepsComponent
     //       this.changeDetectorRef.detectChanges();
     //     }
     //   });
-    let paras = [
-      process?.recID,
-      'BP_Processes',
-      'Flowchart',
-    ];
+    let paras = [process?.recID, 'BP_Processes', 'Flowchart'];
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetFileByOORAsync', paras)
       .subscribe((res) => {
@@ -1174,7 +1176,6 @@ export class ProcessStepsComponent
           this.changeDetectorRef.detectChanges();
         }
       });
-
   }
   addFile(evt: any) {
     this.addFlowchart.referType = 'Flowchart';
@@ -1321,5 +1322,18 @@ export class ProcessStepsComponent
           e
         );
     return linkQuesiton;
+  }
+  setWidthTextColumm(text) {
+    return this.widthElement < text.length * 3;
+  }
+//chuwa xong
+  clickColums(recIDPhase) {
+    this.dataClick = null;
+    this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
+      if (dt) {
+        this.dataClick = dt;
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 }
