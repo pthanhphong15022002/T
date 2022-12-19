@@ -1447,3 +1447,23 @@ codx-filter-form .e-item.e-active .card.w-100.rounded-0 {
 .sk-item.active.selected {
   color: #fff;
 }
+
+codx-tag {
+  .badge {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block !important;
+  }
+
+  .codx-tag {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-wrap: break-word;
+    -webkit-line-clamp: 2;
+    line-height: 1.6;
+    padding: 2px 10px 2px 7px;
+  }
+}
