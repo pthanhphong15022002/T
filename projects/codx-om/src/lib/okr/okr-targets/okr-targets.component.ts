@@ -230,7 +230,7 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   //Sửa trọng số KR
-  editKRWeight(okr: any, child:any) {
+  editWeight(okr: any, child:any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
     let popupTitle='Thay đổi trọng số cho KRs';
     let subTitle='Tính kết quả thực hiện cho mục tiêu';
