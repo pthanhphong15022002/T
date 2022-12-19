@@ -1,0 +1,37 @@
+.om-d-all-bg
+{
+    min-width: 110px;
+    height: 130px;
+    background-image: url(../../../../../../src/assets/themes/om/add/img/All.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.om-d-dept-manga-bg
+{
+    min-width: 110px;
+    height: 130px;
+    background-image: url(../../../../../../src/assets/themes/om/add/img/MyDeptManagement.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.om-d-dept-bg
+{
+    min-width: 110px;
+    height: 130px;
+    background-image: url(../../../../../../src/assets/themes/om/add/img/MyDept.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.om-d-manga-bg
+{
+    min-width: 110px;
+    height: 130px;
+    background-image: url(../../../../../../src/assets/themes/om/add/img/Mymanagement.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.om-add-share > div
+{
+    background: #F4F7FF;
+    padding: 5px 0;
+}
