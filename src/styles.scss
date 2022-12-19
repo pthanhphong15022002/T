@@ -1422,3 +1422,28 @@ a.dropdown-item:focus span {
 codx-filter-form .e-item.e-active .card.w-100.rounded-0 {
   height: auto !important;
 }
+
+/*************/
+.sk-item {
+  width: 38px;
+  height: 26px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background-color: var(--gray-100);
+  border-right: 1px var(--gray-200) solid;
+  color: #888;
+}
+
+.sk-item:first-child {
+  border-left: 1px var(--gray-200) solid;
+}
+
+.sk-item.active {
+  background-color: $primary-active;
+  color: #ccc;
+}
+
+.sk-item.active.selected {
+  color: #fff;
+}
