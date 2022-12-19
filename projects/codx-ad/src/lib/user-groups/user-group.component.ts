@@ -106,21 +106,19 @@ export class UserGroupsComponent extends UIComponent {
     this.notifySvr.alertCode('AD009', config).subscribe((x) => {
       if (x.event.status == 'Y') {
         data.stop = true;
-        this.codxAdService
-          .stopUser(data)
-          .subscribe((res) => {
-            if (res) {
-              // this.view.dataService.remove(res).subscribe();
-              this.detectorRef.detectChanges();
-            }
-          });
+        this.codxAdService.stopUser(data).subscribe((res) => {
+          if (res) {
+            // this.view.dataService.remove(res).subscribe();
+            this.detectorRef.detectChanges();
+          }
+        });
       }
     });
   }
 
   changeDataMF(e: any) {
     var dl = e.filter((x: { functionID: string }) => x.functionID == 'SYS02');
-    dl[0].disabled = true;
+    if (dl) dl[0].disabled = true;
   }
 
   openPopup(item: any) {
