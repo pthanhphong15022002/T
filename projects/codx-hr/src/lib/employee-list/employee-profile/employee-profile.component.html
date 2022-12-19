@@ -632,10 +632,13 @@
             </div>
           </div>
           <div class="d-flex flex-column" *ngIf="crrTab == 2">
-            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeBasicSalariesInfo('add', null)">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeBasicSalariesInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-                ></span>
+              ></span>
               <codx-label
                 fiedName="lbl"
                 default="Lương cơ bản"
@@ -643,7 +646,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeJobSalariesInfo('add', null)">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeJobSalariesInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -687,7 +693,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary" (click)="HandlemployeeAssetInfo('add', null)">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandlemployeeAssetInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -914,6 +923,35 @@
 
 <!-- pane_0 -->
 <ng-template #info>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblInfoPersonal"
+        [formModel]="view.formModel"
+        default="Thông tin cá nhân"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('1', '0')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('1', '1')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y aqua"
     data-kt-scroll="true"
@@ -927,37 +965,6 @@
       <ng-container>
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblInfoPersonal"
-                [formModel]="view.formModel"
-                default="Thông tin cá nhân"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('1', '0')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('1', '1')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -3140,22 +3147,23 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
-                  <div class="d-flex flex-wrap mt-6 mb-3" >
-                    <div [style.background] = "'black'" class="badge border-0 me-2" 
-                    *ngFor="let asset of lstAsset">
+                  <div class="d-flex flex-wrap mt-6 mb-3">
+                    <div
+                      [style.background]="'black'"
+                      class="badge border-0 me-2"
+                      *ngFor="let asset of lstAsset"
+                    >
                       <div class="has-action-menu">
-                        {{asset.assetCategory}} gan cung
+                        {{ asset.assetCategory }} gan cung
                         <codx-mfunc
-                        [formModel]="formModel"
-                        (clickMF)="
-                          clickMF($event, asset, 'Assets')
-                        "
-                        type="hover"
-                        [dataItem]="asset"
-                      >
-                      </codx-mfunc> 
+                          [formModel]="formModel"
+                          (clickMF)="clickMF($event, asset, 'Assets')"
+                          type="hover"
+                          [dataItem]="asset"
+                        >
+                        </codx-mfunc>
                       </div>
-                  </div>
+                    </div>
                   </div>
                   <div class="row form-group"></div>
                 </div>
@@ -3932,7 +3940,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvETrainCourses'"
@@ -3948,7 +3956,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eTrainCourses')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                   <!-- documentNo-status -->
                 </div>
@@ -4166,6 +4174,36 @@
 
 <!-- pane_6 -->
 <ng-template #healthInfo>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblHealthInfo"
+        [formModel]="view.formModel"
+        default="Thông tin sức khỏe"
+      >
+      </codx-label>
+    </div>
+
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('7', '0')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('7', '1')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y"
     data-kt-scroll="true"
@@ -4178,38 +4216,6 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblHealthInfo"
-                [formModel]="view.formModel"
-                default="Thông tin sức khỏe"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('7', '0')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('7', '1')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -4377,7 +4383,7 @@
                               <codx-mfunc
                                 [formModel]="formModel"
                                 (clickMF)="
-                                  clickMF($event, vaccine, 'evaccines')
+                                  clickMFVaccine($event, vaccine, item)
                                 "
                                 type="hover"
                                 [dataItem]="vaccine"
@@ -4414,7 +4420,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEDisease()"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"

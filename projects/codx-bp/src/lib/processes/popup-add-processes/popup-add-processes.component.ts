@@ -224,7 +224,6 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.ownerOld === this.process?.owner && this.action === 'edit') {
       this.callActionSave();
     } else {
-      //  this.isAddPermission(this.process.owner);
       this.updateOrCreatProccess(this.emp);
     }
   }
@@ -248,11 +247,6 @@ export class PopupAddProcessesComponent implements OnInit {
             this.action === 'edit'
               ? this.process.attachments + countAttack
               : countAttack;
-          // if (this.action === 'edit') {
-          //   this.process.attachments += countAttack;
-          // } else {
-          //   this.process.attachments = countAttack;
-          // }
           this.selectedAction();
         }
       });
@@ -338,19 +332,6 @@ export class PopupAddProcessesComponent implements OnInit {
     this.process[e.field] = e.data.fromDate;
   }
 
-  // eventApply(e) {
-  //   var data = e.data[0];
-  //   var id = '';
-  //   switch (data.objectType) {
-  //     case 'U':
-  //       this.process.owner = data.id;
-  //       break;
-  //   }
-  //   if (this.process.owner) {
-  //     this.addPermission(this.process.owner);
-  //   }
-  // }
-
   addFile(e) {
     this.attachment.uploadFile();
   }
@@ -426,15 +407,6 @@ export class PopupAddProcessesComponent implements OnInit {
     tmpPermission.full = true;
     tmpPermission.delete = true;
     tmpPermission.assign = true;
-
-    // tmpPermission.edit = role === this.onwerRole ? true : false;
-    // tmpPermission.create = role === this.onwerRole ? true : false;
-    // tmpPermission.publish = role === this.onwerRole ? true : false;
-    // tmpPermission.read = true;
-    // tmpPermission.share = role === this.onwerRole ? true : false;
-    // tmpPermission.full = role === this.onwerRole ? true : false;
-    // tmpPermission.delete = role === this.onwerRole ? true : false;
-    // tmpPermission.assign = role === this.onwerRole ? true : false;
     tmpPermission.download = true;
   }
   callActionSave() {
@@ -470,8 +442,6 @@ export class PopupAddProcessesComponent implements OnInit {
 
   addAvatar() {
     this.imageAvatar.referType = 'avt';
-    // gán tạm để test hiển thị nha
-    this.process.flowchart = 'avt';
     this.imageAvatar.uploadFile();
   }
   fileImgAdded(e) {

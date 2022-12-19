@@ -135,12 +135,12 @@ export class UserGroupsComponent extends UIComponent {
     this.dialog.closed.subscribe((e) => {});
   }
 
-  convertHtmlAgency(buID: any) {
+  convertHtmlAgency(description: any) {
     var desc = '<div class="d-flex">';
-    if (buID)
+    if (description)
       desc +=
         '<div class="d-flex align-items-center me-2"><span class=" text-dark-75 font-weight-bold icon-apartment1"></span><span class="ms-1">' +
-        buID +
+        description +
         '</span></div>';
     return desc + '</div>';
   }
