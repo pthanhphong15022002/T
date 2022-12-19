@@ -288,4 +288,15 @@ export class CodxOmService {
     );
   }
   //endregion: KR
+
+  //region: OKR
+  editOKRWeight(recID:string, type:string, listOKRWeight:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'EditOKRWeightAsync',
+      [recID,type,listOKRWeight]
+    );
+  }
 }
