@@ -450,9 +450,7 @@
         data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
       }}"
       #p="ngbPopover"
-      [ngbPopover]="
-        setWidth(data?.stepName) ? showAllparent(data?.stepName) : null
-      "
+      [ngbPopover]="setWidth(data?.stepName) ? data?.stepName : null"
       [openDelay]="500"
       (mouseenter)="p.open()"
       (mouseleave)="p.close()"
@@ -758,17 +756,29 @@
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100"
   >
-    <div class="line-colums">{{ item.headerText }}</div>
-    <div class="icon-more_vert icon-18 has-actions-menu">
-      <div class="action-menu ">
-        <!-- <codx-mfunc
-          [formModel]="view.formModel"
-          (clickMF)="clickMFColums($event, item.keyField)"
-          [isBookMark]="true"
-          [dataItem]="dataColums(item.keyField)"
-        >
-        </codx-mfunc> -->
-      </div>
+    <div
+      class="line-colums"
+      #pp="ngbPopover"
+      [ngbPopover]="tesst"
+      (mouseenter)="pp.open()"
+      (mouseleave)="pp.close()"
+      placement="bottom"
+    >
+      {{ item.headerText }}
     </div>
   </div>
+  <div class="icon-more_vert icon-18 has-actions-menu">
+    <div class="action-menu">
+      <codx-mfunc
+        [formModel]="view.formModel"
+        (clickMF)="clickMFColums($event, item.keyField)"
+        [isBookMark]="true"
+        [dataItem]="dataColums(item.keyField)"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+  <ng-template #tesst
+    ><span>{{ item.headerText }}</span></ng-template
+  >
 </ng-template>

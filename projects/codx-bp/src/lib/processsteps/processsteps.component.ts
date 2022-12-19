@@ -1149,26 +1149,6 @@ export class ProcessStepsComponent
   }
 
   getFlowChart(process) {
-    // let paras = [
-    //   '',
-    //   this.funcID,
-    //   process?.recID,
-    //   'BP_Processes',
-    //   'inline',
-    //   1000,
-    //   process?.processName,
-    //   'Flowchart',
-    //   false,
-    // ];
-    // this.api
-    //   .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
-    //   .subscribe((res) => {
-    //     if (res && res?.url) {
-    //       let obj = { pathDisk: res?.url, fileName: process?.processName };
-    //       this.dataFile = obj;
-    //       this.changeDetectorRef.detectChanges();
-    //     }
-    //   });
     let paras = [process?.recID, 'BP_Processes', 'Flowchart'];
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetFileByOORAsync', paras)
@@ -1227,11 +1207,11 @@ export class ProcessStepsComponent
   }
 
   printFlowchart() {
-    let linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
-    if (linkFile) {
+    this.linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
+    if (this.linkFile) {
       const output = document.getElementById('output');
       const img = document.createElement('img');
-      img.src = linkFile;
+      img.src = this.linkFile;
       output.appendChild(img);
       const br = document.createElement('br');
       output.appendChild(br);
@@ -1329,17 +1309,17 @@ export class ProcessStepsComponent
     return this.widthElement < text.length * 3;
   }
   //chuwa xong
-  dataColums(recIDPhase) :any {
+  dataColums(recIDPhase): any {
     this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
-     return dt;
+      return dt;
     });
   }
 
-  clickMFColums(e,recID){
+  clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
-     if(dt){
-      this.clickMF(e,dt)
-     }
-     });
+      if (dt) {
+        this.clickMF(e, dt);
+      }
+    });
   }
 }
