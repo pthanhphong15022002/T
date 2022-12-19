@@ -1,11 +1,14 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary px-20'" [body]="alignKR">
+<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bg-secondary px-20'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
   <div class=" w-100 h-auto bg-white mt-5">
     
     <div class="pt-5 pb-2 text-center">
-      <codx-label [default]="'Tính kết quả thưc hiện cho mục tiêu'" fiedName="" class="fw-bolder fs-2"></codx-label>
+      <codx-label [default]="subTitle" fiedName="" class="fw-bolder fs-2"></codx-label>
+    </div>
+    <div class="pb-2 text-center">
+      <codx-label [default]="dataOKR.okrName" fiedName="" class="fw-bolder fs-4"></codx-label>
     </div>
     
     <div class="d-flex flex-column align-items-center justify-content-center">
@@ -34,19 +37,19 @@
               </div>          
           </div>  
         </div> -->
-        <div *ngFor="let kr of dataOKR.child;let i=index" class="d-flex flex-column w-100">
+        <div *ngFor="let child of okrChild;let i=index" class="d-flex flex-column w-100">
           <div class="d-flex w-100 pb-2 position-relative">
             <span class="ms-5 position-absolute rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center my-3 " style="transform: translateY(50%);">KR</span>  
             <div class="col-8 position-relative d-flex align-items-center">              
               
-              <codx-inplace [type]="'text'" emptyText="" class="w-100" cssClass=" position-absolute top-0 w-100 ps-10 pe-3 py-5 border border-2 border-secondary rounded-0" [value]="kr.okrName">
+              <codx-inplace [type]="'text'" emptyText="" class="w-100" cssClass=" position-absolute top-0 w-100 ps-10 pe-3 py-5 border border-2 border-secondary rounded-0" [value]="child.okrName">
                 
               </codx-inplace>
             </div>
             <div class="col-4 d-flex">              
-              <codx-inplace (valueChange)="valueChange($event)" [field]="kr.recID" [type]="'text'" emptyText="" class="col-4  ms-2 text-center" cssClass=" text-center w-100 py-5 border border-2 border-secondary rounded-0" [value]="listWeight[i]"> </codx-inplace>              
-              <codx-inplace [type]="'text'" emptyText="" class="col-4  ms-2 text-center" cssClass=" text-center w-100 py-5 border border-2 border-secondary rounded-0" [value]="kr.progress+'%'"> </codx-inplace>              
-              <codx-inplace [type]="'text'" emptyText="" class="col-4  ms-2 text-center" cssClass=" text-center w-100 py-5 border border-2 border-secondary rounded-0" [value]="pbyw[i]+'%'"> </codx-inplace>              
+              <codx-inplace (valueChange)="valueChange($event)" [field]="i" [type]="'text'" emptyText="" class="col-4  ms-2 text-center" cssClass=" text-center w-100 py-5 border border-2 border-secondary rounded-0" [value]="listWeight[i]?.weight"> </codx-inplace>              
+              <codx-inplace [type]="'text'" emptyText="" class="col-4  ms-2 text-center" cssClass=" text-center w-100 py-5 border border-2 border-secondary rounded-0" [value]="listWeight[i]?.progress+'%'"> </codx-inplace>              
+              <codx-inplace [type]="'text'" emptyText="" class="col-4  ms-2 text-center" cssClass=" text-center w-100 py-5 border border-2 border-secondary rounded-0" [value]="listWeight[i]?.pbyw+'%'"> </codx-inplace>              
                        
             </div>          
           </div>  
@@ -54,7 +57,7 @@
         <!---->
         <div class=" d-flex w-100 py-2 align-items-center">
           <div class="col-8 text-center"><codx-label default="Tổng cộng" name="lbl" class="fs-4 fw-bolder"></codx-label></div>          
-          <span class="col-4 text-end"><span class="fs-4 fw-bolder me-4">{{dataOKR.progress}}%</span></span>
+          <span class="col-4 text-end"><span class="fs-4 fw-bolder me-4">{{totalProgress}}%</span></span>
         </div>
       </div>
       <div class="d-flex justify-content-end w-80 py-7">     
@@ -63,7 +66,7 @@
             class="me-2 btn d-flex py-2 px-4 btn-sm btn-outline btn-outline-primary btn-active-light-primary  rounded justify-content-center">
             <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3" [formModel]="formModel"></codx-label>
           </span>
-          <span type="button" 
+          <span type="button" (click)="onSaveForm()"
             class="d-flex py-2 px-4 btn-primary rounded justify-content-center ">
             <codx-label name="lblSave" class=" px-3 fw-bold" default="Lưu" [formModel]="formModel"></codx-label>
           </span>

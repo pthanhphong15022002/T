@@ -439,7 +439,7 @@ export class PopupRolesComponent implements OnInit {
   selectRoseType(idUserSelected, value) {
     this.process.permissions.forEach((res) => {
       if (res.objectID != null && res.objectID != '') {
-        if (res.objectID == idUserSelected && value != '0')
+        if (res.objectID == idUserSelected && res.objectType != '7' && res.objectType != '1' && value != '0' )
           res.memberType = value;
       }
     });
