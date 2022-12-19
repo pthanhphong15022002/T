@@ -1,3 +1,4 @@
+import { OKRs } from './../../model/okr.model';
 import {
   AfterViewInit,
   Component,
@@ -41,8 +42,8 @@ export class PopupKRWeightComponent
   formModel: FormModel;
   headerText: string;
   dataOKR: any;
+  totalProgress=0;
   listWeight = [];
-  pbyw = [];
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -55,6 +56,7 @@ export class PopupKRWeightComponent
     this.headerText = 'Thay đổi trọng số KR'; //dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.dataOKR = dialogData.data[0];
+    this.totalProgress=this.dataOKR.progress;
   }
 
   //-----------------------Base Func-------------------------//
@@ -76,17 +78,13 @@ export class PopupKRWeightComponent
   onInit(): void {
     if (this.dataOKR.child) {
       let tempArr = Array.from(this.dataOKR.child);
-      tempArr.forEach((item: any) => {
-        if (item.weight && item.progress) {
-          let pw = item.weight * item.progress;
-          this.pbyw.push(+pw.toFixed(2) * 1);
-          let newWeight = new EditWeight();
-          newWeight.recID = item.recID;
-          newWeight.weight = item.weight;
-          this.listWeight.push(newWeight);
-        } else {
-          this.pbyw.push(0);
-        }
+      tempArr.forEach((item: any) => {        
+        let newWeight = new EditWeight();
+        newWeight.recID = item.recID;
+        newWeight.weight = item.weight;
+        newWeight.progress = item.progress;
+        newWeight.pbyw= +(item.weight * item.progress).toFixed(2) * 1;
+        this.listWeight.push(newWeight);
       });
       this.detectorRef.detectChanges();
     }
@@ -99,7 +97,17 @@ export class PopupKRWeightComponent
     switch (event) {
     }
   }
-  valueChange(evt) {}
+  valueChange(evt:any) {
+    if(evt.data!=null && evt.field!=null){
+      this.listWeight[evt.field].weight=evt.data;      
+      this.listWeight[evt.field].pbyw= +(this.listWeight[evt.field].weight * this.listWeight[evt.field].progress).toFixed(2) * 1;
+      this.totalProgress=0;
+      this.listWeight.forEach(item=>{
+        this.totalProgress+= item.pbyw;
+      })
+      this.detectorRef.detectChanges();
+    }
+  }
 
   //-----------------------End-------------------------------//
 
@@ -113,7 +121,15 @@ export class PopupKRWeightComponent
 
   //-----------------------Logic Func------------------------//
 
-  onSaveForm() {}
+  onSaveForm() {
+
+    this.codxOmService.editOKRWeight(this.dataOKR.recID, this.dataOKR.okrType, this.listWeight).subscribe((res:any)=>{
+      if(res){
+        let x= res;
+      }
+    });
+
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Event-----------------------//
