@@ -111,7 +111,7 @@
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="onSaveForm(false)">
+      <button class="btn btn-primary" (click)="onSaveForm()">
         <i class="icon-save"></i>
         <codx-label
           default="Lưu"
@@ -129,7 +129,7 @@
     [type]="'cardView'"
     [service]="'HR'"
     [assemblyName]="'CM'"
-    [entityName]="'HR_EVaccines'"
+    [entityName]="'HR_EHealths'"
     [className]="'DataBusiness'"
     [method]="'LoadDataAsync'"
     [predicate]="'EmployeeID=@0'"
@@ -145,7 +145,7 @@
   <codx-temp-full
     [formModel]="formModel"
     [typeMF]="'hover'"
-    [title]="data?.vaccineTypeID + ' - ' + (data.vaccineName ?? '')"
+    [title]="data.employeeID"
     [icoTitleCss]="'icon-attach_money'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     [subTitleTmp]="tmplateEJobSalaries"
@@ -159,7 +159,13 @@
 
 <ng-template #tmplateEJobSalaries let-data1>
   <div class="d-flex flex-column">
-    <div><i class="icon-edit_fill"></i>{{ data1.injectDate | fmDT }}</div>
-    <div><i class="icon-list_alt"></i>{{ data1.note }}</div>
+    <div>
+      <i class="icon-edit_fill"></i
+      >{{ (data1.effectedDate | fmDT) + " - " + (data1.expiredDate | fmDT) }}
+    </div>
+    <div>
+      <i class="icon-list_alt"></i
+      >{{ data1.decisionNo + "*" + (data1.signedDate | fmDT) }}
+    </div>
   </div>
 </ng-template>

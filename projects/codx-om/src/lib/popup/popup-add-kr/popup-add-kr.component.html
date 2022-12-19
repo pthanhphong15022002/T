@@ -20,7 +20,7 @@
     </div>
 
     <div class="form-group">
-      <codx-label default="Tên KR" fiedName="OKRName" [formModel]="form.formModel">
+      <codx-label fiedName="OKRName" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         ControlName="oKRName"
@@ -32,7 +32,7 @@
 
     <div class="row">
       <div class="form-group col-4">
-        <codx-label fiedName="Measurement" default="Thang đo" [formModel]="form.formModel">
+        <codx-label fiedName="Measurement" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="measurement"
@@ -43,7 +43,7 @@
       </div>
 
       <div class="form-group col-4">
-        <codx-label default="Chỉ tiêu" fiedName="Target" [formModel]="form.formModel">
+        <codx-label  fiedName="Target" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="target"
@@ -54,7 +54,7 @@
       </div>
 
       <div class="form-group col-4">
-        <codx-label default="Đơn vị tính" fiedName="UMID" [formModel]="form.formModel">
+        <codx-label  fiedName="UMID" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="uMID"
@@ -68,7 +68,7 @@
 
     <div class="row">
       <div class="form-group col-4">
-        <codx-label default="Loại chỉ tiêu" fiedName="Category" [formModel]="form.formModel">
+        <codx-label  fiedName="Category" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="category"
@@ -79,7 +79,7 @@
       </div>
 
       <div class="form-group col-4">
-        <codx-label default="Phân bố chỉ tiêu" fiedName="Plan" [formModel]="form.formModel">
+        <codx-label  fiedName="Plan" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="plan"
@@ -105,7 +105,7 @@
 
     <div class="row">
       <div class="form-group col-4">
-        <codx-label default="Tần suất" fiedName="Frequence" [formModel]="form.formModel">
+        <codx-label  fiedName="Frequence" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="frequence"
@@ -116,7 +116,7 @@
       </div>
 
       <div class="form-group col-6">
-        <codx-label default="Qui định cập nhật dữ liệu" fiedName="CheckInMode" [formModel]="form.formModel">
+        <codx-label fiedName="Qui định cập nhật dữ liệu" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="checkInMode"
@@ -141,10 +141,10 @@
       </div>
 
       <div class="form-group col-6">
-        <codx-label default="Cách thức cập nhật" fiedName="" [formModel]="form.formModel">
+        <codx-label fiedName="" [formModel]="form.formModel">
         </codx-label>
         <codx-input
-          ControlName="oKRName"
+          ControlName="checkInMode"
           [formModel]="form.formModel"
           [Group]="form.formGroup"
         >
@@ -157,7 +157,7 @@
     </div>
 
     <div class="form-group">
-      <codx-label default="Ghi chú" fiedName="Note" [formModel]="form.formModel">
+      <codx-label fiedName="Note" [formModel]="form.formModel">
       </codx-label>
       <codx-input
         ControlName="note"
