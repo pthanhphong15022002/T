@@ -632,10 +632,10 @@
             </div>
           </div>
           <div class="d-flex flex-column" *ngIf="crrTab == 2">
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeBasicSalariesInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
-              ></span>
+                ></span>
               <codx-label
                 fiedName="lbl"
                 default="Lương cơ bản"
@@ -643,7 +643,7 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeJobSalariesInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -687,7 +687,7 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandlemployeeAssetInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -2823,19 +2823,6 @@
                     >
                     </codx-label>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeJobSalariesInfo('add', null)"
-                        >Add Ejob</span
-                      >
-                    </a>
-
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeBasicSalariesInfo('add', null)"
-                        >Add Ebasic</span
-                      >
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -3153,6 +3140,23 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
+                  <div class="d-flex flex-wrap mt-6 mb-3" >
+                    <div [style.background] = "'black'" class="badge border-0 me-2" 
+                    *ngFor="let asset of lstAsset">
+                      <div class="has-action-menu">
+                        {{asset.assetCategory}} gan cung
+                        <codx-mfunc
+                        [formModel]="formModel"
+                        (clickMF)="
+                          clickMF($event, asset, 'Assets')
+                        "
+                        type="hover"
+                        [dataItem]="asset"
+                      >
+                      </codx-mfunc> 
+                      </div>
+                  </div>
+                  </div>
                   <div class="row form-group"></div>
                 </div>
               </div>

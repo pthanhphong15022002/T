@@ -104,7 +104,7 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.request.service = 'TM';
     this.request.assemblyName = 'TM';
     this.request.className = 'TaskBusiness';
-    this.request.method = 'GetTasksAsync';
+    this.request.method = 'GetTasksOMAsync';
     this.request.idField = 'taskID';
     this.request.dataObj = this.dataObj;
 
@@ -157,12 +157,12 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     this.requestSchedule.dataValue = '1;2';
 
     this.modelResource = new ResourceModel();
-    
-      this.modelResource.assemblyName = 'HR';
-      this.modelResource.className = 'OrganizationUnitsBusiness';
-      this.modelResource.service = 'HR';
-      this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
-     
+
+    this.modelResource.assemblyName = 'HR';
+    this.modelResource.className = 'OrganizationUnitsBusiness';
+    this.modelResource.service = 'HR';
+    this.modelResource.method = 'GetListUserBeLongToOrgOfAcountAsync';
+
     this.button = {
       id: 'btnAdd',
     };

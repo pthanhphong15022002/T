@@ -897,6 +897,7 @@ export class ProcessStepsComponent
 
   dropPhase(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
+    this.lockChild =this.lockParent = true;
     var ps = this.view.dataService.data[event.previousIndex];
     if (ps) {
       this.bpService
@@ -966,8 +967,10 @@ export class ProcessStepsComponent
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild =this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild =this.lockParent = false;
           }
         });
     }
@@ -975,6 +978,7 @@ export class ProcessStepsComponent
 
   dropStepChild(event: CdkDragDrop<string[]>, currentID) {
     if (event.previousIndex == event.currentIndex) return;
+    this.lockChild =this.lockParent = true;
     var index = this.view.dataService.data.findIndex(
       (x) => x.recID == currentID
     );
@@ -1030,14 +1034,17 @@ export class ProcessStepsComponent
 
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild =this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild =this.lockParent = false;
           }
         });
     }
   }
 
   dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
+    this.lockChild =this.lockParent = true;
     var psMoved = event.item?.data;
 
     var indexPrevious = this.view.dataService.data.findIndex(
@@ -1105,8 +1112,10 @@ export class ProcessStepsComponent
             // );
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild =this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild =this.lockParent = false;
           }
         });
     }
