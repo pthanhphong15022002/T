@@ -3,50 +3,47 @@
 </codx-form>
 <ng-template #subheader>
   <div class="d-flex align-items-center justify-content-end w-100">
-    <div class="border rounded-pill p-2">
-      <span>
-        <i class="icon-filter_alt"></i>
-      </span>
-      <span class="mx-1">
-        <codx-label [formModel]="dialog.formModel" name="" default="Loại xét duyệt"></codx-label>
-      </span>
+    <div class="d-flex align-items-center border rounded-pill py-2 px-4">
+      <i class="icon-filter_alt icon-16 me-2"></i>
+      <codx-label [formModel]="dialog.formModel" name="" default="Loại xét duyệt"></codx-label>
     </div>
-    <span class="ms-2"><i class="fas fa-ellipsis-h"></i></span>
+    <span class="ms-2"><i class="icon-i-three-dots-vertical icon-20"></i></span>
   </div>
 </ng-template>
 <ng-template #body>
-  <div class="container">
+  <div class="container p-0">
     <ng-container *ngIf="lstApproval; else templateEmpty">
       <ng-container *ngFor="let item of lstApproval">
-        <div class="row p-2">
-          <div [style]="setStyles(item.title | vll:'ES022':'color'|async)" class="col-1 w-30px symbol h-40px fs-4 d-flex justify-content-center align-items-center rounded-circle">
+        <div class="d-flex align-items-top border-top py-3 pe-2">
+          <div [style]="setStyles(item.title | vll:'ES022':'color'|async)"
+            class="w-35px h-35px fs-5 d-flex justify-content-center align-items-center rounded-circle me-3">
             <codx-vll [name]="'ES022'" [value]="item.entityName" [showIcon]="true"></codx-vll>
           </div>
-          <div class="col-10">
-            <div>
-              <codx-vll [classList]="'fw-bolder text-dark'" [name]="'ES022'" [value]="item.title" [showText]="true"></codx-vll>
+          <div class="w-100">
+            <div class="d-flex justify-content-between">
+              <div class="" [innerHTML]="item.textValue"></div>
+              <codx-vll [classList]="'fw-bold text-dark'" [name]="'ES022'" [value]="item.title"
+                [showText]="true"></codx-vll>
             </div>
-            <div class="" [innerHTML]="item.textValue"></div>
             <div class="d-flex align-items-center justify-content-between ">
               <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
-              <codx-img 
-                [width]="30" 
-                [objectId]="item.userID" 
-                [objectName]="item.userName"
-                [objectType]="'AD_Users'">
+              <codx-img [width]="25" [objectId]="item.userID" [objectName]="item.userName" [objectType]="'AD_Users'">
               </codx-img>
             </div>
-            <div class="d-flex align-items-center justify-content-between border-top mt-2 pt-2">
+            <div class="d-flex align-items-center justify-content-between mt-1">
               <div class="">
-                <button type="button" class="btn btn-outline-success w-100px" (click)="approvalAsync(item.recID,item.transID,'5')">
+                <button type="button" class="btn btn-sm btn-outline-success me-3"
+                  (click)="approvalAsync(item.recID,item.transID,'5')">
                   <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
                 </button>
-                <button type="button" class="btn btn-outline-danger w-100px ms-6" (click)="approvalAsync(item.recID,item.transID,'4')">
+                <button type="button" class="btn btn-sm btn-outline-danger"
+                  (click)="approvalAsync(item.recID,item.transID,'4')">
                   <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
                 </button>
               </div>
               <div class="cursor-pointer">
-                <codx-label [classList]="'fst-italic'" [formModel]="dialog.formModel" name="" default="Xem chi tiết"></codx-label>
+                <codx-label [classList]="'fst-italic text-gray-500'" [formModel]="dialog.formModel" name=""
+                  default="Xem chi tiết"></codx-label>
               </div>
             </div>
           </div>
