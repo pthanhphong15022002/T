@@ -314,7 +314,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.attachment?.clearData();
         if (res) {
-          this.dialog.close([res.save]);
+          this.dialog.close(res.save);
           //Đặt cuộc họp sau khi thêm mới cuộc họp cần ktra lại xem có tích hợp module EP hay ko
           if(this.isRoom && this.meeting.location != null){
             this.bookingRoomEP(res.save);

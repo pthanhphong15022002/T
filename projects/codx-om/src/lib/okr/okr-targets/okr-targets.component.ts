@@ -9,7 +9,7 @@ import {
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
-import { PopupKRWeightComponent } from '../../popup/popup-kr-weight/popup-kr-weight.component';
+import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 
@@ -230,16 +230,19 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   //Sửa trọng số KR
-  editKRWeight(o: any) {
+  editWeight(okr: any, child:any) {
+    //OM_WAIT: tiêu đề tạm thời gán cứng
+    let popupTitle='Thay đổi trọng số cho KRs';
+    let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowKR = this.callfunc.openForm(
-      PopupKRWeightComponent,
+      PopupOKRWeightComponent,
       '',
       null,
       null,
       null,
-      [o],
+      [okr,child,popupTitle,subTitle],
       '',
       dModel
     );
