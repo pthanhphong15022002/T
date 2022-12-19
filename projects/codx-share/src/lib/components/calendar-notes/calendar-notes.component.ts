@@ -228,11 +228,6 @@ export class CalendarNotesComponent
         this.change.detectChanges();
       }
     });
-    // this.codxShareSV.dataUpdateShowEvent.subscribe((res) => {
-    //   if (res) {
-    //     debugger;
-    //   }
-    // });
   }
 
   getFirstParam(fDayOfMonth, lDayOfMonth) {
@@ -373,14 +368,21 @@ export class CalendarNotesComponent
     this.daySelected = fromDate;
     var toDate = new Date(dateT.setDate(dateT.getDate() + 1)).toISOString();
     if (this.showList && lstView) {
-      (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
-      (lstView.dataService as CRUDService).predicates = '';
-      (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
-      lstView.dataService
-        .setPredicate(this.predicate, [this.dataValue])
-        .subscribe((res) => {
-          this.change.detectChanges();
-        });
+      // (lstView.dataService as CRUDService).dataObj = `WPCalendars`;
+      // (lstView.dataService as CRUDService).predicates = '';
+      // (lstView.dataService as CRUDService).dataValues = `${fromDate};${toDate}`;
+      // lstView.dataService
+      //   .setPredicate(this.predicate, [this.dataValue])
+      //   .subscribe((res) => {
+      //     this.change.detectChanges();
+      //   });
+      // let myInterval = setInterval(() => {
+      //   if(this.TM_Tasks.length > 0)
+      //   {
+      //     clearInterval(myInterval);
+      //   }
+      // })
+      // (lstView.dataService as CRUDService).data = this.TM_Tasks;
     }
     this.FDdate = fromDate;
     this.TDate = toDate;
@@ -1120,7 +1122,6 @@ export class CalendarNotesComponent
                   ?.childNodes[1]?.childNodes[4]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
                 const lDayOfMonth = new Date(eleToDate.title).toISOString();
-                debugger
                 this.getParamCalendar(fDayOfMonth, lDayOfMonth);
                 var today: any = document.querySelector(
                   ".e-footer-container button[aria-label='Today']"
