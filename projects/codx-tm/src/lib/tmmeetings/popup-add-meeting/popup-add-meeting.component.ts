@@ -98,7 +98,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   location: any;
   reminder: any;
   fields: Object = { text: 'location', value: 'resourceID' };
-  disabledProject = false
+  disabledProject = false ;
+  listResources :string ='' ;
   constructor(
     private changDetec: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -116,7 +117,8 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     this.user = this.authStore.get();
     this.action = dt.data[0];
     this.titleAction = dt.data[1];
-    this.disabledProject = dt.data[2]
+    this.disabledProject = dt.data[2] ;
+    this.listResources = dt?.data[3]
     this.functionID = this.dialog.formModel.funcID;
 
     this.cache
@@ -148,7 +150,9 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     // this.getTimeWork(this.selectedDate);
 
     if (this.action == 'add' || this.action == 'copy') {
-      this.getListUser(this.user?.userID);
+      let listUser = this.user?.userID
+      if(this.listResources) listUser += ";"+this.listResources
+      this.getListUser(listUser);
     }
     this.cache.valueList('CO001').subscribe((res) => {
       if (res && res?.datas.length > 0) {
