@@ -23,14 +23,15 @@ import { CodxOmService } from '../../codx-om.service';
 import { EditWeight } from '../../model/okr.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 
-
 @Component({
   selector: 'popup-kr-weight',
   templateUrl: 'popup-kr-weight.component.html',
   styleUrls: ['popup-kr-weight.component.scss'],
 })
-export class PopupKRWeightComponent extends UIComponent implements AfterViewInit {
-  
+export class PopupKRWeightComponent
+  extends UIComponent
+  implements AfterViewInit
+{
   views: Array<ViewModel> | any = [];
   @ViewChild('checkin') checkin: TemplateRef<any>;
   @ViewChild('alignKR') alignKR: TemplateRef<any>;
@@ -40,8 +41,8 @@ export class PopupKRWeightComponent extends UIComponent implements AfterViewInit
   formModel: FormModel;
   headerText: string;
   dataOKR: any;
-  listWeight=[];
-  pbyw=[];
+  listWeight = [];
+  pbyw = [];
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -51,12 +52,12 @@ export class PopupKRWeightComponent extends UIComponent implements AfterViewInit
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText= "Thay đổi trọng số KR"//dialogData?.data[2];
-    this.dialogRef = dialogRef;   
-    this.dataOKR=dialogData.data[0];
-    
+    this.headerText = 'Thay đổi trọng số KR'; //dialogData?.data[2];
+    this.dialogRef = dialogRef;
+    this.dataOKR = dialogData.data[0];
   }
-  //-----------------------Base Func-----------------------//
+
+  //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
     this.views = [
       {
@@ -73,57 +74,57 @@ export class PopupKRWeightComponent extends UIComponent implements AfterViewInit
   }
 
   onInit(): void {
-    if(this.dataOKR.child){
-      let tempArr= Array.from(this.dataOKR.child);
-      tempArr.forEach((item:any)=>{
-        if(item.weight && item.progress){
-          let pw=item.weight *item.progress;
-          this.pbyw.push((+pw.toFixed(2))*1);
-          let newWeight= new EditWeight();
-          newWeight.recID= item.recID;
-          newWeight.weight=item.weight;
+    if (this.dataOKR.child) {
+      let tempArr = Array.from(this.dataOKR.child);
+      tempArr.forEach((item: any) => {
+        if (item.weight && item.progress) {
+          let pw = item.weight * item.progress;
+          this.pbyw.push(+pw.toFixed(2) * 1);
+          let newWeight = new EditWeight();
+          newWeight.recID = item.recID;
+          newWeight.weight = item.weight;
           this.listWeight.push(newWeight);
-        }
-        else{
+        } else {
           this.pbyw.push(0);
         }
-      })
+      });
       this.detectorRef.detectChanges();
-    }    
-  }
-
-  //-----------------------Base Event-----------------------//
-
-  click(event: any) {
-    switch (event) {
-      
     }
   }
-  valueChange(evt){
-    
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Base Event------------------------//
+  click(event: any) {
+    switch (event) {
+    }
   }
+  valueChange(evt) {}
 
-  //-----------------------Get Data Func-----------------------//
+  //-----------------------End-------------------------------//
 
+  //-----------------------Get Data Func---------------------//
 
-  //-----------------------Validate Func-----------------------//
+  //-----------------------End-------------------------------//
 
+  //-----------------------Validate Func---------------------//
 
-  //-----------------------Logic Func-----------------------//
+  //-----------------------End-------------------------------//
 
-  onSaveForm(){
+  //-----------------------Logic Func------------------------//
 
-  }
+  onSaveForm() {}
+  //-----------------------End-------------------------------//
 
   //-----------------------Logic Event-----------------------//
 
+  //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
 
-  
-  //-----------------------Popup-----------------------//
-  
+  //-----------------------End-------------------------------//
 
-  
-  
+  //-----------------------Popup-----------------------------//
+
+  //-----------------------End-------------------------------//
 }

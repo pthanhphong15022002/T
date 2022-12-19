@@ -1141,26 +1141,40 @@ export class ProcessStepsComponent
   }
 
   getFlowChart(process) {
+    // let paras = [
+    //   '',
+    //   this.funcID,
+    //   process?.recID,
+    //   'BP_Processes',
+    //   'inline',
+    //   1000,
+    //   process?.processName,
+    //   'Flowchart',
+    //   false,
+    // ];
+    // this.api
+    //   .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+    //   .subscribe((res) => {
+    //     if (res && res?.url) {
+    //       let obj = { pathDisk: res?.url, fileName: process?.processName };
+    //       this.dataFile = obj;
+    //       this.changeDetectorRef.detectChanges();
+    //     }
+    //   });
     let paras = [
-      '',
-      this.funcID,
       process?.recID,
       'BP_Processes',
-      'inline',
-      1000,
-      process?.processName,
       'Flowchart',
-      false,
     ];
     this.api
-      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetFileByOORAsync', paras)
       .subscribe((res) => {
-        if (res && res?.url) {
-          let obj = { pathDisk: res?.url, fileName: process?.processName };
-          this.dataFile = obj;
+        if (res) {
+          this.dataFile = res;
           this.changeDetectorRef.detectChanges();
         }
       });
+
   }
   addFile(evt: any) {
     this.addFlowchart.referType = 'Flowchart';
