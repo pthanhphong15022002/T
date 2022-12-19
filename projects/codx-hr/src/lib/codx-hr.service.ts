@@ -632,7 +632,6 @@ export class CodxHrService {
       data
     );
   }
-  
 
   GetEmployeeJobSalariesModel() {
     return this.api.execSv<any>(
@@ -745,7 +744,6 @@ export class CodxHrService {
       data
     );
   }
-  
 
   GetEmployeeBasicSalariesModel() {
     return this.api.execSv<any>(
@@ -870,6 +868,48 @@ export class CodxHrService {
       'ERM.Business.HR',
       'EVaccinesBusiness',
       'DeleteEVaccineAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_EDiseases
+  loadDataEDisease(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'LoadDataEDiseaseAsync',
+      dataRequest
+    );
+  }
+
+  addEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'AddEDiseaseAsync',
+      [data]
+    );
+  }
+
+  editEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'EditEDiseaseAsync',
+      data
+    );
+  }
+
+  deleteEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'DeleteEDiseaseAsync',
       data
     );
   }
