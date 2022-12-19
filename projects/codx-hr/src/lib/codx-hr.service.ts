@@ -946,13 +946,99 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region FunctionList
-  getDataDefault(funcID: string, entityName: string, idField: string) {
-    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+  //#region HR_Skills
+  loadDataSkill(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'LoadDataSkillAsync',
+      dataRequest
+    );
+  }
+
+  addSkill(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'AddSkillAsync',
+      [data]
+    );
+  }
+
+  editSkill(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'EditSkillAsync',
+      data
+    );
+  }
+
+  deleteSkill(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'DeleteSkillAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_SkillGrades
+  loadDataSkillGrade(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'LoadDataSkillGradeAsync',
+      dataRequest
+    );
+  }
+
+  addSkillGrade(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'AddSkillGradeAsync',
+      [data]
+    );
+  }
+
+  editSkillGrade(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'EditSkillGradeAsync',
+      data
+    );
+  }
+
+  deleteSkillGrade(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'DeleteSkillGradeAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_ESkills
+  GetListSkillByDataRequestAsync(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'GetListSkillByDataRequestAsync',
+      dataRequest
+    );
   }
   //#endregion
 }

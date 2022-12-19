@@ -3810,7 +3810,10 @@
                     ></span>
                   </button>
                   <span class="text-gray-500 ms-2">|</span>
-                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-1"
+                    (click)="addSkill()"
+                  >
                     <span
                       class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                     ></span>
@@ -3838,9 +3841,65 @@
                 [(ngbCollapse)]="objCollapes['5.3']"
               >
                 <div class="mb-1">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  ></div>
+                  <ng-container *ngFor="let eSkill of lstESkill">
+                    <div class="pf-skill d-flex align-items-center ms-9 mb-4">
+                      <div class="sk-title w-150px fw-bold">
+                        {{ eSkill.firstItem.skillName }}
+                      </div>
+
+                      <div
+                        class="sk-group d-flex align-items-center"
+                        *ngIf="eSkill.firstItem.maxGrade > 0"
+                      >
+                        <ng-container
+                          *ngFor="
+                            let item of [].constructor(
+                              eSkill.firstItem.maxGrade
+                            );
+                            let i = index
+                          "
+                        >
+                          <div
+                            class="sk-item"
+                            [ngClass]="
+                              i + 1 <= eSkill.firstItem.currentGrade
+                                ? 'active'
+                                : ''
+                            "
+                            [class]="
+                              i + 1 == eSkill.firstItem.currentGrade
+                                ? 'selected'
+                                : ''
+                            "
+                          >
+                            {{ i + 1 }}
+                          </div>
+                        </ng-container>
+
+                        <!-- <div class="sk-item active">2</div>
+                        <div class="sk-item active">3</div>
+                        <div class="sk-item active selected">4</div>
+                        <div class="sk-item">5</div>
+                        <div class="sk-item">6</div> -->
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- <div class="pf-skill d-flex align-items-center ms-9 mb-4">
+                    <div class="sk-title w-150px fw-bold">
+                      Giải quyết vấn đề
+                    </div>
+                    <div class="sk-group d-flex align-items-center">
+                      <div class="sk-item active">1</div>
+                      <div class="sk-item active">2</div>
+                      <div class="sk-item active">3</div>
+                      <div class="sk-item active">4</div>
+                      <div class="sk-item active">5</div>
+                      <div class="sk-item active selected">6</div>
+                      <div class="sk-item">7</div>
+                      <div class="sk-item">8</div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -3875,7 +3934,10 @@
                     ></span>
                   </button>
                   <span class="text-gray-500 ms-2">|</span>
-                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-1"
+                    (click)="addSkillGrade()"
+                  >
                     <span
                       class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                     ></span>
