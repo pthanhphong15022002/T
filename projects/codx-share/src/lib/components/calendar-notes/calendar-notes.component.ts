@@ -376,13 +376,16 @@ export class CalendarNotesComponent
       //   .subscribe((res) => {
       //     this.change.detectChanges();
       //   });
-      // let myInterval = setInterval(() => {
-      //   if(this.TM_Tasks.length > 0)
-      //   {
-      //     clearInterval(myInterval);
-      //   }
-      // })
-      // (lstView.dataService as CRUDService).data = this.TM_Tasks;
+      let myInterval = setInterval(() => {
+        if (this.dataResourceModel.length > 0) {
+          clearInterval(myInterval);
+          this.dataResourceModel.filter(
+            (x) => x.startDate >= fromDate && x.startDate < toDate
+          );
+          debugger
+          (lstView.dataService as CRUDService).data = this.dataResourceModel;
+        }
+      });
     }
     this.FDdate = fromDate;
     this.TDate = toDate;
