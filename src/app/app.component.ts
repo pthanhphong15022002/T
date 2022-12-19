@@ -74,9 +74,9 @@ export class AppComponent implements OnInit, OnDestroy {
     var lstDialog = this.layoutService.listDialog;
     lstDialog.forEach((element) => {
       // var a = element;
-      if (element.hide) element.hide();
+      if (element && element.hide) element.hide();
     });
-    this.layoutService.listDialog = [];
+    // this.layoutService.listDialog = [];
     // var dialogContain = document.querySelector('.codx-dialog-container');
     // dialogContain.innerHTML = '';
     // var dialog = document.querySelectorAll('.e-dialog');
