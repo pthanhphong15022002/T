@@ -103,7 +103,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   click(event: any) {
     switch (event.id) {
       case 'btnAdd': {
-        this.addOKRPlans();
+        this.addOKR();
         break;
       }
       case 'btnAddKR': {

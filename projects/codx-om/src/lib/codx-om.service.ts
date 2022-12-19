@@ -200,9 +200,11 @@ export class CodxOmService {
       recID
     );
   }
-  loadFunctionList(funcID: any): Observable<any> {
-    let paras = ['FuncID', funcID];
-    let keyRoot = 'FuncID' + funcID;
+  
+  loadFunctionList(funcID:any): Observable<any>
+  {
+    let paras = ["FuncID",funcID];
+    let keyRoot = "FuncID" + funcID;
     let key = JSON.stringify(paras).toLowerCase();
     if (this.caches.has(keyRoot)) {
       var c = this.caches.get(keyRoot);
