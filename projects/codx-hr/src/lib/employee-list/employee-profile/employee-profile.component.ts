@@ -106,6 +106,8 @@ export class EmployeeProfileComponent extends UIComponent {
   data: any = {};
   //family
   lstFamily: any;
+  //degree
+  lstEDegrees: any = []
   //passport
   lstPassport: any = [];
   crrPassport: any = {};
@@ -333,6 +335,20 @@ export class EmployeeProfileComponent extends UIComponent {
             if (this.lstVisa.length > 0) {
               this.crrVisa = this.lstVisa[0];
             }
+          });
+          //Edegrees
+          let rqDegrees = new DataRequest();
+          rqDegrees.gridViewName = 'grvEDegrees';
+          rqDegrees.entityName = 'HR_EDegrees';
+          rqDegrees.predicate = 'EmployeeID=@0';
+          rqDegrees.dataValue = params.employeeID;
+          (rqDegrees.page = 1),
+          this.hrService.getEmployeeDregreesInfo(rqDegrees).subscribe((res) => {
+            console.log('ret trả về', res);
+            
+            if (res) this.lstEDegrees = res[0];
+            console.log('lít e đì gri', this.lstEDegrees);
+            
           });
 
         //work permit
@@ -1364,6 +1380,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1388,6 +1405,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1412,7 +1430,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeDegreeInfo() {
+  HandleEmployeeDegreeInfo(actionType: string, data: any ) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1422,7 +1440,10 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeDegreeDetailComponent,
       PopupEDegreesComponent,
       {
-        isAdd: true,
+        // isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstEDegrees.indexOf(data),
+        lstEDegrees : this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
       },
