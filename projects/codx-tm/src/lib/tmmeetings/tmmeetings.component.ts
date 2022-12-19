@@ -9,6 +9,8 @@ import {
   Input,
   AfterViewInit,
   ViewEncapsulation,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -52,7 +54,8 @@ export class TMMeetingsComponent
   @Input() showButtonAdd = true;
   @Input() projectID?: any; //view meeting to sprint_details
   @Input() iterationID?: any;
-  @Input() listResources ?: string
+  @Input() listResources?: string;
+  // @Output() resourcesNew = new EventEmitter<string>();
   @ViewChild('panelRight') panelRight?: TemplateRef<any>;
   @ViewChild('templateLeft') templateLeft: TemplateRef<any>;
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
@@ -476,7 +479,7 @@ export class TMMeetingsComponent
       } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['add', this.titleAction, this.disabledProject,this.listResources],
+        ['add', this.titleAction, this.disabledProject, this.listResources],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -486,6 +489,9 @@ export class TMMeetingsComponent
             [this.view.dataService.dataSelected],
             false
           );
+        // if (e && e?.event != null) {
+        //   this.getResourecesNew(e?.event?.resources);
+        // }
       });
     });
   }
@@ -530,7 +536,7 @@ export class TMMeetingsComponent
       } else this.disabledProject = false;
       this.dialog = this.callfc.openSide(
         PopupAddMeetingComponent,
-        ['copy', this.titleAction,this.disabledProject],
+        ['copy', this.titleAction, this.disabledProject, this.listResources],
         option
       );
       this.dialog.closed.subscribe((e) => {
@@ -540,6 +546,9 @@ export class TMMeetingsComponent
             [this.view.dataService.dataSelected],
             false
           );
+        // if (e && e?.event != null) {
+        //   this.getResourecesNew(e?.event?.resources);
+        // }
       });
     });
   }
@@ -750,4 +759,20 @@ export class TMMeetingsComponent
   openLinkMeeting(data) {
     window.open(data?.link);
   }
+  // getResourecesNew(arrayResource) { 
+  //   if (arrayResource?.length > 0) {
+  //     var idResources = arrayResource.map((x) => {
+  //       return x.resourceID;
+  //     });
+  //     if (!this.listResources)
+  //       return this.resourcesNew.emit(idResources.join(';'));
+  //     let arrResOld = this.listResources.split(';');
+  //     let idNew = [];
+  //     idResources.forEach((obj) => {
+  //       let dt = arrResOld.find((x) => x == obj);
+  //       if (dt) idNew.push(dt);
+  //     });
+  //     return this.resourcesNew.emit(idNew.join(';'));
+  //   }
+  // }
 }
