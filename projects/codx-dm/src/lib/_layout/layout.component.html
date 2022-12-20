@@ -1,50 +1,101 @@
+<div codxcontainer></div>
+<div modifyLang></div>
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
-      <codx-aside *ngIf="asideDisplay" [asideMenuHeader]="header" [asideMenuFooter]="footer" [hasSecond]="false">
+      <codx-aside
+        *ngIf="asideDisplay"
+        [asideMenuHeader]="header"
+        [asideMenuFooter]="footer"
+        [hasSecond]="false"
+      >
       </codx-aside>
       <ng-template #header>
         <div class="d-flex justify-content-start ps-6">
           <a class="btn-add without-sub" href="javascript:;">
-            <button [disabled]="disableInput" (click)="AddFolder()" class="btn btn-outline-primary btn-pill btn-lg"
-              id="kt_demo_panel_toggle" data-toggle="tooltip">
+            <button
+              [disabled]="disableInput"
+              (click)="AddFolder()"
+              class="btn btn-outline-primary btn-pill btn-lg"
+              id="kt_demo_panel_toggle"
+              data-toggle="tooltip"
+            >
               <i class="icon-add"></i>
               <span class="fs-5">{{ titleAddFolder }}</span>
             </button>
           </a>
         </div>
-        
       </ng-template>
       <ng-template #footer>
-        <div class="menu-item progress-line d-flex align-items-center justify-content-center w-100">
-          <div class="mt-2 mx-6  fs-7" *ngIf="showtitle; else elseT">
+        <div
+          class="menu-item progress-line d-flex align-items-center justify-content-center w-100"
+        >
+          <div class="mt-2 mx-6 fs-7" *ngIf="showtitle; else elseT">
             <ng-container *ngIf="itemHdd?.totalHdd >= 0">
-            <div class="progress my-2">
-              <div role="progressbar" attr.aria-valuenow="{{percentUsed}}" aria-valuemin="0" aria-valuemax="100"
-                class="progress-bar" attr.style="width: {{percentUsed}}%"></div>
-            </div>
-          </ng-container>
+              <div class="progress my-2">
+                <div
+                  role="progressbar"
+                  attr.aria-valuenow="{{ percentUsed }}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  class="progress-bar"
+                  attr.style="width: {{ percentUsed }}%"
+                ></div>
+              </div>
+            </ng-container>
             <span class="text-white fs-7">{{ titleHddUsed }}</span>
           </div>
           <ng-template #elseT>
-            <ng-container *ngIf="itemHdd?.totalHdd < 0 ; else elsChart">
-              <span class="text-white fs-7">{{itemHdd?.totalUsed + " " + itemHdd?.unit }}</span>
+            <ng-container *ngIf="itemHdd?.totalHdd < 0; else elsChart">
+              <span class="text-white fs-7">{{
+                itemHdd?.totalUsed + " " + itemHdd?.unit
+              }}</span>
             </ng-container>
             <ng-template #elsChart>
               <div class="control-section">
-                <ejs-dashboardlayout [columns]="8" [cellSpacing]='cellSpacing' [cellAspectRatio]='cellAspectRatio'>
-                  <e-panels >
+                <ejs-dashboardlayout
+                  [columns]="8"
+                  [cellSpacing]="cellSpacing"
+                  [cellAspectRatio]="cellAspectRatio"
+                >
+                  <e-panels>
                     <e-panel [sizeX]="3" [sizeY]="0" [row]="0" [col]="5">
-                        <ejs-accumulationchart [background]="'transparent'" style="height:60px; width: 60px;background-color: transparent" [legendSettings]="pielegendSettings" [tooltip]="pieTooltipSetting" [enableAnimation]= 'animation'>
-                          <e-accumulation-annotations>
-                            <e-accumulation-annotation content='<div class="fs-8 text-white fw-normal" >{{titleHddUsed_small}}%</div>' region='Series'  x='50%' y='50%' >
-                            </e-accumulation-annotation>
+                      <ejs-accumulationchart
+                        [background]="'transparent'"
+                        style="
+                          height: 60px;
+                          width: 60px;
+                          background-color: transparent;
+                        "
+                        [legendSettings]="pielegendSettings"
+                        [tooltip]="pieTooltipSetting"
+                        [enableAnimation]="animation"
+                      >
+                        <e-accumulation-annotations>
+                          <e-accumulation-annotation
+                            content="<div class=&quot;fs-8 text-white fw-normal&quot; >{{
+                              titleHddUsed_small
+                            }}%</div>"
+                            region="Series"
+                            x="50%"
+                            y="50%"
+                          >
+                          </e-accumulation-annotation>
                         </e-accumulation-annotations>
-                          <e-accumulation-series-collection >
-                            <e-accumulation-series  [dataSource]='data' xName='Product' yName='Percentage' innerRadius="90%" radius="100%" [palettes]="palettes" [dataLabel]="dataLabel" [border]='border' >
-                            </e-accumulation-series>
-                          </e-accumulation-series-collection>
-                        </ejs-accumulationchart>
+                        <e-accumulation-series-collection>
+                          <e-accumulation-series
+                            [dataSource]="data"
+                            xName="Product"
+                            yName="Percentage"
+                            innerRadius="90%"
+                            radius="100%"
+                            [palettes]="palettes"
+                            [dataLabel]="dataLabel"
+                            [border]="border"
+                          >
+                          </e-accumulation-series>
+                        </e-accumulation-series-collection>
+                      </ejs-accumulationchart>
                     </e-panel>
                   </e-panels>
                 </ejs-dashboardlayout>
@@ -59,89 +110,213 @@
           <div class="page-title d-flex align-items-center flex-wrap ms-3">
             <div class="d-flex align-items-center flex-wrap mt-3">
               <div ngbDropdown class="nav-item dropdown mr-1">
-                <button ngbDropdownToggle [className]="setClassActive()" type="button" id="dropdownMenuButton"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  
+                <button
+                  ngbDropdownToggle
+                  [className]="setClassActive()"
+                  type="button"
+                  id="dropdownMenuButton"
+                  data-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
                   <span class="icon-dashboard icon-20"></span>
                 </button>
-                <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div
+                  ngbDropdownMenu
+                  class="dropdown-menu"
+                  aria-labelledby="dropdownMenuButton"
+                >
                   <container-element [ngSwitch]="submenu">
                     <!-- the same view can be shown in more than one case 
                               *ngSwitchCase="'multi-choice' || 'singe-choice'"
                           -->
                     <some-element *ngSwitchCase="'DMT05'">
-                      <a ngbDropdownItem class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu được chia sẻ', '1')">
+                      <a
+                        ngbDropdownItem
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT05',
+                            'Tài liệu chia sẻ',
+                            'Tài liệu được chia sẻ',
+                            '1'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được chia sẻ">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Tài liệu được chia sẻ"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
-                      <a ngbDropdownItem class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT05', 'Tài liệu chia sẻ', 'Tài liệu chia sẻ', '2')">
+                      <a
+                        ngbDropdownItem
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT05',
+                            'Tài liệu chia sẻ',
+                            'Tài liệu chia sẻ',
+                            '2'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu chia sẻ">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Tài liệu chia sẻ"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
                     </some-element>
                     <some-other-element *ngSwitchCase="'DMT06'">
-                      <a class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu được yêu cầu', '1')">
+                      <a
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT06',
+                            'Tài liệu yêu cầu chia sẻ',
+                            'Tài liệu được yêu cầu',
+                            '1'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Tài liệu được yêu cầu"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
-                      <a class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Tài liệu yêu cầu', '2')">
+                      <a
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT06',
+                            'Tài liệu yêu cầu chia sẻ',
+                            'Tài liệu yêu cầu',
+                            '2'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu yêu cầu">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Tài liệu yêu cầu"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
-                      <a class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT06', 'Tài liệu yêu cầu chia sẻ', 'Lịch sử chia sẻ', '3')">
+                      <a
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT06',
+                            'Tài liệu yêu cầu chia sẻ',
+                            'Lịch sử chia sẻ',
+                            '3'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử chia sẻ">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Lịch sử chia sẻ"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
                     </some-other-element>
                     <some-other-element *ngSwitchCase="'DMT07'">
-                      <a class="dropdown-item"
-                        (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu được yêu cầu', '1')">
+                      <a
+                        class="dropdown-item"
+                        (click)="
+                          onClick(
+                            'DMT07',
+                            'Tài liệu chờ duyệt',
+                            'Tài liệu được yêu cầu',
+                            '1'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu được yêu cầu">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Tài liệu được yêu cầu"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
-                      <a class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Tài liệu chờ duyệt', '2')">
+                      <a
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT07',
+                            'Tài liệu chờ duyệt',
+                            'Tài liệu chờ duyệt',
+                            '2'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Tài liệu chờ duyệt">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Tài liệu chờ duyệt"
+                            >
                             </codx-label>
                           </span>
                         </div>
                       </a>
-                      <a class="dropdown-item cursor-pointer"
-                        (click)="onClick('DMT07', 'Tài liệu chờ duyệt', 'Lịch sử xét duyệt', '3')">
+                      <a
+                        class="dropdown-item cursor-pointer"
+                        (click)="
+                          onClick(
+                            'DMT07',
+                            'Tài liệu chờ duyệt',
+                            'Lịch sử xét duyệt',
+                            '3'
+                          )
+                        "
+                      >
                         <div class="d-flex align-items-center">
                           <span>
-                            <codx-label fiedName="" formName="" gridViewName="" default="Lịch sử xét duyệt">
+                            <codx-label
+                              fiedName=""
+                              formName=""
+                              gridViewName=""
+                              default="Lịch sử xét duyệt"
+                            >
                             </codx-label>
                           </span>
                         </div>
@@ -164,9 +339,20 @@
                 </div>
               </div>
               <a>
-                <h4 class="text-dark font-weight-bold my-0 mr-2 cursor-pointer" (click)="onJump()">{{this.dmSV.menuActive.getValue()}}</h4>
+                <h4
+                  class="text-dark font-weight-bold my-0 mr-2 cursor-pointer"
+                  (click)="onJump()"
+                >
+                  {{ this.dmSV.menuActive.getValue() }}
+                </h4>
               </a>
-              <codx-breadcumb notTree="true" link="true" end="2" start="1" max="4"></codx-breadcumb>
+              <codx-breadcumb
+                notTree="true"
+                link="true"
+                end="2"
+                start="1"
+                max="4"
+              ></codx-breadcumb>
             </div>
             <!-- <a>
                 <h4 class="text-dark font-weight-bold my-0 mr-2">{{this.dmSV.menuActive.getValue()}}</h4>
@@ -199,17 +385,26 @@
   <!-- begin:: TOPBAR -->
   <ng-template #headerRightBar>
     <!-- CHAT -->
-    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+    <div
+      class="d-flex align-items-center"
+      [ngClass]="codxService.toolbarButtonMarginClass"
+    >
       <!-- <codx-chat-list></codx-chat-list> -->
     </div>
     <!-- NOTES -->
     <div class="d-flex align-items-center" (click)="openFormNoteDrawer()">
       <!-- begin::Menu wrapper -->
-      <div class="btn btn-icon btn-active-light-primary position-relative"
-        [ngClass]="codxService.toolbarButtonHeightClass" id="kt_drawer_note_toggle">
+      <div
+        class="btn btn-icon btn-active-light-primary position-relative"
+        [ngClass]="codxService.toolbarButtonHeightClass"
+        id="kt_drawer_note_toggle"
+      >
         <!-- <span [ngClass]="codxService.toolbarButtonIconSizeClass"></span> -->
-        <span [inlineSVG]="'./assets/themes/sys/default/img/header_notes.svg'" class="svg-icon"
-          [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
+        <span
+          [inlineSVG]="'./assets/themes/sys/default/img/header_notes.svg'"
+          class="svg-icon"
+          [ngClass]="codxService.toolbarButtonIconSizeClass"
+        ></span>
       </div>
       <!-- end::Menu wrapper -->
     </div>
@@ -222,25 +417,37 @@
             " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
         </div>
         </div> -->
-        <codx-notify-drawer></codx-notify-drawer>
-        <codx-activies-approval-list></codx-activies-approval-list>
-
+    <codx-notify-drawer></codx-notify-drawer>
+    <codx-activies-approval-list></codx-activies-approval-list>
 
     <!-- Quick links -->
-    <erm-quick-links-inner [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+    <erm-quick-links-inner
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
       [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
-      [buttonHeightClass]="codxService.toolbarButtonHeightClass"></erm-quick-links-inner>
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+    ></erm-quick-links-inner>
     <!-- End: Quick links -->
     <!-- begin::User -->
-    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"
-      [buttonMarginClass]="codxService.toolbarButtonMarginClass"></codx-user-inner>
+    <codx-user-inner
+      [user]="user"
+      (onAvatarChanged)="this.reloadAvatar($event)"
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+    ></codx-user-inner>
     <!-- end::User -->
 
     <ng-container *ngIf="headerLeft === 'menu'">
-      <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
-        <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
-          id="kt_header_menu_mobile_toggle">
-          <span [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'" class="svg-icon svg-icon-1"></span>
+      <div
+        class="d-flex align-items-center d-lg-none ms-2 me-n3"
+        title="Show header menu"
+      >
+        <div
+          class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+          id="kt_header_menu_mobile_toggle"
+        >
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'"
+            class="svg-icon svg-icon-1"
+          ></span>
         </div>
       </div>
     </ng-container>
@@ -310,5 +517,3 @@
       </div>
     </ng-container>
   </ng-template> -->
-
-  

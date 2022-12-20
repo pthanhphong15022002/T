@@ -109,6 +109,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   date = new Date();
   isScroll = true;
   dataRequest = new DataRequest();
+
+  folder : any;
   @Input() idField :any ; 
   @Input() permissions :any ; 
   //ChunkSizeInKB = 1024 * 2;
@@ -140,11 +142,12 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() parentID: any = ''; // FolderID của Cấp cha chứa thư mục
   /////////////////////////////////////////////////////
   @Input() isSaveSelected = '0'; // Lưu khi chọn select file 0: false , 1 : true
-
+  @Input() isReWrite = false;
   @Input() pageSize = 5;
   @Input() heightScroll = 100;
   @Input() isTab = false;
   @Input() referType: string ="";
+  @Input() dataSelected: any;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
@@ -283,6 +286,64 @@ export class AttachmentComponent implements OnInit, OnChanges {
     return this.allowMultiFile == '1' ? true : false;
   }
 
+  setFormModel()
+  {
+    if(this.formModel)
+    {
+      this.objectType = this.formModel.entityName;
+      this.functionID = this.formModel.funcID;
+    }
+  }
+
+ 
+
+  getFolder()
+  {
+    if(this.dataSelected)
+    {
+      this.objectId = this.dataSelected.recID;
+      if(this.functionID)
+      {
+        this.cache.functionList(this.functionID).subscribe(item=>{
+          if(item)
+          {
+            if(
+              item?.subFolderControl && 
+              item?.subFolderControl != "0" &&
+              item?.subFolderControl != "1" && 
+              item?.subFolderControl != "2" &&
+              item?.subFolderControl != "3" &&
+              item?.subFolderControl != "4" &&
+              item?.subFolderControl != "5"
+            )
+            {
+              var lstSub = item?.subFolderControl.split("_");
+              if(lstSub)
+              {
+                var data = [];
+                for(var i = 0 ; i < lstSub.length ; i++)
+                {
+                  var field = this.jsUcfirst(lstSub[i]);
+                  var name = this.dataSelected[field];
+                  data.push(name);
+                }
+                this.folder = 
+                {
+                  folderName : data.join("_"),
+                  folderID : this.objectId
+                }
+              }
+            }
+          }
+        })
+      }
+    }
+  }
+
+  jsUcfirst(string:any) 
+  {
+      return string.charAt(0).toLowerCase() + string.slice(1);
+  }
   // upload file tai day
   public onFileSelect(args: SelectedEventArgs): void {
     if (
@@ -391,7 +452,8 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.objectId != '' && this.objectId != undefined) {
+    if (this.objectId || this.dataSelected) {
+      this.getFolder();
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
       this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && ReferType=@1';
@@ -411,6 +473,9 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+
+    this.setFormModel();
+    this.getFolder();
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();
     this.fileService.getAllowSizeUpload().subscribe((item) => {
@@ -672,6 +737,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           .addMultiFileObservable(
             this.fileUploadList,
             this.isDM,
+            this.folder,
             this.fdID,
             this.fdName,
             this.parentID,
@@ -729,17 +795,18 @@ export class AttachmentComponent implements OnInit, OnChanges {
                           if (x.event.status == 'Y') {
                             // save all
                             if (x.event.data) {
-                              for (
-                                var i = 0;
-                                i < this.fileUploadList.length;
-                                i++
-                              ) {
-                                this.fileUploadList[i].reWrite = true;
-                              }
+                              // for (
+                              //   var i = 0;
+                              //   i < this.fileUploadList.length;
+                              //   i++
+                              // ) {
+                              //   this.fileUploadList[i].reWrite = true;
+                              // }
                               this.fileService
                                 .addMultiFileObservable(
                                   this.fileUploadList,
                                   this.isDM,
+                                  this.folder,
                                   this.fdID,
                                   this.fdName,
                                   this.parentID,
@@ -766,10 +833,10 @@ export class AttachmentComponent implements OnInit, OnChanges {
                                 });
                             } else {
                               // save 1
-                              var index = this.fileUploadList.findIndex(
-                                (x) => x.fileName == item.data.fileName
-                              );
-                              this.fileUploadList[index].reWrite = true;
+                              // var index = this.fileUploadList.findIndex(
+                              //   (x) => x.fileName == item.data.fileName
+                              // );
+                              // this.fileUploadList[index].reWrite = true;
                               this.onMultiFileSaveObservable();
                             }
                           } else if (x.event.status == 'N') {
@@ -855,6 +922,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
         .addMultiFile(
           this.fileUploadList,
           this.isDM,
+          this.folder,
           this.fdID,
           this.fdName,
           this.parentID,
@@ -960,7 +1028,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                       // save all
                       if (x.event.data) {
                         for (var i = 0; i < this.fileUploadList.length; i++) {
-                          this.fileUploadList[i].reWrite = true;
+                          //this.fileUploadList[i].reWrite = true;
                           this.fileUploadList[i].description =
                             this.description[i];
                         }
@@ -968,6 +1036,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                           .addMultiFile(
                             this.fileUploadList,
                             this.isDM,
+                            this.folder,
                             this.fdID,
                             this.fdName,
                             this.parentID,
@@ -990,7 +1059,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                         var index = this.fileUploadList.findIndex(
                           (x) => x.fileName == item.data.fileName
                         );
-                        this.fileUploadList[index].reWrite = true;
+                        //this.fileUploadList[index].reWrite = true;
                         this.onMultiFileSave();
                       }
                     } else if (x.event.status == 'N') {
@@ -1139,6 +1208,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
               .addFileObservable(
                 fileItem,
                 this.isDM,
+                this.folder,
                 this.fdID,
                 this.fdName,
                 this.parentID,
@@ -1167,6 +1237,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
                     .addFileObservable(
                       fileItem,
                       this.isDM,
+                      this.folder,
                       this.fdID,
                       this.fdName,
                       this.parentID,
@@ -1406,7 +1477,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem, this.isDM).toPromise();
+    var done = this.fileService.addFile(fileItem, this.isDM , this.folder).toPromise();
     if (done) {
       done
         .then((item) => {
@@ -1776,7 +1847,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
         fileUpload.funcID = this.functionID;
         fileUpload.folderType = this.folderType;
-        fileUpload.reWrite = false;
+        fileUpload.reWrite = this.isReWrite;
         fileUpload.data = item;
         fileUpload.item = files[i];
         fileUpload.folderID = this.folderId;

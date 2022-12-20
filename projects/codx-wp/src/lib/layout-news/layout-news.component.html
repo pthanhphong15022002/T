@@ -1,9 +1,16 @@
+<div codxcontainer></div>
+<div modifyLang></div>
 <ng-container *ngIf="user">
   <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
       <div class="wrapper d-flex flex-column flex-row-fluid">
-        <codx-header [class]="headerCSSClasses" [headerBar]="headerBar" class="header align-items-stretch"
-          [headerRightBar]="headerRightBar" #codxHeader>
+        <codx-header
+          [class]="headerCSSClasses"
+          [headerBar]="headerBar"
+          class="header align-items-stretch"
+          [headerRightBar]="headerRightBar"
+          #codxHeader
+        >
         </codx-header>
         <!-- <codx-wrapper class="d-flex flex-column flex-column-fluid" (resizedEvent)="contentResized($event)">
         </codx-wrapper> -->
@@ -25,7 +32,10 @@
   <!-- begin:: TOPBAR -->
   <ng-template #headerRightBar>
     <!-- CHAT -->
-    <div class="d-flex align-items-center" [ngClass]="codxService.toolbarButtonMarginClass">
+    <div
+      class="d-flex align-items-center"
+      [ngClass]="codxService.toolbarButtonMarginClass"
+    >
       <!-- <codx-chat-list></codx-chat-list> -->
     </div>
     <!-- NOTIFICATIONS -->
@@ -41,22 +51,34 @@
     <codx-notify-drawer></codx-notify-drawer>
     <codx-activies-approval-list></codx-activies-approval-list>
 
-
     <!-- Quick links -->
-    <erm-quick-links-inner [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+    <erm-quick-links-inner
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
       [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
-      [buttonHeightClass]="codxService.toolbarButtonHeightClass"></erm-quick-links-inner>
+      [buttonHeightClass]="codxService.toolbarButtonHeightClass"
+    ></erm-quick-links-inner>
     <!-- End: Quick links -->
     <!-- begin::User -->
-    <codx-user-inner [user]="user" (onAvatarChanged)="this.reloadAvatar($event)"
-      [buttonMarginClass]="codxService.toolbarButtonMarginClass"></codx-user-inner>
+    <codx-user-inner
+      [user]="user"
+      (onAvatarChanged)="this.reloadAvatar($event)"
+      [buttonMarginClass]="codxService.toolbarButtonMarginClass"
+    ></codx-user-inner>
     <!-- end::User -->
 
     <ng-container *ngIf="headerLeft === 'menu'">
-      <div class="d-flex align-items-center d-lg-none ms-2 me-n3" title="Show header menu">
-        <div class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
-          id="kt_header_menu_mobile_toggle">
-          <span [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'" class="svg-icon svg-icon-1"></span>
+      <div
+        class="d-flex align-items-center d-lg-none ms-2 me-n3"
+        title="Show header menu"
+      >
+        <div
+          class="btn btn-icon btn-active-light-primary w-30px h-30px w-md-40px h-md-40px"
+          id="kt_header_menu_mobile_toggle"
+        >
+          <span
+            [inlineSVG]="'./assets/media/icons/duotune/text/txt001.svg'"
+            class="svg-icon svg-icon-1"
+          ></span>
         </div>
       </div>
     </ng-container>
@@ -66,46 +88,99 @@
     <ng-container *ngIf="valueList">
       <div class="d-flex align-items-center justify-content-between w-100">
         <div class="me-4 cursor-pointer">
-          <span [class.text-primary]="category == 'home'" class="p-2"
-            (click)="navigate('home','WPT02')">
-              <codx-label formName="News" name="lblHome" default="Tất cả"></codx-label>
+          <span
+            [class.text-primary]="category == 'home'"
+            class="p-2"
+            (click)="navigate('home', 'WPT02')"
+          >
+            <codx-label
+              formName="News"
+              name="lblHome"
+              default="Tất cả"
+            ></codx-label>
           </span>
         </div>
         <div class="me-4 cursor-pointer" *ngFor="let vll of valueList">
-          <span [class.text-primary]="category == vll.value" 
+          <span
+            [class.text-primary]="category == vll.value"
             class="p-2 cursor-pointer"
-            class="menu-link py-3" 
-            (click)="navigate(vll.value,'WPT02')">
-            {{vll.text}}
+            class="menu-link py-3"
+            (click)="navigate(vll.value, 'WPT02')"
+          >
+            {{ vll.text }}
           </span>
         </div>
         <div class="me-4 cursor-pointer">
           <div class="" ngbDropdown>
-            <span class="p-2 cursor-pointer" tabindex="0" ngbDropdownToggle id="navbarDropdown1" role="button">
-              <codx-label [class.text-primary]="category == 'approvals'" formName="News" name="lblADmin" default="Quản trị bài viết"></codx-label>
+            <span
+              class="p-2 cursor-pointer"
+              tabindex="0"
+              ngbDropdownToggle
+              id="navbarDropdown1"
+              role="button"
+            >
+              <codx-label
+                [class.text-primary]="category == 'approvals'"
+                formName="News"
+                name="lblADmin"
+                default="Quản trị bài viết"
+              ></codx-label>
             </span>
-            <div ngbDropdownMenu aria-labelledby="navbarDropdown1" class="dropdown-menu">
-              <span class="px-2" ngbDropdownItem 
-                (click)="navigate('approvals', 'WPT0211')" 
-                class="dropdown-item" 
-                href="javascript:;">
-                <codx-label [class.text-primary]="category == 'approvals'" formName="News" name="lblMyNews" default="Tin tức của tôi"></codx-label>
+            <div
+              ngbDropdownMenu
+              aria-labelledby="navbarDropdown1"
+              class="dropdown-menu"
+            >
+              <span
+                class="px-2"
+                ngbDropdownItem
+                (click)="navigate('approvals', 'WPT0211')"
+                class="dropdown-item"
+                href="javascript:;"
+              >
+                <codx-label
+                  [class.text-primary]="category == 'approvals'"
+                  formName="News"
+                  name="lblMyNews"
+                  default="Tin tức của tôi"
+                ></codx-label>
               </span>
-              <span ngbDropdownItem (click)="navigate('approvals', 'WPT0212')" class="dropdown-item" href="javascript:;">
-                <codx-label formName="News" name="lblADMinNews" default="Xét duyệt tin tức - sự kiện"></codx-label>
+              <span
+                ngbDropdownItem
+                (click)="navigate('approvals', 'WPT0212')"
+                class="dropdown-item"
+                href="javascript:;"
+              >
+                <codx-label
+                  formName="News"
+                  name="lblADMinNews"
+                  default="Xét duyệt tin tức - sự kiện"
+                ></codx-label>
               </span>
-              <span ngbDropdownItem (click)="navigate('approvals', 'WPT0213')" class="dropdown-item" href="javascript:;">
-                <codx-label formName="News" name="lblADMinNews" default="Xét duyệt bài viết MXH"></codx-label>
+              <span
+                ngbDropdownItem
+                (click)="navigate('approvals', 'WPT0213')"
+                class="dropdown-item"
+                href="javascript:;"
+              >
+                <codx-label
+                  formName="News"
+                  name="lblADMinNews"
+                  default="Xét duyệt bài viết MXH"
+                ></codx-label>
               </span>
             </div>
           </div>
         </div>
         <ng-container *ngIf="userPermission && userPermission.create">
           <div class="me-4 cursor-pointer">
-            <span  
-              class="p-2"
-              (click)="navigate('settings','WPT022')">
-              <codx-label [class.text-primary]="category == 'settings'"  formName="News" name="lblSetting" default="Thiết lập"></codx-label>
+            <span class="p-2" (click)="navigate('settings', 'WPT022')">
+              <codx-label
+                [class.text-primary]="category == 'settings'"
+                formName="News"
+                name="lblSetting"
+                default="Thiết lập"
+              ></codx-label>
             </span>
           </div>
         </ng-container>

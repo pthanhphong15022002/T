@@ -532,6 +532,34 @@ export class CodxEpService {
       [recID, driverID]
     );
   }
+  getUserByListDepartmentID(listDepID) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetUserByListDepartmentIDAsync',
+      listDepID
+    );
+  }
+
+  getListUserIDByListOrgIDAsync(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetListUserIDByListOrgIDAsync',
+      data
+    );
+  }
+  getListUserIDByListPositionsID(listPositionID){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EmployeesBusiness',
+      'GetListUserIDByListPositionsIDAsync',
+      listPositionID
+    );  
+  }
   //#endregion
 
   //#region EmailTemplate

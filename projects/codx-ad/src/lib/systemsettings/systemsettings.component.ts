@@ -26,7 +26,7 @@ import {
 @Component({
   selector: 'lib-systemsettings',
   templateUrl: './systemsettings.component.html',
-  styleUrls: ['./systemsettings.component.css'],
+  styleUrls: ['./systemsettings.component.scss'],
 })
 export class SystemsettingsComponent extends UIComponent implements OnInit {
   views: Array<ViewModel> = [];
@@ -42,10 +42,10 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
   dialog!: DialogRef;
   functionList: SYS_FunctionList[] = [];
   pwLifeDays = "";
-  pwExpireWarning= "";
-  pwDuplicate= "";
-  blockSystem="";
-  freezeInMinutes="";
+  pwExpireWarning = "";
+  pwDuplicate = "";
+  blockSystem = "";
+  freezeInMinutes = "";
   name = '';
   private all = ['Thông tin chung', 'Chính sách bảo mật', 'Cấu hình ứng dụng'];
   active = 1;
@@ -116,7 +116,7 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
     var t = this;
   }
 
-  selectedChange(val: any) {}
+  selectedChange(val: any) { }
 
   readMore(dataItem) {
     //this.tableView.addHandler(dataItem, false, "taskGroupID");
@@ -134,8 +134,8 @@ export class SystemsettingsComponent extends UIComponent implements OnInit {
         .execSv('SYS', 'AD', 'SystemSettingsBusiness', 'UpdateSystemAsync', [
           this.systemSetting,
         ])
-        .subscribe(res=>{
-          if(res){
+        .subscribe(res => {
+          if (res) {
             console.log(res);
             this.systemSetting[e.field] = res[e.field];
           }

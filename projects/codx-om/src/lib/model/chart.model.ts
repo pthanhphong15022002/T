@@ -1,7 +1,7 @@
 import { AxisModel, ChartAreaModel } from '@syncfusion/ej2-angular-charts';
 import { SeriesSetting } from 'codx-core';
 
-export class ChartData {
+export class ChartSettings {
   title?: string;
   dataSource?: any;
   legendSetting?: Object;
@@ -15,3 +15,6 @@ export class ChartData {
   className?: string;
   method?: string;
 }
+
+
+// export class 

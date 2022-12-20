@@ -153,7 +153,7 @@ export class ProcessesComponent
     super(inject);
     this.user = this.authStore.get();
     if (this.user?.employee) this.employee = this.user?.employee;
-    this.userGroupID = this.user.groupID;
+    this.userGroupID = this.user?.groupID;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     //this.showButtonAdd = this.funcID != 'BPT6'
     this.cache.gridViewSetup('Processes', 'grvProcesses').subscribe((res) => {
@@ -806,16 +806,17 @@ export class ProcessesComponent
               res.isblur = true;
             }
             break;
+          case 'SYS04':
+            if(data.deleted){
+              res.disabled = true;
+            }
+            break;
           case 'SYS003': // them phien ban
             let isCreate = data?.permissions.some(
               (x) => x.objectID == checkGroup && x.create
             );
             if ((!isCreate && !fullRole) || data.deleted) {
-              if (res.functionID === 'SYS04') {
-                res.disabled = true;
-              } else {
-                res.isblur = true;
-              }
+              res.isblur = true;
             }
             break;
           case 'SYS03': //sua
@@ -907,9 +908,11 @@ export class ProcessesComponent
         if (res) {
           switch (res.objectType) {
             case 'O':
+            case '3':
               if (res.objectID == this.employee?.orgUnitID)
                 isCheck = res.objectID;
               break;
+            case '4':
             case 'D':
               if (res.objectID == this.employee?.departmentID)
                 isCheck = res.objectID;
@@ -918,18 +921,32 @@ export class ProcessesComponent
               if (res.objectID == this.employee?.positionID)
                 isCheck = res.objectID;
               break;
-            //Mai sửa lại
+            //Mai sửa lại - Roles
             case 'R':
-              if (res.objectID == this.employee?.positionID)
-                isCheck = res.objectID;
+              var isRole = this.bpService
+                .getRoles(res.objectID)
+                .subscribe((res) => {
+                  if (res) return true;
+                  else return false;
+                });
+              if (isRole) isCheck = res.objectID;
               break;
             //Mai sửa lại
+            case '2':
             case 'G':
-              if (res.objectID == this.employee?.positionID)
-                isCheck = res.objectID;
+              if (res.objectID == this.userGroupID) isCheck = res.objectID;
               break;
+            case '1':
             case 'U':
               if (res.objectID == this.user.userID) isCheck = res.objectID;
+              break;
+            case '5':
+              if (res.objectID == this.employee?.divisionID)
+                isCheck = res.objectID;
+              break;
+            case '6':
+              if (res.objectID == this.employee?.companyID)
+                isCheck = res.objectID;
               break;
           }
         }

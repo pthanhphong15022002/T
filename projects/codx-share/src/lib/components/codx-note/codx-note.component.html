@@ -1,5 +1,5 @@
 <div class="card-note">
-    <ng-container >
+    <ng-container>
         <div #body class="rounded-2 bg-body border border-1 h-400px overflow-auto p-3">
             <div *ngFor="let item of contents; index as i">
                 <div class="has-action-menu">
@@ -14,7 +14,7 @@
                                 <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
                                     <li>
                                         <button (click)="clickFunction('delete', '', '', item, i, false)"
-                                            class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            class="dropdown-item d-flex align-items-center">
                                             <span [class]="'icon-clear icon-20 me-2'" [style.color]="'red'"></span>
                                             <span class="show-customName">{{ "Xóa" }}</span>
                                         </button>
@@ -22,34 +22,34 @@
                                     <!-- <hr class="dropdown-divider" />
                                     <li>
                                         <button (click)="clickFunction('format', 'TITLE', input, '', i, false)"
-                                            class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            class="dropdown-item d-flex align-items-center">
                                             <span [class]="'icon-title icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Tiêu đề" }}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <button (click)="clickFunction('format', 'TEXT', input, '', i, false)"
-                                            class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            class="dropdown-item d-flex align-items-center">
                                             <span [class]="'icon-format_size icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Dữ liệu thường" }}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <button (click)="clickFunction('format', 'CHECKBOX', input, '', i, false)"
-                                            class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            class="dropdown-item d-flex align-items-center">
                                             <span [class]="'icon-check_box  icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Check list" }}</span>
                                         </button>
                                     </li>
                                     <li>
                                         <button (click)="clickFunction('format', 'LIST', input, '', i, false)"
-                                            class="dropdown-item text-hover-primary d-flex align-items-center">
+                                            class="dropdown-item d-flex align-items-center">
                                             <span [class]="'icon-list_alt  icon-20 me-2'" [style.color]=""></span>
                                             <span class="show-customName">{{ "Danh sách" }}</span>
                                         </button>
                                     </li> -->
                                     <!-- <li>
-                                        <button class="dropdown-item text-hover-primary d-flex align-items-center">
+                                        <button class="dropdown-item d-flex align-items-center">
                                             <span [class]="'icon-format_list_numbered icon-20 me-2'"
                                                 [style.color]=""></span>
                                             <span class="show-customName">{{ "Số thứ tự" }}</span>
@@ -90,7 +90,7 @@
                                     <hr />
                                     <ng-container *ngIf="showMF">
                                         <li>
-                                            <button class="dropdown-item text-hover-primary d-flex align-items-center"
+                                            <button class="dropdown-item d-flex align-items-center"
                                                 (click)="clickFunction('assign', '', input, '', i)">
                                                 <span [class]="'icon-person_add_alt_1 icon-20 me-2'"
                                                     [style.color]="'dodgerblue'"></span>
@@ -98,7 +98,7 @@
                                             </button>
                                         </li>
                                         <li>
-                                            <button class="dropdown-item text-hover-primary d-flex align-items-center"
+                                            <button class="dropdown-item d-flex align-items-center"
                                                 (click)="clickFunction('comment', '', input, '', i)">
                                                 <span [class]="'icon-chat_bubble_outline icon-20 me-2'"
                                                     [style.color]="'dodgerblue'"></span>
@@ -110,7 +110,7 @@
                                         <li>
                                             <button (click)="clickFunction('attachment', '', input, '', i, false)"
                                                 [disabled]="(item.lineType == 'FILE' || item.lineType == 'IMAGE') ? true : false"
-                                                class="dropdown-item text-hover-primary d-flex align-items-center">
+                                                class="dropdown-item d-flex align-items-center">
                                                 <span [class]="'icon-attach_file icon-20 me-2'"
                                                     [style.color]="(item.lineType == 'FILE' || item.lineType == 'IMAGE') ? 'darkgray': 'dodgerblue'"></span>
                                                 <span class="show-customName">{{ "Đính kèm file" }}</span>

@@ -337,11 +337,14 @@ export class AddNoteComponent implements OnInit {
         )
         .subscribe(async (res) => {
           if (res) {
-            var dtNew = res;
-            dtNew.type = 'WP_Notes';
+            let dtNew = res;
+            dtNew['transType'] = 'WP_Notes';
+            dtNew['title'] = res.memo;
+            dtNew['transID'] = res.transID;
+            dtNew['calendarDate'] = res.createdOn;
             if (this.listFileUpload.length > 0) {
               this.listFileUpload.forEach((dt) => {
-                dt.objectID = dtNew.recID;
+                dt.objectID = dtNew.transID;
               });
               this.attachmentAdd.fileUploadList = [...this.listFileUpload];
               (await this.attachmentAdd.saveFilesObservable()).subscribe(
@@ -448,17 +451,20 @@ export class AddNoteComponent implements OnInit {
     this.note.fileCount = this.listFileUpload?.length;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.note?.recID,
+        this.note?.transID,
         this.note,
       ])
       .subscribe(async (res) => {
         if (res) {
-          var dtNew = res;
-          dtNew.type = 'WP_Notes';
+          let dtNew = res;
+          dtNew['transType'] = 'WP_Notes';
+          dtNew['title'] = res.memo;
+          dtNew['transID'] = res.transID;
+          dtNew['calendarDate'] = res.createdOn;
           this.checkUpdate = true;
           if (this.listFileEdit?.length > 0) {
             this.listFileEdit?.forEach((x) => {
-              this.deleteFileByRecID(x.recID, true);
+              this.deleteFileByRecID(x.transID, true);
             });
           }
           var checkDifferentFile =
@@ -466,12 +472,13 @@ export class AddNoteComponent implements OnInit {
             JSON.stringify(this.listFileUpload);
           if (this.listFileUpload?.length > 0 && !checkDifferentFile) {
             this.listFileUpload?.forEach((dt) => {
-              dt.objectID = this.note.recID;
+              dt.objectID = this.note.transID;
             });
             this.attachmentEdit.fileUploadList = this.listFileUpload;
+            this.attachmentEdit.objectId = this.note.transID;
             (await this.attachmentEdit.saveFilesObservable()).subscribe(
               (res: any) => {
-                if (res) {
+                if (res?.length > 0) {
                 }
               }
             );
@@ -568,7 +575,7 @@ export class AddNoteComponent implements OnInit {
         'ERM.Business.DM',
         'FileBussiness',
         'GetFilesByObjectIDImageAsync',
-        this.note.recID
+        this.note.transID
       )
       .subscribe((res) => {});
   }

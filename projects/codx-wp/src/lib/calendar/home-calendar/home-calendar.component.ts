@@ -17,6 +17,7 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import moment from 'moment';
 import { CalendarNotesComponent } from 'projects/codx-share/src/lib/components/calendar-notes/calendar-notes.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 
@@ -30,11 +31,11 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   funcID: any;
   fields = {
-    id: 'TransID',
-    subject: { name: 'Title' },
-    startTime: { name: 'StartDate' },
-    endTime: { name: 'EndDate' },
-    status: 'TransType',
+    id: 'transID',
+    subject: { name: 'title' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    status: 'transType',
   };
   request?: ResourceModel;
   tmpCalendarNote: any;
@@ -172,18 +173,20 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
   }
 
   getCalendarSetting(resource) {
-    var a = this.calendar_setting.createComponent(SettingCalendarComponent);
-    a.instance.funcID = this.funcID;
-    a.instance.fields = this.fields;
-    a.instance.request = this.request;
-    a.instance.showHeader = false;
-    a.instance.resources = resource;
     let myInterval = setInterval(() => {
-      if (this.tmpCalendarNote.instance.dataResourceModel) {
+      if (
+        this.tmpCalendarNote.instance.dataResourceModel.length > 0 &&
+        this.tmpCalendarNote.instance.countDataOfE ==
+          this.tmpCalendarNote.instance.countEvent
+      ) {
         clearInterval(myInterval);
+        let a = this.calendar_setting.createComponent(SettingCalendarComponent);
+        a.instance.funcID = this.funcID;
+        a.instance.fields = this.fields;
+        a.instance.resources = resource;
         a.instance.resourceModel =
           this.tmpCalendarNote.instance.dataResourceModel;
-        debugger;
+        console.log("check resourceModel", a.instance.resourceModel)
       }
     });
   }

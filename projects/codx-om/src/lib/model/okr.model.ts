@@ -64,6 +64,8 @@ export class OKRs {
     createdBy:string;
     modifiedOn:Date;
     modifiedBy:string;
+    //Custom
+    startMonth:number;
   }
 
   export class CheckIns{
@@ -72,6 +74,7 @@ export class OKRs {
     oKRStatus:string;
     checkIn:Date;
     value:number;
+    cummulated:number;
     status:string;
     comment:string;
     positionName:string;
@@ -118,3 +121,10 @@ export class OKRs {
     modifiedBy:string;
   }
 
+  export class EditWeight{
+    recID:string;
+    index:number;
+    weight:number;
+    pbyw:number;
+    progress:number;
+  }

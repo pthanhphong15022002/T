@@ -1,3 +1,4 @@
+import { OMCONST } from './../../codx-om.constant';
 import {
   Component,
   EventEmitter,
@@ -40,22 +41,27 @@ export class PopupAddKRComponent extends UIComponent {
 
   headerText = '';
   subHeaderText = '';
-  month='Tháng';
-  quarter='Quý';
+  month = 'Tháng';
+  quarter = 'Quý';
 
-  months=['1','2','3','4','5','6','7','8','9','10','11','12'];
-  quarters =['1','2','3','4'];
+  months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+  quarters = ['1', '2', '3', '4'];
+  quartersMonth = ['1', '4', '7', '10'];
+  typePlan = '';
+  planMonth = [];
+  planQuarter = [];
 
-  planMonth=[];
-  planQuarter=[];
-
+  listTarget = [];
   formModel: FormModel;
   dialogRef: DialogRef;
   isAfterRender: boolean;
   fGroupAddKR: FormGroup;
-  o:any;
-  oParentID:any;
+  o: any;
+  oParentID: any;
   dialogTargets: DialogRef;
+  funcID: any;
+  tempTarget: any;
+  dataOKRPlans: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -65,15 +71,20 @@ export class PopupAddKRComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.kr = dialogData.data[0];      
-    this.o = dialogData.data[1]; 
-    this.formModel = dialogData.data[2];  
+    this.kr = dialogData.data[0];
+    this.o = dialogData.data[1];
+    this.formModel = dialogData.data[2];
     this.isAdd = dialogData?.data[3];
-    this.headerText= dialogData?.data[4];
+    this.headerText = dialogData?.data[4];
+    this.funcID = dialogData?.data[5];
+    this.dataOKRPlans = dialogData?.data[6];
     this.dialogRef = dialogRef;
-    //
+    if (!this.isAdd) {
+      this.typePlan = this.kr.plan;
+    }
   }
 
+  //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {}
 
   onInit(): void {
@@ -81,29 +92,55 @@ export class PopupAddKRComponent extends UIComponent {
     //   this.formModel=res;
     //   this.initForm();
     // })
-    this.cache.valueList('OM006').subscribe(res=>{
-      if(res){
-        var x= res;
+    this.cache.valueList('OM006').subscribe((res) => {
+      if (res) {
+        var x = res;
       }
-    })
+    });
     this.initForm();
   }
+
   initForm() {
     this.codxOmService
       .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
       .then((item) => {
-        this.fGroupAddKR = item;  
-        if(this.isAdd){
-          this.kr=this.fGroupAddKR.value;  
-          this.kr.parentID=this.o?.recID;
-        }    
+        this.fGroupAddKR = item;
+        if (this.isAdd) {
+          this.kr = this.fGroupAddKR.value;
+          this.kr.parentID = this.o?.recID;
+        }
         this.isAfterRender = true;
-      });    
+      });
   }
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Base Event------------------------//
+
+  valueChange(evt: any) {
+    if (evt && evt.field) {
+      if (this.kr.plan == OMCONST.VLL.Plan.Month) {
+        this.planMonth[evt.field] = evt.data;
+      }
+      if (this.kr.plan == OMCONST.VLL.Plan.Month) {
+        this.planQuarter[evt.field] = evt.data;
+      }
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Get Data Func---------------------//
   
 
-  
+  //-----------------------End-------------------------------//
 
+  //-----------------------Validate Func---------------------//
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Logic Func------------------------//
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddKR.value;
     option.methodName = '';
@@ -111,113 +148,157 @@ export class PopupAddKRComponent extends UIComponent {
     return true;
   }
 
-  onSaveForm(){
+  onSaveForm() {
+    this.kr.parentID = '2fe69da4-7217-11ed-b6e9-d89ef34ba7ae';
+    this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
+
     //tính lại Targets cho KR
-    if(this.kr.targets?.length==0 || this.kr.targets==null){
+    if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget();
+      this.onSaveTarget();
+    }
+    if (this.isAdd) {
+      this.methodAdd(this.kr);
+    } else {
+      this.methodEdit(this.kr);
     }
   }
-
-  typePlan='';
-
-  openPopupTarget(template: any) {   
-    
-
-    if((this.kr.targets?.length==0 || this.kr.targets==null) || this.kr.plan!=this.typePlan){
-      this.calculatorTarget();
-      if( this.kr.plan=='M'){
-        this.typePlan='M';
+  methodAdd(kr: any) {
+    this.codxOmService.addKR(this.kr).subscribe((res: any) => {
+      if (res) {
+        var x = res;
+        this.afterSave(res);
       }
-      else if( this.kr.plan=='Q'){      
-        this.typePlan='Q';
+    });
+  }
+
+  methodEdit(kr: any) {
+    this.codxOmService.editKR(this.kr).subscribe((res: any) => {
+      if (res) {
+        var x = res;
+        this.afterSave(res);
+      }
+    });
+  }
+  afterSave(kr: any) {
+    if (this.isAdd) {
+      this.notificationsService.notifyCode('SYS006');
+    } else {
+      this.notificationsService.notifyCode('SYS007');
+    }
+    this.dialogRef && this.dialogRef.close(kr);
+  }
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Logic Event-----------------------//
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Custom Func-----------------------//
+  //Thiết lập OKRLevel theo funcID
+  OKRLevel() {
+    switch (this.funcID) {
+      case OMCONST.FUNCID.Company:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Company;
+        break;
+      case OMCONST.FUNCID.Department:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Department;
+        break;
+      case OMCONST.FUNCID.Team:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Team;
+        break;
+      case OMCONST.FUNCID.Person:
+        this.kr.okrLevel = OMCONST.VLL.OKRLevel.Person;
+        break;
+    }
+    this.detectorRef.detectChanges();
+  }
+
+  calculatorTarget() {
+    if (this.kr.target && this.kr.plan) {
+      this.planMonth = [];
+      this.planQuarter = [];
+      if (this.kr.plan == OMCONST.VLL.Plan.Month) {
+        for (let i = 1; i <= 12; i++) {
+          this.planMonth.push(this.kr.target / 12);
+        }
+      } else if (this.kr.plan == OMCONST.VLL.Plan.Quarter) {
+        for (let i = 1; i <= 4; i++) {
+          this.planQuarter.push(this.kr.target / 4);
+        }
       }
     }
-    else{
-      if( this.kr?.plan=='M'){
-        
-      this.typePlan='M';
-        this.planMonth=[];
-        this.kr.targets.forEach(element => {
+    this.detectorRef.detectChanges();
+  }
+
+  //-----------------------End-------------------------------//
+
+  //-----------------------Popup-----------------------------//
+  openPopupTarget(template: any) {
+    if (
+      this.kr.targets?.length == 0 ||
+      this.kr.targets == null ||
+      this.kr.plan != this.typePlan
+    ) {
+      this.calculatorTarget();
+      if (this.kr.plan == OMCONST.VLL.Plan.Month) {
+        this.typePlan = OMCONST.VLL.Plan.Month;
+      } else if (this.kr.plan == OMCONST.VLL.Plan.Quarter) {
+        this.typePlan = OMCONST.VLL.Plan.Quarter;
+      }
+    } else {
+      if (this.kr?.plan == OMCONST.VLL.Plan.Month) {
+        this.typePlan = OMCONST.VLL.Plan.Month;
+        this.planMonth = [];
+        Array.from(this.kr.targets).forEach((element: any) => {
           this.planMonth.push(element.target);
         });
-      }
-      else if( this.kr?.plan=='Q'){
-            
-      this.typePlan='Q';
-        this.planQuarter=[];
-        this.kr.targets.forEach(element => {
+      } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
+        this.typePlan = OMCONST.VLL.Plan.Quarter;
+        this.planQuarter = [];
+        Array.from(this.kr.targets).forEach((element: any) => {
           this.planQuarter.push(element.target);
         });
       }
     }
     
-    if( this.kr?.plan=='M'){
-      this.dialogTargets = this.callfc.openForm(template, '', 550, 800, null,);
-    }
-    else if( this.kr?.plan=='Q'){
-      this.dialogTargets = this.callfc.openForm(template, '', 550, 420 , null,);
+
+    if (this.kr?.plan == OMCONST.VLL.Plan.Month) {
+      this.dialogTargets = this.callfc.openForm(template, '', 550, 800, null);
+    } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
+      this.dialogTargets = this.callfc.openForm(template, '', 550, 420, null);
     }
     this.detectorRef.detectChanges();
   }
-
-  calculatorTarget(){
-    if(this.kr.target && this.kr.plan){
-      this.planMonth=[];
-      this.planQuarter=[];
-      if(this.kr.plan=='M'){
-        for (let i = 1; i <= 12; i++) {
-          this.planMonth.push(this.kr.target/12)
-        }
-      }
-      else if(this.kr.plan=='Q'){
-        for (let i = 1; i <= 4; i++) {
-          this.planQuarter.push(this.kr.target/4)
-        }
-      }
-    }
-    this.detectorRef.detectChanges();
-  }
-
-  onSaveTarget(){
-    this.kr.targets=[];
-    let krTarget=[];
-    let type ='';
-    if(this.kr.plan=='M'){
-      type='M';
-      this.planMonth.forEach(item=>{
+  onSaveTarget() {
+    this.kr.targets = [];
+    let krTarget = [];
+    let type = '';
+    if (this.kr.plan == OMCONST.VLL.Plan.Month) {
+      type = OMCONST.VLL.Plan.Month;
+      this.planMonth.forEach((item) => {
+        krTarget.push(item);
+      });
+    } else if (this.kr.plan == OMCONST.VLL.Plan.Quarter) {
+      type = OMCONST.VLL.Plan.Quarter;
+      this.planQuarter.forEach((item) => {
         krTarget.push(item);
       });
     }
-    else if(this.kr.plan=='Q'){
-      type='Q';
-      this.planQuarter.forEach(item=>{
-        krTarget.push(item);
-      });
-    }    
-    krTarget.forEach(item=>{
-      let tempTarget= new Targets();
-      tempTarget.period=this.kr.periodID;
-      tempTarget.oKRID=this.kr.recID;
-      tempTarget.planDate=new Date();//OM_WAITING: sửa lại thành thời gian tương ứng
-      tempTarget.target=item;
-      tempTarget.createdOn=new Date();
+    krTarget.forEach((item) => {
+      let tempTarget = new Targets();
+      tempTarget.period = this.kr.periodID;
+      tempTarget.oKRID = this.kr.recID;
+      tempTarget.planDate = new Date(); //OM_WAITING: sửa lại thành thời gian tương ứng
+      tempTarget.target = item;
+      tempTarget.createdOn = new Date();
       this.kr.targets.push(tempTarget);
-    });    
+    });
     this.dialogTargets.close();
-    this.dialogTargets=null;
+    this.dialogTargets = null;
   }
 
-  valueChange(evt:any){
-    if(evt && evt.field)
-    {
-      if(this.kr.plan=='M'){
-        this.planMonth[evt.field]=evt.data;
-      }
-      if(this.kr.plan=='Q'){
-        this.planQuarter[evt.field]=evt.data;
-      }
-    }
-    this.detectorRef.detectChanges();
-  }
+  //-----------------------End-------------------------------//
 }

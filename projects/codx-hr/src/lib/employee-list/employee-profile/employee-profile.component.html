@@ -11,240 +11,271 @@
   <div class="page-pw h-employee">
     <div class="page-profile">
       <div class="d-flex">
-        <div class="user-left me-7 aqua">
-          <div class="d-flex flex-column mt-9">
-            <div class="d-flex flex-column text-center mb-4">
-              <div
-                class="mb-2 d-flex justify-content-between align-items-center"
-              >
-                <span
-                  class="icon-arrow_back_ios icon-16 text-hover-primary t-gray-800 me-1"
-                ></span>
-                <codx-img
-                  class="me-4 pic-emloyee"
-                  [funcId]="'HRT03a1'"
-                  [width]="100"
-                  [objectId]="'ADMIN'"
-                  [objectType]="'HR_Employees'"
-                  [referType]="'avt'"
-                  [objectName]=""
-                  [isAllowEdit]="true"
-                  [updateDirect]="true"
-                >
-                </codx-img>
-                <span
-                  class="icon-arrow_forward_ios icon-16 text-hover-primary text-gray-800 ms-1"
-                ></span>
-              </div>
-              <!-- ngPopup -->
-              <div
-                ngbDropdown
-                class="badge badge-circle badge-light cursor-pointer text-hover-primary"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-dark-75"
-                  ngbDropdownToggle
-                >
-                </span>
+        <div class="user-left me-7 aqua rounded">
+          <div class="bg-sidebar">
+            <div class="d-flex flex-column">
+              <div class="mt-9 px-2">
+                <div class="d-flex flex-column text-center mb-4">
+                  <div
+                    class="mb-2 d-flex justify-content-between align-items-center"
+                  >
+                    <div
+                      class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center"
+                    >
+                      <span
+                        class="icon-arrow_back_ios icon-16 text-hover-primary me-1 text-white"
+                      ></span>
+                    </div>
 
-                <div ngbDropdownMenu class="" style="min-width: 350px">
-                  <div class="card card-flush">
-                    <div class="card-body pt-0">
-                      <div class="d-flex flex-column">
-                        <div class="d-flex flex-wrap mb-2">
-                          <div class="d-flex align-items-center">
-                            <span
-                              class="icon-cake icon-16 text-gray-800 me-1"
-                            ></span>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.birthday | fmDT }}</span>
-                            </span>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <span #gender>
-                              <codx-vll
-                                [showText]="true"
-                                [showBgColor]="true"
-                                [showIcon]="true"
-                                [formModel]="view.formModel"
-                                [field]="'Gender'"
-                                [value]="data?.gender"
-                                class="badge badge-light badge-square badge-md fs-7"
-                              >
-                              </codx-vll>
-                            </span>
-                          </div>
-                          <div class="d-flex align-items-center">
-                            <span
-                              class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
-                            ></span>
-                            <span #maritalStatus class="fw-bold">
-                              {{ infoPersonal.maritalStatus }}
-                              <!-- <codx-vll
-                          [showText]="true"
-                          [showBgColor]="false"
-                          [showIcon]="false"
-                          [formModel]="view.formModel"
-                          [field]="'MaritalStatus'"
-                          [value]="data?.maritalStatus"
-                          class="text-dark"
+                    <div class="position-relative">
+                      <codx-img
+                        class="me-4 pic-emloyee"
+                        [funcId]="'HRT03a1'"
+                        [width]="100"
+                        [objectId]="'ADMIN'"
+                        [objectType]="'HR_Employees'"
+                        [referType]="'avt'"
+                        [objectName]=""
+                        [isAllowEdit]="true"
+                        [updateDirect]="true"
+                      >
+                      </codx-img>
+
+                      <div
+                        ngbDropdown
+                        class="badge badge-circle badge-light cursor-pointer text-hover-primary position-absolute bottom-0 start-0 bg-primary"
+                      >
+                        <span
+                          class="icon-keyboard_arrow_down icon-18 text-white"
+                          ngbDropdownToggle
                         >
-                        </codx-vll> -->
-                            </span>
-                          </div>
-                        </div>
-                        <div class="d-flex align-items-center mb-4">
-                          <span
-                            class="icon-portrait icon-16 text-gray-800 me-1"
-                          ></span>
-                          <span class="text-dark">
-                            <span>{{ infoPersonal.personalEmail }}</span>
-                          </span>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              fiedName="PITNumber"
-                              [formModel]="view.formModel"
-                            >
-                            </codx-label>
-                            <span>{{ infoPersonal.pitNumber }}</span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex d-flex justify-content-between">
-                            <codx-label
-                              fiedName="SIRegisterNo"
-                              [formModel]="view.formModel"
-                            >
-                            </codx-label>
-                            <span class="text-dark">
-                              {{ infoPersonal.siRegisterNo }}</span
-                            >
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="joinedOn"
-                            >
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.joinedOn }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="hiredOn"
-                            >
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.hiredOn }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="EmployeeTypeID"
-                            >
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.employeeTypeID }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="userID"
-                            >
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.userID }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="lineManager"
-                            >
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.lineManager }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="timeCardNo"
-                            >
-                            </codx-label>
+                        </span>
 
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.timeCardNo }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="shiftCalendarID"
-                            >
-                            </codx-label>
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.shiftCalendarID }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="aLObjectID"
-                            >
-                            </codx-label>
+                        <div ngbDropdownMenu class="" style="min-width: 350px">
+                          <div class="card card-flush">
+                            <div class="card-body pt-0">
+                              <div class="d-flex flex-column">
+                                <div class="d-flex flex-wrap mb-2">
+                                  <div class="d-flex align-items-center">
+                                    <span
+                                      class="icon-cake icon-16 text-gray-800 me-1"
+                                    ></span>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{
+                                        infoPersonal.birthday | fmDT
+                                      }}</span>
+                                    </span>
+                                  </div>
+                                  <div class="d-flex align-items-center">
+                                    <span #gender>
+                                      <codx-vll
+                                        [showText]="true"
+                                        [showBgColor]="true"
+                                        [showIcon]="true"
+                                        [formModel]="view.formModel"
+                                        [field]="'Gender'"
+                                        [value]="data?.gender"
+                                        class="badge badge-light badge-square badge-md fs-7"
+                                      >
+                                      </codx-vll>
+                                    </span>
+                                  </div>
+                                  <div class="d-flex align-items-center">
+                                    <span
+                                      class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+                                    ></span>
+                                    <span #maritalStatus class="fw-bold">
+                                      {{ infoPersonal.maritalStatus }}
+                                      <!-- <codx-vll
+                            [showText]="true"
+                            [showBgColor]="false"
+                            [showIcon]="false"
+                            [formModel]="view.formModel"
+                            [field]="'MaritalStatus'"
+                            [value]="data?.maritalStatus"
+                            class="text-dark"
+                          >
+                          </codx-vll> -->
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="d-flex align-items-center mb-4">
+                                  <span
+                                    class="icon-portrait icon-16 text-gray-800 me-1"
+                                  ></span>
+                                  <span class="text-dark">
+                                    <span>{{
+                                      infoPersonal.personalEmail
+                                    }}</span>
+                                  </span>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      fiedName="PITNumber"
+                                      [formModel]="view.formModel"
+                                    >
+                                    </codx-label>
+                                    <span>{{ infoPersonal.pitNumber }}</span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div
+                                    class="d-flex d-flex justify-content-between"
+                                  >
+                                    <codx-label
+                                      fiedName="SIRegisterNo"
+                                      [formModel]="view.formModel"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark">
+                                      {{ infoPersonal.siRegisterNo }}</span
+                                    >
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="joinedOn"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{ infoPersonal.joinedOn }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="hiredOn"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{ infoPersonal.hiredOn }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="EmployeeTypeID"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{
+                                        infoPersonal.employeeTypeID
+                                      }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="userID"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{ infoPersonal.userID }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="lineManager"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{
+                                        infoPersonal.lineManager
+                                      }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="timeCardNo"
+                                    >
+                                    </codx-label>
 
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.aLObjectID }}</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <div class="d-flex justify-content-between">
-                            <codx-label
-                              [formModel]="view.formModel"
-                              fiedName="payrollGroupID"
-                            >
-                            </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{ infoPersonal.timeCardNo }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="shiftCalendarID"
+                                    >
+                                    </codx-label>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{
+                                        infoPersonal.shiftCalendarID
+                                      }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="aLObjectID"
+                                    >
+                                    </codx-label>
 
-                            <span class="text-dark fw-bold">
-                              <span>{{ infoPersonal.timeCardNo }}</span>
-                            </span>
+                                    <span class="text-dark fw-bold">
+                                      <span>{{ infoPersonal.aLObjectID }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <div class="d-flex justify-content-between">
+                                    <codx-label
+                                      [formModel]="view.formModel"
+                                      fiedName="payrollGroupID"
+                                    >
+                                    </codx-label>
+
+                                    <span class="text-dark fw-bold">
+                                      <span>{{ infoPersonal.timeCardNo }}</span>
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
+
+                    <div
+                      class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center"
+                    >
+                      <span
+                        class="icon-arrow_forward_ios icon-16 text-hover-primary ms-1 text-white"
+                      ></span>
+                    </div>
+                  </div>
+                  <!-- ngPopup -->
+
+                  <!-- end ngpopup -->
+                  <div class="fw-bold font-size-h5 mb-2">
+                    {{ infoPersonal.employeeName }}
+                  </div>
+                  <div class="text-primary">
+                    {{ infoPersonal.positionName }}
                   </div>
                 </div>
               </div>
-
-              <!-- end ngpopup -->
-              <div class="font-weight-bold font-size-h5 mb-2">
-                {{ infoPersonal.employeeName }}
-              </div>
-              <div class="text-dark-75">{{ infoPersonal.positionName }}</div>
             </div>
           </div>
           <hr />
@@ -285,23 +316,23 @@
 
             <div class="d-flex align-items-center mb-2">
               <span
-                class="icon-connection-point icon-16 text-gray-800 me-1"
+                class="icon-connection-point icon-16 text-primary me-1"
               ></span>
-              <span class="text-dark">
-                <span #email>Đội BA - </span>
-                <span #email>Nhóm Codx - </span>
-                <span #email>Trung tâm DXC</span>
+              <span class="text-dark fw-bold">
+                <span #email>Đội BA &#9679; </span>
+                <span #email>Nhóm Codx &#9679; </span>
+                <span #email>Trung tâm DXC </span>
               </span>
             </div>
             <div class="d-flex align-items-center mb-2">
               <span class="icon-email icon-16 text-gray-800 me-1"></span>
-              <span class="text-dark">
+              <span class="text-primary text-decoration-underline">
                 <span #email>{{ infoPersonal.email }}</span>
               </span>
             </div>
             <div class="d-flex align-items-center mb-2">
               <span class="icon-local_phone icon-16 text-gray-800 me-1"></span>
-              <span class="text-dark">
+              <span class="text-gray-400">
                 <span #phone>{{ infoPersonal.phone }}</span>
               </span>
 
@@ -327,7 +358,7 @@
                   (click)="clickTab(0)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-person icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -390,7 +421,9 @@
                   (click)="clickTab(3)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span
+                      class="icon-i-layout-text-sidebar-reverse icon-18"
+                    ></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -432,7 +465,7 @@
                   (click)="clickTab(5)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-i-gift icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -453,7 +486,7 @@
                   (click)="clickTab(6)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-i-gift icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -474,7 +507,7 @@
                   (click)="clickTab(7)"
                 >
                   <span class="me-2">
-                    <span class="icon-dashboard icon-18"></span>
+                    <span class="icon-person_remove icon-18"></span>
                   </span>
                   <div class="fw-bold">
                     <codx-label
@@ -632,7 +665,10 @@
             </div>
           </div>
           <div class="d-flex flex-column" *ngIf="crrTab == 2">
-            <div class="d-flex btn btn-hover-primary">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeBasicSalariesInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -643,7 +679,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeJobSalariesInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -687,7 +726,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandlemployeeAssetInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -762,7 +804,7 @@
           <div class="d-flex flex-column" *ngIf="crrTab == 4">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeDegreeInfo()"
+              (click)="HandleEmployeeDegreeInfo('add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -914,6 +956,35 @@
 
 <!-- pane_0 -->
 <ng-template #info>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblInfoPersonal"
+        [formModel]="view.formModel"
+        default="Thông tin cá nhân"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('1', '0')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('1', '1')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y aqua"
     data-kt-scroll="true"
@@ -927,37 +998,6 @@
       <ng-container>
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblInfoPersonal"
-                [formModel]="view.formModel"
-                default="Thông tin cá nhân"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('1', '0')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('1', '1')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -2823,19 +2863,6 @@
                     >
                     </codx-label>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeJobSalariesInfo('add', null)"
-                        >Add Ejob</span
-                      >
-                    </a>
-
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeBasicSalariesInfo('add', null)"
-                        >Add Ebasic</span
-                      >
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -3153,6 +3180,24 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
+                  <div class="d-flex flex-wrap mt-6 mb-3">
+                    <div
+                      [style.background]="'black'"
+                      class="badge border-0 me-2"
+                      *ngFor="let asset of lstAsset"
+                    >
+                      <div class="has-action-menu">
+                        {{ asset.assetCategory }} gan cung
+                        <codx-mfunc
+                          [formModel]="formModel"
+                          (clickMF)="clickMF($event, asset, 'Assets')"
+                          type="hover"
+                          [dataItem]="asset"
+                        >
+                        </codx-mfunc>
+                      </div>
+                    </div>
+                  </div>
                   <div class="row form-group"></div>
                 </div>
               </div>
@@ -3661,7 +3706,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDegreeInfo()"
+                    (click)="HandleEmployeeDegreeInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3696,9 +3741,64 @@
                 [(ngbCollapse)]="objCollapes['5.1']"
               >
                 <div class="mb-1">
-                  <div
+                  <div>
+                    <div class="d-flex flex-wrap py-3 px-4">
+                      <ng-container *ngFor="let item of lstEDegrees">
+                        <div
+                          class="border rounded min-w-250px mw-250px me-4 mb-2"
+                        >
+                          <codx-temp-full
+                            (clickMF)="clickMF($event, item, 'eDegrees')"
+                            [formModel]="formModel"
+                            [typeMF]="'hover'"
+                            [titleTmp]="titleTemplate"
+                            [subTitleTmp]="tmplateEDegreesMenuList"
+                            cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                            typeMF="hover"
+                            [dataItem]="item"
+                          ></codx-temp-full>
+                          <ng-template #tmplateEDegreesMenuList let-data>
+                            <div class="d-flex flex-column">
+                              <div>
+                                <i class="icon-home_work"></i
+                                >{{ item.trainSupplierID }}
+                              </div>
+                              <div>
+                                <i class="icon-calendar_today"></i
+                                >{{ item.courseName }}
+                                <i
+                                  class="icon-i-arrow-down-left-circle-fill"
+                                ></i
+                                >{{ item.trainForm }} |
+                                <i class="icon-airplanemode_active"></i>
+                                {{ item.ranking }}
+                                <i
+                                  class="icon-i-arrow-down-left-circle-fill"
+                                ></i>
+                                {{ item.totalScore }}
+                              </div>
+                            </div>
+                          </ng-template>
+
+                          <ng-template #titleTemplate let-data>
+                            <div class="d-flex flex-column">
+                              <div>
+                                <i class="icon-school"></i
+                                >{{ item.degreeName }}
+                                <i
+                                  class="icon-i-arrow-down-left-circle-fill"
+                                ></i
+                                >{{ item.issuedDate | fmDT }}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <!-- <div them code o day
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  ></div>
+                  ></div> -->
                 </div>
               </div>
             </div>
@@ -3798,7 +3898,10 @@
                     ></span>
                   </button>
                   <span class="text-gray-500 ms-2">|</span>
-                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-1"
+                    (click)="addSkill()"
+                  >
                     <span
                       class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                     ></span>
@@ -3826,9 +3929,79 @@
                 [(ngbCollapse)]="objCollapes['5.3']"
               >
                 <div class="mb-1">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  ></div>
+                  <ng-container *ngFor="let eSkill of lstESkill">
+                    <div class="has-action-menu">
+                      <div class="pf-skill d-flex align-items-center ms-9 mb-4">
+                        <div class="sk-title w-150px fw-bold">
+                          {{ eSkill?.skillName ?? eSkill?.skillID }}
+                        </div>
+
+                        <div
+                          class="sk-group d-flex align-items-center"
+                          *ngIf="
+                            eSkill.listSkill?.length > 0 &&
+                            eSkill.listSkill[0]?.maxGrade > 0
+                          "
+                        >
+                          <ng-container
+                            *ngFor="
+                              let item of [].constructor(
+                                eSkill.listSkill[0]?.maxGrade
+                              );
+                              let i = index
+                            "
+                          >
+                            <div
+                              class="sk-item"
+                              [ngClass]="
+                                i + 1 <= eSkill.listSkill[0]?.currentGrade
+                                  ? 'active'
+                                  : ''
+                              "
+                              [class]="
+                                i + 1 == eSkill.listSkill[0]?.currentGrade
+                                  ? 'selected'
+                                  : ''
+                              "
+                            >
+                              {{ i + 1 }}
+                            </div>
+                          </ng-container>
+
+                          <!-- <div class="sk-item active">2</div>
+                          <div class="sk-item active">3</div>
+                          <div class="sk-item active selected">4</div>
+                          <div class="sk-item">5</div>
+                          <div class="sk-item">6</div> -->
+                        </div>
+                        <codx-mfunc
+                          [formModel]="formModel"
+                          (clickMF)="
+                            clickMF($event, eSkill.listSkill[0], 'eSkill')
+                          "
+                          type="hover"
+                          [dataItem]="eSkill.listSkill[0]"
+                        >
+                        </codx-mfunc>
+                      </div>
+                    </div>
+                  </ng-container>
+
+                  <!-- <div class="pf-skill d-flex align-items-center ms-9 mb-4">
+                    <div class="sk-title w-150px fw-bold">
+                      Giải quyết vấn đề
+                    </div>
+                    <div class="sk-group d-flex align-items-center">
+                      <div class="sk-item active">1</div>
+                      <div class="sk-item active">2</div>
+                      <div class="sk-item active">3</div>
+                      <div class="sk-item active">4</div>
+                      <div class="sk-item active">5</div>
+                      <div class="sk-item active selected">6</div>
+                      <div class="sk-item">7</div>
+                      <div class="sk-item">8</div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -3863,7 +4036,10 @@
                     ></span>
                   </button>
                   <span class="text-gray-500 ms-2">|</span>
-                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-1"
+                    (click)="addSkillGrade()"
+                  >
                     <span
                       class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                     ></span>
@@ -3894,7 +4070,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvETrainCourses'"
@@ -3910,7 +4086,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eTrainCourses')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                   <!-- documentNo-status -->
                 </div>
@@ -4128,6 +4304,36 @@
 
 <!-- pane_6 -->
 <ng-template #healthInfo>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblHealthInfo"
+        [formModel]="view.formModel"
+        default="Thông tin sức khỏe"
+      >
+      </codx-label>
+    </div>
+
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('7', '0')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('7', '1')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y"
     data-kt-scroll="true"
@@ -4140,38 +4346,6 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblHealthInfo"
-                [formModel]="view.formModel"
-                default="Thông tin sức khỏe"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('7', '0')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('7', '1')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -4223,7 +4397,7 @@
                 [(ngbCollapse)]="objCollapes['7.1']"
               >
                 <div class="mb-3">
-                  <codx-gridview-v2
+                  <!-- <codx-gridview-v2
                     idField="recID"
                     [columnsGrid]=""
                     [service]="'HR'"
@@ -4240,7 +4414,7 @@
                     [contentEditable]="false"
                     [allowResizing]="true"
                     (clickMF)="clickMF($event, null, 'eHealths')"
-                  ></codx-gridview-v2>
+                  ></codx-gridview-v2> -->
                 </div>
               </div>
             </div>
@@ -4339,7 +4513,7 @@
                               <codx-mfunc
                                 [formModel]="formModel"
                                 (clickMF)="
-                                  clickMF($event, vaccine, 'evaccines')
+                                  clickMFVaccine($event, vaccine, item)
                                 "
                                 type="hover"
                                 [dataItem]="vaccine"
@@ -4376,7 +4550,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEDisease()"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4471,7 +4645,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvEAccidents'"
@@ -4487,7 +4661,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eAccidents')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                 </div>
               </div>

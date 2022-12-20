@@ -17,6 +17,7 @@ import {
 } from 'codx-core';
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
 import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
+import moment from 'moment';
 
 @Component({
   selector: 'setting-calendar',
@@ -29,23 +30,29 @@ export class SettingCalendarComponent
 {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
-  funcID: string;
   calendarID: string;
   calendarName: string;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
+  request?: ResourceModel;
+  vllPriority = 'TM005';
+  startTime: any;
+  month: any;
+  day: any;
+  resourceID: any;
   @Input() fields = {
     id: 'recID',
     subject: { name: 'memo' },
     startTime: { name: 'startDate' },
     endTime: { name: 'endDate' },
   };
-  @Input() request?: ResourceModel;
   @Input() resources!: any;
-  @Input() showHeader = true;
   @Input() resourceModel!: any;
+  @Input() funcID: string;
 
   constructor(
     private injector: Injector,
@@ -72,11 +79,71 @@ export class SettingCalendarComponent
           template3: this.cellTemplate,
           resources: this.resources,
           resourceModel: this.resourceModel,
+          template8: this.contentTmp,
+          template6: this.headerTemp,
         },
       },
     ];
     this.detectorRef.detectChanges();
   }
+
+  //region EP
+  showHour(date: any) {
+    let temp = new Date(date);
+    let time =
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
+    return time;
+  }
+
+  sameDayCheck(sDate: any, eDate: any) {
+    return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
+  }
+  //endRegion EP
+
+  //region CO
+  getDate(data) {
+    if (data.startDate) {
+      var date = new Date(data.startDate);
+      this.month = this.addZero(date.getMonth() + 1);
+      this.day = this.addZero(date.getDate());
+      var endDate = new Date(data.endDate);
+      let start =
+        this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
+      let end =
+        this.addZero(endDate.getHours()) +
+        ':' +
+        this.addZero(endDate.getMinutes());
+      this.startTime = start + ' - ' + end;
+    }
+    return this.startTime;
+  }
+
+  addZero(i) {
+    if (i < 10) {
+      i = '0' + i;
+    }
+    return i;
+  }
+
+  getResourceID(data) {
+    var resources = [];
+    this.resourceID = '';
+    resources = data.resources;
+    var id = '';
+    if (resources != null) {
+      resources.forEach((e) => {
+        id += e.resourceID + ';';
+      });
+    }
+
+    if (id != '') {
+      this.resourceID = id.substring(0, id.length - 1);
+    }
+    return this.resourceID;
+  }
+  //endRegion CO
 
   getParams(formName: string, fieldName: string) {
     this.settingCalendar.getParams(formName, fieldName).subscribe((res) => {
@@ -180,26 +247,6 @@ export class SettingCalendarComponent
     alert('trigger');
     (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
   }
-
-  moreMF(functionID, data) {
-    switch (functionID) {
-      case 'edit':
-        this.onUpdate(data);
-        break;
-      case 'delete':
-        this.onDelete(data);
-        break;
-      case 'copy':
-        this.onCopy(data);
-        break;
-    }
-  }
-
-  onUpdate(data) {}
-
-  onDelete(data) {}
-
-  onCopy(data) {}
 
   onAction(event) {
     if (event) debugger;

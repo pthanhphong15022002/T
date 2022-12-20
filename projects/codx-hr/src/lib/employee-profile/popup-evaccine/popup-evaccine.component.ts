@@ -10,6 +10,7 @@ import { FormGroup } from '@angular/forms';
 import {
   CodxFormComponent,
   CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -65,7 +66,31 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.isAfterRender = true;
   }
 
-  onSaveForm() {}
+  onSaveForm(isClose: boolean) {
+    if (this.actionType == 'add' || this.actionType == 'copy') {
+      this.hrSevice.addEVaccine(this.data).subscribe((res) => {
+        if (res) {
+          this.data = res;
+          (this.listView.dataService as CRUDService).add(res).subscribe();
+          this.actionType = 'edit';
+          if (isClose) {
+            this.dialog && this.dialog.close();
+          }
+        }
+      });
+    } else if (this.actionType == 'edit') {
+      this.hrSevice.editEVaccine(this.data).subscribe((res) => {
+        if (res) {
+          (this.listView.dataService as CRUDService).update(res).subscribe();
+          if (isClose) {
+            this.dialog && this.dialog.close();
+          }
+        }
+      });
+    }
+
+    this.cr.detectChanges();
+  }
 
   afterRenderListView(event: any) {
     this.listView = event;

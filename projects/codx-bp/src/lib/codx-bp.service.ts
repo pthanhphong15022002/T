@@ -82,12 +82,12 @@ export class CodxBpService {
     );
   }
 
-  updatePermissionProcess(data){
+  updatePermissionProcess(data: any, lstTmp: BP_ProcessPermissions[]){
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'UpdatePermissionProcessAsync',
-      data
+      [data, lstTmp]
     )
   }
 
@@ -128,7 +128,7 @@ export class CodxBpService {
     return this.api.exec<any>(
       'BP',
       'ProcessStepsBusiness',
-      'GetOwnersByParentIDAsync',
+      'GetProcessStepDetailsByRecIDAsync',
       recID
     );
   }
@@ -239,5 +239,9 @@ export class CodxBpService {
       'GetAllUserPermissionAsync',
       data
     );
+  }
+
+  getRoles(recID: String){
+    return this.api.exec<any>('AD','RolesBusiness','GetAsync', recID);
   }
 }

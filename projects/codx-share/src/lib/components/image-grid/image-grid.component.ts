@@ -86,7 +86,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
             }
           });
           this.files = result;
-          this.evtGetFiles.emit(this.files); // Sr tk Lộc, tk Nguyên add thêm dòng này để lấy dữ liệu
+          this.evtGetFiles.emit(this.files);
           this.dt.detectChanges();
         }
       });
