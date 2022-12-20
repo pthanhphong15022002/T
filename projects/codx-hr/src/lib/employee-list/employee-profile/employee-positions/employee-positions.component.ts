@@ -92,9 +92,9 @@ export class EmployeePositionsComponent extends UIComponent {
   }
 
   saveAppointions() {
-    this.hrService
-      .addOrEditEAppointion(this.formGroup.value)
-      .subscribe((result) => {});
+    // this.hrService
+    //   .addOrEditEAppointion(this.formGroup.value)
+    //   .subscribe((result) => {});
   }
 
   changeAppointion(appoiont) {
