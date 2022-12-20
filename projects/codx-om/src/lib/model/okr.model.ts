@@ -64,6 +64,8 @@ export class OKRs {
     createdBy:string;
     modifiedOn:Date;
     modifiedBy:string;
+    //Custom
+    startMonth:number;
   }
 
   export class CheckIns{

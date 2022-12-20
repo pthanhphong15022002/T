@@ -46,11 +46,12 @@ export class PopupAddKRComponent extends UIComponent {
 
   months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   quarters = ['1', '2', '3', '4'];
-
+  quartersMonth = ['1', '4', '7', '10'];
   typePlan = '';
   planMonth = [];
   planQuarter = [];
 
+  listTarget = [];
   formModel: FormModel;
   dialogRef: DialogRef;
   isAfterRender: boolean;
@@ -59,6 +60,8 @@ export class PopupAddKRComponent extends UIComponent {
   oParentID: any;
   dialogTargets: DialogRef;
   funcID: any;
+  tempTarget:any;
+  dataOKRPlans:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -74,8 +77,11 @@ export class PopupAddKRComponent extends UIComponent {
     this.isAdd = dialogData?.data[3];
     this.headerText = dialogData?.data[4];
     this.funcID = dialogData?.data[5];
+    this.dataOKRPlans = dialogData?.data[6];
     this.dialogRef = dialogRef;
-    
+    if(!this.isAdd){
+      this.typePlan =this.kr.plan;
+    }
   }
 
   //-----------------------Base Func-------------------------//
@@ -104,7 +110,7 @@ export class PopupAddKRComponent extends UIComponent {
           this.kr.parentID = this.o?.recID;
         }
         this.isAfterRender = true;
-      });
+      });      
   }
 
   //-----------------------End-------------------------------//
@@ -149,6 +155,7 @@ export class PopupAddKRComponent extends UIComponent {
     //tính lại Targets cho KR
     if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget();
+      this.onSaveTarget();
     }
     if (this.isAdd) {
       this.methodAdd(this.kr);
@@ -207,13 +214,13 @@ export class PopupAddKRComponent extends UIComponent {
     }
     this.detectorRef.detectChanges();
   }
-
+  
   calculatorTarget() {
     if (this.kr.target && this.kr.plan) {
       this.planMonth = [];
       this.planQuarter = [];
       if (this.kr.plan == OMCONST.VLL.Plan.Month) {
-        for (let i = 1; i <= 12; i++) {
+        for (let i = 1; i <= 12; i++) {          
           this.planMonth.push(this.kr.target / 12);
         }
       } else if (this.kr.plan == OMCONST.VLL.Plan.Quarter) {

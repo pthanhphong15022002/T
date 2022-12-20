@@ -12,7 +12,10 @@ import {
   ApiHttpService,
   DialogData,
   DialogRef,
+  CallFuncService,
+  DialogModel,
 } from 'codx-core';
+import { PopupMoreChartComponent } from '../popup-more-chart/popup-more-chart.component';
 
 @Component({
   selector: 'popup-add-chart',
@@ -22,8 +25,16 @@ import {
 export class PopupAddChartComponent implements OnInit {
   data!: any;
   dialog: any;
+  title!:any;
   @Input() chartFields: any = [];
+  series: any = [];
   chartSetting!: any;
+  dataLabel:any ={
+    visible:true,
+    position: 'Outside',
+    name:'text',
+    format:'n1',
+  };
   majorTickLineWidthX: any = 0;
   majorGridLineWidthX: any = 0;
   majorTickLineWidthY: any = 0;
@@ -56,6 +67,7 @@ export class PopupAddChartComponent implements OnInit {
     maximumTitleWidth: 100,
     width: '100px',
     background: '#fff',
+    position:'Top'
   };
   axisXmodel: any = {
     name: '',
@@ -135,22 +147,51 @@ export class PopupAddChartComponent implements OnInit {
   rangePaddings: any = ["None",
     "Round",
     "Additional"];
-    labelPlacements:any = ['BetweenTicks','OnTicks']
+  labelPlacements:any = ['BetweenTicks','OnTicks'];
+  positions:any=['Top','Left','Bottom','Right']
   crosshair!:any;
   crosshairType: any = ['None','Both','Vertical','Horizontal']
   valuePlacement: any = [ 'Shift','None','Hide'];
   labelIntersectAction = ['Hide','MultipleRows','None','Rotate45','Rotate90','Trim'];
-  drawTypes:any=['Line','Spline','Area','StackingArea','Scatter','Column','StackingColumn','RangeColumn']
+  drawTypes:any=['Line','Spline','Area','StackingArea','Scatter','Column','StackingColumn','RangeColumn'];
+  groupModes:any=['Point','Value'];
+  accLabelPositions: any = ['Inside','Outside'];
+  serieLabelPositions: any = ['Outer','Top','Bottom','Middle','Auto'];
+  labelAlignments: any = ['Near','Center','Far'];
+  formatValues:any=[{text: '1000.0',value:'n1'},{text: '1000.00',value:'n2'},{text: '1000.000',value:'n3'},{text: '1.0%',value:'p1'},{text: '1.00%',value:'p2'},{text: '1.000%',value:'p3'},{text: '$1000.0',value:'c1'},{text: '$1000.00',value:'c2'}]
+  arrDataset:any=[];
+  markerDatalabelValue!:any;
+  isAcc: boolean = false; // is Accumulation chart
+  collapseAxisX: boolean = true;
+  collapseAxisY: boolean = true;
+  collapseLegend: boolean = true;
+  collapseTooltip: boolean = true;
+  collapseMarker: boolean = true;
+  collapseBorder: boolean = true;
+  collapseDataLabel: boolean = true;
+  collapseSerie: boolean = false;
+  @Input() service!: string ;
+  @Input() assembly!: string ;
+  @Input() className!: string ;
+  @Input() method!: string ;
   constructor(
-    private cd: ChangeDetectorRef,
-    private notiService: NotificationsService,
+    private callfunc: CallFuncService,
     private api: ApiHttpService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     //this.dataID = dt?.data[];
     if (dt?.data) {
-      this.chartSetting = dt.data['serieSetting'];
+      this.title = dt.data['title'];
+      if(Array.isArray(dt.data['serieSetting'])){
+        let series = JSON.parse(JSON.stringify(dt.data['serieSetting']))
+        this.chartSetting = series.pop();
+        this.series = series;
+      }
+      else{
+        this.chartSetting = dt.data['serieSetting'];
+      }
+
       // if(this.chartSetting && Object.keys(this.chartSetting).length >0 && !this.chartSetting.width){
       //   this.chartSetting.width = '2';
       // }
@@ -190,10 +231,10 @@ export class PopupAddChartComponent implements OnInit {
       if (this.axisYmodel?.lineStyle?.width)
         this.lineStyleWidthY = this.axisYmodel?.lineStyle?.width;
       if (dt.data['legendSetting']) {
-        // for(let i in dt.data['legendSetting']){
-        //   this.legendSetting[i] =  dt.data['legendSetting'][i];
-        // }
-        this.legendSetting = dt.data['legendSetting'];
+        for(let i in dt.data['legendSetting']){
+          this.legendSetting[i] =  dt.data['legendSetting'][i];
+        }
+        //this.legendSetting = dt.data['legendSetting'];
       }
       if (
         this.chartSetting?.marker &&
@@ -203,6 +244,9 @@ export class PopupAddChartComponent implements OnInit {
          this.marker[i] = this.chartSetting.marker[i];
         }
         this.marker = JSON.parse(JSON.stringify(this.marker));
+        if(this.marker.dataLabel && Object.keys(this.marker.dataLabel).length >0){
+          this.markerDatalabelValue = this.marker.dataLabel;
+        }
         //this.marker = this.chartSetting.marker;
       }
       if (
@@ -248,6 +292,18 @@ export class PopupAddChartComponent implements OnInit {
         (eleOverLay as HTMLElement).style.zIndex = '9998';
       }
     },100)
+    if(dt?.data['request']){
+      this.service = dt?.data['request']['service'];
+      this.assembly = dt?.data['request']['assembly'];
+      this.className = dt?.data['request']['className'];
+      this.method = dt?.data['request']['method']
+      this.api.execSv('EP','EP',"BookingsBusiness",'GetMetaDataAsync',[this.assembly,this.className,'GetEventsAsync']).subscribe((res:any)=>{
+        if(res.result){
+          this.arrDataset = res.result;
+        }
+      })
+    }
+
     this.dialog = dialog;
   }
   chartTypes: any = [
@@ -322,11 +378,15 @@ export class PopupAddChartComponent implements OnInit {
       this.chartFields.push(propSetting[prop]);
     }
 
-    this.onChange({ value: this.chartSetting.type });
+    if(this.chartSetting.type == 'Pie' || this.chartSetting.type =='Funnel' || this.chartSetting.type =='Pyramid'){
+      this.isAcc = true;
+      this.axisXmodel = undefined;
+      this.axisYmodel =undefined;
+    }
+    //this.onChange({ value: this.chartSetting.type });
   }
 
   valueChange(evt: any) {
-    debugger
     this.chartSetting[evt.field] = evt.data;
     if (evt.data==undefined || evt.data == '') {
       delete this.chartSetting[evt.field];
@@ -508,9 +568,14 @@ export class PopupAddChartComponent implements OnInit {
   }
 
   tooltipChange(evt:any){
-    if(!this.border) this.border = {};
-    this.border[evt.field] == evt.data;
+    if(!this.tooltip) this.tooltip = {};
+    this.tooltip[evt.field] == evt.data;
   }
+
+  legendPositionChange(evt:any){
+    this.legendSetting.position = evt.value;
+  }
+
 
   crosshairLineWidth!:any;
   crosshairLineColor!:any;
@@ -624,14 +689,62 @@ export class PopupAddChartComponent implements OnInit {
         delete this.chartSetting[prop];
       }
     }
+    if((this.chartSetting.type == 'Pie'||this.chartSetting.type == 'Funnel' || this.chartSetting.type == 'Pyramid') && this.dataLabel){
+      this.chartSetting.dataLabel = this.dataLabel;
+    }
+    this.series.push(this.chartSetting);
     let chartSettings:any = {
-      serieSetting: this.chartSetting,
+      serieSetting: this.series,
       axisX: this.axisXmodel,
       axisY: this.axisYmodel,
       legendSetting: this.legendSetting,
     };
     if(this.crosshair) chartSettings.crosshair = {...this.crosshair};
+    if(this.title) chartSettings.title = this.title;
     this.dialog && this.dialog.close(chartSettings);
+  }
+
+  moreChart(){
+    let option = new DialogModel();
+    let popupMoreChart = this.callfunc.openForm(PopupMoreChartComponent,'',500,800,'',{serieSetting:{border: this.border,marker: this.marker, ...this.chartSetting},dataset:this.arrDataset},'',option);
+    popupMoreChart.closed.subscribe(res=>{
+      if(res.event && res.event.serieSetting){
+        this.series.push(res.event.serieSetting)
+      }
+    })
+  }
+
+  fieldChange(evt:any,fieldName: string){
+    this.chartSetting[fieldName]= this.lowercaseFirstLetter(evt.value);
+  }
+
+  dataLabelChange(event:any, type:string){
+    if(event.field == 'name'){
+      event.data = this.lowercaseFirstLetter(event.data);
+    }
+    switch(type){
+      case 'dataLabel':
+        if(!this.dataLabel) this.dataLabel = {};
+        this.dataLabel[event.field] = event.data;
+        break;
+      case 'serie':
+        this.chartSetting.dataLabel[event.field] = event.data;
+      break;
+      case 'marker':
+        this.marker.dataLabel[event.field] = event.data;
+      break;
+    }
+  }
+
+  editChart(evt:any, index:any){
+    if(!evt) return;
+    let option = new DialogModel();
+    let popupMoreChart = this.callfunc.openForm(PopupMoreChartComponent,'',500,800,'',{serieSetting:{...evt},dataset: this.arrDataset},'',option);
+    popupMoreChart.closed.subscribe(res=>{
+      if(res.event && res.event.serieSetting){
+        this.series[index] =  res.event.serieSetting;
+      }
+    })
   }
 
   getTypeOfValue(evt:any){
@@ -651,5 +764,13 @@ export class PopupAddChartComponent implements OnInit {
 
   isObject(evt:any){
     return typeof evt === 'object';
+  }
+
+  uppercaseFirstLetter(string:string | any) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  lowercaseFirstLetter(string:string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
   }
 }

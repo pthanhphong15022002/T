@@ -170,7 +170,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
+      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.dataOKRPlans],
       option
     );
     

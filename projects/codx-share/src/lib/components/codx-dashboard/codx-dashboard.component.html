@@ -1,21 +1,32 @@
 <codx-form [body]="body" [subToolbar]="toolbar" [dialog]="dialog"></codx-form>
 <ng-template #body>
-  <div class="h-100 w-100">
-    <!-- <button class="btn btn-danger" (click)="addPanel()">ét be nồ đát bo</button> -->
-    <ejs-dashboardlayout
-      #dashboard
-      id="defaultLayoutDashBoard"
-      style="height: 100% ;"
-      [columns]="columns"
-      [cellSpacing]="cellSpacing"
-      [cellAspectRatio]="cellAspectRatio"
-      [allowResizing]="true"
-      (resizeStart)="onResizeStart($event)"
-      (resize)="onResize($event)"
-      (resizeStop)="onResizeStop($event)"
-      (created)="onCreate($event)"
-    >
-    </ejs-dashboardlayout>
+  <div class="container-fluid h-100">
+    <div class="row h-100 w-100 ">
+      <div  [ngClass]="!isCollapsed ? 'col-3 p-0' : 'd-none'"class="h-100" *ngIf="!isCollapsed">
+        <div class="h-100">
+          <select-template [isPopupMode]="false" (add)="popupClose($event)" [queryList]="templates"></select-template>
+        </div>
+      </div>
+      <div  [ngClass]="!isCollapsed ? 'col-9' : 'col-12'" class="h-100 overflow-auto">
+        <ejs-dashboardlayout
+        #dashboard
+        id="defaultLayoutDashBoard"
+        style="height: 100% ; width: 100%;"
+        [columns]="columns"
+        [cellSpacing]="cellSpacing"
+        [cellAspectRatio]="cellAspectRatio"
+        [allowResizing]="true"
+        (resizeStart)="onResizeStart($event)"
+        (resize)="onResize($event)"
+        (resizeStop)="onResizeStop($event)"
+        (created)="onCreate($event)"
+      >
+      </ejs-dashboardlayout>
+      </div>
+      <!-- <button class="btn btn-danger" (click)="addPanel()">ét be nồ đát bo</button> -->
+    </div>
+
+
   </div>
 </ng-template>
 
@@ -24,15 +35,12 @@
     <codx-chart
       [legendSettings]="legendSetting"
       [chartArea]="chartArea"
-      [marker]="marker"
       [enableCrossHair]="enableCrosshair"
       [primaryXAxis]="primaryXAxis"
       [primaryYAxis]="primaryYAxis"
       [seriesSetting]="seriesSetting"
-      [assemblyName]="assembly"
-      [service]="service"
-      [className]="className"
-      [method]="method"
+      [dataSource]="dataSource"
+      [title]="title"
     ></codx-chart>
   </div>
 </ng-template>
@@ -51,13 +59,14 @@
     <ejs-chart
       style="display: block"
       align="center"
-      [title]="titleLine"
       [primaryXAxis]="xAxisLine"
       [primaryYAxis]="yAxisLine"
       [tooltip]="tooltip"
       [chartArea]="chartArea"
       [width]="width"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -71,7 +80,7 @@
           opacity="1"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="data"
           type="Line"
           xName="Period"
@@ -114,7 +123,7 @@
           [marker]="pentagonMarker"
           opacity="1"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -131,6 +140,8 @@
       [primaryYAxis]="yAxisStepLine"
       [tooltip]="tooltipStepLine"
       [legendSettings]="legendStepLine"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -159,6 +170,8 @@
       [primaryYAxis]="yAxisStackingLine"
       [tooltip]="tooltipStackingLine"
       [legendSettings]="legendStepLine"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -201,6 +214,8 @@
       [primaryYAxis]="yAxisStackingLine100"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -241,6 +256,8 @@
       [primaryYAxis]="yAxisSpLine"
       [tooltip]="tooltipSpLine"
       [legendSettings]="legendStepLine"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -269,6 +286,8 @@
       [primaryYAxis]="yAxisSplineArea"
       [tooltip]="tooltipSpLine"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -283,7 +302,7 @@
           [border]="borderSplineArea"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="dataSplineArea"
           type="SplineArea"
           xName="Period"
@@ -294,7 +313,7 @@
           width="2"
           [border]="borderSplineArea"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -312,6 +331,8 @@
       [chartArea]="chartArea"
       [width]="width"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -338,6 +359,8 @@
       align="center"
       [primaryXAxis]="xAxisArea"
       [primaryYAxis]="yAxisArea"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
 
@@ -367,6 +390,8 @@
       [tooltip]="tooltipRangeArea"
       [zoomSettings]="zoomSettings"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -396,6 +421,8 @@
       [primaryYAxis]="yAxisSplineRangeArea"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -426,6 +453,8 @@
       [primaryYAxis]="yAxisStackingArea"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -481,6 +510,8 @@
       [tooltip]="tooltip"
       (load)="load($event)"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -516,6 +547,8 @@
       [primaryYAxis]="yAxisStepArea"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -545,6 +578,8 @@
       [primaryXAxis]="xAxisStackingStepArea"
       [primaryYAxis]="yAxisStackingStepArea"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -574,6 +609,8 @@
       [chartArea]="chartArea"
       [width]="width"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -603,6 +640,8 @@
       [primaryYAxis]="yAxisColumn"
       [tooltip]="tooltipColumn"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -632,6 +671,8 @@
       [primaryYAxis]="yAxisRangeColumn"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -660,6 +701,8 @@
       [primaryYAxis]="yAxisStackingColumn"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -688,6 +731,8 @@
       [primaryYAxis]="yAxisStackingColumn100"
       [tooltip]="tooltipStackingColumn100"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -701,7 +746,7 @@
           columnWidth="0.5"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="dataStackingColumn100"
           type="StackingColumn100"
           xName="Year"
@@ -711,7 +756,7 @@
           [border]="borderArea"
           columnWidth="0.5"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -727,6 +772,8 @@
       [primaryYAxis]="yAxisBar"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -754,6 +801,8 @@
       [primaryYAxis]="yAxisStackingbar"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -767,7 +816,7 @@
           [border]="borderArea"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="dataStackingBar"
           type="StackingBar"
           xName="Month"
@@ -777,7 +826,7 @@
           columnWidth="0.6"
           [border]="borderArea"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -794,6 +843,8 @@
       [primaryYAxis]="yAxisStackingBar100"
       [tooltip]="tooltipStackingColumn100"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -844,6 +895,8 @@
       [primaryYAxis]="xAxisScatter"
       [tooltip]="tooltip"
       [legendSettings]="legend"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -869,6 +922,8 @@
       [primaryXAxis]="xAxisPolar"
       [primaryYAxis]="yAxisPolar"
       [tooltip]="tooltip"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -895,6 +950,8 @@
       [primaryXAxis]="xAxisPolar"
       [primaryYAxis]="yAxisPolar"
       [tooltip]="tooltip"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -924,6 +981,8 @@
       [tooltip]="tooltipHilo"
       [crosshair]="crosshairHilo"
       [legendSettings]="legendHilo"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -952,6 +1011,8 @@
       [primaryYAxis]="yAxisHistogram"
       [tooltip]="tooltip"
       [legendSettings]="legendHilo"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -982,6 +1043,8 @@
       [primaryYAxis]="yAxisPareto"
       [legendSettings]="legend"
       [tooltip]="tooltip"
+      width="100%"
+      height="80%"
     >
       <e-series-collection>
         <e-series
@@ -1008,6 +1071,8 @@
       [tooltip]="tooltip"
       [enableAnimation]="enableAnimation"
       [enableBorderOnMouseMove]="false"
+      width="100%"
+      height="80%"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
@@ -1016,11 +1081,11 @@
           xName="Browser"
           yName="Users"
           [startAngle]="startAngle"
-          innerRadius="0%"
+          innerRadius="80%"
           radius="60%"
           [explode]="explode"
           explodeOffset="10%"
-          [explodeIndex]="0"
+          [explodeIndex]="1"
         >
         </e-accumulation-series>
       </e-accumulation-series-collection>
@@ -1032,9 +1097,11 @@
   <div class="chart-item w-100 h-100">
     <ejs-accumulationchart
       #pyramid
-      style="display: block; width: 92%"
+      style="display: block;"
       [legendSettings]="legend"
       [tooltip]="tooltipPyramid"
+      width="100%"
+      height="80%"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
@@ -1062,6 +1129,8 @@
       [legendSettings]="legend"
       [tooltip]="tooltipFunnel"
       [enableAnimation]="enableAnimation"
+      width="100%"
+      height="80%"
     >
       <e-accumulation-series-collection>
         <e-accumulation-series
@@ -1085,7 +1154,13 @@
     <!-- <div class="float-start w-100">
 
     </div> -->
-    <div class="float-start d-flex justify-content-between">
+    <div class="float-start d-flex justify-content-between"><button
+        class="btn btn-sm btn-light-info"
+        title="thêm chạc"
+        (click)="isCollapsed = !isCollapsed"
+      >
+        <i [ngClass]="isCollapsed ? 'icon-i-arrow-right-square' : 'icon-i-arrow-left-square' " class="icon-16"></i>
+      </button>
       <button
         class="btn btn-sm btn-light-info"
         title="thêm be nồ"
@@ -1093,13 +1168,13 @@
       >
         <i class="icon-i-collection icon-16"></i>
       </button>
-      <button
+      <!-- <button
         class="btn btn-sm btn-light-primary"
         title="thêm chạc"
         (click)="addPanelAuto()"
       >
         <i class="icon-addchart icon-16"></i>
-      </button>
+      </button> -->
       <button
         class="btn btn-sm btn-light-warning"
         title="lưu chạc"

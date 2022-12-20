@@ -131,7 +131,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 6;
+  crrTab: number = 4;
 
   //EAsset salary
   lstAsset: any = [];
@@ -140,6 +140,8 @@ export class EmployeeProfileComponent extends UIComponent {
   crrEBSalary: any;
   lstEBSalary: any = [];
   listCrrBenefit: any;
+
+  lstESkill: any = [];
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -212,9 +214,6 @@ export class EmployeeProfileComponent extends UIComponent {
   ];
 
   onInit(): void {
-    var a = history.state;
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', a);
-
     this.EExperienceColumnsGrid = [
       {
         field: 'fromDate',
@@ -450,6 +449,25 @@ export class EmployeeProfileComponent extends UIComponent {
           this.lstVaccine = res;
           //this.lstExperience = res;
         });
+
+        //HR_ESkills
+        let rqESkill = new DataRequest();
+        rqESkill.entityName = 'HR_ESkills';
+        rqESkill.dataValues = params.employeeID;
+        rqESkill.predicates = 'EmployeeID=@0';
+        rqESkill.page = 1;
+        rqESkill.pageSize = 20;
+        this.hrService
+          .getViewSkillAsync(rqESkill)
+          .subscribe((res) => {
+            console.log('e Skill', res);
+
+            if (res) {
+              this.lstESkill = res;
+            }
+            //this.lstSkill = res;
+            //this.lstExperience = res;
+          });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -494,6 +512,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eDegrees'){
+          this.HandleEmployeeDegreeInfo('edit', data);
           this.df.detectChanges();
         }
         break;
@@ -632,6 +653,22 @@ export class EmployeeProfileComponent extends UIComponent {
                   }
                 });
             }
+            else if(funcID == 'eDegrees'){
+              this.hrService
+              .DeleteEmployeeDegreeInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstEDegrees.indexOf(data);
+                    if (i != -1) {
+                      this.lstEDegrees.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
           }
         });
         break;
@@ -657,6 +694,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'eDegrees'){
+          this.HandleEmployeeDegreeInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1657,4 +1697,12 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
   //#endregion
+
+  addSkill() {
+    this.hrService.addSkill(null).subscribe();
+  }
+
+  addSkillGrade() {
+    this.hrService.addSkillGrade(null).subscribe();
+  }
 }
