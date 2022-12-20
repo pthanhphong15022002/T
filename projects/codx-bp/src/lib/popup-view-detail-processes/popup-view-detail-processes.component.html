@@ -144,9 +144,9 @@
         data-kt-scroll-wrappers=".stepper-body, .no-header, .view-details-content"
         [attr.data-kt-scroll-offset]="'60px'">
         <ng-container>
-          <ng-container *ngIf="process && childFunc?.length > 0">
+          <ng-container >
             <codx-processsteps #viewProcessSteps [process]="process" [funcID]="funcID" [childFunc]="childFunc"
-              [formModel]="formModelFlowChart" [isEdit]="isEdit" (getObjectFile)="getObjectFile($event)"
+              [formModel]="formModelFlowChart" [isEdit]="isEdit" [viewMode]="tabView.id" (getObjectFile)="getObjectFile($event)"
               (isClosePopup)="getListUser()"></codx-processsteps>
           </ng-container>
         </ng-container>

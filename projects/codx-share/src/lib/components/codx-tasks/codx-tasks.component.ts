@@ -60,6 +60,7 @@ export class CodxTasksComponent
   @Input() refID?: any;
   @Input() refType?: any;
   @Input() calendarID: string;
+  @Input() resourceModel!: any;
   @Input() viewPreset: string = 'weekAndDay';
   @Input() service = 'TM';
   @Input() entityName = 'TM_Tasks';
@@ -342,7 +343,8 @@ export class CodxTasksComponent
         showSearchBar: false,
         model: {
           eventModel: this.fields,
-          //resourceModel: this.resourceField, //ko có thang nay
+          //resourceModel: this.resourceModel,
+         // resourceModel: this.resourceField, //ko có thang nay
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
