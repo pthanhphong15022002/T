@@ -83,7 +83,6 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     //Nguyên thêm để refresh avatar khi change
     this.codxShareSV.dataRefreshImage.subscribe((res) => {
       if (res) {
-        debugger
         this.user['modifiedOn'] = res?.modifiedOn;
         this.change.detectChanges();
       }
@@ -169,6 +168,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
+    let modifiedOn = new Date();
+    this.codxShareSV.dataRefreshImage.next(modifiedOn);
   }
 
   clearCache() {
