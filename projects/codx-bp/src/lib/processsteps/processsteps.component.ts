@@ -62,7 +62,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
 })
 export class ProcessStepsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges
+  implements OnInit, AfterViewInit
 {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
@@ -74,7 +74,7 @@ export class ProcessStepsComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
 
   @Input() process: BP_Processes;
-  @Input() viewMode :any;
+  @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
@@ -160,11 +160,10 @@ export class ProcessStepsComponent
       }
     });
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    this.chgViewModel(this.viewMode);
-    this.changeDetectorRef.detectChanges()
-  }
-  
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.chgViewModel(this.viewMode);
+  //   this.changeDetectorRef.detectChanges()
+  // }
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -336,7 +335,7 @@ export class ProcessStepsComponent
               else {
                 this.kanban.columns = [];
                 this.kanban.columns.push(column);
-                this.kanban.refresh();
+                this.kanban.changeDataSource(this.kanban.columns);
               }
             }
 
@@ -975,8 +974,8 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl;
-              this.kanban.refresh();
+              this.kanban.columns = arrCl ;
+              this.kanban.changeDataSource(this.kanban.columns);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -1326,5 +1325,9 @@ export class ProcessStepsComponent
         this.clickMF(e, dt);
       }
     });
+  }
+
+  viewDetailSurveys(link) {
+    if (link) window.open(link);
   }
 }

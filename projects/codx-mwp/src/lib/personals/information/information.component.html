@@ -16,7 +16,7 @@
             <codx-label fiedName="Avatar" [formModel]="formModel" default="Avatar"></codx-label>
           </label>
           <div class="col-lg-8">
-            <codx-img #imageUpLoad [width]="100" [objectType]="'AD_Users'" aria-disabled="true" [funcId]="funcID"
+            <codx-img #imageUpLoad [width]="100" [objectType]="'AD_Users'" aria-disabled="true" [funcId]="'ADS05'"
               [isAllowEdit]="true" [objectId]="employeeInfo.userID" [objectName]="employeeInfo.userName"
               [updateDirect]="true" [imgOn]="employeeInfo?.modifiedOn" (dataChanged)="changeAvatar($event)">
             </codx-img>

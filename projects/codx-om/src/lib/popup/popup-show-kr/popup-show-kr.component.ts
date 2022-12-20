@@ -1,3 +1,4 @@
+import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -73,23 +74,20 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
           shape: 'Circle',
           fill: '#20bdae',
         },
-        // trendlines: [
-        //   {
-        //     type: 'Linear',
-        //     name: 'Trends',
-        //     width: 3,
-        //     marker: { visible: true },
-        //     fill: '#C64A75',
-        //   },
-
-        // ],
+      },
+      {
+        type: 'Line',
+        xName: 'period',
+        yName: 'target',
+        fill: '#000000',
+        width: 1,
       },
     ],
   };
+
   chartData = {
     progress: 0,
-    checkIns: [],
-    distribute: [],
+    data: [],
   };
 
   dialogCheckIn: DialogRef;
@@ -221,42 +219,69 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   getCheckInsByYear(data: any) {
     const checkIns = data.checkIns;
+    const targets = data.targets;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
+    let tempTarget = 0;
+
+    if (!targets) {
+      return;
+    }
+
     if (checkIns && checkIns.length > 0) {
-      checkIns.map((checkIn, index) => {
+      targets.map((target, index) => {
         let tmpCheckIn: any = {};
         tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `Q${index + 1}`;
-        this.chartData.checkIns.push(tmpCheckIn);
+        tempTarget = tempTarget + (target.target / data.target) * 100;
+        tmpCheckIn.target = tempTarget;
+        this.chartData.data.push(tmpCheckIn);
       });
     }
   }
 
   getCheckInsByQuarter(data: any) {
     const checkIns = data.checkIns;
+    const targets = data.targets;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
+    let tempTarget = 0;
+
+    if (!targets) {
+      return;
+    }
+
     if (checkIns && checkIns.length > 0) {
-      checkIns.map((checkIn, index) => {
+      targets.map((target, index) => {
         let tmpCheckIn: any = {};
         tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `M${index + 1}`;
-        this.chartData.checkIns.push(tmpCheckIn);
+        tempTarget = tempTarget + (target.target / data.target) * 100;
+        tmpCheckIn.target = tempTarget;
+        this.chartData.data.push(tmpCheckIn);
       });
     }
   }
 
   getCheckInsByMonth(data: any) {
     const checkIns = data.checkIns;
+    const targets = data.targets;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
+    let tempTarget = 0;
+
+    if (!targets) {
+      return;
+    }
+
     if (checkIns && checkIns.length > 0) {
-      checkIns.map((checkIn, index) => {
+      targets.map((target, index) => {
         let tmpCheckIn: any = {};
         tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `W${index + 1}`;
-        this.chartData.checkIns.push(tmpCheckIn);
+        tempTarget = tempTarget + (target.target / data.target) * 100;
+        tmpCheckIn.target = tempTarget;
+        this.chartData.data.push(tmpCheckIn);
       });
     }
   }
