@@ -127,8 +127,11 @@ export class CalendarNotesComponent
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
           let numbF = this.convertStrToDate(eleFromDate);
           const fDayOfMonth = moment(numbF).toISOString();
+          let indexLast =
+            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+              .length - 1;
           let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
           let numbL = this.convertStrToDate(eleToDate);
           const lDayOfMonth = moment(numbL).toISOString();
           this.getFirstParam(fDayOfMonth, lDayOfMonth);
@@ -347,7 +350,7 @@ export class CalendarNotesComponent
   }
 
   changeDayOfWeek(e) {
-    var data = JSON.parse(JSON.stringify(e.daySelected));
+    var data = e.daySelected;
     let myInterval = setInterval(() => {
       if (this.lstView) {
         clearInterval(myInterval);
@@ -370,8 +373,11 @@ export class CalendarNotesComponent
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
           let numbF = this.convertStrToDate(eleFromDate);
           const fDayOfMonth = moment(numbF).toISOString();
+          let indexLast =
+            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+              .length - 1;
           let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
           let numbL = this.convertStrToDate(eleToDate);
           const lDayOfMonth = moment(numbL).toISOString();
           this.getFirstParam(fDayOfMonth, lDayOfMonth);
@@ -388,8 +394,11 @@ export class CalendarNotesComponent
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
           let numbF = this.convertStrToDate(eleFromDate);
           const fDayOfMonth = moment(numbF).toISOString();
+          let indexLast =
+            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+              .length - 1;
           let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
           let numbL = this.convertStrToDate(eleToDate);
           const lDayOfMonth = moment(numbL).toISOString();
           this.getFirstParam(fDayOfMonth, lDayOfMonth);
@@ -397,7 +406,7 @@ export class CalendarNotesComponent
       }
     }
     this.dateOfMonth = args.value;
-    var data = JSON.parse(JSON.stringify(args.value));
+    var data = args.value;
     this.setDate(data, this.lstView);
     this.change.detectChanges();
   }
@@ -410,11 +419,17 @@ export class CalendarNotesComponent
         ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
       let numbF = this.convertStrToDate(eleFromDate);
       const fDayOfMonth = moment(numbF).toISOString();
+      let indexLast =
+        htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length -
+        1;
       let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-        ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+        ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
       let numbL = this.convertStrToDate(eleToDate);
       const lDayOfMonth = moment(numbL).toISOString();
       this.getFirstParam(fDayOfMonth, lDayOfMonth);
+      var data = args.date;
+      this.setDate(data, this.lstView);
+      this.change.detectChanges();
     }
   }
 
@@ -451,8 +466,7 @@ export class CalendarNotesComponent
           dataTemp = dataTemp.filter(
             (x) => x.calendarDate >= fromDate && x.calendarDate < toDate
           );
-          (lstView.dataService as CRUDService).data = dataTemp;
-          this.change.detectChanges();
+          (lstView.dataService as CRUDService).data = this.dataResourceModel;
         }
       });
     }
@@ -483,8 +497,12 @@ export class CalendarNotesComponent
               ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
             let numbF = this.convertStrToDate(eleFromDate);
             const fDayOfMonth = moment(numbF).toISOString();
+            let indexLast =
+              htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+                .length - 1;
             let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-              ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+              ?.childNodes[indexLast]?.childNodes[6]
+              .childNodes[0] as HTMLElement;
             let numbL = this.convertStrToDate(eleToDate);
             const lDayOfMonth = moment(numbL).toISOString();
             this.getFirstParam(fDayOfMonth, lDayOfMonth);
@@ -1187,12 +1205,17 @@ export class CalendarNotesComponent
                 clearInterval(myInterVal);
                 var tempCalendar = this.calendar.element;
                 var htmlE = tempCalendar as HTMLElement;
-                var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-                  ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+                var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[0]?.childNodes[0]
+                  ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
                 const fDayOfMonth = moment(numbF).toISOString();
-                let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-                  ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
+                let indexLast =
+                  htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+                    .length - 1;
+                let eleToDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
+                  .childNodes[0] as HTMLElement;
                 let numbL = this.convertStrToDate(eleToDate);
                 const lDayOfMonth = moment(numbL).toISOString();
                 this.getFirstParam(fDayOfMonth, lDayOfMonth);

@@ -453,14 +453,14 @@
     <div>
       <h5 #meetingName>
         {{
-        data?.data?.meetingName
-        | formatvalue
-        : view.formModel
-        : "meetingName"
-        : meetingName
-        : "Meetings"
-        : "grvMeetings"
-        | async
+          data?.data?.meetingName
+            | formatvalue
+              : view.formModel
+              : "meetingName"
+              : meetingName
+              : "Meetings"
+              : "grvMeetings"
+            | async
         }}
       </h5>
     </div>
@@ -469,44 +469,75 @@
         <i class="icon-calendar_today icon-16 me-2"></i>
         <span class="ms-1 fw-bold">
           <span #startDate class="text-gray-700">{{
-            data?.data?.startDate | formatvalue
-            : view.formModel
-            : "startDate"
-            : startDate
-            : "Meetings"
-            : "grvMeetings"
-            | async
-            }}</span>
-          <span *ngIf="data?.data?.startDate" class="fw-bold p-2" [innerHtml]="'( ' + getDate(data?.data) + ')'"></span>
+            data?.data?.startDate
+              | formatvalue
+                : view.formModel
+                : "startDate"
+                : startDate
+                : "Meetings"
+                : "grvMeetings"
+              | async
+          }}</span>
+          <span
+            *ngIf="data?.data?.startDate"
+            class="fw-bold p-2"
+            [innerHtml]="'( ' + getDate(data?.data) + ')'"
+          ></span>
         </span>
       </div>
     </div>
     <hr />
-  
+
     <div class="mb-2 text-dark me-6">
       <span>
-        <codx-label default="Nội dung cuộc họp :" name="lblMemo" [formModel]="view.formModel" class="text-gray-600">
+        <codx-label
+          default="Nội dung cuộc họp :"
+          name="lblMemo"
+          [formModel]="view.formModel"
+          class="text-gray-600"
+        >
         </codx-label>
       </span>
       <span class="ms-2 fw-bold">
         <span class="text-gray-700 size-content-schedule cursor-pointer">
-          <span [innerHTML]="data?.data?.memo" (mouseenter)="popoverMemo.open()" (mouseover)="popoverMemo.close()"
-            [ngbPopover]="tooltipMemo" popoverClass="empPopoverClass" #popoverMemo="ngbPopover"
-            placement="left bottom top right" container="body"></span>
+          <span
+            [innerHTML]="data?.data?.memo"
+            (mouseenter)="popoverMemo.open()"
+            (mouseover)="popoverMemo.close()"
+            [ngbPopover]="tooltipMemo"
+            popoverClass="empPopoverClass"
+            #popoverMemo="ngbPopover"
+            placement="left bottom top right"
+            container="body"
+          ></span>
           <span #memo *ngIf="!data?.data?.memo">{{
             data?.data?.memo
-            | formatvalue: view.formModel:"memo":memo:"Meetings":"grvMeetings"
-            | async
-            }}</span>
+              | formatvalue
+                : view.formModel
+                : "memo"
+                : memo
+                : "Meetings"
+                : "grvMeetings"
+              | async
+          }}</span>
         </span>
       </span>
     </div>
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
-        <codx-label name="lblResources" default="Người tham gia : " class="text-gray-600 me-4">
+        <codx-label
+          name="lblResources"
+          default="Người tham gia : "
+          class="text-gray-600 me-4"
+        >
         </codx-label>
         <div class="d-flex justify-content-end">
-          <codx-imgs [objectId]="getResourceID(data?.data)" objectType="AD_Users" [width]="30" [numberImages]="3">
+          <codx-imgs
+            [objectId]="getResourceID(data?.data)"
+            objectType="AD_Users"
+            [width]="30"
+            [numberImages]="3"
+          >
           </codx-imgs>
         </div>
       </div>
@@ -514,6 +545,56 @@
     <ng-template #tooltipMemo>
       <div [innerHTML]="data?.data?.memo"></div>
     </ng-template>
+  </ng-container>
+  <ng-container #WP_Notes *ngIf="data?.transType == 'WP_Notes'">
+    <div class="checkbox-list">
+      <div *ngIf="data?.data.memo != null">
+        <div
+          *ngIf="data?.data.isPin == true || data?.data.isPin == '1'"
+          class="active"
+        >
+          <span class="icon-push_pin icon-16" type="button"></span>
+        </div>
+        <div class="d-flex flex-column note-option">
+          <span [innerHTML]="data?.data.memo"></span>
+        </div>
+      </div>
+      <div *ngIf="data?.data.memo == null">
+        <div
+          *ngIf="data?.data.isPin == true || data?.data.isPin == '1'"
+          class="active"
+        >
+          <span class="icon-push_pin icon-16" type="button"></span>
+        </div>
+        <div class="d-flex flex-column note-option">
+          <div *ngFor="let itemList of data?.data.CheckList; index as i">
+            <div *ngIf="itemList.status == null">
+              <div class="my-2 note-list">
+                <ul>
+                  <li>{{ itemList.listNote }}</li>
+                </ul>
+              </div>
+            </div>
+            <div *ngIf="itemList.status != null">
+              <div class="my-2 note-list">
+                <codx-input
+                  #checkBoxNote
+                  id="checkBoxNote"
+                  type="checkbox"
+                  label="{{ itemList.listNote }}"
+                  [disabled]="false"
+                  [checked]="
+                    itemList?.status == 'true' || itemList?.status == '1'
+                  "
+                  labelPosition="After"
+                  class="test-check"
+                ></codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
 </ng-template>
 

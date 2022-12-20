@@ -1,4 +1,8 @@
-<codx-form [subHeader]="subheader" [body]="body" (onScroll)="onScroll($event)" [headerText]="'Yêu cầu xét duyệt'"
+<codx-form 
+  [subHeader]="subheader" 
+  [body]="body" 
+  (onScroll)="onScroll($event)" 
+  [headerText]="'Yêu cầu xét duyệt'"
   [dialog]="dialog">
 </codx-form>
 <ng-template #subheader>
@@ -50,23 +54,6 @@
         </div>
       </ng-container>
     </ng-container>
-  </div>
-</ng-template>
-<ng-template #itemNoti let-item>
-  <div class="row p-4 my-2">
-    <div class="col-1">
-      <codx-img [width]="35" [objectId]="item.userID" [objectType]="'AD_Users'"></codx-img>
-    </div>
-    <div class="col-10">
-      <div [innerHTML]="item.textValue">
-      </div>
-      <div>
-        <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
-      </div>
-    </div>
-    <div class="col-1" *ngIf="!item.isRead">
-      <span class="dots"></span>
-    </div>
   </div>
 </ng-template>
 <ng-template #templateEmpty>

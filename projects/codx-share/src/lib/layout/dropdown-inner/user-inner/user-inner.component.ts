@@ -159,6 +159,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    return;
     //Remove Old
     let elm = environment.themeMode=="body"? document.body: this.element.nativeElement.closest('.codx-theme');
     if(this.theme && elm){

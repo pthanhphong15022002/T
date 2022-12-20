@@ -20,7 +20,7 @@ import {
 export class PopupAddOrganizationComponent implements OnInit{
   // input
   funcID:string = "";
-  action:string = "";
+  action:any = null;
   headerText:string ="";
   isModeAdd:boolean = false;
   dialogData:any = null;
@@ -70,12 +70,11 @@ export class PopupAddOrganizationComponent implements OnInit{
         if(func)
         {
           this.func = func;
-          this.headerText = this.action +" "+ func.description;
+          this.headerText = this.action.text +" "+ func.description;
           if(func?.formName && func?.gridViewName){
             this.cache.gridViewSetup(func.formName,func.gridViewName)
             .subscribe((grd:any) => {
               if(grd){
-                console.log(grd);
                 this.grdViewSetup = grd;
               }
             });
@@ -111,19 +110,60 @@ export class PopupAddOrganizationComponent implements OnInit{
   // btn save
   onSave() 
   {
-    console.log(this.data);
-    this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","InsertOrgUnitAsync",[this.data])
-    .subscribe((res:any[]) => {
-      if(res[0]){
-        let result = [res[1],res[2]];
-        this.notifiSV.notifyCode("SYS007");
-        this.dialogRef.close(result);
-      }
-      else
-      {
-        this.notifiSV.notifyCode("SYS021");
-      }
-    });
+    if(this.action.functionID === "SYS03")
+    {
+      this.editData(this.data);
+    }
+    else
+    {
+      this.saveData(this.data);
+    }
   }
 
+  // insert
+  saveData(data:any){
+    if(data){
+      this.api
+        .execAction<boolean>(
+         "HR_OrganizationUnits",
+          [data],
+          'SaveAsyncLogic',
+          true)
+          .subscribe((res:any) =>{
+            if(!res?.error){
+              this.notifiSV.notifyCode("SYS006");
+              this.dialogRef.close(null);
+            }
+            else
+            {
+              this.notifiSV.notifyCode("SYS023");
+              this.dialogRef.close(null);
+            }
+        });
+    }
+  }
+  // edit
+  editData(data:any){
+    if(data){
+      debugger
+      this.api
+        .execAction<boolean>(
+         "HR_OrganizationUnits",
+          [data],
+          'UpdateAsyncLogic',
+          true
+        )
+        .subscribe((res:any) =>{
+            if(!res?.error){
+              this.notifiSV.notifyCode("SYS007");
+              this.dialogRef.close(null);
+            }
+            else
+            {
+              this.notifiSV.notifyCode("SYS021");
+              this.dialogRef.close(null);
+            }
+        });
+    }
+  }
 }
