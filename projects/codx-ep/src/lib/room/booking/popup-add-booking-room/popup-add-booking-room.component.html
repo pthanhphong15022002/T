@@ -115,17 +115,18 @@
             [gridViewName]="formModel.gridViewName">
           </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
+            
             <!-- <div class="mx-2">
-              <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
-                <span class="icon-group_add icon-18"></span>
-              </button>
-
-            </div> -->
-            <div class="mx-2">
               <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
                 <span class="icon-group_add text-primary icon-18"></span>
               </button>
+            </div> -->
+            <div class="mx-2">
+              <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
+                [multiple]="true" [showInput]="false">
+              </codx-input>
             </div>
+            
           </div>
         </div>
         <!-- <ng-container *ngIf="isPopupOptionalUserCbb">
@@ -213,22 +214,18 @@
         </div>
 
         <div class="d-flex flex-row text-end align-items-end">
-          <!-- <div class="mx-2">
-            <button class="btn btn-sm btn-icon btn-light-secondary" (click)="openOptionalUserPopup()">
-              <span class="icon-group_add icon-18"></span>
-            </button>
-          </div>
-          <div class="mx-2">
-            <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
-              <span class="icon-group_add text-primary icon-18"></span>
-            </button>
-          </div> -->
-          <button class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center"
+          
+          <!-- <button class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center"
             (click)="openUserPopup()">
             <span class="icon-group_add icon-18 me-2 text-gray-800"></span>
             <codx-label name="lblChooseRoomAttendees" class="fw-bold text-gray-800" default="Chọn người tham dự">
             </codx-label>
-          </button>
+          </button> -->
+          <div class="mx-2">
+            <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
+              [multiple]="true" [showInput]="false">
+            </codx-input>
+          </div>
         </div>
       </div>
       <div class="d-flex justify-content-between align-items-center mt-4 mb-2" id="PeopleInfo">
@@ -326,6 +323,7 @@
         <codx-input [cusButton]="true" [min]="1" [max]="50" type="number" field="attendees" [crrValue]="data?.attendees"
           (valueChange)="valueAttendeesChange($event)">
         </codx-input>
+        
       </div>
     </div>
 
