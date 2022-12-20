@@ -51,23 +51,21 @@ export class OrgorganizationComponent extends UIComponent {
   setupEmp?: any;
   start = '<span class="opacity-50">';
   end = '</span>';
-  funcID: string = "";
-  codxTreeView:CodxTreeviewComponent= null;
+  funcID: string = '';
+  codxTreeView: CodxTreeviewComponent = null;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
-  constructor(private inject: Injector) 
-  {
+  constructor(private inject: Injector) {
     super(inject);
   }
 
   onInit(): void {
     this.router.params.subscribe((params) => {
-      if (params['funcID']) 
-      {
+      if (params['funcID']) {
         this.funcID = params['funcID'];
         if (!this.funcID.includes('WP')) {
           this.button = {
@@ -90,8 +88,7 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.tempTree,
           panelRightRef: this.panelRightLef,
           template2: this.tmpOrgChart,
-          resourceModel: { parentIDField: 'ParentID' }
-
+          resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
@@ -104,7 +101,7 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.tempTree,
           panelRightRef: this.panelRightLef,
           template2: this.tmpList,
-          resourceModel: { parentIDField: 'ParentID' }
+          resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
@@ -117,8 +114,8 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.tempTree,
           panelRightRef: this.panelRightLef,
           template2: this.tmpMasterDetail,
-        }
-      }
+        },
+      },
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
@@ -141,21 +138,18 @@ export class OrgorganizationComponent extends UIComponent {
   }
   // button add toolbar
   btnClick(e) {
-    if (this.view) 
-    {
+    if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      let currentView:any = this.view.currentView;
-      if(currentView)
-      {
+      let currentView: any = this.view.currentView;
+      if (currentView) {
         this.codxTreeView = currentView.currentComponent?.treeView;
       }
-      this.view.dataService.addNew()
-      .subscribe((result: any) => {
+      this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
-          result.parentID = this.view.dataService.dataSelected.orgUnitID;
+          //result.parentID = this.view.dataService.dataSelected.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
