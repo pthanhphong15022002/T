@@ -122,21 +122,10 @@
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <!-- <div class="check-list text-dark" #reference>
-              {{
-                item.reference
-                  | formatvalue
-                    : view?.formModel
-                    : "reference"
-                    : reference
-                    : "BPQuestionnaires"
-                    : "grvBPQuestionnaires"
-                  | async
-              }}
-            </div> -->
-            <div
+            <div class="cursor-pointer text-hover-primary"
               *ngIf="item.reference"
               [innerHtml]="viewQuestion(item.reference)"
+              (click)="viewDetailSurveys(viewQuestion(item.reference))"
             ></div>
           </ng-container>
         </ng-container>
@@ -752,7 +741,7 @@
   <span>{{ text }}</span>
 </ng-template>
 
-<ng-template #viewColumKaban let-item>
+<ng-template #viewColumKaban let-data>
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100"
   >
@@ -764,20 +753,20 @@
       (mouseleave)="pp.close()"
       placement="bottom"
     >
-      {{ item.headerText }}
+      {{ data.headerText }}
     </div>
   </div>
   <div class="icon-more_vert icon-18 has-actions-menu">
     <div class="action-menu">
       <codx-mfunc
         [formModel]="formModel"
-        (clickMF)="clickMFColums($event, item.keyField)"
+        (clickMF)="clickMFColums($event, data.keyField)"
         [isBookMark]="true"
       >
       </codx-mfunc>
     </div>
   </div>
   <ng-template #tesst
-    ><span>{{ item.headerText }}</span></ng-template
+    ><span>{{ data.headerText }}</span></ng-template
   >
 </ng-template>
