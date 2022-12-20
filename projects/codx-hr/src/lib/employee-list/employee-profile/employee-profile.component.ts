@@ -1499,9 +1499,8 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeSkillDetailComponent,
       PopupESkillsComponent,
       {
         isAdd: true,
