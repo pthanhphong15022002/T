@@ -1,15 +1,14 @@
-<codx-form subname="" [body]="body" [footer]="footer" [dialog]="dialog">
-  <ng-template popup adde #body>
+<codx-form subname="" [body]="body" [footer]="footer" [dialog]="dialog" id="selectTemplate{{randomKey}}" >
+  <ng-template  #body>
     <ng-container>
       <div class="container">
         <div class="row  h-75">
-          <div class="d-flex flex-wrap h-100 w-100 drag-wrapper">
+          <div class="d-flex flex-wrap h-100 w-100 drag-wrapper overflow-auto">
             <div class="ratio ratio-1x1 border-box-rarius border rounded m-3 bg-white"*ngFor="let data of chartTypes" [id]="data.value"
              (click)="cellClick($event,data)"
               cdkDrag (cdkDragEnded)="dragEnd($event,data)"
               (cdkDragStarted)="dragStart($event,data)"
               cdkDragLockAxis="x"
-              cdkDragBoundary=".drag-wrapper"
               >
               <div class="d-flex justify-content-center flex-column">
                 <div class="m-auto">
@@ -54,7 +53,7 @@
       <!-- <button class="btn btn-light-primary" (click)="addChart()">
         <codx-label name="lblAddChart" default="Thêm biểu đồ"></codx-label>
       </button> -->
-      <div class="float-end">
+      <div class="float-end" *ngIf="isPopupMode">
         <button class="btn btn-light-primary" (click)="saveForm()">
           <codx-label name="lblChoose" default="Chọn"></codx-label>
         </button>
