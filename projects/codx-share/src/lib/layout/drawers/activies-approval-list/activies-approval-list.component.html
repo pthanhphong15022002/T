@@ -10,4 +10,7 @@
     class="svg-icon"
     [ngClass]="codxService.toolbarButtonIconSizeClass"
   ></span>
+  <span *ngIf="totalNoti > 0" class="position-absolute topbar-badge translate-middle badge rounded-pill bg-danger px-2 top-0 start-100">
+    <span class="text-white">{{totalNoti < 9 ? totalNoti : '9+'}}</span>
+  </span>
 </div>

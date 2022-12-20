@@ -64,7 +64,7 @@ export class EmployeeListComponent extends UIComponent {
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
-
+  @ViewChild('view') viewBase: any;
   constructor(
     private injector: Injector,
     private notifiSV: NotificationsService
@@ -357,7 +357,12 @@ export class EmployeeListComponent extends UIComponent {
 
   viewEmployeeInfo(func, data) {
     if (func.url)
-      this.codxService.navigate('', func.url, { employeeID: data.employeeID });
+      this.codxService.navigate(
+        '',
+        func.url,
+        { employeeID: data.employeeID },
+        { lv: 'saaaaaaaaaaa' }
+      );
   }
 
   exportFile() {
@@ -411,6 +416,8 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   doubleClick(data) {
+    console.log('viewbase', this.viewBase);
+
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'HR0032') this.urlView = obj.url;

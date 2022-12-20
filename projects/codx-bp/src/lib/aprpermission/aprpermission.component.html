@@ -81,7 +81,7 @@
     </td>
     <td class="rowphoto">
       <div *ngIf="(data.approveStatus !='5' || data.approveStatus !='4') && data.approvedBy != userID">
-        <button class="btn btn-primary" (click)="permission(data, '3')">
+        <button class="btn btn-primary" (click)="permission(data, '5')">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
         <codx-mfunc [formModel]="view.formModel" (clickMF)="clickMF($event, data)" [isBookMark]="true" [dataItem]="data"

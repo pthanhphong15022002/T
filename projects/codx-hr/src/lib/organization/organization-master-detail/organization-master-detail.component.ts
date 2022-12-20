@@ -12,6 +12,33 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
   @Input() formModel:FormModel = null;
   employeeManager:any = null;
   totalEmployee:number = 0;
+  columnsGrid:any[] = [
+    {
+      field: 'employeeID',
+      headerText: 'Họ và tên',
+    },
+    {
+      field: 'birthDay',
+      headerText: 'Ngày sinh',
+    },
+    {
+      field: 'Phone',
+      headerText: 'Số điện thoại',
+    },
+    {
+      field: 'Email',
+      headerText: 'Email',
+    },
+    {
+      field: 'JoinredOn',
+      headerText: 'Ngày vào làm',
+    },
+    {
+      field: 'Status',
+      headerText: 'Trạng thái',
+    },
+  ];
+  
   @ViewChild("codxListView") codxListView:CodxListviewComponent;
   constructor(
     private api:ApiHttpService,

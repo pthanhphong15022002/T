@@ -5,11 +5,11 @@ import {
   SidebarModel,
   FormModel,
   DialogModel,
+  ApiHttpService,
 } from 'codx-core';
-import { ChartData } from '../../model/chart.model';
-import { OKRs } from '../../model/okr.model';
+import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
-import { PopupKRWeightComponent } from '../../popup/popup-kr-weight/popup-kr-weight.component';
+import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 
@@ -19,6 +19,7 @@ import { OkrAddComponent } from '../okr-add/okr-add.component';
   styleUrls: ['./okr-targets.component.css'],
 })
 export class OkrTargetsComponent implements OnInit {
+  @Input() dataOKRPlans: any;
   @Input() dataOKR: any;
   @Input() formModel: any;
   @Input() gridView: any;
@@ -27,7 +28,7 @@ export class OkrTargetsComponent implements OnInit {
 
   formModelKR = new FormModel();
 
-  chartData: ChartData = {
+  chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
       valueType: 'Category',
@@ -65,40 +66,19 @@ export class OkrTargetsComponent implements OnInit {
     method: 'GetChartDataAsync',
   };
 
-  chartData1: ChartData = {
+  chartSettings1: ChartSettings = {
     title: '15 Objectives',
-    primaryXAxis: {
-      valueType: 'Category',
-      majorGridLines: { width: 0 },
-      edgeLabelPlacement: 'Shift',
-    },
-    primaryYAxis: {
-      minimum: 0,
-      maximum: 100,
-      interval: 10,
-    },
     seriesSetting: [
       {
         type: 'Pie',
-        xName: 'name',
+        xName: 'status',
         yName: 'value',
         innerRadius: '80%',
         radius: '70%',
         startAngle: 0,
         explodeIndex: 1,
-        explodeOffset: '10%',
         explode: true,
         endAngle: 360,
-        groupTo: '2',
-        groupMode: 'Value',
-        dataLabel: {
-          name: 'text',
-          visible: true,
-          position: 'Inside',
-          font: {
-            fontWeight: '600',
-          },
-        },
       },
     ],
     service: 'OM',
@@ -107,9 +87,67 @@ export class OkrTargetsComponent implements OnInit {
     method: 'GetChartData1Async',
   };
 
-  constructor(private callfunc: CallFuncService, private cache: CacheService) {}
+  chartSettings2: ChartSettings = {
+    title: '15 KRs',
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'status',
+        yName: 'value',
+        innerRadius: '80%',
+        radius: '70%',
+        startAngle: 0,
+        explodeIndex: 1,
+        explode: true,
+        endAngle: 360,
+      },
+    ],
+    service: 'OM',
+    assembly: 'ERM.Business.OM',
+    className: 'OKRBusiness',
+    method: 'GetChartData1Async',
+  };
+
+  Objs = [];
+  ObjQty = 0;
+  Krs = [];
+  KrQty = 0;
+
+  progress: number = 0;
+
+  constructor(
+    private callfunc: CallFuncService,
+    private cache: CacheService,
+    private api: ApiHttpService
+  ) {}
 
   ngOnInit(): void {
+    this.progress = this.dataOKRPlans?.progress;
+    this.api
+      .exec('OM', 'OKRBusiness', 'GetOKRDashboardByPlanAsync', [
+        this.dataOKRPlans?.periodID,
+      ])
+      .subscribe((res: any) => {
+        res[1].map((res) => {
+          let qty = res.quantity;
+          let type = res.okrType;
+          let items = res.items;
+          switch (type) {
+            case 'O':
+              this.chartSettings1.title =
+                qty + (qty > 1 ? ' Objectives' : ' Objective');
+              this.Objs = items;
+              break;
+            case 'R':
+              this.chartSettings2.title = qty + (qty > 1 ? ' KRs' : ' KR');
+              this.Krs = items;
+              break;
+            default:
+              break;
+          }
+        });
+      });
+
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
@@ -186,22 +224,25 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr, o,],
+      [kr, o],
       '',
       dModel
     );
   }
   //Sửa trọng số KR
-  editKRWeight(o: any) {
+  editWeight(okr: any, child:any) {
+    //OM_WAIT: tiêu đề tạm thời gán cứng
+    let popupTitle='Thay đổi trọng số cho KRs';
+    let subTitle='Tính kết quả thực hiện cho mục tiêu';
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowKR = this.callfunc.openForm(
-      PopupKRWeightComponent,
+      PopupOKRWeightComponent,
       '',
       null,
       null,
       null,
-      [o,],
+      [okr,child,popupTitle,subTitle],
       '',
       dModel
     );

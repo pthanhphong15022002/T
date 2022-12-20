@@ -28,6 +28,7 @@ export class BookingStationeryViewDetailComponent
   @Output('copy') copy: EventEmitter<any> = new EventEmitter();
   @Output('edit') edit: EventEmitter<any> = new EventEmitter();
   @Output('delete') delete: EventEmitter<any> = new EventEmitter();
+  @Output('release') release: EventEmitter<any> = new EventEmitter();
   @Output('setPopupTitle') setPopupTitle: EventEmitter<any> =
     new EventEmitter();
   @ViewChild('reference') reference: TemplateRef<ElementRef>;
@@ -106,8 +107,12 @@ export class BookingStationeryViewDetailComponent
       case 'SYS04': //Copy.
         this.lviewCopy(data, event.text);
         break;
+      case 'EP8T1101': //Copy.
+        this.lviewRelease(data);
+        break;
     }
   }
+
   lviewEdit(data?, mfuncName?) {
     if (data) {
       this.setPopupTitle.emit(mfuncName);
@@ -128,6 +133,12 @@ export class BookingStationeryViewDetailComponent
     }
   }
 
+  lviewRelease(data?) {
+    if (data) {
+      this.release.emit(data);
+    }
+  }
+
   changeDataMF(event, data: any) {
     if (event != null && data != null && this.funcID == 'EP8T11') {
       event.forEach((func) => {
@@ -136,19 +147,19 @@ export class BookingStationeryViewDetailComponent
             if (
               func.functionID == 'SYS02' /*MF sửa*/ ||
               func.functionID == 'SYS03' /*MF xóa*/ ||
-              func.functionID == 'SYS04' /*MF chép*/
+              func.functionID == 'SYS04' /*MF chép*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
             ) {
               func.disabled = false;
             }
           });
         } else {
           event.forEach((func) => {
-            if (func.functionID == 'SYS04' /*MF chép*/) {
-              func.disabled = false;
-            }
             if (
               func.functionID == 'SYS02' /*MF sửa*/ ||
-              func.functionID == 'SYS03' /*MF xóa*/
+              func.functionID == 'SYS03' /*MF xóa*/ ||
+              func.functionID == 'SYS04' /*MF chép*/ ||
+              func.functionID == 'EP8T1101' /*MF gửi duyệt*/
             ) {
               func.disabled = true;
             }
@@ -161,7 +172,8 @@ export class BookingStationeryViewDetailComponent
         if (
           func.functionID == 'SYS02' /*MF sửa*/ ||
           func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'SYS04' /*MF chép*/
+          func.functionID == 'SYS04' /*MF chép*/ || 
+          func.functionID == 'EP8T1101' /*MF gửi duyệt*/
         ) {
           func.disabled = true;
         }

@@ -116,7 +116,7 @@ app-notes-home {
 //     height: 350px !important;
 // }
 
-ejs-listview .e-ul > li {
+ejs-listview .e-ul>li {
   margin-bottom: 5px;
 }
 
@@ -131,4 +131,8 @@ ejs-listview .e-ul > li {
 .title-calendar {
   background-color: #ddf7f5;
   height: 2.5rem;
+}
+
+.cal-notes .lstView .e-listview {
+  border-radius: 0 !important;
 }

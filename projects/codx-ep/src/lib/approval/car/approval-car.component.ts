@@ -35,7 +35,7 @@ export class ApprovalCarsComponent extends UIComponent {
   assemblyName = 'EP';
   className = 'BookingsBusiness';
   method = 'GetListApprovalAsync';
-  cbbDriver: DriverModel[]=[];
+  cbbDriver: DriverModel[] = [];
   idField = 'recID';
 
   // [entityName]="'ES_ApprovalTrans'"
@@ -54,11 +54,11 @@ export class ApprovalCarsComponent extends UIComponent {
   popupDialog: any;
   dialog!: DialogRef;
   formModel: FormModel;
-  viewType=ViewType;
-  driverID:any;
-  listDriver=[];
-  driver:any;
-  fields:any;
+  viewType = ViewType;
+  driverID: any;
+  listDriver = [];
+  driver: any;
+  fields: any;
   popupTitle: any;
   constructor(
     private injector: Injector,
@@ -73,8 +73,6 @@ export class ApprovalCarsComponent extends UIComponent {
         this.formModel = res;
       }
     });
-    
-  
   }
 
   onInit(): void {
@@ -131,7 +129,7 @@ export class ApprovalCarsComponent extends UIComponent {
         request: this.request,
         //toolbarTemplate: this.footerButton,
         showSearchBar: false,
-        showFilter:false,
+        showFilter: false,
         model: {
           //panelLeftRef:this.panelLeft,
           eventModel: this.fields,
@@ -142,7 +140,6 @@ export class ApprovalCarsComponent extends UIComponent {
           template6: this.mfButton, //header
           template8: this.contentTmp, //content
           statusColorRef: 'EP022',
-          
         },
       },
     ];
@@ -166,7 +163,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
       case 'EPT40204': {
         //Phân công tài xế
-        this.popupTitle=value.text;
+        this.popupTitle = value.text;
         this.assignDriver(datas);
         break;
       }
@@ -175,7 +172,7 @@ export class ApprovalCarsComponent extends UIComponent {
         break;
     }
   }
-  
+
   approve(data: any, status: string) {
     this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
@@ -183,7 +180,9 @@ export class ApprovalCarsComponent extends UIComponent {
         this.codxEpService
           .approve(
             data?.approvalTransRecID, //ApprovelTrans.RecID
-            status
+            status,
+            '',
+            ''
           )
           .subscribe((res: any) => {
             if (res?.msgCodeError == null && res?.rowCount >= 0) {
@@ -205,45 +204,50 @@ export class ApprovalCarsComponent extends UIComponent {
           });
       });
   }
-  setPopupTitle(data:any){
-    if(data){
-      this.popupTitle=data;
+  setPopupTitle(data: any) {
+    if (data) {
+      this.popupTitle = data;
     }
   }
   assignDriver(data: any) {
-    let startDate= new Date(data.startDate);
-    let endDate= new Date(data.endDate);
-    this.codxEpService.getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
-    .subscribe((res:any)=>{
-      if(res){
-        this.cbbDriver=[];
-        this.listDriver = res;
-        this.listDriver.forEach(dri=>{
-          var tmp = new DriverModel();
-          tmp['driverID'] = dri.resourceID;
-          tmp['driverName'] = dri.resourceName;
-          this.cbbDriver.push(tmp);
-        })
-        this.popupDialog = this.callfc.openForm(
-          PopupDriverAssignComponent,'',550,250,this.funcID,
-          [
-            this.view.dataService.dataSelected,            
-            this.popupTitle,
-            this.view.dataService,
-            this.cbbDriver,
-          ]            
-        );
-        this.dialog.closed.subscribe((x) => {
-          if (!x.event) this.view.dataService.clear(); 
-          else {
-            this.view.dataService.update(x.event).subscribe();
-          }
-        });
-      }
-    })       
+    let startDate = new Date(data.startDate);
+    let endDate = new Date(data.endDate);
+    this.codxEpService
+      .getAvailableDriver(startDate.toUTCString(), endDate.toUTCString())
+      .subscribe((res: any) => {
+        if (res) {
+          this.cbbDriver = [];
+          this.listDriver = res;
+          this.listDriver.forEach((dri) => {
+            var tmp = new DriverModel();
+            tmp['driverID'] = dri.resourceID;
+            tmp['driverName'] = dri.resourceName;
+            this.cbbDriver.push(tmp);
+          });
+          this.popupDialog = this.callfc.openForm(
+            PopupDriverAssignComponent,
+            '',
+            550,
+            250,
+            this.funcID,
+            [
+              this.view.dataService.dataSelected,
+              this.popupTitle,
+              this.view.dataService,
+              this.cbbDriver,
+            ]
+          );
+          this.dialog.closed.subscribe((x) => {
+            if (!x.event) this.view.dataService.clear();
+            else {
+              this.view.dataService.update(x.event).subscribe();
+            }
+          });
+        }
+      });
   }
 
-  cbxChange(evt:any){}
+  cbxChange(evt: any) {}
   closeAddForm(event) {}
 
   changeItemDetail(event) {
@@ -281,9 +285,9 @@ export class ApprovalCarsComponent extends UIComponent {
             func.disabled = true;
           }
           if (func.functionID == 'EPT40204' /*MF phân công tài xế*/) {
-            if(data.status==5 && data.driverName==null)
+            if (data.status == 5 && data.driverName == null)
               func.disabled = false;
-            else{
+            else {
               func.disabled = true;
             }
           }
@@ -291,18 +295,18 @@ export class ApprovalCarsComponent extends UIComponent {
       }
     }
   }
-  sameDayCheck(sDate:any, eDate:any){
-    if(sDate && eDate){
-      return moment(new Date(sDate)).isSame(new Date(eDate),'day');
+  sameDayCheck(sDate: any, eDate: any) {
+    if (sDate && eDate) {
+      return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
     }
     return false;
   }
-  showHour(date:any){
-    let temp= new Date(date);
+  showHour(date: any) {
+    let temp = new Date(date);
     let time =
-          ('0' + temp.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + temp.getMinutes()).toString().slice(-2);
+      ('0' + temp.getHours()).toString().slice(-2) +
+      ':' +
+      ('0' + temp.getMinutes()).toString().slice(-2);
     return time;
   }
   updateStatus(data: any) {

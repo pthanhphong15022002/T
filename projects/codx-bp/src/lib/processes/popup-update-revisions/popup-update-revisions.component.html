@@ -38,13 +38,25 @@
                 {{item.createdOn| timefrom}}
               </span>
             </div>
-            <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"></div>
+            <div *ngIf="item?.comment" [innerHTML]="sanitizer.bypassSecurityTrustHtml(item?.comment)"></div>
+            <div *ngIf="!item?.comment" #comment>
+              {{
+                item.comment
+                | formatvalue
+                : form.formModel
+                : "comment"
+                : comment
+                : "ProcessRevisions"
+                : "grvProcessRevisions"
+                | async
+                }}
+            </div>
           </div>
         </div>
 
         <div class="d-flex flex-column w-125px min-w-125px px-3 ms-6">
           <div class="justify-content-end mb-2">
-            <codx-label name="lblActivedOn" fiedName="ActivedOn" formName="ProcessRevisions"
+            <codx-label fiedName="ActivedOn" formName="ProcessRevisions"
               gridViewName="grvProcessRevisions" default="Ngày hiệu lực">
             </codx-label>
           </div>

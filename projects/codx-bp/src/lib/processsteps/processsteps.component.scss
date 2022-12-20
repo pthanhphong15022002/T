@@ -294,3 +294,15 @@ codx-views {
 .list-empty.card {
   height: calc(100vh - 245px) !important;
 }
+
+.psteps-list codx-mfunc {
+  display: none;
+}
+
+.line-colums {
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}

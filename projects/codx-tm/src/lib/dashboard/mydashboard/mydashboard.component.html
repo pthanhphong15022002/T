@@ -2,7 +2,7 @@
 
 <ng-template #content>
   <div class="page-content d-flex flex-row">
-    <div class="w-100 me-4">
+    <div class="w-100 pe-4">
       <div class="row m-0 bg-body rounded-2 mb-3 p-3">
         <div class="col-4 px-2">
           <div class="d-flex justify-content-between p-3" style="background-color: #d8fffd">
@@ -61,10 +61,10 @@
           </div>
         </div>
       </div>
-      <div class="d-flex mb-3">
+      <div class="d-flex mb-3 mh-200px h-200px">
         <div class="rounded-2 bg-body" style="width: 50%">
-          <ejs-accumulationchart id="chart-task-group" width="80%" [legendSettings]="legendSettings2"
-            [tooltip]="tooltip">
+          <ejs-accumulationchart id="chart-task-group" class=" mh-200px h-200px" width="80%"
+            [legendSettings]="legendSettings2" [tooltip]="tooltip">
             <e-accumulation-series-collection>
               <e-accumulation-series [dataSource]="data?.tasksByGroup" xName="taskGroupName" yName="qty" radius="70%"
                 innerRadius="80%"></e-accumulation-series>
@@ -74,7 +74,7 @@
         <div class="bg-body rounded-2" style="width: 50%">
           <div class="row">
             <div class="col-5">
-              <ejs-circulargauge style="display: block" id="range-container" width="80%">
+              <ejs-circulargauge class="mh-200px h-200px" style="display: block" id="range-container" width="80%">
                 <e-axes>
                   <e-axis minimum="0" radius="100%" maximum="100" startAngle="0" endAngle="360"
                     [majorTicks]="majorTicks" [labelStyle]="labelStyle" [lineStyle]="lineStyle"
@@ -95,7 +95,7 @@
               </ejs-circulargauge>
             </div>
             <div class="col-7">
-              <div class="rateDoneTask_wrap" style="
+              <div class="rateDoneTask_wrap mh-100px h-100px" style="
                   position: relative;
                   top: 50%;
                   left: 50%;

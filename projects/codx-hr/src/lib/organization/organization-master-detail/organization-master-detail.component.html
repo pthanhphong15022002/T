@@ -51,14 +51,14 @@
             </div>
           </div>
           <div>
-            <p>{{codxListView.dataService.data.length}}</p>
+            <p>{{0}}</p>
             <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
           </div>
       </div>
   </div>
   <!-- list detail -->
   <div class="p-2 h-100 w-100">
-    <codx-listview 
+    <!-- <codx-listview 
       #codxListView 
       [formModel]="formModel" 
       service="HR" 
@@ -69,9 +69,39 @@
       [dataValue]="orgUnitID"
       [headerTemplate]="headerTemplate"
       [itemTemplate]="itemTemplate">
-    </codx-listview>
+    </codx-listview> -->
+    <codx-gridview-v2
+      #grid
+      [funcId]="formModel.funcID"
+      [autoLoad]="true"
+      service="HR" 
+      entityName="HR_Employees"
+      assemblyName="ERM.Business.HR"
+      className="OrganizationUnitsBusiness"
+      method="GetEmployeesMasterDetailAsync"
+      rowHeight="40"
+      [columnsGrid]="columnsGrid"
+      [rowTemplate]="itemTemplate">
+    </codx-gridview-v2>
   </div>
 </div>
+
+<!-- grid -->
+<ng-template>
+  <codx-gridview-v2
+    #grid
+    [funcId]="formModel.funcID"
+    [autoLoad]="true"
+    service="HR" 
+    entityName="HR_Employees"
+    assemblyName="ERM.Business.HR"
+    className="OrganizationUnitsBusiness"
+    method="GetEmployeesMasterDetailAsync"
+    rowHeight="40"
+    [columnsGrid]="columnsGrid"
+    [rowTemplate]="itemTemplate"
+  ></codx-gridview-v2>
+</ng-template>
 <ng-template #headerTemplate>
   <div class="row bg-secondary p-2 w-100">
     <!-- Họ và tên -->

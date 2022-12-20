@@ -112,3 +112,7 @@
 /* codx-processsteps {
   height: 100%;
 } */
+.status{
+  position: relative;
+  bottom: 130px;
+}

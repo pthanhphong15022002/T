@@ -6,6 +6,7 @@ import {
   ApiHttpService,
   NotificationsService,
   CodxFormComponent,
+  AuthStore,
 } from 'codx-core';
 import { Component, OnInit, Optional,  ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 
@@ -37,11 +38,16 @@ export class PopupAddAttendeesComponent implements OnInit {
   isPopupUserCbb: boolean;
   lstUser: any[];
   attendeesList=[];
+  resources=[];
+  listUserID=[];
+  user: any;
+  curUser: any;
   constructor(
     private cache: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private codxEpService: CodxEpService,
     private apiHttpService: ApiHttpService,
+    private authStore: AuthStore,
     private notificationsService: NotificationsService,
     @Optional() dialogData?: DialogData,
     @Optional() dialog?: DialogRef
@@ -50,6 +56,7 @@ export class PopupAddAttendeesComponent implements OnInit {
     this.data = dialogData.data[0];
     this.formModel = dialogData.data[1];
     this.dialogRef.formModel=this.formModel;
+    this.user = this.authStore.get();
     this.headerText = dialogData.data[2];
     this.cache.valueList('EP009').subscribe((res) => {
       if (res && res?.datas.length > 0) { 
@@ -65,36 +72,37 @@ export class PopupAddAttendeesComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiHttpService
-            .callSv(
-              'EP',
-              'ERM.Business.EP',
-              'BookingAttendeesBusiness',
-              'GetAsync',
-              [this.data.recID]
-            )
-            .subscribe((res) => {
-              if (res) {
-                let peopleAttend = res.msgBodyData[0];
-                peopleAttend.forEach((people) => {
-                  let tempAttender = new BookingAttendees();
-                  tempAttender.userID = people.userID;
-                  tempAttender.userName = people.userName;
-                  tempAttender.status = people.status;
-                  tempAttender.roleType = people.roleType;
-                  tempAttender.optional = people.optional;
-                  this.listRoles.forEach((element) => {
-                    if (element.value == tempAttender.roleType) {
-                      tempAttender.icon = element.icon;
-                      tempAttender.roleName = element.text;
-                    }
-                  });
-                  
-                  this.oldAttendees.push(tempAttender);
-                  
-                });
-                this.changeDetectorRef.detectChanges();
-              }
-            });
+    .callSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingAttendeesBusiness',
+      'GetAsync',
+      [this.data.recID]
+    )
+    .subscribe((res) => {
+      if (res) {
+        let peopleAttend = res.msgBodyData[0];
+        peopleAttend.forEach((people) => {
+          let tempAttender = new BookingAttendees();
+          tempAttender.userID = people.userID;
+          tempAttender.userName = people.userName;
+          tempAttender.status = people.status;
+          tempAttender.roleType = people.roleType;
+          tempAttender.optional = people.optional;
+          this.listRoles.forEach((element) => {
+            if (element.value == tempAttender.roleType) {
+              tempAttender.icon = element.icon;
+              tempAttender.roleName = element.text;
+            }
+          });
+          
+          this.oldAttendees.push(tempAttender);
+          this.resources.push(tempAttender);
+
+        });
+        this.changeDetectorRef.detectChanges();
+      }
+    });
 
   }
  
@@ -193,6 +201,143 @@ export class PopupAddAttendeesComponent implements OnInit {
     }
   }
   
+  eventApply(e) {
+    var listUserID = '';
+    var listDepartmentID = '';
+    var listUserIDByOrg = '';
+    var type = 'U';
+    e?.data?.forEach((obj) => {
+      if (obj.objectType && obj.id) {
+        type = obj.objectType;
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
+      }
+    });
+    if (listUserID != '') {
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+      this.valueUser(listUserID);
+    }
+
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.codxEpService
+        .getListUserIDByListOrgIDAsync([listDepartmentID, type])
+        .subscribe((res) => {
+          if (res) {
+            listUserIDByOrg += res;
+            if (listUserID != '') listUserIDByOrg += ';' + listUserID;
+            this.valueUser(listUserIDByOrg);
+          }
+        });
+    }
+  }
+  valueUser(resourceID) {
+    if (resourceID != '') {
+      if (this.resources != null) {
+        var user = this.resources;
+        var array = resourceID.split(';');
+        var id = '';
+        var arrayNew = [];
+        user.forEach((e) => {
+          id += e.userID + ';';
+        });
+        if (id != '') {
+          id = id.substring(0, id.length - 1);
+
+          array.forEach((element) => {
+            if (!id.split(';').includes(element)) arrayNew.push(element);
+          });
+        }
+        if (arrayNew.length > 0) {
+          resourceID = arrayNew.join(';');
+          id += ';' + resourceID;
+          this.getListUser(resourceID);
+        }
+      } else {
+        this.getListUser(resourceID);
+      }
+    }
+  }
+
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    var arrUser = resource.split(';');
+    this.listUserID = this.listUserID.concat(arrUser);
+    this.apiHttpService
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource = new BookingAttendees();
+            // if (emp.userID == this.user.userID) {
+            //   tmpResource.userID = emp?.userID;
+            //   tmpResource.userName = emp?.userName;
+            //   tmpResource.positionName = emp?.positionName;
+            //   tmpResource.roleType = '1';
+            //   tmpResource.optional = false;
+            //   this.listRoles.forEach((element) => {
+            //     if (element.value == tmpResource.roleType) {
+            //       tmpResource.icon = element.icon;
+            //       tmpResource.roleName = element.text;
+            //     }
+            //   });
+            //   this.resources.push(tmpResource);
+            // } else {
+              tmpResource.userID = emp?.userID;
+              tmpResource.userName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = '3';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.resources.push(tmpResource);
+            //}
+            
+          }
+          this.resources.forEach(item=>{
+            let isDuplicate=false;
+            this.oldAttendees.forEach(oItem=>{
+              if(item.userID == oItem.userID){
+                isDuplicate=true;
+              }
+            });
+            if(!isDuplicate){
+
+              this.newAttendees.push(item);
+            };
+          });
+          this.newAttendees = this.filterArray(this.newAttendees);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+  filterArray(arr) {
+    return [...new Map(arr.map((item) => [item['userID'], item])).values()];
+  }
   attendeesCheckChange(event: any, userID: any) {
     this.newAttendees.forEach((attender) => {
       if (attender.userID == userID) {

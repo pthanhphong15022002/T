@@ -233,7 +233,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         'ERM.Business.SYS',
         'SettingValuesBusiness',
         'GetByModuleAsync',
-        'EPParameters'
+        'EPCarParameters'
       )
       .subscribe((res) => {
         if (res) {

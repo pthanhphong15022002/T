@@ -37,11 +37,13 @@ import {
   ResourceModel,
   SidebarModel,
   UIComponent,
+  Util,
   ViewModel,
   ViewType,
 } from 'codx-core';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
 
 import { CodxBpService } from '../codx-bp.service';
 import {
@@ -60,7 +62,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
 })
 export class ProcessStepsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnChanges
 {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
@@ -69,14 +71,16 @@ export class ProcessStepsComponent
   @ViewChild('templateView') templateView!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
 
   @Input() process: BP_Processes;
-  @Input() viewMode = '16';
+  @Input() viewMode :any;
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
-  @Input() isEdit :boolean = false;
+  @Input() isEdit: boolean = false;
   @Output() getObjectFile = new EventEmitter();
+  @Output() isClosePopup = new EventEmitter();
 
   showButtonAdd = true;
   dataObj?: any;
@@ -111,6 +115,7 @@ export class ProcessStepsComponent
   lockParent = false;
   lockChild = false;
   hideMoreFC = false;
+  hideMoreFCChild = false;
   formModelMenu: FormModel;
   vllInterval = 'VL004';
   dataFile: any;
@@ -132,7 +137,11 @@ export class ProcessStepsComponent
   listCountPhases: any;
   actived = false;
   isBlock: any = true;
-  idView ='' ;
+  idView = '';
+  loadingData = false;
+  heightFlowChart = 0;
+  widthElement = 300;
+  dataClick: any;
 
   constructor(
     inject: Injector,
@@ -151,11 +160,20 @@ export class ProcessStepsComponent
       }
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.chgViewModel(this.viewMode);
+    this.changeDetectorRef.detectChanges()
+  }
+  
 
   onInit(): void {
     this.actived = this.process?.actived;
     if (!this.actived || !this.isEdit) {
-      this.lockChild = this.lockParent = this.hideMoreFC = true;
+      this.lockChild =
+        this.lockParent =
+        this.hideMoreFC =
+        this.hideMoreFCChild =
+          true;
     }
     this.processID = this.process?.recID ? this.process?.recID : '';
     this.numberColums = this.process?.phases ? this.process?.phases : 0;
@@ -194,8 +212,12 @@ export class ProcessStepsComponent
       id: 'btnAdd',
       items: items,
     };
+    // this.childFunc.forEach((obj) => {
+    //   if (obj.id != 'P') this.childFuncOfP.push(obj);
+    // });
+    //p chỉ lấy a
     this.childFunc.forEach((obj) => {
-      if (obj.id != 'P') this.childFuncOfP.push(obj);
+      if (obj.id == 'A') this.childFuncOfP.push(obj);
     });
     this.childFunc.map((obj) => {
       if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
@@ -222,6 +244,7 @@ export class ProcessStepsComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
+          template2: this.viewColumKaban,
         },
       },
       {
@@ -243,9 +266,9 @@ export class ProcessStepsComponent
 
   //Thay doi viewModel
   chgViewModel(type) {
-   // this.idView = type ;
+    // this.idView = type ;
     let view = this.views.find((x) => x.id == type);
-    if (view) this.view.viewChange(view);
+    if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -261,7 +284,7 @@ export class ProcessStepsComponent
       this.view.dataService.dataSelected.processID = this.processID;
       if (this.parentID != '')
         this.view.dataService.dataSelected.parentID = this.parentID;
-       var dialog = this.callfc.openSide(
+      var dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
         ['add', this.titleAction, this.stepType, this.formModelMenu],
         option
@@ -320,6 +343,7 @@ export class ProcessStepsComponent
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
+          this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
           this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.notiService.notifyCode('SYS006');
@@ -407,6 +431,7 @@ export class ProcessStepsComponent
               if (index != -1)
                 this.listPhaseName[index] = processStep.processName;
             }
+            this.isClosePopup.emit(true);
             this.dataTreeProcessStep = this.view.dataService.data;
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -569,6 +594,7 @@ export class ProcessStepsComponent
             this.view.dataService.data.push(processStep);
             this.listPhaseName.push(processStep.stepName);
           }
+          this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
           this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
@@ -635,7 +661,7 @@ export class ProcessStepsComponent
               });
               break;
           }
-
+          this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
           this.isBlockClickMoreFunction(this.dataTreeProcessStep);
           this.changeDetectorRef.detectChanges();
@@ -684,7 +710,7 @@ export class ProcessStepsComponent
         evt?.text.charAt(0).toLocaleLowerCase() +
         evt?.text.slice(1);
     }
- 
+
     var funcMenu = this.childFunc.find((x) => x.id == this.stepType);
 
     if (funcMenu) {
@@ -754,7 +780,7 @@ export class ProcessStepsComponent
       this.parentID =
         this.stepType != 'A' && data.stepType == 'P' ? '' : data.recID;
       this.titleAction = this.getTitleAction(this.titleAdd, this.stepType);
-     
+
       if (funcMenu) {
         this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
           this.cache
@@ -853,6 +879,10 @@ export class ProcessStepsComponent
     }
     if (e?.view.id == 6) {
       this.isKanban = true;
+      this.widthElement =
+        document.getElementsByClassName(
+          '.e-header-cells'
+        )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
@@ -880,6 +910,7 @@ export class ProcessStepsComponent
 
   dropPhase(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
+    this.lockChild = this.lockParent = true;
     var ps = this.view.dataService.data[event.previousIndex];
     if (ps) {
       this.bpService
@@ -949,8 +980,10 @@ export class ProcessStepsComponent
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild = this.lockParent = false;
           }
         });
     }
@@ -958,6 +991,7 @@ export class ProcessStepsComponent
 
   dropStepChild(event: CdkDragDrop<string[]>, currentID) {
     if (event.previousIndex == event.currentIndex) return;
+    this.lockChild = this.lockParent = true;
     var index = this.view.dataService.data.findIndex(
       (x) => x.recID == currentID
     );
@@ -1013,14 +1047,17 @@ export class ProcessStepsComponent
 
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild = this.lockParent = false;
           }
         });
     }
   }
 
   dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
+    this.lockChild = this.lockParent = true;
     var psMoved = event.item?.data;
 
     var indexPrevious = this.view.dataService.data.findIndex(
@@ -1088,8 +1125,10 @@ export class ProcessStepsComponent
             // );
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild = this.lockParent = false;
           }
         });
     }
@@ -1115,23 +1154,12 @@ export class ProcessStepsComponent
   }
 
   getFlowChart(process) {
-    let paras = [
-      '',
-      this.funcID,
-      process?.recID,
-      'BP_Processes',
-      'inline',
-      1000,
-      process?.processName,
-      'Flowchart',
-      false,
-    ];
+    let paras = [process?.recID, 'BP_Processes', 'Flowchart'];
     this.api
-      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetFileByOORAsync', paras)
       .subscribe((res) => {
-        if (res && res?.url) {
-          let obj = { pathDisk: res?.url, fileName: process?.processName };
-          this.dataFile = obj;
+        if (res) {
+          this.dataFile = res;
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -1143,7 +1171,7 @@ export class ProcessStepsComponent
 
   fileSave(e) {
     if (e && typeof e === 'object') {
-      this.dataFile = e;   
+      this.dataFile = e;
       this.getObjectFile.emit(e);
       this.changeDetectorRef.detectChanges();
     }
@@ -1157,7 +1185,7 @@ export class ProcessStepsComponent
     if (!data?.items || data?.items?.length == 0) return false;
     let checkList = [];
     data?.items.forEach((x) => {
-      if (x.stepType == stepType) checkList.push(x);
+      if (x.stepType == stepType && x.reference) checkList.push(x);
     });
     let check = checkList.length > 0;
     return check;
@@ -1184,6 +1212,7 @@ export class ProcessStepsComponent
   }
 
   printFlowchart() {
+    this.linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
     if (this.linkFile) {
       const output = document.getElementById('output');
       const img = document.createElement('img');
@@ -1192,8 +1221,6 @@ export class ProcessStepsComponent
       const br = document.createElement('br');
       output.appendChild(br);
       window.print();
-
-      document.body.removeChild(output);
     } else
       window.frames[0]?.postMessage(
         JSON.stringify({ MessageId: 'Action_Print' }),
@@ -1246,33 +1273,58 @@ export class ProcessStepsComponent
   }
 
   openMF(data, p) {
-  
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
-      // var element = document.getElementById(data?.parentID);
-      // if (element ) {
-      //  element.classList.add('hiden') ;
-      // }
       this.dataHover = data;
       p.open();
-     // this.hideMoreFC = true;
+      // this.hideMoreFC = true;
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
   }
-  moveOut(){
-    // if(this.hideMoreFC)
-    // this.hideMoreFC = false
-  }
+
   showAllparent(text) {
     return (
       this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
     );
   }
-  setWidth(data){
-    let width = document.getElementsByTagName("body")[0].offsetWidth;    
-    return width < data.length*12 ? true :  false;
+  setWidth(data) {
+    let width = document.getElementsByTagName('body')[0].offsetWidth;
+    return width < data.length * 12 ? true : false;
+  }
+
+  viewQuestion(e) {
+    let url = window.location.href;
+    let index = url.indexOf('/bp/');
+    let linkQuesiton = '';
+    if (index != -1)
+      linkQuesiton =
+        url.substring(0, index) +
+        Util.stringFormat(
+          '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+          'SVT01',
+          '',
+          e
+        );
+    return linkQuesiton;
+  }
+  setWidthTextColumm(text) {
+    return this.widthElement < text.length * 3;
+  }
+  //chuwa xong
+  dataColums(recIDPhase): any {
+    this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
+      return dt;
+    });
+  }
+
+  clickMFColums(e, recID) {
+    this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
+      if (dt) {
+        this.clickMF(e, dt);
+      }
+    });
   }
 }

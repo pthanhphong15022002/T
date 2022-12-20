@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DataRequest } from '@shared/models/data.request';
 import { LayoutModel } from '@shared/models/layout.model';
 import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
 import {
@@ -234,15 +235,7 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeDegreeInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EDegreesBusiness',
-      'AddEmployeeDegreeInfoAsync',
-      data
-    );
-  }
+
   saveEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -284,6 +277,57 @@ export class CodxHrService {
     );
   }
 
+  //#endregion
+
+  //#regin EDegrees
+  getEmployeeDegreeModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'GetEmployeeDegreesModelAsync'
+    );
+  }
+
+  updateEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'UpdateEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  AddEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'AddEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'DeleteEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  getEDegreesWithDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'LoadEDegreesAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EmpVisasBusiness
@@ -363,7 +407,7 @@ export class CodxHrService {
       'HR',
       'HR',
       'EDegreesBusiness',
-      'GetEmployeeDegreeInfoAsync',
+      'LoadEDegreesAsync',
       data
     );
   }
@@ -423,16 +467,6 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
-      data
-    );
-  }
-
-  getEmployeeAssetsInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAssetsBusiness',
-      'GetEmployeeAssetsInfoAsync',
       data
     );
   }
@@ -527,16 +561,57 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeAssetsInfo(data) {
+  //#endregion
+
+  //#region EAssetBusiness
+  getEmployeeAssetsModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
-      'AddEmployeeAssetsInfoAsync',
+      'GetEAssetsModelAsync'
+    );
+  }
+
+  UpdateEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'UpdateEAssetsInfoAsync',
       data
     );
   }
 
+  AddEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'AddEAssetsInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'DeleteEAssetsInfoAsync',
+      data
+    );
+  }
+
+  getListAssetByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'GetListAssetsByDataRequestAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EFamiliesBusiness
@@ -601,7 +676,7 @@ export class CodxHrService {
 
   //#endregion
 
-  //region #EJobSalaries
+  //#region #EJobSalaries
   GetCurrentJobSalaryByEmployeeID(data) {
     return this.api.execSv<any>(
       'HR',
@@ -714,13 +789,62 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_EBasicSalaries
-  GetCurrentEBasicSalaries(empID: string) {
+  GetCurrentEBasicSalariesByEmployeeID(empID: string) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'EBasicSalariesBusiness',
-      'GetCurrentEBSalaryAsync',
+      'GetCurrentBasicSalariesByEmployeeIDAsync',
       [empID]
+    );
+  }
+
+  getListBasicSalariesByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetListEBasicSalariesAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeBasicsalaryInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'DeleteEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+
+  GetEmployeeBasicSalariesModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'GetEmployeeBasicSalariesModelAsync'
+    );
+  }
+
+  AddEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'AddEmployeeBasicSalariesInfoAsync',
+      data
+    );
+  }
+
+  UpdateEmployeeBasicSalariesInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBasicSalariesBusiness',
+      'UpdateEmployeeBasicSalariesInfoAsync',
+      data
     );
   }
   //#endregion
@@ -734,6 +858,144 @@ export class CodxHrService {
       'GetCurrentBenefitAsync',
       [empID]
     );
+  }
+  //#endregion
+
+  //#region HR_EHealths
+
+  loadDataEHealths(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'LoadDataEHealthsAsync',
+      dataRequest
+    );
+  }
+
+  addEHealth(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'AddEHealthsAsync',
+      [data]
+    );
+  }
+
+  editEHealth(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'EditEHealthsAsync',
+      data
+    );
+  }
+
+  deleteEHealth(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EHealthsBusiness',
+      'DeleteEHealthsAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+  //#region HR_EVaccines
+  loadDataEVaccine(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'LoadDataEVaccineAsync',
+      dataRequest
+    );
+  }
+
+  addEVaccine(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'AddEVaccineAsync',
+      [data]
+    );
+  }
+
+  editEVaccine(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'EditEVaccineAsync',
+      data
+    );
+  }
+
+  deleteEVaccine(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EVaccinesBusiness',
+      'DeleteEVaccineAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_EDiseases
+  loadDataEDisease(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'LoadDataEDiseaseAsync',
+      dataRequest
+    );
+  }
+
+  addEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'AddEDiseaseAsync',
+      [data]
+    );
+  }
+
+  editEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'EditEDiseaseAsync',
+      data
+    );
+  }
+
+  deleteEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'DeleteEDiseaseAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region FunctionList
+  getDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
   }
   //#endregion
 }

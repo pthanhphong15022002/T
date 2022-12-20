@@ -219,7 +219,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
     if (this.formType == 'edit') {
       this.isAddMode = false;
       op.methodName = 'UpdateUserAsync';
-      data = [this.adUserGroup, this.viewChooseRole, checkDifference];
+      data = [this.adUserGroup, this.viewChooseRole, checkDifference, "1"];
     }
     op.data = data;
     return true;
@@ -342,7 +342,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
                 }
                 this.adService
                   .updateUserRoles(
-                    lstUser,
+                    this.dataUserCbb,
                     this.viewChooseRole,
                     true,
                     this.adUserGroup,
@@ -366,7 +366,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               ) {
                 this.adService
                   .updateUserRoles(
-                    this.dataUserCbbTemp,
+                    lstUser,
                     this.viewChooseRole,
                     true,
                     this.adUserGroup,

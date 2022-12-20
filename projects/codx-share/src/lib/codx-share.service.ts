@@ -1,4 +1,4 @@
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { TM_Tasks } from './components/codx-tasks/model/task.model';
 import {
@@ -36,7 +36,7 @@ export class CodxShareService {
     afterSave?: Function,
     formModel?: any,
     dataService?: any,
-    that:any = null
+    that: any = null
   ) {
     var funcID = val?.functionID;
     switch (funcID) {
@@ -64,7 +64,7 @@ export class CodxShareService {
               result: e?.event,
               data: data,
             };
-            afterSave(result , that);
+            afterSave(result, that);
           }
         });
         break;
@@ -333,6 +333,14 @@ export class CodxShareService {
     title: string,
     formModel: FormModel
   ) {
+    if (formModel) {
+      this.cache.functionList('EST021').subscribe((fm) => {
+        if (fm) {
+          formModel = fm;
+        }
+      });
+    }
+
     let _dialog: any;
     switch (status) {
       case '0': {
@@ -397,12 +405,95 @@ export class CodxShareService {
     return _dialog;
   }
 
+  beforeApproveUseRecID(
+    status: string,
+    recID: string,
+    title: string,
+    funcID: string = null
+  ) {
+    let formModel;
+    let approvalTrans: any = {};
+
+    this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetByRecIDAsync',
+      [recID]
+    );
+
+    //console.log('ndhoa', approvalTrans);
+
+    // let _dialog: any;
+    // switch (status) {
+    //   case '0': {
+    //     //cancel
+    //     if (approvalTrans.cancelControl != 1) {
+    //       _dialog = this.openPopupComment(
+    //         status,
+    //         approvalTrans.cancelControl,
+    //         funcID,
+    //         title,
+    //         formModel
+    //       );
+    //     }
+    //     break;
+    //   }
+    //   case '2': {
+    //     //redo
+    //     if (
+    //       approvalTrans.redoControl == '2' ||
+    //       approvalTrans.redoControl == '3'
+    //     ) {
+    //       _dialog = this.openPopupComment(
+    //         status,
+    //         approvalTrans.redoControl,
+    //         funcID,
+    //         title,
+    //         formModel
+    //       );
+    //     }
+    //     break;
+    //   }
+    //   case '5': {
+    //     //duyet
+    //     if (approvalTrans.approveControl != '1') {
+    //       _dialog = this.openPopupComment(
+    //         status,
+    //         approvalTrans.approveControl,
+    //         funcID,
+    //         title,
+    //         formModel
+    //       );
+    //     }
+    //     break;
+    //   }
+    //   case '4': {
+    //     //reject
+    //     if (
+    //       approvalTrans.rejectControl == '2' ||
+    //       approvalTrans.rejectControl == '3'
+    //     ) {
+    //       _dialog = this.openPopupComment(
+    //         status,
+    //         approvalTrans.rejectControl,
+    //         funcID,
+    //         title,
+    //         formModel
+    //       );
+    //     }
+    //     break;
+    //   }
+    // }
+    // return _dialog;
+  }
+
   openPopupComment(
     status: string,
     funcControl: string,
     funcID: string,
     title: string,
-    formModel: FormModel,
+    formModel: FormModel
   ) {
     let dialogComment = this.callfunc.openForm(
       PopupCommentComponent,
@@ -418,6 +509,45 @@ export class CodxShareService {
       }
     );
     return dialogComment;
+  }
+
+  getDataTM_Tasks(requestData) {
+    return this.api.execSv(
+      'TM',
+      'TM',
+      'TaskBusiness',
+      'GetTasksWithScheduleWPAsync',
+      [requestData, true]
+    );
+  }
+
+  getDataWP_Notes(predicate, dataValue) {
+    return this.api.execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NotesBusiness',
+      'GetListAsync',
+      [predicate, dataValue]
+    );
+  }
+  getDataCO_Meetings(requestData) {
+    return this.api.execSv(
+      'CO',
+      'CO',
+      'MeetingsBusiness',
+      'GetListMeetingsAsync',
+      requestData
+    );
+  }
+
+  getDataEP_Bookings(requestData) {
+    return this.api.execSv(
+      'EP',
+      'EP',
+      'BookingsBusiness',
+      'GetListBookingAsync',
+      requestData
+    );
   }
 }
 

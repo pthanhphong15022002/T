@@ -8,10 +8,10 @@
 >
 </codx-views>
 <ng-template #panelContent>
-  <div class="page-pw h-100">
+  <div class="page-pw h-employee">
     <div class="page-profile">
       <div class="d-flex">
-        <div class="user-left me-7">
+        <div class="user-left me-7 aqua">
           <div class="d-flex flex-column mt-9">
             <div class="d-flex flex-column text-center mb-4">
               <div
@@ -314,7 +314,7 @@
             </div>
           </div>
           <hr />
-          <div class="user-menu">
+          <div class="user-menu scroll-y">
             <ul
               class="nav nav-tabs nav-pills flex-row border-0 flex-md-column me-3 mb-3 mb-md-0 fs-6 min-w-lg-200px"
             >
@@ -492,7 +492,7 @@
         <div class="d-flex flex-column-fluid">
           <div class="container p-0">
             <div class="w-100 user-right">
-              <div class="tab-content py-5">
+              <div class="tab-content">
                 <div
                   class="tab-pane fade show"
                   id="pane_0"
@@ -552,11 +552,406 @@
         </div>
       </div>
     </div>
+    <div ngbDropdown class="emp-check-add rounded-circle">
+      <span
+        ngbDropdownToggle
+        class="btn btn-icon btn-primary rounded-circle fs-1 icon-add"
+      >
+      </span>
+      <div ngbDropdownMenu class="" style="min-width: 200px">
+        <div class="card card-flush">
+          <div class="d-flex flex-column" *ngIf="crrTab == 0">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handleEFamilyInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Quan hệ gia đình"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handleEmployeePassportInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Hộ chiếu"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handleEmployeeVisaInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Thị thực"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handleEmployeeWorkingPermitInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Giấy phép lao động"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="crrTab == 1">
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Hồ sơ lưu trữ"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="crrTab == 2">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeBasicSalariesInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Lương cơ bản"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeJobSalariesInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Lương chức danh"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Phụ cấp"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Thu nhập khác"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Khấu trừ khác"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandlemployeeAssetInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Tài sản cấp phát"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="crrTab == 3">
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Hợp đồng lao động"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Bổ nhiệm - Điều chuyển"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Nghỉ phép"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Công tác"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="handlEmployeeExperiences('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Kinh nghiệm trước đây"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="crrTab == 4">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeDegreeInfo('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Bằng cấp"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEmployeeCertificateInfo()"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Chứng chỉ"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEmployeeSkillsInfo()"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Kỹ năng"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEmployeeTrainCourseInfo()"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Đào tạo"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="crrTab == 5">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEmployeeAwardsInfo()"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Khen thưởng"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEmployeeDisciplinesInfo()"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Kỷ luật"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+          <div class="d-flex flex-column" *ngIf="crrTab == 6">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEHealths('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Khám sức khỏe"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="addEditEVaccines('add', null)"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Tiêm vaccine"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Bệnh nghề nghiệp"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+            <div class="d-flex btn btn-hover-primary">
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Tai nạn lao động"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+  <!-- <div class="more-function">
+    <div class="d-flex flex-column">
+      <span class="postnews mt-3">
+        <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
+      </span>
+    </div>
+  </div> -->
 </ng-template>
 
 <!-- pane_0 -->
 <ng-template #info>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblInfoPersonal"
+        [formModel]="view.formModel"
+        default="Thông tin cá nhân"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('1', '0')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('1', '1')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y aqua"
     data-kt-scroll="true"
@@ -570,37 +965,6 @@
       <ng-container>
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblInfoPersonal"
-                [formModel]="view.formModel"
-                default="Thông tin cá nhân"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('1', '0')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('1', '1')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -1400,7 +1764,12 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstPassport[0]?.passportNo }}</span
+                            :
+                            {{
+                              lstPassport?.length > 0
+                                ? lstPassport[0]?.passportNo
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1416,7 +1785,12 @@
                           >
                           </codx-label>
                           <span #IssuedPlace
-                            >: {{ lstPassport[0]?.issuedPlace }}</span
+                            >:
+                            {{
+                              lstPassport?.length > 0
+                                ? lstPassport[0]?.issuedPlace
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1434,7 +1808,12 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstPassport[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              lstPassport?.length > 0
+                                ? (lstPassport[0]?.issuedDate | fmDT)
+                                : ("" | fmDT)
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1450,7 +1829,13 @@
                           >
                           </codx-label>
                           <span #ExpiredDate
-                            >: {{ lstPassport[0]?.expiredDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstPassport?.length > 0
+                                ? lstPassport[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1458,9 +1843,15 @@
                     <codx-mfunc
                       *ngIf="lstPassport?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstPassport[0], 'passport')"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstPassport?.length > 0 ? lstPassport[0] : {},
+                          'passport'
+                        )
+                      "
                       type="hover"
-                      [dataItem]="lstPassport[0]"
+                      [dataItem]="lstPassport?.length > 0 ? lstPassport[0] : {}"
                     >
                     </codx-mfunc>
                   </div>
@@ -1498,7 +1889,10 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstVisa[0]?.visaNo }}</span
+                            :
+                            {{
+                              lstVisa?.length > 0 ? lstVisa[0]?.visaNo : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1513,7 +1907,12 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ lstVisa[0]?.issuedPlace }} </span>
+                          <span
+                            >:
+                            {{
+                              lstVisa?.length > 0 ? lstVisa[0]?.issuedPlace : ""
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1530,7 +1929,13 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstVisa[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1546,8 +1951,20 @@
                           >
                           </codx-label>
                           <span #issuedOn
-                            >: {{ lstVisa[0]?.effectedDate | fmDT }} -
-                            {{ lstVisa[0]?.expiredDate | fmDT }}
+                            >:
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.effectedDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}
                           </span>
                         </div>
                       </div>
@@ -1555,9 +1972,15 @@
                     <codx-mfunc
                       *ngIf="lstVisa?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstVisa[0], 'visa')"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstVisa?.length > 0 ? lstVisa[0] : null,
+                          'visa'
+                        )
+                      "
                       type="hover"
-                      [dataItem]="lstVisa[0]"
+                      [dataItem]="lstVisa?.length > 0 ? lstVisa[0] : {}"
                     >
                     </codx-mfunc>
                   </div>
@@ -1596,7 +2019,12 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstWorkPermit[0]?.workPermitNo }}</span
+                            :
+                            {{
+                              lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.workPermitNo
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1611,7 +2039,14 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ lstWorkPermit[0]?.issuedPlace }} </span>
+                          <span
+                            >:
+                            {{
+                              lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.issuedPlace
+                                : ""
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1628,7 +2063,13 @@
                           >
                           </codx-label>
                           <span
-                            >: {{ lstWorkPermit[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1644,8 +2085,20 @@
                           >
                           </codx-label>
                           <span
-                            >: {{ lstWorkPermit[0]?.fromDate | fmDT }} -
-                            {{ lstWorkPermit[0]?.toDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.fromDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.toDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1654,10 +2107,16 @@
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
                       (clickMF)="
-                        clickMF($event, lstWorkPermit[0], 'workpermit')
+                        clickMF(
+                          $event,
+                          lstWorkPermit?.length > 0 ? lstWorkPermit[0] : null,
+                          'workpermit'
+                        )
                       "
                       type="hover"
-                      [dataItem]="lstWorkPermit[0]"
+                      [dataItem]="
+                        lstWorkPermit?.length > 0 ? lstWorkPermit[0] : {}
+                      "
                     >
                     </codx-mfunc>
                   </div>
@@ -1668,114 +2127,6 @@
           </div>
         </div>
       </ng-container>
-      <!-- kinh nghiem -->
-      <!-- <div class="col d-flex" id="MWP00202" class="d-block mt-6">
-        <div class="user-profile overview">
-          <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-            <codx-label name="lblExperencies" [formModel]="view.formModel" default="Kinh nghiệm trước đây">
-            </codx-label>
-          </div>
-          <div class="border rounded-2 p-4 pb-0">
-            <div class="user-process process-h">
-              <ng-container>
-                <div class="process-item d-flex mb-4">
-                  <div class="yeartoyear fw-bold text-dark mt-3">2 năm</div>
-                  <div class="mx-3 mt-3 process-line">
-                    <span class="pic-circle"></span>
-                  </div>
-                  <div class="d-flex flex-column py-3 px-4 process-r">
-                    <div class="d-flex flex-column">
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-              <ng-container>
-                <div class="process-item d-flex mb-4">
-                  <div class="yeartoyear mt-3"></div>
-                  <div class="mx-3 mt-3 process-line">
-                    <span class="icon-add_circle_outline icon-16 text-success"></span>
-                  </div>
-                  <div class="add-process">
-                    <button class="btn btn-sm btn-light" (click)="handlEmployeeExperiences('add', null)">
-                      <i class="icon-add icon-16 ms-n2"></i>
-                      <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới kinh nghiệm">
-                      </codx-label>
-                    </button>
-                  </div>
-                </div>
-                <codx-gridview-v2 [service]="'HR'" [gridViewName]="'grvEExperiences'" [formName]="'EExperiences'"
-                  [assemblyName]="'HR'" [className]="'EExperiencesBusiness'" [method]="'GetListByEmployeeIDAsync'"
-                  [predicates]="'EmployeeID=@0'" [autoLoad]="true" [height]="200" [dataValues]="data.employeeID"
-                  [entityName]="'HR_EExperiences'" [contentEditable]="false" [allowResizing]="true"
-                  (clickMF)="clickMF($event, null, 'eexperiences')"></codx-gridview-v2>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col d-flex" id="MWP00205" class="d-block mb-3">
-        <div class="user-profile overview">
-          <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-            <codx-label name="lblRelationShip" [formModel]="view.formModel" default="Quan hệ gia đình">
-            </codx-label>
-            <ngx-skeleton-loader count="5" animation="progress">
-            </ngx-skeleton-loader>
-          </div>
-          <div class="border rounded-2 p-4">
-            <div class="row">
-              <ng-container>
-                <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                  <codx-card-center cardCss="border h-100" [imageId]="'relationship.recID'" [formModel]="view.formModel"
-                    [title]="'relationship.relationName'" [dataItem]="'relationship'" [typeMF]="'hover'"
-                    [desc]="'relationship.relationType' + ' | ' + 'Năm sinh: '">
-                  </codx-card-center>
-                </div>
-              </ng-container>
-              <ng-container>
-                <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                  <div class="d-flex">
-                    <div class="add-process">
-                      <button class="btn btn-sm btn-light">
-                        <i class="icon-add icon-16 ms-n2"></i>
-                        <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
-                        </codx-label>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </ng-container>
-            </div>
-          </div>
-        </div>
-      </div> -->
-
-      <!-- sở thích -->
-      <!-- <div class="col d-flex" id="MWP00206" class="d-block mb-5">
-        <div class="user-profile overview">
-          <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-            <codx-label name="lblHobbie" [formModel]="view.formModel" default="Sở thích">
-            </codx-label>
-          </div>
-        </div>
-        <ngx-skeleton-loader count="5" animation="progress"></ngx-skeleton-loader>
-        <div class="border rounded-2 p-4">
-          <div class="list-hoppy">
-            <div class="d-flex align-items-center user-item tagitem">
-              <div>item.hobbyName }}</div>
-              <a class="text-dark text-hover-danger mt-1 ms-1">
-                <span class="icon-close icon-14"></span>
-              </a>
-            </div>
-            <div class="add-process">
-              <button class="btn btn-sm btn-light">
-                <i class="icon-add icon-16 ms-n2"></i>
-                <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
-                </codx-label>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 </ng-template>
@@ -2479,10 +2830,6 @@
                     >
                     </codx-label>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeJobSalariesInfo('add', null)"
-                      ></span>
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -2501,8 +2848,12 @@
                       </codx-temp-full>
                       <ng-template #footerEBSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương chức
-                          danh: {{ crrEBSalary.jSalary }}
+                          <span class="icon-attach_money"></span>Lương cơ bản:
+                          {{ crrEBSalary.bSalary }}
+                        </div>
+                        <div class="d-flex align-items-center mt-1">
+                          <span class="icon-attach_money"></span>Lương đóng BH:
+                          {{ crrEBSalary.siSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-3">
                           <span class="icon-calendar_today"></span>Hiệu lực:
@@ -2756,8 +3107,10 @@
                   </div>
                 </div>
                 <div class="d-flex align-items-center ms-5">
-                  <button class="btn btn-icon btn-sm position-relative ms-2"
-                  (click)="HandlemployeeAssetInfo('add', null)">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-2"
+                    (click)="HandlemployeeAssetInfo('add', null)"
+                  >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
                     ></span>
@@ -2794,6 +3147,24 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
+                  <div class="d-flex flex-wrap mt-6 mb-3">
+                    <div
+                      [style.background]="'black'"
+                      class="badge border-0 me-2"
+                      *ngFor="let asset of lstAsset"
+                    >
+                      <div class="has-action-menu">
+                        {{ asset.assetCategory }} gan cung
+                        <codx-mfunc
+                          [formModel]="formModel"
+                          (clickMF)="clickMF($event, asset, 'Assets')"
+                          type="hover"
+                          [dataItem]="asset"
+                        >
+                        </codx-mfunc>
+                      </div>
+                    </div>
+                  </div>
                   <div class="row form-group"></div>
                 </div>
               </div>
@@ -3302,7 +3673,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDegreeInfo()"
+                    (click)="HandleEmployeeDegreeInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3337,9 +3708,43 @@
                 [(ngbCollapse)]="objCollapes['5.1']"
               >
                 <div class="mb-1">
-                  <div
+                  <div>
+                    <div class="d-flex flex-wrap py-3 px-4">
+                      <ng-container *ngFor="let item of lstEDegrees">
+                        <div
+                          class="border rounded min-w-250px mw-250px me-4 mb-2"
+                        >
+                          <codx-temp-full
+                              [formModel]="formModel"
+                              [typeMF]="'hover'"
+                              [titleTmp] = "titleTemplate"
+                              [subTitleTmp]="tmplateEDegreesMenuList"
+                              cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                              typeMF="hover"
+                              [dataItem]="item"
+                          ></codx-temp-full>
+                          <ng-template #tmplateEDegreesMenuList let-data>
+                              <div class="d-flex flex-column">
+                                  <div><i class ="icon-home_work"></i>{{item.trainSupplierID}}</div>
+                                  <div><i class ="icon-calendar_today"></i>{{item.courseName}} <i class="icon-i-arrow-down-left-circle-fill"></i>{{item.trainForm}} |
+                                      <i class="icon-airplanemode_active"></i> {{item.ranking}} <i class="icon-i-arrow-down-left-circle-fill"></i> {{item.totalScore}}</div>
+                              </div>
+                          </ng-template>
+                          
+                          <ng-template #titleTemplate let-data>
+                              <div class="d-flex flex-column">
+                                  <div><i class ="icon-school"></i>{{item.degreeName}}
+                                      <i class="icon-i-arrow-down-left-circle-fill"></i>{{item.issuedDate | fmDT}}
+                                  </div>
+                              </div>
+                          </ng-template>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <!-- <div them code o day
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  ></div>
+                  ></div> -->
                 </div>
               </div>
             </div>
@@ -3535,7 +3940,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvETrainCourses'"
@@ -3551,7 +3956,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eTrainCourses')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                   <!-- documentNo-status -->
                 </div>
@@ -3769,6 +4174,36 @@
 
 <!-- pane_6 -->
 <ng-template #healthInfo>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblHealthInfo"
+        [formModel]="view.formModel"
+        default="Thông tin sức khỏe"
+      >
+      </codx-label>
+    </div>
+
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('7', '0')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('7', '1')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y"
     data-kt-scroll="true"
@@ -3781,38 +4216,6 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblHealthInfo"
-                [formModel]="view.formModel"
-                default="Thông tin sức khỏe"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('7', '0')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('7', '1')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -3835,7 +4238,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeAwardsInfo()"
+                    (click)="addEHealths('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3864,7 +4267,7 @@
                 [(ngbCollapse)]="objCollapes['7.1']"
               >
                 <div class="mb-3">
-                  <codx-gridview-v2
+                  <!-- <codx-gridview-v2
                     idField="recID"
                     [columnsGrid]=""
                     [service]="'HR'"
@@ -3881,7 +4284,7 @@
                     [contentEditable]="false"
                     [allowResizing]="true"
                     (clickMF)="clickMF($event, null, 'eHealths')"
-                  ></codx-gridview-v2>
+                  ></codx-gridview-v2> -->
                 </div>
               </div>
             </div>
@@ -3907,7 +4310,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEditEVaccines('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3943,49 +4346,54 @@
               >
                 <div class="mb-1">
                   <div class="d-flex flex-wrap mt-6 mb-3">
-                    <div class="mw-300px min-w-300px">
-                      <div
-                        class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
-                      >
-                        <span
-                          class="icon-i-arrow-down-left-circle-fill icon-14 me-2"
-                          style="color: blueviolet"
-                        ></span
-                        ><span>VaccinnA</span>
-                      </div>
-                      <div class="pf-process">
+                    <ng-container *ngFor="let item of lstVaccine">
+                      <div class="mw-300px min-w-300px me-5">
                         <div
-                          class="d-flex align-items-center pf-process-item py-2"
+                          class="d-flex align-items-center p-1 ps-2 border rounded-2 pf-title mb-3"
                         >
                           <span
-                            class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
+                            class="icon-i-arrow-down-left-circle-fill icon-14 me-2"
+                            style="color: blueviolet"
                           ></span
-                          ><span
-                            class="icon-date_range icon-16 me-2 text-gray-600"
-                          ></span
-                          ><span class="text-gray-600 me-3">02/02/2022</span
-                          ><span
-                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
-                          ></span>
-                          <div class="text-primary">Pfizer</div>
+                          ><span>{{ item?.vaccineTypeID }}</span>
                         </div>
-                        <div
-                          class="d-flex align-items-center pf-process-item py-2"
-                        >
-                          <span
-                            class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
-                          ></span
-                          ><span
-                            class="icon-date_range icon-16 me-2 text-gray-600"
-                          ></span
-                          ><span class="text-gray-600 me-3">02/02/2022</span
-                          ><span
-                            class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
-                          ></span>
-                          <div class="text-primary">Astra silicon</div>
+                        <div class="pf-process">
+                          <ng-container *ngFor="let vaccine of item.vaccines">
+                            <div class="has-action-menu">
+                              <div
+                                class="d-flex align-items-center pf-process-item py-2"
+                              >
+                                <span
+                                  class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
+                                ></span
+                                ><span
+                                  class="icon-date_range icon-16 me-2 text-gray-600"
+                                ></span
+                                ><span class="text-gray-600 me-3">{{
+                                  vaccine.injectDate | fmDT
+                                }}</span
+                                ><span
+                                  *ngIf="vaccine?.vaccineName != null"
+                                  class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 me-2 text-gray-400"
+                                ></span>
+                                <div class="text-primary">
+                                  {{ vaccine?.vaccineName }}
+                                </div>
+                              </div>
+                              <codx-mfunc
+                                [formModel]="formModel"
+                                (clickMF)="
+                                  clickMFVaccine($event, vaccine, item)
+                                "
+                                type="hover"
+                                [dataItem]="vaccine"
+                              >
+                              </codx-mfunc>
+                            </div>
+                          </ng-container>
                         </div>
                       </div>
-                    </div>
+                    </ng-container>
                   </div>
                 </div>
               </div>
@@ -4012,7 +4420,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEDisease()"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4107,7 +4515,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvEAccidents'"
@@ -4123,7 +4531,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eAccidents')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                 </div>
               </div>

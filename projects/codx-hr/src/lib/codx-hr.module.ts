@@ -74,6 +74,9 @@ import { OrganizationMasterDetailComponent } from './organization/organization-m
 import { OrganizationListComponent } from './organization/organization-list/organization-list.component';
 import { PopupECalculateSalaryComponent } from './employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
 import { PopupETimeCardComponent } from './employee-profile/popup-etime-card/popup-etime-card.component';
+import { PopupEhealthsComponent } from './employee-profile/popup-ehealths/popup-ehealths.component';
+import { PopupEVaccineComponent } from './employee-profile/popup-evaccine/popup-evaccine.component';
+import { PopupEDiseasesComponent } from './employee-profile/popup-ediseases/popup-ediseases.component';
 
 export const routes: Routes = [
   {
@@ -259,6 +262,9 @@ const T_Component: Type<any>[] = [
   OrganizationListComponent,
   PopupECalculateSalaryComponent,
   PopupETimeCardComponent,
+  PopupEhealthsComponent,
+  PopupEVaccineComponent,
+  PopupEDiseasesComponent,
 ];
 @NgModule({
   imports: [

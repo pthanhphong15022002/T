@@ -1,4 +1,5 @@
-import { Component, OnInit, Optional } from '@angular/core';
+import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { DialogData, DialogRef, FormModel } from 'codx-core';
 
 @Component({
@@ -6,7 +7,7 @@ import { DialogData, DialogRef, FormModel } from 'codx-core';
   templateUrl: './okr-add.component.html',
   styleUrls: ['./okr-add.component.css']
 })
-export class OkrAddComponent implements OnInit {
+export class OkrAddComponent implements OnInit , AfterViewInit{
 
   dataOKR : any;
   data : any;
@@ -14,7 +15,9 @@ export class OkrAddComponent implements OnInit {
   headerText = "Thêm mới mục tiêu";
   gridView: any;
   formModel: any;
+  okrAddGroup: FormGroup;
   constructor(
+    private formBuilder: FormBuilder,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
@@ -24,11 +27,22 @@ export class OkrAddComponent implements OnInit {
     if(dt?.data[2]) this.headerText = dt?.data[2];
    
    }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
-    
+    //Tạo formGroup
+    this.okrAddGroup = this.formBuilder.group({
+      shares: '5',
+    });
+    this.dataOKR = {
+      okrName : "",
+      note: ""
+    }
   }
   onSaveForm(){
-    
+    debugger;
+    var a = this.dataOKR;
+    var b = this.okrAddGroup.value;
   }
 }

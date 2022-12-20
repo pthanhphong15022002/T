@@ -225,7 +225,6 @@
           [firstDayOfWeek]="1"
           (renderDayCell)="onLoad($event)"
           (change)="changeDayOfMonth($event)"
-          locale="vi"
           cssClass="width-calendar"
           class="e-customStyle"
           title="Lịch các nhân"
@@ -404,7 +403,7 @@
       assemblyName="ERM.Business.SYS"
       className="SettingValuesBusiness"
       method="GetDataByDateAsync"
-      [entityName]="'WP_Notes'"
+      entityName = 'WP_Notes'
       [predicate]="predicate"
       [dataValue]="dataValue"
       [itemTemplate]="dataPara"
@@ -416,11 +415,7 @@
   <ng-template #dataPara let-item>
     <div
       class="d-flex flex-column py-1"
-      *ngIf="
-        (checkWP_NotesParam == true || checkWP_NotesParam == '1') &&
-        item.TransType == 'WP_Notes' &&
-        item.ShowCalendar == true
-      "
+      *ngIf="item.transType == 'WP_Notes' && item.showCalendar == true"
     >
       <div
         [ngStyle]="{
@@ -429,7 +424,7 @@
         }"
       >
         <div class="checkbox-list">
-          <div *ngIf="item.Title != null">
+          <div *ngIf="item.title != null">
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
@@ -440,7 +435,7 @@
                     ></span>
                   </div>
                 </a>
-                <a class="action-item" (click)="onDeleteNote(item)">
+                <a class="action-item" (click)="onDelete(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
                     <span
                       [class]="deleteMF?.largeIcon"
@@ -494,14 +489,14 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="item.IsPin == true || item.IsPin == '1'" class="active">
+            <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">
-              <span [innerHTML]="item.Title"></span>
+              <span [innerHTML]="item.title"></span>
             </div>
           </div>
-          <div *ngIf="item.Title == null">
+          <div *ngIf="item.title == null">
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
@@ -512,7 +507,7 @@
                     ></span>
                   </div>
                 </a>
-                <a class="action-item" (click)="onDeleteNote(item)">
+                <a class="action-item" (click)="onDelete(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
                     <span
                       [class]="deleteMF?.largeIcon"
@@ -566,7 +561,7 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="item.IsPin == true || item.IsPin == '1'" class="active">
+            <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">
@@ -601,12 +596,7 @@
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkTM_TasksParam == true || checkTM_TasksParam == '1') &&
-        item?.TransType == 'TM_MyTasks'
-      "
-    >
+    <div *ngIf="item?.transType == 'TM_MyTasks'">
       <div
         [ngStyle]="{
           'background-color': TM_TasksParam?.ShowBackground,
@@ -615,17 +605,12 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.Description"></span>
+            <span [innerHTML]="item.description"></span>
           </div>
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkCO_MeetingsParam == true || checkCO_MeetingsParam == '1') &&
-        item?.TransType == 'CO_Meetings'
-      "
-    >
+    <div *ngIf="item?.transType == 'CO_Meetings'">
       <div
         [ngStyle]="{
           'background-color': CO_MeetingsParam?.ShowBackground,
@@ -634,18 +619,12 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.Title"></span>
+            <span [innerHTML]="item.title"></span>
           </div>
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkEP_BookingRoomsParam == true ||
-          checkEP_BookingRoomsParam == '1') &&
-        item?.TransType == 'EP_BookingRooms'
-      "
-    >
+    <div *ngIf="item?.transType == 'EP_BookingRooms'">
       <div
         [ngStyle]="{
           'background-color': EP_BookingRoomsParam?.ShowBackground,
@@ -654,17 +633,12 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.Title"></span>
+            <span [innerHTML]="item.title"></span>
           </div>
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkEP_BookingCarsParam == true || checkEP_BookingCarsParam == '1') &&
-        item?.TransType == 'EP_BookingCars'
-      "
-    >
+    <div *ngIf="item?.transType == 'EP_BookingCars'">
       <div
         [ngStyle]="{
           'background-color': EP_BookingCarsParam?.ShowBackground,
@@ -673,7 +647,7 @@
       >
         <div class="checkbox-list">
           <div class="d-flex flex-column note-option">
-            <span [innerHTML]="item.Title"></span>
+            <span [innerHTML]="item.title"></span>
           </div>
         </div>
       </div>

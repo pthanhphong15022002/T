@@ -88,6 +88,20 @@
     .sprints-task-detail {
         height: calc(100vh - 186px) !important;
         overflow: hidden;
-    }
 
+        .card-body.fillter-card-body.scroll-y {
+            height: calc(100vh - 342px) !important;
+        }
+
+        codx-tree-history {
+            .treehis-main {
+                height: 100%;
+            }
+
+            .tree-body {
+                height: calc(100% - 50px);
+                overflow: auto;
+            }
+        }
+    }
 }
