@@ -91,6 +91,7 @@ export class PopupMoreChartComponent implements OnInit {
   dialog!: any;
   orgSetting!: any;
   tooltip!:any;
+  arrDataset:any=[];
   constructor(
     private cd: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -102,6 +103,7 @@ export class PopupMoreChartComponent implements OnInit {
     if (dt?.data) {
       this.chartSetting = dt.data['serieSetting'];
       this.orgSetting = {...dt.data['serieSetting']};
+      this.arrDataset = dt.data['dataset'];
       if (
         this.chartSetting?.marker &&
         Object.keys(this.chartSetting.marker).length > 0
@@ -180,7 +182,7 @@ export class PopupMoreChartComponent implements OnInit {
     if(!this.chartSetting.yName) this.chartSetting.yName = this.orgSetting.yName ? this.orgSetting.yName : " " ;
     if(!this.chartSetting.xName) this.chartSetting.xName = this.orgSetting.xName ? this.orgSetting.xName : " ";
     if(!this.chartSetting.name) this.chartSetting.name = this.orgSetting.name ? this.orgSetting.name : " ";
-    //setting.fill ='#00bdae';
+    setting.fill =this.chartSetting.fill ? this.chartSetting.fill: '#00bdae';
     switch (evt.value) {
       case 'Line':
       case 'StepLine':
@@ -339,6 +341,10 @@ export class PopupMoreChartComponent implements OnInit {
     this.chartSetting[evt.field] = evt.data;
   }
 
+  fieldChange(evt:any,fieldName: string){
+    this.chartSetting[fieldName]= this.lowercaseFirstLetter(evt.value);
+  }
+
   saveForm() {
     let serieSetting:any={
       ...this.chartSetting
@@ -379,5 +385,13 @@ export class PopupMoreChartComponent implements OnInit {
       .split(/(?=[A-Z])/)
       .join(' ')
       .toLowerCase();
+  }
+
+  uppercaseFirstLetter(string:string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  lowercaseFirstLetter(string:string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
   }
 }

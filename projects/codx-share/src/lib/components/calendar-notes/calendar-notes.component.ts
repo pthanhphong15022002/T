@@ -452,8 +452,8 @@ export class CalendarNotesComponent
     }
   }
 
-  countEvent = 0;
-  countDataOfE = 0;
+  @Input() countEvent = 0;
+  @Input() countDataOfE = 0;
   getParamCalendar(fDayOfMonth, lDayOfMonth, updateCheck = true) {
     this.countDataOfE = 0;
     this.api
@@ -641,10 +641,20 @@ export class CalendarNotesComponent
               paramValue[keyValue] = data[value];
             if (paramValue[keyValue] == 'CheckList')
               paramValue[keyValue] = data.checkList;
+            else if (paramValue[keyValue] == 'StartDate') {
+              paramValue[keyValue] = data.startDate;
+            } else if (paramValue[keyValue] == 'EndDate')
+              paramValue[keyValue] = data.endDate;
           } else {
             paramValue['data'][key] = data[key];
           }
         }
+      }
+      if (!paramValue['StartDate'] && !paramValue['EndDate']) {
+        paramValue['startDate'] = moment(paramValue?.calendarDate).startOf(
+          'date'
+        );
+        paramValue['endDate'] = paramValue?.calendarDate;
       }
       switch (transType) {
         case 'TM_Tasks':
