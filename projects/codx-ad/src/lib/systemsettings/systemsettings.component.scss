@@ -1,3 +1,5 @@
+@import "../../../../../src/theme.scss";
+
 .e-tab-header {
     width: 220px;
     min-width: 220px;
@@ -35,11 +37,6 @@
     border: 0 !important;
 }
 
-.e-tab .e-tab-header .e-toolbar-item {
-    height: 38px;
-    min-height: 38px;
-}
-
 
 lib-systemsettings .e-tab .e-tab-header.e-vertical:before {
     display: none;
@@ -51,4 +48,27 @@ lib-systemsettings .e-tab .e-tab-header.e-vertical:before {
 
 .e-content.e-lib {
     height: 100% !important;
+}
+
+/* van */
+
+.e-tab .e-tab-header.e-vertical .e-toolbar-item.e-active {
+    background-color: var(--primary-lighter);
+    border: 0 !important;
+}
+
+
+.e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover {
+    background-color: var(--primary-lightest);
+}
+
+
+.e-toolbar-items {
+    margin-top: 10px !important;
+}
+
+.e-toolbar-items .e-toolbar-item {
+    margin-bottom: 6px !important;
+    min-height: 34px !important;
+
 }
