@@ -137,9 +137,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   range: any;
   optionalData;
   saveAndApprove = false;
-  userInfo;
+  userInfo;  
+  user;
   saveCheck = false;
-
+  listUserID=[];
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -148,7 +149,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     private cacheService: CacheService,
     private changeDetectorRef: ChangeDetectorRef,
     private apiHttpService: ApiHttpService,
-    private user: AuthStore,
+    private authStore: AuthStore,
 
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
@@ -162,7 +163,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.userInfo = user.get();
+    this.userInfo = authStore.get();    
+    this.user = this.authStore.get();
     if (this.isAdd) {
       if (this.optionalData != null) {
         this.data.bookingOn = this.optionalData.startDate;
@@ -256,7 +258,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 }
               });
           }
-
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -378,6 +379,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.curUser.roleName = element.text;
             }
           });
+          this.resources.push(this.curUser);
           this.changeDetectorRef.detectChanges();
         } else {
           //lấy ds người tham gia khi sửa
@@ -1277,6 +1279,135 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     this.changeDetectorRef.detectChanges();
     this.popover.close();
+  }
+
+  eventApply(e) {
+    var listUserID = '';
+    var listDepartmentID = '';
+    var listUserIDByOrg = '';
+    var type = 'U';
+    e?.data?.forEach((obj) => {
+      if (obj.objectType && obj.id) {
+        type = obj.objectType;
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
+      }
+    });
+    if (listUserID != '') {
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+      this.valueUser(listUserID);
+    }
+
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.codxEpService
+        .getListUserIDByListOrgIDAsync([listDepartmentID, type])
+        .subscribe((res) => {
+          if (res) {
+            listUserIDByOrg += res;
+            if (listUserID != '') listUserIDByOrg += ';' + listUserID;
+            this.valueUser(listUserIDByOrg);
+          }
+        });
+    }
+  }
+  valueUser(resourceID) {
+    if (resourceID != '') {
+      if (this.resources != null) {
+        var user = this.resources;
+        var array = resourceID.split(';');
+        var id = '';
+        var arrayNew = [];
+        user.forEach((e) => {
+          id += e.userID + ';';
+        });
+        if (id != '') {
+          id = id.substring(0, id.length - 1);
+
+          array.forEach((element) => {
+            if (!id.split(';').includes(element)) arrayNew.push(element);
+          });
+        }
+        if (arrayNew.length > 0) {
+          resourceID = arrayNew.join(';');
+          id += ';' + resourceID;
+          this.getListUser(resourceID);
+        }
+      } else {
+        this.getListUser(resourceID);
+      }
+    }
+  }
+
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    var arrUser = resource.split(';');
+    this.listUserID = this.listUserID.concat(arrUser);
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource = new BookingAttendees();
+            if (emp.userID == this.user.userID) {
+              tmpResource.userID = emp?.userID;
+              tmpResource.userName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = '1';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.resources.push(tmpResource);
+            } else {
+              tmpResource.userID = emp?.userID;
+              tmpResource.userName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = '3';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.resources.push(tmpResource);
+            }
+            
+          }
+          this.resources.forEach(item=>{
+            if(item.userID!= this.curUser.userID){
+              this.attendeesList.push(item);
+            }
+          });
+          this.attendeesList = this.filterArray(this.attendeesList);
+          this.data.attendees = this.attendeesList.length + 1;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
   }
   deleteAttender(attID: string) {
     var tempDelete;
