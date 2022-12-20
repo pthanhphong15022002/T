@@ -29,6 +29,7 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -58,6 +59,7 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
   selector: 'lib-employee-profile',
   templateUrl: './employee-profile.component.html',
   styleUrls: ['./employee-profile.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
