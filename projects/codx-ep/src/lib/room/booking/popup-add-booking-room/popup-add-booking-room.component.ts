@@ -410,12 +410,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   if (
                     tempAttender.userID != this.authService.userValue.userID
                   ) {
-                    this.attendeesList.push(tempAttender);
+                    this.attendeesList.push(tempAttender);                    
+                    this.resources.push(this.curUser);
                   }
                   if (
                     tempAttender.userID == this.authService.userValue.userID 
                   ) {
                     this.curUser = tempAttender;
+                    
+                    this.resources.push(this.curUser);
                   } else if (people.optional == false) {//EP_WAIT xóa sau khi debug lại
                     this.lstUser.push(tempAttender);
                   } else {
@@ -1416,7 +1419,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempDelete = item;
       }
     });
-    this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
+    this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);    
+    this.data.attendees = this.attendeesList.length + 1;
     this.changeDetectorRef.detectChanges();
   }
   connectMeetingNow() {
