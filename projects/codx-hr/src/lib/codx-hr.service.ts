@@ -1032,6 +1032,15 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_SkillGrades
+  getEmployeeSkillModel(){
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'getEmployeeSkillModelAsync'
+    );
+  }
+
   loadDataSkillGrade(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',

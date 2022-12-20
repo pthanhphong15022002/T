@@ -219,6 +219,33 @@
                       (valueChange)="valueChange($event)"
                     ></codx-input>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'xName'" >
+                      <div class="w-100 mt-3">
+                        <ejs-dropdownlist
+                        [dataSource]="arrDataset"
+                        (change)="fieldChange($event,'xName')"
+                        [value]="chartSetting[item.name] ? uppercaseFirstLetter(chartSetting[item.name]):chartSetting[item.name] "
+                       ></ejs-dropdownlist>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'yName'" >
+                      <div class="w-100 mt-3">
+                        <ejs-dropdownlist
+                        [dataSource]="arrDataset"
+                        (change)="fieldChange($event,'yName')"
+                        [value]="chartSetting[item.name] ? uppercaseFirstLetter(chartSetting[item.name]):chartSetting[item.name] "
+                       ></ejs-dropdownlist>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'tooltipMappingName'" >
+                      <div class="w-100 mt-3">
+                        <ejs-dropdownlist
+                        [dataSource]="arrDataset"
+                        (change)="fieldChange($event,'tooltipMappingName')"
+                        [value]="chartSetting[item.name] ? uppercaseFirstLetter(chartSetting[item.name]):chartSetting[item.name] "
+                       ></ejs-dropdownlist>
+                      </div>
+                    </ng-container>
                     <ng-container *ngSwitchCase="'fill'" >
                       <div class="w-100 mt-3">
                         <codx-input

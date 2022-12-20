@@ -127,6 +127,7 @@ export class BP_ProcessPermissions {
   assign: boolean;
   share: boolean;
   upload: boolean;
+  allowPermit: boolean;
   isActive: boolean;
   download: boolean;
   publish: boolean;

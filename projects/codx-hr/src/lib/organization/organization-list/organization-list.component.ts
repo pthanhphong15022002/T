@@ -49,10 +49,7 @@ export class OrganizationListComponent
       this.orgUnitID = changes.orgUnitID.currentValue;
       if (this.codxListView) {
         this.codxListView.dataService
-          .setPredicates(
-            ['OrgUnitID = @0 or @0.Contains(ParentID)'],
-            [this.orgUnitID]
-          )
+          .setPredicates([this.predicate], [this.orgUnitID])
           .subscribe();
       }
       this.dt.detectChanges();

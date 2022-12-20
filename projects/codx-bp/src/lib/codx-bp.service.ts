@@ -82,12 +82,12 @@ export class CodxBpService {
     );
   }
 
-  updatePermissionProcess(data){
+  updatePermissionProcess(data: any, lstTmp: BP_ProcessPermissions[]){
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'UpdatePermissionProcessAsync',
-      data
+      [data, lstTmp]
     )
   }
 
