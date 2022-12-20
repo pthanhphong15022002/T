@@ -79,7 +79,9 @@ export class PopupAddKRComponent extends UIComponent {
     this.funcID = dialogData?.data[5];
     this.dataOKRPlans = dialogData?.data[6];
     this.dialogRef = dialogRef;
-    
+    if(!this.isAdd){
+      this.typePlan =this.kr.plan;
+    }
   }
 
   //-----------------------Base Func-------------------------//
@@ -162,7 +164,7 @@ export class PopupAddKRComponent extends UIComponent {
     }
   }
   methodAdd(kr: any) {
-    this.codxOmService.addKR(this.kr,this.kr.targets).subscribe((res: any) => {
+    this.codxOmService.addKR(this.kr).subscribe((res: any) => {
       if (res) {
         var x = res;
         this.afterSave(res);
