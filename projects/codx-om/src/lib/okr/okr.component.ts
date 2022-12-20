@@ -89,7 +89,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.cache.getCompany(user.userID).subscribe(item=>{
       if(item) 
       {
-        this.titleRoom = item.organizationName;
+        this.titleRoom = item.orgUnitName;
         this.dtCompany = item;
       }
     })
