@@ -382,7 +382,6 @@ export class CalendarNotesComponent
           this.dataResourceModel.filter(
             (x) => x.startDate >= fromDate && x.startDate < toDate
           );
-          debugger
           (lstView.dataService as CRUDService).data = this.dataResourceModel;
         }
       });
