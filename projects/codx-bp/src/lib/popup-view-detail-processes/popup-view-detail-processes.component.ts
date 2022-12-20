@@ -54,13 +54,14 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     { name: 'Kanban', textDefault: 'Kanban', isActive: false, id: 6 },
     { name: 'Flowchart', textDefault: 'Flowchart', isActive: false, id: 9 },
   ];
+  tabView :any ;
   formModelFlowChart: FormModel;
   listPhaseName = [];
   childFunc = [];
   mfAdd: any;
   isShowButton = true;
   isEdit = true;
-  avata = "";
+  avata = '';
 
   constructor(
     private api: ApiHttpService,
@@ -97,25 +98,20 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     this.bpService
       .updateHistoryViewProcessesAsync(this.process.recID)
       .subscribe();
-  }
-
-  ngOnInit(): void {
-    // if (this.tabControl.length == 0) {
-    //  this.tabControl = this.all;
-    // }
-    // else {
-    //   this.active = this.tabControl.findIndex(
-    //     (x: TabModel) => x.isActive == true
-    //   );
-    // }
-    //this.changeDetectorRef.detectChanges();
     this.getListUser();
   }
 
-  getListUser(){
+  ngOnInit(): void {
+    this.tabView = this.tabControl.find(
+      (x: TabModel) => x.isActive == true
+    );
+    this.changeDetectorRef.detectChanges();
+  }
+
+  getListUser() {
     this.bpService.getUserByProcessId(this.process.recID).subscribe((res) => {
-      if(res){
-        this.avata =res;
+      if (res) {
+        this.avata = res;
       }
     });
   }
@@ -225,7 +221,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
   getObjectFile(e) {
     if (e) {
-      this.bpService.getFlowChartNew.next(e)
+      this.bpService.getFlowChartNew.next(e);
     }
   }
 }

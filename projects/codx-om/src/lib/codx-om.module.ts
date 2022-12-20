@@ -25,7 +25,7 @@ import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
 import { PopupSaveVersionComponent } from './popup/popup-save-version/popup-save-version.component';
 import { PopupShowKRComponent } from './popup/popup-show-kr/popup-show-kr.component';
 import { PopupCheckInComponent } from './popup/popup-check-in/popup-check-in.component';
-import { PopupKRWeightComponent } from './popup/popup-kr-weight/popup-kr-weight.component';
+import { PopupOKRWeightComponent } from './popup/popup-okr-weight/popup-okr-weight.component';
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 
 const routes: Routes = [
@@ -85,7 +85,7 @@ const routes: Routes = [
     PopupSaveVersionComponent,
     PopupViewVersionComponent,
     OKRTasksComponent,
-    PopupKRWeightComponent,
+    PopupOKRWeightComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

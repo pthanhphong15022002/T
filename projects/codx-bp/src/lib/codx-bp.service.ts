@@ -128,7 +128,7 @@ export class CodxBpService {
     return this.api.exec<any>(
       'BP',
       'ProcessStepsBusiness',
-      'GetOwnersByParentIDAsync',
+      'GetProcessStepDetailsByRecIDAsync',
       recID
     );
   }

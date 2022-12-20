@@ -1,11 +1,11 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary px-20'" [body]="alignKR">
+<codx-form [headerText]="popupTitle" [dialog]="dialogRef" [bodyCss]="'bg-secondary px-20'" [body]="alignKR">
 </codx-form>
 
 <ng-template #alignKR>
   <div class=" w-100 h-auto bg-white mt-5">
     
     <div class="pt-5 pb-2 text-center">
-      <codx-label [default]="'Tính kết quả thưc hiện cho mục tiêu'" fiedName="" class="fw-bolder fs-2"></codx-label>
+      <codx-label [default]="subTitle" fiedName="" class="fw-bolder fs-2"></codx-label>
     </div>
     <div class="pb-2 text-center">
       <codx-label [default]="dataOKR.okrName" fiedName="" class="fw-bolder fs-4"></codx-label>
@@ -37,12 +37,12 @@
               </div>          
           </div>  
         </div> -->
-        <div *ngFor="let kr of dataOKR.child;let i=index" class="d-flex flex-column w-100">
+        <div *ngFor="let child of okrChild;let i=index" class="d-flex flex-column w-100">
           <div class="d-flex w-100 pb-2 position-relative">
             <span class="ms-5 position-absolute rounded-circle p-4px w-h-circle bg-2D3958 fw-bold text-white me-1 text-center my-3 " style="transform: translateY(50%);">KR</span>  
             <div class="col-8 position-relative d-flex align-items-center">              
               
-              <codx-inplace [type]="'text'" emptyText="" class="w-100" cssClass=" position-absolute top-0 w-100 ps-10 pe-3 py-5 border border-2 border-secondary rounded-0" [value]="kr.okrName">
+              <codx-inplace [type]="'text'" emptyText="" class="w-100" cssClass=" position-absolute top-0 w-100 ps-10 pe-3 py-5 border border-2 border-secondary rounded-0" [value]="child.okrName">
                 
               </codx-inplace>
             </div>

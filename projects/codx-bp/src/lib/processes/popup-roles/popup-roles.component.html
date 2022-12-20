@@ -5,7 +5,7 @@
         <div class="user-mini-nav">
           <div *ngIf="process != null && process?.permissions != null">
             <ng-container *ngFor="let perm of permissions; index as i;">
-              <div (click)="changePermission(i)"
+              <div *ngIf="perm.approveStatus !== '3' && perm.approveStatus !== '4'" (click)="changePermission(i)"
                 [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
                 <div class="d-flex justify-content-between list-title w-100">
@@ -20,7 +20,7 @@
                     </ng-template>
                     <ng-template #elsethenAvatar1>
                       <div class="me-3 d-flex align-items-center" popoverClass="userPopoverClass"
-                        [ngbPopover]="popoverSelectRoles" placement="bottom" #p="ngbPopover"
+                        [ngbPopover]="popoverSelectRoles" placement="right bottom" #p="ngbPopover"
                         (mouseenter)="showPopover(p, perm)" autoClose="outside">
                         <div class="d-flex align-items-center position-relative">
                           <codx-img class="" [width]="25" [objectId]="perm.objectID" objectType="AD_Users">

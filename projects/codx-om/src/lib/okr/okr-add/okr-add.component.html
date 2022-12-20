@@ -37,8 +37,8 @@
     </div>
     <div class="form-group">
       <codx-label [formModel]="form.formModel" fiedName="Shares"></codx-label>
-      <div class="d-flex align-items-center justify-content-between ">
-        <div class="d-flex flex-column align-items-center">
+      <div class="d-flex align-items-center justify-content-between om-add-share">
+        <div class="d-flex flex-column align-items-center ">
           <codx-input
             type="radio"
             name="radio-dtexport"
@@ -49,6 +49,7 @@
           >
           </codx-input>
           <codx-label [default]="'Tất cả'" class="mt-2"></codx-label>
+          <div class="om-d-all-bg"></div>
         </div>
         <div class="d-flex flex-column align-items-center">
           <codx-input
@@ -60,7 +61,8 @@
             crrValue="7"
           >
           </codx-input>
-          <codx-label [default]="'Phòng & Quản lý của tôi'" class="mt-2"></codx-label>
+          <codx-label [default]="'Phòng & Quản lý của tôi'" class="mt-2 mx-2"></codx-label>
+          <div class="om-d-dept-manga-bg"></div>
         </div>
         <div class="d-flex flex-column align-items-center">
           <codx-input
@@ -73,6 +75,7 @@
           >
           </codx-input>
           <codx-label [default]="'Phòng của tôi'" class="mt-2"></codx-label>
+          <div class="om-d-dept-bg"></div>
         </div>
         <div class="d-flex flex-column align-items-center">
           <codx-input
@@ -85,6 +88,7 @@
           >
           </codx-input>
           <codx-label [default]="'Quản lý của tôi'" class="mt-2"></codx-label>
+          <div class="om-d-manga-bg"></div>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 <codx-views #view [views]="views"> </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
-    <lib-okr-toolbar (click)="click($event)"></lib-okr-toolbar>
+    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR"></lib-okr-toolbar>
     <div class="pt-5 pb-2 text-center">
       <codx-label
         [default]="titleRoom"

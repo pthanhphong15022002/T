@@ -30,9 +30,7 @@
             <div class="w-100">
               <div [innerHTML]="item.textValue">
               </div>
-              <div>
-                <span class="text-primary ms-1">{{item.createdOn | timefrom}}</span>
-              </div>
+              <span class="text-gray-500 ms-1">{{item.createdOn | timefrom}}</span>
             </div>
             <div class="w-50px d-flex justify-content-end" *ngIf="item.read == false">
               <span class="dots"></span>

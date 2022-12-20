@@ -29,6 +29,7 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -58,6 +59,7 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
   selector: 'lib-employee-profile',
   templateUrl: './employee-profile.component.html',
   styleUrls: ['./employee-profile.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
@@ -106,6 +108,8 @@ export class EmployeeProfileComponent extends UIComponent {
   data: any = {};
   //family
   lstFamily: any;
+  //degree
+  lstEDegrees: any = []
   //passport
   lstPassport: any = [];
   crrPassport: any = {};
@@ -127,7 +131,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 6;
+  crrTab: number = 4;
 
   //EAsset salary
   lstAsset: any = [];
@@ -136,6 +140,8 @@ export class EmployeeProfileComponent extends UIComponent {
   crrEBSalary: any;
   lstEBSalary: any = [];
   listCrrBenefit: any;
+
+  lstESkill: any = [];
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -208,9 +214,6 @@ export class EmployeeProfileComponent extends UIComponent {
   ];
 
   onInit(): void {
-    var a = history.state;
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', a);
-
     this.EExperienceColumnsGrid = [
       {
         field: 'fromDate',
@@ -334,6 +337,20 @@ export class EmployeeProfileComponent extends UIComponent {
               this.crrVisa = this.lstVisa[0];
             }
           });
+          //Edegrees
+          let rqDegrees = new DataRequest();
+          rqDegrees.gridViewName = 'grvEDegrees';
+          rqDegrees.entityName = 'HR_EDegrees';
+          rqDegrees.predicate = 'EmployeeID=@0';
+          rqDegrees.dataValue = params.employeeID;
+          (rqDegrees.page = 1),
+          this.hrService.getEmployeeDregreesInfo(rqDegrees).subscribe((res) => {
+            console.log('ret trả về', res);
+            
+            if (res) this.lstEDegrees = res[0];
+            console.log('lít e đì gri', this.lstEDegrees);
+            
+          });
 
         //work permit
         let op4 = new DataRequest();
@@ -432,6 +449,25 @@ export class EmployeeProfileComponent extends UIComponent {
           this.lstVaccine = res;
           //this.lstExperience = res;
         });
+
+        //HR_ESkills
+        let rqESkill = new DataRequest();
+        rqESkill.entityName = 'HR_ESkills';
+        rqESkill.dataValues = params.employeeID;
+        rqESkill.predicates = 'EmployeeID=@0';
+        rqESkill.page = 1;
+        rqESkill.pageSize = 20;
+        this.hrService
+          .getViewSkillAsync(rqESkill)
+          .subscribe((res) => {
+            console.log('e Skill', res);
+
+            if (res) {
+              this.lstESkill = res;
+            }
+            //this.lstSkill = res;
+            //this.lstExperience = res;
+          });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -476,6 +512,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('edit', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eDegrees'){
+          this.HandleEmployeeDegreeInfo('edit', data);
           this.df.detectChanges();
         }
         break;
@@ -614,6 +653,22 @@ export class EmployeeProfileComponent extends UIComponent {
                   }
                 });
             }
+            else if(funcID == 'eDegrees'){
+              this.hrService
+              .DeleteEmployeeDegreeInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstEDegrees.indexOf(data);
+                    if (i != -1) {
+                      this.lstEDegrees.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
           }
         });
         break;
@@ -639,6 +694,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'eDegrees'){
+          this.HandleEmployeeDegreeInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1364,6 +1422,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1388,6 +1447,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1412,7 +1472,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeDegreeInfo() {
+  HandleEmployeeDegreeInfo(actionType: string, data: any ) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1422,7 +1482,10 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeDegreeDetailComponent,
       PopupEDegreesComponent,
       {
-        isAdd: true,
+        // isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstEDegrees.indexOf(data),
+        lstEDegrees : this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
       },
@@ -1438,9 +1501,8 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeSkillDetailComponent,
       PopupESkillsComponent,
       {
         isAdd: true,
@@ -1634,4 +1696,12 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
   //#endregion
+
+  addSkill() {
+    this.hrService.addSkill(null).subscribe();
+  }
+
+  addSkillGrade() {
+    this.hrService.addSkillGrade(null).subscribe();
+  }
 }

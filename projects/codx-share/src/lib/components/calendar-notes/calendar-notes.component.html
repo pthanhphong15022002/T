@@ -403,6 +403,7 @@
       assemblyName="ERM.Business.SYS"
       className="SettingValuesBusiness"
       method="GetDataByDateAsync"
+      entityName = 'WP_Notes'
       [predicate]="predicate"
       [dataValue]="dataValue"
       [itemTemplate]="dataPara"
@@ -414,11 +415,7 @@
   <ng-template #dataPara let-item>
     <div
       class="d-flex flex-column py-1"
-      *ngIf="
-        (checkWP_NotesParam == true || checkWP_NotesParam == '1') &&
-        item.transType == 'WP_Notes' &&
-        item.showCalendar == true
-      "
+      *ngIf="item.transType == 'WP_Notes' && item.showCalendar == true"
     >
       <div
         [ngStyle]="{
@@ -438,7 +435,7 @@
                     ></span>
                   </div>
                 </a>
-                <a class="action-item" (click)="onDeleteNote(item)">
+                <a class="action-item" (click)="onDelete(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
                     <span
                       [class]="deleteMF?.largeIcon"
@@ -510,7 +507,7 @@
                     ></span>
                   </div>
                 </a>
-                <a class="action-item" (click)="onDeleteNote(item)">
+                <a class="action-item" (click)="onDelete(item)">
                   <div class="d-flex align-items-center btn-tooltip icon-18">
                     <span
                       [class]="deleteMF?.largeIcon"
@@ -599,12 +596,7 @@
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkTM_TasksParam == true || checkTM_TasksParam == '1') &&
-        item?.transType == 'TM_MyTasks'
-      "
-    >
+    <div *ngIf="item?.transType == 'TM_MyTasks'">
       <div
         [ngStyle]="{
           'background-color': TM_TasksParam?.ShowBackground,
@@ -618,12 +610,7 @@
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkCO_MeetingsParam == true || checkCO_MeetingsParam == '1') &&
-        item?.transType == 'CO_Meetings'
-      "
-    >
+    <div *ngIf="item?.transType == 'CO_Meetings'">
       <div
         [ngStyle]="{
           'background-color': CO_MeetingsParam?.ShowBackground,
@@ -637,13 +624,7 @@
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkEP_BookingRoomsParam == true ||
-          checkEP_BookingRoomsParam == '1') &&
-        item?.transType == 'EP_BookingRooms'
-      "
-    >
+    <div *ngIf="item?.transType == 'EP_BookingRooms'">
       <div
         [ngStyle]="{
           'background-color': EP_BookingRoomsParam?.ShowBackground,
@@ -657,12 +638,7 @@
         </div>
       </div>
     </div>
-    <div
-      *ngIf="
-        (checkEP_BookingCarsParam == true || checkEP_BookingCarsParam == '1') &&
-        item?.transType == 'EP_BookingCars'
-      "
-    >
+    <div *ngIf="item?.transType == 'EP_BookingCars'">
       <div
         [ngStyle]="{
           'background-color': EP_BookingCarsParam?.ShowBackground,
