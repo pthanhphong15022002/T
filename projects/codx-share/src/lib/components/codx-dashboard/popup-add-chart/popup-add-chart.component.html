@@ -528,127 +528,6 @@
           </div>
           </div>
 
-          <!--Marker setting-->
-
-          <codx-label name="lblMarker" default="Marker" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"></codx-label>
-          <div class="border my-3" style="border-radius: 16px;">
-          <div *ngFor="let mark of marker | keyvalue" class="form-group m-3">
-            <codx-label class="text-capitalize" [default]="formatString(mark.key)"></codx-label>
-            <ng-container [ngSwitch]="mark?.key">
-              <ng-container *ngSwitchCase="'visible'">
-                <div class="d-flex justify-content-start">
-                  <codx-input
-                    class="float-right"
-                    type="switch"
-                    field="visible"
-                    [crrValue]="mark.value"
-                    (valueChange)="markerChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'isFilled'">
-                <div class="d-flex justify-content-start">
-                  <codx-input
-                    class="float-right"
-                    type="switch"
-                    field="isFilled"
-                    [crrValue]="mark.value"
-                    (valueChange)="markerChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'width'">
-                <div class="w-100 mt-3">
-                  <codx-input
-                    class="float-right"
-                    type="number"
-                    field="width"
-                    [crrValue]="mark.value"
-                    (valueChange)="markerChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-
-              <ng-container *ngSwitchCase="'height'">
-                <div class="w-100 mt-3">
-                  <codx-input
-                    type="number"
-                    field="height"
-                    [crrValue]="mark.value"
-                    (valueChange)="markerChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'position'">
-                <div class="w-100 mt-3">
-                  <codx-input
-                    class="float-right"
-                    type="text"
-                    field="position"
-                    [crrValue]="mark.value"
-                    (valueChange)="markerChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'shape'">
-                <div class="w-100 mt-3">
-                  <ejs-dropdownlist
-                    [dataSource]="markerShape"
-                    (change)="markerShapeChange($event)"
-                    [value]="mark.value"
-                   ></ejs-dropdownlist>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'fill'" >
-                <div class="w-100 mt-3">
-                  <codx-input
-                    class="float-right"
-                    type="colorpicker"
-                    field="fill"
-                    [crrValue]="mark.value"
-                    (valueChange)="markerChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-            </ng-container>
-          </div>
-          </div>
-
-          <!--Border setting-->
-
-          <ng-container *ngIf="border">
-            <codx-label name="lblBorder" default="Border" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"></codx-label>
-          <div class="border my-3" style="border-radius: 16px;">
-          <div *ngFor="let b of border | keyvalue" class="form-group m-3">
-            <codx-label class="text-capitalize" [default]="formatString(b.key)"></codx-label>
-            <ng-container [ngSwitch]="b?.key">
-              <ng-container *ngSwitchCase="'width'">
-                <div class="w-100 mt-3">
-                  <codx-input
-                    class="float-right"
-                    type="number"
-                    field="width"
-                    [crrValue]="b.value"
-                    (valueChange)="borderChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-              <ng-container *ngSwitchCase="'color'" >
-                <div class="w-100 mt-3">
-                  <codx-input
-                    class="float-right"
-                    type="colorpicker"
-                    field="color"
-                    [crrValue]="b.value"
-                    (valueChange)="borderChange($event)"
-                  ></codx-input>
-                </div>
-              </ng-container>
-
-            </ng-container>
-          </div>
-          </div>
-          </ng-container>
 
           <!--Crosshair setting-->
 
@@ -784,6 +663,128 @@
           </ng-container>
 
 
+          <!--Marker setting-->
+
+          <codx-label name="lblMarker" default="Marker" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"></codx-label>
+          <div class="border my-3" style="border-radius: 16px;">
+          <div *ngFor="let mark of marker | keyvalue" class="form-group m-3">
+            <codx-label class="text-capitalize" [default]="formatString(mark.key)"></codx-label>
+            <ng-container [ngSwitch]="mark?.key">
+              <ng-container *ngSwitchCase="'visible'">
+                <div class="d-flex justify-content-start">
+                  <codx-input
+                    class="float-right"
+                    type="switch"
+                    field="visible"
+                    [crrValue]="mark.value"
+                    (valueChange)="markerChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'isFilled'">
+                <div class="d-flex justify-content-start">
+                  <codx-input
+                    class="float-right"
+                    type="switch"
+                    field="isFilled"
+                    [crrValue]="mark.value"
+                    (valueChange)="markerChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'width'">
+                <div class="w-100 mt-3">
+                  <codx-input
+                    class="float-right"
+                    type="number"
+                    field="width"
+                    [crrValue]="mark.value"
+                    (valueChange)="markerChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="'height'">
+                <div class="w-100 mt-3">
+                  <codx-input
+                    type="number"
+                    field="height"
+                    [crrValue]="mark.value"
+                    (valueChange)="markerChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'position'">
+                <div class="w-100 mt-3">
+                  <codx-input
+                    class="float-right"
+                    type="text"
+                    field="position"
+                    [crrValue]="mark.value"
+                    (valueChange)="markerChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'shape'">
+                <div class="w-100 mt-3">
+                  <ejs-dropdownlist
+                    [dataSource]="markerShape"
+                    (change)="markerShapeChange($event)"
+                    [value]="mark.value"
+                   ></ejs-dropdownlist>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'fill'" >
+                <div class="w-100 mt-3">
+                  <codx-input
+                    class="float-right"
+                    type="colorpicker"
+                    field="fill"
+                    [crrValue]="mark.value"
+                    (valueChange)="markerChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+          </div>
+
+          <!--Border setting-->
+
+          <ng-container *ngIf="border">
+            <codx-label name="lblBorder" default="Border" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"></codx-label>
+          <div class="border my-3" style="border-radius: 16px;">
+          <div *ngFor="let b of border | keyvalue" class="form-group m-3">
+            <codx-label class="text-capitalize" [default]="formatString(b.key)"></codx-label>
+            <ng-container [ngSwitch]="b?.key">
+              <ng-container *ngSwitchCase="'width'">
+                <div class="w-100 mt-3">
+                  <codx-input
+                    class="float-right"
+                    type="number"
+                    field="width"
+                    [crrValue]="b.value"
+                    (valueChange)="borderChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'color'" >
+                <div class="w-100 mt-3">
+                  <codx-input
+                    class="float-right"
+                    type="colorpicker"
+                    field="color"
+                    [crrValue]="b.value"
+                    (valueChange)="borderChange($event)"
+                  ></codx-input>
+                </div>
+              </ng-container>
+
+            </ng-container>
+          </div>
+          </div>
+          </ng-container>
+
           <!--ChartSerie setting-->
 
           <codx-label name="lblSerieSetting" default="Serie Setting" style="font-weight:500;text-transform: uppercase;font-size: 13px;color:#0d6efd"></codx-label>
@@ -857,14 +858,29 @@
     </ng-container>
   </ng-template>
   <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button class="btn btn-light-primary" (click)="saveForm()">
-        <codx-label
-          name="lblSave"
-          [formModel]="dialog.formModel"
-          default="Lưu"
-        ></codx-label>
-      </button>
+    <div class="d-flex float-start h-50px mb-3" *ngIf="series.length >0">
+      <button *ngFor="let item of series, let index = index" class="btn btn-sm btn-light-warning m-1" (click)="editChart(item,index)">{{item.type}}</button>
+    </div>
+    <div class="d-flex justify-content-between w-100">
+      <div class="float-start">
+        <button class="btn btn-light-primary" (click)="moreChart()">
+          <codx-label
+            name="lblMoreChart"
+            [formModel]="dialog.formModel"
+            default="Thêm biểu đồ"
+          ></codx-label>
+        </button>
+      </div>
+      <div class="float-end">
+        <button class="btn btn-light-primary" (click)="saveForm()">
+          <codx-label
+            name="lblSave"
+            [formModel]="dialog.formModel"
+            default="Lưu"
+          ></codx-label>
+        </button>
+      </div>
+
     </div>
   </ng-template>
 </codx-form>
