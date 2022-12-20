@@ -1,73 +1,17 @@
-<ng-template #infoEmployee let-data>
-  <div class="d-flex align-items-start">
-    <codx-img *ngIf="data.employeeID" [width]="40" class="me-3" [objectName]="data.employeeName"
-      [objectId]="data.employeeID" objectType="HR_Employees">
-    </codx-img>
-    <div *ngIf="!data.employeeID" class="me-3">
-      <span class="noimage symbol symbol-40 symbol-circle symbol-label text-white ng-star-inserted"
-        style="background-color: #a2dbdb38; background-image: none"><span
-          class="icon-account_circle icon-60 text-gray-500"></span></span>
-    </div>
-    <div class="d-flex flex-column flex-grow-1">
-      <div class="align-items-center">
-        <span *ngIf="data.employeeName" class="text-dark fw-bold fs-6 me-2">
-          {{ data.employeeName }}</span>
-        <span *ngIf="!data.employeeName" class="text-gray-600 fw-bold me-2">
-          <codx-label [formModel]="formModel"
-            default="Tên nhân viên">
-          </codx-label>
-        </span>
-      </div>
-      <div class="align-items-center">
-        <span class="text-gray-700 me-2" *ngIf="data.positionName">
-          {{ data.positionName }}</span>
-        <span class="text-gray-700" *ngIf="!data.positionName">
-          <codx-label [formModel]="formModel"
-            default="Chức vụ">
-          </codx-label>
-        </span>
-      </div>
-      <div class="d-flex align-items-center">
-        <div class="d-flex align-items-center me-4">
-          <span class="icon-phone_android icon-16 text-gray-600 me-2"></span>
-          <span class="text-gray-500" *ngIf="data.phone">
-            {{ data.phone }}
-          </span>
-          <span class="text-gray-500" *ngIf="!data.phone">
-            <codx-label [formModel]="formModel"
-              default="Số điện thoại">
-            </codx-label>
-          </span>
-        </div>
-        <div class="d-flex align-items-center">
-          <span class="icon-email icon-16 text-gray-600 me-2"></span>
-          <div class="text-gray-500 fs-7" *ngIf="data.email">
-            {{ data.email }}
-          </div>
-          <div class="text-50 fs-7 text-gray-600" *ngIf="!data.email">
-            <codx-label [formModel]="formModel"
-              default="Email">
-            </codx-label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</ng-template>
+
 <div class="p-2 h-100">
   <codx-listview 
     #codxListView
     [itemTemplate]="itemTemplate"
     [formModel]="formModel"
-    [service]="'HR'"
-    [assemblyName]="'ERM.Business.HR'"
-    [className]="'OrganizationUnitsBusiness'"
-    [method]="'GetDataTreeListAssync'"
-    [funcId]="formModel.funcID"
-    [entityName]="formModel.entityName"
-    [predicate]="predicate"
-    [dataValue]="orgUnitID">
+    [dataService]="dataService"
+    [funcId]="formModel.funcID">
   </codx-listview>
+  <!-- <ng-container *ngFor="let item of dataSource">
+    <div class="row">
+      <ng-container *ngTemplateOutlet="itemTemplate;context:item"></ng-container>
+    </div>
+  </ng-container> -->
 </div>
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column py-4 border-bottom">

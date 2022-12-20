@@ -10,8 +10,7 @@ export class OrganizationListComponent implements OnInit,OnChanges,AfterViewInit
 
   @Input() orgUnitID:string = "";
   @Input() formModel:FormModel = null;
-  data:any[] = [];
-  predicate:string = "@0.Contains(OrgUnitID) && Stop=false";
+  @Input() dataService: CRUDService = null
   @ViewChild("codxListView") codxListView:CodxListviewComponent;
   constructor
   (
@@ -25,18 +24,12 @@ export class OrganizationListComponent implements OnInit,OnChanges,AfterViewInit
   ngOnInit(): void {
   }
   ngAfterViewInit(): void {
-    this.codxListView.dataService.idField = "orgUnitID";
   }
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue)
+    if(changes.orgUnitID)
     {
-      this.orgUnitID = changes.orgUnitID.currentValue;
-      if(this.codxListView)
-      {
-        this.codxListView.dataService.setPredicate("",[this.orgUnitID]).subscribe();
-      }
-      this.dt.detectChanges();
+      this.dataService.setPredicate("",[this.orgUnitID]).subscribe();
     }
   }
   //loadEmployList

@@ -4,175 +4,174 @@
   [body]="body"
   [formModel]="dialogRef.formModel"
   [footer]="footer"
-  [dialog]="dialogRef"
->
-  <ng-template #body>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="OrgUnitID"
-            [default]="grdViewSetup['OrgUnitID']['headerText']">
-          </codx-label>
-          <codx-input
-            [formModel]="dialogRef.formModel"
-            field="orgUnitID"
-            [disabled]="!parameterHR?.stop"
-            [crrValue]="data.orgUnitID"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel!"
-            fiedName="OrgUnitType" 
-            [default]="grdViewSetup['OrgUnitType']['headerText']">
-          </codx-label>
-          <codx-input
-            [formModel]="dialogRef.formModel"
-            field="orgUnitType"
-            [crrValue]="data.orgUnitType"
-            (valueChange)="valueChange($event)"
-          ></codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialogRef.formModel"
-          fiedName="OrgUnitName"
-          [default]="grdViewSetup['OrgUnitName']['headerText']">
-        </codx-label>
-        <codx-input
-          [formModel]="dialogRef.formModel"
-          field="orgUnitName"
-          [crrValue]="data.orgUnitName"
-          (valueChange)="valueChange($event)">
-          </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialogRef.formModel"
-          fiedName="ParentID"
-          [default]="grdViewSetup['ParentID']['headerText']">
-        </codx-label>
-        <codx-input
-          [formModel]="dialogRef.formModel"
-          field="parentID"
-          [crrValue]="data.parentID"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialogRef.formModel"
-          fiedName="Manager"
-          [default]="grdViewSetup['Manager']['headerText']">
-        </codx-label>
-        <codx-input
-          [formModel]="dialogRef.formModel"
-          field="manager"
-          [crrValue]="data.manager"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialogRef.formModel"
-          fiedName="Manager2"
-          [default]="grdViewSetup['Manager2']['headerText']">
-        </codx-label>
-        <codx-input
-          [formModel]="dialogRef.formModel"
-          field="manager2"
-          [crrValue]="data.manager2"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialogRef.formModel"
-          fiedName="Assistant"
-          [default]="grdViewSetup['Assistant']['headerText']">
-        </codx-label>
-        <codx-input
-          [formModel]="dialogRef.formModel"
-          field="assistant"
-          [crrValue]="data.assistant"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="Phone"
-            [default]="grdViewSetup['Phone']['headerText']">
-          </codx-label>
-          <codx-input
-            [formModel]="dialogRef.formModel"
-            field="phone"
-            [crrValue]="data.phone"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="Email"
-            [default]="grdViewSetup['Email']['headerText']">
-          </codx-label>
-          <codx-input
-            [formModel]="dialogRef.formModel"
-            field="email"
-            [crrValue]="data.email"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label
-          [formModel]="dialogRef.formModel"
-          fiedName="Street" 
-          [default]="grdViewSetup['Street']['headerText']">
-        </codx-label>
-        <codx-input
-          [formModel]="dialogRef.formModel"
-          field="street"
-          [crrValue]="data.street"
-          (valueChange)="valueChange($event)">
-        </codx-input>
-      </div>
-    </div>
-  </ng-template>
-
-  <ng-template #footer>
-    <div class="d-flex justify-content-end">
-      <button type="button" class="btn btn-primary" (click)="onSave()">
-        <codx-label
-          [formModel]="form.formModel"
-          name="lblSubmit"
-          default="Lưu"
-        ></codx-label>
-      </button>
-    </div>
-  </ng-template>
+  [dialog]="dialogRef">
 </codx-form>
+<ng-template #body>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialogRef.formModel"
+          fiedName="OrgUnitID"
+          [default]="grdViewSetup['OrgUnitID']['headerText']">
+        </codx-label>
+        <codx-input
+          [formModel]="dialogRef.formModel"
+          field="orgUnitID"
+          [disabled]="!parameterHR?.stop"
+          [crrValue]="data.orgUnitID"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialogRef.formModel!"
+          fiedName="OrgUnitType" 
+          [default]="grdViewSetup['OrgUnitType']['headerText']">
+        </codx-label>
+        <codx-input
+          [formModel]="dialogRef.formModel"
+          field="orgUnitType"
+          [crrValue]="data.orgUnitType"
+          (valueChange)="valueChange($event)"
+        ></codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label
+        [formModel]="dialogRef.formModel"
+        fiedName="OrgUnitName"
+        [default]="grdViewSetup['OrgUnitName']['headerText']">
+      </codx-label>
+      <codx-input
+        [formModel]="dialogRef.formModel"
+        field="orgUnitName"
+        [crrValue]="data.orgUnitName"
+        (valueChange)="valueChange($event)">
+        </codx-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label
+        [formModel]="dialogRef.formModel"
+        fiedName="ParentID"
+        [default]="grdViewSetup['ParentID']['headerText']">
+      </codx-label>
+      <codx-input
+        [formModel]="dialogRef.formModel"
+        field="parentID"
+        [crrValue]="data.parentID"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label
+        [formModel]="dialogRef.formModel"
+        fiedName="Manager"
+        [default]="grdViewSetup['Manager']['headerText']">
+      </codx-label>
+      <codx-input
+        [formModel]="dialogRef.formModel"
+        field="manager"
+        [crrValue]="data.manager"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label
+        [formModel]="dialogRef.formModel"
+        fiedName="Manager2"
+        [default]="grdViewSetup['Manager2']['headerText']">
+      </codx-label>
+      <codx-input
+        [formModel]="dialogRef.formModel"
+        field="manager2"
+        [crrValue]="data.manager2"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label
+        [formModel]="dialogRef.formModel"
+        fiedName="Assistant"
+        [default]="grdViewSetup['Assistant']['headerText']">
+      </codx-label>
+      <codx-input
+        [formModel]="dialogRef.formModel"
+        field="assistant"
+        [crrValue]="data.assistant"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialogRef.formModel"
+          fiedName="Phone"
+          [default]="grdViewSetup['Phone']['headerText']">
+        </codx-label>
+        <codx-input
+          [formModel]="dialogRef.formModel"
+          field="phone"
+          [crrValue]="data.phone"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <codx-label
+          [formModel]="dialogRef.formModel"
+          fiedName="Email"
+          [default]="grdViewSetup['Email']['headerText']">
+        </codx-label>
+        <codx-input
+          [formModel]="dialogRef.formModel"
+          field="email"
+          [crrValue]="data.email"
+          (valueChange)="valueChange($event)">
+        </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="form-group">
+      <codx-label
+        [formModel]="dialogRef.formModel"
+        fiedName="Street" 
+        [default]="grdViewSetup['Street']['headerText']">
+      </codx-label>
+      <codx-input
+        [formModel]="dialogRef.formModel"
+        field="street"
+        [crrValue]="data.street"
+        (valueChange)="valueChange($event)">
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" (click)="onSave()">
+      <codx-label
+        [formModel]="form.formModel"
+        name="lblSubmit"
+        default="Lưu"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
