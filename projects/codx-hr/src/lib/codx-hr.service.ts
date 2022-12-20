@@ -1074,12 +1074,12 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_ESkills
-  GetListSkillByDataRequestAsync(dataRequest: DataRequest) {
+  getViewSkillAsync(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
       'ESkillsBusiness',
-      'GetListSkillByDataRequestAsync',
+      'GetViewSkillAsync',
       dataRequest
     );
   }

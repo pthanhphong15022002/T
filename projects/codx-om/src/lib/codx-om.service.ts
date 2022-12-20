@@ -269,13 +269,13 @@ export class CodxOmService {
       [recID, checkIn]
     );
   }
-  addKR(kr:any) {
+  addKR(kr:any,targets:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
       'AddKRAsync',
-      [kr]
+      [kr,targets]
     );
   }
   editKR(kr:any) {
