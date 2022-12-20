@@ -1312,7 +1312,7 @@ export class ProcessStepsComponent
     return this.widthElement < text.length * 3;
   }
   //chuwa xong
-  dataColums(recIDPhase): any {
+  dataColums(recIDPhase) {
     this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
       return dt;
     });
@@ -1321,6 +1321,7 @@ export class ProcessStepsComponent
   clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
       if (dt) {
+        this.dataClick = dt
         this.clickMF(e, dt);
       }
     });

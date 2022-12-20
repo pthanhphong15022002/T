@@ -759,7 +759,8 @@
   <div class="icon-more_vert icon-18 has-actions-menu">
     <div class="action-menu">
       <codx-mfunc
-        [formModel]="formModel"
+        [type]="'hover'"
+        [formModel]="view.formModel"
         (clickMF)="clickMFColums($event, data.keyField)"
         [isBookMark]="true"
       >
