@@ -39,15 +39,16 @@ import { PopupSelectTemplateComponent } from './popup-select-template/popup-sele
 export class CodxDashboardComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    let ins = setInterval(() => {
-      let _layout = document.getElementsByTagName('ejs-dashboardlayout')[0];
-      if (_layout) {
-        clearInterval(ins);
-        document.getElementsByTagName(
-          'ejs-dashboardlayout'
-        )[0].parentElement!.parentElement!.style.padding = '5px';
-      }
-    }, 200);
+    document.getElementsByClassName('card-body')[0].setAttribute('style','padding: 0 !important');
+    // let ins = setInterval(() => {
+    //   let _layout = document.getElementsByTagName('ejs-dashboardlayout')[0];
+    //   if (_layout) {
+    //     clearInterval(ins);
+    //     document.getElementsByTagName(
+    //       'ejs-dashboardlayout'
+    //     )[0].parentElement!.parentElement!.style.padding = '5px';
+    //   }
+    // }, 200);
   }
   @Input() columns: number = 10;
   @Input() cellSpacing: number[] = [10, 10];
@@ -187,7 +188,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
 
   dataItem: any;
   enableCrosshair: boolean = false;
-
+  isCollapsed: boolean = true;
   constructor(
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
@@ -292,6 +293,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   addChart(evt: any, eleLayout: any) {
+
     if (evt.panelID) {
       let elePanel = document.getElementById(evt.panelID);
       let idx = this.objDashboard.panels.findIndex(
@@ -378,14 +380,17 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           (eleOverLay as HTMLElement).style.zIndex = '-1';
         }
           if (res.event) {
-            if (
-              !res.event.serieSetting.marker ||
-              Object.keys(res.event.serieSetting.marker).length == 0
-            ) {
-              res.event.serieSetting.marker = this.marker;
-            }
+            // if (
+            //   !res.event.serieSetting.marker ||
+            //   Object.keys(res.event.serieSetting.marker).length == 0
+            // ) {
+            //   res.event.serieSetting.marker = this.marker;
+            // }
             this.legendSetting = res.event.legendSetting;
-            this.primaryXAxis = res.event.axisX;
+            for(let i in res.event.axisX){
+              (this.primaryXAxis as any) = res.event.axisX[i];
+            }
+            this.primaryXAxis = {...this.primaryXAxis};
             this.primaryYAxis = res.event.axisY;
             if(res.event.crosshair) this.enableCrosshair = true;
 
@@ -425,29 +430,32 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         const chartObj = args.element
           .getElementsByClassName('chart-item')[0]
           .querySelector('ejs-accumulationchart').ej2_instances[0];
-        if (args.element.offsetHeight < chartObj.element.offsetHeight) {
-          chartObj.height = '60%';
-          chartObj.width = '80%';
-        } else {
-          chartObj.height = '100%';
+          chartObj.height = '80%';
           chartObj.width = '100%';
-        }
+        // if (args.element.offsetHeight < chartObj.element.offsetHeight) {
+        //   chartObj.height = '80%';
+        //   chartObj.width = '80%';
+        // }
+        // else {
+        //   chartObj.height = '100%';
+        //   chartObj.width = '100%';
+        // }
         chartObj.refreshChart();
       }
       if (args.element.querySelector('ejs-chart')) {
         const chartObj = args.element
           .getElementsByClassName('chart-item')[0]
           .querySelector('ejs-chart').ej2_instances[0];
-        chartObj.height = '90%';
-        chartObj.width = '90%';
+        chartObj.height = '80%';
+        chartObj.width = '100%';
         chartObj.chartResize();
       }
       if (args.element.querySelector('ejs-treemap')) {
         let component = args.element.getElementsByTagName('ejs-treemap')[0];
         if (component) {
           let instance = window.ng.getComponent(component) as TreeMapComponent;
-          instance.width = '100%';
-          instance.height = '100%';
+          instance.width = '80%';
+          instance.height = '80%';
           instance.refresh();
         }
       }
@@ -538,6 +546,10 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     });
   }
 
+  popupClose(evt:any){
+    this.addPanel(true,evt.data)
+  }
+
   isJSON(str:any) {
     try {
         return (JSON.parse(str) && !!str);
@@ -620,9 +632,15 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     primaryXAxis?: any,
     primaryYAxis?: any
   ) {
-    this.seriesSetting = [chartSetting];
+    if(Array.isArray(chartSetting)) this.seriesSetting = chartSetting;
+    else this.seriesSetting = [chartSetting];
     this.legendSetting = { ...this.legendSetting };
-    if(primaryXAxis) this.primaryXAxis = {...primaryXAxis}
+    if(primaryXAxis){
+      for(let i in primaryXAxis){
+        (this.primaryXAxis as any)[i] = primaryXAxis[i];
+      }
+      this.primaryXAxis = {...this.primaryXAxis}
+    }
     if(primaryYAxis) this.primaryYAxis = {...primaryYAxis}
     let elePanel = document.getElementById(panelId);
     this.createPanelContent(panelId, this.chart!, chartSetting.type);
@@ -677,8 +695,8 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
           .getElementsByClassName('chart-item')[0]
           .querySelector('ejs-chart').ej2_instances[0];
         if (chartObj) {
-          chartObj.height = '90%';
-          chartObj.width = '90%';
+          chartObj.height = '80%';
+          chartObj.width = '100%';
           chartObj.chartResize();
         }
       }
@@ -1020,7 +1038,6 @@ public yAxisLine: Object = {
     enableHighlight: true,
   };
 
-  titleLine: string = 'Biểu đồ đường dây điện';
 
   lineSettings: any = {
     primaryXAxis: this.xAxisLine,
@@ -1028,7 +1045,8 @@ public yAxisLine: Object = {
     tooltip: this.tooltip,
     legendSetting: this.legend,
     marker: this.marker,
-    width:"2"
+    width:2,
+    opacity: 1
   };
   //#endregion
 
@@ -1083,7 +1101,8 @@ stepLineSettings:any = {
   tooltip: this.tooltipStepLine,
   legendSetting: this.legendStepLine,
   marker: this.markerStepLine,
-  width: '5'
+  width:5,
+  opacity: 1
 }
   //#endregion
 
@@ -1150,7 +1169,8 @@ stackingLineSettings:any = {
   legendSetting: this.legendStepLine,
   marker: this.markerStackingLine0,
   dashArray:"5,1",
-  width:"2"
+  width:2,
+  opacity:1
 }
   //#endregion
 
@@ -1215,7 +1235,8 @@ stackingLine100Settings:any = {
   tooltip: this.tooltipStackingLine100,
   legendSetting: this.legendStepLine,
   marker: this.markerStackingLine0,
-  width:"2"
+  width:2,
+  opacity:1
 }
   //#endregion
 
@@ -1253,7 +1274,7 @@ splineSettings:any = {
   tooltip: this.tooltipSpLine,
   legendSetting: this.legendStepLine,
   marker: this.markerSpLine,
-  width:"2"
+  width:2,
 }
   //#endregion
 
@@ -1294,7 +1315,7 @@ splineAreaSettings:any = {
   legendSetting: this.legend,
   marker: this.markerSpLine,
   border: this.borderSplineArea,
-  width:"2"
+  width:2,
 }
   //#endregion
 
@@ -1651,7 +1672,7 @@ stepAreaSettings:any = {
   border: this.borderStepArea,
   legendSetting: this.legend,
   marker: this.marker,
-  width: '2',
+  width:2,
   opacity: this.opacity,
 
 }
@@ -1778,7 +1799,7 @@ markerColumn: Object = {
   marker: this.markerColumn,
   columnSpacing:0.1,
   tooltipMappingName:" ",
-  width:"2"
+  width:2,
 }
   //#endregion
 
@@ -1856,7 +1877,7 @@ stackingColumnSettings:any = {
   legendSetting: this.legend,
   border: this.borderArea,
   columnWidth:0.5,
-  width:"2"
+  width:2,
 
 }
   //#endregion
@@ -1901,7 +1922,7 @@ stackingColumn100Settings:any = {
   legendSetting: this.legend,
   border: this.borderArea,
   columnWidth:0.5,
-  width:"2"
+  width:2,
 }
 
   //#endregion
@@ -1976,7 +1997,7 @@ stackingBarSettings:any = {
   tooltip: this.tooltip,
   legendSetting: this.legend,
   border:this.borderArea,
-  width:"2",
+  width:2,
   columnWidth:0.6
 }
   //#endregion
@@ -2009,7 +2030,7 @@ yAxisStackingBar100: Object = {
     tooltip: this.tooltipStackingColumn100,
     legendSetting: this.legend,
     border: this.borderArea,
-    width:"2",
+    width:2,
     columnWidth:0.6
   };
   //#endregion
@@ -2069,7 +2090,7 @@ scatterSettings:any = {
   tooltip: this.tooltipStackingColumn100,
   legendSetting: this.legend,
   marker: this.markerScatter,
-  width:"2"
+  width:2,
 }
   //#endregion
 
@@ -2110,7 +2131,7 @@ dataPolar: Object[] = [
     tooltip: this.tooltip,
     marker: this.markerPolar,
     drawType:"Line",
-    width:"2"
+    width:2,
 
   };
   //#endregion
@@ -2363,7 +2384,7 @@ dataHilo: any = [ {
     binInterval: this.binInterval,
     columnWidth: this.columnWidth,
     showNormalDistribution: this.showNormalDistribution,
-    width:"2"
+    width:2,
   };
   //#endregion
 
@@ -2403,7 +2424,7 @@ yAxisPareto: Object = {
     tooltip: this.tooltip,
     marker: this.markerPareto,
     legendSetting: this.legend,
-    width: '2'
+    width:2,
   };
   //#endregion
 
