@@ -132,6 +132,10 @@ export class PopupAddProcessesComponent implements OnInit {
       // this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
       // this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
  //   }
+ if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
+  this.process.versionNo = 'V0.0'
+
+ }
   }
 
   ngOnInit(): void {
@@ -150,7 +154,7 @@ export class PopupAddProcessesComponent implements OnInit {
       op.className = 'ProcessesBusiness';
 
       var versions = new BP_ProcessRevisions();
-      this.process.versionNo = this.folderName;
+      this.process.versionNo = 'V0.0';
       versions.versionNo = this.process.versionNo;
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;

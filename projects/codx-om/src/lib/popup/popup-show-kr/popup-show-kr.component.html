@@ -95,7 +95,7 @@
                                 markerShape="Circle"
                                 radius="100%"
                                 [value]="
-                                  progressHistory[progressHistory.length - 1]
+                                  progressHistory[0]
                                 "
                                 color="white"
                                 [markerHeight]="20"
@@ -109,7 +109,7 @@
                                 color="#E63B86"
                                 start="0"
                                 [end]="
-                                  progressHistory[progressHistory.length - 1]
+                                  progressHistory[0]
                                 "
                                 startWidth="20"
                                 endWidth="20"
@@ -118,7 +118,7 @@
                               <e-range
                                 color="#E0E0E0"
                                 [start]="
-                                  progressHistory[progressHistory.length - 1]
+                                  progressHistory[0]
                                 "
                                 end="100"
                                 startWidth="20"
@@ -171,7 +171,7 @@
                       [primaryXAxis]="chartSettings?.primaryXAxis"
                       [primaryYAxis]="chartSettings?.primaryYAxis"
                       [seriesSetting]="chartSettings?.seriesSetting"
-                      [dataSource]="chartData.checkIns"
+                      [dataSource]="chartData.data"
                     ></codx-chart>
                   </div>
                 </ng-container>

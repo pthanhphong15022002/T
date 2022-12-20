@@ -3,23 +3,46 @@
     $primary: #3699ff;
     $primary-active: #187DE4;
     $primary-inverse: #FFFFFF;
-    $primary-light: #D3E8FF;
+
+    $primary-darkest: #032b53;
+    $primary-darker: #0155aa;
+    $primary-dark: #187DE4;
+    $primary-light: #bce5f1;
+    $primary-lighter: #e1ecf8;
+    $primary-lightest: #e9f4ff;
+
     $text-primary: #005dc7;
     $text-primary-dark: #0078FF;
     $text-primary-darker: #005dc7;
     $text-primary-light: #D3E8FF;
 
 
+    --primary: #3699ff;
+    --primary-active: #187DE4;
+    --primary-inverse: #FFFFFF;
+
+    --primary-darkest: #032b53;
+    --primary-darker: #0155aa;
+    --primary-dark: #187DE4;
+    --primary-light: #cae8f1;
+    --primary-lighter: #deeaf7;
+    --primary-lightest: #e9f4ff;
+
+    --text-primary: #005dc7;
+    --text-primary-dark: #0078FF;
+    --text-primary-darker: #005dc7;
+    --text-primary-light: #D3E8FF;
+
+
     --bs-body-line-height: 1.4;
     --fs-7: 12px;
     --title-color: #f5f9fa;
-
     --white: #ffffff;
     --black: #0f0f0f;
     --text-dark: #1d1f1f;
-
     --bg-body: #fff;
     --bghover: #f4f8ff;
+    --border-gray: #e3e7e9;
 
 
     --gray-800: #28292b;
@@ -31,8 +54,6 @@
     --gray-200: #cad0d3;
     --gray-100: #f5f9fa;
 
-    --text-primary: #005dc7;
-    --border-gray: #e3e7e9;
 }
 
 /*** css for theme********/
@@ -42,10 +63,10 @@
     --bs-active-primary: #fd492a;
     --text-primary: #fd492a;
 
+    $primary: #ff7213;
     $primary-darkest: #521e01;
     $primary-darker: #EF4023;
     $primary-dark: #ff6822;
-    $primary: #ff7213;
     $primary-light: #fcc898;
     $primary-lighter: #fffbed;
     $primary-lightest: #fffef1;
@@ -381,11 +402,6 @@
         fill: #fff !important;
     }
 
-    // .btn.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
-    //     fill: $primary-dark ;
-    // }
-
-    ////
     codx-header .icon-arrow_back {
         color: $primary !important;
     }
