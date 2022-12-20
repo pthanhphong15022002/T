@@ -3715,6 +3715,7 @@
                           class="border rounded min-w-250px mw-250px me-4 mb-2"
                         >
                           <codx-temp-full
+                              (clickMF)="clickMF($event, item, 'eDegrees')"
                               [formModel]="formModel"
                               [typeMF]="'hover'"
                               [titleTmp] = "titleTemplate"

@@ -493,6 +493,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('edit', data);
           this.df.detectChanges();
+        } else if (funcID == 'eDegrees'){
+          this.HandleEmployeeDegreeInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -630,6 +633,22 @@ export class EmployeeProfileComponent extends UIComponent {
                   }
                 });
             }
+            else if(funcID == 'eDegrees'){
+              this.hrService
+              .DeleteEmployeeDegreeInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstEDegrees.indexOf(data);
+                    if (i != -1) {
+                      this.lstEDegrees.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
           }
         });
         break;
@@ -655,6 +674,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'eDegrees'){
+          this.HandleEmployeeDegreeInfo('copy', data);
           this.df.detectChanges();
         }
         break;
