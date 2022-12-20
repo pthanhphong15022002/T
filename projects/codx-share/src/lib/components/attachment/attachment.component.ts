@@ -145,6 +145,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   @Input() heightScroll = 100;
   @Input() isTab = false;
   @Input() referType: string ="";
+  @Input() dataSelected: any;
   @Output() fileAdded = new EventEmitter();
   @ViewChild('openFile') openFile;
   @ViewChild('openFolder') openFolder;
