@@ -632,7 +632,10 @@
             </div>
           </div>
           <div class="d-flex flex-column" *ngIf="crrTab == 2">
-            <div class="d-flex btn btn-hover-primary">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeBasicSalariesInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -643,7 +646,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandleEmployeeJobSalariesInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -687,7 +693,10 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="HandlemployeeAssetInfo('add', null)"
+            >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -762,7 +771,7 @@
           <div class="d-flex flex-column" *ngIf="crrTab == 4">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeDegreeInfo()"
+              (click)="HandleEmployeeDegreeInfo('add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -914,6 +923,35 @@
 
 <!-- pane_0 -->
 <ng-template #info>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblInfoPersonal"
+        [formModel]="view.formModel"
+        default="Thông tin cá nhân"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('1', '0')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('1', '1')"
+        [attr.aria-expanded]="!objCollapes['1']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y aqua"
     data-kt-scroll="true"
@@ -927,37 +965,6 @@
       <ng-container>
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblInfoPersonal"
-                [formModel]="view.formModel"
-                default="Thông tin cá nhân"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('1', '0')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('1', '1')"
-                [attr.aria-expanded]="!objCollapes['1']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -1757,7 +1764,12 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstPassport?.length > 0 ? lstPassport[0]?.passportNo : '' }}</span
+                            :
+                            {{
+                              lstPassport?.length > 0
+                                ? lstPassport[0]?.passportNo
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1773,7 +1785,12 @@
                           >
                           </codx-label>
                           <span #IssuedPlace
-                            >: {{ lstPassport?.length > 0 ? lstPassport[0]?.issuedPlace : '' }}</span
+                            >:
+                            {{
+                              lstPassport?.length > 0
+                                ? lstPassport[0]?.issuedPlace
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1791,7 +1808,12 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstPassport?.length > 0 ? (lstPassport[0]?.issuedDate | fmDT) : (''| fmDT) }}</span
+                            >:
+                            {{
+                              lstPassport?.length > 0
+                                ? (lstPassport[0]?.issuedDate | fmDT)
+                                : ("" | fmDT)
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1807,7 +1829,13 @@
                           >
                           </codx-label>
                           <span #ExpiredDate
-                            >: {{ lstPassport[0]?.expiredDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstPassport?.length > 0
+                                ? lstPassport[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1815,9 +1843,15 @@
                     <codx-mfunc
                       *ngIf="lstPassport?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstPassport[0], 'passport')"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstPassport?.length > 0 ? lstPassport[0] : {},
+                          'passport'
+                        )
+                      "
                       type="hover"
-                      [dataItem]="lstPassport[0]"
+                      [dataItem]="lstPassport?.length > 0 ? lstPassport[0] : {}"
                     >
                     </codx-mfunc>
                   </div>
@@ -1855,7 +1889,10 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstVisa[0]?.visaNo }}</span
+                            :
+                            {{
+                              lstVisa?.length > 0 ? lstVisa[0]?.visaNo : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1870,7 +1907,12 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ lstVisa[0]?.issuedPlace }} </span>
+                          <span
+                            >:
+                            {{
+                              lstVisa?.length > 0 ? lstVisa[0]?.issuedPlace : ""
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1887,7 +1929,13 @@
                           >
                           </codx-label>
                           <span #issuedDate
-                            >: {{ lstVisa[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1903,8 +1951,20 @@
                           >
                           </codx-label>
                           <span #issuedOn
-                            >: {{ lstVisa[0]?.effectedDate | fmDT }} -
-                            {{ lstVisa[0]?.expiredDate | fmDT }}
+                            >:
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.effectedDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstVisa?.length > 0
+                                ? lstVisa[0]?.expiredDate
+                                : null
+                              ) | fmDT
+                            }}
                           </span>
                         </div>
                       </div>
@@ -1912,9 +1972,15 @@
                     <codx-mfunc
                       *ngIf="lstVisa?.length > 0"
                       [formModel]="view.formModel"
-                      (clickMF)="clickMF($event, lstVisa[0], 'visa')"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstVisa?.length > 0 ? lstVisa[0] : null,
+                          'visa'
+                        )
+                      "
                       type="hover"
-                      [dataItem]="lstVisa[0]"
+                      [dataItem]="lstVisa?.length > 0 ? lstVisa[0] : {}"
                     >
                     </codx-mfunc>
                   </div>
@@ -1953,7 +2019,12 @@
                           >
                           </codx-label>
                           <span class="text-dark">
-                            : {{ lstWorkPermit[0]?.workPermitNo }}</span
+                            :
+                            {{
+                              lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.workPermitNo
+                                : ""
+                            }}</span
                           >
                         </div>
                       </div>
@@ -1968,7 +2039,14 @@
                             [formModel]="view.formModel"
                           >
                           </codx-label>
-                          <span>: {{ lstWorkPermit[0]?.issuedPlace }} </span>
+                          <span
+                            >:
+                            {{
+                              lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.issuedPlace
+                                : ""
+                            }}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1985,7 +2063,13 @@
                           >
                           </codx-label>
                           <span
-                            >: {{ lstWorkPermit[0]?.issuedDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.issuedDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -2001,8 +2085,20 @@
                           >
                           </codx-label>
                           <span
-                            >: {{ lstWorkPermit[0]?.fromDate | fmDT }} -
-                            {{ lstWorkPermit[0]?.toDate | fmDT }}</span
+                            >:
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.fromDate
+                                : null
+                              ) | fmDT
+                            }}
+                            -
+                            {{
+                              (lstWorkPermit?.length > 0
+                                ? lstWorkPermit[0]?.toDate
+                                : null
+                              ) | fmDT
+                            }}</span
                           >
                         </div>
                       </div>
@@ -2011,10 +2107,16 @@
                       *ngIf="lstWorkPermit?.length > 0"
                       [formModel]="view.formModel"
                       (clickMF)="
-                        clickMF($event, lstWorkPermit[0], 'workpermit')
+                        clickMF(
+                          $event,
+                          lstWorkPermit?.length > 0 ? lstWorkPermit[0] : null,
+                          'workpermit'
+                        )
                       "
                       type="hover"
-                      [dataItem]="lstWorkPermit[0]"
+                      [dataItem]="
+                        lstWorkPermit?.length > 0 ? lstWorkPermit[0] : {}
+                      "
                     >
                     </codx-mfunc>
                   </div>
@@ -2728,17 +2830,6 @@
                     >
                     </codx-label>
                     <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeJobSalariesInfo('add', null)"
-                      >Add Ejob</span>
-                    </a>
-
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="HandleEmployeeBasicSalariesInfo('add', null)"
-                      >Add Ebasic</span>
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -2757,12 +2848,12 @@
                       </codx-temp-full>
                       <ng-template #footerEBSalaries let-data>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương cơ
-                          bản: {{ crrEBSalary.bSalary }}
+                          <span class="icon-attach_money"></span>Lương cơ bản:
+                          {{ crrEBSalary.bSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-1">
-                          <span class="icon-attach_money"></span>Lương đóng 
-                          BH: {{ crrEBSalary.siSalary }}
+                          <span class="icon-attach_money"></span>Lương đóng BH:
+                          {{ crrEBSalary.siSalary }}
                         </div>
                         <div class="d-flex align-items-center mt-3">
                           <span class="icon-calendar_today"></span>Hiệu lực:
@@ -3056,6 +3147,24 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
+                  <div class="d-flex flex-wrap mt-6 mb-3">
+                    <div
+                      [style.background]="'black'"
+                      class="badge border-0 me-2"
+                      *ngFor="let asset of lstAsset"
+                    >
+                      <div class="has-action-menu">
+                        {{ asset.assetCategory }} gan cung
+                        <codx-mfunc
+                          [formModel]="formModel"
+                          (clickMF)="clickMF($event, asset, 'Assets')"
+                          type="hover"
+                          [dataItem]="asset"
+                        >
+                        </codx-mfunc>
+                      </div>
+                    </div>
+                  </div>
                   <div class="row form-group"></div>
                 </div>
               </div>
@@ -3564,7 +3673,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDegreeInfo()"
+                    (click)="HandleEmployeeDegreeInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3599,9 +3708,64 @@
                 [(ngbCollapse)]="objCollapes['5.1']"
               >
                 <div class="mb-1">
-                  <div
+                  <div>
+                    <div class="d-flex flex-wrap py-3 px-4">
+                      <ng-container *ngFor="let item of lstEDegrees">
+                        <div
+                          class="border rounded min-w-250px mw-250px me-4 mb-2"
+                        >
+                          <codx-temp-full
+                              (clickMF)="clickMF($event, item, 'eDegrees')"
+                              [formModel]="formModel"
+                              [typeMF]="'hover'"
+                              [titleTmp] = "titleTemplate"
+                              [subTitleTmp]="tmplateEDegreesMenuList"
+                              cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                              typeMF="hover"
+                              [dataItem]="item"
+                          ></codx-temp-full>
+                          <ng-template #tmplateEDegreesMenuList let-data>
+                            <div class="d-flex flex-column">
+                              <div>
+                                <i class="icon-home_work"></i
+                                >{{ item.trainSupplierID }}
+                              </div>
+                              <div>
+                                <i class="icon-calendar_today"></i
+                                >{{ item.courseName }}
+                                <i
+                                  class="icon-i-arrow-down-left-circle-fill"
+                                ></i
+                                >{{ item.trainForm }} |
+                                <i class="icon-airplanemode_active"></i>
+                                {{ item.ranking }}
+                                <i
+                                  class="icon-i-arrow-down-left-circle-fill"
+                                ></i>
+                                {{ item.totalScore }}
+                              </div>
+                            </div>
+                          </ng-template>
+
+                          <ng-template #titleTemplate let-data>
+                            <div class="d-flex flex-column">
+                              <div>
+                                <i class="icon-school"></i
+                                >{{ item.degreeName }}
+                                <i
+                                  class="icon-i-arrow-down-left-circle-fill"
+                                ></i
+                                >{{ item.issuedDate | fmDT }}
+                              </div>
+                            </div>
+                          </ng-template>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                  <!-- <div them code o day
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  ></div>
+                  ></div> -->
                 </div>
               </div>
             </div>
@@ -3701,7 +3865,10 @@
                     ></span>
                   </button>
                   <span class="text-gray-500 ms-2">|</span>
-                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-1"
+                    (click)="addSkill()"
+                  >
                     <span
                       class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                     ></span>
@@ -3729,9 +3896,74 @@
                 [(ngbCollapse)]="objCollapes['5.3']"
               >
                 <div class="mb-1">
-                  <div
-                    class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
-                  ></div>
+                  <ng-container *ngFor="let eSkill of lstESkill">
+                    <div class="has-action-menu">
+                      <div class="pf-skill d-flex align-items-center ms-9 mb-4">
+                        <div class="sk-title w-150px fw-bold">
+                          {{ eSkill.firstItem.skillName }}
+                        </div>
+
+                        <div
+                          class="sk-group d-flex align-items-center"
+                          *ngIf="eSkill.firstItem.maxGrade > 0"
+                        >
+                          <ng-container
+                            *ngFor="
+                              let item of [].constructor(
+                                eSkill.firstItem.maxGrade
+                              );
+                              let i = index
+                            "
+                          >
+                            <div
+                              class="sk-item"
+                              [ngClass]="
+                                i + 1 <= eSkill.firstItem.currentGrade
+                                  ? 'active'
+                                  : ''
+                              "
+                              [class]="
+                                i + 1 == eSkill.firstItem.currentGrade
+                                  ? 'selected'
+                                  : ''
+                              "
+                            >
+                              {{ i + 1 }}
+                            </div>
+                          </ng-container>
+
+                          <!-- <div class="sk-item active">2</div>
+                          <div class="sk-item active">3</div>
+                          <div class="sk-item active selected">4</div>
+                          <div class="sk-item">5</div>
+                          <div class="sk-item">6</div> -->
+                        </div>
+                      </div>
+                      <codx-mfunc
+                        [formModel]="formModel"
+                        (clickMF)="clickMF($event, eSkill.firstItem, 'eskill')"
+                        type="hover"
+                        [dataItem]="eSkill.firstItem"
+                      >
+                      </codx-mfunc>
+                    </div>
+                  </ng-container>
+
+                  <!-- <div class="pf-skill d-flex align-items-center ms-9 mb-4">
+                    <div class="sk-title w-150px fw-bold">
+                      Giải quyết vấn đề
+                    </div>
+                    <div class="sk-group d-flex align-items-center">
+                      <div class="sk-item active">1</div>
+                      <div class="sk-item active">2</div>
+                      <div class="sk-item active">3</div>
+                      <div class="sk-item active">4</div>
+                      <div class="sk-item active">5</div>
+                      <div class="sk-item active selected">6</div>
+                      <div class="sk-item">7</div>
+                      <div class="sk-item">8</div>
+                    </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -3766,7 +3998,10 @@
                     ></span>
                   </button>
                   <span class="text-gray-500 ms-2">|</span>
-                  <button class="btn btn-icon btn-sm position-relative ms-1">
+                  <button
+                    class="btn btn-icon btn-sm position-relative ms-1"
+                    (click)="addSkillGrade()"
+                  >
                     <span
                       class="icon-more_vert icon-20 text-gray-600 text-hover-primary"
                     ></span>
@@ -3797,7 +4032,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvETrainCourses'"
@@ -3813,7 +4048,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eTrainCourses')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                   <!-- documentNo-status -->
                 </div>
@@ -4031,6 +4266,36 @@
 
 <!-- pane_6 -->
 <ng-template #healthInfo>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblHealthInfo"
+        [formModel]="view.formModel"
+        default="Thông tin sức khỏe"
+      >
+      </codx-label>
+    </div>
+
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('7', '0')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span
+          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('7', '1')"
+        [attr.aria-expanded]="!objCollapes['7']"
+      >
+        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 pw-lg scroll-y"
     data-kt-scroll="true"
@@ -4043,38 +4308,6 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblHealthInfo"
-                [formModel]="view.formModel"
-                default="Thông tin sức khỏe"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('7', '0')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('7', '1')"
-                [attr.aria-expanded]="!objCollapes['7']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="7" #7="ngbCollapse" [(ngbCollapse)]="objCollapes['7']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -4126,7 +4359,7 @@
                 [(ngbCollapse)]="objCollapes['7.1']"
               >
                 <div class="mb-3">
-                  <codx-gridview-v2
+                  <!-- <codx-gridview-v2
                     idField="recID"
                     [columnsGrid]=""
                     [service]="'HR'"
@@ -4143,7 +4376,7 @@
                     [contentEditable]="false"
                     [allowResizing]="true"
                     (clickMF)="clickMF($event, null, 'eHealths')"
-                  ></codx-gridview-v2>
+                  ></codx-gridview-v2> -->
                 </div>
               </div>
             </div>
@@ -4242,7 +4475,7 @@
                               <codx-mfunc
                                 [formModel]="formModel"
                                 (clickMF)="
-                                  clickMF($event, vaccine, 'evaccines')
+                                  clickMFVaccine($event, vaccine, item)
                                 "
                                 type="hover"
                                 [dataItem]="vaccine"
@@ -4279,7 +4512,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEDisease()"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4374,7 +4607,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <codx-gridview-v2
+                    <!-- <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvEAccidents'"
@@ -4390,7 +4623,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eAccidents')"
-                    ></codx-gridview-v2>
+                    ></codx-gridview-v2> -->
                   </div>
                 </div>
               </div>

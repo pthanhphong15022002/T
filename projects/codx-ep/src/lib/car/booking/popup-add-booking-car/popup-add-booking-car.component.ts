@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { APICONSTANT } from '@shared/constant/api-const';
-import { AuthService, CacheService, CRUDService } from 'codx-core';
+import { AuthService, AuthStore, CacheService, CRUDService } from 'codx-core';
 import {
   DialogData,
   DialogRef,
@@ -20,6 +20,7 @@ import {
   RequestOption,
 } from 'codx-core';
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
+import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { Equipments } from '../../../models/equipments.model';
 
 export class Device {
@@ -119,13 +120,16 @@ export class PopupAddBookingCarComponent extends UIComponent {
   isCopy = false;
   isPopupCbb = false;
   saveCheck = false;
-
+  resources=[];
+  listUserID=[];
+  user:any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
     private notificationsService: NotificationsService,
     private authService: AuthService,
     private cacheService: CacheService,
+    private authStore: AuthStore,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -135,6 +139,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     this.tmpTitle = dialogData?.data[2];
     this.optionalData = dialogData?.data[3];
     this.isCopy = dialogData?.data[4];
+    this.user = this.authStore.get();
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
@@ -356,21 +361,20 @@ export class PopupAddBookingCarComponent extends UIComponent {
         });
         if (this.isAdd) {
           let people = this.authService.userValue;
-          this.tempAtender = {
-            userID: people.userID,
-            userName: people.userName,
-            status: '1',
-            objectType: 'AD_Users',
-            roleType: '1',
-            objectID: undefined,
-            icon: '',
-          };
+          let tmpResource =new BookingAttendees();
+          tmpResource.userID = people?.userID;
+          tmpResource.userName = people?.userName;
+          tmpResource.roleType = '1';
+          tmpResource.optional = false;
           this.listRoles.forEach((element) => {
-            if (element.value == this.tempAtender.roleType) {
-              this.tempAtender.icon = element.icon;
+            if (element.value == tmpResource.roleType) {
+              tmpResource.icon = element.icon;
+              tmpResource.roleName = element.text;
             }
           });
-          this.curUser = this.tempAtender;
+          
+          this.curUser = tmpResource;
+          this.resources.push(tmpResource);
         }
         if (!this.isAdd) {
           this.codxEpService
@@ -379,30 +383,30 @@ export class PopupAddBookingCarComponent extends UIComponent {
               if (res) {
                 this.attendees = res.msgBodyData[0];
                 this.attendees.forEach((people) => {
-                  this.tempAtender = {
-                    userID: people.userID,
-                    userName: people.userName,
-                    status: people.status,
-                    objectType: 'AD_Users',
-                    roleType: people.roleType,
-                    objectID: undefined,
-                    icon: '',
-                  };
+                  let tmpResource =new BookingAttendees();
+                  tmpResource.userID = people?.userID;
+                  tmpResource.userName = people?.userName;
+                  tmpResource.roleType = people?.roleType;
+                  tmpResource.optional = false;
                   this.listRoles.forEach((element) => {
-                    if (element.value == this.tempAtender.roleType) {
-                      this.tempAtender.icon = element.icon;
+                    if (element.value == tmpResource.roleType) {
+                      tmpResource.icon = element.icon;
+                      tmpResource.roleName = element.text;
                     }
                   });
+
                   if (
-                    this.tempAtender.userID == this.authService.userValue.userID
+                    tmpResource.userID == this.authService.userValue.userID
                   ) {
-                    this.curUser = this.tempAtender;
-                  } else if (this.tempAtender.roleType == '2') {
-                    this.driver = this.tempAtender;
+                    this.curUser = tmpResource;                    
+                    this.resources.push(this.curUser);
+                  } else if (tmpResource.roleType == '2') {
+                    this.driver = tmpResource;
                     this.driver.objectID = people.note;
                     this.driver.objectType = 'EP_Resources';
                   } else {
-                    this.lstPeople.push(this.tempAtender);
+                    this.lstPeople.push(tmpResource);           
+                    this.resources.push(tmpResource);
                   }
                 });
                 if (this.driver != null) {
@@ -632,7 +636,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
         tempDelete = item;
       }
     });
-    this.lstPeople.splice(this.lstPeople.indexOf(tempDelete), 1);
+    this.lstPeople.splice(this.lstPeople.indexOf(tempDelete), 1);    
+    this.data.attendees = this.lstPeople.length + 1;
     this.detectorRef.detectChanges();
   }
   driverChangeWithCar(carID: string) {
@@ -850,5 +855,133 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.isPopupCbb = false;
       this.detectorRef.detectChanges();
     }
+  }
+  eventApply(e) {
+    var listUserID = '';
+    var listDepartmentID = '';
+    var listUserIDByOrg = '';
+    var type = 'U';
+    e?.data?.forEach((obj) => {
+      if (obj.objectType && obj.id) {
+        type = obj.objectType;
+        switch (obj.objectType) {
+          case 'U':
+            listUserID += obj.id + ';';
+            break;
+          case 'O':
+          case 'D':
+            listDepartmentID += obj.id + ';';
+            break;
+        }
+      }
+    });
+    if (listUserID != '') {
+      listUserID = listUserID.substring(0, listUserID.length - 1);
+      this.valueUser(listUserID);
+    }
+
+    if (listDepartmentID != '')
+      listDepartmentID = listDepartmentID.substring(
+        0,
+        listDepartmentID.length - 1
+      );
+    if (listDepartmentID != '') {
+      this.codxEpService
+        .getListUserIDByListOrgIDAsync([listDepartmentID, type])
+        .subscribe((res) => {
+          if (res) {
+            listUserIDByOrg += res;
+            if (listUserID != '') listUserIDByOrg += ';' + listUserID;
+            this.valueUser(listUserIDByOrg);
+          }
+        });
+    }
+  }
+  valueUser(resourceID) {
+    if (resourceID != '') {
+      if (this.resources != null) {
+        var user = this.resources;
+        var array = resourceID.split(';');
+        var id = '';
+        var arrayNew = [];
+        user.forEach((e) => {
+          id += e.userID + ';';
+        });
+        if (id != '') {
+          id = id.substring(0, id.length - 1);
+
+          array.forEach((element) => {
+            if (!id.split(';').includes(element)) arrayNew.push(element);
+          });
+        }
+        if (arrayNew.length > 0) {
+          resourceID = arrayNew.join(';');
+          id += ';' + resourceID;
+          this.getListUser(resourceID);
+        }
+      } else {
+        this.getListUser(resourceID);
+      }
+    }
+  }
+
+  getListUser(resource) {
+    while (resource.includes(' ')) {
+      resource = resource.replace(' ', '');
+    }
+    var arrUser = resource.split(';');
+    this.listUserID = this.listUserID.concat(arrUser);
+    this.api
+      .execSv<any>(
+        'HR',
+        'ERM.Business.HR',
+        'EmployeesBusiness',
+        'GetListEmployeesByUserIDAsync',
+        JSON.stringify(resource.split(';'))
+      )
+      .subscribe((res) => {
+        if (res && res.length > 0) {
+          for (var i = 0; i < res.length; i++) {
+            let emp = res[i];
+            var tmpResource = new BookingAttendees();
+            if (emp.userID == this.user.userID) {
+              tmpResource.userID = emp?.userID;
+              tmpResource.userName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = '1';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.resources.push(tmpResource);
+            } else {
+              tmpResource.userID = emp?.userID;
+              tmpResource.userName = emp?.userName;
+              tmpResource.positionName = emp?.positionName;
+              tmpResource.roleType = '3';
+              tmpResource.optional = false;
+              this.listRoles.forEach((element) => {
+                if (element.value == tmpResource.roleType) {
+                  tmpResource.icon = element.icon;
+                  tmpResource.roleName = element.text;
+                }
+              });
+              this.resources.push(tmpResource);
+            }
+            
+          }
+          this.resources.forEach(item=>{
+            if(item.userID!= this.curUser.userID){
+              this.lstPeople.push(item);
+            }
+          });
+          this.lstPeople = this.filterArray(this.lstPeople);
+          this.data.attendees = this.lstPeople.length + 1;
+          this.detectorRef.detectChanges();
+        }
+      });
   }
 }

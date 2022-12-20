@@ -1,20 +1,12 @@
-<ng-template #footer>
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-primary" (click)="onSaveForm()">
-            <i class="icon-save"></i>
-        <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
-        </button>
-    </div>
-</ng-template>
-
-<codx-form
-    #form
-    [headerText] = "headerText"
-    [body]="body"
+<layout-list-detail
+    #lstDetail
+    [title]="headerText"
     [formModel]="formModel"
     [footer]="footer"
     [dialog]="dialog"
-    [data]="data"
+    [data]="degreeObj"
+    [leftTemlate]="LeftTemlate"
+    [RightTemlate]="body"
     *ngIf="isAfterRender"
 >
     <ng-template #body>
@@ -290,4 +282,61 @@
             ></codx-input>
         </div>
     </ng-template>
-</codx-form>
+
+    <ng-template #footer>
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-primary" (click)="onSaveForm()">
+                <i class="icon-save"></i>
+            <codx-label default="Lưu" name="lblSave" [formModel]="formModel"></codx-label>
+            </button>
+        </div>
+    </ng-template>
+</layout-list-detail>
+
+<ng-template #LeftTemlate>
+    <codx-listview
+        #listView
+        [type]="'cardView'"
+        [service]="'HR'"
+        [assemblyName]="'HR'"
+        [entityName]="'HR_EDegrees'"
+        [className]="'EDegreesBusiness'"
+        [method]="'LoadEDegreesAsync'"
+        [predicate]="'EmployeeID=@0'"
+        [dataValue]="employId"
+        [itemTemplate]="itemTemplate"
+        (afterRender) = "afterRenderListView($event)"
+        [selectFirst]="true"
+    ></codx-listview>
+</ng-template>
+
+<ng-template #itemTemplate let-data>
+    <!-- <i class="icon-i-arrow-down-left-circle-fill"></i> + data.issuedDate -->
+    <codx-temp-full
+        [formModel]="formModel"
+        [typeMF]="'hover'"
+        [titleTmp] = "titleTemplate"
+        [subTitleTmp]="tmplateEDegreesMenuList"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        [hideMF]="true"
+        typeMF="hover"
+        [dataItem]="data"
+        (click)="click(data)"
+    ></codx-temp-full>
+</ng-template>
+
+<ng-template #tmplateEDegreesMenuList let-data>
+    <div class="d-flex flex-column">
+        <div><i class ="icon-home_work"></i>{{data.trainSupplierID}}</div>
+        <div><i class ="icon-calendar_today"></i>{{data.courseName}} <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.trainForm}} |
+            <i class="icon-airplanemode_active"></i> {{data.ranking}} <i class="icon-i-arrow-down-left-circle-fill"></i> {{data.totalScore}}</div>
+    </div>
+</ng-template>
+
+<ng-template #titleTemplate let-data>
+    <div class="d-flex flex-column">
+        <div><i class ="icon-school"></i>{{data.degreeName}}
+            <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.issuedDate | fmDT}}
+        </div>
+    </div>
+</ng-template>

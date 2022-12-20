@@ -91,7 +91,7 @@ export class UpdateNotePinComponent implements OnInit {
         this.itemUpdate.isNote = true;
         this.api
           .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-            this.itemUpdate?.recID,
+            this.itemUpdate?.transID,
             this.itemUpdate,
           ])
           .subscribe((res) => {
@@ -122,7 +122,7 @@ export class UpdateNotePinComponent implements OnInit {
     this.dataOld.isNote = true;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.dataOld.recID,
+        this.dataOld.transID,
         this.dataOld,
       ])
       .subscribe((res) => {

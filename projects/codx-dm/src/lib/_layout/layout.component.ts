@@ -173,7 +173,7 @@ db.DM_FolderInfo.updateMany(
     this.folderService.getFolders('').subscribe(async (list) => {
       if (list) {
         this.dmSV.listFolder = list[0];
-        this.dmSV.ChangeData.next(true);
+        this.dmSV.addFile.next(true);
         this.changeDetectorRef.detectChanges();
       }
     });
@@ -182,7 +182,7 @@ db.DM_FolderInfo.updateMany(
     this.fileService.options.favoriteID = subid;
     this.fileService.GetFiles('').subscribe(async (list) => {
       this.dmSV.listFiles = list[0];
-      this.dmSV.ChangeData.next(true);
+      this.dmSV.addFile.next(true);
       this.changeDetectorRef.detectChanges();
     });
   }

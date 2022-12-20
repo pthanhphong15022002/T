@@ -76,7 +76,6 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
     this.request.idField = 'recID';
-    
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -180,7 +179,9 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.codxEpService
       .approve(
         data?.approvalTransRecID, //ApprovelTrans.RecID
-        status
+        status,
+        '',
+        ''
       )
       .subscribe((res: any) => {
         if (res?.msgCodeError == null && res?.rowCount >= 0) {
@@ -208,7 +209,10 @@ export class ApprovalRoomsComponent extends UIComponent {
                         .subscribe((res) => {
                           //Duyệt VPP tự dộng
                           this.codxEpService
-                            .getParams('EPStationeryParameters', 'AutoApproveItem')
+                            .getParams(
+                              'EPStationeryParameters',
+                              'AutoApproveItem'
+                            )
                             .subscribe((res) => {
                               if (res) {
                                 let dataValue = res[0].dataValue;
@@ -221,7 +225,7 @@ export class ApprovalRoomsComponent extends UIComponent {
                                     .getApprovalTransByTransID(booking)
                                     .subscribe((trans: any) => {
                                       this.codxEpService
-                                        .approve(trans.recID, '5')
+                                        .approve(trans.recID, '5', '', '')
                                         .subscribe();
                                     });
                                 }

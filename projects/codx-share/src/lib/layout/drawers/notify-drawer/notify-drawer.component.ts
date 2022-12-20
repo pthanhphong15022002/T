@@ -48,7 +48,7 @@ export class NotifyDrawerComponent implements OnInit, AfterViewInit {
       "ERM.Business.BG",
       "NotificationBusinesss",
       "GetNotiNumberAsync",
-      []).subscribe((res:any) => {
+      ["NO"]).subscribe((res:any) => {
         if(res > 0) 
         {
           this.totalNoti = res;

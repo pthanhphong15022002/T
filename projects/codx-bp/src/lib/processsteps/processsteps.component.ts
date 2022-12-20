@@ -62,7 +62,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
 })
 export class ProcessStepsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit
+  implements OnInit, AfterViewInit, OnChanges
 {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
@@ -71,9 +71,10 @@ export class ProcessStepsComponent
   @ViewChild('templateView') templateView!: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
   @ViewChild('addFlowchart') addFlowchart: AttachmentComponent;
+  @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
 
   @Input() process: BP_Processes;
-  @Input() viewMode = '16';
+  @Input() viewMode :any;
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
@@ -139,6 +140,8 @@ export class ProcessStepsComponent
   idView = '';
   loadingData = false;
   heightFlowChart = 0;
+  widthElement = 300;
+  dataClick: any;
 
   constructor(
     inject: Injector,
@@ -157,6 +160,11 @@ export class ProcessStepsComponent
       }
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.chgViewModel(this.viewMode);
+    this.changeDetectorRef.detectChanges()
+  }
+  
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -236,6 +244,7 @@ export class ProcessStepsComponent
         request2: this.resourceKanban,
         model: {
           template: this.cardKanban,
+          template2: this.viewColumKaban,
         },
       },
       {
@@ -259,7 +268,7 @@ export class ProcessStepsComponent
   chgViewModel(type) {
     // this.idView = type ;
     let view = this.views.find((x) => x.id == type);
-    if (view) this.view.viewChange(view);
+    if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -870,6 +879,10 @@ export class ProcessStepsComponent
     }
     if (e?.view.id == 6) {
       this.isKanban = true;
+      this.widthElement =
+        document.getElementsByClassName(
+          '.e-header-cells'
+        )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
@@ -897,6 +910,7 @@ export class ProcessStepsComponent
 
   dropPhase(event: CdkDragDrop<string[]>) {
     if (event.previousIndex == event.currentIndex) return;
+    this.lockChild = this.lockParent = true;
     var ps = this.view.dataService.data[event.previousIndex];
     if (ps) {
       this.bpService
@@ -966,8 +980,10 @@ export class ProcessStepsComponent
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild = this.lockParent = false;
           }
         });
     }
@@ -975,6 +991,7 @@ export class ProcessStepsComponent
 
   dropStepChild(event: CdkDragDrop<string[]>, currentID) {
     if (event.previousIndex == event.currentIndex) return;
+    this.lockChild = this.lockParent = true;
     var index = this.view.dataService.data.findIndex(
       (x) => x.recID == currentID
     );
@@ -1030,14 +1047,17 @@ export class ProcessStepsComponent
 
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild = this.lockParent = false;
           }
         });
     }
   }
 
   dropChildToParent(event: CdkDragDrop<string[]>, crrParentID) {
+    this.lockChild = this.lockParent = true;
     var psMoved = event.item?.data;
 
     var indexPrevious = this.view.dataService.data.findIndex(
@@ -1105,8 +1125,10 @@ export class ProcessStepsComponent
             // );
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
+            this.lockChild = this.lockParent = false;
           } else {
             this.notiService.notifyCode(' SYS021');
+            this.lockChild = this.lockParent = false;
           }
         });
     }
@@ -1132,23 +1154,12 @@ export class ProcessStepsComponent
   }
 
   getFlowChart(process) {
-    let paras = [
-      '',
-      this.funcID,
-      process?.recID,
-      'BP_Processes',
-      'inline',
-      1000,
-      process?.processName,
-      'Flowchart',
-      false,
-    ];
+    let paras = [process?.recID, 'BP_Processes', 'Flowchart'];
     this.api
-      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetFileByOORAsync', paras)
       .subscribe((res) => {
-        if (res && res?.url) {
-          let obj = { pathDisk: res?.url, fileName: process?.processName };
-          this.dataFile = obj;
+        if (res) {
+          this.dataFile = res;
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -1201,11 +1212,11 @@ export class ProcessStepsComponent
   }
 
   printFlowchart() {
-    let linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
-    if (linkFile) {
+    this.linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
+    if (this.linkFile) {
       const output = document.getElementById('output');
       const img = document.createElement('img');
-      img.src = linkFile;
+      img.src = this.linkFile;
       output.appendChild(img);
       const br = document.createElement('br');
       output.appendChild(br);
@@ -1298,5 +1309,22 @@ export class ProcessStepsComponent
           e
         );
     return linkQuesiton;
+  }
+  setWidthTextColumm(text) {
+    return this.widthElement < text.length * 3;
+  }
+  //chuwa xong
+  dataColums(recIDPhase): any {
+    this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
+      return dt;
+    });
+  }
+
+  clickMFColums(e, recID) {
+    this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
+      if (dt) {
+        this.clickMF(e, dt);
+      }
+    });
   }
 }

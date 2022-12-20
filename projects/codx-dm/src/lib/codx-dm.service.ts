@@ -1162,7 +1162,7 @@ export class CodxDMService {
         this.setRequest(
           type,
           data.recID,
-          data.permissions[0].id,
+          data.id,
           this.idMenuActive == 'DMT06' ? '5' : '6',
           true
         );
@@ -1172,7 +1172,7 @@ export class CodxDMService {
         this.setRequest(
           type,
           data.recID,
-          data.permissions[0].id,
+          data.id,
           this.idMenuActive == 'DMT06' ? '4' : '8',
           false
         );

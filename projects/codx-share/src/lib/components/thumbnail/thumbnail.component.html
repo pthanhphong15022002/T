@@ -1,26 +1,25 @@
 <div [style]="isScroll == '0'?'max-height: 100px; overflow-y: auto;':null">
   <ng-container *ngIf="files != null && files.length > 0">
-    <div *ngFor="let item of files" class="d-flex align-items-center has-action-menu-1 mb-3">
+    <div *ngFor="let item of files" class="d-flex align-items-center has-action-menu-1 mb-2">
       <div *ngIf="(item.data != null) then data else nodata"></div>
       <ng-template #data>
         <div (dblclick)="openFile(item.data.recID)" class="cursor-pointer">
           <div *ngIf="(displayThumb == 'simple') then simple else full"></div>
           <ng-template #simple>
             <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
-              title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
-               [descLine]="1">
+              title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})" [descLine]="1">
             </codx-temp-full>
           </ng-template>
           <ng-template #full>
             <codx-temp-full imageSrc="{{dmSV.getImage(item.data)}}" imgCss="w-20px me-3 cursor-pointer"
               title="{{item?.data.fileName}} ({{formatBytes(item?.data.fileSize)}})"
-              subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}"
-               [descLine]="1">
+              subTitle="{{item.data.createdOn  | date: 'dd/MM/yyyy'}}{{' | ' + item.data.createdBy}}" [descLine]="1">
             </codx-temp-full>
           </ng-template>
         </div>
 
-        <div *ngIf="hideHover == '1'" class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
+        <div *ngIf="hideHover == '1'"
+          class="action-menu-1 d-flex justify-content-center align-items-center cursor-pointer">
           <div class="btn btn-sm btn-icon btn-white cursor-pointer " *ngIf="hideDelete=='0'"
             (click)="deleteFile(item.data.recID)">
             <i class="icon-close text-danger icon-16"></i>

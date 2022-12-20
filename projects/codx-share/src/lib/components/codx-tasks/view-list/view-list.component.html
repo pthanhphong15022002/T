@@ -23,7 +23,7 @@
           class="badge badge-light badge-md fs-7 ms-2">
         </codx-vll>
       </div>
-      <div class="w-120px min-w-120px">
+      <div class="w-125px min-w-125px">
         <div *ngIf="data.memo" class="dropdown" [class.dropdown-customv2]="data.memo" [ngbPopover]="popDetail"
           #p="ngbPopover" [openDelay]="500" (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)"
           placement="bottom right top" autoClose="outside">
@@ -50,16 +50,16 @@
         </div>
       </div>
 
-      <div class="w-50px min-w-50px">
+      <div class="w-100px min-w-100px">
         <div *ngIf="data.category == '3'" class="">
           <codx-imgs [isToolTip]="false" [width]="30" [objectId]="data?.assignTo" objectType="AD_Users"
-            [numberImages]="4" (click)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
+            [numberImages]="2" (click)="popoverEmpList(popoverList, data)" [ngbPopover]="popEmpList"
             popoverClass="empPopoverClass" #popoverList="ngbPopover" placement="right bottom" container="body"
             autoClose="outside" [openDelay]="500">
           </codx-imgs>
         </div>
         <div *ngIf="data.category == '1' || data.category == '2'" class="">
-          <codx-imgs [width]="30" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="4">
+          <codx-imgs [width]="30" [objectId]="data?.owner" objectType="AD_Users" [numberImages]="2">
           </codx-imgs>
         </div>
         <!-- <div class="d-flex">
@@ -79,11 +79,10 @@
         <div class="text-gray-600 fs-7">
           <codx-label name="DueDate" [formModel]="formModel" default="Ngày hết hạn:"></codx-label>
         </div>
-        <div class="text-dark" #duaDate>
-          <!-- {{data.dueDate|date:'dd/MM/yyyy'}} -->
+        <div class="text-dark" #dueDate>
           {{
           data?.dueDate
-          | formatvalue: formModel:"dueDate":duaDate:"Tasks":"grvTasks"
+          | formatvalue: formModel:"dueDate":dueDate:"Tasks":"grvTasks"
           | async
           }}
         </div>
@@ -179,11 +178,14 @@
         </div>
         <div class="d-flex align-items-center" *ngIf="item?.roleType == 'R' || item?.roleType == 'A'">
           <div class="d-flex align-items-end me-2 codx-badge">
-            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="data?.status" [showText]="true"
+            <codx-vll [name]="vllStatus" [field]="'Status'" [value]="item?.status" [showText]="true"
               [showBgColor]="true" class="badge badge-light badge-md fs-7 me-2">
             </codx-vll>
-            <span class="text-gray-700">{{
-              item?.dueDate | date: "dd/MM/yyyy"
+            <span class="text-gray-700"#dueDate>
+              {{
+                item?.dueDate
+              | formatvalue: formModel:"dueDate":dueDate:"Tasks":"grvTasks"
+              | async
               }}</span>
           </div>
         </div>

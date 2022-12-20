@@ -235,27 +235,6 @@ export class CodxHrService {
     );
   }
 
-  //region new hr module
-  addOrEditEAppointion(appointion) {
-    return this.api.execSv(
-      'HR',
-      'Hr',
-      'EAppointionsBusiness',
-      'AddOrEditEAppointionByEmployeeIDAsync',
-      appointion
-    );
-  }
-  //endregion
-
-  saveEmployeeDegreeInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EDegreesBusiness',
-      'AddEmployeeDegreeInfoAsync',
-      data
-    );
-  }
   saveEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -297,6 +276,57 @@ export class CodxHrService {
     );
   }
 
+  //#endregion
+
+  //#regin EDegrees
+  getEmployeeDegreeModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'GetEmployeeDegreesModelAsync'
+    );
+  }
+
+  updateEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'UpdateEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  AddEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'AddEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeDegreeInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'DeleteEmployeeDegreeInfoAsync',
+      data
+    );
+  }
+
+  getEDegreesWithDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EDegreesBusiness',
+      'LoadEDegreesAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EmpVisasBusiness
@@ -376,7 +406,7 @@ export class CodxHrService {
       'HR',
       'HR',
       'EDegreesBusiness',
-      'GetEmployeeDegreeInfoAsync',
+      'LoadEDegreesAsync',
       data
     );
   }
@@ -436,16 +466,6 @@ export class CodxHrService {
       'HR',
       'EDisciplinesBusiness',
       'GetEmployeeDisciplinesInfoAsync',
-      data
-    );
-  }
-
-  getEmployeeAssetsInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAssetsBusiness',
-      'GetEmployeeAssetsInfoAsync',
       data
     );
   }
@@ -540,16 +560,57 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeAssetsInfo(data) {
+  //#endregion
+
+  //#region EAssetBusiness
+  getEmployeeAssetsModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EAssetsBusiness',
-      'AddEmployeeAssetsInfoAsync',
+      'GetEAssetsModelAsync'
+    );
+  }
+
+  UpdateEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'UpdateEAssetsInfoAsync',
       data
     );
   }
 
+  AddEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'AddEAssetsInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeAssetInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'DeleteEAssetsInfoAsync',
+      data
+    );
+  }
+
+  getListAssetByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAssetsBusiness',
+      'GetListAssetsByDataRequestAsync',
+      data
+    );
+  }
   //#endregion
 
   //#region EFamiliesBusiness
@@ -644,7 +705,6 @@ export class CodxHrService {
       data
     );
   }
-  
 
   GetEmployeeJobSalariesModel() {
     return this.api.execSv<any>(
@@ -757,7 +817,6 @@ export class CodxHrService {
       data
     );
   }
-  
 
   GetEmployeeBasicSalariesModel() {
     return this.api.execSv<any>(
@@ -887,13 +946,141 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region FunctionList
-  getDataDefault(funcID: string, entityName: string, idField: string) {
-    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+  //#region HR_EDiseases
+  loadDataEDisease(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'LoadDataEDiseaseAsync',
+      dataRequest
+    );
+  }
+
+  addEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'AddEDiseaseAsync',
+      [data]
+    );
+  }
+
+  editEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'EditEDiseaseAsync',
+      data
+    );
+  }
+
+  deleteEDisease(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EDiseasesBusiness',
+      'DeleteEDiseaseAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_Skills
+  loadDataSkill(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'LoadDataSkillAsync',
+      dataRequest
+    );
+  }
+
+  addSkill(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'AddSkillAsync',
+      [data]
+    );
+  }
+
+  editSkill(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'EditSkillAsync',
+      data
+    );
+  }
+
+  deleteSkill(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillsBusiness',
+      'DeleteSkillAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_SkillGrades
+  loadDataSkillGrade(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'LoadDataSkillGradeAsync',
+      dataRequest
+    );
+  }
+
+  addSkillGrade(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'AddSkillGradeAsync',
+      [data]
+    );
+  }
+
+  editSkillGrade(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'EditSkillGradeAsync',
+      data
+    );
+  }
+
+  deleteSkillGrade(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'DeleteSkillGradeAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region HR_ESkills
+  getViewSkillAsync(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'GetViewSkillAsync',
+      dataRequest
+    );
   }
   //#endregion
 }

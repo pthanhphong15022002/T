@@ -235,8 +235,15 @@
     <div class="d-flex me-6">
       <i class="icon-calendar_today icon-16 me-2"></i>
       <span class="ms-1 fw-bold">
-        <span *ngIf="data.dueDate" class="text-gray-700">{{
-          data.dueDate | date : "dd/MM/yyyy"
+        <span *ngIf="data.dueDate" class="text-gray-700" #dueDate>{{
+          data.dueDate
+            | formatvalue
+              : view.formModel
+              : "dueDate"
+              : dueDate
+              : "Tasks"
+              : "grvTasks"
+            | async
         }}</span>
         <span #dueDate *ngIf="!data.dueDate">{{
           data?.dueDate
@@ -433,8 +440,15 @@
         </codx-vll>
       </ng-container>
       <span>
-        <span class="fs-7 text-gray-600">{{
-          data.dueDate | date : "dd/MM/yyyy"
+        <span class="fs-7 text-gray-600" #dueDate>{{
+          data.dueDate
+            | formatvalue
+              : view.formModel
+              : "dueDate"
+              : dueDate
+              : "Tasks"
+              : "grvTasks"
+            | async
         }}</span>
       </span>
     </div>
@@ -536,8 +550,14 @@
               </codx-vll>
             </span>
             <span>
-              <span class="text-gray-700">{{
-                item.dueDate | date : "dd/MM/yyyy"
+              <span class="text-gray-700" #dueDate>{{
+                item.dueDate | formatvalue
+                : view.formModel
+                : "dueDate"
+                : dueDate
+                : "Tasks"
+                : "grvTasks"
+              | async
               }}</span>
             </span>
           </div>

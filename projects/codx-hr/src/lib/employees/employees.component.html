@@ -89,30 +89,30 @@
             </codx-vll>
           </div>
           <div class="text-gray-700">
-            <span #positionName>{{
+            <span >{{
               data.positionName
-              | formatvalue: view.formModel:"positionID":positionName
+              | formatvalue: view.formModel:"positionID"
               | async
               }}</span>
           </div>
 
           <div class="text-gray-700">
-            <span #organizationName>{{
-              data.organizationName
-              | formatvalue: view.formModel:"orgUnitID":organizationName
+            <span>{{
+              data.orgUnitName
+              | formatvalue: view.formModel:"orgUnitID"
               | async
               }}</span>
           </div>
 
-          <div class="text-gray-700">
-            <span #departmentName>{{
+          <div  class="text-gray-700">
+            <span *ngIf="data.departmentName">{{
               data.departmentName
-              | formatvalue: view.formModel:"departmentID":departmentName
+              | formatvalue: view.formModel:"departmentID"
               | async
               }}</span>
-            <span #divisionName>{{
+            <span *ngIf="data.divisionName">{{
               data.divisionName
-              | formatvalue: view.formModel:"divisionID":divisionName
+              | formatvalue: view.formModel:"divisionID"
               | async
               }}</span>
           </div>
