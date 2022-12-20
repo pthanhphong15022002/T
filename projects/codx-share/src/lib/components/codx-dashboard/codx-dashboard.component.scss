@@ -1,0 +1,14 @@
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.fade-in-text {
+  opacity: 1;
+	animation-name: fadeIn;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 2s;
+}
+.container-fluid{
+  padding: 0;
+}

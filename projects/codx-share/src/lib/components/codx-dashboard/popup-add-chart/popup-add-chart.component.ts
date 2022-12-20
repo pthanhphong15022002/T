@@ -12,7 +12,10 @@ import {
   ApiHttpService,
   DialogData,
   DialogRef,
+  CallFuncService,
+  DialogModel,
 } from 'codx-core';
+import { PopupMoreChartComponent } from '../popup-more-chart/popup-more-chart.component';
 
 @Component({
   selector: 'popup-add-chart',
@@ -23,6 +26,7 @@ export class PopupAddChartComponent implements OnInit {
   data!: any;
   dialog: any;
   @Input() chartFields: any = [];
+  series: any = [];
   chartSetting!: any;
   majorTickLineWidthX: any = 0;
   majorGridLineWidthX: any = 0;
@@ -140,17 +144,23 @@ export class PopupAddChartComponent implements OnInit {
   crosshairType: any = ['None','Both','Vertical','Horizontal']
   valuePlacement: any = [ 'Shift','None','Hide'];
   labelIntersectAction = ['Hide','MultipleRows','None','Rotate45','Rotate90','Trim'];
-  drawTypes:any=['Line','Spline','Area','StackingArea','Scatter','Column','StackingColumn','RangeColumn']
+  drawTypes:any=['Line','Spline','Area','StackingArea','Scatter','Column','StackingColumn','RangeColumn'];
   constructor(
-    private cd: ChangeDetectorRef,
-    private notiService: NotificationsService,
-    private api: ApiHttpService,
+    private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
     //this.dataID = dt?.data[];
     if (dt?.data) {
-      this.chartSetting = dt.data['serieSetting'];
+      if(Array.isArray(dt.data['serieSetting'])){
+        let series = JSON.parse(JSON.stringify(dt.data['serieSetting']))
+        this.chartSetting = series.pop();
+        this.series = series;
+      }
+      else{
+        this.chartSetting = dt.data['serieSetting'];
+      }
+
       // if(this.chartSetting && Object.keys(this.chartSetting).length >0 && !this.chartSetting.width){
       //   this.chartSetting.width = '2';
       // }
@@ -322,11 +332,10 @@ export class PopupAddChartComponent implements OnInit {
       this.chartFields.push(propSetting[prop]);
     }
 
-    this.onChange({ value: this.chartSetting.type });
+    //this.onChange({ value: this.chartSetting.type });
   }
 
   valueChange(evt: any) {
-    debugger
     this.chartSetting[evt.field] = evt.data;
     if (evt.data==undefined || evt.data == '') {
       delete this.chartSetting[evt.field];
@@ -508,8 +517,8 @@ export class PopupAddChartComponent implements OnInit {
   }
 
   tooltipChange(evt:any){
-    if(!this.border) this.border = {};
-    this.border[evt.field] == evt.data;
+    if(!this.tooltip) this.tooltip = {};
+    this.tooltip[evt.field] == evt.data;
   }
 
   crosshairLineWidth!:any;
@@ -624,14 +633,36 @@ export class PopupAddChartComponent implements OnInit {
         delete this.chartSetting[prop];
       }
     }
+    this.series.push(this.chartSetting);
     let chartSettings:any = {
-      serieSetting: this.chartSetting,
+      serieSetting: this.series,
       axisX: this.axisXmodel,
       axisY: this.axisYmodel,
       legendSetting: this.legendSetting,
     };
     if(this.crosshair) chartSettings.crosshair = {...this.crosshair};
     this.dialog && this.dialog.close(chartSettings);
+  }
+
+  moreChart(){
+    let option = new DialogModel();
+    let popupMoreChart = this.callfunc.openForm(PopupMoreChartComponent,'',500,800,'',{serieSetting:{border: this.border,marker: this.marker, ...this.chartSetting}},'',option);
+    popupMoreChart.closed.subscribe(res=>{
+      if(res.event && res.event.serieSetting){
+        this.series.push(res.event.serieSetting)
+      }
+    })
+  }
+
+  editChart(evt:any, index:any){
+    if(!evt) return;
+    let option = new DialogModel();
+    let popupMoreChart = this.callfunc.openForm(PopupMoreChartComponent,'',500,800,'',{serieSetting:{...evt}},'',option);
+    popupMoreChart.closed.subscribe(res=>{
+      if(res.event && res.event.serieSetting){
+        this.series[index] =  res.event.serieSetting;
+      }
+    })
   }
 
   getTypeOfValue(evt:any){
@@ -651,5 +682,12 @@ export class PopupAddChartComponent implements OnInit {
 
   isObject(evt:any){
     return typeof evt === 'object';
+  }
+  uppercaseFirstLetter(string:string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  lowercaseFirstLetter(string:string) {
+    return string.charAt(0).toLowerCase() + string.slice(1);
   }
 }

@@ -129,7 +129,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 6;
+  crrTab: number = 4;
 
   //EAsset salary
   lstAsset: any = [];
@@ -138,6 +138,8 @@ export class EmployeeProfileComponent extends UIComponent {
   crrEBSalary: any;
   lstEBSalary: any = [];
   listCrrBenefit: any;
+
+  lstESkill: any = [];
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -210,9 +212,6 @@ export class EmployeeProfileComponent extends UIComponent {
   ];
 
   onInit(): void {
-    var a = history.state;
-    console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', a);
-
     this.EExperienceColumnsGrid = [
       {
         field: 'fromDate',
@@ -448,6 +447,25 @@ export class EmployeeProfileComponent extends UIComponent {
           this.lstVaccine = res;
           //this.lstExperience = res;
         });
+
+        //HR_ESkills
+        let rqESkill = new DataRequest();
+        rqESkill.entityName = 'HR_ESkills';
+        rqESkill.dataValues = params.employeeID;
+        rqESkill.predicates = 'EmployeeID=@0';
+        rqESkill.page = 1;
+        rqESkill.pageSize = 20;
+        this.hrService
+          .GetListSkillByDataRequestAsync(rqESkill)
+          .subscribe((res) => {
+            console.log('e Skill', res);
+
+            if (res) {
+              this.lstESkill = res;
+            }
+            //this.lstSkill = res;
+            //this.lstExperience = res;
+          });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -1655,4 +1673,12 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
   //#endregion
+
+  addSkill() {
+    this.hrService.addSkill(null).subscribe();
+  }
+
+  addSkillGrade() {
+    this.hrService.addSkillGrade(null).subscribe();
+  }
 }
