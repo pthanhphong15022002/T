@@ -45,4 +45,5 @@ export class highLightTextArea {
     pageNumber: number;
   };
   color: string;
+  isAdded: boolean;
 }
