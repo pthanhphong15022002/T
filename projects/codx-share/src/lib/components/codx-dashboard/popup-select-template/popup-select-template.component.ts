@@ -1,21 +1,24 @@
-import { ChangeDetectorRef, Component, OnInit, Optional } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Optional, Output, SimpleChanges, TemplateRef, ViewChild } from "@angular/core";
 import { ApiHttpService, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, SidebarModel } from "codx-core";
 import { of } from "rxjs";
 import { PopupAddChartComponent } from "../popup-add-chart/popup-add-chart.component";
 
 @Component({
-  selector: 'popup-select-template',
+  selector: 'select-template',
   templateUrl: 'popup-select-template.component.html',
   styleUrls: ['popup-select-template.component.scss']
 })
-export class PopupSelectTemplateComponent implements OnInit {
+export class PopupSelectTemplateComponent implements OnInit,AfterViewInit,OnChanges {
 
   dialog: any;
-  queryList!: any;
-  listTemplate: any = [];
+  @Input() queryList!: any;
+  @Input() listTemplate: any = [];
+  @Input() isPopupMode: boolean = true;
   value!:any;
-  panelID!: any;
-  chartType!: any;
+  @Input() panelID!: any;
+  @Input() chartType!: any;
+  @Output() add = new EventEmitter<any>();
+  @ViewChild('body') body! : TemplateRef<any>;
  fields: Object = { text: 'text', value: 'value' };
  chartTypes: any = [
   { text: 'Line', value: 'Line', iconCss:'icon-timeline' },
@@ -56,19 +59,20 @@ export class PopupSelectTemplateComponent implements OnInit {
   { text: 'Funnel', value: 'Funnel' ,iconCss:'icon-i-funnel-fill'},
 ];
 parentScope!: any;
+randomKey!: any;
 dragPosition:any= {x: 0, y: 0};
   constructor(
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
-    if(dt?.data){
+    if(dt?.data && dt?.data.length >2){
       this.queryList = dt?.data[0];
       this.panelID = dt?.data[1];
       this.parentScope = dt?.data[2];
       if(this.queryList){
         let i=0;
-        this.queryList.forEach((item:any)=>{
+        this.queryList?.forEach((item:any)=>{
           let ele = item.createEmbeddedView();
           let obj = {value: i, text: ''}
           obj.text = ele.rootNodes[0].title ? ele.rootNodes[0].title : ele.rootNodes[0].id;
@@ -80,12 +84,38 @@ dragPosition:any= {x: 0, y: 0};
     }
     let ins = setInterval(()=>{
       let eleOverLay = Array.from(document.getElementsByClassName('e-dlg-overlay')).pop();
-      if(eleOverLay){
+      if(eleOverLay && this.isPopupMode){
         clearInterval(ins);
         (eleOverLay as HTMLElement).style.zIndex = '9998';
       }
+      else if(!this.isPopupMode) clearInterval(ins);
     },100)
     this.dialog = dialog;
+    this.randomKey = Math.random();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['queryList']){
+      if(this.queryList){
+        let i=0;
+        this.queryList?.forEach((item:any)=>{
+          let ele = item.createEmbeddedView();
+          let obj = {value: i, text: ''}
+          obj.text = ele.rootNodes[0].title ? ele.rootNodes[0].title : ele.rootNodes[0].id;
+          this.listTemplate.push(obj);
+          i++;
+        });
+        this.listTemplate = JSON.parse(JSON.stringify(this.listTemplate));
+      }
+    }
+  }
+  ngAfterViewInit(): void {
+    if(!this.isPopupMode){
+      let ele = document.getElementById('selectTemplate'+this.randomKey);
+      if(ele){
+        ele.getElementsByClassName('icon-close')[0].parentElement?.classList.add('d-none');
+        (ele.firstChild as HTMLElement).setAttribute('style','border: 5px solid #ddd !important')
+      }
+    }
   }
   ngOnInit(): void {
 
@@ -93,12 +123,18 @@ dragPosition:any= {x: 0, y: 0};
 
 
   saveForm(){
-    if(this.value){
-      this.dialog.close({data:this.value, type:'template'});
+    if(this.isPopupMode){
+      if(this.value){
+        this.dialog.close({data:this.value, type:'template'});
+      }
+      else{
+        this.dialog.close({data: undefined, type:this.chartType});
+      }
     }
     else{
-      this.dialog.close({data: undefined, type:this.chartType});
+      this.add.emit({data: undefined, type:this.chartType});
     }
+
 
   }
   addChart(){
@@ -151,6 +187,9 @@ dragPosition:any= {x: 0, y: 0};
     if(( evt.distance.x < 0 && evt.dropPoint.x < parentPos.left ) || (evt.dropPoint.x >= parentPos.right -20 && evt.distance.x > 0)){
       if(this.parentScope){
       this.parentScope.addPanel(true,data.value,undefined);
+    }
+    else{
+      this.add.emit({data: data.value})
     }
     }
 
