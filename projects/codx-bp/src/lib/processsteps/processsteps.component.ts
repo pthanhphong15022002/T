@@ -961,7 +961,7 @@ export class ProcessStepsComponent
             ) {
               let crr = event.currentIndex;
               let pre = event.previousIndex;
-              let arrCl = this.kanban.columns;
+              let arrCl = JSON.parse(JSON.stringify(this.kanban.columns));// ko bi luu ngươc
               let temp = arrCl[pre];
               if (crr > pre) {
                 for (var i = pre; i < crr; i++) {
@@ -974,8 +974,7 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl ;
-              this.kanban.changeDataSource(this.kanban.columns);
+              this.kanban.changeDataSource(arrCl);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
