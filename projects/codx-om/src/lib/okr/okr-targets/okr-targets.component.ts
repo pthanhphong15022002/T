@@ -179,17 +179,17 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   // Thêm/sửa  KR
-  addKR(o: any) {
-    let option = new SidebarModel();
-    option.Width = '550px';
-    option.FormModel = this.formModel;
+  // addKR(o: any) {
+  //   let option = new SidebarModel();
+  //   option.Width = '550px';
+  //   option.FormModel = this.formModel;
 
-    let dialogKR = this.callfunc.openSide(
-      PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
-      option
-    );
-  }
+  //   let dialogKR = this.callfunc.openSide(
+  //     PopupAddKRComponent,
+  //     [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.dataOKRPlans],
+  //     option
+  //   );
+  // }
 
   editKR(kr: any, o: any, popupTitle: any) {
     let option = new SidebarModel();
@@ -198,7 +198,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [kr, o, this.formModelKR, false, popupTitle],
+      [kr, o, this.formModelKR, false, popupTitle, this.dataOKRPlans],
       option
     );
   }
