@@ -806,16 +806,17 @@ export class ProcessesComponent
               res.isblur = true;
             }
             break;
+          case 'SYS04':
+            if(data.deleted){
+              res.disabled = true;
+            }
+            break;
           case 'SYS003': // them phien ban
             let isCreate = data?.permissions.some(
               (x) => x.objectID == checkGroup && x.create
             );
             if ((!isCreate && !fullRole) || data.deleted) {
-              if (res.functionID === 'SYS04') {
-                res.disabled = true;
-              } else {
-                res.isblur = true;
-              }
+              res.isblur = true;
             }
             break;
           case 'SYS03': //sua
@@ -928,8 +929,7 @@ export class ProcessesComponent
                   if (res) return true;
                   else return false;
                 });
-              if (isRole)
-                isCheck = res.objectID;
+              if (isRole) isCheck = res.objectID;
               break;
             //Mai sửa lại
             case '2':

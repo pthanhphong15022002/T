@@ -424,7 +424,7 @@ export class PopupAddProcessesComponent implements OnInit {
     tmpPermission.share = true;
     tmpPermission.full = true;
     tmpPermission.delete = true;
-    tmpPermission.assign = true;
+    tmpPermission.allowPermit = true;
     tmpPermission.download = true;
   }
   callActionSave() {

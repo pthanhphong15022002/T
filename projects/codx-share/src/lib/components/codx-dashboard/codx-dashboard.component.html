@@ -39,10 +39,8 @@
       [primaryXAxis]="primaryXAxis"
       [primaryYAxis]="primaryYAxis"
       [seriesSetting]="seriesSetting"
-      [assemblyName]="assembly"
-      [service]="service"
-      [className]="className"
-      [method]="method"
+      [dataSource]="dataSource"
+      [title]="title"
     ></codx-chart>
   </div>
 </ng-template>
@@ -304,7 +302,7 @@
           [border]="borderSplineArea"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="dataSplineArea"
           type="SplineArea"
           xName="Period"
@@ -315,7 +313,7 @@
           width="2"
           [border]="borderSplineArea"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -748,7 +746,7 @@
           columnWidth="0.5"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="dataStackingColumn100"
           type="StackingColumn100"
           xName="Year"
@@ -758,7 +756,7 @@
           [border]="borderArea"
           columnWidth="0.5"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -818,7 +816,7 @@
           [border]="borderArea"
         >
         </e-series>
-        <e-series
+        <!-- <e-series
           [dataSource]="dataStackingBar"
           type="StackingBar"
           xName="Month"
@@ -828,7 +826,7 @@
           columnWidth="0.6"
           [border]="borderArea"
         >
-        </e-series>
+        </e-series> -->
       </e-series-collection>
     </ejs-chart>
   </div>
@@ -1083,11 +1081,11 @@
           xName="Browser"
           yName="Users"
           [startAngle]="startAngle"
-          innerRadius="0%"
+          innerRadius="80%"
           radius="60%"
           [explode]="explode"
           explodeOffset="10%"
-          [explodeIndex]="0"
+          [explodeIndex]="1"
         >
         </e-accumulation-series>
       </e-accumulation-series-collection>
