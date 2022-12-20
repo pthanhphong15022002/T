@@ -164,7 +164,6 @@ export class ProcessStepsComponent
   //   this.chgViewModel(this.viewMode);
   //   this.changeDetectorRef.detectChanges()
   // }
-  
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -336,7 +335,7 @@ export class ProcessStepsComponent
               else {
                 this.kanban.columns = [];
                 this.kanban.columns.push(column);
-                this.kanban.refresh();
+                this.kanban.changeDataSource(this.kanban.columns);
               }
             }
 
@@ -975,8 +974,8 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl;
-              this.kanban.refresh();
+              this.kanban.columns = arrCl ;
+              this.kanban.changeDataSource(this.kanban.columns);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -1326,5 +1325,9 @@ export class ProcessStepsComponent
         this.clickMF(e, dt);
       }
     });
+  }
+
+  viewDetailSurveys(link) {
+    if (link) window.open(link);
   }
 }
