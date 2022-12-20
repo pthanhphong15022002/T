@@ -7,24 +7,17 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
-import { TreeViewComponent } from '@syncfusion/ej2-angular-navigations';
+import { ConsoleLogger } from '@microsoft/signalr/dist/esm/Utils';
 import {
   ButtonModel,
   CodxFormDynamicComponent,
   CodxTreeviewComponent,
   CRUDService,
-  FormatvaluePipe,
-  FormModel,
   SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
 } from 'codx-core';
-import { map, Observable, of } from 'rxjs';
-import { CodxHrService } from '../codx-hr.service';
-import { PopupAddOrganizationComponent } from './popup-add-organization/popup-add-organization.component';
-
 @Component({
   selector: 'lib-organization',
   templateUrl: './organization.component.html',
@@ -37,37 +30,30 @@ export class OrgorganizationComponent extends UIComponent {
   orgUnitID: string = '';
   parentID: string = '';
   detailComponent: any;
-  dataDetail: any = new Array();
+  dataSource: any[] = [];
   dataCard: any = new Array();
   treeComponent?: CodxTreeviewComponent;
   currentView: any;
   currView?: TemplateRef<any>;
-  numberLV: string = '3';
-  onlyDepartment?: boolean = false;
-  formModelEmployee: FormModel = {
-    formName: 'Employees',
-    gridViewName: 'grvEmployees',
-  };
-  setupEmp?: any;
   start = '<span class="opacity-50">';
   end = '</span>';
-  funcID: string = "";
-  codxTreeView:CodxTreeviewComponent= null;
+  funcID: string = '';
+  codxTreeView: CodxTreeviewComponent = null;
+  dataService:CRUDService = null;
+  templateActive:number = 0
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
   @ViewChild('tmpList') tmpList: TemplateRef<any>;
   @ViewChild('tmpMasterDetail') tmpMasterDetail: TemplateRef<any>;
 
-  constructor(private inject: Injector) 
-  {
+  constructor(private inject: Injector) {
     super(inject);
   }
 
   onInit(): void {
     this.router.params.subscribe((params) => {
-      if (params['funcID']) 
-      {
+      if (params['funcID']) {
         this.funcID = params['funcID'];
         if (!this.funcID.includes('WP')) {
           this.button = {
@@ -76,6 +62,14 @@ export class OrgorganizationComponent extends UIComponent {
         }
       }
     });
+    this.dataService = new CRUDService(this.inject);
+    this.dataService.service = "HR";
+    this.dataService.assemblyName = "ERM.Business.HR";
+    this.dataService.className = "OrganizationUnitsBusiness";
+    this.dataService.method = "GetOrgAsync";
+    this.dataService.idField = "OrgUnitID";
+    this.dataService.request.entityName = "HR_OrganizationUnits";
+    this.detectorRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -90,25 +84,24 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.tempTree,
           panelRightRef: this.panelRightLef,
           template2: this.tmpOrgChart,
-          resourceModel: { parentIDField: 'ParentID' }
-
+          resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
-        id: '2',
+        id: '1',
         type: ViewType.tree_list,
         sameData: true,
-        active: true,
+        active: false,
         model: {
           resizable: true,
           template: this.tempTree,
           panelRightRef: this.panelRightLef,
           template2: this.tmpList,
-          resourceModel: { parentIDField: 'ParentID' }
+          resourceModel: { parentIDField: 'ParentID' },
         },
       },
       {
-        id: '3',
+        id: '2',
         type: ViewType.tree_masterdetail,
         sameData: true,
         active: false,
@@ -117,8 +110,8 @@ export class OrgorganizationComponent extends UIComponent {
           template: this.tempTree,
           panelRightRef: this.panelRightLef,
           template2: this.tmpMasterDetail,
-        }
-      }
+        },
+      },
     ];
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
@@ -126,36 +119,36 @@ export class OrgorganizationComponent extends UIComponent {
   // change view
   changeView(evt: any) {
     this.currView = null;
-    if (evt.view) {
+    if (evt.view) 
+    {
+      this.templateActive = evt.view.type;
       this.currView = evt.view.model.template2;
     }
+    this.detectorRef.detectChanges();
   }
   // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;
-    if (data && this.orgUnitID != data.orgUnitID) {
+    if (data && this.orgUnitID !== data.orgUnitID) 
+    {
       this.orgUnitID = data.orgUnitID;
-      this.parentID = data.parentID;
       this.detectorRef.detectChanges();
     }
   }
   // button add toolbar
   btnClick(e) {
-    if (this.view) 
-    {
+    if (this.view) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
-      let currentView:any = this.view.currentView;
-      if(currentView)
-      {
+      let currentView: any = this.view.currentView;
+      if (currentView) {
         this.codxTreeView = currentView.currentComponent?.treeView;
       }
-      this.view.dataService.addNew()
-      .subscribe((result: any) => {
+      this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
-          result.parentID = this.view.dataService.dataSelected.orgUnitID;
+          //result.parentID = this.view.dataService.dataSelected.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -174,5 +167,19 @@ export class OrgorganizationComponent extends UIComponent {
       });
     }
   }
-  loadEmployList(e, orgid, status) {}
+
+  // get data master detail
+  data:any[] = [];
+  getDataMasterDetail(orgUnitID:string){
+    this.api.execSv(
+      "HR",
+      "ERM.Business.HR",
+      "OrganizationUnitsBusiness",
+      "GetEmployeesMasterDetailAsync",
+      [orgUnitID])
+      .subscribe((res:any) => {
+        debugger
+        this.data= res[0];
+      });
+  }
 }

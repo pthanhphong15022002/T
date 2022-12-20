@@ -166,7 +166,7 @@ export class FileService implements OnDestroy {
         return this.api.exec<any>("DM", "FileBussiness", "RenameFileAsync", [id, fileName]);
     }
 
-    addMultiFileObservable(list: FileUpload[] , isDM: boolean = false , folderID: string = "" , folderName: string = "" , parentID:string= "" , idField:string = ""): Observable<DataReturn[] | null> {
+    addMultiFileObservable(list: FileUpload[] , isDM: boolean = false  , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string= "" , idField:string = ""): Observable<DataReturn[] | null> {
         let data = JSON.stringify(list);
         return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM,folderID,folderName,parentID,idField]).pipe(
             map(data => {
@@ -179,8 +179,8 @@ export class FileService implements OnDestroy {
         );
     }
 
-    addMultiFile(list: FileUpload[] , isDM: boolean = false , folderID: string = "" , folderName: string = "", parentID:string= "" , idField:string = ""): Observable<DataReturn[]> {
-        //var bytes = new Int8Array(data as ArrayBuffer); 
+    addMultiFile(list: FileUpload[] , isDM: boolean = false ,  folder:object = null , folderID: string = "" , folderName: string = "", parentID:string= "" , idField:string = "" ): Observable<DataReturn[]> {
+        //var bytes = new Int8Array(data as ArrayBuffer);
         //  var item = this.arrayBufferToBase64(data);
         let data = JSON.stringify(list);
         return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folderID , folderName,parentID,idField]);
@@ -229,14 +229,14 @@ export class FileService implements OnDestroy {
     }
 
     //Observable<any>
-    addFile(file: FileUpload , isDM : boolean = false , folderID: string = "" , folderName: string = "" , parentID:string = ""  , idField:string = ""): Observable<any> {
+    addFile(file: FileUpload , isDM : boolean = false , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string = ""  , idField:string = ""): Observable<any> {
         //  var bytes = new Int8Array(data as ArrayBuffer); 
         //  var item = this.arrayBufferToBase64(data);        
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folderID , folderName,parentID,idField]);
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField]);
     }
 
-    addFileObservable(file: FileUpload, isDM:boolean = false , folderID: string = "" , folderName: string = "", parentID:string = "" , idField:string = ""): Observable<any> {
-        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folderID , folderName,parentID,idField]).pipe(
+    addFileObservable(file: FileUpload, isDM:boolean = false , folder:object = null , folderID: string = "" , folderName: string = "", parentID:string = "" , idField:string = ""): Observable<any> {
+        return this.api.execSv<DataReturn>("DM", "DM", "FileBussiness", "AddFileAsync", [file,isDM , folder , folderID , folderName,parentID,idField]).pipe(
             map(data => {
                 return data;                
             }),

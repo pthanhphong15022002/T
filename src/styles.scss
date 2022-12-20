@@ -1381,7 +1381,6 @@ codx-processsteps .e-card-wrapper {
   overflow: auto;
 }
 
-.dropdown-item:hover span,
 .dropdown-item:focus span {
   color: white !important;
 }
@@ -1477,4 +1476,17 @@ codx-tag {
 .w-480px.h-480px img {
   width: 480px !important;
   height: auto;
+}
+
+.btn.btn-transparent {
+  background-color: transparent !important;
+}
+
+/*** van lich **/
+ejs-schedule .e-schedule-toolbar-container .e-control.e-popup-open {
+  max-width: 300px;
+}
+
+.e-datepicker.e-popup-open {
+  max-width: 300px;
 }

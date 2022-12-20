@@ -105,7 +105,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         "SYS", 
         "ERM.Business.AD",
         "AutoNumbersBusiness",
-        "GenAutoNumberAsync", // hòa kêu note lại
+        "GenAutoNumberAsync", 
         [funcID, entityName, fieldName, null])
         .subscribe((res:any) =>{
           if(res)
@@ -186,43 +186,29 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
   addEmployeeAsync(employee:any){
     if(employee){
-      this.api.execSv(
-        "HR",
-        "ERM.Business.HR",
-        "EmployeesBusiness",
-        "UpdateEmployeeAsync",[employee])
-        .subscribe((res:any) => {
-        if(res){
-          this.dialogRef.close(res);
-        }
-      })
+      this.api
+        .execAction<boolean>(
+         "HR_Employees",
+          [employee],
+          'SaveAsync')
+          .subscribe((res:any) =>{
+            if(!res?.error){
+              this.dialogRef.close(res.data);
+            }
+            else
+            {
+              this.notifiSV.notifyCode("SYS023");
+              this.dialogRef.close(null);
+            }
+        });
     }
   }
 
-  valueChange(event:any){
-    console.log(event);
-  }
   dataChange(e: any) {
     if(e)
     {
       this.employee[e.field] = e.data;
     }
   }
-  getDataFromPositionID(dataSelected:any){
-    if(!dataSelected) return;
-    dataSelected.map((e:any) => {
-      console.log(e);
-      this.employee["organizationID"] = e.OrgUnitID;
-      this.employee["departmentID"] = e.DepartmentID;
-      this.detectorRef.detectChanges();
-    });
-  }
-  changeTime(data) {
-    if (!data.field || !data.data) return;
-    this.employee[data.field] = data.data?.fromDate;
-  }
 
-  buttonClick(e: any) {
-    console.log(e);
-  }
 }

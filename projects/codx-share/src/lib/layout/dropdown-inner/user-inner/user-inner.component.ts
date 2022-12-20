@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -21,6 +22,7 @@ import {
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'codx-user-inner',
@@ -54,7 +56,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private cache: CacheService,
     private api: ApiHttpService,
     private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private element: ElementRef
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) this.functionList = res;
@@ -83,7 +86,6 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     //Nguyên thêm để refresh avatar khi change
     this.codxShareSV.dataRefreshImage.subscribe((res) => {
       if (res) {
-        debugger
         this.user['modifiedOn'] = res?.modifiedOn;
         this.change.detectChanges();
       }
@@ -157,10 +159,19 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    return;
+    //Remove Old
+    let elm = environment.themeMode=="body"? document.body: this.element.nativeElement.closest('.codx-theme');
+    if(this.theme && elm){
+      elm.classList.remove(this.theme.id);
+    }
+
     this.themes.forEach((theme: ThemeFlag) => {
       if (theme.id === value) {
         theme.active = true;
         this.theme = theme;
+
+        elm.classList.add(this.theme.id);
       } else {
         theme.active = false;
       }
@@ -169,6 +180,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
+    let modifiedOn = new Date();
+    var obj = { modifiedOn: modifiedOn };
+    this.codxShareSV.dataRefreshImage.next(obj);
   }
 
   clearCache() {

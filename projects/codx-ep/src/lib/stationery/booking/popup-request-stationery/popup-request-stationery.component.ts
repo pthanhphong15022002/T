@@ -175,7 +175,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
         );
         if (this.data) {
           if (this.isAddNew) {
-            this.dialogAddBookingStationery.patchValue({
+            this.dialogAddBookingStationery.patchValue({        
+              reasonID: '',
               resourceType: '6',
               category: '1',
               status: '1',

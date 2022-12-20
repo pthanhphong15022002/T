@@ -26,7 +26,6 @@ export class ViewFlowchartComponent
 {
   @Input() dataFile: any;
   heightFlowChart = 600;
-  data: any;
   linkFile: any;
   isShow = true;
    
@@ -37,18 +36,16 @@ export class ViewFlowchartComponent
   //   wheelZoomFactor: 1,
   // };
   constructor(
-    private fileService: FileService,
-    private notificationsService: NotificationsService,
     private changeRef: ChangeDetectorRef
   ) {}
   ngOnChanges(changes: SimpleChanges): void {
     if (this.dataFile) {
-      this.data = this.dataFile;
-      this.linkFile = environment.urlUpload + '/' + this.data?.pathDisk;
+      this.linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
       this.changeRef.detectChanges();
     }
   }
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
     let viewContent = document.getElementById('view-detail-processstep');

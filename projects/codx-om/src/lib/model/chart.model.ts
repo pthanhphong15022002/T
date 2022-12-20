@@ -15,3 +15,6 @@ export class ChartSettings {
   className?: string;
   method?: string;
 }
+
+
+// export class 

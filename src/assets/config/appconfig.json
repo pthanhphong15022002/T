@@ -1,5 +1,5 @@
 {
-  "apiUrl": "http://172.16.7.34:8011",
+  "apiUrl": "http://localhost:8011",
   "reportUrl": "http://172.16.7.34:4203/report",
   "shopping": "https://172.16.7.34:44317/Shopping",
   "urlUpload": "http://localhost:8011/lvfile",
@@ -7,6 +7,7 @@
   "office365": "",
   "saas": 1,
   "layoutCZ": "qtsc",
+  "themeMode": "body",
   "SureMeet": {
     "baseUrl": "https://api.suremeet.vn/",
     "tokenUrl": "api/auth/token",
@@ -27,4 +28,3 @@
     "measurementId": "G-HH40VHYRF0"
   }
 }
-  

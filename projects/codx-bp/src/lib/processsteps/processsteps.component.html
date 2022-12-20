@@ -122,21 +122,10 @@
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <!-- <div class="check-list text-dark" #reference>
-              {{
-                item.reference
-                  | formatvalue
-                    : view?.formModel
-                    : "reference"
-                    : reference
-                    : "BPQuestionnaires"
-                    : "grvBPQuestionnaires"
-                  | async
-              }}
-            </div> -->
-            <div
+            <div class="cursor-pointer text-hover-primary"
               *ngIf="item.reference"
               [innerHtml]="viewQuestion(item.reference)"
+              (click)="viewDetailSurveys(viewQuestion(item.reference))"
             ></div>
           </ng-container>
         </ng-container>
@@ -450,9 +439,7 @@
         data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
       }}"
       #p="ngbPopover"
-      [ngbPopover]="
-        setWidth(data?.stepName) ? showAllparent(data?.stepName) : null
-      "
+      [ngbPopover]="setWidth(data?.stepName) ? data?.stepName : null"
       [openDelay]="500"
       (mouseenter)="p.open()"
       (mouseleave)="p.close()"
@@ -755,25 +742,31 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div class="d-flex align-items-center justify-content-between w-100">
-    <div class="cursor-pointer">{{ data.headerText }}</div>
-    <div class="icon-more_vert icon-18 has-actions-menu" (click)="clickColums(data?.keyField)">
-      <div class="action-menu">
-        <codx-mfunc
-          type="hover"
-          [formModel]="view.formModel"
-          (clickMF)="clickMF($event,dataClick)"
-          [isBookMark]="true"
-          [dataItem]="dataClick"
-        >
-        </codx-mfunc>
-      </div>
+  <div
+    class="d-flex align-items-center justify-content-between cursor-pointer w-100"
+  >
+    <div
+      class="line-colums"
+      #pp="ngbPopover"
+      [ngbPopover]="tesst"
+      (mouseenter)="pp.open()"
+      (mouseleave)="pp.close()"
+      placement="bottom"
+    >
+      {{ data.headerText }}
     </div>
   </div>
+  <div class="icon-more_vert icon-18 has-actions-menu">
+    <div class="action-menu">
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMFColums($event, data.keyField)"
+        [isBookMark]="true"
+      >
+      </codx-mfunc>
+    </div>
+  </div>
+  <ng-template #tesst
+    ><span>{{ data.headerText }}</span></ng-template
+  >
 </ng-template>
-
-<!-- <ng-template #templateView>
-  <ng-container *ngIf="idView=='16'" [ngTemplateOutlet]="itemViewList"></ng-container>
-  
-  <ng-container *ngIf="idView=='9'" [ngTemplateOutlet]="flowChart"></ng-container>
-</ng-template> -->

@@ -160,6 +160,10 @@ export class ProcessStepsComponent
       }
     });
   }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.chgViewModel(this.viewMode);
+  //   this.changeDetectorRef.detectChanges()
+  // }
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -263,7 +267,7 @@ export class ProcessStepsComponent
   chgViewModel(type) {
     // this.idView = type ;
     let view = this.views.find((x) => x.id == type);
-    if (view) this.view.viewChange(view);
+    if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -331,7 +335,7 @@ export class ProcessStepsComponent
               else {
                 this.kanban.columns = [];
                 this.kanban.columns.push(column);
-                this.kanban.refresh();
+                this.kanban.changeDataSource(this.kanban.columns);
               }
             }
 
@@ -875,7 +879,9 @@ export class ProcessStepsComponent
     if (e?.view.id == 6) {
       this.isKanban = true;
       this.widthElement =
-        document.getElementsByClassName(' e-header-cells').item[0].offsetHeight;
+        document.getElementsByClassName(
+          '.e-header-cells'
+        )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
       this.changeDetectorRef.detectChanges();
@@ -968,8 +974,8 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl;
-              this.kanban.refresh();
+              this.kanban.columns = arrCl ;
+              this.kanban.changeDataSource(this.kanban.columns);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -1147,26 +1153,6 @@ export class ProcessStepsComponent
   }
 
   getFlowChart(process) {
-    // let paras = [
-    //   '',
-    //   this.funcID,
-    //   process?.recID,
-    //   'BP_Processes',
-    //   'inline',
-    //   1000,
-    //   process?.processName,
-    //   'Flowchart',
-    //   false,
-    // ];
-    // this.api
-    //   .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
-    //   .subscribe((res) => {
-    //     if (res && res?.url) {
-    //       let obj = { pathDisk: res?.url, fileName: process?.processName };
-    //       this.dataFile = obj;
-    //       this.changeDetectorRef.detectChanges();
-    //     }
-    //   });
     let paras = [process?.recID, 'BP_Processes', 'Flowchart'];
     this.api
       .execSv<any>('DM', 'DM', 'FileBussiness', 'GetFileByOORAsync', paras)
@@ -1225,11 +1211,11 @@ export class ProcessStepsComponent
   }
 
   printFlowchart() {
-    let linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
-    if (linkFile) {
+    this.linkFile = environment.urlUpload + '/' + this.dataFile?.pathDisk;
+    if (this.linkFile) {
       const output = document.getElementById('output');
       const img = document.createElement('img');
-      img.src = linkFile;
+      img.src = this.linkFile;
       output.appendChild(img);
       const br = document.createElement('br');
       output.appendChild(br);
@@ -1326,14 +1312,22 @@ export class ProcessStepsComponent
   setWidthTextColumm(text) {
     return this.widthElement < text.length * 3;
   }
-//chuwa xong
-  clickColums(recIDPhase) {
-    this.dataClick = null;
+  //chuwa xong
+  dataColums(recIDPhase): any {
     this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
+      return dt;
+    });
+  }
+
+  clickMFColums(e, recID) {
+    this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
       if (dt) {
-        this.dataClick = dt;
-        this.changeDetectorRef.detectChanges();
+        this.clickMF(e, dt);
       }
     });
+  }
+
+  viewDetailSurveys(link) {
+    if (link) window.open(link);
   }
 }
