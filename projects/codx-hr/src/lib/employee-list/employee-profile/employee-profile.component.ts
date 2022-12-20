@@ -456,7 +456,7 @@ export class EmployeeProfileComponent extends UIComponent {
         rqESkill.page = 1;
         rqESkill.pageSize = 20;
         this.hrService
-          .GetListSkillByDataRequestAsync(rqESkill)
+          .getViewSkillAsync(rqESkill)
           .subscribe((res) => {
             console.log('e Skill', res);
 
