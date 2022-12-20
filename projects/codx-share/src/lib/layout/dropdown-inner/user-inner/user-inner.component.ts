@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -21,6 +22,7 @@ import {
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'codx-user-inner',
@@ -54,7 +56,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private cache: CacheService,
     private api: ApiHttpService,
     private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private element: ElementRef
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) this.functionList = res;
@@ -157,10 +160,18 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    //Remove Old
+    let elm = environment.themeMode=="body"? document.body: this.element.nativeElement.closest('.codx-theme');
+    if(this.theme && elm){
+      elm.classList.remove(this.theme.id);
+    }
+
     this.themes.forEach((theme: ThemeFlag) => {
       if (theme.id === value) {
         theme.active = true;
         this.theme = theme;
+
+        elm.classList.add(this.theme.id);
       } else {
         theme.active = false;
       }
