@@ -3715,14 +3715,14 @@
                           class="border rounded min-w-250px mw-250px me-4 mb-2"
                         >
                           <codx-temp-full
-                              (clickMF)="clickMF($event, item, 'eDegrees')"
-                              [formModel]="formModel"
-                              [typeMF]="'hover'"
-                              [titleTmp] = "titleTemplate"
-                              [subTitleTmp]="tmplateEDegreesMenuList"
-                              cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-                              typeMF="hover"
-                              [dataItem]="item"
+                            (clickMF)="clickMF($event, item, 'eDegrees')"
+                            [formModel]="formModel"
+                            [typeMF]="'hover'"
+                            [titleTmp]="titleTemplate"
+                            [subTitleTmp]="tmplateEDegreesMenuList"
+                            cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+                            typeMF="hover"
+                            [dataItem]="item"
                           ></codx-temp-full>
                           <ng-template #tmplateEDegreesMenuList let-data>
                             <div class="d-flex flex-column">

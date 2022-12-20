@@ -169,7 +169,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   avatarChanged(data: any) {
     this.onAvatarChanged.emit(data);
     let modifiedOn = new Date();
-    this.codxShareSV.dataRefreshImage.next(modifiedOn);
+    var obj = { modifiedOn: modifiedOn };
+    this.codxShareSV.dataRefreshImage.next(obj);
   }
 
   clearCache() {
