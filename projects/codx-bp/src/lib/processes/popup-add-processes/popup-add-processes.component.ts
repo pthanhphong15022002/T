@@ -24,7 +24,6 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
 import { tmpUser } from '../../models/BP_UserPermission.model';
-
 @Component({
   selector: 'lib-popup-add-processes',
   templateUrl: './popup-add-processes.component.html',
@@ -73,6 +72,12 @@ export class PopupAddProcessesComponent implements OnInit {
   emp: tmpUser;
   onwerRole: string = 'onwer';
   userRole: string = 'user';
+  folderID: string =''; // Id of versionNo
+  folderName: string =''; // versionNo
+  parentID: string =''; // Id of proccess
+  moreFunctionCopy: string = 'copy';
+  moreFunctionAdd: string = 'add';
+  moreFunctionEdit: string = 'edit';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -120,13 +125,19 @@ export class PopupAddProcessesComponent implements OnInit {
     this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
     this.nameOld = this.process.processName;
-    if (this.action != 'add') this.getAvatar(this.process);
+    if (this.action != this.moreFunctionAdd) this.getAvatar(this.process);
+    //test gán cứng
+    // if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
+    //   this.folderName ='V0.0';
+      // this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
+      // this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
+ //   }
   }
 
   ngOnInit(): void {
     this.acceptEdit();
     this.isDisable = true;
-    if (this.action === 'edit') {
+    if (this.action === this.moreFunctionEdit) {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
     }
   }
@@ -134,19 +145,19 @@ export class PopupAddProcessesComponent implements OnInit {
   //#region method
   beforeSave(op) {
     var data = [];
-    if (this.action == 'add' || this.action == 'copy') {
+    if (this.action == this.moreFunctionAdd || this.action == this.moreFunctionCopy) {
       op.method = 'AddProcessesAsync';
       op.className = 'ProcessesBusiness';
 
       var versions = new BP_ProcessRevisions();
-      this.process.versionNo = 'V0.0';
+      this.process.versionNo = this.folderName;
       versions.versionNo = this.process.versionNo;
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
-      this.process.phases = this.action == 'copy' ? this.phasesOld : 0;
-      this.process.activities = this.action == 'copy' ? this.ActivitiesOld : 0;
-      if (this.action == 'copy') {
+      this.process.phases = this.action == this.moreFunctionCopy ? this.phasesOld : 0;
+      this.process.activities = this.action == this.moreFunctionCopy ? this.ActivitiesOld : 0;
+      if (this.action == this.moreFunctionCopy) {
         this.process.attachments = this.isCoppyFile
           ? this.process.attachments > 0
             ? this.process.attachments + this.AttachmentsOld
@@ -156,7 +167,10 @@ export class PopupAddProcessesComponent implements OnInit {
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-
+      // if(this.action ===this.moreFunctionAdd){
+      //   this.process.recID = this.parentID;
+      //   this.process.versions[0].recID = this.folderID;
+      // }
       data = [
         this.process,
         this.isCoppyKeyValue ?? '',
@@ -164,7 +178,7 @@ export class PopupAddProcessesComponent implements OnInit {
         this.funcID,
         this.entity,
       ];
-    } else if (this.action == 'edit') {
+    } else if (this.action == this.moreFunctionEdit) {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
       data = [this.process, this.funcID, this.entity, this.ownerOld];
@@ -221,7 +235,7 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if (this.ownerOld === this.process?.owner && this.action === 'edit') {
+    if (this.ownerOld === this.process?.owner && this.action === this.moreFunctionEdit) {
       this.callActionSave();
     } else {
       this.updateOrCreatProccess(this.emp);
@@ -244,7 +258,7 @@ export class PopupAddProcessesComponent implements OnInit {
           var countAttack = 0;
           countAttack = Array.isArray(res) ? res.length : 1;
           this.process.attachments =
-            this.action === 'edit'
+            this.action === this.moreFunctionEdit
               ? this.process.attachments + countAttack
               : countAttack;
           this.selectedAction();
@@ -256,7 +270,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   selectedAction() {
     switch (this.action) {
-      case 'copy': {
+      case this.moreFunctionCopy: {
         this.notiService.alertCode('BP007').subscribe((x) => {
           if (x.event.status == 'N') {
             this.isCoppyFile = false;
@@ -268,11 +282,11 @@ export class PopupAddProcessesComponent implements OnInit {
         });
         break;
       }
-      case 'add': {
+      case this.moreFunctionAdd: {
         this.isUpdateCreateProcess();
         break;
       }
-      case 'edit': {
+      case this.moreFunctionEdit: {
         this.isUpdateCreateProcess();
         break;
       }
@@ -305,7 +319,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   //#endregion method
   isUpdateCreateProcess() {
-    if (this.action === 'add' || this.action === 'copy') {
+    if (this.action === this.moreFunctionAdd || this.action === this.moreFunctionCopy) {
       this.onAdd();
     } else {
       this.onUpdate();
@@ -412,7 +426,7 @@ export class PopupAddProcessesComponent implements OnInit {
   callActionSave() {
     if (
       this.process?.processName.trim() === this.nameOld?.trim() &&
-      this.action == 'edit'
+      this.action == this.moreFunctionEdit
     ) {
       this.actionSave();
     } else if (
@@ -446,7 +460,8 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   fileImgAdded(e) {
     if (e?.data && e?.data?.length > 0) {
-      this.linkAvatar = e?.data[0].avatar;
+      var countListFile = e.data.length;
+      this.linkAvatar = e?.data[countListFile-1].avatar;
       this.changeDetectorRef.detectChanges();
     }
   }

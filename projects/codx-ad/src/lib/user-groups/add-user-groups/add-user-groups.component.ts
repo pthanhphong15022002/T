@@ -342,7 +342,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
                 }
                 this.adService
                   .updateUserRoles(
-                    lstUser,
+                    this.dataUserCbb,
                     this.viewChooseRole,
                     true,
                     this.adUserGroup,
@@ -366,7 +366,7 @@ export class AddUserGroupsComponent extends UIComponent implements OnInit {
               ) {
                 this.adService
                   .updateUserRoles(
-                    this.dataUserCbbTemp,
+                    lstUser,
                     this.viewChooseRole,
                     true,
                     this.adUserGroup,

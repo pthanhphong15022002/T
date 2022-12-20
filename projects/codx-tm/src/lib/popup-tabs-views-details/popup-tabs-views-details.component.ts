@@ -20,7 +20,7 @@ import { TabModelSprints } from '../models/TM_Sprints.model';
   encapsulation: ViewEncapsulation.None,
 })
 export class PopupTabsViewsDetailsComponent implements OnInit, AfterViewInit {
-  title = 'Danh sách công việc';
+  title = '';
   createdByName: any;
   dialog: DialogRef;
   active = 1;
