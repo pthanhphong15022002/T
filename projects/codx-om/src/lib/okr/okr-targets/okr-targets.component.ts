@@ -100,6 +100,7 @@ export class OkrTargetsComponent implements OnInit {
         explodeIndex: 1,
         explode: true,
         endAngle: 360,
+        // dataLabel:{visible:true, name:'status', template:'${point.value}',position:'Outside'}
       },
     ],
     service: 'OM',
