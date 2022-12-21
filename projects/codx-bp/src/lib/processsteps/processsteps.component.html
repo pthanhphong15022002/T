@@ -122,7 +122,8 @@
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <div class="cursor-pointer text-hover-primary"
+            <div
+              class="cursor-pointer text-hover-primary"
               *ngIf="item.reference"
               [innerHtml]="viewQuestion(item.reference)"
               (click)="viewDetailSurveys(viewQuestion(item.reference))"
@@ -745,29 +746,36 @@
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100"
   >
-    <div
-      class="line-colums"
-      #pp="ngbPopover"
-      [ngbPopover]="tesst"
-      (mouseenter)="pp.open()"
-      (mouseleave)="pp.close()"
-      placement="bottom"
-    >
+    <div class="line-colums">
       {{ data.headerText }}
     </div>
   </div>
-  <div class="icon-more_vert icon-18 has-actions-menu">
+  <div>
+    <codx-mfunc
+      type="hover"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data.dataColums)"
+      [dataItem]="data.dataColums"
+    >
+    </codx-mfunc>
+  </div>
+  <!-- <div class="icon-more_vert icon-18 has-actions-menu">
     <div class="action-menu">
       <codx-mfunc
-        [type]="'hover'"
+        type="hover"
         [formModel]="view.formModel"
-        (clickMF)="clickMFColums($event, data.keyField)"
-        [isBookMark]="true"
+        (clickMF)="clickMF($event, item.dataColums)"
+        [dataItem]="item.dataColums"
       >
       </codx-mfunc>
     </div>
-  </div>
+  </div> -->
   <ng-template #tesst
     ><span>{{ data.headerText }}</span></ng-template
   >
 </ng-template>
+<!-- #pp="ngbPopover"
+      [ngbPopover]="tesst"
+      (mouseenter)="pp.open()"
+      (mouseleave)="pp.close()"
+      placement="bottom" -->
