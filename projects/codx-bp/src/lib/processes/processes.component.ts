@@ -423,6 +423,8 @@ export class ProcessesComponent
         phasesOld: data.phases ?? 0,
         attachOld: data.attachments ?? 0,
         actiOld: data.activities ?? 0,
+        onwerOld: data.owner??'',
+        listPermiss: data.permissions.filter(x=>x.autoCreate==true)??null,
       };
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
