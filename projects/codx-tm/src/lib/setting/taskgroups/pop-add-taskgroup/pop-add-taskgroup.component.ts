@@ -19,8 +19,10 @@ import {
   ViewsComponent,
   FormModel,
   CallFuncService,
+  Util,
 } from 'codx-core';
 import { AnyARecord } from 'dns';
+
 import { Observable, Subject } from 'rxjs';
 import { CodxTMService } from '../../../codx-tm.service';
 import { StatusTaskGoal } from '../../../models/enum/enum';
@@ -66,6 +68,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   titleAction = '';
   verifyName = '';
   approveName = '';
+  mess = '';
   constructor(
     private authStore: AuthStore,
     private cache: CacheService,
@@ -76,7 +79,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.data = dialog.dataService!.dataSelected;
+    this.data = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
     this.taskGroups = this.data;
     this.dialog = dialog;
     this.action = dt.data[0];
@@ -109,6 +112,9 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     //   this.initForm();
     this.cache.gridViewSetup('TaskGroups', 'grvTaskGroups').subscribe((res) => {
       if (res) this.gridViewSetup = res;
+    });
+    this.cache.message('TM046').subscribe((dt) => {
+      this.mess = dt?.defaultName;
     });
 
     if (this.taskGroups.checkList) {
@@ -587,5 +593,9 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   openPopupLink() {
     var m = this.taskGroups.maxHours;
     this.callfc.openForm(this.addLink, '', 500, 300);
+  }
+
+  viewHtmlMaxHour(hour) {
+    return Util.stringFormat(this.mess, hour);
   }
 }

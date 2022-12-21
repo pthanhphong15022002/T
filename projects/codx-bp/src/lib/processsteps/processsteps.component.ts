@@ -1283,12 +1283,20 @@ export class ProcessStepsComponent
     this.crrPopper = p;
     if (data != null) {
       this.dataHover = data;
-      p.open();
-      // this.hideMoreFC = true;
+      p.open();    
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  closeMFTypeA(){
+    this.hideMoreFC = false;
+    this.hideMoreFCChild = true;
+  }
+  openMFTypeA(){
+    this.hideMoreFC = true;
+    this.hideMoreFCChild = false;
   }
 
   showAllparent(text) {

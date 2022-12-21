@@ -423,6 +423,8 @@ export class ProcessesComponent
         phasesOld: data.phases ?? 0,
         attachOld: data.attachments ?? 0,
         actiOld: data.activities ?? 0,
+        onwerOld: data.owner??'',
+        listPermiss: data.permissions.filter(x=>x.autoCreate==true)??null,
       };
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
@@ -486,6 +488,7 @@ export class ProcessesComponent
   releaseProcess(data) {
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
+    this.comment = ''
     this.dialogPopup = this.callfc.openForm(
       this.viewReleaseProcess,
       '',
