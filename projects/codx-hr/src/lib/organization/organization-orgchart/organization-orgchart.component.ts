@@ -148,14 +148,16 @@ export class OrganizationOrgchartComponent implements OnInit {
       }
       let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
       popup.closed.subscribe((res:any) => {
-        debugger
         if(res.event){
           let org = res.event[0];
           let tmpOrg = res.event[1];
-          this.dataService.add(tmpOrg).subscribe();
+          this.dataService.update(tmpOrg).subscribe(() => {
+            let data = JSON.parse(JSON.stringify(this.dataService.data));
+            this.setDataOrg(data);   
+            this.dt.detectChanges();
+
+          });
           this.view.dataService.add(org).subscribe();
-          this.setDataOrg(this.dataService.data);
-          this.dt.detectChanges();
         }
       });
     }
