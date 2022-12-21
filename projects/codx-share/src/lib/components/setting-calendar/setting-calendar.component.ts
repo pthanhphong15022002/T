@@ -18,6 +18,7 @@ import {
 import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
 import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
 import moment from 'moment';
+import { CodxShareService } from '../../codx-share.service';
 
 @Component({
   selector: 'setting-calendar',
@@ -56,7 +57,8 @@ export class SettingCalendarComponent
 
   constructor(
     private injector: Injector,
-    private settingCalendar: SettingCalendarService
+    private settingCalendar: SettingCalendarService,
+    private codxShareSV: CodxShareService
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -248,7 +250,9 @@ export class SettingCalendarComponent
     (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
   }
 
-  onAction(event) {
-    if (event) debugger;
+  onAction(event: any) {
+    if (event?.type == 'navigate') {
+      this.codxShareSV.dateChange.next(event.data.fromDate);
+    }
   }
 }

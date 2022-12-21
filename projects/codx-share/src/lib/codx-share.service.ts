@@ -22,6 +22,9 @@ export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
   dataRefreshImage = new BehaviorSubject<any>(null);
   dataUpdateShowEvent = new BehaviorSubject<any>(null);
+  dateChange = new BehaviorSubject<any>(null);
+  dataResourceModel = new BehaviorSubject<any>(null);
+  settingValue = new BehaviorSubject<any>(null);
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
