@@ -59,7 +59,7 @@ export class OkrToolbarComponent implements OnInit {
     this.click.emit(obj);
   }
 
-  editWeight(okrPlan: any) {
+  editWeight(planRecID: any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
     let popupTitle='Thay đổi trọng số cho mục tiêu';
     let subTitle='Trọng số & kết quả thực hiện';
@@ -71,7 +71,7 @@ export class OkrToolbarComponent implements OnInit {
       null,
       null,
       null,
-      [okrPlan.recID, OMCONST.VLL.OKRType.Obj,popupTitle , subTitle ],
+      [planRecID, OMCONST.VLL.OKRType.Obj,popupTitle , subTitle ],
       '',
       dModel
     );
