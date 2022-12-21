@@ -119,6 +119,7 @@ export class CodxTasksComponent
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
   paramModule: TM_Parameter = new TM_Parameter();
+  paramDefaut: TM_Parameter = new TM_Parameter() ;
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -150,6 +151,7 @@ export class CodxTasksComponent
   crrStatus = '';
   disabledProject = false;
   crrFuncID = '';
+  
 
   constructor(
     inject: Injector,
@@ -1054,6 +1056,7 @@ export class CodxTasksComponent
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.paramModule = JSON.parse(JSON.stringify(param));
+          this.paramDefaut = JSON.parse(JSON.stringify(param));
           return callback && callback(true);
         }
       });
@@ -1074,7 +1077,7 @@ export class CodxTasksComponent
           this.convertParameterByTaskGroup(res);
           this.clickMFAfterParameter(e, data);
         } else {
-          this.param = this.paramModule;
+          this.param = JSON.parse(JSON.stringify(this.paramModule));
           this.clickMFAfterParameter(e, data);
         }
       });
@@ -1449,7 +1452,7 @@ export class CodxTasksComponent
     this.itemSelected = data;
     if (data.taskGroupID) this.getTaskGroup(data.taskGroupID, e, data);
     else {
-      this.param = this.paramModule;
+      this.param = JSON.parse(JSON.stringify(this.paramDefaut));
       this.clickMFAfterParameter(e, data);
     }
   }
