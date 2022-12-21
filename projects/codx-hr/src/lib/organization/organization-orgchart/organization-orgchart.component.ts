@@ -22,8 +22,6 @@ export class OrganizationOrgchartComponent implements OnInit {
   public snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None
   };
-
-  // end setting orgChart
   @Input() formModel:FormModel;
   @Input() orgUnitID:string; 
   @Input() view:ViewsComponent = null; 
@@ -37,6 +35,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   imployeeInfo: any = {};
   employees:any[] = [];
   headerColor:string = "#03a9f4";
+  @ViewChild("diagram") diagram:any;
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -152,8 +151,7 @@ export class OrganizationOrgchartComponent implements OnInit {
           let org = res.event[0];
           let tmpOrg = res.event[1];
           this.dataService.update(tmpOrg).subscribe(() => {
-            let data = JSON.parse(JSON.stringify(this.dataService.data));
-            this.setDataOrg(data);   
+            this.dataSource = this.newDataManager(this.dataService.data);
             this.dt.detectChanges();
 
           });

@@ -67,17 +67,12 @@
     [funcId]="formModel.funcID"
     [entityName]="formModel.entityName">
   </codx-listview>
-  <!-- <ng-container *ngFor="let item of dataSource">
-    <div class="row">
-      <ng-container *ngTemplateOutlet="itemTemplate;context:item"></ng-container>
-    </div>
-  </ng-container> -->
 </div>
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column py-4 border-bottom">
     <div class="d-flex align-items-center org-header mt-1 mb-3">
-      <div *ngIf="item.departmentName" class="text-dark fw-bold fs-6 me-3">
-        {{ item.departmentName }}
+      <div class="text-dark fw-bold fs-6 me-3">
+        {{ item.orgUnitName }}
       </div>
       <codx-vll
         [name]="'L0605'"
