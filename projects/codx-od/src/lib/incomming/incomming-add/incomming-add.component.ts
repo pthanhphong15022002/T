@@ -106,7 +106,7 @@ export class IncommingAddComponent implements OnInit {
         {
           this.dispatch.owner = user?.userID;
           this.getInforByUser(this.dispatch.owner).subscribe(item=>{
-            if(item) this.dispatch.orgUnitID = item.organizationID
+            if(item) this.dispatch.orgUnitID = item.orgUnitID
           })
         }
       }
