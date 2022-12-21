@@ -17,7 +17,7 @@ export class OkrToolbarComponent implements OnInit {
   buttonAddO: ButtonModel;
   button?: ButtonModel;
   @Output() click = new EventEmitter<any>();
-  date = new Date();
+  date:any = new Date();
   ops = ['m','q','y'];
   okrPlan:any;
   okrChild:any;
@@ -26,8 +26,6 @@ export class OkrToolbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
-    
     this.button = {
       id: 'btnAdd',
       icon:'icon-i-chevron-down',
@@ -51,6 +49,7 @@ export class OkrToolbarComponent implements OnInit {
   }
   changeCalendar(event:any)
   {
+    debugger
     var obj = 
     {
       id : "Calendar",

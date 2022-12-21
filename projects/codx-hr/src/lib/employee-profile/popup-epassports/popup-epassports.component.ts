@@ -130,7 +130,7 @@ export class PopupEPassportsComponent extends UIComponent implements OnInit {
     console.log('formdata', data);
     this.passportObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.passportObj)) 
-    this.indexSelected = this.lstPassports.findIndex(p => p.recID = this.passportObj.recID);
+    this.indexSelected = this.lstPassports.findIndex(p => p.recID == this.passportObj.recID);
     this.actionType ='edit'
     this.formGroup?.patchValue(this.passportObj);
     this.cr.detectChanges();

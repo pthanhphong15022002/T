@@ -80,7 +80,7 @@ export class PopupUpdateStatusComponent implements OnInit {
   }
   changeEstimated(data) {
     if (!data.data) return;
-    var num = Number.parseFloat(data.data);
+    var num = data.data;
     // if (!num) {
     //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
     //   this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
@@ -94,7 +94,7 @@ export class PopupUpdateStatusComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    this.completed = num.toFixed(2)
+    this.completed = Number.parseFloat(num).toFixed(2)
     // this.crrCompleted = this.completed;
   }
 
