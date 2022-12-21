@@ -63,16 +63,15 @@
     #codxListView
     [itemTemplate]="itemTemplate"
     [formModel]="formModel"
-    [service]="'HR'"
-    [assemblyName]="'ERM.Business.HR'"
-    [className]="'OrganizationUnitsBusiness'"
-    [method]="'GetDataTreeListAssync'"
+    [dataService]="dataService"
     [funcId]="formModel.funcID"
-    [entityName]="formModel.entityName"
-    [predicates]="predicate"
-    [dataValues]="orgUnitID"
-  >
+    [entityName]="formModel.entityName">
   </codx-listview>
+  <!-- <ng-container *ngFor="let item of dataSource">
+    <div class="row">
+      <ng-container *ngTemplateOutlet="itemTemplate;context:item"></ng-container>
+    </div>
+  </ng-container> -->
 </div>
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column py-4 border-bottom">

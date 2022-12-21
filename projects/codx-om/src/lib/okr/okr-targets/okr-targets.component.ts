@@ -1,3 +1,4 @@
+import { OMCONST } from './../../codx-om.constant';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   CacheService,
@@ -243,7 +244,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [okr,child,popupTitle,subTitle],
+      [okr.recID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
       '',
       dModel
     );

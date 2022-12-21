@@ -423,6 +423,8 @@ export class ProcessesComponent
         phasesOld: data.phases ?? 0,
         attachOld: data.attachments ?? 0,
         actiOld: data.activities ?? 0,
+        onwerOld: data.owner??'',
+        listPermiss: data.permissions.filter(x=>x.autoCreate==true)??null,
       };
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
@@ -486,6 +488,7 @@ export class ProcessesComponent
   releaseProcess(data) {
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
+    this.comment = ''
     this.dialogPopup = this.callfc.openForm(
       this.viewReleaseProcess,
       '',
@@ -782,10 +785,9 @@ export class ProcessesComponent
     if (e != null && data != null) {
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
-      var checkGroup = '';
 
-      checkGroup = await this.checkGroupId(data);
-      this.checkGroupPerm = checkGroup;
+      // checkGroup = await this.checkGroupId(data);
+      // this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':
@@ -799,22 +801,18 @@ export class ProcessesComponent
           case 'BPT309': // phat hanh
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
-            let isPublish = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.publish
-            );
+            let isPublish = data.publish;
             if (data.status === '6' || (!isPublish && !fullRole)) {
               res.isblur = true;
             }
             break;
           case 'SYS04':
-            if(data.deleted){
+            if (data.deleted) {
               res.disabled = true;
             }
             break;
           case 'SYS003': // them phien ban
-            let isCreate = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.create
-            );
+            let isCreate = data.write;
             if ((!isCreate && !fullRole) || data.deleted) {
               res.isblur = true;
             }
@@ -828,9 +826,7 @@ export class ProcessesComponent
           case 'BPT103': //luu phien ban
           case 'BPT303': //luu phien ban
           case 'BPT603': //luu phien ban
-            let isEdit = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.edit
-            );
+            let isEdit = data.write;
             if ((!isEdit && !fullRole) || data.deleted) {
               if (res.functionID === 'SYS03') {
                 res.disabled = true;
@@ -840,9 +836,7 @@ export class ProcessesComponent
             }
             break;
           case 'SYS02': // xoa
-            let isDelete = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.delete
-            );
+            let isDelete = data.delete;
             if ((!isDelete && !fullRole) || data.deleted) {
               res.disabled = true;
             }
@@ -865,13 +859,17 @@ export class ProcessesComponent
           case 'BPT205': //chia se
           case 'BPT305': //chia se
           case 'BPT605': //chia se
-            let isShare = data?.permissions.some(
-              (x) =>
-                x.objectID == checkGroup &&
-                x.share &&
-                x.approveStatus !== '3' &&
-                x.approveStatus != '4'
-            );
+            let isShare =
+              data.share &&
+              data?.permissions.some(
+                (x) =>
+                  x.objectID == this.userId &&
+                  x.approveStatus !== '3' &&
+                  x.approveStatus !== '4'
+              )
+                ? true
+                : false;
+
             if (!isShare && !fullRole) {
               res.isblur = true;
             }
@@ -880,18 +878,16 @@ export class ProcessesComponent
           case 'BPT208': //phan quyen
           case 'BPT308': //phan quyen
           case 'BPT608': //phan quyen
-            let isAssign = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.assign
-            );
+            let isAssign = data.allowPermit;
+
             if (!isAssign && !fullRole) {
               res.isblur = true;
             }
 
             break;
           case 'BPT702': //Khoi phuc
-            let isRestore = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.delete
-            );
+          let isRestore = data.delete;
+
             if (!isRestore && !fullRole) {
               res.isblur = true;
             }
@@ -957,15 +953,17 @@ export class ProcessesComponent
 
   //Check quyền đọc, icon đọc, check quyền xem chi tiết doubleClick
   checkPermissionRead(data) {
-    var group = '';
-    group = this.checkGroupId(data);
-    let isRead = data?.permissions.some(
-      (x) =>
-        x.objectID == group &&
-        x.read &&
-        x.approveStatus !== '3' &&
-        x.approveStatus !== '4'
-    );
+    let isRead =
+      data.read &&
+      data?.permissions.some(
+        (x) =>
+          x.objectID == this.userId &&
+          x.approveStatus !== '3' &&
+          x.approveStatus !== '4'
+      )
+        ? true
+        : false;
+
     let isOwner = data?.owner == this.userId ? true : false;
     return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
   }
@@ -989,9 +987,7 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
-    var group = '';
-    group = this.checkGroupId(data);
-    let isEdit = data?.permissions.some((x) => x.objectID == group && x.edit);
+    let isEdit = data.write;
     let isOwner = data?.owner == this.userId ? true : false;
     let editRole =
       (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !data.deleted

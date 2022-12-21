@@ -327,6 +327,7 @@ export class ProcessStepsComponent
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
               column.showItemCount = false;
+              column.dataColums = processStep;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
@@ -580,10 +581,17 @@ export class ProcessStepsComponent
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
               column.showItemCount = false;
+              column.dataColums = processStep;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
-              this.kanban.addColumn(column, index);
+              if (this.kanban.columns && this.kanban.columns.length)
+                this.kanban.addColumn(column, index);
+              else {
+                this.kanban.columns = [];
+                this.kanban.columns.push(column);
+                this.kanban.changeDataSource(this.kanban.columns);
+              }
               if (processStep.items.length > 0) {
                 processStep.items.forEach((obj) => {
                   if (this.kanban) this.kanban.addCard(obj);
@@ -961,7 +969,7 @@ export class ProcessStepsComponent
             ) {
               let crr = event.currentIndex;
               let pre = event.previousIndex;
-              let arrCl = this.kanban.columns;
+              let arrCl = JSON.parse(JSON.stringify(this.kanban.columns)); // ko bi luu ngươc
               let temp = arrCl[pre];
               if (crr > pre) {
                 for (var i = pre; i < crr; i++) {
@@ -974,8 +982,7 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl ;
-              this.kanban.changeDataSource(this.kanban.columns);
+              this.kanban.changeDataSource(arrCl);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -1276,12 +1283,20 @@ export class ProcessStepsComponent
     this.crrPopper = p;
     if (data != null) {
       this.dataHover = data;
-      p.open();
-      // this.hideMoreFC = true;
+      p.open();    
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  closeMFTypeA(){
+    this.hideMoreFC = false;
+    this.hideMoreFCChild = true;
+  }
+  openMFTypeA(){
+    this.hideMoreFC = true;
+    this.hideMoreFCChild = false;
   }
 
   showAllparent(text) {
@@ -1313,7 +1328,7 @@ export class ProcessStepsComponent
     return this.widthElement < text.length * 3;
   }
   //chuwa xong
-  dataColums(recIDPhase): any {
+  dataColums(recIDPhase) {
     this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
       return dt;
     });
@@ -1322,6 +1337,7 @@ export class ProcessStepsComponent
   clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
       if (dt) {
+        this.dataClick = dt;
         this.clickMF(e, dt);
       }
     });

@@ -369,10 +369,13 @@ export class CatagoryComponent implements OnInit {
   loadValue() {
     switch (this.category) {
       case '1':
-        var value = this.settingValue[0].dataValue;
-        if (value) {
-          this.dataValue = JSON.parse(value);
+        if (this.settingValue.length > 0) {
+          var value = this.settingValue[0].dataValue;
+          if (value) {
+            this.dataValue = JSON.parse(value);
+          }
         }
+
         break;
     }
   }
@@ -568,15 +571,49 @@ export class CatagoryComponent implements OnInit {
             if (ele) ele.innerHTML = name;
           }
           if (!this.dialog) {
-            dt.dataValue = JSON.stringify(this.dataValue);
-            this.api
-              .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-              .subscribe((res) => {
-                if (res) {
-                }
-                this.changeDetectorRef.detectChanges();
-                console.log(res);
-              });
+            if (dt) {
+              dt.dataValue = JSON.stringify(this.dataValue);
+              this.api
+                .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+                .subscribe((res) => {
+                  if (res) {
+                  }
+                  this.changeDetectorRef.detectChanges();
+                  console.log(res);
+                });
+            } else {
+              //dt = {};
+
+              if (this.setting.length > 0) {
+                this.api
+                  .execSv(
+                    'SYS',
+                    'ERM.Business.CM',
+                    'DataBusiness',
+                    'GetDefaultEntityAsync',
+                    'SYS_SettingValues'
+                  )
+                  .subscribe((res) => {
+                    if (res) {
+                      dt = res;
+                      dt.dataValue = JSON.stringify(this.dataValue);
+                      var setting = this.setting[0];
+                      dt.formName = setting.formName;
+                      dt.category = setting.category;
+                      dt.refModule = setting.moduleSales;
+                      this.settingValue.push(dt);
+                      this.api
+                        .execAction('SYS_SettingValues', [dt], 'SaveAsync')
+                        .subscribe((res) => {
+                          if (res) {
+                          }
+                          this.changeDetectorRef.detectChanges();
+                          console.log(res);
+                        });
+                    }
+                  });
+              }
+            }
           }
         }
       }
@@ -585,15 +622,47 @@ export class CatagoryComponent implements OnInit {
 
   click($event: any) {
     var dt = this.settingValue.find((x) => x.category == this.category);
-    dt.dataValue = JSON.stringify(this.dataValue);
-    this.api
-      .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
-      .subscribe((res) => {
-        if (res) {
-          this.dialog.close();
-        }
-        this.changeDetectorRef.detectChanges();
-        console.log(res);
-      });
+    if (dt) {
+      dt.dataValue = JSON.stringify(this.dataValue);
+      this.api
+        .execAction('SYS_SettingValues', [dt], 'UpdateAsync')
+        .subscribe((res) => {
+          if (res) {
+            this.dialog.close();
+          }
+          this.changeDetectorRef.detectChanges();
+          console.log(res);
+        });
+    } else {
+      if (this.setting.length > 0) {
+        this.api
+          .execSv(
+            'SYS',
+            'ERM.Business.CM',
+            'DataBusiness',
+            'GetDefaultEntityAsync',
+            'SYS_SettingValues'
+          )
+          .subscribe((res) => {
+            if (res) {
+              dt = res;
+              dt.dataValue = JSON.stringify(this.dataValue);
+              var setting = this.setting[0];
+              dt.formName = setting.formName;
+              dt.category = setting.category;
+              dt.refModule = setting.moduleSales;
+              this.settingValue.push(dt);
+              this.api
+                .execAction('SYS_SettingValues', [dt], 'SaveAsync')
+                .subscribe((res) => {
+                  if (res) {
+                  }
+                  this.changeDetectorRef.detectChanges();
+                  console.log(res);
+                });
+            }
+          });
+      }
+    }
   }
 }

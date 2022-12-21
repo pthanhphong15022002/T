@@ -452,8 +452,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.objectId || this.dataSelected) {
-      this.getFolder();
+    if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
       this.dataRequest.predicate = 'ObjectID=@0 && IsDelete = false && ReferType=@1';
@@ -475,7 +474,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   ngOnInit(): void {
 
     this.setFormModel();
-    this.getFolder();
+ 
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();
     this.fileService.getAllowSizeUpload().subscribe((item) => {
@@ -706,6 +705,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSaveObservable(): Promise<Observable<any[]>> {
+    this.getFolder();
     try {
       if (this.data == undefined) this.data = [];
 
@@ -884,6 +884,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   async onMultiFileSave() {
+    this.getFolder();
     if (
       this.dataFolder &&
       this.dataFolder?.copyrights &&
