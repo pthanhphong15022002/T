@@ -52,10 +52,10 @@ export class RoomsComponent extends UIComponent {
   funcID: string;
   showToolBar = 'true';
   roomEquipments = [];
-  labelEquip:'';
-  labelArea:'';
-  labelRanking:'';
-  labelCâpcity:'';
+  labelEquip: '';
+  labelArea: '';
+  labelRanking: '';
+  labelCâpcity: '';
   service = 'EP';
   assemblyName = 'EP';
   entityName = 'EP_Resources';
@@ -121,7 +121,7 @@ export class RoomsComponent extends UIComponent {
             {
               field: '',
               headerText: '',
-              width: 30,
+              width: 40,
               template: this.itemAction,
               textAlign: 'center',
             },
@@ -277,7 +277,7 @@ export class RoomsComponent extends UIComponent {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
+                this.view.dataService.update(x.event).subscribe((res) => { });
               }
             });
           });
@@ -308,7 +308,7 @@ export class RoomsComponent extends UIComponent {
               if (!x.event) this.view.dataService.clear();
               if (x?.event) {
                 x.event.modifiedOn = new Date();
-                this.view.dataService.update(x.event).subscribe((res) => {});
+                this.view.dataService.update(x.event).subscribe((res) => { });
               }
             });
           });
