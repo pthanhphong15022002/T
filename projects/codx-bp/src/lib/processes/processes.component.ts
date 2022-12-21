@@ -488,6 +488,7 @@ export class ProcessesComponent
   releaseProcess(data) {
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
+    this.comment = ''
     this.dialogPopup = this.callfc.openForm(
       this.viewReleaseProcess,
       '',

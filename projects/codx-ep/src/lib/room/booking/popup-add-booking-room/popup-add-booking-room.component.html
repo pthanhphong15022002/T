@@ -3,7 +3,7 @@
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo, tabReminder]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
-      
+
 
       <div class="row">
         <div class="col-4 form-group">
@@ -45,21 +45,23 @@
           (valueChange)="valueCbxRoomChange($event)">
         </codx-input>
         <div class="row">
-          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
+          <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
+            class="d-flex align-items-center justify-content-between">
             <div class="d-flex flex-wrap">
               <div class="d-flex justify-content-start" *ngFor="let item of tmplstDevice">
-                <li class="d-flex align-items-end me-2" [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
-                  <span class="me-1 ps-2" [className]="item.icon" [ngClass]="[
+                <li class="d-flex align-items-center me-4 mt-1"
+                  [ngClass]="item.isSelected ? 'text-primary' : 'text-muted'">
+                  <span class="me-1 icon-16" [className]="item.icon" [ngClass]="[
                       item.isSelected ? 'text-primary' : 'text-muted'
                     ]">
-                  </span>{{ item.text }}
+                  </span><span>{{ item.text }}</span>
                 </li>
               </div>
             </div>
             <span class="text-end" *ngIf="tmplstDevice?.length > 0 && tmplstDevice != null">
-              <button type="button" class="btn btn-clean btn-sm btn-icon btn-icon-md" data-dismiss="modal"
+              <button type="button" class="btn btn-sm btn-icon" data-dismiss="modal"
                 (click)="openPopupDevice(popupDevice)">
-                <i class="icon-select_all text-primary text-hover-primary-dark icon-24"></i>
+                <i class="icon-select_all text-primary text-hover-primary icon-22"></i>
               </button>
             </span>
           </div>
@@ -102,8 +104,7 @@
           </ng-container>
         </div>
         <ng-container class="d-flex align-items-center fw-bold" *ngIf="data?.online && data.onlineUrl">
-          <button (click)="connectMeetingNow()"
-            class=" bg-transparent border-0 text-start" >
+          <button (click)="connectMeetingNow()" class=" bg-transparent border-0 text-start">
             <span class="text-decoration-underline  fw-bold" style="color: #007bff;">{{ data?.onlineUrl }}</span>
           </button>
         </ng-container>
@@ -115,18 +116,18 @@
             [gridViewName]="formModel.gridViewName">
           </codx-label>
           <div class="d-flex flex-row text-end align-items-end">
-            
+
             <!-- <div class="mx-2">
               <button class="btn btn-sm btn-icon" (click)="openUserPopup()">
                 <span class="icon-group_add text-primary icon-18"></span>
               </button>
             </div> -->
             <div class="mx-2">
-              <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
-                [multiple]="true" [showInput]="false">
+              <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources"
+                [dataShared]="[]" [multiple]="true" [showInput]="false">
               </codx-input>
             </div>
-            
+
           </div>
         </div>
         <!-- <ng-container *ngIf="isPopupOptionalUserCbb">
@@ -191,8 +192,8 @@
             </a> -->
         </div>
         <div class="AttachmentFile-group flex-nowrap">
-          <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1" hideFolder="1"
-            hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
+          <codx-attachment #attachment [objectType]="formModel?.entityName" [showMessage]="0" hideBtnSave="1"
+            hideFolder="1" hideUploadBtn="1" hideDes="1" hideImageUpload="0" hideImageThumb="0" [functionID]="funcID"
             [objectId]="data?.recID" [allowMultiFile]="0" [idBrowse]="'add'" displayThumb="full"
             (fileAdded)="fileAdded($event)" (fileCount)="fileCount($event)">
           </codx-attachment>
@@ -214,7 +215,7 @@
         </div>
 
         <div class="d-flex flex-row text-end align-items-end">
-          
+
           <!-- <button class="btn btn-sm btn-outline btn-outline-secondary d-flex flex-row align-items-center"
             (click)="openUserPopup()">
             <span class="icon-group_add icon-18 me-2 text-gray-800"></span>
@@ -222,8 +223,8 @@
             </codx-label>
           </button> -->
           <div class="mx-2">
-            <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
-              [multiple]="true" [showInput]="false">
+            <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources"
+              [dataShared]="[]" [multiple]="true" [showInput]="false">
             </codx-input>
           </div>
         </div>
@@ -266,47 +267,47 @@
           </codx-input>
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center me-5">
-          <span class="icon-close" style="visibility:hidden"></span>        
+          <span class="icon-close" style="visibility:hidden"></span>
         </div>
       </div>
 
       <div class="d-flex align-items-center mb-4 pb-2 position-relative" *ngFor="let item of attendeesList">
-        
-          <div class="symbol symbol-30px symbol-circle me-4">
-            <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
-            <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
-              <span popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
-                autoClose="outside" class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
-                style="bottom: -5px;right:-4px">
-  
-              </span>
-            </div>
+
+        <div class="symbol symbol-30px symbol-circle me-4">
+          <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
+          <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
+            <span popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
+              autoClose="outside" class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+              style="bottom: -5px;right:-4px">
+
+            </span>
           </div>
-  
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark fw-bold fs-6 fw-bolder">
-              {{ item.userName }}
-            </div>
-            <div>
-              <span class="text-muted">{{
-                item.roleType | vll: "EP009":"text" | async
-                }}</span>
-            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="text-dark fw-bold fs-6 fw-bolder">
+            {{ item.userName }}
           </div>
-  
-          <div class="d-flex flex-column justify-content-center align-items-center me-5">
-            <codx-input type="checkbox" [checked]="item.optional"
-              (valueChange)="attendeesCheckChange($event, item.userID)">
-            </codx-input>          
+          <div>
+            <span class="text-muted">{{
+              item.roleType | vll: "EP009":"text" | async
+              }}</span>
           </div>
-  
-          <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item.roleType!='1'">
-            <span class="icon-close" role="button" (click)="deleteAttender(item.userID)"></span>        
-          </div>
-          <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item.roleType=='1'">
-            <span class="icon-close" style="visibility:hidden"></span>          
-          </div>
-        
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center me-5">
+          <codx-input type="checkbox" [checked]="item.optional"
+            (valueChange)="attendeesCheckChange($event, item.userID)">
+          </codx-input>
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item.roleType!='1'">
+          <span class="icon-close" role="button" (click)="deleteAttender(item.userID)"></span>
+        </div>
+        <div class="d-flex flex-column justify-content-center align-items-center me-5" *ngIf="item.roleType=='1'">
+          <span class="icon-close" style="visibility:hidden"></span>
+        </div>
+
       </div>
     </ng-container>
   </ng-template>
@@ -323,7 +324,7 @@
         <codx-input [cusButton]="true" [min]="1" [max]="50" type="number" field="attendees" [crrValue]="data?.attendees"
           (valueChange)="valueAttendeesChange($event)">
         </codx-input>
-        
+
       </div>
     </div>
 
@@ -462,8 +463,8 @@
       </div>
     </div>
     <div class="modal-body" *ngIf="tmplstDevice != null">
-      <div class="py-2" *ngFor="let item of tmplstDevice">
-        <div class="d-flex flex-stack">
+      <div class="mb-1" *ngFor="let item of tmplstDevice">
+        <div class="d-flex flex-stack p-2 rounded-2 bg-hover">
           <div class="d-flex">
             <span class="me-1 ps-2" [className]="item.icon"
               [ngClass]="[item.isSelected ? 'text-primary' : 'text-muted']"></span>

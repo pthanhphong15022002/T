@@ -102,7 +102,13 @@ export class IncommingAddComponent implements OnInit {
         this.dispatch.agencyName = null;
         // this.dispatch.departmentID = "BGĐ"
         // this.getDispathOwner("BGĐ");
-        if(this.formModel?.funcID == "ODT41") this.dispatch.owner = user?.userID
+        if(this.formModel?.funcID == "ODT41") 
+        {
+          this.dispatch.owner = user?.userID;
+          this.getInforByUser(this.dispatch.owner).subscribe(item=>{
+            if(item) this.dispatch.orgUnitID = item.orgUnitID
+          })
+        }
       }
       this.dispatch.createdOn = new Date();
     } 
@@ -163,7 +169,7 @@ export class IncommingAddComponent implements OnInit {
     if(event.data?.value[0])
     {
       this.getInforByUser(event.data?.value[0]).subscribe(item=>{
-        if(item) this.dispatch.orgUnitID = item.organizationID
+        if(item) this.dispatch.orgUnitID = item.orgUnitID
       })
     }
   }
@@ -187,7 +193,7 @@ export class IncommingAddComponent implements OnInit {
             this.dispatch.owner = item[0].domainUser;
             this.change = this.dispatch.owner;
             this.getInforByUser(item[0].domainUser).subscribe(item=>{
-              if(item) this.dispatch.orgUnitID = item.organizationID
+              if(item) this.dispatch.orgUnitID = item.orgUnitID
             })
             this.ref.detectChanges();
           } else {

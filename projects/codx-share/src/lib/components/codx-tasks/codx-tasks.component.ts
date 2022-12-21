@@ -118,7 +118,7 @@ export class CodxTasksComponent
   gridView: any;
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
-  paramModule: any;
+  paramModule: TM_Parameter = new TM_Parameter();
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -207,6 +207,7 @@ export class CodxTasksComponent
 
     this.afterLoad();
     this.getParams();
+    this.getParam();
     this.dataObj = JSON.stringify(this.dataObj);
     this.detectorRef.detectChanges();
   }
@@ -344,7 +345,7 @@ export class CodxTasksComponent
         model: {
           eventModel: this.fields,
           //resourceModel: this.resourceModel,
-         // resourceModel: this.resourceField, //ko có thang nay
+          // resourceModel: this.resourceField, //ko có thang nay
           //template7: this.footerNone, ///footer
           template4: this.resourceHeader,
           template6: this.mfButton, //header
@@ -391,7 +392,7 @@ export class CodxTasksComponent
     this.view.dataService.methodSave = 'AddTaskAsync';
     this.view.dataService.methodUpdate = 'UpdateTaskAsync';
     this.view.dataService.methodDelete = 'DeleteTaskAsync';
-    this.getParam();
+    //this.getParam();
     //this.detectorRef.detectChanges();
   }
   //#endregion
@@ -1052,7 +1053,7 @@ export class CodxTasksComponent
         if (res) {
           var param = JSON.parse(res.dataValue);
           this.param = param;
-          this.paramModule = param;
+          this.paramModule = JSON.parse(JSON.stringify(param));
           return callback && callback(true);
         }
       });
