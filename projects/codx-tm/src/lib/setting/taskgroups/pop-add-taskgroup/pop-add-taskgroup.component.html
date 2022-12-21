@@ -29,7 +29,7 @@
 </ng-template>
 <ng-template #tabControl>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-7">
       <codx-label fiedName="ProjectControl" default="Dự án" formName="TaskGroups" gridViewName="grvTaskGroups">
       </codx-label>
       <div>
@@ -38,7 +38,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-5">
       <codx-input name="projectControl" type="valuelist" field="projectControl" placeholder=""
         [crrValue]="taskGroups.projectControl" (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.ProjectControl.referedValue">
@@ -46,7 +46,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-7">
       <codx-label fiedName="LocationControl" default="Địa điểm" formName="TaskGroups" gridViewName="grvTaskGroups">
       </codx-label>
       <div>
@@ -55,7 +55,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-5">
       <codx-input name="locationControl" type="valuelist" field="locationControl" placeholder=""
         [crrValue]="taskGroups.locationControl" (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.LocationControl.referedValue">
@@ -64,7 +64,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-7">
       <codx-label fiedName="PlanControl" default="Kế hoạch thực hiện công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -74,7 +74,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-5">
       <codx-input name="planControl" type="valuelist" field="planControl" placeholder=""
         [crrValue]="taskGroups.planControl" (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.PlanControl.referedValue">
@@ -82,7 +82,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-7">
       <codx-label fiedName="UpdateControl" default="Cập nhật tình trạng công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -92,7 +92,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-5">
       <codx-input name="updateControl" type="valuelist" field="updateControl" placeholder=""
         [crrValue]="taskGroups.updateControl" (valueChange)="valueList($event)"
         [refValue]="gridViewSetup.UpdateControl.referedValue">
@@ -100,7 +100,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="VerifyControl" default="" formName="TaskGroups" gridViewName="grvTaskGroups">
       </codx-label>
       <div>
@@ -128,7 +128,7 @@
         </div> -->
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px">
           <codx-input name="verifyControl" type="switch" class="test-switch" field="verifyControl"
@@ -145,7 +145,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="ApproveControl" default="Đánh giá công việc khi hoàn tất" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -174,7 +174,7 @@
         </div> -->
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px">
           <codx-input name="approveControl" type="switch" class="test-switch" field="approveControl"
@@ -191,7 +191,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="MaxHoursControl" default="Thời gian tối đa hoàn thành" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -201,7 +201,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px">
           <codx-input name="maxHoursControl" type="switch" class="test-switch" field="maxHoursControl"
@@ -216,7 +216,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="EditControl" default="Chỉnh sửa nội dung công việc được phân công" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -226,7 +226,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px"></div>
         <codx-input name="editControl" type="switch" class="test-switch" field="editControl"
@@ -237,7 +237,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="DueDateControl" default="Được phép thêm công việc quá khứ" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -247,7 +247,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px"></div>
         <codx-input name="dueDateControl" type="switch" class="test-switch" field="dueDateControl"
@@ -258,7 +258,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="AutoCompleted" default="Cập nhật hoàn thành tự động đối với giao việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -269,7 +269,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px"></div>
         <codx-input name="autoCompleted" type="switch" class="test-switch" field="autoCompleted"
@@ -280,7 +280,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="ExtendControl" default="Gia hạn công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -290,7 +290,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px"></div>
         <codx-input name="extendControl" type="switch" class="test-switch" field="extendControl"
@@ -301,7 +301,7 @@
     </div>
   </div>
   <div class="row form-group">
-    <div class="form-group col-8">
+    <div class="form-group col-9">
       <codx-label fiedName="ConfirmControl" default="Xác nhận thực hiện công việc" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
@@ -311,7 +311,7 @@
         </codx-label>
       </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
       <div class="d-flex justify-content-end">
         <div class="ms-3 w-30px">
           <codx-input name="confirmControl" type="switch" class="test-switch" field="confirmControl"

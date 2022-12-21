@@ -1,0 +1,47 @@
+<codx-form
+  headerText="Clear cache"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+>
+  <ng-template #body>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-input
+            field="All"
+            type="checkbox"
+            label="CheckAll"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+    </div>
+    <div class="row list-cache">
+      <ng-container *ngFor="let item of listCache">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-input
+              [field]="item"
+              type="checkbox"
+              [label]="item"
+              [checked]="isAll"
+              [disabled]="isAll"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="Clear()">
+        Clear cache
+      </button>
+    </div>
+  </ng-template>
+</codx-form>
