@@ -18,7 +18,11 @@ import {
   DialogRef,
   FormModel,
 } from 'codx-core';
-import { tmpReferences } from '../model/task.model';
+import {
+  tmpReferences,
+  TM_Parameter,
+  TM_TaskGroups,
+} from '../model/task.model';
 import { CRUDService } from 'codx-core/public-api';
 
 @Component({
@@ -31,7 +35,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
-  @Input() param?: any;
+  @Input() param: TM_Parameter = new TM_Parameter();
   @Input() listRoles?: any;
   @Input() popoverCrr?: any;
   @Input() vllStatus?: any;
@@ -60,6 +64,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
+  loadParam = false ;
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -88,17 +93,19 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     this.viewTags = '';
     this.dataTree = [];
     this.dataReferences = [];
+    this.loadParam = false ;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
-      .subscribe((res) => {
+      .subscribe( (res) => {
         if (res) {
           this.itemSelected = res;
-          // this.itemSelected['memoHTML'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo)
-          // this.itemSelected['memoHTML2'] = this.sanitizer.bypassSecurityTrustHtml(this.itemSelected.memo2)
           this.viewTags = this.itemSelected?.tags;
-          this.changeDetectorRef.detectChanges();
+          if (this.itemSelected.taskGroupID) {
+            this.getTaskGroup(this.itemSelected.taskGroupID);
+          }else  this.loadParam = true ;
           this.loadTreeView();
           this.loadDataReferences();
+          this.changeDetectorRef.detectChanges();
         }
       });
   }
@@ -239,7 +246,12 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region  tree
   loadTreeView() {
     this.dataTree = [];
-    if (!this.itemSelected || !this.itemSelected?.taskID || (this.itemSelected.category=='1'&& !this.itemSelected.isAssign)) return;
+    if (
+      !this.itemSelected ||
+      !this.itemSelected?.taskID ||
+      (this.itemSelected.category == '1' && !this.itemSelected.isAssign)
+    )
+      return;
     this.api
       .execSv<any>(
         'TM',
@@ -255,53 +267,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   }
   //#endregion
 
-  //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
-  // loadDataReferences() {
-  //   if (this.itemSelected.category == '1') {
-  //     this.dataReferences = [];
-  //     return;
-  //   }
-  //   this.dataReferences = [];
-  //   if (this.itemSelected.category == '2') {
-  //     this.api
-  //       .execSv<any>(
-  //         'TM',
-  //         'TM',
-  //         'TaskBusiness',
-  //         'GetTaskParentByTaskIDAsync',
-  //         this.itemSelected.taskID
-  //       )
-  //       .subscribe((res) => {
-  //         if (res) {
-  //           var ref = new tmpReferences();
-  //           ref.recIDReferences = res.recID;
-  //           ref.refType = 'TM_Tasks';
-  //           ref.createdOn = res.createdOn;
-  //           ref.memo = res.taskName;
-  //           ref.createdBy = res.createdBy;
-  //           ref.attachments = res.attachments;
-  //           ref.comments = res.comments;
-  //           var taskParent = res;
-  //           this.api
-  //             .execSv<any>('SYS', 'AD', 'UsersBusiness', 'GetUserAsync', [
-  //               res.createdBy,
-  //             ])
-  //             .subscribe((user) => {
-  //               if (user) {
-  //                 ref.createByName = user.userName;
-  //                 this.dataReferences.push(ref);
-  //                 this.getReferencesByCategory3(taskParent);
-  //               }
-  //             });
-  //         }
-  //       });
-  //   } else if (this.itemSelected.category == '3') {
-  //     this.getReferencesByCategory3(this.itemSelected);
-  //   }
-  // }
-  //referen new
   loadDataReferences() {
-    this.dataReferences = []
+    this.dataReferences = [];
     if (this.itemSelected.refID)
       this.getReferencesByCategory3(this.itemSelected);
   }
@@ -418,4 +385,44 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       });
   }
   //#endregion
+  getTaskGroup(idTasKGroup) {
+    this.api
+      .execSv<any>(
+        'TM',
+        'ERM.Business.TM',
+        'TaskGroupBusiness',
+        'GetAsync',
+        idTasKGroup
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.loadParam = true
+          this.convertParameterByTaskGroup(res);
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+
+  //#region Convert
+  convertParameterByTaskGroup(taskGroup: TM_TaskGroups) {
+    this.param.ApproveBy = taskGroup.approveBy;
+    this.param.Approvers = taskGroup.approvers;
+    this.param.ApproveControl = taskGroup.approveControl;
+    this.param.AutoCompleted = taskGroup.autoCompleted;
+    this.param.ConfirmControl = taskGroup.confirmControl;
+    this.param.EditControl = taskGroup.editControl;
+    this.param.LocationControl = taskGroup.locationControl;
+    this.param.MaxHours = taskGroup.maxHours.toString();
+    this.param.MaxHoursControl = taskGroup.maxHoursControl;
+    this.param.PlanControl = taskGroup.planControl;
+    this.param.ProjectControl = taskGroup.projectControl;
+    this.param.UpdateControl = taskGroup.updateControl;
+    this.param.VerifyBy = taskGroup.verifyBy;
+    this.param.VerifyByType = taskGroup.verifyByType;
+    this.param.VerifyControl = taskGroup.verifyControl;
+    this.param.DueDateControl = taskGroup.dueDateControl;
+    this.param.ExtendControl = taskGroup.extendControl;
+    this.param.ExtendBy = taskGroup.extendBy;
+    this.param.CompletedControl = taskGroup.completedControl;
+  }
 }

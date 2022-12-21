@@ -1,3 +1,4 @@
+import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
 import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
 import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
@@ -122,6 +123,8 @@ export class EmployeeProfileComponent extends UIComponent {
   jobInfo: any;
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
+  //Certificate
+  lstCertificates: any = []
   //EExperience
   lstExperience: any = [];
   lstVaccine: any = [];
@@ -135,7 +138,8 @@ export class EmployeeProfileComponent extends UIComponent {
 
   //EAsset salary
   lstAsset: any = [];
-
+  //EAppointion 
+  lstAppointions: any = []
   //Basic salary
   crrEBSalary: any;
   lstEBSalary: any = [];
@@ -283,6 +287,17 @@ export class EmployeeProfileComponent extends UIComponent {
         rqAsset.page = 1;
         this.hrService.getListAssetByDataRequest(rqAsset).subscribe((res) => {
           if (res) this.lstAsset = res[0];
+        });
+
+        //Certificate
+        let rqCertificate = new DataRequest();
+        rqCertificate.gridViewName = 'grvEAssets';
+        rqCertificate.entityName = 'HR_ECertificates';
+        rqCertificate.predicate = 'EmployeeID=@0';
+        rqCertificate.dataValue = params.employeeID;
+        rqCertificate.page = 1;
+        this.hrService.getECertificateWithDataRequest(rqCertificate).subscribe((res) => {
+          if (res) this.lstCertificates = res[0];
         });
 
         //Passport
@@ -513,6 +528,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo('edit', data);
           this.df.detectChanges();
+        } else if(funcID == 'eCertificate'){
+          this.HandleEmployeeCertificateInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -683,6 +701,21 @@ export class EmployeeProfileComponent extends UIComponent {
                   }
                 }
               });
+            } else if(funcID == 'eCertificate'){
+              this.hrService
+              .DeleteEmployeeCertificateInfo(data.recID)
+              .subscribe((p) => {
+                if (p == true) {
+                  this.notify.notifyCode('SYS008');
+                  let i = this.lstCertificates.indexOf(data);
+                  if (i != -1) {
+                    this.lstCertificates.splice(i, 1);
+                  }
+                  this.df.detectChanges();
+                } else {
+                  this.notify.notifyCode('SYS022');
+                }
+              });
             }
           }
         });
@@ -712,6 +745,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'eCertificate'){
+          this.HandleEmployeeCertificateInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1466,17 +1502,40 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeCertificateInfo() {
+  HandleEmployeeAppointionInfo(actionType: string, data: any){
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeCertificateDetailComponent,
+      PopupEappointionsComponent,
+      {
+        actionType: actionType,
+        indexSelected: this.lstAppointions.indexOf(data),
+        lstCertificates : this.lstAppointions,
+        headerText: 'Bổ nhiệm - điều chuyển',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  HandleEmployeeCertificateInfo(actionType: string, data: any) {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
       PopupECertificatesComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstCertificates.indexOf(data),
+        lstCertificates : this.lstCertificates,
         headerText: 'Chứng chỉ',
         employeeId: this.data.employeeID,
       },

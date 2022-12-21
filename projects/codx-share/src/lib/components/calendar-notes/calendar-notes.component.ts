@@ -466,8 +466,7 @@ export class CalendarNotesComponent
           dataTemp = dataTemp.filter(
             (x) => x.calendarDate >= fromDate && x.calendarDate < toDate
           );
-          (lstView.dataService as CRUDService).data = dataTemp;
-          this.change.detectChanges();
+          (lstView.dataService as CRUDService).data = this.dataResourceModel;
         }
       });
     }

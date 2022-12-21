@@ -1,0 +1,4 @@
+.e-grid.e-default tr td:first-child,
+.e-grid.e-default tr th:first-child {
+  padding-left: 12px !important;
+}
