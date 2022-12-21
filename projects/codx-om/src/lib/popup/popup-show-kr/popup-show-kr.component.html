@@ -61,11 +61,13 @@
               <div class="d-flex flex-column container h-100">
                 <ng-container>
                   <div class="d-flex justify-content-center align-items-center">
-                    <div style="width: 650px; height: 350px">
+                    <div style="width: 650px; height: 200px">
                       <ejs-circulargauge
                         style="display: block"
                         background="transparent"
                         (load)="load($event)"
+                        class="position-absolute"
+                        style="top: -10%"
                       >
                         <e-axes>
                           <e-axis
