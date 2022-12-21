@@ -1077,7 +1077,7 @@ export class CodxTasksComponent
           this.convertParameterByTaskGroup(res);
           this.clickMFAfterParameter(e, data);
         } else {
-          this.param = this.paramModule;
+          this.param = JSON.parse(JSON.stringify(this.paramModule));
           this.clickMFAfterParameter(e, data);
         }
       });
