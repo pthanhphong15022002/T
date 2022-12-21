@@ -478,7 +478,7 @@
           <div
             class="mt-1 pb-2"
             *ngIf="
-              param?.ProjectControl != '0' || param?.LocationControl != '0'
+            loadParam && (param?.ProjectControl != '0' || param?.LocationControl != '0')
             "
           >
             <div class="d-flex mb-1" *ngIf="param?.ProjectControl != '0'">

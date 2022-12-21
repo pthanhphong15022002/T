@@ -327,6 +327,7 @@ export class ProcessStepsComponent
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
               column.showItemCount = false;
+              column.dataColums = processStep;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
@@ -580,10 +581,17 @@ export class ProcessStepsComponent
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
               column.showItemCount = false;
+              column.dataColums = processStep;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
-              this.kanban.addColumn(column, index);
+              if (this.kanban.columns && this.kanban.columns.length)
+                this.kanban.addColumn(column, index);
+              else {
+                this.kanban.columns = [];
+                this.kanban.columns.push(column);
+                this.kanban.changeDataSource(this.kanban.columns);
+              }
               if (processStep.items.length > 0) {
                 processStep.items.forEach((obj) => {
                   if (this.kanban) this.kanban.addCard(obj);
@@ -961,7 +969,7 @@ export class ProcessStepsComponent
             ) {
               let crr = event.currentIndex;
               let pre = event.previousIndex;
-              let arrCl = JSON.parse(JSON.stringify(this.kanban.columns));// ko bi luu ngươc
+              let arrCl = JSON.parse(JSON.stringify(this.kanban.columns)); // ko bi luu ngươc
               let temp = arrCl[pre];
               if (crr > pre) {
                 for (var i = pre; i < crr; i++) {
@@ -1329,7 +1337,7 @@ export class ProcessStepsComponent
   clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
       if (dt) {
-        this.dataClick = dt
+        this.dataClick = dt;
         this.clickMF(e, dt);
       }
     });

@@ -183,7 +183,7 @@ export class ColumnsModel{
    allowDrag :boolean = true;
    allowToggle :boolean = false;  
    color :string;
-   dataValue : any
+   dataValue : string
    headerText :string;
    isExpanded:boolean =false ;
    keyField :string;
@@ -192,6 +192,7 @@ export class ColumnsModel{
    predicate :string
    showAddButton :boolean =false ;
    showItemCount :boolean =false ;
+   dataColums : any;
 }
 
 export class TabModel {
