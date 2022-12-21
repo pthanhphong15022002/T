@@ -51,89 +51,32 @@
             </div>
           </div>
           <div>
-            <p>{{0}}</p>
+            <p>{{grid.dataService.rowCount}}</p>
             <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
           </div>
       </div>
   </div>
-  <!-- list detail -->
+  <!-- grid -->
   <div class="p-2 h-100 w-100">
-    <!-- <codx-listview 
-      #codxListView 
-      [formModel]="formModel" 
-      service="HR" 
-      entityName="HR_Employees"
-      assemblyName="ERM.Business.HR"
-      className="OrganizationUnitsBusiness"
-      method="GetEmployeesMasterDetailAsync"
-      [dataValue]="orgUnitID"
-      [headerTemplate]="headerTemplate"
-      [itemTemplate]="itemTemplate">
-    </codx-listview> -->
-    <codx-gridview-v2
+    <codx-gridview
       #grid
+      idField="EmployeeID"
       [funcId]="formModel.funcID"
-      [autoLoad]="true"
+      [formModel]="formModel"
       service="HR" 
-      entityName="HR_Employees"
       assemblyName="ERM.Business.HR"
       className="OrganizationUnitsBusiness"
       method="GetEmployeesMasterDetailAsync"
       rowHeight="40"
       [columnsGrid]="columnsGrid"
-      [rowTemplate]="itemTemplate">
-    </codx-gridview-v2>
+      [rowTmp]="itemTemplate">
+    </codx-gridview>
   </div>
 </div>
-
-<!-- grid -->
-<ng-template>
-  <codx-gridview-v2
-    #grid
-    [funcId]="formModel.funcID"
-    [autoLoad]="true"
-    service="HR" 
-    entityName="HR_Employees"
-    assemblyName="ERM.Business.HR"
-    className="OrganizationUnitsBusiness"
-    method="GetEmployeesMasterDetailAsync"
-    rowHeight="40"
-    [columnsGrid]="columnsGrid"
-    [rowTemplate]="itemTemplate"
-  ></codx-gridview-v2>
-</ng-template>
-<ng-template #headerTemplate>
-  <div class="row bg-secondary p-2 w-100">
+<ng-template #itemTemplate let-item>
+  <tr>
     <!-- Họ và tên -->
-    <div class="col-3 text-center">
-      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeName" [default]="'Họ và tên'"></codx-label>
-    </div>
-    <!-- Ngày sinh -->
-    <div class="col-1 text-center">
-      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeBirthday" [default]="'Ngày sinh'"></codx-label>
-    </div>
-    <!-- Di động -->
-    <div class="col-2 text-center">
-      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeePhone" [default]="'Di động'"></codx-label>
-    </div>
-    <!-- Email -->
-    <div class="col-2 text-center">
-      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeMail" [default]="'EMail'"></codx-label>
-    </div>
-    <!-- Ngày vào làm -->
-    <div class="col-2 text-center">
-      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeJoinredOn" [default]="'Ngày vào làm'"></codx-label>
-    </div>
-    <!-- Trạng thái -->
-    <div class="col-2 text-center">
-      <codx-label class="fw-bolder" [formModel]="formModel" name="lblEmployeeStatus" [default]="'Trạng thái'"></codx-label>
-    </div>
-  </div>
-</ng-template>
-<ng-template #itemTemplate let-item let-index>
-  <div class="row p-2">
-    <!-- Họ và tên -->
-    <div class="col-3">
+    <td>
       <div>
         <codx-img 
           [objectId]="item.employeeID" 
@@ -147,34 +90,43 @@
         <p class="m-0 fw-bolder" *ngIf="item.employeeName">{{item.employeeName}}</p>
         <p class="m-0 text-dark-500" *ngIf="item.positionName">{{item.positionName}}</p>
       </div>
-    </div>  
+    </td>  
     <!-- Ngày sinh -->
-    <div class="col-1">
+    <td>
       <p class="m-0" *ngIf="item.birthday">{{item.birthday}}</p>
-    </div>
+    </td>
     <!-- Phone -->
-    <div class="col-2">
+    <td>
       <p class="m-0" *ngIf="item.phone">{{item.phone}}</p>
-    </div>
+    </td>
     <!-- Email -->
-    <div class="col-2">
+    <td>
       <p class="m-0" *ngIf="item.email">{{item.email}}</p>
-    </div>
+    </td>
     <!-- Ngày vào làm -->
-    <div class="col-2">
+    <td>
       <p class="m-0" *ngIf="item.joinedOn">{{item.joinedOn}}</p>
-    </div>
+    </td>
     <!-- Trạng thái -->
-    <div class="col-2">
+    <td>
       <ng-container *ngIf="item.status">
         <codx-vll [formModel]="formModel" [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
       </ng-container>
-    </div>
+    </td>
+    <td>
+      <codx-mfunc
+        [formModel]="formModel"
+        (clickMF)="clickMF($event,item)"
+        [isBookMark]="false"
+        [dataItem]="item"
+        type="hover">
+      </codx-mfunc>
+    </td>
     <!-- Sở thích -->
     <!-- <div class="col-1">
       <ng-container *ngIf="item.status">
         <codx-vll [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
       </ng-container>
     </div> -->
-  </div>
+  </tr>
 </ng-template>

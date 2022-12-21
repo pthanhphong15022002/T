@@ -73,6 +73,11 @@
     [dataValues]="orgUnitID"
   >
   </codx-listview>
+  <!-- <ng-container *ngFor="let item of dataSource">
+    <div class="row">
+      <ng-container *ngTemplateOutlet="itemTemplate;context:item"></ng-container>
+    </div>
+  </ng-container> -->
 </div>
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column py-4 border-bottom">

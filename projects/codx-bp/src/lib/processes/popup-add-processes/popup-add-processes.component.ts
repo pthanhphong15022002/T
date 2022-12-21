@@ -459,6 +459,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   addAvatar() {
+    //this.imageAvatar.clearData();
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
@@ -466,6 +467,7 @@ export class PopupAddProcessesComponent implements OnInit {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
       this.linkAvatar = e?.data[countListFile-1].avatar;
+
       this.changeDetectorRef.detectChanges();
     }
   }

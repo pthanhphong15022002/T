@@ -162,6 +162,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    return;
     //Remove Old
     let elm =
       environment.themeMode == 'body'

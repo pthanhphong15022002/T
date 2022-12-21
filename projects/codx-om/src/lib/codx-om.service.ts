@@ -259,6 +259,24 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+  getObjectAndKRChild(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OB,
+      'GetObjectAndKRChildAsync',
+      [recID]
+    );
+  }
+  getOKRPlandAndOChild(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'GetOKRPlandAndOChildAsync',
+      [recID]
+    );
+  }
   //region: KR
   checkInKR(recID:string,checkIn:any) {
     return this.api.execSv(
