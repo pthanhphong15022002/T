@@ -481,7 +481,7 @@
             loadParam && (param?.ProjectControl != '0' || param?.LocationControl != '0')
             "
           >
-            <div class="d-flex mb-1" *ngIf="param?.ProjectControl != '0'">
+            <div class="d-flex mb-1" *ngIf="loadParam && param?.ProjectControl != '0'">
               <span class="fw-bold">
                 <!-- <codx-label fiedName="ProjectName" formName="Projects" gridViewName="grvProjects" default="Dự án:">
               </codx-label> -->
