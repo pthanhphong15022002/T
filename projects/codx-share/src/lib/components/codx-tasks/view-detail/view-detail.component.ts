@@ -89,14 +89,14 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   //#region
   //#region Method
   getChangeData() {}
-  async getTaskDetail() {
+  getTaskDetail() {
     this.viewTags = '';
     this.dataTree = [];
     this.dataReferences = [];
     this.loadParam = false ;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
-      .subscribe(async (res) => {
+      .subscribe( (res) => {
         if (res) {
           this.itemSelected = res;
           this.viewTags = this.itemSelected?.tags;
