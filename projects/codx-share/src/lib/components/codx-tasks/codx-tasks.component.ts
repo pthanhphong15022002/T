@@ -1452,7 +1452,7 @@ export class CodxTasksComponent
     this.itemSelected = data;
     if (data.taskGroupID) this.getTaskGroup(data.taskGroupID, e, data);
     else {
-      this.param = this.paramModule;
+      this.param = JSON.parse(JSON.stringify(this.paramDefaut));
       this.clickMFAfterParameter(e, data);
     }
   }
