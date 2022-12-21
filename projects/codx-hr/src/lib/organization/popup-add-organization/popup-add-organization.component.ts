@@ -132,7 +132,7 @@ export class PopupAddOrganizationComponent implements OnInit{
           .subscribe((res:any) =>{
             if(!res?.error){
               this.notifiSV.notifyCode("SYS006");
-              this.dialogRef.close(null);
+              this.dialogRef.close(data);
             }
             else
             {
