@@ -6,7 +6,7 @@ export const OMCONST = {
         OKR : 'OKRBusiness',
         KR : 'KRBusiness',
         OB: 'OBBusiness',
-        OKRPlan: 'OKRPlanBusiness',
+        OKRPlan: 'OKRPlansBusiness',
         OM: 'OMBusiness',
         Reviews: 'ReviewsBusiness',
         Reports: 'ReportsBusiness',
@@ -20,7 +20,7 @@ export const OMCONST = {
     VLL: {
         OKRType:{
             Obj:'O',
-            KResult:'KR',
+            KResult:'R',
             SKResult:'S',
         },
 

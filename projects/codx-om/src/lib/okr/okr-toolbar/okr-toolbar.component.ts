@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { ButtonModel, DialogModel, CallFuncService } from 'codx-core';
+import { OMCONST } from '../../codx-om.constant';
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 
 @Component({
@@ -58,7 +59,7 @@ export class OkrToolbarComponent implements OnInit {
     this.click.emit(obj);
   }
 
-  editWeight(okr: any, child:any) {
+  editWeight(okrPlan: any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
     let popupTitle='Thay đổi trọng số cho mục tiêu';
     let subTitle='Trọng số & kết quả thực hiện';
@@ -70,7 +71,7 @@ export class OkrToolbarComponent implements OnInit {
       null,
       null,
       null,
-      [okr, child,popupTitle , subTitle ],
+      [okrPlan.recID, OMCONST.VLL.OKRType.Obj,popupTitle , subTitle ],
       '',
       dModel
     );
