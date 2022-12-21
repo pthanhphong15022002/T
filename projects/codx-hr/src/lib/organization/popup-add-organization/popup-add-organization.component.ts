@@ -145,18 +145,12 @@ export class PopupAddOrganizationComponent implements OnInit{
   // edit
   editData(data:any){
     if(data){
-      debugger
       this.api
-        .execAction<boolean>(
-         "HR_OrganizationUnits",
-          [data],
-          'UpdateAsyncLogic',
-          true
-        )
+        .execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","UpdateAsync",[data])
         .subscribe((res:any) =>{
-            if(!res?.error){
+            if(res){
               this.notifiSV.notifyCode("SYS007");
-              this.dialogRef.close(null);
+              this.dialogRef.close(res);
             }
             else
             {

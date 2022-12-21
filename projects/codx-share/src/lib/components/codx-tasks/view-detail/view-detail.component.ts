@@ -35,7 +35,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   dialog: any;
   @Input() formModel?: FormModel;
   @Input() taskExtends?: any;
-  @Input() param: TM_Parameter = new TM_Parameter();
+  @Input() paramDefaut?: TM_Parameter = new TM_Parameter();
   @Input() listRoles?: any;
   @Input() popoverCrr?: any;
   @Input() vllStatus?: any;
@@ -65,6 +65,8 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
   loadParam = false ;
+  param?: TM_Parameter = new TM_Parameter();
+
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
@@ -102,7 +104,11 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           this.viewTags = this.itemSelected?.tags;
           if (this.itemSelected.taskGroupID) {
             this.getTaskGroup(this.itemSelected.taskGroupID);
-          }else  this.loadParam = true ;
+          }else  {
+            this.param = JSON.parse(JSON.stringify(this.paramDefaut));
+            this.loadParam = true ;
+          }
+
           this.loadTreeView();
           this.loadDataReferences();
           this.changeDetectorRef.detectChanges();
