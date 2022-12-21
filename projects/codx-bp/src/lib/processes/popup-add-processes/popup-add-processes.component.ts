@@ -78,6 +78,8 @@ export class PopupAddProcessesComponent implements OnInit {
   moreFunctionCopy: string = 'copy';
   moreFunctionAdd: string = 'add';
   moreFunctionEdit: string = 'edit';
+  listPermissionCopy:BP_ProcessPermissions[] = [];
+  onwerOldCoppy:string = '';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -124,6 +126,8 @@ export class PopupAddProcessesComponent implements OnInit {
     this.phasesOld = this.processOldCopy?.phasesOld;
     this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
+    this.listPermissionCopy = this.processOldCopy?.listPermiss;
+    this.onwerOldCoppy =this.processOldCopy?.onwerOld;
     this.nameOld = this.process.processName;
     if (this.action != this.moreFunctionAdd) this.getAvatar(this.process);
     //test gán cứng
@@ -168,6 +172,15 @@ export class PopupAddProcessesComponent implements OnInit {
             : this.AttachmentsOld
           : this.process.attachments;
         this.isCoppyKeyValue = this.isCoppyFile ? 'copyFile' : 'copyDefault';
+        var countArray = this.listPermissionCopy.length;
+        if(countArray>0){
+          for(let i=0; i<countArray; i++) {
+            if(this.listPermissionCopy[i].autoCreate && this.listPermissionCopy[i].objectID != this.onwerOldCoppy) {
+              this.process.permissions.push(this.listPermissionCopy[i]);
+            }
+          }
+
+        }
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;

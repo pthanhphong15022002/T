@@ -105,9 +105,9 @@ export class IncommingAddComponent implements OnInit {
         if(this.formModel?.funcID == "ODT41") 
         {
           this.dispatch.owner = user?.userID;
-          this.getInforByUser(this.dispatch.owner).subscribe(item=>{
-            if(item) this.dispatch.orgUnitID = item.orgUnitID
-          })
+          // this.getInforByUser(this.dispatch.owner).subscribe(item=>{
+          //   if(item) this.dispatch.orgUnitID = item.orgUnitID
+          // })
         }
       }
       this.dispatch.createdOn = new Date();
@@ -168,9 +168,9 @@ export class IncommingAddComponent implements OnInit {
     this.dispatch.owner = event.data?.value[0];
     if(event.data?.value[0])
     {
-      this.getInforByUser(event.data?.value[0]).subscribe(item=>{
-        if(item) this.dispatch.orgUnitID = item.orgUnitID
-      })
+      // this.getInforByUser(event.data?.value[0]).subscribe(item=>{
+      //   if(item) this.dispatch.orgUnitID = item.orgUnitID
+      // })
     }
   }
   //Nơi nhận
@@ -192,9 +192,9 @@ export class IncommingAddComponent implements OnInit {
           if (item != null && item.length > 0) {
             this.dispatch.owner = item[0].domainUser;
             this.change = this.dispatch.owner;
-            this.getInforByUser(item[0].domainUser).subscribe(item=>{
-              if(item) this.dispatch.orgUnitID = item.orgUnitID
-            })
+            // this.getInforByUser(item[0].domainUser).subscribe(item=>{
+            //   if(item) this.dispatch.orgUnitID = item.orgUnitID
+            // })
             this.ref.detectChanges();
           } else {
             this.dispatch.owner = '';

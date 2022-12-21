@@ -64,7 +64,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
     
     if(this.actionType === 'edit' || this.actionType ==='copy'){
-      this.lstCertificates = JSON.parse(JSON.stringify(this.lstCertificates[this.indexSelected]));
+      this.certificateObj = JSON.parse(JSON.stringify(this.lstCertificates[this.indexSelected]));
       this.formModel.currentData = this.certificateObj
     }
     console.log('employid', this.employId)
@@ -130,8 +130,12 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   click(data) {
     console.log('formdata', data);
     this.certificateObj = data;
+    console.log('certi obj', this.certificateObj);
+    console.log('lit cert', this.lstCertificates);
+    
     this.formModel.currentData = JSON.parse(JSON.stringify(this.certificateObj)) 
-    this.indexSelected = this.lstCertificates.findIndex(p => p.recID = this.certificateObj.recID);
+    this.indexSelected = this.lstCertificates.findIndex(p => p.recID == this.certificateObj.recID);
+    console.log('index after click', this.indexSelected);
     this.actionType ='edit'
     this.formGroup?.patchValue(this.certificateObj);
     this.cr.detectChanges();
