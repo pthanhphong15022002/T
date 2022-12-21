@@ -122,6 +122,8 @@ export class EmployeeProfileComponent extends UIComponent {
   jobInfo: any;
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
+  //Certificate
+  lstCertificates: any = []
   //EExperience
   lstExperience: any = [];
   lstVaccine: any = [];
@@ -283,6 +285,17 @@ export class EmployeeProfileComponent extends UIComponent {
         rqAsset.page = 1;
         this.hrService.getListAssetByDataRequest(rqAsset).subscribe((res) => {
           if (res) this.lstAsset = res[0];
+        });
+
+        //Certificate
+        let rqCertificate = new DataRequest();
+        rqCertificate.gridViewName = 'grvEAssets';
+        rqCertificate.entityName = 'HR_ECertificates';
+        rqCertificate.predicate = 'EmployeeID=@0';
+        rqCertificate.dataValue = params.employeeID;
+        rqCertificate.page = 1;
+        this.hrService.getECertificateWithDataRequest(rqAsset).subscribe((res) => {
+          if (res) this.lstCertificates = res[0];
         });
 
         //Passport
@@ -1451,17 +1464,18 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeCertificateInfo() {
+  HandleEmployeeCertificateInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeCertificateDetailComponent,
       PopupECertificatesComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstAsset.indexOf(data),
+        lstCertificates : this.lstCertificates,
         headerText: 'Chứng chỉ',
         employeeId: this.data.employeeID,
       },
