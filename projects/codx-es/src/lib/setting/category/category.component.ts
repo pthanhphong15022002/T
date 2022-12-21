@@ -79,6 +79,8 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     private layout: LayoutService
   ) {
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    console.log('functionID category', this.funcID);
+
     this.cacheSv.functionList(this.funcID).subscribe((func) => {
       this.funcList = func;
     });
@@ -92,10 +94,11 @@ export class DocCategoryComponent implements OnInit, AfterViewInit {
     this.viewBase.dataService.methodDelete = 'DeleteCategoryAsync';
     this.viewBase.dataService.methodSave = 'AddNewAsync';
     this.viewBase.dataService.methodUpdate = 'EditCategoryAsync';
-
-    this.button = {
-      id: 'btnAdd',
-    };
+    if (this.funcID != 'ODS24') {
+      this.button = {
+        id: 'btnAdd',
+      };
+    }
 
     this.moreFunc = [
       {

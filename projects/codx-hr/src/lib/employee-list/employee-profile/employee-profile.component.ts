@@ -59,7 +59,7 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
   selector: 'lib-employee-profile',
   templateUrl: './employee-profile.component.html',
   styleUrls: ['./employee-profile.component.scss'],
-  encapsulation:ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
@@ -109,7 +109,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //family
   lstFamily: any;
   //degree
-  lstEDegrees: any = []
+  lstEDegrees: any = [];
   //passport
   lstPassport: any = [];
   crrPassport: any = {};
@@ -350,19 +350,18 @@ export class EmployeeProfileComponent extends UIComponent {
               this.crrVisa = this.lstVisa[0];
             }
           });
-          //Edegrees
-          let rqDegrees = new DataRequest();
-          rqDegrees.gridViewName = 'grvEDegrees';
-          rqDegrees.entityName = 'HR_EDegrees';
-          rqDegrees.predicate = 'EmployeeID=@0';
-          rqDegrees.dataValue = params.employeeID;
-          (rqDegrees.page = 1),
+        //Edegrees
+        let rqDegrees = new DataRequest();
+        rqDegrees.gridViewName = 'grvEDegrees';
+        rqDegrees.entityName = 'HR_EDegrees';
+        rqDegrees.predicate = 'EmployeeID=@0';
+        rqDegrees.dataValue = params.employeeID;
+        (rqDegrees.page = 1),
           this.hrService.getEmployeeDregreesInfo(rqDegrees).subscribe((res) => {
             console.log('ret trả về', res);
-            
+
             if (res) this.lstEDegrees = res[0];
             console.log('lít e đì gri', this.lstEDegrees);
-            
           });
 
         //work permit
@@ -470,17 +469,15 @@ export class EmployeeProfileComponent extends UIComponent {
         rqESkill.predicates = 'EmployeeID=@0';
         rqESkill.page = 1;
         rqESkill.pageSize = 20;
-        this.hrService
-          .getViewSkillAsync(rqESkill)
-          .subscribe((res) => {
-            console.log('e Skill', res);
+        this.hrService.getViewSkillAsync(rqESkill).subscribe((res) => {
+          console.log('e Skill', res);
 
-            if (res) {
-              this.lstESkill = res;
-            }
-            //this.lstSkill = res;
-            //this.lstExperience = res;
-          });
+          if (res) {
+            this.lstESkill = res;
+          }
+          //this.lstSkill = res;
+          //this.lstExperience = res;
+        });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -526,7 +523,7 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('edit', data);
           this.df.detectChanges();
-        } else if (funcID == 'eDegrees'){
+        } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo('edit', data);
           this.df.detectChanges();
         }
@@ -665,10 +662,9 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
-            }
-            else if(funcID == 'eDegrees'){
+            } else if (funcID == 'eDegrees') {
               this.hrService
-              .DeleteEmployeeDegreeInfo(data.recID)
+                .DeleteEmployeeDegreeInfo(data.recID)
                 .subscribe((p) => {
                   if (p == true) {
                     this.notify.notifyCode('SYS008');
@@ -681,6 +677,25 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'eSkill') {
+              this.hrService.deleteESkill(data.recID).subscribe((res) => {
+                if (res) {
+                  let grpIndex = this.lstESkill.findIndex(
+                    (p) => p.skillID == data.skillID
+                  );
+                  if (grpIndex > -1) {
+                    let lstItem = this.lstESkill[grpIndex]?.listSkill;
+
+                    let skillIndex = lstItem.findIndex(
+                      (p) => p.recID == data.recID
+                    );
+                    if (skillIndex > -1) {
+                      lstItem.splice(skillIndex, 1);
+                      this.df.detectChanges();
+                    }
+                  }
+                }
+              });
             }
           }
         });
@@ -708,7 +723,7 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'Assets') {
           this.HandlemployeeAssetInfo('copy', data);
           this.df.detectChanges();
-        } else if(funcID == 'eDegrees'){
+        } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo('copy', data);
           this.df.detectChanges();
         }
@@ -1486,7 +1501,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  HandleEmployeeDegreeInfo(actionType: string, data: any ) {
+  HandleEmployeeDegreeInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1499,7 +1514,7 @@ export class EmployeeProfileComponent extends UIComponent {
         // isAdd: true,
         actionType: actionType,
         indexSelected: this.lstEDegrees.indexOf(data),
-        lstEDegrees : this.lstEDegrees,
+        lstEDegrees: this.lstEDegrees,
         headerText: 'Bằng cấp',
         employeeId: this.data.employeeID,
       },

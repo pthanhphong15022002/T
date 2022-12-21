@@ -1481,3 +1481,12 @@ codx-tag {
 .btn.btn-transparent {
   background-color: transparent !important;
 }
+
+/*** van lich **/
+ejs-schedule .e-schedule-toolbar-container .e-control.e-popup-open {
+  max-width: 300px;
+}
+
+.e-datepicker.e-popup-open {
+  max-width: 300px;
+}

@@ -164,7 +164,6 @@ export class ProcessStepsComponent
   //   this.chgViewModel(this.viewMode);
   //   this.changeDetectorRef.detectChanges()
   // }
-  
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -336,7 +335,7 @@ export class ProcessStepsComponent
               else {
                 this.kanban.columns = [];
                 this.kanban.columns.push(column);
-                this.kanban.refresh();
+                this.kanban.changeDataSource(this.kanban.columns);
               }
             }
 
@@ -962,7 +961,7 @@ export class ProcessStepsComponent
             ) {
               let crr = event.currentIndex;
               let pre = event.previousIndex;
-              let arrCl = this.kanban.columns;
+              let arrCl = JSON.parse(JSON.stringify(this.kanban.columns));// ko bi luu ngươc
               let temp = arrCl[pre];
               if (crr > pre) {
                 for (var i = pre; i < crr; i++) {
@@ -975,8 +974,7 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl;
-              this.kanban.refresh();
+              this.kanban.changeDataSource(arrCl);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -1314,7 +1312,7 @@ export class ProcessStepsComponent
     return this.widthElement < text.length * 3;
   }
   //chuwa xong
-  dataColums(recIDPhase): any {
+  dataColums(recIDPhase) {
     this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
       return dt;
     });
@@ -1323,8 +1321,13 @@ export class ProcessStepsComponent
   clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
       if (dt) {
+        this.dataClick = dt
         this.clickMF(e, dt);
       }
     });
+  }
+
+  viewDetailSurveys(link) {
+    if (link) window.open(link);
   }
 }

@@ -235,7 +235,6 @@ export class CodxHrService {
     );
   }
 
-
   saveEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -1075,7 +1074,7 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_SkillGrades
-  getEmployeeSkillModel(){
+  getEmployeeSkillModel() {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1133,6 +1132,16 @@ export class CodxHrService {
       'ESkillsBusiness',
       'GetViewSkillAsync',
       dataRequest
+    );
+  }
+
+  deleteESkill(recID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'DeleteESkillAsync',
+      recID
     );
   }
   //#endregion

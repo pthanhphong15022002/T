@@ -175,20 +175,18 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
   getCalendarSetting(resource) {
     let myInterval = setInterval(() => {
       if (
-        this.tmpCalendarNote.instance.dataResourceModel &&
         this.tmpCalendarNote.instance.dataResourceModel.length > 0 &&
         this.tmpCalendarNote.instance.countDataOfE ==
           this.tmpCalendarNote.instance.countEvent
       ) {
         clearInterval(myInterval);
-        var a = this.calendar_setting.createComponent(SettingCalendarComponent);
+        let a = this.calendar_setting.createComponent(SettingCalendarComponent);
         a.instance.funcID = this.funcID;
         a.instance.fields = this.fields;
-        a.instance.showHeader = false;
         a.instance.resources = resource;
         a.instance.resourceModel =
           this.tmpCalendarNote.instance.dataResourceModel;
-        debugger;
+        console.log("check resourceModel", a.instance.resourceModel)
       }
     });
   }

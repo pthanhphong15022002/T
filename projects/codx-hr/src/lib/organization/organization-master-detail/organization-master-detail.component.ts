@@ -1,81 +1,102 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, CodxListviewComponent, FormModel } from 'codx-core';
+import { ApiHttpService, CacheService, CodxGridviewComponent, FormModel } from 'codx-core';
 
 @Component({
   selector: 'lib-organization-master-detail',
   templateUrl: './organization-master-detail.component.html',
   styleUrls: ['./organization-master-detail.component.css']
 })
-export class OrganizationMasterDetailComponent implements OnInit, OnChanges {
+export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
 
   @Input() orgUnitID:string = "";
   @Input() formModel:FormModel = null;
   employeeManager:any = null;
   totalEmployee:number = 0;
-  columnsGrid:any[] = [
-    {
-      field: 'employeeID',
-      headerText: 'Họ và tên',
-    },
-    {
-      field: 'birthDay',
-      headerText: 'Ngày sinh',
-    },
-    {
-      field: 'Phone',
-      headerText: 'Số điện thoại',
-    },
-    {
-      field: 'Email',
-      headerText: 'Email',
-    },
-    {
-      field: 'JoinredOn',
-      headerText: 'Ngày vào làm',
-    },
-    {
-      field: 'Status',
-      headerText: 'Trạng thái',
-    },
-  ];
-  
-  @ViewChild("codxListView") codxListView:CodxListviewComponent;
+  columnsGrid:any[] = []
+  gridViweSetUp:any = {};
+  predicate:string = "@0.Contains(EmployeeID) || EmployeeID != @1";
+  dataValue:string = "";
+  @ViewChild("grid") grid:CodxGridviewComponent;
   constructor(
     private api:ApiHttpService,
+    private cache:CacheService,
     private dt:ChangeDetectorRef,
   ) 
   { 
     
   }
-  ngOnInit(): void {
-    this.getManager(this.orgUnitID);
-  }
-
-  //onChange orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
-      this.orgUnitID = changes.orgUnitID.currentValue;
+    if(this.orgUnitID){
       this.getManager(this.orgUnitID);
-      if(this.codxListView){
-        this.codxListView.dataService.setPredicate("",[this.orgUnitID]).subscribe();
+      if(this.grid){
+        this.grid.dataService.setPredicate("",[this.orgUnitID]).subscribe();
       }
-      this.dt.detectChanges();
+    }
+  }
+  ngOnInit(): void {
+    this.setDataDefault(this.formModel);
+  }
+  setDataDefault(formModel:FormModel){
+    if(formModel){
+      this.cache.gridViewSetup(formModel.formName,formModel.gridViewName)
+      .subscribe((grd:any) => {
+        if(grd){
+          this.gridViweSetUp = grd;
+          this.columnsGrid = [
+            {
+              headerText: grd["EmployeeName"]["headerText"],
+              width: '25%',
+            },
+            {
+              headerText: grd["Birthday"]["headerText"],
+              width: '15%',
+            },
+            {
+              headerText: grd["Phone"]["headerText"],
+              width: '15%',
+            },
+            {
+              headerText: grd["Email"]["headerText"],
+              width: '15%',
+            },
+            {
+              headerText: grd["JoinedOn"]["headerText"],
+              width: '15%',
+            },
+            {
+              headerText: grd["Status"]["headerText"],
+              width: '15%',
+            },
+            {
+              headerText: "",
+              width: '5%',
+            },
+          ];
+        }
+      });
     }
   }
   // get employee manager by orgUnitID
   getManager(orgUnitID:string){
     if(orgUnitID){
-      this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","GetEmployeeMasterDetailAsync",[orgUnitID])
+      this.api.execSv("HR","ERM.Business.HR","OrganizationUnitsBusiness","GetManagerAsync",[orgUnitID])
       .subscribe((res:any) => {
         if(res)
         {
           this.employeeManager = JSON.parse(JSON.stringify(res));
         }
-        else{
+        else
+        {
           this.employeeManager = null;
         }
         this.dt.detectChanges();
       });
     }
   }
+
+  // clickMFC
+  clickMF(event:any,item:any){
+
+  }
+  
 }
