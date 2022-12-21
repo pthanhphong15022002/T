@@ -1,13 +1,28 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  Optional,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthService, AuthStore, CacheService, DialogData, DialogRef, NotificationsService } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthService,
+  AuthStore,
+  CacheService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+} from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
 @Component({
   selector: 'lib-popup-add-employees',
   templateUrl: './popup-add-employees.component.html',
-  styleUrls: ['./popup-add-employees.component.css']
+  styleUrls: ['./popup-add-employees.component.css'],
 })
 export class PopupAddEmployeesComponent implements OnInit {
   title = '';
@@ -15,12 +30,12 @@ export class PopupAddEmployeesComponent implements OnInit {
     {
       icon: 'icon-info',
       text: 'Thông tin chung',
-      name: 'tabInfoPersonal'
+      name: 'tabInfoPersonal',
     },
     {
       icon: 'icon-person',
       text: 'Nhân viên',
-      name: 'tabInfoEmploy'
+      name: 'tabInfoEmploy',
     },
     {
       icon: 'icon-receipt_long',
@@ -34,22 +49,22 @@ export class PopupAddEmployeesComponent implements OnInit {
     },
   ];
   dialogRef: any;
-  dialogData: any = null  ;
+  dialogData: any = null;
   employee: HR_Employees;
-  defaultEmployeeID:string = "";
+  defaultEmployeeID: string = '';
   readOnly = false;
   showAssignTo = false;
   isSaving: boolean = false;
   isNew: boolean = true;
-  currentSection = "InfoPersonal";
+  currentSection = 'InfoPersonal';
   user: any;
-  formName = "";
-  gridViewName = "";
+  formName = '';
+  gridViewName = '';
   functionID: string;
   isAfterRender = false;
   gridViewSetup: any;
-  action : "add" | "edit" | "copy" = "add";
-  paramaterHR:any = null
+  action: 'add' | 'edit' | 'copy' = 'add';
+  paramaterHR: any = null;
 
   constructor(
     private auth: AuthService,
@@ -60,13 +75,10 @@ export class PopupAddEmployeesComponent implements OnInit {
     private api: ApiHttpService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-  ) 
-  {
-    this.user = this.auth.userValue
+  ) {
+    this.user = this.auth.userValue;
     this.dialogData = dialogData.data;
     this.dialogRef = dialogRef;
-    
-    
   }
 
   ngOnInit(): void {
@@ -77,60 +89,67 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.getParamerAsync(this.functionID);
   }
   // get parameter auto default number
-  getParamerAsync(funcID:string){
-    if(funcID)
-    {
-      this.api.execSv(
-        "SYS",
-        "ERM.Business.AD",
-        "AutoNumberDefaultsBusiness",
-        "GenAutoDefaultAsync",
-        [funcID])
-        .subscribe((res:any) => {
-          if(res)
-          {
+  getParamerAsync(funcID: string) {
+    if (funcID) {
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.AD',
+          'AutoNumberDefaultsBusiness',
+          'GenAutoDefaultAsync',
+          [funcID]
+        )
+        .subscribe((res: any) => {
+          if (res) {
             this.paramaterHR = JSON.parse(JSON.stringify(res));
           }
-      });
+        });
     }
   }
   // set title popup
-  setTile(event,form){
+  setTile(event, form) {
     form.title = this.title;
     this.detectorRef.detectChanges();
   }
-  getDefaultEmployeeID(funcID:string,entityName:string,fieldName:string,data:any = null){
-    if(funcID && entityName && fieldName){
-      this.api.execSv(
-        "SYS", 
-        "ERM.Business.AD",
-        "AutoNumbersBusiness",
-        "GenAutoNumberAsync", 
-        [funcID, entityName, fieldName, null])
-        .subscribe((res:any) =>{
-          if(res)
-          {
+  getDefaultEmployeeID(
+    funcID: string,
+    entityName: string,
+    fieldName: string,
+    data: any = null
+  ) {
+    if (funcID && entityName && fieldName) {
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.AD',
+          'AutoNumbersBusiness',
+          'GenAutoNumberAsync',
+          [funcID, entityName, fieldName, null]
+        )
+        .subscribe((res: any) => {
+          if (res) {
             this.defaultEmployeeID = res;
             this.employee.employeeID = this.defaultEmployeeID;
+          } else {
+            this.notifiSV.notifyCode('SYS020');
           }
-          else
-          {
-            this.notifiSV.notifyCode("SYS020");
-          }
-        })
+        });
     }
-    
   }
 
   getAutonumber(functionID, entityName, fieldName): Observable<any> {
     var subject = new Subject<any>();
-    this.api.execSv<any>("SYS", "ERM.Business.AD", "AutoNumbersBusiness",
-      "GenAutoNumberAsync", [functionID, entityName, fieldName, null])
-      .subscribe(item => {
-        if (item)
-          subject.next(item);
-        else
-          subject.next(null);
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.AD',
+        'AutoNumbersBusiness',
+        'GenAutoNumberAsync',
+        [functionID, entityName, fieldName, null]
+      )
+      .subscribe((item) => {
+        if (item) subject.next(item);
+        else subject.next(null);
       });
     return subject.asObservable();
   }
@@ -145,70 +164,56 @@ export class PopupAddEmployeesComponent implements OnInit {
     } else if (this.action === 'edit') {
       this.isNew = false;
     }
-    data = [
-      this.employee,
-      this.isNew
-    ];
+    data = [this.employee, this.isNew];
     op.data = data;
     return true;
   }
 
   // btn save
   OnSaveForm() {
-    if(this.action == "edit"){
+    if (this.action == 'edit') {
       this.updateEmployeeAsync(this.employee);
-    }
-    else
-    {
+    } else {
       this.addEmployeeAsync(this.employee);
     }
   }
 
-  updateEmployeeAsync(employee:any){
-    if(employee){
+  updateEmployeeAsync(employee: any) {
+    if (employee) {
       this.api
-        .execAction<boolean>(
-         "HR_Employees",
-          [employee],
-          'UpdateAsync',
-          true
-        ).subscribe((res:any) =>{
-            if(!res?.error){
-              this.dialogRef.close(res.data);
-            }
-            else
-            {
-              this.notifiSV.notifyCode("SYS021");
-              this.dialogRef.close(null);
-            }
+        .execAction<boolean>('HR_Employees', [employee], 'UpdateAsync', true)
+        .subscribe((res: any) => {
+          if (!res?.error) {
+            this.dialogRef.close(res.data);
+          } else {
+            this.notifiSV.notifyCode('SYS021');
+            this.dialogRef.close(null);
+          }
         });
     }
   }
-  addEmployeeAsync(employee:any){
-    if(employee){
+  addEmployeeAsync(employee: any) {
+    if (employee) {
       this.api
-        .execAction<boolean>(
-         "HR_Employees",
-          [employee],
-          'SaveAsync')
-          .subscribe((res:any) =>{
-            if(!res?.error){
-              this.dialogRef.close(res.data);
-            }
-            else
-            {
-              this.notifiSV.notifyCode("SYS023");
-              this.dialogRef.close(null);
-            }
+        .execAction<boolean>('HR_Employees', [employee], 'SaveAsync')
+        .subscribe((res: any) => {
+          if (!res?.error) {
+            this.dialogRef.close(res.data);
+          } else {
+            this.notifiSV.notifyCode('SYS023');
+            this.dialogRef.close(null);
+          }
         });
     }
   }
 
   dataChange(e: any) {
-    if(e)
-    {
-      this.employee[e.field] = e.data;
+    if (e) {
+      if (typeof e.data !== 'string') {
+        this.employee[e.field] = e.data.fromDate
+          ? e.data.fromDate.toISOString()
+          : null;
+      } else this.employee[e.field] = e.data;
     }
   }
-
 }
