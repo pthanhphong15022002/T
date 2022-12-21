@@ -19,10 +19,12 @@ import {
   MenuComponent,
   ApiHttpService,
   AuthStore,
+  CallFuncService,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
+import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
 
 @Component({
   selector: 'codx-user-inner',
@@ -57,7 +59,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private api: ApiHttpService,
     private codxShareSV: CodxShareService,
     private change: ChangeDetectorRef,
-    private element: ElementRef
+    private element: ElementRef,
+    private callSV: CallFuncService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) this.functionList = res;
@@ -160,8 +163,11 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
   setTheme(value: string) {
     //Remove Old
-    let elm = environment.themeMode=="body"? document.body: this.element.nativeElement.closest('.codx-theme');
-    if(this.theme && elm){
+    let elm =
+      environment.themeMode == 'body'
+        ? document.body
+        : this.element.nativeElement.closest('.codx-theme');
+    if (this.theme && elm) {
       elm.classList.remove(this.theme.id);
     }
 
@@ -185,15 +191,16 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   clearCache() {
-    this.auth
-      .clearCache()
-      .pipe()
-      .subscribe((data) => {
-        if (data) {
-          if (!data.isError) this.notifyService.notifyCode('SYS017');
-          else this.notifyService.notify(data.error);
-        }
-      });
+    this.callSV.openForm(CodxClearCacheComponent, 'Clear cache', 500, 700);
+    // this.auth
+    //   .clearCache()
+    //   .pipe()
+    //   .subscribe((data) => {
+    //     if (data) {
+    //       if (!data.isError) this.notifyService.notifyCode('SYS017');
+    //       else this.notifyService.notify(data.error);
+    //     }
+    //   });
   }
 
   ngOnDestroy() {
