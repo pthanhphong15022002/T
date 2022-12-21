@@ -1,6 +1,6 @@
-<div class="p-2 h-100">
+<div class="p-2 h-100 w-100">
   <!-- master -->
-  <div class="d-flex w-100" id="master">
+  <div class="d-flex " id="master">
       <div class="me-4">
           <codx-img 
               [objectId]="employeeManager?.employeeID" 
@@ -57,9 +57,9 @@
       </div>
   </div>
   <!-- grid -->
-    <div id="detail" class="h-100" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
-    data-kt-scroll-dependencies="#master, .pw-profile, .pw-menu"
-    data-kt-scroll-wrappers=".wrapper-portal, .wrapper, #detail, .pw-content" data-kt-scroll-offset="0">
+    <div id="detail"  data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies="#master"
+    data-kt-scroll-wrappers="#detail" data-kt-scroll-offset="0">
     <codx-gridview
       #grid
       [formModel]="formModelEmp"
