@@ -17,7 +17,7 @@ export class OkrToolbarComponent implements OnInit {
   buttonAddO: ButtonModel;
   button?: ButtonModel;
   @Output() click = new EventEmitter<any>();
-  date = new Date();
+  date:any = new Date();
   ops = ['m','q','y'];
   okrPlan:any;
   okrChild:any;
@@ -26,8 +26,6 @@ export class OkrToolbarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
-    
     this.button = {
       id: 'btnAdd',
       icon:'icon-i-chevron-down',
@@ -51,6 +49,7 @@ export class OkrToolbarComponent implements OnInit {
   }
   changeCalendar(event:any)
   {
+    debugger
     var obj = 
     {
       id : "Calendar",
@@ -59,7 +58,7 @@ export class OkrToolbarComponent implements OnInit {
     this.click.emit(obj);
   }
 
-  editWeight(okrPlan: any) {
+  editWeight(planRecID: any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
     let popupTitle='Thay đổi trọng số cho mục tiêu';
     let subTitle='Trọng số & kết quả thực hiện';
@@ -71,7 +70,7 @@ export class OkrToolbarComponent implements OnInit {
       null,
       null,
       null,
-      [okrPlan.recID, OMCONST.VLL.OKRType.Obj,popupTitle , subTitle ],
+      [planRecID, OMCONST.VLL.OKRType.Obj,popupTitle , subTitle ],
       '',
       dModel
     );

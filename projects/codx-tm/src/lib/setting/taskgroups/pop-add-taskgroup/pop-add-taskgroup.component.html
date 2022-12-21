@@ -192,13 +192,13 @@
   </div>
   <div class="row form-group">
     <div class="form-group col-9">
-      <codx-label fiedName="MaxHoursControl" default="Thời gian tối đa hoàn thành" formName="TaskGroups"
+      <codx-label fiedName="MaxHours" default="Thời gian tối đa hoàn thành" formName="TaskGroups"
         gridViewName="grvTaskGroups">
       </codx-label>
       <div>
-        <codx-label class="fw-normal text-gray-500" fiedName="MaxHoursControl"
-          default="Số giờ tối đa để hoàn thành công việc là 8" formName="TaskGroups" gridViewName="grvTaskGroups">
-        </codx-label>
+        <div class="fw-normal text-gray-500" 
+          [innerHTML]="viewHtmlMaxHour(taskGroups.maxHours)" >
+        </div>
       </div>
     </div>
     <div class="col-3">
@@ -413,7 +413,7 @@
       </div>
     </div>
     <div class="form-group row">
-      <codx-input type="text" class="form-control" placeholder="Tối thiểu 0, tối đa 8" [crrValue]="taskGroups.maxHours"
+      <codx-input type="text" class="form-control" [placeholder]="gridViewSetup?.MaxHours?.headerText" [crrValue]="taskGroups.maxHours"
         (valueChange)="changeHours($event)"></codx-input>
     </div>
   </div>

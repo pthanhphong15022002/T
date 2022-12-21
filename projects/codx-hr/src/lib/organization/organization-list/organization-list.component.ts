@@ -29,10 +29,8 @@ export class OrganizationListComponent
 {
   @Input() orgUnitID: string = '';
   @Input() formModel: FormModel = null;
-  data: any[] = [];
+  @Input() dataService:CRUDService = null; 
   isloaded = false;
-  predicate: string = 'OrgUnitID = @0 or @0.Contains(ParentID)';
-  @ViewChild('codxListView') codxListView: CodxListviewComponent;
   constructor(
     private api: ApiHttpService,
     private dt: ChangeDetectorRef,
@@ -41,15 +39,14 @@ export class OrganizationListComponent
 
   ngOnInit(): void {}
   ngAfterViewInit(): void {
-    this.codxListView.dataService.idField = 'orgUnitID';
   }
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
       this.orgUnitID = changes.orgUnitID.currentValue;
-      if (this.codxListView) {
-        this.codxListView.dataService
-          .setPredicates([this.predicate], [this.orgUnitID])
+      if (this.dataService) {
+        this.dataService
+          .setPredicates([], [this.orgUnitID])
           .subscribe();
       }
       this.dt.detectChanges();
@@ -79,7 +76,7 @@ export class OrganizationListComponent
   // delete data
   deleteData(data: any) {
     if (data) {
-      (this.codxListView.dataService as CRUDService)
+      (this.dataService as CRUDService)
         .delete([data], true, (option: RequestOption) =>
           this.beforeDelete(option)
         )
@@ -92,7 +89,7 @@ export class OrganizationListComponent
     opt.assemblyName = 'ERM.Business.HR';
     opt.className = 'OrganizationUnitsBusiness';
     opt.methodName = 'DeleteOrgUnitAsync';
-    opt.data = [this.codxListView.dataService.dataSelected.orgUnitID];
+    opt.data = [this.dataService.dataSelected.orgUnitID];
     return true;
   }
   // edit data
@@ -100,15 +97,15 @@ export class OrganizationListComponent
     if (data && text) {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.codxListView.dataService;
-      option.FormModel = this.codxListView.formModel;
-      (this.codxListView.dataService as CRUDService)
+      option.DataService = this.dataService;
+      option.FormModel = this.formModel;
+      (this.dataService as CRUDService)
         .edit(data)
         .subscribe((result: any) => {
           if (result) {
             let data = {
-              dataService: this.codxListView.dataService,
-              formModel: this.codxListView.formModel,
+              dataService: this.dataService,
+              formModel: this.formModel,
               data: result,
               function: this.formModel.funcID,
               isAddMode: false,
@@ -129,18 +126,18 @@ export class OrganizationListComponent
     if (data && text) {
       let option = new SidebarModel();
       option.Width = '550px';
-      option.DataService = this.codxListView.dataService;
-      option.FormModel = this.codxListView.formModel;
-      this.codxListView.dataService.dataSelected = JSON.parse(
+      option.DataService = this.dataService;
+      option.FormModel = this.formModel;
+      this.dataService.dataSelected = JSON.parse(
         JSON.stringify(data)
       );
-      (this.codxListView.dataService as CRUDService)
+      (this.dataService as CRUDService)
         .copy(data)
         .subscribe((result: any) => {
           if (result) {
             let data = {
-              dataService: this.codxListView.dataService,
-              formModel: this.codxListView.formModel,
+              dataService: this.dataService,
+              formModel: this.formModel,
               data: result,
               function: this.formModel.funcID,
               isAddMode: true,
