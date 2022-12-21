@@ -125,10 +125,15 @@ export class CalendarNotesComponent
           var htmlE = tempCalendar as HTMLElement;
           var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
-          const fDayOfMonth = new Date(eleFromDate.title).toISOString();
-          var eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
-          const lDayOfMonth = new Date(eleToDate.title).toISOString();
+          let numbF = this.convertStrToDate(eleFromDate);
+          const fDayOfMonth = moment(numbF).toISOString();
+          let indexLast =
+            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+              .length - 1;
+          let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
+          let numbL = this.convertStrToDate(eleToDate);
+          const lDayOfMonth = moment(numbL).toISOString();
           this.getFirstParam(fDayOfMonth, lDayOfMonth);
         }
       }, 200);
@@ -345,7 +350,7 @@ export class CalendarNotesComponent
   }
 
   changeDayOfWeek(e) {
-    var data = JSON.parse(JSON.stringify(e.daySelected));
+    var data = e.daySelected;
     let myInterval = setInterval(() => {
       if (this.lstView) {
         clearInterval(myInterval);
@@ -361,29 +366,71 @@ export class CalendarNotesComponent
       var monthCrr = 1 + moment(dateCrr).month();
       var nextMonth = 1 + moment(args.value).month();
       if (monthCrr != nextMonth) {
-        let fDayOfMonth = moment(args.value).startOf('month').toISOString();
-        let lDayOfMonth = moment(args.value).endOf('month').toISOString();
-        this.getParam(fDayOfMonth, lDayOfMonth);
+        if (this.calendar) {
+          var tempCalendar = this.calendar.element;
+          var htmlE = tempCalendar as HTMLElement;
+          var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+            ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+          let numbF = this.convertStrToDate(eleFromDate);
+          const fDayOfMonth = moment(numbF).toISOString();
+          let indexLast =
+            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+              .length - 1;
+          let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
+          let numbL = this.convertStrToDate(eleToDate);
+          const lDayOfMonth = moment(numbL).toISOString();
+          this.getFirstParam(fDayOfMonth, lDayOfMonth);
+        }
       }
     } else {
       var monthCrr = 1 + moment(this.dateOfMonth).month();
       var nextMonth = 1 + moment(args.value).month();
       if (monthCrr != nextMonth) {
-        let fDayOfMonth = moment(args.value).startOf('month').toISOString();
-        let lDayOfMonth = moment(args.value).endOf('month').toISOString();
-        this.getParam(fDayOfMonth, lDayOfMonth);
+        if (this.calendar) {
+          var tempCalendar = this.calendar.element;
+          var htmlE = tempCalendar as HTMLElement;
+          var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+            ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+          let numbF = this.convertStrToDate(eleFromDate);
+          const fDayOfMonth = moment(numbF).toISOString();
+          let indexLast =
+            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+              .length - 1;
+          let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
+          let numbL = this.convertStrToDate(eleToDate);
+          const lDayOfMonth = moment(numbL).toISOString();
+          this.getFirstParam(fDayOfMonth, lDayOfMonth);
+        }
       }
     }
     this.dateOfMonth = args.value;
-    var data = JSON.parse(JSON.stringify(args.value));
+    var data = args.value;
     this.setDate(data, this.lstView);
     this.change.detectChanges();
   }
 
   changeNewMonth(args: any) {
-    var fDayOfMonth = moment(args.date).startOf('month').toISOString();
-    var lDayOfMonth = moment(args.date).endOf('month').toISOString();
-    this.getParam(fDayOfMonth, lDayOfMonth);
+    if (this.calendar) {
+      var tempCalendar = this.calendar.element;
+      var htmlE = tempCalendar as HTMLElement;
+      var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+        ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+      let numbF = this.convertStrToDate(eleFromDate);
+      const fDayOfMonth = moment(numbF).toISOString();
+      let indexLast =
+        htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length -
+        1;
+      let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+        ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
+      let numbL = this.convertStrToDate(eleToDate);
+      const lDayOfMonth = moment(numbL).toISOString();
+      this.getFirstParam(fDayOfMonth, lDayOfMonth);
+      var data = args.date;
+      this.setDate(data, this.lstView);
+      this.change.detectChanges();
+    }
   }
 
   changeNewWeek(args: any) {
@@ -419,13 +466,20 @@ export class CalendarNotesComponent
           dataTemp = dataTemp.filter(
             (x) => x.calendarDate >= fromDate && x.calendarDate < toDate
           );
-          (lstView.dataService as CRUDService).data = dataTemp;
-          this.change.detectChanges();
+          (lstView.dataService as CRUDService).data = this.dataResourceModel;
         }
       });
     }
     this.FDdate = fromDate;
     this.TDate = toDate;
+  }
+
+  convertStrToDate(eleDate) {
+    let str: any = eleDate.title.split(',');
+    let strMonth: any = str[1].split('Tháng');
+    let numb: any = strMonth[1] + '-' + strMonth[0];
+    numb = numb + '-' + str[2];
+    return numb.replaceAll(' ', '');
   }
 
   valueChangeTypeCalendar(e) {
@@ -441,11 +495,17 @@ export class CalendarNotesComponent
             var htmlE = tempCalendar as HTMLElement;
             var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
               ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
-            const fDayOfMonth = new Date(eleFromDate.title).toISOString();
-            var eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-              ?.childNodes[4]?.childNodes[6].childNodes[0] as HTMLElement;
-            const lDayOfMonth = new Date(eleToDate.title).toISOString();
-            this.getParamCalendar(fDayOfMonth, lDayOfMonth);
+            let numbF = this.convertStrToDate(eleFromDate);
+            const fDayOfMonth = moment(numbF).toISOString();
+            let indexLast =
+              htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+                .length - 1;
+            let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+              ?.childNodes[indexLast]?.childNodes[6]
+              .childNodes[0] as HTMLElement;
+            let numbL = this.convertStrToDate(eleToDate);
+            const lDayOfMonth = moment(numbL).toISOString();
+            this.getFirstParam(fDayOfMonth, lDayOfMonth);
           }
         }, 100);
       }
@@ -1148,12 +1208,17 @@ export class CalendarNotesComponent
                 var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
-                const fDayOfMonth = new Date(eleFromDate.title).toISOString();
-                var eleToDate = htmlE?.childNodes[1]?.childNodes[0]
-                  ?.childNodes[1]?.childNodes[4]?.childNodes[6]
+                let numbF = this.convertStrToDate(eleFromDate);
+                const fDayOfMonth = moment(numbF).toISOString();
+                let indexLast =
+                  htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+                    .length - 1;
+                let eleToDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
-                const lDayOfMonth = new Date(eleToDate.title).toISOString();
-                this.getParamCalendar(fDayOfMonth, lDayOfMonth);
+                let numbL = this.convertStrToDate(eleToDate);
+                const lDayOfMonth = moment(numbL).toISOString();
+                this.getFirstParam(fDayOfMonth, lDayOfMonth);
                 var today: any = document.querySelector(
                   ".e-footer-container button[aria-label='Today']"
                 );
@@ -1162,7 +1227,6 @@ export class CalendarNotesComponent
                 }
               }
             });
-            // this.getParam(fDayOfMonth, lDayOfMonth);
           }
           this.setEventWeek();
           // var obj = {

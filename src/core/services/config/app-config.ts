@@ -6,7 +6,8 @@ export abstract class AppConfig {
   reportUrl: string;
   office365: string;
   saas: number;
-  layoutCZ: any;
+  layoutCZ: string;
+  themeMode: string;
   sureMeet: any;
   firebase: any;
 }

@@ -235,7 +235,6 @@ export class CodxHrService {
     );
   }
 
-
   saveEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -246,15 +245,6 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeCertificatesInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'ECertificatesBusiness',
-      'AddEmployeeCertificateInfoAsync',
-      data
-    );
-  }
 
   //#region EPassportsBusiness
 
@@ -381,16 +371,6 @@ export class CodxHrService {
   }
 
   //#endregion
-
-  getEmployeeCertificatesInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'ECertificatesBusiness',
-      'GetEmployeeCertificateInfoAsync',
-      data
-    );
-  }
 
   getEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
@@ -613,6 +593,68 @@ export class CodxHrService {
     );
   }
   //#endregion
+
+    //#region ECertificateBusiness
+    getEmployeeCertificatesInfoById(data){
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'GetOneEmployeeCertificateByEmployeeId',
+        data
+      );
+    }
+
+    getECertificateWithDataRequest(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'GetListCertificatesByDataRequestAsync',
+        data
+      );
+    }
+  
+    getECertificateModel() {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'GetEmployeeCertificatesModelAsync'
+      );
+    }
+  
+    AddEmployeeCertificateInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'AddEmployeeCertificatesInfoAsync',
+        data
+      );
+    }
+  
+    UpdateEmployeeCertificateInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'UpdateEmployeeCertificatesInfoAsync',
+        data
+      );
+    }
+  
+    DeleteEmployeeCertificateInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'DeleteEmployeeCertificatesInfoAsync',
+        data
+      );
+    }
+  
+    //#endregion
 
   //#region EFamiliesBusiness
   getFamilyByEmployeeID(empID: string) {
@@ -1032,6 +1074,15 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_SkillGrades
+  getEmployeeSkillModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'getEmployeeSkillModelAsync'
+    );
+  }
+
   loadDataSkillGrade(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
@@ -1081,6 +1132,16 @@ export class CodxHrService {
       'ESkillsBusiness',
       'GetViewSkillAsync',
       dataRequest
+    );
+  }
+
+  deleteESkill(recID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'DeleteESkillAsync',
+      recID
     );
   }
   //#endregion

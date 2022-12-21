@@ -127,11 +127,11 @@ export class PopupAddProcessesComponent implements OnInit {
     this.nameOld = this.process.processName;
     if (this.action != this.moreFunctionAdd) this.getAvatar(this.process);
     //test gán cứng
-    // if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
-    //   this.folderName ='V0.0';
-      // this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
-      // this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
- //   }
+    if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
+      this.folderName ='V0.0';
+      this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
+      this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
+   }
  if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
   this.process.versionNo = 'V0.0'
 
@@ -171,10 +171,10 @@ export class PopupAddProcessesComponent implements OnInit {
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      // if(this.action ===this.moreFunctionAdd){
-      //   this.process.recID = this.parentID;
-      //   this.process.versions[0].recID = this.folderID;
-      // }
+      if(this.action ===this.moreFunctionAdd){
+        this.process.recID = this.parentID;
+        this.process.versions[0].recID = this.folderID;
+      }
       data = [
         this.process,
         this.isCoppyKeyValue ?? '',
@@ -424,7 +424,7 @@ export class PopupAddProcessesComponent implements OnInit {
     tmpPermission.share = true;
     tmpPermission.full = true;
     tmpPermission.delete = true;
-    tmpPermission.assign = true;
+    tmpPermission.allowPermit = true;
     tmpPermission.download = true;
   }
   callActionSave() {
@@ -459,6 +459,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   addAvatar() {
+    //this.imageAvatar.clearData();
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
@@ -466,6 +467,7 @@ export class PopupAddProcessesComponent implements OnInit {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
       this.linkAvatar = e?.data[countListFile-1].avatar;
+
       this.changeDetectorRef.detectChanges();
     }
   }

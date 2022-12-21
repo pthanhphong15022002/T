@@ -1,3 +1,4 @@
+import { waitForAsync } from '@angular/core/testing';
 import { OKRs } from '../../model/okr.model';
 import {
   AfterViewInit,
@@ -23,6 +24,7 @@ import { CodxOmService } from '../../codx-om.service';
 
 import { EditWeight } from '../../model/okr.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
+import { OMCONST } from '../../codx-om.constant';
 
 @Component({
   selector: 'popup-okr-weight',
@@ -37,16 +39,20 @@ export class PopupOKRWeightComponent
   @ViewChild('checkin') checkin: TemplateRef<any>;
   @ViewChild('alignKR') alignKR: TemplateRef<any>;
   @ViewChild('attachment') attachment: AttachmentComponent;
-
+  krType = OMCONST.VLL.OKRType.KResult;
+  oType = OMCONST.VLL.OKRType.Obj;
   dialogRef: DialogRef;
   formModel: FormModel;
   headerText: string;
   dataOKR: any;
-  totalProgress=0;
+  totalProgress = 0;
   listWeight = [];
   okrChild: any;
-  popupTitle='';
-  subTitle='';
+  popupTitle = '';
+  subTitle = '';
+  recID: any;
+  editWeight: any;
+  totalWeight: number;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -58,12 +64,10 @@ export class PopupOKRWeightComponent
     super(injector);
     this.headerText = 'Thay đổi trọng số KR'; //dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.dataOKR = dialogData.data[0];    
-    this.okrChild = dialogData.data[1];
-    
-    this.popupTitle = dialogData.data[2];    
+    this.recID = dialogData.data[0];
+    this.editWeight = dialogData.data[1];
+    this.popupTitle = dialogData.data[2];
     this.subTitle = dialogData.data[3];
-    this.totalProgress=this.dataOKR.progress;
   }
 
   //-----------------------Base Func-------------------------//
@@ -83,17 +87,11 @@ export class PopupOKRWeightComponent
   }
 
   onInit(): void {
-    if (this.okrChild) {
-      let tempArr = Array.from(this.okrChild);
-      tempArr.forEach((item: any) => {        
-        let newWeight = new EditWeight();
-        newWeight.recID = item.recID;
-        newWeight.weight = item.weight;
-        newWeight.progress = item.progress;
-        newWeight.pbyw= +(item.weight * item.progress).toFixed(2) * 1;
-        this.listWeight.push(newWeight);
-      });
-      this.detectorRef.detectChanges();
+    if (this.editWeight == OMCONST.VLL.OKRType.KResult) {
+      this.getObjectData();
+    }
+    if (this.editWeight == OMCONST.VLL.OKRType.Obj) {
+      this.getOKRPlanData();
     }
   }
 
@@ -104,14 +102,18 @@ export class PopupOKRWeightComponent
     switch (event) {
     }
   }
-  valueChange(evt:any) {
-    if(evt.data!=null && evt.field!=null){
-      this.listWeight[evt.field].weight=evt.data;      
-      this.listWeight[evt.field].pbyw= +(this.listWeight[evt.field].weight * this.listWeight[evt.field].progress).toFixed(2) * 1;
-      this.totalProgress=0;
-      this.listWeight.forEach(item=>{
-        this.totalProgress+= item.pbyw;
-      })
+  valueChange(evt: any) {
+    if (evt.data != null && evt.field != null) {
+      this.listWeight[evt.field].weight = parseFloat(evt.data);
+      this.listWeight[evt.field].pbyw =
+        +(
+          this.listWeight[evt.field].weight *
+          this.listWeight[evt.field].progress
+        ).toFixed(2) * 1;
+      this.totalProgress = 0;
+      this.listWeight.forEach((item) => {
+        this.totalProgress += item.pbyw;
+      });
       this.detectorRef.detectChanges();
     }
   }
@@ -119,7 +121,48 @@ export class PopupOKRWeightComponent
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
-
+  getObjectData(){
+    this.codxOmService
+        .getObjectAndKRChild(this.recID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.dataOKR = res;
+            this.okrChild = res.child;
+            this.totalProgress = this.dataOKR.progress;
+            let tempArr = Array.from(this.okrChild);
+            tempArr.forEach((item: any) => {
+              let newWeight = new EditWeight();
+              newWeight.recID = item.recID;
+              newWeight.weight = item.weight;
+              newWeight.progress = item.progress;
+              newWeight.pbyw = +(item.weight * item.progress).toFixed(2) * 1;
+              this.listWeight.push(newWeight);
+            });
+            this.detectorRef.detectChanges();
+          }
+        });
+  }
+  getOKRPlanData(){
+    this.codxOmService
+        .getOKRPlandAndOChild(this.recID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.dataOKR = res;
+            this.okrChild = res.child;
+            this.totalProgress = this.dataOKR.progress;
+            let tempArr = Array.from(this.okrChild);
+            tempArr.forEach((item: any) => {
+              let newWeight = new EditWeight();
+              newWeight.recID = item.recID;
+              newWeight.weight = item.weight;
+              newWeight.progress = item.progress;
+              newWeight.pbyw = +(item.weight * item.progress).toFixed(2) * 1;
+              this.listWeight.push(newWeight);
+            });
+            this.detectorRef.detectChanges();
+          }
+        });
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Validate Func---------------------//
@@ -129,13 +172,33 @@ export class PopupOKRWeightComponent
   //-----------------------Logic Func------------------------//
 
   onSaveForm() {
-
-    this.codxOmService.editOKRWeight(this.dataOKR.recID, this.dataOKR.okrType, this.listWeight).subscribe((res:any)=>{
-      if(res){
-        let x= res;
+    if(this.listWeight){
+      this.totalWeight = 0;
+      this.listWeight.forEach((okr)=>{
+        if(okr.weight!=null){
+          this.totalWeight = this.totalWeight+ okr.weight;
+          this.detectorRef.detectChanges();
+        }
+        
+        else{   
+          okr.weight=0;       
+          //this.notificationsService.notify("Trọng số không được bỏ trống","2");         
+          return;
+        }
+      });
+      if(this.totalWeight!=1){
+        this.notificationsService.notify("Tổng trọng số phải bằng 1","2");
+        return;
       }
-    });
-
+    }
+    this.codxOmService
+      .editOKRWeight(this.dataOKR.recID, this.editWeight , this.listWeight)
+      .subscribe((res: any) => {
+        if (res) {
+          let x = res;
+          this.dialogRef && this.dialogRef.close();
+        }
+      });
   }
   //-----------------------End-------------------------------//
 

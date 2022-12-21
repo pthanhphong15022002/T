@@ -106,7 +106,7 @@ export class ActiviesSliderComponent implements OnInit {
           'ApproveAsync',
           [transID, status, '', ''])
           .subscribe((res: any) => {
-          if (res) 
+          if (!res?.msgCodeError) 
           {
             let mssgCodeNoti = status == ApprovalStatus.approved ? "WP005" : "WP007";
             this.notiSV.notifyCode(mssgCodeNoti);

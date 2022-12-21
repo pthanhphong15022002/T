@@ -126,7 +126,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
     });
     item.isActive = true;
     // if(item.id == 6 || item.id == 16){
-    this.viewProcessSteps.chgViewModel(item.id);
+    this.viewProcessSteps?.chgViewModel(item.id);
     // }
     this.changeDetectorRef.detectChanges();
   }

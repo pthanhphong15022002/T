@@ -9,10 +9,6 @@
   (buttonClick)="btnClick($event)" 
   (viewChanged)="changeView($event)">
 </codx-views>
-<!-- panel right lef -->
-<ng-template #panelRightLef>
-  <ng-container *ngTemplateOutlet="currView"></ng-container>
-</ng-template>
 <!-- tree -->
 <ng-template #tempTree let-data>
   <div class="d-flex align-items-top py-1">
@@ -20,15 +16,20 @@
     <span>{{ data.orgUnitName }}</span>
   </div>
 </ng-template>
+<!-- panel right lef -->
+<ng-template #panelRightLef>
+  <ng-container *ngTemplateOutlet="currView"></ng-container>
+</ng-template>
+
 <!-- tree master detail -->
 <ng-template #tmpMasterDetail>
   <lib-organization-master-detail [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-master-detail>
 </ng-template>
 <!-- tree orgChart -->
 <ng-template #tmpOrgChart>
-  <hr-organization-orgchart [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
+  <hr-organization-orgchart [dataService]="dataService" [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
 </ng-template>
 <!-- tree list -->
 <ng-template #tmpList>
-  <lib-organization-list [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-list>
+  <lib-organization-list [dataService]="dataService" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-list>
 </ng-template>
