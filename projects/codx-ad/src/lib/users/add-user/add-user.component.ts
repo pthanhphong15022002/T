@@ -129,11 +129,16 @@ export class AddUserComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.user = auth.get();
 
-    this.cache.gridViewSetup('Users', 'grvUsers').subscribe((res) => {
-      if (res) {
-        this.gridViewSetup = res;
-      }
-    });
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
     this.cache.message('WP028').subscribe((res) => {
       if (res) {
         this.contentComment = res.defaultName;
