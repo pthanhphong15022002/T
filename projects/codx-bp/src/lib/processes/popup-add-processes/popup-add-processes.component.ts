@@ -134,8 +134,8 @@ export class PopupAddProcessesComponent implements OnInit {
     //test gán cứng
     if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
       this.folderName ='V0.0';
-      this.folderID = Util.uid();
-      this.parentID = Util.uid();
+       this.folderID = Util.uid();
+       this.parentID = Util.uid();
    }
  if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
   this.process.versionNo = 'V0.0'
@@ -186,7 +186,6 @@ export class PopupAddProcessesComponent implements OnInit {
       this.revisions.push(versions);
       this.process.versions = this.revisions;
       if(this.action ===this.moreFunctionAdd){
-        this.process.recID = this.parentID;
         this.process.versions[0].recID = this.folderID;
       }
       data = [
