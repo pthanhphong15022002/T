@@ -98,13 +98,15 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     this.tmpCalendarNote.instance.typeCalendar = 'month';
     this.tmpCalendarNote.instance.showList = false;
     this.tmpCalendarNote.instance.showListParam = true;
-    this.codxShareSV.settingValue.subscribe((res) => {
-      if (res) {
-        let TM_ = JSON.parse(res.TM_Tasks[1]);
-        let WP_ = JSON.parse(res.WP_Notes[1]);
-        let CO_ = JSON.parse(res.CO_Meetings[1]);
-        let EP_BookingRooms_ = JSON.parse(res.EP_BookingRooms[1]);
-        let EP_BookingCars_ = JSON.parse(res.EP_BookingCars[1]);
+    let myInterval = setInterval(() => {
+      if (this.tmpCalendarNote.instance.settingValue) {
+        clearInterval(myInterval);
+        let param = this.tmpCalendarNote.instance.settingValue;
+        let TM_ = JSON.parse(param.TM_Tasks[1]);
+        let WP_ = JSON.parse(param.WP_Notes[1]);
+        let CO_ = JSON.parse(param.CO_Meetings[1]);
+        let EP_BookingRooms_ = JSON.parse(param.EP_BookingRooms[1]);
+        let EP_BookingCars_ = JSON.parse(param.EP_BookingCars[1]);
         var TM_Params = [
           {
             color: TM_.ShowBackground,
@@ -165,8 +167,10 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
         a.instance.funcID = this.funcID;
         a.instance.fields = this.fields;
         a.instance.resources = resource;
-        a.instance.resourceModel = this.tmpCalendarNote.instance.dataResourceModel;
+        a.instance.resourceModel =
+          this.tmpCalendarNote.instance.dataResourceModel;
+        debugger
       }
-    }); 
+    });
   }
 }

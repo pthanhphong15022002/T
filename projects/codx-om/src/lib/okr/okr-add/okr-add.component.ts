@@ -16,6 +16,8 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   gridView: any;
   formModel: any;
   okrAddGroup: FormGroup;
+  ops = ['q'];
+  date = new Date();
   constructor(
     private formBuilder: FormBuilder,
     @Optional() dt?: DialogData,
@@ -40,6 +42,12 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
       note: ""
     }
   }
+
+  changeCalendar(e:any)
+  {
+    this.dataOKR.periodID = e?.text;
+  }
+
   onSaveForm(){
     debugger;
     var a = this.dataOKR;
