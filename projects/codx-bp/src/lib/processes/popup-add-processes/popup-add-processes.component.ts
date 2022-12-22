@@ -24,6 +24,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
 import { tmpUser } from '../../models/BP_UserPermission.model';
+import { Util } from "codx-core";
 @Component({
   selector: 'lib-popup-add-processes',
   templateUrl: './popup-add-processes.component.html',
@@ -133,8 +134,8 @@ export class PopupAddProcessesComponent implements OnInit {
     //test gán cứng
     if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
       this.folderName ='V0.0';
-      this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
-      this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
+       this.folderID = Util.uid();
+       this.parentID = Util.uid();
    }
  if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
   this.process.versionNo = 'V0.0'
@@ -185,7 +186,6 @@ export class PopupAddProcessesComponent implements OnInit {
       this.revisions.push(versions);
       this.process.versions = this.revisions;
       if(this.action ===this.moreFunctionAdd){
-        this.process.recID = this.parentID;
         this.process.versions[0].recID = this.folderID;
       }
       data = [

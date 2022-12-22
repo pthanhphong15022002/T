@@ -1299,11 +1299,11 @@ export class ProcessStepsComponent
     this.hideMoreFCChild = false;
   }
 
-  showAllparent(text) {
-    return (
-      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
-    );
-  }
+  // showAllparent(text) {
+  //   return (
+  //     this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+  //   );
+  // }
   setWidth(data) {
     let width = document.getElementsByTagName('body')[0].offsetWidth;
     return width < data.length * 12 ? true : false;
