@@ -667,7 +667,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       }
       this.saveCheck = true;
-    } else {
+    } else {                  
+      this.saveCheck = false;
       return;
     }
   }

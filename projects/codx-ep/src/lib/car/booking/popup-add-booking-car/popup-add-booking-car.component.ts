@@ -594,7 +594,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           } else {
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
-        } else {
+        } else {                      
+          this.saveCheck = false;
           return;
         }
       });
