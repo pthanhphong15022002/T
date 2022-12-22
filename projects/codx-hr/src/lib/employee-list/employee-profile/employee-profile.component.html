@@ -93,7 +93,9 @@
                                     <codx-label [formModel]="view.formModel" fiedName="joinedOn">
                                     </codx-label>
                                     <span class="text-dark fw-bold">
-                                      <span>{{ infoPersonal.joinedOn }}</span>
+                                      <span>{{
+                                        infoPersonal.joinedOn | fmDT
+                                        }}</span>
                                     </span>
                                   </div>
                                 </div>
@@ -102,7 +104,9 @@
                                     <codx-label [formModel]="view.formModel" fiedName="hiredOn">
                                     </codx-label>
                                     <span class="text-dark fw-bold">
-                                      <span>{{ infoPersonal.hiredOn }}</span>
+                                      <span>{{
+                                        infoPersonal.hiredOn | fmDT
+                                        }}</span>
                                     </span>
                                   </div>
                                 </div>
@@ -186,7 +190,8 @@
                     </div>
 
                     <div class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center">
-                      <span class="icon-arrow_forward_ios icon-16 text-hover-primary ms-1 text-white"></span>
+                      <span (click)="nextEmp()"
+                        class="icon-arrow_forward_ios icon-16 text-hover-primary ms-1 text-white"></span>
                     </div>
                   </div>
                   <!-- ngPopup -->
@@ -876,8 +881,8 @@
                       </div>
                     </div>
                     <div class="col-8">
-                      <div class="d-flex align-items-center ps-1">
-                        <span class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1"></span>
+                      <div class="d-flex align-items-center ps-1 ">
+                        <span class="icon-i-info-circle-fill icon-circle-group text-gray-600 me-1 pe-2"></span>
                         <codx-label class="text-gray-600 me-2" fiedName="partyAt" [formModel]="view.formModel">
                         </codx-label>
                         <span #partyAt>: {{ infoPersonal.partyAt }} </span>
