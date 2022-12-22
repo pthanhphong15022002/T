@@ -970,7 +970,6 @@ export class ProcessesComponent
 
   viewDetailProcessSteps(moreFunc, data) {
     let isEdit = data.write;
-    let isOwner = data?.owner == this.userId ? true : false;
     let editRole =
       isEdit && !data.deleted
         ? true
