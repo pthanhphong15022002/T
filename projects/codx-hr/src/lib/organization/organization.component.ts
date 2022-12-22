@@ -39,8 +39,8 @@ export class OrgorganizationComponent extends UIComponent {
   end = '</span>';
   funcID: string = '';
   codxTreeView: CodxTreeviewComponent = null;
-  dataService:CRUDService = null;
-  templateActive:number = 0
+  dataService: CRUDService = null;
+  templateActive: number = 0;
   @ViewChild('tempTree') tempTree: TemplateRef<any>;
   @ViewChild('panelRightLef') panelRightLef: TemplateRef<any>;
   @ViewChild('tmpOrgChart') tmpOrgChart: TemplateRef<any>;
@@ -63,12 +63,12 @@ export class OrgorganizationComponent extends UIComponent {
       }
     });
     this.dataService = new CRUDService(this.inject);
-    this.dataService.service = "HR";
-    this.dataService.assemblyName = "ERM.Business.HR";
-    this.dataService.className = "OrganizationUnitsBusiness";
-    this.dataService.method = "GetOrgAsync";
-    this.dataService.idField = "OrgUnitID";
-    this.dataService.request.entityName = "HR_OrganizationUnits";
+    this.dataService.service = 'HR';
+    this.dataService.assemblyName = 'ERM.Business.HR';
+    this.dataService.className = 'OrganizationUnitsBusiness';
+    this.dataService.method = 'GetOrgAsync';
+    this.dataService.idField = 'OrgUnitID';
+    this.dataService.request.entityName = 'HR_OrganizationUnits';
     this.detectorRef.detectChanges();
   }
 
@@ -113,14 +113,16 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
+    debugger;
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
+    this.dataService.currentComponent =
+      this.view?.dataService?.currentComponent;
   }
   // change view
   changeView(evt: any) {
     this.currView = null;
-    if (evt.view) 
-    {
+    if (evt.view) {
       this.templateActive = evt.view.type;
       this.currView = evt.view.model.template2;
     }
@@ -129,8 +131,7 @@ export class OrgorganizationComponent extends UIComponent {
   // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;
-    if (data && this.orgUnitID !== data.orgUnitID) 
-    {
+    if (data && this.orgUnitID !== data.orgUnitID) {
       this.orgUnitID = data.orgUnitID;
       this.detectorRef.detectChanges();
     }
@@ -162,9 +163,8 @@ export class OrgorganizationComponent extends UIComponent {
             option,
             this.funcID
           );
-          popup.closed.subscribe((res:any) => {
-            if(res.event.save.data)
-            {
+          popup.closed.subscribe((res: any) => {
+            if (res.event.save.data) {
               let org = res.event.save.data;
               this.orgUnitID = org.orgUnitID;
               this.detectorRef.detectChanges();
