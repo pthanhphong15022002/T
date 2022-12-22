@@ -139,6 +139,7 @@ export class ProcessesComponent
   idProccess = '';
   employee: any;
   checkGroupPerm = '';
+  popupOld: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -1052,12 +1053,27 @@ export class ProcessesComponent
   //   return strTime;
   // }
 
-  PopoverDetail(p: any, emp) {
+  PopoverDetail(p: any, emp) {    
+    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+      this.popupOld?.close();   
+    }
+   
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
-      if (emp.memo != null) p.open();
+      if (emp.memo != null || emp.processName != null) {
+        p.open();      
+      } 
     } else p.close();
+    this.popupOld = p;
+  }
+
+  closePopover() {
+    this.popupOld?.close();  
+  }
+
+  setTextPopover(text){
+    return (text);
   }
 
   openPopup() {
