@@ -113,10 +113,11 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
+    debugger;
     this.view.dataService.parentIdField = 'ParentID';
+    this.detectorRef.detectChanges();
     this.dataService.currentComponent =
       this.view?.dataService?.currentComponent;
-    this.detectorRef.detectChanges();
   }
   // change view
   changeView(evt: any) {
