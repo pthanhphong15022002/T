@@ -1,6 +1,6 @@
-<div class="p-2 h-100" >
+<div class="p-2 h-100 w-100">
   <!-- master -->
-  <div class="d-flex w-100">
+  <div class="d-flex " id="master">
       <div class="me-4">
           <codx-img 
               [objectId]="employeeManager?.employeeID" 
@@ -57,76 +57,79 @@
       </div>
   </div>
   <!-- grid -->
-  <div class="p-2 h-100 w-100">
+    <div id="detail"  data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto"
+    data-kt-scroll-dependencies="#master"
+    data-kt-scroll-wrappers="#detail" data-kt-scroll-offset="0">
     <codx-gridview
       #grid
+      [formModel]="formModelEmp"
       idField="EmployeeID"
-      [funcId]="formModel.funcID"
-      [formModel]="formModel"
+      [entityName]="'HR_Employees'"
       service="HR" 
       assemblyName="ERM.Business.HR"
       className="OrganizationUnitsBusiness"
       method="GetEmployeesMasterDetailAsync"
       rowHeight="40"
-      [columnsGrid]="columnsGrid"
-      [rowTmp]="itemTemplate">
+      [columnsGrid]="columnsGrid">
     </codx-gridview>
   </div>
 </div>
-<ng-template #itemTemplate let-item>
-  <tr>
-    <!-- Họ và tên -->
-    <td>
-      <div>
-        <codx-img 
-          [objectId]="item.employeeID" 
-          [objectName]="item.objectName" 
-          [objectType]="'HR_Employees'" 
-          [width]="30"
-          [imageType]="'circle'">
-        </codx-img>
-      </div>
-      <div>
-        <p class="m-0 fw-bolder" *ngIf="item.employeeName">{{item.employeeName}}</p>
-        <p class="m-0 text-dark-500" *ngIf="item.positionName">{{item.positionName}}</p>
-      </div>
-    </td>  
-    <!-- Ngày sinh -->
-    <td>
-      <p class="m-0" *ngIf="item.birthday">{{item.birthday}}</p>
-    </td>
-    <!-- Phone -->
-    <td>
-      <p class="m-0" *ngIf="item.phone">{{item.phone}}</p>
-    </td>
-    <!-- Email -->
-    <td>
-      <p class="m-0" *ngIf="item.email">{{item.email}}</p>
-    </td>
-    <!-- Ngày vào làm -->
-    <td>
-      <p class="m-0" *ngIf="item.joinedOn">{{item.joinedOn}}</p>
-    </td>
-    <!-- Trạng thái -->
-    <td>
-      <ng-container *ngIf="item.status">
-        <codx-vll [formModel]="formModel" [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
-      </ng-container>
-    </td>
-    <td>
-      <codx-mfunc
-        [formModel]="formModel"
-        (clickMF)="clickMF($event,item)"
-        [isBookMark]="false"
+<ng-template #templateName let-item>
+  <div>
+    <codx-temp-full
+        [imageId]="item.employeeID"
+        imageObjType="HR_Employees"
+        [title]="item.employeeName"
+        [subTitle]="item.positionName"
+        [formModel]="formModelEmp"
         [dataItem]="item"
-        type="hover">
-      </codx-mfunc>
-    </td>
-    <!-- Sở thích -->
-    <!-- <div class="col-1">
-      <ng-container *ngIf="item.status">
-        <codx-vll [name]="'L0025'" [value]="item.status" [showText]="true" [showBgColor]="true"></codx-vll>
-      </ng-container>
-    </div> -->
-  </tr>
+        [hideMF]="true"
+        [imageObjName]="item.employeeName">
+    </codx-temp-full>
+  </div>
 </ng-template>
+<ng-template #templateBirthday let-item>
+  <div>
+    <span *ngIf="item.birthday">{{item.birthday | formatvalue:formModelEmp:"Birthday" | async}}</span>
+  </div>
+</ng-template>
+<ng-template #templatePhone let-item>
+  <div>
+    <span *ngIf="item.phone">{{item.phone | formatvalue:formModelEmp:"Phone" | async}}</span>
+  </div>
+</ng-template>
+<ng-template #templateEmail let-item>
+  <div>
+    <span *ngIf="item.email">{{item.email | formatvalue:formModelEmp:"Email" | async}}</span>
+  </div>
+</ng-template>
+<ng-template #templateJoinedOn let-item>
+  <div>
+    <span *ngIf="item.joinedOn">{{item.joinedOn | formatvalue:formModelEmp:"JoinedOn" | async}}</span>
+  </div>
+</ng-template>
+<ng-template #templateStatus let-item>
+  <div>
+    <ng-container *ngIf="item.status">
+      <codx-vll 
+        [formModel]="formModelEmp" 
+        [classList]="'badge badge-sm badge-inline'"
+        [name]="'HR003'" 
+        [value]="item.status" 
+        [showText]="true" 
+        [showBgColor]="true">
+      </codx-vll>
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #templateMoreFC let-item>
+  <div>
+    <codx-mfunc
+      [formModel]="formModelEmp"
+      (clickMF)="clickMF($event, item)"
+      [dataItem]="item"
+      type="view">
+    </codx-mfunc>
+  </div>
+</ng-template>
+
