@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CodxGridviewComponent, FormModel } from 'codx-core';
+import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
+import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CRUDService, FormModel, SidebarModel, ViewsComponent } from 'codx-core';
+import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 @Component({
   selector: 'lib-organization-master-detail',
@@ -9,71 +10,94 @@ import { ApiHttpService, CacheService, CodxGridviewComponent, FormModel } from '
 export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
 
   @Input() orgUnitID:string = "";
+  @Input() view:ViewsComponent = null; 
   @Input() formModel:FormModel = null;
   employeeManager:any = null;
   totalEmployee:number = 0;
-  columnsGrid:any[] = []
-  gridViweSetUp:any = {};
-  predicate:string = "@0.Contains(EmployeeID) || EmployeeID != @1";
-  dataValue:string = "";
+  columnsGrid:any[] = null;
+  grvSetup:any = {};
+  formModelEmp:FormModel = new FormModel();
   @ViewChild("grid") grid:CodxGridviewComponent;
+  @ViewChild("templateName",{ static: true }) templateName:TemplateRef<any>;
+  @ViewChild("templateBirthday",{ static: true }) templateBirthday:TemplateRef<any>;
+  @ViewChild("templatePhone",{ static: true }) templatePhone:TemplateRef<any>;
+  @ViewChild("templateEmail",{ static: true }) templateEmail:TemplateRef<any>;
+  @ViewChild("templateJoinedOn",{ static: true }) templateJoinedOn:TemplateRef<any>;
+  @ViewChild("templateStatus",{ static: true }) templateStatus:TemplateRef<any>;
+  @ViewChild("templateMoreFC",{ static: true }) templateMoreFC:TemplateRef<any>;
+
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
+    private callFC:CallFuncService,
     private dt:ChangeDetectorRef,
   ) 
   { 
     
   }
+  
+  ngOnInit(): void {
+    // lấy grvSetup của employee để view và format data theo thiết lập
+    this.formModelEmp.formName = "Employees";
+    this.formModelEmp.gridViewName = "grvEmployees" 
+    this.formModelEmp.entityName = "HR_Employees";
+    this.cache.gridViewSetup(this.formModelEmp.formName,this.formModelEmp.gridViewName)
+    .subscribe((grd:any) => {
+      if(grd){
+        this.grvSetup = grd;
+        console.log(grd);
+        this.columnsGrid = [
+          {
+            headerText: grd["EmployeeName"]["headerText"],
+            field:"EmployeeName",
+            template:this.templateName,
+            width: '30%',
+          },
+          {
+            headerText: grd["Birthday"]["headerText"],
+            field:"Birthday",
+            template:this.templateBirthday,
+            width: '10%',
+          },
+          {
+            headerText: grd["Phone"]["headerText"],
+            field:"Phone",
+            template:this.templatePhone,
+            width: '10%',
+          },
+          {
+            headerText: grd["Email"]["headerText"],
+            field:"Email",
+            template:this.templateEmail,
+            width: '10%',
+          },
+          {
+            headerText: grd["JoinedOn"]["headerText"],
+            field:"JoinedOn",
+            template:this.templateJoinedOn,
+            width: '10%',
+          },
+          {
+            headerText: grd["Status"]["headerText"],
+            field:"Status",
+            template:this.templateStatus,
+            width: '15%',
+          },
+          {
+            template:this.templateMoreFC,
+            width: '5%',
+          }
+        ];
+        this.dt.detectChanges();
+      }
+    });
+  }
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.orgUnitID){
+    if(changes.orgUnitID){
       this.getManager(this.orgUnitID);
       if(this.grid){
-        this.grid.dataService.setPredicate("",[this.orgUnitID]).subscribe();
+        this.grid.dataService.setPredicates([],[this.orgUnitID]).subscribe();
       }
-    }
-  }
-  ngOnInit(): void {
-    this.setDataDefault(this.formModel);
-  }
-  setDataDefault(formModel:FormModel){
-    if(formModel){
-      this.cache.gridViewSetup(formModel.formName,formModel.gridViewName)
-      .subscribe((grd:any) => {
-        if(grd){
-          this.gridViweSetUp = grd;
-          this.columnsGrid = [
-            {
-              headerText: grd["EmployeeName"]["headerText"],
-              width: '25%',
-            },
-            {
-              headerText: grd["Birthday"]["headerText"],
-              width: '15%',
-            },
-            {
-              headerText: grd["Phone"]["headerText"],
-              width: '15%',
-            },
-            {
-              headerText: grd["Email"]["headerText"],
-              width: '15%',
-            },
-            {
-              headerText: grd["JoinedOn"]["headerText"],
-              width: '15%',
-            },
-            {
-              headerText: grd["Status"]["headerText"],
-              width: '15%',
-            },
-            {
-              headerText: "",
-              width: '5%',
-            },
-          ];
-        }
-      });
     }
   }
   // get employee manager by orgUnitID
@@ -94,9 +118,46 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
     }
   }
 
-  // clickMFC
-  clickMF(event:any,item:any){
+  // click moreFC
+  clickMF(event: any, data: any) {
+    if (event) {
+      switch (event.functionID) {
+        case 'SYS02': //delete
 
+          break;
+        case 'SYS03': // edit
+          this.editData(data, event);
+          break;
+        case 'SYS04': // copy
+          break;
+        default:
+          break;
+      }
+    }
   }
-  
-}
+  //delete data
+  editData(data, event){
+    if(this.grid){
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.grid.dataService;
+      option.FormModel = this.formModel;
+      let object = {
+        data:data,
+        action: event,
+        funcID:this.formModel.funcID,
+        isModeAdd : false
+      }
+      let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
+      popup.closed.subscribe((res:any) => {
+        if(res.event){
+          let org = res.event[0];
+          let tmpOrg = res.event[1];
+          (this.grid.dataService as CRUDService).update(tmpOrg).subscribe();
+          this.view.dataService.add(org).subscribe();
+        }
+      });
+    }
+    }
+  }
+

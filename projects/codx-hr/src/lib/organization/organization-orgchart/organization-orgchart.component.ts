@@ -22,10 +22,9 @@ export class OrganizationOrgchartComponent implements OnInit {
   public snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None
   };
-
-  // end setting orgChart
   @Input() formModel:FormModel;
   @Input() orgUnitID:string; 
+  @Input() view:ViewsComponent = null; 
   @Input() dataService:CRUDService = null; 
   width = 250;
   height = 350;
@@ -36,6 +35,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   imployeeInfo: any = {};
   employees:any[] = [];
   headerColor:string = "#03a9f4";
+  @ViewChild("diagram") diagram:any;
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -48,7 +48,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   //onChange dataSource
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.orgUnitID){
-      this.dataService.setPredicate("",[this.orgUnitID]).subscribe(res => {
+      this.dataService.setPredicates([],[this.orgUnitID]).subscribe(res => {
         //this.setDataOrg(this.dataService.data);
         this.dataSource = this.newDataManager(this.dataService.data);
       })
@@ -98,71 +98,21 @@ export class OrganizationOrgchartComponent implements OnInit {
 
   public nodeDefaults(obj: NodeModel): NodeModel {
     obj.expandIcon = {
-      height: 20,
-      width: 20,
+      height: 15,
+      width: 15,
       shape: "Minus",
       fill: "lightgray",
       offset: { x: 0.5, y: 1}
     };
     obj.collapseIcon = {
-      height: 20,
-      width: 20,
+      height: 15,
+      width: 15,
       shape: "Plus",
       fill: "lightgray",
       offset: { x: 0.5, y: 1 }
     };
     return obj;
   }
-
-  // // load data child
-  loadDataChild(node:any){
-    let result = [];
-    if(node.childrenLoaded){
-      result = this.dataService.data.filter(e => e.parentID != node.orgUnitID);
-      if(result.length > 0)
-      {
-        result.forEach(element => {
-          if(element.orgUnitID == node.orgUnitID)
-          {
-            element.childrenLoaded = false;
-            return;
-          }
-        });
-        this.dataService.data = JSON.parse(JSON.stringify(result))
-      }
-      this.setDataOrg(this.dataService.data);
-    }
-    else{
-      if(node.orgUnitID)
-      {
-        this.api.execSv(
-          "HR",
-          "ERM.Business.HR",
-          "OrganizationUnitsBusiness",
-          "GetChildOrgChartAsync",
-          [node.orgUnitID])
-          .subscribe((res:any) =>{
-            if(res)
-            {
-              result = this.dataService.data.concat(res);
-              if(result.length > 0)
-              {
-                result.forEach(element => {
-                  if(element.orgUnitID == node.orgUnitID)
-                  {
-                    element.childrenLoaded = true;
-                    return;
-                  }
-                });
-              }
-              this.dataService.data = JSON.parse(JSON.stringify(result))
-              this.setDataOrg(this.dataService.data);
-            }
-          });
-      }
-    }
-  }
-
 
   // // click moreFC
   clickMF(event:any, node:any)
@@ -172,6 +122,7 @@ export class OrganizationOrgchartComponent implements OnInit {
         case "SYS02": //delete
           break;
         case "SYS03": // edit
+          this.editData(node,event);
           break;
         case "SYS04": // copy
           break;
@@ -182,7 +133,31 @@ export class OrganizationOrgchartComponent implements OnInit {
   }
 
   // // edit data
-  editData(node:any){
+  editData(node:any,event:any){
+    if (this.dataService) {
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.dataService;
+      option.FormModel = this.formModel;
+      let object = {
+        data:node,
+        action: event,
+        funcID:this.formModel.funcID,
+        isModeAdd : false
+      }
+      let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
+      popup.closed.subscribe((res:any) => {
+        if(res.event){
+          let org = res.event[0];
+          let tmpOrg = res.event[1];
+          this.dataService.update(tmpOrg).subscribe(() => {
+            this.dataSource = this.newDataManager(this.dataService.data);
+            this.dt.detectChanges();
 
+          });
+          this.view.dataService.add(org).subscribe();
+        }
+      });
+    }
   }
 }

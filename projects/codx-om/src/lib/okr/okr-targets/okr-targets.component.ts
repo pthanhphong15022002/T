@@ -1,3 +1,4 @@
+import { OMCONST } from './../../codx-om.constant';
 import { Component, Input, OnInit } from '@angular/core';
 import {
   CacheService,
@@ -12,6 +13,7 @@ import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.compo
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
+import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -214,9 +216,23 @@ export class OkrTargetsComponent implements OnInit {
       }
     }
   }
-
+  //Xem chi tiết OB
+  showOB(obj:any) {
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    let dialogShowOB = this.callfunc.openForm(
+      PopupShowOBComponent,
+      '',
+      null,
+      null,
+      null,
+      [obj.recID,obj.okrName],
+      '',
+      dModel
+    );
+  }
   //Xem chi tiết KR
-  showKR(kr: any, o: any) {
+  showKR(kr: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowKR = this.callfunc.openForm(
@@ -225,27 +241,10 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr, o],
+      [kr.recID,kr.okrName,kr.parentID],
       '',
       dModel
     );
   }
-  //Sửa trọng số KR
-  editWeight(okr: any, child:any) {
-    //OM_WAIT: tiêu đề tạm thời gán cứng
-    let popupTitle='Thay đổi trọng số cho KRs';
-    let subTitle='Tính kết quả thực hiện cho mục tiêu';
-    let dModel = new DialogModel();
-    dModel.IsFull = true;
-    let dialogShowKR = this.callfunc.openForm(
-      PopupOKRWeightComponent,
-      '',
-      null,
-      null,
-      null,
-      [okr,child,popupTitle,subTitle],
-      '',
-      dModel
-    );
-  }
+  
 }

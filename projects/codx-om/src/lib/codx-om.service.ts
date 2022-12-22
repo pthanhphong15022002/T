@@ -259,7 +259,34 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
+  getObjectAndKRChild(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OB,
+      'GetObjectAndKRChildAsync',
+      [recID]
+    );
+  }
+  getOKRPlandAndOChild(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'GetOKRPlandAndOChildAsync',
+      [recID]
+    );
+  }
   //region: KR
+  getKRByID(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'GetKRByIDAsync',
+      [recID]
+    );
+  }
   checkInKR(recID:string,checkIn:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -297,6 +324,16 @@ export class CodxOmService {
       OMCONST.BUSINESS.OKR,
       'EditOKRWeightAsync',
       [recID,type,listOKRWeight]
+    );
+  }
+
+  getListAlign(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetListAlignAsync',
+      [recID]
     );
   }
 }
