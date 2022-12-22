@@ -168,6 +168,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.taskName = this.taskParent.taskName;
       this.task.memo = this.taskParent.memo;
       this.task.memo2 = this.taskParent.memo2;
+      this.task.priority= this.taskParent.priority;
       this.task.taskGroupID = this.taskParent.taskGroupID;
       this.task.projectID = this.taskParent.projectID;
       this.task.location = this.taskParent.location;
@@ -260,7 +261,9 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeVLL(e) {}
+  changeVLL(e) {
+    this.task.priority = e?.data;
+  }
 
   async saveAssign(id, isContinue) {
     if (this.task.taskName == null || this.task.taskName.trim() == '') {

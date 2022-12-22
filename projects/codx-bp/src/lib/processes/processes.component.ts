@@ -510,7 +510,7 @@ export class ProcessesComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialogUpdate = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
           {
             title: this.titleAction,
@@ -521,7 +521,7 @@ export class ProcessesComponent
           },
           option
         );
-        this.dialog.closed
+        dialogUpdate.closed
           .subscribe
           //(e) => {
           // if (e?.event && e?.event != null) {
@@ -541,7 +541,7 @@ export class ProcessesComponent
       formModel: this.formModelMF,
     };
 
-    this.dialog = this.callfc.openForm(
+    var dialogRevision = this.callfc.openForm(
       RevisionsComponent,
       '',
       500,
@@ -549,7 +549,7 @@ export class ProcessesComponent
       '',
       obj
     );
-    this.dialog.closed.subscribe((e) => {
+    dialogRevision.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
