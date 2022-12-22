@@ -24,6 +24,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxBpService } from '../../codx-bp.service';
 import { environment } from 'src/environments/environment';
 import { tmpUser } from '../../models/BP_UserPermission.model';
+import { Util } from "codx-core";
 @Component({
   selector: 'lib-popup-add-processes',
   templateUrl: './popup-add-processes.component.html',
@@ -78,6 +79,8 @@ export class PopupAddProcessesComponent implements OnInit {
   moreFunctionCopy: string = 'copy';
   moreFunctionAdd: string = 'add';
   moreFunctionEdit: string = 'edit';
+  listPermissionCopy:BP_ProcessPermissions[] = [];
+  onwerOldCoppy:string = '';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -124,13 +127,15 @@ export class PopupAddProcessesComponent implements OnInit {
     this.phasesOld = this.processOldCopy?.phasesOld;
     this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
+    this.listPermissionCopy = this.processOldCopy?.listPermiss;
+    this.onwerOldCoppy =this.processOldCopy?.onwerOld;
     this.nameOld = this.process.processName;
     if (this.action != this.moreFunctionAdd) this.getAvatar(this.process);
     //test gán cứng
     if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
       this.folderName ='V0.0';
-      this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
-      this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
+      this.folderID = Util.uid();
+      this.parentID = Util.uid();
    }
  if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
   this.process.versionNo = 'V0.0'
@@ -168,6 +173,15 @@ export class PopupAddProcessesComponent implements OnInit {
             : this.AttachmentsOld
           : this.process.attachments;
         this.isCoppyKeyValue = this.isCoppyFile ? 'copyFile' : 'copyDefault';
+        var countArray = this.listPermissionCopy.length;
+        if(countArray>0){
+          for(let i=0; i<countArray; i++) {
+            if(this.listPermissionCopy[i].autoCreate && this.listPermissionCopy[i].objectID != this.onwerOldCoppy) {
+              this.process.permissions.push(this.listPermissionCopy[i]);
+            }
+          }
+
+        }
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;

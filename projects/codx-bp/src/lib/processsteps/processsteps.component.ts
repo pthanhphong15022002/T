@@ -278,7 +278,7 @@ export class ProcessStepsComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      option.zIndex = 1001;
+      // option.zIndex = 1001;
 
       this.view.dataService.dataSelected.processID = this.processID;
       if (this.parentID != '')
@@ -1283,18 +1283,18 @@ export class ProcessStepsComponent
     this.crrPopper = p;
     if (data != null) {
       this.dataHover = data;
-      p.open();    
+      p.open();
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
   }
 
-  closeMFTypeA(){
+  closeMFTypeA() {
     this.hideMoreFC = false;
     this.hideMoreFCChild = true;
   }
-  openMFTypeA(){
+  openMFTypeA() {
     this.hideMoreFC = true;
     this.hideMoreFCChild = false;
   }

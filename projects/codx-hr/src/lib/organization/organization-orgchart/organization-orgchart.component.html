@@ -21,12 +21,7 @@
   <div class="department-card border border-gray-300 w-250px h-350px position-relative">
     <div class="d-flex align-items-center p-3 w-100" [style.background-color]="data.colorStatus ? data.colorStatus : headerColor">
       <i class="text-white me-2" [ngClass]="data.icon ? data.icon : 'icon-business icon-18'"></i>
-      <div class="d-flex flex-grow-1 text-white fs-5">
-        {{data.departmentName  || "Phòng ban"
-        | lang: "txtDepartmentName":formModel.formName
-        | async
-        }}
-      </div>
+      <div class="d-flex flex-grow-1 text-white fs-5">{{data.orgUnitName}}</div>
       <div>
         <codx-mfunc
           [formModel]="formModel"
@@ -47,7 +42,7 @@
           [objectType]="'HR_Employees'">
         </codx-img>
         <div class="text-dark fs-4 fw-bold mt-4 mb-2">
-        <codx-label [formModel]="formModel" name="txtEmployeeName" [default]="data.employeeName || 'Tên Nhân Viên'"></codx-label>
+        <codx-label [formModel]="formModel" name="lblEmployeeName" [default]="data.employeeName || 'Tên Nhân Viên'"></codx-label>
         </div>
         <div class="text-gray-600 mb-3">
           <codx-label [formModel]="formModel" name="txtPositionName" [default]="data.positionName || 'Chức vụ'"></codx-label>

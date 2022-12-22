@@ -2,7 +2,7 @@
 /***Khong duoc xoa***/
 @import "/node_modules/codx-core/assets/sass/init";
 
-@import "./src/theme.scss";
+@import "src/theme.scss";
 
 .e-device .e-dlg-content,
 .e-device .e-dlg-content * {
@@ -1494,4 +1494,16 @@ ejs-schedule .e-schedule-toolbar-container .e-control.e-popup-open {
 .w-35px.h-20px.codx-switch {
   height: 16px !important;
   width: 30px !important;
+}
+
+.e-schedule-table.e-content-table .e-appointment-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 7px;
+}
+
+.e-schedule-table.e-content-table .e-appointment-details .e-subject {
+  width: 100%;
+  padding-top: 0 !important;
 }

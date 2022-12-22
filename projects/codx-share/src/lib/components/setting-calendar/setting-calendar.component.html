@@ -333,7 +333,7 @@
       <codx-label name="lblCar" default="Loại xe" class="fw-bold"></codx-label>
       <span class="me-1 fw-bold">:</span>
       <span class="">
-        {{ data?.data?.resourceName }}
+        {{ getResourceName(data?.data?.resourceID) }}
       </span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -344,12 +344,15 @@
         class="fw-bold"
       ></codx-label>
       <span class="me-1 fw-bold">:</span>
-      <span *ngIf="data?.data?.driverName != null">
+      <span *ngIf="driverName != '' && driverName != null">
         <span class="">
-          {{ data?.data?.driverName }}
+          {{ driverName }}
         </span>
       </span>
-      <span *ngIf="data?.data?.driverName == null">
+      <span *ngIf="driverName == ''">
+        <span></span>
+      </span>
+      <span *ngIf="driverName == null">
         <codx-label
           default="Không có tài xế"
           class=""
@@ -357,6 +360,7 @@
         ></codx-label>
       </span>
     </div>
+
     <hr />
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
       <i class="icon-person me-1"></i>
@@ -364,6 +368,7 @@
         {{ data?.data?.requester }}
       </span>
     </div>
+
     <div *ngIf="sameDayCheck(data?.data?.startDate, data?.data?.endDate)">
       <div class="d-flex mt-1 flex-grow-1 mb-2">
         <div class="d-flex me-6">
@@ -404,6 +409,7 @@
         </div>
       </div>
     </div>
+
     <hr />
     <div class="mb-2">
       <codx-label
@@ -412,7 +418,7 @@
         class="fw-bold"
       ></codx-label>
       <span class="me-1 fw-bold">:</span>
-      <span class="ms-1">{{ data?.data?.reasonName }} </span>
+      <span class="ms-1">{{ data?.data?.reasonID }} </span>
     </div>
     <div class="mb-2">
       <codx-label
@@ -432,13 +438,14 @@
       <span class="me-1 fw-bold">:</span>
       <span class="ms-1">{{ data?.data?.address }} </span>
     </div>
+
     <div>
       <div class="d-flex mb-2">
         <div class="d-flex text-dark me-6">
           <!-- <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label> -->
           <div class="d-flex justify-content-end">
             <codx-imgs
-              [objectId]="data?.data?.bookingAttendees"
+              [objectId]="selectBookingAttendees"
               objectType="AD_Users"
               [numberImages]="7"
               [width]="30"
@@ -600,4 +607,27 @@
 
 <ng-template #headerTemp>
   <div class="mt-6"></div>
+</ng-template>
+
+<ng-template #cardTemplate let-data>
+  <ng-container *ngIf="data.transType == 'EP_BookingCars'">
+    <div
+      class="d-flex flex-column w-100"
+      (click)="getMoreInfo(data.data.transID)"
+    >
+      <span>{{ showHour(data.data.startDate) }} - {{ showHour(data.data.endDate) }}</span>
+      <span
+        class="fw-bold"
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        >{{ data.title }}</span
+      >
+    </div>
+  </ng-container>
+  <ng-container #other *ngIf="data.transType != 'EP_BookingCars'">
+    <span
+      class="fw-bold"
+      style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+      >{{ data.title }}</span
+    >
+  </ng-container>
 </ng-template>

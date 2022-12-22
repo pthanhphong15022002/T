@@ -20,6 +20,7 @@ import {
 import moment from 'moment';
 import { CalendarNotesComponent } from 'projects/codx-share/src/lib/components/calendar-notes/calendar-notes.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-home-calendar',
@@ -52,6 +53,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     private injector: Injector,
     private change: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private codxShareSV: CodxShareService,
     @Optional() dialogRef: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -86,12 +88,6 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
         this.getCalendarNotes();
       }
     }, 200);
-    // let myInterval_SettingCalendar = setInterval(() => {
-    //   if (this.calendar_notes) {
-    //     clearInterval(myInterval_SettingCalendar);
-    //     this.getCalendarSetting();
-    //   }
-    // }, 200);
   }
 
   getCalendarNotes() {
@@ -105,21 +101,12 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     let myInterval = setInterval(() => {
       if (this.tmpCalendarNote.instance.settingValue) {
         clearInterval(myInterval);
-        let TM_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.TM_Tasks[1]
-        );
-        let WP_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.WP_Notes[1]
-        );
-        let CO_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.CO_Meetings[1]
-        );
-        let EP_BookingRooms_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.EP_BookingRooms[1]
-        );
-        let EP_BookingCars_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.EP_BookingCars[1]
-        );
+        let param = this.tmpCalendarNote.instance.settingValue;
+        let TM_ = JSON.parse(param.TM_Tasks[1]);
+        let WP_ = JSON.parse(param.WP_Notes[1]);
+        let CO_ = JSON.parse(param.CO_Meetings[1]);
+        let EP_BookingRooms_ = JSON.parse(param.EP_BookingRooms[1]);
+        let EP_BookingCars_ = JSON.parse(param.EP_BookingCars[1]);
         var TM_Params = [
           {
             color: TM_.ShowBackground,
@@ -174,11 +161,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
 
   getCalendarSetting(resource) {
     let myInterval = setInterval(() => {
-      if (
-        this.tmpCalendarNote.instance.dataResourceModel.length > 0 &&
-        this.tmpCalendarNote.instance.countDataOfE ==
-          this.tmpCalendarNote.instance.countEvent
-      ) {
+      if (this.tmpCalendarNote.instance.dataResourceModel.length > 0) {
         clearInterval(myInterval);
         let a = this.calendar_setting.createComponent(SettingCalendarComponent);
         a.instance.funcID = this.funcID;
@@ -186,7 +169,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
         a.instance.resources = resource;
         a.instance.resourceModel =
           this.tmpCalendarNote.instance.dataResourceModel;
-        console.log("check resourceModel", a.instance.resourceModel)
+        debugger
       }
     });
   }

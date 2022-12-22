@@ -22,6 +22,9 @@ export class CodxShareService {
   hideAside = new BehaviorSubject<any>(null);
   dataRefreshImage = new BehaviorSubject<any>(null);
   dataUpdateShowEvent = new BehaviorSubject<any>(null);
+  dateChange = new BehaviorSubject<any>(null);
+  dataResourceModel = new BehaviorSubject<any>(null);
+  settingValue = new BehaviorSubject<any>(null);
   constructor(
     private notificationsService: NotificationsService,
     private callfunc: CallFuncService,
@@ -511,6 +514,7 @@ export class CodxShareService {
     return dialogComment;
   }
 
+  #region_calendar
   getDataTM_Tasks(requestData) {
     return this.api.execSv(
       'TM',
@@ -549,6 +553,20 @@ export class CodxShareService {
       requestData
     );
   }
+  #endregion_calendar
+
+  #region_EP_BookingCars
+  getListAttendees(recID: any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingAttendeesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+  #endregion_EP_BookingCars
+
 }
 
 //#region Model

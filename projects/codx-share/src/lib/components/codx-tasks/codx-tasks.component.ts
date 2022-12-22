@@ -119,6 +119,7 @@ export class CodxTasksComponent
   isAssignTask = false;
   param: TM_Parameter = new TM_Parameter();
   paramModule: TM_Parameter = new TM_Parameter();
+  paramDefaut: TM_Parameter = new TM_Parameter();
   listTaskResousce = [];
   searchField = '';
   listTaskResousceSearch = [];
@@ -733,10 +734,10 @@ export class CodxTasksComponent
             this.actionUpdateStatus(
               moreFunc,
               taskAction,
-              this.paramModule.UpdateControl,
-              this.paramModule.MaxHoursControl,
-              this.paramModule.MaxHours,
-              this.paramModule.CompletedControl
+              this.paramDefaut.UpdateControl,
+              this.paramDefaut.MaxHoursControl,
+              this.paramDefaut.MaxHours,
+              this.paramDefaut.CompletedControl
             );
           }
         });
@@ -744,10 +745,10 @@ export class CodxTasksComponent
       this.actionUpdateStatus(
         moreFunc,
         taskAction,
-        this.paramModule.UpdateControl,
-        this.paramModule.MaxHoursControl,
-        this.paramModule.MaxHours,
-        this.paramModule.CompletedControl
+        this.paramDefaut.UpdateControl,
+        this.paramDefaut.MaxHoursControl,
+        this.paramDefaut.MaxHours,
+        this.paramDefaut.CompletedControl
       );
     }
   }
@@ -761,7 +762,11 @@ export class CodxTasksComponent
     completedControl
   ) {
     var status = UrlUtil.getUrl('defaultValue', moreFunc.url);
-    if (status == '90' && completedControl != '0') {
+    if (
+      status == '90' &&
+      completedControl != '0' &&
+      taskAction.category == '3'
+    ) {
       var isCheck = false;
       this.api
         .execSv<any>(
@@ -772,15 +777,13 @@ export class CodxTasksComponent
           taskAction.taskID
         )
         .subscribe((res) => {
-          if (res) {
-            res.forEach((obj) => {
-              if (obj.status != '90' && obj.status != '80') {
-                isCheck = true;
-                return;
-              }
+          if (res && res.length > 0) {
+            isCheck = res.some((obj) => {
+              obj.status != '90' && obj.status != '80';
             });
             if (isCheck) {
               this.notiService.notifyCode('TM008');
+              return;
             } else
               this.updatStatusAfterCheck(
                 moreFunc,
@@ -791,7 +794,7 @@ export class CodxTasksComponent
               );
           }
         });
-    } else if (status == '80') {
+    } else if (status == '80' && taskAction.category == '3') {
       this.updateStatusCancel(
         moreFunc,
         taskAction,
@@ -817,7 +820,6 @@ export class CodxTasksComponent
     maxHoursControl,
     maxHours
   ) {
-    var isCheck = false;
     this.api
       .execSv<any>(
         'TM',
@@ -827,15 +829,13 @@ export class CodxTasksComponent
         taskAction.taskID
       )
       .subscribe((res) => {
-        if (res) {
-          res.forEach((element) => {
-            if (element.status != '00' && element.status != '10') {
-              isCheck = false;
-              return;
-            }
+        if (res && res.length > 0) {
+          var isCheck = res.some((obj) => {
+            obj.status != '00' && obj.status != '10';
           });
           if (isCheck) {
             this.notiService.notifyCode('TM008');
+            return;
           } else
             this.updatStatusAfterCheck(
               moreFunc,
@@ -950,11 +950,9 @@ export class CodxTasksComponent
                     }
                   });
               }
-            } else {
-              if (kanban) kanban.updateCard(taskAction);
-              this.notiService.notifyCode('TM008');
             }
-          }
+            if (kanban) kanban.updateCard(taskAction);
+          } else this.notiService.notifyCode('SYS021');
         });
     }
   }
@@ -1054,6 +1052,7 @@ export class CodxTasksComponent
           var param = JSON.parse(res.dataValue);
           this.param = param;
           this.paramModule = JSON.parse(JSON.stringify(param));
+          this.paramDefaut = JSON.parse(JSON.stringify(param));
           return callback && callback(true);
         }
       });
@@ -1074,7 +1073,7 @@ export class CodxTasksComponent
           this.convertParameterByTaskGroup(res);
           this.clickMFAfterParameter(e, data);
         } else {
-          this.param = this.paramModule;
+          this.param = JSON.parse(JSON.stringify(this.paramModule));
           this.clickMFAfterParameter(e, data);
         }
       });
@@ -1449,7 +1448,7 @@ export class CodxTasksComponent
     this.itemSelected = data;
     if (data.taskGroupID) this.getTaskGroup(data.taskGroupID, e, data);
     else {
-      this.param = this.paramModule;
+      this.param = JSON.parse(JSON.stringify(this.paramDefaut));
       this.clickMFAfterParameter(e, data);
     }
   }

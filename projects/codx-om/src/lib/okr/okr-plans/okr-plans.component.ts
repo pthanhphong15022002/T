@@ -108,7 +108,7 @@ export class OkrPlansComponent implements OnInit {
       .subscribe((item:any) => {
         if (item) {
            this.api
-          .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMAsync', [
+          .execSv('OM', 'OM', 'OKRBusiness', 'SaveOMsAsync', [
             this.okrForm.value.okrFormArray,item.recID
           ])
           .subscribe((item2) => {
