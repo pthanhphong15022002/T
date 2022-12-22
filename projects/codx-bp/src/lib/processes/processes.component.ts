@@ -423,8 +423,9 @@ export class ProcessesComponent
         phasesOld: data.phases ?? 0,
         attachOld: data.attachments ?? 0,
         actiOld: data.activities ?? 0,
-        onwerOld: data.owner??'',
-        listPermiss: data.permissions.filter(x=>x.autoCreate==true)??null,
+        onwerOld: data.owner ?? '',
+        listPermiss:
+          data.permissions.filter((x) => x.autoCreate == true) ?? null,
       };
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
@@ -488,7 +489,7 @@ export class ProcessesComponent
   releaseProcess(data) {
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
-    this.comment = ''
+    this.comment = '';
     this.dialogPopup = this.callfc.openForm(
       this.viewReleaseProcess,
       '',
@@ -509,7 +510,7 @@ export class ProcessesComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialogUpdate = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
           {
             title: this.titleAction,
@@ -520,7 +521,7 @@ export class ProcessesComponent
           },
           option
         );
-        this.dialog.closed
+        dialogUpdate.closed
           .subscribe
           //(e) => {
           // if (e?.event && e?.event != null) {
@@ -540,7 +541,7 @@ export class ProcessesComponent
       formModel: this.formModelMF,
     };
 
-    this.dialog = this.callfc.openForm(
+    var dialogRevision = this.callfc.openForm(
       RevisionsComponent,
       '',
       500,
@@ -548,7 +549,7 @@ export class ProcessesComponent
       '',
       obj
     );
-    this.dialog.closed.subscribe((e) => {
+    dialogRevision.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
@@ -802,7 +803,7 @@ export class ProcessesComponent
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
             let isPublish = data.publish;
-            if (data.status === '6' || (!isPublish && !fullRole)) {
+            if (data.status === '6' || !isPublish) {
               res.isblur = true;
             }
             break;
@@ -813,7 +814,7 @@ export class ProcessesComponent
             break;
           case 'SYS003': // them phien ban
             let isCreate = data.write;
-            if ((!isCreate && !fullRole) || data.deleted) {
+            if (!isCreate || data.deleted) {
               res.isblur = true;
             }
             break;
@@ -827,7 +828,7 @@ export class ProcessesComponent
           case 'BPT303': //luu phien ban
           case 'BPT603': //luu phien ban
             let isEdit = data.write;
-            if ((!isEdit && !fullRole) || data.deleted) {
+            if (!isEdit || data.deleted) {
               if (res.functionID === 'SYS03') {
                 res.disabled = true;
               } else {
@@ -837,7 +838,7 @@ export class ProcessesComponent
             break;
           case 'SYS02': // xoa
             let isDelete = data.delete;
-            if ((!isDelete && !fullRole) || data.deleted) {
+            if (!isDelete || data.deleted) {
               res.disabled = true;
             }
             break;
@@ -859,18 +860,9 @@ export class ProcessesComponent
           case 'BPT205': //chia se
           case 'BPT305': //chia se
           case 'BPT605': //chia se
-            let isShare =
-              data.share &&
-              data?.permissions.some(
-                (x) =>
-                  x.objectID == this.userId &&
-                  x.approveStatus !== '3' &&
-                  x.approveStatus !== '4'
-              )
-                ? true
-                : false;
+            let isShare = data.share;
 
-            if (!isShare && !fullRole) {
+            if (!isShare) {
               res.isblur = true;
             }
             break;
@@ -880,15 +872,15 @@ export class ProcessesComponent
           case 'BPT608': //phan quyen
             let isAssign = data.allowPermit;
 
-            if (!isAssign && !fullRole) {
+            if (!isAssign) {
               res.isblur = true;
             }
 
             break;
           case 'BPT702': //Khoi phuc
-          let isRestore = data.delete;
+            let isRestore = data.delete;
 
-            if (!isRestore && !fullRole) {
+            if (!isRestore) {
               res.isblur = true;
             }
         }
@@ -953,19 +945,9 @@ export class ProcessesComponent
 
   //Check quyền đọc, icon đọc, check quyền xem chi tiết doubleClick
   checkPermissionRead(data) {
-    let isRead =
-      data.read &&
-      data?.permissions.some(
-        (x) =>
-          x.objectID == this.userId &&
-          x.approveStatus !== '3' &&
-          x.approveStatus !== '4'
-      )
-        ? true
-        : false;
+    let isRead = data.read;
 
-    let isOwner = data?.owner == this.userId ? true : false;
-    return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
+    return isRead ? true : false;
   }
 
   async doubleClickViewProcessSteps(moreFunc, data) {
@@ -990,7 +972,7 @@ export class ProcessesComponent
     let isEdit = data.write;
     let isOwner = data?.owner == this.userId ? true : false;
     let editRole =
-      (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !data.deleted
+      isEdit && !data.deleted
         ? true
         : false;
 

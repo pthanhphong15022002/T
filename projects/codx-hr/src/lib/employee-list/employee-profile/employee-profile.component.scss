@@ -6,22 +6,34 @@
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25) !important;
 }
 
-.h-employee{
-    height: calc(100% - 42px);
+.h-employee {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
+.user-menu {
+  height: calc(100% - 330px) !important;
+}
 
-.h-employee{
-  .pic-emloyee .top-100.start-100{
+.pw-content {
+  height: calc(100% - 90px) !important;
+  border: 1px aqua solid;
+}
+
+.h-employee {
+  .pic-emloyee .top-100.start-100 {
     margin-left: -10px;
     margin-top: -10px;
-    }
-  .bg-sidebar{ 
+  }
+
+  .bg-sidebar {
     background-image: url(../../../../../../src/assets/themes/hr/default/img/EmpProfile_Background.jpg);
     background-repeat: no-repeat;
     background-size: 100% 62%;
   }
-  .icon-circle-group{
+
+  .icon-circle-group {
     font-size: 6px !important;
   }
 }
