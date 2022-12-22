@@ -63,13 +63,13 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
             headerText: grd["Phone"]["headerText"],
             field:"Phone",
             template:this.templatePhone,
-            width: '10%',
+            width: '15%',
           },
           {
             headerText: grd["Email"]["headerText"],
             field:"Email",
             template:this.templateEmail,
-            width: '10%',
+            width: '15%',
           },
           {
             headerText: grd["JoinedOn"]["headerText"],
@@ -81,11 +81,7 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
             headerText: grd["Status"]["headerText"],
             field:"Status",
             template:this.templateStatus,
-            width: '15%',
-          },
-          {
-            template:this.templateMoreFC,
-            width: '5%',
+            width: '20%',
           }
         ];
         this.dt.detectChanges();

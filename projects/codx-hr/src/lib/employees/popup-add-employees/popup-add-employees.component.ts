@@ -171,6 +171,7 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
+    debugger
     if (this.action == 'edit') {
       this.updateEmployeeAsync(this.employee);
     } else {
@@ -193,17 +194,32 @@ export class PopupAddEmployeesComponent implements OnInit {
     }
   }
   addEmployeeAsync(employee: any) {
+    debugger
     if (employee) {
-      this.api
-        .execAction<boolean>('HR_Employees', [employee], 'SaveAsync')
-        .subscribe((res: any) => {
-          if (!res?.error) {
-            this.dialogRef.close(res.data);
-          } else {
-            this.notifiSV.notifyCode('SYS023');
-            this.dialogRef.close(null);
-          }
-        });
+      // this.api
+      //   .execAction<boolean>('HR_Employees', [employee], 'SaveAsync')
+      //   .subscribe((res: any) => {
+      //     if (!res?.error) {
+      //       this.notifiSV.notifyCode("SYS006");
+      //       this.dialogRef.close(res.data);
+      //     } else {
+      //       this.notifiSV.notifyCode('SYS023');
+      //       this.dialogRef.close(null);
+      //     }
+      //   });
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","InsertAsync",[employee])
+      .subscribe((res:any[]) => {
+        if(res[0]){
+          let data = res[1];
+          this.notifiSV.notifyCode("SYS006");
+          this.dialogRef.close(data);
+        }
+        else
+        {
+          this.notifiSV.notifyCode('SYS023');
+          this.dialogRef.close(null);
+        }
+      });
     }
   }
 
