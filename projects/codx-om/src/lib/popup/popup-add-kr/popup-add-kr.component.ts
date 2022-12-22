@@ -289,8 +289,8 @@ export class PopupAddKRComponent extends UIComponent {
     }
     krTarget.forEach((item) => {
       let tempTarget = new Targets();
-      tempTarget.period = this.kr.periodID;
-      tempTarget.oKRID = this.kr.recID;
+      tempTarget.period = this.kr?.periodID;
+      tempTarget.oKRID = this.kr?.recID;
       tempTarget.planDate = new Date(); //OM_WAITING: sửa lại thành thời gian tương ứng
       tempTarget.target = item;
       tempTarget.createdOn = new Date();

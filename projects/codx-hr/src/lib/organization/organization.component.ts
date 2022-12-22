@@ -148,7 +148,6 @@ export class OrgorganizationComponent extends UIComponent {
       }
       this.view.dataService.addNew().subscribe((result: any) => {
         if (result) {
-          //result.parentID = this.view.dataService.dataSelected.orgUnitID;
           let data = {
             dataService: this.view.dataService,
             formModel: this.view.formModel,
@@ -163,23 +162,16 @@ export class OrgorganizationComponent extends UIComponent {
             option,
             this.funcID
           );
+          popup.closed.subscribe((res:any) => {
+            if(res.event.save.data)
+            {
+              let org = res.event.save.data;
+              this.orgUnitID = org.orgUnitID;
+              this.detectorRef.detectChanges();
+            }
+          });
         }
       });
     }
-  }
-
-  // get data master detail
-  data:any[] = [];
-  getDataMasterDetail(orgUnitID:string){
-    this.api.execSv(
-      "HR",
-      "ERM.Business.HR",
-      "OrganizationUnitsBusiness",
-      "GetEmployeesMasterDetailAsync",
-      [orgUnitID])
-      .subscribe((res:any) => {
-        debugger
-        this.data= res[0];
-      });
   }
 }
