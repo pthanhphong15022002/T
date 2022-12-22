@@ -265,15 +265,15 @@ const themeDatas: ThemeFlag[] = [
     enable: true,
   },
   {
-    id: 'skyblue-light',
-    name: 'Skyblue Light',
+    id: 'sapphire-light',
+    name: 'Sapphire Light',
     color: '#23d3c1',
     enable: true,
   },
   {
     id: 'green-light',
     name: 'Green Light',
-    color: '#36ff72',
+    color: '#15b144',
     enable: true,
   },
 ];

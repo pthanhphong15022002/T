@@ -69,7 +69,7 @@
     --border-light: #ffdac8;
 }
 
-.skyblue-light {
+.sapphire-light {
 
     --primary: #28e0ce;
     --primary-active: #13a597;
@@ -93,16 +93,27 @@
 }
 
 .green-light {
-    --primary-darkest: #005716;
-    --primary-darker: #00c73c;
-    --primary-dark: #00ff15;
-    --primary: #36ff72;
-    --primary-light: #d3ffda;
-    --primary-lighter: #eaffeb;
-    --primary-lightest: #f4fff5;
+
+    --primary: #27d65c;
+    --primary-active: #0f8633;
+    --primary-inverse: #FFFFFF;
+    --primary-darkest: #01520f;
+    --primary-darker: #0f8633;
+    --primary-dark: #14ad42;
+    --primary-light: #aaddb1;
+    --primary-lighter: #f4fff5;
+    --primary-lightest: #f4fcf5;
+
+    --text-primary: #0f8633;
+    --bs-active-primary: #0f8633;
+    --title-color: #0f8633;
+    --icon-color: #0f8633;
+    --bullet-color: #0f8633;
+    --arrow-color: #0f8633;
+    --bg-color: #0f8633;
+    --border-light: #c8ffcd;
+
 }
-
-
 
 
 .codx-theme {
@@ -484,7 +495,7 @@
         }
     }
 
-    &.skyblue-light {
+    &.sapphire-light {
 
         .e-switch-wrapper .e-switch-on,
         .e-switch-wrapper .e-switch-on,
@@ -501,6 +512,26 @@
         .e-switch-wrapper:hover .e-switch-off,
         .e-switch-wrapper .e-switch-off:hover {
             background-color: #bef0ec !important;
+        }
+    }
+
+    &.green-light {
+
+        .e-switch-wrapper .e-switch-on,
+        .e-switch-wrapper .e-switch-on,
+        .e-switch-wrapper .e-switch-inner.e-switch-active {
+            background-color: #32e969 !important;
+        }
+
+        .e-switch-wrapper .e-switch-inner.e-switch-active {
+            border-color: #32e969 !important;
+        }
+
+        .e-switch-wrapper .e-switch-on:hover,
+        .e-switch-wrapper .e-switch-on:hover,
+        .e-switch-wrapper:hover .e-switch-off,
+        .e-switch-wrapper .e-switch-off:hover {
+            background-color: #aaddb1 !important;
         }
     }
 
