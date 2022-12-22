@@ -108,17 +108,15 @@
   </ng-container>
   <ng-container>
     <div class="form-group">
-      <div class="d-flex align-items-center justify-content-between">
-        <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
-        </codx-label>
-      </div>
+      <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
+      </codx-label>
       <codx-input type="textarea" headerposition="none" field="memo" format="ed" height="150" [crrValue]="task?.memo"
         (valueChange)="changeMemo($event)" [disabled]="readOnly">
       </codx-input>
     </div>
   </ng-container>
   <ng-container *ngIf="showAssignTo">
-    <div class="d-flex align-items-center justify-content-between mt-4">
+    <div class="d-flex align-items-center nav-item w-100 mb-1">
       <div class="d-flex align-items-center mb-3">
         <span class="icon-person icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary mt-1">
@@ -136,7 +134,7 @@
       </ng-container>
     </div>
   </ng-container>
-  <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="showLabelAttachment">
+  <div class="d-flex align-items-center nav-item w-100 mb-1" *ngIf="showLabelAttachment">
     <div class="d-flex align-items-center mb-2">
       <span class="icon-attach_file icon-18 me-2 text-primary"></span>
       <div class="fw-bold text-primary">
@@ -155,11 +153,9 @@
 </ng-template>
 
 <ng-template #tabJob>
-  <div class="tm-desc form-group mb-0 mt-3">
-    <div class="d-flex align-items-center justify-content-between">
-      <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
-      </codx-label>
-    </div>
+  <div class="tm-desc">
+    <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
+    </codx-label>
     <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed" height="550"
       (valueChange)="changeMemo($event)" [disabled]="readOnly"></codx-input>
   </div>
@@ -240,7 +236,7 @@
 </ng-template>
 
 <ng-template #tabListToDo>
-  <div class="d-flex align-items-center justify-content-between mt-4">
+  <div class="d-flex align-items-center justify-content-between">
     <div class="d-flex align-items-center">
       <span class="icon-playlist_add_check icon-16 me-2 text-primary"></span>
       <div class="fw-bold text-primary">
@@ -330,11 +326,9 @@
       (valueChange)="valueChange($event)" [disabled]="readOnly">
     </codx-input>
   </div>
-  <div class="form-group mt-3">
-    <div>
-      <codx-label fiedName="RefNo" [formModel]="form.formModel" default="Tham chiếu">
-      </codx-label>
-    </div>
+  <div class="form-group">
+    <codx-label fiedName="RefNo" [formModel]="form.formModel" default="Tham chiếu">
+    </codx-label>
     <!-- <codx-input field="refNo" [formModel]="form.formModel" [Group]="form.formGroup" (valueChange)="cbxChange($event)"
       [disabled]="readOnly">
     </codx-input> -->
