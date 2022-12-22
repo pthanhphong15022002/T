@@ -497,6 +497,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   addAvatar() {
     //this.imageAvatar.clearData();
+    //this.imageAvatar.referType = this.process.versionNo; 
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
