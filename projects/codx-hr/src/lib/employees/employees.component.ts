@@ -188,7 +188,6 @@ export class EmployeesComponent extends UIComponent {
             action: 'add',
             title: `${event.text}  ${this.functionName}`,
           };
-          debugger;
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
             object,

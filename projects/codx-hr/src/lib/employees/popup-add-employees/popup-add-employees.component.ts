@@ -14,7 +14,9 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
@@ -65,7 +67,9 @@ export class PopupAddEmployeesComponent implements OnInit {
   gridViewSetup: any;
   action: 'add' | 'edit' | 'copy' = 'add';
   paramaterHR: any = null;
-
+  grvSetup:any = {};
+  arrFieldRequire:any[] = [];
+  mssgCode:string = "SYS009";
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -87,6 +91,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.functionID = this.dialogRef.formModel.funcID;
     this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     this.getParamerAsync(this.functionID);
+    this.getGridViewSetup(this.dialogRef.formModel);
   }
   // get parameter auto default number
   getParamerAsync(funcID: string) {
@@ -104,6 +109,21 @@ export class PopupAddEmployeesComponent implements OnInit {
             this.paramaterHR = JSON.parse(JSON.stringify(res));
           }
         });
+    }
+  }
+
+  getGridViewSetup(formModel:FormModel){
+    if(formModel)
+    { 
+      this.cache.gridViewSetup(formModel.formName, formModel.gridViewName).subscribe((grd:any) => {
+        if(grd){
+          this.grvSetup = grd;
+          let arrField =  Object.values(grd).filter((x:any) => x.isRequire);
+          if(arrField){
+            this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
+          }
+        }
+      });
     }
   }
   // set title popup
@@ -171,11 +191,27 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
-    debugger
-    if (this.action == 'edit') {
-      this.updateEmployeeAsync(this.employee);
-    } else {
-      this.addEmployeeAsync(this.employee);
+    let arrFieldUnValid:string = "";
+    if(this.arrFieldRequire.length > 0)
+    {
+      this.arrFieldRequire.forEach((field) => {
+        let key = Util.camelize(field);
+        if (this.employee && this.employee[key])
+        {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
+        }
+      });
+    }
+    if(arrFieldUnValid){
+      this.notifiSV.notifyCode(this.mssgCode,0,arrFieldUnValid);
+    }
+    else
+    {
+      if (this.action == 'edit') {
+        this.updateEmployeeAsync(this.employee);
+      } else {
+        this.addEmployeeAsync(this.employee);
+      }
     }
   }
 
@@ -194,19 +230,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     }
   }
   addEmployeeAsync(employee: any) {
-    debugger
     if (employee) {
-      // this.api
-      //   .execAction<boolean>('HR_Employees', [employee], 'SaveAsync')
-      //   .subscribe((res: any) => {
-      //     if (!res?.error) {
-      //       this.notifiSV.notifyCode("SYS006");
-      //       this.dialogRef.close(res.data);
-      //     } else {
-      //       this.notifiSV.notifyCode('SYS023');
-      //       this.dialogRef.close(null);
-      //     }
-      //   });
       this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","InsertAsync",[employee])
       .subscribe((res:any[]) => {
         if(res[0]){
