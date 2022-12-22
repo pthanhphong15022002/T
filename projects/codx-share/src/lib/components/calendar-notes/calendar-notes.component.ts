@@ -279,6 +279,9 @@ export class CalendarNotesComponent
         this.change.detectChanges();
       }
     });
+    this.codxShareSV.dateChange.subscribe((res) => {
+      if (res) this.dateChange = res;
+    });
   }
 
   getFirstParam(fDayOfMonth, lDayOfMonth, updateCheck) {
@@ -312,9 +315,6 @@ export class CalendarNotesComponent
   }
 
   setEventWeek() {
-    this.toDate = new Date();
-    var datePare = new Date(Date.parse(this.toDate));
-    this.toDate = datePare.toLocaleDateString();
     var ele = document.querySelectorAll('.week-item[data-date]');
     let myInterval = setInterval(() => {
       if (ele && ele.length > 0) {
@@ -363,51 +363,52 @@ export class CalendarNotesComponent
 
   dateOfMonth: any;
   changeDayOfMonth(args: any) {
-    if (!this.dateOfMonth) {
-      var dateCrr = new Date();
-      var monthCrr = 1 + moment(dateCrr).month();
-      var nextMonth = 1 + moment(args.value).month();
-      if (monthCrr != nextMonth) {
-        if (this.calendar) {
-          var tempCalendar = this.calendar.element;
-          var htmlE = tempCalendar as HTMLElement;
-          var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
-          let numbF = this.convertStrToDate(eleFromDate);
-          const fDayOfMonth = moment(numbF).toISOString();
-          let indexLast =
-            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-              .length - 1;
-          let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
-          let numbL = this.convertStrToDate(eleToDate);
-          const lDayOfMonth = moment(numbL).toISOString();
-          this.getFirstParam(fDayOfMonth, lDayOfMonth, false);
-        }
-      }
-    } else {
-      var monthCrr = 1 + moment(this.dateOfMonth).month();
-      var nextMonth = 1 + moment(args.value).month();
-      if (monthCrr != nextMonth) {
-        if (this.calendar) {
-          var tempCalendar = this.calendar.element;
-          var htmlE = tempCalendar as HTMLElement;
-          var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
-          let numbF = this.convertStrToDate(eleFromDate);
-          const fDayOfMonth = moment(numbF).toISOString();
-          let indexLast =
-            htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-              .length - 1;
-          let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-            ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
-          let numbL = this.convertStrToDate(eleToDate);
-          const lDayOfMonth = moment(numbL).toISOString();
-          this.getFirstParam(fDayOfMonth, lDayOfMonth, false);
-        }
-      }
-    }
+    // if (!this.dateOfMonth) {
+    //   var dateCrr = new Date();
+    //   var monthCrr = 1 + moment(dateCrr).month();
+    //   var nextMonth = 1 + moment(args.value).month();
+    //   if (monthCrr != nextMonth) {
+    //     if (this.calendar) {
+    //       var tempCalendar = this.calendar.element;
+    //       var htmlE = tempCalendar as HTMLElement;
+    //       var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+    //         ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+    //       let numbF = this.convertStrToDate(eleFromDate);
+    //       const fDayOfMonth = moment(numbF).toISOString();
+    //       let indexLast =
+    //         htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+    //           .length - 1;
+    //       let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+    //         ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
+    //       let numbL = this.convertStrToDate(eleToDate);
+    //       const lDayOfMonth = moment(numbL).toISOString();
+    //       this.getFirstParam(fDayOfMonth, lDayOfMonth, false);
+    //     }
+    //   }
+    // } else {
+    //   var monthCrr = 1 + moment(this.dateOfMonth).month();
+    //   var nextMonth = 1 + moment(args.value).month();
+    //   if (monthCrr != nextMonth) {
+    //     if (this.calendar) {
+    //       var tempCalendar = this.calendar.element;
+    //       var htmlE = tempCalendar as HTMLElement;
+    //       var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+    //         ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
+    //       let numbF = this.convertStrToDate(eleFromDate);
+    //       const fDayOfMonth = moment(numbF).toISOString();
+    //       let indexLast =
+    //         htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+    //           .length - 1;
+    //       let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+    //         ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
+    //       let numbL = this.convertStrToDate(eleToDate);
+    //       const lDayOfMonth = moment(numbL).toISOString();
+    //       this.getFirstParam(fDayOfMonth, lDayOfMonth, false);
+    //     }
+    //   }
+    // }
     this.dateOfMonth = args.value;
+    this.FDdate = args.value;
     var data = args.value;
     this.setDate(data, this.lstView);
     this.change.detectChanges();
@@ -760,6 +761,7 @@ export class CalendarNotesComponent
         JSON.stringify(this.EP_BookingRooms)
       );
       this.EP_BookingCarsTemp = JSON.parse(JSON.stringify(this.EP_BookingCars));
+      this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
     }
   }
   WP_NotesTemp: any = [];
@@ -1221,12 +1223,17 @@ export class CalendarNotesComponent
                 ...lstTemp,
               ];
           }
-          this.setEventWeek();
-          var today: any = document.querySelector(
-            ".e-footer-container button[class='e-btn e-today e-flat e-primary e-css']"
+          var monthPre: any = document.querySelector(
+            ".e-icon-container button[class='e-prev']"
           );
-          if (today) {
-            today.click();
+          if (monthPre) {
+            monthPre.click();
+          }
+          var monthNext: any = document.querySelector(
+            ".e-icon-container button[class='e-next']"
+          );
+          if (monthNext) {
+            monthNext.click();
           }
         }
       });

@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CodxGridviewComponent, FormModel } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CRUDService, FormModel, SidebarModel, ViewsComponent } from 'codx-core';
+import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 @Component({
   selector: 'lib-organization-master-detail',
@@ -9,12 +10,12 @@ import { ApiHttpService, CacheService, CodxGridviewComponent, FormModel } from '
 export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
 
   @Input() orgUnitID:string = "";
+  @Input() view:ViewsComponent = null; 
   @Input() formModel:FormModel = null;
   employeeManager:any = null;
   totalEmployee:number = 0;
   columnsGrid:any[] = null;
   grvSetup:any = {};
-  predicates:string = "@0.Contains(EmployeeID) || EmployeeID != @1";
   formModelEmp:FormModel = new FormModel();
   @ViewChild("grid") grid:CodxGridviewComponent;
   @ViewChild("templateName",{ static: true }) templateName:TemplateRef<any>;
@@ -28,19 +29,13 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
   constructor(
     private api:ApiHttpService,
     private cache:CacheService,
+    private callFC:CallFuncService,
     private dt:ChangeDetectorRef,
   ) 
   { 
     
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID){
-      this.getManager(this.orgUnitID);
-      if(this.grid){
-        this.grid.dataService.setPredicates([],[this.orgUnitID]).subscribe();
-      }
-    }
-  }
+  
   ngOnInit(): void {
     // lấy grvSetup của employee để view và format data theo thiết lập
     this.formModelEmp.formName = "Employees";
@@ -97,6 +92,14 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
       }
     });
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes.orgUnitID){
+      this.getManager(this.orgUnitID);
+      if(this.grid){
+        this.grid.dataService.setPredicates([],[this.orgUnitID]).subscribe();
+      }
+    }
+  }
   // get employee manager by orgUnitID
   getManager(orgUnitID:string){
     if(orgUnitID){
@@ -115,9 +118,46 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
     }
   }
 
-  // clickMFC
-  clickMF(event:any,item:any){
+  // click moreFC
+  clickMF(event: any, data: any) {
+    if (event) {
+      switch (event.functionID) {
+        case 'SYS02': //delete
 
+          break;
+        case 'SYS03': // edit
+          this.editData(data, event);
+          break;
+        case 'SYS04': // copy
+          break;
+        default:
+          break;
+      }
+    }
   }
-  
-}
+  //delete data
+  editData(data, event){
+    if(this.grid){
+      let option = new SidebarModel();
+      option.Width = '550px';
+      option.DataService = this.grid.dataService;
+      option.FormModel = this.formModel;
+      let object = {
+        data:data,
+        action: event,
+        funcID:this.formModel.funcID,
+        isModeAdd : false
+      }
+      let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
+      popup.closed.subscribe((res:any) => {
+        if(res.event){
+          let org = res.event[0];
+          let tmpOrg = res.event[1];
+          (this.grid.dataService as CRUDService).update(tmpOrg).subscribe();
+          this.view.dataService.add(org).subscribe();
+        }
+      });
+    }
+    }
+  }
+

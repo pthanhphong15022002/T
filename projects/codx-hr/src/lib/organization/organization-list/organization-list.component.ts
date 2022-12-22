@@ -17,7 +17,9 @@ import {
   FormModel,
   RequestOption,
   SidebarModel,
+  ViewsComponent,
 } from 'codx-core';
+import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 @Component({
   selector: 'lib-organization-list',
@@ -29,6 +31,7 @@ export class OrganizationListComponent
 {
   @Input() orgUnitID: string = '';
   @Input() formModel: FormModel = null;
+  @Input() view:ViewsComponent = null; 
   @Input() dataService:CRUDService = null; 
   isloaded = false;
   constructor(
@@ -62,10 +65,10 @@ export class OrganizationListComponent
           this.deleteData(data);
           break;
         case 'SYS03': // edit
-          this.editData(data, event.text);
+          this.editData(data, event);
           break;
         case 'SYS04': // copy
-          this.copyData(data, event.text);
+          this.copyData(data, event);
           break;
         default:
           break;
@@ -93,32 +96,27 @@ export class OrganizationListComponent
     return true;
   }
   // edit data
-  editData(data: any, text: string) {
-    if (data && text) {
+  editData(data: any, event: any) {
+    if (this.dataService) {
       let option = new SidebarModel();
       option.Width = '550px';
       option.DataService = this.dataService;
       option.FormModel = this.formModel;
-      (this.dataService as CRUDService)
-        .edit(data)
-        .subscribe((result: any) => {
-          if (result) {
-            let data = {
-              dataService: this.dataService,
-              formModel: this.formModel,
-              data: result,
-              function: this.formModel.funcID,
-              isAddMode: false,
-              titleMore: text,
-            };
-            let popup = this.callFC.openSide(
-              CodxFormDynamicComponent,
-              data,
-              option,
-              this.formModel.funcID
-            );
-          }
-        });
+      let object = {
+        data:data,
+        action: event,
+        funcID:this.formModel.funcID,
+        isModeAdd : false
+      }
+      let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
+      popup.closed.subscribe((res:any) => {
+        if(res.event){
+          let org = res.event[0];
+          let tmpOrg = res.event[1];
+          this.dataService.update(tmpOrg).subscribe();
+          this.view.dataService.add(org).subscribe();
+        }
+      });
     }
   }
   // copy data

@@ -22,8 +22,6 @@ export class OrganizationOrgchartComponent implements OnInit {
   public snapSettings: SnapSettingsModel = {
     constraints: SnapConstraints.None
   };
-
-  // end setting orgChart
   @Input() formModel:FormModel;
   @Input() orgUnitID:string; 
   @Input() view:ViewsComponent = null; 
@@ -37,6 +35,7 @@ export class OrganizationOrgchartComponent implements OnInit {
   imployeeInfo: any = {};
   employees:any[] = [];
   headerColor:string = "#03a9f4";
+  @ViewChild("diagram") diagram:any;
   constructor(
     private api:ApiHttpService,
     private dt:ChangeDetectorRef,
@@ -148,14 +147,15 @@ export class OrganizationOrgchartComponent implements OnInit {
       }
       let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
       popup.closed.subscribe((res:any) => {
-        debugger
         if(res.event){
           let org = res.event[0];
           let tmpOrg = res.event[1];
-          this.dataService.add(tmpOrg).subscribe();
+          this.dataService.update(tmpOrg).subscribe(() => {
+            this.dataSource = this.newDataManager(this.dataService.data);
+            this.dt.detectChanges();
+
+          });
           this.view.dataService.add(org).subscribe();
-          this.setDataOrg(this.dataService.data);
-          this.dt.detectChanges();
         }
       });
     }
