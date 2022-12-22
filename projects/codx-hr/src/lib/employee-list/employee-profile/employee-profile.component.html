@@ -103,7 +103,7 @@
                                   <span
                                     class="icon-portrait icon-16 text-gray-800 me-1"
                                   ></span>
-                                  <span class="text-dark">
+                                  <span class="text-primary text-decoration-underline">
                                     <span>{{
                                       infoPersonal.personalEmail
                                     }}</span>
@@ -1830,7 +1830,9 @@
                         </div>
                       </div>
                     </div>
-                    <codx-mfunc
+                    
+                  </div>
+                  <codx-mfunc
                       *ngIf="lstVisa?.length > 0"
                       [formModel]="view.formModel"
                       (clickMF)="
@@ -1844,7 +1846,6 @@
                       [dataItem]="lstVisa?.length > 0 ? lstVisa[0] : {}"
                     >
                     </codx-mfunc>
-                  </div>
                 </div>
                 <hr />
                 <div #WorkPermit class="mb-1">
