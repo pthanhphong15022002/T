@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment';
 })
 export class CodxAttachmentTempComponent implements OnInit {
   @Input() objectID: string = '';
+  @Input() referType: string = '';
   @Input() formModel: FormModel = null;
   @Input() viewType = '0';
   @Input() count = 0;
@@ -61,7 +62,7 @@ export class CodxAttachmentTempComponent implements OnInit {
           this.assamplyName,
           this.className,
           'GetFilesByIbjectIDAsync',
-          [pObjectID]
+          [pObjectID,this.referType]
         )
         .subscribe((res: any) => {
           if (res.length > 0) {

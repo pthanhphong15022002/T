@@ -67,12 +67,12 @@
 
 .line-clamp {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
   /* background-color: #fff; */
   /* ADDED */
-  max-height: 3em;
+  /* max-height: 3em; */
 
 }
 
@@ -80,10 +80,10 @@
   padding: 0 !important;
 }
 
-.box:hover .line-clamp {
+/* .box:hover .line-clamp {
   -webkit-line-clamp: 40;
   max-height: 40em;
-}
+} */
 
 .line-clamp-card {
   display: -webkit-box;
