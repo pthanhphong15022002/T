@@ -31,8 +31,8 @@ export class OrganizationListComponent
 {
   @Input() orgUnitID: string = '';
   @Input() formModel: FormModel = null;
-  @Input() view:ViewsComponent = null; 
-  @Input() dataService:CRUDService = null; 
+  @Input() view: ViewsComponent = null;
+  @Input() dataService: CRUDService = null;
   isloaded = false;
   constructor(
     private api: ApiHttpService,
@@ -41,16 +41,13 @@ export class OrganizationListComponent
   ) {}
 
   ngOnInit(): void {}
-  ngAfterViewInit(): void {
-  }
+  ngAfterViewInit(): void {}
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
       this.orgUnitID = changes.orgUnitID.currentValue;
       if (this.dataService) {
-        this.dataService
-          .setPredicates([], [this.orgUnitID])
-          .subscribe();
+        this.dataService.setPredicates([], [this.orgUnitID]).subscribe();
       }
       this.dt.detectChanges();
     }
@@ -79,11 +76,7 @@ export class OrganizationListComponent
   // delete data
   deleteData(data: any) {
     if (data) {
-      (this.dataService as CRUDService)
-        .delete([data], true, (option: RequestOption) =>
-          this.beforeDelete(option)
-        )
-        .subscribe();
+      (this.dataService as CRUDService).delete([data], true).subscribe();
     }
   }
   // before delete
@@ -103,14 +96,19 @@ export class OrganizationListComponent
       option.DataService = this.dataService;
       option.FormModel = this.formModel;
       let object = {
-        data:data,
+        data: data,
         action: event,
-        funcID:this.formModel.funcID,
-        isModeAdd : false
-      }
-      let popup = this.callFC.openSide(PopupAddOrganizationComponent,object,option,this.formModel.funcID);
-      popup.closed.subscribe((res:any) => {
-        if(res.event){
+        funcID: this.formModel.funcID,
+        isModeAdd: false,
+      };
+      let popup = this.callFC.openSide(
+        PopupAddOrganizationComponent,
+        object,
+        option,
+        this.formModel.funcID
+      );
+      popup.closed.subscribe((res: any) => {
+        if (res.event) {
           let org = res.event[0];
           let tmpOrg = res.event[1];
           this.dataService.update(tmpOrg).subscribe();
@@ -126,29 +124,25 @@ export class OrganizationListComponent
       option.Width = '550px';
       option.DataService = this.dataService;
       option.FormModel = this.formModel;
-      this.dataService.dataSelected = JSON.parse(
-        JSON.stringify(data)
-      );
-      (this.dataService as CRUDService)
-        .copy(data)
-        .subscribe((result: any) => {
-          if (result) {
-            let data = {
-              dataService: this.dataService,
-              formModel: this.formModel,
-              data: result,
-              function: this.formModel.funcID,
-              isAddMode: true,
-              titleMore: text,
-            };
-            let popup = this.callFC.openSide(
-              CodxFormDynamicComponent,
-              data,
-              option,
-              this.formModel.funcID
-            );
-          }
-        });
+      this.dataService.dataSelected = JSON.parse(JSON.stringify(data));
+      (this.dataService as CRUDService).copy(data).subscribe((result: any) => {
+        if (result) {
+          let data = {
+            dataService: this.dataService,
+            formModel: this.formModel,
+            data: result,
+            function: this.formModel.funcID,
+            isAddMode: true,
+            titleMore: text,
+          };
+          let popup = this.callFC.openSide(
+            CodxFormDynamicComponent,
+            data,
+            option,
+            this.formModel.funcID
+          );
+        }
+      });
     }
   }
 }

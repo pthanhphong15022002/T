@@ -6,6 +6,7 @@ import {
   ViewChild,
   TemplateRef,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import {
   UIComponent,
@@ -33,6 +34,7 @@ export class SettingCalendarComponent
   @ViewChild('view') viewOrg!: ViewsComponent;
   @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   calendarID: string;
   calendarName: string;
@@ -45,6 +47,13 @@ export class SettingCalendarComponent
   month: any;
   day: any;
   resourceID: any;
+  tempCarName = '';
+  listCar = [];
+  driverName = '';
+  selectBookingAttendees = '';
+  listDriver: any[];
+  tempDriverName = '';
+
   @Input() fields = {
     id: 'recID',
     subject: { name: 'memo' },
@@ -58,7 +67,8 @@ export class SettingCalendarComponent
   constructor(
     private injector: Injector,
     private settingCalendar: SettingCalendarService,
-    private codxShareSV: CodxShareService
+    private codxShareSV: CodxShareService,
+    private change: ChangeDetectorRef
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
@@ -79,6 +89,7 @@ export class SettingCalendarComponent
         model: {
           eventModel: this.fields,
           template3: this.cellTemplate,
+          template: this.cardTemplate,
           resources: this.resources,
           resourceModel: this.resourceModel,
           template8: this.contentTmp,
@@ -103,6 +114,50 @@ export class SettingCalendarComponent
     return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
   }
   //endRegion EP
+
+  //region EP_BookingCars
+  getResourceName(resourceID: any) {
+    this.tempCarName = '';
+    this.listCar.forEach((r) => {
+      if (r.resourceID == resourceID) {
+        this.tempCarName = r.resourceName;
+      }
+    });
+    return this.tempCarName;
+  }
+  getMoreInfo(recID: any) {
+    this.selectBookingAttendees = '';
+    this.driverName = ' ';
+    this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
+      if (attendees) {
+        let lstAttendees = attendees;
+        lstAttendees.forEach((element) => {
+          if (element.roleType != '2') {
+            this.selectBookingAttendees =
+              this.selectBookingAttendees + element.userID + ';';
+          } else {
+            this.driverName = this.getDriverName(element.userID);
+          }
+        });
+        if (this.driverName == ' ') {
+          this.driverName = null;
+        }
+        this.change.detectChanges();
+      }
+    });
+  }
+  getDriverName(resourceID: any) {
+    this.tempDriverName = '';
+    if (this.listDriver.length > 0) {
+      this.listDriver.forEach((r) => {
+        if (r.resourceID == resourceID) {
+          this.tempDriverName = r.resourceName;
+        }
+      });
+    }
+    return this.tempDriverName;
+  }
+  //endRegion EP_BookingCars
 
   //region CO
   getDate(data) {

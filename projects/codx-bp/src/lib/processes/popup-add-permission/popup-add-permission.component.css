@@ -38,3 +38,14 @@
   font-weight: 500;
   font-size: 14px;
 }
+
+.line-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  /* background-color: #fff; */
+  /* ADDED */
+  max-height: 3em;
+
+}
