@@ -474,6 +474,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.fGroupAddBookingCar,
           this.formModel
         );
+                    
+        this.saveCheck = false;
         return;
       }
       if (this.data.phone != null && this.data.phone != '') {
@@ -483,6 +485,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
             '2',
             0
           ); // EP_WAIT doi messcode tu BA
+                      
+          this.saveCheck = false;
           return;
         }
       }
@@ -499,7 +503,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.data.hours = hours;
         }
       } else {
-        this.notificationsService.notifyCode('TM036');
+        this.notificationsService.notifyCode('TM036');                    
+        this.saveCheck = false;
         return;
       }
       let tmpEquip = [];
@@ -530,7 +535,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
       if (this.data.attendees > this.carCapacity) {
         this.notificationsService.alertCode('EP010').subscribe((x) => {
-          if (x.event.status == 'N') {
+          if (x.event.status == 'N') {                        
+            this.saveCheck = false;
             return;
           } else {
             this.startSave(approval);

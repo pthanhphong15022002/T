@@ -632,13 +632,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           .alertCode('Chưa có đường dẫn cho cuộc họp online!')
           .subscribe((x) => {
             //EP_WAIT đợi messagecode từ BA
-            if (x.event.status == 'N') {
+            if (x.event.status == 'N') {              
+              this.saveCheck = false;
               return;
             } else {
               if (this.data.attendees > this.roomCapacity) {
                 this.notificationsService.alertCode('EP004').subscribe((x) => {
                   if (x.event.status == 'N') {
-                    return;
+                     
+                    this.saveCheck = false;
+                    return;                   
                   } else {
                     this.attendeesValidateStep(approval);
                   }
@@ -652,6 +655,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         if (this.data.attendees > this.roomCapacity) {
           this.notificationsService.alertCode('EP004').subscribe((x) => {
             if (x.event.status == 'N') {
+              
+              this.saveCheck = false;
               return;
             } else {
               this.attendeesValidateStep(approval);
@@ -690,7 +695,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.notificationsService
             .alertCode('EP005', null, '"' + this.busyAttendees + '"')
             .subscribe((x) => {
-              if (x.event.status == 'N') {
+              if (x.event.status == 'N') {                
+                this.saveCheck = false;
                 return;
               } else {
                 this.startSave(approval);
