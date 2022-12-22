@@ -255,6 +255,20 @@ export class CodxHrService {
     );
   }
 
+  //#region HR_Employees
+
+  getModelFormEmploy(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetModelFormEmployAsync',
+      dataRequest
+    );
+  }
+
+  //#endregion
+
   //#region EPassportsBusiness
 
   getEmployeePassportModel() {
@@ -278,7 +292,8 @@ export class CodxHrService {
 
   //#endregion
 
-  //#regin EDegrees
+  //#region EDegrees
+
   getEmployeeDegreeModel() {
     return this.api.execSv<any>(
       'HR',
@@ -1099,6 +1114,48 @@ export class CodxHrService {
       'ESkillsBusiness',
       'DeleteESkillAsync',
       recID
+    );
+  }
+  //#endregion
+
+  //#region HR_EAccidents
+  loadDataEAccident(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'LoadDataEAccidentAsync',
+      dataRequest
+    );
+  }
+
+  addEAccident(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'AddEAccidentAsync',
+      [data]
+    );
+  }
+
+  editEAccident(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'EditEAccidentAsync',
+      data
+    );
+  }
+
+  deleteEAccident(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'DeleteEAccidentAsync',
+      data
     );
   }
   //#endregion

@@ -141,7 +141,9 @@
                                     >
                                     </codx-label>
                                     <span class="text-dark fw-bold">
-                                      <span>{{ infoPersonal.joinedOn }}</span>
+                                      <span>{{
+                                        infoPersonal.joinedOn | fmDT
+                                      }}</span>
                                     </span>
                                   </div>
                                 </div>
@@ -153,7 +155,9 @@
                                     >
                                     </codx-label>
                                     <span class="text-dark fw-bold">
-                                      <span>{{ infoPersonal.hiredOn }}</span>
+                                      <span>{{
+                                        infoPersonal.hiredOn | fmDT
+                                      }}</span>
                                     </span>
                                   </div>
                                 </div>
@@ -261,6 +265,7 @@
                       class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center"
                     >
                       <span
+                        (click)="nextEmp()"
                         class="icon-arrow_forward_ios icon-16 text-hover-primary ms-1 text-white"
                       ></span>
                     </div>

@@ -154,6 +154,7 @@ export class EmployeeProfileComponent extends UIComponent {
   disciplineColumnGrid;
   expColumnGrid;
 
+  //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
   healthPeriodID: TemplateRef<any>;
   @ViewChild('healthPeriodDate', { static: true })
@@ -167,7 +168,10 @@ export class EmployeeProfileComponent extends UIComponent {
   EExperienceTmp: TemplateRef<any>;
   @ViewChild('tempFromDate', { static: true }) tempFromDate;
   @ViewChild('tempToDate', { static: true })
+
+  //#endregion
   tempToDate: TemplateRef<any>;
+
   objCollapes = {
     '1': false,
     '1.1': false,
@@ -213,6 +217,9 @@ export class EmployeeProfileComponent extends UIComponent {
     { icon: 'icon-apartment', text: 'Thôi việc' },
   ];
 
+  listEmp: any;
+  request: DataRequest;
+
   onInit(): void {
     this.EExperienceColumnsGrid = [
       {
@@ -247,6 +254,21 @@ export class EmployeeProfileComponent extends UIComponent {
 
     this.routeActive.queryParams.subscribe((params) => {
       if (params.employeeID || this.user.userID) {
+        console.log('State', history.state);
+        this.listEmp = history.state?.data;
+        this.request = history.state?.request;
+
+        let index = this.listEmp?.findIndex(
+          (p) => p.employeeID == params.employeeID
+        );
+        if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
+          this.request.page += 1;
+          this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
+            if (res) {
+              this.listEmp.push(...res[0]);
+            }
+          });
+        }
         // Thong tin ca nhan
         this.hrService.getEmployeeInfo(params.employeeID).subscribe((emp) => {
           if (emp) {
@@ -1718,5 +1740,48 @@ export class EmployeeProfileComponent extends UIComponent {
 
   addSkillGrade() {
     this.hrService.addSkillGrade(null).subscribe();
+  }
+
+  nextEmp() {
+    if (this.listEmp) {
+      let index = this.listEmp.findIndex(
+        (p) => p.employeeID == this.data.employeeID
+      );
+      if (index > -1 && this.listEmp[index + 1]?.employeeID) {
+        let urlView = '/hr/employeedetail/HRT03a1';
+        this.codxService.navigate(
+          '',
+          urlView,
+          {
+            employeeID: this.listEmp[index + 1]?.employeeID,
+          },
+          {
+            data: this.listEmp,
+            request: this.request,
+          }
+        );
+      }
+    }
+  }
+
+  previousEmp() {
+    if (this.listEmp) {
+      let index = this.listEmp.findIndex(
+        (p) => p.employeeID == this.data.employeeID
+      );
+      if (index > -1 && this.listEmp[index - 1]?.employeeID) {
+        let urlView = '/hr/employeedetail/HRT03a1';
+        this.codxService.navigate(
+          '',
+          urlView,
+          {
+            employeeID: this.listEmp[index + 1]?.employeeID,
+          },
+          {
+            data: this.listEmp,
+          }
+        );
+      }
+    }
   }
 }
