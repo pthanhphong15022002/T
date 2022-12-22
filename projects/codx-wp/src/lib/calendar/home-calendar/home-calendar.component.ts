@@ -1,3 +1,4 @@
+declare var window: any;
 import {
   ChangeDetectorRef,
   Component,
@@ -10,6 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  CodxScheduleComponent,
   DialogData,
   DialogRef,
   ResourceModel,
@@ -91,17 +93,15 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
   }
 
   getCalendarNotes() {
-    this.tmpCalendarNote = this.calendar_notes.createComponent(
-      CalendarNotesComponent
-    );
-    this.tmpCalendarNote.instance.showHeader = false;
-    this.tmpCalendarNote.instance.typeCalendar = 'month';
-    this.tmpCalendarNote.instance.showList = false;
-    this.tmpCalendarNote.instance.showListParam = true;
+    let a = this.calendar_notes.createComponent(CalendarNotesComponent);
+    a.instance.showHeader = false;
+    a.instance.typeCalendar = 'month';
+    a.instance.showList = false;
+    a.instance.showListParam = true;
     let myInterval = setInterval(() => {
-      if (this.tmpCalendarNote.instance.settingValue) {
+      if (a.instance.settingValue) {
         clearInterval(myInterval);
-        let param = this.tmpCalendarNote.instance.settingValue;
+        let param = a.instance.settingValue;
         let TM_ = JSON.parse(param.TM_Tasks[1]);
         let WP_ = JSON.parse(param.WP_Notes[1]);
         let CO_ = JSON.parse(param.CO_Meetings[1]);
@@ -112,7 +112,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
             color: TM_.ShowBackground,
             borderColor: TM_.ShowColor,
             text: 'TM_Tasks',
-            status: 'TM_MyTasks',
+            status: 'TM_Tasks',
           },
         ];
         var WP_Params = [
@@ -154,22 +154,33 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
           ...EP_BookingRoomParams,
           ...EP_BookingCarParams,
         ];
-        this.getCalendarSetting(this.resources);
+        let myInterval1 = setInterval(() => {
+          if (a.instance.dataResourceModel.length > 0) {
+            clearInterval(myInterval1);
+            this.getCalendarSetting(
+              this.resources,
+              a.instance.dataResourceModel
+            );
+          }
+        });
       }
     });
   }
 
-  getCalendarSetting(resource) {
-    let myInterval = setInterval(() => {
-      if (this.tmpCalendarNote.instance.dataResourceModel.length > 0) {
-        clearInterval(myInterval);
-        let a = this.calendar_setting.createComponent(SettingCalendarComponent);
-        a.instance.funcID = this.funcID;
-        a.instance.fields = this.fields;
-        a.instance.resources = resource;
-        a.instance.resourceModel =
-          this.tmpCalendarNote.instance.dataResourceModel;
-        debugger
+  getCalendarSetting(resource, dataResourceModel) {
+    let a = this.calendar_setting.createComponent(SettingCalendarComponent);
+    a.instance.funcID = this.funcID;
+    a.instance.fields = this.fields;
+    a.instance.resources = resource;
+    a.instance.resourceModel = dataResourceModel;
+    this.codxShareSV.dataResourceModel.subscribe((res) => {
+      if (res) {
+        let ele = document.getElementsByTagName('codx-schedule')[0];
+        if (ele) {
+          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+          cmp.dataSource = res;
+          cmp.setEventSettings();
+        }
       }
     });
   }
