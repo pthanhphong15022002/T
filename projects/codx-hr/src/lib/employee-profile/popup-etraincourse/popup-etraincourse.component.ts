@@ -81,7 +81,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     .then((item) => {
       this.formGroup2 = item;
       console.log('form2 test', this.formGroup2);
-      this.hrService.getEmployeeCertificatesInfo(this.employId).subscribe(p =>{
+      this.hrService.getEmployeeCertificatesInfoById(this.employId).subscribe(p =>{
         console.log('thong tin chung chi nhan vien', p);
         this.dataForm2 = p;
         this.formModel2.currentData = this.dataForm2
@@ -112,7 +112,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm2(){
-    this.hrService.saveEmployeeCertificatesInfo(this.dataForm2).subscribe(p => {
+    this.hrService.AddEmployeeCertificateInfo(this.dataForm2).subscribe(p => {
       if(p === "True"){
         this.notitfy.notifyCode('SYS007')
         this.dialog.close()

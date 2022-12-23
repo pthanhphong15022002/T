@@ -129,7 +129,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
       // },
       // { name: 'Approve', textDefault: 'Xét duyệt', isActive: false },
     ];
-    if (this.view.funcID == 'ODT41')
+    if (this.view?.funcID == 'ODT41')
       this.tabControl.push({
         name: 'Approve',
         textDefault: 'Xét duyệt',

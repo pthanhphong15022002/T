@@ -139,6 +139,7 @@ export class ProcessesComponent
   idProccess = '';
   employee: any;
   checkGroupPerm = '';
+  popupOld: any;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -423,6 +424,9 @@ export class ProcessesComponent
         phasesOld: data.phases ?? 0,
         attachOld: data.attachments ?? 0,
         actiOld: data.activities ?? 0,
+        onwerOld: data.owner ?? '',
+        listPermiss:
+          data.permissions.filter((x) => x.autoCreate == true) ?? null,
       };
       this.dialog = this.callfc.openSide(
         PopupAddProcessesComponent,
@@ -486,6 +490,7 @@ export class ProcessesComponent
   releaseProcess(data) {
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
+    this.comment = '';
     this.dialogPopup = this.callfc.openForm(
       this.viewReleaseProcess,
       '',
@@ -506,7 +511,7 @@ export class ProcessesComponent
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
         option.Width = '550px';
-        this.dialog = this.callfc.openSide(
+        var dialogUpdate = this.callfc.openSide(
           PopupUpdateRevisionsComponent,
           {
             title: this.titleAction,
@@ -517,7 +522,7 @@ export class ProcessesComponent
           },
           option
         );
-        this.dialog.closed
+        dialogUpdate.closed
           .subscribe
           //(e) => {
           // if (e?.event && e?.event != null) {
@@ -537,7 +542,7 @@ export class ProcessesComponent
       formModel: this.formModelMF,
     };
 
-    this.dialog = this.callfc.openForm(
+    var dialogRevision = this.callfc.openForm(
       RevisionsComponent,
       '',
       500,
@@ -545,7 +550,7 @@ export class ProcessesComponent
       '',
       obj
     );
-    this.dialog.closed.subscribe((e) => {
+    dialogRevision.closed.subscribe((e) => {
       if (e?.event && e?.event != null) {
         this.view.dataService.clear();
         this.view.dataService.update(e?.event).subscribe();
@@ -782,10 +787,9 @@ export class ProcessesComponent
     if (e != null && data != null) {
       let isOwner = data?.owner == this.userId ? true : false;
       let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
-      var checkGroup = '';
 
-      checkGroup = await this.checkGroupId(data);
-      this.checkGroupPerm = checkGroup;
+      // checkGroup = await this.checkGroupId(data);
+      // this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':
@@ -799,23 +803,20 @@ export class ProcessesComponent
           case 'BPT309': // phat hanh
           case 'BPT109': // phat hanh
           case 'BPT209': // phat hanh
-            let isPublish = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.publish
-            );
-            if (data.status === '6' || (!isPublish && !fullRole)) {
+            let isPublish = data.publish;
+            if (data.status === '6' || !isPublish) {
               res.isblur = true;
             }
             break;
+          case 'SYS04':
+            if (data.deleted) {
+              res.disabled = true;
+            }
+            break;
           case 'SYS003': // them phien ban
-            let isCreate = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.create
-            );
-            if ((!isCreate && !fullRole) || data.deleted) {
-              if (res.functionID === 'SYS04') {
-                res.disabled = true;
-              } else {
-                res.isblur = true;
-              }
+            let isCreate = data.write;
+            if (!isCreate || data.deleted) {
+              res.isblur = true;
             }
             break;
           case 'SYS03': //sua
@@ -827,10 +828,8 @@ export class ProcessesComponent
           case 'BPT103': //luu phien ban
           case 'BPT303': //luu phien ban
           case 'BPT603': //luu phien ban
-            let isEdit = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.edit
-            );
-            if ((!isEdit && !fullRole) || data.deleted) {
+            let isEdit = data.write;
+            if (!isEdit || data.deleted) {
               if (res.functionID === 'SYS03') {
                 res.disabled = true;
               } else {
@@ -839,10 +838,8 @@ export class ProcessesComponent
             }
             break;
           case 'SYS02': // xoa
-            let isDelete = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.delete
-            );
-            if ((!isDelete && !fullRole) || data.deleted) {
+            let isDelete = data.delete;
+            if (!isDelete || data.deleted) {
               res.disabled = true;
             }
             break;
@@ -864,14 +861,9 @@ export class ProcessesComponent
           case 'BPT205': //chia se
           case 'BPT305': //chia se
           case 'BPT605': //chia se
-            let isShare = data?.permissions.some(
-              (x) =>
-                x.objectID == checkGroup &&
-                x.share &&
-                x.approveStatus !== '3' &&
-                x.approveStatus != '4'
-            );
-            if (!isShare && !fullRole) {
+            let isShare = data.share;
+
+            if (!isShare) {
               res.isblur = true;
             }
             break;
@@ -879,19 +871,17 @@ export class ProcessesComponent
           case 'BPT208': //phan quyen
           case 'BPT308': //phan quyen
           case 'BPT608': //phan quyen
-            let isAssign = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.assign
-            );
-            if (!isAssign && !fullRole) {
+            let isAssign = data.allowPermit;
+
+            if (!isAssign) {
               res.isblur = true;
             }
 
             break;
           case 'BPT702': //Khoi phuc
-            let isRestore = data?.permissions.some(
-              (x) => x.objectID == checkGroup && x.delete
-            );
-            if (!isRestore && !fullRole) {
+            let isRestore = data.delete;
+
+            if (!isRestore) {
               res.isblur = true;
             }
         }
@@ -928,8 +918,7 @@ export class ProcessesComponent
                   if (res) return true;
                   else return false;
                 });
-              if (isRole)
-                isCheck = res.objectID;
+              if (isRole) isCheck = res.objectID;
               break;
             //Mai sửa lại
             case '2':
@@ -957,17 +946,9 @@ export class ProcessesComponent
 
   //Check quyền đọc, icon đọc, check quyền xem chi tiết doubleClick
   checkPermissionRead(data) {
-    var group = '';
-    group = this.checkGroupId(data);
-    let isRead = data?.permissions.some(
-      (x) =>
-        x.objectID == group &&
-        x.read &&
-        x.approveStatus !== '3' &&
-        x.approveStatus !== '4'
-    );
-    let isOwner = data?.owner == this.userId ? true : false;
-    return isRead || this.isAdmin || isOwner || this.isAdminBp ? true : false;
+    let isRead = data.read;
+
+    return isRead ? true : false;
   }
 
   async doubleClickViewProcessSteps(moreFunc, data) {
@@ -989,12 +970,9 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
-    var group = '';
-    group = this.checkGroupId(data);
-    let isEdit = data?.permissions.some((x) => x.objectID == group && x.edit);
-    let isOwner = data?.owner == this.userId ? true : false;
+    let isEdit = data.write;
     let editRole =
-      (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !data.deleted
+      isEdit && !data.deleted
         ? true
         : false;
 
@@ -1058,12 +1036,27 @@ export class ProcessesComponent
   //   return strTime;
   // }
 
-  PopoverDetail(p: any, emp) {
+  PopoverDetail(p: any, emp) {    
+    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+      this.popupOld?.close();   
+    }
+   
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
-      if (emp.memo != null) p.open();
+      if (emp.memo != null || emp.processName != null) {
+        p.open();      
+      } 
     } else p.close();
+    this.popupOld = p;
+  }
+
+  closePopover() {
+    this.popupOld?.close();  
+  }
+
+  setTextPopover(text){
+    return (text);
   }
 
   openPopup() {

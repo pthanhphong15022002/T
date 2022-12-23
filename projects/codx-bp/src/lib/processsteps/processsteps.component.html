@@ -50,7 +50,11 @@
             default="Hoạt động"
           ></codx-label>
         </label>
-        <div class="check-list text-dark">
+        <div
+          class="check-list text-dark"
+          (mouseenter)="openMFTypeA()"
+          (mouseleave)="closeMFTypeA()"
+        >
           <ng-container *ngFor="let item of data?.items">
             <div
               class="d-flex align-item-center p-1 mb-2 psteps-item"
@@ -122,21 +126,11 @@
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
-            <!-- <div class="check-list text-dark" #reference>
-              {{
-                item.reference
-                  | formatvalue
-                    : view?.formModel
-                    : "reference"
-                    : reference
-                    : "BPQuestionnaires"
-                    : "grvBPQuestionnaires"
-                  | async
-              }}
-            </div> -->
             <div
+              class="cursor-pointer text-hover-primary"
               *ngIf="item.reference"
               [innerHtml]="viewQuestion(item.reference)"
+              (click)="viewDetailSurveys(viewQuestion(item.reference))"
             ></div>
           </ng-container>
         </ng-container>
@@ -485,6 +479,7 @@
       >&nbsp;
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
+    <!-- Bo nut them chi tiet -->
     <div class="moreFC-ver" *ngIf="!hideMoreFC">
       <div class="action-menu">
         <ng-container #moreFC>
@@ -752,32 +747,40 @@
   <span>{{ text }}</span>
 </ng-template>
 
-<ng-template #viewColumKaban let-item>
+<ng-template #viewColumKaban let-data>
   <div
     class="d-flex align-items-center justify-content-between cursor-pointer w-100"
   >
-    <div
-      class="line-colums"
-      #pp="ngbPopover"
-      [ngbPopover]="tesst"
-      (mouseenter)="pp.open()"
-      (mouseleave)="pp.close()"
-      placement="bottom"
-    >
-      {{ item.headerText }}
+    <div class="line-colums">
+      {{ data.headerText }}
     </div>
   </div>
+  <!-- <div>
+    <codx-mfunc
+      type="hover"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, currentData(data.keyFiled))"
+      [dataItem]="currentData(data.keyFiled)"
+    >
+    </codx-mfunc>
+  </div> -->
   <div class="icon-more_vert icon-18 has-actions-menu">
     <div class="action-menu">
-      <codx-mfunc
-        [formModel]="formModel"
-        (clickMF)="clickMFColums($event, item.keyField)"
-        [isBookMark]="true"
+      <!-- <codx-mfunc
+        type="hover"
+        [formModel]="view.formModel"
+        (clickMF)="clickMF($event, currentData(data.keyField))"
+        [dataItem]="currentData(data.keyField)"
       >
-      </codx-mfunc>
+      </codx-mfunc> -->
     </div>
   </div>
   <ng-template #tesst
-    ><span>{{ item.headerText }}</span></ng-template
+    ><span>{{ data.headerText }}</span></ng-template
   >
 </ng-template>
+<!-- #pp="ngbPopover"
+      [ngbPopover]="tesst"
+      (mouseenter)="pp.open()"
+      (mouseleave)="pp.close()"
+      placement="bottom" -->

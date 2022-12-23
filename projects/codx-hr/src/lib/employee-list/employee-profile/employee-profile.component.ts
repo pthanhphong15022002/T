@@ -1,3 +1,4 @@
+import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
 import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
 import { PopupECalculateSalaryComponent } from './../../employee-profile/popup-ecalculate-salary/popup-ecalculate-salary.component';
@@ -28,6 +29,7 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   AuthStore,
@@ -58,6 +60,7 @@ import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/
   selector: 'lib-employee-profile',
   templateUrl: './employee-profile.component.html',
   styleUrls: ['./employee-profile.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class EmployeeProfileComponent extends UIComponent {
   @ViewChild('panelContent') panelContent: TemplateRef<any>;
@@ -120,6 +123,8 @@ export class EmployeeProfileComponent extends UIComponent {
   jobInfo: any;
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
+  //Certificate
+  lstCertificates: any = [];
   //EExperience
   lstExperience: any = [];
   lstVaccine: any = [];
@@ -134,7 +139,8 @@ export class EmployeeProfileComponent extends UIComponent {
 
   //EAsset salary
   lstAsset: any = [];
-
+  //EAppointion
+  lstAppointions: any = [];
   //Basic salary
   crrEBSalary: any;
   lstEBSalary: any = [];
@@ -153,6 +159,7 @@ export class EmployeeProfileComponent extends UIComponent {
   disciplineColumnGrid;
   expColumnGrid;
 
+  //#region ViewChild
   @ViewChild('healthPeriodID', { static: true })
   healthPeriodID: TemplateRef<any>;
   @ViewChild('healthPeriodDate', { static: true })
@@ -166,7 +173,10 @@ export class EmployeeProfileComponent extends UIComponent {
   EExperienceTmp: TemplateRef<any>;
   @ViewChild('tempFromDate', { static: true }) tempFromDate;
   @ViewChild('tempToDate', { static: true })
+
+  //#endregion
   tempToDate: TemplateRef<any>;
+
   objCollapes = {
     '1': false,
     '1.1': false,
@@ -211,6 +221,9 @@ export class EmployeeProfileComponent extends UIComponent {
     { icon: 'icon-apartment', text: 'Sức khỏe' },
     { icon: 'icon-apartment', text: 'Thôi việc' },
   ];
+
+  listEmp: any;
+  request: DataRequest;
 
   onInit(): void {
     this.EExperienceColumnsGrid = [
@@ -265,6 +278,33 @@ export class EmployeeProfileComponent extends UIComponent {
                     console.log('data', this.data);
                   }
                 });
+              console.log('State', history.state);
+              this.listEmp = history.state?.data;
+              this.request = history.state?.request;
+
+              let index = this.listEmp?.findIndex(
+                (p) => p.employeeID == params.employeeID
+              );
+              if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
+                this.request.page += 1;
+                this.hrService
+                  .getModelFormEmploy(this.request)
+                  .subscribe((res) => {
+                    if (res) {
+                      this.listEmp.push(...res[0]);
+                    }
+                  });
+              }
+              // Thong tin ca nhan
+              this.hrService
+                .getEmployeeInfo(params.employeeID)
+                .subscribe((emp) => {
+                  if (emp) {
+                    this.data = emp;
+                    this.infoPersonal = emp;
+                    console.log('data', this.data);
+                  }
+                });
 
               //Quan he gia dinh
               // this.hrService
@@ -297,6 +337,19 @@ export class EmployeeProfileComponent extends UIComponent {
                 .getListAssetByDataRequest(rqAsset)
                 .subscribe((res) => {
                   if (res) this.lstAsset = res[0];
+                });
+
+              //Certificate
+              let rqCertificate = new DataRequest();
+              rqCertificate.gridViewName = 'grvEAssets';
+              rqCertificate.entityName = 'HR_ECertificates';
+              rqCertificate.predicate = 'EmployeeID=@0';
+              rqCertificate.dataValue = params.employeeID;
+              rqCertificate.page = 1;
+              this.hrService
+                .getECertificateWithDataRequest(rqCertificate)
+                .subscribe((res) => {
+                  if (res) this.lstCertificates = res[0];
                 });
 
               //Passport
@@ -604,6 +657,9 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo('edit', data);
           this.df.detectChanges();
+        } else if (funcID == 'eCertificate') {
+          this.HandleEmployeeCertificateInfo('edit', data);
+          this.df.detectChanges();
         }
         break;
 
@@ -755,6 +811,40 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                 });
+            } else if (funcID == 'eSkill') {
+              this.hrService.deleteESkill(data.recID).subscribe((res) => {
+                if (res) {
+                  let grpIndex = this.lstESkill.findIndex(
+                    (p) => p.skillID == data.skillID
+                  );
+                  if (grpIndex > -1) {
+                    let lstItem = this.lstESkill[grpIndex]?.listSkill;
+
+                    let skillIndex = lstItem.findIndex(
+                      (p) => p.recID == data.recID
+                    );
+                    if (skillIndex > -1) {
+                      lstItem.splice(skillIndex, 1);
+                      this.df.detectChanges();
+                    }
+                  }
+                }
+              });
+            } else if (funcID == 'eCertificate') {
+              this.hrService
+                .DeleteEmployeeCertificateInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstCertificates.indexOf(data);
+                    if (i != -1) {
+                      this.lstCertificates.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
             }
           }
         });
@@ -784,6 +874,9 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eDegrees') {
           this.HandleEmployeeDegreeInfo('copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eCertificate') {
+          this.HandleEmployeeCertificateInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1532,33 +1625,40 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  popupEmployeePositions() {
-    let eData = {
-      data: this.data,
-    };
-    let option = new SidebarModel();
-    option.Width = '800px';
-
-    let ePositionsDialog = this.callfc.openSide(
-      EmployeePositionsComponent,
-      eData,
-      option
-    );
-    ePositionsDialog.closed.subscribe((ret) => {
-      console.log('dong pop up', ret);
-    });
-  }
-  addEmployeeCertificateInfo() {
+  HandleEmployeeAppointionInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeCertificateDetailComponent,
+      PopupEappointionsComponent,
+      {
+        actionType: actionType,
+        indexSelected: this.lstAppointions.indexOf(data),
+        lstCertificates: this.lstAppointions,
+        headerText: 'Bổ nhiệm - điều chuyển',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  HandleEmployeeCertificateInfo(actionType: string, data: any) {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
       PopupECertificatesComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstCertificates.indexOf(data),
+        lstCertificates: this.lstCertificates,
         headerText: 'Chứng chỉ',
         employeeId: this.data.employeeID,
       },
@@ -1598,9 +1698,8 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '550px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeSkillDetailComponent,
       PopupESkillsComponent,
       {
         isAdd: true,
@@ -1801,5 +1900,48 @@ export class EmployeeProfileComponent extends UIComponent {
 
   addSkillGrade() {
     this.hrService.addSkillGrade(null).subscribe();
+  }
+
+  nextEmp() {
+    if (this.listEmp) {
+      let index = this.listEmp.findIndex(
+        (p) => p.employeeID == this.data.employeeID
+      );
+      if (index > -1 && this.listEmp[index + 1]?.employeeID) {
+        let urlView = '/hr/employeedetail/HRT03a1';
+        this.codxService.navigate(
+          '',
+          urlView,
+          {
+            employeeID: this.listEmp[index + 1]?.employeeID,
+          },
+          {
+            data: this.listEmp,
+            request: this.request,
+          }
+        );
+      }
+    }
+  }
+
+  previousEmp() {
+    if (this.listEmp) {
+      let index = this.listEmp.findIndex(
+        (p) => p.employeeID == this.data.employeeID
+      );
+      if (index > -1 && this.listEmp[index - 1]?.employeeID) {
+        let urlView = '/hr/employeedetail/HRT03a1';
+        this.codxService.navigate(
+          '',
+          urlView,
+          {
+            employeeID: this.listEmp[index + 1]?.employeeID,
+          },
+          {
+            data: this.listEmp,
+          }
+        );
+      }
+    }
   }
 }

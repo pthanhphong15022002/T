@@ -1,3 +1,5 @@
+import { title } from 'process';
+import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
   Component,
@@ -44,11 +46,14 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   headerText: string;
   formModelCheckin = new FormModel();
   dtStatus: any;
-  dataOKR = [];
   openAccordion = [];
   dataKR: any;
+  title='';
+  krRecID:any;
+  krParentID:any;
   progressHistory = [];
   krCheckIn = [];
+  listAlign=[];
   chartSettings: ChartSettings = {
     primaryXAxis: {
       valueType: 'Category',
@@ -73,23 +78,20 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
           shape: 'Circle',
           fill: '#20bdae',
         },
-        // trendlines: [
-        //   {
-        //     type: 'Linear',
-        //     name: 'Trends',
-        //     width: 3,
-        //     marker: { visible: true },
-        //     fill: '#C64A75',
-        //   },
-
-        // ],
+      },
+      {
+        type: 'Line',
+        xName: 'period',
+        yName: 'target',
+        fill: '#000000',
+        width: 1,
       },
     ],
   };
+
   chartData = {
     progress: 0,
-    checkIns: [],
-    distribute: [],
+    data: [],
   };
 
   dialogCheckIn: DialogRef;
@@ -142,24 +144,11 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     super(injector);
     this.headerText = 'Xem chi tiết - Kết quả chính'; //dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.dataOKR.push(dialogData.data[1]);
-    this.dataKR = dialogData.data[0];
+    this.krRecID=dialogData.data[0];
+    this.title = dialogData.data[1];
+    this.krParentID = dialogData.data[2];
 
-    //tính giá trị progress theo các lần checkIn
-    this.totalProgress = this.dataKR.progress;
-    if (this.dataKR?.checkIns) {
-      this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
-      this.krCheckIn = Array.from(this.dataKR?.checkIns);
-      this.krCheckIn.forEach((element) => {
-        if (this.krCheckIn.indexOf(element) == 0) {
-          this.progressHistory.push(this.totalProgress);
-        } else {
-          this.totalProgress -=
-            this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
-          this.progressHistory.push(this.totalProgress);
-        }
-      });
-    }
+    
   }
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
@@ -178,10 +167,9 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.cache.valueList('OM002').subscribe((item) => {
-      var x = item;
-    });
-    this.getChartData();
+    
+    this.getKRData();    
+    this.getListAlign();
   }
 
   //-----------------------End-------------------------------//
@@ -195,6 +183,41 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
+  getKRData(){
+    this.codxOmService
+        .getKRByID(this.krRecID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.dataKR = res;      
+            //tính giá trị progress theo các lần checkIn
+            this.totalProgress = this.dataKR.progress;
+            if (this.dataKR?.checkIns) {
+              this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
+              this.krCheckIn = Array.from(this.dataKR?.checkIns);
+              this.krCheckIn.forEach((element) => {
+                if (this.krCheckIn.indexOf(element) == 0) {
+                  this.progressHistory.push(this.totalProgress);
+                } else {
+                  this.totalProgress -=
+                    this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
+                  this.progressHistory.push(this.totalProgress);
+                }
+              });
+            }
+            this.getChartData();
+            this.detectorRef.detectChanges();
+          }
+        });
+  }
+  getListAlign(){
+    this.codxOmService
+        .getListAlign(this.krParentID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.listAlign = res;           
+          }
+        });
+  }
   getItemOKR(i: any, recID: any) {
     this.openAccordion[i] = !this.openAccordion[i];
     // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
@@ -221,42 +244,69 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
 
   getCheckInsByYear(data: any) {
     const checkIns = data.checkIns;
+    const targets = data.targets;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
+    let tempTarget = 0;
+
+    if (!targets) {
+      return;
+    }
+
     if (checkIns && checkIns.length > 0) {
-      checkIns.map((checkIn, index) => {
+      targets.map((target, index) => {
         let tmpCheckIn: any = {};
         tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `Q${index + 1}`;
-        this.chartData.checkIns.push(tmpCheckIn);
+        tempTarget = tempTarget + (target.target / data.target) * 100;
+        tmpCheckIn.target = tempTarget;
+        this.chartData.data.push(tmpCheckIn);
       });
     }
   }
 
   getCheckInsByQuarter(data: any) {
     const checkIns = data.checkIns;
+    const targets = data.targets;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
+    let tempTarget = 0;
+
+    if (!targets) {
+      return;
+    }
+
     if (checkIns && checkIns.length > 0) {
-      checkIns.map((checkIn, index) => {
+      targets.map((target, index) => {
         let tmpCheckIn: any = {};
         tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `M${index + 1}`;
-        this.chartData.checkIns.push(tmpCheckIn);
+        tempTarget = tempTarget + (target.target / data.target) * 100;
+        tmpCheckIn.target = tempTarget;
+        this.chartData.data.push(tmpCheckIn);
       });
     }
   }
 
   getCheckInsByMonth(data: any) {
     const checkIns = data.checkIns;
+    const targets = data.targets;
     const progressHistory = this.progressHistory;
     const progressHistoryReverse = [...progressHistory].reverse();
+    let tempTarget = 0;
+
+    if (!targets) {
+      return;
+    }
+
     if (checkIns && checkIns.length > 0) {
-      checkIns.map((checkIn, index) => {
+      targets.map((target, index) => {
         let tmpCheckIn: any = {};
         tmpCheckIn.percent = progressHistoryReverse[index];
         tmpCheckIn.period = `W${index + 1}`;
-        this.chartData.checkIns.push(tmpCheckIn);
+        tempTarget = tempTarget + (target.target / data.target) * 100;
+        tmpCheckIn.target = tempTarget;
+        this.chartData.data.push(tmpCheckIn);
       });
     }
   }
@@ -287,7 +337,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
         this.dataKR = res.event;
         this.totalProgress = this.dataKR.progress;
         this.progressHistory.unshift(this.totalProgress);
-        this.dataOKR.map((item: any) => {
+        this.dataKR.map((item: any) => {
           if (item.recID == res.event.parentID) {
             item = res.event;
           }

@@ -32,7 +32,7 @@
           <div class="d-flex flex-row">
             <div class="col-3">
               <codx-label default="Kết quả thực hiện" fiedName="Value" [formModel]="form.formModel"></codx-label>
-              <codx-input [showSpinButton]="false" ControlName="value" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
+              <codx-input [max]="dataKR.checkInMode==1?100:100-dataKR.progress" [showSpinButton]="false" ControlName="value" [formModel]="form.formModel" [Group]="form.formGroup"></codx-input>
             </div>
             <div class="col-5 ms-5">
               <codx-label default="Tình trạng" fiedName="Status" [formModel]="form.formModel"></codx-label>

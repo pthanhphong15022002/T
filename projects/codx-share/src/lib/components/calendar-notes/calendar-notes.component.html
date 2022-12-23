@@ -211,27 +211,27 @@
   </div>
   <div class="calendar-box position-relative">
     <div class="form-calendar">
-      <div *ngIf="typeCalendar == 'week'">
-        <selectweek
-          (onChangeWeek)="setEventWeek()"
-          (onChangeValue)="changeDayOfWeek($event)"
-          (onChangeNewWeek)="changeNewWeek($event)"
-        >
-        </selectweek>
-      </div>
-      <div *ngIf="typeCalendar == 'month'">
-        <ejs-calendar
-          #calendar
-          [firstDayOfWeek]="1"
-          (renderDayCell)="onLoad($event)"
-          (change)="changeDayOfMonth($event)"
-          cssClass="width-calendar"
-          class="e-customStyle"
-          title="Lịch các nhân"
-          (navigated)="changeNewMonth($event)"
-        >
-        </ejs-calendar>
-      </div>
+      <selectweek
+        *ngIf="typeCalendar == 'week'"
+        (onChangeWeek)="setEventWeek()"
+        (onChangeValue)="changeDayOfWeek($event)"
+        (onChangeNewWeek)="changeNewWeek($event)"
+      >
+      </selectweek>
+      <ejs-calendar
+        *ngIf="typeCalendar == 'month'"
+        #calendar
+        [firstDayOfWeek]="1"
+        locale="vi"
+        (renderDayCell)="onLoad($event)"
+        (change)="changeDayOfMonth($event)"
+        cssClass="width-calendar"
+        class="e-customStyle"
+        title="Lịch các nhân"
+        (navigated)="changeNewMonth($event)"
+        [value]="dateChange"
+      >
+      </ejs-calendar>
     </div>
   </div>
   <ng-container *ngIf="showListParam">
@@ -399,16 +399,8 @@
   <div class="lstView" *ngIf="showList">
     <codx-listview
       #listview
-      service="SYS"
-      assemblyName="ERM.Business.SYS"
-      className="SettingValuesBusiness"
-      method="GetDataByDateAsync"
-      entityName = 'WP_Notes'
-      [predicate]="predicate"
-      [dataValue]="dataValue"
       [itemTemplate]="dataPara"
       type="listView"
-      [funcId]="functionList?.functionID"
     >
     </codx-listview>
   </div>
@@ -596,7 +588,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="item?.transType == 'TM_MyTasks'">
+    <div *ngIf="item?.transType == 'TM_Tasks'">
       <div
         [ngStyle]="{
           'background-color': TM_TasksParam?.ShowBackground,

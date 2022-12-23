@@ -40,6 +40,8 @@ export class PopupDistributeKRComponent extends UIComponent implements AfterView
   dialogRef: DialogRef;
   formModel: FormModel;
   headerText: string;
+  obName='';
+  krName='';
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -52,7 +54,8 @@ export class PopupDistributeKRComponent extends UIComponent implements AfterView
     this.headerText= "Phân bổ KR"//dialogData?.data[2];
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef?.formModel;    
-    
+    this.obName=dialogData.data[0];
+    this.krName=dialogData.data[1];
   }
 
   ngAfterViewInit(): void {

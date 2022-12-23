@@ -158,8 +158,8 @@
       <div>
         <codx-attachment
           #attachment
-          [objectType]="dialog.formModel.entityName"
-          [objectId]="process?.recID"
+          [objectId]="process.recID"
+          [objectType]="form.formModel.entityName"
           hideFolder="1"
           hideImageUpload="0"
           hideImageThumb="0"
@@ -168,11 +168,14 @@
           type="inline"
           allowMultiFile="1"
           [formModel]="dialog.formModel"
-          [functionID]="funcID"
           (fileAdded)="fileAdded($event)"
           (fileCount)="getfileCount($event)"
           displayThumb="full"
-          showMessage="0"
+          showMessage="0"  
+          [fdID]="folderID"
+          [fdName]="folderName"
+          [parentID]="parentID"
+          [dataSelected]="process"       
         >
         </codx-attachment>
       </div>
@@ -235,28 +238,26 @@
 
       </div>
     </div>
-
     <codx-attachment
-    #imageAvatar
-    [objectType]="'BP_Processes'"
-    [objectId]="process?.recID"
-    hideFolder="1"
-    hideImageUpload="1"
-    hideImageThumb="1"
-    hideUploadBtn="1"
-    hideDes="1"
-    type="inline"
-    allowMultiFile="0"
-    [formModel]="dialog.formModel"
-    [functionID]="funcID"
-    allowExtensions=".jpg,.png"
-    [isSaveSelected]="0"
-    (fileAdded)="fileImgAdded($event)"
-    displayThumb="full"
-    showMessage="0"
-    category="0"
-  >
-  </codx-attachment>
+      #imageAvatar
+      [objectId]="process.recID"
+      [objectType]="form.formModel.entityName"
+      hideFolder="1"
+      hideImageUpload="1"
+      hideImageThumb="1"
+      hideUploadBtn="1"
+      hideDes="1"
+      type="inline"
+      allowMultiFile="0"
+      [formModel]="dialog.formModel"
+      allowExtensions=".jpg,.png"
+      [isSaveSelected]="0"
+      (fileAdded)="fileImgAdded($event)"
+      displayThumb="full"
+      showMessage="0"
+      category="0"          
+    >
+    </codx-attachment>
 
   </ng-template>
 </codx-form>

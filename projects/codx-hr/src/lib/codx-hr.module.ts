@@ -78,6 +78,7 @@ import { PopupETimeCardComponent } from './employee-profile/popup-etime-card/pop
 import { PopupEhealthsComponent } from './employee-profile/popup-ehealths/popup-ehealths.component';
 import { PopupEVaccineComponent } from './employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from './employee-profile/popup-ediseases/popup-ediseases.component';
+import { PopupEappointionsComponent } from './employee-profile/popup-eappointions/popup-eappointions.component';
 
 export const routes: Routes = [
   {
@@ -267,6 +268,7 @@ const T_Component: Type<any>[] = [
   PopupEhealthsComponent,
   PopupEVaccineComponent,
   PopupEDiseasesComponent,
+  PopupEappointionsComponent,
 ];
 @NgModule({
   imports: [

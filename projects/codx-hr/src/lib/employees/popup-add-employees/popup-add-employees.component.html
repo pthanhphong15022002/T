@@ -6,7 +6,6 @@
   [footer]="footer"
   [dialog]="dialogRef"
   [openMore]="true"
-  (buttonClick)="buttonClick($event)"
   [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]"
   [data]="employee"
 >
@@ -88,7 +87,9 @@
             [formModel]="dialogRef.formModel"
             field="birthday"
             [crrValue]="employee.birthday"
-            (valueChange)="changeTime($event)"
+            field="birthday"
+            [crrValue]="employee.birthday"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -283,12 +284,16 @@
             [formModel]="dialogRef.formModel"
             fiedName="JoinedOn"
             default="Ngày vào làm"
-          ></codx-label>
+          >
+          </codx-label>
           <codx-input
             [formModel]="dialogRef.formModel"
             field="joinedOn"
             [crrValue]="employee.joinedOn"
-            (valueChange)="changeTime($event)"
+            (valueChange)="dataChange($event)"
+            field="joinedOn"
+            [crrValue]="employee.joinedOn"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -309,7 +314,7 @@
             format="d"
             placeholder="datetime"
             [crrValue]="employee?.joinedOn"
-            (valueChange)="changeTime($event)"
+            (valueChange)="dataChange($event)"
             placeholder="datetime"
           >
           </codx-input>
@@ -331,7 +336,10 @@
             format="d"
             placeholder="datetime"
             [crrValue]="employee?.hiredOn"
-            (valueChange)="changeTime($event)"
+            (valueChange)="dataChange($event)"
+            field="hiredOn"
+            [crrValue]="employee.hiredOn"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -364,6 +372,10 @@
             (valueChange)="dataChange($event)"
             [crrValue]="employee?.idCardNo"
             placeholder="Số CMNN/CCCD"
+            field="idCardNo"
+            [formModel]="dialogRef.formModel"
+            (valueChange)="dataChange($event)"
+            [crrValue]="employee.idCardNo"
           >
           </codx-input>
         </div>
@@ -382,7 +394,11 @@
             format="d"
             placeholder="datetime"
             [crrValue]="employee?.issuedOn"
-            (valueChange)="changeTime($event)"
+            (valueChange)="dataChange($event)"
+            [formModel]="dialogRef.formModel"
+            field="issuedOn"
+            [crrValue]="employee.issuedOn"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -407,6 +423,10 @@
             ngDefaultControl
             placeholder="Nơi cấp"
             loadFull="true"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.issuedBy"
+            field="issuedBy"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -429,6 +449,10 @@
             (valueChange)="dataChange($event)"
             ngDefaultControl
             refValue="L0226"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.maritalStatus"
+            field="maritalStatus"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -450,6 +474,10 @@
             service="BS"
             (valueChange)="dataChange($event)"
             loadFull="true"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.nationality"
+            field="nationality"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -473,6 +501,10 @@
             service="BS"
             (valueChange)="dataChange($event)"
             loadFull="true"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.ethnicGroup"
+            field="ethnicGroup"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -493,6 +525,10 @@
             service="BS"
             (valueChange)="dataChange($event)"
             loadFull="true"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.religion"
+            field="religion"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -515,6 +551,10 @@
             (valueChange)="dataChange($event)"
             ngDefaultControl
             refValue="L1033"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.education"
+            field="education"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -536,6 +576,10 @@
             service="BS"
             (valueChange)="dataChange($event)"
             loadFull="true"
+            [formModel]="dialogRef.formModel"
+            [crrValue]="employee.degree"
+            field="degree"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -571,6 +615,11 @@
             field="pitNumber"
             (valueChange)="dataChange($event)"
             [crrValue]="employee?.pitNumber"
+            |
+            [formModel]="dialogRef.formModel"
+            field="pitNumber"
+            (valueChange)="dataChange($event)"
+            [crrValue]="employee.pitNumber"
           >
           </codx-input>
         </div>
@@ -590,7 +639,10 @@
             format="d"
             placeholder="datetime"
             [crrValue]="employee?.pitIssuedOn"
-            (valueChange)="changeTime($event)"
+            [formModel]="dialogRef.formModel"
+            field="pitIssuedOn"
+            [crrValue]="employee.pitIssuedOn"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>
@@ -611,6 +663,10 @@
             field="siRegisterNo"
             (valueChange)="dataChange($event)"
             [crrValue]="employee?.siRegisterNo"
+            [formModel]="dialogRef.formModel"
+            field="siRegisterNo"
+            (valueChange)="dataChange($event)"
+            [crrValue]="employee.siRegisterNo"
           >
           </codx-input>
         </div>
@@ -630,7 +686,10 @@
             format="d"
             placeholder="datetime"
             [crrValue]="employee?.siRegisterOn"
-            (valueChange)="changeTime($event)"
+            [formModel]="dialogRef.formModel"
+            field="siRegisterOn"
+            [crrValue]="employee.siRegisterOn"
+            (valueChange)="dataChange($event)"
           >
           </codx-input>
         </div>

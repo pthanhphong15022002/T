@@ -245,15 +245,20 @@ export class CodxHrService {
     );
   }
 
-  saveEmployeeCertificatesInfo(data) {
+
+  //#region HR_Employees
+
+  getModelFormEmploy(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
-      'HR',
-      'ECertificatesBusiness',
-      'AddEmployeeCertificateInfoAsync',
-      data
+      'ERM.Business.HR',
+      'EmployeesBusiness',
+      'GetModelFormEmployAsync',
+      dataRequest
     );
   }
+
+  //#endregion
 
   //#region EPassportsBusiness
 
@@ -278,7 +283,8 @@ export class CodxHrService {
 
   //#endregion
 
-  //#regin EDegrees
+  //#region EDegrees
+
   getEmployeeDegreeModel() {
     return this.api.execSv<any>(
       'HR',
@@ -380,16 +386,6 @@ export class CodxHrService {
   }
 
   //#endregion
-
-  getEmployeeCertificatesInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'ECertificatesBusiness',
-      'GetEmployeeCertificateInfoAsync',
-      data
-    );
-  }
 
   getEmployeeSkillsInfo(data) {
     return this.api.execSv<any>(
@@ -612,6 +608,68 @@ export class CodxHrService {
     );
   }
   //#endregion
+
+    //#region ECertificateBusiness
+    getEmployeeCertificatesInfoById(data){
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'GetOneEmployeeCertificateByEmployeeId',
+        data
+      );
+    }
+
+    getECertificateWithDataRequest(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'GetListCertificatesByDataRequestAsync',
+        data
+      );
+    }
+  
+    getECertificateModel() {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'GetEmployeeCertificatesModelAsync'
+      );
+    }
+  
+    AddEmployeeCertificateInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'AddEmployeeCertificatesInfoAsync',
+        data
+      );
+    }
+  
+    UpdateEmployeeCertificateInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'UpdateEmployeeCertificatesInfoAsync',
+        data
+      );
+    }
+  
+    DeleteEmployeeCertificateInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'ECertificatesBusiness',
+        'DeleteEmployeeCertificatesInfoAsync',
+        data
+      );
+    }
+  
+    //#endregion
 
   //#region EFamiliesBusiness
   getFamilyByEmployeeID(empID: string) {
@@ -1031,6 +1089,15 @@ export class CodxHrService {
   //#endregion
 
   //#region HR_SkillGrades
+  getEmployeeSkillModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'SkillGradesBusiness',
+      'getEmployeeSkillModelAsync'
+    );
+  }
+
   loadDataSkillGrade(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
@@ -1080,6 +1147,58 @@ export class CodxHrService {
       'ESkillsBusiness',
       'GetViewSkillAsync',
       dataRequest
+    );
+  }
+
+  deleteESkill(recID: string) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'DeleteESkillAsync',
+      recID
+    );
+  }
+  //#endregion
+
+  //#region HR_EAccidents
+  loadDataEAccident(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'LoadDataEAccidentAsync',
+      dataRequest
+    );
+  }
+
+  addEAccident(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'AddEAccidentAsync',
+      [data]
+    );
+  }
+
+  editEAccident(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'EditEAccidentAsync',
+      data
+    );
+  }
+
+  deleteEAccident(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EAccidentsBusiness',
+      'DeleteEAccidentAsync',
+      data
     );
   }
   //#endregion

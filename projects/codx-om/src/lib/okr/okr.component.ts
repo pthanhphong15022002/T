@@ -89,7 +89,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.cache.getCompany(user.userID).subscribe(item=>{
       if(item) 
       {
-        this.titleRoom = item.organizationName;
+        this.titleRoom = item.orgUnitName;
         this.dtCompany = item;
       }
     })
@@ -170,7 +170,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính'],
+      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.dataOKRPlans],
       option
     );
     

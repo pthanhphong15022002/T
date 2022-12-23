@@ -1,3 +1,4 @@
+declare var window: any;
 import {
   ChangeDetectorRef,
   Component,
@@ -10,6 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
+  CodxScheduleComponent,
   DialogData,
   DialogRef,
   ResourceModel,
@@ -17,8 +19,10 @@ import {
   ViewModel,
   ViewType,
 } from 'codx-core';
+import moment from 'moment';
 import { CalendarNotesComponent } from 'projects/codx-share/src/lib/components/calendar-notes/calendar-notes.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'app-home-calendar',
@@ -51,6 +55,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
     private injector: Injector,
     private change: ChangeDetectorRef,
     private route: ActivatedRoute,
+    private codxShareSV: CodxShareService,
     @Optional() dialogRef: DialogRef,
     @Optional() dt: DialogData
   ) {
@@ -85,46 +90,29 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
         this.getCalendarNotes();
       }
     }, 200);
-    // let myInterval_SettingCalendar = setInterval(() => {
-    //   if (this.calendar_notes) {
-    //     clearInterval(myInterval_SettingCalendar);
-    //     this.getCalendarSetting();
-    //   }
-    // }, 200);
   }
 
   getCalendarNotes() {
-    this.tmpCalendarNote = this.calendar_notes.createComponent(
-      CalendarNotesComponent
-    );
-    this.tmpCalendarNote.instance.showHeader = false;
-    this.tmpCalendarNote.instance.typeCalendar = 'month';
-    this.tmpCalendarNote.instance.showList = false;
-    this.tmpCalendarNote.instance.showListParam = true;
+    let a = this.calendar_notes.createComponent(CalendarNotesComponent);
+    a.instance.showHeader = false;
+    a.instance.typeCalendar = 'month';
+    a.instance.showList = false;
+    a.instance.showListParam = true;
     let myInterval = setInterval(() => {
-      if (this.tmpCalendarNote.instance.settingValue) {
+      if (a.instance.settingValue) {
         clearInterval(myInterval);
-        let TM_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.TM_Tasks[1]
-        );
-        let WP_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.WP_Notes[1]
-        );
-        let CO_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.CO_Meetings[1]
-        );
-        let EP_BookingRooms_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.EP_BookingRooms[1]
-        );
-        let EP_BookingCars_ = JSON.parse(
-          this.tmpCalendarNote.instance.settingValue.EP_BookingCars[1]
-        );
+        let param = a.instance.settingValue;
+        let TM_ = JSON.parse(param.TM_Tasks[1]);
+        let WP_ = JSON.parse(param.WP_Notes[1]);
+        let CO_ = JSON.parse(param.CO_Meetings[1]);
+        let EP_BookingRooms_ = JSON.parse(param.EP_BookingRooms[1]);
+        let EP_BookingCars_ = JSON.parse(param.EP_BookingCars[1]);
         var TM_Params = [
           {
             color: TM_.ShowBackground,
             borderColor: TM_.ShowColor,
             text: 'TM_Tasks',
-            status: 'TM_MyTasks',
+            status: 'TM_Tasks',
           },
         ];
         var WP_Params = [
@@ -166,124 +154,34 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
           ...EP_BookingRoomParams,
           ...EP_BookingCarParams,
         ];
-        this.getCalendarSetting(this.resources);
+        let myInterval1 = setInterval(() => {
+          if (a.instance.dataResourceModel.length > 0) {
+            clearInterval(myInterval1);
+            this.getCalendarSetting(
+              this.resources,
+              a.instance.dataResourceModel
+            );
+          }
+        });
       }
     });
   }
 
-  getCalendarSetting(resource) {
-    var a = this.calendar_setting.createComponent(SettingCalendarComponent);
+  getCalendarSetting(resource, dataResourceModel) {
+    let a = this.calendar_setting.createComponent(SettingCalendarComponent);
     a.instance.funcID = this.funcID;
     a.instance.fields = this.fields;
-    a.instance.showHeader = false;
     a.instance.resources = resource;
-    // let myInterval = setInterval(() => {
-    //   if (
-    //     this.tmpCalendarNote.instance.dataResourceModel &&
-    //     this.tmpCalendarNote.instance.dataResourceModel.length > 0
-    //   ) {
-    //     clearInterval(myInterval);
-    var objTemp = [
-      {
-        transType: 'WP_Notes',
-        functionID: 'WPT08',
-        transID: 'a5be41d4-5c7e-42e5-8372-02482301d465',
-        calendarDate: '2022-12-08T00:00:00+07:00',
-        startDate: '2022-12-08T00:00:00+07:00',
-        endDate: 'EndDate',
-        startTime: '2022-12-08T00:00:00+07:00',
-        endTime: 'EndDate',
-        title: '08.12',
-        description: '08.12',
-        memo: '08.12',
-        checkList: 'CheckList',
-        noteType: 'text',
-        showCalendar: true,
-        isPin: false,
-        isNote: true,
-        icon: 'icon-location_on',
-        resources: {
-          ResourceID: null,
-          ResourceType: null,
-        },
-        data: {
-          id: '6391a75e9c255c1c530ce0dc',
-          recID: 'a5be41d4-5c7e-42e5-8372-02482301d465',
-          transID: null,
-          tags: null,
-          isNote: true,
-          fileCount: 0,
-          noteType: 'text',
-          title: null,
-          memo: '08.12',
-          checkList: null,
-          isPin: false,
-          showCalendar: true,
-          createdOn: '2022-12-08T00:00:00+07:00',
-          createdBy: 'ADMIN',
-          modifiedOn: null,
-          modifiedBy: 'ADMIN',
-          write: true,
-          delete: true,
-          share: true,
-          assign: true,
-          includeTables: null,
-          updateColumns: '',
-          unbounds: null,
-        },
-      },
-      {
-        transType: 'WP_Notes',
-        functionID: 'WPT08',
-        transID: 'e1a9fa7a-ce46-43c1-9493-9f36141e49e1',
-        calendarDate: '2022-12-12T00:00:00+07:00',
-        startDate: '2022-12-12T00:00:00+07:00',
-        endDate: 'EndDate',
-        startTime: '2022-12-12T00:00:00+07:00',
-        endTime: 'EndDate',
-        title: '12.12',
-        description: '12.12',
-        memo: '12.12',
-        checkList: 'CheckList',
-        noteType: 'text',
-        showCalendar: true,
-        isPin: false,
-        isNote: true,
-        icon: 'icon-location_on',
-        resources: {
-          ResourceID: null,
-          ResourceType: null,
-        },
-        data: {
-          id: '63968e7ef54b20713e808eaf',
-          recID: 'e1a9fa7a-ce46-43c1-9493-9f36141e49e1',
-          transID: null,
-          tags: null,
-          isNote: true,
-          fileCount: 0,
-          noteType: 'text',
-          title: null,
-          memo: '12.12',
-          checkList: null,
-          isPin: false,
-          showCalendar: true,
-          createdOn: '2022-12-12T00:00:00+07:00',
-          createdBy: 'ADMIN',
-          modifiedOn: null,
-          modifiedBy: 'ADMIN',
-          write: true,
-          delete: true,
-          share: true,
-          assign: true,
-          includeTables: null,
-          updateColumns: '',
-          unbounds: null,
-        },
-      },
-    ];
-    a.instance.resourceModel = objTemp;
-    debugger;
-    // }
-    // });
+    a.instance.resourceModel = dataResourceModel;
+    this.codxShareSV.dataResourceModel.subscribe((res) => {
+      if (res) {
+        let ele = document.getElementsByTagName('codx-schedule')[0];
+        if (ele) {
+          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+          cmp.dataSource = res;
+          cmp.setEventSettings();
+        }
+      }
+    });
   }
 }

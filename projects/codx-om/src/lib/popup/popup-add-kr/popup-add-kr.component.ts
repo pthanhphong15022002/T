@@ -46,11 +46,12 @@ export class PopupAddKRComponent extends UIComponent {
 
   months = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
   quarters = ['1', '2', '3', '4'];
-
+  quartersMonth = ['1', '4', '7', '10'];
   typePlan = '';
   planMonth = [];
   planQuarter = [];
 
+  listTarget = [];
   formModel: FormModel;
   dialogRef: DialogRef;
   isAfterRender: boolean;
@@ -59,6 +60,8 @@ export class PopupAddKRComponent extends UIComponent {
   oParentID: any;
   dialogTargets: DialogRef;
   funcID: any;
+  tempTarget: any;
+  dataOKRPlans: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -74,8 +77,11 @@ export class PopupAddKRComponent extends UIComponent {
     this.isAdd = dialogData?.data[3];
     this.headerText = dialogData?.data[4];
     this.funcID = dialogData?.data[5];
+    this.dataOKRPlans = dialogData?.data[6];
     this.dialogRef = dialogRef;
-    
+    if (!this.isAdd) {
+      this.typePlan = this.kr.plan;
+    }
   }
 
   //-----------------------Base Func-------------------------//
@@ -126,6 +132,7 @@ export class PopupAddKRComponent extends UIComponent {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
+  
 
   //-----------------------End-------------------------------//
 
@@ -142,13 +149,20 @@ export class PopupAddKRComponent extends UIComponent {
   }
 
   onSaveForm() {
+    //xóa khi đã lấy được model chuẩn từ setting 
+    this.kr.status='1';
+    this.kr.approveStatus='1';
+    this.kr.approveControl='1';
+    this.kr.okrType=OMCONST.VLL.OKRType.KResult;
     this.kr.parentID = '2fe69da4-7217-11ed-b6e9-d89ef34ba7ae';
+    //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
 
     //tính lại Targets cho KR
     if (this.kr.targets?.length == 0 || this.kr.targets == null) {
       this.calculatorTarget();
+      this.onSaveTarget();
     }
     if (this.isAdd) {
       this.methodAdd(this.kr);
@@ -244,17 +258,18 @@ export class PopupAddKRComponent extends UIComponent {
       if (this.kr?.plan == OMCONST.VLL.Plan.Month) {
         this.typePlan = OMCONST.VLL.Plan.Month;
         this.planMonth = [];
-        this.kr.targets.forEach((element) => {
+        Array.from(this.kr.targets).forEach((element: any) => {
           this.planMonth.push(element.target);
         });
       } else if (this.kr?.plan == OMCONST.VLL.Plan.Quarter) {
         this.typePlan = OMCONST.VLL.Plan.Quarter;
         this.planQuarter = [];
-        this.kr.targets.forEach((element) => {
+        Array.from(this.kr.targets).forEach((element: any) => {
           this.planQuarter.push(element.target);
         });
       }
     }
+    
 
     if (this.kr?.plan == OMCONST.VLL.Plan.Month) {
       this.dialogTargets = this.callfc.openForm(template, '', 550, 800, null);
@@ -280,8 +295,8 @@ export class PopupAddKRComponent extends UIComponent {
     }
     krTarget.forEach((item) => {
       let tempTarget = new Targets();
-      tempTarget.period = this.kr.periodID;
-      tempTarget.oKRID = this.kr.recID;
+      tempTarget.period = this.kr?.periodID;
+      tempTarget.oKRID = this.kr?.recID;
       tempTarget.planDate = new Date(); //OM_WAITING: sửa lại thành thời gian tương ứng
       tempTarget.target = item;
       tempTarget.createdOn = new Date();

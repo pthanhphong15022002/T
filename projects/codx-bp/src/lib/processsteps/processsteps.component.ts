@@ -62,7 +62,7 @@ import { PopupAddProcessStepsComponent } from './popup-add-process-steps/popup-a
 })
 export class ProcessStepsComponent
   extends UIComponent
-  implements OnInit, AfterViewInit, OnChanges
+  implements OnInit, AfterViewInit
 {
   @ViewChild('itemViewList') itemViewList: TemplateRef<any>;
   @ViewChild('flowChart') flowChart?: TemplateRef<any>;
@@ -74,7 +74,7 @@ export class ProcessStepsComponent
   @ViewChild('viewColumKaban') viewColumKaban!: TemplateRef<any>;
 
   @Input() process: BP_Processes;
-  @Input() viewMode :any;
+  @Input() viewMode = '16';
   @Input() funcID = 'BPT11';
   @Input() childFunc = [];
   @Input() formModel: FormModel;
@@ -142,6 +142,7 @@ export class ProcessStepsComponent
   heightFlowChart = 0;
   widthElement = 300;
   dataClick: any;
+  dataColums =[] ;
 
   constructor(
     inject: Injector,
@@ -160,11 +161,10 @@ export class ProcessStepsComponent
       }
     });
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    this.chgViewModel(this.viewMode);
-    this.changeDetectorRef.detectChanges()
-  }
-  
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   this.chgViewModel(this.viewMode);
+  //   this.changeDetectorRef.detectChanges()
+  // }
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -279,14 +279,14 @@ export class ProcessStepsComponent
       option.DataService = this.view?.dataService;
       option.FormModel = this.view?.formModel;
       option.Width = '550px';
-      option.zIndex = 1001;
+      // option.zIndex = 1001;
 
       this.view.dataService.dataSelected.processID = this.processID;
       if (this.parentID != '')
         this.view.dataService.dataSelected.parentID = this.parentID;
       var dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType, this.formModelMenu],
+        ['add', this.titleAction, this.stepType, this.formModelMenu,this.process],
         option
       );
       dialog.closed.subscribe((e) => {
@@ -328,6 +328,7 @@ export class ProcessStepsComponent
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
               column.showItemCount = false;
+              column.dataColums = processStep;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
@@ -336,7 +337,7 @@ export class ProcessStepsComponent
               else {
                 this.kanban.columns = [];
                 this.kanban.columns.push(column);
-                this.kanban.refresh();
+                this.kanban.changeDataSource(this.kanban.columns);
               }
             }
 
@@ -372,6 +373,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
@@ -539,6 +541,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process,
             data.recID,
           ],
           option
@@ -581,10 +584,17 @@ export class ProcessStepsComponent
               column.headerText = processStep.stepName;
               column.keyField = processStep.recID;
               column.showItemCount = false;
+              column.dataColums = processStep;
               let index = this.kanban?.columns?.length
                 ? this.kanban?.columns?.length
                 : 0;
-              this.kanban.addColumn(column, index);
+              if (this.kanban.columns && this.kanban.columns.length)
+                this.kanban.addColumn(column, index);
+              else {
+                this.kanban.columns = [];
+                this.kanban.columns.push(column);
+                this.kanban.changeDataSource(this.kanban.columns);
+              }
               if (processStep.items.length > 0) {
                 processStep.items.forEach((obj) => {
                   if (this.kanban) this.kanban.addCard(obj);
@@ -885,6 +895,7 @@ export class ProcessStepsComponent
         )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
+      this.dataColums = this.kanban.columns;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -962,7 +973,7 @@ export class ProcessStepsComponent
             ) {
               let crr = event.currentIndex;
               let pre = event.previousIndex;
-              let arrCl = this.kanban.columns;
+              let arrCl = JSON.parse(JSON.stringify(this.kanban.columns)); // ko bi luu ngươc
               let temp = arrCl[pre];
               if (crr > pre) {
                 for (var i = pre; i < crr; i++) {
@@ -975,8 +986,7 @@ export class ProcessStepsComponent
                 }
                 arrCl[crr] = temp;
               }
-              this.kanban.columns = arrCl;
-              this.kanban.refresh();
+              this.kanban.changeDataSource(arrCl);
             }
             this.notiService.notifyCode('SYS007');
             this.changeDetectorRef.detectChanges();
@@ -1278,18 +1288,26 @@ export class ProcessStepsComponent
     if (data != null) {
       this.dataHover = data;
       p.open();
-      // this.hideMoreFC = true;
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
   }
 
-  showAllparent(text) {
-    return (
-      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
-    );
+  closeMFTypeA() {
+    this.hideMoreFC = false;
+    this.hideMoreFCChild = true;
   }
+  openMFTypeA() {
+    this.hideMoreFC = true;
+    this.hideMoreFCChild = false;
+  }
+
+  // showAllparent(text) {
+  //   return (
+  //     this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+  //   );
+  // }
   setWidth(data) {
     let width = document.getElementsByTagName('body')[0].offsetWidth;
     return width < data.length * 12 ? true : false;
@@ -1314,17 +1332,24 @@ export class ProcessStepsComponent
     return this.widthElement < text.length * 3;
   }
   //chuwa xong
-  dataColums(recIDPhase): any {
-    this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
-      return dt;
-    });
-  }
+  
 
   clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
       if (dt) {
+        this.dataClick = dt;
         this.clickMF(e, dt);
       }
     });
+  }
+
+  viewDetailSurveys(link) {
+    if (link) window.open(link);
+  }
+
+  currentData(key):any{
+   let dt = this.kanban.columns.find(x=>x.keyField==key) ;
+   let dataColums = dt?.dataColums
+   return dataColums
   }
 }

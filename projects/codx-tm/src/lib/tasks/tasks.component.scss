@@ -48,12 +48,6 @@ ejs-richtexteditor .e-dialog>.e-dlg-header-content+.e-dlg-content {
   padding: 15px;
 }
 
-codx-view-list-detail .codx-detail-footer .tab-content {
-  height: 370px !important;
-  padding: 10px !important;
-  padding-right: 20px !important;
-}
-
 codx-tabs .tab-comt {
   position: relative;
   height: 338px;
@@ -63,7 +57,7 @@ codx-tabs .tab-comt .tab_container .tree-body {
   height: 300px;
   overflow: auto;
   overflow-x: hidden;
-  margin-top: 10px;
+  padding-top: 10px;
 }
 
 // .bg-red {

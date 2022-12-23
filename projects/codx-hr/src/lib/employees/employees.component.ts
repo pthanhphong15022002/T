@@ -70,8 +70,7 @@ export class EmployeesComponent extends UIComponent {
 
   constructor(
     private injector: Injector,
-    private notifiSV: NotificationsService,
-    private adService: CodxAdService
+    private notifiSV: NotificationsService
   ) {
     super(injector);
   }
@@ -175,6 +174,10 @@ export class EmployeesComponent extends UIComponent {
   }
 
   btnClick(event: any) {
+    // window.open(
+    //   '/tester/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123',
+    //   '_blank'
+    // );
     if (event?.text) {
       this.view.dataService.addNew().subscribe((res: any) => {
         if (res) {
@@ -187,7 +190,6 @@ export class EmployeesComponent extends UIComponent {
             action: 'add',
             title: `${event.text}  ${this.functionName}`,
           };
-          debugger;
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
             object,

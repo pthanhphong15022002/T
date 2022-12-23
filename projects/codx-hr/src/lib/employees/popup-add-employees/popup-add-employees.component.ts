@@ -14,9 +14,10 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
   NotificationsService,
+  Util,
 } from 'codx-core';
-import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
 
@@ -49,6 +50,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       name: 'tabInfoLaw',
     },
   ];
+  isCorporation = false;
   dialogRef: any;
   dialogData: any = null;
   employee: HR_Employees;
@@ -66,7 +68,9 @@ export class PopupAddEmployeesComponent implements OnInit {
   gridViewSetup: any;
   action: 'add' | 'edit' | 'copy' = 'add';
   paramaterHR: any = null;
-  isCorporation = false;
+  grvSetup: any = {};
+  arrFieldRequire: any[] = [];
+  mssgCode: string = 'SYS009';
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -74,7 +78,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     private fb: FormBuilder,
     private cache: CacheService,
     private api: ApiHttpService,
-    private adService: CodxAdService,
+
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -89,6 +93,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.functionID = this.dialogRef.formModel.funcID;
     this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     this.getParamerAsync(this.functionID);
+    this.getGridViewSetup(this.dialogRef.formModel);
   }
   // get parameter auto default number
   getParamerAsync(funcID: string) {
@@ -104,6 +109,22 @@ export class PopupAddEmployeesComponent implements OnInit {
         .subscribe((res: any) => {
           if (res) {
             this.paramaterHR = JSON.parse(JSON.stringify(res));
+          }
+        });
+    }
+  }
+
+  getGridViewSetup(formModel: FormModel) {
+    if (formModel) {
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((grd: any) => {
+          if (grd) {
+            this.grvSetup = grd;
+            let arrField = Object.values(grd).filter((x: any) => x.isRequire);
+            if (arrField) {
+              this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
+            }
           }
         });
     }
@@ -125,7 +146,7 @@ export class PopupAddEmployeesComponent implements OnInit {
           'SYS',
           'ERM.Business.AD',
           'AutoNumbersBusiness',
-          'GenAutoNumberAsync', // hòa kêu note lại
+          'GenAutoNumberAsync',
           [funcID, entityName, fieldName, null]
         )
         .subscribe((res: any) => {
@@ -173,10 +194,23 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
-    if (this.action == 'edit') {
-      this.updateEmployeeAsync(this.employee);
+    let arrFieldUnValid: string = '';
+    if (this.arrFieldRequire.length > 0) {
+      this.arrFieldRequire.forEach((field) => {
+        let key = Util.camelize(field);
+        if (this.employee && this.employee[key]) {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ';';
+        }
+      });
+    }
+    if (arrFieldUnValid) {
+      this.notifiSV.notifyCode(this.mssgCode, 0, arrFieldUnValid);
     } else {
-      this.addEmployeeAsync(this.employee);
+      if (this.action == 'edit') {
+        this.updateEmployeeAsync(this.employee);
+      } else {
+        this.addEmployeeAsync(this.employee);
+      }
     }
   }
 
@@ -197,44 +231,29 @@ export class PopupAddEmployeesComponent implements OnInit {
   addEmployeeAsync(employee: any) {
     if (employee) {
       this.api
-        .execSv(
-          'HR',
-          'ERM.Business.HR',
-          'EmployeesBusiness',
-          'UpdateEmployeeAsync',
-          [employee]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.dialogRef.close(res);
+        .execSv('HR', 'ERM.Business.HR', 'EmployeesBusiness', 'InsertAsync', [
+          employee,
+        ])
+        .subscribe((res: any[]) => {
+          if (res[0]) {
+            let data = res[1];
+            this.notifiSV.notifyCode('SYS006');
+            this.dialogRef.close(data);
+          } else {
+            this.notifiSV.notifyCode('SYS023');
+            this.dialogRef.close(null);
           }
         });
     }
   }
 
-  valueChange(event: any) {
-    console.log(event);
-  }
   dataChange(e: any) {
     if (e) {
-      this.employee[e.field] = e.data;
+      if (typeof e.data !== 'string') {
+        this.employee[e.field] = e.data.fromDate
+          ? e.data.fromDate.toISOString()
+          : null;
+      } else this.employee[e.field] = e.data;
     }
-  }
-  getDataFromPositionID(dataSelected: any) {
-    if (!dataSelected) return;
-    dataSelected.map((e: any) => {
-      console.log(e);
-      this.employee['organizationID'] = e.OrgUnitID;
-      this.employee['departmentID'] = e.DepartmentID;
-      this.detectorRef.detectChanges();
-    });
-  }
-  changeTime(data) {
-    if (!data.field || !data.data) return;
-    this.employee[data.field] = data.data?.fromDate;
-  }
-
-  buttonClick(e: any) {
-    console.log(e);
   }
 }

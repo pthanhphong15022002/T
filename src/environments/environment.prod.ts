@@ -14,6 +14,7 @@ export const environment = {
   appName: 'hps-file-test', // Tam thoi de hard
   saas: 1,
   layoutCZ: 'qtsc',
+  themeMode: "body",//layout
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',

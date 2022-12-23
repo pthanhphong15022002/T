@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   Input,
@@ -18,9 +19,12 @@ import {
   MenuComponent,
   ApiHttpService,
   AuthStore,
+  CallFuncService,
 } from 'codx-core';
 import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
+import { environment } from 'src/environments/environment';
+import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
 
 @Component({
   selector: 'codx-user-inner',
@@ -54,7 +58,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     private cache: CacheService,
     private api: ApiHttpService,
     private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private element: ElementRef,
+    private callSV: CallFuncService
   ) {
     this.cache.functionList('ADS05').subscribe((res) => {
       if (res) this.functionList = res;
@@ -65,6 +71,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.user$ = this.auth.user$;
     this.tenant = this.tenantStore.get()?.tenant;
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
+
+    if (environment.themeMode == 'body')
+      document.body.classList.add('codx-theme');
+
     this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
     if (this.functionList) {
       this.formModel = {
@@ -156,10 +166,21 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    //Remove Old
+    let elm =
+      environment.themeMode == 'body'
+        ? document.body
+        : this.element.nativeElement.closest('.codx-theme');
+    if (this.theme && elm) {
+      elm.classList.remove(this.theme.id);
+    }
+
     this.themes.forEach((theme: ThemeFlag) => {
       if (theme.id === value) {
         theme.active = true;
         this.theme = theme;
+
+        elm.classList.add(this.theme.id);
       } else {
         theme.active = false;
       }
@@ -174,15 +195,16 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   clearCache() {
-    this.auth
-      .clearCache()
-      .pipe()
-      .subscribe((data) => {
-        if (data) {
-          if (!data.isError) this.notifyService.notifyCode('SYS017');
-          else this.notifyService.notify(data.error);
-        }
-      });
+    this.callSV.openForm(CodxClearCacheComponent, 'Clear cache', 500, 700);
+    // this.auth
+    //   .clearCache()
+    //   .pipe()
+    //   .subscribe((data) => {
+    //     if (data) {
+    //       if (!data.isError) this.notifyService.notifyCode('SYS017');
+    //       else this.notifyService.notify(data.error);
+    //     }
+    //   });
   }
 
   ngOnDestroy() {
@@ -239,12 +261,20 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'orange',
     name: 'Orange',
-    color: '#f36519',
+    color: '#ff7213',
+    enable: true,
   },
   {
-    id: 'pink',
-    name: 'Pink',
-    color: '#f70f8f',
+    id: 'sapphire',
+    name: 'Sapphire',
+    color: '#23d3c1',
+    enable: true,
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    color: '#15b144',
+    enable: true,
   },
 ];
 

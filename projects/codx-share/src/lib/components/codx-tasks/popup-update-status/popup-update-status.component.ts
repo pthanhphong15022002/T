@@ -18,6 +18,9 @@ export class PopupUpdateStatusComponent implements OnInit {
   completed: any;
   completedOn: any;
   moreFunc: any;
+  maxHoursControl: any
+  maxHours : any
+  updateControl:any
   url: string;
   status: string;
   title: string = 'Cập nhật tình trạng công việc ';
@@ -40,6 +43,9 @@ export class PopupUpdateStatusComponent implements OnInit {
     this.task = JSON.parse(JSON.stringify(this.data?.taskAction));;
     this.moreFunc = this.data.moreFunc;
     this.title = this.moreFunc.customName ;
+    this.maxHoursControl = this.data.maxHoursControl ;
+    this.maxHours = this.data.maxHours;
+    this.updateControl= this.data.updateControl
     this.url = this.moreFunc.url;
     this.status = UrlUtil.getUrl('defaultValue', this.url);
     this.completedOn = moment(new Date()).toDate();
@@ -60,8 +66,8 @@ export class PopupUpdateStatusComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
-    if (this.status=="90" && this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
-      this.notiService.notifyCode('TM058',0,[this.data?.maxHours])  ///truyền có tham số
+    if (this.status=="90" && this.maxHoursControl != '0' && Number.parseFloat(this.completed) > Number.parseFloat(this.maxHours)) {
+      this.notiService.notifyCode('TM058',0,[this.maxHours])  ///truyền có tham số
       return;
      }  
     // this.crrCompleted = this.completed;
@@ -80,7 +86,7 @@ export class PopupUpdateStatusComponent implements OnInit {
   }
   changeEstimated(data) {
     if (!data.data) return;
-    var num = Number.parseFloat(data.data);
+    var num = data.data;
     // if (!num) {
     //   //  this.notiService.notifyCode("can cai code o day đang gan tam")
     //   this.notiService.notify('Giá trị nhập vào không phải là 1 số !');
@@ -94,7 +100,7 @@ export class PopupUpdateStatusComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    this.completed = num.toFixed(2)
+    this.completed = Number.parseFloat(num).toFixed(2)
     // this.crrCompleted = this.completed;
   }
 
@@ -110,11 +116,11 @@ export class PopupUpdateStatusComponent implements OnInit {
     ];
   }
   saveData() {
-    if (this.status=="90" && this.data?.maxHoursControl != '0' && this.completed > this.data?.maxHours) {
-      this.notiService.notifyCode('TM058',0,[this.data?.maxHours])  ///truyền có tham số
+    if (this.status=="90" && this.maxHoursControl && this.maxHoursControl != '0' && Number.parseFloat(this.completed) > Number.parseFloat(this.maxHours)){
+      this.notiService.notifyCode('TM058',0,[this.maxHours]) ;
       return;
-     }  
-    if (this.data.updateControl == '2') {
+    }  
+    if (this.updateControl == '2') {
       if (this.comment==null || this.comment.trim() == ''){
          this.notiService.notifyCode("TM057")
        return ;
