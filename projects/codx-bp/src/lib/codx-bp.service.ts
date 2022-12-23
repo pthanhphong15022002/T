@@ -21,6 +21,8 @@ export class CodxBpService {
   isProcess = this.bpProcesses.asObservable();
   getFlowChartNew = new BehaviorSubject<any>(null);
   crrFlowChart = this.getFlowChartNew.asObservable();
+  
+  funcIDParent = new BehaviorSubject<any>(null);
 
   getListFunctionMenuCreatedStepAsync(funcID) {
     return this.api.exec<any>(

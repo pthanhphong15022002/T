@@ -970,6 +970,7 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
+    this.bpService.funcIDParent.next(this.funcID)
     let isEdit = data.write;
     let editRole =
       isEdit && !data.deleted
