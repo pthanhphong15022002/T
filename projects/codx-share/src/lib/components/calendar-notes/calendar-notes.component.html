@@ -401,6 +401,7 @@
       #listview
       [itemTemplate]="dataPara"
       type="listView"
+      [dataService]="dtService"
     >
     </codx-listview>
   </div>
@@ -416,7 +417,7 @@
         }"
       >
         <div class="checkbox-list">
-          <div *ngIf="item.title != null">
+          <div *ngIf="item.memo != null">
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
@@ -481,14 +482,17 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+            <div
+              *ngIf="item.isPin == true || item.isPin == '1'"
+              class="active"
+            >
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">
-              <span [innerHTML]="item.title"></span>
+              <span [innerHTML]="item.memo"></span>
             </div>
           </div>
-          <div *ngIf="item.title == null">
+          <div *ngIf="item.memo == null">
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
@@ -553,7 +557,10 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="item.isPin == true || item.isPin == '1'" class="active">
+            <div
+              *ngIf="item.isPin == true || item.isPin == '1'"
+              class="active"
+            >
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">

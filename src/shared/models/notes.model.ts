@@ -16,6 +16,7 @@ export class Notes {
   fileCount: string;
   isNote: boolean;
   files: any[];
+  calendarDate: any;
 }
 
 export class TempNote {
