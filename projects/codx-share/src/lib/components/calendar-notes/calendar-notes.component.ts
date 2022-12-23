@@ -277,9 +277,22 @@ export class CalendarNotesComponent
         this.change.detectChanges();
       }
     });
-    this.codxShareSV.dateChange.subscribe((res) => {
-      if (res) this.dateChange = res;
-    });
+    if (this.typeCalendar == 'month') {
+      this.codxShareSV.dateChange.subscribe((res) => {
+        if (res) {
+          this.dateChange = res.fromDate;
+          this.getParamCalendar(
+            moment(res.fromDate).toISOString(),
+            moment(res.toDate).toISOString(),
+            false
+          );
+          if (this.calendar) {
+            this.calendar.refresh();
+            this.calendar.value = this.dateChange;
+          }
+        }
+      });
+    }
   }
 
   getFirstParam(fDayOfMonth, lDayOfMonth, updateCheck) {
@@ -1108,21 +1121,22 @@ export class CalendarNotesComponent
             else if (transType == 'EP_BookingRooms') this.EP_BookingRooms = [];
             else if (transType == 'EP_BookingCars') this.EP_BookingCars = [];
           } else {
-            if (transType == 'WP_Notes') this.WP_Notes = this.WP_NotesTemp;
-            else if (transType == 'TM_Tasks') this.TM_Tasks = this.TM_TasksTemp;
-            else if (transType == 'CO_Meetings')
-              this.CO_Meetings = this.CO_MeetingsTemp;
-            else if (transType == 'EP_BookingRooms')
-              this.EP_BookingRooms = this.EP_BookingRoomsTemp;
-            else if (transType == 'EP_BookingCars')
-              this.EP_BookingCars = this.EP_BookingCarsTemp;
+            if (this.checkWP_NotesParam)
+              if (transType == 'WP_Notes') this.WP_Notes = this.WP_NotesTemp;
+              else if (transType == 'TM_Tasks')
+                this.TM_Tasks = this.TM_TasksTemp;
+              else if (transType == 'CO_Meetings')
+                this.CO_Meetings = this.CO_MeetingsTemp;
+              else if (transType == 'EP_BookingRooms')
+                this.EP_BookingRooms = this.EP_BookingRoomsTemp;
+              else if (transType == 'EP_BookingCars')
+                this.EP_BookingCars = this.EP_BookingCarsTemp;
           }
           // this.componentRef.destroy();
           if (value == '0') {
             this.dataResourceModel = this.dataResourceModel.filter(
               (x) => x.transType != transType
             );
-            debugger;
             if (this.showList) {
               if (this.dataListViewTemp && this.dataListViewTemp.length > 0)
                 this.lstView.dataService.data =
@@ -1131,33 +1145,71 @@ export class CalendarNotesComponent
                   );
             }
           } else if (value == '1') {
-            if (transType == 'WP_Notes') {
-              debugger;
-              this.dataResourceModel = [
-                ...this.WP_NotesTemp,
-                ...this.dataResourceModel,
-              ];
-            } else if (transType == 'TM_Tasks')
-              this.dataResourceModel = [
-                ...this.dataResourceModel,
-                ...this.TM_TasksTemp,
-              ];
-            else if (transType == 'CO_Meetings')
-              this.dataResourceModel = [
-                ...this.dataResourceModel,
-                ...this.CO_MeetingsTemp,
-              ];
-            else if (transType == 'EP_BookingRooms')
-              this.dataResourceModel = [
-                ...this.dataResourceModel,
-                ...this.EP_BookingRoomsTemp,
-              ];
-            else if (transType == 'EP_BookingCars')
-              this.dataResourceModel = [
-                ...this.dataResourceModel,
-                ...this.EP_BookingCarsTemp,
-              ];
-            debugger;
+            if (
+              this.checkWP_NotesParam == '0' ||
+              this.checkTM_TasksParam == '0' ||
+              this.checkCO_MeetingsParam == '0' ||
+              this.checkEP_BookingCarsParam == '0' ||
+              this.checkEP_BookingRoomsParam == '0'
+            ) {
+              if (this.calendar) {
+                var tempCalendar = this.calendar.element;
+                var htmlE = tempCalendar as HTMLElement;
+                var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[0]?.childNodes[0]
+                  ?.childNodes[0] as HTMLElement;
+                let numbF = this.convertStrToDate(eleFromDate);
+                const fDayOfMonth = moment(numbF).toISOString();
+                let indexLast =
+                  htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
+                    .length - 1;
+                let eleToDate = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
+                  .childNodes[0] as HTMLElement;
+                let numbL = this.convertStrToDate(eleToDate);
+                const lDayOfMonth = moment(numbL).toISOString();
+                this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
+              } else {
+                if (this.typeCalendar == 'week') {
+                  let eleWeek = document.querySelectorAll(
+                    '.week-item[data-date]'
+                  );
+                  let htmlEleFD = eleWeek[0] as HTMLElement;
+                  var fromDate = moment(htmlEleFD?.dataset?.date).toISOString();
+                  let htmlEleTD = eleWeek[eleWeek.length - 1] as HTMLElement;
+                  var toDate = moment(htmlEleTD?.dataset?.date).toISOString();
+                  this.getParamCalendar(fromDate, toDate, false);
+                  this.setDate(this.FDdate, this.lstView);
+                  this.change.detectChanges();
+                }
+              }
+            } else {
+              if (transType == 'WP_Notes')
+                this.dataResourceModel = [
+                  ...this.WP_NotesTemp,
+                  ...this.dataResourceModel,
+                ];
+              else if (transType == 'TM_Tasks')
+                this.dataResourceModel = [
+                  ...this.dataResourceModel,
+                  ...this.TM_TasksTemp,
+                ];
+              else if (transType == 'CO_Meetings')
+                this.dataResourceModel = [
+                  ...this.dataResourceModel,
+                  ...this.CO_MeetingsTemp,
+                ];
+              else if (transType == 'EP_BookingRooms')
+                this.dataResourceModel = [
+                  ...this.dataResourceModel,
+                  ...this.EP_BookingRoomsTemp,
+                ];
+              else if (transType == 'EP_BookingCars')
+                this.dataResourceModel = [
+                  ...this.dataResourceModel,
+                  ...this.EP_BookingCarsTemp,
+                ];
+            }
             if (this.showList) {
               let lstTemp: any = JSON.parse(
                 JSON.stringify(this.dataListViewTemp)
@@ -1179,6 +1231,7 @@ export class CalendarNotesComponent
             this.calendar.refresh();
             this.calendar.value = this.FDdate;
           } else this.setEventWeek();
+          this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
         }
       });
   }

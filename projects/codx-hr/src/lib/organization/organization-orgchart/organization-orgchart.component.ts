@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit, Output, SimpleChanges,EventEmitter, ViewChild } from '@angular/core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ConnectorModel, Diagram, DiagramComponent, DiagramTools, NodeModel, SnapConstraints, SnapSettingsModel, TextModel } from '@syncfusion/ej2-angular-diagrams';
 import { DataManager } from '@syncfusion/ej2-data';
 import { ApiHttpService, CallFuncService, CodxFormDynamicComponent, CRUDService, FormModel, SidebarModel, ViewsComponent } from 'codx-core';
@@ -120,6 +121,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     if(event){
       switch(event.functionID){
         case "SYS02": //delete
+          this.deleteData(node);
           break;
         case "SYS03": // edit
           this.editData(node,event);
@@ -132,7 +134,7 @@ export class OrganizationOrgchartComponent implements OnInit {
     }
   }
 
-  // // edit data
+  // edit data
   editData(node:any,event:any){
     if (this.dataService) {
       let option = new SidebarModel();
@@ -153,11 +155,22 @@ export class OrganizationOrgchartComponent implements OnInit {
           this.dataService.update(tmpOrg).subscribe(() => {
             this.dataSource = this.newDataManager(this.dataService.data);
             this.dt.detectChanges();
-
           });
           this.view.dataService.add(org).subscribe();
         }
       });
     }
+  }
+
+  // delete data
+  deleteData(node)
+  {
+    this.view.dataService.delete([node]).subscribe(() => {
+      this.dataService.remove(node).subscribe( () => {
+        this.dataSource = this.newDataManager(this.dataService.data);
+        this.dt.detectChanges();
+      })
+    });
+    
   }
 }

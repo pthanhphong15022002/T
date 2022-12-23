@@ -188,7 +188,6 @@ export class EmployeesComponent extends UIComponent {
             action: 'add',
             title: `${event.text}  ${this.functionName}`,
           };
-          debugger;
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
             object,
@@ -197,7 +196,7 @@ export class EmployeesComponent extends UIComponent {
           popup.closed.subscribe((res: any) => {
             if (res?.event) {
               let data = res.event;
-              this.view.dataService.add(data, 0).subscribe();
+              this.view.dataService.add(data,0).subscribe();
               this.detectorRef.detectChanges();
             }
           });
