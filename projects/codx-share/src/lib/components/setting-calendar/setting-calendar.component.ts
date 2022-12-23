@@ -36,12 +36,12 @@ export class SettingCalendarComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
-  calendarID: string;
   calendarName: string;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
   request?: ResourceModel;
+  calendarID: string;
   vllPriority = 'TM005';
   startTime: any;
   month: any;
@@ -75,13 +75,23 @@ export class SettingCalendarComponent
     private change: ChangeDetectorRef
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    if (!this.funcID) {
+      this.router.params.subscribe((params) => {
+        if (params) {
+          this.funcID = params['funcID'];
+          this.cache.functionList(this.funcID).subscribe((res) => {
+            if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
+          });
+        }
+      });
+    } else {
+      this.cache.functionList(this.funcID).subscribe((res) => {
+        if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
+      });
+    }
   }
 
   onInit(): void {
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      this.getParams(res.module + 'Parameters', 'CalendarID');
-    });
     this.codxShareSV.getListResource('1').subscribe((res: any) => {
       if (res) {
         this.listRoom = [];
@@ -271,7 +281,7 @@ export class SettingCalendarComponent
         }
         this.getDayWeek(this.calendarID);
         this.getDaysOff(this.calendarID);
-        this.detectorRef.detectChanges();
+        // this.detectorRef.detectChanges();
       }
     });
   }

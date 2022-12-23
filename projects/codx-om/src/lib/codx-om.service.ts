@@ -334,6 +334,16 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Thêm một mục tiêu
+  addOKR(okr:any , shares:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SaveOMAsync',
+      [okr,shares]
+    );
+  }
   //Lấy OB và tất cả KR con theo ID của OB
   getObjectAndKRChild(recID:string) {
     return this.api.execSv(
@@ -344,7 +354,16 @@ export class CodxOmService {
       [recID]
     );
   }
-
+  //Lấy một KR và OB cha của KR đó theo ID của KR (Lấy data cho việc phân bổ KR top-down)
+  getKRAndOBParent(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetKRAndOBParentAsync',
+      [recID]
+    );
+  }
   //Lấy một KR theo ID
   getKRByID(recID:string) {
     return this.api.execSv(

@@ -18,11 +18,11 @@
 }
 
 .week-item.active {
-  color: #0078FF;
+  color: var(--primary-dark);
 }
 
 .week-item.active div {
-  color: #0078FF;
+  color: var(--primary);
 }
 
 .task-weekbox {

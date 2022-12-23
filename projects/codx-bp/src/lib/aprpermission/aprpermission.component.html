@@ -1,5 +1,6 @@
 <codx-views #view service="BP" assemblyName="ERM.Business.BP" entityName="BP_Processes" className="ProcessesBusiness"
-  method="GetListPersionsByOwnerAsync" [views]="views" [dataObj]="dataObj" [autoLoad]="true" idField="recID">
+  method="GetListPersionsByOwnerAsync" [views]="views" [dataObj]="dataObj" [autoLoad]="true" idField="recID" (mouseenter)="closePopover()"
+  >
 </codx-views>
 
 <ng-template #itemViewList let-data>
@@ -10,6 +11,7 @@
           <div class="fw-bold line-clamp"
           [ngbPopover]="setTextPopover(data.processName)"
           #p1="ngbPopover"
+          [openDelay]="500"
           (mouseenter)="PopoverDetail(p1, data)"
           placement="bottom right top"
           [popoverClass]="data.recID">{{ data.processName }}</div>
