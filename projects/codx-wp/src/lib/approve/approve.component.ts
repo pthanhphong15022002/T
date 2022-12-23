@@ -16,7 +16,6 @@ import {
   DialogModel,
 } from 'codx-core';
 import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add-post/popup-add-post.component';
-import { PopupAddPostComponents } from '../dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 
 @Component({
@@ -51,7 +50,7 @@ export class ApproveComponent extends UIComponent {
 
   @ViewChild('itemTemplate') itemTemplate: TemplateRef<any>;
   @ViewChild('panelRightRef') panelRightRef: TemplateRef<any>;
-  @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
+  @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
   tabAsside = [
     {
       name: 'await',
@@ -126,7 +125,7 @@ export class ApproveComponent extends UIComponent {
         sameData: true,
         model: {
           template: this.itemTemplate,
-          panelLeftRef: this.panelLeftRef,
+          headerTemplate: this.headerTemplate,
           panelRightRef: this.panelRightRef,
         },
       },
@@ -156,7 +155,8 @@ export class ApproveComponent extends UIComponent {
     }
   }
   selectedChange(event: any) {
-    if (event?.data?.recID) {
+    if (event?.data?.recID) 
+    {
       this.selectedID = event.data.recID;
       this.detectorRef.detectChanges();
     }
