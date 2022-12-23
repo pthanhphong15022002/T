@@ -93,7 +93,6 @@ export class OkrPlansComponent implements OnInit {
 
   save() {
     //Them moi bo muc tieu
-    debugger;
     var dataOKRPlans = 
     {
       //Cong ty
@@ -145,7 +144,6 @@ export class OkrPlansComponent implements OnInit {
 
   changeCalendar(event:any)
   {
-    debugger;
   }
   getTextDate()
   {

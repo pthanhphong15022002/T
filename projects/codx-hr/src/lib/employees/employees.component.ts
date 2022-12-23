@@ -172,10 +172,11 @@ export class EmployeesComponent extends UIComponent {
   }
 
   btnClick(event: any) {
-    // window.open(
-    //   '/tester/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123',
-    //   '_blank'
+    // this.codxService.openUrlNewTab(
+    //   '',
+    //   '/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123'
     // );
+
     if (event?.text) {
       this.view.dataService.addNew().subscribe((res: any) => {
         if (res) {
@@ -196,7 +197,7 @@ export class EmployeesComponent extends UIComponent {
           popup.closed.subscribe((res: any) => {
             if (res?.event) {
               let data = res.event;
-              this.view.dataService.add(data,0).subscribe();
+              this.view.dataService.add(data, 0).subscribe();
               this.detectorRef.detectChanges();
             }
           });

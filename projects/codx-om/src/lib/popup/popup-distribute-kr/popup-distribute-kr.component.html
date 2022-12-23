@@ -10,14 +10,14 @@
   <div class=" w-100 bg-white px-5">
     <div class="pt-5 pb-2 text-center">
       <codx-label
-        [default]="'Tên Mục tiêu'"
+        [default]="obName"
         fiedName="titleO"
         class="fw-bold fs-2"
       ></codx-label>
     </div>
     <div class="pb-2 text-center">
       <codx-label
-        [default]="'Tên KR'"
+        [default]="krName"
         fiedName="titleKR"
         class="fw-bold fs-2"
       ></codx-label>
@@ -163,9 +163,9 @@
               </div>
             </ng-template>
           </e-tabitem>
-          <e-tabitem>
+          <e-tabitem >
             <ng-template #headerText>
-              <div class="d-flex align-items-center">
+              <div class="d-flex align-items-center" >
                 <i class="fa-solid icon-groups me-2"></i>
                 <codx-label
                   default="Cơ cấu báo cáo"
