@@ -1,11 +1,21 @@
-<codx-detail-tmp [header]="header" [body]="body" (clickMF)="clickMF($event)" [formModel]="formModel" [dataItem]="data"
+<codx-detail-tmp 
+    [header]="header" 
+    [body]="body" 
+    (clickMF)="clickMF($event)" 
+    [formModel]="formModel" 
+    [dataItem]="data"
     [footer]="footer">
 </codx-detail-tmp>
 
 <ng-template #header>
     <div class="d-flex align-items-center">
         <div>
-            <codx-img [width]="40" [objectId]="data?.createdBy" [objectType]="'AD_Users'">
+            <codx-img 
+                [width]="40" 
+                [objectId]="data?.createdBy" 
+                [objectName]="data?.createdName"
+                [referType]="'avt'" 
+                [objectType]="'AD_Users'">
             </codx-img>
         </div>
         <div class="d-flex flex-column w-100 ms-4 py-3">
@@ -17,8 +27,12 @@
                 </div>
                 <div>
                     <ng-container *ngIf="data?.approveStatus">
-                        <codx-vll [name]="'CO003'" [classList]="'rounded-pill p-2 px-4 text-center'"
-                            [value]="data.approveStatus" [showText]="true" [showBgColor]="true">
+                        <codx-vll 
+                            [name]="'CO003'" 
+                            [classList]="'rounded-pill p-2 px-4 text-center'"
+                            [value]="data.approveStatus" 
+                            [showText]="true" 
+                            [showBgColor]="true">
                         </codx-vll>
                     </ng-container>
                 </div>
@@ -54,7 +68,11 @@
                 <div class="row mt-2 ">
                     <div class="col-2"></div>
                     <div class="col-10">
-                        <codx-tag [isEdit]="false" [disabled]="true" [value]="data.tags" [entityName]="'WP_News'">
+                        <codx-tag 
+                            [isEdit]="false" 
+                            [disabled]="true" 
+                            [value]="data.tags" 
+                            [entityName]="'WP_News'">
                         </codx-tag>
                     </div>
                 </div>
@@ -95,10 +113,14 @@
                     <codx-label [formModel]="formModel" [fiedName]="'Image'"></codx-label>
                 </div>
                 <div class="col-10">
-                    <div class="w-50 h-50">
-                        <codx-img [imageType]="'square'" [isDefaulImg]="true" [objectId]="data.recID"
-                            [objectType]="data.entityName" [width]="200">
+                    <div class="w-50 h-50" *ngIf="data.recID">
+                        <codx-img 
+                            class="abc123"
+                            [objectId]="'b2721e10-6ea1-436e-8f63-75f0b85107db'"
+                            [objectType]="'WP_News'" 
+                            [width]="100">
                         </codx-img>
+                        {{data.recID}}
                     </div>
                 </div>
             </div>
