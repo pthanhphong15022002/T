@@ -336,4 +336,14 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Thêm một mục tiêu
+  addOKR(okr:any , shares:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SaveOMAsync',
+      [okr,shares]
+    );
+  }
 }

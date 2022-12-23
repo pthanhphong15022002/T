@@ -62,7 +62,7 @@ export class CodxAttachmentTempComponent implements OnInit {
           this.assamplyName,
           this.className,
           'GetFilesByIbjectIDAsync',
-          [pObjectID,this.referType]
+          pObjectID
         )
         .subscribe((res: any) => {
           if (res.length > 0) {
