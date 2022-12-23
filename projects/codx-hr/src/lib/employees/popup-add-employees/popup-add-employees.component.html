@@ -221,8 +221,8 @@
           <codx-label [formModel]="dialogRef.formModel" fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
           </codx-label>
           <codx-input 
-            type="datetime" 
-            [disabled]="true"
+            [formModel]="dialogRef.formModel"
+            [disabled]="action!='edit'"
             field="hiredOn" 
             [crrValue]="employee.hiredOn" 
             (valueChange)="dataChange($event)">
@@ -411,7 +411,8 @@
           <codx-label [formModel]="dialogRef.formModel" fiedName="SiRegisterOn" default="Ngày cấp">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" field="siRegisterOn"
+            [formModel]="dialogRef.formModel" 
+            field="siRegisterOn"
             [crrValue]="employee.siRegisterOn" 
             (valueChange)="dataChange($event)">
           </codx-input>
