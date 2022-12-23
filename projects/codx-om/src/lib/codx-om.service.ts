@@ -334,6 +334,16 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Thêm một mục tiêu
+  addOKR(okr:any , shares:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SaveOMAsync',
+      [okr,shares]
+    );
+  }
   //Lấy OB và tất cả KR con theo ID của OB
   getObjectAndKRChild(recID:string) {
     return this.api.execSv(

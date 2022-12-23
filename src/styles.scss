@@ -839,15 +839,16 @@ codx-header .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not
 }
 
 .e-toolbar .e-tbar-btn:focus,
-.e-toolbar .e-tbar-btn:hover {
+.e-toolbar .e-tbar-btn:hover,
+.e-toolbar .e-active-view .e-tbar-btn {
   background: var(--primary) !important;
   border-color: var(--primary) !important;
   color: var(--white);
 }
 
-.content-tree .d-flex.user-card {
-  margin-top: 0px !important;
-  padding: 0 !important;
+.codx-theme .e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text,
+.e-toolbar .e-tbar-btn:hover .e-tbar-btn-text {
+  color: var(--white) !important;
 }
 
 /****/
@@ -1470,4 +1471,8 @@ ejs-schedule .e-schedule-toolbar-container .e-control.e-popup-open {
 .e-schedule-table.e-content-table .e-appointment-details .e-subject {
   width: 100%;
   padding-top: 0 !important;
+}
+
+codx-view-schedule .container-fluid.h-50px .mt-4 {
+  margin-top: 10px !important;
 }

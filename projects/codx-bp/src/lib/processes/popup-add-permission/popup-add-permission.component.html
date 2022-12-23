@@ -3,18 +3,17 @@
     <div class="offcanvas-wrapper">
       <div class="d-flex justify-content-between background-name">
         <div class="d-flex align-items-center ">
-          <div [ngbPopover]="popDetail" #p="ngbPopover" [openDelay]="500"
-            (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)" placement="bottom right top"
-            autoClose="outside">
+          <div [ngbPopover]="setTextPopover(data.processName)" #p1="ngbPopover" [openDelay]="500"
+            (mouseenter)="PopoverDetail(p1, data)" placement="bottom right top" [popoverClass]="data.recID">
             <span class="text-name line-clamp">{{fullName}}</span>
 
           </div>
         </div>
       </div>
-      <div class="request-to mt-4">
+      <div class="request-to mt-4" (mouseenter)="closePopover()">
         <div class="d-flex justify-content-between border-bottom py-1">
           <div class="d-flex align-items-center flex-grow-1">
-            <div class="w-50px">
+            <div class="w-50px"  >
               <codx-label name="lblFromDate" [formModel]="form.formModel" [default]="isShare ? 'Đến' : 'Cho'"
                 class="fw-bold">
               </codx-label>:
@@ -84,7 +83,7 @@
             </div>
           </div>
           <div class="d-flex">
-            <codx-input type="share" field="addUser" refValue="BP022" [showInput]="false"
+            <codx-input type="share" field="addUser" [multiple]="false" refValue="BP022" [showInput]="false"
               (valueChange)="onUserEvent($event, 'by')">
             </codx-input>
 
