@@ -253,7 +253,8 @@ export class OkrTargetsComponent implements OnInit {
     );
   }
   distributeKR(kr:any,ob:any){
-    let dModel = new DialogModel();
+    let dModel = new DialogModel();    
+    dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
       PopupDistributeOKRComponent,
       '',
