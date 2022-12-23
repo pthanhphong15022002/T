@@ -196,7 +196,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     {
       this.arrFieldRequire.forEach((field) => {
         let key = Util.camelize(field);
-        if (this.employee && this.employee[key])
+        if (!this.employee[key])
         {
           arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
         }

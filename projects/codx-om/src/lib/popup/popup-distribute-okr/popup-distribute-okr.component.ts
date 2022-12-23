@@ -42,109 +42,21 @@ import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.co
 })
 export class PopupDistributeOKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
-  @ViewChild('checkin') checkin: TemplateRef<any>;
-  @ViewChild('alignKR') alignKR: TemplateRef<any>;
-  @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('distributeKR') distributeKR: TemplateRef<any>;
 
   dialogRef: DialogRef;
-  formModel: FormModel;
-  headerText: string;
-  formModelCheckin = new FormModel();
-  dtStatus: any;
-  dataOKR:any;
-  listAlign=[];
-  openAccordion = [];
-  dataKR: any;
-  progressHistory = [];
-  krCheckIn = [];
-  chartSettings: ChartSettings = {
-    primaryXAxis: {
-      valueType: 'Category',
-      majorGridLines: { width: 0 },
-      edgeLabelPlacement: 'Shift',
-    },
-    primaryYAxis: {
-      minimum: 0,
-      maximum: 100,
-      interval: 20,
-    },
-    seriesSetting: [
-      {
-        type: 'SplineArea',
-        xName: 'period',
-        yName: 'percent',
-        fill: '#dfe4e3',
-        marker: {
-          visible: true,
-          height: 6,
-          width: 6,
-          shape: 'Circle',
-          fill: '#20bdae',
-        },
-      },
-      {
-        type: 'Line',
-        xName: 'period',
-        yName: 'target',
-        fill: '#000000',
-        width: 1,
-      },
-    ],
-  };
-
-  chartData = {
-    progress: 0,
-    data: [],
-  };
-
-  dialogCheckIn: DialogRef;
-  totalProgress: number;
-
-  //#region gauge chart
-  pointerBorder = {
-    color: '#007DD1',
-    width: 2,
-  };
-
-  rangeLinearGradient: Object = {
-    startValue: '0%',
-    endValue: '100%',
-    colorStop: [
-      { color: '#9e40dc', offset: '0%', opacity: 1 },
-      { color: '#d93c95', offset: '70%', opacity: 1 },
-    ],
-  };
-
-  labelStyle: Object = {
-    position: 'Outside',
-    font: {
-      fontFamily: 'inherit',
-    },
-    offset: 0,
-  };
-  obRecID: any;
-  okrChild= [];
-  listChild=[];
-  title='';
-  obName: any;
-  krName: any;
-  curUser:any;
-  userInfo:any;
+  headerText='';
+  obName='';
+  krName='';
+  recID: any;
+  distributeType: any;
+  curUser: any;
+  userInfo: any;
   orgUnitTree: any;
-  companyName='';
   isAfterRender=false;
-  load(args: ILoadedEventArgs): void {
-    // custom code start
-    let selectedTheme: string = location.hash.split('/')[1];
-    selectedTheme = selectedTheme ? selectedTheme : 'Material';
-    args.gauge.theme = <GaugeTheme>(
-      (selectedTheme.charAt(0).toUpperCase() + selectedTheme.slice(1))
-        .replace(/-dark/i, 'Dark')
-        .replace(/contrast/i, 'Contrast')
-    );
-    // custom code end
-  }
-  //#endregion gauge chart
+  dataOB: any;
+  dataKR: any;
+  listDistribute=[];
 
   constructor(
     private injector: Injector,
@@ -160,25 +72,11 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     this.headerText = 'Xem chi tiết - Mục tiêu'; //dialogData?.data[2];
     this.dialogRef = dialogRef;    
     this.obName=dialogData.data[0];
-    this.krName=dialogData.data[1];
+    this.krName=dialogData.data[1];    
+    this.recID=dialogData.data[2];
+    this.distributeType=dialogData.data[3];
     this.curUser= authStore.get();
-    this.cache.getCompany(this.curUser.userID).subscribe(item=>{
-      if(item) 
-      {
-        this.userInfo=item;        
-        this.codxOmService.getlistOrgUnit(this.userInfo.companyID).subscribe((res:any)=>{
-          if(res){
-            this.orgUnitTree= res;
-            let temp= new DistributeOKR();
-            temp.okrName= this.krName;
-            temp
-
-            this.detectorRef.detectChanges();
-            this.isAfterRender=true;
-          }
-        });
-      }
-    })
+    
   }
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
@@ -189,7 +87,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
         active: true,
         sameData: true,
         model: {
-          panelRightRef: this.alignKR,
+          panelRightRef: this.distributeKR,
           contextMenu: '',
         },
       },
@@ -197,9 +95,30 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   }
 
   onInit(): void {
-    
-    //this.getObjectData();    
-    //this.getListAlign();
+    this.getKRAndOBParent();
+    this.cache.getCompany(this.curUser.userID).subscribe(item=>{
+      if(item) 
+      {
+        this.userInfo=item;        
+        this.codxOmService.getlistOrgUnit(this.userInfo.companyID).subscribe((res:any)=>{
+          if(res){
+            this.orgUnitTree= res;           
+            Array.from(this.orgUnitTree.childrens).forEach((item:any)=>{
+              let temp = new DistributeOKR();
+              temp.okrName= this.dataKR.okrName;
+              temp.orgUnitID= item.orgUnitID;
+              temp.orgUnitName= item.orgUnitName;
+              temp.umid=this.dataKR.umid;
+              temp.distributePct=100/this.orgUnitTree.CountChild;
+              temp.distributeValue= this.dataKR.target/this.orgUnitTree.CountChild;
+              this.listDistribute.push(temp);
+            })
+            this.detectorRef.detectChanges();
+            this.isAfterRender=true;
+          }
+        });
+      }
+    });
   }
 
   //-----------------------End-------------------------------//
@@ -214,26 +133,18 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
 
   //-----------------------Get Data Func---------------------//
   
-  getObjectData(){
+  getKRAndOBParent(){
     this.codxOmService
-        .getObjectAndKRChild(this.obRecID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.dataOKR = res;
-            this.okrChild = res.child;            
-            this.detectorRef.detectChanges();
-          }
-        });
+    .getKRAndOBParent(this.recID)
+    .subscribe((res: any) => {
+      if (res) {
+        this.dataOB = res;
+        this.dataKR = res.child[0];            
+        this.detectorRef.detectChanges();
+      }
+    });
   }
-  getListAlign(){
-    this.codxOmService
-        .getListAlign(this.obRecID)
-        .subscribe((res: any) => {
-          if (res) {
-            this.listAlign = res;           
-          }
-        });
-  }
+  
 
   
 

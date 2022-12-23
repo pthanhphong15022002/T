@@ -45,6 +45,7 @@ export class AprpermissionComponent
   userID: any;
   gridViewSetup: any;
   vllStatus: any;
+  popupOld: any;
   tmpPerm = new BP_ProcessPermissions();
   popoverDetail: any;
   @ViewChild('view') codxview!: any;
@@ -82,8 +83,8 @@ export class AprpermissionComponent
       { headerTemplate: this.itemProcessName, width: 300 },
       { headerTemplate: this.itemOwner, width: 200 },
       { headerTemplate: this.itemCreatedOn, width: 150 },
-      { headerTemplate: this.itemPermissions, width: 150 },
-      { headerTemplate: this.itemDescription, width: 150 },
+      { headerTemplate: this.itemPermissions, width: 100 },
+      { headerTemplate: this.itemDescription, width: 200 },
       { headerTemplate: this.itemStatus, width: 150 },
       { field: '', headerText: '', width: 100 },
       { field: '', headerText: '', width: 50 },
@@ -244,10 +245,27 @@ export class AprpermissionComponent
   }
 
   PopoverDetail(p: any, emp) {
+    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+      this.popupOld?.close();
+    }
+
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
-      if (emp.memo != null) p.open();
+      if (emp.memo != null || emp.processName != null) {
+        p.open();
+      }
     } else p.close();
+    this.popupOld = p;
+  }
+  closePopover() {
+    this.popupOld?.close();
+  }
+  setTextPopover(text){
+    var divE = document.createElement('div');
+    // divE.classList.add("text-gray-800")
+    divE.innerHTML = text;
+
+    return (divE.innerText);
   }
 }

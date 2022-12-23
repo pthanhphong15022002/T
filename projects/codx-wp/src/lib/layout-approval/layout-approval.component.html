@@ -23,7 +23,7 @@
   <codx-scroll-top></codx-scroll-top>
 
   <!-- begin:: Drawers -->
-
+  
   <!-- <codx-user-drawer></codx-user-drawer> -->
   <!-- end:: Drawers -->
 
@@ -42,7 +42,9 @@
             " class="svg-icon" [ngClass]="codxService.toolbarButtonIconSizeClass"></span>
         </div>
         </div> -->
-
+        <codx-messenger-drawer></codx-messenger-drawer>
+        <codx-notify-drawer></codx-notify-drawer>
+        <codx-activies-approval-list></codx-activies-approval-list>
     <!-- Quick links -->
     <erm-quick-links-inner [buttonMarginClass]="codxService.toolbarButtonMarginClass"
       [buttonIconClass]="codxService.toolbarButtonIconSizeClass"
