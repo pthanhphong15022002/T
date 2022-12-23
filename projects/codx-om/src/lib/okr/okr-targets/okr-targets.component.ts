@@ -66,7 +66,7 @@ export class OkrTargetsComponent implements OnInit {
     ],
     service: 'OM',
     assembly: 'ERM.Business.OM',
-    className: 'OKRBusiness',
+    className: 'DashBoardBusiness',
     method: 'GetChartDataAsync',
   };
 
@@ -87,7 +87,7 @@ export class OkrTargetsComponent implements OnInit {
     ],
     service: 'OM',
     assembly: 'ERM.Business.OM',
-    className: 'OKRBusiness',
+    className: 'DashBoardBusiness',
     method: 'GetChartData1Async',
   };
 
