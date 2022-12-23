@@ -258,7 +258,9 @@ export class AprpermissionComponent
     } else p.close();
     this.popupOld = p;
   }
-
+  closePopover() {
+    this.popupOld?.close();
+  }
   setTextPopover(text){
     var divE = document.createElement('div');
     // divE.classList.add("text-gray-800")
