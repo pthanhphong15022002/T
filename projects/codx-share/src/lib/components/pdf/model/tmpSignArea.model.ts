@@ -37,13 +37,27 @@ export class tmpAreaName {
 }
 
 export class highLightTextArea {
-  location: {
-    top: number;
-    left: number;
-    width: number;
-    height: number;
-    pageNumber: number;
-  };
+  author: string;
+  location: location;
+  locations: Array<location>;
+  comment: Array<comment>;
+  createdDate: Date;
   color: string;
+  group: string;
   isAdded: boolean;
+}
+
+export class comment {
+  createdDate: Date;
+  modifyDate: Date;
+  author: string;
+  content: string;
+}
+
+export class location {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+  pageNumber: number;
 }

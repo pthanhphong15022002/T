@@ -1020,6 +1020,15 @@ export class CodxEsService {
       lstHighlightTextArea
     );
   }
+  getListAddedAnnoataion(fileUrl, lstRenderedPages) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetListHighlightAsync',
+      [fileUrl, lstRenderedPages]
+    );
+  }
 
   cancelSignfile(sfRecID: string, comment: string) {
     return this.api.execSv<any>(
@@ -1286,13 +1295,13 @@ export class CodxEsService {
     );
   }
 
-  highlightText(fileUrl, lstHLArea) {
+  highlightText(fileUrl, fileID, fileName, lstHLArea) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'HighlightTextAsync',
-      [fileUrl, lstHLArea]
+      [fileUrl, fileID, fileName, lstHLArea]
     );
   }
 
