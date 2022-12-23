@@ -14,6 +14,8 @@ import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
+import { PopupDistributeKRComponent } from '../../popup/popup-distribute-kr/popup-distribute-kr.component';
+import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/popup-distribute-okr.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -127,7 +129,7 @@ export class OkrTargetsComponent implements OnInit {
   ngOnInit(): void {
     this.progress = this.dataOKRPlans?.progress;
     this.api
-      .exec('OM', 'OKRBusiness', 'GetOKRDashboardByPlanAsync', [
+      .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
         this.dataOKRPlans?.periodID,
       ])
       .subscribe((res: any) => {
@@ -214,6 +216,10 @@ export class OkrTargetsComponent implements OnInit {
         this.editKR(kr, o, popupTitle);
         break;
       }
+      case 'SYS04': {
+        this.distributeKR(kr,o);
+        break;
+      }
     }
   }
   //Xem chi tiết OB
@@ -242,6 +248,20 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       [kr.recID,kr.okrName,kr.parentID],
+      '',
+      dModel
+    );
+  }
+  distributeKR(kr:any,ob:any){
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    let dialogDisKR = this.callfunc.openForm(
+      PopupDistributeOKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [ob.okrName,kr.okrName,kr.recID],
       '',
       dModel
     );
