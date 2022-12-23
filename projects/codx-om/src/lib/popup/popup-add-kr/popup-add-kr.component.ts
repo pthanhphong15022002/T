@@ -149,7 +149,13 @@ export class PopupAddKRComponent extends UIComponent {
   }
 
   onSaveForm() {
+    //xóa khi đã lấy được model chuẩn từ setting 
+    this.kr.status='1';
+    this.kr.approveStatus='1';
+    this.kr.approveControl='1';
+    this.kr.okrType=OMCONST.VLL.OKRType.KResult;
     this.kr.parentID = '2fe69da4-7217-11ed-b6e9-d89ef34ba7ae';
+    //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
 
