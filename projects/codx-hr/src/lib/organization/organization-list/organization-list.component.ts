@@ -40,7 +40,10 @@ export class OrganizationListComponent
     private callFC: CallFuncService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.dataService.currentComponent =
+      this.view?.dataService?.currentComponent;
+  }
   ngAfterViewInit(): void {}
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {

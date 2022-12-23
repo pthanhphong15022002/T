@@ -223,7 +223,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   //Xem chi tiết OB
-  showOB(obj:any) {
+  showOB(obj: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowOB = this.callfunc.openForm(
@@ -232,7 +232,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obj.recID,obj.okrName],
+      [obj.recID, obj.okrName],
       '',
       dModel
     );
@@ -247,14 +247,13 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr.recID,kr.okrName,kr.parentID],
+      [kr.recID, kr.okrName, kr.parentID],
       '',
       dModel
     );
   }
   distributeKR(kr:any,ob:any){
     let dModel = new DialogModel();
-    dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
       PopupDistributeOKRComponent,
       '',
@@ -266,5 +265,4 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  
 }

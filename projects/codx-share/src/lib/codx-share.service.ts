@@ -567,6 +567,28 @@ export class CodxShareService {
   }
   #endregion_EP_BookingCars
 
+  #region_EP_BookingRooms
+  getListItems(recID: any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingItemsBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+  #endregionEP_BookingRooms
+  
+  getListResource(resourceType: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListResourceByTypeAsync',
+      [resourceType]
+    );
+  }
+
 }
 
 //#region Model

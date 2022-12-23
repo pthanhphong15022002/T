@@ -172,7 +172,7 @@ export class BookingStationeryViewDetailComponent
         if (
           func.functionID == 'SYS02' /*MF sửa*/ ||
           func.functionID == 'SYS03' /*MF xóa*/ ||
-          func.functionID == 'SYS04' /*MF chép*/ || 
+          func.functionID == 'SYS04' /*MF chép*/ ||
           func.functionID == 'EP8T1101' /*MF gửi duyệt*/
         ) {
           func.disabled = true;
