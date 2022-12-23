@@ -3,7 +3,12 @@
     <div class="offcanvas-wrapper">
       <div class="d-flex justify-content-between background-name">
         <div class="d-flex align-items-center ">
-          <span class="text-name">{{fullName}}</span>
+          <div [ngbPopover]="popDetail" #p="ngbPopover" [openDelay]="500"
+            (mouseenter)="PopoverDetail(p, data)" (mouseleave)="PopoverDetail(p, null)" placement="bottom right top"
+            autoClose="outside">
+            <span class="text-name line-clamp">{{fullName}}</span>
+
+          </div>
         </div>
       </div>
       <div class="request-to mt-4">
@@ -234,3 +239,11 @@
     </button>
   </ng-template>
 </codx-form>
+
+<ng-template #popDetail>
+  <div class="d-flex flex-column w-100">
+    <div class="text-gray-800 ">
+      {{popoverDetail.processName}}
+    </div>
+  </div>
+</ng-template>

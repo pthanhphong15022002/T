@@ -50,13 +50,14 @@
             default="Hoạt động"
           ></codx-label>
         </label>
-        <div 
-            class="check-list text-dark"  
-            (mouseenter)="openMFTypeA()"
-            (mouseleave)="closeMFTypeA()">
+        <div
+          class="check-list text-dark"
+          (mouseenter)="openMFTypeA()"
+          (mouseleave)="closeMFTypeA()"
+        >
           <ng-container *ngFor="let item of data?.items">
             <div
-              class="d-flex align-item-center p-1 mb-2 psteps-item "
+              class="d-flex align-item-center p-1 mb-2 psteps-item"
               #p="ngbPopover"
               [ngbPopover]="!hideMoreFCChild ? hoverMoreFunction : ''"
               (mouseenter)="openMF(item, p)"
@@ -754,26 +755,26 @@
       {{ data.headerText }}
     </div>
   </div>
-  <div>
+  <!-- <div>
     <codx-mfunc
       type="hover"
       [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data.dataColums)"
-      [dataItem]="data.dataColums"
+      (clickMF)="clickMF($event, currentData(data.keyFiled))"
+      [dataItem]="currentData(data.keyFiled)"
     >
     </codx-mfunc>
-  </div>
-  <!-- <div class="icon-more_vert icon-18 has-actions-menu">
+  </div> -->
+  <div class="icon-more_vert icon-18 has-actions-menu">
     <div class="action-menu">
-      <codx-mfunc
+      <!-- <codx-mfunc
         type="hover"
         [formModel]="view.formModel"
-        (clickMF)="clickMF($event, item.dataColums)"
-        [dataItem]="item.dataColums"
+        (clickMF)="clickMF($event, currentData(data.keyField))"
+        [dataItem]="currentData(data.keyField)"
       >
-      </codx-mfunc>
+      </codx-mfunc> -->
     </div>
-  </div> -->
+  </div>
   <ng-template #tesst
     ><span>{{ data.headerText }}</span></ng-template
   >
