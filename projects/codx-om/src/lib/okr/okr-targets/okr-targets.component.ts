@@ -14,7 +14,6 @@ import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
-
 @Component({
   selector: 'lib-okr-targets',
   templateUrl: './okr-targets.component.html',
@@ -217,7 +216,7 @@ export class OkrTargetsComponent implements OnInit {
     }
   }
   //Xem chi tiết OB
-  showOB(obj:any) {
+  showOB(obj: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowOB = this.callfunc.openForm(
@@ -226,7 +225,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [obj.recID,obj.okrName],
+      [obj.recID, obj.okrName],
       '',
       dModel
     );
@@ -241,10 +240,9 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr.recID,kr.okrName,kr.parentID],
+      [kr.recID, kr.okrName, kr.parentID],
       '',
       dModel
     );
   }
-  
 }
