@@ -176,30 +176,7 @@ export class CodxOmService {
     }
   }
 
-  //Lấy danh sách mục tiêu
-  getOKR(dataRequest: DataRequest) {
-    return this.api.execSv('OM', 'OM', 'OKRBusiness', 'GetAsync', dataRequest);
-  }
-
-  //Lấy danh sách Bộ mục tiêu
-  getOKRPlans(periodID: string, interval: string, year: any) {
-    periodID = '2022'; //Tạm để cứng chờ khi tạo được periodID
-    return this.api.execSv('OM', 'OM', 'OKRPlansBusiness', 'GetAsync', [
-      periodID,
-      interval,
-      year,
-    ]);
-  }
-  //Lấy danh sách chi tiết KR từ recID OKR
-  getKRByOKR(recID: any) {
-    return this.api.execSv(
-      'OM',
-      'OM',
-      'OKRBusiness',
-      'GetChildByIDAsync',
-      recID
-    );
-  }
+  
   
   loadFunctionList(funcID:any): Observable<any>
   {
@@ -259,15 +236,8 @@ export class CodxOmService {
     this.cachedObservables.set(key, observable);
     return observable;
   }
-  getObjectAndKRChild(recID:string) {
-    return this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OB,
-      'GetObjectAndKRChildAsync',
-      [recID]
-    );
-  }
+  
+  //region OKR Plan
   getOKRPlandAndOChild(recID:string) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -277,16 +247,22 @@ export class CodxOmService {
       [recID]
     );
   }
-  //region: KR
-  getKRByID(recID:string) {
+  //Lấy danh sách Bộ mục tiêu
+  getOKRPlans(periodID: string, interval: string, year: any) {
+    periodID = '2022'; //Tạm để cứng chờ khi tạo được periodID
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
-      'GetKRByIDAsync',
-      [recID]
-    );
+      OMCONST.BUSINESS.OKRPlan,
+      'GetAsync', 
+      [periodID, interval, year,]);
   }
+  
+  
+  //endregion
+
+  //region: KR
+  
   checkInKR(recID:string,checkIn:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -326,7 +302,29 @@ export class CodxOmService {
       [recID,type,listOKRWeight]
     );
   }
-
+  //-------------------------Get Data OKR---------------------------------//
+  //Lấy danh sách chi tiết KR từ recID OKR
+  getKRByOKR(recID: any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetChildByIDAsync',
+      recID
+    );
+  }
+  //Lấy danh sách mục tiêu
+  getOKR(dataRequest: DataRequest) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR, 
+      'GetAsync', 
+      dataRequest
+    );
+  }
+  //Lấy danh sách liên kết OKR 
+  //(Bao gồm danh sách các OB có cùng ParentID với OB hiện tại, kèm theo tất cả KR con của từng OB)
   getListAlign(recID:string) {
     return this.api.execSv(
       OMCONST.SERVICES,
@@ -336,4 +334,59 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Thêm một mục tiêu
+  addOKR(okr:any , shares:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'SaveOMAsync',
+      [okr,shares]
+    );
+  }
+  //Lấy OB và tất cả KR con theo ID của OB
+  getObjectAndKRChild(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetObjectAndKRChildAsync',
+      [recID]
+    );
+  }
+  //Lấy một KR và OB cha của KR đó theo ID của KR (Lấy data cho việc phân bổ KR top-down)
+  getKRAndOBParent(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetKRAndOBParentAsync',
+      [recID]
+    );
+  }
+  //Lấy một KR theo ID
+  getKRByID(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetKRByIDAsync',
+      [recID]
+    );
+  }
+
+  //endregion
+
+  //region get Data from HR
+  getlistOrgUnit(recID:any) {
+    return this.api.execSv(
+      'HR',
+      'HR',
+      'OrganizationUnitsBusiness',
+      'GetOrgIDHierarchyByOrgIDAsync',
+      [recID]
+    );
+  }
+  
+  //endregion
 }

@@ -41,8 +41,8 @@ export class OrganizationListComponent
   ) {}
 
   ngOnInit(): void {
-    this.dataService.currentComponent =
-      this.view?.dataService?.currentComponent;
+    // this.dataService.currentComponent =
+    //   this.view?.dataService?.currentComponent;
   }
   ngAfterViewInit(): void {}
   // change orgUnitID

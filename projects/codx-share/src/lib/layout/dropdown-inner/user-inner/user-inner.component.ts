@@ -259,21 +259,21 @@ const themeDatas: ThemeFlag[] = [
     enable: true,
   },
   {
-    id: 'orange-light',
-    name: 'Orange Light',
+    id: 'orange',
+    name: 'Orange',
     color: '#ff7213',
     enable: true,
   },
   {
-    id: 'skyblue-light',
-    name: 'Skyblue Light',
+    id: 'sapphire',
+    name: 'Sapphire',
     color: '#23d3c1',
     enable: true,
   },
   {
-    id: 'green-light',
-    name: 'Green Light',
-    color: '#36ff72',
+    id: 'green',
+    name: 'Green',
+    color: '#15b144',
     enable: true,
   },
 ];

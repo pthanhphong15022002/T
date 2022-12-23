@@ -131,6 +131,13 @@ export class ProcessStepsComponent
   parentID = '';
   linkFile: any;
   crrPopper: any;
+  moreDefaut ={
+    share: true,
+    write: true ,
+    read : true,
+    download :true,
+    delete : true,
+  }
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message
@@ -286,7 +293,7 @@ export class ProcessStepsComponent
         this.view.dataService.dataSelected.parentID = this.parentID;
       var dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType, this.formModelMenu],
+        ['add', this.titleAction, this.stepType, this.formModelMenu,this.process],
         option
       );
       dialog.closed.subscribe((e) => {
@@ -373,6 +380,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
@@ -540,6 +548,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process,
             data.recID,
           ],
           option
