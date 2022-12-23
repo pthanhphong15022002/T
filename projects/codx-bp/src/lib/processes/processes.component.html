@@ -336,12 +336,19 @@
         </div>
       </div>
       <div *ngIf="!data.memo">
-        <span
-          disabled="true"
-          *ngIf="!data.memo"
-          class="b text-gray-600 text-start">
-          <codx-label name="lblNoMemo" default="Description..."></codx-label>
-        </span>
+        <div #memo>
+          {{
+            data?.memo
+            | formatvalue
+            : view.formModel
+            : "memo"
+            : memo
+            : "Processes"
+            : "grvProcesses"
+            | async
+            }}
+        </div>
+
       </div>
     </td>
     <td class="rowphoto" (mouseenter)="closePopover()">

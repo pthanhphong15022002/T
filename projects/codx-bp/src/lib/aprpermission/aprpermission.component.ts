@@ -250,4 +250,5 @@ export class AprpermissionComponent
       if (emp.memo != null) p.open();
     } else p.close();
   }
+
 }
