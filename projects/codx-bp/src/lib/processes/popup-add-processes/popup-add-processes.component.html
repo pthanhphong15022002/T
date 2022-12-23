@@ -119,6 +119,7 @@
       >
       </codx-label>
       <codx-input
+        [disabled]="funcID == 'BPT2' ? true : false"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="owner"
@@ -171,11 +172,11 @@
           (fileAdded)="fileAdded($event)"
           (fileCount)="getfileCount($event)"
           displayThumb="full"
-          showMessage="0"  
+          showMessage="0"
           [fdID]="folderID"
           [fdName]="folderName"
           [parentID]="parentID"
-          [dataSelected]="process"       
+          [dataSelected]="process"
         >
         </codx-attachment>
       </div>
@@ -255,7 +256,7 @@
       (fileAdded)="fileImgAdded($event)"
       displayThumb="full"
       showMessage="0"
-      category="0"          
+      category="0"
     >
     </codx-attachment>
 
