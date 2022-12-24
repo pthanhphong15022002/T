@@ -265,7 +265,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [ob.okrName,kr.okrName,kr.recID],
+      [ob.okrName,kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
       '',
       dModel
     );

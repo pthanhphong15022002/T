@@ -169,7 +169,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
 
   getCalendarSetting(resource, dataResourceModel) {
     let a = this.calendar_setting.createComponent(SettingCalendarComponent);
-    a.instance.funcID = this.funcID;
+    // a.instance.funcID = this.funcID;
     a.instance.fields = this.fields;
     a.instance.resources = resource;
     a.instance.resourceModel = dataResourceModel;
@@ -177,6 +177,7 @@ export class HomeCalendarComponent extends UIComponent implements OnInit {
       if (res) {
         let ele = document.getElementsByTagName('codx-schedule')[0];
         if (ele) {
+            console.log("check asdasd")
           let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
           cmp.dataSource = res;
           cmp.setEventSettings();

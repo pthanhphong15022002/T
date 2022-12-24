@@ -113,14 +113,15 @@
                     <codx-label [formModel]="formModel" [fiedName]="'Image'"></codx-label>
                 </div>
                 <div class="col-10">
-                    <div class="w-50 h-50" *ngIf="data.recID">
+                    <div class="w-50 h-50">
                         <codx-img 
-                            class="abc123"
-                            [objectId]="'b2721e10-6ea1-436e-8f63-75f0b85107db'"
-                            [objectType]="'WP_News'" 
-                            [width]="100">
+                            [imageType]="'square'"
+                            [objectId]="data.recID"
+                            [objectType]="'WP_News'"
+                            [referType]="'image'" 
+                            [isDefaulImg]="true"
+                            [width]="200">
                         </codx-img>
-                        {{data.recID}}
                     </div>
                 </div>
             </div>

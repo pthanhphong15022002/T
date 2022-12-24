@@ -43,7 +43,7 @@ export class CompanyEditComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.dialogData){
-      this.data = this.dialogData;
+      this.data = JSON.parse(JSON.stringify(this.dialogData));
     }
     else
     {
@@ -72,7 +72,7 @@ export class CompanyEditComponent implements OnInit {
         ).subscribe((res:any) => {
           if(res)
           {
-            this.dataOld = {...res};
+            this.dataOld = JSON.parse(JSON.stringify(res));
             this.dialogRef.close(this.dataOld);
           }
         });
