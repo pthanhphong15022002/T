@@ -15,6 +15,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   data : any;
   dialog : any;
   headerText = "Thêm mới mục tiêu";
+  type:any = "add";
   gridView: any;
   formModel: any;
   okrAddGroup: FormGroup;
@@ -53,11 +54,16 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    debugger;
     this.dialog = dialog;
     if(dt?.data[0]) this.gridView = dt?.data[0];
     if(dt?.data[1]) this.formModel = dt?.data[1];
-    if(dt?.data[2]) this.headerText = dt?.data[2];
-    if(dt?.data[3]) this.parentID = dt?.data[3]
+    if(dt?.data[2]) this.type = dt?.data[2];
+    if(dt?.data[3]) this.parentID = dt?.data[3];
+    if(this.type == "edit") {
+      this.headerText = "Chỉnh sửa mục tiêu"
+      this.dataOKR =  dt?.data[4];
+    }
    }
   ngAfterViewInit(): void {
   }
@@ -67,16 +73,20 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     this.okrAddGroup = this.formBuilder.group({
       shares: '9',
     });
-    this.dataOKR = {
+    if(this.type == "add")
+    {
+     this.dataOKR = {
       okrName : "",
       note: ""
+     }
     }
+    
   }
 
   changeCalendar(e:any)
   {
     debugger;
-    this.dataOKR.periodID = e?.text;
+    //this.dataOKR.periodID = e?.text;
   }
 
   onSaveForm(){

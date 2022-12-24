@@ -146,8 +146,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     let dialog = this.callfc.openSide(OkrAddComponent, [
       this.gridView,
       this.formModelKR,
-      "Thêm mới mục tiêu",
-      this.dataOKRPlans.recID
+      "add",
+      this.dataOKRPlans.recID,
+      null
     ]
     );    
   }
