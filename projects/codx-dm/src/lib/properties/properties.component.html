@@ -54,7 +54,6 @@
                                     </ng-container>
                                 </div>
                                 <div class="d-flex">
-
                                     <a (click)="openRight(2, false)"
                                         class="btn btn-sm btn-outline-primary">{{titleShare}}</a>
                                     <!-- <a (click)="openRight(2, true)"
@@ -63,15 +62,49 @@
                             </div>
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <ng-container *ngIf="fileEditing">
-                                    <span class="text-gray-600 me-2 w-100px">{{titleFiletype}}:</span>
-                                    <span class="">
-                                        <!-- {{fileEditing.type}} --> {{fileEditing.extension}}
-                                    </span>
+                                    <codx-label [default]="titleFiletype" fiedName="lblFileType" class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.fileName}}</span>
                                 </ng-container>
                                 <ng-template #elseVersion>
                                     <span class="">{{messerror}}</span>
                                 </ng-template>
                             </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleFilesize" fiedName="lblFileSize" class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.fileSize}} (bytes)</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleCreator" fiedName="lblCreator" class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.userName}}</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div>
+                            <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleVersion" fiedName="lblVersion" class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.version ? fileEditing.version : "Không có dữ liệu"}}</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div>
+                            <!-- <div *ngIf="fileEditing" class="d-flex my-3">
+                                <ng-container *ngIf="fileEditing">
+                                    <codx-label [default]="titleApprove" fiedName="lblApprove" class="text-gray-600 me-2 w-100px"></codx-label>
+                                    <span class="">{{fileEditing.fileName}}</span>
+                                </ng-container>
+                                <ng-template #elseVersion>
+                                    <span class="">{{messerror}}</span>
+                                </ng-template>
+                            </div> -->
                             <div *ngIf="fileEditing" class="d-flex my-3">
                                 <span class="text-gray-600 me-2 w-100px">{{titleLanguage}}:</span>
                                 <ng-container *ngIf="fileEditing.language , else elselanguage">
