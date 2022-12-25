@@ -48,7 +48,7 @@ export class PopupAddProcessStepsComponent
   processSteps: BP_ProcessSteps;
   owners: Array<BP_ProcessOwners> = [];
   ownersClone: any = [];
-
+  process: any;
   user: any;
   data: any;
   funcID: any;
@@ -68,6 +68,7 @@ export class PopupAddProcessStepsComponent
   listOwnerDetails = [];
   popover: any;
   formModelMenu: FormModel;
+  funcIDparent: any;
   crrIndex = 0;
   gridViewSetup: any;
   recIDCopied: any;
@@ -76,6 +77,7 @@ export class PopupAddProcessStepsComponent
   stepNameOld = '';
   linkQuesiton = '';
   hideExtend = false;
+  folderID = '';
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
@@ -97,10 +99,16 @@ export class PopupAddProcessStepsComponent
     this.titleActon = dt?.data[1];
     this.stepType = dt?.data[2];
     this.formModelMenu = dt?.data[3];
-    this.recIDCopied = dt?.data[4];
+    this.process = dt?.data[4];
+    this.recIDCopied = dt?.data[5];
     if (this.processSteps.parentID && this.action == 'add') {
       this.lockParentId = true;
     }
+    this.bpService.funcIDParent.subscribe((func) => (this.funcIDparent = func));
+    if (this.process)
+      this.folderID = this.process.versions.find(
+        (x) => x.versionNo == this.process.versionNo
+      ).recID;
     if (this.stepType) this.processSteps.stepType = this.stepType;
     this.owners = this.processSteps.owners ? this.processSteps.owners : [];
     this.dialog = dialog;
@@ -500,6 +508,5 @@ export class PopupAddProcessStepsComponent
         .setAttribute('style', 'width: 900px; z-index: 1000;');
       ext.classList.add('rotate-back');
     }
-
   }
 }

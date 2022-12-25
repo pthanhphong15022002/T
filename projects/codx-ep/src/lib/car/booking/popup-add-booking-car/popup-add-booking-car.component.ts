@@ -123,6 +123,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   resources=[];
   listUserID=[];
   user:any;
+  busyAttendees: string;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -474,6 +475,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.fGroupAddBookingCar,
           this.formModel
         );
+                    
+        this.saveCheck = false;
         return;
       }
       if (this.data.phone != null && this.data.phone != '') {
@@ -483,6 +486,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
             '2',
             0
           ); // EP_WAIT doi messcode tu BA
+                      
+          this.saveCheck = false;
           return;
         }
       }
@@ -499,7 +504,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.data.hours = hours;
         }
       } else {
-        this.notificationsService.notifyCode('TM036');
+        this.notificationsService.notifyCode('TM036');                    
+        this.saveCheck = false;
         return;
       }
       let tmpEquip = [];
@@ -530,19 +536,55 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
       if (this.data.attendees > this.carCapacity) {
         this.notificationsService.alertCode('EP010').subscribe((x) => {
-          if (x.event.status == 'N') {
+          if (x.event.status == 'N') {                        
+            this.saveCheck = false;
             return;
           } else {
-            this.startSave(approval);
+            this.attendeesValidateStep(approval)
           }
         });
       } else {
-        this.startSave(approval);
+        this.attendeesValidateStep(approval)
       }
       this.saveCheck = true;
     } else {
       return;
     }
+  }
+  attendeesValidateStep(approval) {
+    this.api
+      .callSv(
+        'EP',
+        'ERM.Business.EP',
+        'BookingsBusiness',
+        'BookingAttendeesValidatorAsync',
+        [
+          this.attendeesList,
+          this.data.startDate,
+          this.data.endDate,
+          this.data.recID,
+        ]
+      )
+      .subscribe((res) => {
+        if (res != null && res.msgBodyData[0].length > 0) {
+          this.busyAttendees = '';
+          res.msgBodyData[0].forEach((item) => {
+            this.busyAttendees += item.objectName + ', ';
+          });
+          this.notificationsService
+            .alertCode('EP005', null, '"' + this.busyAttendees + '"')
+            .subscribe((x) => {
+              if (x.event.status == 'N') {                
+                this.saveCheck = false;
+                return;
+              } else {
+                this.startSave(approval);
+              }
+            });
+        } else {
+          this.startSave(approval);
+        }
+      });
   }
   startSave(approval) {
     this.dialogRef.dataService
@@ -588,7 +630,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
           } else {
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
-        } else {
+        } else {                      
+          this.saveCheck = false;
           return;
         }
       });

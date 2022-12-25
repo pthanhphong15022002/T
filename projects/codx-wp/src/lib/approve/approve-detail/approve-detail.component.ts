@@ -48,7 +48,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   
 
   ngOnInit(): void {
-    this.getPostInfor();
+    this.getPostInfor(this.objectID);
     this.cache.functionList(this.funcID).subscribe((func: any) => 
       {
         if(func)
@@ -59,29 +59,33 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.objectID?.currentValue && (changes.objectID?.currentValue != changes.objectID?.previousValue)){
-      this.getPostInfor();
+    if(changes.objectID)
+    {
+      this.getPostInfor(this.objectID);
     }
   }
-  getPostInfor(){
-    if(!this.objectID){
-      this.data = null;
-      return;
+  getPostInfor(objectID:string){
+    if(objectID)
+    {
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "NewsBusiness",
+        "GetPostInfoAsync",
+        [this.objectID,this.funcID])
+        .subscribe((res:any) => {
+          if(res)
+          {
+            this.data = JSON.parse(JSON.stringify(res));
+            this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
+            this.dt.detectChanges();
+          }
+        });
     }
-    this.api.execSv(
-      "WP",
-      "ERM.Business.WP",
-      "NewsBusiness",
-      "GetPostInfoAsync",
-      [this.objectID,this.funcID])
-      .subscribe((res:any) => {
-        if(res)
-        {
-          this.data = res;
-          this.data.contentHtml = this.sanitizer.bypassSecurityTrustHtml(this.data.contents);
-          this.dt.detectChanges();
-        }
-      });
+    else
+    {
+      this.data = null;
+    }
   }
   clickMF(event:any){
     if(event?.functionID){

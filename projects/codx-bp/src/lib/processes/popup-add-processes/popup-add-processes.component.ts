@@ -19,6 +19,7 @@ import {
   AuthStore,
   NotificationsService,
   ApiHttpService,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { CodxBpService } from '../../codx-bp.service';
@@ -72,14 +73,14 @@ export class PopupAddProcessesComponent implements OnInit {
   emp: tmpUser;
   onwerRole: string = 'onwer';
   userRole: string = 'user';
-  folderID: string =''; // Id of versionNo
-  folderName: string =''; // versionNo
-  parentID: string =''; // Id of proccess
+  folderID: string = ''; // Id of versionNo
+  folderName: string = ''; // versionNo
+  parentID: string = ''; // Id of proccess
   moreFunctionCopy: string = 'copy';
   moreFunctionAdd: string = 'add';
   moreFunctionEdit: string = 'edit';
-  listPermissionCopy:BP_ProcessPermissions[] = [];
-  onwerOldCoppy:string = '';
+  listPermissionCopy: BP_ProcessPermissions[] = [];
+  onwerOldCoppy: string = '';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -127,19 +128,29 @@ export class PopupAddProcessesComponent implements OnInit {
     this.ActivitiesOld = this.processOldCopy?.actiOld;
     this.AttachmentsOld = this.processOldCopy?.attachOld;
     this.listPermissionCopy = this.processOldCopy?.listPermiss;
-    this.onwerOldCoppy =this.processOldCopy?.onwerOld;
+    this.onwerOldCoppy = this.processOldCopy?.onwerOld;
     this.nameOld = this.process.processName;
     if (this.action != this.moreFunctionAdd) this.getAvatar(this.process);
     //test gán cứng
-    if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
-      this.folderName ='V0.0';
-      this.folderID ='5d6a0978-86f4-4c2d-a95c-6c5050b6fca3';
-      this.parentID ='bcd22997-982c-47eb-871c-745448fba08e';
-   }
- if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
-  this.process.versionNo = 'V0.0'
-
- }
+    //if(this.action ===this.moreFunctionAdd || this.action===this.moreFunctionCopy) {
+    this.folderName =
+      this.action == 'add' || this.action == 'copy'
+        ? 'V0.0'
+        : this.process.versionNo;
+    this.folderID =
+      this.action == 'add' || this.action == 'copy'
+        ? Util.uid()
+        : this.process.versions.find(
+            (x) => x.versionNo == this.process.versionNo
+          )?.recID;
+    this.parentID = this.process.recID;
+    // }
+    if (
+      this.action === this.moreFunctionAdd ||
+      this.action === this.moreFunctionCopy
+    ) {
+      this.process.versionNo = 'V0.0';
+    }
   }
 
   ngOnInit(): void {
@@ -153,7 +164,10 @@ export class PopupAddProcessesComponent implements OnInit {
   //#region method
   beforeSave(op) {
     var data = [];
-    if (this.action == this.moreFunctionAdd || this.action == this.moreFunctionCopy) {
+    if (
+      this.action == this.moreFunctionAdd ||
+      this.action == this.moreFunctionCopy
+    ) {
       op.method = 'AddProcessesAsync';
       op.className = 'ProcessesBusiness';
 
@@ -163,8 +177,10 @@ export class PopupAddProcessesComponent implements OnInit {
       versions.createdOn = new Date();
       versions.createdBy = this.user.userID;
       versions.activedOn = this.process.activedOn;
-      this.process.phases = this.action == this.moreFunctionCopy ? this.phasesOld : 0;
-      this.process.activities = this.action == this.moreFunctionCopy ? this.ActivitiesOld : 0;
+      this.process.phases =
+        this.action == this.moreFunctionCopy ? this.phasesOld : 0;
+      this.process.activities =
+        this.action == this.moreFunctionCopy ? this.ActivitiesOld : 0;
       if (this.action == this.moreFunctionCopy) {
         this.process.attachments = this.isCoppyFile
           ? this.process.attachments > 0
@@ -173,19 +189,20 @@ export class PopupAddProcessesComponent implements OnInit {
           : this.process.attachments;
         this.isCoppyKeyValue = this.isCoppyFile ? 'copyFile' : 'copyDefault';
         var countArray = this.listPermissionCopy.length;
-        if(countArray>0){
-          for(let i=0; i<countArray; i++) {
-            if(this.listPermissionCopy[i].autoCreate && this.listPermissionCopy[i].objectID != this.onwerOldCoppy) {
+        if (countArray > 0) {
+          for (let i = 0; i < countArray; i++) {
+            if (
+              this.listPermissionCopy[i].autoCreate &&
+              this.listPermissionCopy[i].objectID != this.onwerOldCoppy
+            ) {
               this.process.permissions.push(this.listPermissionCopy[i]);
             }
           }
-
         }
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
       if(this.action ===this.moreFunctionAdd){
-        this.process.recID = this.parentID;
         this.process.versions[0].recID = this.folderID;
       }
       data = [
@@ -252,7 +269,10 @@ export class PopupAddProcessesComponent implements OnInit {
         return;
       }
     }
-    if (this.ownerOld === this.process?.owner && this.action === this.moreFunctionEdit) {
+    if (
+      this.ownerOld === this.process?.owner &&
+      this.action === this.moreFunctionEdit
+    ) {
       this.callActionSave();
     } else {
       this.updateOrCreatProccess(this.emp);
@@ -336,7 +356,10 @@ export class PopupAddProcessesComponent implements OnInit {
   }
   //#endregion method
   isUpdateCreateProcess() {
-    if (this.action === this.moreFunctionAdd || this.action === this.moreFunctionCopy) {
+    if (
+      this.action === this.moreFunctionAdd ||
+      this.action === this.moreFunctionCopy
+    ) {
       this.onAdd();
     } else {
       this.onUpdate();
@@ -371,9 +394,9 @@ export class PopupAddProcessesComponent implements OnInit {
     else this.isHaveFile = false;
     this.showLabelAttachment = this.isHaveFile;
   }
-  fileAdded(e) { }
+  fileAdded(e) {}
 
-  valueCbx(e) { }
+  valueCbx(e) {}
   //#endregion event
 
   valueChangeUser(e) {
@@ -396,15 +419,16 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process?.permissions != null &&
       this.process?.permissions.length > 0
     ) {
-      this.process.permissions.filter(x=>x.objectID===this.tmpPermission.objectID).forEach((element) => {
+      this.process.permissions
+        .filter((x) => x.objectID === this.tmpPermission.objectID)
+        .forEach((element) => {
           this.updatePermission(emp, element, this.onwerRole);
           this.isExitUserPermiss = true;
-      });
+        });
       if (!this.isExitUserPermiss) {
         this.process.permissions.push(this.tmpPermission);
       }
-    }
-    else {
+    } else {
       this.perms.push(this.tmpPermission);
       this.process.permissions = this.perms;
     }
@@ -426,7 +450,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
     }
     // BE handle update onwer
-    tmpPermission.objectType = '1'
+    tmpPermission.objectType = '1';
     tmpPermission.memberType = '0';
     tmpPermission.autoCreate = true;
 
@@ -473,13 +497,14 @@ export class PopupAddProcessesComponent implements OnInit {
 
   addAvatar() {
     //this.imageAvatar.clearData();
+    //this.imageAvatar.referType = this.process.versionNo; 
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
   fileImgAdded(e) {
     if (e?.data && e?.data?.length > 0) {
       var countListFile = e.data.length;
-      this.linkAvatar = e?.data[countListFile-1].avatar;
+      this.linkAvatar = e?.data[countListFile - 1].avatar;
 
       this.changeDetectorRef.detectChanges();
     }

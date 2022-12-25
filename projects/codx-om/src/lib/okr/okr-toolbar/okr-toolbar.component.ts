@@ -49,7 +49,6 @@ export class OkrToolbarComponent implements OnInit {
   }
   changeCalendar(event:any)
   {
-    debugger
     var obj = 
     {
       id : "Calendar",

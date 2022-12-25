@@ -7,6 +7,7 @@
   [autoLoad]="false"
 >
 </codx-views>
+
 <ng-template #panelContent>
   <div class="page-pw h-employee bg-body p-3 rounded-2">
     <div class="page-profile">
@@ -2011,21 +2012,21 @@
                           </div>
                         </div>
                       </div>
-                      <codx-mfunc
-                        *ngIf="lstVisa?.length > 0"
-                        [formModel]="view.formModel"
-                        (clickMF)="
-                          clickMF(
-                            $event,
-                            lstVisa?.length > 0 ? lstVisa[0] : null,
-                            'visa'
-                          )
-                        "
-                        type="hover"
-                        [dataItem]="lstVisa?.length > 0 ? lstVisa[0] : {}"
-                      >
-                      </codx-mfunc>
                     </div>
+                    <codx-mfunc
+                      *ngIf="lstVisa?.length > 0"
+                      [formModel]="view.formModel"
+                      (clickMF)="
+                        clickMF(
+                          $event,
+                          lstVisa?.length > 0 ? lstVisa[0] : null,
+                          'visa'
+                        )
+                      "
+                      type="hover"
+                      [dataItem]="lstVisa?.length > 0 ? lstVisa[0] : {}"
+                    >
+                    </codx-mfunc>
                   </div>
                   <hr />
                   <div #WorkPermit class="mb-1">

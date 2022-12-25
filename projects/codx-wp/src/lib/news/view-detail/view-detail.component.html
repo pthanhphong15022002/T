@@ -56,7 +56,8 @@
                                                                         <codx-img class="me-3" [width]="30"
                                                                             [imageType]="'circle'"
                                                                             [objectId]="item.objectID"
-                                                                            objectType="AD_Users">
+                                                                            objectType="AD_Users" 
+                                                                            [referType]="'avt'">
                                                                         </codx-img>
                                                                         <span class="fw-bolder">{{ item.objectName
                                                                             }}</span>
@@ -128,8 +129,14 @@
                                 (click)="clickViewDeital(item)">
                                 <div class="d-flex align-items-top">
                                     <div class="me-4">
-                                        <codx-img [width]="70" imageType="square" [cssClass]="'img'"
-                                            [isDefaulImg]="true" [objectId]="item.recID" [objectType]="'WP_News'">
+                                        <codx-img 
+                                            [width]="70" 
+                                            imageType="square" 
+                                            [cssClass]="'img'"
+                                            [isDefaulImg]="true" 
+                                            [objectId]="item.recID" 
+                                            [objectType]="'WP_News'" 
+                                            [referType]="'image'">
                                         </codx-img>
                                     </div>
                                     <div class="d-flex flex-column w-100">

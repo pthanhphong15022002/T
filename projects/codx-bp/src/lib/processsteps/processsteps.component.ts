@@ -131,6 +131,13 @@ export class ProcessStepsComponent
   parentID = '';
   linkFile: any;
   crrPopper: any;
+  moreDefaut ={
+    share: true,
+    write: true ,
+    read : true,
+    download :true,
+    delete : true,
+  }
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message
@@ -142,6 +149,7 @@ export class ProcessStepsComponent
   heightFlowChart = 0;
   widthElement = 300;
   dataClick: any;
+  dataColums =[] ;
 
   constructor(
     inject: Injector,
@@ -285,7 +293,7 @@ export class ProcessStepsComponent
         this.view.dataService.dataSelected.parentID = this.parentID;
       var dialog = this.callfc.openSide(
         PopupAddProcessStepsComponent,
-        ['add', this.titleAction, this.stepType, this.formModelMenu],
+        ['add', this.titleAction, this.stepType, this.formModelMenu,this.process],
         option
       );
       dialog.closed.subscribe((e) => {
@@ -372,6 +380,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process
           ],
           option
         );
@@ -539,6 +548,7 @@ export class ProcessStepsComponent
             this.titleAction,
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
+            this.process,
             data.recID,
           ],
           option
@@ -892,6 +902,7 @@ export class ProcessStepsComponent
         )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
+      this.dataColums = this.kanban.columns;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -1299,11 +1310,11 @@ export class ProcessStepsComponent
     this.hideMoreFCChild = false;
   }
 
-  showAllparent(text) {
-    return (
-      this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
-    );
-  }
+  // showAllparent(text) {
+  //   return (
+  //     this.titleAdd + ' ' + text.charAt(0).toLocaleLowerCase() + text.slice(1)
+  //   );
+  // }
   setWidth(data) {
     let width = document.getElementsByTagName('body')[0].offsetWidth;
     return width < data.length * 12 ? true : false;
@@ -1328,11 +1339,7 @@ export class ProcessStepsComponent
     return this.widthElement < text.length * 3;
   }
   //chuwa xong
-  dataColums(recIDPhase) {
-    this.bpService.getProcessStepDetailsByRecID(recIDPhase).subscribe((dt) => {
-      return dt;
-    });
-  }
+  
 
   clickMFColums(e, recID) {
     this.bpService.getProcessStepDetailsByRecID(recID).subscribe((dt) => {
@@ -1345,5 +1352,11 @@ export class ProcessStepsComponent
 
   viewDetailSurveys(link) {
     if (link) window.open(link);
+  }
+
+  currentData(key):any{
+   let dt = this.kanban.columns.find(x=>x.keyField==key) ;
+   let dataColums = dt?.dataColums
+   return dataColums
   }
 }
