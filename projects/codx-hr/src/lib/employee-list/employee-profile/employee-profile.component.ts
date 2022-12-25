@@ -55,6 +55,7 @@ import { NoopAnimationPlayer } from '@angular/animations';
 import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/popup-ehealths.component';
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
+import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -134,7 +135,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 4;
+  crrTab: number = 3;
 
   //EAsset salary
   lstAsset: any = [];
@@ -261,6 +262,30 @@ export class EmployeeProfileComponent extends UIComponent {
         console.log('State', history.state);
         this.listEmp = history.state?.data;
         this.request = history.state?.request;
+        if (!this.request && !this.listEmp) {
+          let i = 1;
+          this.listEmp = [];
+          let flag = true;
+          //while (flag) {
+          this.request = new DataRequest();
+          this.request.entityName = 'HR_Employees';
+          this.request.gridViewName = 'grvEmployees';
+          this.request.page = i;
+          this.request.pageSize = 20;
+          this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
+            if (res) {
+              this.listEmp.push(...res[0]);
+              let index = this.listEmp?.findIndex(
+                (p) => p.employeeID == params.employeeID
+              );
+              i++;
+              if (index > -1) {
+                flag = false;
+              }
+            }
+          });
+          //}
+        }
 
         let index = this.listEmp?.findIndex(
           (p) => p.employeeID == params.employeeID
@@ -273,6 +298,7 @@ export class EmployeeProfileComponent extends UIComponent {
             }
           });
         }
+
         // Thong tin ca nhan
         this.hrService.getEmployeeInfo(params.employeeID).subscribe((emp) => {
           if (emp) {
@@ -1795,6 +1821,39 @@ export class EmployeeProfileComponent extends UIComponent {
   }
   //#endregion
 
+  //#region HR_EContracts
+  addEContracts() {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEContractComponent,
+      {
+        actionType: 'add',
+        salarySelected: null,
+        headerText: 'Hợp đồng lao động',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+
+  //#endregion
+
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }
@@ -1843,14 +1902,14 @@ export class EmployeeProfileComponent extends UIComponent {
       );
       if (index > -1 && this.listEmp[index - 1]?.employeeID) {
         let urlView = '/hr/employeedetail/HRT03a1';
-        this.codxService.navigate(
-          '',
+        this.codxService.replaceNavigate(
           urlView,
           {
             employeeID: this.listEmp[index + 1]?.employeeID,
           },
           {
             data: this.listEmp,
+            request: this.request,
           }
         );
       }
