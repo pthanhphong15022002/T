@@ -436,7 +436,7 @@ export class CalendarNotesComponent
       debugger
       this.dataResourceModel;
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      cmp.isNavigateInside = true;
+      // cmp.isNavigateInside = true; // a Trầm chưa úp đét core
       cmp.selectedDate = args.date;
       cmp.onNavigating(args);
     }
