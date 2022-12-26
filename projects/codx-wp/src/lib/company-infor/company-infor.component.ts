@@ -91,13 +91,11 @@ export class CompanyInforComponent extends UIComponent {
       let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
       popup.closed.subscribe((res:any)=>{
         if(res?.event){
-          let companyPost = res.event;
-          if(companyPost?.recID){
-            this.data = {...companyPost};
+          let result = res.event;
+          this.data = JSON.parse(JSON.stringify(result));
             this.notifySvr.notifyCode('SYS007');
             this.detectorRef.detectChanges();
           }
-        }
       });
     }
   }

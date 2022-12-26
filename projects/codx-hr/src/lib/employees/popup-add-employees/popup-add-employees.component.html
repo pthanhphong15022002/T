@@ -307,36 +307,8 @@
           >
           </codx-label>
           <codx-input
-            type="datetime"
-            [disabled]="true"
-            class="test-datetime"
-            field="hiredOn"
-            format="d"
-            placeholder="datetime"
-            [crrValue]="employee?.joinedOn"
-            (valueChange)="dataChange($event)"
-            placeholder="datetime"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
             [formModel]="dialogRef.formModel"
-            fiedName="HiredOn"
-            default="Ngày trở thành nhân viên chính thức"
-          >
-          </codx-label>
-          <codx-input
-            type="datetime"
-            [disabled]="true"
-            class="test-datetime"
-            field="hiredOn"
-            format="d"
-            placeholder="datetime"
-            [crrValue]="employee?.hiredOn"
-            (valueChange)="dataChange($event)"
+            [disabled]="action != 'edit'"
             field="hiredOn"
             [crrValue]="employee.hiredOn"
             (valueChange)="dataChange($event)"
@@ -680,12 +652,6 @@
           >
           </codx-label>
           <codx-input
-            type="datetime"
-            class="test-datetime"
-            field="siRegisterOn"
-            format="d"
-            placeholder="datetime"
-            [crrValue]="employee?.siRegisterOn"
             [formModel]="dialogRef.formModel"
             field="siRegisterOn"
             [crrValue]="employee.siRegisterOn"

@@ -1,11 +1,10 @@
 <codx-form [body]="body" [footer]="footer" [dialog]="dialogRef">
     <ng-template #body>
-        <div class="container">
-            <div class="row">
+        <div class="container container-md">
+            <div class="w-larger p-9">
                 <codx-input 
                     type="textarea" 
                     class="test-textarea" 
-                    field="textarea" 
                     [crrValue]="data?.contents"
                     (valueChange)="valueChange($event)"
                     ngDefaultControl>

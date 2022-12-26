@@ -89,18 +89,30 @@ export class UpdateNotePinComponent implements OnInit {
         var isPin = !this.itemUpdate.isPin;
         this.itemUpdate.isPin = isPin;
         this.itemUpdate.isNote = true;
+        this.itemUpdate['createdOn'] = this.itemUpdate?.calendarDate
+          ? this.itemUpdate?.calendarDate
+          : this.itemUpdate.createdOn;
         this.api
           .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-            this.itemUpdate?.transID,
+            this.itemUpdate?.recID
+              ? this.itemUpdate?.recID
+              : this.itemUpdate?.transID,
             this.itemUpdate,
           ])
           .subscribe((res) => {
             if (res) {
-              var object = [{
-                data: res,
-                type: 'edit-note-drawer',
-                formType: this.formType,
-              }];
+              let dtNew = res;
+              dtNew['transType'] = 'WP_Notes';
+              dtNew['memo'] = res.memo;
+              dtNew['transID'] = res.recID ? res.recID : res.transID;
+              dtNew['calendarDate'] = res.createdOn;
+              var object = [
+                {
+                  data: dtNew,
+                  type: 'edit-note-drawer',
+                  formType: this.formType,
+                },
+              ];
               this.noteService.data.next(object);
               this.noteService.dataUpdate.next(object);
               this.dialog.close(res);
@@ -120,18 +132,28 @@ export class UpdateNotePinComponent implements OnInit {
     var isPin = !this.dataOld.isPin;
     this.dataOld.isPin = isPin;
     this.dataOld.isNote = true;
+    this.dataOld['createdOn'] = this.dataOld?.calendarDate
+    ? this.dataOld?.calendarDate
+    : this.dataOld?.createdOn;
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.dataOld.transID,
+        this.dataOld?.recID ? this.dataOld?.recID : this.dataOld?.transID,
         this.dataOld,
       ])
       .subscribe((res) => {
         if (res) {
-          var object = [{
-            data: res,
-            type: 'edit-note-drawer',
-            formType: this.formType,
-          }];
+          let dtNew = res;
+          dtNew['transType'] = 'WP_Notes';
+          dtNew['memo'] = res.memo;
+          dtNew['transID'] = res.recID ? res.recID : res.transID;
+          dtNew['calendarDate'] = res.createdOn;
+          var object = [
+            {
+              data: dtNew,
+              type: 'edit-note-drawer',
+              formType: this.formType,
+            },
+          ];
           this.noteService.data.next(object);
           if (this.formType == 'add') {
             this.noteService.dataUpdate.next(object);

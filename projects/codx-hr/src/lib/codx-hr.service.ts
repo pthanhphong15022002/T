@@ -245,7 +245,6 @@ export class CodxHrService {
     );
   }
 
-
   //#region HR_Employees
 
   getModelFormEmploy(dataRequest: DataRequest) {
@@ -609,6 +608,68 @@ export class CodxHrService {
   }
   //#endregion
 
+      //#region EAppointionsBusiness
+      getEmployeeAppointionsInfoById(data){
+        return this.api.execSv<any>(
+          'HR',
+          'HR',
+          'EAppointionsBusiness',
+          'GetOneEmployeeCertificateByEmployeeId',
+          data
+        );
+      }
+  
+      getEAppointionsWithDataRequest(data) {
+        return this.api.execSv<any>(
+          'HR',
+          'HR',
+          'EAppointionsBusiness',
+          'GetListAppointionsByDataRequestAsync',
+          data
+        );
+      }
+    
+      getEAppointionsModel() {
+        return this.api.execSv<any>(
+          'HR',
+          'HR',
+          'EAppointionsBusiness',
+          'GetEmployeeAppointionsModelAsync'
+        );
+      }
+    
+      AddEmployeeAppointionsInfo(data) {
+        return this.api.execSv<any>(
+          'HR',
+          'HR',
+          'EAppointionsBusiness',
+          'AddEmployeeAppointionsInfoAsync',
+          data
+        );
+      }
+    
+      UpdateEmployeeAppointionsInfo(data) {
+        return this.api.execSv<any>(
+          'HR',
+          'HR',
+          'EAppointionsBusiness',
+          'UpdateEmployeeAppointionsInfoAsync',
+          data
+        );
+      }
+    
+      DeleteEmployeeAppointionsInfo(data) {
+        return this.api.execSv<any>(
+          'HR',
+          'HR',
+          'EAppointionsBusiness',
+          'DeleteEmployeeAppointionsInfoAsync',
+          data
+        );
+      }
+    
+      //#endregion
+
     //#region ECertificateBusiness
     getEmployeeCertificatesInfoById(data){
       return this.api.execSv<any>(
@@ -620,55 +681,106 @@ export class CodxHrService {
       );
     }
 
-    getECertificateWithDataRequest(data) {
+  getECertificateWithDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'GetListCertificatesByDataRequestAsync',
+      data
+    );
+  }
+
+  getECertificateModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'GetEmployeeCertificatesModelAsync'
+    );
+  }
+
+  AddEmployeeCertificateInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'AddEmployeeCertificatesInfoAsync',
+      data
+    );
+  }
+
+  UpdateEmployeeCertificateInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'UpdateEmployeeCertificatesInfoAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeCertificateInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ECertificatesBusiness',
+      'DeleteEmployeeCertificatesInfoAsync',
+      data
+    );
+  }
+
+  //#endregion
+
+    //#region EDiseases
+    getEmployeeDiseasesModel() {
       return this.api.execSv<any>(
         'HR',
         'HR',
-        'ECertificatesBusiness',
-        'GetListCertificatesByDataRequestAsync',
+        'EDiseasesBusiness',
+        'GetEmployeeEdiseasesModelAsync'
+      );
+    }
+  
+    UpdateEmployeeDiseasesInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EDiseasesBusiness',
+        'EditEDiseaseAsync',
         data
       );
     }
   
-    getECertificateModel() {
+    AddEmployeeDiseasesInfo(data) {
       return this.api.execSv<any>(
         'HR',
         'HR',
-        'ECertificatesBusiness',
-        'GetEmployeeCertificatesModelAsync'
-      );
-    }
-  
-    AddEmployeeCertificateInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'ECertificatesBusiness',
-        'AddEmployeeCertificatesInfoAsync',
+        'EDiseasesBusiness',
+        'AddEDiseaseAsync',
         data
       );
     }
   
-    UpdateEmployeeCertificateInfo(data) {
+    DeleteEmployeeDiseasesInfo(data) {
       return this.api.execSv<any>(
         'HR',
         'HR',
-        'ECertificatesBusiness',
-        'UpdateEmployeeCertificatesInfoAsync',
+        'EDiseasesBusiness',
+        'DeleteEDiseaseAsync',
         data
       );
     }
   
-    DeleteEmployeeCertificateInfo(data) {
+    getListDiseasesByDataRequest(data) {
       return this.api.execSv<any>(
         'HR',
         'HR',
-        'ECertificatesBusiness',
-        'DeleteEmployeeCertificatesInfoAsync',
+        'EDiseasesBusiness',
+        'LoadDataEDiseasesAsync',
         data
       );
     }
-  
     //#endregion
 
   //#region EFamiliesBusiness
@@ -1161,6 +1273,13 @@ export class CodxHrService {
   }
   //#endregion
 
+  getHRDataDefault(funcID: string, entityName: string, idField: string) {
+    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
+  }
   //#region HR_EAccidents
   loadDataEAccident(dataRequest: DataRequest) {
     return this.api.execSv<any>(
@@ -1200,6 +1319,72 @@ export class CodxHrService {
       'DeleteEAccidentAsync',
       data
     );
+  }
+  //#endregion
+
+  //#region HR_EContracts
+  getEContractDefault() {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'GetEContractDefaultAsync',
+      null
+    );
+  }
+
+  loadDataEContract(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'LoadDataEContractAsync',
+      dataRequest
+    );
+  }
+
+  addEContract(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'AddEContractAsync',
+      [data]
+    );
+  }
+
+  editEContract(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'EditEContractAsync',
+      data
+    );
+  }
+
+  deleteEContract(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'DeleteEContractAsync',
+      data
+    );
+  }
+  //#endregion
+
+  //#region
+  getDataDefault(
+    funcID: string,
+    entityName: string,
+    idField: string
+  ): Observable<object> {
+    return this.api.execSv('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      funcID,
+      entityName,
+      idField,
+    ]);
   }
   //#endregion
 }

@@ -146,7 +146,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     let dialog = this.callfc.openSide(OkrAddComponent, [
       this.gridView,
       this.formModelKR,
-      "Thêm mới mục tiêu"
+      "add",
+      this.dataOKRPlans.recID,
+      null
     ]
     );    
   }
@@ -217,8 +219,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     }
     else if(data.type == "quarter")
     {
-      var m = Math.floor(date.getMonth()/3) + 1;
-      this.periodID = (m > 4? m - 4 : m).toString();
+      this.periodID = data.text;
       this.interval = "Q";
     }
     else if(data.type == "month") 
