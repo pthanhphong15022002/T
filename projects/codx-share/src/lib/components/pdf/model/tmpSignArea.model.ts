@@ -40,7 +40,7 @@ export class highLightTextArea {
   author: string;
   location: location;
   locations: Array<location>;
-  comment: Array<comment>;
+  comment: comment;
   createdDate: Date;
   color: string;
   group: string;
@@ -48,8 +48,6 @@ export class highLightTextArea {
 }
 
 export class comment {
-  createdDate: Date;
-  modifyDate: Date;
   author: string;
   content: string;
 }

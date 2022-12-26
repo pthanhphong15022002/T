@@ -613,11 +613,8 @@
                               [id]="area.recID"
                               *ngIf="!isPublic"
                               class="img"
-                              [src]="
-                                checkIsUrl(area.labelValue)
-                                  ? env.urlUpload + '/' + area.labelValue
-                                  : 'assets/themes/sys/default/img/Avatar_Default.svg'
-                              "
+                              [src]="env.urlUpload + '/' + area.labelValue"
+                              onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'"
                             />
                             <codx-img
                               *ngIf="isPublic && area.labelType == 'S1'"
@@ -948,34 +945,38 @@
             <ng-template #content>
               <div class="highlightAreas">
                 <div
-                  class="highlighted"
-                  style="
-                    border: 1px solid black;
-                    margin-bottom: 10px;
-                    padding: 5px;
+                  class="highlightedList"
+                  [style]="
+                    'border: 1px solid black; margin-bottom: 10px; padding: 5px; background-color: ' +
+                    defaultColor
                   "
                   (click)="goToSelectedHighlightText(key)"
                   *ngFor="let key of lstKey"
                   [attr.data-id]="key"
                 >
                   <codx-temp-full
-                    [title]="'Highlight' + getHLText(key).author"
+                    [title]="'Highlight' + getHLText(key)?.author"
                     [resourceObjType]="'AD_Users'"
                     [icoCss]="
                       'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom'
                     "
                     [subTitle]="
-                      'Trang ' + getHLText(key).locations[0]?.pageNumber
+                      'Trang ' +
+                      (getHLText(key).isAdded
+                        ? getHLText(key).locations[0].pageNumber
+                        : getHLText(key).location.pageNumber)
                     "
                     [subTitleCss]="'page-end'"
+                    [desc]="'Comment: ' + getHLText(key).comment?.content"
                   >
                   </codx-temp-full>
-
                   <button
-                    *ngIf="curSelectedHLA == key"
+                    *ngIf="
+                      curSelectedHLA?.group == key && !curSelectedHLA?.isAdded
+                    "
                     type="button"
                     class="btn btn-sm btn-primary"
-                    (click)="removeHLA()"
+                    (click)="removeHLA(key)"
                   >
                     <codx-label
                       name="lblSave"
@@ -1050,30 +1051,43 @@
 
 <div
   id="hla-Cmt"
-  style="display: none; position: absolute; width: 200px; height: 500px"
+  class="hla-Cmt"
+  style="
+    display: none;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+  "
 >
-  <div style="z-index: 2">
+  <div style="z-index: 2" class="hla-Cmt">
     <div class="row">
-      <codx-input type="text" [crrValue]="curCmtContent"> </codx-input>
+      <!-- <input class="hla-Cmt" type="text" /> -->
+      <input
+        class="hla-Cmt"
+        id="input-Cmt"
+        type="text"
+        [(value)]="curCmtContent"
+      />
     </div>
-    <div class="row d-flex justify-content-end">
-      <div class="btn">
-        <button id="add-cmt-btn">
+    <div class="row d-flex justify-content-end" class="hla-Cmt">
+      <div class="btn col-2" class="hla-Cmt">
+        <button id="add-cmt-btn" class="hla-Cmt">
           <codx-label
             name="lblHLACommentAdd"
             [formModel]=""
             [default]="'OK'"
-            class="text-header d-block"
+            class="text-header d-block hla-Cmt"
           ></codx-label>
         </button>
       </div>
-      <div class="btn">
-        <button id="delete-cmt-btn">
+      <div class="btn col-2" class="hla-Cmt">
+        <button id="delete-cmt-btn" class="hla-Cmt">
           <codx-label
             name="lblHLACommentDel"
             [formModel]=""
             [default]="'Xóa'"
-            class="text-header d-block"
+            class="text-header d-block hla-Cmt"
           ></codx-label>
         </button>
       </div>

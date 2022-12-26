@@ -26,6 +26,7 @@ import {
 import Konva from 'konva';
 import { qr } from './model/mode';
 import {
+  comment,
   highLightTextArea,
   location,
   tmpAreaName,
@@ -124,7 +125,7 @@ export class PdfComponent
   isInteractPDF = false;
   lstHighlightTextArea: Array<highLightTextArea> = [];
   lstKey: Array<string> = [];
-  curSelectedHLA = '';
+  curSelectedHLA: highLightTextArea;
   curCmtContent = '';
 
   defaultColor = 'rgb(255,255,0)';
@@ -249,6 +250,7 @@ export class PdfComponent
 
   vllSupplier: any;
   onInit() {
+    this.curSelectedHLA = null;
     this.cache.valueList('ES029').subscribe((res) => {
       if (res) {
         this.vllSupplier = res.datas;
@@ -408,6 +410,51 @@ export class PdfComponent
           }
         });
     }
+
+    document.onclick = (e) => {
+      let hlaCmt = document.getElementById('hla-Cmt');
+      if (hlaCmt) {
+        if (
+          e.target &&
+          (e.target as HTMLElement).classList.contains('highlighted')
+        ) {
+          hlaCmt.style.display = 'initial';
+          hlaCmt.style.top = e.clientY + 20 + 'px';
+          hlaCmt.style.left = e.clientX + 5 + 'px';
+          this.curCmtContent = this.curSelectedHLA.comment?.content ?? '';
+          let inputCmt = document.getElementById(
+            'input-Cmt'
+          ) as HTMLInputElement;
+          inputCmt.value = this.curCmtContent;
+          inputCmt.disabled = this.curSelectedHLA.isAdded;
+        } else {
+          if (!(e.target as HTMLElement).classList.contains('hla-Cmt')) {
+            hlaCmt.style.display = 'none';
+          }
+        }
+      }
+    };
+    //add cmt
+    document.getElementById('add-cmt-btn').onclick = (e) => {
+      this.curCmtContent = (
+        document.getElementById('input-Cmt') as HTMLInputElement
+      ).value;
+      let tmpCmt: comment = {
+        author: this.user.userID,
+        content: this.curCmtContent,
+      };
+      this.curSelectedHLA.comment = tmpCmt;
+    };
+
+    //remove cmt
+    document.getElementById('delete-cmt-btn').onclick = (e) => {
+      this.curSelectedHLA.comment = {
+        author: '',
+        content: '',
+      };
+      this.curCmtContent = '';
+      (document.getElementById('input-Cmt') as HTMLInputElement).value = '';
+    };
   }
 
   //remove area
@@ -535,6 +582,7 @@ export class PdfComponent
             : true
         );
         this.tr?.forceUpdate();
+        this.curSelectedArea.draggable(this.tr.draggable());
         this.tr?.nodes([this.curSelectedArea]);
         layerChildren.add(this.tr);
         if (this.curSelectedAnnotID != area.recID) {
@@ -1162,39 +1210,39 @@ export class PdfComponent
       }
     }
 
-    if (this.isInteractPDF && rendedPage.childElementCount > 1) {
-      let pNum = (rendedPage as HTMLElement)?.dataset?.pageNumber;
-      let textLayer = rendedPage.children.item(1);
-      let textLayerRect = textLayer?.getBoundingClientRect();
-      let top = textLayerRect?.top;
-      let left = textLayerRect?.left;
-      let width = textLayerRect?.width;
-      let height = textLayerRect?.height;
-      let tmpGroup = Guid.newGuid().toString();
-      this.lstHighlightTextArea
-        .filter(
-          (area) =>
-            area.location.pageNumber.toString() == pNum && area.isAdded == false
-        )
-        .forEach((hla) => {
-          let span = document.createElement('span');
-          span.style.height = hla.location.height * this.yScale + 'px';
-          span.style.width = hla.location.width * this.xScale + 'px';
-          span.style.top = hla.location.top * this.yScale + 'px';
-          span.style.left = hla.location.left * this.xScale + 'px';
-          span.style.zIndex = '2';
-          span.classList.add(tmpGroup);
-          span.classList.add('highlighted');
-          span.style.backgroundColor = this.defaultColor;
-          if (textLayer) {
-            textLayer.appendChild(span);
-          }
-        });
+    if (rendedPage.childElementCount > 1) {
+      this.getListHighlights();
+      // let pNum = (rendedPage as HTMLElement)?.dataset?.pageNumber;
+      // let textLayer = rendedPage.children.item(1);
+      // let textLayerRect = textLayer?.getBoundingClientRect();
+      // let top = textLayerRect?.top;
+      // let left = textLayerRect?.left;
+      // let width = textLayerRect?.width;
+      // let height = textLayerRect?.height;
+      // let hlas = this.lstHighlightTextArea.filter(
+      //   (area) => area.locations[0].pageNumber.toString() == pNum
+      // );
+      // hlas.forEach((hla) => {
+      //   hla.locations.forEach((loc) => {
+      //     let span = document.createElement('span');
+      //     span.style.height = loc.height * this.yScale + 'px';
+      //     span.style.width = loc.width * this.xScale + 'px';
+      //     span.style.top = (loc.top - loc.height) * this.yScale + 'px';
+      //     span.style.left = (loc.left - loc.width) * this.xScale + 'px';
+      //     span.style.zIndex = '2';
+      //     span.dataset.id = hla.group;
+      //     span.classList.add('highlighted');
+      //     span.style.backgroundColor = this.defaultColor;
+      //     span.onclick = () => {
+      //       this.goToSelectedHighlightText(hla.group);
+      //     };
+      //     if (textLayer) {
+      //       textLayer.appendChild(span);
+      //     }
+      //   });
+      // });
     }
-    let annotationLayer = document.getElementsByClassName('annotationLayer');
-    Array.from(annotationLayer).forEach((ele: HTMLElement) => {
-      ele.style.zIndex = '-1';
-    });
+
     // }
   }
 
@@ -1206,6 +1254,11 @@ export class PdfComponent
           this.maxTopDiv = div;
         }
       });
+      if (txtLayer?.source.textLayerDiv?.nextElementSibling != null) {
+        (
+          txtLayer?.source.textLayerDiv?.nextElementSibling as HTMLElement
+        ).style.zIndex = '-1';
+      }
     }
   }
   //create area
@@ -1343,7 +1396,7 @@ export class PdfComponent
             height: tmpName.LabelType == '8' ? 200 : 100,
             id: recID,
             name: JSON.stringify(tmpName),
-            draggable: true,
+            draggable: draggable,
           });
 
           if (isSaveToDB) {
@@ -2316,13 +2369,13 @@ export class PdfComponent
     });
     this.detectorRef.detectChanges();
   }
-  getHLText(key) {
-    let pageNumber = this.lstHighlightTextArea.find((x) => x.group == key);
-    return pageNumber;
+  getHLText(key): highLightTextArea {
+    let hla = this.lstHighlightTextArea.find((x) => x.group == key);
+    return hla;
   }
 
   goToSelectedHighlightText(key) {
-    this.curSelectedHLA = key;
+    this.curSelectedHLA = this.lstHighlightTextArea.find((x) => x.group == key);
     let curSelectHL = document.getElementsByClassName('highlighted');
     let selectedSpans = Array.from(curSelectHL).filter((ele: HTMLElement) => {
       return ele.dataset.id == key;
@@ -2331,27 +2384,11 @@ export class PdfComponent
       ele.style.backgroundColor = this.selectedColor;
     });
 
-    let lstHLSpans = selectedSpans.filter((ele: HTMLElement) => {
-      return ele.parentElement.classList.contains('textLayer');
-    });
-    let averageEle = lstHLSpans?.at(Math.floor(lstHLSpans.length / 2));
-    if (averageEle) {
-      let hlaCmt = document.getElementById('hla-Cmt');
-      if (hlaCmt) {
-        hlaCmt.style.display = 'initial';
-        hlaCmt.style.top = averageEle.getBoundingClientRect().top + 20 + 'px';
-        hlaCmt.style.left =
-          averageEle.getBoundingClientRect().left +
-          averageEle.getBoundingClientRect().width +
-          'px';
-      }
-    }
-
     let unselectedSpans = Array.from(curSelectHL).filter((ele: HTMLElement) => {
       return ele.dataset.id != key;
     });
     unselectedSpans?.forEach((ele: HTMLElement) => {
-      ele.style.backgroundColor = 'white';
+      ele.style.backgroundColor = this.defaultColor;
     });
     // forEach((ele: HTMLElement) => {
     //   if (ele.dataset.id == key) {
@@ -2363,9 +2400,25 @@ export class PdfComponent
     //     ele.style.backgroundColor = 'white';
     //   }
     // });
+
+    let curSelectHLLst = document.getElementsByClassName('highlightedList');
+    Array.from(curSelectHLLst).forEach((ele: HTMLElement) => {
+      if (ele.dataset.id != key) {
+        ele.style.backgroundColor = this.defaultColor;
+      } else {
+        ele.style.backgroundColor = this.selectedColor;
+      }
+    });
     this.detectorRef.detectChanges();
   }
-  removeHLA() {}
+  removeHLA(key: string) {
+    let idx = this.lstHighlightTextArea.findIndex((x) => x.group == key);
+    if (idx != -1 && this.lstHighlightTextArea[idx].isAdded == false) {
+      this.lstHighlightTextArea.splice(idx, 1);
+      this.lstKey.splice(idx, 1);
+      this.detectorRef.detectChanges();
+    }
+  }
 
   getListHighlights() {
     let ngxService: NgxExtendedPdfViewerService =
@@ -2383,7 +2436,7 @@ export class PdfComponent
           let textLayer = Array.from(lstTextLayer).find(
             (tLayer: HTMLElement) => {
               let pNum = tLayer.parentElement?.dataset?.pageNumber;
-              return pNum == this.curPage.toString();
+              return pNum == value?.locations[0]?.pageNumber;
             }
           );
           if (textLayer) {
@@ -2393,18 +2446,21 @@ export class PdfComponent
             let width = textLayerRect.width;
             let height = textLayerRect.height;
             this.lstKey.push(key);
-            let tmpHLA: highLightTextArea = {
-              group: key,
-              location: null,
-              locations: value,
-              color: this.defaultColor,
-              isAdded: true,
-              comment: [],
-              author: '',
-              createdDate: new Date(),
-            };
-            this.lstHighlightTextArea.push(tmpHLA);
-            value?.forEach((location: location) => {
+            // let tmpHLA: highLightTextArea = {
+            //   group: key,
+            //   location: null,
+            //   locations: value,
+            //   color: this.defaultColor,
+            //   isAdded: true,
+            //   comment: {
+            //     author: '',
+            //     content: '',
+            //   },
+            //   author: '',
+            //   createdDate: new Date(),
+            // };
+            this.lstHighlightTextArea.push(value);
+            value?.locations?.forEach((location: location) => {
               let span = document.createElement('span');
               span.style.height = location.height * this.yScale + 'px';
               span.style.width = location.width * this.xScale + 'px';
@@ -2450,6 +2506,7 @@ export class PdfComponent
     var selection = window.getSelection().getRangeAt(0);
 
     var rects = selection.getClientRects();
+    if (rects.length == 0) return;
     let lstTextLayer = document.getElementsByClassName('textLayer');
 
     let textLayer = Array.from(lstTextLayer).find((tLayer: HTMLElement) => {
@@ -2464,6 +2521,7 @@ export class PdfComponent
     let height = textLayerRect.height;
     let tmpLstHLA: Array<highLightTextArea> = [];
     let tmpGroup = Guid.newGuid().toString();
+    this.lstKey.push(tmpGroup);
     Array.from(rects).forEach((rect) => {
       let span = document.createElement('span');
       span.style.height = rect.height + 'px';
@@ -2471,9 +2529,12 @@ export class PdfComponent
       span.style.top = rect.top - top + 'px';
       span.style.left = rect.left - left + 'px';
       span.style.zIndex = '2';
-      span.classList.add(tmpGroup);
+      span.dataset.id = tmpGroup;
       span.classList.add('highlighted');
       span.style.backgroundColor = this.defaultColor;
+      span.onclick = () => {
+        this.goToSelectedHighlightText(tmpGroup);
+      };
       if (textLayer) {
         textLayer.appendChild(span);
         let tmpHLA: highLightTextArea = {
@@ -2483,12 +2544,17 @@ export class PdfComponent
             left: Number(span.style.left.replace('px', '')) / this.xScale,
             width: rect.width / this.xScale,
             height: rect.height / this.yScale,
-            pageNumber: this.curPage,
+            pageNumber:
+              Number(textLayer.parentElement?.dataset?.pageNumber) ??
+              this.curPage,
           },
           locations: [],
           createdDate: new Date(),
           author: '',
-          comment: [],
+          comment: {
+            author: '',
+            content: '',
+          },
           group: tmpGroup,
           isAdded: false,
         };
@@ -2497,6 +2563,7 @@ export class PdfComponent
     });
     if (tmpLstHLA.length > 0) {
       this.lstHighlightTextArea = this.lstHighlightTextArea.concat(tmpLstHLA);
+      this.detectorRef.detectChanges();
     }
   }
 
