@@ -142,25 +142,25 @@ export class CalendarCenterComponent
   }
 
   getDayWeek(calendarID: string) {
-    this.codxCalendarSV.getDayWeek(calendarID).subscribe((res) => {
-      if (res) {
-        this.dayWeek = res;
-        (
-          this.viewOrg.currentView as any
-        )?.schedule?.scheduleObj?.first?.refresh();
-      }
-    });
+    // this.codxCalendarSV.getDayWeek(calendarID).subscribe((res) => {
+    //   if (res) {
+    //     this.dayWeek = res;
+    //     (
+    //       this.viewOrg?.currentView as any
+    //     )?.schedule?.scheduleObj?.first?.refresh();
+    //   }
+    // });
   }
 
   getDaysOff(calendarID: string) {
-    this.codxCalendarSV.getDaysOff(calendarID).subscribe((res) => {
-      if (res) {
-        this.daysOff = res;
-        (
-          this.viewOrg.currentView as any
-        )?.schedule?.scheduleObj?.first?.refresh();
-      }
-    });
+    // this.codxCalendarSV.getDaysOff(calendarID).subscribe((res) => {
+    //   if (res) {
+    //     this.daysOff = res;
+    //     (
+    //       this.viewOrg?.currentView as any
+    //     )?.schedule?.scheduleObj?.first?.refresh();
+    //   }
+    // });
   }
 
   getCellContent(evt: any): string {

@@ -184,10 +184,10 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
 
   navigate() {
     this.codxShareSV.dateChange.subscribe((res) => {
-      if (this.check) return;
+      // if (this.check) return;
       if (res?.fromDate && res?.toDate) {
         this.dateChange = res.fromDate;
-        this.check = false;
+        // this.check = false;
         this.getParamCalendar(
           moment(res.fromDate).toISOString(),
           moment(res.toDate).toISOString(),
@@ -207,7 +207,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     this.change.detectChanges();
   }
 
-  check = false;
+  // check = false;
   changeNewMonth(args: any) {
     if (this.calendar_mini) {
       var tempCalendar = this.calendar_mini.element;
@@ -229,10 +229,10 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (ele) {
       this.dataResourceModel;
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      cmp.isNavigateInside = false;
+      // cmp.isNavigateInside = false;
       cmp.selectedDate = args.date;
       //cmp.isNavigateInside = true;
-      this.check = true;
+      // this.check = true;
       cmp.onNavigating(args);
     }
   }
@@ -445,7 +445,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
-      if (res[0].length > 0) {
+      if (res) {
         this.getModelShare(res[0], param.Template, 'TM_Tasks');
       }
     });
@@ -527,71 +527,75 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getModelShare(lstData, param, transType) {
-    lstData.forEach((item) => {
-      var paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
-      paramValue['data'] = {};
-      let data: any = JSON.parse(JSON.stringify(item));
-      for (const key in data) {
-        for (const keyValue of Object.keys(paramValue)) {
-          if (
-            paramValue[keyValue] &&
-            typeof paramValue[keyValue] === 'string'
-          ) {
-            var value = Util.camelize(paramValue[keyValue]);
-            if (data[value] || typeof data[value] == 'boolean')
-              paramValue[keyValue] = data[value];
-            if (paramValue[keyValue] == 'CheckList')
-              paramValue[keyValue] = data.checkList;
-            else if (paramValue[keyValue] == 'StartDate') {
-              paramValue[keyValue] = data.startDate;
-            } else if (paramValue[keyValue] == 'EndDate')
-              paramValue[keyValue] = data.endDate;
-          } else {
-            paramValue['data'][key] = data[key];
+    if (lstData) {
+      lstData.forEach((item) => {
+        var paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
+        paramValue['data'] = {};
+        let data: any = JSON.parse(JSON.stringify(item));
+        for (const key in data) {
+          for (const keyValue of Object.keys(paramValue)) {
+            if (
+              paramValue[keyValue] &&
+              typeof paramValue[keyValue] === 'string'
+            ) {
+              var value = Util.camelize(paramValue[keyValue]);
+              if (data[value] || typeof data[value] == 'boolean')
+                paramValue[keyValue] = data[value];
+              if (paramValue[keyValue] == 'CheckList')
+                paramValue[keyValue] = data.checkList;
+              else if (paramValue[keyValue] == 'StartDate') {
+                paramValue[keyValue] = data.startDate;
+              } else if (paramValue[keyValue] == 'EndDate')
+                paramValue[keyValue] = data.endDate;
+            } else {
+              paramValue['data'][key] = data[key];
+            }
           }
         }
-      }
-      if (!paramValue['StartDate'] && !paramValue['EndDate']) {
-        paramValue['startDate'] = moment(paramValue?.calendarDate).startOf(
-          'date'
+        if (!paramValue['StartDate'] && !paramValue['EndDate']) {
+          paramValue['startDate'] = moment(paramValue?.calendarDate).startOf(
+            'date'
+          );
+          paramValue['endDate'] = paramValue?.calendarDate;
+        }
+        switch (transType) {
+          case 'TM_Tasks':
+            this.TM_Tasks.push(paramValue);
+            break;
+          case 'WP_Notes':
+            this.WP_Notes.push(paramValue);
+            break;
+          case 'CO_Meetings':
+            this.CO_Meetings.push(paramValue);
+            break;
+          case 'EP_BookingRooms':
+            this.EP_BookingRooms.push(paramValue);
+            break;
+          case 'EP_BookingCars':
+            this.EP_BookingCars.push(paramValue);
+            break;
+        }
+      });
+      this.onSwitchCountEven(transType);
+      if (this.countDataOfE == this.countEvent) {
+        this.dataResourceModel = [
+          ...this.TM_Tasks,
+          ...this.WP_Notes,
+          ...this.CO_Meetings,
+          ...this.EP_BookingRooms,
+          ...this.EP_BookingCars,
+        ];
+        this.TM_TasksTemp = JSON.parse(JSON.stringify(this.TM_Tasks));
+        this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
+        this.CO_MeetingsTemp = JSON.parse(JSON.stringify(this.CO_Meetings));
+        this.EP_BookingRoomsTemp = JSON.parse(
+          JSON.stringify(this.EP_BookingRooms)
         );
-        paramValue['endDate'] = paramValue?.calendarDate;
+        this.EP_BookingCarsTemp = JSON.parse(
+          JSON.stringify(this.EP_BookingCars)
+        );
+        this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
       }
-      switch (transType) {
-        case 'TM_Tasks':
-          this.TM_Tasks.push(paramValue);
-          break;
-        case 'WP_Notes':
-          this.WP_Notes.push(paramValue);
-          break;
-        case 'CO_Meetings':
-          this.CO_Meetings.push(paramValue);
-          break;
-        case 'EP_BookingRooms':
-          this.EP_BookingRooms.push(paramValue);
-          break;
-        case 'EP_BookingCars':
-          this.EP_BookingCars.push(paramValue);
-          break;
-      }
-    });
-    this.onSwitchCountEven(transType);
-    if (this.countDataOfE == this.countEvent) {
-      this.dataResourceModel = [
-        ...this.TM_Tasks,
-        ...this.WP_Notes,
-        ...this.CO_Meetings,
-        ...this.EP_BookingRooms,
-        ...this.EP_BookingCars,
-      ];
-      this.TM_TasksTemp = JSON.parse(JSON.stringify(this.TM_Tasks));
-      this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
-      this.CO_MeetingsTemp = JSON.parse(JSON.stringify(this.CO_Meetings));
-      this.EP_BookingRoomsTemp = JSON.parse(
-        JSON.stringify(this.EP_BookingRooms)
-      );
-      this.EP_BookingCarsTemp = JSON.parse(JSON.stringify(this.EP_BookingCars));
-      this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
     }
   }
 
