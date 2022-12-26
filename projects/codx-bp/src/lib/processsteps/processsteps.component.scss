@@ -315,3 +315,15 @@ codx-views {
 .colums-morefunc{
   background-color: #e2e3ee;
 }
+.envelop{
+  width: 300px;
+  position: relative; 
+  height: 30px; 
+  display: flex;
+  .show-more{
+    position: absolute; 
+    top: 0px ; right: 0px; 
+    background: white;
+    border-radius: 20px;
+  }
+}
