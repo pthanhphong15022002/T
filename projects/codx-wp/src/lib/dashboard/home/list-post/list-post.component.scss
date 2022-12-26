@@ -313,3 +313,9 @@ ejs-listview .e-ul>li {
     width: 100%;
     height: auto;
 }
+
+.dark {
+    .post-new {
+        border-color: var(--border-gray) !important;
+    }
+}
