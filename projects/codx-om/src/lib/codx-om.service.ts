@@ -335,13 +335,24 @@ export class CodxOmService {
     );
   }
   //Thêm một mục tiêu
-  addOKR(okr:any , shares:any) {
+  addOKR(okr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'SaveOMAsync',
-      [okr,shares]
+      okr
+    );
+  }
+
+  //Chỉnh sửa mục tiêu
+  updateOKR(okr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'UpdateOKRAsync',
+      okr
     );
   }
   //Lấy OB và tất cả KR con theo ID của OB
