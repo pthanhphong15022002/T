@@ -156,7 +156,7 @@
           <div
             *ngFor="let l of langs"
             class="menu-item px-3 cursor-pointer"
-            (click)="selectLanguage(l.lang)"
+            (click)="updateSettting(l.lang, '')"
             data-toggle="tooltip"
             [title]="l.enable ? '' : 'Coming soon'"
           >
