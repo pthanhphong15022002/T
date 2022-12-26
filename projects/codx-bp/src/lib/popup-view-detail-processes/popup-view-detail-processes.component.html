@@ -9,7 +9,7 @@
         <div class="p-2"> -->
           <!-- ///noi dung -->
           <div class="process-detail-header">
-            <div class="fw-bold text-dark fs-4 mb-2 line-clamp line-clamp-3" #processName>
+            <div class="fw-bold text-dark fs-4 mb-2 line-clamp line-clamp-2" #processName>
               {{
               process?.processName
               | formatvalue
@@ -96,7 +96,7 @@
         <div class="justify-content-end">
           <div class="left-button me-3">
             <div class="d-flex justify-content-end user">
-              <codx-imgs class="" [objectId]="listuserStr" objectType="AD_Users" [numberImages]="6">
+              <codx-imgs class="" [objectId]="listuserStr" objectType="AD_Users" [numberImages]="8">
               </codx-imgs>
             </div>
             <div class="overflow-hidden btn-group me-3 button-add" *ngIf="process.actived && name != 'Flowchart'">
