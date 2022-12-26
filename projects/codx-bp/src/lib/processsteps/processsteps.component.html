@@ -748,11 +748,11 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div style="position: relative; height: 30px; display: flex;">
+  <div class="envelop">
     <div class="d-flex align-items-center justify-content-between cursor-pointer w-100  has-actions-menu">
       <div class="line-colums">{{ data.headerText }}</div>
     </div>
-    <div class="show-more" style="position: absolute; top: 0px ; right: -20px; background: white;border-radius: 20px;">   
+    <div class="show-more" >   
         <codx-mfunc
         type="hover"
         [formModel]="view.formModel"
@@ -763,6 +763,5 @@
       </codx-mfunc>
     </div>
   </div>
- 
 </ng-template>
 
