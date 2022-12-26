@@ -1276,7 +1276,7 @@ export class CodxTasksComponent
       PopupUpdateProgressComponent,
       '',
       560,
-      360,
+      370,
       '',
       obj
     );
