@@ -130,8 +130,7 @@
         --text-menu: #dee0e7;
         --text-body: #CDCDDE;
         --text-des: #6D6D80;
-
-
+        --bg-input: #1b1b29;
         --scrollbar-thumb: #333358;
 
         --gray-100: #1b1b29;
@@ -145,7 +144,40 @@
         --gray-800: #CDCDDE;
         --gray-900: #FFFFFF;
 
+
         color: var(--text-body);
+
+        .text-gray-900 {
+            color: var(--gray-900) !important;
+        }
+
+        .text-gray-800 {
+            color: var(--gray-800) !important;
+        }
+
+        .text-gray-700 {
+            color: var(--gray-700) !important;
+        }
+
+        .text-gray-600 {
+            color: var(--gray-600) !important;
+        }
+
+        .text-gray-500 {
+            color: var(--gray-500) !important;
+        }
+
+        .text-gray-400 {
+            color: var(--gray-400) !important;
+        }
+
+        .text-gray-300 {
+            color: var(--gray-300) !important;
+        }
+
+        .bg-gray-200 {
+            background-color: var(--gray-200) !important;
+        }
 
         .header-fixed .header {
             background-color: var(--bg-card);
@@ -174,6 +206,35 @@
 
         codx-view-list-detail .e-pane {
             background-color: var(--bg-card);
+        }
+
+        .dropdown-menu {
+            background-color: #27273a !important;
+            color: var(--text-body);
+
+            .dropdown-item {
+                color: var(--text-body);
+            }
+        }
+
+        .e-dlg-content {
+            background-color: var(--bg-card) !important;
+            color: var(--text-body);
+        }
+
+        .e-dialog {
+            border: 1px solid #27273a;
+            background-color: transparent;
+
+            .btn {
+                color: var(--primary-dark);
+            }
+
+            .dialog-title,
+            .dialog-title.codx-label .dialog-title * {
+                color: var(--text-body);
+            }
+
         }
 
         .codx-theme .e-listview .e-list-item.e-active {
@@ -210,7 +271,7 @@
             border-color: var(--border-list) !important;
         }
 
-        .e-listview .e-list-item {
+        bg-input .e-listview .e-list-item {
             color: var(--text-des);
         }
 
@@ -235,6 +296,27 @@
             color: var(--text-body);
         }
 
+        textarea.codx-textarea {
+            background-color: var(--bg-input);
+        }
+
+        .e-input-group,
+        .e-input-group.e-control-wrapper,
+        .e-float-input,
+        .e-float-input.e-input-group,
+        .e-float-input.e-control-wrapper,
+        .e-float-input.e-input-group.e-control-wrapper {
+            background: var(--bg-input);
+            color: var(--text-body);
+        }
+
+        .btn.btn-white {
+            background-color: var(--bg-card);
+
+            &:hover {
+                background-color: var(--gray-100) !important;
+            }
+        }
     }
 
 
