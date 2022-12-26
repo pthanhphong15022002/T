@@ -13,6 +13,9 @@ import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.compo
 import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-weight.component';
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
+import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
+import { PopupDistributeKRComponent } from '../../popup/popup-distribute-kr/popup-distribute-kr.component';
+import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/popup-distribute-okr.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -63,7 +66,7 @@ export class OkrTargetsComponent implements OnInit {
     ],
     service: 'OM',
     assembly: 'ERM.Business.OM',
-    className: 'OKRBusiness',
+    className: 'DashBoardBusiness',
     method: 'GetChartDataAsync',
   };
 
@@ -84,7 +87,7 @@ export class OkrTargetsComponent implements OnInit {
     ],
     service: 'OM',
     assembly: 'ERM.Business.OM',
-    className: 'OKRBusiness',
+    className: 'DashBoardBusiness',
     method: 'GetChartData1Async',
   };
 
@@ -126,7 +129,7 @@ export class OkrTargetsComponent implements OnInit {
   ngOnInit(): void {
     this.progress = this.dataOKRPlans?.progress;
     this.api
-      .exec('OM', 'OKRBusiness', 'GetOKRDashboardByPlanAsync', [
+      .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
         this.dataOKRPlans?.periodID,
       ])
       .subscribe((res: any) => {
@@ -213,11 +216,29 @@ export class OkrTargetsComponent implements OnInit {
         this.editKR(kr, o, popupTitle);
         break;
       }
+      case 'SYS04': {
+        this.distributeKR(kr,o);
+        break;
+      }
     }
   }
-
+  //Xem chi tiết OB
+  showOB(obj: any) {
+    let dModel = new DialogModel();
+    dModel.IsFull = true;
+    let dialogShowOB = this.callfunc.openForm(
+      PopupShowOBComponent,
+      '',
+      null,
+      null,
+      null,
+      [obj.recID, obj.okrName],
+      '',
+      dModel
+    );
+  }
   //Xem chi tiết KR
-  showKR(kr: any, o: any) {
+  showKR(kr: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogShowKR = this.callfunc.openForm(
@@ -226,25 +247,21 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr, o],
+      [kr.recID, kr.okrName, kr.parentID],
       '',
       dModel
     );
   }
-  //Sửa trọng số KR
-  editWeight(okr: any, child:any) {
-    //OM_WAIT: tiêu đề tạm thời gán cứng
-    let popupTitle='Thay đổi trọng số cho KRs';
-    let subTitle='Tính kết quả thực hiện cho mục tiêu';
-    let dModel = new DialogModel();
+  distributeKR(kr:any,ob:any){
+    let dModel = new DialogModel();    
     dModel.IsFull = true;
-    let dialogShowKR = this.callfunc.openForm(
-      PopupOKRWeightComponent,
+    let dialogDisKR = this.callfunc.openForm(
+      PopupDistributeOKRComponent,
       '',
       null,
       null,
       null,
-      [okr.recID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
+      [ob.okrName,kr.okrName,kr.recID],
       '',
       dModel
     );

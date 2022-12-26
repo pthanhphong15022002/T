@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DialogData, DialogRef, FormModel } from 'codx-core';
+import { ApiHttpService, DialogData, DialogRef, FormModel } from 'codx-core';
+import { OMCONST } from '../../codx-om.constant';
+import { CodxOmService } from '../../codx-om.service';
 
 @Component({
   selector: 'lib-okr-add',
@@ -16,7 +18,37 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   gridView: any;
   formModel: any;
   okrAddGroup: FormGroup;
+  ops = ['q'];
+  date = new Date();
+  parentID: any;
+  //Chờ c thương trả vll
+  //Giả lập vll
+  vll={
+    datas : [
+      {
+        value: "9",
+        text: "Tất cả",
+        icon: "All.svg"
+      },
+      {
+        value: "4;P",
+        text: "Phòng & Quản lý của tôi",
+        icon: "MyDeptManagement.svg"
+      },
+      {
+        value: "4",
+        text: "Phòng của tôi",
+        icon: "MyDept.svg"
+      },
+      {
+        value: "P",
+        text: "Quản lý của tôi",
+        icon: "Mymanagement.svg"
+      }
+    ]
+  }
   constructor(
+    private codxOmService: CodxOmService,
     private formBuilder: FormBuilder,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -25,7 +57,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     if(dt?.data[0]) this.gridView = dt?.data[0];
     if(dt?.data[1]) this.formModel = dt?.data[1];
     if(dt?.data[2]) this.headerText = dt?.data[2];
-   
+    if(dt?.data[3]) this.parentID = dt?.data[3]
    }
   ngAfterViewInit(): void {
   }
@@ -33,16 +65,31 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   ngOnInit(): void {
     //Tạo formGroup
     this.okrAddGroup = this.formBuilder.group({
-      shares: '5',
+      shares: '9',
     });
     this.dataOKR = {
       okrName : "",
       note: ""
     }
   }
-  onSaveForm(){
+
+  changeCalendar(e:any)
+  {
     debugger;
-    var a = this.dataOKR;
-    var b = this.okrAddGroup.value;
+    this.dataOKR.periodID = e?.text;
+  }
+
+  onSaveForm(){
+    if(this.formModel.functionID == OMCONST.FUNCID.Company)
+      this.dataOKR.oKRLevel = "1";
+    else if(this.formModel.functionID == OMCONST.FUNCID.Department)
+      this.dataOKR.oKRLevel = "3";
+    else if(this.formModel.functionID == OMCONST.FUNCID.Team)
+      this.dataOKR.oKRLevel = "5";
+    else if(this.formModel.functionID == OMCONST.FUNCID.Person)
+      this.dataOKR.oKRLevel = "9";
+    this.dataOKR.interval = "Q";
+    this.dataOKR.parentID = this.parentID;
+    this.codxOmService.addOKR(this.dataOKR,this.okrAddGroup.value.shares).subscribe();
   }
 }

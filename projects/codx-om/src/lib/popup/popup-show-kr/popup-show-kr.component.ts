@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -45,11 +46,14 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   headerText: string;
   formModelCheckin = new FormModel();
   dtStatus: any;
-  dataOKR = [];
   openAccordion = [];
   dataKR: any;
+  title='';
+  krRecID:any;
+  krParentID:any;
   progressHistory = [];
   krCheckIn = [];
+  listAlign=[];
   chartSettings: ChartSettings = {
     primaryXAxis: {
       valueType: 'Category',
@@ -140,24 +144,11 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     super(injector);
     this.headerText = 'Xem chi tiết - Kết quả chính'; //dialogData?.data[2];
     this.dialogRef = dialogRef;
-    this.dataOKR.push(dialogData.data[1]);
-    this.dataKR = dialogData.data[0];
+    this.krRecID=dialogData.data[0];
+    this.title = dialogData.data[1];
+    this.krParentID = dialogData.data[2];
 
-    //tính giá trị progress theo các lần checkIn
-    this.totalProgress = this.dataKR.progress;
-    if (this.dataKR?.checkIns) {
-      this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
-      this.krCheckIn = Array.from(this.dataKR?.checkIns);
-      this.krCheckIn.forEach((element) => {
-        if (this.krCheckIn.indexOf(element) == 0) {
-          this.progressHistory.push(this.totalProgress);
-        } else {
-          this.totalProgress -=
-            this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
-          this.progressHistory.push(this.totalProgress);
-        }
-      });
-    }
+    
   }
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
@@ -176,10 +167,9 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.cache.valueList('OM002').subscribe((item) => {
-      var x = item;
-    });
-    this.getChartData();
+    
+    this.getKRData();    
+    this.getListAlign();
   }
 
   //-----------------------End-------------------------------//
@@ -193,6 +183,41 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
+  getKRData(){
+    this.codxOmService
+        .getKRByID(this.krRecID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.dataKR = res;      
+            //tính giá trị progress theo các lần checkIn
+            this.totalProgress = this.dataKR.progress;
+            if (this.dataKR?.checkIns) {
+              this.dataKR.checkIns = Array.from(this.dataKR?.checkIns).reverse();
+              this.krCheckIn = Array.from(this.dataKR?.checkIns);
+              this.krCheckIn.forEach((element) => {
+                if (this.krCheckIn.indexOf(element) == 0) {
+                  this.progressHistory.push(this.totalProgress);
+                } else {
+                  this.totalProgress -=
+                    this.krCheckIn[this.krCheckIn.indexOf(element) - 1].value;
+                  this.progressHistory.push(this.totalProgress);
+                }
+              });
+            }
+            this.getChartData();
+            this.detectorRef.detectChanges();
+          }
+        });
+  }
+  getListAlign(){
+    this.codxOmService
+        .getListAlign(this.krParentID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.listAlign = res;           
+          }
+        });
+  }
   getItemOKR(i: any, recID: any) {
     this.openAccordion[i] = !this.openAccordion[i];
     // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
@@ -312,7 +337,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
         this.dataKR = res.event;
         this.totalProgress = this.dataKR.progress;
         this.progressHistory.unshift(this.totalProgress);
-        this.dataOKR.map((item: any) => {
+        this.dataKR.map((item: any) => {
           if (item.recID == res.event.parentID) {
             item = res.event;
           }

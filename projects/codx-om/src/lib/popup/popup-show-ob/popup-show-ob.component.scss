@@ -4,7 +4,6 @@
 
 #om-tab .e-tab-header {
   text-align: center;
-  z-index: 1;
 }
 #om-tab .e-tab-text {
   color: black;
@@ -171,4 +170,6 @@
 .me-15px {
   margin-right: 15px;
 }
-
+.e-tab-header {
+  z-index: 1;
+}

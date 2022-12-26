@@ -175,7 +175,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
         );
         if (this.data) {
           if (this.isAddNew) {
-            this.dialogAddBookingStationery.patchValue({        
+            this.dialogAddBookingStationery.patchValue({
               reasonID: '',
               resourceType: '6',
               category: '1',
@@ -294,14 +294,17 @@ export class PopupRequestStationeryComponent extends UIComponent {
           this.formModel
         );
       }
+
       if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
         this.dialogAddBookingStationery.patchValue({
           reasonID: this.dialogAddBookingStationery.value.reasonID[0],
         });
       }
+
       this.dialogAddBookingStationery.patchValue({
         title: this.dialogAddBookingStationery.value.note,
       });
+
       this.dialogRef.dataService
         .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
         .subscribe((res) => {
@@ -367,6 +370,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
               this.dialogRef && this.dialogRef.close();
             }
           } else {
+            this.dialogRef && this.dialogRef.close();
             return;
           }
         });
@@ -449,10 +453,6 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   addQuota() {
     this.cart.map((item) => {
-      // this.lstStationery.push({
-      //   id: item.resourceID,
-      //   quantity: item?.quantity * this.qtyEmp,
-      // });
       this.lstStationery.push(item);
     });
 

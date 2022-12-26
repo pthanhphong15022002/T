@@ -124,13 +124,13 @@
             <codx-label default="Collapse" fiedName="lblCollapse"></codx-label>
             <i class="fas fa-angle-down ms-3"></i>
           </div>
-          <div
+          <!-- <div
             ngbDropdownMenu
             class="dropdown-menu p-5"
             aria-labelledby="dropdownMenuButton"
           >
             Collapse
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -140,13 +140,13 @@
         <div class="d-flex align-items-center justify-content-between mt-5">
           <div
             class="d-flex align-items-center cursor-pointer w-100"
-            (click)="getItemOKR(i, data.recID)"
             data-bs-toggle="collapse"
             [attr.data-target]="'#collapse' + i"
             aria-expanded="true"
             [attr.aria-controls]="'collapse' + i"
           >
             <div
+              (click)="getItemOKR(i, data.recID)"
               class="rounded-circle cursor-pointer me-3 bg-light w-20px h-18px text-center"
             >
               <i
@@ -158,7 +158,7 @@
               ></i>
             </div>
             <i class="fa-solid fa-bullseye me-3 fs-3 txt-color-0E4C55"></i>
-            <span>{{ data.okrName }}</span>
+            <span (click)="showOB(data)">{{ data.okrName }}</span>
           </div>
           <div class="d-flex align-items-center justify-content-end">
             <div
@@ -195,10 +195,7 @@
               </div>
             </div>
             <div class="d-flex ms-9">
-              <button
-                (click)="editWeight(data, data.child)"
-                class="btn btn-icon btn-sm position-relative ms-4"
-              >
+              <button class="btn btn-icon btn-sm position-relative ms-4">
                 <span
                   class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"
                 ></span>
@@ -277,7 +274,7 @@
                           KR
                         </div>
                         <i class="icon-link me-3"></i>
-                        <div (click)="showKR(item, data)">
+                        <div (click)="showKR(item)">
                           {{ item.okrName }}
                         </div>
                       </div>

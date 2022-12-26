@@ -423,9 +423,17 @@ export class EmployeeListComponent extends UIComponent {
         if (obj.functionID == 'HR0032') this.urlView = obj.url;
       });
       this.urlView = '/hr/employeedetail/HRT03a1';
-      this.codxService.navigate('', this.urlView, {
-        employeeID: data.employeeID,
-      });
+      this.codxService.navigate(
+        '',
+        this.urlView,
+        {
+          employeeID: data.employeeID,
+        },
+        {
+          data: this.viewBase?.dataService?.data,
+          request: this.viewBase?.dataService?.request,
+        }
+      );
     }
   }
 

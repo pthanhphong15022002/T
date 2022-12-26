@@ -37,6 +37,9 @@ export class PopupAddPermissionComponent implements OnInit {
   gridViewSetup: any;
   data: any;
   funcID: any;
+  popupOld: any;
+  popoverList: any;
+  popoverDetail: any;
   entity: any;
   per = new tmpPermission();
   permission: BP_ProcessPermissions[];
@@ -326,4 +329,27 @@ export class PopupAddPermissionComponent implements OnInit {
     }
   }
   //#endregion
+
+  PopoverDetail(p: any, emp) {
+    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+      this.popupOld?.close();
+    }
+
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.processName != null) {
+        p.open();
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
+
+  setTextPopover(text){
+    return (text);
+  }
+
+  closePopover() {
+    this.popupOld?.close();
+  }
 }

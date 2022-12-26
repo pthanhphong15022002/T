@@ -71,6 +71,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     this.user$ = this.auth.user$;
     this.tenant = this.tenantStore.get()?.tenant;
     this.setLanguage(this.auth.userValue?.language?.toLowerCase());
+
+    if (environment.themeMode == 'body')
+      document.body.classList.add('codx-theme');
+
     this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
     if (this.functionList) {
       this.formModel = {
@@ -162,7 +166,6 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
-    return;
     //Remove Old
     let elm =
       environment.themeMode == 'body'
@@ -258,12 +261,20 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'orange',
     name: 'Orange',
-    color: '#f36519',
+    color: '#ff7213',
+    enable: true,
   },
   {
-    id: 'pink',
-    name: 'Pink',
-    color: '#f70f8f',
+    id: 'sapphire',
+    name: 'Sapphire',
+    color: '#23d3c1',
+    enable: true,
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    color: '#15b144',
+    enable: true,
   },
 ];
 

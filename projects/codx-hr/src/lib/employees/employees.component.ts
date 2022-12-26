@@ -52,38 +52,37 @@ export class EmployeesComponent extends UIComponent {
   employStatus: any;
   urlView: string;
   listMoreFunc = [];
-  functionName:string = "";
+  functionName: string = '';
 
   // @Input() formModel: any;
   @ViewChild('cardTemp') cardTemp: TemplateRef<any>;
   @ViewChild('itemEmployee', { static: true }) itemEmployee: TemplateRef<any>;
   @ViewChild('itemContact', { static: true }) itemContact: TemplateRef<any>;
-  @ViewChild('itemInfoPersonal', { static: true }) itemInfoPersonal: TemplateRef<any>;
-  @ViewChild('itemStatusName', { static: true }) itemStatusName: TemplateRef<any>;
+  @ViewChild('itemInfoPersonal', { static: true })
+  itemInfoPersonal: TemplateRef<any>;
+  @ViewChild('itemStatusName', { static: true })
+  itemStatusName: TemplateRef<any>;
   @ViewChild('itemAction', { static: true }) itemAction: TemplateRef<any>;
   @ViewChild('grid', { static: true }) grid: TemplateRef<any>;
   @ViewChild('panelLeftRef') panelLeftRef: TemplateRef<any>;
   @ViewChild('templateTree') templateTree: TemplateRef<any>;
 
-
   constructor(
     private injector: Injector,
-    private notifiSV: NotificationsService,
+    private notifiSV: NotificationsService
   ) {
     super(injector);
-
   }
   onInit(): void {
-    this.router.params.subscribe((param:any) =>{
-      if(param){
-        let funcID = param["funcID"];
-        if(funcID)
-        {
+    this.router.params.subscribe((param: any) => {
+      if (param) {
+        let funcID = param['funcID'];
+        if (funcID) {
           this.functionID = funcID;
           this.getSetup(funcID);
         }
       }
-    })
+    });
   }
 
   ngAfterViewInit(): void {
@@ -119,7 +118,7 @@ export class EmployeesComponent extends UIComponent {
         field: '',
         headerText: '',
         width: 30,
-        template: this.itemAction
+        template: this.itemAction,
       },
     ];
     this.views = [
@@ -148,18 +147,18 @@ export class EmployeesComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
-  getSetup(functionID:string){
-    if(functionID){
-      this.cache.functionList(functionID).subscribe((func:any) => {
-        if(func)
-        {
+  getSetup(functionID: string) {
+    if (functionID) {
+      this.cache.functionList(functionID).subscribe((func: any) => {
+        if (func) {
           this.functionName = func.description;
-          this.cache.moreFunction(func.formName, func.gridViewName).subscribe((res) => {
-            if (res) 
-            {
-              this.listMoreFunc = res;
-            }
-          });
+          this.cache
+            .moreFunction(func.formName, func.gridViewName)
+            .subscribe((res) => {
+              if (res) {
+                this.listMoreFunc = res;
+              }
+            });
         }
       });
     }
@@ -172,21 +171,24 @@ export class EmployeesComponent extends UIComponent {
     return moment(value).fromNow(true);
   }
 
-  btnClick(event:any) {
-    if (event?.text) 
-    {
-      this.view.dataService.addNew().subscribe((res:any) => {
-        if(res){
+  btnClick(event: any) {
+    // this.codxService.openUrlNewTab(
+    //   '',
+    //   '/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123'
+    // );
+
+    if (event?.text) {
+      this.view.dataService.addNew().subscribe((res: any) => {
+        if (res) {
           let option = new SidebarModel();
           option.DataService = this.view.dataService;
           option.FormModel = this.view.formModel;
           option.Width = '800px';
           let object = {
-            employee:res,
-            action:"add",
-            title: `${event.text}  ${this.functionName}` 
+            employee: res,
+            action: 'add',
+            title: `${event.text}  ${this.functionName}`,
           };
-          debugger
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
             object,
@@ -204,19 +206,18 @@ export class EmployeesComponent extends UIComponent {
     }
   }
 
-  
   clickMF(event: any, data: any) {
-    if(event && data){
+    if (event && data) {
       this.view.dataService.dataSelected = data;
       switch (event.functionID) {
         case 'SYS02': // xóa
           this.delete(data);
           break;
         case 'SYS03': // edit
-          this.edit(event,data);
+          this.edit(event, data);
           break;
         case 'SYS04': // sao chép
-          this.copy(event,data);
+          this.copy(event, data);
           break;
         case 'HR0031': // cập nhật tình trạng
           this.updateStatus(data, event.functionID);
@@ -230,72 +231,72 @@ export class EmployeesComponent extends UIComponent {
       }
     }
   }
-  edit(event:any,data:any) {
-    if (event && data) 
-    {
+  edit(event: any, data: any) {
+    if (event && data) {
       this.view.dataService.dataSelected = data;
       this.view.dataService
-      .edit(this.view.dataService.dataSelected)
-      .subscribe((res: any) => {
-        let option = new SidebarModel();
-        option.DataService = this.view.dataService;
-        option.FormModel = this.view.formModel;
-        option.Width = '800px';
-        let object = {
-          employee:data,
-          action:"edit",
-          title: `${event.text}  ${this.functionName}` 
-        };
-        let popup = this.callfc.openSide(
-          PopupAddEmployeesComponent,
-          object,
-          option
-        );
-        popup.closed.subscribe((result) => {
-          if (result?.event) 
-          {
-            let dataUpdate = result.event;
-            this.view.dataService
-              .update(dataUpdate)
-              .subscribe();
-          }
-        });
-      });
-    }
-    
-  }
-
-  copy(event:any,data:any) {
-    if (event && data)
-    {
-      this.view.dataService.dataSelected = data;
-      this.view.dataService
-        .copy(0)
+        .edit(this.view.dataService.dataSelected)
         .subscribe((res: any) => {
           let option = new SidebarModel();
-          option.DataService = this.view?.dataService;
-          option.FormModel = this.view?.formModel;
+          option.DataService = this.view.dataService;
+          option.FormModel = this.view.formModel;
           option.Width = '800px';
           let object = {
-            employee:res,
-            action:"copy",
-            title: `${event.text}  ${this.functionName}` 
+            employee: data,
+            action: 'edit',
+            title: `${event.text}  ${this.functionName}`,
           };
-          debugger
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
             object,
             option
           );
+          popup.closed.subscribe((result) => {
+            if (result?.event) {
+              let dataUpdate = result.event;
+              this.view.dataService.update(dataUpdate).subscribe();
+            }
+          });
         });
+    }
+  }
+
+  copy(event: any, data: any) {
+    if (event && data) {
+      this.view.dataService.dataSelected = data;
+      this.view.dataService.copy(0).subscribe((res: any) => {
+        let option = new SidebarModel();
+        option.DataService = this.view?.dataService;
+        option.FormModel = this.view?.formModel;
+        option.Width = '800px';
+        let object = {
+          employee: res,
+          action: 'copy',
+          title: `${event.text}  ${this.functionName}`,
+        };
+        debugger;
+        let popup = this.callfc.openSide(
+          PopupAddEmployeesComponent,
+          object,
+          option
+        );
+      });
       this.detectorRef.detectChanges();
     }
   }
 
-  delete(data:any) 
-  {
+  delete(data: any) {
     this.view.dataService
-      .delete([data],true,(option:any) => this.beforeDel(option),null,null,null,null,false)
+      .delete(
+        [data],
+        true,
+        (option: any) => this.beforeDel(option),
+        null,
+        null,
+        null,
+        null,
+        false
+      )
       .subscribe();
     this.detectorRef.detectChanges();
   }
@@ -349,9 +350,9 @@ export class EmployeesComponent extends UIComponent {
   }
 
   beforeDel(opt: RequestOption) {
-    debugger
-    opt.service = "HR";
-    opt.assemblyName = "ERM.Business.HR";
+    debugger;
+    opt.service = 'HR';
+    opt.assemblyName = 'ERM.Business.HR';
     opt.className = 'EmployeesBusiness';
     opt.methodName = 'DeleteAsync';
     opt.data = this.view.dataService.dataSelected.employeeID;
@@ -364,14 +365,20 @@ export class EmployeesComponent extends UIComponent {
   }
 
   updateStatus(data: any, funcID: string) {
-    let popup = this.callfc.openForm(UpdateStatusComponent, 'Cập nhật tình trạng', 350, 200, funcID, data);
+    let popup = this.callfc.openForm(
+      UpdateStatusComponent,
+      'Cập nhật tình trạng',
+      350,
+      200,
+      funcID,
+      data
+    );
     popup.closed.subscribe((e) => {
       if (e?.event) {
         var emp = e.event;
         if (emp.status == '90') {
           this.view.dataService.remove(emp).subscribe();
-        }
-        else this.view.dataService.update(emp).subscribe();
+        } else this.view.dataService.update(emp).subscribe();
       }
       this.detectorRef.detectChanges();
     });
@@ -405,11 +412,9 @@ export class EmployeesComponent extends UIComponent {
     );
   }
 
-  
-
   doubleClick(data) {
     // this.codxService.navigate('HRT0301', '', {employeeID: data.employeeID});
-    debugger
+    debugger;
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
         if (obj.functionID == 'HR0032') this.urlView = obj.url;
@@ -420,7 +425,11 @@ export class EmployeesComponent extends UIComponent {
     }
   }
 
-  placeholder(value: string, formModel: FormModel, field: string): Observable<string> {
+  placeholder(
+    value: string,
+    formModel: FormModel,
+    field: string
+  ): Observable<string> {
     if (value) {
       return of(`<span>${value}</span>`);
     } else {

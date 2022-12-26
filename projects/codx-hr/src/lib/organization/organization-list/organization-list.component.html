@@ -1,4 +1,4 @@
-<ng-template #infoEmployee let-data>
+<!-- <ng-template #infoEmployee let-data>
   <div class="d-flex align-items-start">
     <codx-img
       *ngIf="data.employeeID"
@@ -57,33 +57,22 @@
       </div>
     </div>
   </div>
-</ng-template>
+</ng-template> -->
 <div class="p-2 h-100">
   <codx-listview
     #codxListView
     [itemTemplate]="itemTemplate"
     [formModel]="formModel"
-    [service]="'HR'"
-    [assemblyName]="'ERM.Business.HR'"
-    [className]="'OrganizationUnitsBusiness'"
-    [method]="'GetDataTreeListAssync'"
+    [dataService]="dataService"
     [funcId]="formModel.funcID"
-    [entityName]="formModel.entityName"
-    [predicates]="predicate"
-    [dataValues]="orgUnitID"
-  >
+    [entityName]="formModel.entityName">
   </codx-listview>
-  <!-- <ng-container *ngFor="let item of dataSource">
-    <div class="row">
-      <ng-container *ngTemplateOutlet="itemTemplate;context:item"></ng-container>
-    </div>
-  </ng-container> -->
 </div>
 <ng-template #itemTemplate let-item>
   <div class="d-flex flex-column py-4 border-bottom">
     <div class="d-flex align-items-center org-header mt-1 mb-3">
-      <div *ngIf="item.departmentName" class="text-dark fw-bold fs-6 me-3">
-        {{ item.departmentName }}
+      <div class="text-dark fw-bold fs-6 me-3">
+        {{ item.orgUnitName }}
       </div>
       <codx-vll
         [name]="'L0605'"
