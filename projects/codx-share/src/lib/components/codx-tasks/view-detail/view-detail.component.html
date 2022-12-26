@@ -33,8 +33,9 @@
           <div class="me-3">
             <codx-img
               [objectId]="
-                taskExtends ? itemSelected.userID : itemSelected?.createdBy
+                taskExtends ? itemSelected?.userID : itemSelected?.createdBy
               "
+              [objectName]="taskExtends ? itemSelected.userName : itemSelected?.userNameCreate"
               objectType="AD_Users"
               [width]="50"
             >
