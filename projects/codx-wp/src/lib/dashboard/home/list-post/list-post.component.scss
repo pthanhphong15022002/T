@@ -211,7 +211,7 @@ ejs-listview .e-ul>li {
 .feed-box input.codx-text {
     border: 0;
     padding-left: 0;
-    background-color: #f5f5f5;
+    background-color: transparent;
 }
 
 .btn-like,
@@ -312,4 +312,10 @@ ejs-listview .e-ul>li {
 .pic>img {
     width: 100%;
     height: auto;
+}
+
+.dark {
+    .post-new {
+        border-color: var(--border-gray) !important;
+    }
 }

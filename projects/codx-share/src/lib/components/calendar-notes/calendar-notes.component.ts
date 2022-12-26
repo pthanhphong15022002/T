@@ -433,10 +433,10 @@ export class CalendarNotesComponent
     }
     let ele = document.getElementsByTagName('codx-schedule')[0];
     if (ele) {
-      debugger
+      debugger;
       this.dataResourceModel;
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      //cmp.isNavigateInside = true;
+      // cmp.isNavigateInside = true; // a Trầm chưa úp đét core
       cmp.selectedDate = args.date;
       cmp.onNavigating(args);
     }
@@ -604,7 +604,7 @@ export class CalendarNotesComponent
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
-      if (res) {
+      if (res[0].length > 0) {
         this.getModelShare(res[0], param.Template, 'TM_Tasks');
       }
     });
@@ -749,7 +749,7 @@ export class CalendarNotesComponent
       this.EP_BookingRoomsTemp = JSON.parse(
         JSON.stringify(this.EP_BookingRooms)
       );
-      debugger
+      debugger;
       this.EP_BookingCarsTemp = JSON.parse(JSON.stringify(this.EP_BookingCars));
       this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
     }

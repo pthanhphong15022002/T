@@ -756,7 +756,7 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="HandleEmployeeAppointionInfo('add', null)">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -4632,7 +4632,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEDisease()"
+                    (click)="addEDisease('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4670,6 +4670,24 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   ></div>
+                  <div class="d-flex flex-wrap mt-6 mb-3">
+                    <div
+                      [style.background]="'black'"
+                      class="badge border-0 me-2"
+                      *ngFor="let disease of lstEdiseases"
+                    >
+                      <div class="has-action-menu">
+                        {{ disease.treatDoctor }} gan cung du lieu,dang gan sai field
+                        <codx-mfunc
+                          [formModel]="formModel"
+                          (clickMF)="clickMF($event, disease, 'Diseases')"
+                          type="hover"
+                          [dataItem]="disease"
+                        >
+                        </codx-mfunc>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -551,14 +551,73 @@ export class CodxEpService {
       data
     );
   }
-  getListUserIDByListPositionsID(listPositionID){
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
       'EmployeesBusiness',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
-    );  
+    );
+  }
+  //#endregion
+
+  //#Setting SYS
+  getCalendar() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'Calendar'
+    );
+  }
+  getCalendarWeekdays(calendarID:any) {
+    return this.api.execSv(
+      'BS',
+      'ERM.Business.BS',
+      'CalendarWeekdaysBusiness',
+      'GetDayShiftAsync',
+      [calendarID]
+    );
+  }
+  getEPSetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPParameters'
+    );
+  }
+  getEPRoomSetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPRoomParameters'
+    );
+  }
+
+  getEPCarSetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPCarParameters'
+    );
+  }
+
+  getEPStationerySetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPStationeryParameters'
+    );
   }
   //#endregion
 
