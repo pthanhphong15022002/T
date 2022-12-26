@@ -301,7 +301,7 @@ codx-views {
 .show-more{
   opacity: 0;
 }
-.show-more:hover{
+.envelop:hover .show-more{
   opacity: 1;
 }
 
@@ -316,7 +316,7 @@ codx-views {
   background-color: #e2e3ee;
 }
 .envelop{
-  width: 300px;
+  width: 100%;
   position: relative; 
   height: 30px; 
   display: flex;
