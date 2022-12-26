@@ -1,78 +1,69 @@
-import { SettingCalendarService } from './setting-calender.service';
 import {
   Component,
+  OnInit,
   Injector,
   AfterViewInit,
   ViewChild,
   TemplateRef,
-  Input,
   ChangeDetectorRef,
+  Input,
 } from '@angular/core';
-import {
-  UIComponent,
-  FormModel,
-  ViewType,
-  ViewModel,
-  ViewsComponent,
-  ResourceModel,
-} from 'codx-core';
-import { PopupAddCalendarComponent } from './popup-add-calendar/popup-add-calendar.component';
-import { PopupSettingCalendarComponent } from './popup-setting-calendar/popup-setting-calendar.component';
+import { UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import moment from 'moment';
-import { CodxShareService } from '../../codx-share.service';
+import { CodxShareService } from '../../../codx-share.service';
+import { CodxCalendarService } from '../codx-calendar.service';
 
 @Component({
-  selector: 'setting-calendar',
-  templateUrl: './setting-calendar.component.html',
-  styleUrls: ['./setting-calendar.component.scss'],
+  selector: 'lib-calendar-center',
+  templateUrl: './calendar-center.component.html',
+  styleUrls: ['./calendar-center.component.scss'],
 })
-export class SettingCalendarComponent
+export class CalendarCenterComponent
   extends UIComponent
-  implements AfterViewInit
+  implements OnInit, AfterViewInit
 {
-  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
-  @ViewChild('view') viewOrg!: ViewsComponent;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  listRoom = [];
+  listCar = [];
+  listDriver = [];
   views: Array<ViewModel> | any = [];
-  calendarName: string;
-  dayWeek = [];
-  daysOff = [];
-  formModel: FormModel;
-  request?: ResourceModel;
-  calendarID: string;
-  vllPriority = 'TM005';
-  startTime: any;
-  month: any;
-  day: any;
+  fields = {
+    id: 'transID',
+    subject: { name: 'title' },
+    startTime: { name: 'startDate' },
+    endTime: { name: 'endDate' },
+    status: 'transType',
+  };
   resourceID: any;
   tempCarName = '';
-  listCar = [];
   driverName = '';
   selectBookingAttendeesCar = '';
   selectBookingAttendeesRoom = '';
-  listDriver: any[];
   tempDriverName = '';
   selectBookingItems = [];
   tempRoomName = '';
-  listRoom = [];
+  funcID: string;
+  startTime: any;
+  month: any;
+  day: any;
+  daysOff = [];
+  calendarID: string;
+  vllPriority = 'TM005';
+  dayWeek = [];
 
-  @Input() fields = {
-    id: 'recID',
-    subject: { name: 'memo' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-  };
   @Input() resources!: any;
   @Input() resourceModel!: any;
-  @Input() funcID: string;
+
+  @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
+  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
+  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
+  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
+  @ViewChild('view') viewOrg!: ViewsComponent;
 
   constructor(
     private injector: Injector,
-    private settingCalendar: SettingCalendarService,
     private codxShareSV: CodxShareService,
-    private change: ChangeDetectorRef
+    private change: ChangeDetectorRef,
+    private codxCalendarSV: CodxCalendarService
   ) {
     super(injector);
     this.router.params.subscribe((params) => {
@@ -124,6 +115,85 @@ export class SettingCalendarComponent
       },
     ];
     this.detectorRef.detectChanges();
+  }
+
+  onAction(event: any) {
+    if (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) {
+      var obj = { fromDate: event.data.fromDate, toDate: event.data.toDate};
+      this.codxShareSV.dateChange.next(obj);
+    }
+  }
+
+  getParams(formName: string, fieldName: string) {
+    this.codxCalendarSV.getParams(formName, fieldName).subscribe((res) => {
+      if (res) {
+        let dataValue = res[0].dataValue;
+        let json = JSON.parse(dataValue);
+        if (json.CalendarID && json.CalendarID == '') {
+          this.calendarID = 'STD';
+        } else {
+          this.calendarID = json.CalendarID;
+        }
+        this.getDayWeek(this.calendarID);
+        this.getDaysOff(this.calendarID);
+        // this.detectorRef.detectChanges();
+      }
+    });
+  }
+
+  getDayWeek(calendarID: string) {
+    this.codxCalendarSV.getDayWeek(calendarID).subscribe((res) => {
+      if (res) {
+        this.dayWeek = res;
+        (
+          this.viewOrg.currentView as any
+        )?.schedule?.scheduleObj?.first?.refresh();
+      }
+    });
+  }
+
+  getDaysOff(calendarID: string) {
+    this.codxCalendarSV.getDaysOff(calendarID).subscribe((res) => {
+      if (res) {
+        this.daysOff = res;
+        (
+          this.viewOrg.currentView as any
+        )?.schedule?.scheduleObj?.first?.refresh();
+      }
+    });
+  }
+
+  getCellContent(evt: any): string {
+    if (this.daysOff.length > 0) {
+      for (let i = 0; i < this.daysOff.length; i++) {
+        let day = new Date(this.daysOff[i].calendarDate);
+        if (
+          day &&
+          evt.getFullYear() == day.getFullYear() &&
+          evt.getMonth() == day.getMonth() &&
+          evt.getDate() == day.getDate()
+        ) {
+          var time = evt.getTime();
+          var ele = document.querySelectorAll('[data-date="' + time + '"]');
+          if (ele.length > 0) {
+            ele.forEach((item) => {
+              (item as any).style.color = this.daysOff[i].dayoffColor;
+              (item as any).style.backgroundColor =
+                this.daysOff[i].dayoffColor + '30';
+            });
+          }
+          let content =
+            '<div class="d-flex justify-content-between"><span >' +
+            this.daysOff[i].note +
+            '</span>' +
+            '<span class="' +
+            this.daysOff[i].symbol +
+            '"></span></div>';
+          return content;
+        }
+      }
+    }
+    return ``;
   }
 
   //region EP
@@ -262,107 +332,4 @@ export class SettingCalendarComponent
     return this.resourceID;
   }
   //endRegion CO
-
-  getParams(formName: string, fieldName: string) {
-    this.settingCalendar.getParams(formName, fieldName).subscribe((res) => {
-      if (res) {
-        let dataValue = res[0].dataValue;
-        let json = JSON.parse(dataValue);
-        if (json.CalendarID && json.CalendarID == '') {
-          this.calendarID = 'STD';
-        } else {
-          this.calendarID = json.CalendarID;
-        }
-        this.getDayWeek(this.calendarID);
-        this.getDaysOff(this.calendarID);
-        // this.detectorRef.detectChanges();
-      }
-    });
-  }
-
-  getDayWeek(calendarID: string) {
-    this.settingCalendar.getDayWeek(calendarID).subscribe((res) => {
-      if (res) {
-        this.dayWeek = res;
-        (
-          this.viewOrg.currentView as any
-        )?.schedule?.scheduleObj?.first?.refresh();
-      }
-    });
-  }
-
-  getDaysOff(calendarID: string) {
-    this.settingCalendar.getDaysOff(calendarID).subscribe((res) => {
-      if (res) {
-        this.daysOff = res;
-        (
-          this.viewOrg.currentView as any
-        )?.schedule?.scheduleObj?.first?.refresh();
-      }
-    });
-  }
-
-  getCellContent(evt: any): string {
-    if (this.daysOff.length > 0) {
-      for (let i = 0; i < this.daysOff.length; i++) {
-        let day = new Date(this.daysOff[i].calendarDate);
-        if (
-          day &&
-          evt.getFullYear() == day.getFullYear() &&
-          evt.getMonth() == day.getMonth() &&
-          evt.getDate() == day.getDate()
-        ) {
-          var time = evt.getTime();
-          var ele = document.querySelectorAll('[data-date="' + time + '"]');
-          if (ele.length > 0) {
-            ele.forEach((item) => {
-              (item as any).style.color = this.daysOff[i].dayoffColor;
-              (item as any).style.backgroundColor =
-                this.daysOff[i].dayoffColor + '30';
-            });
-          }
-          let content =
-            '<div class="d-flex justify-content-between"><span >' +
-            this.daysOff[i].note +
-            '</span>' +
-            '<span class="' +
-            this.daysOff[i].symbol +
-            '"></span></div>';
-          return content;
-        }
-      }
-    }
-    return ``;
-  }
-
-  changeCombobox(event) {
-    event.data == ''
-      ? (this.calendarID = 'STD')
-      : (this.calendarID = event.data);
-    this.getDaysOff(this.calendarID);
-    this.detectorRef.detectChanges();
-  }
-
-  addCalendar() {
-    this.callfc.openForm(
-      PopupAddCalendarComponent,
-      'Tạo lịch làm việc',
-      500,
-      360,
-      '',
-      [this.formModel, this.calendarID]
-    );
-  }
-
-  openCalendarSettings() {
-    this.callfc.openForm(PopupSettingCalendarComponent, '', 1200, 1000, '', [
-      this.formModel,
-      this.calendarID,
-    ]);
-  }
-
-  reloadCalendar() {
-    alert('trigger');
-    (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
-  }
 }

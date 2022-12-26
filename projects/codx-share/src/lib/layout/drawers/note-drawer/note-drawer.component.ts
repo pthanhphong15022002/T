@@ -239,6 +239,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
       component: 'note-drawer',
+      countNotePin: this.countNotePin,
     };
     this.callfc.openForm(
       AddNoteComponent,
