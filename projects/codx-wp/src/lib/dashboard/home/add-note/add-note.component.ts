@@ -339,8 +339,8 @@ export class AddNoteComponent implements OnInit {
           if (res) {
             let dtNew = res;
             dtNew['transType'] = 'WP_Notes';
-            dtNew['title'] = res.memo;
-            dtNew['transID'] = res.transID;
+            dtNew['memo'] = res.memo;
+            dtNew['transID'] = res.recID;
             dtNew['calendarDate'] = res.createdOn;
             if (this.listFileUpload.length > 0) {
               this.listFileUpload.forEach((dt) => {
@@ -458,8 +458,8 @@ export class AddNoteComponent implements OnInit {
         if (res) {
           let dtNew = res;
           dtNew['transType'] = 'WP_Notes';
-          dtNew['title'] = res.memo;
-          dtNew['transID'] = res.transID;
+          dtNew['memo'] = res.memo;
+          dtNew['transID'] = res.recID;
           dtNew['calendarDate'] = res.createdOn;
           this.checkUpdate = true;
           if (this.listFileEdit?.length > 0) {
@@ -484,9 +484,12 @@ export class AddNoteComponent implements OnInit {
             );
           }
           var object = [];
-          if (this.component == 'note-drawer')
-            object = [{ data: dtNew, type: 'edit-note-drawer' }];
-          else {
+          if (this.component == 'note-drawer') {
+            if (this.date2 != undefined)
+              object = [{ data: dtNew, type: 'edit-note-drawer-otherDate' }];
+            else
+              object = [{ data: dtNew, type: 'edit-note-drawer-currentDate' }];
+          } else {
             if (this.date2 != undefined)
               object = [{ data: dtNew, type: 'edit-otherDate' }];
             else object = [{ data: dtNew, type: 'edit-currentDate' }];

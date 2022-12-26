@@ -68,6 +68,7 @@ export class PopupAddProcessStepsComponent
   listOwnerDetails = [];
   popover: any;
   formModelMenu: FormModel;
+  funcIDparent: any;
   crrIndex = 0;
   gridViewSetup: any;
   recIDCopied: any;
@@ -103,6 +104,7 @@ export class PopupAddProcessStepsComponent
     if (this.processSteps.parentID && this.action == 'add') {
       this.lockParentId = true;
     }
+    this.bpService.funcIDParent.subscribe((func) => (this.funcIDparent = func));
     if (this.process)
       this.folderID = this.process.versions.find(
         (x) => x.versionNo == this.process.versionNo

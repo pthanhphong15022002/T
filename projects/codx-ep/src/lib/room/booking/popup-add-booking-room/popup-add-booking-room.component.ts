@@ -137,10 +137,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   range: any;
   optionalData;
   saveAndApprove = false;
-  userInfo;  
+  userInfo;
   user;
   saveCheck = false;
-  listUserID=[];
+  listUserID = [];
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -163,7 +163,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.dialogRef = dialogRef;
     this.formModel = this.dialogRef.formModel;
     this.funcID = this.formModel.funcID;
-    this.userInfo = authStore.get();    
+    this.userInfo = authStore.get();
     this.user = this.authStore.get();
     if (this.isAdd) {
       if (this.optionalData != null) {
@@ -190,29 +190,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   onInit(): void {
     //Lấy giờ làm việc
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'EPRoomParameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = JSON.parse(
-            res.msgBodyData[0].dataValue
-          )?.CalendarID;
-          if (this.calendarID) {
-            this.api
-              .exec<any>(
-                APICONSTANT.ASSEMBLY.BS,
-                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
-                'GetDayShiftAsync',
-                [this.calendarID]
-              )
-              .subscribe((res) => {
-                res.forEach((day) => {
+    this.codxEpService.getEPRoomSetting().subscribe((setting: any) => {
+      if (setting) {
+        this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+        if (this.calendarID) {
+          this.codxEpService
+            .getCalendarWeekdays(this.calendarID)
+            .subscribe((cal: any) => {
+              if (cal) {
+                Array.from(cal).forEach((day: any) => {
                   if (day?.shiftType == '1') {
                     let tmpstartTime = day?.startTime.split(':');
                     this.calendarStartTime =
@@ -228,39 +214,62 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                     }
                   }
                 });
-              });
+              }
+            });
+        } 
+        this.changeDetectorRef.detectChanges();
+      } else {
+        this.codxEpService.getEPSetting().subscribe((setting: any) => {
+          if (setting) {
+            this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+            if (this.calendarID) {
+              this.codxEpService
+                .getCalendarWeekdays(this.calendarID)
+                .subscribe((cal: any) => {
+                  if (cal) {
+                    Array.from(cal).forEach((day: any) => {
+                      if (day?.shiftType == '1') {
+                        let tmpstartTime = day?.startTime.split(':');
+                        this.calendarStartTime =
+                          tmpstartTime[0] + ':' + tmpstartTime[1];
+                        if (this.isAdd) {
+                          this.startTime = this.calendarStartTime;
+                        }
+                      } else if (day?.shiftType == '2') {
+                        let tmpEndTime = day?.endTime.split(':');
+                        this.calendarEndTime =
+                          tmpEndTime[0] + ':' + tmpEndTime[1];
+                        if (this.isAdd) {
+                          this.endTime = this.calendarEndTime;
+                        }
+                      }
+                    });
+                  }
+                });
+            }
           } else {
-            this.api
-              .execSv(
-                'SYS',
-                'ERM.Business.SYS',
-                'SettingValuesBusiness',
-                'GetByModuleAsync',
-                'Calendar'
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let tempStartTime = JSON.parse(
-                    res.dataValue
-                  )[0]?.StartTime.split(':');
-                  this.calendarStartTime =
-                    tempStartTime[0] + ':' + tempStartTime[1];
-                  if (this.isAdd) {
-                    this.startTime = this.calendarStartTime;
-                  }
-                  let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
-                    ':'
-                  );
-                  this.calendarEndTime = endTime[0] + ':' + endTime[1];
-                  if (this.isAdd) {
-                    this.endTime = this.calendarEndTime;
-                  }
+            this.codxEpService.getCalendar().subscribe((res: any) => {
+              if (res) {
+                let tempStartTime = JSON.parse(
+                  res.dataValue
+                )[0]?.StartTime.split(':');
+                this.calendarStartTime =
+                  tempStartTime[0] + ':' + tempStartTime[1];
+                if (this.isAdd) {
+                  this.startTime = this.calendarStartTime;
                 }
-              });
+                let endTime = JSON.parse(res.dataValue)[1]?.EndTime.split(':');
+                this.calendarEndTime = endTime[0] + ':' + endTime[1];
+                if (this.isAdd) {
+                  this.endTime = this.calendarEndTime;
+                }
+              }
+            });
           }
           this.changeDetectorRef.detectChanges();
-        }
-      });
+        });
+      }
+    });
 
     //Thêm lấy thời gian hiện tại làm thông tin đặt phòng khi thêm mới
     // if (this.isAdd && this.optionalData!=null) {
@@ -410,16 +419,17 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   if (
                     tempAttender.userID != this.authService.userValue.userID
                   ) {
-                    this.attendeesList.push(tempAttender);                    
+                    this.attendeesList.push(tempAttender);
                     this.resources.push(this.curUser);
                   }
                   if (
-                    tempAttender.userID == this.authService.userValue.userID 
+                    tempAttender.userID == this.authService.userValue.userID
                   ) {
                     this.curUser = tempAttender;
-                    
+
                     this.resources.push(this.curUser);
-                  } else if (people.optional == false) {//EP_WAIT xóa sau khi debug lại
+                  } else if (people.optional == false) {
+                    //EP_WAIT xóa sau khi debug lại
                     this.lstUser.push(tempAttender);
                   } else {
                     this.lstUserOptional.push(tempAttender);
@@ -575,7 +585,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   onSaveForm(approval: boolean = false) {
     if (!this.saveCheck) {
-      if(this.isAdd){
+      if (this.isAdd) {
         this.data.requester = this.authService?.userValue?.userName;
       }
       this.fGroupAddBookingRoom.patchValue(this.data);
@@ -632,16 +642,15 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           .alertCode('Chưa có đường dẫn cho cuộc họp online!')
           .subscribe((x) => {
             //EP_WAIT đợi messagecode từ BA
-            if (x.event.status == 'N') {              
+            if (x.event.status == 'N') {
               this.saveCheck = false;
               return;
             } else {
               if (this.data.attendees > this.roomCapacity) {
                 this.notificationsService.alertCode('EP004').subscribe((x) => {
                   if (x.event.status == 'N') {
-                     
                     this.saveCheck = false;
-                    return;                   
+                    return;
                   } else {
                     this.attendeesValidateStep(approval);
                   }
@@ -655,7 +664,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         if (this.data.attendees > this.roomCapacity) {
           this.notificationsService.alertCode('EP004').subscribe((x) => {
             if (x.event.status == 'N') {
-              
               this.saveCheck = false;
               return;
             } else {
@@ -667,7 +675,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       }
       this.saveCheck = true;
-    } else {                  
+    } else {
       this.saveCheck = false;
       return;
     }
@@ -696,7 +704,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           this.notificationsService
             .alertCode('EP005', null, '"' + this.busyAttendees + '"')
             .subscribe((x) => {
-              if (x.event.status == 'N') {                
+              if (x.event.status == 'N') {
                 this.saveCheck = false;
                 return;
               } else {
@@ -814,7 +822,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   valueDateChange(event: any) {
     if (event.data) {
       this.data.bookingOn = event.data.fromDate;
-      
+
       if (!this.bookingOnCheck()) {
         this.checkLoop = !this.checkLoop;
         if (!this.checkLoop) {
@@ -837,8 +845,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   bookingOnCheck() {
     let selectDate = new Date(this.data.bookingOn);
     let tmpCrrDate = new Date();
-    this.data.startDate= new Date(this.data.startDate);
-    this.data.endDate= new Date(this.data.endDate);
+    this.data.startDate = new Date(this.data.startDate);
+    this.data.endDate = new Date(this.data.endDate);
 
     this.data.startDate = new Date(
       selectDate.getFullYear(),
@@ -1406,10 +1414,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               });
               this.resources.push(tmpResource);
             }
-            
           }
-          this.resources.forEach(item=>{
-            if(item.userID!= this.curUser.userID){
+          this.resources.forEach((item) => {
+            if (item.userID != this.curUser.userID) {
               this.attendeesList.push(item);
             }
           });
@@ -1426,7 +1433,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempDelete = item;
       }
     });
-    this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);    
+    this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
     this.data.attendees = this.attendeesList.length + 1;
     this.changeDetectorRef.detectChanges();
   }

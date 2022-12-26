@@ -131,6 +131,13 @@ export class ProcessStepsComponent
   parentID = '';
   linkFile: any;
   crrPopper: any;
+  moreDefaut ={
+    share: true,
+    write: true ,
+    read : true,
+    download :true,
+    delete : true,
+  }
 
   msgBP001 = 'BP005'; // gán tạm message
   msgBP002 = 'BP006'; // gán tạm message

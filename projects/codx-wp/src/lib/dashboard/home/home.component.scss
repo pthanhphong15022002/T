@@ -55,7 +55,6 @@
   width: 22%;
   min-width: 220px;
   max-width: 260px;
-  //border: 1px red solid;
 }
 
 .aside.aside-transparent .aside-menu {
@@ -89,10 +88,6 @@
 .h-175px img {
   min-height: 175px;
 }
-
-// .h-200px img {
-//     min-height: 200px;
-// }
 
 .h-250px img {
   min-height: 250px;
@@ -174,10 +169,4 @@
   right: 30px;
   bottom: 20px;
   z-index: 99;
-}
-
-.menu-title-gray-800 .menu-item .menu-link,
-.menu-title-gray-800 .menu-item .menu-link .menu-title,
-.menu-icon-gray-800 .menu-item .menu-link .menu-icon i {
-  color: #28292b !important;
 }

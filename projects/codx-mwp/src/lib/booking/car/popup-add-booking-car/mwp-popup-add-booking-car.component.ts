@@ -227,130 +227,169 @@ export class MWPPopupAddBookingCarComponent extends UIComponent {
     });
     this.detectorRef.detectChanges();
 
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'EPCarParameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = JSON.parse(
-            res.msgBodyData[0].dataValue
-          )?.CalendarID;
-          if (this.calendarID) {
-            this.api
-              .exec<any>(
-                APICONSTANT.ASSEMBLY.BS,
-                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
-                'GetDayShiftAsync',
-                [this.calendarID]
-              )
-              .subscribe((res) => {
-                
-                let tmpDateTime = new Date();
-                if(this.optionalData && this.optionalData?.startDate){
-                  tmpDateTime = this.optionalData.startDate
-                }
-                res.forEach((day) => {
-                  if (day?.shiftType == '1') {
-                    let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime =
-                      tmpstartTime[0] + ':' + tmpstartTime[1];
-                    if (this.isAdd) {
-                      this.data.startDate = new Date(
-                        tmpDateTime.getFullYear(),
-                        tmpDateTime.getMonth(),
-                        tmpDateTime.getDate(),
-                        tmpstartTime[0],
-                        tmpstartTime[1],
-                        0
-                      );
-                    }
-                    this.calEndHour = tmpstartTime[0];
-                    this.calEndMinutes = tmpstartTime[1];
-                    
-                  } else if (day?.shiftType == '2') {
-                    let tmpEndTime = day?.endTime.split(':');
-                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                    if (this.isAdd ) {
-                      this.data.endDate = new Date(
-                        tmpDateTime.getFullYear(),
-                        tmpDateTime.getMonth(),
-                        tmpDateTime.getDate(),
-                        tmpEndTime[0],
-                        tmpEndTime[1],
-                        0
-                      );
-                    }
-                    this.calEndHour = tmpEndTime[0];
-                    this.calEndMinutes = tmpEndTime[1];                    
-                  }
-                });
-                if(this.isAdd && this.optionalData){
-                  this.driverChangeWithCar(this.optionalData.resourceId);
-                }
-                if(this.isCopy){
-                  this.driverChangeWithCar(this.data.resourceID);
-                }
-              });
-          } else {
-            this.api
-              .execSv(
-                'SYS',
-                'ERM.Business.SYS',
-                'SettingValuesBusiness',
-                'GetByModuleAsync',
-                'Calendar'
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let tempStartTime = JSON.parse(
-                    res.dataValue
-                  )[0]?.StartTime.split(':');
+    this.codxEpService.getEPCarSetting().subscribe((setting: any) => {
+      if (setting) {
+        this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+        if (this.calendarID) {
+          this.codxEpService
+            .getCalendarWeekdays(this.calendarID)
+            .subscribe((cal: any) => {
+              let tmpDateTime = new Date();
+              if (this.optionalData && this.optionalData?.startDate) {
+                tmpDateTime = this.optionalData.startDate;
+              }
+              Array.from(cal).forEach((day: any) => {
+                if (day?.shiftType == '1') {
+                  let tmpstartTime = day?.startTime.split(':');
                   this.calendarStartTime =
-                    tempStartTime[0] + ':' + tempStartTime[1];
-                  let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
-                    ':'
-                  );
-                  this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
-                  let tmpDateTime = new Date();
-                  if (this.isAdd && this.optionalData == null) {
+                    tmpstartTime[0] + ':' + tmpstartTime[1];
+                  if (this.isAdd) {
                     this.data.startDate = new Date(
                       tmpDateTime.getFullYear(),
                       tmpDateTime.getMonth(),
                       tmpDateTime.getDate(),
-                      tempStartTime[0],
-                      tempStartTime[1],
+                      tmpstartTime[0],
+                      tmpstartTime[1],
                       0
                     );
+                  }
+                  this.calEndHour = tmpstartTime[0];
+                  this.calEndMinutes = tmpstartTime[1];
+                } else if (day?.shiftType == '2') {
+                  let tmpEndTime = day?.endTime.split(':');
+                  this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                  if (this.isAdd) {
                     this.data.endDate = new Date(
                       tmpDateTime.getFullYear(),
                       tmpDateTime.getMonth(),
                       tmpDateTime.getDate(),
-                      tempEndTime[0],
-                      tempEndTime[1],
+                      tmpEndTime[0],
+                      tmpEndTime[1],
                       0
                     );
                   }
-                  this.calStartHour = tempStartTime[0];
-                  this.calStartMinutes = tempStartTime[1];
-                  this.calEndHour = tempEndTime[0];
-                  this.calEndMinutes = tempEndTime[1];
-                  if(this.isAdd && this.optionalData){
-                    this.driverChangeWithCar(this.optionalData.resourceId);
-                  }
-                  if(this.isCopy){
-                    this.driverChangeWithCar(this.data.resourceID);
-                  }
+                  this.calEndHour = tmpEndTime[0];
+                  this.calEndMinutes = tmpEndTime[1];
                 }
               });
-          }
-          this.detectorRef.detectChanges();
+              if (this.isAdd && this.optionalData) {
+                this.driverChangeWithCar(this.optionalData.resourceId);
+              }
+              if (this.isCopy) {
+                this.driverChangeWithCar(this.data.resourceID);
+              }
+
+              this.detectorRef.detectChanges();
+            });
         }
-      });
+      } else {
+        this.codxEpService.getEPSetting().subscribe((setting: any) => {
+          if (setting) {
+            this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+            if (this.calendarID) {
+              this.codxEpService
+                .getCalendarWeekdays(this.calendarID)
+                .subscribe((cal: any) => {
+                  let tmpDateTime = new Date();
+                  if (this.optionalData && this.optionalData?.startDate) {
+                    tmpDateTime = this.optionalData.startDate;
+                  }
+                  Array.from(cal).forEach((day: any) => {
+                    if (day?.shiftType == '1') {
+                      let tmpstartTime = day?.startTime.split(':');
+                      this.calendarStartTime =
+                        tmpstartTime[0] + ':' + tmpstartTime[1];
+                      if (this.isAdd) {
+                        this.data.startDate = new Date(
+                          tmpDateTime.getFullYear(),
+                          tmpDateTime.getMonth(),
+                          tmpDateTime.getDate(),
+                          tmpstartTime[0],
+                          tmpstartTime[1],
+                          0
+                        );
+                      }
+                      this.calEndHour = tmpstartTime[0];
+                      this.calEndMinutes = tmpstartTime[1];
+                    } else if (day?.shiftType == '2') {
+                      let tmpEndTime = day?.endTime.split(':');
+                      this.calendarEndTime =
+                        tmpEndTime[0] + ':' + tmpEndTime[1];
+                      if (this.isAdd) {
+                        this.data.endDate = new Date(
+                          tmpDateTime.getFullYear(),
+                          tmpDateTime.getMonth(),
+                          tmpDateTime.getDate(),
+                          tmpEndTime[0],
+                          tmpEndTime[1],
+                          0
+                        );
+                      }
+                      this.calEndHour = tmpEndTime[0];
+                      this.calEndMinutes = tmpEndTime[1];
+                    }
+                  });
+                  if (this.isAdd && this.optionalData) {
+                    this.driverChangeWithCar(this.optionalData.resourceId);
+                  }
+                  if (this.isCopy) {
+                    this.driverChangeWithCar(this.data.resourceID);
+                  }
+
+                  this.detectorRef.detectChanges();
+                });
+            }
+          } else {
+            this.codxEpService.getCalendar().subscribe((res: any) => {
+              if (res) {
+                let tempStartTime = JSON.parse(
+                  res.dataValue
+                )[0]?.StartTime.split(':');
+                this.calendarStartTime =
+                  tempStartTime[0] + ':' + tempStartTime[1];
+                let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
+                  ':'
+                );
+                this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
+                let tmpDateTime = new Date();
+                if (this.isAdd && this.optionalData == null) {
+                  this.data.startDate = new Date(
+                    tmpDateTime.getFullYear(),
+                    tmpDateTime.getMonth(),
+                    tmpDateTime.getDate(),
+                    tempStartTime[0],
+                    tempStartTime[1],
+                    0
+                  );
+                  this.data.endDate = new Date(
+                    tmpDateTime.getFullYear(),
+                    tmpDateTime.getMonth(),
+                    tmpDateTime.getDate(),
+                    tempEndTime[0],
+                    tempEndTime[1],
+                    0
+                  );
+                }
+                this.calStartHour = tempStartTime[0];
+                this.calStartMinutes = tempStartTime[1];
+                this.calEndHour = tempEndTime[0];
+                this.calEndMinutes = tempEndTime[1];
+                if (this.isAdd && this.optionalData) {
+                  this.driverChangeWithCar(this.optionalData.resourceId);
+                }
+                if (this.isCopy) {
+                  this.driverChangeWithCar(this.data.resourceID);
+                }
+
+                this.detectorRef.detectChanges();
+              }
+            });
+          }
+        });
+
+        this.detectorRef.detectChanges();
+      }
+    });
 
     
     this.cache.valueList('EP010').subscribe((res) => {
