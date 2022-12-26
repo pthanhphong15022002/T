@@ -36,7 +36,7 @@
       </codx-input>
     </div>
     <div class="form-group">
-      <codx-label [formModel]="form.formModel" fiedName="Shares"></codx-label>
+      <codx-label [formModel]="form.formModel" fiedName="Visibility"></codx-label>
       <div class="d-flex align-items-center justify-content-between om-add-share">
         <ng-container *ngIf="vll.datas">
           <div *ngFor="let dt of vll.datas" class="d-flex flex-column align-items-center ">
@@ -50,7 +50,7 @@
             >
             </codx-input>
             <codx-label [default]="dt.text" class="mt-2"></codx-label>
-            <div class="om-d-all-bg" [ngStyle]="{'background-image': 'url(../../../../../../src/assets/themes/om/add/img/' + dt.icon + ')'}"></div>
+            <div class="om-d-all-bg" [ngStyle]="{'background-image': 'url(assets/themes/om/add/img/' + dt.icon + ')'}"></div>
           </div>
         </ng-container>
       </div>

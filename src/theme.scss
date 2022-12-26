@@ -57,7 +57,7 @@
         --primary-darkest: #521e01;
         --primary-darker: #fd492a;
         --primary-dark: #ff6822;
-        --primary-light: #fcc898;
+        --primary-light: #ffdebf;
         --primary-lighter: #fffbed;
         --primary-lightest: #fffef1;
 
@@ -135,6 +135,10 @@
         }
     }
 
+    .menu-state-title-primary .menu-item.hover:not(.here)>.menu-link:not(.disabled):not(.active):not(.here) .menu-title,
+    .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not(.disabled):not(.active):not(.here) .menu-title {
+        color: var(--primary);
+    }
 
     .e-tab-wrap:hover .e-tab-text {
         color: var(--primary-dark) !important;
@@ -269,10 +273,11 @@
 
     .dropdown-item:active {
         background-color: var(--primary-lighter);
+        color: var(--gray-900);
     }
 
     .dropdown-item:hover {
-        background-color: var(--primary);
+        background-color: var(--primary-lighter);
     }
 
     .btn-check:checked+.btn.btn-active-light-primary,
@@ -332,6 +337,11 @@
         background: var(--primary-light);
     }
 
+    .e-calendar .e-content td.e-selected span.e-day,
+    .e-bigger.e-small .e-calendar .e-content td.e-selected span.e-day {
+        background-color: var(--primary-dark);
+    }
+
     /*** boostrap ***/
     .e-calendar .e-btn.e-today.e-flat.e-primary,
     .e-calendar .e-css.e-btn.e-today.e-flat.e-primary {
@@ -355,7 +365,7 @@
 
     .e-switch-wrapper .e-switch-off,
     .e-switch-wrapper .e-switch-off {
-        background-color: #cbcbcb !important;
+        background-color: var(--gray-300) !important;
     }
 
     .e-switch-wrapper:hover .e-switch-off,
@@ -416,6 +426,11 @@
     /// svg
     .btn:hover .svg-icon svg [fill]:not(.permanent):not(g) {
         fill: var(--primary) !important;
+    }
+
+    .show>.btn.btn-active-light-primary .svg-icon svg [fill]:not(.permanent):not(g) {
+        transition: fill 0.3s ease;
+        fill: var(--primary);
     }
 
 

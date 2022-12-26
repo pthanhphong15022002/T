@@ -78,24 +78,14 @@
 }
 
 app-personals .pw-content {
-  margin-top: 15px;
-  padding: 15px 15px 0;
+  margin-top: 12px;
+  padding: 12px;
   min-width: 760px;
-  height: calc(100vh - 250px) !important;
+  height: calc(100vh - 235px) !important;
   overflow: auto;
   background-color: white;
-  box-shadow: 0px 10px 10px 10px rgb(82 63 107 / 5%);
+  box-shadow: 0px 6px 6px 6px rgb(82 63 107 / 6%);
 }
-
-// .personal-menu div.active a,
-// .personal-menu div:hover a {
-//     color: #0078ff;
-// }
-
-// .personal-menu div.active span,
-// .personal-menu div:hover span {
-//     color: #0078ff;
-// }
 
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {
   color: #495057 !important;

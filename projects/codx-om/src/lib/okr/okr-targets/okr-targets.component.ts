@@ -171,13 +171,17 @@ export class OkrTargetsComponent implements OnInit {
     //   });
   }
 
-  clickMF(e: any) {
+  clickMF(e: any,data:any) {
     var funcID = e?.functionID;
     switch (funcID) {
+      //Chỉnh sửa
       case 'SYS03': {
         let dialog = this.callfunc.openSide(OkrAddComponent, [
           this.gridView,
-          this.formModel,
+          this.formModelKR,
+          "edit",
+          "",
+          data
         ]);
         break;
       }
@@ -261,7 +265,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [ob.okrName,kr.okrName,kr.recID],
+      [ob.okrName,kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
       '',
       dModel
     );
