@@ -239,7 +239,7 @@
         [assemblyName]="'HR'"
         [entityName]="'HR_EAppointions'"
         [className]="'EAppointionsBusiness'"
-        [method]="'GetListEAppointionByDataRequestAsync'"
+        [method]="'GetListAppointionsByDataRequestAsync'"
         [predicate]="'EmployeeID=@0'"
         [dataValue]="employId"
         [itemTemplate]="itemTemplate"
@@ -251,8 +251,7 @@
 <ng-template #itemTemplate let-data>
     <codx-temp-full
         [formModel]="formModel"
-        [typeMF]="'hover'"
-        [title]="data.passportNo"
+        [titleTmp]="tmplateTitleEAppointions"
         [icoTitleCss]="'icon-list_alt'"
         [subTitleTmp]="tmplateEAppointionsMenuList"
         cardCss="card codx_cardcenter px-2 pt-4 pb-2"
