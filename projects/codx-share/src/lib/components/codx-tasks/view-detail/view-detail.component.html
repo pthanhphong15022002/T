@@ -625,7 +625,7 @@
       <div
         class="text-gray-700"
         *ngIf="itemSelected?.memo"
-        [innerHTML]="itemSelected.memo"
+        [innerHTML]="sanitizer.bypassSecurityTrustHtml(itemSelected?.memo)"
       ></div>
       <div *ngIf="itemSelected?.memo2">
         <span class="text-gray-700">
