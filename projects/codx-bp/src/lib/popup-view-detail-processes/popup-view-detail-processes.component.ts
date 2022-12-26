@@ -61,7 +61,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   mfAdd: any;
   isShowButton = true;
   isEdit = true;
-  avata = '';
+  listuserStr = '';
 
   constructor(
     private api: ApiHttpService,
@@ -111,7 +111,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   getListUser() {
     this.bpService.getUserByProcessId(this.process.recID).subscribe((res) => {
       if (res) {
-        this.avata = res;
+        this.listuserStr = res;
       }
     });
   }
