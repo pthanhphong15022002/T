@@ -798,7 +798,7 @@ codx-view-list-detail .codx-detail-footer.expand .tab-content {
   overflow: auto;
   padding: 0 15px;
   position: relative;
-  height: 358px;
+  height: 360px;
   padding-bottom: 0 !important;
 }
 
@@ -1319,6 +1319,12 @@ codx-vll {
 
 .tab-content>.active {
   height: 100%;
+  overflow: auto;
+}
+
+.tab-content .mt-3.tab-tch {
+  margin-top: 0 !important;
+  padding-top: 5px !important;
 }
 
 .label-colon {
