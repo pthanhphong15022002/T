@@ -26,7 +26,7 @@
                     <codx-label fiedName="LegalName" formName="SystemSetting" gridViewName="" default="Tên công ty">
                     </codx-label>
                   </div>
-                  <codx-input type="text" field="legalName" [crrValue]="data?.legalName" placeholder="Tên công ty">
+                  <codx-input disabled="true" type="text" field="legalName" [crrValue]="data?.legalName" placeholder="Tên công ty">
                   </codx-input>
                 </div>
                 <div class="col-md-2">
@@ -53,7 +53,7 @@
                   </codx-label>
                 </div>
                 <div class="col-6">
-                  <codx-input type="text" class="form-control" field="taxCode" [crrValue]="data.taxCode"></codx-input>
+                  <codx-input disabled="true" type="text" class="form-control" field="taxCode" [crrValue]="data.taxCode"></codx-input>
                 </div>
               </div>
               <div class="d-flex justify-content-center pt-3">

@@ -90,10 +90,7 @@ export class CalendarNotesComponent
   dataListViewTemp: any;
   dtService: CRUDService;
 
-  @Input() showHeader = true;
   @Input() typeCalendar = 'week';
-  @Input() showList = true;
-  @Input() showListParam = false;
   @Output() dataResourceModel: any[] = [];
   @Output() settingValue: any;
 
@@ -440,11 +437,11 @@ export class CalendarNotesComponent
 
   setDate(data, lstView: CodxListviewComponent) {
     if (data) {
-      let dateT = data.toLocaleDateString();
+      let dateT = new Date(data).toLocaleDateString();
       var fromDate = dateT;
       this.daySelected = fromDate;
       var toDate = moment(dateT).add(1, 'day').toISOString();
-      if (this.showList && lstView) {
+      if (lstView) {
         let myInterval = setInterval(() => {
           if (
             this.dataResourceModel.length > 0 &&
@@ -604,9 +601,7 @@ export class CalendarNotesComponent
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
-      if (res[0].length > 0) {
-        this.getModelShare(res[0], param.Template, 'TM_Tasks');
-      }
+      this.getModelShare(res[0], param.Template, 'TM_Tasks');
     });
   }
 
@@ -614,8 +609,8 @@ export class CalendarNotesComponent
     if (showEvent == '0' || showEvent == 'false') return;
     this.CO_Meetings = [];
     let requestDataCO: DataRequest = new DataRequest();
-    requestDataCO.predicate = predicate;
-    requestDataCO.dataValue = dataValue;
+    requestDataCO.predicates = predicate;
+    requestDataCO.dataValues = dataValue;
     requestDataCO.funcID = 'TMT0501';
     requestDataCO.formName = 'TMMeetings';
     requestDataCO.gridViewName = 'grvTMMeetings';
@@ -625,9 +620,7 @@ export class CalendarNotesComponent
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'CO_Meetings');
-      }
+      this.getModelShare(res[0], param.Template, 'CO_Meetings');
     });
   }
 
@@ -635,8 +628,8 @@ export class CalendarNotesComponent
     if (showEvent == '0' || showEvent == 'false') return;
     this.EP_BookingRooms = [];
     let requestDataEP_Room: DataRequest = new DataRequest();
-    requestDataEP_Room.predicate = predicate;
-    requestDataEP_Room.dataValue = dataValue;
+    requestDataEP_Room.predicates = predicate;
+    requestDataEP_Room.dataValues = dataValue;
     requestDataEP_Room.funcID = 'EP4T11';
     requestDataEP_Room.formName = 'BookingRooms';
     requestDataEP_Room.gridViewName = 'grvBookingRooms';
@@ -646,9 +639,7 @@ export class CalendarNotesComponent
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
-      }
+      this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
     });
   }
 
@@ -656,8 +647,8 @@ export class CalendarNotesComponent
     if (showEvent == '0' || showEvent == 'false') return;
     this.EP_BookingCars = [];
     let requestDataEP_Car: DataRequest = new DataRequest();
-    requestDataEP_Car.predicate = predicate;
-    requestDataEP_Car.dataValue = dataValue;
+    requestDataEP_Car.predicates = predicate;
+    requestDataEP_Car.dataValues = dataValue;
     requestDataEP_Car.funcID = 'EP7T11';
     requestDataEP_Car.formName = 'BookingCars';
     requestDataEP_Car.gridViewName = 'grvBookingCars';
@@ -667,9 +658,7 @@ export class CalendarNotesComponent
     requestDataEP_Car.entityName = 'EP_Bookings';
     requestDataEP_Car.entityPermission = 'EP_BookingCars';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'EP_BookingCars');
-      }
+      this.getModelShare(res[0], param.Template, 'EP_BookingCars');
     });
   }
 
@@ -677,80 +666,82 @@ export class CalendarNotesComponent
     if (showEvent == '0' || showEvent == 'false') return;
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
-      if (res) {
-        this.countNotePin = 0;
-        this.countNotePin = res[1];
-        this.getModelShare(res[0], param.Template, 'WP_Notes');
-      }
+      this.countNotePin = 0;
+      this.countNotePin = res[1];
+      this.getModelShare(res[0], param.Template, 'WP_Notes');
     });
   }
 
   getModelShare(lstData, param, transType) {
-    lstData.forEach((item) => {
-      var paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
-      paramValue['data'] = {};
-      let data: any = JSON.parse(JSON.stringify(item));
-      for (const key in data) {
-        for (const keyValue of Object.keys(paramValue)) {
-          if (
-            paramValue[keyValue] &&
-            typeof paramValue[keyValue] === 'string'
-          ) {
-            var value = Util.camelize(paramValue[keyValue]);
-            if (data[value] || typeof data[value] == 'boolean')
-              paramValue[keyValue] = data[value];
-            if (paramValue[keyValue] == 'CheckList')
-              paramValue[keyValue] = data.checkList;
-            else if (paramValue[keyValue] == 'StartDate') {
-              paramValue[keyValue] = data.startDate;
-            } else if (paramValue[keyValue] == 'EndDate')
-              paramValue[keyValue] = data.endDate;
-          } else {
-            paramValue['data'][key] = data[key];
+    this.onSwitchCountEven(transType);
+    if (lstData && lstData.length > 0) {
+      lstData.forEach((item) => {
+        var paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
+        paramValue['data'] = {};
+        let data: any = JSON.parse(JSON.stringify(item));
+        for (const key in data) {
+          for (const keyValue of Object.keys(paramValue)) {
+            if (
+              paramValue[keyValue] &&
+              typeof paramValue[keyValue] === 'string'
+            ) {
+              var value = Util.camelize(paramValue[keyValue]);
+              if (data[value] || typeof data[value] == 'boolean')
+                paramValue[keyValue] = data[value];
+              if (paramValue[keyValue] == 'CheckList')
+                paramValue[keyValue] = data.checkList;
+              else if (paramValue[keyValue] == 'StartDate') {
+                paramValue[keyValue] = data.startDate;
+              } else if (paramValue[keyValue] == 'EndDate')
+                paramValue[keyValue] = data.endDate;
+            } else {
+              paramValue['data'][key] = data[key];
+            }
           }
         }
-      }
-      if (!paramValue['StartDate'] && !paramValue['EndDate']) {
-        paramValue['startDate'] = moment(paramValue?.calendarDate).startOf(
-          'date'
+        if (!paramValue['StartDate'] && !paramValue['EndDate']) {
+          paramValue['startDate'] = moment(paramValue?.calendarDate).startOf(
+            'date'
+          );
+          paramValue['endDate'] = paramValue?.calendarDate;
+        }
+        switch (transType) {
+          case 'TM_Tasks':
+            this.TM_Tasks.push(paramValue);
+            break;
+          case 'WP_Notes':
+            this.WP_Notes.push(paramValue);
+            break;
+          case 'CO_Meetings':
+            this.CO_Meetings.push(paramValue);
+            break;
+          case 'EP_BookingRooms':
+            this.EP_BookingRooms.push(paramValue);
+            break;
+          case 'EP_BookingCars':
+            this.EP_BookingCars.push(paramValue);
+            break;
+        }
+      });
+      if (this.countDataOfE == this.countEvent) {
+        this.dataResourceModel = [];
+        this.dataResourceModel = [
+          ...this.TM_Tasks,
+          ...this.WP_Notes,
+          ...this.CO_Meetings,
+          ...this.EP_BookingRooms,
+          ...this.EP_BookingCars,
+        ];
+        this.TM_TasksTemp = JSON.parse(JSON.stringify(this.TM_Tasks));
+        this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
+        this.CO_MeetingsTemp = JSON.parse(JSON.stringify(this.CO_Meetings));
+        this.EP_BookingRoomsTemp = JSON.parse(
+          JSON.stringify(this.EP_BookingRooms)
         );
-        paramValue['endDate'] = paramValue?.calendarDate;
+        this.EP_BookingCarsTemp = JSON.parse(
+          JSON.stringify(this.EP_BookingCars)
+        );
       }
-      switch (transType) {
-        case 'TM_Tasks':
-          this.TM_Tasks.push(paramValue);
-          break;
-        case 'WP_Notes':
-          this.WP_Notes.push(paramValue);
-          break;
-        case 'CO_Meetings':
-          this.CO_Meetings.push(paramValue);
-          break;
-        case 'EP_BookingRooms':
-          this.EP_BookingRooms.push(paramValue);
-          break;
-        case 'EP_BookingCars':
-          this.EP_BookingCars.push(paramValue);
-          break;
-      }
-    });
-    this.onSwitchCountEven(transType);
-    if (this.countDataOfE == this.countEvent) {
-      this.dataResourceModel = [
-        ...this.TM_Tasks,
-        ...this.WP_Notes,
-        ...this.CO_Meetings,
-        ...this.EP_BookingRooms,
-        ...this.EP_BookingCars,
-      ];
-      this.TM_TasksTemp = JSON.parse(JSON.stringify(this.TM_Tasks));
-      this.WP_NotesTemp = JSON.parse(JSON.stringify(this.WP_Notes));
-      this.CO_MeetingsTemp = JSON.parse(JSON.stringify(this.CO_Meetings));
-      this.EP_BookingRoomsTemp = JSON.parse(
-        JSON.stringify(this.EP_BookingRooms)
-      );
-      this.EP_BookingCarsTemp = JSON.parse(JSON.stringify(this.EP_BookingCars));
-      this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
     }
   }
 
@@ -1162,13 +1153,11 @@ export class CalendarNotesComponent
             this.dataResourceModel = this.dataResourceModel.filter(
               (x) => x.transType != transType
             );
-            if (this.showList) {
-              if (this.dataListViewTemp && this.dataListViewTemp.length > 0)
-                this.lstView.dataService.data =
-                  this.lstView.dataService.data.filter(
-                    (x) => x.transType != transType
-                  );
-            }
+            if (this.dataListViewTemp && this.dataListViewTemp.length > 0)
+              this.lstView.dataService.data =
+                this.lstView.dataService.data.filter(
+                  (x) => x.transType != transType
+                );
           } else if (value == '1') {
             if (
               this.checkWP_NotesParam == '0' ||
@@ -1235,28 +1224,26 @@ export class CalendarNotesComponent
                   ...this.EP_BookingCarsTemp,
                 ];
             }
-            if (this.showList) {
-              let lstTemp: any = JSON.parse(
-                JSON.stringify(this.dataListViewTemp)
-              );
-              lstTemp = lstTemp.filter((x) => x.transType == transType);
-              if (transType == 'WP_Notes')
-                this.lstView.dataService.data = [
-                  ...lstTemp,
-                  ...this.lstView.dataService.data,
-                ];
-              else
-                this.lstView.dataService.data = [
-                  ...this.lstView.dataService.data,
-                  ...lstTemp,
-                ];
-            }
+            let lstTemp: any = JSON.parse(
+              JSON.stringify(this.dataListViewTemp)
+            );
+            lstTemp = lstTemp.filter((x) => x.transType == transType);
+            if (transType == 'WP_Notes')
+              this.lstView.dataService.data = [
+                ...lstTemp,
+                ...this.lstView.dataService.data,
+              ];
+            else
+              this.lstView.dataService.data = [
+                ...this.lstView.dataService.data,
+                ...lstTemp,
+              ];
           }
-          if (this.typeCalendar == 'month' && this.calendar) {
-            this.calendar.refresh();
-            this.calendar.value = this.FDdate;
-          } else this.setEventWeek();
-          this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
+          // if (this.typeCalendar == 'month' && this.calendar) {
+          //   this.calendar.refresh();
+          //   this.calendar.value = this.FDdate;
+          // } else this.setEventWeek();
+          // this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
         }
       });
   }
