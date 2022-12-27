@@ -137,7 +137,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 3;
+  crrTab: number = 4;
 
   //EAsset salary
   lstAsset: any = [];
@@ -338,7 +338,7 @@ export class EmployeeProfileComponent extends UIComponent {
         this.hrService.getListAssetByDataRequest(rqAppointion).subscribe((res) => {
           if (res) this.lstAppointions = res[0];
           console.log('lit e appoint', this.lstAppointions);
-          
+
         });
 
         //Asset
@@ -428,9 +428,9 @@ export class EmployeeProfileComponent extends UIComponent {
         this.hrService.getListDiseasesByDataRequest(rqDiseases).subscribe((res) => {
           if (res) this.lstEdiseases = res[0];
           console.log('lit e di zi', this.lstEdiseases);
-          
+
         });
-        
+
         //Edegrees
         let rqDegrees = new DataRequest();
         rqDegrees.gridViewName = 'grvEDegrees';
@@ -610,10 +610,10 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeCertificateInfo('edit', data);
           this.df.detectChanges();
-        } else if(funcID == 'eAppointions'){
+        } else if (funcID == 'eAppointions') {
           this.HandleEmployeeAppointionInfo('edit', data);
           this.df.detectChanges()
-        } else if(funcID == 'eExperiences'){
+        } else if (funcID == 'eExperiences') {
           this.handlEmployeeExperiences('edit', data);
           this.df.detectChanges();
         }
@@ -801,37 +801,37 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                   this.df.detectChanges();
-              }); 
-            } else if(funcID == 'eAppointions'){
+                });
+            } else if (funcID == 'eAppointions') {
               this.hrService
-              .DeleteEmployeeAppointionsInfo(data.recID)
-              .subscribe((p) => {
-                if (p == true) {
-                  this.notify.notifyCode('SYS008');
-                  let i = this.lstAppointions.indexOf(data);
-                  if (i != -1) {
-                    this.lstAppointions.splice(i, 1);
+                .DeleteEmployeeAppointionsInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstAppointions.indexOf(data);
+                    if (i != -1) {
+                      this.lstAppointions.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
                   }
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              }); 
-            } else if(funcID == 'eExperiences'){
+                });
+            } else if (funcID == 'eExperiences') {
               this.hrService
-              .DeleteEmployeeExperienceInfo(data.recID)
-              .subscribe((p) => {
-                if (p == true) {
-                  this.notify.notifyCode('SYS008');
-                  let i = this.lstExperience.indexOf(data);
-                  if (i != -1) {
-                    this.lstExperience.splice(i, 1);
+                .DeleteEmployeeExperienceInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstExperience.indexOf(data);
+                    if (i != -1) {
+                      this.lstExperience.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
                   }
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              }); 
+                });
             }
           }
         });
@@ -865,10 +865,10 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeCertificateInfo('copy', data);
           this.df.detectChanges();
-        } else if(funcID == 'eAppointions'){
+        } else if (funcID == 'eAppointions') {
           this.HandleEmployeeAppointionInfo('copy', data);
           this.df.detectChanges();
-        } else if(funcID == 'eExperiences'){
+        } else if (funcID == 'eExperiences') {
           this.handlEmployeeExperiences('copy', data);
           this.df.detectChanges();
         }
@@ -1197,7 +1197,7 @@ export class EmployeeProfileComponent extends UIComponent {
     ];
   }
 
-  changeItemDetail(item) {}
+  changeItemDetail(item) { }
 
   clickTab(tabNumber) {
     this.crrTab = tabNumber;
@@ -1636,7 +1636,7 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         indexSelected: this.lstAppointions.indexOf(data),
-        lstEAppointions : this.lstAppointions,
+        lstEAppointions: this.lstAppointions,
       }
     );
     dialogAdd.closed.subscribe((res) => {
