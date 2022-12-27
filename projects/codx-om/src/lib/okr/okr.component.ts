@@ -1,3 +1,4 @@
+import { OMCONST } from './../codx-om.constant';
 import {
   AfterViewInit,
   Component,
@@ -172,7 +173,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.dataOKRPlans],
+      [OMCONST.MFUNCID.Add, null, o, this.formModelKR, 'Thêm mới kết quả chính',this.dataOKRPlans],
       option
     );
     

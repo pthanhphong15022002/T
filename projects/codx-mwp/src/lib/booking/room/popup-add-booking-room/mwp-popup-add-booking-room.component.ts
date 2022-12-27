@@ -640,7 +640,7 @@ export class MWPPopupAddBookingRoomComponent extends UIComponent {
     //ktra link online
     if(this.data.online && (this.data.onlineUrl==null || this.data.onlineUrl==''))
     {
-      this.notificationsService.alertCode('Chưa có đường dẫn cho cuộc họp online!').subscribe((x)=>{//EP_WAIT đợi messagecode từ BA
+      this.notificationsService.alertCode('EP012').subscribe((x)=>{//EP_WAIT đợi messagecode từ BA
         if (x.event.status == 'N') {
           return;
         } else {
@@ -730,7 +730,7 @@ export class MWPPopupAddBookingRoomComponent extends UIComponent {
               );
             }            
           }
-          if (approval) {
+          if (approval ) {
             (
               this.codxEpService.getCategoryByEntityName(
                 this.formModel.entityName
