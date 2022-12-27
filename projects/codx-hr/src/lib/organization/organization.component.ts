@@ -1,8 +1,6 @@
 import {
-  ChangeDetectorRef,
   Component,
   Injector,
-  OnInit,
   TemplateRef,
   ViewChild,
   ViewEncapsulation,
@@ -113,7 +111,6 @@ export class OrgorganizationComponent extends UIComponent {
         },
       },
     ];
-    debugger;
     this.view.dataService.parentIdField = 'ParentID';
     this.detectorRef.detectChanges();
     this.dataService.currentComponent =
@@ -131,9 +128,9 @@ export class OrgorganizationComponent extends UIComponent {
   // selected change
   onSelectionChanged(evt: any) {
     var data = evt.data || evt;
-    if (data && this.orgUnitID !== data.orgUnitID) {
+    if (data && this.orgUnitID !== data.orgUnitID) 
+    {
       this.orgUnitID = data.orgUnitID;
-      this.detectorRef.detectChanges();
     }
   }
   // button add toolbar
