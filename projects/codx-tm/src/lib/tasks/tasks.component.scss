@@ -54,10 +54,14 @@ codx-tabs .tab-comt {
 }
 
 codx-tabs .tab-comt .tab_container .tree-body {
-  height: 300px;
+  height: 285px;
   overflow: auto;
   overflow-x: hidden;
   padding-top: 10px;
+}
+
+codx-tabs .tab-content .content-tree {
+  padding: 0 !important;
 }
 
 // .bg-red {
