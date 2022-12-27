@@ -570,6 +570,16 @@ export class CodxEpService {
       listPositionID
     );
   }
+
+  afterApprovedManual(entity: string, recID: string, status:string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'ApprovedAsync',
+      [entity, recID, status]
+    );
+  }
   //#endregion
 
   //#Setting SYS

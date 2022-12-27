@@ -71,14 +71,12 @@ export class PopupAddKRComponent extends UIComponent {
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);    
-    this.isAdd = dialogData?.data[0];
-    this.kr = dialogData.data[1];
+    this.isAdd = dialogData?.data[0];    
+    this.headerText = dialogData?.data[1];
     this.o = dialogData.data[2];
-    this.formModel = dialogData.data[3];
-    this.headerText = dialogData?.data[4];
-    this.funcID = dialogData?.data[5];
-    this.dataOKRPlans = dialogData?.data[6];
-    this.dialogRef = dialogRef;
+    this.kr = dialogData.data[3];
+    this.dataOKRPlans = dialogData?.data[4];
+    
     if (!this.isAdd) {
       this.typePlan = this.kr.plan;
     }

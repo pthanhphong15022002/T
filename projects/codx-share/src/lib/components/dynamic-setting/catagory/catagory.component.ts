@@ -124,15 +124,18 @@ export class CatagoryComponent implements OnInit {
         ['FormName=@0 and Category=@1', 'ESParameters;1']
       )
       .subscribe((setting: any) => {
-        let format = JSON.parse(setting.dataValue);
-        console.log('func', this.function);
-
-        // this.cacheService.functionList(this.lstFuncID)
-        this.labels = format?.Label?.filter((label) => {
-          return label.Language == this.function?.language;
-        });
-
-        this.changeDetectorRef.detectChanges();
+        if(setting){
+          let format = JSON.parse(setting?.dataValue);
+          console.log('func', this.function);
+  
+          // this.cacheService.functionList(this.lstFuncID)
+          this.labels = format?.Label?.filter((label) => {
+            return label.Language == this.function?.language;
+          });
+  
+          this.changeDetectorRef.detectChanges();
+        }
+        
       });
   }
 

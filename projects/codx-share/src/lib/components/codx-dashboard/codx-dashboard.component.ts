@@ -250,7 +250,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   savePanel(evt: any){
-    let dataSettings: any = {id: this.dataItem.recID, panels: [], panelDatas:[] };
+    let dataSettings: any = {id: this.dataItem?.recID, panels: [], panelDatas:[] };
     let arrPanels = this.objDashboard.serialize();
     dataSettings.panels = arrPanels;
     arrPanels.forEach((item:any)=>{
@@ -269,8 +269,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     });
     console.log(JSON.stringify(dataSettings.panels,function replacer(key, value) { return value}));
     console.log(JSON.stringify(dataSettings.panelDatas, function replacer(key, value) { return value}));
-    debugger
-
   }
 
   addPanel(isAuto: boolean = false, chartType?: string, data?: any) {
@@ -483,7 +481,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     if (args.element) {
       if (args.element.querySelector('ejs-accumulationchart')) {
         const chartObj = args.element
-          .getElementsByClassName('chart-item')[0]
           .querySelector('ejs-accumulationchart').ej2_instances[0];
           chartObj.height = '80%';
           chartObj.width = '100%';
@@ -499,7 +496,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
       }
       if (args.element.querySelector('ejs-chart')) {
         const chartObj = args.element
-          .getElementsByClassName('chart-item')[0]
           .querySelector('ejs-chart').ej2_instances[0];
         chartObj.height = '80%';
         chartObj.width = '100%';
@@ -519,11 +515,12 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
 
   onCreate(evt: any) {
 
+    document.getElementsByClassName('icon-close icon-18')[0].remove();
     //let itemData = JSON.parse('{"id":"cff7b1a6-4b3a-4b9a-8d3c-bd33d99b2e66","panels":[{"id":"0.678896381234823_layout","row":0,"col":4,"sizeX":6,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.1257922786025789_layout","row":0,"col":0,"sizeX":4,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}],"panelDatas":[{"panelId":"0.678896381234823_layout","data":"{\"serieSetting\":{\"type\":\"StepArea\",\"marker\":{\"visible\":true,\"width\":10,\"height\":10},\"border\":{\"width\":2},\"tooltip\":{\"enable\":true},\"xName\":\"bookingNo\",\"yName\":\"attendees\",\"name\":\"a rê a chạc\"},\"axisX\":{\"valueType\":\"Category\",\"majorTickLines\":{\"width\":0}},\"axisY\":{\"title\":\"\",\"minimum\":0,\"maximum\":30,\"interval\":4,\"lineStyle\":{\"width\":0},\"majorTickLines\":{\"width\":0}},\"legendSetting\":{\"visible\":true,\"enableHighlight\":true}}"},{"panelId":"0.1257922786025789_layout","data":"TextCLGT"}]}')
-    this.panels = JSON.parse('[{"id":"0.9272112695591359_layout","row":0,"col":3,"sizeX":7,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.2912252785831644_layout","row":0,"col":0,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]');
+    //this.panels = JSON.parse('[{"id":"0.9272112695591359_layout","row":0,"col":3,"sizeX":7,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.2912252785831644_layout","row":0,"col":0,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]');
 
     //debugger
-    this.datas = JSON.parse('[{"panelId":"0.9272112695591359_layout","data":"{\\"serieSetting\\":{\\"type\\":\\"Line\\",\\"marker\\":{\\"visible\\":true,\\"width\\":10,\\"height\\":10},\\"tooltip\\":{\\"enable\\":true},\\"xName\\":\\"bookingNo\\",\\"yName\\":\\"attendees\\",\\"name\\":\\"kkkk\\"},\\"axisX\\":{\\"valueType\\":\\"Category\\",\\"edgeLabelPlacement\\":\\"Shift\\",\\"majorGridLines\\":{\\"width\\":0}},\\"axisY\\":{\\"title\\":\\" \\",\\"minimum\\":0,\\"maximum\\":30,\\"interval\\":4,\\"lineStyle\\":{\\"width\\":0},\\"majorTickLines\\":{\\"width\\":0}},\\"legendSetting\\":{\\"visible\\":true,\\"enableHighlight\\":true}}"},{"panelId":"0.2912252785831644_layout","data":"TextCLGT"}]');
+    //this.datas = JSON.parse('[{"panelId":"0.9272112695591359_layout","data":"{\\"serieSetting\\":{\\"type\\":\\"Line\\",\\"marker\\":{\\"visible\\":true,\\"width\\":10,\\"height\\":10},\\"tooltip\\":{\\"enable\\":true},\\"xName\\":\\"bookingNo\\",\\"yName\\":\\"attendees\\",\\"name\\":\\"kkkk\\"},\\"axisX\\":{\\"valueType\\":\\"Category\\",\\"edgeLabelPlacement\\":\\"Shift\\",\\"majorGridLines\\":{\\"width\\":0}},\\"axisY\\":{\\"title\\":\\" \\",\\"minimum\\":0,\\"maximum\\":30,\\"interval\\":4,\\"lineStyle\\":{\\"width\\":0},\\"majorTickLines\\":{\\"width\\":0}},\\"legendSetting\\":{\\"visible\\":true,\\"enableHighlight\\":true}}"},{"panelId":"0.2912252785831644_layout","data":"TextCLGT"}]');
 
 
     if (this.panels && this.panels.length > 0) {
