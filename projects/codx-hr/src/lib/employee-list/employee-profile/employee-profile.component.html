@@ -865,7 +865,7 @@
           <div class="d-flex flex-column" *ngIf="crrTab == 5">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeAwardsInfo()"
+              (click)="addEmployeeAwardsInfo('add',null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -4238,7 +4238,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeAwardsInfo()"
+                    (click)="addEmployeeAwardsInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4632,7 +4632,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEDisease('add', null)"
+                    (click)="HandleEmployeeDiseaseInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"

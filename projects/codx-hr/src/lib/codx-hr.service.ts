@@ -445,16 +445,6 @@ export class CodxHrService {
     );
   }
 
-  getEmployeeAwardInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAwardsBusiness',
-      'GetEmployeeAwardInfoAsync',
-      data
-    );
-  }
-
   getEmployeeDesciplinesInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -535,15 +525,6 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeAwardInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EAwardsBusiness',
-      'AddEmployeeAwardInfoAsync',
-      data
-    );
-  }
 
   updateEmployeeDisciplinesInfo(data) {
     return this.api.execSv<any>(
@@ -556,6 +537,58 @@ export class CodxHrService {
   }
 
   //#endregion
+
+
+    //#region EPassportBusiness
+    getEmployeeAwardModel() {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAwardsBusiness',
+        'GetEmployeeAwardModelAsync'
+      );
+    }
+  
+    UpdateEmployeeAwardInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAwardsBusiness',
+        'UpdateEmployeeAwardInfoAsync',
+        data
+      );
+    }
+  
+    AddEmployeeAwardInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAwardsBusiness',
+        'AddEmployeeAwardInfoAsync',
+        data
+      );
+    }
+  
+    DeleteEmployeeAwardInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAwardsBusiness',
+        'DeleteEmployeeAwardInfoAsync',
+        data
+      );
+    }
+  
+    getListAwardByDataRequest(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAwardsBusiness',
+        'GetListAwardByDataRequestAsyncLogic',
+        data
+      );
+    }
+    //#endregion
 
   //#region EAssetBusiness
   getEmployeeAssetsModel() {
@@ -767,7 +800,7 @@ export class CodxHrService {
         'HR',
         'HR',
         'EDiseasesBusiness',
-        'DeleteEDiseaseAsync',
+        'DeleteEmployeeDiseaseInfoAsync',
         data
       );
     }
