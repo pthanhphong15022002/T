@@ -9,6 +9,7 @@ import {
   TemplateRef,
   ViewChild,
   ViewContainerRef,
+  ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CalendarComponent } from '@syncfusion/ej2-angular-calendars';
@@ -34,6 +35,7 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
   selector: 'app-codx-calendar',
   templateUrl: './codx-calendar.component.html',
   styleUrls: ['./codx-calendar.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class CodxCalendarComponent extends UIComponent implements OnInit {
   headerText: any;
@@ -184,10 +186,12 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
 
   navigate() {
     this.codxShareSV.dateChange.subscribe((res) => {
-      // if (this.check) return;
+      if (this.check) return;
+      if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
+        return;
       if (res?.fromDate && res?.toDate) {
         this.dateChange = res.fromDate;
-        // this.check = false;
+        this.check = false;
         this.getParamCalendar(
           moment(res.fromDate).toISOString(),
           moment(res.toDate).toISOString(),
@@ -207,7 +211,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     this.change.detectChanges();
   }
 
-  // check = false;
+  check = false;
   changeNewMonth(args: any) {
     if (this.calendar_mini) {
       var tempCalendar = this.calendar_mini.element;
@@ -229,10 +233,9 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (ele) {
       this.dataResourceModel;
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      // cmp.isNavigateInside = false;
       cmp.selectedDate = args.date;
       //cmp.isNavigateInside = true;
-      // this.check = true;
+      this.check = true;
       cmp.onNavigating(args);
     }
   }
@@ -353,81 +356,83 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getParamCalendar(fDayOfMonth, lDayOfMonth, updateCheck = true) {
-    debugger;
-    this.countDataOfE = 0;
-    this.api
-      .execSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetParamCalendarAsync',
-        'WPCalendars'
-      )
-      .subscribe((res) => {
-        if (res) {
-          let dt = res;
-          this.countEvent = dt[1];
-          const dataValue = fDayOfMonth + ';' + lDayOfMonth;
-          this.TM_TasksParam = dt[0]?.TM_Tasks[1]
-            ? JSON.parse(dt[0]?.TM_Tasks[1])
-            : null;
-          this.WP_NotesParam = dt[0]?.WP_Notes[1]
-            ? JSON.parse(dt[0]?.WP_Notes[1])
-            : null;
-          this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
-            ? JSON.parse(dt[0]?.CO_Meetings[1])
-            : null;
-          this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
-            ? JSON.parse(dt[0]?.EP_BookingRooms[1])
-            : null;
-          this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
-            ? JSON.parse(dt[0]?.EP_BookingCars[1])
-            : null;
-          this.settingValue = dt[0];
-          if (updateCheck == true) {
-            this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
-            this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
-            this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
-            this.checkEP_BookingRoomsParam =
-              this.EP_BookingRoomsParam?.ShowEvent;
-            this.checkEP_BookingCarsParam = this.EP_BookingCarsParam?.ShowEvent;
+    if (fDayOfMonth && lDayOfMonth) {
+      this.countDataOfE = 0;
+      this.api
+        .execSv(
+          'SYS',
+          'ERM.Business.SYS',
+          'SettingValuesBusiness',
+          'GetParamCalendarAsync',
+          'WPCalendars'
+        )
+        .subscribe((res) => {
+          if (res) {
+            let dt = res;
+            this.countEvent = dt[1];
+            const dataValue = fDayOfMonth + ';' + lDayOfMonth;
+            this.TM_TasksParam = dt[0]?.TM_Tasks[1]
+              ? JSON.parse(dt[0]?.TM_Tasks[1])
+              : null;
+            this.WP_NotesParam = dt[0]?.WP_Notes[1]
+              ? JSON.parse(dt[0]?.WP_Notes[1])
+              : null;
+            this.CO_MeetingsParam = dt[0]?.CO_Meetings[1]
+              ? JSON.parse(dt[0]?.CO_Meetings[1])
+              : null;
+            this.EP_BookingRoomsParam = dt[0]?.EP_BookingRooms[1]
+              ? JSON.parse(dt[0]?.EP_BookingRooms[1])
+              : null;
+            this.EP_BookingCarsParam = dt[0]?.EP_BookingCars[1]
+              ? JSON.parse(dt[0]?.EP_BookingCars[1])
+              : null;
+            this.settingValue = dt[0];
+            if (updateCheck == true) {
+              this.checkTM_TasksParam = this.TM_TasksParam?.ShowEvent;
+              this.checkWP_NotesParam = this.WP_NotesParam?.ShowEvent;
+              this.checkCO_MeetingsParam = this.CO_MeetingsParam?.ShowEvent;
+              this.checkEP_BookingRoomsParam =
+                this.EP_BookingRoomsParam?.ShowEvent;
+              this.checkEP_BookingCarsParam =
+                this.EP_BookingCarsParam?.ShowEvent;
+            }
+            const lDayTimeOfMonth = moment(lDayOfMonth)
+              .endOf('date')
+              .toISOString();
+            const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
+            this.getRequestTM(
+              dt[0]?.TM_Tasks[0],
+              dataValueTM,
+              this.TM_TasksParam,
+              this.TM_TasksParam?.ShowEvent
+            );
+            this.getRequestWP(
+              dt[0]?.WP_Notes[0],
+              dataValue,
+              this.WP_NotesParam,
+              this.WP_NotesParam?.ShowEvent
+            );
+            this.getRequestCO(
+              dt[0]?.CO_Meetings[0],
+              dataValue,
+              this.CO_MeetingsParam,
+              this.CO_MeetingsParam?.ShowEvent
+            );
+            this.getRequestEP_BookingRoom(
+              dt[0]?.EP_BookingRooms[0],
+              dataValue,
+              this.EP_BookingRoomsParam,
+              this.EP_BookingRoomsParam?.ShowEvent
+            );
+            this.getRequestEP_BookingCar(
+              dt[0]?.EP_BookingCars[0],
+              dataValue,
+              this.EP_BookingCarsParam,
+              this.EP_BookingCarsParam?.ShowEvent
+            );
           }
-          const lDayTimeOfMonth = moment(lDayOfMonth)
-            .endOf('date')
-            .toISOString();
-          const dataValueTM = fDayOfMonth + ';' + lDayTimeOfMonth;
-          this.getRequestTM(
-            dt[0]?.TM_Tasks[0],
-            dataValueTM,
-            this.TM_TasksParam,
-            this.TM_TasksParam?.ShowEvent
-          );
-          this.getRequestWP(
-            dt[0]?.WP_Notes[0],
-            dataValue,
-            this.WP_NotesParam,
-            this.WP_NotesParam?.ShowEvent
-          );
-          this.getRequestCO(
-            dt[0]?.CO_Meetings[0],
-            dataValue,
-            this.CO_MeetingsParam,
-            this.CO_MeetingsParam?.ShowEvent
-          );
-          this.getRequestEP_BookingRoom(
-            dt[0]?.EP_BookingRooms[0],
-            dataValue,
-            this.EP_BookingRoomsParam,
-            this.EP_BookingRoomsParam?.ShowEvent
-          );
-          this.getRequestEP_BookingCar(
-            dt[0]?.EP_BookingCars[0],
-            dataValue,
-            this.EP_BookingCarsParam,
-            this.EP_BookingCarsParam?.ShowEvent
-          );
-        }
-      });
+        });
+    }
   }
 
   getRequestTM(predicate, dataValue, param, showEvent) {
