@@ -44,11 +44,13 @@ export class PopupUpdateRevisionsComponent implements OnInit {
   userId = "";
   isAdmin: false;
   isAdminBp: false;
+  firstNameVersion: string = '';
   constructor(
     private bpService: CodxBpService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
     private change: ChangeDetectorRef,
+    private cache: CacheService,
     public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -65,6 +67,15 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.user = this.authStore.get();
     this.revisions = this.getProcess.versions.sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
     this.title = this.titleAction;
+    this.cache.message('BP001').subscribe((res) => {
+      if (res) {
+        this.firstNameVersion = Util.stringFormat(
+          res.defaultName,
+          ': ' + 'V0.0'
+        );
+      }
+    });
+
   };
 
 
@@ -86,7 +97,6 @@ export class PopupUpdateRevisionsComponent implements OnInit {
             (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !proesses.deleted
               ? true
               : false;
-      
 
           let obj = {
             moreFunc: this.moreFunc,
