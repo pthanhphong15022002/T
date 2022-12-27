@@ -39,21 +39,21 @@
         </codx-label>
         <!-- <codx-input
       ControlName="startDate"
-      format="f"
+      format="F"
       type="datetime"
       class="test-datetime"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
     >
     </codx-input> -->
-        <codx-input field="startDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
+        <codx-input field="startDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
           (valueChange)="startDateChange($event)">
         </codx-input>
       </div>
       <div class="col-6 form-group">
         <codx-label fiedName="EndDate" [formModel]="form.formModel">
         </codx-label>
-        <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
+        <codx-input field="endDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
           (valueChange)="endDateChange($event)">
         </codx-input>
       </div>
@@ -294,7 +294,7 @@
 
       <div class="col-6">
         <codx-label name="lblCardInfo" default="Ngày cấp thẻ"> </codx-label>
-        <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
+        <codx-input type="datetime" [disabled]="true" format="F" class="test-datetime">
         </codx-input>
       </div>
     </div>
@@ -306,7 +306,7 @@
 
       <div class="col-6">
         <codx-label name="lblCardInfo" default="Ngày trả thẻ"> </codx-label>
-        <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
+        <codx-input type="datetime" [disabled]="true" format="F" class="test-datetime">
         </codx-input>
       </div>
     </div>
