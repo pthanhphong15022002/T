@@ -125,7 +125,9 @@ export class EmployeeProfileComponent extends UIComponent {
   crrJobSalaries: any = {};
   lstJobSalaries: any = [];
   //Certificate
-  lstCertificates: any = [];
+  lstCertificates: any = []
+  //Diseases
+  lstEdiseases: any = []
   //EExperience
   lstExperience: any = [];
   lstVaccine: any = [];
@@ -135,7 +137,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 3;
+  crrTab: number = 4;
 
   //EAsset salary
   lstAsset: any = [];
@@ -147,6 +149,8 @@ export class EmployeeProfileComponent extends UIComponent {
   listCrrBenefit: any;
 
   lstESkill: any = [];
+  //Awards
+  lstAwards: any = [];
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -326,6 +330,19 @@ export class EmployeeProfileComponent extends UIComponent {
           if (res) this.lstFamily = res[0];
         });
 
+        //Appointions
+        let rqAppointion = new DataRequest();
+        rqAppointion.gridViewName = 'grvEAppointions';
+        rqAppointion.entityName = 'HR_EAppointions';
+        rqAppointion.predicate = 'EmployeeID=@0';
+        rqAppointion.dataValue = params.employeeID;
+        rqAppointion.page = 1;
+        this.hrService.getListAssetByDataRequest(rqAppointion).subscribe((res) => {
+          if (res) this.lstAppointions = res[0];
+          console.log('lit e appoint', this.lstAppointions);
+
+        });
+
         //Asset
         let rqAsset = new DataRequest();
         rqAsset.gridViewName = 'grvEAssets';
@@ -402,6 +419,20 @@ export class EmployeeProfileComponent extends UIComponent {
               this.crrVisa = this.lstVisa[0];
             }
           });
+
+        // lstEdiseases Ediseases
+        let rqDiseases = new DataRequest();
+        rqDiseases.gridViewName = 'grvEDiseases';
+        rqDiseases.entityName = 'HR_EDiseases';
+        rqDiseases.predicate = 'EmployeeID=@0';
+        rqDiseases.dataValue = params.employeeID;
+        rqDiseases.page = 1;
+        this.hrService.getListDiseasesByDataRequest(rqDiseases).subscribe((res) => {
+          if (res) this.lstEdiseases = res[0];
+          console.log('lit e di zi', this.lstEdiseases);
+
+        });
+
         //Edegrees
         let rqDegrees = new DataRequest();
         rqDegrees.gridViewName = 'grvEDegrees';
@@ -530,6 +561,22 @@ export class EmployeeProfileComponent extends UIComponent {
           //this.lstSkill = res;
           //this.lstExperience = res;
         });
+
+        //HR_EAwards
+        let rqAward = new DataRequest();
+        rqAward.entityName = 'HR_ESkills';
+        rqAward.dataValues = params.employeeID;
+        rqAward.predicates = 'EmployeeID=@0';
+        rqAward.page = 1;
+        rqAward.pageSize = 20;
+        this.hrService.getViewSkillAsync(rqAward).subscribe((res) => {
+
+          if (res) {
+            this.lstAwards = res;
+          }
+          //this.lstSkill = res;
+          //this.lstExperience = res;
+        });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -581,6 +628,14 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeCertificateInfo('edit', data);
           this.df.detectChanges();
+        } else if (funcID == 'eAppointions') {
+          this.HandleEmployeeAppointionInfo('edit', data);
+          this.df.detectChanges()
+        } else if (funcID == 'eExperiences') {
+          this.handlEmployeeExperiences('edit', data);
+          this.df.detectChanges();
+        } else if(funcID == 'Diseases'){
+          this.HandleEmployeeDiseaseInfo('edit', data);
         }
         break;
 
@@ -765,7 +820,54 @@ export class EmployeeProfileComponent extends UIComponent {
                   } else {
                     this.notify.notifyCode('SYS022');
                   }
+                  this.df.detectChanges();
                 });
+            } else if (funcID == 'eAppointions') {
+              this.hrService
+                .DeleteEmployeeAppointionsInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstAppointions.indexOf(data);
+                    if (i != -1) {
+                      this.lstAppointions.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == 'eExperiences') {
+              this.hrService
+                .DeleteEmployeeExperienceInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstExperience.indexOf(data);
+                    if (i != -1) {
+                      this.lstExperience.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
+            else if(funcID == 'Diseases'){
+              this.hrService
+              .DeleteEmployeeDiseasesInfo(data.recID)
+              .subscribe((p) => {
+                if(p == true){
+                  this.notify.notifyCode('SYS008');
+                  let i = this.lstEdiseases.indexOf(data);
+                  if(i != -1){
+                    this.lstEdiseases.splice(i, 1);
+                  }
+                  this.df.detectChanges();
+                } else{
+                  this.notify.notifyCode('SYS022');
+                }
+              })
             }
           }
         });
@@ -798,6 +900,15 @@ export class EmployeeProfileComponent extends UIComponent {
           this.df.detectChanges();
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeCertificateInfo('copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eAppointions') {
+          this.HandleEmployeeAppointionInfo('copy', data);
+          this.df.detectChanges();
+        } else if (funcID == 'eExperiences') {
+          this.handlEmployeeExperiences('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'Diseases'){
+          this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1125,7 +1236,7 @@ export class EmployeeProfileComponent extends UIComponent {
     ];
   }
 
-  changeItemDetail(item) {}
+  changeItemDetail(item) { }
 
   clickTab(tabNumber) {
     this.crrTab = tabNumber;
@@ -1258,6 +1369,7 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
   }
+
 
   HandleEmployeeJobSalariesInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
@@ -1505,7 +1617,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeAwardsInfo() {
+  addEmployeeAwardsInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1515,7 +1627,9 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeAwardsDetailComponent,
       PopupEAwardsComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstAsset.indexOf(data),
+        lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
       },
@@ -1563,14 +1677,12 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         indexSelected: this.lstAppointions.indexOf(data),
-        lstCertificates: this.lstAppointions,
-        headerText: 'Bổ nhiệm - điều chuyển',
-        employeeId: this.data.employeeID,
-      },
-      option
+        lstEAppointions: this.lstAppointions,
+      }
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1789,8 +1901,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //#endregion
 
   //#region HR_EDesisease
-  addEDisease() {
-    let data;
+  HandleEmployeeDiseaseInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
@@ -1798,9 +1909,10 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEDiseasesComponent,
       {
-        actionType: 'add',
-        salarySelected: data,
-        headerText: 'Tiêm Vaccine',
+        actionType: actionType,
+        indexSelected: this.lstEdiseases.indexOf(data),
+        lstEdiseases: this.lstEdiseases,
+        headerText: 'Bệnh nghề nghiệp',
         employeeId: this.data.employeeID,
       },
       option
@@ -1813,7 +1925,6 @@ export class EmployeeProfileComponent extends UIComponent {
         //     this.crrJobSalaries = p;
         //   });
         console.log('current val', res.event);
-        this.crrJobSalaries = res.event;
         this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();

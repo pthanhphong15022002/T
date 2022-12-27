@@ -138,7 +138,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupSelectTemplateComponent } from './components/codx-dashboard/popup-select-template/popup-select-template.component';
 import { PopupMoreChartComponent } from './components/codx-dashboard/popup-more-chart/popup-more-chart.component';
 import { CodxClearCacheComponent } from './components/codx-clear-cache/codx-clear-cache.component';
-import { FormatPipe } from './pipe/format.pipe';
+import { CodxCalendarComponent } from './components/codx-calendar/codx-calendar.component';
+import { CalendarCenterComponent } from './components/codx-calendar/calendar-center/calendar-center.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -233,10 +234,12 @@ const T_Component: Type<any>[] = [
   CodxHistoryComponent,
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
-  PopupMoreChartComponent
+  PopupMoreChartComponent,
+  CodxCalendarComponent,
+  CalendarCenterComponent,
 ];
 
-const T_Pipe: Type<any>[] = [TruncatePipe, FileImage,FormatPipe];
+const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
 
 @NgModule({
   declarations: [
@@ -250,6 +253,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage,FormatPipe];
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
     CodxClearCacheComponent,
+    CalendarCenterComponent,
   ],
   imports: [
     CommonModule,

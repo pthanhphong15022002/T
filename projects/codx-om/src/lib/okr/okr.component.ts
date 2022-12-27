@@ -1,3 +1,4 @@
+import { OMCONST } from './../codx-om.constant';
 import {
   AfterViewInit,
   Component,
@@ -26,6 +27,7 @@ import { PopupDistributeKRComponent } from '../popup/popup-distribute-kr/popup-d
 import { PopupShowKRComponent } from '../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-okr',
@@ -55,12 +57,41 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   dataDate = null;
 
   dataRequest = new DataRequest();
-  formModelKR = new FormModel();
-  constructor(inject: Injector) {
-    super(inject);
+  formModelKR = new FormModel();  
+  formModelOB = new FormModel();
+  funcID: any;
+  obFuncID:any;
+  krFuncID:any;
+  addKRTitle='';
+  addOBTitle='';
+  constructor(
+    inject: Injector,
+    private activatedRoute: ActivatedRoute,
+    private codxOmService: CodxOmService,
+    ) {
+    super(inject);    
+    this.funcID = this.activatedRoute.snapshot.params['funcID'];
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
     //var x= this.authService.userValue;
+    switch(this.funcID){
+      case OMCONST.FUNCID.Company:
+        this.krFuncID=OMCONST.KRFuncID.Company;
+        this.obFuncID=OMCONST.OBFuncID.Company;
+        break;
+      case OMCONST.FUNCID.Department:
+        this.krFuncID=OMCONST.KRFuncID.Department;
+        this.obFuncID=OMCONST.OBFuncID.Department;
+        break;
+      case OMCONST.FUNCID.Team:
+        this.krFuncID=OMCONST.KRFuncID.Team;
+        this.obFuncID=OMCONST.OBFuncID.Team;
+        break;
+      case OMCONST.FUNCID.Person:
+        this.krFuncID=OMCONST.KRFuncID.Person;
+        this.obFuncID=OMCONST.OBFuncID.Person;
+        break;
+    }
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -86,17 +117,36 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe(item=>{
-      if(item) 
-      {
-        this.titleRoom = item.orgUnitName;
-        this.dtCompany = item;
+    // this.cache.getCompany(user.userID).subscribe(item=>{
+    //   if(item) 
+    //   {
+    //     this.titleRoom = item.orgUnitName;
+    //     this.dtCompany = item;
+    //   }
+    // });
+    //Lấy Form Model cho KR và OB
+    debugger;
+    this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
+      if (krFM) {
+        this.formModelKR = krFM;
       }
-    })
-    this.formModelKR.entityName = 'OM_OKRs';
-    this.formModelKR.gridViewName = 'grvOKRs';
-    this.formModelKR.formName = 'OKRs';
-    this.formModelKR.entityPer = 'OM_OKRs';
+    });
+    this.codxOmService.getFormModel(this.obFuncID).then((obFM) => {
+      if (obFM) {
+        this.formModelOB = obFM;
+      }
+    });
+    //Lấy tiêu đề theo FuncID cho Popup
+    this.cache.functionList(this.krFuncID).subscribe((res) => {
+      if (res) {
+        this.addKRTitle = res.customName.toString();
+      }
+    });
+    this.cache.functionList(this.obFuncID).subscribe((res) => {
+      if (res) {
+        this.addOBTitle = res.customName.toString();
+      }
+    });
   }
 
   //Hàm click
@@ -152,27 +202,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     ]
     );    
   }
-  //Lấy data danh sách mục tiêu
-  getGridViewSetup() {
-    this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
-      this.okrService
-        .loadGridView(fuc?.formName, fuc?.gridViewName)
-        .subscribe((grd) => {
-          this.gridView = grd;
-        });
-    });
-  }
-
-  //Thêm KR
+  //Thêm mới KR
   addKR(o: any=null) {
-    // Tạo FormModel cho OKRs
+
     let option = new SidebarModel();
-    option.Width = '550px';
     option.FormModel = this.formModelKR;
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [null, o, this.formModelKR, true, 'Thêm mới kết quả chính',this.dataOKRPlans],
+      [OMCONST.MFUNCID.Add, this.addKRTitle, null, o, this.dataOKRPlans],
       option
     );
     
@@ -190,6 +228,18 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     })
 
   }
+  //Lấy data danh sách mục tiêu
+  getGridViewSetup() {
+    this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
+      this.okrService
+        .loadGridView(fuc?.formName, fuc?.gridViewName)
+        .subscribe((grd) => {
+          this.gridView = grd;
+        });
+    });
+  }
+
+  
 
   getOKRPlans(periodID: any , interval: any , year: any)
   {

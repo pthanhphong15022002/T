@@ -57,7 +57,8 @@
         >
           <ng-container *ngFor="let item of data?.items">
             <div
-              class="d-flex align-item-center p-1 mb-2 psteps-item"
+              [ngClass]="!hideMoreFCChild && checkBackground(item?.recID) ? 'color-hover' : ''"
+              class="d-flex align-item-center psteps-item"
               #p="ngbPopover"
               [ngbPopover]="!hideMoreFCChild ? hoverMoreFunction : ''"
               (mouseenter)="openMF(item, p)"
@@ -734,7 +735,8 @@
 </ng-template>
 
 <ng-template #hoverMoreFunction>
-  <codx-mfunc
+  <div class="more-function">
+    <codx-mfunc
     type="hover"
     [formModel]="view.formModel"
     (clickMF)="clickMF($event, dataHover)"
@@ -742,17 +744,18 @@
     [dataItem]="dataHover"
   >
   </codx-mfunc>
+  </div>
 </ng-template>
 <ng-template #showAllparentName let-text>
   <span>{{ text }}</span>
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div style="position: relative; height: 30px; display: flex;">
+  <div class="envelop">
     <div class="d-flex align-items-center justify-content-between cursor-pointer w-100  has-actions-menu">
       <div class="line-colums">{{ data.headerText }}</div>
     </div>
-    <div class="show-more" style="position: absolute; top: 0px ; right: -20px; background: white;border-radius: 20px;">   
+    <div class="show-more" >   
         <codx-mfunc
         type="hover"
         [formModel]="view.formModel"
@@ -763,6 +766,5 @@
       </codx-mfunc>
     </div>
   </div>
- 
 </ng-template>
 

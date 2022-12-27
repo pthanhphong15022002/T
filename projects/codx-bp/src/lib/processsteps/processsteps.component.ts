@@ -150,6 +150,7 @@ export class ProcessStepsComponent
   widthElement = 300;
   dataClick: any;
   dataColums =[] ;
+  isHover = null;
 
   constructor(
     inject: Injector,
@@ -465,9 +466,9 @@ export class ProcessStepsComponent
     } else {
       // doi parent
       phaseOld?.items.splice(index, 1);
-      if (index < phaseOld.length - 1) {
-        for (var i = index; i < phaseOld.length; i++) {
-          phaseOld[i].stepNo--;
+      if (index < phaseOld?.items.length - 1) {
+        for (var i = index; i < phaseOld?.items.length; i++) {
+          phaseOld['items'][i].stepNo--;
         }
       }
       var indexParentNew = this.view.dataService.data.findIndex(
@@ -1192,6 +1193,7 @@ export class ProcessStepsComponent
       this.getObjectFile.emit(e);
       this.changeDetectorRef.detectChanges();
     }
+    this.addFlowchart.clearData() ;
   }
 
   showIconByStepType(stepType) {
@@ -1293,12 +1295,18 @@ export class ProcessStepsComponent
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
+      this.isHover = data?.recID;
       this.dataHover = data;
       p.open();
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  checkBackground(i){
+    if( this.isHover == i) return true;
+    return false;
   }
 
   closeMFTypeA() {

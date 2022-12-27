@@ -482,7 +482,7 @@ export class VersionComponent implements OnInit {
       //     });
       //   });
       // }
-
+      this.fileEditing.createdOn = new Date();
       this.fileService.updateVersionFile(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
           var files = that.dmSV.listFiles;
