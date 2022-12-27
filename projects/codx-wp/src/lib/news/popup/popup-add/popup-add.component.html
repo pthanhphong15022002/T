@@ -6,7 +6,7 @@
                 <codx-label class="fw-bolder fs-1" 
                     [formModel]="dialogRef.formModel" 
                     name="lblHeaderText"
-                    default="Soạn thảo văn bản">
+                    [default]="headerText">
                 </codx-label>
             </div>
             <div class="d-flex align-items-center justify-content-start ">
@@ -49,22 +49,19 @@
     <!-- body -->
     <div class="card-body p-0 addnews-body">
         <div class="row mt-1">
-
             <div class="col-5">
                 <div class="card add-news-left w-100 rounded-0 border-0">
                     <div class="form-group">
                         <codx-label 
                             class="fw-bolder" 
-                            [formModel]="dialogRef.formModel" 
                             [fiedName]="'Category'"
-                            default="Phân loại">
+                            [formModel]="dialogRef.formModel" 
+                            [default]="grvSetup['Category']['headerText']">
                         </codx-label>
                         <codx-input 
-                            type="valuelist" 
-                            name="valuelist" 
-                            refValue="WP002" 
                             field="Category"
                             [crrValue]="data.category" 
+                            [formModel]="dialogRef.formModel" 
                             (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
@@ -73,14 +70,13 @@
                             <div class="form-group">
                                 <codx-label 
                                     class="fw-bolder" 
-                                    [formModel]="dialogRef.formModel" 
                                     [fiedName]="'StartDate'"
-                                    default="Ngày bắt đầu">
+                                    [formModel]="dialogRef.formModel" 
+                                    [default]="grvSetup['StartDate']['headerText']">
                                 </codx-label>
                                 <codx-input 
-                                    type="datetime" 
-                                    class="test-datetime" 
                                     field="StartDate"
+                                    [formModel]="dialogRef.formModel" 
                                     [crrValue]="data.startDate" 
                                     format="F"
                                     (valueChange)="valueChange($event)">
@@ -93,12 +89,11 @@
                                     class="fw-bolder" 
                                     [formModel]="dialogRef.formModel" 
                                     [fiedName]="'EndDate'"
-                                    default="Ngày kết thúc">
+                                    [default]="grvSetup['EndDate']['headerText']">
                                 </codx-label>
                                 <codx-input 
-                                    type="datetime" 
-                                    class="test-datetime" 
                                     field="EndDate"
+                                    [formModel]="dialogRef.formModel" 
                                     [crrValue]="data.endDate" 
                                     format="F"
                                     (valueChange)="valueChange($event)">
@@ -111,13 +106,12 @@
                             class="fw-bolder" 
                             [formModel]="dialogRef.formModel" 
                             [fiedName]="'Subject'"
-                            default="Tiêu đề">
+                            [default]="grvSetup['Subject']['headerText']">
                         </codx-label>
                         <codx-input 
-                            type="text" 
-                            class="form-control" 
                             field="Subject"
-                            [crrValue]="data.subject" 
+                            [crrValue]="data.subject"
+                            [formModel]="dialogRef.formModel" 
                             (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
@@ -126,15 +120,14 @@
                             class="fw-bolder" 
                             [formModel]="dialogRef.formModel" 
                             [fiedName]="'SubContent'"
-                            default="Mô tả">
+                            [default]="grvSetup['SubContent']['headerText']">
                         </codx-label>
                         <codx-input 
-                            class="form-control" 
-                            type="textarea" 
                             format="ed2" 
                             [rows]="'4'" 
                             field="SubContent" 
                             [crrValue]="data.subContent"
+                            [formModel]="dialogRef.formModel" 
                             (valueChange)="valueChange($event)">
                         </codx-input>
                     </div>
@@ -143,7 +136,7 @@
                             class="fw-bolder mb-2" 
                             [formModel]="dialogRef.formModel" 
                             [fiedName]="'Image'"
-                            default="Hình hiển thị">
+                            [default]="grvSetup['Image']['headerText']">
                         </codx-label>
                         <div class="w-100 px-9 bg-gray-100 rounded-2 py-4 150px" (click)="clickUploadImage()">
                             <div class="d-flex justify-content-center" *ngIf="fileImage;else defaultImage">
@@ -157,7 +150,7 @@
                                         <codx-label 
                                             class="fw-bolder" 
                                             [formModel]="dialogRef.formModel" 
-                                            name="lblSelectImage"
+                                            name="lblImage"
                                             default="Chọn hình ảnh">
                                         </codx-label>
                                         <p class="text-gray-500">{{messageImage}}</p>
@@ -188,19 +181,17 @@
                                 class="fw-bolder" 
                                 [formModel]="dialogRef.formModel" 
                                 [fiedName]="'AllowShare'"
-                                default="Cho phép chia sẻ MXH nội bộ">
+                                [default]="grvSetup['AllowShare']['headerText']">
                             </codx-label>
                         </div>
                         <div class="mt-1">
                             <codx-input 
                                 type="switch" 
-                                [checked]="false" 
-                                [disabled]="false" 
+                                [formModel]="dialogRef.formModel" 
                                 id="switchShared"
                                 labelPosition="Before" 
                                 field="AllowShare"
                                 [crrValue]="data.allowShare" 
-                                class="test-switch"
                                 (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>
@@ -211,19 +202,17 @@
                                 class="fw-bolder" 
                                 [formModel]="dialogRef.formModel" 
                                 [fiedName]="'CreatePost'"
-                                default="Tạo bài viết MXH nội bộ tự động">
+                                [default]="grvSetup['CreatePost']['headerText']">
                             </codx-label>
                         </div>
                         <div class="mt-1">
                             <codx-input 
-                                type="switch" 
-                                [checked]="false" 
-                                [disabled]="false" 
+                                type="switch"
+                                [formModel]="dialogRef.formModel" 
                                 id="switchCreated"
                                 labelPosition="Before" 
                                 field="CreatePost"
                                 [crrValue]="data.createPost" 
-                                class="test-switch"
                                 (valueChange)="valueChange($event)">
                             </codx-input>
                         </div>
@@ -237,13 +226,12 @@
                             class="fw-bolder" 
                             [formModel]="dialogRef.formModel" 
                             [fiedName]="'Contents'"
-                            default="Nội dung">
+                            [default]="grvSetup['Contents']['headerText']">
                         </codx-label>
                         <codx-input 
                             [height]="'100%'" 
-                            type="textarea" 
-                            class="test-textarea" 
                             field="Contents" 
+                            [formModel]="dialogRef.formModel" 
                             [crrValue]="data.contents" 
                             (valueChange)="valueChange($event)">
                         </codx-input>
@@ -313,6 +301,7 @@
                             [objectId]="permisison.objectID" 
                             [objectType]="'AD_Users'" 
                             [cssClass]="'me-3'"
+                            [referType]="'avt'"
                             [objectName]="permisison.objectName" 
                             [width]="30">
                         </codx-img>

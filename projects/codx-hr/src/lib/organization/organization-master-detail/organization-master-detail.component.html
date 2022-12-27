@@ -1,6 +1,6 @@
-<!-- master -->
-<div class="d-flex " id="master">
-    <div class="me-4">
+<div class="contianer h-100" id="master-detail">
+  <div class="row" id="master">
+    <div class="col-2">
         <codx-img 
             [objectId]="employeeManager?.employeeID" 
             [objectName]="employeeManager?.employeeName"
@@ -9,7 +9,7 @@
             [imageType]="'circle'">
         </codx-img>
     </div>
-    <div class="d-flex align-items-center justify-content-between w-100 p-2">
+    <div class="col-10 d-flex align-items-center justify-content-between p-2">
         <div>
           <div>
             <ng-container *ngIf="employeeManager?.employeeName ; else lblEmployeeName">
@@ -55,23 +55,24 @@
           <codx-label [formModel]="formModel" name="lblTotalEmployee" default="Tổng số nhân viên"></codx-label>
         </div>
     </div>
+  </div>
+  <div id="detail" > 
+    <codx-gridview
+      #grid
+      [formModel]="formModelEmp"
+      idField="EmployeeID"
+      [entityName]="'HR_Employees'"
+      service="HR" 
+      assemblyName="ERM.Business.HR"
+      className="OrganizationUnitsBusiness"
+      method="GetEmployeesMasterDetailAsync"
+      rowHeight="40"
+      [dataValues]="orgUnitID"
+      [columnsGrid]="columnsGrid">
+    </codx-gridview>
+  </div>
 </div>
-<!-- grid -->
-<div class="h-100">
-  <codx-gridview
-    #grid
-    [formModel]="formModelEmp"
-    idField="EmployeeID"
-    [entityName]="'HR_Employees'"
-    service="HR" 
-    assemblyName="ERM.Business.HR"
-    className="OrganizationUnitsBusiness"
-    method="GetEmployeesMasterDetailAsync"
-    rowHeight="40"
-    [columnsGrid]="columnsGrid">
-  </codx-gridview>
-</div>
-
+  
 <ng-template #templateName let-item>
   <div>
     <codx-temp-full

@@ -138,6 +138,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupSelectTemplateComponent } from './components/codx-dashboard/popup-select-template/popup-select-template.component';
 import { PopupMoreChartComponent } from './components/codx-dashboard/popup-more-chart/popup-more-chart.component';
 import { CodxClearCacheComponent } from './components/codx-clear-cache/codx-clear-cache.component';
+import { FormatPipe } from './pipe/format.pipe';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -235,7 +236,7 @@ const T_Component: Type<any>[] = [
   PopupMoreChartComponent
 ];
 
-const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
+const T_Pipe: Type<any>[] = [TruncatePipe, FileImage,FormatPipe];
 
 @NgModule({
   declarations: [

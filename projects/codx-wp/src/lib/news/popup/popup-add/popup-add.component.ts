@@ -24,18 +24,18 @@ export class PopupAddComponent implements OnInit {
   dialogData: any;
   dialogRef: DialogRef = null;
   newsType: any;
-  shareControl: string = "9"; // default everyone
+  shareControl: string = "";
   mssgCodeNoty:any = null;
   fileUpload: any[] = [];
   fileImage: any = null;
   fileVideo: any = null;
-  shareIcon: string = "";
-  shareText: string = "";
-  shareWith: string = "";
   dVLL:any = {};
   permissions: Permission[] = [];
   messageImage: string = "";
   data:WP_News = null;  
+  grvSetup:any = {};
+  arrFieldRequire:any[] = [];
+  headerText:string = "";
   NEWSTYPE = {
     POST: "1",
     VIDEO: "2"
@@ -86,27 +86,42 @@ export class PopupAddComponent implements OnInit {
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
-  ngAfterViewInit(): void {
-  }
+
 
 
   ngOnInit(): void {
+    this.setDataDefault();
+  }
+  ngAfterViewInit(): void {
+  }
+
+  setDataDefault() {
+    debugger
     this.data = new WP_News();
     this.data.newsType = this.newsType;
     this.data.shareControl = "9";
-    this.setDataDefault();
-  }
-
-
-  setDataDefault() {
     this.cache.message('WP017').subscribe((mssg: any) => {
-      if(mssg?.defaultName){
-        this.messageImage = mssg.defaultName;
+      if(mssg?.customName){
+        this.messageImage = mssg.customName;
       }
     });
-    this.cache.message("SYS009").subscribe((mssg: any) => {
-      if(mssg){
-        this.mssgCodeNoty = mssg;
+    this.cache.functionList(this.dialogRef.formModel.funcID).subscribe((func:any) => {
+      if(func){
+        console.log(func);
+        this.headerText = `Thêm ${func.customName}`;
+        let formName = func.formName;
+        let grvName = func.gridViewName;
+        this.cache.gridViewSetup(formName, grvName)
+        .subscribe((grv:any) => {
+          if(grv){
+            console.log(grv);
+            this.grvSetup = grv;
+              let arrField =  Object.values(grv).filter((x:any) => x.isRequire);
+              if(arrField){
+                this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
+              }
+          }
+        });
       }
     });
   }
@@ -114,40 +129,24 @@ export class PopupAddComponent implements OnInit {
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
-  clickInsertNews() {
-    if (!this.data.category) {
-      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Loại bài viết");
-      this.notifSV.notify(mssgCode);
-      return;
-    }
-    if(!this.data.startDate){
-      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Ngày bắt đầu");
-      this.notifSV.notify(mssgCode);
-      return;
+  clickInsertNews(){
+    if(this.arrFieldRequire.length > 0)
+    {
+      let arrFieldUnValid:string = "";
+      this.arrFieldRequire.forEach((field) => {
+        let key = Util.camelize(field);
+        if (!this.data[key])
+        {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
+        }
+      });
+      if(arrFieldUnValid) return this.notifSV.notifyCode("SYS009",0,arrFieldUnValid);
     }
     if(this.data.endDate) // check endDate
     {
       let startDate = new Date(this.data.startDate);
       let endDate = new Date(this.data.endDate);
-      if(startDate > endDate){
-        return this.notifSV.notify("Ngày kết thúc phải lớn hơn ngày bắt đầu");  
-      }
-    }
-    if (!this.data.subject) {
-      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Tiêu đề");
-      this.notifSV.notify(mssgCode);
-      return;
-    }
-    if (!this.data.subContent) {
-      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Mô tả");
-      this.notifSV.notify(mssgCode);
-      return;
-    }
-    if (this.data.newsType == this.NEWSTYPE.POST && !this.data.contents) 
-    {
-      let mssgCode = Util.stringFormat(this.mssgCodeNoty.defaultName, "Nội dung");
-      this.notifSV.notify(mssgCode);
-      return;
+      if(startDate > endDate) return this.notifSV.notifyCode('WP012');  
     }
     this.api
       .execSv(
@@ -155,14 +154,15 @@ export class PopupAddComponent implements OnInit {
         'ERM.Business.WP',
         'NewsBusiness',
         'InsertNewsAsync',
-        [this.data]
-      ).subscribe(async (res:boolean) => {
+        [this.data])
+        .subscribe(async (res:boolean) => {
         if (res) {
           if (this.fileUpload.length > 0) {
             this.codxATM.objectId = this.data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
-                if (res2) {
+                if (res2) 
+                {
                   this.dialogRef.close();
                 }
               }
@@ -173,49 +173,64 @@ export class PopupAddComponent implements OnInit {
             this.dialogRef.close();
           }
         }
+        else
+        {
+          this.dialogRef.close();
+
+        }
       });
   }
   releaseNews() {
+    if(this.arrFieldRequire.length > 0)
+    {
+      let arrFieldUnValid:string = "";
+      this.arrFieldRequire.forEach((field) => {
+        let key = Util.camelize(field);
+        if (!this.data[key])
+        {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
+        }
+      });
+      if(arrFieldUnValid) return this.notifSV.notifyCode("SYS009",0,arrFieldUnValid);
+    }
+    if(this.data.endDate) // check endDate
+    {
+      let startDate = new Date(this.data.startDate);
+      let endDate = new Date(this.data.endDate);
+      if(startDate > endDate) return this.notifSV.notifyCode('WP012');  
+    }
     this.api
       .execSv(
         'WP',
         'ERM.Business.WP',
         'NewsBusiness',
         'ReleaseNewsAsync',
-        [this.data]
-      ).subscribe(async (res:any[]) => {
+        [this.data])
+        .subscribe(async (res:any[]) => {
         if (res) {
           let checkApproval = res[0];
-          let result = res[1];
-          if (this.fileUpload.length > 0 && result?.recID) {
-            this.codxATM.objectId = result.recID;
+          let data = res[1];
+          if (this.fileUpload.length > 0 && data.recID) {
+            this.codxATM.objectId = data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
                 if (res2) {
-                  if(checkApproval)
-                  {
-                    this.dialogRef.close();
-                  }
-                  else
-                  {
-                    this.dialogRef.close(result);
-                  }
+                  let result = checkApproval ? null : data
+                  this.dialogRef.close(result);
                 }
               }
             );
           }
           else
           {
-            if(checkApproval)
-            {
-              this.dialogRef.close();
-            }
-            else
-            {
-              this.dialogRef.close(result);
-            }
+            let result = checkApproval ? null : data
+            this.dialogRef.close(result);
           }
+        }
+        else
+        {
+          this.dialogRef.close();
         }
       });
   }
@@ -223,39 +238,12 @@ export class PopupAddComponent implements OnInit {
     if(event)
     {
       let field = event.field;
+      field = field[0].toLowerCase() + field.slice(1);
       let value = event.data;
-      switch(field)
-      {
-          case "Tags":
-            this.data.tags = value;
-            break;
-          case "Category":
-            this.data.category = value;
-            break;
-          case "StartDate":
-            this.data.startDate = new Date(value.fromDate);
-            break;
-          case "EndDate":
-            this.data.endDate = new Date(value.fromDate);
-            break;
-          case "Subject":
-            this.data.subject = value;
-            break;
-          case "SubContent":
-            this.data.subContent = value;
-            break;
-          case "AllowShare":
-            this.data.allowShare = value;
-            break;
-          case "CreatePost":
-            this.data.createPost = value;
-            break;
-          case "Contents":
-            this.data.contents = value;
-            break;
-          default:
-            break;  
+      if(field === "startDate" ||  field == "endDate"){
+        value = value.toDate;
       }
+      this.data[field] = value;
       this.changedt.detectChanges();
     }
     
@@ -326,15 +314,11 @@ export class PopupAddComponent implements OnInit {
         if (f.mimeType.indexOf("image") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.IMAGE;
           this.fileImage = f;
+          this.data['image'] = "1";
         }
         else if (f.mimeType.indexOf("video") >= 0) {
           f['referType'] = this.FILE_REFERTYPE.VIDEO;
           this.fileVideo = f;
-        }
-        else
-        {
-          this.notifSV.notify("Vui lòng chọn file hình ảnh hoặc video");
-          return;
         }
         this.fileUpload.push(f);
       });
