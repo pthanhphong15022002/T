@@ -202,7 +202,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      if(this.action ===this.moreFunctionAdd){
+      if(this.action == 'add' || this.action == 'copy'){
         this.process.versions[0].recID = this.folderID;
       }
       data = [
@@ -227,6 +227,7 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         this.attachment?.clearData();
+        this.imageAvatar.clearData() ;
         if (res) {
           this.dialog.close([res.save]);
         } else this.dialog.close();
@@ -238,7 +239,8 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.attachment?.clearData();
+        this.attachment?.clearData();
+        this.imageAvatar.clearData() ;
           this.dialog.close(res.update);
         }
       });

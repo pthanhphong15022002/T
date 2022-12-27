@@ -9,6 +9,7 @@
     --border-gray: #e3e7e9;
     --text-menu: #28292b;
     --scrollbar-thumb: #dfdfdf;
+    --border-list: #e1e6e7;
 
     --gray-800: #28292b;
     --gray-700: #3f4144;
@@ -30,7 +31,7 @@
         --primary-active: #005dc7;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #032b53;
-        --primary-darker: #0155aa;
+        --primary-darker: #005DC7;
         --primary-dark: #187DE4;
         --primary-light: #cae8f1;
         --primary-lighter: #ecf5fd;
@@ -47,11 +48,11 @@
     }
 
     &.orange {
-        --primary: #ff7213;
+        --primary: #ff7619;
         --primary-active: #ff6602;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #521e01;
-        --primary-darker: #fd492a;
+        --primary-darker: #f15711;
         --primary-dark: #ff6822;
         --primary-light: #ffdebf;
         --primary-lighter: #fffbed;
@@ -110,12 +111,16 @@
     }
 
     &.dark {
-
+        --primary: #1e1e2d;
         --primary-active: #3a3c50;
 
+        --primary-darkest: #0c0c11;
+        --primary-darker: #1d1d2c;
+        --primary-dark: #1e1e2d;
         --primary-light: #2a2b3a;
         --primary-lighter: #1f202e;
         --primary-lightest: #1f2134;
+
 
 
         --white: #f0f0f0;
@@ -187,8 +192,16 @@
             fill: var(-text-gray-600);
         }
 
+        ejs-listview {
+            background-color: var(--bg-body);
+        }
+
         codx-wrapper {
             background-color: var(--bg-body);
+        }
+
+        .e-listview .e-list-item {
+            color: var(--text-body);
         }
 
         .bg-body {
@@ -693,6 +706,10 @@
 
     a.menu-link {
         color: var(--primary-dark);
+    }
+
+    .extend-function hr {
+        background-color: var(--primary);
     }
 }
 

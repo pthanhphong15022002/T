@@ -154,8 +154,7 @@ export class DynamicFormComponent extends UIComponent {
     });
   }
   private edit(evt?, mFunc?) {
-    this.dataSelected = this.viewBase.dataService.dataSelected;
-    if (evt) this.dataSelected = evt;
+    if (evt) this.viewBase.dataService.dataSelected = this.dataSelected = evt;
     this.viewBase.dataService.edit(this.dataSelected).subscribe(() => {
       let option = new SidebarModel();
       option.Width = '550px';
@@ -191,8 +190,8 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private copy(evt: any, mFunc?) {
-    this.dataSelected = this.viewBase.dataService.dataSelected;
-    if (!this.dataSelected && evt) {
+    //this.dataSelected = this.viewBase.dataService.dataSelected;
+    if (evt) {
       this.viewBase.dataService.dataSelected = this.dataSelected = evt;
     }
     (this.viewBase.dataService as CRUDService).copy().subscribe((res) => {
@@ -216,8 +215,7 @@ export class DynamicFormComponent extends UIComponent {
   }
 
   private delete(evt?) {
-    let delItem = this.viewBase.dataService.dataSelected;
-    if (evt) delItem = evt;
+    if (evt) var delItem = (this.viewBase.dataService.dataSelected = evt);
     //Xử lý riêng OD
     if (this.viewBase?.currentView?.formModel?.funcID == 'ODS21') {
       this.api

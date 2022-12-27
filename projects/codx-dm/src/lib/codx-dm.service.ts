@@ -367,8 +367,9 @@ export class CodxDMService {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  getAvatar(ext: string) {
-    if (ext == null) return 'file.svg';
+  getAvatar(ex: string) {
+    if (!ex) return 'file.svg';
+    var ext = ex.toLocaleLowerCase();
     switch (ext) {
       case '.txt':
         return 'txt.svg';
@@ -770,7 +771,8 @@ export class CodxDMService {
             e[i].disabled = true;
           }
         }
-        // xet quyetn
+      
+        // xét quyền
         if (e[i].data) {
           e[i].isblur = false; // duoc view
           switch (e[i].data.functionID) {
@@ -827,7 +829,7 @@ export class CodxDMService {
               if (!data.create) e[i].isblur = true; // duoc view
               break;
             case 'DMT0218': // quan ly version
-              if (!data.write || !this.revision) e[i].isblur = true; // duoc view
+              if (!data.write || !data.revision) e[i].isblur = true; // duoc view
               break;
 
             // case "DMT0220": // persmission file
@@ -1155,7 +1157,6 @@ export class CodxDMService {
   clickMF($event, data: any, view: any = null) {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
-    debugger;
     switch ($event.functionID) {
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file

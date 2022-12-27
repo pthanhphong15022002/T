@@ -54,14 +54,12 @@ export class NewsComponent extends UIComponent {
 
   constructor
   (
-    private injector: Injector,
-    private notifySV:NotificationsService
+    private injector: Injector
   ) 
   { 
     super(injector)
   }
   onInit(): void {
-    // this.clearData();
     this.router.params.subscribe((param) => {
       if (param) {
         this.funcID = param["funcID"];
@@ -160,7 +158,7 @@ export class NewsComponent extends UIComponent {
       this.codxService.navigate('', '/wp/news/' + this.funcID + '/' + data.category + '/' + data.recID);
     }
   }
-  clickShowPopupCreate(newsType: string) {
+  openPopupAdd(newsType: string) {
     if(this.view && newsType){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
@@ -201,7 +199,7 @@ export class NewsComponent extends UIComponent {
       });
     }
   }
-  clickShowPopupSearch() {
+  openPopupSearch() {
     if(this.view){
       let option = new DialogModel();
       option.DataService = this.view.dataService;
