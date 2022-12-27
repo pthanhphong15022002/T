@@ -136,15 +136,15 @@ export class PopupAddPermissionComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          if (this.per.form == '2') {
-            this.notificationsService.notifyCode('OD013');
+          if (this.per.form == '4') {
+            this.notificationsService.notifyCode('SYS034');
             this.dialog.close(res);
           } else {
-            this.notificationsService.notifyCode('SYS034');
+            this.notificationsService.notifyCode('OD013');
             this.dialog.close(res);
           }
         } else {
-          if (this.per.form == '2')
+          if (this.per.form == '3')
             this.notificationsService.notifyCode('SYS016');
           else
             this.notificationsService.notify(
