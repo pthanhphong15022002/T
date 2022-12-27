@@ -202,6 +202,7 @@ export class CodxEpService {
       [formName, null, fieldName]
     );
   }
+
   getListResource(resourceType: string) {
     return this.api.execSv(
       'EP',
@@ -211,6 +212,7 @@ export class CodxEpService {
       [resourceType]
     );
   }
+
   getListAttendees(recID: any) {
     return this.api.execSv(
       'EP',
@@ -220,6 +222,7 @@ export class CodxEpService {
       [recID]
     );
   }
+
   getListItems(recID: any) {
     return this.api.execSv(
       'EP',
@@ -229,6 +232,7 @@ export class CodxEpService {
       [recID]
     );
   }
+
   getListReason(entity: string) {
     return this.api.execSv(
       'BS',
@@ -258,6 +262,7 @@ export class CodxEpService {
       [resourceID]
     );
   }
+  
   rescheduleBooking(recID: string, startDate: any, endDate: any) {
     return this.api.execSv(
       'EP',
@@ -267,6 +272,7 @@ export class CodxEpService {
       [recID, startDate, endDate]
     );
   }
+
   inviteAttendees(recID: string, attendees: any[]) {
     return this.api.execSv(
       'EP',
@@ -514,6 +520,7 @@ export class CodxEpService {
       [resourceType, startDate, endDate]
     );
   }
+
   getAvailableDriver(startDate: string, endDate: string) {
     return this.api.execSv(
       'EP',
@@ -523,6 +530,7 @@ export class CodxEpService {
       [startDate, endDate]
     );
   }
+
   assignDriver(recID: string, driverID: string) {
     return this.api.execSv(
       'EP',
@@ -532,6 +540,7 @@ export class CodxEpService {
       [recID, driverID]
     );
   }
+
   getUserByListDepartmentID(listDepID) {
     return this.api.execSv<any>(
       'HR',
@@ -551,6 +560,7 @@ export class CodxEpService {
       data
     );
   }
+
   getListUserIDByListPositionsID(listPositionID){
     return this.api.execSv<any>(
       'HR',
@@ -558,7 +568,76 @@ export class CodxEpService {
       'EmployeesBusiness',
       'GetListUserIDByListPositionsIDAsync',
       listPositionID
-    );  
+    );
+  }
+  //#endregion
+
+  //#Setting SYS
+  getSettingValue(para:any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      para
+    );
+  }
+
+  getCalendar() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'Calendar'
+    );
+  }
+  getCalendarWeekdays(calendarID:any) {
+    return this.api.execSv(
+      'BS',
+      'ERM.Business.BS',
+      'CalendarWeekdaysBusiness',
+      'GetDayShiftAsync',
+      [calendarID]
+    );
+  }
+  getEPSetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPParameters'
+    );
+  }
+  getEPRoomSetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPRoomParameters'
+    );
+  }
+
+  getEPCarSetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPCarParameters'
+    );
+  }
+
+  getEPStationerySetting() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      'EPStationeryParameters'
+    );
   }
   //#endregion
 
@@ -680,124 +759,5 @@ export class CodxEpService {
       })
       .catch((err: any) => {});
   }
-
-  // createMeeting(
-  //   meetingUrl,
-  //   meetingTitle,
-  //   meetingDescription,
-  //   meetingStartDate,
-  //   meetingStartTime,
-  //   meetingDuration,
-  //   meetingPassword
-  // ): Promise<string> {
-  //   if (meetingUrl) {
-  //     return meetingUrl;
-  //   }
-  //   return axios
-
-  //     .create({
-  //       baseURL: 'https://api.suremeet.vn/',
-  //     })
-  //     .post('api/auth/token', {
-  //       client_id: 'portal',
-  //       client_secret:'lacviet@2022@$%!$$!(@',
-  //     })
-  //     .then((res: any) => {
-  //       let data = {
-  //         app_id: 'demo.suremeet@gmail.com',
-  //         app_secret: '123456',
-  //         meetingschedule_id: 0,
-  //         meetingschedule_title: meetingTitle,
-  //         meetingschedule_description: meetingDescription,
-  //         meetingschedule_startdate: this.datePipe
-  //           .transform(meetingStartDate, 'yyyy-MM-dd')
-  //           .toString(),
-  //         meetingschedule_starttime: meetingStartTime,
-  //         meetingschedule_duration: meetingDuration,
-  //         meetingschedule_password: meetingPassword,
-  //       };
-
-  //       return axios
-  //         .create({
-  //           baseURL: 'https://api.suremeet.vn/',
-  //         })
-  //         .post('PublicMeeting/AddUpdate', data)
-  //         .then((meeting: any) => {
-  //           return meeting.data.url;
-  //         })
-  //         .catch((err: any) => {});
-  //     })
-  //     .catch((err: any) => {});
-  //   return null;
-  // }
-
-  // async connectMeetingNow(
-  //   meetingTitle: string,
-  //   meetingDescription: string,
-  //   meetingDuration: number,
-  //   meetingPassword: string,
-  //   userName: string,
-  //   mail: string,
-  //   isManager: boolean,
-  //   meetingUrl?: string,
-  //   meetingStartDate?: string,
-  //   meetingStartTime?: string
-  // ) {
-  //   meetingStartDate = meetingStartDate ?? new Date().toString();
-
-  //   meetingStartDate = this.datePipe
-  //     .transform(meetingStartDate, 'yyyy-MM-dd')
-  //     .toString();
-
-  //   meetingStartTime =
-  //     meetingStartTime ??
-  //     this.datePipe.transform(new Date().toString(), 'HH:mm');
-
-  //   let url =
-  //     meetingUrl ??
-  //     (await this.createMeeting(
-  //       meetingUrl,
-  //       meetingTitle,
-  //       meetingDescription,
-  //       meetingStartDate,
-  //       meetingStartTime,
-  //       meetingDuration,
-  //       meetingPassword
-  //     ).then((url) => {
-  //       return url;
-  //     }));
-
-  //   return axios
-  //     .create({
-  //       baseURL: 'https://api.suremeet.vn/',
-  //     })
-  //     .post('api/auth/token', {
-  //       client_id: 'portal',
-  //       client_secret:'lacviet@2022@$%!$$!(@',
-  //     })
-  //     .then((res: any) => {
-  //       let data = {
-  //         app_id: 'demo.suremeet@gmail.com',
-  //         app_secret: '123456',
-  //         key: (url as string).split('/').reverse().at(0),
-  //         password: null,
-  //         name: userName,
-  //         email: mail,
-  //         manager: isManager == true ? 1 : 0,
-  //       };
-  //       return axios
-  //         .create({
-  //           baseURL: 'https://api.suremeet.vn/',
-  //         })
-  //         .post('PublicMeeting/Verify', data)
-  //         .then((connectData: any) => {
-  //           if (connectData?.data?.url) {
-  //             return connectData?.data?.url;
-  //           }
-  //         })
-  //         .catch((err: any) => {});
-  //     })
-  //     .catch((err: any) => {});
-  // }
   //#endregion
 }

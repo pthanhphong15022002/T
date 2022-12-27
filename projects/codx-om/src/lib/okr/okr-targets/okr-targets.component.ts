@@ -27,6 +27,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() dataOKR: any;
   @Input() formModel: any;
   @Input() gridView: any;
+  
   dtStatus = [];
   openAccordion = [];
 
@@ -207,17 +208,49 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [kr, o, this.formModelKR, false, popupTitle, this.dataOKRPlans],
+      [OMCONST.MFUNCID.Edit, kr, o, this.formModelKR,  popupTitle, this.dataOKRPlans],
       option
     );
+  }
+  
+  copyKR(kr: any, o: any, popupTitle: any) {
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.FormModel = this.formModel;
+
+    let dialogKR = this.callfunc.openSide(
+      PopupAddKRComponent,
+      [OMCONST.MFUNCID.Copy, kr, o, this.formModelKR,  popupTitle, this.dataOKRPlans],
+      option
+    );
+  }
+  
+  deleteKR(kr: any, o: any, popupTitle: any) {
+    // let option = new SidebarModel();
+    // option.Width = '550px';
+    // option.FormModel = this.formModel;
+
+    // let dialogKR = this.callfunc.openSide(
+    //   PopupAddKRComponent,
+    //   [kr, o, this.formModelKR, false, popupTitle, this.dataOKRPlans],
+    //   option
+    // );
   }
 
   clickKRMF(e: any, kr: any, o: any) {
     let popupTitle = e.text + ' kết quả chính';
     var funcID = e?.functionID;
     switch (funcID) {
-      case 'SYS03': {
+      case OMCONST.MFUNCID.Edit: {
         this.editKR(kr, o, popupTitle);
+        break;
+      }
+      case OMCONST.MFUNCID.Copy: {
+        this.copyKR(kr, o, popupTitle);
+        break;
+      }
+      case OMCONST.MFUNCID.Delete: {
+        this.deleteKR(kr, o, popupTitle);
         break;
       }
       case 'SYS04': {

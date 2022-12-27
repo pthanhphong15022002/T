@@ -21,6 +21,7 @@ import { TreeMapComponent } from '@syncfusion/ej2-angular-treemap';
 import {
   ApiHttpService,
   CallFuncService,
+  CodxChartsComponent,
   DialogData,
   DialogModel,
   DialogRef,
@@ -226,6 +227,28 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
     }
   }
 
+  changeCondition(evt:any){
+    this.api.execSv(this.service,this.assembly,this.className,this.method).subscribe((res:any)=>{
+      this.dataSource = res;
+      if(this.dataSource && this.dataSource.length >0){
+        this.dataSource.forEach((item:any)=>{
+          item.attendees = Math.floor(Math.random() * 10)
+        });
+        this.dataSource = this.dataSource.slice();
+        console.log(this.dataSource);
+        this.objDashboard && (this.objDashboard as any).panelCollection.forEach((item:any)=>{
+          let component = item.getElementsByTagName('codx-chart')[0];
+          if (component) {
+            let instance = window.ng.getComponent(component) as CodxChartsComponent;
+            instance.dataSource = this.dataSource.slice();
+            instance.refresh();
+          }
+        })
+      }
+
+    })
+  }
+
   savePanel(evt: any){
     let dataSettings: any = {id: this.dataItem.recID, panels: [], panelDatas:[] };
     let arrPanels = this.objDashboard.serialize();
@@ -316,7 +339,6 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   addChart(evt: any, eleLayout: any) {
-
     if (evt.panelID) {
       let elePanel = document.getElementById(evt.panelID);
       let idx = this.objDashboard.panels.findIndex(
@@ -581,7 +603,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
   }
 
   popupClose(evt:any){
-    this.addPanel(true,evt.data)
+    this.addPanel(evt.isAuto,evt.chartType,evt.data)
   }
 
   isJSON(str:any) {
@@ -591,11 +613,7 @@ export class CodxDashboardComponent implements OnInit, AfterViewInit {
         return false;
     }
 }
-  private createPanelContent(
-    panelID: any,
-    childEle: any,
-    chartType?: string,
-    defaultSetting?: any
+  private createPanelContent(panelID: any, childEle: any,chartType: any = undefined,defaultSetting: any =undefined
   ) {
     let isTemplate = false;
     let elePanel = document.getElementById(panelID);

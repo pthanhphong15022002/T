@@ -7,6 +7,8 @@
     --bg-body: #fff;
     --bghover: #f4f8ff;
     --border-gray: #e3e7e9;
+    --text-menu: #28292b;
+    --scrollbar-thumb: #dfdfdf;
 
     --gray-800: #28292b;
     --gray-700: #3f4144;
@@ -15,19 +17,13 @@
     --gray-400: #a4a9ac;
     --gray-300: #c2c8ca;
     --gray-200: #cad0d3;
+    --gray-150: #e1e6e7;
     --gray-100: #f5f9fa;
 
-
-    ///temp//
-    --link-hover-color: #ff00b3;
-    --link-hover-decoration: #c700ac;
 }
 
 /*** css for theme********/
 .codx-theme {
-    &.dark {
-        --bg-body: #28292b;
-    }
 
     &.default {
         --primary: #3699ff;
@@ -52,7 +48,7 @@
 
     &.orange {
         --primary: #ff7213;
-        --primary-active: #fd492a;
+        --primary-active: #ff6602;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #521e01;
         --primary-darker: #fd492a;
@@ -94,7 +90,7 @@
 
     &.green {
         --primary: #27d65c;
-        --primary-active: #0f8633;
+        --primary-active: #179b3f;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #01520f;
         --primary-darker: #0f8633;
@@ -113,8 +109,219 @@
         --border-light: #c8ffcd;
     }
 
+    &.dark {
+
+        --primary-active: #3a3c50;
+
+        --primary-light: #2a2b3a;
+        --primary-lighter: #1f202e;
+        --primary-lightest: #1f2134;
+
+
+        --white: #f0f0f0;
+        --black: #232425;
+
+        --bg-body: #151521;
+        --bg-card: #1e1e2d;
+        --bghover: #303236;
+        --border-gray: #2d2f42;
+        --border-list: #21213a;
+        --text-dark: #c2c9d8;
+        --text-menu: #dee0e7;
+        --text-body: #CDCDDE;
+        --text-des: #6D6D80;
+        --bg-input: #1b1b29;
+        --scrollbar-thumb: #333358;
+
+        --gray-100: #1b1b29;
+        --gray-150: #202031;
+        --gray-200: #2B2B40;
+        --gray-300: #323248;
+        --gray-400: #474761;
+        --gray-500: #565674;
+        --gray-600: #6D6D80;
+        --gray-700: #92929F;
+        --gray-800: #CDCDDE;
+        --gray-900: #FFFFFF;
+
+
+        color: var(--text-body);
+
+        .text-gray-900 {
+            color: var(--gray-900) !important;
+        }
+
+        .text-gray-800 {
+            color: var(--gray-800) !important;
+        }
+
+        .text-gray-700 {
+            color: var(--gray-700) !important;
+        }
+
+        .text-gray-600 {
+            color: var(--gray-600) !important;
+        }
+
+        .text-gray-500 {
+            color: var(--gray-500) !important;
+        }
+
+        .text-gray-400 {
+            color: var(--gray-400) !important;
+        }
+
+        .text-gray-300 {
+            color: var(--gray-300) !important;
+        }
+
+        .bg-gray-200 {
+            background-color: var(--gray-200) !important;
+        }
+
+        .header-fixed .header {
+            background-color: var(--bg-card);
+        }
+
+        .header .svg-icon svg [fill]:not(.permanent):not(g) {
+            fill: var(-text-gray-600);
+        }
+
+        codx-wrapper {
+            background-color: var(--bg-body);
+        }
+
+        .bg-body {
+            background-color: var(--bg-body) !important;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+        }
+
+        .card .card-header .card-title,
+        .card .card-header .card-title .card-label {
+            color: var(--text-body);
+        }
+
+        codx-view-list-detail .e-pane {
+            background-color: var(--bg-card);
+        }
+
+        .dropdown-menu {
+            background-color: #27273a !important;
+            color: var(--text-body);
+
+            .dropdown-item {
+                color: var(--text-body);
+            }
+        }
+
+        .e-dlg-content {
+            background-color: var(--bg-card) !important;
+            color: var(--text-body);
+        }
+
+        .e-dialog {
+            border: 1px solid #27273a;
+            background-color: transparent;
+
+            .btn {
+                color: var(--primary-dark);
+            }
+
+            .dialog-title,
+            .dialog-title.codx-label .dialog-title * {
+                color: var(--text-body);
+            }
+
+        }
+
+        .codx-theme .e-listview .e-list-item.e-active {
+            background-color: var(--primary-lightest);
+        }
+
+        .aside.aside-transparent {
+            background-color: var(--bg-body);
+        }
+
+        app-list-post .e-listview .e-list-item {
+            border-color: var(--bg-card) !important;
+            background-color: var(--bg-card);
+        }
+
+        .wp-home .e-listview .e-list-item.e-hover,
+        .wp-home .e-listview .e-list-item.e-active {
+            background-color: var(--bg-card) !important;
+        }
+
+        .menu-title-gray-800 .menu-item .menu-link .menu-title {
+            color: var(--text-menu);
+        }
+
+        .border,
+        .border-bottom,
+        .border-top,
+        .border-left,
+        .border-right {
+            border-color: var(--border-gray) !important;
+        }
+
+        codx-temp-full .border-bottom {
+            border-color: var(--border-list) !important;
+        }
+
+        bg-input .e-listview .e-list-item {
+            color: var(--text-des);
+        }
+
+        .text-dark {
+            color: var(--white) !important;
+        }
+
+        .menu-title-gray-800 .menu-item .menu-link {
+            color: var(--white);
+        }
+
+        .e-splitter.e-splitter-horizontal .e-pane,
+        .e-splitter.e-splitter-vertical .e-pane {
+            color: var(--text-body);
+        }
+
+        .menu-title-gray-700 .menu-item .menu-link .menu-title {
+            color: var(--text-body);
+        }
+
+        codx-view-list-detail .nav-link {
+            color: var(--text-body);
+        }
+
+        textarea.codx-textarea {
+            background-color: var(--bg-input);
+        }
+
+        .e-input-group,
+        .e-input-group.e-control-wrapper,
+        .e-float-input,
+        .e-float-input.e-input-group,
+        .e-float-input.e-control-wrapper,
+        .e-float-input.e-input-group.e-control-wrapper {
+            background: var(--bg-input);
+            color: var(--text-body);
+        }
+
+        .btn.btn-white {
+            background-color: var(--bg-card);
+
+            &:hover {
+                background-color: var(--gray-100) !important;
+            }
+        }
+    }
+
+
     ::-webkit-scrollbar-thumb {
-        background-color: #dfdfdf !important;
+        background-color: var(--scrollbar-thumb) !important;
     }
 
     .aside {

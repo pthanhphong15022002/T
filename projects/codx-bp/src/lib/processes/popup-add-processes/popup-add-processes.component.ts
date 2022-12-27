@@ -202,7 +202,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      if(this.action ===this.moreFunctionAdd){
+      if(this.action == 'add' || this.action == 'copy'){
         this.process.versions[0].recID = this.folderID;
       }
       data = [
