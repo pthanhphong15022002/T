@@ -118,7 +118,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
         //delete autoNumer đã thiết lập
         this.esService
           .deleteAutoNumber(this.data.categoryID)
-          .subscribe((resDelete) => {});
+          .subscribe((resDelete) => { });
 
         //delete EmailTemplate da thiet lap
         this.esService.deleteEmailTemplate().subscribe((res1) => {
@@ -149,7 +149,7 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
       //New list step
       this.esService
         .copyApprovalStep(this.oldRecID, this.data.recID)
-        .subscribe((res) => {});
+        .subscribe((res) => { });
     }
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
@@ -195,20 +195,21 @@ export class PopupAddCategoryComponent implements OnInit, AfterViewInit {
                   fieldName: this.data[fieldName],
                 });
               }
-              this.esService
-                .getAutoNumber(this.data.autoNumber)
-                .subscribe((res) => {
-                  if (res != null) {
-                    this.autoNumber = res;
-                    if (res.autoNoCode != null) {
-                      this.setViewAutoNumber(this.autoNumber);
-                      this.isAddAutoNumber = false;
-                    }
-                  }
-                });
+
               this.cr.detectChanges();
             }
           }
+          this.esService
+            .getAutoNumber(this.data.autoNumber)
+            .subscribe((res) => {
+              if (res != null) {
+                this.autoNumber = res;
+                if (res.autoNoCode != null) {
+                  this.setViewAutoNumber(this.autoNumber);
+                  this.isAddAutoNumber = false;
+                }
+              }
+            });
         });
     } else {
     }

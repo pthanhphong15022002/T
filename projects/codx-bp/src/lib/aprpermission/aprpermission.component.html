@@ -97,7 +97,7 @@
       </div>
     </td>
     <td class="rowphoto">
-      <div *ngIf="(data.approveStatus !='5' || data.approveStatus !='4') && data.approvedBy != userID">
+      <div *ngIf="(data.approveStatus !='5' && data.approveStatus !='4') && data.approvedBy != userID">
         <button class="btn btn-primary" (click)="permission(data, '5')">
           <codx-label default="Xét duyệt"></codx-label>
         </button>
@@ -143,7 +143,7 @@
 <!--Header-->
 <ng-template #itemProcessName>
   <div class="padding">
-    <codx-label fiedName="ProcessName" formName="AprPermissions" gridViewName="grvAprPermissions"
+    <codx-label fiedName="ProcessName" [formModel]="view.formModel"
       default="Tên qui trình">
     </codx-label>
   </div>
@@ -151,7 +151,7 @@
 
 <ng-template #itemOwner>
   <div class="padding">
-    <codx-label fiedName="Petitioner" formName="AprPermissions" gridViewName="grvAprPermissions"
+    <codx-label fiedName="Petitioner" [formModel]="view.formModel"
       default="Người yêu cầu">
     </codx-label>
   </div>
@@ -159,7 +159,7 @@
 
 <ng-template #itemCreatedOn>
   <div class="padding">
-    <codx-label fiedName="RequestDate" formName="AprPermissions" gridViewName="grvAprPermissions"
+    <codx-label fiedName="RequestDate" [formModel]="view.formModel"
       default="Ngày yêu cầu">
     </codx-label>
   </div>
@@ -167,21 +167,21 @@
 
 <ng-template #itemPermissions>
   <div class="padding">
-    <codx-label fiedName="Permission" formName="AprPermissions" gridViewName="grvAprPermissions" default="Quyền">
+    <codx-label fiedName="Permission" [formModel]="view.formModel" default="Quyền">
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemDescription>
   <div class="padding">
-    <codx-label fiedName="Description" formName="AprPermissions" gridViewName="grvAprPermissions" default="Ghi chú">
+    <codx-label fiedName="Description" [formModel]="view.formModel" default="Ghi chú">
     </codx-label>
   </div>
 </ng-template>
 
 <ng-template #itemStatus let-data>
   <div>
-    <codx-label fiedName="ApproveStatus" formName="AprPermissions" gridViewName="grvAprPermissions"
+    <codx-label fiedName="ApproveStatus" [formModel]="view.formModel"
       default="Trạng thái">
     </codx-label>
   </div>

@@ -570,9 +570,29 @@ export class CodxEpService {
       listPositionID
     );
   }
+
+  afterApprovedManual(entity: string, recID: string, status:string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingsBusiness',
+      'ApprovedAsync',
+      [entity, recID, status]
+    );
+  }
   //#endregion
 
   //#Setting SYS
+  getSettingValue(para:any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      para
+    );
+  }
+
   getCalendar() {
     return this.api.execSv(
       'SYS',

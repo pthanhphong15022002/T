@@ -249,11 +249,13 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   dataChange(e: any) {
     if (e) {
+      let field = e.field;
+      field = field[0].toLowerCase() + field.slice(1);
       if (typeof e.data !== 'string') {
-        this.employee[e.field] = e.data.fromDate
+        this.employee[field] = e.data.fromDate
           ? e.data.fromDate.toISOString()
           : null;
-      } else this.employee[e.field] = e.data;
+      } else this.employee[field] = e.data;
     }
   }
 }

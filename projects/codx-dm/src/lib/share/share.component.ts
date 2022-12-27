@@ -149,7 +149,6 @@ export class ShareComponent implements OnInit {
     var list = [];
     if ($event.data != undefined) {
       var data = $event.data;
-      debugger;
       for(var i=0; i<data.length; i++) {
         var item = data[i];
         var perm = new Permission;               

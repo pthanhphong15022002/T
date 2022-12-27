@@ -60,6 +60,12 @@ erm-quick-links-inner .dropdown-menu {
   border-radius: 2rem !important;
 }
 
+.icon-6 {
+  font-size: 6px !important;
+  height: 6px;
+  line-height: 6px;
+}
+
 .e-multi-select-wrapper input[type=text] {
   font-size: 13px;
 }
@@ -364,6 +370,10 @@ hr {
 
 .form-group codx-label.fw-normal .codx-label {
   font-weight: 400 !important;
+}
+
+.form-group codx-label .codx-label {
+  margin-bottom: 4px !important;
 }
 
 [data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-arrow {
@@ -720,6 +730,11 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   border-radius: 0 3px 3px 0 !important;
 }
 
+.codx-search {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .codx-search .btn-icon-clear {
   margin-right: 20px;
 }
@@ -792,7 +807,7 @@ codx-view-list-detail .codx-detail-footer.expand .tab-content {
   overflow: auto;
   padding: 0 15px;
   position: relative;
-  height: 358px;
+  height: 360px;
   padding-bottom: 0 !important;
 }
 
@@ -1311,8 +1326,18 @@ codx-vll {
   word-break: break-word;
 }
 
+.tab-content>.tab-pane {
+  padding-right: 5px;
+}
+
 .tab-content>.active {
   height: 100%;
+  overflow: auto;
+}
+
+.tab-content .mt-3.tab-tch {
+  margin-top: 0 !important;
+  padding-top: 5px !important;
 }
 
 .label-colon {

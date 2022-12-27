@@ -493,6 +493,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
   ngAfterViewInit(): void {}
   beforeSave(option: RequestOption) {
+    // this.data.approval= '0';
+    // this.data.approveStatus = '5';
+    // this.data.status = '5';
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd, this.attendeesList, null, null];
@@ -521,7 +524,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
       if (this.data.phone != null && this.data.phone != '') {
         if (!this.validatePhoneNumber(this.data.phone)) {
           this.notificationsService.notify(
-            'Số điện thoại không hợp lệ',
+            'Số điện thoại không hợp lệ',//EP014
             '2',
             0
           ); // EP_WAIT doi messcode tu BA
@@ -636,7 +639,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
             this.returnData = res.save;
           }
           if (approval) {
-            this.codxEpService
+            if(this.data.approval!='0'){
+              this.codxEpService
               .getCategoryByEntityName(this.formModel.entityName)
               .subscribe((res: any) => {
                 this.codxEpService
@@ -665,6 +669,14 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   });
               });
 
+            }
+            else{              
+              this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe(res);
+              this.notificationsService.notifyCode('ES007');
+              this.dialogRef && this.dialogRef.close(this.returnData);
+
+            }
+            
             this.dialogRef && this.dialogRef.close(this.returnData);
           } else {
             this.dialogRef && this.dialogRef.close(this.returnData);
@@ -813,7 +825,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     return true;
   }
   startDateChange(evt: any) {
-    if (!evt.field || !evt.data) {
+    if (!evt.field ) {
       return;
     }
     this.data.startDate = new Date(evt.data.fromDate);
@@ -856,7 +868,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     // }
   }
   endDateChange(evt: any) {
-    if (!evt.field || !evt.data) {
+    if (!evt.field ) {
       return;
     }
     this.data.endDate = new Date(evt.data.fromDate);
