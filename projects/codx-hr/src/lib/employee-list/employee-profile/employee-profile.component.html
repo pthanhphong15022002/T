@@ -879,7 +879,7 @@
             </div>
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeDisciplinesInfo()"
+              (click)="addEmployeeDisciplinesInfo('add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -3608,7 +3608,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2
+                    <codx-gridview-v2
                       idField="recID"
                       [columnsGrid]="expColumnGrid"
                       [service]="'HR'"
@@ -3625,7 +3625,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eExperiences')"
-                    ></codx-gridview-v2> -->
+                    ></codx-gridview-v2>
                   </div>
                 </div>
               </div>
@@ -4312,7 +4312,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEmployeeDisciplinesInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4718,7 +4718,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="HandleEmployeeAccidentInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"

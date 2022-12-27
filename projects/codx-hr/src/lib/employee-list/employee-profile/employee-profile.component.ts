@@ -1,3 +1,4 @@
+import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
 import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
 import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
 import { PopupETimeCardComponent } from './../../employee-profile/popup-etime-card/popup-etime-card.component';
@@ -131,6 +132,13 @@ export class EmployeeProfileComponent extends UIComponent {
   //EExperience
   lstExperience: any = [];
   lstVaccine: any = [];
+
+  //EDiscipline
+  lstDiscipline: any = [];
+
+  //EAccident
+  lstAccidents: any = [];
+
   formModel;
   itemDetail;
   EExperienceColumnsGrid: any;
@@ -341,6 +349,17 @@ export class EmployeeProfileComponent extends UIComponent {
           if (res) this.lstAppointions = res[0];
           console.log('lit e appoint', this.lstAppointions);
           
+        });
+
+        //Discipline
+        let rqDiscipline = new DataRequest();
+        rqDiscipline.gridViewName = 'grvEDisciplines';
+        rqDiscipline.entityName = 'HR_EDisciplines';
+        rqDiscipline.predicate = 'EmployeeID=@0';
+        rqDiscipline.dataValue = params.employeeID;
+        rqDiscipline.page = 1;
+        this.hrService.getListDisciplineByDataRequest(rqDiscipline).subscribe((res) => {
+          if (res) this.lstDiscipline = res[0];
         });
 
         //Asset
@@ -1596,7 +1615,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //   });
   // }
 
-  addEmployeeDisciplinesInfo() {
+  addEmployeeDisciplinesInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1606,14 +1625,17 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeDisciplinesDetailComponent,
       PopupEDisciplinesComponent,
       {
-        isAdd: true,
-        employeeId: this.data.employeeID,
+        actionType: actionType,
+        indexSelected: this.lstDiscipline.indexOf(data),
+        lstDiscipline: this.lstDiscipline,
         headerText: 'Kỷ luật',
+        employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1632,6 +1654,31 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
+    });
+  }
+
+  HandleEmployeeAccidentInfo(actionType: string, data: any){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+
+    option.Width = '800px';
+    let dialogAdd = this.callfunc.openSide(
+      // EmployeeAllocatedPropertyDetailComponent,
+      PopupEaccidentsComponent,
+      {
+        actionType: actionType,
+        indexSelected: this.lstAccidents.indexOf(data),
+        lstAccidents: this.lstAccidents,
+        employeeId: this.data.employeeID,
+        headerText: 'Tai nạn lao động',
       },
       option
     );
