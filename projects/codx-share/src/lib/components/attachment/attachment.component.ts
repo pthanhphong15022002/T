@@ -301,7 +301,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   {
     if(this.dataSelected)
     {
-      this.objectId = this.dataSelected.recID;
+      //this.objectId = this.dataSelected.recID;
       if(this.functionID)
       {
         this.cache.functionList(this.functionID).subscribe(item=>{
@@ -474,7 +474,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   ngOnInit(): void {
 
     this.setFormModel();
- 
+    if(this.dataSelected)  this.objectId = this.dataSelected.recID;
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();
     this.fileService.getAllowSizeUpload().subscribe((item) => {

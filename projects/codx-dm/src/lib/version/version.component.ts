@@ -465,7 +465,6 @@ export class VersionComponent implements OnInit {
 
   async versionFile() {
     var that = this;
-    debugger;
     if (this.fileEditing.item != '' && this.fileEditing.item != undefined && this.fileEditing.item != null) {
       this.fileEditing.comment = this.comment;
       await this.dmSV.getToken();

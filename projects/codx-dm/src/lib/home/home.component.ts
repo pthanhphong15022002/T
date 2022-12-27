@@ -349,7 +349,6 @@ export class HomeComponent extends UIComponent implements  OnDestroy {
     });
     this.dmSV.isChangeData.subscribe((item) => {
       if (item) {
-        debugger
         this.dmSV.page = 1;
         this.getDataFolder(this.dmSV.folderID);
         this.getDataFile(this.dmSV.folderID);

@@ -638,7 +638,6 @@ export class CodxDMService {
   }
 
   filterMoreFunction(e: any, data: any, modeView = false) {
-    debugger;
     var type = this.getType(data, 'entity');
     var bookmark = this.isBookmark(data);
     var list =
@@ -1157,7 +1156,6 @@ export class CodxDMService {
   clickMF($event, data: any, view: any = null) {
     var type = this.getType(data, 'name');
     let option = new SidebarModel();
-    debugger;
     switch ($event.functionID) {
       case 'DMT0226': // xet duyet thu muc
       case 'DMT0230': // xet duyet file
