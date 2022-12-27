@@ -65,6 +65,7 @@ export class PropertiesComponent implements OnInit {
   titleFilesize = 'Kích cỡ file';
   titleCreator = 'Người tạo';
   titleVersion = 'Phiên bản';
+  titleApprove = 'Phê duyệt';
   titleLanguage = 'Ngôn ngữ';
   titleAuthor = 'Tác giả';
   titlePublisher = 'Nhà xuất bản';

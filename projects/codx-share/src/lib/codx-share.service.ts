@@ -514,6 +514,7 @@ export class CodxShareService {
     return dialogComment;
   }
 
+  #region_calendar
   getDataTM_Tasks(requestData) {
     return this.api.execSv(
       'TM',
@@ -533,6 +534,16 @@ export class CodxShareService {
       [predicate, dataValue]
     );
   }
+
+  getDataWP_Notes_IsPin() {
+    return this.api.execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NotesBusiness',
+      'GetListIsPinAsync',
+    );
+  }
+
   getDataCO_Meetings(requestData) {
     return this.api.execSv(
       'CO',
@@ -552,6 +563,42 @@ export class CodxShareService {
       requestData
     );
   }
+  #endregion_calendar
+
+  #region_EP_BookingCars
+  getListAttendees(recID: any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingAttendeesBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+  #endregion_EP_BookingCars
+
+  #region_EP_BookingRooms
+  getListItems(recID: any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'BookingItemsBusiness',
+      'GetAsync',
+      [recID]
+    );
+  }
+  #endregionEP_BookingRooms
+  
+  getListResource(resourceType: string) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListResourceByTypeAsync',
+      [resourceType]
+    );
+  }
+
 }
 
 //#region Model

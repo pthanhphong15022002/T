@@ -50,7 +50,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
   typeList = 'note-drawer';
   header = 'Ghi chú';
   dialog: DialogRef;
-  predicate = 'CreatedBy=@0 && isNote=true';
+  predicate = 'CreatedBy=@0';
   dataValue = '';
   editMF: any;
   deleteMF: any;
@@ -92,6 +92,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
     });
     var dataSv = new CRUDService(injector);
     dataSv.request.pageSize = 10;
+    dataSv.idField = 'recID';
     this.dtService = dataSv;
   }
 
@@ -137,7 +138,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
             type == 'add-otherDate' ||
             type == 'add-note-drawer'
           ) {
-            (this.lstView.dataService as CRUDService)
+            (this.lstView.dataService as CRUDService) 
               .add(data)
               .subscribe((res) => {
                 this.sortDataByDESC('drawer');
@@ -238,6 +239,7 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       formType: 'edit',
       maxPinNotes: this.maxPinNotes,
       component: 'note-drawer',
+      countNotePin: this.countNotePin,
     };
     this.callfc.openForm(
       AddNoteComponent,
@@ -325,7 +327,12 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       ])
       .subscribe((res) => {
         if (res) {
-          var object = [{ data: res, type: 'edit-note-drawer' }];
+          let dtNew = res;
+          dtNew['transType'] = 'WP_Notes';
+          dtNew['memo'] = res.memo;
+          dtNew['transID'] = res.recID;
+          dtNew['calendarDate'] = res.createdOn;
+          var object = [{ data: dtNew, type: 'edit-note-drawer' }];
           this.noteService.data.next(object);
           this.changeDetectorRef.detectChanges();
         }
@@ -342,8 +349,13 @@ export class NoteDrawerComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
+          let dtNew = res;
+          dtNew['transType'] = 'WP_Notes';
+          dtNew['memo'] = res.memo;
+          dtNew['transID'] = res.recID;
+          dtNew['calendarDate'] = res.createdOn;
           if (item.isPin) this.countNotePin--;
-          var object = [{ data: res, type: 'delete' }];
+          var object = [{ data: dtNew, type: 'delete' }];
           this.noteService.data.next(object);
         }
       });

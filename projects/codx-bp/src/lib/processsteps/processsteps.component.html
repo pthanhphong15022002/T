@@ -50,13 +50,14 @@
             default="Hoạt động"
           ></codx-label>
         </label>
-        <div 
-            class="check-list text-dark"  
-            (mouseenter)="openMFTypeA()"
-            (mouseleave)="closeMFTypeA()">
+        <div
+          class="check-list text-dark"
+          (mouseenter)="openMFTypeA()"
+          (mouseleave)="closeMFTypeA()"
+        >
           <ng-container *ngFor="let item of data?.items">
             <div
-              class="d-flex align-item-center p-1 mb-2 psteps-item "
+              class="d-flex align-item-center p-1 mb-2 psteps-item"
               #p="ngbPopover"
               [ngbPopover]="!hideMoreFCChild ? hoverMoreFunction : ''"
               (mouseenter)="openMF(item, p)"
@@ -747,39 +748,20 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div
-    class="d-flex align-items-center justify-content-between cursor-pointer w-100"
-  >
-    <div class="line-colums">
-      {{ data.headerText }}
+  <div class="envelop">
+    <div class="d-flex align-items-center justify-content-between cursor-pointer w-100  has-actions-menu">
+      <div class="line-colums">{{ data.headerText }}</div>
     </div>
-  </div>
-  <div>
-    <codx-mfunc
-      type="hover"
-      [formModel]="view.formModel"
-      (clickMF)="clickMF($event, data.dataColums)"
-      [dataItem]="data.dataColums"
-    >
-    </codx-mfunc>
-  </div>
-  <!-- <div class="icon-more_vert icon-18 has-actions-menu">
-    <div class="action-menu">
-      <codx-mfunc
+    <div class="show-more" >   
+        <codx-mfunc
         type="hover"
         [formModel]="view.formModel"
-        (clickMF)="clickMF($event, item.dataColums)"
-        [dataItem]="item.dataColums"
+        (clickMF)="clickMFColums($event,data.keyField)"
+        [dataItem]="moreDefaut"  
+        [isBookMark]="false"
       >
       </codx-mfunc>
     </div>
-  </div> -->
-  <ng-template #tesst
-    ><span>{{ data.headerText }}</span></ng-template
-  >
+  </div>
 </ng-template>
-<!-- #pp="ngbPopover"
-      [ngbPopover]="tesst"
-      (mouseenter)="pp.open()"
-      (mouseleave)="pp.close()"
-      placement="bottom" -->
+

@@ -28,7 +28,6 @@
   [views]="views"
   [autoLoad]="false"
   [funcID]="funcID"
-  (onActions)="onAction($event)"
 >
 </codx-views>
 
@@ -37,7 +36,7 @@
 </ng-template>
 
 <ng-template #contentTmp let-data>
-  <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_MyTasks'">
+  <ng-container #tmpTM_Tasks *ngIf="data?.transType == 'TM_Tasks'">
     <div>
       <h5>{{ data?.data?.taskName }}</h5>
     </div>
@@ -210,7 +209,7 @@
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
       <i class="icon-location_on me-1"></i>
       <span class="fw-bold">
-        {{ data?.data?.resourceName }}
+        {{ getResourceNameRoom(data?.data?.resourceID) }}
       </span>
     </div>
 
@@ -239,35 +238,37 @@
 
     <hr />
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
-      <codx-label name="lblReason" default="Lí do" class="fw-bold"></codx-label>
-      <span class="me-1 fw-bold">:</span>
+      <codx-label
+        name="lblReason"
+        default="Lí do"
+        class="fw-bold text-nowrap"
+      ></codx-label>
+      <span class="me-2 fw-bold">:</span>
       <span class="text-gray-800">
-        {{ data?.data?.reasonName }}
+        {{ data?.data?.reasonID }}
       </span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
       <codx-label
         default="Nội dung"
         name="lblMemo"
-        class="fw-bold"
+        class="fw-bold text-nowrap"
       ></codx-label>
-      <span class="me-1 fw-bold">:</span>
-      <span class="text-gray-800">
-        {{ data?.data?.memo }}
-      </span>
+      <span class="me-2 fw-bold">:</span>
+      <span class="text-gray-800" [innerHTML]="data?.data?.memo"> </span>
     </div>
     <div class="d-flex mb-2">
       <div class="d-flex text-dark me-6">
         <codx-label
           name="lblAttendees"
           default="Người tham gia"
-          class="fw-bold"
+          class="fw-bold text-nowrap"
         >
         </codx-label>
-        <span class="me-1 fw-bold">:</span>
-        <div class="ms-2 d-flex justify-content-end">
+        <span class="me-2 fw-bold">:</span>
+        <div class="d-flex justify-content-end">
           <codx-imgs
-            [objectId]="data?.data?.bookingAttendees"
+            [objectId]="selectBookingAttendeesRoom"
             objectType="AD_Users"
             [numberImages]="6"
             [width]="30"
@@ -278,10 +279,10 @@
     </div>
     <hr />
     <div
-      *ngIf="data?.data?.bookingItems?.length > 0"
+      *ngIf="selectBookingItems.length > 0"
       style="max-height: 150px; overflow: auto"
     >
-      <div *ngFor="let item of data?.data?.bookingItems">
+      <div *ngFor="let item of selectBookingItems">
         <div class="d-flex mb-4 justify-content-between">
           <div class="d-flex flex-row">
             <div class="me-2">
@@ -308,6 +309,7 @@
               </div>
             </div>
           </div>
+
           <div class="d-flex align-items-center me-3">
             <codx-label
               default="Số lượng"
@@ -333,7 +335,7 @@
       <codx-label name="lblCar" default="Loại xe" class="fw-bold"></codx-label>
       <span class="me-1 fw-bold">:</span>
       <span class="">
-        {{ data?.data?.resourceName }}
+        {{ getResourceNameCar(data?.data?.resourceID) }}
       </span>
     </div>
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
@@ -344,12 +346,15 @@
         class="fw-bold"
       ></codx-label>
       <span class="me-1 fw-bold">:</span>
-      <span *ngIf="data?.data?.driverName != null">
+      <span *ngIf="driverName != '' && driverName != null">
         <span class="">
-          {{ data?.data?.driverName }}
+          {{ driverName }}
         </span>
       </span>
-      <span *ngIf="data?.data?.driverName == null">
+      <span *ngIf="driverName == ''">
+        <span></span>
+      </span>
+      <span *ngIf="driverName == null">
         <codx-label
           default="Không có tài xế"
           class=""
@@ -357,6 +362,7 @@
         ></codx-label>
       </span>
     </div>
+
     <hr />
     <div class="d-flex mt-1 flex-grow-1 mb-2 me-6">
       <i class="icon-person me-1"></i>
@@ -364,6 +370,7 @@
         {{ data?.data?.requester }}
       </span>
     </div>
+
     <div *ngIf="sameDayCheck(data?.data?.startDate, data?.data?.endDate)">
       <div class="d-flex mt-1 flex-grow-1 mb-2">
         <div class="d-flex me-6">
@@ -404,6 +411,7 @@
         </div>
       </div>
     </div>
+
     <hr />
     <div class="mb-2">
       <codx-label
@@ -412,7 +420,7 @@
         class="fw-bold"
       ></codx-label>
       <span class="me-1 fw-bold">:</span>
-      <span class="ms-1">{{ data?.data?.reasonName }} </span>
+      <span class="ms-1">{{ data?.data?.reasonID }} </span>
     </div>
     <div class="mb-2">
       <codx-label
@@ -432,13 +440,14 @@
       <span class="me-1 fw-bold">:</span>
       <span class="ms-1">{{ data?.data?.address }} </span>
     </div>
+
     <div>
       <div class="d-flex mb-2">
         <div class="d-flex text-dark me-6">
           <!-- <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label> -->
           <div class="d-flex justify-content-end">
             <codx-imgs
-              [objectId]="data?.data?.bookingAttendees"
+              [objectId]="selectBookingAttendeesCar"
               objectType="AD_Users"
               [numberImages]="7"
               [width]="30"
@@ -600,4 +609,43 @@
 
 <ng-template #headerTemp>
   <div class="mt-6"></div>
+</ng-template>
+
+<ng-template #cardTemplate let-data>
+  <ng-container *ngIf="data.transType == 'EP_BookingCars'">
+    <div
+      class="d-flex flex-column w-100"
+      (click)="getMoreInfoBookingCars(data.transID)"
+    >
+      <span
+        >{{ showHour(data.data.startDate) }} -
+        {{ showHour(data.data.endDate) }}</span
+      >
+      <span
+        class="fw-bold"
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        >{{ data.title }}</span
+      >
+    </div>
+  </ng-container>
+  <ng-container *ngIf="data.transType == 'EP_BookingRooms'">
+    <div
+      class="d-flex flex-column w-100"
+      (click)="getMoreInfoBookingRooms(data.transID)"
+    >
+      <span>{{ showHour(data.data.startDate) }} - {{ showHour(data.data.endDate) }}</span>
+      <span
+        class="fw-bold"
+        style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+        >{{ data.title }}</span
+      >
+    </div>
+  </ng-container>
+  <ng-container #other *ngIf="data.transType != 'EP_BookingCars'">
+    <span
+      class="fw-bold"
+      style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+      >{{ data.title }}</span
+    >
+  </ng-container>
 </ng-template>

@@ -1,9 +1,17 @@
-<codx-views #view [entityName]="entityName" idField="recID" [views]="views" [service]="'WP'"
-  [assemblyName]="'ERM.Business.WP'" [className]="'NewsBusiness'" [method]="'GetDataApprovalAsync'"
-  [selectedFirst]="true" (selectedChange)="selectedChange($event)" (buttonClick)="clickBtnAdd()">
+<codx-views #view 
+  [entityName]="entityName" 
+  idField="recID" 
+  [views]="views" 
+  [service]="'WP'"
+  [assemblyName]="'ERM.Business.WP'" 
+  [className]="'NewsBusiness'" 
+  [method]="'GetDataApprovalAsync'"
+  [selectedFirst]="true" 
+  (selectedChange)="selectedChange($event)" 
+  (buttonClick)="clickBtnAdd()">
 </codx-views>
 
-<ng-template #panelLeftRef>
+<ng-template #headerTemplate>
   <ul class="nav nav-news">
     <ng-container *ngFor="let item of tabAsside">
       <li class="nav-item" [class.text-primary]="item.active">
@@ -16,8 +24,13 @@
   </ul>
 </ng-template>
 <ng-template #panelRightRef>
-  <approve-view-detail [objectID]="selectedID" [entityName]="entityName" [dataService]="view.dataService"
-    [funcID]="view.funcID" (evtUpdateApproval)="realoadData($event)" [formModel]="view.formModel">
+  <approve-view-detail 
+    [objectID]="selectedID" 
+    [entityName]="entityName" 
+    [dataService]="view.dataService"
+    [funcID]="view.funcID" 
+    (evtUpdateApproval)="realoadData($event)" 
+    [formModel]="view.formModel">
   </approve-view-detail>
 </ng-template>
 <ng-template #tmpEmpty>

@@ -1,29 +1,226 @@
+<ng-template #tmpContent>
+  <ejs-tab
+    #leftToolbar
+    (selecting)="swipeToRightTab($event)"
+    heightAdjustMode="Fill"
+  >
+  <e-tabitems>
+    <e-tabitem>
+      <ng-template #headerText>
+        <codx-label default="Bệnh nghề nghiệp"></codx-label>
+      </ng-template>
+      <ng-template #content>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label fiedName="DiseaseID" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="diseaseID"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="DiseaseDate" [formModel]="formModel"></codx-label>
+            <codx-input
+              disabled="true"
+              field="diseaseDate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label
+              fiedName="FromDate"
+              [formModel]="formModel"
+            ></codx-label>
+            <codx-input
+              field="fromDate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="ToDate" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="toDate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+        <div class="form-group row">
+          <codx-label fiedName="TreatHopitalID" [formModel]="formModel"></codx-label>
+          <codx-input
+            field="treatHopitalID"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+    
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label fiedName="TreatDoctor" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="treatDoctor"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="TotalCost" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="totalCost"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+    
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label fiedName="PayForm" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="payForm"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="AllowanceLevel" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="allowanceLevel"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+    
+        <div class="form-group row">
+          <codx-label fiedName="Conclusion" [formModel]="formModel"></codx-label>
+          <codx-input
+            field="conclusion"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+    
+        <div class="form-group row">
+          <codx-label
+            fiedName="Note"
+            [formModel]="formModel"
+          ></codx-label>
+          <codx-input
+            field="note"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </ng-template>
+    </e-tabitem>
+
+    <e-tabitem>
+      <ng-template #headerText>
+        <codx-label default="Giám định y khoa"></codx-label>
+      </ng-template>
+      <ng-template #content>
+        <div class="form-group rpw">
+          <codx-label fiedName="IsInspect" [formModel]="formModel"></codx-label>
+          <codx-input
+            field="isInspect"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+    
+        <div class="form-group rpw">
+          <codx-label fiedName="InspectionPlace" [formModel]="formModel"></codx-label>
+          <codx-input
+            field="inspectionPlace"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+    
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label fiedName="InspectionDecisionNo" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="inspectionDecisionNo"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="InspectionDate" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="inspectionDate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+    
+        <div class="form-group row">
+          <div class="col-6">
+            <codx-label fiedName="DiseaseRate" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="diseaseRate"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+          <div class="col-6">
+            <codx-label fiedName="Seniority" [formModel]="formModel"></codx-label>
+            <codx-input
+              field="seniority"
+              [formModel]="formModel"
+              [Group]="formGroup"
+            ></codx-input>
+          </div>
+        </div>
+    
+        <div class="form-group rpw">
+          <codx-label fiedName="InspectionNote" [formModel]="formModel"></codx-label>
+          <codx-input
+            field="inspectionNote"
+            [formModel]="formModel"
+            [Group]="formGroup"
+          ></codx-input>
+        </div>
+      </ng-template>
+    </e-tabitem>
+  </e-tabitems>
+  </ejs-tab>
+</ng-template>
+
 <layout-list-detail
   #lstDetail
   [title]="headerText"
   [formModel]="formModel"
   [footer]="footer"
   [dialog]="dialog"
-  [data]="data"
+  [data]="ediseasesObj"
   [leftTemlate]="LeftTemlate"
-  [RightTemlate]="body"
+  [RightTemlate]="tmpContent"
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <!-- <div class="form-group row">
+    <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="DiseaseID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="decisionNo"
+          field="diseaseID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="DiseaseDate" [formModel]="formModel"></codx-label>
         <codx-input
           disabled="true"
-          field="isCurrent"
+          field="diseaseDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -32,28 +229,28 @@
     <div class="form-group row">
       <div class="col-6">
         <codx-label
-          fiedName="EffectedDate"
+          fiedName="FromDate"
           [formModel]="formModel"
         ></codx-label>
         <codx-input
-          field="effectedDate"
+          field="fromDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="ToDate" [formModel]="formModel"></codx-label>
         <codx-input
-          field="expiredDate"
+          field="toDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="form-group row">
-      <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="TreatHopitalID" [formModel]="formModel"></codx-label>
       <codx-input
-        field="jSalary"
+        field="treatHopitalID"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
@@ -61,17 +258,17 @@
 
     <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TreatDoctor" [formModel]="formModel"></codx-label>
         <codx-input
-          field="signedDate"
+          field="treatDoctor"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="TotalCost" [formModel]="formModel"></codx-label>
         <codx-input
-          field="signStatus"
+          field="totalCost"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
@@ -79,9 +276,28 @@
     </div>
 
     <div class="form-group row">
-      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
+      <div class="col-6">
+        <codx-label fiedName="PayForm" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="payForm"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="AllowanceLevel" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="allowanceLevel"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="Conclusion" [formModel]="formModel"></codx-label>
       <codx-input
-        field="signerID"
+        field="conclusion"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
@@ -89,24 +305,82 @@
 
     <div class="form-group row">
       <codx-label
-        fiedName="SignerPosition"
+        fiedName="Note"
         [formModel]="formModel"
       ></codx-label>
       <codx-input
-        field="signerPosition"
+        field="note"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
+
+    //tach form tai day
+
+    <div class="form-group rpw">
+      <codx-label fiedName="IsInspect" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="isInspect"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
     </div>
 
     <div class="form-group rpw">
-      <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+      <codx-label fiedName="InspectionPlace" [formModel]="formModel"></codx-label>
       <codx-input
-        field="note"
+        field="inspectionPlace"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div> -->
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="InspectionDecisionNo" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="inspectionDecisionNo"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="InspectionDate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="inspectionDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-6">
+        <codx-label fiedName="DiseaseRate" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="diseaseRate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label fiedName="Seniority" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="seniority"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <codx-label fiedName="InspectionNote" [formModel]="formModel"></codx-label>
+      <codx-input
+        field="inspectionNote"
+        [formModel]="formModel"
+        [Group]="formGroup"
+      ></codx-input>
+    </div>
   </ng-template>
 
   <ng-template #footer>
@@ -123,15 +397,28 @@
   </ng-template>
 </layout-list-detail>
 
+<ng-template #footer>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
 <ng-template #LeftTemlate>
   <codx-listview
     #listView
     [type]="'cardView'"
     [service]="'HR'"
-    [assemblyName]="'CM'"
-    [entityName]="'HR_EHealths'"
-    [className]="'DataBusiness'"
-    [method]="'LoadDataAsync'"
+    [assemblyName]="'HR'"
+    [entityName]="'HR_EDiseases'"
+    [className]="'EDiseasesBusiness'"
+    [method]="'LoadDataEDiseasesAsync'"
     [predicate]="'EmployeeID=@0'"
     [dataValue]="employeeId"
     [itemTemplate]="itemTemplate"
@@ -145,10 +432,10 @@
   <codx-temp-full
     [formModel]="formModel"
     [typeMF]="'hover'"
-    [title]="data.employeeID"
-    [icoTitleCss]="'icon-attach_money'"
+    [title]="data.treatDoctor"
+    [icoTitleCss]="'icon-i-arrow-down-left-circle-fill'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-    [subTitleTmp]="tmplateEJobSalaries"
+    [subTitleTmp]="tmplateEDiseases"
     [dataItem]="data"
     typeMF="hover"
     [hideMF]="true"
@@ -157,15 +444,15 @@
   </codx-temp-full>
 </ng-template>
 
-<ng-template #tmplateEJobSalaries let-data1>
+<ng-template #tmplateEDiseases let-data1>
   <div class="d-flex flex-column">
     <div>
-      <i class="icon-edit_fill"></i
-      >{{ (data1.effectedDate | fmDT) + " - " + (data1.expiredDate | fmDT) }}
+      <i class ="icon-calendar_today"></i>{{data1.fromDate | fmDT}} -
+      {{data1.toDate | fmDT}}
     </div>
-    <div>
-      <i class="icon-list_alt"></i
-      >{{ data1.decisionNo + "*" + (data1.signedDate | fmDT) }}
+    <div *ngIf="data1.note != null">
+      <i class="icon-edit"></i
+      >{{ data1.note}}
     </div>
   </div>
 </ng-template>

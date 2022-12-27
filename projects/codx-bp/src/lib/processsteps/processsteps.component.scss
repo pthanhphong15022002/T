@@ -298,6 +298,12 @@ codx-views {
 // .psteps-list codx-mfunc {
 //   display: none;
 // }
+.show-more{
+  opacity: 0;
+}
+.envelop:hover .show-more{
+  opacity: 1;
+}
 
 .line-colums {
   -webkit-line-clamp: 1;
@@ -305,4 +311,19 @@ codx-views {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 260px;
+}
+.colums-morefunc{
+  background-color: #e2e3ee;
+}
+.envelop{
+  width: 100%;
+  position: relative; 
+  height: 30px; 
+  display: flex;
+  .show-more{
+    position: absolute; 
+    top: 0px ; right: 0px; 
+    background: white;
+    border-radius: 20px;
+  }
 }

@@ -1,4 +1,4 @@
-import { DomSanitizer } from '@angular/platform-browser';
+
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -24,6 +24,7 @@ import {
   TM_TaskGroups,
 } from '../model/task.model';
 import { CRUDService } from 'codx-core/public-api';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'share-view-detail',
@@ -70,7 +71,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   constructor(
     private api: ApiHttpService,
     private callfc: CallFuncService,
-    private sanitizer: DomSanitizer,
+    public sanitizer: DomSanitizer,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef

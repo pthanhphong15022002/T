@@ -241,11 +241,33 @@
           </div>
         </div>
         <div>
-          <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="processSteps?.recID"
+          <!-- <codx-attachment #attachment [objectType]="dialog.formModel.entityName" [objectId]="processSteps?.recID"
             hideFolder="1" hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline"
             allowMultiFile="1" [formModel]="dialog.formModel" [functionID]="funcID" (fileAdded)="fileAdded($event)"
             (fileCount)="getfileCount($event)" displayThumb="full" showMessage="0">
-          </codx-attachment>
+          </codx-attachment> -->
+          <codx-attachment
+          #attachment
+          [objectType]="formModelMenu.entityName" 
+          [objectId]="processSteps?.recID"
+          hideFolder="1"
+          hideImageUpload="0"
+          hideImageThumb="0"
+          hideUploadBtn="1"
+          hideDes="1"
+          type="inline"
+          allowMultiFile="1"
+          [functionID]="funcIDparent"
+          (fileAdded)="fileAdded($event)"
+          (fileCount)="getfileCount($event)"
+          displayThumb="full"
+          showMessage="0"  
+          [fdID]="folderID" 
+          [fdName]="process.versionNo"
+          [parentID]="process.recID"
+          [dataSelected]="process"   
+        >
+        </codx-attachment>
         </div>
       </ng-container>
     </div>

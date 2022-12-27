@@ -35,7 +35,31 @@ erm-quick-links-inner .dropdown-menu {
   color: var(--text-primary) !important;
 }
 
+.h-16px {
+  height: 16px;
+}
+
 /** custom bootstrap  **/
+.rounded-4 {
+  border-radius: 1rem !important;
+}
+
+.rounded-5 {
+  border-radius: 1.25rem !important;
+}
+
+.rounded-6 {
+  border-radius: 1.5rem !important;
+}
+
+.rounded-7 {
+  border-radius: 1.75rem !important;
+}
+
+.rounded-8 {
+  border-radius: 2rem !important;
+}
+
 .e-multi-select-wrapper input[type=text] {
   font-size: 13px;
 }
@@ -109,64 +133,8 @@ img.w-20px.h-20px,
   border-radius: 50%;
 }
 
-.rounded {
-  border-radius: 0.475rem !important;
-}
-
-.rounded-0 {
-  border-radius: 0 !important;
-}
-
-.rounded-1 {
-  border-radius: 0.425rem !important;
-}
-
-.rounded-2 {
-  border-radius: 0.475rem !important;
-}
-
-.rounded-3 {
-  border-radius: 0.625rem !important;
-}
-
-.rounded-4 {
-  border-radius: 1rem !important;
-}
-
-.rounded-circle {
-  border-radius: 50% !important;
-}
-
-.rounded-pill {
-  border-radius: 50rem !important;
-}
-
-.rounded-top {
-  border-top-left-radius: var(--bs-border-radius) !important;
-  border-top-right-radius: var(--bs-border-radius) !important;
-}
-
-.rounded-end {
-  border-top-right-radius: var(--bs-border-radius) !important;
-  border-bottom-right-radius: var(--bs-border-radius) !important;
-}
-
-.rounded-bottom {
-  border-bottom-right-radius: var(--bs-border-radius) !important;
-  border-bottom-left-radius: var(--bs-border-radius) !important;
-}
-
-.rounded-start {
-  border-bottom-left-radius: var(--bs-border-radius) !important;
-  border-top-left-radius: var(--bs-border-radius) !important;
-}
-
 .icon-56 {
   font-size: 56px !important;
-}
-
-.h-105px {
-  height: 65px;
 }
 
 /***ES-Trinh ky****/
@@ -203,7 +171,6 @@ img.w-20px.h-20px,
   .codx-stepper {
     .stepper-item::before {
       content: "";
-      //  background-color: #dbdbdb;
       border-top: 0.5px dashed #dbdbdb;
       height: 1px;
       position: absolute;
@@ -327,14 +294,10 @@ lib-nosubaside .aside-menu .menu .menu-item .menu-link {
   border-radius: 4px;
 }
 
-// lib-nosubaside[data-kt-aside-minimize=on] .aside-menu .menu .menu-item .menu-link {
-//   margin: 4px 10px;
-// }
 
 lib-nosubaside .aside-menu .menu .menu-item .menu-link.active {
 
   background-color: var(--primary-active) !important;
-  //background-color: #16a3e2e3 !important;
 
 }
 
@@ -875,15 +838,16 @@ codx-header .menu-state-title-primary .menu-item:not(.here) .menu-link:hover:not
 }
 
 .e-toolbar .e-tbar-btn:focus,
-.e-toolbar .e-tbar-btn:hover {
+.e-toolbar .e-tbar-btn:hover,
+.e-toolbar .e-active-view .e-tbar-btn {
   background: var(--primary) !important;
   border-color: var(--primary) !important;
   color: var(--white);
 }
 
-.content-tree .d-flex.user-card {
-  margin-top: 0px !important;
-  padding: 0 !important;
+.codx-theme .e-schedule .e-schedule-toolbar .e-active-view .e-tbar-btn-text,
+.e-toolbar .e-tbar-btn:hover .e-tbar-btn-text {
+  color: var(--white) !important;
 }
 
 /****/
@@ -1381,10 +1345,6 @@ codx-processsteps .e-card-wrapper {
   overflow: auto;
 }
 
-.dropdown-item:focus span {
-  color: white !important;
-}
-
 .dropdown-item.cursor-pointer.border-top {
   border-top: 0 !important;
   position: relative;
@@ -1506,4 +1466,8 @@ ejs-schedule .e-schedule-toolbar-container .e-control.e-popup-open {
 .e-schedule-table.e-content-table .e-appointment-details .e-subject {
   width: 100%;
   padding-top: 0 !important;
+}
+
+codx-view-schedule .container-fluid.h-50px .mt-4 {
+  margin-top: 10px !important;
 }

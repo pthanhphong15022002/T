@@ -25,6 +25,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
 import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
+import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-user-inner',
@@ -75,7 +76,11 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     if (environment.themeMode == 'body')
       document.body.classList.add('codx-theme');
 
-    this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
+    this.setTheme(
+      this.auth.userValue.theme
+        ? this.auth.userValue.theme.toLowerCase()
+        : 'default'
+    ); //('default');
     if (this.functionList) {
       this.formModel = {
         formName: this.functionList?.formName,
@@ -109,13 +114,14 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     document.location.reload();
   }
 
-  selectLanguage(lang: string) {
-    this.setLanguage(lang);
+  updateSettting(lang: string, theme: string) {
+    if (lang) this.setLanguage(lang);
+    if (theme) this.setTheme(theme);
     var l = this.language.lang.toUpperCase();
     this.api
       .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
         l,
-        '',
+        theme,
       ])
       .subscribe((res: UserModel) => {
         this.auth.userSubject.next(res);
@@ -161,7 +167,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   selectTheme(theme: string) {
-    this.setTheme(theme);
+    //this.setTheme(theme);
+    this.updateSettting('', theme);
     // document.location.reload();
   }
 
@@ -261,13 +268,20 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'orange',
     name: 'Orange',
-    color: '#f36519',
+    color: '#ff7213',
     enable: true,
   },
   {
-    id: 'pink',
-    name: 'Pink',
-    color: '#f70f8f',
+    id: 'sapphire',
+    name: 'Sapphire',
+    color: '#23d3c1',
+    enable: true,
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    color: '#15b144',
+    enable: true,
   },
 ];
 

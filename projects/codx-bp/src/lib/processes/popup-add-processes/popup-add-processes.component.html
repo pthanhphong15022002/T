@@ -119,6 +119,7 @@
       >
       </codx-label>
       <codx-input
+        [disabled]="funcID == 'BPT2' ? true : false"
         [Group]="form.formGroup"
         [formModel]="form.formModel"
         field="owner"
@@ -158,6 +159,8 @@
       <div>
         <codx-attachment
           #attachment
+          [objectId]="process.recID"
+          [objectType]="form.formModel.entityName"
           hideFolder="1"
           hideImageUpload="0"
           hideImageThumb="0"
@@ -172,7 +175,7 @@
           showMessage="0"
           [fdID]="folderID"
           [fdName]="folderName"
-          [parentID]="parentID"
+          [parentID]="process.recID"
           [dataSelected]="process"
         >
         </codx-attachment>
@@ -236,9 +239,10 @@
 
       </div>
     </div>
-
     <codx-attachment
       #imageAvatar
+      [objectId]="process.recID"
+      [objectType]="form.formModel.entityName"
       hideFolder="1"
       hideImageUpload="1"
       hideImageThumb="1"
@@ -253,10 +257,6 @@
       displayThumb="full"
       showMessage="0"
       category="0"
-      [fdID]="folderID"
-      [fdName]="folderName"
-      [parentID]="parentID"
-      [dataSelected]="process"
     >
     </codx-attachment>
 
