@@ -3168,6 +3168,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
       }
+      else
+      {
+        this.fileUploadList.push(this.fileUploadList[index]);
+        this.fileUploadList.splice(index, 1);
+      }
     }
 
     this.fileAdded.emit({ data: this.fileUploadList });
