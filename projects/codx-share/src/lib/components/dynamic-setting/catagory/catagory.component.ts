@@ -372,6 +372,7 @@ export class CatagoryComponent implements OnInit {
   loadValue() {
     switch (this.category) {
       case '1':
+        //case '4':
         if (this.settingValue.length > 0) {
           var value = this.settingValue[0].dataValue;
           if (value) {
