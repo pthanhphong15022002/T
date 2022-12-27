@@ -70,7 +70,7 @@ dragPosition:any= {x: 0, y: 0};
       this.queryList = dt?.data[0];
       this.panelID = dt?.data[1];
       this.parentScope = dt?.data[2];
-      if(this.queryList){
+      if(this.queryList && this.queryList._results){
         let i=0;
         this.queryList?.forEach((item:any)=>{
           let ele = item.createEmbeddedView();
@@ -165,6 +165,13 @@ dragPosition:any= {x: 0, y: 0};
     if(evt.value != undefined){
       this.chartType = undefined;
       this.value = Array.from(this.queryList)[evt.value];
+
+      if(this.parentScope && this.isPopupMode){
+        this.parentScope.addPanel(true,'template',this.value);
+        }
+        else{
+          this.add.emit({isAuto:true, chartType:'template',data: this.value})
+        }
     }
   }
 
@@ -185,16 +192,24 @@ dragPosition:any= {x: 0, y: 0};
     let eleParent = evt.source.element.nativeElement.parentElement;
     let parentPos = eleParent.getBoundingClientRect();
     if(( evt.distance.x < 0 && evt.dropPoint.x < parentPos.left ) || (evt.dropPoint.x >= parentPos.right -20 && evt.distance.x > 0)){
-      if(this.parentScope){
+      if(this.parentScope && this.isPopupMode){
       this.parentScope.addPanel(true,data.value,undefined);
-    }
-    else{
-      this.add.emit({data: data.value})
-    }
+      }
+      else{
+        this.add.emit({isAuto:true,chartType: undefined,data: data.value})
+      }
     }
 
   }
   dragStart(evt:any, data: any){
+    evt.source.element.nativeElement.parentElement.childNodes.forEach((e:any)=>{
+      if(e.id && e.id != data.value){
+        if(e.classList.contains('active-cell')){
+          e.classList.remove('active-cell');
+        }
+      }
+    })
+    evt.source.element.nativeElement.classList.add('active-cell')
     //evt.source.element.nativeElement.parentElement.childNodes.forEach((e:any)=>{
     //   if(e.id && e.id != data.value){
     //     if(e.classList.contains('active-cell')){
