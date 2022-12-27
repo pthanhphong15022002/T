@@ -1038,23 +1038,23 @@ export class ProcessesComponent
   //   return strTime;
   // }
 
-  PopoverDetail(p: any, emp) {    
+  PopoverDetail(p: any, emp) {
     if(this.popupOld?.popoverClass !== p?.popoverClass ) {
-      this.popupOld?.close();   
+      this.popupOld?.close();
     }
-   
+
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp.memo != null || emp.processName != null) {
-        p.open();      
-      } 
+        p.open();
+      }
     } else p.close();
     this.popupOld = p;
   }
 
   closePopover() {
-    this.popupOld?.close();  
+    this.popupOld?.close();
   }
 
   setTextPopover(text){
@@ -1096,11 +1096,11 @@ export class ProcessesComponent
         this.entityName,
       ])
       .subscribe((res) => {
-        if (res) {          
+        if (res) {
           this.notification.notifyCode('SYS007');
           this.dialogPopup.close();
           this.itemSelected.status = '6';
-          this.view.dataService.update(this.dataSelected).subscribe();
+          this.view.dataService.update(this.itemSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });
