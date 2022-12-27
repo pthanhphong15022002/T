@@ -117,14 +117,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   onInit(): void {
     var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe(item=>{
-      if(item) 
-      {
-        this.titleRoom = item.orgUnitName;
-        this.dtCompany = item;
-      }
-    });
+    // this.cache.getCompany(user.userID).subscribe(item=>{
+    //   if(item) 
+    //   {
+    //     this.titleRoom = item.orgUnitName;
+    //     this.dtCompany = item;
+    //   }
+    // });
     //Lấy Form Model cho KR và OB
+    debugger;
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
@@ -194,7 +195,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   {
     let dialog = this.callfc.openSide(OkrAddComponent, [
       this.gridView,
-      this.formModelOB,
+      this.formModelKR,
       "add",
       this.dataOKRPlans.recID,
       null

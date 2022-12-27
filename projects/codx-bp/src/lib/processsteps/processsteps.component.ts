@@ -150,6 +150,7 @@ export class ProcessStepsComponent
   widthElement = 300;
   dataClick: any;
   dataColums =[] ;
+  isHover = null;
 
   constructor(
     inject: Injector,
@@ -1294,12 +1295,18 @@ export class ProcessStepsComponent
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
+      this.isHover = data?.recID;
       this.dataHover = data;
       p.open();
     } else {
       p.close();
     }
     this.changeDetectorRef.detectChanges();
+  }
+
+  checkBackground(i){
+    if( this.isHover == i) return true;
+    return false;
   }
 
   closeMFTypeA() {
