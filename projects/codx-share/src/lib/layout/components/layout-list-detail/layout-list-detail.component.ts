@@ -7,6 +7,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -20,7 +21,8 @@ import {
 @Component({
   selector: 'layout-list-detail',
   templateUrl: './layout-list-detail.component.html',
-  styleUrls: ['./layout-list-detail.component.css'],
+  styleUrls: ['./layout-list-detail.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LayoutListDetailComponent implements OnInit {
   @Input() formModel?: FormModel;
@@ -50,7 +52,7 @@ export class LayoutListDetailComponent implements OnInit {
     private cache: CacheService,
     private route: ActivatedRoute,
     private changeDetectorRef: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.funcID = this.formModel?.funcID;
