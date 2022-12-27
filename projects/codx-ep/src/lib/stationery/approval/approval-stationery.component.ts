@@ -140,7 +140,11 @@ export class ApprovalStationeryComponent
   changeDataMF(event, data: any) {
     if (event != null && data != null) {
       event.forEach((func) => {
-        if (func.functionID == 'SYS04' /*Copy*/) {
+        if (
+          func.functionID == 'SYS02' /*Delete*/ ||
+          func.functionID == 'SYS03' /*Edit*/ ||
+          func.functionID == 'SYS04' /*Copy*/
+        ) {
           func.disabled = true;
         }
       });
