@@ -44,9 +44,13 @@ export const OMCONST = {
         
     },
     
-    // FUNCID: {
-        
-    // },
+    MFUNCID: {
+        Add:'SYS01',
+        Delete:'SYS02',
+        Edit:'SYS03',
+        Copy:'SYS04',
+
+    },
 
 
 

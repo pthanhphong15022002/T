@@ -416,7 +416,18 @@ export class EmployeeListComponent extends UIComponent {
   }
 
   doubleClick(data) {
+    let page = 1;
     console.log('viewbase', this.viewBase);
+    // if (
+    //   this.viewBase?.dataService?.data &&
+    //   this.viewBase?.dataService?.request?.page > 1
+    // ) {
+    //   let listEmp = this.viewBase?.dataService?.data;
+    //   let index = listEmp?.findIndex((p) => p.employeeID == data.employeeID);
+    //   if (index > -1 && this.viewBase?.dataService?.request?.pageSize > 0) {
+    //     page = index / this.viewBase?.dataService?.request?.pageSize + 1;
+    //   }
+    // }
 
     if (this.listMoreFunc.length > 0) {
       this.listMoreFunc.forEach((obj) => {
@@ -428,6 +439,7 @@ export class EmployeeListComponent extends UIComponent {
         this.urlView,
         {
           employeeID: data.employeeID,
+          //page: page,
         },
         {
           data: this.viewBase?.dataService?.data,

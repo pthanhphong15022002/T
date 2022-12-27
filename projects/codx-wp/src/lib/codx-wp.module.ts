@@ -50,7 +50,7 @@ import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post
 import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
 import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
-import { HomeCalendarComponent } from './calendar/home-calendar/home-calendar.component';
+import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 
 
 export const routes: Routes = [
@@ -137,7 +137,7 @@ export const routes: Routes = [
     children: [
       {
         path: ':funcID',
-        component: HomeCalendarComponent,
+        component: CodxCalendarComponent,
       },
     ],
   },
@@ -190,7 +190,6 @@ const Component: Type<any>[] =
     PopupAddGroupComponent,
     LayoutChatComponent,
     ChatBoxComponent,
-    HomeCalendarComponent
   ];
 
 @NgModule({

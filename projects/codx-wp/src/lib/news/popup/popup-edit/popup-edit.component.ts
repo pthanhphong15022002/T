@@ -102,6 +102,7 @@ export class PopupEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    debugger
     this.getFileByObjectID(this.data.recID);
   }
 
@@ -116,9 +117,9 @@ export class PopupEditComponent implements OnInit {
           'FileBussiness',
           'GetFilesByIbjectIDAsync',
           [objectID]
-        )
-        .subscribe((files: any[]) => {
+        ).subscribe((files: any[]) => {
           if (files.length > 0) {
+            debugger
             files.forEach((f: any) => {
               f['source'] = `${environment.urlUpload}` + '/' + f.url;
               if (f.referType == this.FILE_REFERTYPE.IMAGE) {

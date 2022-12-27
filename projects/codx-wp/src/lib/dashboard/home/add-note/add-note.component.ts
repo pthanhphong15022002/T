@@ -112,6 +112,7 @@ export class AddNoteComponent implements OnInit {
     this.currentDate = dt.data?.currentDate;
     this.maxPinNotes = dt.data?.maxPinNotes;
     this.component = dt.data?.component;
+    this.countNotePin = dt.data?.countNotePin;
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
@@ -137,18 +138,7 @@ export class AddNoteComponent implements OnInit {
       };
       if (this.note.noteType != 'text') this.note.checkList.push(dtt);
     }
-    this.getNumberNotePin();
     this.noteType.text = true;
-  }
-
-  getNumberNotePin() {
-    if (this.data) {
-      this.data.forEach((res) => {
-        if (res.isPin == true || res.isPin == '1') {
-          this.countNotePin++;
-        }
-      });
-    }
   }
 
   ngAfterViewInit() {
@@ -339,8 +329,8 @@ export class AddNoteComponent implements OnInit {
           if (res) {
             let dtNew = res;
             dtNew['transType'] = 'WP_Notes';
-            dtNew['title'] = res.memo;
-            dtNew['transID'] = res.transID;
+            dtNew['memo'] = res.memo;
+            dtNew['transID'] = res.recID;
             dtNew['calendarDate'] = res.createdOn;
             if (this.listFileUpload.length > 0) {
               this.listFileUpload.forEach((dt) => {
@@ -458,8 +448,8 @@ export class AddNoteComponent implements OnInit {
         if (res) {
           let dtNew = res;
           dtNew['transType'] = 'WP_Notes';
-          dtNew['title'] = res.memo;
-          dtNew['transID'] = res.transID;
+          dtNew['memo'] = res.memo;
+          dtNew['transID'] = res.recID;
           dtNew['calendarDate'] = res.createdOn;
           this.checkUpdate = true;
           if (this.listFileEdit?.length > 0) {
@@ -484,9 +474,12 @@ export class AddNoteComponent implements OnInit {
             );
           }
           var object = [];
-          if (this.component == 'note-drawer')
-            object = [{ data: dtNew, type: 'edit-note-drawer' }];
-          else {
+          if (this.component == 'note-drawer') {
+            if (this.date2 != undefined)
+              object = [{ data: dtNew, type: 'edit-note-drawer-otherDate' }];
+            else
+              object = [{ data: dtNew, type: 'edit-note-drawer-currentDate' }];
+          } else {
             if (this.date2 != undefined)
               object = [{ data: dtNew, type: 'edit-otherDate' }];
             else object = [{ data: dtNew, type: 'edit-currentDate' }];

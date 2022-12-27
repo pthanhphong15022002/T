@@ -9,24 +9,24 @@
   text-align: center;
   width: 40px;
   height: 56px;
-  background-color: #f9f9f9 !important;
+  background-color: var(--gray-150) !important;
 }
 
 .week-item:hover {
-  background-color: #c0d5f3 !important;
+  background-color: var(--primary-light) !important;
   cursor: pointer;
 }
 
 .week-item.active {
-  color: #0078FF;
+  color: var(--primary-dark);
 }
 
 .week-item.active div {
-  color: #0078FF;
+  color: var(--primary);
 }
 
 .task-weekbox {
-  background-color: #eee;
+  background-color: var(--gray-100);
   padding: 10px 10px 10px 10px;
   margin-bottom: 5px;
 }
@@ -48,5 +48,6 @@
   background-color: #d3d5dd91 !important;
   border-radius: 13px !important;
 }
+
 
 /*** select week 19/5/2022 ***/

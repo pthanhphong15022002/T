@@ -1,8 +1,8 @@
 <codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary h-100'" 
-[body]="alignKR" *ngIf="isAfterRender">
+[body]="distributeKR" *ngIf="isAfterRender">
 </codx-form>
 
-<ng-template #alignKR>
+<ng-template #distributeKR>
   <div class="w-100 h-100 bg-white d-flex flex-column">
     <span class="pt-5 bg-secondary row"></span>
     <div class="pt-5 pb-2 text-center">
@@ -50,8 +50,8 @@
                     <span class="ps-2 fs-5 fw-bolder">{{orgUnitTree?.orgUnitName}}</span>
                 </div>
                 <!--content-->
-                <div class="d-flex flex-column" *ngIf=" orgUnitTree && orgUnitTree?.listChildrens">
-                  <ng-container class="d-flex flex-column" *ngFor="let item of orgUnitTree.listChildrens;">
+                <div class="d-flex flex-column" *ngIf=" listDistribute && listDistribute?.length>0">
+                  <ng-container class="d-flex flex-column" *ngFor="let item of listDistribute;">
                     <div class="my-2 d-flex flex-row justify-content-center">
                       <div class=" col-3 mx-1 d-flex flex-row ">
                         <div class="d-flex justify-content-center align-items-center" style="height:30px;width:30px"><span
@@ -60,27 +60,27 @@
   
                         <codx-inplace [type]="'text'" emptyText="" style="width:100%;"
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item?.orgUnitName"> </codx-inplace>
+                          [value]="item?.orgUnitName"></codx-inplace>
                       </div>
                       <div class=" col-1  mx-1">
                         <codx-inplace [type]="'text'" emptyText=""
-                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="''">
+                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.distributePct">
                         </codx-inplace>
                       </div>
                       <div class="col-2 mx-1">
                         <codx-inplace [type]="'text'" emptyText=""
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="''"> </codx-inplace>
+                          [value]="item.distributeValue"> </codx-inplace>
                       </div>
                       <div class="col-1  mx-1">
                         <codx-inplace [type]="'text'" emptyText=""
-                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="''">
+                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.umid">
                         </codx-inplace>
                       </div>
                       <div class=" col-3  mx-1">
                         <codx-inplace [type]="'text'" emptyText=""
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="krName"> </codx-inplace>
+                          [value]="item.okrName"> </codx-inplace>
                       </div>
                     </div>
                   </ng-container>
