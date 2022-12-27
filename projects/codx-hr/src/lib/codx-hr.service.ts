@@ -524,22 +524,10 @@ export class CodxHrService {
       data
     );
   }
-
-
-  updateEmployeeDisciplinesInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'EDisciplinesBusiness',
-      'AddEmployeeDisciplinesInfoAsync',
-      data
-    );
-  }
-
   //#endregion
 
 
-    //#region EPassportBusiness
+    //#region EAwardBusiness
     getEmployeeAwardModel() {
       return this.api.execSv<any>(
         'HR',
@@ -589,6 +577,109 @@ export class CodxHrService {
       );
     }
     //#endregion
+
+        //#region EAwardBusiness
+        getEmployeeDisciplineModel() {
+          return this.api.execSv<any>(
+            'HR',
+            'HR',
+            'EDisciplinesBusiness',
+            'GetEmployeeDisciplineModelAsync'
+          );
+        }
+      
+        UpdateEmployeeDisciplineInfo(data) {
+          return this.api.execSv<any>(
+            'HR',
+            'HR',
+            'EDisciplinesBusiness',
+            'UpdateEmployeeDisciplineInfoAsync',
+            data
+          );
+        }
+      
+        AddEmployeeDisciplineInfo(data) {
+          return this.api.execSv<any>(
+            'HR',
+            'HR',
+            'EDisciplinesBusiness',
+            'AddEmployeeDisciplineInfoAsync',
+            data
+          );
+        }
+      
+        DeleteEmployeeDisciplineInfo(data) {
+          return this.api.execSv<any>(
+            'HR',
+            'HR',
+            'EDisciplinesBusiness',
+            'DeleteEmployeeDisciplineInfoAsync',
+            data
+          );
+        }
+      
+        getListDisciplineByDataRequest(data) {
+          return this.api.execSv<any>(
+            'HR',
+            'HR',
+            'EDisciplinesBusiness',
+            'GetListDisciplineByDataRequestAsync',
+            data
+          );
+        }
+        //#endregion
+
+  //#region EAccidentBusiness
+  getEmployeeAccidentModel(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'GetEmployeeAccidentsModelAsync'
+    );
+  }
+
+  UpdateEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'EditEAccidentAsync',
+      data
+    );
+  }
+
+  AddEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'AddEAccidentAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'DeleteEAccidentAsync',
+      data
+    );
+  }
+
+  getListAccidentByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'LoadDataEAccidentAsync',
+      data
+    );
+  }
+
+  //#endregion
 
   //#region EAssetBusiness
   getEmployeeAssetsModel() {
