@@ -563,6 +563,16 @@ export class CodxEpService {
   //#endregion
 
   //#Setting SYS
+  getSettingValue(para:any) {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.SYS',
+      'SettingValuesBusiness',
+      'GetByModuleAsync',
+      para
+    );
+  }
+
   getCalendar() {
     return this.api.execSv(
       'SYS',
