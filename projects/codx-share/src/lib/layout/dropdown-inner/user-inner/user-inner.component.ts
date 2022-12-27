@@ -75,12 +75,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
     if (environment.themeMode == 'body')
       document.body.classList.add('codx-theme');
-
-    this.setTheme(
-      this.auth.userValue.theme
-        ? this.auth.userValue.theme.toLowerCase()
-        : 'default'
-    ); //('default');
+    if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
+    this.setTheme(this.auth.userValue.theme.toLowerCase()); //('default');
     if (this.functionList) {
       this.formModel = {
         formName: this.functionList?.formName,
@@ -262,25 +258,25 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',
-    color: '#187de4',
+    color: '#005DC7',
     enable: true,
   },
   {
     id: 'orange',
     name: 'Orange',
-    color: '#ff7213',
+    color: '#f15711',
     enable: true,
   },
   {
     id: 'sapphire',
     name: 'Sapphire',
-    color: '#23d3c1',
+    color: '#0b9b8d',
     enable: true,
   },
   {
     id: 'green',
     name: 'Green',
-    color: '#15b144',
+    color: '#0f8633',
     enable: true,
   },
 ];

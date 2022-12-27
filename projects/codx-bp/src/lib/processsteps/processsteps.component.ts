@@ -1193,6 +1193,7 @@ export class ProcessStepsComponent
       this.getObjectFile.emit(e);
       this.changeDetectorRef.detectChanges();
     }
+    this.addFlowchart.clearData() ;
   }
 
   showIconByStepType(stepType) {

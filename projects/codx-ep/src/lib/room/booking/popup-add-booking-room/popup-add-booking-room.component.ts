@@ -105,30 +105,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   tmplstStationery = [];
   tmpTitle = '';
   title = '';
-  isCopy = false;
-  tabInfo: any[] = [
-    {
-      icon: 'icon-info',
-      text: 'Thông tin chung',
-      name: 'tabGeneralInfo',
-    },
-    {
-      icon: 'icon-person_outline',
-      text: 'Người tham dự',
-      name: 'tabPeopleInfo',
-    },
-    {
-      icon: 'icon-layers',
-      text: 'Văn phòng phẩm',
-      name: 'tabStationery',
-    },
-    {
-      icon: 'icon-tune',
-      text: 'Thông tin khác',
-      name: 'tabMoreInfo',
-    },
-    { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'tabReminder' },
-  ];
+  isCopy = false;  
+  ep8Avaiable:any;
+  sysSetting:any;
+  
   lstEquipment = [];
 
   listRoles = [];
@@ -141,6 +121,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   user;
   saveCheck = false;
   listUserID = [];
+  tabInfo=[];
   constructor(
     private injector: Injector,
     private notificationsService: NotificationsService,
@@ -189,6 +170,58 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.codxEpService.getSettingValue('System').subscribe((sys:any)=>{
+      if(sys){
+        this.ep8Avaiable= JSON.parse(sys.dataValue)?.EP8;
+        if(this.ep8Avaiable !=null && this.ep8Avaiable ==true){
+          this.tabInfo = [
+            {
+              icon: 'icon-info',
+              text: 'Thông tin chung',
+              name: 'tabGeneralInfo',
+            },
+            {
+              icon: 'icon-person_outline',
+              text: 'Người tham dự',
+              name: 'tabPeopleInfo',
+            },
+            {
+              icon: 'icon-layers',
+              text: 'Văn phòng phẩm',
+              name: 'tabStationery',
+            },
+            {
+              icon: 'icon-tune',
+              text: 'Thông tin khác',
+              name: 'tabMoreInfo',
+            },
+            { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'tabReminder' },
+          ];
+        }
+        else{
+          this.tabInfo = [
+            {
+              icon: 'icon-info',
+              text: 'Thông tin chung',
+              name: 'tabGeneralInfo',
+            },
+            {
+              icon: 'icon-person_outline',
+              text: 'Người tham dự',
+              name: 'tabPeopleInfo',
+            },
+            {
+              icon: 'icon-tune',
+              text: 'Thông tin khác',
+              name: 'tabMoreInfo',
+            },
+            { icon: 'icon-playlist_add_check', text: 'Mở rộng', name: 'tabReminder' },
+          ];
+        }
+        
+      }
+      
+    });
     //Lấy giờ làm việc
     this.codxEpService.getEPRoomSetting().subscribe((setting: any) => {
       if (setting) {
@@ -642,7 +675,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         (this.data.onlineUrl == null || this.data.onlineUrl == '')
       ) {
         this.notificationsService
-          .alertCode('Chưa có đường dẫn cho cuộc họp online!')
+          .alertCode('EP012')
           .subscribe((x) => {
             //EP_WAIT đợi messagecode từ BA
             if (x.event.status == 'N') {
@@ -766,7 +799,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         }
         if (approval) {
-          this.codxEpService
+          if(this.data.approval!='0'){
+
+            this.codxEpService
             .getCategoryByEntityName(this.formModel.entityName)
             .subscribe((res: any) => {
               this.codxEpService
@@ -794,6 +829,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   }
                 });
             });
+          }
+          else{              
+            this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe(res);
+            this.notificationsService.notifyCode('ES007');
+            this.dialogRef && this.dialogRef.close(this.returnData);
+
+          }
           this.dialogRef && this.dialogRef.close(this.returnData);
         } else {
           this.dialogRef && this.dialogRef.close(this.returnData);

@@ -158,9 +158,6 @@ export class PopupRolesComponent implements OnInit {
         if (res.permissions.length > 0) {
           this.notifi.notifyCode('SYS034');
           this.dialog.close(res);
-        } else {
-          this.notifi.notify('Phân quyền không thành công');
-          return;
         }
       });
     }

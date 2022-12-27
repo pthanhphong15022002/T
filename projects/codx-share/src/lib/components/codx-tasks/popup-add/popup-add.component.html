@@ -29,20 +29,23 @@
       (valueChange)="cbxChange($event)" [disabled]="readOnly">
     </codx-input>
   </div>
-  <div class="form-group row">
-    <div class="col-6">
-      <div>
+  <div class="row mx-0">
+    <div class="col-6 ps-0">
+      <div class="form-group">
         <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
         </codx-label>
+        <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" [crrValue]="task?.dueDate"
+          (valueChange)="changeTime($event)" [disabled]="disableDueDate">
+        </codx-input>
       </div>
-      <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" [crrValue]="task?.dueDate"
-        (valueChange)="changeTime($event)" [disabled]="disableDueDate">
-      </codx-input>
     </div>
-    <div class="col-6">
-      <div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
         <codx-label fiedName="Priority" [formModel]="form.formModel" default="Ưu tiên">
         </codx-label>
+        <codx-input field="priority" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="changeVLL($event)" [disabled]="readOnly">
+        </codx-input>
       </div>
       <!-- <codx-input
         field="priority"
@@ -55,9 +58,7 @@
         [disabled]="readOnly"
       >
       </codx-input> -->
-      <codx-input field="priority" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="changeVLL($event)" [disabled]="readOnly">
-      </codx-input>
+
     </div>
   </div>
   <div class="extend-function" *ngIf="param?.PlanControl != '0' || param?.PlanControl == null">
@@ -75,8 +76,8 @@
   <ng-container *ngIf="
       (param?.PlanControl != '0' || param?.PlanControl == null) && showPlan
     ">
-    <div class="form-group row extend-more">
-      <div class="col-5">
+    <div class="form-group row mx-0 extend-more">
+      <div class="col-5 ps-0">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
@@ -94,7 +95,7 @@
           (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-2 ps-0">
+      <div class="col-2 ps-0 pe-0">
         <div>
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
@@ -107,7 +108,7 @@
     </div>
   </ng-container>
   <ng-container>
-    <div class="form-group">
+    <div class="form-group mb-0">
       <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
       </codx-label>
       <codx-input type="textarea" headerposition="none" field="memo" format="ed" height="150" [crrValue]="task?.memo"
