@@ -150,13 +150,14 @@
                 (mouseenter)="p.open()"
                 (mouseleave)="p.close()"
                 placement="right">
+              </span>
+
                 <codx-attachment-temp
                   [objectID]="data?.recID"
                   [formModel]="view.formModel"
                   [count]="data.attachments"
                   [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
-              </span>
             </div>
           </div>
           <!-- <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
