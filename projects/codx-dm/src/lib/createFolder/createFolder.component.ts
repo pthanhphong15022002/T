@@ -623,6 +623,7 @@ export class CreateFolderComponent implements OnInit {
       this.folderService
         .updateFolder(this.fileEditing)
         .subscribe(async (item) => {
+          debugger
           if (item.status == 0) {
             let folder = new FolderInfo();
             folder.recID = that.id;
