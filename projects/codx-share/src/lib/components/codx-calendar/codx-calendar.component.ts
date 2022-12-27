@@ -176,13 +176,17 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
       ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
     let numbF = this.convertStrToDate(eleFromDate);
-    const fDayOfMonth = moment(numbF).toISOString();
-    let indexLast =
-      htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length - 1;
+    const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+    let length =
+      htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length;
+    let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+      ?.childNodes[length - 1] as HTMLElement;
+    let indexLast = length - 1;
+    if (eleClass.className == 'e-month-hide') indexLast = length - 2;
     let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
       ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
     let numbL = this.convertStrToDate(eleToDate);
-    const lDayOfMonth = moment(numbL).toISOString();
+    const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
     this.getParamCalendar(fDayOfMonth, lDayOfMonth, true);
     this.getDayOfWeek(htmlE);
   }
@@ -212,7 +216,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     }
   }
 
-  typeNavigate = null;
+  typeNavigate = 'Month';
   navigate() {
     this.codxShareSV.dateChange.subscribe((res) => {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
@@ -221,13 +225,14 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         if (
           res.type == 'Week' ||
           res.type == 'WorkWeek' ||
-          this.typeNavigate == undefined
+          (this.typeNavigate == undefined &&
+            this.typeNavigate != 'Month' &&
+            this.typeNavigate != 'Year')
         ) {
           let date: any = moment(res.fromDate).subtract('day');
           this.dateChange = date._d;
         } else this.dateChange = res.fromDate;
         this.typeNavigate = res.type;
-        // this.calendar_mini.change(null);
         this.change.detectChanges();
         let myInterVal = setInterval(() => {
           clearInterval(myInterVal);
@@ -238,26 +243,42 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   changeDayOfMonth(args: any) {
+    args['date'] = args.value;
+    let crrDate = moment(this.FDdate)
+      .startOf('month')
+      .add(1, 'day')
+      .toISOString();
+    let newDate = moment(args.value)
+      .startOf('month')
+      .add(1, 'day')
+      .toISOString();
     this.FDdate = args.value;
-    let day = moment(args.value).date();
-    let changeWeek = true;
-    this.lstDOWeek.forEach((x) => {
-      if (x == day) {
-        changeWeek = false;
-        return;
-      }
-    });
-    if (
-      this.typeNavigate == 'Week' ||
-      this.typeNavigate == 'WorkWeek' ||
-      this.typeNavigate == undefined
-    ) {
-      if (changeWeek) {
-        let ele = document.getElementsByTagName('codx-schedule')[0];
-        if (ele) {
-          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-          cmp.selectedDate = args.value;
-          cmp.onNavigating(args);
+    if (crrDate != newDate) this.changeNewMonth(args);
+    else {
+      let day = moment(args.value).date();
+      let changeWeek = true;
+      this.lstDOWeek.forEach((x) => {
+        if (x == day) {
+          changeWeek = false;
+          return;
+        }
+      });
+      if (
+        this.typeNavigate == 'Week' ||
+        this.typeNavigate == 'WorkWeek' ||
+        (this.typeNavigate == undefined &&
+          this.typeNavigate != 'Month' &&
+          this.typeNavigate != 'Year')
+      ) {
+        if (changeWeek && this.calendar_mini) {
+          let eleCalendar = this.calendar_mini.element as HTMLElement;
+          this.getDayOfWeek(eleCalendar);
+          let ele = document.getElementsByTagName('codx-schedule')[0];
+          if (ele) {
+            let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+            cmp.selectedDate = args.value;
+            cmp.isNavigateInside = true;
+          }
         }
       }
     }
@@ -268,7 +289,11 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (ele) {
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
       cmp.selectedDate = args.date;
-      cmp.onNavigating(args);
+      cmp.isNavigateInside = true;
+      // let myInterVal = setInterval(() => {
+      //   clearInterval(myInterVal);
+      //   this.loadData();
+      // }, 100);
     }
   }
 
@@ -329,15 +354,20 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
-                const fDayOfMonth = moment(numbF).toISOString();
-                let indexLast =
+                const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+                let length =
                   htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-                    .length - 1;
+                    .length;
+                let eleClass = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[length - 1] as HTMLElement;
+                let indexLast = length - 1;
+                if (eleClass.className == 'e-month-hide')
+                  indexLast = length - 2;
                 let eleToDate = htmlE?.childNodes[1]?.childNodes[0]
                   ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
                 let numbL = this.convertStrToDate(eleToDate);
-                const lDayOfMonth = moment(numbL).toISOString();
+                const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
                 this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
               }
             } else {
@@ -480,7 +510,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataTM.gridViewName = 'grvMyTasks';
     requestDataTM.pageLoading = true;
     requestDataTM.page = 1;
-    requestDataTM.pageSize = 20;
+    requestDataTM.pageSize = 1000;
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
@@ -499,7 +529,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataCO.gridViewName = 'grvTMMeetings';
     requestDataCO.pageLoading = true;
     requestDataCO.page = 1;
-    requestDataCO.pageSize = 20;
+    requestDataCO.pageSize = 1000;
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
@@ -518,7 +548,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataEP_Room.gridViewName = 'grvBookingRooms';
     requestDataEP_Room.pageLoading = true;
     requestDataEP_Room.page = 1;
-    requestDataEP_Room.pageSize = 20;
+    requestDataEP_Room.pageSize = 1000;
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
@@ -537,7 +567,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataEP_Car.gridViewName = 'grvBookingCars';
     requestDataEP_Car.pageLoading = true;
     requestDataEP_Car.page = 1;
-    requestDataEP_Car.pageSize = 20;
+    requestDataEP_Car.pageSize = 1000;
     requestDataEP_Car.entityName = 'EP_Bookings';
     requestDataEP_Car.entityPermission = 'EP_BookingCars';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
@@ -714,7 +744,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
         if (ele) {
           let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
           cmp.dataSource = res;
-          console.log('check cmp.dataSource', cmp.dataSource);
           cmp.setEventSettings();
         }
       }

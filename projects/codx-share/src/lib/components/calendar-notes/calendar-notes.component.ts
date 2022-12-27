@@ -134,15 +134,19 @@ export class CalendarNotesComponent
           var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
           let numbF = this.convertStrToDate(eleFromDate);
-          const fDayOfMonth = moment(numbF).toISOString();
-          let indexLast =
+          const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+          let length =
             htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-              .length - 1;
+              .length;
+          let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+            ?.childNodes[length - 1] as HTMLElement;
+          let indexLast = length - 1;
+          if (eleClass.className == 'e-month-hide') indexLast = length - 2;
           let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
             ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
           let numbL = this.convertStrToDate(eleToDate);
-          const lDayOfMonth = moment(numbL).toISOString();
-          this.getFirstParam(fDayOfMonth, lDayOfMonth, true);
+          const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+          this.getParamCalendar(fDayOfMonth, lDayOfMonth, true);
         }
       }, 200);
     }
@@ -237,18 +241,6 @@ export class CalendarNotesComponent
               type == 'edit-note-drawer-currentDate' ||
               type == 'edit-note-drawer'
             ) {
-              // (this.lstView.dataService as CRUDService).data.forEach((x) => {
-              //   if (x.transID == data.transID) {
-              //     x.isPin = data.isPin;
-              //     x.isNote = data.isNote;
-              //     x.noteType = data.noteType;
-              //     x.memo = data.memo;
-              //     x.title = data.title;
-              //     x.checkList = data.checkList;
-              //     x.showCalendar = data.showCalendar;
-              //     x.calendarDate = data.calendarDate;
-              //   }
-              // });
               (this.lstView.dataService as CRUDService)
                 .update(data)
                 .subscribe();
@@ -289,26 +281,6 @@ export class CalendarNotesComponent
         this.change.detectChanges();
       }
     });
-    // if (this.typeCalendar == 'month') {
-    //   this.codxShareSV.dateChange.subscribe((res) => {
-    //     if (res) {
-    //       this.dateChange = res.fromDate;
-    //       this.getParamCalendar(
-    //         moment(res.fromDate).toISOString(),
-    //         moment(res.toDate).toISOString(),
-    //         false
-    //       );
-    //       if (this.calendar) {
-    //         this.calendar.refresh();
-    //         this.calendar.value = this.dateChange;
-    //       }
-    //     }
-    //   });
-    // }
-  }
-
-  getFirstParam(fDayOfMonth, lDayOfMonth, updateCheck) {
-    this.getParamCalendar(fDayOfMonth, lDayOfMonth, updateCheck);
   }
 
   getMaxPinNote() {
@@ -396,10 +368,22 @@ export class CalendarNotesComponent
   }
 
   changeDayOfMonth(args: any) {
-    this.FDdate = args.value;
-    var data = args.value;
-    this.setDate(data, this.lstView);
-    this.change.detectChanges();
+    args['date'] = args.value;
+    let crrDate = moment(this.FDdate)
+      .startOf('month')
+      .add(1, 'day')
+      .toISOString();
+    let newDate = moment(args.value)
+      .startOf('month')
+      .add(1, 'day')
+      .toISOString();
+    if (crrDate != newDate) this.changeNewMonth(args);
+    else {
+      this.FDdate = args.value;
+      var data = args.value;
+      this.setDate(data, this.lstView);
+      this.change.detectChanges();
+    }
   }
 
   changeNewMonth(args: any) {
@@ -412,26 +396,21 @@ export class CalendarNotesComponent
       var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
         ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
       let numbF = this.convertStrToDate(eleFromDate);
-      const fDayOfMonth = moment(numbF).toISOString();
-      let indexLast =
-        htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length -
-        1;
+      const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+      let length =
+        htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length;
+      let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+        ?.childNodes[length - 1] as HTMLElement;
+      let indexLast = length - 1;
+      if (eleClass.className == 'e-month-hide') indexLast = length - 2;
       let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
         ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
       let numbL = this.convertStrToDate(eleToDate);
-      const lDayOfMonth = moment(numbL).toISOString();
-      this.getFirstParam(fDayOfMonth, lDayOfMonth, false);
+      const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+      this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
       var data = args.date;
       this.setDate(data, this.lstView);
       this.change.detectChanges();
-    }
-    let ele = document.getElementsByTagName('codx-schedule')[0];
-    if (ele) {
-      this.dataResourceModel;
-      let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      // cmp.isNavigateInside = true; // a Trầm chưa úp đét core
-      cmp.selectedDate = args.date;
-      cmp.onNavigating(args);
     }
   }
 
@@ -491,16 +470,20 @@ export class CalendarNotesComponent
             var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
               ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
             let numbF = this.convertStrToDate(eleFromDate);
-            const fDayOfMonth = moment(numbF).toISOString();
-            let indexLast =
+            const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+            let length =
               htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-                .length - 1;
+                .length;
+            let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+              ?.childNodes[length - 1] as HTMLElement;
+            let indexLast = length - 1;
+            if (eleClass.className == 'e-month-hide') indexLast = length - 2;
             let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
               ?.childNodes[indexLast]?.childNodes[6]
               .childNodes[0] as HTMLElement;
             let numbL = this.convertStrToDate(eleToDate);
-            const lDayOfMonth = moment(numbL).toISOString();
-            this.getFirstParam(fDayOfMonth, lDayOfMonth, false);
+            const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
+            this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
             this.setDate(this.FDdate, this.lstView);
             this.change.detectChanges();
           }
@@ -616,7 +599,7 @@ export class CalendarNotesComponent
     requestDataCO.gridViewName = 'grvTMMeetings';
     requestDataCO.pageLoading = true;
     requestDataCO.page = 1;
-    requestDataCO.pageSize = 20;
+    requestDataCO.pageSize = 1000;
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
@@ -635,7 +618,7 @@ export class CalendarNotesComponent
     requestDataEP_Room.gridViewName = 'grvBookingRooms';
     requestDataEP_Room.pageLoading = true;
     requestDataEP_Room.page = 1;
-    requestDataEP_Room.pageSize = 20;
+    requestDataEP_Room.pageSize = 1000;
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
@@ -654,7 +637,7 @@ export class CalendarNotesComponent
     requestDataEP_Car.gridViewName = 'grvBookingCars';
     requestDataEP_Car.pageLoading = true;
     requestDataEP_Car.page = 1;
-    requestDataEP_Car.pageSize = 20;
+    requestDataEP_Car.pageSize = 1000;
     requestDataEP_Car.entityName = 'EP_Bookings';
     requestDataEP_Car.entityPermission = 'EP_BookingCars';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
@@ -1173,15 +1156,20 @@ export class CalendarNotesComponent
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
-                const fDayOfMonth = moment(numbF).toISOString();
-                let indexLast =
+                const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+                let length =
                   htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-                    .length - 1;
+                    .length;
+                let eleClass = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[length - 1] as HTMLElement;
+                let indexLast = length - 1;
+                if (eleClass.className == 'e-month-hide')
+                  indexLast = length - 2;
                 let eleToDate = htmlE?.childNodes[1]?.childNodes[0]
                   ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
                 let numbL = this.convertStrToDate(eleToDate);
-                const lDayOfMonth = moment(numbL).toISOString();
+                const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
                 this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
               } else {
                 if (this.typeCalendar == 'week') {
