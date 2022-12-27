@@ -137,7 +137,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 3;
+  crrTab: number = 4;
 
   //EAsset salary
   lstAsset: any = [];
@@ -149,6 +149,8 @@ export class EmployeeProfileComponent extends UIComponent {
   listCrrBenefit: any;
 
   lstESkill: any = [];
+  //Awards
+  lstAwards: any = [];
 
   healthColumnsGrid;
   vaccineColumnsGrid;
@@ -338,7 +340,7 @@ export class EmployeeProfileComponent extends UIComponent {
         this.hrService.getListAssetByDataRequest(rqAppointion).subscribe((res) => {
           if (res) this.lstAppointions = res[0];
           console.log('lit e appoint', this.lstAppointions);
-          
+
         });
 
         //Asset
@@ -428,9 +430,9 @@ export class EmployeeProfileComponent extends UIComponent {
         this.hrService.getListDiseasesByDataRequest(rqDiseases).subscribe((res) => {
           if (res) this.lstEdiseases = res[0];
           console.log('lit e di zi', this.lstEdiseases);
-          
+
         });
-        
+
         //Edegrees
         let rqDegrees = new DataRequest();
         rqDegrees.gridViewName = 'grvEDegrees';
@@ -559,6 +561,22 @@ export class EmployeeProfileComponent extends UIComponent {
           //this.lstSkill = res;
           //this.lstExperience = res;
         });
+
+        //HR_EAwards
+        let rqAward = new DataRequest();
+        rqAward.entityName = 'HR_ESkills';
+        rqAward.dataValues = params.employeeID;
+        rqAward.predicates = 'EmployeeID=@0';
+        rqAward.page = 1;
+        rqAward.pageSize = 20;
+        this.hrService.getViewSkillAsync(rqAward).subscribe((res) => {
+
+          if (res) {
+            this.lstAwards = res;
+          }
+          //this.lstSkill = res;
+          //this.lstExperience = res;
+        });
       }
     });
     this.router.params.subscribe((param: any) => {
@@ -610,12 +628,14 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeCertificateInfo('edit', data);
           this.df.detectChanges();
-        } else if(funcID == 'eAppointions'){
+        } else if (funcID == 'eAppointions') {
           this.HandleEmployeeAppointionInfo('edit', data);
           this.df.detectChanges()
-        } else if(funcID == 'eExperiences'){
+        } else if (funcID == 'eExperiences') {
           this.handlEmployeeExperiences('edit', data);
           this.df.detectChanges();
+        } else if(funcID == 'Diseases'){
+          this.HandleEmployeeDiseaseInfo('edit', data);
         }
         break;
 
@@ -801,37 +821,53 @@ export class EmployeeProfileComponent extends UIComponent {
                     this.notify.notifyCode('SYS022');
                   }
                   this.df.detectChanges();
-              }); 
-            } else if(funcID == 'eAppointions'){
+                });
+            } else if (funcID == 'eAppointions') {
               this.hrService
-              .DeleteEmployeeAppointionsInfo(data.recID)
+                .DeleteEmployeeAppointionsInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstAppointions.indexOf(data);
+                    if (i != -1) {
+                      this.lstAppointions.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            } else if (funcID == 'eExperiences') {
+              this.hrService
+                .DeleteEmployeeExperienceInfo(data.recID)
+                .subscribe((p) => {
+                  if (p == true) {
+                    this.notify.notifyCode('SYS008');
+                    let i = this.lstExperience.indexOf(data);
+                    if (i != -1) {
+                      this.lstExperience.splice(i, 1);
+                    }
+                    this.df.detectChanges();
+                  } else {
+                    this.notify.notifyCode('SYS022');
+                  }
+                });
+            }
+            else if(funcID == 'Diseases'){
+              this.hrService
+              .DeleteEmployeeDiseasesInfo(data.recID)
               .subscribe((p) => {
-                if (p == true) {
+                if(p == true){
                   this.notify.notifyCode('SYS008');
-                  let i = this.lstAppointions.indexOf(data);
-                  if (i != -1) {
-                    this.lstAppointions.splice(i, 1);
+                  let i = this.lstEdiseases.indexOf(data);
+                  if(i != -1){
+                    this.lstEdiseases.splice(i, 1);
                   }
                   this.df.detectChanges();
-                } else {
+                } else{
                   this.notify.notifyCode('SYS022');
                 }
-              }); 
-            } else if(funcID == 'eExperiences'){
-              this.hrService
-              .DeleteEmployeeExperienceInfo(data.recID)
-              .subscribe((p) => {
-                if (p == true) {
-                  this.notify.notifyCode('SYS008');
-                  let i = this.lstExperience.indexOf(data);
-                  if (i != -1) {
-                    this.lstExperience.splice(i, 1);
-                  }
-                  this.df.detectChanges();
-                } else {
-                  this.notify.notifyCode('SYS022');
-                }
-              }); 
+              })
             }
           }
         });
@@ -865,11 +901,14 @@ export class EmployeeProfileComponent extends UIComponent {
         } else if (funcID == 'eCertificate') {
           this.HandleEmployeeCertificateInfo('copy', data);
           this.df.detectChanges();
-        } else if(funcID == 'eAppointions'){
+        } else if (funcID == 'eAppointions') {
           this.HandleEmployeeAppointionInfo('copy', data);
           this.df.detectChanges();
-        } else if(funcID == 'eExperiences'){
+        } else if (funcID == 'eExperiences') {
           this.handlEmployeeExperiences('copy', data);
+          this.df.detectChanges();
+        } else if(funcID == 'Diseases'){
+          this.HandleEmployeeDiseaseInfo('copy', data);
           this.df.detectChanges();
         }
         break;
@@ -1197,7 +1236,7 @@ export class EmployeeProfileComponent extends UIComponent {
     ];
   }
 
-  changeItemDetail(item) {}
+  changeItemDetail(item) { }
 
   clickTab(tabNumber) {
     this.crrTab = tabNumber;
@@ -1578,7 +1617,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeAwardsInfo() {
+  addEmployeeAwardsInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1588,7 +1627,9 @@ export class EmployeeProfileComponent extends UIComponent {
       // EmployeeAwardsDetailComponent,
       PopupEAwardsComponent,
       {
-        isAdd: true,
+        actionType: actionType,
+        indexSelected: this.lstAsset.indexOf(data),
+        lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
       },
@@ -1636,7 +1677,7 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         indexSelected: this.lstAppointions.indexOf(data),
-        lstEAppointions : this.lstAppointions,
+        lstEAppointions: this.lstAppointions,
       }
     );
     dialogAdd.closed.subscribe((res) => {
@@ -1860,7 +1901,7 @@ export class EmployeeProfileComponent extends UIComponent {
   //#endregion
 
   //#region HR_EDesisease
-  addEDisease(actionType: string, data: any) {
+  HandleEmployeeDiseaseInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     // option.FormModel = this.view.formModel
