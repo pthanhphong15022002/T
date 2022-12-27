@@ -227,6 +227,7 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         this.attachment?.clearData();
+        this.imageAvatar.clearData() ;
         if (res) {
           this.dialog.close([res.save]);
         } else this.dialog.close();
@@ -238,7 +239,8 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.attachment?.clearData();
+        this.attachment?.clearData();
+        this.imageAvatar.clearData() ;
           this.dialog.close(res.update);
         }
       });
