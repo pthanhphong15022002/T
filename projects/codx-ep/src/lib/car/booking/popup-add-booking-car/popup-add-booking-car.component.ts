@@ -493,9 +493,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
   ngAfterViewInit(): void {}
   beforeSave(option: RequestOption) {
-    //this.data.approval= '0';
-    //this.data.approveStatus = '5';
-    //this.data.status = '5';
+    // this.data.approval= '0';
+    // this.data.approveStatus = '5';
+    // this.data.status = '5';
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd, this.attendeesList, null, null];
@@ -671,8 +671,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
             }
             else{              
+              this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe(res);
               this.notificationsService.notifyCode('ES007');
               this.dialogRef && this.dialogRef.close(this.returnData);
+
             }
             
             this.dialogRef && this.dialogRef.close(this.returnData);

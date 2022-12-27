@@ -121,6 +121,7 @@ const routes: Routes = [
       {
         path: 'categories/:funcID',
         component: DocCategoryComponent,
+        data: { noReuse: true },
       },
     ],
   },
