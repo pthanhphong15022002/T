@@ -327,3 +327,22 @@ codx-views {
     border-radius: 20px;
   }
 }
+.psteps-list{
+  width: 100%;
+  .color-hover{
+    background-color: aliceblue;
+  }
+  .psteps-item{
+    margin: 0;
+    padding: 5px !important;
+    border-radius: 0 15px 15px 0;
+  }
+}
+
+:host ::ng-deep .popover-body{
+  padding: 0 !important;
+}
+
+.more-function codx-mfunc{
+  top: -15px !important;
+}

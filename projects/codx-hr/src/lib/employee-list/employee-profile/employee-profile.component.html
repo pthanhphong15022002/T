@@ -18,10 +18,10 @@
               <div class="mt-9 px-2">
                 <div class="d-flex flex-column text-center mb-4">
                   <div
-                    class="mb-2 d-flex justify-conteuser-leftt-between align-items-center"
+                    class="mb-2 d-flex justify-content-between align-items-center"
                   >
                     <div
-                      class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center"
+                      class="w-25px h-25px border rounded-circle d-flex align-items-center "
                     >
                       <span
                         class="icon-arrow_back_ios icon-16 text-hover-primary me-1 text-white"
@@ -971,7 +971,7 @@
         [attr.aria-expanded]="!objCollapes['1']"
       >
         <span
-          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
         ></span>
       </a>
       <a
@@ -979,7 +979,10 @@
         (click)="collapse('1', '1')"
         [attr.aria-expanded]="!objCollapes['1']"
       >
-        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
+        >
+
+        </span>
       </a>
     </div>
   </div>
@@ -2164,11 +2167,11 @@
     <div class="d-flex">
       <a class="btn btn-xs btn-icon btn-white btn-hover-primary me-3" (click)="collapse('2', '0')"
         [attr.aria-expanded]="!objCollapes['2']">
-        <span class="icon-double_arrow icon-18 text-hover-primary " style="transform: rotate(90deg);"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"></span>
       </a>
       <a class="btn btn-xs btn-icon btn-white btn-hover-primary" (click)="collapse('2', '1')"
         [attr.aria-expanded]="!objCollapes['2']">
-        <span class="icon-double_arrow icon-18 text-hover-primary "style="transform: rotate(-90deg);"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"></span>
       </a>
     </div>
   </div>
@@ -2712,11 +2715,11 @@
             <div class="d-flex">
               <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-3" (click)="collapse('3', '0')"
                 [attr.aria-expanded]="!objCollapes['3']">
-                <span class="icon-double_arrow icon-18 text-hover-primary"></span>
+                <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"></span>
               </a>
               <a class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="collapse('3', '1')"
                 [attr.aria-expanded]="!objCollapes['3']">
-                <span class="icon-double_arrow icon-18 text-hover-primary"></span>
+                <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);"></span>
               </a>
             </div>
           </div>
@@ -2881,7 +2884,7 @@
                         </codx-temp-full>
                         <ng-template #footerBenefit let-data>
                           <div class="d-flex align-items-center mt-1">
-                            <span class="icon-attach_money"></span
+                            <span class="icon-i-plus-circle me-1 icon-16"></span
                             >{{ data.benefitID }}
                           </div>
                           <div class="d-flex align-items-center mt-1">
@@ -2889,8 +2892,8 @@
                             >{{ data.benefitAmt }}
                           </div>
 
-                          <div class="d-flex align-items-center mt-3">
-                            <span class="icon-calendar_today"></span>Hiệu lực:
+                          <div class="d-flex align-items-center mt-1">
+                            <span class="icon-i-calendar2-event-fill me-2 text-gray-600 icon-12 ms-1"></span>Hiệu lực:
                             {{ data.effectedDate | fmDT }}
                             -
                             {{ data.expiredDate | fmDT }}
@@ -3136,7 +3139,7 @@
         [attr.aria-expanded]="!objCollapes['4']"
       >
         <span
-          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
         ></span>
       </a>
       <a
@@ -3144,7 +3147,9 @@
         (click)="collapse('4', '1')"
         [attr.aria-expanded]="!objCollapes['4']"
       >
-        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);">
+
+        </span>
       </a>
     </div>
   </div>
@@ -3578,7 +3583,7 @@
                 [attr.aria-expanded]="!objCollapes['5']"
               >
                 <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
                 ></span>
               </a>
               <a
@@ -3587,7 +3592,7 @@
                 [attr.aria-expanded]="!objCollapes['5']"
               >
                 <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
                 ></span>
               </a>
             </div>
@@ -3674,21 +3679,21 @@
                           ></codx-temp-full>
                           <ng-template #tmplateEDegreesMenuList let-data>
                             <div class="d-flex flex-column">
-                              <div>
-                                <i class="icon-home_work"></i
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-home_work icon-14 text-gray-600 me-1"></i
                                 >{{ item.trainSupplierID }}
                               </div>
-                              <div>
-                                <i class="icon-calendar_today"></i
+                              <div class="pt-2" >
+                                <i class="icon-calendar_today icon-14 text-gray-600 me-1 "></i
                                 >{{ item.courseName }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-14 text-gray-600 me-1 icon-circle-group"
                                 ></i
                                 >{{ item.trainForm }} |
-                                <i class="icon-airplanemode_active"></i>
+                                <i class="icon-airplanemode_active icon-14 text-gray-600 me-1"></i>
                                 {{ item.ranking }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-14 text-gray-600 me-1 icon-circle-group"
                                 ></i>
                                 {{ item.totalScore }}
                               </div>
@@ -3697,11 +3702,11 @@
 
                           <ng-template #titleTemplate let-data>
                             <div class="d-flex flex-column">
-                              <div>
-                                <i class="icon-school"></i
+                              <div class="d-flex align-items-center">
+                                <i class="icon-school  text-gray-600 me-1 icon-14"></i
                                 >{{ item.degreeName }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1 ms-1"
                                 ></i
                                 >{{ item.issuedDate | fmDT }}
                               </div>
@@ -3798,31 +3803,31 @@
                           ></codx-temp-full>
 
                           <ng-template #tmplateECertificateTitle let-data>
-                            <div>
+                            <div class="d-flex align-items-center ">
+                              <i
+                                class="icon-i-arrow-down-left-circle-fill icon-16 me-1 "
+                              ></i>
                               {{ data.certificateID
-                              }}<i
-                                class="icon-i-arrow-down-left-circle-fill"
-                              ></i
-                              >{{ data.certificateGradeID }}
+                              }}{{ data.certificateGradeID }}
                             </div>
                           </ng-template>
 
                           <ng-template #tmplateECertificateMenuList let-data>
                             <div class="d-flex flex-column">
-                              <div>
-                                <i class="icon-calendar_today"></i
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-calendar_today me-1 icon-14 text-gray-600"></i
                                 >{{ data.issuedDate | fmDT }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 ms-1"
                                 ></i
                                 >{{ data.trainSupplierID }}
                               </div>
-                              <div>
-                                <i class="icon-edit_fill"></i
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-category icon-14 text-primary me-1"></i
                                 >{{ data.certificateType }} | <i class=""></i
                                 >{{ data.ranking
                                 }}<i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 ms-1 me-1"
                                 ></i
                                 >{{ data.totalScore }}
                               </div>
@@ -4107,7 +4112,7 @@
                 [attr.aria-expanded]="!objCollapes['6']"
               >
                 <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
                 ></span>
               </a>
               <a
@@ -4116,7 +4121,7 @@
                 [attr.aria-expanded]="!objCollapes['6']"
               >
                 <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
+                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
                 ></span>
               </a>
             </div>
@@ -4298,7 +4303,7 @@
         [attr.aria-expanded]="!objCollapes['7']"
       >
         <span
-          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
         ></span>
       </a>
       <a
@@ -4306,7 +4311,8 @@
         (click)="collapse('7', '1')"
         [attr.aria-expanded]="!objCollapes['7']"
       >
-        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);"
+        ></span>
       </a>
     </div>
   </div>
@@ -4484,7 +4490,7 @@
                                   class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
                                 ></span
                                 ><span
-                                  class="icon-date_range icon-16 me-2 text-gray-600"
+                                  class="icon-i-calendar-event icon-16 me-2 text-gray-600"
                                 ></span
                                 ><span class="text-gray-600 me-3">{{
                                   vaccine.injectDate | fmDT

@@ -799,7 +799,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         }
         if (approval) {
-          this.codxEpService
+          if(this.data.approval!='0'){
+
+            this.codxEpService
             .getCategoryByEntityName(this.formModel.entityName)
             .subscribe((res: any) => {
               this.codxEpService
@@ -827,6 +829,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   }
                 });
             });
+          }
+          else{              
+            this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe(res);
+            this.notificationsService.notifyCode('ES007');
+            this.dialogRef && this.dialogRef.close(this.returnData);
+
+          }
           this.dialogRef && this.dialogRef.close(this.returnData);
         } else {
           this.dialogRef && this.dialogRef.close(this.returnData);

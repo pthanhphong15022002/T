@@ -18,14 +18,14 @@ export const OMCONST = {
         Person:'OMT04',
     },
     
-    OB:{
+    OBFuncID:{
         Company:'OMT011',
         Department:'OMT021',
         Team:'OMT031',
         Person:'OMT041',
     },
 
-    KR:{
+    KRFuncID:{
         Company:'OMT012',
         Department:'OMT022',
         Team:'OMT032',
