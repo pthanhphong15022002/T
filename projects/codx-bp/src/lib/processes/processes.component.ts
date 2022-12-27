@@ -488,6 +488,7 @@ export class ProcessesComponent
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
   releaseProcess(data) {
+    this.dataSelected = data;
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
     this.comment = '';
@@ -1095,10 +1096,11 @@ export class ProcessesComponent
         this.entityName,
       ])
       .subscribe((res) => {
-        if (res) {
+        if (res) {          
           this.notification.notifyCode('SYS007');
           this.dialogPopup.close();
-          this.view.dataService.update(res).subscribe();
+          this.itemSelected.status = '6';
+          this.view.dataService.update(this.dataSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });
