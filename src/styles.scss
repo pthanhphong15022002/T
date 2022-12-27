@@ -1317,6 +1317,10 @@ codx-vll {
   word-break: break-word;
 }
 
+.tab-content>.tab-pane {
+  padding-right: 5px;
+}
+
 .tab-content>.active {
   height: 100%;
   overflow: auto;
