@@ -169,6 +169,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    //check exist list theme
+    let findtheme = this.themes.find((x) => x.id == value);
+    if (!findtheme) value = 'default';
     //Remove Old
     let elm =
       environment.themeMode == 'body'
