@@ -249,7 +249,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 });
               }
             });
-        } 
+        }
         this.changeDetectorRef.detectChanges();
       } else {
         this.codxEpService.getEPSetting().subscribe((setting: any) => {
@@ -598,11 +598,13 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     // }
     return '';
   }
+
   reminderChange(evt: any) {
     if (evt != null) {
       this.data.reminder = evt.data;
     }
   }
+
   beforeSave(option: RequestOption) {
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
@@ -645,6 +647,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       this.lstStationery.forEach((item) => {
         this.tmplstStationery.push(item);
       });
+      //this.checkCurrentQty(this.tmplstStationery);
       this.tmpAttendeesList = [];
       this.attendeesList.forEach((item) => {
         this.tmpAttendeesList.push(item);
@@ -749,74 +752,89 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
       });
   }
+
+  //Check tồn kho
+  checkCurrentQty(listStationery = []): boolean {
+    let result = true;
+    if (listStationery.length > 0) {
+      this.api
+        .exec('EP', 'ResourcesBusiness', 'CheckCurrentQtyAsync', [
+          listStationery,
+        ])
+        .subscribe((res) => {
+          return res;
+        });
+    }
+    return result;
+  }
+
   startSave(approval) {
-    this.dialogRef.dataService
-      .save(
-        (opt: RequestOption) => this.beforeSave(opt),
-        0,
-        null,
-        null,
-        !approval
-      )
-      .subscribe(async (res) => {
-        if (res.save || res.update) {
-          if (!res.save) {
-            this.returnData = res.update;
-          } else {
-            this.returnData = res.save;
-          }
-          if (this.returnData?.recID && this.returnData?.attachments > 0) {
-            if (
-              this.attachment.fileUploadList &&
-              this.attachment.fileUploadList.length > 0
-            ) {
-              this.attachment.objectId = this.returnData?.recID;
-              (await this.attachment.saveFilesObservable()).subscribe(
-                (item2: any) => {
-                  if (item2?.status == 0) {
-                    this.fileAdded(item2);
-                  }
-                }
-              );
-            }
-          }
-          if (approval) {
-            this.codxEpService
-              .getCategoryByEntityName(this.formModel.entityName)
-              .subscribe((res: any) => {
-                this.codxEpService
-                  .release(
-                    this.returnData,
-                    res?.processID,
-                    'EP_Bookings',
-                    this.formModel.funcID
-                  )
-                  .subscribe((res) => {
-                    if (res?.msgCodeError == null && res?.rowCount) {
-                      this.notificationsService.notifyCode('ES007');
-                      this.returnData.approveStatus = '3';
-                      this.returnData.status = '3';
-                      this.returnData.write = false;
-                      this.returnData.delete = false;
-                      (this.dialogRef.dataService as CRUDService)
-                        .update(this.returnData)
-                        .subscribe();
-                      this.dialogRef && this.dialogRef.close(this.returnData);
-                    } else {
-                      this.notificationsService.notifyCode(res?.msgCodeError);
-                      // Thêm booking thành công nhưng gửi duyệt thất bại
-                      this.dialogRef && this.dialogRef.close(this.returnData);
-                    }
-                  });
-              });
-            this.dialogRef && this.dialogRef.close(this.returnData);
-          } else {
-            this.dialogRef && this.dialogRef.close(this.returnData);
-          }
+    this.dialogRef.dataService.save(
+      (opt: RequestOption) => this.beforeSave(opt),
+      0,
+      null,
+      null,
+      !approval
+    )
+    .subscribe(async (res) => {
+      if (res.save || res.update) {
+        if (!res.save) {
+          this.returnData = res.update;
         } else {
-          return;
+          this.returnData = res.save;
         }
-      });
+        if (this.returnData?.recID && this.returnData?.attachments > 0) {
+          if (
+            this.attachment.fileUploadList &&
+            this.attachment.fileUploadList.length > 0
+          ) {
+            this.attachment.objectId = this.returnData?.recID;
+            (await this.attachment.saveFilesObservable()).subscribe(
+              (item2: any) => {
+                if (item2?.status == 0) {
+                  this.fileAdded(item2);
+                }
+              }
+            );
+          }
+        }
+        if (approval) {
+          this.codxEpService
+            .getCategoryByEntityName(this.formModel.entityName)
+            .subscribe((res: any) => {
+              this.codxEpService
+                .release(
+                  this.returnData,
+                  res?.processID,
+                  'EP_Bookings',
+                  this.formModel.funcID
+                )
+                .subscribe((res) => {
+                  if (res?.msgCodeError == null && res?.rowCount) {
+                    this.notificationsService.notifyCode('ES007');
+                    this.returnData.approveStatus = '3';
+                    this.returnData.status = '3';
+                    this.returnData.write = false;
+                    this.returnData.delete = false;
+                    (this.dialogRef.dataService as CRUDService)
+                      .update(this.returnData)
+                      .subscribe();
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  } else {
+                    this.notificationsService.notifyCode(res?.msgCodeError);
+                    // Thêm booking thành công nhưng gửi duyệt thất bại
+                    this.dialogRef && this.dialogRef.close(this.returnData);
+                  }
+                });
+            });
+          this.dialogRef && this.dialogRef.close(this.returnData);
+        } else {
+          this.dialogRef && this.dialogRef.close(this.returnData);
+        }
+      } else {
+        return;
+      }
+    });
   }
 
   valueChange(event) {

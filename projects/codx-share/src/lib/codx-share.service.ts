@@ -534,6 +534,16 @@ export class CodxShareService {
       [predicate, dataValue]
     );
   }
+
+  getDataWP_Notes_IsPin() {
+    return this.api.execSv(
+      'WP',
+      'ERM.Business.WP',
+      'NotesBusiness',
+      'GetListIsPinAsync',
+    );
+  }
+
   getDataCO_Meetings(requestData) {
     return this.api.execSv(
       'CO',

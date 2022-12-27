@@ -51,7 +51,9 @@ export class PleaseUseComponent extends UIComponent implements OnInit {
   }
 
   checkValidEmail() {
-    const regex = new RegExp('/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/');
+    const regex = new RegExp(
+      '^([\\w-]+(?:\\.[\\w-]+)*)@((?:[\\w-]+\\.)*\\w[\\w-]{0,66})\\.([A-Za-z]{2,6}(?:\\.[A-Za-z]{2,6})?)$'
+    );
     var checkRegex = regex.test(this.email);
     if (checkRegex == false) {
       this.notificationsService.notify("Trường 'Email' không hợp lệ");
