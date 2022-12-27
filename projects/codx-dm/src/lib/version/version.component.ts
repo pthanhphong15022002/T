@@ -465,6 +465,7 @@ export class VersionComponent implements OnInit {
 
   async versionFile() {
     var that = this;
+    debugger;
     if (this.fileEditing.item != '' && this.fileEditing.item != undefined && this.fileEditing.item != null) {
       this.fileEditing.comment = this.comment;
       await this.dmSV.getToken();
@@ -482,7 +483,7 @@ export class VersionComponent implements OnInit {
       //     });
       //   });
       // }
-
+      this.fileEditing.createdOn = new Date();
       this.fileService.updateVersionFile(this.fileEditing).subscribe(async res => {
         if (res.status == 0) {
           var files = that.dmSV.listFiles;
