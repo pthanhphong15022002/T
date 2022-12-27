@@ -81,11 +81,11 @@
 
 <ng-template #tmplateEPassportsMenuList let-data>
     <div class="d-flex flex-column w-100">
-        <div><i class="icon-i-arrow-down-left-circle-fill icon-6 mx-2"></i>{{data.skillID}}<i
-                class="icon-i-arrow-down-left-circle-fill icon-6 mx-2"></i> {{data.skillGradeID}}</div>
+        <div><i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i>{{data.skillID}}<i
+                class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i> {{data.skillGradeID}}</div>
         <div><i class="icon-calendar_today"></i>{{(data.trainFrom | fmDT) + ' - ' + (data.trainTo | fmDT)}}</div>
         <div><i class="icon-airplanemode_active"></i>{{data.ranking}}
-            <i class="icon-i-arrow-down-left-circle-fill icon-6 mx-2"></i>{{data.totalScore}}
+            <i class="icon-i-arrow-down-left-circle-fill icon-6 mx-1"></i>{{data.totalScore}}
         </div>
     </div>
 </ng-template>

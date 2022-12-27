@@ -21,7 +21,7 @@ import {
 @Component({
   selector: 'layout-list-detail',
   templateUrl: './layout-list-detail.component.html',
-  styleUrls: ['./layout-list-detail.component.scss'],
+  styleUrls: ['./layout-list-detail.component.css'],
   encapsulation: ViewEncapsulation.None
 })
 export class LayoutListDetailComponent implements OnInit {
