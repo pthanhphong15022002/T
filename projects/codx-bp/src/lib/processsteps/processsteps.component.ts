@@ -465,9 +465,9 @@ export class ProcessStepsComponent
     } else {
       // doi parent
       phaseOld?.items.splice(index, 1);
-      if (index < phaseOld.length - 1) {
-        for (var i = index; i < phaseOld.length; i++) {
-          phaseOld[i].stepNo--;
+      if (index < phaseOld?.items.length - 1) {
+        for (var i = index; i < phaseOld?.items.length; i++) {
+          phaseOld['items'][i].stepNo--;
         }
       }
       var indexParentNew = this.view.dataService.data.findIndex(

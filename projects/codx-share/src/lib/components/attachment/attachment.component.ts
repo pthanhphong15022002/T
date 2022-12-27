@@ -301,7 +301,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   {
     if(this.dataSelected)
     {
-      this.objectId = this.dataSelected.recID;
+      //this.objectId = this.dataSelected.recID;
       if(this.functionID)
       {
         this.cache.functionList(this.functionID).subscribe(item=>{
@@ -452,6 +452,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if(this.dataSelected)  this.objectId = this.dataSelected.recID;
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;
@@ -474,7 +475,6 @@ export class AttachmentComponent implements OnInit, OnChanges {
   ngOnInit(): void {
 
     this.setFormModel();
- 
     //this.getFolderPath();
     this.dataFolder = this.dmSV.parentFolder.getValue();
     this.fileService.getAllowSizeUpload().subscribe((item) => {
@@ -3167,6 +3167,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
 
         addedList.push(Object.assign({}, fileUpload));
         this.fileUploadList.push(Object.assign({}, fileUpload));
+      }
+      else
+      {
+        this.fileUploadList.push(this.fileUploadList[index]);
+        this.fileUploadList.splice(index, 1);
       }
     }
 

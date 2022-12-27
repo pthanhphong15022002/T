@@ -75,12 +75,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
     if (environment.themeMode == 'body')
       document.body.classList.add('codx-theme');
-
-    this.setTheme(
-      this.auth.userValue.theme
-        ? this.auth.userValue.theme.toLowerCase()
-        : 'default'
-    ); //('default');
+    if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
+    this.setTheme(this.auth.userValue.theme.toLowerCase()); //('default');
     if (this.functionList) {
       this.formModel = {
         formName: this.functionList?.formName,
