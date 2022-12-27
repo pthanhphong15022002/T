@@ -196,7 +196,7 @@ dragPosition:any= {x: 0, y: 0};
       this.parentScope.addPanel(true,data.value,undefined);
       }
       else{
-        this.add.emit({isAuto:true,chartType: undefined,data: data.value})
+        this.add.emit({isAuto:true,chartType: data.value,data: undefined})
       }
     }
 
