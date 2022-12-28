@@ -385,11 +385,11 @@
         </codx-input>
       </div>
 
-      <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-        <div class="col-10">
-          <codx-label fiedName="Repeat" [formModel]="form.formModel"></codx-label>
+      <div class="d-flex justify-content-start align-items-center">
+        <div class="w-100">
+          <codx-label class="fw-bold" fiedName="Repeat" [formModel]="form.formModel"></codx-label>
         </div>
-        <div class="col-2 d-flex justify-content-end">
+        <div class="ms-5">
           <codx-input #checkbox type="switch" field="repeat" [checked]="data?.repeat" [crrValue]="data?.repeat"
             (valueChange)="valueChange($event)">
           </codx-input>
