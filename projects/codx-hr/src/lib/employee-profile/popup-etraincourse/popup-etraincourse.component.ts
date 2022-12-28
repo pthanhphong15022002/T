@@ -121,4 +121,10 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     })
   }
 
+  afterRenderListView(data){
+
+  }
+
+  click(data){}
+
 }

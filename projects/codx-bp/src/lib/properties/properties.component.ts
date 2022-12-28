@@ -57,6 +57,7 @@ export class PropertiesComponent implements OnInit {
   funcID: any;
   entityName: any;
   flowChart: any;
+  objectID: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -68,6 +69,7 @@ export class PropertiesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(data.data));
+    this.objectID = this.data.recID;
     this.process = this.data;
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
@@ -233,17 +235,15 @@ export class PropertiesComponent implements OnInit {
           this.readonly = false;
           this.commenttext = '';
           this.process = res;
+          this.objectID = this.process.recID;
           this.rattings = this.process.rattings.sort(
             (a, b) =>
               new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
           );
           this.getRating(res.rattings);
           this.notificationsService.notifyCode('DM010');
-          // this.history.objectID = this.id;
-          // this.history.funcID = this.funcID;
-          // this.history.formModel = this.dialog.formModel;
-          // this.history.getDataAsync(this.process.recID);
           this.dialog.dataService.update(this.process).subscribe();
+          this.history.getDataAsync(this.objectID);
           this.changeDetectorRef.detectChanges();
         }
       });
