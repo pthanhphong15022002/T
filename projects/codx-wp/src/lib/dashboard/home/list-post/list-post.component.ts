@@ -165,23 +165,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
                 this.gridViewSetup = grd;
               }
             });
-          // get more function
-          // this.cache
-          //   .moreFunction(func.formName, func.gridViewName)
-          //   .subscribe((mFC: any) => {
-          //     if (mFC) {
-          //       //this.defaultMoreFC = mFC;
-          //       if (typeof mFC == 'object' && !Array.isArray(mFC)) {
-          //         for (let i of Object.keys(mFC)) {
-          //           this.defaultMoreFC.push(mFC[i]);
-          //         }
-          //       }
-          //       else if(Array.isArray(mFC))
-          //       {
-          //         this.defaultMoreFC = mFC;
-          //       }
-          //     }
-          //   });
         }
       });
     }
@@ -320,7 +303,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     );
     popup.closed.subscribe((res: any) => {
       if (res?.event?.recID) {
-        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        (this.listview.dataService as CRUDService)
+        .update(res.event).subscribe();
         this.notifySvr.notifyCode('WP021');
       }
     });

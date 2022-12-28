@@ -338,28 +338,8 @@ div.offcanvas {
   border-color: #3699FF;
 }
 
-.dropzone-msg-title {
-  font-weight: 450;
-  font-size: 13px;
-  line-height: 16px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: var(--gray-800);
-}
-
-.dropzone-msg-desc {
-  font-weight: 400;
-  font-size: 11px;
-  line-height: 14px;
-  display: flex;
-  align-items: center;
-  text-align: center;
-  /* Text/Muted */
-  color: #6C757D;
-}
 .image-maxsize{
-  width: 494px !important;
+  width: 490px !important;
   height: 194px !important;
   border-radius: 0.42rem;
 }

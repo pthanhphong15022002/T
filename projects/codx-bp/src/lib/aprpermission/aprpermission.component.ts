@@ -189,7 +189,6 @@ export class AprpermissionComponent
   }
 
   changeDataMF(e, data) {
-    console.log(e);
     e.forEach((res) => {
       switch (res.functionID) {
         case 'SYS005':

@@ -46,8 +46,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
 
   dialogRef: DialogRef;
   headerText='';
-  obName='';
-  krName='';
+  okrName='';
   recID: any;
   distributeType: any;
   curUser: any;
@@ -71,10 +70,9 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     super(injector);
     this.headerText = 'Xem chi tiết - Mục tiêu'; //dialogData?.data[2];
     this.dialogRef = dialogRef;    
-    this.obName=dialogData.data[0];
-    this.krName=dialogData.data[1];    
-    this.recID=dialogData.data[2];
-    this.distributeType=dialogData.data[3];
+    this.okrName=dialogData.data[0];    
+    this.recID=dialogData.data[1];
+    this.distributeType=dialogData.data[2];
     this.curUser= authStore.get();
     
   }

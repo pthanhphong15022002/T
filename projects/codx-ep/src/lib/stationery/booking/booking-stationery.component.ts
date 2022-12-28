@@ -372,8 +372,8 @@ export class BookingStationeryComponent
       this.notificationsService.notifyCode('TM052');
       return;
     }
-
-    this.codxEpService
+    if(data.approval!=0){
+      this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((category: any) => {
         this.codxEpService
@@ -396,6 +396,18 @@ export class BookingStationeryComponent
             }
           });
       });
+    }
+    else{
+      data.approveStatus = '5';
+      data.status = '5';
+      data.write = false;
+      data.delete = false;
+      this.view.dataService.update(data).subscribe(); 
+      this.notificationsService.notifyCode('ES007');
+      this.codxEpService.afterApprovedManual(this.formModel.entityName, data.recID,'5').subscribe();
+      
+    }
+    
   }
 
   setPopupTitle(mfunc) {

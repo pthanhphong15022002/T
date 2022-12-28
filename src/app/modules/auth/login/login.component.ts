@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.layoutCZ = environment.layoutCZ;
     const tenant = this.tenantStore.getName();
     CacheRouteReuseStrategy.clear();
-    
+
     // redirect to home if already logged in
     this.routeActive.queryParams.subscribe((params) => {
       if (params.sk) {
@@ -280,7 +280,8 @@ export class LoginComponent implements OnInit, OnDestroy {
             } else {
               if (this.returnUrl.indexOf(data.tenant) > 0)
                 this.router.navigate([`${this.returnUrl}`]);
-              else this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
+              //this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
+              else this.router.navigate(['/tenants']);
             }
           } else {
             // this.alerttext = data.error;
