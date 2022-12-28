@@ -3,8 +3,18 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthComponent } from './auth.component';
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { LoginComponent } from './login/login.component';
+import { TenantsComponent } from './tenants/tenants.component';
 
 const routes: Routes = [
+  {
+    path: 'login',
+    component: LoginComponent,
+    data: { returnUrl: window.location.pathname, noReuse: true },
+  },
+  {
+    path: 'tenants',
+    component: TenantsComponent,
+  },
   {
     path: '',
     component: AuthComponent,
@@ -28,6 +38,12 @@ const routes: Routes = [
       { path: '**', redirectTo: 'login', pathMatch: 'full' },
     ],
   },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full',
+  },
+  { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
 
 @NgModule({
