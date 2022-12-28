@@ -26,17 +26,16 @@
         <div class="flex-grow-1 extend-main">
           <div class="h-100 extend-content">
             <div class="dms-info">
-              <div class="d-flex align-items-center">
-                <div *ngIf="process != null && flowChart != null">
-                  <img alt="" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
-                    src="{{flowChart.pathDisk}}">
+              <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column">
+                <div class="dropzone-msg dz-message needsclick" *ngIf="process != null && flowChart != null">
+                  <ng-container  *ngIf="flowChart!=''">
+                    <img [src]="flowChart" class="image-maxsize"/>
+                  </ng-container>
+                  <!-- <img alt="" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
+                    src="{{flowChart}}"> -->
 
                 </div>
-                <!-- <ng-template #elsethenAvatar1>
-                    <div class="mh-150px me-2" [style.background]="flowChart.backGround" style="width: 500px; margin-bottom: 5px;">
-                      {{flowChart.fileName}}
-                    </div>
-                  </ng-template> -->
+
               </div>
               <div class="dms-btn d-flex justify-content-between mt-4" style="margin-bottom: 5px;">
                 <div class="tag-1line" *ngIf="data.tags">
@@ -88,7 +87,7 @@
                 </div>
               </div>
               <!--Gắn tạm sau này BA hướng dẫn phê duyệt thì mới thay-->
-              <div class="d-flex flex-wrap mb-2">
+              <!-- <div class="d-flex flex-wrap mb-2">
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark">
                     <codx-label name="" default="Người phê duyệt:"> </codx-label>
@@ -108,7 +107,7 @@
                     | async
                     }}</span>
                 </div>
-              </div>
+              </div> -->
               <div class="d-flex flex-wrap mb-2" >
                 <div class="d-flex align-items-center me-4">
                   <span class="fw-bold text-dark" >
