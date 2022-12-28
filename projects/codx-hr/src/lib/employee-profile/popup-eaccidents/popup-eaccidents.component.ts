@@ -1,15 +1,23 @@
-import { CodxHrService } from './../../codx-hr.service';
-import { Injector } from '@angular/core';
-import { Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { CodxHrService } from '../../codx-hr.service'
+import { Injector, ChangeDetectorRef } from '@angular/core';
+import { 
+  Component, 
+  OnInit,
+  Optional,
+  ViewChild  
+} from '@angular/core';
+
 import {
   CodxFormComponent,
+  CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
   UIComponent,
-} from 'codx-core';
-import { FormGroup } from '@angular/forms';
+ } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-eaccidents',
@@ -21,15 +29,19 @@ export class PopupEaccidentsComponent  extends UIComponent implements OnInit {
   formGroup: FormGroup;
   grvSetup
   headerText: ''
+  indexSelected
   dialog: DialogRef;
   accidentObj;
+  employeeId: string;
   lstAccident;
   actionType;
   data;
   isAfterRender = false;
+  @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('form') form: CodxFormComponent;
 
   constructor(
+    private cr: ChangeDetectorRef,
     private injector: Injector,
     private notitfy: NotificationsService,
     private hrSevice: CodxHrService,
@@ -45,19 +57,21 @@ export class PopupEaccidentsComponent  extends UIComponent implements OnInit {
     }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.formModel = dialog?.formModel;
-    if(this.formModel){
-      this.isAfterRender = true
+    this.employeeId = data?.data?.employeeId;
+    this.actionType = data?.data?.actionType;
+    this.lstAccident = data?.data?.lstAccident;
+    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+
+    if (this.actionType === 'edit' || this.actionType === 'copy') {
+      this.accidentObj = JSON.parse(JSON.stringify(this.lstAccident[this.indexSelected]));
+      this.formModel.currentData = this.accidentObj;
     }
-    this.data = dialog?.dataService?.dataSelected
    }
 
    initForm() {
     this.hrSevice
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
-        console.log('fromGroup acci', item);
-        
         this.formGroup = item;  
         if(this.actionType == 'add'){
           this.hrSevice.getEmployeeAccidentModel().subscribe(p => {
@@ -75,33 +89,63 @@ export class PopupEaccidentsComponent  extends UIComponent implements OnInit {
 
   onInit(): void {
     this.initForm();
-    // this.cache
-    // .gridViewSetup(
-    //   this.dialog?.formModel?.formName,
-    //   this.dialog?.formModel?.gridViewName
-    // )
-    // .subscribe((res) => {
-    //   // this.grvSetup = res;
-    //   // console.log('form model', this.formModel);
-    // });
   }
 
   onSaveForm(){
-    console.log('fromGroup acci', this.formGroup);
-
-    this.hrSevice.AddEmployeeAccidentInfo(this.data).subscribe(p => {
-      if(p === "True"){
-        this.notitfy.notifyCode('SYS007')
-        this.dialog.close()
-      }
-      else this.notitfy.notifyCode('DM034')
-    })
+    if(this.actionType === 'copy' || this.actionType === 'add'){
+      delete this.accidentObj.recID
+    }
+    this.accidentObj.employeeID = this.employeeId 
+    console.log(this.accidentObj.employeeID);
+    
+    if(this.actionType === 'add' || this.actionType === 'copy'){
+      this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe(p => {
+        if(p != null){
+          this.accidentObj.recID = p.recID
+          this.notitfy.notifyCode('SYS007')
+          this.lstAccident.push(JSON.parse(JSON.stringify(this.accidentObj)));
+          if(this.listView){
+            (this.listView.dataService as CRUDService).add(this.accidentObj).subscribe();
+          }
+          // this.dialog.close(p)
+        }
+        else this.notitfy.notifyCode('DM034')
+      });
+    } 
+    else{
+      this.hrSevice.UpdateEmployeeAccidentInfo(this.formModel.currentData).subscribe(p => {
+        if(p != null){
+          this.notitfy.notifyCode('SYS007')
+        this.lstAccident[this.indexSelected] = p;
+        if(this.listView){
+          (this.listView.dataService as CRUDService).update(this.lstAccident[this.indexSelected]).subscribe()
+        }
+          // this.dialog.close(this.data)
+        }
+        else this.notitfy.notifyCode('DM034')
+      });
+    }
   }
 
   swipeToRightTab(e) {
     if (e.isSwiped) {
       e.cancel = true;
     }
+  }
+
+  afterRenderListView(event: any) {
+    this.listView = event;
+    console.log(this.listView);
+  }
+
+  click(data) {
+    console.log('formdata', data);
+    this.accidentObj = data;
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.accidentObj)) 
+    this.indexSelected = this.lstAccident.findIndex(p => p.recID == this.accidentObj.recID);
+    this.actionType ='edit'
+    this.formGroup?.patchValue(this.accidentObj);
+    this.cr.detectChanges();
   }
 
 }

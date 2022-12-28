@@ -9,7 +9,7 @@
         <div class="p-2"> -->
           <!-- ///noi dung -->
           <div class="process-detail-header">
-            <div class="fw-bold text-dark fs-4 mb-2 line-clamp line-clamp-2" #processName>
+            <div class="fw-bold text-dark fs-4 mb-2 line-clamp line-clamp-1" #processName>
               {{
               process?.processName
               | formatvalue
@@ -146,7 +146,7 @@
         <ng-container>
           <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps #viewProcessSteps [process]="process" [funcID]="funcID" [childFunc]="childFunc"
-              [formModel]="formModelFlowChart" [isEdit]="isEdit"  (getObjectFile)="getObjectFile($event)"
+              [formModel]="formModelFlowChart" [isEdit]="isEdit"  (getObjectFile)="getObjectFile($event)" [viewMode] = "viewMode"
               (isClosePopup)="getListUser()"></codx-processsteps>
           </ng-container>
         </ng-container>
