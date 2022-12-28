@@ -29,6 +29,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   IsAfterRender = false;
   data;
   dataForm2;
+  actionType: string;
+  isSaved: boolean;
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -126,5 +128,12 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   click(data){}
+
+  insertECertificate(){
+    if(this.actionType == 'edit')
+    this.hrService.AddEmployeeCertificateInfo(this.data).subscribe(res => {if(res){
+
+    }})
+  }
 
 }

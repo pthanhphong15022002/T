@@ -668,6 +668,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         this.notificationsService.notifyCode('EP002');
         return;
       }
+      if(this.data.startDate >= this.data.endDate){
+        this.notificationsService.notifyCode('EP002');
+        return;
+      }
       this.tmplstStationery = [];
       this.lstStationery.forEach((item) => {
         this.tmplstStationery.push(item);
@@ -1063,30 +1067,30 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       // ) {
       //   return false;
       // }
-      if (this.data.startDate >= this.data.endDate) {
-        let tmpStartT = new Date(this.data.startDate);
-        let tmpEndH = tmpStartT.getHours();
-        let tmpEndM = tmpStartT.getMinutes();
-        if (tmpEndM < 30) {
-          tmpEndM = 30;
-        } else {
-          tmpEndH = tmpEndH + 1;
-          tmpEndM = 0;
-        }
-        this.data.endDate = new Date(
-          tmpStartT.getFullYear(),
-          tmpStartT.getMonth(),
-          tmpStartT.getDate(),
-          tmpEndH,
-          tmpEndM,
-          0,
-          0
-        );
-        this.endTime =
-          ('0' + tmpEndH.toString()).slice(-2) +
-          ':' +
-          ('0' + tmpEndM.toString()).slice(-2);
-      }
+      // if (this.data.startDate >= this.data.endDate) {
+      //   let tmpStartT = new Date(this.data.startDate);
+      //   let tmpEndH = tmpStartT.getHours();
+      //   let tmpEndM = tmpStartT.getMinutes();
+      //   if (tmpEndM < 30) {
+      //     tmpEndM = 30;
+      //   } else {
+      //     tmpEndH = tmpEndH + 1;
+      //     tmpEndM = 0;
+      //   }
+      //   this.data.endDate = new Date(
+      //     tmpStartT.getFullYear(),
+      //     tmpStartT.getMonth(),
+      //     tmpStartT.getDate(),
+      //     tmpEndH,
+      //     tmpEndM,
+      //     0,
+      //     0
+      //   );
+      //   this.endTime =
+      //     ('0' + tmpEndH.toString()).slice(-2) +
+      //     ':' +
+      //     ('0' + tmpEndM.toString()).slice(-2);
+      // }
       this.changeDetectorRef.detectChanges();
     }
     return true;

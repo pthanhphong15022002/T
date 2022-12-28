@@ -178,13 +178,40 @@
         </ng-template>
 
         <ng-template #content>
-          <div class="fs-6 fw-bold text-uppercase text-primary form-group mt-4">
-            <codx-label
-              name="lblCertificate"
-              [formModel]="formModel"
-              default="THÔNG TIN CHỨNG CHỈ"
-            >
-            </codx-label>
+          <div class="d-flex flex-stack fs-6 py-2 mt-4">
+            <div class="fs-6 fw-bold text-uppercase text-primary form-group">
+              <codx-label
+                name="lblCertificate"
+                [formModel]="formModel"
+                default="Thông tin chứng chỉ"
+              >
+              </codx-label>
+            </div>
+            <span class="text-end align-items-end">
+              <a
+                class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+              (click)="insertECertificate()"
+                >
+                <span
+                  class="icon-trending_up text-danger btn-text-primary me-2"
+                ></span>
+                <codx-label
+                  name="lblUpdateECertificates"
+                  default="Cập nhật Chứng chỉ"
+                  [formModel]="dialog.formModel"
+                ></codx-label>
+              </a>
+              <div class="d-flex mt-1">
+                <span class="icon-check icon-16 text-primary me-1"></span>
+                <div class="b text-primary text-italic">
+                  <codx-label
+                    name="lblNoMemo"
+                    default="Đã cập nhật Chứng chỉ"
+                    [formModel]="formModel"
+                  ></codx-label>
+                </div>
+              </div>
+            </span>
           </div>
           <div class="form-group row">
             <codx-label
@@ -228,7 +255,7 @@
           <div class="form-group row">
             <div class="col-6">
               <codx-label
-                fiedName="degreeNo"
+                fiedName="DegreeNo"
                 [formModel]="formModel2"
               ></codx-label>
               <codx-input
@@ -251,10 +278,27 @@
           </div>
 
           <div class="form-group row">
-            <codx-label
-              fiedName="IssuedPlace"
-              [formModel]="formModel2"
-            ></codx-label>
+            <div class="d-flex flex-stack">
+              <codx-label
+                fiedName="IssuedPlace"
+                [formModel]="formModel2"
+              ></codx-label>
+              <span class="text-end align-items-end mb-1">
+                <a
+                  class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+                >
+                  <span
+                    class="icon-south text-danger btn-text-primary me-2"
+                  ></span>
+                  <codx-label
+                    name="lblSetIssuedPlace"
+                    default="(=Nơi đào tạo)"
+                    [formModel]="dialog.formModel"
+                  ></codx-label>
+                </a>
+              </span>
+            </div>
+
             <codx-input
               [Group]="formGroup2"
               [formModel]="formModel2"
@@ -480,16 +524,19 @@
 <ng-template #footerItemList let-data>
   <div class="d-flex flex-column mt-1">
     <div class="d-flex align-items-center mb-1">
-        <span class="me-1 icon-i-arrow-down-left-circle-fill icon-14" style="color: blueviolet"></span>
-        <span class="text-dark">
-          <span>{{data?.trainCourseID}}</span>
-        </span>
-      </div>
+      <span
+        class="me-1 icon-i-arrow-down-left-circle-fill icon-14"
+        style="color: blueviolet"
+      ></span>
+      <span class="text-dark">
+        <span>{{ data?.trainCourseID }}</span>
+      </span>
+    </div>
     <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center">
         <span class="me-1 icon-date_range icon-14 text-gray-800"></span>
         <span class="text-dark">
-          <span>{{data?.trainFrom | fmDT }} - {{data?.trainTo | fmDT}}</span>
+          <span>{{ data?.trainFrom | fmDT }} - {{ data?.trainTo | fmDT }}</span>
         </span>
       </div>
       <div class="d-flex align-items-center">
@@ -497,26 +544,26 @@
           class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
         ></span>
         <span class="fw-bold text-primary">
-          <span>{{data?.inYear}}</span>
+          <span>{{ data?.inYear }}</span>
         </span>
       </div>
     </div>
     <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center">
         <span class="icon-connection-point icon-14 text-primary me-1"></span>
-        <span class="text-primary"> {{data?.trainCourseID}} </span>
+        <span class="text-primary"> {{ data?.trainCourseID }} </span>
       </div>
       <span class="text-gray-500 me-1 ms-1">|</span>
       <div class="d-flex align-items-center">
         <span class="icon-connection-point icon-14 text-primary me-1"></span>
-        <span class="text-primary"> {{data?.ranking}} </span>
+        <span class="text-primary"> {{ data?.ranking }} </span>
       </div>
       <div class="d-flex align-items-center">
         <span
           class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
         ></span>
         <span class="fw-bold text-primary">
-          <span>{{data?.totalScore}}</span>
+          <span>{{ data?.totalScore }}</span>
         </span>
       </div>
       <div class="d-flex align-items-center">
@@ -524,7 +571,7 @@
           class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
         ></span>
         <span class="fw-bold">
-          <span>{{data?.result}}</span>
+          <span>{{ data?.result }}</span>
         </span>
       </div>
     </div>

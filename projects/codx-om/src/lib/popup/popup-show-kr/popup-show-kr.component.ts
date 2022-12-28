@@ -18,6 +18,7 @@ import {
 import {
   AuthService,
   DialogData,
+  DialogModel,
   DialogRef,
   FormModel,
   NotificationsService,
@@ -29,6 +30,8 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { CodxOmService } from '../../codx-om.service';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
+import { PopupDistributeOKRComponent } from '../popup-distribute-okr/popup-distribute-okr.component';
+import { OMCONST } from '../../codx-om.constant';
 
 @Component({
   selector: 'popup-show-kr',
@@ -391,6 +394,19 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
-
+  distributeKR(kr:any){
+    let dModel = new DialogModel();    
+    dModel.IsFull = true;
+    let dialogDisKR = this.callfc.openForm(
+      PopupDistributeOKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
+      '',
+      dModel
+    );
+  }
   //-----------------------End-------------------------------//
 }

@@ -13,6 +13,7 @@ import { FormatPipe } from './pipes/format-string.pipe';
 import { SubCategoryComponent } from './sub-category/sub-category.component';
 import { InputTypePipe } from './pipes/input-type.pipe';
 import { ShareSettingPipe } from './pipes/shareSetting.pipe';
+import { BindValuePipe } from './pipes/bind-value.pipe';
 
 export const routes: Routes = [
   {
@@ -38,6 +39,7 @@ const T_Pipe: Type<any>[] = [
   FormatPipe,
   InputTypePipe,
   ShareSettingPipe,
+  BindValuePipe,
 ];
 
 @NgModule({
