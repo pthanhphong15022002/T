@@ -56,7 +56,7 @@ export class PropertiesComponent implements OnInit {
   userName = '';
   funcID: any;
   entityName: any;
-  flowChart: any;
+  flowChart= '';
   objectID: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,

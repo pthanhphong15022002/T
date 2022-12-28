@@ -25,17 +25,15 @@
       <div class="d-flex">
         <div class="flex-grow-1 extend-main">
           <div class="h-100 extend-content">
-            <div class="dms-info">
-              <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column">
-                <div class="dropzone-msg dz-message needsclick" *ngIf="process != null && flowChart != null">
-                  <ng-container  *ngIf="flowChart!=''">
+            <div class="dms-info" >
+              <div *ngIf="flowChart!=''" class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column">
+                <div class="dropzone-msg dz-message needsclick">
+                  <ng-container>
                     <img [src]="flowChart" class="image-maxsize"/>
                   </ng-container>
                   <!-- <img alt="" class="mh-150px me-2" style="width: 500px; margin-bottom: 10px;"
                     src="{{flowChart}}"> -->
-
                 </div>
-
               </div>
               <div class="dms-btn d-flex justify-content-between mt-4" style="margin-bottom: 5px;">
                 <div class="tag-1line" *ngIf="data.tags">
