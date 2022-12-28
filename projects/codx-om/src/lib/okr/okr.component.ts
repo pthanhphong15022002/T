@@ -125,7 +125,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     //   }
     // });
     //Lấy Form Model cho KR và OB
-    debugger;
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
