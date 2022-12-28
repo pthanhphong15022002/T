@@ -15,6 +15,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   Util,
 } from 'codx-core';
@@ -70,6 +71,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   grvSetup:any = {};
   arrFieldRequire:any[] = [];
   mssgCode:string = "SYS009";
+  @ViewChild("form") form:LayoutAddComponent;
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -248,14 +250,29 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
 
   dataChange(e: any) {
-    if (e) {
-      let field = e.field;
-      field = field[0].toLowerCase() + field.slice(1);
-      if (typeof e.data !== 'string') {
-        this.employee[field] = e.data.fromDate
-          ? e.data.fromDate.toISOString()
-          : null;
-      } else this.employee[field] = e.data;
+    debugger
+    if (this.form && e) 
+    {
+      let field = Util.camelize(e.field);
+      let data = e.data;
+      if(field)
+      {
+        switch(field){
+          case "positionID":
+            break;
+          case "":
+            break;
+          case "":
+            break;
+          case "":
+            break;
+        }
+        if (typeof e.data !== 'string') {
+          this.employee[field] = e.data.fromDate
+            ? e.data.fromDate.toISOString()
+            : null;
+        } else this.employee[field] = e.data;
+      }
     }
   }
 }
