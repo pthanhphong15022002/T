@@ -258,7 +258,7 @@ export class ProcessStepsComponent
       {
         id: '9',
         type: ViewType.content,
-        active: false,
+        active: true,
         sameData: false,
         model: {
           panelLeftRef: this.flowChart,
@@ -274,8 +274,7 @@ export class ProcessStepsComponent
 
   //Thay doi viewModel
   chgViewModel(type) {
-    // this.idView = type ;
-    let view = this.views.find((x) => x.id == type);
+    let view = this.views.find((x) => x.id == type);  
     if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
