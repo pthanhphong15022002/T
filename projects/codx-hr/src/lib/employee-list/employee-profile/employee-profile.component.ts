@@ -282,7 +282,7 @@ export class EmployeeProfileComponent extends UIComponent {
           this.request = new DataRequest();
           this.request.entityName = 'HR_Employees';
           this.request.gridViewName = 'grvEmployees';
-          this.request.page = params?.page ?? null;
+          this.request.page = params?.page ?? 1;
           this.request.predicate = params?.predicate ?? '';
           this.request.dataValue = params?.dataValue ?? '';
           if (params?.filter) this.request.filter = JSON.parse(params?.filter);

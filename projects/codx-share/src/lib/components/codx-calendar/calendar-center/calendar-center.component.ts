@@ -124,12 +124,14 @@ export class CalendarCenterComponent
     )
       return;
     if (
-      event?.type == 'navigate' &&
-      event.data.fromDate &&
-      event.data.toDate &&
-      (event?.data?.type == undefined || event?.data?.type != 'Year')
+      (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) ||
+      event?.data?.type == undefined
     ) {
-      var obj = { fromDate: event.data.fromDate, toDate: event.data.toDate, type: event?.data.type };
+      var obj = {
+        fromDate: event.data.fromDate,
+        toDate: event.data.toDate,
+        type: event?.data.type,
+      };
       this.codxShareSV.dateChange.next(obj);
     }
   }

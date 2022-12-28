@@ -32,10 +32,10 @@
               </ng-template>
             </div>
             <ng-template #content>
-              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y" *ngIf="!checkRefreshAvatar">
+              <div class="pw-content pw-feed pw-md rounded-2" *ngIf="!checkRefreshAvatar">
                 <app-posts></app-posts>
               </div>
-              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y" *ngIf="checkRefreshAvatar">
+              <div class="pw-content pw-feed pw-md rounded-2" *ngIf="checkRefreshAvatar">
                 <app-posts></app-posts>
               </div>
             </ng-template>
@@ -53,7 +53,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body">
+              <div class="pw-content p-5 h-100 w-100 pw-lg rounded-2 bg-body">
                 <app-img></app-img>
               </div>
             </ng-template>
@@ -71,7 +71,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body">
+              <div class="pw-content p-5 h-100 w-100 pw-lg rounded-2 bg-body">
                 <div class="px-5">
                   <app-video></app-video>
                 </div>
@@ -93,7 +93,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body">
+              <div class="pw-content p-5 h-100 w-100 pw-lg rounded-2 bg-body">
                 <app-note-books></app-note-books>
               </div>
             </ng-template>
@@ -111,7 +111,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="pw-content h-100 w-100 pw-lg rounded-2 bg-body scroll-y">
+              <div class="pw-content p-5 h-100 w-100 pw-lg rounded-2 bg-body scroll-y">
                 <app-storage></app-storage>
               </div>
             </ng-template>
@@ -129,7 +129,7 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <div class="pw-content pw-feed h-100 pw-md rounded-2 bg-body scroll-y">
+              <div class="pw-content p-5 pw-feed h-100 pw-md rounded-2 bg-body scroll-y">
                 <app-information></app-information>
               </div>
             </ng-template>

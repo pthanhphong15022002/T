@@ -86,48 +86,54 @@ export class PopupUpdateRevisionsComponent implements OnInit {
   onClose() {
     this.dialog.close();
   }
+
+  openProcessStep(process, role){
+    let editRole = false;
+    if(role){
+      editRole = process.write && !process.deleted ? true : false;
+    }
+    let obj = {
+      moreFunc: this.moreFunc,
+      data: process,
+      formModel: {
+        entityName: "BP_Processes",
+        entityPer: "BP_Processes",
+        formName: "Processes",
+        funcID: "BPT1",
+        gridViewName: "grvProcesses",
+        userPermission: null,
+      },
+      editRole,
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    var dialog = this.callfc.openForm(
+      PopupViewDetailProcessesComponent,
+      '',
+      Util.getViewPort().height - 100,
+      Util.getViewPort().width - 100,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+  }
+
   getProcessesStep(item) {
-    this.bpService.getProcessesByVersion([this.data.recID, item.versionNo])
+    if(item?.versionNo == this.data?.versionNo){
+      this.dialog.close();
+      this.openProcessStep(this.data, true);
+    }else{
+      this.bpService.getProcessesByVersion([this.data.recID, item.versionNo])
       .subscribe(proesses => {
         if (proesses) {
           this.dialog.close();
-          let isEdit = proesses?.permissions.some((x) => x.objectID == this.userId  && x.edit);
-          let isOwner = proesses?.owner == this.userId ? true : false;
-          let editRole =
-            (this.isAdmin || isOwner || this.isAdminBp || isEdit) && !proesses.deleted
-              ? true
-              : false;
-
-          let obj = {
-            moreFunc: this.moreFunc,
-            data: proesses,
-            formModel: {
-              entityName: "BP_Processes",
-              entityPer: "BP_Processes",
-              formName: "Processes",
-              funcID: "BPT1",
-              gridViewName: "grvProcesses",
-              userPermission: null,
-            },
-            editRole,
-          };
-
-          let dialogModel = new DialogModel();
-          dialogModel.IsFull = true;
-          dialogModel.zIndex = 999;
-          var dialog = this.callfc.openForm(
-            PopupViewDetailProcessesComponent,
-            '',
-            Util.getViewPort().height - 100,
-            Util.getViewPort().width - 100,
-            '',
-            obj,
-            '',
-            dialogModel
-          );
+          this.openProcessStep(proesses, false);
         }
       })
-
+    }   
   }
   //#endregion event
 }
