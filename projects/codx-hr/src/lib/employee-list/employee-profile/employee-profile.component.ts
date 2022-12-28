@@ -1811,6 +1811,7 @@ export class EmployeeProfileComponent extends UIComponent {
         isAdd: true,
         headerText: 'Đào tạo',
         employeeId: this.data.employeeID,
+        actionType: 'add',
       },
       option
     );

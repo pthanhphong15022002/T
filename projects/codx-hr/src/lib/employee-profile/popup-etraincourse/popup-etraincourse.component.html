@@ -178,8 +178,8 @@
         </ng-template>
 
         <ng-template #content>
-          <div class="d-flex flex-stack fs-6 py-2 mt-4">
-            <div class="fs-6 fw-bold text-uppercase text-primary form-group">
+          <div class="d-flex flex-stack fs-6 py-2 mt-4 align-items-center">
+            <div class="fs-6 fw-bold text-uppercase text-primary">
               <codx-label
                 name="lblCertificate"
                 [formModel]="formModel"
@@ -201,26 +201,27 @@
                   [formModel]="dialog.formModel"
                 ></codx-label>
               </a>
-              <div class="d-flex mt-1">
-                <span class="icon-check icon-16 text-primary me-1"></span>
-                <div class="b text-primary text-italic">
-                  <codx-label
-                    name="lblNoMemo"
-                    default="Đã cập nhật Chứng chỉ"
-                    [formModel]="formModel"
-                  ></codx-label>
-                </div>
-              </div>
+              
             </span>
+          </div>
+          <div class="d-flex justify-content-end" *ngIf="data.isUpdateCertificate">
+            <span class="icon-check icon-16 text-primary me-1"></span>
+            <div class="b text-primary text-italic">
+              <codx-label
+                name="lblNoMemo"
+                default="Đã cập nhật Chứng chỉ"
+                [formModel]="formModel"
+              ></codx-label>
+            </div>
           </div>
           <div class="form-group row">
             <codx-label
               fiedName="CertificateType"
-              [formModel]="formModel2"
+              [formModel]="formModel"
             ></codx-label>
             <codx-input
-              [Group]="formGroup2"
-              [formModel]="formModel2"
+              [Group]="formGroup"
+              [formModel]="formModel"
               field="certificateType"
             ></codx-input>
           </div>
@@ -229,11 +230,11 @@
             <div class="col-6">
               <codx-label
                 fiedName="CertificateID"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="certificateID"
               >
               </codx-input>
@@ -241,11 +242,11 @@
             <div class="col-6">
               <codx-label
                 fiedName="CertificateGradeID"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="certificateGradeID"
               >
               </codx-input>
@@ -256,22 +257,22 @@
             <div class="col-6">
               <codx-label
                 fiedName="DegreeNo"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="degreeNo"
               ></codx-input>
             </div>
             <div class="col-6">
               <codx-label
                 fiedName="BookNo"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="bookNo"
               ></codx-input>
             </div>
@@ -281,7 +282,7 @@
             <div class="d-flex flex-stack">
               <codx-label
                 fiedName="IssuedPlace"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <span class="text-end align-items-end mb-1">
                 <a
@@ -300,8 +301,8 @@
             </div>
 
             <codx-input
-              [Group]="formGroup2"
-              [formModel]="formModel2"
+              [Group]="formGroup"
+              [formModel]="formModel"
               field="issuedPlace"
             ></codx-input>
           </div>
@@ -310,22 +311,22 @@
             <div class="col-6">
               <codx-label
                 fiedName="IssuedBy"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="issuedBy"
               ></codx-input>
             </div>
             <div class="col-6">
               <codx-label
                 fiedName="LimitMonths"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="limitMonths"
               ></codx-input>
             </div>
@@ -335,22 +336,22 @@
             <div class="col-6">
               <codx-label
                 fiedName="EffectedDate"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="effectedDate"
               ></codx-input>
             </div>
             <div class="col-6">
               <codx-label
                 fiedName="ExpiredDate"
-                [formModel]="formModel2"
+                [formModel]="formModel"
               ></codx-label>
               <codx-input
-                [Group]="formGroup2"
-                [formModel]="formModel2"
+                [Group]="formGroup"
+                [formModel]="formModel"
                 field="expiredDate"
               ></codx-input>
             </div>
