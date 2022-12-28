@@ -14,8 +14,8 @@
     <div class="form-group">
       <codx-label default="Mục tiêu" fiedName="" [formModel]="form.formModel">
       </codx-label>
-      <codx-input [crrValue]="kr.parentID" type="text">
-        
+      <codx-input type="combobox" [refValue]="'Objectives'" [crrValue]="kr.parentID" 
+      (valueChange)="valueChange($event)" field="parentID">        
       </codx-input>
     </div>
 
@@ -236,7 +236,7 @@
                   [min]="0"
                   [showSpinButton]="false"
                   [crrValue]="planMonth[i]"
-                  (valueChange)="valueChange($event)"
+                  (valueChange)="valuePlanChange($event)"
                 ></codx-input>               
               </div>
             </div>
