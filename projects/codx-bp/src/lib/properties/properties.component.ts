@@ -57,6 +57,7 @@ export class PropertiesComponent implements OnInit {
   funcID: any;
   entityName: any;
   flowChart: any;
+  objectID: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -68,10 +69,11 @@ export class PropertiesComponent implements OnInit {
   ) {
     this.dialog = dialog;
     this.data = JSON.parse(JSON.stringify(data.data));
+    this.objectID = this.data.recID;
     this.process = this.data;
     this.funcID = this.dialog.formModel.funcID;
     this.entityName = this.dialog.formModel.entityName;
-    this.viewFlowChart();
+    this.getAvatar(this.process);
 
     if (this.process.rattings.length > 0)
       this.rattings = this.process.rattings.sort(
@@ -111,11 +113,11 @@ export class PropertiesComponent implements OnInit {
 
   //#region event enter comment
   eventEnter() {
-    var input = document.getElementById("myInput");
-    input.addEventListener("keypress", function(event) {
-      if (event.key === "Enter") {
+    var input = document.getElementById('myInput');
+    input.addEventListener('keypress', function (event) {
+      if (event.key === 'Enter') {
         event.preventDefault();
-        document.getElementById("myBtn").click();
+        document.getElementById('myBtn').click();
       }
     });
   }
@@ -218,7 +220,7 @@ export class PropertiesComponent implements OnInit {
   //#endregion
 
   setComment(event = null) {
-    console.log(event)
+    console.log(event);
     this.bpSV
       .setViewRattings(
         this.id,
@@ -233,21 +235,18 @@ export class PropertiesComponent implements OnInit {
           this.readonly = false;
           this.commenttext = '';
           this.process = res;
+          this.objectID = this.process.recID;
           this.rattings = this.process.rattings.sort(
             (a, b) =>
               new Date(b.createdOn).getTime() - new Date(a.createdOn).getTime()
           );
           this.getRating(res.rattings);
           this.notificationsService.notifyCode('DM010');
-          // this.history.objectID = this.id;
-          // this.history.funcID = this.funcID;
-          // this.history.formModel = this.dialog.formModel;
-          // this.history.getDataAsync(this.process.recID);
           this.dialog.dataService.update(this.process).subscribe();
+          this.history.getDataAsync(this.objectID);
           this.changeDetectorRef.detectChanges();
         }
       });
-
   }
 
   setClassRating(i, rating) {
@@ -255,34 +254,75 @@ export class PropertiesComponent implements OnInit {
     else return 'icon-star text-muted icon-16 mr-1';
   }
 
-  // sortRattings(data: BP_ProcessesRating[]) {
-  //   data.sort((a, b) => {
-  //     var date1 = a.createdOn.getTime();
-  //     var date2 = b.createdOn.getTime();
-  //     return date1 - date2;
-  //   });
+  // viewFlowChart() {
+  //   let paras = [
+  //     '',
+  //     this.funcID,
+  //     this.process?.recID,
+  //     'BP_Processes',
+  //     'inline',
+  //     1000,
+  //     this.process?.processName,
+  //     'Flowchart',
+  //     false,
+  //   ];
+  //   this.api
+  //     .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+  //     .subscribe((res) => {
+  //       if (res && res?.url) {
+  //         let obj = {
+  //           pathDisk: environment.urlUpload + '/' + res?.url,
+  //           fileName: this.process?.processName,
+  //         };
+  //         this.flowChart = obj;
+  //       }
+  //     });
+  // }
 
-  viewFlowChart() {
-    let paras = [
+  getAvatar(process) {
+    let avatar = [
       '',
       this.funcID,
-      this.process?.recID,
+      process?.recID,
       'BP_Processes',
       'inline',
       1000,
-      this.process?.processName,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    let flowChart = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
       'Flowchart',
       false,
     ];
     this.api
-      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', paras)
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
       .subscribe((res) => {
         if (res && res?.url) {
-          let obj = {
-            pathDisk: environment.urlUpload + '/' + res?.url,
-            fileName: this.process?.processName,
-          };
-          this.flowChart = obj;
+          this.flowChart = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        } else {
+          this.api
+            .execSv<any>(
+              'DM',
+              'DM',
+              'FileBussiness',
+              'GetAvatarAsync',
+              flowChart
+            )
+            .subscribe((res) => {
+              if (res && res?.url) {
+                this.flowChart = environment.urlUpload + '/' + res?.url;
+                this.changeDetectorRef.detectChanges();
+              }
+            });
         }
       });
   }
