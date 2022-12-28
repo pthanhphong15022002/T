@@ -120,9 +120,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
   isCopy = false;
   isPopupCbb = false;
   saveCheck = false;
-  resources=[];
-  listUserID=[];
-  user:any;
+  resources = [];
+  listUserID = [];
+  user: any;
+  busyAttendees: string;
+  approvalRule: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -228,129 +230,220 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
     this.detectorRef.detectChanges();
-
-    this.api
-      .callSv(
-        'SYS',
-        'ERM.Business.SYS',
-        'SettingValuesBusiness',
-        'GetByModuleAsync',
-        'EPCarParameters'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.calendarID = JSON.parse(
-            res.msgBodyData[0].dataValue
-          )?.CalendarID;
-          if (this.calendarID) {
-            this.api
-              .exec<any>(
-                APICONSTANT.ASSEMBLY.BS,
-                APICONSTANT.BUSINESS.BS.CalendarWeekdays,
-                'GetDayShiftAsync',
-                [this.calendarID]
-              )
-              .subscribe((res) => {
-                let tmpDateTime = new Date();
-                if (this.optionalData && this.optionalData?.startDate) {
-                  tmpDateTime = this.optionalData.startDate;
-                }
-                res.forEach((day) => {
-                  if (day?.shiftType == '1') {
-                    let tmpstartTime = day?.startTime.split(':');
-                    this.calendarStartTime =
-                      tmpstartTime[0] + ':' + tmpstartTime[1];
-                    if (this.isAdd) {
-                      this.data.startDate = new Date(
-                        tmpDateTime.getFullYear(),
-                        tmpDateTime.getMonth(),
-                        tmpDateTime.getDate(),
-                        tmpstartTime[0],
-                        tmpstartTime[1],
-                        0
-                      );
-                    }
-                    this.calEndHour = tmpstartTime[0];
-                    this.calEndMinutes = tmpstartTime[1];
-                  } else if (day?.shiftType == '2') {
-                    let tmpEndTime = day?.endTime.split(':');
-                    this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
-                    if (this.isAdd) {
-                      this.data.endDate = new Date(
-                        tmpDateTime.getFullYear(),
-                        tmpDateTime.getMonth(),
-                        tmpDateTime.getDate(),
-                        tmpEndTime[0],
-                        tmpEndTime[1],
-                        0
-                      );
-                    }
-                    this.calEndHour = tmpEndTime[0];
-                    this.calEndMinutes = tmpEndTime[1];
-                  }
-                });
-                if (this.isAdd && this.optionalData) {
-                  this.driverChangeWithCar(this.optionalData.resourceId);
-                }
-                if (this.isCopy) {
-                  this.driverChangeWithCar(this.data.resourceID);
-                }
-              });
-          } else {
-            this.api
-              .execSv(
-                'SYS',
-                'ERM.Business.SYS',
-                'SettingValuesBusiness',
-                'GetByModuleAsync',
-                'Calendar'
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let tempStartTime = JSON.parse(
-                    res.dataValue
-                  )[0]?.StartTime.split(':');
+    this.codxEpService.getEPCarSetting('4').subscribe((approvalSetting: any) => {
+      if (approvalSetting) {
+        this.approvalRule = JSON.parse(approvalSetting.dataValue)[0]?.ApprovalRule;
+      }
+    });
+    this.codxEpService.getEPCarSetting('1').subscribe((setting: any) => {
+      if (setting) {
+        this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+        if (this.calendarID) {
+          this.codxEpService
+            .getCalendarWeekdays(this.calendarID)
+            .subscribe((cal: any) => {
+              let tmpDateTime = new Date();
+              if (this.optionalData && this.optionalData?.startDate) {
+                tmpDateTime = this.optionalData.startDate;
+              }
+              Array.from(cal).forEach((day: any) => {
+                if (day?.shiftType == '1') {
+                  let tmpstartTime = day?.startTime.split(':');
                   this.calendarStartTime =
-                    tempStartTime[0] + ':' + tempStartTime[1];
-                  let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
-                    ':'
-                  );
-                  this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
-                  let tmpDateTime = new Date();
-                  if (this.isAdd && this.optionalData == null) {
+                    tmpstartTime[0] + ':' + tmpstartTime[1];
+                  if (this.isAdd) {
                     this.data.startDate = new Date(
                       tmpDateTime.getFullYear(),
                       tmpDateTime.getMonth(),
                       tmpDateTime.getDate(),
-                      tempStartTime[0],
-                      tempStartTime[1],
+                      tmpstartTime[0],
+                      tmpstartTime[1],
                       0
                     );
+                  }
+                  this.calEndHour = tmpstartTime[0];
+                  this.calEndMinutes = tmpstartTime[1];
+                } else if (day?.shiftType == '2') {
+                  let tmpEndTime = day?.endTime.split(':');
+                  this.calendarEndTime = tmpEndTime[0] + ':' + tmpEndTime[1];
+                  if (this.isAdd) {
                     this.data.endDate = new Date(
                       tmpDateTime.getFullYear(),
                       tmpDateTime.getMonth(),
                       tmpDateTime.getDate(),
-                      tempEndTime[0],
-                      tempEndTime[1],
+                      tmpEndTime[0],
+                      tmpEndTime[1],
                       0
                     );
                   }
-                  this.calStartHour = tempStartTime[0];
-                  this.calStartMinutes = tempStartTime[1];
-                  this.calEndHour = tempEndTime[0];
-                  this.calEndMinutes = tempEndTime[1];
+                  this.calEndHour = tmpEndTime[0];
+                  this.calEndMinutes = tmpEndTime[1];
+                }
+              });
+              if (this.isAdd && this.optionalData) {
+                this.driverChangeWithCar(this.optionalData.resourceId);
+              }
+              if (this.isCopy) {
+                this.driverChangeWithCar(this.data.resourceID);
+              }
+
+              this.detectorRef.detectChanges();
+            });
+        }
+        else {
+          this.codxEpService.getCalendar().subscribe((res: any) => {
+            if (res) {
+              let tempStartTime = JSON.parse(
+                res.dataValue
+              )[0]?.StartTime.split(':');
+              this.calendarStartTime =
+                tempStartTime[0] + ':' + tempStartTime[1];
+              let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
+                ':'
+              );
+              this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
+              let tmpDateTime = new Date();
+              if (this.isAdd && this.optionalData == null) {
+                this.data.startDate = new Date(
+                  tmpDateTime.getFullYear(),
+                  tmpDateTime.getMonth(),
+                  tmpDateTime.getDate(),
+                  tempStartTime[0],
+                  tempStartTime[1],
+                  0
+                );
+                this.data.endDate = new Date(
+                  tmpDateTime.getFullYear(),
+                  tmpDateTime.getMonth(),
+                  tmpDateTime.getDate(),
+                  tempEndTime[0],
+                  tempEndTime[1],
+                  0
+                );
+              }
+              this.calStartHour = tempStartTime[0];
+              this.calStartMinutes = tempStartTime[1];
+              this.calEndHour = tempEndTime[0];
+              this.calEndMinutes = tempEndTime[1];
+              if (this.isAdd && this.optionalData) {
+                this.driverChangeWithCar(this.optionalData.resourceId);
+              }
+              if (this.isCopy) {
+                this.driverChangeWithCar(this.data.resourceID);
+              }
+
+              this.detectorRef.detectChanges();
+            }
+          });
+        }
+      } else {
+        this.codxEpService.getEPSetting().subscribe((setting: any) => {
+          if (setting) {
+            this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
+            if (this.calendarID) {
+              this.codxEpService
+                .getCalendarWeekdays(this.calendarID)
+                .subscribe((cal: any) => {
+                  let tmpDateTime = new Date();
+                  if (this.optionalData && this.optionalData?.startDate) {
+                    tmpDateTime = this.optionalData.startDate;
+                  }
+                  Array.from(cal).forEach((day: any) => {
+                    if (day?.shiftType == '1') {
+                      let tmpstartTime = day?.startTime.split(':');
+                      this.calendarStartTime =
+                        tmpstartTime[0] + ':' + tmpstartTime[1];
+                      if (this.isAdd) {
+                        this.data.startDate = new Date(
+                          tmpDateTime.getFullYear(),
+                          tmpDateTime.getMonth(),
+                          tmpDateTime.getDate(),
+                          tmpstartTime[0],
+                          tmpstartTime[1],
+                          0
+                        );
+                      }
+                      this.calEndHour = tmpstartTime[0];
+                      this.calEndMinutes = tmpstartTime[1];
+                    } else if (day?.shiftType == '2') {
+                      let tmpEndTime = day?.endTime.split(':');
+                      this.calendarEndTime =
+                        tmpEndTime[0] + ':' + tmpEndTime[1];
+                      if (this.isAdd) {
+                        this.data.endDate = new Date(
+                          tmpDateTime.getFullYear(),
+                          tmpDateTime.getMonth(),
+                          tmpDateTime.getDate(),
+                          tmpEndTime[0],
+                          tmpEndTime[1],
+                          0
+                        );
+                      }
+                      this.calEndHour = tmpEndTime[0];
+                      this.calEndMinutes = tmpEndTime[1];
+                    }
+                  });
                   if (this.isAdd && this.optionalData) {
                     this.driverChangeWithCar(this.optionalData.resourceId);
                   }
                   if (this.isCopy) {
                     this.driverChangeWithCar(this.data.resourceID);
                   }
+
+                  this.detectorRef.detectChanges();
+                });
+            }
+          } else {
+            this.codxEpService.getCalendar().subscribe((res: any) => {
+              if (res) {
+                let tempStartTime = JSON.parse(
+                  res.dataValue
+                )[0]?.StartTime.split(':');
+                this.calendarStartTime =
+                  tempStartTime[0] + ':' + tempStartTime[1];
+                let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
+                  ':'
+                );
+                this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
+                let tmpDateTime = new Date();
+                if (this.isAdd && this.optionalData == null) {
+                  this.data.startDate = new Date(
+                    tmpDateTime.getFullYear(),
+                    tmpDateTime.getMonth(),
+                    tmpDateTime.getDate(),
+                    tempStartTime[0],
+                    tempStartTime[1],
+                    0
+                  );
+                  this.data.endDate = new Date(
+                    tmpDateTime.getFullYear(),
+                    tmpDateTime.getMonth(),
+                    tmpDateTime.getDate(),
+                    tempEndTime[0],
+                    tempEndTime[1],
+                    0
+                  );
                 }
-              });
+                this.calStartHour = tempStartTime[0];
+                this.calStartMinutes = tempStartTime[1];
+                this.calEndHour = tempEndTime[0];
+                this.calEndMinutes = tempEndTime[1];
+                if (this.isAdd && this.optionalData) {
+                  this.driverChangeWithCar(this.optionalData.resourceId);
+                }
+                if (this.isCopy) {
+                  this.driverChangeWithCar(this.data.resourceID);
+                }
+
+                this.detectorRef.detectChanges();
+              }
+            });
           }
-          this.detectorRef.detectChanges();
-        }
-      });
+        });
+
+        this.detectorRef.detectChanges();
+      }
+    });
 
     this.cache.valueList('EP010').subscribe((res) => {
       if (res && res?.datas.length > 0) {
@@ -361,7 +454,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         });
         if (this.isAdd) {
           let people = this.authService.userValue;
-          let tmpResource =new BookingAttendees();
+          let tmpResource = new BookingAttendees();
           tmpResource.userID = people?.userID;
           tmpResource.userName = people?.userName;
           tmpResource.roleType = '1';
@@ -372,7 +465,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
               tmpResource.roleName = element.text;
             }
           });
-          
+
           this.curUser = tmpResource;
           this.resources.push(tmpResource);
         }
@@ -383,7 +476,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
               if (res) {
                 this.attendees = res.msgBodyData[0];
                 this.attendees.forEach((people) => {
-                  let tmpResource =new BookingAttendees();
+                  let tmpResource = new BookingAttendees();
                   tmpResource.userID = people?.userID;
                   tmpResource.userName = people?.userName;
                   tmpResource.roleType = people?.roleType;
@@ -395,17 +488,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     }
                   });
 
-                  if (
-                    tmpResource.userID == this.authService.userValue.userID
-                  ) {
-                    this.curUser = tmpResource;                    
+                  if (tmpResource.userID == this.authService.userValue.userID) {
+                    this.curUser = tmpResource;
                     this.resources.push(this.curUser);
                   } else if (tmpResource.roleType == '2') {
                     this.driver = tmpResource;
                     this.driver.objectID = people.note;
                     this.driver.objectType = 'EP_Resources';
                   } else {
-                    this.lstPeople.push(tmpResource);           
+                    this.lstPeople.push(tmpResource);
                     this.resources.push(tmpResource);
                   }
                 });
@@ -474,23 +565,27 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.fGroupAddBookingCar,
           this.formModel
         );
+
+        this.saveCheck = false;
         return;
       }
       if (this.data.phone != null && this.data.phone != '') {
         if (!this.validatePhoneNumber(this.data.phone)) {
           this.notificationsService.notify(
-            'Số điện thoại không hợp lệ',
+            'Số điện thoại không hợp lệ',//EP014
             '2',
             0
           ); // EP_WAIT doi messcode tu BA
+
+          this.saveCheck = false;
           return;
         }
       }
-
+      let tempDate =new Date();
       if (
         this.data.startDate != null &&
         this.data.endDate != null &&
-        this.data.startDate < this.data.endDate
+        this.data.startDate < this.data.endDate && this.data.startDate >= new Date(tempDate.getFullYear(),tempDate.getMonth(),tempDate.getDate(),0,0,0,0)
       ) {
         let hours = parseInt(
           ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
@@ -500,6 +595,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         }
       } else {
         this.notificationsService.notifyCode('TM036');
+        this.saveCheck = false;
         return;
       }
       let tmpEquip = [];
@@ -526,23 +622,68 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.approveStatus = '1';
       this.data.status = '1';
       this.data.resourceType = '2';
+      if(this.approvalRule=='0' && approval){
+        this.data.approveStatus = '5';
+        this.data.status = '5';
+      }
+      else{
+        this.data.approveStatus = '1';
+        this.data.status = '1';
+      }      
+      this.data.approval =this.approvalRule;
       this.data.attendees = this.attendeesList.length;
 
       if (this.data.attendees > this.carCapacity) {
         this.notificationsService.alertCode('EP010').subscribe((x) => {
           if (x.event.status == 'N') {
+            this.saveCheck = false;
             return;
           } else {
-            this.startSave(approval);
+            this.attendeesValidateStep(approval);
           }
         });
       } else {
-        this.startSave(approval);
+        this.attendeesValidateStep(approval);
       }
       this.saveCheck = true;
     } else {
       return;
     }
+  }
+  attendeesValidateStep(approval) {
+    this.api
+      .callSv(
+        'EP',
+        'ERM.Business.EP',
+        'BookingsBusiness',
+        'BookingAttendeesValidatorAsync',
+        [
+          this.attendeesList,
+          this.data.startDate,
+          this.data.endDate,
+          this.data.recID,
+        ]
+      )
+      .subscribe((res) => {
+        if (res != null && res.msgBodyData[0].length > 0) {
+          this.busyAttendees = '';
+          res.msgBodyData[0].forEach((item) => {
+            this.busyAttendees += item.objectName + ', ';
+          });
+          this.notificationsService
+            .alertCode('EP005', null, '"' + this.busyAttendees + '"')
+            .subscribe((x) => {
+              if (x.event.status == 'N') {
+                this.saveCheck = false;
+                return;
+              } else {
+                this.startSave(approval);
+              }
+            });
+        } else {
+          this.startSave(approval);
+        }
+      });
   }
   startSave(approval) {
     this.dialogRef.dataService
@@ -555,7 +696,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
             this.returnData = res.save;
           }
           if (approval) {
-            this.codxEpService
+            if(this.data.approval!='0'){
+              this.codxEpService
               .getCategoryByEntityName(this.formModel.entityName)
               .subscribe((res: any) => {
                 this.codxEpService
@@ -584,11 +726,19 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   });
               });
 
+            }
+            else{              
+              this.notificationsService.notifyCode('ES007');
+              this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe();
+              this.dialogRef && this.dialogRef.close(this.returnData); 
+            }
+            
             this.dialogRef && this.dialogRef.close(this.returnData);
           } else {
             this.dialogRef && this.dialogRef.close(this.returnData);
           }
         } else {
+          this.saveCheck = false;
           return;
         }
       });
@@ -636,7 +786,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         tempDelete = item;
       }
     });
-    this.lstPeople.splice(this.lstPeople.indexOf(tempDelete), 1);    
+    this.lstPeople.splice(this.lstPeople.indexOf(tempDelete), 1);
     this.data.attendees = this.lstPeople.length + 1;
     this.detectorRef.detectChanges();
   }
@@ -731,7 +881,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     return true;
   }
   startDateChange(evt: any) {
-    if (!evt.field || !evt.data) {
+    if (!evt.field ) {
       return;
     }
     this.data.startDate = new Date(evt.data.fromDate);
@@ -774,7 +924,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     // }
   }
   endDateChange(evt: any) {
-    if (!evt.field || !evt.data) {
+    if (!evt.field ) {
       return;
     }
     this.data.endDate = new Date(evt.data.fromDate);
@@ -971,10 +1121,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
               });
               this.resources.push(tmpResource);
             }
-            
           }
-          this.resources.forEach(item=>{
-            if(item.userID!= this.curUser.userID){
+          this.resources.forEach((item) => {
+            if (item.userID != this.curUser.userID) {
               this.lstPeople.push(item);
             }
           });

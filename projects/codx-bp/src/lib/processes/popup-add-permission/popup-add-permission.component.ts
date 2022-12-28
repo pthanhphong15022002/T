@@ -37,6 +37,7 @@ export class PopupAddPermissionComponent implements OnInit {
   gridViewSetup: any;
   data: any;
   funcID: any;
+  popupOld: any;
   popoverList: any;
   popoverDetail: any;
   entity: any;
@@ -83,7 +84,7 @@ export class PopupAddPermissionComponent implements OnInit {
   onShare() {
     this.per.recIDProcess = this.id;
     if (this.toPermission == null) {
-      this.notificationsService.notifyCode('Không được phép bỏ trống');
+      this.notificationsService.notifyCode('SYS028');
       return;
     }
     this.per.toPermission = this.toPermission;
@@ -91,16 +92,9 @@ export class PopupAddPermissionComponent implements OnInit {
     this.per.ccPermission = this.ccPermission;
     for (var i = 0; i < this.per.toPermission.length; i++) {
       if (this.startDate != null && this.endDate != null) {
-        if (this.startDate >= this.endDate) {
-          this.notificationsService.notify(
-            'Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!'
-          );
-          return;
-        }
-        //Chưa có mssg code
-        if (!this.isCheckFromToDate(this.startDate)) {
-          this.notificationsService.notify(
-            'Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!'
+        if (this.startDate > this.endDate) {
+          this.notificationsService.notifyCode(
+            'BP003'
           );
           return;
         }
@@ -135,21 +129,13 @@ export class PopupAddPermissionComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          if (this.per.form == '2') {
-            this.notificationsService.notifyCode('OD013');
-            this.dialog.close(res);
-          } else {
+          if (this.per.form == '4') {
             this.notificationsService.notifyCode('SYS034');
             this.dialog.close(res);
+          } else {
+            this.notificationsService.notifyCode('OD013');
+            this.dialog.close(res);
           }
-        } else {
-          if (this.per.form == '2')
-            this.notificationsService.notifyCode('SYS016');
-          else
-            this.notificationsService.notify(
-              'Yêu cầu cấp quyền không thành công'
-            );
-          this.dialog.close();
         }
       });
   }
@@ -330,10 +316,25 @@ export class PopupAddPermissionComponent implements OnInit {
   //#endregion
 
   PopoverDetail(p: any, emp) {
+    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+      this.popupOld?.close();
+    }
+
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
-      if (emp.memo != null) p.open();
+      if (emp.processName != null) {
+        p.open();
+      }
     } else p.close();
+    this.popupOld = p;
+  }
+
+  setTextPopover(text){
+    return (text);
+  }
+
+  closePopover() {
+    this.popupOld?.close();
   }
 }

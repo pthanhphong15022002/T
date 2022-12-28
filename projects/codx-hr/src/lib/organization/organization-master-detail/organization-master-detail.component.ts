@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
-import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CRUDService, FormModel, SidebarModel, ViewsComponent } from 'codx-core';
+import { ApiHttpService, CacheService, CallFuncService, CodxGridviewComponent, CRUDService, FormModel, ScrollComponent, SidebarModel, ViewsComponent } from 'codx-core';
 import { PopupAddOrganizationComponent } from '../popup-add-organization/popup-add-organization.component';
 
 @Component({
-  selector: 'lib-organization-master-detail',
+  selector: 'lib-organization-masterdetail',
   templateUrl: './organization-master-detail.component.html',
   styleUrls: ['./organization-master-detail.component.css']
 })
@@ -18,13 +18,13 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
   grvSetup:any = {};
   formModelEmp:FormModel = new FormModel();
   @ViewChild("grid") grid:CodxGridviewComponent;
-  @ViewChild("templateName",{ static: true }) templateName:TemplateRef<any>;
-  @ViewChild("templateBirthday",{ static: true }) templateBirthday:TemplateRef<any>;
-  @ViewChild("templatePhone",{ static: true }) templatePhone:TemplateRef<any>;
-  @ViewChild("templateEmail",{ static: true }) templateEmail:TemplateRef<any>;
-  @ViewChild("templateJoinedOn",{ static: true }) templateJoinedOn:TemplateRef<any>;
-  @ViewChild("templateStatus",{ static: true }) templateStatus:TemplateRef<any>;
-  @ViewChild("templateMoreFC",{ static: true }) templateMoreFC:TemplateRef<any>;
+  @ViewChild("templateName") templateName:TemplateRef<any>;
+  @ViewChild("templateBirthday") templateBirthday:TemplateRef<any>;
+  @ViewChild("templatePhone") templatePhone:TemplateRef<any>;
+  @ViewChild("templateEmail") templateEmail:TemplateRef<any>;
+  @ViewChild("templateJoinedOn") templateJoinedOn:TemplateRef<any>;
+  @ViewChild("templateStatus") templateStatus:TemplateRef<any>;
+  @ViewChild("templateMoreFC") templateMoreFC:TemplateRef<any>;
 
   constructor(
     private api:ApiHttpService,
@@ -35,9 +35,9 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
   { 
     
   }
+
   
   ngOnInit(): void {
-    // lấy grvSetup của employee để view và format data theo thiết lập
     this.formModelEmp.formName = "Employees";
     this.formModelEmp.gridViewName = "grvEmployees" 
     this.formModelEmp.entityName = "HR_Employees";
@@ -45,7 +45,6 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
     .subscribe((grd:any) => {
       if(grd){
         this.grvSetup = grd;
-        console.log(grd);
         this.columnsGrid = [
           {
             headerText: grd["EmployeeName"]["headerText"],
@@ -63,13 +62,13 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
             headerText: grd["Phone"]["headerText"],
             field:"Phone",
             template:this.templatePhone,
-            width: '10%',
+            width: '15%',
           },
           {
             headerText: grd["Email"]["headerText"],
             field:"Email",
             template:this.templateEmail,
-            width: '10%',
+            width: '15%',
           },
           {
             headerText: grd["JoinedOn"]["headerText"],
@@ -81,25 +80,21 @@ export class OrganizationMasterDetailComponent implements OnInit, OnChanges{
             headerText: grd["Status"]["headerText"],
             field:"Status",
             template:this.templateStatus,
-            width: '15%',
-          },
-          {
-            template:this.templateMoreFC,
-            width: '5%',
+            width: '20%',
           }
         ];
-        this.dt.detectChanges();
       }
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.orgUnitID){
+    if(changes.orgUnitID.currentValue != changes.orgUnitID.previousValue){
       this.getManager(this.orgUnitID);
       if(this.grid){
         this.grid.dataService.setPredicates([],[this.orgUnitID]).subscribe();
       }
     }
   }
+
   // get employee manager by orgUnitID
   getManager(orgUnitID:string){
     if(orgUnitID){

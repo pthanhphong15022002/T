@@ -36,12 +36,12 @@ export class SettingCalendarComponent
   @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
   @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
-  calendarID: string;
   calendarName: string;
   dayWeek = [];
   daysOff = [];
   formModel: FormModel;
   request?: ResourceModel;
+  calendarID: string;
   vllPriority = 'TM005';
   startTime: any;
   month: any;
@@ -50,9 +50,13 @@ export class SettingCalendarComponent
   tempCarName = '';
   listCar = [];
   driverName = '';
-  selectBookingAttendees = '';
+  selectBookingAttendeesCar = '';
+  selectBookingAttendeesRoom = '';
   listDriver: any[];
   tempDriverName = '';
+  selectBookingItems = [];
+  tempRoomName = '';
+  listRoom = [];
 
   @Input() fields = {
     id: 'recID',
@@ -71,12 +75,34 @@ export class SettingCalendarComponent
     private change: ChangeDetectorRef
   ) {
     super(injector);
-    this.funcID = this.router.snapshot.params['funcID'];
+    this.router.params.subscribe((params) => {
+      if (params) {
+        this.funcID = params['funcID'];
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
+        });
+      }
+    });
   }
 
   onInit(): void {
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      this.getParams(res.module + 'Parameters', 'CalendarID');
+    this.codxShareSV.getListResource('1').subscribe((res: any) => {
+      if (res) {
+        this.listRoom = [];
+        this.listRoom = res;
+      }
+    });
+    this.codxShareSV.getListResource('2').subscribe((res: any) => {
+      if (res) {
+        this.listCar = [];
+        this.listCar = res;
+      }
+    });
+    this.codxShareSV.getListResource('3').subscribe((res: any) => {
+      if (res) {
+        this.listDriver = [];
+        this.listDriver = res;
+      }
     });
   }
 
@@ -116,7 +142,7 @@ export class SettingCalendarComponent
   //endRegion EP
 
   //region EP_BookingCars
-  getResourceName(resourceID: any) {
+  getResourceNameCar(resourceID: any) {
     this.tempCarName = '';
     this.listCar.forEach((r) => {
       if (r.resourceID == resourceID) {
@@ -125,16 +151,17 @@ export class SettingCalendarComponent
     });
     return this.tempCarName;
   }
-  getMoreInfo(recID: any) {
-    this.selectBookingAttendees = '';
+
+  getMoreInfoBookingCars(recID: any) {
+    this.selectBookingAttendeesCar = '';
     this.driverName = ' ';
     this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
       if (attendees) {
         let lstAttendees = attendees;
         lstAttendees.forEach((element) => {
           if (element.roleType != '2') {
-            this.selectBookingAttendees =
-              this.selectBookingAttendees + element.userID + ';';
+            this.selectBookingAttendeesCar =
+              this.selectBookingAttendeesCar + element.userID + ';';
           } else {
             this.driverName = this.getDriverName(element.userID);
           }
@@ -146,6 +173,28 @@ export class SettingCalendarComponent
       }
     });
   }
+
+  getMoreInfoBookingRooms(recID: any) {
+    this.selectBookingItems = [];
+    this.selectBookingAttendeesRoom = '';
+
+    this.codxShareSV.getListItems(recID).subscribe((item: any) => {
+      if (item) {
+        this.selectBookingItems = item;
+      }
+    });
+    this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
+      if (attendees) {
+        let lstAttendees = attendees;
+        lstAttendees.forEach((element) => {
+          this.selectBookingAttendeesRoom =
+            this.selectBookingAttendeesRoom + element.userID + ';';
+        });
+        this.selectBookingAttendeesRoom;
+      }
+    });
+  }
+
   getDriverName(resourceID: any) {
     this.tempDriverName = '';
     if (this.listDriver.length > 0) {
@@ -158,6 +207,18 @@ export class SettingCalendarComponent
     return this.tempDriverName;
   }
   //endRegion EP_BookingCars
+
+  //region EP_BookingRooms
+  getResourceNameRoom(resourceID: any) {
+    this.tempRoomName = '';
+    this.listRoom.forEach((r) => {
+      if (r.resourceID == resourceID) {
+        this.tempRoomName = r.resourceName;
+      }
+    });
+    return this.tempRoomName;
+  }
+  //endRegion EP_BookingRooms
 
   //region CO
   getDate(data) {
@@ -214,7 +275,7 @@ export class SettingCalendarComponent
         }
         this.getDayWeek(this.calendarID);
         this.getDaysOff(this.calendarID);
-        this.detectorRef.detectChanges();
+        // this.detectorRef.detectChanges();
       }
     });
   }
@@ -303,11 +364,5 @@ export class SettingCalendarComponent
   reloadCalendar() {
     alert('trigger');
     (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
-  }
-
-  onAction(event: any) {
-    if (event?.type == 'navigate') {
-      this.codxShareSV.dateChange.next(event.data.fromDate);
-    }
   }
 }

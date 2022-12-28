@@ -605,7 +605,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     }
     this.tmplstStationery=[];
     this.lstStationery.forEach(item=>{
-      this.tmplstStationery.push(item)
+      if(item.quantity>0){
+
+        this.tmplstStationery.push(item);
+      }
     })
     this.tmpAttendeesList = [];
     this.attendeesList.forEach((item) => {
@@ -1206,9 +1209,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
     });
 
-    this.lstStationery = this.lstStationery.filter((item) => {
-      return item.quantity != 0;
-    });
+    // this.lstStationery = this.lstStationery.filter((item) => {
+    //   return item.quantity != 0;
+    // });
   }
   //////////////////////////
   attendeesCheckChange(event: any, userID: any) {

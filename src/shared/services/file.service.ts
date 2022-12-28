@@ -168,7 +168,7 @@ export class FileService implements OnDestroy {
 
     addMultiFileObservable(list: FileUpload[] , isDM: boolean = false  , folder:object = null , folderID: string = "" , folderName: string = "" , parentID:string= "" , idField:string = ""): Observable<DataReturn[] | null> {
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM,folderID,folderName,parentID,idField]).pipe(
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM ,folder,folderID,folderName,parentID,idField]).pipe(
             map(data => {
                 return data;                
             }),
@@ -183,7 +183,7 @@ export class FileService implements OnDestroy {
         //var bytes = new Int8Array(data as ArrayBuffer);
         //  var item = this.arrayBufferToBase64(data);
         let data = JSON.stringify(list);
-        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folderID , folderName,parentID,idField]);
+        return this.api.execSv<DataReturn[]>("DM", "DM", "FileBussiness", "AddMultiFileAsync", [data,isDM , folder, folderID , folderName,parentID,idField]);
     }
 
     UpdateRequestAsync(id: string, objectID: string, status: string, isActive: boolean): Observable<any> {

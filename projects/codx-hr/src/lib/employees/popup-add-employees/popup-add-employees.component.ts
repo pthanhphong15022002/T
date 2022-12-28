@@ -14,7 +14,10 @@ import {
   CacheService,
   DialogData,
   DialogRef,
+  FormModel,
+  LayoutAddComponent,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { Observable, Subject } from 'rxjs';
 import { HR_Employees } from '../../model/HR_Employees.model';
@@ -65,7 +68,10 @@ export class PopupAddEmployeesComponent implements OnInit {
   gridViewSetup: any;
   action: 'add' | 'edit' | 'copy' = 'add';
   paramaterHR: any = null;
-
+  grvSetup:any = {};
+  arrFieldRequire:any[] = [];
+  mssgCode:string = "SYS009";
+  @ViewChild("form") form:LayoutAddComponent;
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -87,6 +93,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     this.functionID = this.dialogRef.formModel.funcID;
     this.employee = JSON.parse(JSON.stringify(this.dialogData.employee));
     this.getParamerAsync(this.functionID);
+    this.getGridViewSetup(this.dialogRef.formModel);
   }
   // get parameter auto default number
   getParamerAsync(funcID: string) {
@@ -104,6 +111,21 @@ export class PopupAddEmployeesComponent implements OnInit {
             this.paramaterHR = JSON.parse(JSON.stringify(res));
           }
         });
+    }
+  }
+
+  getGridViewSetup(formModel:FormModel){
+    if(formModel)
+    { 
+      this.cache.gridViewSetup(formModel.formName, formModel.gridViewName).subscribe((grd:any) => {
+        if(grd){
+          this.grvSetup = grd;
+          let arrField =  Object.values(grd).filter((x:any) => x.isRequire);
+          if(arrField){
+            this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
+          }
+        }
+      });
     }
   }
   // set title popup
@@ -171,10 +193,27 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
-    if (this.action == 'edit') {
-      this.updateEmployeeAsync(this.employee);
-    } else {
-      this.addEmployeeAsync(this.employee);
+    let arrFieldUnValid:string = "";
+    if(this.arrFieldRequire.length > 0)
+    {
+      this.arrFieldRequire.forEach((field) => {
+        let key = Util.camelize(field);
+        if (!this.employee[key])
+        {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
+        }
+      });
+    }
+    if(arrFieldUnValid){
+      this.notifiSV.notifyCode(this.mssgCode,0,arrFieldUnValid);
+    }
+    else
+    {
+      if (this.action == 'edit') {
+        this.updateEmployeeAsync(this.employee);
+      } else {
+        this.addEmployeeAsync(this.employee);
+      }
     }
   }
 
@@ -194,26 +233,46 @@ export class PopupAddEmployeesComponent implements OnInit {
   }
   addEmployeeAsync(employee: any) {
     if (employee) {
-      this.api
-        .execAction<boolean>('HR_Employees', [employee], 'SaveAsync')
-        .subscribe((res: any) => {
-          if (!res?.error) {
-            this.dialogRef.close(res.data);
-          } else {
-            this.notifiSV.notifyCode('SYS023');
-            this.dialogRef.close(null);
-          }
-        });
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","InsertAsync",[employee])
+      .subscribe((res:any[]) => {
+        if(res[0]){
+          let data = res[1];
+          this.notifiSV.notifyCode("SYS006");
+          this.dialogRef.close(data);
+        }
+        else
+        {
+          this.notifiSV.notifyCode('SYS023');
+          this.dialogRef.close(null);
+        }
+      });
     }
   }
 
   dataChange(e: any) {
-    if (e) {
-      if (typeof e.data !== 'string') {
-        this.employee[e.field] = e.data.fromDate
-          ? e.data.fromDate.toISOString()
-          : null;
-      } else this.employee[e.field] = e.data;
+    debugger
+    if (this.form && e) 
+    {
+      let field = Util.camelize(e.field);
+      let data = e.data;
+      if(field)
+      {
+        switch(field){
+          case "positionID":
+            break;
+          case "":
+            break;
+          case "":
+            break;
+          case "":
+            break;
+        }
+        if (typeof e.data !== 'string') {
+          this.employee[field] = e.data.fromDate
+            ? e.data.fromDate.toISOString()
+            : null;
+        } else this.employee[field] = e.data;
+      }
     }
   }
 }

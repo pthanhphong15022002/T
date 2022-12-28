@@ -298,6 +298,12 @@ codx-views {
 // .psteps-list codx-mfunc {
 //   display: none;
 // }
+.show-more{
+  opacity: 0;
+}
+.envelop:hover .show-more{
+  opacity: 1;
+}
 
 .line-colums {
   -webkit-line-clamp: 1;
@@ -305,4 +311,38 @@ codx-views {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 260px;
+}
+.colums-morefunc{
+  background-color: #e2e3ee;
+}
+.envelop{
+  width: 100%;
+  position: relative; 
+  height: 30px; 
+  display: flex;
+  .show-more{
+    position: absolute; 
+    top: 0px ; right: 0px; 
+    background: white;
+    border-radius: 20px;
+  }
+}
+.psteps-list{
+  width: 100%;
+  .color-hover{
+    background-color: aliceblue;
+  }
+  .psteps-item{
+    margin: 0;
+    padding: 5px !important;
+    border-radius: 0 15px 15px 0;
+  }
+}
+
+:host ::ng-deep .popover-body{
+  padding: 0 !important;
+}
+
+.more-function codx-mfunc{
+  top: -15px !important;
 }

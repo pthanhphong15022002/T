@@ -1155,6 +1155,16 @@ export class PopupAddSignFileComponent implements OnInit {
   }
 
   fileDelete(event) {
-    console.log(event);
+    if(event && event?.length> 0){
+      let file = event[0].data;
+      if(file){
+        let i = this.data?.files?.findIndex(p => p.fileID == file.recID);
+        if(i > -1){
+          this.data.files.splice(i, 1);
+          this.dialogSignFile.patchValue({files: this.data.files})
+          this.cr.detectChanges();
+        }
+      }
+    }
   }
 }

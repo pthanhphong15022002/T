@@ -3,7 +3,7 @@
   entityName="HR_OrganizationUnits" 
   idField="orgUnitID" 
   [views]="views"
-  [selectedFirst]="true" 
+  [selectedFirst]="false" 
   (selectedChange)="onSelectionChanged($event)" 
   [button]="button"
   (buttonClick)="btnClick($event)" 
@@ -23,11 +23,11 @@
 
 <!-- tree master detail -->
 <ng-template #tmpMasterDetail>
-  <lib-organization-master-detail [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-master-detail>
+  <lib-organization-masterdetail [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></lib-organization-masterdetail>
 </ng-template>
 <!-- tree orgChart -->
 <ng-template #tmpOrgChart>
-  <hr-organization-orgchart [dataService]="dataService" [view]="view" [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
+  <hr-organization-orgchart [view]="view" [dataService]="dataService"  [formModel]="view.formModel" [orgUnitID]="orgUnitID"></hr-organization-orgchart>
 </ng-template>
 <!-- tree list -->
 <ng-template #tmpList>

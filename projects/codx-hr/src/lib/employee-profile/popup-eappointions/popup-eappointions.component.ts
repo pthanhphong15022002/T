@@ -65,6 +65,8 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEAppointions = data?.data?.lstEAppointions
+    console.log('lit input EApotins:', this.lstEAppointions);
+    
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
 
     if(this.actionType === 'edit' || this.actionType ==='copy'){
@@ -98,11 +100,13 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
     }
     this.EAppointionObj.employeeID = this.employId 
     if(this.actionType === 'add' || this.actionType === 'copy'){
-      this.hrService.addEmployeePassportInfo(this.EAppointionObj).subscribe(p => {
+      this.hrService.AddEmployeeAppointionsInfo(this.EAppointionObj).subscribe(p => {
         if(p != null){
           this.EAppointionObj.recID = p.recID
           this.notify.notifyCode('SYS007')
           this.lstEAppointions.push(JSON.parse(JSON.stringify(this.EAppointionObj)));
+          console.log('lit e appoint', this.lstEAppointions);
+          
           if(this.listView){
             (this.listView.dataService as CRUDService).add(this.EAppointionObj).subscribe();
           }
@@ -112,7 +116,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
       });
     } 
     else{
-      this.hrService.updateEmployeePassportInfo(this.formModel.currentData).subscribe(p => {
+      this.hrService.UpdateEmployeeAppointionsInfo(this.formModel.currentData).subscribe(p => {
         if(p != null){
           this.notify.notifyCode('SYS007')
         this.lstEAppointions[this.indexSelected] = p;

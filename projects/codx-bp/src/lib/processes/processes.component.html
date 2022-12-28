@@ -150,13 +150,14 @@
                 (mouseenter)="p.open()"
                 (mouseleave)="p.close()"
                 placement="right">
+              </span>
+
                 <codx-attachment-temp
                   [objectID]="data?.recID"
                   [formModel]="view.formModel"
                   [count]="data.attachments"
                   [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
-              </span>
             </div>
           </div>
           <!-- <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
@@ -336,13 +337,20 @@
         </div>
       </div>
       <div *ngIf="!data.memo">
-        <span
-          disabled="true"
-          *ngIf="!data.memo"
-          class="b text-gray-600 text-start">
-          <codx-label name="lblNoMemo" default="Description..."></codx-label>
-        </span>
-      </div> -->
+        <div #memo>
+          {{
+            data?.memo
+            | formatvalue
+            : view.formModel
+            : "memo"
+            : memo
+            : "Processes"
+            : "grvProcesses"
+            | async
+            }}
+        </div>
+
+      </div>
     </td>
     <td class="rowphoto" (mouseenter)="closePopover()">
       <div *ngIf="funcID == 'BPT4'">

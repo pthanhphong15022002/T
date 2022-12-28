@@ -40,12 +40,14 @@ export class OrganizationListComponent
     private callFC: CallFuncService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // this.dataService.currentComponent =
+    //   this.view?.dataService?.currentComponent;
+  }
   ngAfterViewInit(): void {}
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
-      this.orgUnitID = changes.orgUnitID.currentValue;
       if (this.dataService) {
         this.dataService.setPredicates([], [this.orgUnitID]).subscribe();
       }

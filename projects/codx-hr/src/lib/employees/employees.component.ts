@@ -172,10 +172,11 @@ export class EmployeesComponent extends UIComponent {
   }
 
   btnClick(event: any) {
-    // window.open(
-    //   '/tester/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123',
-    //   '_blank'
+    // this.codxService.openUrlNewTab(
+    //   '',
+    //   '/hr/employee/HRT03?predicate=employeeID=@0&dataValue=123'
     // );
+
     if (event?.text) {
       this.view.dataService.addNew().subscribe((res: any) => {
         if (res) {
@@ -188,7 +189,6 @@ export class EmployeesComponent extends UIComponent {
             action: 'add',
             title: `${event.text}  ${this.functionName}`,
           };
-          debugger;
           let popup = this.callfc.openSide(
             PopupAddEmployeesComponent,
             object,

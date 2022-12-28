@@ -488,6 +488,7 @@ export class ProcessesComponent
     this.dialogPopup = this.callfc.openForm(this.viewReName, '', 500, 10);
   }
   releaseProcess(data) {
+    this.dataSelected = data;
     this.statusLable = this.gridViewSetup['Status']['headerText'];
     this.commentLable = this.gridViewSetup['Comments']['headerText'];
     this.comment = '';
@@ -970,6 +971,7 @@ export class ProcessesComponent
   }
 
   viewDetailProcessSteps(moreFunc, data) {
+    this.bpService.funcIDParent.next(this.funcID)
     let isEdit = data.write;
     let editRole =
       isEdit && !data.deleted
@@ -1036,23 +1038,23 @@ export class ProcessesComponent
   //   return strTime;
   // }
 
-  PopoverDetail(p: any, emp) {    
+  PopoverDetail(p: any, emp) {
     if(this.popupOld?.popoverClass !== p?.popoverClass ) {
-      this.popupOld?.close();   
+      this.popupOld?.close();
     }
-   
+
     if (emp != null) {
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp.memo != null || emp.processName != null) {
-        p.open();      
-      } 
+        p.open();
+      }
     } else p.close();
     this.popupOld = p;
   }
 
   closePopover() {
-    this.popupOld?.close();  
+    this.popupOld?.close();
   }
 
   setTextPopover(text){
@@ -1097,7 +1099,8 @@ export class ProcessesComponent
         if (res) {
           this.notification.notifyCode('SYS007');
           this.dialogPopup.close();
-          this.view.dataService.update(res).subscribe();
+          this.itemSelected.status = '6';
+          this.view.dataService.update(this.itemSelected).subscribe();
           this.detectorRef.detectChanges();
         }
       });

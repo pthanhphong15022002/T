@@ -25,6 +25,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { CodxShareService } from '../../../codx-share.service';
 import { environment } from 'src/environments/environment';
 import { CodxClearCacheComponent } from '../../../components/codx-clear-cache/codx-clear-cache.component';
+import { T } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-user-inner',
@@ -74,8 +75,8 @@ export class UserInnerComponent implements OnInit, OnDestroy {
 
     if (environment.themeMode == 'body')
       document.body.classList.add('codx-theme');
-
-    this.selectTheme('default'); //(this.auth.userValue.theme.toLowerCase());
+    if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
+    this.setTheme(this.auth.userValue.theme.toLowerCase()); //('default');
     if (this.functionList) {
       this.formModel = {
         formName: this.functionList?.formName,
@@ -109,19 +110,20 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     document.location.reload();
   }
 
-  selectLanguage(lang: string) {
-    this.setLanguage(lang);
+  updateSettting(lang: string, theme: string) {
+    if (lang) this.setLanguage(lang);
+    if (theme) this.setTheme(theme);
     var l = this.language.lang.toUpperCase();
     this.api
       .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
         l,
-        '',
+        theme,
       ])
       .subscribe((res: UserModel) => {
         this.auth.userSubject.next(res);
         //this.auth.startRefreshTokenTimer();
         this.authstore.set(res);
-        document.location.reload();
+        if (lang) document.location.reload();
       });
     this.cache.systemSetting().subscribe((systemSetting: any) => {
       systemSetting.language = this.language.lang.toUpperCase();
@@ -143,7 +145,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
             this.auth.userSubject.next(user);
             //this.auth.startRefreshTokenTimer();
             this.authstore.set(user);
-            document.location.reload();
+            if (lang) document.location.reload();
           }
         });
     });
@@ -161,11 +163,15 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   selectTheme(theme: string) {
-    this.setTheme(theme);
+    //this.setTheme(theme);
+    this.updateSettting('', theme);
     // document.location.reload();
   }
 
   setTheme(value: string) {
+    //check exist list theme
+    let findtheme = this.themes.find((x) => x.id == value);
+    if (!findtheme) value = 'default';
     //Remove Old
     let elm =
       environment.themeMode == 'body'
@@ -255,19 +261,26 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',
-    color: '#187de4',
+    color: '#005DC7',
     enable: true,
   },
   {
     id: 'orange',
     name: 'Orange',
-    color: '#f36519',
+    color: '#f15711',
     enable: true,
   },
   {
-    id: 'pink',
-    name: 'Pink',
-    color: '#f70f8f',
+    id: 'sapphire',
+    name: 'Sapphire',
+    color: '#0b9b8d',
+    enable: true,
+  },
+  {
+    id: 'green',
+    name: 'Green',
+    color: '#0f8633',
+    enable: true,
   },
 ];
 
