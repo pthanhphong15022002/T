@@ -124,6 +124,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   listUserID = [];
   user: any;
   busyAttendees: string;
+  approvalRule: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -229,8 +230,12 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.tmplstDevice = JSON.parse(JSON.stringify(this.tmplstDevice));
     });
     this.detectorRef.detectChanges();
-
-    this.codxEpService.getEPCarSetting().subscribe((setting: any) => {
+    this.codxEpService.getEPCarSetting('4').subscribe((approvalSetting: any) => {
+      if (approvalSetting) {
+        this.approvalRule = JSON.parse(approvalSetting.dataValue)[0]?.ApprovalRule;
+      }
+    });
+    this.codxEpService.getEPCarSetting('1').subscribe((setting: any) => {
       if (setting) {
         this.calendarID = JSON.parse(setting.dataValue)?.CalendarID;
         if (this.calendarID) {
@@ -284,6 +289,52 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
               this.detectorRef.detectChanges();
             });
+        }
+        else {
+          this.codxEpService.getCalendar().subscribe((res: any) => {
+            if (res) {
+              let tempStartTime = JSON.parse(
+                res.dataValue
+              )[0]?.StartTime.split(':');
+              this.calendarStartTime =
+                tempStartTime[0] + ':' + tempStartTime[1];
+              let tempEndTime = JSON.parse(res.dataValue)[1]?.EndTime.split(
+                ':'
+              );
+              this.calendarEndTime = tempEndTime[0] + ':' + tempEndTime[1];
+              let tmpDateTime = new Date();
+              if (this.isAdd && this.optionalData == null) {
+                this.data.startDate = new Date(
+                  tmpDateTime.getFullYear(),
+                  tmpDateTime.getMonth(),
+                  tmpDateTime.getDate(),
+                  tempStartTime[0],
+                  tempStartTime[1],
+                  0
+                );
+                this.data.endDate = new Date(
+                  tmpDateTime.getFullYear(),
+                  tmpDateTime.getMonth(),
+                  tmpDateTime.getDate(),
+                  tempEndTime[0],
+                  tempEndTime[1],
+                  0
+                );
+              }
+              this.calStartHour = tempStartTime[0];
+              this.calStartMinutes = tempStartTime[1];
+              this.calEndHour = tempEndTime[0];
+              this.calEndMinutes = tempEndTime[1];
+              if (this.isAdd && this.optionalData) {
+                this.driverChangeWithCar(this.optionalData.resourceId);
+              }
+              if (this.isCopy) {
+                this.driverChangeWithCar(this.data.resourceID);
+              }
+
+              this.detectorRef.detectChanges();
+            }
+          });
         }
       } else {
         this.codxEpService.getEPSetting().subscribe((setting: any) => {
@@ -493,9 +544,6 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
   ngAfterViewInit(): void {}
   beforeSave(option: RequestOption) {
-    // this.data.approval= '0';
-    // this.data.approveStatus = '5';
-    // this.data.status = '5';
     let itemData = this.data;
     option.methodName = 'AddEditItemAsync';
     option.data = [itemData, this.isAdd, this.attendeesList, null, null];
@@ -533,11 +581,11 @@ export class PopupAddBookingCarComponent extends UIComponent {
           return;
         }
       }
-
+      let tempDate =new Date();
       if (
         this.data.startDate != null &&
         this.data.endDate != null &&
-        this.data.startDate < this.data.endDate
+        this.data.startDate < this.data.endDate && this.data.startDate >= new Date(tempDate.getFullYear(),tempDate.getMonth(),tempDate.getDate(),0,0,0,0)
       ) {
         let hours = parseInt(
           ((this.data.endDate - this.data.startDate) / 1000 / 60 / 60).toFixed()
@@ -574,6 +622,15 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.approveStatus = '1';
       this.data.status = '1';
       this.data.resourceType = '2';
+      if(this.approvalRule=='0' && approval){
+        this.data.approveStatus = '5';
+        this.data.status = '5';
+      }
+      else{
+        this.data.approveStatus = '1';
+        this.data.status = '1';
+      }      
+      this.data.approval =this.approvalRule;
       this.data.attendees = this.attendeesList.length;
 
       if (this.data.attendees > this.carCapacity) {
@@ -671,10 +728,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
             }
             else{              
-              this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe(res);
               this.notificationsService.notifyCode('ES007');
-              this.dialogRef && this.dialogRef.close(this.returnData);
-
+              this.codxEpService.afterApprovedManual(this.formModel.entityName, this.returnData.recID,'5').subscribe();
+              this.dialogRef && this.dialogRef.close(this.returnData); 
             }
             
             this.dialogRef && this.dialogRef.close(this.returnData);
