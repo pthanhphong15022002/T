@@ -3555,6 +3555,37 @@
 
 <!-- pane_4 -->
 <ng-template #knowledge>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblKnowledge"
+        [formModel]="view.formModel"
+        default="Kiến thức"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('5', '0')"
+        [attr.aria-expanded]="!objCollapes['5']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('5', '1')"
+        [attr.aria-expanded]="!objCollapes['5']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
+        ></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -3567,37 +3598,7 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblKnowledge"
-                [formModel]="view.formModel"
-                default="Kiến thức"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('5', '0')"
-                [attr.aria-expanded]="!objCollapes['5']"
-              >
-                <span
-                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('5', '1')"
-                [attr.aria-expanded]="!objCollapes['5']"
-              >
-                <span
-                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
+
           <div id="5" #5="ngbCollapse" [(ngbCollapse)]="objCollapes['5']">
             <!-- Degree -->
             <div class="rounded-2 p-4">
@@ -3795,7 +3796,8 @@
                             [formModel]="formModel"
                             [typeMF]="'hover'"
                             [titleTmp]="tmplateECertificateTitle"
-                            [icoTitleCss]="'icon-list_alt'"
+                            [titleCss]="'text-dark fw-bold'"
+                            [icoTitleCss]="'icon-list_alt icon-14'"
                             [subTitleTmp]="tmplateECertificateMenuList"
                             cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                             typeMF="hover"
@@ -3803,12 +3805,12 @@
                           ></codx-temp-full>
 
                           <ng-template #tmplateECertificateTitle let-data>
-                            <div class="d-flex align-items-center ">
+                            <div class="d-flex align-items-center">
                               <i
-                                class="icon-i-arrow-down-left-circle-fill icon-16 me-1 "
+                                class="icon-i-arrow-down-left-circle-fill icon-14 me-1 "
                               ></i>
-                              {{ data.certificateID
-                              }}{{ data.certificateGradeID }}
+                              <span class="text-dark fw-bold">{{ data.certificateID
+                              }}{{ data.certificateGradeID }}</span>
                             </div>
                           </ng-template>
 

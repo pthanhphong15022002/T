@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { MODEL_CHANGED } from '@syncfusion/ej2-angular-richtexteditor';
 import { DateTime } from '@syncfusion/ej2-charts';
-import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest, CacheService } from 'codx-core';
+import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest, CacheService, CodxService } from 'codx-core';
 
 @Component({
   selector: 'lib-notify-drawer-slider',
@@ -32,6 +32,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     private dt:ChangeDetectorRef,
     private auth:AuthService,
     private cache:CacheService,
+    private codxService:CodxService,
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) 
@@ -93,18 +94,25 @@ export class NotifyDrawerSliderComponent implements OnInit {
   }
 
   clickNotification(item:any){
-    this.api.execSv(
-    'BG',
-    'ERM.Business.BG',
-    'NotificationBusinesss',
-    'UpdateNotificationAsync', 
-    [item.recID]).subscribe((res:boolean) => {
-      if(res)
-      {
-        item.read = true;
-        this.dt.detectChanges();
-      }
-    })
+    if(item.transID){
+      this.api.execSv(
+        'BG',
+        'ERM.Business.BG',
+        'NotificationBusinesss',
+        'UpdateNotificationAsync', 
+        [item.recID]).subscribe((res:boolean) => {
+          if(res)
+          {
+            item.read = true;
+            this.dt.detectChanges();
+          }
+      });
+      let query = {
+        predicate:"RecID=@0",
+        dataValue:item.transID
+      };
+      this.codxService.openUrlNewTab(item.function,"",query);
+    }
   }
 
   getMessage(mssgCode:string){

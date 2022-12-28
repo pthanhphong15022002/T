@@ -1,0 +1,340 @@
+.text-gray-900 {
+    color: var(--gray-900) !important;
+}
+
+.text-gray-800 {
+    color: var(--gray-800) !important;
+}
+
+.text-gray-700 {
+    color: var(--gray-700) !important;
+}
+
+.text-gray-600 {
+    color: var(--gray-600) !important;
+}
+
+.text-gray-500 {
+    color: var(--gray-500) !important;
+}
+
+.text-gray-400 {
+    color: var(--gray-400) !important;
+}
+
+.text-gray-300 {
+    color: var(--gray-300) !important;
+}
+
+.bg-gray-200 {
+    background-color: var(--gray-200) !important;
+}
+
+.header-fixed .header {
+    background-color: var(--bg-card);
+}
+
+.header .svg-icon svg [fill]:not(.permanent):not(g) {
+    fill: var(-text-gray-600);
+}
+
+ejs-listview {
+    background-color: var(--bg-card);
+}
+
+codx-wrapper {
+    background-color: var(--bg-body);
+}
+
+.e-listview .e-list-item {
+    color: var(--text-body);
+}
+
+.e-listview .e-list-item .fw-bold {
+    color: var(--text-title);
+}
+
+.bg-body {
+    background-color: var(--bg-body) !important;
+}
+
+.card {
+    background-color: var(--bg-card);
+}
+
+.card .card-header .card-title,
+.card .card-header .card-title .card-label {
+    color: var(--text-body);
+}
+
+codx-view-list-detail .e-pane {
+    background-color: var(--bg-card);
+}
+
+.dropdown-menu {
+    background-color: #27273a !important;
+    color: var(--text-body);
+
+    .dropdown-item {
+        color: var(--text-body);
+    }
+}
+
+.e-dlg-content {
+    background-color: var(--bg-card) !important;
+    color: var(--text-body);
+}
+
+.e-dialog {
+    border: 1px solid #27273a;
+    background-color: transparent;
+
+    .btn {
+        color: var(--primary-dark);
+    }
+
+    .dialog-title,
+    .dialog-title.codx-label .dialog-title * {
+        color: var(--text-body);
+    }
+
+}
+
+.codx-theme .e-listview .e-list-item.e-active {
+    background-color: var(--primary-lightest);
+}
+
+.aside.aside-transparent {
+    background-color: var(--bg-body);
+}
+
+app-list-post .e-listview .e-list-item {
+    border-color: var(--bg-card) !important;
+    background-color: var(--bg-card);
+}
+
+.wp-home .e-listview .e-list-item.e-hover,
+.wp-home .e-listview .e-list-item.e-active {
+    background-color: var(--bg-card) !important;
+}
+
+.menu-title-gray-800 .menu-item .menu-link .menu-title {
+    color: var(--text-menu);
+}
+
+.border,
+.border-bottom,
+.border-top,
+.border-left,
+.border-right {
+    border-color: var(--border-gray) !important;
+}
+
+codx-temp-full .border-bottom {
+    border-color: var(--border-list) !important;
+}
+
+bg-input .e-listview .e-list-item {
+    color: var(--text-des);
+}
+
+.text-dark {
+    color: var(--text-title) !important;
+}
+
+.menu-title-gray-800 .menu-item .menu-link {
+    color: var(--text-title);
+}
+
+.e-splitter.e-splitter-horizontal .e-pane,
+.e-splitter.e-splitter-vertical .e-pane {
+    color: var(--text-body);
+}
+
+.menu-title-gray-700 .menu-item .menu-link .menu-title {
+    color: var(--text-body);
+}
+
+codx-view-list-detail .nav-link {
+    color: var(--text-body);
+}
+
+textarea.codx-textarea {
+    background-color: var(--bg-input);
+}
+
+.e-input-group,
+.e-input-group.e-control-wrapper,
+.e-float-input,
+.e-float-input.e-input-group,
+.e-float-input.e-control-wrapper,
+.e-float-input.e-input-group.e-control-wrapper {
+    background: var(--bg-input);
+    color: var(--text-body);
+}
+
+.btn.btn-white {
+    background-color: var(--bg-card);
+
+    &:hover {
+        background-color: var(--gray-100) !important;
+    }
+}
+
+.toolbar {
+    background-color: var(--bg-card);
+}
+
+.header-fixed.toolbar-fixed .toolbar {
+    border-top-color: var(--border-light);
+}
+
+.e-grid .e-table,
+.e-grid .e-gridcontent,
+.e-grid .e-gridheader {
+    background-color: var(--bg-card) !important;
+}
+
+.e-grid .e-gridheader {
+    border-bottom-color: #212529;
+    border-top-color: #dee2e6;
+    color: var(--text-des);
+}
+
+.btn.btn-outline-default {
+    border-color: var(--border-gray);
+}
+
+codx-view-list-detail .codx-detail-footer {
+    background-color: var(--primary-light) !important;
+    border-color: var(--border-gray);
+}
+
+.nav-tabs {
+    border-color: var(--border-light);
+}
+
+.e-schedule .e-month-view .e-date-header-wrap table td,
+.e-schedule .e-month-agenda-view .e-date-header-wrap table td {
+    background-color: var(--bg-card);
+    border-color: var(--border-list);
+}
+
+#Schedule .e-work-cells.e-work-days,
+#Calendar .e-work-cells.e-work-days {
+    background-color: var(--bg-card) !important;
+}
+
+.e-schedule .e-month-view .e-work-cells,
+.e-schedule .e-month-agenda-view .e-work-cells {
+    background-color: var(--bg-body);
+    border-color: var(--border-list);
+}
+
+.e-schedule {
+    background-color: var(--bg-card);
+    border-color: var(--border-list) !important;
+}
+
+.e-schedule .e-month-view .e-more-indicator {
+    color: var(--text-body);
+}
+
+.e-schedule .e-month-view .e-work-cells:hover,
+.e-schedule .e-month-agenda-view .e-work-cells:hover {
+    background-color: var(--bg-card);
+    color: var(--text-title);
+}
+
+.e-schedule .e-month-view .e-work-cells,
+.e-schedule .e-month-agenda-view .e-work-cells {
+    color: var(--text-title);
+}
+
+.e-schedule .e-schedule-toolbar .e-toolbar-items {
+    background-color: var(--bg-body);
+}
+
+.e-toolbar .e-tbar-btn {
+    background-color: var(--bg-card);
+    color: var(--text-menu);
+}
+
+.codx-form>.card-header,
+.e-dialog .e-dlg-header .card-header {
+    background-color: var(--bg-card);
+    color: var(--text-menu);
+}
+
+.codx-form>.card-header::after,
+.e-dialog .e-dlg-header .card-header::after {
+    background-image: none;
+}
+
+.codx-form>.card-header::before,
+.e-dialog .e-dlg-header .card-header::before {
+    background-image: none;
+}
+
+.dialog-title,
+.dialog-title.codx-label .dialog-title * {
+    color: var(--text-title);
+}
+
+.nav-pills .nav-link {
+    color: var(--text-body);
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--primary-light);
+    color: var(--text-menu);
+}
+
+.e-float-input input,
+.e-float-input textarea,
+.e-float-input.e-control-wrapper input,
+.e-float-input.e-control-wrapper textarea {
+    border-color: var(--border-gray) !important;
+}
+
+.e-input-group:not(.e-success):not(.e-warning):not(.e-error),
+.e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
+    border-color: var(--border-gray) !important;
+}
+
+.e-grid .e-headercell,
+.e-grid .e-detailheadercell {
+    background-color: var(--primary) !important;
+}
+
+.e-row:hover .e-rowcell {
+    background-color: var(--primary-darker) !important;
+}
+
+.e-grid .e-rowcell {
+    border-color: var(--border-list) !important;
+}
+
+.e-grid .e-content {
+    background-color: var(--bg-card) !important;
+}
+
+.e-pane,
+.e-diagram {
+    background-color: var(--bg-card) !important;
+}
+
+a {
+    color: var(--text-body);
+}
+
+.action-menu,
+.has-action-menu codx-mfunc {
+    background-color: var(--primary-light) !important;
+}
+
+.bg-secondary {
+    background-color: var(--bg-card) !important;
+}
+
+//end dark
