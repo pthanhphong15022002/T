@@ -3,7 +3,7 @@
   [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo, tabReminder]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
-      
+
       <div class="row">
         <div class="col-4 form-group">
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
@@ -268,44 +268,44 @@
           </codx-input>
         </div>
         <div class="d-flex flex-column justify-content-center align-items-center me-5">
-          <span class="icon-close" style="visibility:hidden"></span>        
+          <span class="icon-close" style="visibility:hidden"></span>
         </div>
       </div>
 
       <div class="d-flex align-items-center mb-4 pb-2 position-relative" *ngFor="let item of attendeesList">
-        
-          <div class="symbol symbol-30px symbol-circle me-4">
-            <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
-            <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
-              <span popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
-                autoClose="outside" class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
-                style="bottom: -5px;right:-4px">
-  
-              </span>
-            </div>
+
+        <div class="symbol symbol-30px symbol-circle me-4">
+          <codx-img [width]="30" [objectId]="item.userID" objectType="AD_Users"></codx-img>
+          <div role="button" class="pe-auto" (click)="showPopover(p, item.userID)">
+            <span popoverClass="userPopoverClass" [ngbPopover]="popoverSelectRoles" placement="right" #p="ngbPopover"
+              autoClose="outside" class="position-absolute" inlineSVG="./assets/themes/ep/default/img/{{ item.icon }}"
+              style="bottom: -5px;right:-4px">
+
+            </span>
           </div>
-  
-          <div class="d-flex flex-column flex-grow-1">
-            <div class="text-dark fw-bold fs-6 fw-bolder">
-              {{ item.userName }}
-            </div>
-            <div>
-              <span class="text-muted">{{
-                item.roleType | vll: "EP009":"text" | async
-                }}</span>
-            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-grow-1">
+          <div class="text-dark fw-bold fs-6 fw-bolder">
+            {{ item.userName }}
           </div>
-  
-          <div class="d-flex flex-column justify-content-center align-items-center me-5">
-            <codx-input type="checkbox" [checked]="item.optional"
-              (valueChange)="attendeesCheckChange($event, item.userID)">
-            </codx-input>          
+          <div>
+            <span class="text-muted">{{
+              item.roleType | vll: "EP009":"text" | async
+              }}</span>
           </div>
-  
-          <div class="d-flex flex-column justify-content-center align-items-center me-5">
-            <span class="icon-close" role="button" (click)="deleteAttender(item.userID)"></span>        
-          </div>
-        
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center me-5">
+          <codx-input type="checkbox" [checked]="item.optional"
+            (valueChange)="attendeesCheckChange($event, item.userID)">
+          </codx-input>
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-center me-5">
+          <span class="icon-close" role="button" (click)="deleteAttender(item.userID)"></span>
+        </div>
+
       </div>
     </ng-container>
   </ng-template>
@@ -382,11 +382,11 @@
         </codx-input>
       </div>
 
-      <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-        <div class="col-10">
+      <div class="d-flex justify-content-start align-items-center">
+        <div class="w-100">
           <codx-label fiedName="Repeat" [formModel]="form.formModel"></codx-label>
         </div>
-        <div class="col-2 d-flex justify-content-end">
+        <div class="ms-6">
           <codx-input #checkbox type="switch" field="repeat" [checked]="data?.repeat" [crrValue]="data?.repeat"
             (valueChange)="valueChange($event)">
           </codx-input>
