@@ -1131,7 +1131,6 @@ export class CalendarNotesComponent
               else if (transType == 'EP_BookingCars')
                 this.EP_BookingCars = this.EP_BookingCarsTemp;
           }
-          // this.componentRef.destroy();
           if (value == '0') {
             this.dataResourceModel = this.dataResourceModel.filter(
               (x) => x.transType != transType
@@ -1227,11 +1226,7 @@ export class CalendarNotesComponent
                 ...lstTemp,
               ];
           }
-          // if (this.typeCalendar == 'month' && this.calendar) {
-          //   this.calendar.refresh();
-          //   this.calendar.value = this.FDdate;
-          // } else this.setEventWeek();
-          // this.codxShareSV.dataResourceModel.next(this.dataResourceModel);
+        
         }
       });
   }
