@@ -620,33 +620,33 @@ export class CodxEpService {
       'EPParameters'
     );
   }
-  getEPRoomSetting() {
+  getEPRoomSetting(category:any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
-      'GetByModuleAsync',
-      'EPRoomParameters'
+      'GetByModuleWithCategoryAsync',
+      ['EPRoomParameters',category]
     );
   }
 
-  getEPCarSetting() {
+  getEPCarSetting(category:any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
-      'GetByModuleAsync',
-      'EPCarParameters'
+      'GetByModuleWithCategoryAsync',
+      ['EPCarParameters',category]
     );
   }
 
-  getEPStationerySetting() {
+  getEPStationerySetting(category:any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
-      'GetByModuleAsync',
-      'EPStationeryParameters'
+      'GetByModuleWithCategoryAsync',
+      ['EPStationeryParameters',category]
     );
   }
   //#endregion

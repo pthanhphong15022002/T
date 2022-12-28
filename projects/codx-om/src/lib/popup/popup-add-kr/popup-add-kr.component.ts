@@ -128,7 +128,7 @@ export class PopupAddKRComponent extends UIComponent {
 
   //-----------------------Base Event------------------------//
 
-  valueChange(evt: any) {
+  valuePlanChange(evt: any) {
     if (evt && evt.field) {
       if (this.kr.plan == OMCONST.VLL.Plan.Month) {
         this.planMonth[evt.field] = evt.data;
@@ -140,6 +140,12 @@ export class PopupAddKRComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+  valueChange(evt: any) {
+    if (evt && evt.field) {
+      this.kr[evt.field]=evt.data;      
+    }
+    this.detectorRef.detectChanges();
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
@@ -165,7 +171,7 @@ export class PopupAddKRComponent extends UIComponent {
     this.kr.approveStatus='1';
     this.kr.approveControl='1';
     this.kr.okrType=OMCONST.VLL.OKRType.KResult;
-    this.kr.parentID = '2fe69da4-7217-11ed-b6e9-d89ef34ba7ae';
+    this.kr.transID = this.dataOKRPlans.recID;
     //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);

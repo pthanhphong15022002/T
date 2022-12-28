@@ -294,7 +294,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
           this.formModel
         );
       }
-
+      let bDay=new Date(this.dialogAddBookingStationery.value.bookingOn);
+      let tmpDay= new Date();
+      if(bDay< new Date(tmpDay.getFullYear(),tmpDay.getMonth(),tmpDay.getDate(),0,0,0,0)){        
+        this.notificationsService.notifyCode('TM036');
+        this.saveCheck = false;
+        return;
+      }
+      
       if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
         this.dialogAddBookingStationery.patchValue({
           reasonID: this.dialogAddBookingStationery.value.reasonID[0],
