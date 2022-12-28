@@ -1310,12 +1310,16 @@ export class ProcessStepsComponent
   }
 
   closeMFTypeA() {
-    this.hideMoreFC = false;
-    this.hideMoreFCChild = true;
+    if(this.isEdit){
+      this.hideMoreFC = false;
+      this.hideMoreFCChild = true;
+    }
   }
   openMFTypeA() {
-    this.hideMoreFC = true;
-    this.hideMoreFCChild = false;
+    if(this.isEdit){
+      this.hideMoreFC = true;
+      this.hideMoreFCChild = false;
+    }
   }
 
   // showAllparent(text) {
