@@ -1500,3 +1500,7 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 .user-selected .e-list-item.e-hover {
   background-color: transparent !important;
 }
+
+.stepper-body codx-attachment .overflow-auto.mh-200px {
+  max-height: none !important;
+}
