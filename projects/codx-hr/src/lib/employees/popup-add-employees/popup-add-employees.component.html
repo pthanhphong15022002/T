@@ -12,7 +12,7 @@
 <ng-template #tabInfoPersonal>
   <div id="InfoPersonal">
     <div class="text-primary mb-3 fw-bold">
-      <codx-label name="lblGeneralInfo" default="Thông tin chung">
+      <codx-label [formModel]="form.formModel" name="lblGeneralInfo" default="Thông tin chung">
       </codx-label>
     </div>
   </div>
@@ -20,12 +20,12 @@
     <div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="EmployeeID" default="Mã nhân viên">
+          <codx-label [formModel]="form.formModel" fiedName="EmployeeID" default="Mã nhân viên">
           </codx-label>
           <codx-input
-            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             [disabled]="paramaterHR?.stop ? false:true"
-            [crrValue]="employee.employeeID" 
             field="employeeID"
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -35,11 +35,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="EmployeeName" default="Tên nhân viên">
+          <codx-label [formModel]="form.formModel" fiedName="EmployeeName" default="Tên nhân viên">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
-            [crrValue]="employee.employeeName" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="employeeName"
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -49,24 +49,24 @@
     <div class="row">
       <div class="col">
         <div class="form-group gender-control">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Gender" default="Giới tính">
+          <codx-label [formModel]="form.formModel" fiedName="Gender" default="Giới tính">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
-            field="Gender" 
-            [crrValue]="employee.gender" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
+            field="gender" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Birthday" default="Ngày sinh">
+          <codx-label [formModel]="form.formModel" fiedName="Birthday" default="Ngày sinh">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="birthday" 
-            [crrValue]="employee.birthday" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
@@ -74,11 +74,11 @@
     </div>
     <div class="row">
       <div class="form-group">
-        <codx-label [formModel]="dialogRef.formModel" fiedName="BirthPlace" default="Nơi sinh">
+        <codx-label [formModel]="form.formModel" fiedName="BirthPlace" default="Nơi sinh">
         </codx-label>
         <codx-input
-          [formModel]="dialogRef.formModel"
-          [crrValue]="employee.birthPlace"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel"
           field="birthPlace" 
           (valueChange)="dataChange($event)">
         </codx-input>
@@ -87,24 +87,24 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Phone" default="Điện thoại">
+          <codx-label [formModel]="form.formModel" fiedName="Phone" default="Điện thoại">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="phone" 
-            (valueChange)="dataChange($event)"
-            [crrValue]="employee.phone">
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Email" default="Email cá nhân"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="Email" default="Email cá nhân"></codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="personalEmail" 
-            (valueChange)="dataChange($event)"
-            [crrValue]="employee?.personalEmail">
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
@@ -112,13 +112,13 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Street" default="Địa chỉ thường trú">
+          <codx-label [formModel]="form.formModel" fiedName="Street" default="Địa chỉ thường trú">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="street" 
-            (valueChange)="dataChange($event)"
-            [crrValue]="employee.street">
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
@@ -126,12 +126,13 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="FullAddress" default="Địa chỉ tạm trú">
+          <codx-label [formModel]="form.formModel" fiedName="FullAddress" default="Địa chỉ tạm trú">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" field="fullAddress"
-            (valueChange)="dataChange($event)" 
-            [crrValue]="employee?.fullAddress">
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
+            field="fullAddress"
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
@@ -142,18 +143,18 @@
 <ng-template #tabInfoEmploy>
   <div id="InfoEmploy">
     <div class="text-primary mb-3 fw-bold">
-      <codx-label [formModel]="dialogRef.formModel" name="lblEmployee" default="Nhân viên"></codx-label>
+      <codx-label [formModel]="form.formModel" name="lblEmployee" default="Nhân viên"></codx-label>
     </div>
   </div>
   <div class="row-group">
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Chức danh công việc">
+          <codx-label [formModel]="form.formModel" fiedName="PositionID" default="Chức danh công việc">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"  
-            [crrValue]="employee.positionID"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"  
             field="positionID" 
             [virtual]="{itemHeight:100}"
             [popupSettings]="{ width: '300px' }" 
@@ -165,11 +166,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="OrgUnitID" default="Bộ phận">
+          <codx-label [formModel]="form.formModel" fiedName="OrgUnitID" default="Bộ phận">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
-            [crrValue]="employee.orgUnitID"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="orgUnitID" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -179,12 +180,12 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="DepartmentID" default="Phòng ban">
+          <codx-label [formModel]="form.formModel" fiedName="DepartmentID" default="Phòng ban">
           </codx-label>
           <codx-input 
-            [crrValue]="employee.departmentID"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="departmentID" 
-            [formModel]="dialogRef.formModel"
             (valueChange)="dataChange($event)" >
           </codx-input>
         </div>
@@ -193,11 +194,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="DivisionID" default="Khối">
+          <codx-label [formModel]="form.formModel" fiedName="DivisionID" default="Khối">
           </codx-label>
           <codx-input 
-            [crrValue]="employee.divisionID" 
-            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="divisionID" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -207,24 +208,24 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="joinedOn" 
-            [crrValue]="employee.joinedOn" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
+          <codx-label [formModel]="form.formModel" fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             [disabled]="action!='edit'"
             field="hiredOn" 
-            [crrValue]="employee.hiredOn" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
@@ -244,23 +245,23 @@
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="IdCardNo" default="CMND/CCCD">
+          <codx-label [formModel]="form.formModel" fiedName="IdCardNo" default="CMND/CCCD">
           </codx-label>
           <codx-input 
             field="idCardNo" 
-            [formModel]="dialogRef.formModel"
-            (valueChange)="dataChange($event)"
-            [crrValue]="employee.idCardNo">
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="IssuedOn" default="Ngày cấp"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="IssuedOn" default="Ngày cấp"></codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="issuedOn" 
-            [crrValue]="employee.issuedOn" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
@@ -269,10 +270,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="IssuedBy" default="Nơi cấp"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="IssuedBy" default="Nơi cấp"></codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
-            [crrValue]="employee.issuedBy"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="issuedBy" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -282,11 +283,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="MaritalStatus" default="Tình trạng hôn nhân">
+          <codx-label [formModel]="form.formModel" fiedName="MaritalStatus" default="Tình trạng hôn nhân">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
-            [crrValue]="employee.maritalStatus"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="maritalStatus" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -294,11 +295,11 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Nationality" default="Quốc tịch">
+          <codx-label [formModel]="form.formModel" fiedName="Nationality" default="Quốc tịch">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
-            [crrValue]="employee.nationality"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="nationality"
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -308,11 +309,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="EthnicGroup" default="Dân tộc">
+          <codx-label [formModel]="form.formModel" fiedName="EthnicGroup" default="Dân tộc">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"
-            [crrValue]="employee.ethnicGroup"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="ethnicGroup" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -320,10 +321,10 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Religion" default="Tôn giáo"></codx-label>
+          <codx-label [formModel]="form.formModel" fiedName="Religion" default="Tôn giáo"></codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
-            [crrValue]="employee.religion"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="religion" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -333,11 +334,11 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Education" default="Trình độ văn hóa">
+          <codx-label [formModel]="form.formModel" fiedName="Education" default="Trình độ văn hóa">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
-            [crrValue]="employee.education"
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="education" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -345,11 +346,11 @@
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="Degree" default="Trình độ chuyên môn">
+          <codx-label [formModel]="form.formModel" fiedName="Degree" default="Trình độ chuyên môn">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel"  
-            [crrValue]="employee.degree" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"  
             field="degree" 
             (valueChange)="dataChange($event)">
           </codx-input>
@@ -362,7 +363,7 @@
 <ng-template #tabInfoLaw>
   <div id="InfoLaw">
     <div class="text-primary mb-3 fw-bold">
-      <codx-label [formModel]="dialogRef.formModel" name="lblJuridical" default="Thông tin pháp lý">
+      <codx-label [formModel]="form.formModel" name="lblJuridical" default="Thông tin pháp lý">
       </codx-label>
     </div>
   </div>
@@ -370,24 +371,24 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="PitNumber" default="Mã số thuế">
+          <codx-label [formModel]="form.formModel" fiedName="PitNumber" default="Mã số thuế">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="pitNumber" 
-            (valueChange)="dataChange($event)"
-            [crrValue]="employee.pitNumber">
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="PitIssuedOn" default="Ngày cấp">
+          <codx-label [formModel]="form.formModel" fiedName="PitIssuedOn" default="Ngày cấp">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="pitIssuedOn" 
-            [crrValue]="employee.pitIssuedOn" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
@@ -396,24 +397,24 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="SiRegisterNo" default="Mã số BHXH">
+          <codx-label [formModel]="form.formModel" fiedName="SiRegisterNo" default="Mã số BHXH">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel"
             field="siRegisterNo"
-            (valueChange)="dataChange($event)" 
-            [crrValue]="employee.siRegisterNo">
+            (valueChange)="dataChange($event)">
           </codx-input>
         </div>
       </div>
       <div class="col">
         <div class="form-group">
-          <codx-label [formModel]="dialogRef.formModel" fiedName="SiRegisterOn" default="Ngày cấp">
+          <codx-label [formModel]="form.formModel" fiedName="SiRegisterOn" default="Ngày cấp">
           </codx-label>
           <codx-input 
-            [formModel]="dialogRef.formModel" 
+            [Group]="form.formGroup"
+            [formModel]="form.formModel" 
             field="siRegisterOn"
-            [crrValue]="employee.siRegisterOn" 
             (valueChange)="dataChange($event)">
           </codx-input>
         </div>
@@ -425,7 +426,7 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
-      <codx-label [formModel]="dialogRef.formModel" fiedName="lblSave" default="Lưu">
+      <codx-label [formModel]="form.formModel" fiedName="lblSave" default="Lưu">
       </codx-label>
     </button>
   </div>

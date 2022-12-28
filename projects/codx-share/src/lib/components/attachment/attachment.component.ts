@@ -452,7 +452,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(this.dataSelected)  this.objectId = this.dataSelected.recID;
+    if(this.dataSelected && !this.objectId)  this.objectId = this.dataSelected.recID;
     if (this.objectId) {
       this.dataRequest.page = 1;
       this.dataRequest.pageSize = this.pageSize;

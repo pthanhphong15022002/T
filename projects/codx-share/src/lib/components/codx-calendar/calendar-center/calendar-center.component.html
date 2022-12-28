@@ -8,7 +8,7 @@
 </codx-views>
 
 <ng-template #cellTemplate let-data>
-  <div [innerHtml]="getCellContent(data?.date)"></div>
+  <div [innerHtml]="getCellContent(data?.calendarDate)"></div>
 </ng-template>
 
 <ng-template #contentTmp let-data>
@@ -420,7 +420,6 @@
     <div>
       <div class="d-flex mb-2">
         <div class="d-flex text-dark me-6">
-          <!-- <codx-label default="Thành viên" class="fw-bold me-4"> </codx-label> -->
           <div class="d-flex justify-content-end">
             <codx-imgs
               [objectId]="selectBookingAttendeesCar"
@@ -533,7 +532,7 @@
   </ng-container>
   <ng-container #WP_Notes *ngIf="data?.transType == 'WP_Notes'">
     <div class="checkbox-list">
-      <div *ngIf="data?.data.memo != null">
+      <div *ngIf="data?.data.noteType == 'text'">
         <div
           *ngIf="data?.data.isPin == true || data?.data.isPin == '1'"
           class="active"
@@ -544,7 +543,7 @@
           <span [innerHTML]="data?.data.memo"></span>
         </div>
       </div>
-      <div *ngIf="data?.data.memo == null">
+      <div *ngIf="data?.data.noteType != 'text'">
         <div
           *ngIf="data?.data.isPin == true || data?.data.isPin == '1'"
           class="active"
@@ -552,7 +551,7 @@
           <span class="icon-push_pin icon-16" type="button"></span>
         </div>
         <div class="d-flex flex-column note-option">
-          <div *ngFor="let itemList of data?.data.CheckList; index as i">
+          <div *ngFor="let itemList of data?.data.checkList; index as i">
             <div *ngIf="itemList.status == null">
               <div class="my-2 note-list">
                 <ul>
@@ -609,7 +608,10 @@
       class="d-flex flex-column w-100"
       (click)="getMoreInfoBookingRooms(data.transID)"
     >
-      <span>{{ showHour(data.data.startDate) }} - {{ showHour(data.data.endDate) }}</span>
+      <span
+        >{{ showHour(data.data.startDate) }} -
+        {{ showHour(data.data.endDate) }}</span
+      >
       <span
         class="fw-bold"
         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
@@ -617,11 +619,46 @@
       >
     </div>
   </ng-container>
-  <ng-container #other *ngIf="data.transType != 'EP_BookingCars'">
+  <ng-container
+    *ngIf="data.transType == 'TM_Tasks' || data.transType == 'CO_Meetings'"
+  >
     <span
       class="fw-bold"
       style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
       >{{ data.title }}</span
     >
+  </ng-container>
+  <ng-container *ngIf="data.transType == 'WP_Notes'">
+    <span
+      *ngIf="data?.noteType == 'text'"
+      class="fw-bold"
+      style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis"
+      >{{ data?.memo }}</span
+    >
+    <div *ngIf="data?.noteType != 'text'">
+      <div *ngFor="let itemList of data?.checkList; index as i">
+        <div *ngIf="itemList.status == null">
+          <div class="my-2 note-list">
+            <ul>
+              <li>{{ itemList.listNote }}</li>
+            </ul>
+          </div>
+        </div>
+        <div *ngIf="itemList.status != null">
+          <div class="my-2 note-list">
+            <codx-input
+              #checkBoxNote
+              id="checkBoxNote"
+              type="checkbox"
+              label="{{ itemList.listNote }}"
+              [disabled]="false"
+              [checked]="itemList?.status == 'true' || itemList?.status == '1'"
+              labelPosition="After"
+              class="test-check"
+            ></codx-input>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
 </ng-template>

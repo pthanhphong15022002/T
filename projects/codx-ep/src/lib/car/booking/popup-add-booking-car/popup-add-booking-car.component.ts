@@ -825,7 +825,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     return true;
   }
   startDateChange(evt: any) {
-    if (!evt.field || !evt.data) {
+    if (!evt.field ) {
       return;
     }
     this.data.startDate = new Date(evt.data.fromDate);
@@ -868,7 +868,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
     // }
   }
   endDateChange(evt: any) {
-    if (!evt.field || !evt.data) {
+    if (!evt.field ) {
       return;
     }
     this.data.endDate = new Date(evt.data.fromDate);
