@@ -68,6 +68,7 @@ export class ImageGridComponent extends ErmComponent implements OnInit {
         'GetFilesByIbjectIDAsync',
         this.objectID
       ).subscribe((result: any[]) => {
+        debugger
         if (result.length > 0) {
           result.forEach((f: any) => {
             switch(f['referType'])

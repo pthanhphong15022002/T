@@ -165,23 +165,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
                 this.gridViewSetup = grd;
               }
             });
-          // get more function
-          // this.cache
-          //   .moreFunction(func.formName, func.gridViewName)
-          //   .subscribe((mFC: any) => {
-          //     if (mFC) {
-          //       //this.defaultMoreFC = mFC;
-          //       if (typeof mFC == 'object' && !Array.isArray(mFC)) {
-          //         for (let i of Object.keys(mFC)) {
-          //           this.defaultMoreFC.push(mFC[i]);
-          //         }
-          //       }
-          //       else if(Array.isArray(mFC))
-          //       {
-          //         this.defaultMoreFC = mFC;
-          //       }
-          //     }
-          //   });
         }
       });
     }

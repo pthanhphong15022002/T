@@ -3796,7 +3796,8 @@
                             [formModel]="formModel"
                             [typeMF]="'hover'"
                             [titleTmp]="tmplateECertificateTitle"
-                            [icoTitleCss]="'icon-list_alt'"
+                            [titleCss]="'text-dark fw-bold'"
+                            [icoTitleCss]="'icon-list_alt icon-14'"
                             [subTitleTmp]="tmplateECertificateMenuList"
                             cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                             typeMF="hover"
@@ -3804,12 +3805,12 @@
                           ></codx-temp-full>
 
                           <ng-template #tmplateECertificateTitle let-data>
-                            <div class="d-flex align-items-center ">
+                            <div class="d-flex align-items-center">
                               <i
-                                class="icon-i-arrow-down-left-circle-fill icon-16 me-1 "
+                                class="icon-i-arrow-down-left-circle-fill icon-14 me-1 "
                               ></i>
-                              {{ data.certificateID
-                              }}{{ data.certificateGradeID }}
+                              <span class="text-dark fw-bold">{{ data.certificateID
+                              }}{{ data.certificateGradeID }}</span>
                             </div>
                           </ng-template>
 
