@@ -222,22 +222,22 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
         return;
       if (res?.fromDate && res?.toDate) {
+        if (res?.type) this.typeNavigate = res.type;
+        if (this.typeNavigate == 'Year') this.dateChange = this.FDdate;
+        else this.dateChange = res.fromDate;
+        if (this.typeNavigate == 'Year' && res.type == undefined) {
+          this.dateChange = res?.toDate;
+          return;
+        }
         if (
-          res.type == 'Week' ||
-          res.type == 'WorkWeek' ||
-          (this.typeNavigate == undefined &&
-            this.typeNavigate != 'Month' &&
-            this.typeNavigate != 'Year')
+          this.typeNavigate != 'Month' &&
+          this.typeNavigate != 'MonthAgenda'
         ) {
-          let date: any = moment(res.fromDate).subtract('day');
-          this.dateChange = date._d;
-        } else this.dateChange = res.fromDate;
-        this.typeNavigate = res.type;
-        this.change.detectChanges();
-        let myInterVal = setInterval(() => {
-          clearInterval(myInterVal);
-          this.loadData();
-        }, 100);
+          let myInterVal = setInterval(() => {
+            clearInterval(myInterVal);
+            this.loadData();
+          }, 100);
+        }
       }
     });
   }
@@ -263,37 +263,40 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
           return;
         }
       });
-      if (
-        this.typeNavigate == 'Week' ||
-        this.typeNavigate == 'WorkWeek' ||
-        (this.typeNavigate == undefined &&
-          this.typeNavigate != 'Month' &&
-          this.typeNavigate != 'Year')
-      ) {
+      if (this.typeNavigate == 'Week' || this.typeNavigate == 'WorkWeek') {
         if (changeWeek && this.calendar_mini) {
           let eleCalendar = this.calendar_mini.element as HTMLElement;
           this.getDayOfWeek(eleCalendar);
           let ele = document.getElementsByTagName('codx-schedule')[0];
           if (ele) {
             let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-            cmp.selectedDate = args.value;
+            cmp.selectedDate = new Date(args.value);
             cmp.isNavigateInside = true;
           }
+        }
+      }
+      if (this.typeNavigate == 'Day') {
+        let ele = document.getElementsByTagName('codx-schedule')[0];
+        if (ele) {
+          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+          cmp.selectedDate = new Date(args.value);
+          cmp.isNavigateInside = true;
         }
       }
     }
   }
 
   changeNewMonth(args: any) {
+    this.FDdate = args.date;
     let ele = document.getElementsByTagName('codx-schedule')[0];
     if (ele) {
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      cmp.selectedDate = args.date;
+      cmp.selectedDate = new Date(args.date);
       cmp.isNavigateInside = true;
-      // let myInterVal = setInterval(() => {
-      //   clearInterval(myInterVal);
-      //   this.loadData();
-      // }, 100);
+      let myInterVal = setInterval(() => {
+        clearInterval(myInterVal);
+        this.loadData();
+      }, 100);
     }
   }
 
