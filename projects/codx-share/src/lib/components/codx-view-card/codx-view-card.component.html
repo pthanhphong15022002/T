@@ -1,0 +1,57 @@
+<div class="d-flex flex-column flex-grow-1 justify-content-center align-items-center pt-5">
+    <ng-container *ngIf="card.backgroundColor;else havePattern">
+      <div class="card-img w-300px h-450px" [style.background]="card.backgroundColor"
+        style="background-size: 100% auto">
+        <div class="card-body text-center">
+            <div color="bg-transparent" class="text-center">
+                <h2 class="fw-bolderer mb-6 mt-3" [style.color]="card.headerColor">
+                    {{ card.cardType | vll: "L1422":"text" | async }}
+                </h2>
+            </div>
+            <div class="d-flex justify-content-center align-items-center">
+                <codx-img [width]="40" [objectId]="card.senderID" [objectName]="card.senderName" [referType]="'avt'" objectType="AD_Users">
+                </codx-img>
+            <div class="w-50px text-center ion-justify-content-between">
+                <img class="icon-mail ion-margin-top-8" src="/assets/themes/fd/default/img/img_SendCard.svg" />
+            </div>
+            <div>
+                <codx-img [width]="40" [referType]="'avt'" [objectId]="card.receiverID" [objectName]="card.receiverName" objectType="AD_Users">
+                </codx-img>
+            </div>
+            </div>
+            <div class="text-dark text-feed mt-6">
+                <div [innerHTML]="card.situation" [style.color]="card.textColor"></div>
+            </div>
+            <div class="d-flex align-items-center justify-content-center mt-6">
+                <ng-container *ngIf="card.rating">
+                    <div class="symbol symbol-30 me-2">
+                        <ng-container *ngIf="card.cardType == '2'">
+                            <img class="w-100" src="/assets/themes/fd/default/img/{{
+                                card.rating | vll: 'L1419':'icon' | async
+                            }}" />
+                        </ng-container>
+                        <ng-template>
+                            <img class="w-100" src="/assets/themes/fd/default/img/{{
+                                card.rating | vll: 'L1424':'icon' | async
+                            }}" />
+                        </ng-template>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="card.hasGift">
+                    <div class="">
+                        <img src="/assets/themes/fd/default/img/img_HasGifts.svg" />
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="card.hasPoint">
+                    <div class="ms-2">
+                        <img src="/assets/themes/fd/default/img/img_HasCoins.svg" />
+                    </div>
+                </ng-container>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #havePattern>
+        <!-- để hỏi lại bên DM chổ get file -->
+    </ng-template>
+</div>

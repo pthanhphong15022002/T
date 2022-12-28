@@ -158,7 +158,8 @@ export class AddEditComponent implements OnInit {
 
   addRow() {
     let idx = this.grid.dataSource.length;
-    this.grid.addRow(null, idx);
+    let data = this.grid.formGroup.value;
+    this.grid.addRow(data, idx);
   }
 
   cellChanged(e) {

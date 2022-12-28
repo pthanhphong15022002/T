@@ -279,8 +279,12 @@ export class PopupAddPostComponent implements OnInit {
           }
           this.data = res;
           this.data.files = this.codxFile.files;
-          this.notifySvr.notifyCode('WP021');
           this.dialogRef.close(this.data);
+        }
+        else
+        {
+          this.dialogRef.close(null);
+          this.notifySvr.notifyCode('SYS021');
         }
     });
   }
