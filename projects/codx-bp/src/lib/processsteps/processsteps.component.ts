@@ -777,7 +777,7 @@ export class ProcessStepsComponent
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
-            this.edit(data,!this.isEdit);            
+            this.edit(data,true);            
           });
       });
     }
@@ -1321,6 +1321,7 @@ export class ProcessStepsComponent
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
+      this.isHover = data?.recID;
       this.dataHover = data;
       p.open();
     } else {

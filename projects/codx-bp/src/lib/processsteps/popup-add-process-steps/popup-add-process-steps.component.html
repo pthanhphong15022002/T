@@ -101,11 +101,11 @@
         <div class="d-flex justify-content-between align-items-center">
           <div style="width: 100%">
             <codx-input [field]="stepType == 'E' ? 'stepName' : 'memo'" [formModel]="form.formModel"
-              [Group]="form.formGroup" (valueChange)="valueChange($event)" disabled="true">
+              [Group]="form.formGroup" (valueChange)="valueChange($event)" [disabled] ="isView">
             </codx-input>
           </div>
 
-          <button class="button-mail" *ngIf="stepType == 'E'" (click)="handelMail()">
+          <button class="button-mail" *ngIf="stepType == 'E'" (click)="handelMail()" disabled="isView" [ngStyle]="isView ? {'background': '#e9ecef'} : {}">
             <span class="icon-email icon-20 text-primary-600 py-2"></span>
           </button>
         </div>
