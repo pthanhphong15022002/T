@@ -150,6 +150,7 @@ export class ProcessStepsComponent
   dataClick: any;
   dataColums = [];
   isHover = null;
+  listCountActivities:number =0;
 
   constructor(
     inject: Injector,
@@ -204,6 +205,7 @@ export class ProcessStepsComponent
     this.resourceKanban.method = 'GetColumnsKanbanAsync';
     this.resourceKanban.dataObj = this.dataObj;
     this.listCountPhases = this.process.phases;
+    this.listCountActivities = this.process.activities;
     var items = [];
     if (this.childFunc && this.childFunc.length > 0) {
       items = this.childFunc.map((obj) => {
@@ -705,7 +707,7 @@ export class ProcessStepsComponent
   //#region event
   click(evt: ButtonModel) {
     this.isBlockClickMoreFunction();
-    if (this.listCountPhases <= 0 && evt.id != 'P') {
+    if (this.listCountPhases <= 0 && evt.id != 'P' && this.listCountActivities ==0) {
       return this.notiService.notify(this.msgBP001);
     }
     if (
@@ -777,7 +779,7 @@ export class ProcessStepsComponent
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
-            this.edit(data,true);            
+            this.edit(data,true);
           });
       });
     }
