@@ -180,7 +180,16 @@ export class CodxEpService {
       resolve(obj);
     });
   }
-
+  getListAvailableResource(resourceType: string,startTime:any, endTime:any) {
+    return this.api.execSv(
+      'EP',
+      'ERM.Business.EP',
+      'ResourcesBusiness',
+      'GetListAvailableResourceAsync',
+      [resourceType,startTime,endTime]
+    );
+  }
+  
   deleteFile(objectID, objectType, delForever) {
     return this.api
       .execSv(
@@ -510,14 +519,15 @@ export class CodxEpService {
   getAvailableResources(
     resourceType: string,
     startDate: string,
-    endDate: string
+    endDate: string,
+    recID:string
   ) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
       'GetListAvailableResourceAsync',
-      [resourceType, startDate, endDate]
+      [resourceType, startDate, endDate,recID]
     );
   }
 

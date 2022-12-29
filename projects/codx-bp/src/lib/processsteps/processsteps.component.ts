@@ -257,7 +257,7 @@ export class ProcessStepsComponent
       },
       {
         id: '9',
-        type: ViewType.content,
+        type: ViewType.chart,
         active: true,
         sameData: false,
         model: {
@@ -760,6 +760,26 @@ export class ProcessStepsComponent
 
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
+  }
+  dblClick(e,data){
+    e.stopPropagation() 
+    let stepType = data.stepType;
+    this.titleAction = this.getTitleAction("", data.stepType);
+    let funcMenu = this.childFunc.find((x) => x.id == stepType);
+    if (funcMenu) {
+      this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
+        this.cache
+          .gridViewSetup(funcMenu.formName, funcMenu.gridViewName)
+          .subscribe((res) => {
+            this.formModelMenu = this.view?.formModel;
+            this.formModelMenu.formName = funcMenu.formName;
+            this.formModelMenu.gridViewName = funcMenu.gridViewName;
+            this.formModelMenu.funcID = funcMenu.funcID;
+            this.formModelMenu.entityName = funcMenu.entityName;
+            this.edit(data);            
+          });
+      });
+    }
   }
 
   clickMF(e: any, data?: any) {

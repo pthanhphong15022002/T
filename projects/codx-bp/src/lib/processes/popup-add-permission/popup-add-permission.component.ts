@@ -91,11 +91,20 @@ export class PopupAddPermissionComponent implements OnInit {
     this.per.byPermission = this.byPermission;
     this.per.ccPermission = this.ccPermission;
     for (var i = 0; i < this.per.toPermission.length; i++) {
+      if (!this.isShare) {
+        var check =
+          this.per.toPermission[i].objectID == this.process.owner
+            ? true
+            : false;
+        if (check) {
+          //Chưa có mssg code
+          this.notificationsService.notify(`${this.per.toPermission[i].objectName} đang trùng với chủ quy trình`);
+          return;
+        }
+      }
       if (this.startDate != null && this.endDate != null) {
         if (this.startDate > this.endDate) {
-          this.notificationsService.notifyCode(
-            'BP003'
-          );
+          this.notificationsService.notifyCode('BP003');
           return;
         }
 
@@ -165,12 +174,16 @@ export class PopupAddPermissionComponent implements OnInit {
     if ($event.data != undefined) {
       var data = $event.data;
       var list = [];
-
       for (var i = 0; i < data.length; i++) {
         var item = data[i];
         var perm = new BP_ProcessPermissions();
-        perm.objectName = item.text != null ? item.text : item.objectName;
-        perm.objectID = item.id;
+        if (item.objectType == '1') {
+          perm.objectID = this.process.owner;
+          perm.objectName = this.data.userName;
+        } else {
+          perm.objectID = item.id;
+          perm.objectName = item.text != null ? item.text : item.objectName;
+        }
         perm.objectType = item.objectType;
         perm.read = true;
 
@@ -316,7 +329,7 @@ export class PopupAddPermissionComponent implements OnInit {
   //#endregion
 
   PopoverDetail(p: any, emp) {
-    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
     }
 
@@ -330,8 +343,8 @@ export class PopupAddPermissionComponent implements OnInit {
     this.popupOld = p;
   }
 
-  setTextPopover(text){
-    return (text);
+  setTextPopover(text) {
+    return text;
   }
 
   closePopover() {

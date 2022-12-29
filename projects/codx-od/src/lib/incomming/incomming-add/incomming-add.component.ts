@@ -189,6 +189,7 @@ export class IncommingAddComponent implements OnInit {
           [data, null, null]
         )
         .subscribe((item: any) => {
+          debugger;
           if (item != null && item.length > 0) {
             this.dispatch.owner = item[0].domainUser;
             this.change = this.dispatch.owner;
