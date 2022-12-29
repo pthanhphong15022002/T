@@ -154,7 +154,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   tabContent: any[] = [];
   titleAction = '';
   disableDueDate = false;
-  titleViewTask =""
+  titleViewTask ="Xem"
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
