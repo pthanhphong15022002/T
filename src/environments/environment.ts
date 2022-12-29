@@ -13,10 +13,6 @@ export const environment = {
   office365: '',
   appName: '',
   saas: 0,
-<<<<<<< HEAD
-  tenantFirst: false,
-=======
->>>>>>> 726831c7da36081f4171c26172c8a93b8c3a24a0
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout
   SureMeet: {
