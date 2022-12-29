@@ -99,7 +99,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     }
     this.certificateObj.employeeID = this.employId 
     if(this.actionType === 'add' || this.actionType === 'copy'){
-      this.hrService.AddEmployeeCertificateInfo(this.certificateObj).subscribe(p => {
+      this.hrService.AddECertificateInfo(this.certificateObj).subscribe(p => {
         if(p != null){
           this.certificateObj.recID = p.recID
           this.notify.notifyCode('SYS007')

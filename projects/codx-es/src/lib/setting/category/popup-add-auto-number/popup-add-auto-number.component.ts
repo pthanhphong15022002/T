@@ -119,6 +119,7 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
   }
 
   getVll() {
+    let i = 0;
     this.cache
       .gridViewSetup(this.formModel.formName, this.formModel.gridViewName)
       .subscribe((gv) => {
@@ -127,14 +128,20 @@ export class PopupAddAutoNumberComponent implements OnInit, AfterViewInit {
             .valueList(gv['DateFormat']?.referedValue ?? 'L0088')
             .subscribe((vllDFormat) => {
               this.vllDateFormat = vllDFormat.datas;
-              this.setViewAutoNumber();
+              i++;
+              if(i == 2){
+                this.setViewAutoNumber();
+              }
             });
 
           this.cache
             .valueList(gv['StringFormat']?.referedValue ?? 'L0089')
             .subscribe((vllSFormat) => {
               this.vllStringFormat = vllSFormat.datas;
-              this.setViewAutoNumber();
+              i++;
+              if(i == 2){
+                this.setViewAutoNumber();
+              }
             });
         }
       });

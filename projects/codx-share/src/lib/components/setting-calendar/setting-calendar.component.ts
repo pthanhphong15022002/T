@@ -32,9 +32,6 @@ export class SettingCalendarComponent
 {
   @ViewChild('cellTemplate') cellTemplate: TemplateRef<any>;
   @ViewChild('view') viewOrg!: ViewsComponent;
-  @ViewChild('contentTmp') contentTmp?: TemplateRef<any>;
-  @ViewChild('headerTemp') headerTemp?: TemplateRef<any>;
-  @ViewChild('cardTemplate') cardTemplate?: TemplateRef<any>;
   views: Array<ViewModel> | any = [];
   calendarName: string;
   dayWeek = [];
@@ -57,16 +54,7 @@ export class SettingCalendarComponent
   selectBookingItems = [];
   tempRoomName = '';
   listRoom = [];
-
-  @Input() fields = {
-    id: 'recID',
-    subject: { name: 'memo' },
-    startTime: { name: 'startDate' },
-    endTime: { name: 'endDate' },
-  };
-  @Input() resources!: any;
-  @Input() resourceModel!: any;
-  @Input() funcID: string;
+  funcID: string;
 
   constructor(
     private injector: Injector,
@@ -75,20 +63,14 @@ export class SettingCalendarComponent
     private change: ChangeDetectorRef
   ) {
     super(injector);
-    if (!this.funcID) {
-      this.router.params.subscribe((params) => {
-        if (params) {
-          this.funcID = params['funcID'];
-          this.cache.functionList(this.funcID).subscribe((res) => {
-            if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
-          });
-        }
-      });
-    } else {
-      this.cache.functionList(this.funcID).subscribe((res) => {
-        if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
-      });
-    }
+    this.router.params.subscribe((params) => {
+      if (params) {
+        this.funcID = params['funcID'];
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) this.getParams(res.module + 'Parameters', 'CalendarID');
+        });
+      }
+    });
   }
 
   onInit(): void {
@@ -119,13 +101,7 @@ export class SettingCalendarComponent
         active: true,
         sameData: false,
         model: {
-          eventModel: this.fields,
           template3: this.cellTemplate,
-          template: this.cardTemplate,
-          resources: this.resources,
-          resourceModel: this.resourceModel,
-          template8: this.contentTmp,
-          template6: this.headerTemp,
         },
       },
     ];
@@ -145,129 +121,6 @@ export class SettingCalendarComponent
   sameDayCheck(sDate: any, eDate: any) {
     return moment(new Date(sDate)).isSame(new Date(eDate), 'day');
   }
-  //endRegion EP
-
-  //region EP_BookingCars
-  getResourceNameCar(resourceID: any) {
-    this.tempCarName = '';
-    this.listCar.forEach((r) => {
-      if (r.resourceID == resourceID) {
-        this.tempCarName = r.resourceName;
-      }
-    });
-    return this.tempCarName;
-  }
-
-  getMoreInfoBookingCars(recID: any) {
-    this.selectBookingAttendeesCar = '';
-    this.driverName = ' ';
-    this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
-      if (attendees) {
-        let lstAttendees = attendees;
-        lstAttendees.forEach((element) => {
-          if (element.roleType != '2') {
-            this.selectBookingAttendeesCar =
-              this.selectBookingAttendeesCar + element.userID + ';';
-          } else {
-            this.driverName = this.getDriverName(element.userID);
-          }
-        });
-        if (this.driverName == ' ') {
-          this.driverName = null;
-        }
-        this.change.detectChanges();
-      }
-    });
-  }
-
-  getMoreInfoBookingRooms(recID: any) {
-    this.selectBookingItems = [];
-    this.selectBookingAttendeesRoom = '';
-
-    this.codxShareSV.getListItems(recID).subscribe((item: any) => {
-      if (item) {
-        this.selectBookingItems = item;
-      }
-    });
-    this.codxShareSV.getListAttendees(recID).subscribe((attendees: any) => {
-      if (attendees) {
-        let lstAttendees = attendees;
-        lstAttendees.forEach((element) => {
-          this.selectBookingAttendeesRoom =
-            this.selectBookingAttendeesRoom + element.userID + ';';
-        });
-        this.selectBookingAttendeesRoom;
-      }
-    });
-  }
-
-  getDriverName(resourceID: any) {
-    this.tempDriverName = '';
-    if (this.listDriver.length > 0) {
-      this.listDriver.forEach((r) => {
-        if (r.resourceID == resourceID) {
-          this.tempDriverName = r.resourceName;
-        }
-      });
-    }
-    return this.tempDriverName;
-  }
-  //endRegion EP_BookingCars
-
-  //region EP_BookingRooms
-  getResourceNameRoom(resourceID: any) {
-    this.tempRoomName = '';
-    this.listRoom.forEach((r) => {
-      if (r.resourceID == resourceID) {
-        this.tempRoomName = r.resourceName;
-      }
-    });
-    return this.tempRoomName;
-  }
-  //endRegion EP_BookingRooms
-
-  //region CO
-  getDate(data) {
-    if (data.startDate) {
-      var date = new Date(data.startDate);
-      this.month = this.addZero(date.getMonth() + 1);
-      this.day = this.addZero(date.getDate());
-      var endDate = new Date(data.endDate);
-      let start =
-        this.addZero(date.getHours()) + ':' + this.addZero(date.getMinutes());
-      let end =
-        this.addZero(endDate.getHours()) +
-        ':' +
-        this.addZero(endDate.getMinutes());
-      this.startTime = start + ' - ' + end;
-    }
-    return this.startTime;
-  }
-
-  addZero(i) {
-    if (i < 10) {
-      i = '0' + i;
-    }
-    return i;
-  }
-
-  getResourceID(data) {
-    var resources = [];
-    this.resourceID = '';
-    resources = data.resources;
-    var id = '';
-    if (resources != null) {
-      resources.forEach((e) => {
-        id += e.resourceID + ';';
-      });
-    }
-
-    if (id != '') {
-      this.resourceID = id.substring(0, id.length - 1);
-    }
-    return this.resourceID;
-  }
-  //endRegion CO
 
   getParams(formName: string, fieldName: string) {
     this.settingCalendar.getParams(formName, fieldName).subscribe((res) => {
@@ -370,12 +223,5 @@ export class SettingCalendarComponent
   reloadCalendar() {
     alert('trigger');
     (this.viewOrg.currentView as any).schedule?.scheduleObj?.first?.refresh();
-  }
-
-  onAction(event: any) {
-    if (event?.type == 'navigate') {
-      var obj = { fromDate: event.data.fromDate, toDate: event.data.toDate };
-      this.codxShareSV.dateChange.next(obj);
-    }
   }
 }

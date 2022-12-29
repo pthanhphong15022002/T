@@ -14,8 +14,8 @@
     <div class="form-group">
       <codx-label default="Mục tiêu" fiedName="" [formModel]="form.formModel">
       </codx-label>
-      <codx-input [crrValue]="kr.parentID" type="text">
-        
+      <codx-input type="combobox" [refValue]="'Objectives'" [crrValue]="kr.parentID" 
+      (valueChange)="valueChange($event)" field="parentID">        
       </codx-input>
     </div>
 
@@ -116,7 +116,7 @@
       </div>
 
       <div class="form-group col-6">
-        <codx-label fiedName="Qui định cập nhật dữ liệu" [formModel]="form.formModel">
+        <codx-label fiedName="CheckInMode" [formModel]="form.formModel">
         </codx-label>
         <codx-input
           ControlName="checkInMode"
@@ -128,7 +128,7 @@
 
     </div>
 
-    <div class="row">
+    <!-- <div class="row">
       <div class="form-group col-4">
         <codx-label default="Nguồn dữ liệu" fiedName="" [formModel]="form.formModel">
         </codx-label>
@@ -154,7 +154,7 @@
         <span role="button" class="icon-settings text-primary "></span>
       </div>
       
-    </div>
+    </div> -->
 
     <div class="form-group">
       <codx-label fiedName="Note" [formModel]="form.formModel">
@@ -236,7 +236,7 @@
                   [min]="0"
                   [showSpinButton]="false"
                   [crrValue]="planMonth[i]"
-                  (valueChange)="valueChange($event)"
+                  (valueChange)="valuePlanChange($event)"
                 ></codx-input>               
               </div>
             </div>

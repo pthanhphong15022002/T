@@ -112,6 +112,7 @@ export class AddNoteComponent implements OnInit {
     this.currentDate = dt.data?.currentDate;
     this.maxPinNotes = dt.data?.maxPinNotes;
     this.component = dt.data?.component;
+    this.countNotePin = dt.data?.countNotePin;
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
@@ -137,18 +138,7 @@ export class AddNoteComponent implements OnInit {
       };
       if (this.note.noteType != 'text') this.note.checkList.push(dtt);
     }
-    this.getNumberNotePin();
     this.noteType.text = true;
-  }
-
-  getNumberNotePin() {
-    if (this.data) {
-      this.data.forEach((res) => {
-        if (res.isPin == true || res.isPin == '1') {
-          this.countNotePin++;
-        }
-      });
-    }
   }
 
   ngAfterViewInit() {

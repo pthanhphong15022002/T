@@ -38,7 +38,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   process: any;
   viewMode = '16';
   funcID = 'BPT11'; //testsau klaay từ more ra
-  name = 'ViewList';
+  name = '';
   offset = '75px';
   dialog!: DialogRef;
   data: any;
@@ -50,11 +50,11 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   formModel: any;
   linkFile: any;
   tabControl: TabModel[] = [
-    { name: 'ViewList', textDefault: 'Viewlist', isActive: true, id: 16 },
+    { name: 'ViewList', textDefault: 'Viewlist', isActive: false, id: 16 },
     { name: 'Kanban', textDefault: 'Kanban', isActive: false, id: 6 },
     { name: 'Flowchart', textDefault: 'Flowchart', isActive: false, id: 9 },
   ];
-  tabView :any ;
+  tabView: any;
   formModelFlowChart: FormModel;
   listPhaseName = [];
   childFunc = [];
@@ -86,6 +86,31 @@ export class PopupViewDetailProcessesComponent implements OnInit {
         this.formModelFlowChart = f.formModel;
       }
     });
+
+    this.cache.viewSettings(this.funcID).subscribe((dt) => {
+      if (
+        dt &&
+        dt.length > 0 &&
+        dt.findIndex((x) => x.isDefault == true) != -1
+      ) {
+        this.tabControl.forEach((tabs) => {
+          let view = dt.find((x) => x.view == tabs.id);
+          if (view) {
+            tabs.isActive = view.isDefault;
+            if (tabs.isActive) {
+              this.viewMode = tabs.id.toString();
+              this.name = tabs.name;
+            }
+          }
+        });
+      } else {
+        this.tabControl[0].isActive = true;
+        this.name = this.tabControl[0].name;
+        this.viewMode = this.tabControl[0].id.toString();
+      }
+      this.changeDetectorRef.detectChanges();
+    });
+
     //this.getFlowChart(this.process)
 
     this.bpService
@@ -102,9 +127,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.tabView = this.tabControl.find(
-      (x: TabModel) => x.isActive == true
-    );
+    this.tabView = this.tabControl.find((x: TabModel) => x.isActive == true);
     this.changeDetectorRef.detectChanges();
   }
 
@@ -125,6 +148,7 @@ export class PopupViewDetailProcessesComponent implements OnInit {
       }
     });
     item.isActive = true;
+    this.viewMode = item.id;
     // if(item.id == 6 || item.id == 16){
     this.viewProcessSteps?.chgViewModel(item.id);
     // }

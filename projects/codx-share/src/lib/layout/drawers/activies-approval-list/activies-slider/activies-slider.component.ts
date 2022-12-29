@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
-import { off } from 'process';
+import { ApiHttpService, AuthService, AuthStore, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-activies-slider',
@@ -9,6 +8,7 @@ import { off } from 'process';
 })
 
 export class ActiviesSliderComponent implements OnInit {
+  
   dialog: DialogRef;
   user:any = null;
   lstApproval:any[] = [];
@@ -35,6 +35,7 @@ export class ActiviesSliderComponent implements OnInit {
     private dt:ChangeDetectorRef,
     private notiSV:NotificationsService,
     private auth:AuthStore,
+    private codxService:CodxService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   )
@@ -91,8 +92,20 @@ export class ActiviesSliderComponent implements OnInit {
         this.dt.detectChanges();
       }
     });
+
+    
   }
 
+  //view detail
+  clickViewDetail(item){
+    if(item.transID){
+      let query = {
+        predicate:"RecID=@0",
+        dataValue:item.transID
+      };
+      this.codxService.openUrlNewTab(item.function,"",query);
+    }
+  }
   approvalAsync(recID:string ,transID:string, status:string){
     if(recID && transID && status)
     {
@@ -143,3 +156,4 @@ enum ApprovalStatus {
   approved = "5",
   denied = "4"
 };
+

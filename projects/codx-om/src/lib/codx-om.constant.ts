@@ -17,6 +17,28 @@ export const OMCONST = {
         Team:'OMT03',
         Person:'OMT04',
     },
+    
+    OBFuncID:{
+        Company:'OMT011',
+        Department:'OMT021',
+        Team:'OMT031',
+        Person:'OMT041',
+    },
+
+    KRFuncID:{
+        Company:'OMT012',
+        Department:'OMT022',
+        Team:'OMT032',
+        Person:'OMT042',
+    },
+
+    MFUNCID: {
+        Add:'SYS01',
+        Delete:'SYS02',
+        Edit:'SYS03',
+        Copy:'SYS04',
+    },
+    
     VLL: {
         OKRType:{
             Obj:'O',
@@ -44,13 +66,7 @@ export const OMCONST = {
         
     },
     
-    MFUNCID: {
-        Add:'SYS01',
-        Delete:'SYS02',
-        Edit:'SYS03',
-        Copy:'SYS04',
 
-    },
 
 
 

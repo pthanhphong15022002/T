@@ -138,6 +138,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { PopupSelectTemplateComponent } from './components/codx-dashboard/popup-select-template/popup-select-template.component';
 import { PopupMoreChartComponent } from './components/codx-dashboard/popup-more-chart/popup-more-chart.component';
 import { CodxClearCacheComponent } from './components/codx-clear-cache/codx-clear-cache.component';
+import { CodxCalendarComponent } from './components/codx-calendar/codx-calendar.component';
+import { CalendarCenterComponent } from './components/codx-calendar/calendar-center/calendar-center.component';
+import { CodxViewCardComponent } from './components/codx-view-card/codx-view-card.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -232,7 +235,10 @@ const T_Component: Type<any>[] = [
   CodxHistoryComponent,
   CodxHistoryItemComponent,
   PopupSelectTemplateComponent,
-  PopupMoreChartComponent
+  PopupMoreChartComponent,
+  CodxCalendarComponent,
+  CalendarCenterComponent,
+  CodxViewCardComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -249,6 +255,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     AddEditApprovalStepComponent,
     PopupAddApproverComponent,
     CodxClearCacheComponent,
+    CalendarCenterComponent,
   ],
   imports: [
     CommonModule,

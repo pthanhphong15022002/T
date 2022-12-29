@@ -34,224 +34,210 @@
           <div class="w-100 h-100 bg-body rounded-3 p-9 scroll-y">
             <!-- Account Information -->
             <div class="body_detail p-6">
-              <div class="row">
-                <div class="col-md-10 form-group w-50">
-                  <div class="fw-bold text-dark mb-1">
-                    <codx-label
-                      fiedName="LegalName"
-                      formName="SystemSetting"
-                      gridViewName=""
-                      default="Tên công ty"
-                    >
-                    </codx-label>
-                  </div>
+              <div class="d-flex justify-content-between mb-3">
+                <codx-label
+                  class="fw-bold"
+                  name="Description"
+                  formName="SystemSetting"
+                  default="Thông tin chung"
+                >
+                </codx-label>
+                <button
+                  class="btn btn-icon btn-white"
+                  (click)="clickEditInfo(data)"
+                >
+                  <i class="icon-create icon-18"></i>
+                </button>
+              </div>
+
+              <div class="form-group">
+                <codx-label
+                  fiedName=""
+                  formName="SystemSetting"
+                  gridViewName=""
+                  default="Web Address"
+                >
+                </codx-label>
+                <div *ngIf="tenant">
                   <codx-input
                     type="text"
-                    field="legalName"
-                    [crrValue]="data?.legalName"
-                    placeholder="Tên công ty"
-                  >
-                  </codx-input>
-                </div>
-                <div class="col-md-2">
-                  <button
-                    class="btn btn-icon btn-white"
-                    (click)="clickEditInfo(data)"
-                  >
-                    <i class="icon-create icon-18"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="form-group w-40">
-                <div class="fw-bold text-dark mb-1">
-                  <codx-label
-                    fiedName=""
-                    formName="SystemSetting"
-                    gridViewName=""
-                    default="Web Address"
-                  >
-                  </codx-label>
-                </div>
-                <div class="row">
-                  <div class="col-6" *ngIf="tenant">
-                    <codx-input
-                      type="text"
-                      field=""
-                      [crrValue]="tenant"
-                      (valueChange)="txtToLower($event)"
-                      disabled="true"
-                    ></codx-input>
-                  </div>
-                </div>
-              </div>
-              <div class="form-group w-40">
-                <div class="fw-bold text-dark mb-1">
-                  <codx-label
-                    fiedName="taxCode"
-                    formName="SystemSetting"
-                    gridViewName=""
-                    default="Mã số thuế"
-                  >
-                  </codx-label>
-                </div>
-                <div class="col-6">
-                  <codx-input
-                    type="text"
-                    class="form-control"
-                    field="taxCode"
-                    [crrValue]="data.taxCode"
+                    field=""
+                    [crrValue]="tenant"
+                    (valueChange)="txtToLower($event)"
+                    disabled="true"
                   ></codx-input>
                 </div>
               </div>
-              <div class="d-flex justify-content-center pt-3">
-                <div class="form-group">
-                  <div class="d-flex">
-                    <div class="img_option">
-                      <div class="container_img_logo img_logo me-3">
-                        <input
-                          name="imageUrlMain"
-                          hidden
-                          #fileInput_main
-                          type="file"
-                          accept="themes/ad/images/*"
-                          (change)="changeMainLogo($event)"
-                        />
-                        <div
-                          *ngIf="
-                            !imageLogo;
-                            then imageDefaultMain;
-                            else imageUpdateMain
-                          "
-                        ></div>
-                        <ng-template #imageDefaultMain>
-                          <img
-                            class="img_logo img_settings_logo"
-                            src="../../../assets/themes/ad/default/img/logo.png"
+
+              <div class="form-group">
+                <codx-label
+                  fiedName="taxCode"
+                  formName="SystemSetting"
+                  gridViewName=""
+                  default="Mã số thuế"
+                >
+                </codx-label>
+                <codx-input
+                  disabled="true"
+                  type="text"
+                  class="form-control"
+                  field="taxCode"
+                  [crrValue]="data.taxCode"
+                ></codx-input>
+              </div>
+              <div class="row pt-3">
+                <div class="col-6">
+                  <div class="form-group">
+                    <div class="d-flex">
+                      <div class="img_option">
+                        <div class="container_img_logo img_logo me-3">
+                          <input
+                            name="imageUrlMain"
+                            hidden
+                            #fileInput_main
+                            type="file"
+                            accept="themes/ad/images/*"
+                            (change)="changeMainLogo($event)"
                           />
-                          <div class="overlay_main img_logo"></div>
-                          <div class="button_image_main">
-                            <button
-                              class="btn btn-icon btn-white button_change_main"
-                              type="button"
-                              (click)="fileInput_main.click()"
-                            >
-                              <i class="icon-create icon-18"></i>
-                            </button>
-                          </div>
-                        </ng-template>
-                        <ng-template #imageUpdateMain>
-                          <img
-                            [src]="imageLogo"
-                            class="img_logo img_settings_logo"
-                          />
-                          <div class="overlay_main img_logo"></div>
-                          <div class="button_image_main">
-                            <button
-                              class="btn btn-icon btn-white button_change_main"
-                              type="button"
-                              (click)="fileInput_main.click()"
-                            >
-                              <i class="icon-create icon-18"></i>
-                            </button>
-                          </div>
-                        </ng-template>
+                          <div
+                            *ngIf="
+                              !imageLogo;
+                              then imageDefaultMain;
+                              else imageUpdateMain
+                            "
+                          ></div>
+                          <ng-template #imageDefaultMain>
+                            <img
+                              class="img_logo img_settings_logo"
+                              src="../../../assets/themes/ad/default/img/logo.png"
+                            />
+                            <div class="overlay_main img_logo"></div>
+                            <div class="button_image_main">
+                              <button
+                                class="btn btn-icon btn-white button_change_main"
+                                type="button"
+                                (click)="fileInput_main.click()"
+                              >
+                                <i class="icon-create icon-18"></i>
+                              </button>
+                            </div>
+                          </ng-template>
+                          <ng-template #imageUpdateMain>
+                            <img
+                              [src]="imageLogo"
+                              class="img_logo img_settings_logo"
+                            />
+                            <div class="overlay_main img_logo"></div>
+                            <div class="button_image_main">
+                              <button
+                                class="btn btn-icon btn-white button_change_main"
+                                type="button"
+                                (click)="fileInput_main.click()"
+                              >
+                                <i class="icon-create icon-18"></i>
+                              </button>
+                            </div>
+                          </ng-template>
+                        </div>
                       </div>
-                    </div>
-                    <div class="d-flex flex-column">
-                      <codx-label
-                        fiedName=""
-                        class="fw-bold"
-                        formName="SystemSetting"
-                        gridViewName=""
-                        default="Main Logo"
-                      >
-                      </codx-label>
-                      <i>
+                      <div class="d-flex flex-column">
                         <codx-label
                           fiedName=""
+                          class="fw-bold"
                           formName="SystemSetting"
                           gridViewName=""
-                          default="Recommended: 50x50px PNG with"
+                          default="Main Logo"
                         >
-                        </codx-label
-                        ><br />
-                        <codx-label
-                          default="transparent background"
-                        ></codx-label>
-                      </i>
+                        </codx-label>
+                        <i>
+                          <codx-label
+                            fiedName=""
+                            formName="SystemSetting"
+                            gridViewName=""
+                            default="Recommended: 50x50px PNG with"
+                          >
+                          </codx-label
+                          ><br />
+                          <codx-label
+                            default="transparent background"
+                          ></codx-label>
+                        </i>
+                      </div>
                     </div>
                   </div>
                 </div>
-                <div class="form-group ps-6">
-                  <div class="d-flex">
-                    <div class="img_optionFull">
-                      <div class="container_img img_logoFull">
-                        <input
-                          name="imageUrl"
-                          hidden
-                          #fileInput
-                          type="file"
-                          accept="themes/ad/images/*"
-                          (change)="changeMainHeader($event)"
-                        />
-
-                        <div
-                          *ngIf="!image; then imageDefault; else imageUpdate"
-                        ></div>
-
-                        <ng-template #imageDefault>
-                          <img
-                            class="img_logoFull img_settings"
-                            src="../../../assets/themes/ad/default/img/logoFull_default.png"
+                <div class="col-6">
+                  <div class="form-group">
+                    <div class="d-flex">
+                      <div class="img_optionFull">
+                        <div class="container_img img_logoFull">
+                          <input
+                            name="imageUrl"
+                            hidden
+                            #fileInput
+                            type="file"
+                            accept="themes/ad/images/*"
+                            (change)="changeMainHeader($event)"
                           />
-                          <div class="overlay img_logoFull"></div>
-                          <div class="button_image">
-                            <button
-                              class="btn btn-icon btn-white button_change_email"
-                              type="button"
-                              (click)="fileInput.click()"
-                            >
-                              <i class="icon-create icon-18"></i>
-                            </button>
-                          </div>
-                        </ng-template>
-                        <ng-template #imageUpdate>
-                          <img
-                            [src]="image"
-                            class="img_logoFull img_settings"
-                          />
-                          <div class="overlay img_logoFull"></div>
-                          <div class="button_image">
-                            <button
-                              class="btn btn-icon btn-white button_change_email"
-                              type="button"
-                              (click)="fileInput.click()"
-                            >
-                              <i class="icon-create icon-18"></i>
-                            </button>
-                          </div>
-                        </ng-template>
-                      </div>
-                    </div>
-                    <div class="d-flex flex-column">
-                      <div class="col-12">
-                        <div class="fw-bold text-dark">
-                          <codx-label
-                            fiedName=""
-                            formName="SystemSetting"
-                            gridViewName=""
-                            default="E-mail header"
-                          ></codx-label>
+
+                          <div
+                            *ngIf="!image; then imageDefault; else imageUpdate"
+                          ></div>
+
+                          <ng-template #imageDefault>
+                            <img
+                              class="img_logoFull img_settings"
+                              src="../../../assets/themes/ad/default/img/logoFull_default.png"
+                            />
+                            <div class="overlay img_logoFull"></div>
+                            <div class="button_image">
+                              <button
+                                class="btn btn-icon btn-white button_change_email"
+                                type="button"
+                                (click)="fileInput.click()"
+                              >
+                                <i class="icon-create icon-18"></i>
+                              </button>
+                            </div>
+                          </ng-template>
+                          <ng-template #imageUpdate>
+                            <img
+                              [src]="image"
+                              class="img_logoFull img_settings"
+                            />
+                            <div class="overlay img_logoFull"></div>
+                            <div class="button_image">
+                              <button
+                                class="btn btn-icon btn-white button_change_email"
+                                type="button"
+                                (click)="fileInput.click()"
+                              >
+                                <i class="icon-create icon-18"></i>
+                              </button>
+                            </div>
+                          </ng-template>
                         </div>
-                        <div class="text-italic text-gray-500">
-                          <codx-label
-                            fiedName=""
-                            formName="SystemSetting"
-                            gridViewName=""
-                            default="Recommended resolution"
-                          >
-                          </codx-label>
-                          <codx-label default="200x60px"></codx-label>
+                      </div>
+                      <div class="d-flex flex-column">
+                        <div class="col-12">
+                          <div class="fw-bold text-dark">
+                            <codx-label
+                              fiedName=""
+                              formName="SystemSetting"
+                              gridViewName=""
+                              default="E-mail header"
+                            ></codx-label>
+                          </div>
+                          <div class="text-italic text-gray-500">
+                            <codx-label
+                              fiedName=""
+                              formName="SystemSetting"
+                              gridViewName=""
+                              default="Recommended resolution"
+                            >
+                            </codx-label>
+                            <codx-label default="200x60px"></codx-label>
+                          </div>
                         </div>
                       </div>
                     </div>
