@@ -280,22 +280,18 @@
                 prefixIcon="e-style btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               ></e-item>
               <e-item
-                (click)="confirmHighlightText()"
+                (click)="confirmHighlightText(false)"
                 prefixIcon="e-circle-check
                 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               ></e-item>
-              <e-item
-                (click)="addComment()"
-                prefixIcon="e-comment-add
-                btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              ></e-item>
+
               <e-item
                 (click)="changeEditMode()"
                 prefixIcon="e-repeat btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               >
               </e-item>
               <e-item
-                (click)="deleteHighlight()"
+                (click)="changeRemoveHLAMode()"
                 prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               >
               </e-item>
@@ -323,8 +319,8 @@
         [(zoom)]="zoomValue"
         (zoomChange)="changeZoom('', $event)"
         [(page)]="curPage"
-        [handTool]="false"
-        [showHandToolButton]="false"
+        [handTool]="showHand"
+        [showHandToolButton]="showHand"
         [useBrowserLocale]="false"
         [language]="'vn'"
         [showUnverifiedSignatures]="true"
@@ -943,6 +939,15 @@
               ></codx-label>
             </ng-template>
             <ng-template #content>
+              <ejs-toolbar>
+                <e-items>
+                  <e-item
+                    [prefixIcon]="'e-circle-remove'"
+                    (click)="confirmRemoveHLA()"
+                  ></e-item>
+                </e-items>
+              </ejs-toolbar>
+
               <div class="highlightAreas">
                 <div
                   class="highlightedList"
@@ -955,35 +960,28 @@
                   [attr.data-id]="key"
                 >
                   <codx-temp-full
-                    [title]="'Highlight' + getHLText(key)?.author"
+                    [title]="
+                      getHLText(key)?.author + ' ' + getHLText(key)?.createdDate
+                    "
                     [resourceObjType]="'AD_Users'"
                     [icoCss]="
                       'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom'
                     "
                     [subTitle]="
-                      'Trang ' +
-                      (getHLText(key).isAdded
-                        ? getHLText(key).locations[0].pageNumber
-                        : getHLText(key).location.pageNumber)
+                      'Trang ' + getHLText(key)?.locations[0]?.pageNumber
                     "
                     [subTitleCss]="'page-end'"
-                    [desc]="'Comment: ' + getHLText(key).comment?.content"
+                    [desc]="getHLText(key)?.comment?.content"
                   >
                   </codx-temp-full>
-                  <button
-                    *ngIf="
-                      curSelectedHLA?.group == key && !curSelectedHLA?.isAdded
-                    "
-                    type="button"
-                    class="btn btn-sm btn-primary"
-                    (click)="removeHLA(key)"
+                  <codx-input
+                    [attr.data-id]="key"
+                    *ngIf="deleteHLAMode"
+                    type="checkbox"
+                    class="hla-check-delete me-2"
+                    name="select"
                   >
-                    <codx-label
-                      name="lblSave"
-                      default="Xóa"
-                      [formModel]=""
-                    ></codx-label>
-                  </button>
+                  </codx-input>
                 </div>
               </div>
             </ng-template>

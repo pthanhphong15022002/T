@@ -38,13 +38,13 @@ export class tmpAreaName {
 
 export class highLightTextArea {
   author: string;
-  location: location;
   locations: Array<location>;
   comment: comment;
   createdDate: Date;
   color: string;
   group: string;
   isAdded: boolean;
+  isChange: boolean;
 }
 
 export class comment {

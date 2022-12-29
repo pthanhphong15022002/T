@@ -1295,13 +1295,13 @@ export class CodxEsService {
     );
   }
 
-  highlightText(fileUrl, fileID, fileName, lstHLArea) {
+  highlightText(fileUrl, fileID, fileName, isClear, lstHLArea) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'HighlightTextAsync',
-      [fileUrl, fileID, fileName, lstHLArea]
+      [fileUrl, fileID, fileName, isClear, lstHLArea]
     );
   }
 
