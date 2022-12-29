@@ -900,8 +900,19 @@ codx-tag .codx-tag:hover {
   opacity: 0.9;
 }
 
+codx-layout-add .codx-tab {
+  position: relative;
+}
+
 codx-layout-add .codx-tab .tab-content {
-  height: calc(100vh - 155px) !important;
+  height: 100% !important;
+  position: absolute;
+  left: 207px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  min-width: auto !important;
+  width: auto !important;
 }
 
 codx-layout-add .card-header {
@@ -1330,9 +1341,9 @@ codx-vll {
   padding-right: 5px;
 }
 
-.tab-content>.active {
+.tab-horizone.tab-footer .tab-content>.active {
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .tab-content .mt-3.tab-tch {
@@ -1503,4 +1514,22 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 
 .stepper-body codx-attachment .overflow-auto.mh-200px {
   max-height: none !important;
+}
+
+#dropdownContent .card .card-header {
+  padding-bottom: 5px !important;
+}
+
+#dropdownContent div.has-action-menu {
+  margin: 0 !important;
+  padding: 2px !important;
+}
+
+#dropdownContent .e-list-item {
+  padding: 4px 8px !important;
+  border-bottom: 1px var(--gray-150) solid;
+}
+
+.user-mini-nav-custom a {
+  color: var(--primary-dark);
 }

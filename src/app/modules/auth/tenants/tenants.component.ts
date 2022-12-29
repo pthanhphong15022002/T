@@ -10,6 +10,6 @@ export class TenantsComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.router.navigate(['/tester']);
+    // this.router.navigate(['/tester']);
   }
 }

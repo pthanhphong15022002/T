@@ -12,9 +12,10 @@ export const environment = {
   office365: 'https://view.officeapps.live.com/op/view.aspx?src=',
   reportUrl: '',
   appName: 'hps-file-test', // Tam thoi de hard
-  saas: 1,
+  saas: 0,
+  tenantFirst: true,
   layoutCZ: 'qtsc',
-  themeMode: "body",//layout
+  themeMode: 'body', //layout
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',

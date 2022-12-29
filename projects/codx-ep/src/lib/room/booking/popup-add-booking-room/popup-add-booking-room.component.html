@@ -41,10 +41,17 @@
           <codx-label fiedName="ResourceID" [formModel]="form.formModel">
           </codx-label>
         </div>
-        <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+        <!-- <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueCbxRoomChange($event)">
-        </codx-input>
-        <div class="row mx-0">
+        </codx-input> -->
+        <ejs-dropdownlist
+        id='resource' 
+        #cusCBB [dataSource]='cbbResource'
+        [fields]='fields' 
+        [placeholder]="'Phòng họp'" 
+        (valueChange)="cbxResourceChange($event)"
+      ></ejs-dropdownlist>
+        <div class="row">
           <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0"
             class="d-flex align-items-center justify-content-between">
             <div class="d-flex flex-wrap">

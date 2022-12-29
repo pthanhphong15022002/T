@@ -1,426 +1,587 @@
-<codx-layout-add #form 
-  (setTitle)="setTile($event,form)" 
-  [tabInfo]="tabInfo" 
-  [formModel]="dialogRef.formModel" 
-  [footer]="footer" 
-  [dialog]="dialogRef" 
-  [openMore]="true" 
-  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]" 
-  [data]="employee">
+<codx-layout-add
+  #form
+  (setTitle)="setTile($event, form)"
+  [tabInfo]="tabInfo"
+  [formModel]="dialogRef.formModel"
+  [footer]="footer"
+  [dialog]="dialogRef"
+  [openMore]="true"
+  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]"
+  [data]="employee"
+>
 </codx-layout-add>
 
 <ng-template #tabInfoPersonal>
-  <div id="InfoPersonal">
-    <div class="text-primary mb-3 fw-bold">
-      <codx-label [formModel]="form.formModel" name="lblGeneralInfo" default="Thông tin chung">
-      </codx-label>
+  <ng-container *ngIf="form.formGroup">
+    <div id="InfoPersonal">
+      <div class="text-primary mb-3 fw-bold">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblGeneralInfo"
+          default="Thông tin chung"
+        >
+        </codx-label>
+      </div>
     </div>
-  </div>
-  <div class="row-group">
-    <div>
-      <div class="col">
+    <div class="row-group">
+      <div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="EmployeeID"
+              default="Mã nhân viên"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              [disabled]="dialogRef.dataService!.keyField === 'EmployeeID'"
+              field="employeeID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="EmployeeName"
+              default="Tên nhân viên"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="employeeName"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group gender-control">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Gender"
+              default="Giới tính"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="gender"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Birthday"
+              default="Ngày sinh"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="birthday"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="EmployeeID" default="Mã nhân viên">
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="BirthPlace"
+            default="Nơi sinh"
+          >
           </codx-label>
           <codx-input
             [Group]="form.formGroup"
             [formModel]="form.formModel"
-            [disabled]="paramaterHR?.stop ? false:true"
-            field="employeeID"
-            (valueChange)="dataChange($event)">
+            field="birthPlace"
+            (valueChange)="dataChange($event)"
+          >
           </codx-input>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="EmployeeName" default="Tên nhân viên">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="employeeName"
-            (valueChange)="dataChange($event)">
-          </codx-input>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Phone"
+              default="Điện thoại"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="phone"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Email"
+              default="Email cá nhân"
+            ></codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="personalEmail"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group gender-control">
-          <codx-label [formModel]="form.formModel" fiedName="Gender" default="Giới tính">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="gender" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Street"
+              default="Địa chỉ thường trú"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="street"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Birthday" default="Ngày sinh">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="birthday" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="FullAddress"
+              default="Địa chỉ tạm trú"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="fullAddress"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="form-group">
-        <codx-label [formModel]="form.formModel" fiedName="BirthPlace" default="Nơi sinh">
-        </codx-label>
-        <codx-input
-          [Group]="form.formGroup"
-          [formModel]="form.formModel"
-          field="birthPlace" 
-          (valueChange)="dataChange($event)">
-        </codx-input>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Phone" default="Điện thoại">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="phone" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Email" default="Email cá nhân"></codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="personalEmail" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Street" default="Địa chỉ thường trú">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="street" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="FullAddress" default="Địa chỉ tạm trú">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="fullAddress"
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div>
+      </div></div
+  ></ng-container>
 </ng-template>
 
 <ng-template #tabInfoEmploy>
-  <div id="InfoEmploy">
-    <div class="text-primary mb-3 fw-bold">
-      <codx-label [formModel]="form.formModel" name="lblEmployee" default="Nhân viên"></codx-label>
+  <ng-container *ngIf="form.formGroup">
+    <div id="InfoEmploy">
+      <div class="text-primary mb-3 fw-bold">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblEmployee"
+          default="Nhân viên"
+        ></codx-label>
+      </div>
     </div>
-  </div>
-  <div class="row-group">
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="PositionID" default="Chức danh công việc">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"  
-            field="positionID" 
-            [virtual]="{itemHeight:100}"
-            [popupSettings]="{ width: '300px' }" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
+    <div class="row-group">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="PositionID"
+              default="Chức danh công việc"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="positionID"
+              [virtual]="{ itemHeight: 100 }"
+              [popupSettings]="{ width: '300px' }"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="OrgUnitID"
+              default="Bộ phận"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="orgUnitID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="DepartmentID"
+              default="Phòng ban"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="departmentID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="DivisionID"
+              default="Khối"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="divisionID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="JoinedOn"
+              default="Ngày vào làm"
+            ></codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="joinedOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="HiredOn"
+              default="Ngày trở thành nhân viên chính thức"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              [disabled]="action != 'edit'"
+              field="hiredOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="OrgUnitID" default="Bộ phận">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="orgUnitID" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="DepartmentID" default="Phòng ban">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="departmentID" 
-            (valueChange)="dataChange($event)" >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="DivisionID" default="Khối">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="divisionID" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="JoinedOn" default="Ngày vào làm"></codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="joinedOn" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="HiredOn" default="Ngày trở thành nhân viên chính thức">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            [disabled]="action!='edit'"
-            field="hiredOn" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #tabInfoPrivate>
-  <div id="InfoPrivate">
-    <div class="text-primary mb-3 fw-bold">
-      <codx-label name="lblPersonalInfo" default="Thông tin cá nhân">
-      </codx-label>
-    </div>
-  </div>
-  <div class="row-group">
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IdCardNo" default="CMND/CCCD">
-          </codx-label>
-          <codx-input 
-            field="idCardNo" 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IssuedOn" default="Ngày cấp"></codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="issuedOn" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
+  <ng-container *ngIf="form.formGroup">
+    <div id="InfoPrivate">
+      <div class="text-primary mb-3 fw-bold">
+        <codx-label name="lblPersonalInfo" default="Thông tin cá nhân">
+        </codx-label>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="IssuedBy" default="Nơi cấp"></codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="issuedBy" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
+    <div class="row-group">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="IdCardNo"
+              default="CMND/CCCD"
+            >
+            </codx-label>
+            <codx-input
+              field="idCardNo"
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="IssuedOn"
+              default="Ngày cấp"
+            ></codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="issuedOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="IssuedBy"
+              default="Nơi cấp"
+            ></codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="issuedBy"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="MaritalStatus"
+              default="Tình trạng hôn nhân"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="maritalStatus"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Nationality"
+              default="Quốc tịch"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="nationality"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="EthnicGroup"
+              default="Dân tộc"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="ethnicGroup"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Religion"
+              default="Tôn giáo"
+            ></codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="religion"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Education"
+              default="Trình độ văn hóa"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="education"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="Degree"
+              default="Trình độ chuyên môn"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="degree"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="MaritalStatus" default="Tình trạng hôn nhân">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="maritalStatus" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Nationality" default="Quốc tịch">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="nationality"
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="EthnicGroup" default="Dân tộc">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="ethnicGroup" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Religion" default="Tôn giáo"></codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="religion" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Education" default="Trình độ văn hóa">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="education" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="Degree" default="Trình độ chuyên môn">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"  
-            field="degree" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #tabInfoLaw>
-  <div id="InfoLaw">
-    <div class="text-primary mb-3 fw-bold">
-      <codx-label [formModel]="form.formModel" name="lblJuridical" default="Thông tin pháp lý">
-      </codx-label>
-    </div>
-  </div>
-  <div class="row-group">
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="PitNumber" default="Mã số thuế">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="pitNumber" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
-      </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="PitIssuedOn" default="Ngày cấp">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="pitIssuedOn" 
-            (valueChange)="dataChange($event)">
-          </codx-input>
-        </div>
+  <ng-container *ngIf="form.formGroup">
+    <div id="InfoLaw">
+      <div class="text-primary mb-3 fw-bold">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblJuridical"
+          default="Thông tin pháp lý"
+        >
+        </codx-label>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="SiRegisterNo" default="Mã số BHXH">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="siRegisterNo"
-            (valueChange)="dataChange($event)">
-          </codx-input>
+    <div class="row-group">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="PitNumber"
+              default="Mã số thuế"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="pitNumber"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="PitIssuedOn"
+              default="Ngày cấp"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="pitIssuedOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
-      <div class="col">
-        <div class="form-group">
-          <codx-label [formModel]="form.formModel" fiedName="SiRegisterOn" default="Ngày cấp">
-          </codx-label>
-          <codx-input 
-            [Group]="form.formGroup"
-            [formModel]="form.formModel" 
-            field="siRegisterOn"
-            (valueChange)="dataChange($event)">
-          </codx-input>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="SiRegisterNo"
+              default="Mã số BHXH"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="siRegisterNo"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="SiRegisterOn"
+              default="Ngày cấp"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="siRegisterOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #footer>

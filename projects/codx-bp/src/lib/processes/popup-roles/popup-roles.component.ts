@@ -324,8 +324,8 @@ export class PopupRolesComponent implements OnInit {
       if (perm != null && list.length > 0) {
         index = list.findIndex(
           (x) =>
-            (x.objectID != null && x.objectID === perm.objectID) ||
-            (x.objectID == null && x.objectType == perm.objectType)
+            (x.objectID != null && x.objectID === perm.objectID && x.objectType == perm.objectType && x.approveStatus == "5") ||
+            (x.objectID == null && x.objectType == perm.objectType && x.approveStatus == "5")
         );
       }
     } else {
