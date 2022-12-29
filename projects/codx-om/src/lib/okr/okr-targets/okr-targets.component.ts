@@ -266,18 +266,18 @@ export class OkrTargetsComponent implements OnInit {
         this.editKR(kr, o, popupTitle);
         break;
       }
-      case OMCONST.MFUNCID.Copy: {
-        this.copyKR(kr, o, popupTitle);
-        break;
-      }
+      // case OMCONST.MFUNCID.Copy: {
+      //   this.copyKR(kr, o, popupTitle);
+      //   break;
+      // }
       case OMCONST.MFUNCID.Delete: {
         this.deleteKR(kr);
         break;
       }
-      // case 'SYS04': {
-      //   this.distributeKR(kr,o);
-      //   break;
-      // }
+      case 'SYS04': {
+        this.distributeKR(kr);
+        break;
+      }
     }
   }
   //Xem chi tiết OB
@@ -310,5 +310,18 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  
+  distributeKR(kr:any){
+    let dModel = new DialogModel();    
+    dModel.IsFull = true;
+    let dialogDisKR = this.callfunc.openForm(
+      PopupDistributeOKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
+      '',
+      dModel
+    );
+  }
 }
