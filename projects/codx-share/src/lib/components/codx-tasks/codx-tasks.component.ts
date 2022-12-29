@@ -1618,7 +1618,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask, funcID],
+        [data, 'view', isAssignTask,"",funcID],
         option
       );
     }
