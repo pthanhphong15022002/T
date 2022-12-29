@@ -27,7 +27,7 @@
     <div>
       <div
         id="avatar_id"
-        class="d-flex justify-content-between form-group align-items-center form-group"
+        class="d-flex justify-content-between form-group align-items-center form-group pb-4"
       >
         <div id="eAvartar">
           <codx-img
@@ -71,8 +71,9 @@
 
       <div
         id="joinedOn-employeeTypeID"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="joinedOn">
           <codx-label fiedName="joinedOn" [formModel]="form.formModel">
           </codx-label>
@@ -83,6 +84,8 @@
           >
           </codx-input>
         </div>
+      </div>
+      <div class="col-6">
         <div id="employeeTypeID">
           <codx-label fiedName="employeeTypeID" [formModel]="form.formModel">
           </codx-label>
@@ -94,18 +97,23 @@
           </codx-input>
         </div>
       </div>
+      
+      </div>
 
-      <div id="email-phone" class="d-flex justify-content-between form-group">
-        <div id="email">
-          <codx-label fiedName="email" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            field="email"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
+      <div id="email-phone" class="row form-group">
+        <div class="col-6">
+          <div id="email">
+            <codx-label fiedName="email" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input
+              field="email"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
         </div>
+       <div class="col-6">
         <div id="phone">
           <codx-label fiedName="phone" [formModel]="form.formModel">
           </codx-label>
@@ -116,12 +124,15 @@
           >
           </codx-input>
         </div>
+       </div>
+       
       </div>
 
       <div
         id="positionID-jobLevel"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="positionID">
           <codx-label fiedName="positionID" [formModel]="form.formModel">
           </codx-label>
@@ -132,6 +143,9 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div id="jobLevel">
           <codx-label fiedName="jobLevel" [formModel]="form.formModel">
           </codx-label>
@@ -143,8 +157,11 @@
           </codx-input>
         </div>
       </div>
+        
+      
+      </div>
 
-      <div id="orgUnitID">
+      <div id="orgUnitID" class="pb-4">
         <codx-label fiedName="orgUnitID" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -155,7 +172,7 @@
         </codx-input>
       </div>
 
-      <div id="locationID">
+      <div id="locationID" class="pb-4">
         <codx-label fiedName="locationID" [formModel]="form.formModel">
         </codx-label>
         <codx-input
@@ -168,8 +185,9 @@
 
       <div
         id="timeCardNo-userID"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="timeCardNo">
           <codx-label fiedName="timeCardNo" [formModel]="form.formModel">
           </codx-label>
@@ -180,6 +198,9 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div id="userID">
           <codx-label fiedName="userID" [formModel]="form.formModel">
           </codx-label>
@@ -191,11 +212,15 @@
           </codx-input>
         </div>
       </div>
+      
+       
+      </div>
 
       <div
         id="shiftCalendarID-aLObjectID"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="shiftCalendarID">
           <codx-label fiedName="shiftCalendarID" [formModel]="form.formModel">
           </codx-label>
@@ -206,6 +231,8 @@
           >
           </codx-input>
         </div>
+      </div>
+      <div class="col-6">
         <div id="aLObjectID">
           <codx-label fiedName="aLObjectID" [formModel]="form.formModel">
           </codx-label>
@@ -217,11 +244,14 @@
           </codx-input>
         </div>
       </div>
+        
+      </div>
 
       <div
         id="payrollGroupID-currencyID"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="payrollGroupID">
           <codx-label fiedName="payrollGroupID" [formModel]="form.formModel">
           </codx-label>
@@ -232,6 +262,8 @@
           >
           </codx-input>
         </div>
+      </div>
+       <div class="col-6">
         <div id="currencyID">
           <codx-label fiedName="currencyID" [formModel]="form.formModel">
           </codx-label>
@@ -242,6 +274,8 @@
           >
           </codx-input>
         </div>
+       </div>
+      
       </div>
     </div>
   </ng-container>
@@ -252,8 +286,9 @@
     <div class="form-group">
       <div
         id="gender-maritalStatus"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="gender">
           <codx-label fiedName="gender" [formModel]="form.formModel">
           </codx-label>
@@ -264,21 +299,26 @@
           >
           </codx-input>
         </div>
-        <div id="maritalStatus">
-          <codx-label fiedName="maritalStatus" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            field="maritalStatus"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
-        </div>
+      </div>
+    <div class="col-6">
+      <div id="maritalStatus">
+        <codx-label fiedName="maritalStatus" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="maritalStatus"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+    </div>
+       
       </div>
       <div
         id="birthday_birthPlace"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div class="birthday">
           <codx-label fiedName="birthday" [formModel]="form.formModel">
           </codx-label>
@@ -289,6 +329,9 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div class="birthPlace">
           <codx-label fiedName="birthPlace" [formModel]="form.formModel">
           </codx-label>
@@ -300,10 +343,14 @@
           </codx-input>
         </div>
       </div>
+       
+       
+      </div>
       <div
         id="domicile-nationality"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div class="domicile">
           <codx-label fiedName="domicile" [formModel]="form.formModel">
           </codx-label>
@@ -314,6 +361,9 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div class="nationality">
           <codx-label fiedName="nationality" [formModel]="form.formModel">
           </codx-label>
@@ -325,10 +375,14 @@
           </codx-input>
         </div>
       </div>
+        
+        
+      </div>
       <div
         id="ethnicGroup-religion"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div class="ethnicGroup">
           <codx-label fiedName="ethnicGroup" [formModel]="form.formModel">
           </codx-label>
@@ -339,21 +393,26 @@
           >
           </codx-input>
         </div>
-        <div class="religion">
-          <codx-label fiedName="religion" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            field="religion"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
+      </div>
+        <div class="col-6">
+          <div class="religion">
+            <codx-label fiedName="religion" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input
+              field="religion"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
         </div>
+       
       </div>
       <div
         id="iDCardNo-issuedBy"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="iDCardNo">
           <codx-label fiedName="IDCardNo" [formModel]="form.formModel">
           </codx-label>
@@ -364,6 +423,8 @@
           >
           </codx-input>
         </div>
+      </div>
+       <div class="col-6">
         <div id="issuedBy">
           <codx-label fiedName="issuedBy" [formModel]="form.formModel">
           </codx-label>
@@ -374,11 +435,14 @@
           >
           </codx-input>
         </div>
+       </div>
+       
       </div>
       <div
         id="issuedOn-iDExpiredOn"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="issuedOn">
           <codx-label fiedName="issuedOn" [formModel]="form.formModel">
           </codx-label>
@@ -389,6 +453,8 @@
           >
           </codx-input>
         </div>
+      </div>
+      <div class="col-6">
         <div id="iDExpiredOn">
           <codx-label fiedName="IDExpiredOn" [formModel]="form.formModel">
           </codx-label>
@@ -400,10 +466,14 @@
           </codx-input>
         </div>
       </div>
+      
+       
+      </div>
       <div
         id="education-educationTrainForm"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="education">
           <codx-label fiedName="Education" [formModel]="form.formModel">
           </codx-label>
@@ -414,6 +484,8 @@
           >
           </codx-input>
         </div>
+      </div>
+      <div class="col-6">
         <div id="educationTrainForm">
           <codx-label
             fiedName="educationTrainForm"
@@ -428,10 +500,14 @@
           </codx-input>
         </div>
       </div>
+       
+        
+      </div>
       <div
         id="trainFieldID-trainLevel"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="trainFieldID">
           <codx-label fiedName="trainFieldID" [formModel]="form.formModel">
           </codx-label>
@@ -442,6 +518,9 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div id="trainLevel">
           <codx-label fiedName="trainLevel" [formModel]="form.formModel">
           </codx-label>
@@ -452,6 +531,9 @@
           >
           </codx-input>
         </div>
+      </div>
+        
+        
       </div>
       <div id="degreeName">
         <codx-label fiedName="degreeName" [formModel]="form.formModel">
@@ -465,8 +547,9 @@
       </div>
       <div
         id="mobile-personalEmail"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="mobile">
           <codx-label fiedName="mobile" [formModel]="form.formModel">
           </codx-label>
@@ -477,6 +560,8 @@
           >
           </codx-input>
         </div>
+      </div>
+      <div class="col-6">
         <div id="personalEmail">
           <codx-label fiedName="personalEmail" [formModel]="form.formModel">
           </codx-label>
@@ -487,6 +572,8 @@
           >
           </codx-input>
         </div>
+      </div>
+      
       </div>
       <div id="address">
         <codx-label fiedName="address" [formModel]="form.formModel">
@@ -500,8 +587,9 @@
       </div>
       <div
         id="provinceID-districtID"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="provinceID">
           <codx-label fiedName="provinceID" [formModel]="form.formModel">
           </codx-label>
@@ -512,6 +600,9 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div id="districtID">
           <codx-label fiedName="districtID" [formModel]="form.formModel">
           </codx-label>
@@ -523,27 +614,37 @@
           </codx-input>
         </div>
       </div>
-      <div id="wardID-hamlet" class="d-flex justify-content-between form-group">
-        <div id="wardID">
-          <codx-label fiedName="wardID" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            field="wardID"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
+       
+        
+      </div>
+      <div id="wardID-hamlet" class="row form-group">
+        <div class="col-6">
+          <div id="wardID">
+            <codx-label fiedName="wardID" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input
+              field="wardID"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
+
         </div>
-        <div id="hamlet">
-          <codx-label fiedName="hamlet" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            field="hamlet"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
+        <div class="col-6">
+          <div id="hamlet">
+            <codx-label fiedName="hamlet" [formModel]="form.formModel">
+            </codx-label>
+            <codx-input
+              field="hamlet"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+            >
+            </codx-input>
+          </div>
         </div>
+      
+       
       </div>
       <div id="tAddress">
         <codx-label fiedName="tAddress" [formModel]="form.formModel">
@@ -557,8 +658,9 @@
       </div>
       <div
         id="tProvinceID-tDistrictID"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="tProvinceID">
           <codx-label fiedName="tProvinceID" [formModel]="form.formModel">
           </codx-label>
@@ -569,6 +671,8 @@
           >
           </codx-input>
         </div>
+      </div>
+       <div class="col-6">
         <div id="tDistrictID">
           <codx-label fiedName="tDistrictID" [formModel]="form.formModel">
           </codx-label>
@@ -579,11 +683,14 @@
           >
           </codx-input>
         </div>
+       </div>
+      
       </div>
       <div
         id="tWardID-tHamlet"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="tWardID">
           <codx-label fiedName="tWardID" [formModel]="form.formModel">
           </codx-label>
@@ -594,11 +701,17 @@
           >
           </codx-input>
         </div>
+      </div>
+
+      <div class="col-6">
         <div id="tHamlet">
           <codx-label fiedName="tHamlet" [formModel]="form.formModel">
           </codx-label>
           <codx-input field="tHamlet" v> </codx-input>
         </div>
+      </div>
+        
+       
       </div>
     </div>
   </ng-container>
@@ -609,8 +722,9 @@
     <div class="form-group">
       <div
         id="sIRegisterNo-sIRegisterOn"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="sIRegisterNo">
           <codx-label fiedName="sIRegisterNo" [formModel]="form.formModel">
           </codx-label>
@@ -621,6 +735,8 @@
           >
           </codx-input>
         </div>
+      </div>
+       <div class="col-6">
         <div id="sIRegisterOn">
           <codx-label fiedName="sIRegisterOn" [formModel]="form.formModel">
           </codx-label>
@@ -631,11 +747,14 @@
           >
           </codx-input>
         </div>
+       </div>
+       
       </div>
       <div
         id="pITNumber-pITIssuedOn"
-        class="d-flex justify-content-between form-group"
+        class="row form-group"
       >
+      <div class="col-6">
         <div id="pITNumber">
           <codx-label fiedName="pITNumber" [formModel]="form.formModel">
           </codx-label>
@@ -646,16 +765,21 @@
           >
           </codx-input>
         </div>
-        <div id="pITIssuedOn">
-          <codx-label fiedName="pITIssuedOn" [formModel]="form.formModel">
-          </codx-label>
-          <codx-input
-            field="pITIssuedOn"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-          >
-          </codx-input>
-        </div>
+
+      </div>
+     <div class="col-6">
+      <div id="pITIssuedOn">
+        <codx-label fiedName="pITIssuedOn" [formModel]="form.formModel">
+        </codx-label>
+        <codx-input
+          field="pITIssuedOn"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+        >
+        </codx-input>
+      </div>
+     </div>
+       
       </div>
     </div>
   </ng-container>
