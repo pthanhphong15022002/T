@@ -137,7 +137,7 @@ export class EmployeeProfileComponent extends UIComponent {
   lstDiscipline: any = [];
 
   //EAccident
-  lstAccidents: any = [];
+  lstAccident: any = [];
 
   formModel;
   itemDetail;
@@ -388,6 +388,20 @@ export class EmployeeProfileComponent extends UIComponent {
           .getECertificateWithDataRequest(rqCertificate)
           .subscribe((res) => {
             if (res) this.lstCertificates = res[0];
+          });
+
+        //Accident
+        let rqAccident = new DataRequest();
+        rqAccident.gridViewName = 'grvEAccidents';
+        rqAccident.entityName = 'HR_EAccidents';
+        rqAccident.predicate = 'EmployeeID=@0';
+        rqAccident.dataValue = params.employeeID;
+        rqAccident.page = 1;
+        this.hrService
+          .getListAccidentByDataRequest(rqAccident)
+          .subscribe((res) => {
+            if (res) this.lstAccident = res[0];
+            console.log('lit accident', this.lstAccident);
           });
 
         //Passport
@@ -1677,8 +1691,8 @@ export class EmployeeProfileComponent extends UIComponent {
       PopupEaccidentsComponent,
       {
         actionType: actionType,
-        indexSelected: this.lstAccidents.indexOf(data),
-        lstAccidents: this.lstAccidents,
+        indexSelected: this.lstAccident.indexOf(data),
+        lstAccident: this.lstAccident,
         employeeId: this.data.employeeID,
         headerText: 'Tai nạn lao động',
       },
@@ -1811,6 +1825,7 @@ export class EmployeeProfileComponent extends UIComponent {
         isAdd: true,
         headerText: 'Đào tạo',
         employeeId: this.data.employeeID,
+        actionType: 'add',
       },
       option
     );

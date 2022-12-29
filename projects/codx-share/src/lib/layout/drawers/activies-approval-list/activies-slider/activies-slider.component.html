@@ -45,7 +45,7 @@
                   <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
                 </button>
               </div>
-              <div class="cursor-pointer">
+              <div class="cursor-pointer" (click)="clickViewDetail(item)" >
                 <codx-label [classList]="'fst-italic text-gray-500'" [formModel]="dialog.formModel" name=""
                   default="Xem chi tiết"></codx-label>
               </div>

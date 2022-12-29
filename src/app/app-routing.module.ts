@@ -9,6 +9,7 @@ import { LayoutOnlyHeaderComponent } from 'projects/codx-share/src/lib/_layout/_
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { SettingCalendarComponent } from 'projects/codx-share/src/lib/components/setting-calendar/setting-calendar.component';
 import { ExternalSigningComponent } from 'projects/codx-es/src/lib/external-signing/external-signing.component';
+import { TenantsComponent } from '@modules/auth/tenants/tenants.component';
 
 var childRoutes = [
   {
@@ -207,6 +208,15 @@ var childRoutes = [
 ];
 
 export const routes: Routes = [
+  {
+    path: 'tenants',
+    component: TenantsComponent,
+  },
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./modules/auth/auth.module').then((m) => m.AuthModule),
+  },
   {
     path: ':tenant',
     children: childRoutes,

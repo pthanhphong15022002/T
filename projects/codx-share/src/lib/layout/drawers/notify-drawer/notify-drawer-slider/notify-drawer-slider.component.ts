@@ -94,27 +94,25 @@ export class NotifyDrawerSliderComponent implements OnInit {
   }
 
   clickNotification(item:any){
-    debugger
-    this.api.execSv(
-      'BG',
-      'ERM.Business.BG',
-      'NotificationBusinesss',
-      'UpdateNotificationAsync', 
-      [item.recID]).subscribe((res:boolean) => {
-        if(res)
-        {
-          item.read = true;
-          this.dt.detectChanges();
-        }
-    });
     if(item.transID){
+      this.api.execSv(
+        'BG',
+        'ERM.Business.BG',
+        'NotificationBusinesss',
+        'UpdateNotificationAsync', 
+        [item.recID]).subscribe((res:boolean) => {
+          if(res)
+          {
+            item.read = true;
+            this.dt.detectChanges();
+          }
+      });
       let query = {
         predicate:"RecID=@0",
         dataValue:item.transID
       };
       this.codxService.openUrlNewTab(item.function,"",query);
     }
-    
   }
 
   getMessage(mssgCode:string){

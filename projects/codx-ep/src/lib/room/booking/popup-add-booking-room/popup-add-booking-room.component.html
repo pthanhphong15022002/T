@@ -5,8 +5,8 @@
     <ng-container *ngIf="form && form.formGroup">
 
 
-      <div class="row">
-        <div class="col-4 form-group">
+      <div class="row mx-0">
+        <div class="col-4 form-group ps-0">
           <codx-label fiedName="BookingOn" [formModel]="form.formModel">
           </codx-label>
           <codx-input field="bookingOn" [crrValue]="data.bookingOn" format="d" type="datetime" class="test-datetime"
@@ -30,7 +30,7 @@
           </codx-input>
         </div>
 
-        <div class="col-2 d-flex flex-column justify-content-center">
+        <div class="col-2 d-flex flex-column justify-content-center pe-0">
           <codx-input #checkbox type="checkbox" label="Cả ngày" labelPosition="after" field="day" class="test-check"
             (valueChange)="valueAllDayChange($event)" [disabled]="false" [checked]="isFullDay">
           </codx-input>
@@ -319,12 +319,12 @@
     </ng-container>
   </ng-template>
   <ng-template #tabStationery>
-    <div class="form-group row d-flex flex-row justify-content-start align-items-center">
-      <div class="col-4">
+    <div class="d-flex justify-content-start align-items-center">
+      <div class="me-3">
         <codx-label fiedName="Attendees" [formModel]="form.formModel">
         </codx-label>
       </div>
-      <div class="col-4">
+      <div class="">
         <!-- <codx-input ControlName="attendees" [formModel]="form.formModel" [Group]="form.formGroup"
           (valueChange)="valueAttendeesChange($event)">
         </codx-input> -->
@@ -392,11 +392,11 @@
         </codx-input>
       </div>
 
-      <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-        <div class="col-10">
-          <codx-label fiedName="Repeat" [formModel]="form.formModel"></codx-label>
+      <div class="d-flex justify-content-start align-items-center">
+        <div class="w-100">
+          <codx-label class="fw-bold" fiedName="Repeat" [formModel]="form.formModel"></codx-label>
         </div>
-        <div class="col-2 d-flex justify-content-end">
+        <div class="ms-5">
           <codx-input #checkbox type="switch" field="repeat" [checked]="data?.repeat" [crrValue]="data?.repeat"
             (valueChange)="valueChange($event)">
           </codx-input>
