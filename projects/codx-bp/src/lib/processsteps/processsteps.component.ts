@@ -257,7 +257,7 @@ export class ProcessStepsComponent
       },
       {
         id: '9',
-        type: ViewType.content,
+        type: ViewType.chart,
         active: true,
         sameData: false,
         model: {
