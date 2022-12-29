@@ -82,6 +82,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   nagetivePhysical: string = '';
   totalStationery = 0;
   saveCheck = false;
+  approvalRule: any;
 
   constructor(
     private injector: Injector,
@@ -111,7 +112,11 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.user = this.auth.get();
-
+    this.epService.getEPStationerySetting('4').subscribe((approvalSetting: any) => {
+      if (approvalSetting) {
+        this.approvalRule = JSON.parse(approvalSetting.dataValue)[0]?.ApprovalRule;
+      }
+    });
     this.epService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res[0];
       this.totalStationery = res[1];
@@ -294,7 +299,22 @@ export class PopupRequestStationeryComponent extends UIComponent {
           this.formModel
         );
       }
-
+      if(this.approvalRule=='0' && approval){
+        this.dialogAddBookingStationery.patchValue({
+          title: this.dialogAddBookingStationery.value.note,
+          approveStatus:'5',
+          status:'5',
+        });
+      }     
+      this.data.approval =this.approvalRule;
+      let bDay=new Date(this.dialogAddBookingStationery.value.bookingOn);
+      let tmpDay= new Date();
+      if(bDay< new Date(tmpDay.getFullYear(),tmpDay.getMonth(),tmpDay.getDate(),0,0,0,0)){        
+        this.notificationsService.notifyCode('TM036');
+        this.saveCheck = false;
+        return;
+      }
+      
       if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
         this.dialogAddBookingStationery.patchValue({
           reasonID: this.dialogAddBookingStationery.value.reasonID[0],
@@ -303,6 +323,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
       this.dialogAddBookingStationery.patchValue({
         title: this.dialogAddBookingStationery.value.note,
+        approval:this.approvalRule,
       });
 
       this.dialogRef.dataService
@@ -333,7 +354,8 @@ export class PopupRequestStationeryComponent extends UIComponent {
             }
 
             if (approval) {
-              this.epService
+              if(this.approvalRule!='0'){
+                this.epService
                 .getCategoryByEntityName(this.formModel.entityName)
                 .subscribe((category: any) => {
                   this.returnData.forEach((item) => {
@@ -365,6 +387,20 @@ export class PopupRequestStationeryComponent extends UIComponent {
                       });
                   });
                 });
+              }
+              else{
+                this.notificationsService.notifyCode('ES007');
+                this.returnData.forEach((item) => {
+                  this.epService.afterApprovedManual(this.formModel.entityName, item.recID,'5').subscribe(res);  
+                  item.approveStatus = '5';
+                  item.status = '5';
+                  item.write = false;
+                  item.delete = false;       
+                });
+                this.dialogRef && this.dialogRef.close(this.returnData);
+
+              }
+              
               this.dialogRef && this.dialogRef.close();
             } else {
               this.dialogRef && this.dialogRef.close();

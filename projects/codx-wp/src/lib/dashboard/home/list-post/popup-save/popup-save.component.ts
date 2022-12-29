@@ -8,7 +8,6 @@ import { ApiHttpService, AuthService, CacheService, CallFuncService, DialogData,
 })
 export class PopupSavePostComponent implements OnInit {
 
-
   headerText: string;
   headerTextPopup: string = "Thêm mới kho lưu trữ";
   dialogData:any = null;
@@ -18,8 +17,7 @@ export class PopupSavePostComponent implements OnInit {
   listStorage: any[] = [];
   title: string = "";
   storageType: string = "WP_Comments";
-  storageIDSelected: any = null;
-  storage:any = null;
+  IDSelected: any = null;
 
   @ViewChild("fromPopupAdd") popupBody: TemplateRef<any>;
   constructor(
@@ -50,21 +48,20 @@ export class PopupSavePostComponent implements OnInit {
         {
           this.listStorage = res;
           this.listStorage[0].isActive = true;
-          this.storageIDSelected = this.listStorage[0].recID;
-          this.storage = this.listStorage[0]
+          this.IDSelected = this.listStorage[0].recID;
           this.dt.detectChanges();
         }
       });
   }
   saveObjectToStorage() {
-    if(this.storage && this.data)
+    if(this.IDSelected && this.data)
     {
       this.api.execSv(
       "WP",
       "ERM.Business.WP",
       "StoragesBusiness",
       "InsertIntoStorageAsync",
-      [this.storage.recID, this.data.recID])
+      [this.IDSelected, this.data.recID])
       .subscribe((res:any) => {
         if (res)
         {
@@ -79,14 +76,15 @@ export class PopupSavePostComponent implements OnInit {
     }
   }
   selectStorage(item){
-    this.listStorage.map((x: any) => {
+    debugger
+    this.listStorage.forEach((x: any) => {
       if (x.recID != item.recID) 
       {
         x.isActive = false;
       }
       else 
       {
-        this.storageIDSelected = x.recID;
+        this.IDSelected = x.recID;
         x.isActive = true;
       }
     });

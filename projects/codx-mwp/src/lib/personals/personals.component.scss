@@ -79,12 +79,11 @@
 
 app-personals .pw-content {
   margin-top: 12px;
-  padding: 12px;
   min-width: 760px;
-  height: calc(100vh - 235px) !important;
+  height: calc(100vh - 240px) !important;
   overflow: auto;
   background-color: white;
-  box-shadow: 0px 6px 6px 6px rgb(82 63 107 / 6%);
+  box-shadow: none;
 }
 
 .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap {

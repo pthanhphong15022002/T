@@ -118,8 +118,20 @@ export class CalendarCenterComponent
   }
 
   onAction(event: any) {
-    if (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) {
-      var obj = { fromDate: event.data.fromDate, toDate: event.data.toDate};
+    if (
+      event.data.fromDate == 'Invalid Date' &&
+      event.data.toDate == 'Invalid Date'
+    )
+      return;
+    if (
+      (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) ||
+      event?.data?.type == undefined
+    ) {
+      var obj = {
+        fromDate: event.data.fromDate,
+        toDate: event.data.toDate,
+        type: event?.data.type,
+      };
       this.codxShareSV.dateChange.next(obj);
     }
   }

@@ -35,7 +35,7 @@ import { CalendarCenterComponent } from './calendar-center/calendar-center.compo
   selector: 'app-codx-calendar',
   templateUrl: './codx-calendar.component.html',
   styleUrls: ['./codx-calendar.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class CodxCalendarComponent extends UIComponent implements OnInit {
   headerText: any;
@@ -87,7 +87,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   dateChange: any;
   countEvent = 0;
   countDataOfE = 0;
-  FDdate: any;
+  FDdate: any = new Date();
   TDate: any;
   WP_NotesTemp: any = [];
   TM_TasksTemp: any = [];
@@ -168,75 +168,135 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     }, 200);
   }
 
+  fDayOfWeek: any;
+  lDayOfWeek: any;
   loadData() {
     var tempCalendar = this.calendar_mini.element;
     var htmlE = tempCalendar as HTMLElement;
     var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
       ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
     let numbF = this.convertStrToDate(eleFromDate);
-    const fDayOfMonth = moment(numbF).toISOString();
-    let indexLast =
-      htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length - 1;
+    const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+    let length =
+      htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length;
+    let eleClass = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
+      ?.childNodes[length - 1] as HTMLElement;
+    let indexLast = length - 1;
+    if (eleClass.className == 'e-month-hide') indexLast = length - 2;
     let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
       ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
     let numbL = this.convertStrToDate(eleToDate);
-    const lDayOfMonth = moment(numbL).toISOString();
+    const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
     this.getParamCalendar(fDayOfMonth, lDayOfMonth, true);
+    this.getDayOfWeek(htmlE);
   }
 
+  lstDOWeek = [];
+  getDayOfWeek(htmlE) {
+    this.lstDOWeek = [];
+    if (htmlE) {
+      let eleWeek = (
+        htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1] as HTMLElement
+      ).querySelectorAll('span.e-day');
+      let DOMWeek;
+      eleWeek.forEach((x) => {
+        if (+x.textContent == moment(this.FDdate).date())
+          DOMWeek = x.parentNode.parentNode;
+      });
+      if (DOMWeek) {
+        let index = DOMWeek.childNodes.length - 1;
+        DOMWeek.childNodes.forEach((x) => {
+          this.lstDOWeek.push(+x.childNodes[0].textContent);
+        });
+        let eleFDOWeek = DOMWeek.childNodes[0].childNodes[0];
+        let eleLDOWeek = DOMWeek.childNodes[index].childNodes[0];
+        this.fDayOfWeek = +eleFDOWeek.textContent;
+        this.lDayOfWeek = +eleLDOWeek.textContent;
+      }
+    }
+  }
+
+  typeNavigate = 'Month';
   navigate() {
     this.codxShareSV.dateChange.subscribe((res) => {
-      if (this.check) return;
       if (res?.fromDate == 'Invalid Date' && res?.toDate == 'Invalid Date')
         return;
       if (res?.fromDate && res?.toDate) {
-        this.dateChange = res.fromDate;
-        this.check = false;
-        this.getParamCalendar(
-          moment(res.fromDate).toISOString(),
-          moment(res.toDate).toISOString(),
-          false
-        );
-        if (this.calendar_mini) {
-          this.calendar_mini.refresh();
-          this.calendar_mini.value = this.dateChange;
+        if (res?.type) this.typeNavigate = res.type;
+        if (this.typeNavigate == 'Year') this.dateChange = this.FDdate;
+        else this.dateChange = res.fromDate;
+        if (this.typeNavigate == 'Year' && res.type == undefined) {
+          this.dateChange = res?.toDate;
+          return;
+        }
+        if (
+          this.typeNavigate != 'Month' &&
+          this.typeNavigate != 'MonthAgenda'
+        ) {
+          let myInterVal = setInterval(() => {
+            clearInterval(myInterVal);
+            this.loadData();
+          }, 100);
         }
       }
     });
   }
 
   changeDayOfMonth(args: any) {
+    args['date'] = args.value;
+    let crrDate = moment(this.FDdate)
+      .startOf('month')
+      .add(1, 'day')
+      .toISOString();
+    let newDate = moment(args.value)
+      .startOf('month')
+      .add(1, 'day')
+      .toISOString();
     this.FDdate = args.value;
-    var data = args.value;
-    this.change.detectChanges();
+    if (crrDate != newDate) this.changeNewMonth(args);
+    else {
+      let day = moment(args.value).date();
+      let changeWeek = true;
+      this.lstDOWeek.forEach((x) => {
+        if (x == day) {
+          changeWeek = false;
+          return;
+        }
+      });
+      if (this.typeNavigate == 'Week' || this.typeNavigate == 'WorkWeek') {
+        if (changeWeek && this.calendar_mini) {
+          let eleCalendar = this.calendar_mini.element as HTMLElement;
+          this.getDayOfWeek(eleCalendar);
+          let ele = document.getElementsByTagName('codx-schedule')[0];
+          if (ele) {
+            let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+            cmp.selectedDate = new Date(args.value);
+            cmp.isNavigateInside = true;
+          }
+        }
+      }
+      if (this.typeNavigate == 'Day') {
+        let ele = document.getElementsByTagName('codx-schedule')[0];
+        if (ele) {
+          let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+          cmp.selectedDate = new Date(args.value);
+          cmp.isNavigateInside = true;
+        }
+      }
+    }
   }
 
-  check = false;
   changeNewMonth(args: any) {
-    if (this.calendar_mini) {
-      var tempCalendar = this.calendar_mini.element;
-      var htmlE = tempCalendar as HTMLElement;
-      var eleFromDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-        ?.childNodes[0]?.childNodes[0]?.childNodes[0] as HTMLElement;
-      let numbF = this.convertStrToDate(eleFromDate);
-      const fDayOfMonth = moment(numbF).toISOString();
-      let indexLast =
-        htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes.length -
-        1;
-      let eleToDate = htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]
-        ?.childNodes[indexLast]?.childNodes[6].childNodes[0] as HTMLElement;
-      let numbL = this.convertStrToDate(eleToDate);
-      const lDayOfMonth = moment(numbL).toISOString();
-      this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
-    }
+    this.FDdate = args.date;
     let ele = document.getElementsByTagName('codx-schedule')[0];
     if (ele) {
-      this.dataResourceModel;
       let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      cmp.selectedDate = args.date;
-      //cmp.isNavigateInside = true;
-      this.check = true;
-      cmp.onNavigating(args);
+      cmp.selectedDate = new Date(args.date);
+      cmp.isNavigateInside = true;
+      let myInterVal = setInterval(() => {
+        clearInterval(myInterVal);
+        this.loadData();
+      }, 100);
     }
   }
 
@@ -297,15 +357,20 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
                   ?.childNodes[1]?.childNodes[0]?.childNodes[0]
                   ?.childNodes[0] as HTMLElement;
                 let numbF = this.convertStrToDate(eleFromDate);
-                const fDayOfMonth = moment(numbF).toISOString();
-                let indexLast =
+                const fDayOfMonth = moment(numbF).add(1, 'day').toISOString();
+                let length =
                   htmlE?.childNodes[1]?.childNodes[0]?.childNodes[1]?.childNodes
-                    .length - 1;
+                    .length;
+                let eleClass = htmlE?.childNodes[1]?.childNodes[0]
+                  ?.childNodes[1]?.childNodes[length - 1] as HTMLElement;
+                let indexLast = length - 1;
+                if (eleClass.className == 'e-month-hide')
+                  indexLast = length - 2;
                 let eleToDate = htmlE?.childNodes[1]?.childNodes[0]
                   ?.childNodes[1]?.childNodes[indexLast]?.childNodes[6]
                   .childNodes[0] as HTMLElement;
                 let numbL = this.convertStrToDate(eleToDate);
-                const lDayOfMonth = moment(numbL).toISOString();
+                const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
                 this.getParamCalendar(fDayOfMonth, lDayOfMonth, false);
               }
             } else {
@@ -356,6 +421,8 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getParamCalendar(fDayOfMonth, lDayOfMonth, updateCheck = true) {
+    console.log('check fDayOfMonth', fDayOfMonth);
+    console.log('check lDayOfMonth', lDayOfMonth);
     if (fDayOfMonth && lDayOfMonth) {
       this.countDataOfE = 0;
       this.api
@@ -450,9 +517,7 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     requestDataTM.entityName = 'TM_Tasks';
     requestDataTM.entityPermission = 'TM_MyTasks';
     this.codxShareSV.getDataTM_Tasks(requestDataTM).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'TM_Tasks');
-      }
+      this.getModelShare(res[0], param.Template, 'TM_Tasks');
     });
   }
 
@@ -460,20 +525,18 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (showEvent == '0' || showEvent == 'false') return;
     this.CO_Meetings = [];
     let requestDataCO: DataRequest = new DataRequest();
-    requestDataCO.predicate = predicate;
-    requestDataCO.dataValue = dataValue;
+    requestDataCO.predicates = predicate;
+    requestDataCO.dataValues = dataValue;
     requestDataCO.funcID = 'TMT0501';
     requestDataCO.formName = 'TMMeetings';
     requestDataCO.gridViewName = 'grvTMMeetings';
     requestDataCO.pageLoading = true;
     requestDataCO.page = 1;
-    requestDataCO.pageSize = 20;
+    requestDataCO.pageSize = 1000;
     requestDataCO.entityName = 'CO_Meetings';
     requestDataCO.entityPermission = 'CO_TMMeetings';
     this.codxShareSV.getDataCO_Meetings(requestDataCO).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'CO_Meetings');
-      }
+      this.getModelShare(res[0], param.Template, 'CO_Meetings');
     });
   }
 
@@ -481,20 +544,18 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (showEvent == '0' || showEvent == 'false') return;
     this.EP_BookingRooms = [];
     let requestDataEP_Room: DataRequest = new DataRequest();
-    requestDataEP_Room.predicate = predicate;
-    requestDataEP_Room.dataValue = dataValue;
+    requestDataEP_Room.predicates = predicate;
+    requestDataEP_Room.dataValues = dataValue;
     requestDataEP_Room.funcID = 'EP4T11';
     requestDataEP_Room.formName = 'BookingRooms';
     requestDataEP_Room.gridViewName = 'grvBookingRooms';
     requestDataEP_Room.pageLoading = true;
     requestDataEP_Room.page = 1;
-    requestDataEP_Room.pageSize = 20;
+    requestDataEP_Room.pageSize = 1000;
     requestDataEP_Room.entityName = 'EP_Bookings';
     requestDataEP_Room.entityPermission = 'EP_BookingRooms';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Room).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
-      }
+      this.getModelShare(res[0], param.Template, 'EP_BookingRooms');
     });
   }
 
@@ -502,20 +563,18 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (showEvent == '0' || showEvent == 'false') return;
     this.EP_BookingCars = [];
     let requestDataEP_Car: DataRequest = new DataRequest();
-    requestDataEP_Car.predicate = predicate;
-    requestDataEP_Car.dataValue = dataValue;
+    requestDataEP_Car.predicates = predicate;
+    requestDataEP_Car.dataValues = dataValue;
     requestDataEP_Car.funcID = 'EP7T11';
     requestDataEP_Car.formName = 'BookingCars';
     requestDataEP_Car.gridViewName = 'grvBookingCars';
     requestDataEP_Car.pageLoading = true;
     requestDataEP_Car.page = 1;
-    requestDataEP_Car.pageSize = 20;
+    requestDataEP_Car.pageSize = 1000;
     requestDataEP_Car.entityName = 'EP_Bookings';
     requestDataEP_Car.entityPermission = 'EP_BookingCars';
     this.codxShareSV.getDataEP_Bookings(requestDataEP_Car).subscribe((res) => {
-      if (res) {
-        this.getModelShare(res[0], param.Template, 'EP_BookingCars');
-      }
+      this.getModelShare(res[0], param.Template, 'EP_BookingCars');
     });
   }
 
@@ -523,16 +582,15 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
     if (showEvent == '0' || showEvent == 'false') return;
     this.WP_Notes = [];
     this.codxShareSV.getDataWP_Notes(predicate, dataValue).subscribe((res) => {
-      if (res) {
-        this.countNotePin = 0;
-        this.countNotePin = res[1];
-        this.getModelShare(res[0], param.Template, 'WP_Notes');
-      }
+      this.countNotePin = 0;
+      this.countNotePin = res[1];
+      this.getModelShare(res[0], param.Template, 'WP_Notes');
     });
   }
 
   getModelShare(lstData, param, transType) {
-    if (lstData) {
+    this.onSwitchCountEven(transType);
+    if (lstData && lstData.length > 0) {
       lstData.forEach((item) => {
         var paramValue = JSON.parse(JSON.stringify(Util.camelizekeyObj(param)));
         paramValue['data'] = {};
@@ -581,7 +639,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
             break;
         }
       });
-      this.onSwitchCountEven(transType);
       if (this.countDataOfE == this.countEvent) {
         this.dataResourceModel = [
           ...this.TM_Tasks,
