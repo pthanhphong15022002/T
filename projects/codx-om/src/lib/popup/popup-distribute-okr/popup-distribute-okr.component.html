@@ -8,7 +8,7 @@
     <!-- <div class="pt-5 pb-2 text-center">
       <codx-label [default]="'Mục tiêu: '+obName" fiedName="titleO" class="fw-bold fs-4"></codx-label>
     </div> -->
-    <div class="pb-2 text-center">
+    <div class="pt-3 text-center">
       <codx-label [default]="'KR: '+okrName" fiedName="titleKR" class="fw-bold fs-2"></codx-label>
     </div>
     <div class="flex-grow-1 overflow-auto">
@@ -51,7 +51,7 @@
                 </div>
                 <!--content-->
                 <div class="d-flex flex-column" *ngIf=" listDistribute && listDistribute?.length>0">
-                  <ng-container class="d-flex flex-column" *ngFor="let item of listDistribute;">
+                  <ng-container class="d-flex flex-column" *ngFor="let item of listDistribute; let i=index;">
                     <div class="my-2 d-flex flex-row justify-content-center">
                       <div class=" col-3 mx-1 d-flex flex-row ">
                         <div class="d-flex justify-content-center align-items-center" style="height:30px;width:30px"><span
@@ -63,22 +63,22 @@
                           [value]="item?.orgUnitName"></codx-inplace>
                       </div>
                       <div class=" col-1  mx-1">
-                        <codx-inplace [type]="'text'" emptyText=""
+                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="percentChange($event)" [field]="i"
                           cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.distributePct">
                         </codx-inplace>
                       </div>
                       <div class="col-2 mx-1">
-                        <codx-inplace [type]="'text'" emptyText=""
+                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="valueChange($event)" [field]="i"
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
                           [value]="item.distributeValue"> </codx-inplace>
                       </div>
                       <div class="col-1  mx-1">
-                        <codx-inplace [type]="'text'" emptyText=""
+                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" [field]="i"
                           cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.umid">
                         </codx-inplace>
                       </div>
                       <div class=" col-3  mx-1">
-                        <codx-inplace [type]="'text'" emptyText=""
+                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="nameChange($event)" [field]="i"
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
                           [value]="item.okrName"> </codx-inplace>
                       </div>
@@ -123,7 +123,7 @@
         <button class="btn btn-outline-primary me-2">
           <codx-label name="lblCancel" default="Huỷ"></codx-label>
         </button>
-        <button class="btn btn-primary">
+        <button class="btn btn-primary" (click)="onSaveForm()">
           <codx-label name="lblSave" default="Lưu"></codx-label>
         </button>
       </div>

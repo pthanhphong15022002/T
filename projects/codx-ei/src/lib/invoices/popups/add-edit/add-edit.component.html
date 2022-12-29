@@ -368,12 +368,12 @@
               default="Tiền tệ"
             >
             </codx-label>
-            <!-- <codx-input
+            <codx-input
               field="currencyID"
               [formModel]="form.formModel"
               [Group]="form.formGroup"
             >
-            </codx-input> -->
+            </codx-input>
           </div>
         </div>
         <!-- Tỷ giá -->
@@ -543,18 +543,10 @@
 
 <!-- Add Line template -->
 <ng-template #addLine let-data>
-  <table class="e-table e-inline-edit boder-0">
-    <colgroup>
-      <col style="width: 100px" />
-      <col style="width: 100px" />
-      <col style="width: 100px" />
-      <col style="width: 100px" />
-      <col style="width: 100px" />
-      <col style="width: 100px" />
-    </colgroup>
-    <tbody>
-      <tr>
-        <td class="e-rowcell text-start">
+  <div class="form-group mb-0 row">
+    <div class="col-12">
+      <div class="form-group mb-0 row">
+        <div class="col-2">
           <button class="btn btn-md btn-primary" (click)="addRow()">
             <codx-label
               name="btnAdd"
@@ -562,26 +554,46 @@
               default="Thêm mới"
             ></codx-label>
           </button>
-        </td>
-        <td class="e-rowcell text-start">
-          <codx-label
-            fiedName="totalAmt"
-            [formModel]="form.formModel"
-            default="Tổng cộng"
-          ></codx-label>
-        </td>
-        <td class="e-rowcell text-start">
-          <span>{{ invoices?.quantity }}</span>
-        </td>
-        <td class="e-rowcell">
-          <span>{{ invoices?.salesAmt }}</span>
-        </td>
-        <td class="e-rowcell">
-          <span>{{ invoices?.totalAmt }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+        </div>
+        <!-- Tổng số lượng -->
+        <div class="col-2">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="quantity"
+              [formModel]="form.formModel"
+              default="Tổng số lượng: "
+            >
+            </codx-label>
+            <span>{{ invoices?.quantity || 0 }}</span>
+          </div>
+        </div>
+        <!-- Tổng tiền trước thuế -->
+        <div class="col-2">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="totalPrice"
+              [formModel]="form.formModel"
+              default="Tổng tiền trước thuế: "
+            >
+            </codx-label>
+            <span>{{ invoices?.salesAmt || 0 }}</span>
+          </div>
+        </div>
+        <!-- Tổng tiền sau thuế -->
+        <div class="col-2">
+          <div class="form-group mb-0 pt-1">
+            <codx-label
+              fiedName="totalAmt"
+              [formModel]="form.formModel"
+              default="Tổng tiền sau thuế:"
+            >
+            </codx-label>
+            <span>{{ invoices?.totalAmt || 0 }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </ng-template>
 
 <!-- Tab Reference -->
