@@ -777,11 +777,7 @@ export class ProcessStepsComponent
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
-<<<<<<< HEAD
             this.edit(data,true);            
-=======
-            this.edit(data,!this.isEdit);
->>>>>>> 5f7762382e036b9b6f52d0443f817eb06ea8ab51
           });
       });
     }
