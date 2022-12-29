@@ -565,7 +565,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
-    if (!this.saveCheck) {
+    if (true) {
       this.data.reminder = 15;
       this.data.bookingOn = this.data.startDate;
       this.data.stopOn = this.data.endDate;
