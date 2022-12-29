@@ -180,12 +180,14 @@ export class AddEditComponent implements OnInit {
     }
 
     if (
-      e.field === 'quantity' &&
+      (e.field.toLowerCase() === 'quantity' ||
+        e.field.toLowerCase() === 'salesprice' ||
+        e.field.toLowerCase() === 'vatid') &&
       (e.data.salesPrice !== '' ||
         e.data.salesPrice !== undefined ||
         e.data.salesPrice >= 0)
     ) {
-      let data = this.calculateLine(e.data);
+      this.calculateLine(e.data);
       this.updateInvoices();
     }
   }
@@ -201,7 +203,7 @@ export class AddEditComponent implements OnInit {
         opt.className = 'InvoicesBusiness';
         opt.assemblyName = 'EI';
         opt.service = 'EI';
-        opt.data = this.invoices;
+        opt.data = [this.invoices, this.grid.dataSource];
         return true;
       })
       .subscribe();

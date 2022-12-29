@@ -22,6 +22,7 @@ import {
 import { CodxEpService, ModelPage } from '../../../codx-ep.service';
 import { BookingAttendees } from '../../../models/bookingAttendees.model';
 import { Equipments } from '../../../models/equipments.model';
+import { Resource } from '../../../models/resource.model';
 
 export class Device {
   id;
@@ -38,6 +39,7 @@ export class Device {
 export class PopupAddBookingCarComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('form') form: any;
+  @ViewChild('cusCBB') cusCBB: any;
 
   @Input() editResources: any;
   @Input() isAdd = true;
@@ -279,7 +281,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   this.calEndHour = tmpEndTime[0];
                   this.calEndMinutes = tmpEndTime[1];
                 }
-              });
+              });              
+              this.getResourceForCurrentTime();
               if (this.isAdd && this.optionalData) {
                 this.driverChangeWithCar(this.optionalData.resourceId);
               }
@@ -320,7 +323,10 @@ export class PopupAddBookingCarComponent extends UIComponent {
                   tempEndTime[1],
                   0
                 );
+                
               }
+              
+              this.getResourceForCurrentTime();
               this.calStartHour = tempStartTime[0];
               this.calStartMinutes = tempStartTime[1];
               this.calEndHour = tempEndTime[0];
@@ -383,6 +389,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
                       this.calEndMinutes = tmpEndTime[1];
                     }
                   });
+                  
+                  this.getResourceForCurrentTime();
                   if (this.isAdd && this.optionalData) {
                     this.driverChangeWithCar(this.optionalData.resourceId);
                   }
@@ -423,7 +431,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
                     tempEndTime[1],
                     0
                   );
+                  
                 }
+                this.getResourceForCurrentTime();
                 this.calStartHour = tempStartTime[0];
                 this.calStartMinutes = tempStartTime[1];
                 this.calEndHour = tempEndTime[0];
@@ -817,8 +827,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         );
       } else {
         this.driver = null;
-
-        this.notificationsService.notify('Xe hiện tại không có tài xế', '3', 0); // EP_WAIT doi messcode tu BA
+        this.notificationsService.notifyCode('EP008');
       }
       this.detectorRef.detectChanges();
     });
@@ -833,8 +842,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.codxEpService
         .driverValidator(
           driverID,
-          new Date(startDate).toUTCString(),
-          new Date(endDate).toUTCString(),
+          new Date(startDate),
+          new Date(endDate),
           recID
         )
         .subscribe((res) => {
@@ -891,6 +900,9 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.endDate,
       this.data.recID
     );
+    this.detectorRef.detectChanges();
+    
+    this.getResourceForCurrentTime();
     // if (
     //   this.data.startDate.getHours() == 0 &&
     //   this.data.startDate.getMinutes() == 0
@@ -934,6 +946,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
       this.data.endDate,
       this.data.recID
     );
+    
+    this.getResourceForCurrentTime();
     // if (
     //   this.data.endDate.getHours() == 0 &&
     //   this.data.endDate.getMinutes() == 0
@@ -1132,5 +1146,69 @@ export class PopupAddBookingCarComponent extends UIComponent {
           this.detectorRef.detectChanges();
         }
       });
+  }
+  cbbResource=[];  
+  fields: Object = { text: 'resourceName', value: 'resourceID' };
+  cbbResourceName:string;
+  getResourceForCurrentTime(){
+    this.codxEpService.getAvailableResources('2',this.data.startDate,this.data.endDate,this.data.recID).subscribe((res:any)=>{
+      if(res){
+        this.cbbResource=[];
+        Array.from(res).forEach((item:any)=>{
+          let tmpRes= new Resource();
+          tmpRes.resourceID=item.resourceID;
+          tmpRes.resourceName=item.resourceName;
+          tmpRes.capacity=item.capacity;
+          tmpRes.equipments=item.equipments;          
+          this.cbbResource.push(tmpRes);
+        });
+        let resourceStillAvailable= false;
+        if(this.data.resourceID!=null){
+          this.cbbResource.forEach(item=>{
+            if(item.resourceID == this.data.resourceID){
+              resourceStillAvailable = true;
+            }
+          });
+          if(!resourceStillAvailable){
+            this.data.resourceID=null;
+            this.tmplstDevice = [];
+            this.cusCBB.value=null;
+          }
+          else{
+            this.cbxResourceChange(this.data.resourceID);            
+            this.cusCBB.value=this.data.resourceID;
+          }
+        }
+
+        this.detectorRef.detectChanges();
+      }
+    })
+  }
+
+  cbxResourceChange(evt:any){
+    if(evt){
+      this.data.resourceID=evt;
+      let selectResource= this.cbbResource.filter((obj) => {
+        return obj.resourceID == evt;
+      });
+      if(selectResource){
+        this.carCapacity = selectResource[0].capacity;
+        this.tmplstDevice = [];
+        selectResource[0].equipments.forEach((item) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = item.equipmentID;
+            tmpDevice.isSelected = false;
+            this.vllDevices.forEach((vlItem) => {
+              if (tmpDevice.id == vlItem.value) {
+                tmpDevice.text = vlItem.text;
+                tmpDevice.icon = vlItem.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
+          });
+      }      
+      this.driverChangeWithCar(evt);
+      this.detectorRef.detectChanges();
+    }
   }
 }
