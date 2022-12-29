@@ -394,19 +394,6 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
-  distributeKR(kr:any){
-    let dModel = new DialogModel();    
-    dModel.IsFull = true;
-    let dialogDisKR = this.callfc.openForm(
-      PopupDistributeOKRComponent,
-      '',
-      null,
-      null,
-      null,
-      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
-      '',
-      dModel
-    );
-  }
+  
   //-----------------------End-------------------------------//
 }
