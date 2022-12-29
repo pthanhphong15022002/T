@@ -91,7 +91,7 @@
               <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
                 (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right
                 left">
-                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments">
+                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments" [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
               </span>
 
