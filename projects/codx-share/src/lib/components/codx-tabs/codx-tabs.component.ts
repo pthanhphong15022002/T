@@ -85,6 +85,15 @@ export class CodxTabsComponent implements OnInit {
   }
 
   navChange(evt: any) {
+    let footer = document.querySelector('.codx-detail-footer');
+    if (footer) {
+      var f = footer as HTMLElement;
+      let clss = f.classList;
+      if (!clss.contains('expand')) {
+        clss.remove('collape');
+        clss.add('expand');
+      }
+    }
     this.tabChange.emit(evt);
   }
 }
