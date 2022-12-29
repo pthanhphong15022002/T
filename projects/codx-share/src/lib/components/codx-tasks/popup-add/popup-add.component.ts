@@ -154,6 +154,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   tabContent: any[] = [];
   titleAction = '';
   disableDueDate = false;
+  titleViewTask =""
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -189,6 +190,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.cache.functionList(this.functionID).subscribe((f) => {
       if (f) {
+        this.titleViewTask = f.language=="VN" ? "Xem chi tiết" :"View"
         this.cache
           .gridViewSetup(f.formName, f.gridViewName)
           .subscribe((res) => {
@@ -245,7 +247,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.getTaskCoppied(this.taskCopy.taskID);
     } else {
       this.titleAction =
-        this.action == 'edit' ? this.titleAction : 'Xem chi tiết';
+        this.action == 'edit' ? this.titleAction : this.titleViewTask;
       if (this.action == 'view') {
         this.disableDueDate = true;
         this.readOnly = true;
