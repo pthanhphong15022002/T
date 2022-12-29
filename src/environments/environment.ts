@@ -12,7 +12,7 @@ export const environment = {
   urlUpload: '',
   office365: '',
   appName: '',
-  saas: 1,
+  saas: 0,
   tenantFirst: false,
   layoutCZ: 'qtsc',
   themeMode: 'body', //layout
