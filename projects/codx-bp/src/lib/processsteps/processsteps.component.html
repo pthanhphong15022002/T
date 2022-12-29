@@ -32,6 +32,7 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
     [rootData]="data"
+    (dblclick)="dblClick($event,data)"
   >
   </codx-card-img>
 </ng-template>
@@ -64,6 +65,7 @@
               (mouseenter)="openMF(item, p)"
               autoClose="outside"
               placement="right"
+              (dblclick)="dblClick($event,item)"
             >
               <i
                 class="{{
@@ -320,6 +322,7 @@
                 <div class="card card-steplist">
                   <div
                     class="steplist-hearder border border-gray-200 rounded px-6 py-4"
+                    (dblclick)="dblClick($event,item)"
                   >
                     <!-- <div class="example-handle" cdkDragHandle>
                       <span class="icon-reorder"></span>
@@ -405,6 +408,7 @@
                                 [desc2Tmp]="cardTitleTmp"
                                 [footer]="cardImgFooter"
                                 [moreFuncCss]="'me-15'"
+                                (dblclick)="dblClick($event,item1)"
                               >
                               </codx-temp-full>
 
@@ -439,7 +443,7 @@
   </div>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <div>
+  <div >
     <div
       class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
         data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'

@@ -280,8 +280,9 @@ export class LoginComponent implements OnInit, OnDestroy {
             } else {
               if (this.returnUrl.indexOf(data.tenant) > 0)
                 this.router.navigate([`${this.returnUrl}`]);
-              //this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
-              else this.router.navigate(['/tenants']);
+              else if (environment.tenantFirst)
+                this.router.navigate(['/tenants']);
+              else this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
             }
           } else {
             // this.alerttext = data.error;
