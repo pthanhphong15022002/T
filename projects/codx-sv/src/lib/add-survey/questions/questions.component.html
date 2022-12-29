@@ -371,10 +371,10 @@
         <span class="icon-arrow_drop_down_circle icon-24"></span>
         <codx-label fiedName="" default="Menu thả xuống"></codx-label>
       </div>
-      <div class="d-flex" *ngIf="answerType == 'A'">
+      <!-- <div class="d-flex" *ngIf="answerType == 'A'">
         <span class="icon-cloud_upload icon-24"></span>
         <codx-label fiedName="" default="Tải tệp lên"></codx-label>
-      </div>
+      </div> -->
       <div class="d-flex" *ngIf="answerType == 'R'">
         <span class="icon-24"></span>
         <codx-label fiedName="" default="Phạm vi tuyến tính"></codx-label>
@@ -444,7 +444,7 @@
         </div>
       </button>
       <hr />
-      <button
+      <!-- <button
         ngbDropdownItem
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'A')"
       >
@@ -453,7 +453,7 @@
           <codx-label fiedName="" default="Tải tệp lên"></codx-label>
         </div>
       </button>
-      <hr />
+      <hr /> -->
       <button
         ngbDropdownItem
         (click)="clickQuestionMF(seqNoSession, itemQuestion, 'R')"
@@ -911,8 +911,11 @@
     *ngIf="itemQuestion?.qPicture && lstEditIV.length > 0"
     class="pb-12"
   >
-    <div *ngFor="let item of lstEditIV" class="min-h-253px">
-      <div class="w-100" *ngIf="item.objectID == itemQuestion.recID">
+    <div *ngFor="let item of lstEditIV">
+      <div
+        class="w-100 min-h-253px"
+        *ngIf="item.objectID == itemQuestion.recID"
+      >
         <div
           [ngClass]="
             itemQuestion?.alignCenterImg
@@ -1021,7 +1024,7 @@
                 </li>
                 <li>
                   <a
-                    (click)="deleteFileInlineQ(item.objectID)"
+                    (click)="delFileInline(item.objectID)"
                     ngbDropdownItem
                     href="javascript:void(0)"
                   >
@@ -1276,13 +1279,20 @@
           </div>
         </div>
         <div #imageInlineAnswer *ngIf="itemAnswer.hasPicture">
-          <div *ngFor="let item of lstEditIV">
-            <img
-              class="w-100px"
-              [src]="getSrcImage(item)"
-              alt=""
+          <div *ngFor="let item of lstEditIV" class="ms-12 mt-3">
+            <div
               *ngIf="item.objectID == itemAnswer.recID"
-            />
+              class="position-relative has-action-menu"
+            >
+              <img
+                class="w-100px border-gray"
+                [src]="getSrcImage(item)"
+                alt=""
+              />
+              <span (click)="delFileInline(item.objectID)"
+                class="icon-close icon-20 icon-MF-image-outside-answer action-menu pointer"
+              ></span>
+            </div>
           </div>
         </div>
       </div>
@@ -1611,6 +1621,7 @@
                     [width]="150"
                     cssClass="pic"
                     imageType="square"
+                    referType="image"
                   >
                   </codx-img>
                 </ng-container>
@@ -1633,107 +1644,6 @@
       />
     </div>
   </ng-container>
-  <!-- <ng-template #viewImage>
-    <div class="position-relative">
-      <div class="row mt-2 justify-content-between pd-10">
-        <div class="col-5 my-2 m-w-100">
-          <div class="d-flex align-items-center icon-MF-image-outside">
-            <div ngbDropdown class="dropdown" container="body">
-              <a
-                href="javascript:void(0)"
-                class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
-                ngbDropdownToggle
-                id="dropdownMenuButton1"
-                aria-expanded="false"
-              >
-                <span class="icon-more_vert icon-22"> </span>
-              </a>
-              <ul ngbDropdownMenu aria-labelledby="dropdownMenuButton1">
-                <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-format_align_left"></span>
-                    <codx-label
-                      fiedName="formatAlignLeft"
-                      default="Căn trái"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-format_align_right"></span>
-                    <codx-label
-                      fiedName="formatAlignRight"
-                      default="Căn phải"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a ngbDropdownItem href="javascript:void(0)">
-                    <span class="icon-format_align_center"></span>
-                    <codx-label
-                      fiedName="formatAlignCenter"
-                      default="Căn giữa"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    (click)="
-                      popupUploadFile(itemQuestion.category, 'change', false)
-                    "
-                    ngbDropdownItem
-                    href="javascript:void(0)"
-                  >
-                    <span class="icon-image"></span>
-                    <codx-label
-                      fiedName="changeImage"
-                      default="Thay đổi"
-                    ></codx-label>
-                  </a>
-                </li>
-                <li>
-                  <a
-                    (click)="
-                      deleteFile(seqNoSession, itemQuestion, data.objectID)
-                    "
-                    ngbDropdownItem
-                    href="javascript:void(0)"
-                  >
-                    <span class="icon-delete"></span>
-                    <codx-label
-                      fiedName="deleteImage"
-                      default="Xóa"
-                    ></codx-label>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="w-150">
-            <ng-container *ngIf="itemQuestion.category == 'P'">
-              <codx-img
-                [objectId]="itemQuestion.recID"
-                [objectType]="functionList.entityName"
-                [width]="150"
-                cssClass="pic"
-                imageType="square"
-              >
-              </codx-img>
-            </ng-container>
-            <ng-container *ngIf="itemQuestion.category == 'V'">
-              <video #video controls class="w-100 rounded h-auto">
-                <source [src]="getSrcVideo(itemQuestion)" type="video/mp4" />
-              </video>
-            </ng-container>
-          </div>
-        </div>
-      </div>
-      <img
-        [src]="getUrlImageOfVideo(itemQuestion.videoID)"
-        *ngIf="itemQuestion?.url"
-      />
-    </div>
-  </ng-template> -->
 </ng-template>
 <ng-template
   #template_card_title

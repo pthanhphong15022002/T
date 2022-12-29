@@ -421,8 +421,6 @@ export class CodxCalendarComponent extends UIComponent implements OnInit {
   }
 
   getParamCalendar(fDayOfMonth, lDayOfMonth, updateCheck = true) {
-    console.log('check fDayOfMonth', fDayOfMonth);
-    console.log('check lDayOfMonth', lDayOfMonth);
     if (fDayOfMonth && lDayOfMonth) {
       this.countDataOfE = 0;
       this.api
