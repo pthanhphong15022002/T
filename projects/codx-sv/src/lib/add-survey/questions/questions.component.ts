@@ -157,20 +157,21 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   onInit(): void {}
 
   ngAfterViewInit() {
-    this.onLoading();
+    var html = document.querySelector('app-questions');
+    let myInterVal = setInterval(() => {
+      if (html) {
+        clearInterval(myInterVal);
+        this.onLoading(html);
+      }
+    }, 1000);
   }
 
-  onLoading() {
-    var html = document.querySelector('codx-wrapper');
+  onLoading(html) {
     if (html) {
       html.addEventListener('scroll', (e) => {
         var htmlMF = document.querySelector('.moreFC');
-        let myInterval = setInterval(() => {
-          if (htmlMF) {
-            clearInterval(myInterval);
-            htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
-          }
-        }, 200);
+        htmlMF.setAttribute('style', `top: ${html.scrollTop}px`);
+        console.log('check html.scrollTop', html.scrollTop);
       });
     }
   }

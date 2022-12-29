@@ -372,6 +372,10 @@ hr {
   font-weight: 400 !important;
 }
 
+.form-group codx-label .codx-label {
+  margin-bottom: 4px !important;
+}
+
 [data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-arrow {
   opacity: 0;
 }
@@ -726,6 +730,11 @@ codx-toolbar-button .dropdown-toggle.dropdown-toggle-split {
   border-radius: 0 3px 3px 0 !important;
 }
 
+.codx-search {
+  display: flex;
+  justify-content: flex-start;
+}
+
 .codx-search .btn-icon-clear {
   margin-right: 20px;
 }
@@ -798,7 +807,7 @@ codx-view-list-detail .codx-detail-footer.expand .tab-content {
   overflow: auto;
   padding: 0 15px;
   position: relative;
-  height: 358px;
+  height: 360px;
   padding-bottom: 0 !important;
 }
 
@@ -1317,8 +1326,18 @@ codx-vll {
   word-break: break-word;
 }
 
+.tab-content>.tab-pane {
+  padding-right: 5px;
+}
+
 .tab-content>.active {
   height: 100%;
+  overflow-y: auto;
+}
+
+.tab-content .mt-3.tab-tch {
+  margin-top: 0 !important;
+  padding-top: 5px !important;
 }
 
 .label-colon {
@@ -1476,4 +1495,30 @@ ejs-schedule .e-schedule-toolbar-container .e-control.e-popup-open {
 
 codx-view-schedule .container-fluid.h-50px .mt-4 {
   margin-top: 10px !important;
+}
+
+.user-selected .e-list-item.e-hover {
+  background-color: transparent !important;
+}
+
+.stepper-body codx-attachment .overflow-auto.mh-200px {
+  max-height: none !important;
+}
+
+#dropdownContent .card .card-header {
+  padding-bottom: 5px !important;
+}
+
+#dropdownContent div.has-action-menu {
+  margin: 0 !important;
+  padding: 2px !important;
+}
+
+#dropdownContent .e-list-item {
+  padding: 4px 8px !important;
+  border-bottom: 1px var(--gray-150) solid;
+}
+
+.user-mini-nav-custom a {
+  color: var(--primary-dark);
 }

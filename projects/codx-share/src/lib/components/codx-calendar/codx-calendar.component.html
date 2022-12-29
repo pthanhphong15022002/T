@@ -32,7 +32,11 @@
             ></codx-label>
           </div>
           <span
-            class="icon-more_vert icon-20 icon-gray col-md-1 pt-1 ps-7"
+            [ngClass]="
+              !isCollapsed
+                ? 'icon-keyboard_arrow_up icon-20 icon-gray col-md-1 pt-1 ps-7'
+                : 'icon-keyboard_arrow_down icon-20 icon-gray col-md-1 pt-1 ps-7'
+            "
             (click)="collapse.toggle()"
             [attr.aria-expanded]="!isCollapsed"
             aria-controls="collapseExample"

@@ -206,7 +206,7 @@
   [RightTemlate]="tmpContent"
   *ngIf="isAfterRender"
 >
-  <ng-template #body>
+  <!-- <ng-template #body>
     <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="DiseaseID" [formModel]="formModel"></codx-label>
@@ -381,7 +381,7 @@
         [Group]="formGroup"
       ></codx-input>
     </div>
-  </ng-template>
+  </ng-template> -->
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
@@ -397,7 +397,7 @@
   </ng-template>
 </layout-list-detail>
 
-<ng-template #footer>
+<!-- <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="onSaveForm()">
       <i class="icon-save"></i>
@@ -408,7 +408,7 @@
       ></codx-label>
     </button>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #LeftTemlate>
   <codx-listview

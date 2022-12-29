@@ -12,9 +12,9 @@ export const environment = {
   urlUpload: '',
   office365: '',
   appName: '',
-  saas: 1,
-  layoutCZ: "qtsc",
-  themeMode: "body",//layout
+  saas: 0,
+  layoutCZ: 'qtsc',
+  themeMode: 'body', //layout
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',

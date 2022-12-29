@@ -29,22 +29,25 @@
       (valueChange)="cbxChange($event)" [disabled]="readOnly">
     </codx-input>
   </div>
-  <div class="form-group row">
-    <div class="col-6">
-      <div>
+  <div class="row mx-0">
+    <div class="col-6 ps-0">
+      <div class="form-group">
         <codx-label fiedName="DueDate" formName="Tasks" gridViewName="grvTasks" default="Ngày hết hạn">
         </codx-label>
+        <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" [crrValue]="task?.dueDate"
+          (valueChange)="changeTime($event)" [disabled]="disableDueDate">
+        </codx-input>
       </div>
-      <codx-input type="datetime" class="test-datetime" field="dueDate" format="F" [crrValue]="task?.dueDate"
-        (valueChange)="changeTime($event)" [disabled]="disableDueDate">
-      </codx-input>
     </div>
-    <div class="col-6">
-      <div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
         <codx-label fiedName="Priority" [formModel]="form.formModel" default="Ưu tiên">
         </codx-label>
+        <codx-input field="priority" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="changeVLL($event)" [disabled]="readOnly">
+        </codx-input>
       </div>
-      <!-- <codx-input
+      <!-- <codx-input dung công việc
         field="priority"
         [type]="gridViewSetup['Priority']['controlType']"
         [placeholder]="gridViewSetup['Priority']['headerText']"
@@ -55,12 +58,10 @@
         [disabled]="readOnly"
       >
       </codx-input> -->
-      <codx-input field="priority" [formModel]="form.formModel" [Group]="form.formGroup"
-        (valueChange)="changeVLL($event)" [disabled]="readOnly">
-      </codx-input>
+
     </div>
   </div>
-  <div class="extend-function" *ngIf="param?.PlanControl != '0' || param?.PlanControl == null">
+  <div class="extend-function pt-0" *ngIf="param?.PlanControl != '0' || param?.PlanControl == null">
     <hr />
     <div class="d-flex justify-content-center" (click)="showPlan = !showPlan">
       <div class="d-flex align-items-center w-auto extend-title">
@@ -75,8 +76,8 @@
   <ng-container *ngIf="
       (param?.PlanControl != '0' || param?.PlanControl == null) && showPlan
     ">
-    <div class="form-group row extend-more">
-      <div class="col-5">
+    <div class="form-group row mx-0 extend-more">
+      <div class="col-5 ps-0">
         <div>
           <codx-label fiedName="StartDate" [formModel]="form.formModel" default="Ngày bắt đầu">
           </codx-label>
@@ -94,7 +95,7 @@
           (valueChange)="changeTime($event)" [disabled]="readOnly">
         </codx-input>
       </div>
-      <div class="col-2 ps-0">
+      <div class="col-2 ps-0 pe-0">
         <div>
           <codx-label fiedName="Estimated" [formModel]="form.formModel" default="Số giờ">
           </codx-label>
@@ -116,7 +117,7 @@
     </div>
   </ng-container>
   <ng-container *ngIf="showAssignTo">
-    <div class="d-flex align-items-center nav-item w-100 mb-1">
+    <div class="d-flex align-items-center justify-content-between nav-item w-100 mb-1 mt-3">
       <div class="d-flex align-items-center mb-3">
         <span class="icon-person icon-18 me-2 text-primary"></span>
         <div class="fw-bold text-primary mt-1">
@@ -153,7 +154,7 @@
 </ng-template>
 
 <ng-template #tabJob>
-  <div class="tm-desc">
+  <div class="tm-desc form-group mb-0">
     <codx-label fiedName="Memo" [formModel]="form.formModel" default="Nội dung công việc">
     </codx-label>
     <codx-input type="textarea" headerposition="none" field="memo" [crrValue]="task?.memo" format="ed" height="550"
@@ -170,7 +171,7 @@
       </div>
     </ng-container>
   </div>
-  <div class="d-flex align-items-center justify-content-between mt-4">
+  <div class="d-flex align-items-center justify-content-between mt-3">
     <div class="d-flex align-items-center">
       <span class="icon-person icon-18 me-2 text-primary"></span>
       <div class="fw-bold text-primary mt-1">

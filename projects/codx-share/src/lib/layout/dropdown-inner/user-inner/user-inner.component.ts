@@ -123,7 +123,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
         this.auth.userSubject.next(res);
         //this.auth.startRefreshTokenTimer();
         this.authstore.set(res);
-        document.location.reload();
+        if (lang) document.location.reload();
       });
     this.cache.systemSetting().subscribe((systemSetting: any) => {
       systemSetting.language = this.language.lang.toUpperCase();
@@ -145,7 +145,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
             this.auth.userSubject.next(user);
             //this.auth.startRefreshTokenTimer();
             this.authstore.set(user);
-            document.location.reload();
+            if (lang) document.location.reload();
           }
         });
     });
@@ -169,6 +169,9 @@ export class UserInnerComponent implements OnInit, OnDestroy {
   }
 
   setTheme(value: string) {
+    //check exist list theme
+    let findtheme = this.themes.find((x) => x.id == value);
+    if (!findtheme) value = 'default';
     //Remove Old
     let elm =
       environment.themeMode == 'body'
@@ -258,25 +261,25 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'default',
     name: 'Default',
-    color: '#187de4',
+    color: '#005DC7',
     enable: true,
   },
   {
     id: 'orange',
     name: 'Orange',
-    color: '#ff7213',
+    color: '#f15711',
     enable: true,
   },
   {
     id: 'sapphire',
     name: 'Sapphire',
-    color: '#23d3c1',
+    color: '#0b9b8d',
     enable: true,
   },
   {
     id: 'green',
     name: 'Green',
-    color: '#15b144',
+    color: '#0f8633',
     enable: true,
   },
 ];

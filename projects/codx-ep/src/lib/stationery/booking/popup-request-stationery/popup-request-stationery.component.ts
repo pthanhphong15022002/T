@@ -82,6 +82,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   nagetivePhysical: string = '';
   totalStationery = 0;
   saveCheck = false;
+  approvalRule: any;
 
   constructor(
     private injector: Injector,
@@ -111,7 +112,15 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   onInit(): void {
     this.user = this.auth.get();
-
+    this.epService
+      .getEPStationerySetting('4')
+      .subscribe((approvalSetting: any) => {
+        if (approvalSetting) {
+          this.approvalRule = JSON.parse(
+            approvalSetting.dataValue
+          )[0]?.ApprovalRule;
+        }
+      });
     this.epService.getStationeryGroup().subscribe((res) => {
       this.groupStationery = res[0];
       this.totalStationery = res[1];
@@ -275,7 +284,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
   }
 
   beforeSave(option: any) {
-    let itemData = this.dialogAddBookingStationery.value;
+    let itemData = this.data;
     this.addQuota();
     this.groupByWareHouse();
     this.dialogAddBookingStationery.patchValue({ recID: this.data.recID });
@@ -294,16 +303,46 @@ export class PopupRequestStationeryComponent extends UIComponent {
           this.formModel
         );
       }
-
-      if (this.dialogAddBookingStationery.value.reasonID instanceof Object) {
-        this.dialogAddBookingStationery.patchValue({
-          reasonID: this.dialogAddBookingStationery.value.reasonID[0],
-        });
+      this.data.approval = this.approvalRule;
+      let bDay = new Date(this.dialogAddBookingStationery.value.bookingOn);
+      let tmpDay = new Date();
+      if (
+        bDay <
+        new Date(
+          tmpDay.getFullYear(),
+          tmpDay.getMonth(),
+          tmpDay.getDate(),
+          0,
+          0,
+          0,
+          0
+        )
+      ) {
+        this.notificationsService.notifyCode('TM036');
+        this.saveCheck = false;
+        return;
       }
 
       this.dialogAddBookingStationery.patchValue({
         title: this.dialogAddBookingStationery.value.note,
+        approval: this.approvalRule,
       });
+
+      this.data.bookingOn = this.dialogAddBookingStationery.value.bookingOn;
+      this.data.reasonID = this.dialogAddBookingStationery.value.reasonID;
+      this.data.note = this.dialogAddBookingStationery.value.note;
+      this.data.title = this.dialogAddBookingStationery.value.note;
+      this.data.approval = this.approvalRule;
+      this.data.resourceType =
+        this.dialogAddBookingStationery.value.resourceType;
+      this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus;
+      if (this.approvalRule == '0' && approval) {
+        this.data.approveStatus = '5';
+        this.data.status = '5';
+      } else {
+        this.data.approveStatus = '1';
+        this.data.status = '1';
+      }
 
       this.dialogRef.dataService
         .save((opt: any) => this.beforeSave(opt), 0, null, null, !approval)
@@ -333,38 +372,57 @@ export class PopupRequestStationeryComponent extends UIComponent {
             }
 
             if (approval) {
-              this.epService
-                .getCategoryByEntityName(this.formModel.entityName)
-                .subscribe((category: any) => {
-                  this.returnData.forEach((item) => {
-                    this.epService
-                      .release(
-                        item,
-                        category.processID,
-                        'EP_Bookings',
-                        this.formModel.funcID
-                      )
-                      .subscribe((res) => {
-                        if (res?.msgCodeError == null && res?.rowCount >= 0) {
-                          this.notificationsService.notifyCode('ES007');
-                          item.approveStatus = '3';
-                          item.status = '3';
-                          item.write = false;
-                          item.delete = false;
-                          (this.dialogRef.dataService as CRUDService)
-                            .update(item)
-                            .subscribe();
-                          this.dialogRef && this.dialogRef.close();
-                        } else {
-                          this.notificationsService.notifyCode(
-                            res?.msgCodeError
-                          );
-                          // Thêm booking thành công nhưng gửi duyệt thất bại
-                          this.dialogRef && this.dialogRef.close();
-                        }
-                      });
+              if (this.approvalRule != '0') {
+                this.epService
+                  .getCategoryByEntityName(this.formModel.entityName)
+                  .subscribe((category: any) => {
+                    this.returnData.forEach((item) => {
+                      this.epService
+                        .release(
+                          item,
+                          category.processID,
+                          'EP_Bookings',
+                          this.formModel.funcID
+                        )
+                        .subscribe((res) => {
+                          if (res?.msgCodeError == null && res?.rowCount >= 0) {
+                            this.notificationsService.notifyCode('ES007');
+                            item.approveStatus = '3';
+                            item.status = '3';
+                            item.write = false;
+                            item.delete = false;
+                            (this.dialogRef.dataService as CRUDService)
+                              .update(item)
+                              .subscribe();
+                            this.dialogRef && this.dialogRef.close();
+                          } else {
+                            this.notificationsService.notifyCode(
+                              res?.msgCodeError
+                            );
+                            // Thêm booking thành công nhưng gửi duyệt thất bại
+                            this.dialogRef && this.dialogRef.close();
+                          }
+                        });
+                    });
                   });
+              } else {
+                this.notificationsService.notifyCode('ES007');
+                this.returnData.forEach((item) => {
+                  this.epService
+                    .afterApprovedManual(
+                      this.formModel.entityName,
+                      item.recID,
+                      '5'
+                    )
+                    .subscribe(res);
+                  item.approveStatus = '5';
+                  item.status = '5';
+                  item.write = false;
+                  item.delete = false;
                 });
+                this.dialogRef && this.dialogRef.close(this.returnData);
+              }
+
               this.dialogRef && this.dialogRef.close();
             } else {
               this.dialogRef && this.dialogRef.close();

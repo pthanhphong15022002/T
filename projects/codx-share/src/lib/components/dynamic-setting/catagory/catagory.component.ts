@@ -106,7 +106,7 @@ export class CatagoryComponent implements OnInit {
         this.title = ds.text;
         if (this.category === '2' || this.category === '7')
           this.getIDAutoNumber();
-        else if (this.category === '4') this.getCategories();
+        //else if (this.category === '4') this.getCategories();
         else if (this.category === '5') this.getAlertRule();
         else if (this.category === '6') this.getSchedules();
       }
@@ -124,15 +124,17 @@ export class CatagoryComponent implements OnInit {
         ['FormName=@0 and Category=@1', 'ESParameters;1']
       )
       .subscribe((setting: any) => {
-        let format = JSON.parse(setting.dataValue);
-        console.log('func', this.function);
+        if (setting) {
+          let format = JSON.parse(setting?.dataValue);
+          console.log('func', this.function);
 
-        // this.cacheService.functionList(this.lstFuncID)
-        this.labels = format?.Label?.filter((label) => {
-          return label.Language == this.function?.language;
-        });
+          // this.cacheService.functionList(this.lstFuncID)
+          this.labels = format?.Label?.filter((label) => {
+            return label.Language == this.function?.language;
+          });
 
-        this.changeDetectorRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
+        }
       });
   }
 
@@ -369,13 +371,16 @@ export class CatagoryComponent implements OnInit {
   loadValue() {
     switch (this.category) {
       case '1':
+      case '4':
         if (this.settingValue.length > 0) {
           var value = this.settingValue[0].dataValue;
           if (value) {
             this.dataValue = JSON.parse(value);
           }
+          if (this.category == '4') {
+            this.getCategories();
+          }
         }
-
         break;
     }
   }
@@ -439,9 +444,14 @@ export class CatagoryComponent implements OnInit {
 
   getCategories() {
     var lstCategoryID = [];
-    if (this.setting) {
-      this.setting.forEach((element) => {
-        if (element.fieldName) lstCategoryID.push(element.fieldName);
+    // if (this.setting) {
+    //   this.setting.forEach((element) => {
+    //     if (element.fieldName) lstCategoryID.push(element.fieldName);
+    //   });
+    // }
+    if (this.dataValue && Array.isArray(this.dataValue)) {
+      this.dataValue.forEach((element) => {
+        if (element.CategoryID) lstCategoryID.push(element.CategoryID);
       });
     }
     if (lstCategoryID.length > 0) {
@@ -532,44 +542,53 @@ export class CatagoryComponent implements OnInit {
             console.log(res);
           });
       } else {
-        if (this.dataValue[field] == value) return;
+        if (this.category != '4') if (this.dataValue[field] == value) return;
         var dt = this.settingValue.find((x) => x.category == this.category);
-        if (this.category == '1') {
-          if (data.displayMode !== '4' && data.displayMode !== '5') {
-            this.dataValue[field] = value;
-          } else {
-            if (!Array.isArray(value)) this.dataValue[field] = value;
-            let fID = '',
-              id = '',
-              fName = '',
-              name = '',
-              fType = '',
-              type = '';
-            var settingChild = this.settingFull.filter((item: any) => {
-              if (item.refLineID === data.recID) {
-                if (item.dataFormat === 'ID') fID = item.fieldName;
-                if (item.dataFormat === 'Name') fName = item.fieldName;
-                if (item.dataFormat === 'Type') fType = item.fieldName;
-                return item;
-              }
-            });
-            if (Array.isArray(value)) {
-              value.forEach((element, i) => {
-                let space = '';
-                if (i > 0) space = ';';
-                id += space + (element.id || '');
-                name += space + (element.text || element.objectName || '');
-                type += space + (element.objectType || '');
-              });
-            }
-            if (fID) this.dataValue[fID] = id;
-            if (fName) this.dataValue[fName] = name;
-            if (fType) this.dataValue[fType] = type;
-            var ele = document.querySelector(
-              '.share-object-name[data-recid="' + data.recID + '"]'
+        if (this.category == '1' || this.category == '4') {
+          if (this.category == '4' && Array.isArray(this.dataValue)) {
+            let dtvalue = this.dataValue.find(
+              (x) => x.FieldName == data.fieldName
             );
-            if (ele) ele.innerHTML = name;
+            if (dtvalue.ApprovalRule == value) return;
+            dtvalue.ApprovalRule = value;
+          } else {
+            if (data.displayMode !== '4' && data.displayMode !== '5') {
+              this.dataValue[field] = value;
+            } else {
+              if (!Array.isArray(value)) this.dataValue[field] = value;
+              let fID = '',
+                id = '',
+                fName = '',
+                name = '',
+                fType = '',
+                type = '';
+              var settingChild = this.settingFull.filter((item: any) => {
+                if (item.refLineID === data.recID) {
+                  if (item.dataFormat === 'ID') fID = item.fieldName;
+                  if (item.dataFormat === 'Name') fName = item.fieldName;
+                  if (item.dataFormat === 'Type') fType = item.fieldName;
+                  return item;
+                }
+              });
+              if (Array.isArray(value)) {
+                value.forEach((element, i) => {
+                  let space = '';
+                  if (i > 0) space = ';';
+                  id += space + (element.id || '');
+                  name += space + (element.text || element.objectName || '');
+                  type += space + (element.objectType || '');
+                });
+              }
+              if (fID) this.dataValue[fID] = id;
+              if (fName) this.dataValue[fName] = name;
+              if (fType) this.dataValue[fType] = type;
+              var ele = document.querySelector(
+                '.share-object-name[data-recid="' + data.recID + '"]'
+              );
+              if (ele) ele.innerHTML = name;
+            }
           }
+
           if (!this.dialog) {
             if (dt) {
               dt.dataValue = JSON.stringify(this.dataValue);

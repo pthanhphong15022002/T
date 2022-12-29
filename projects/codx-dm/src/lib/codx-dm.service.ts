@@ -367,8 +367,9 @@ export class CodxDMService {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  getAvatar(ext: string) {
-    if (ext == null) return 'file.svg';
+  getAvatar(ex: string) {
+    if (!ex) return 'file.svg';
+    var ext = ex.toLocaleLowerCase();
     switch (ext) {
       case '.txt':
         return 'txt.svg';

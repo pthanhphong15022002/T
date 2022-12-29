@@ -281,12 +281,30 @@ export class CodxOmService {
       [kr]
     );
   }
+  copyKR(kr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'AddKRAsync',
+      [kr]
+    );
+  }
   editKR(kr:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
       'EditKRAsync',
+      [kr]
+    );
+  }
+  deleteKR(kr:any) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'DeleteKRAsync',
       [kr]
     );
   }
