@@ -1332,7 +1332,7 @@ codx-vll {
 
 .tab-content>.active {
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .tab-content .mt-3.tab-tch {
@@ -1503,4 +1503,22 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 
 .stepper-body codx-attachment .overflow-auto.mh-200px {
   max-height: none !important;
+}
+
+#dropdownContent .card .card-header {
+  padding-bottom: 5px !important;
+}
+
+#dropdownContent div.has-action-menu {
+  margin: 0 !important;
+  padding: 2px !important;
+}
+
+#dropdownContent .e-list-item {
+  padding: 4px 8px !important;
+  border-bottom: 1px var(--gray-150) solid;
+}
+
+.user-mini-nav-custom a {
+  color: var(--primary-dark);
 }
