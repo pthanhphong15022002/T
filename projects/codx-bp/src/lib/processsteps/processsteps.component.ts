@@ -144,7 +144,6 @@ export class ProcessStepsComponent
   listCountPhases: any;
   actived = false;
   isBlock: any = true;
-  idView = '';
   loadingData = false;
   heightFlowChart = 0;
   widthElement = 300;
@@ -367,7 +366,7 @@ export class ProcessStepsComponent
     });
   }
 
-  edit(data) {
+  edit(data, isView = false) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -387,6 +386,8 @@ export class ProcessStepsComponent
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
             this.process,
+            null,
+            isView
           ],
           option
         );
@@ -764,7 +765,7 @@ export class ProcessStepsComponent
   dblClick(e,data){
     e.stopPropagation()
     let stepType = data.stepType;
-    this.titleAction = this.getTitleAction("", data.stepType);
+    this.titleAction = this.getTitleAction("Xem", data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
     if (funcMenu) {
       this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
@@ -776,7 +777,7 @@ export class ProcessStepsComponent
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
-            this.edit(data);
+            this.edit(data,!this.isEdit);
           });
       });
     }
