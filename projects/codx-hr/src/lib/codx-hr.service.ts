@@ -411,7 +411,7 @@ export class CodxHrService {
       'HR',
       'HR',
       'ETrainCoursesBusiness',
-      'GetEmployeeTrainCoursesInfoAsync',
+      'GetETrainCoursesByEmpIDAsync',
       data
     );
   }

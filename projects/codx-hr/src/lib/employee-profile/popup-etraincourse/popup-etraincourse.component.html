@@ -287,6 +287,7 @@
               <span class="text-end align-items-end mb-1">
                 <a
                   class="btn btn-sm border border-gray-300 btn-active-light-primary align-items-center d-flex flex-row text-italic"
+                  (click)="setIssuedPlace()"
                 >
                   <span
                     class="icon-south text-danger btn-text-primary me-2"
@@ -468,7 +469,7 @@
 
 <ng-template #footer>
   <div class="d-flex justify-content-end" (click)="onSaveForm2()">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"
@@ -481,7 +482,7 @@
 
 <ng-template #footer1>
   <div class="d-flex justify-content-end">
-    <button class="btn btn-primary" (click)="onSaveForm()">
+    <button class="btn btn-primary" (click)="onSaveForm(false)">
       <i class="icon-save"></i>
       <codx-label
         default="Lưu"

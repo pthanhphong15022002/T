@@ -10,6 +10,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { Thickness } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'lib-popup-etraincourse',
@@ -105,11 +106,13 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     }
   }
 
-  onSaveForm() {
-    this.hrService.updateEmployeeTrainCourseInfo(this.data).subscribe((p) => {
-      if (p === 'True') {
+  onSaveForm(closeForm: boolean) {
+    this.hrService.updateEmployeeTrainCourseInfo(this.data).subscribe((res) => {
+      if (res) {
         this.notitfy.notifyCode('SYS007');
-        this.dialog.close();
+        if (closeForm) {
+          this.dialog && this.dialog.close();
+        }
       } else this.notitfy.notifyCode('DM034');
     });
   }
@@ -133,16 +136,38 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       this.actionType == 'edit' ||
       (this.actionType == 'add' && this.isSaved == true)
     ) {
+      let modelECertificate = JSON.parse(JSON.stringify(this.data));
+      modelECertificate.refTrainCource = this.data.recID;
+      delete modelECertificate.recID;
+
       this.hrService.AddECertificateInfo(this.data).subscribe((res) => {
         if (res) {
           this.data.isUpdateCertificate = true;
-          this.formGroup.patchValue({isUpdateCertificate: true})
+          this.formGroup.patchValue({ isUpdateCertificate: true });
+          this.hrService
+            .updateEmployeeTrainCourseInfo(this.data)
+            .subscribe((res) => {});
           this.cr.detectChanges();
         }
       });
     } else if (this.actionType == 'add' && this.isSaved == false) {
       //Thông báo lưu record trainning trước khi cập nhật Chứng chỉ
+      this.notitfy.notifyCode('SYS007');
     }
     this.cr.detectChanges();
   }
+
+
+  setIssuedPlace(){
+    if(this.data.trainSupplierID){
+      this.data.issuedPlace = this.data.trainSupplierID
+      this.formGroup.patchValue({issuedPlace: this.data.issuedPlace})
+      this.cr.detectChanges();
+    }
+    else{
+      //Thông báo chưa chọn nơi đào tạo
+    }
+    
+  }
+  
 }
