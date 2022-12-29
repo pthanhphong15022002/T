@@ -303,7 +303,8 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     );
     popup.closed.subscribe((res: any) => {
       if (res?.event?.recID) {
-        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        (this.listview.dataService as CRUDService)
+        .update(res.event).subscribe();
         this.notifySvr.notifyCode('WP021');
       }
     });
