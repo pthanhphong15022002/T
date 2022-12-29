@@ -39,7 +39,7 @@
       <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)">
       </codx-input>
-      <div class="row mx-0">
+      <div class="row mt-2">
         <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start flex-wrap">
             <div class="d-flex" *ngFor="let item of tmplstDevice">
