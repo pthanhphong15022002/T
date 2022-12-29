@@ -378,6 +378,10 @@
         border-color: var(--primary-dark) !important;
     }
 
+    .e-calendar .e-content td.e-today span.e-day {
+        color: var(--text-dark) !important;
+    }
+
     .e-date-wrapper span.e-input-group-icon.e-date-icon.e-icons.e-active {
         background: var(--primary-light);
     }
