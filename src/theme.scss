@@ -345,6 +345,7 @@
 
     .btn-outline-primary:hover {
         background-color: var(--primary-light);
+        color: var(--primary-dark) !important;
     }
 
     .btn.btn-active-light-primary.btn-outline:not(.btn-outline-default) {
