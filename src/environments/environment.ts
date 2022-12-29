@@ -13,8 +13,9 @@ export const environment = {
   office365: '',
   appName: '',
   saas: 1,
-  layoutCZ: "qtsc",
-  themeMode: "body",//layout
+  tenantFirst: false,
+  layoutCZ: 'qtsc',
+  themeMode: 'body', //layout
   SureMeet: {
     baseUrl: 'https://api.suremeet.vn/',
     tokenUrl: 'api/auth/token',

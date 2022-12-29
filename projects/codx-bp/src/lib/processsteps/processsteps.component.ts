@@ -257,8 +257,8 @@ export class ProcessStepsComponent
       },
       {
         id: '9',
-        type: ViewType.content,
-        active: false,
+        type: ViewType.chart,
+        active: true,
         sameData: false,
         model: {
           panelLeftRef: this.flowChart,
@@ -274,8 +274,7 @@ export class ProcessStepsComponent
 
   //Thay doi viewModel
   chgViewModel(type) {
-    // this.idView = type ;
-    let view = this.views.find((x) => x.id == type);
+    let view = this.views.find((x) => x.id == type);  
     if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
@@ -472,9 +471,9 @@ export class ProcessStepsComponent
     } else {
       // doi parent
       phaseOld?.items.splice(index, 1);
-      if (index < phaseOld?.items.length - 1) {
-        for (var i = index; i < phaseOld?.items.length; i++) {
-          phaseOld['items'][i].stepNo--;
+      if (index < phaseOld.length - 1) {
+        for (var i = index; i < phaseOld.length; i++) {
+          phaseOld[i].stepNo--;
         }
       }
       var indexParentNew = this.view.dataService.data.findIndex(
@@ -635,8 +634,10 @@ export class ProcessStepsComponent
             this.kanban = (this.view.currentView as any).kanban;
           switch (data.stepType) {
             case 'P':
-              if (this.kanban && this.kanban.columns.length >0) {
-                let idx= this.kanban.columns.findIndex(x=>x.keyField==data.recID)
+              if (this.kanban && this.kanban.columns.length > 0) {
+                let idx = this.kanban.columns.findIndex(
+                  (x) => x.keyField == data.recID
+                );
                 this.kanban.columns?.splice(idx, 1);
                 this.kanban.refresh();
               }
@@ -908,7 +909,6 @@ export class ProcessStepsComponent
         )?.item[0]?.offsetHeight;
       if (this.kanban) (this.view.currentView as any).kanban = this.kanban;
       else this.kanban = (this.view.currentView as any).kanban;
-      this.dataColums = this.kanban.columns;
       this.changeDetectorRef.detectChanges();
     }
   }
@@ -1300,7 +1300,6 @@ export class ProcessStepsComponent
     if (this.crrPopper && this.crrPopper.isOpen()) this.crrPopper.close();
     this.crrPopper = p;
     if (data != null) {
-      this.isHover = data?.recID;
       this.dataHover = data;
       p.open();
     } else {
@@ -1315,13 +1314,13 @@ export class ProcessStepsComponent
   }
 
   closeMFTypeA() {
-    if(this.isEdit){
+    if (this.isEdit) {
       this.hideMoreFC = false;
       this.hideMoreFCChild = true;
     }
   }
   openMFTypeA() {
-    if(this.isEdit){
+    if (this.isEdit) {
       this.hideMoreFC = true;
       this.hideMoreFCChild = false;
     }
