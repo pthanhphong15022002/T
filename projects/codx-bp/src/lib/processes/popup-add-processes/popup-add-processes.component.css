@@ -45,6 +45,10 @@
   color: #6C757D;
 }
 .image-maxsize{
-  width: 494px !important;
-  height: 242px !important;
+  /* width: 494px !important;
+  height: 242px !important; */
+  height: 250px !important;
+  width: auto !important;
+  max-width: 498px !important;
+  max-height: 245px !important;
 }

@@ -345,6 +345,7 @@
 
     .btn-outline-primary:hover {
         background-color: var(--primary-light);
+        color: var(--primary-dark) !important;
     }
 
     .btn.btn-active-light-primary.btn-outline:not(.btn-outline-default) {
@@ -375,6 +376,10 @@
     .e-bigger.e-small .e-calendar .e-content td.e-today span.e-day,
     .e-bigger.e-small .e-calendar .e-content td.e-focused-date.e-today span.e-day {
         border-color: var(--primary-dark) !important;
+    }
+
+    .e-calendar .e-content td.e-today span.e-day {
+        color: var(--text-dark) !important;
     }
 
     .e-date-wrapper span.e-input-group-icon.e-date-icon.e-icons.e-active {

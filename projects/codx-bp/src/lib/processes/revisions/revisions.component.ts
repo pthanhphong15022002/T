@@ -5,17 +5,11 @@ import {
   Optional,
   ViewChild,
   ChangeDetectorRef,
-  inject,
-  Injector,
 } from '@angular/core';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import {
   DialogData,
   DialogRef,
-  ApiHttpService,
   NotificationsService,
-  AuthStore,
-  UIComponent,
   CacheService,
   Util,
 } from 'codx-core';

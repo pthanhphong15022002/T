@@ -91,9 +91,16 @@
   opacity: 1;
 }
 
-.button_change_email {
-  margin: 34px;
-  margin-left: 169px;
+.img_option,
+.img_optionFull {
+  position: relative;
+}
+
+.button_change_email,
+.button_change_main {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* hover image mail header */

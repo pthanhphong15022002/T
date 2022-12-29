@@ -1098,42 +1098,49 @@ export class AttachmentComponent implements OnInit, OnChanges {
     }
   }
 
-  async serviceAddFile(fileItem: FileUpload): Promise<FileUpload> {
-    try {
-      fileItem.uploadId = '';
-      fileItem.objectID = this.objectId;
-      var appName = environment.appName; // Tam thoi de hard
-      var ChunkSizeInKB = this.dmSV.ChunkSizeInKB;
-      var uploadFile = null;
-      if (!fileItem.item?.rawFile?.name)
-        uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
-      else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
-      var retUpload = await lvFileClientAPI.postAsync(
-        `api/${appName}/files/register`,
-        {
-          Data: {
-            FileName: uploadFile.name,
-            ChunkSizeInKB: ChunkSizeInKB,
-            FileSize: uploadFile.size,
-            thumbSize: {
-              width: 200, //Kích thước của file ảnh Thum bề ngang
-              height: 200, //Kích thước của file ảnh Thum bề dọc
-            },
-            IsPublic: true,
-            ThumbConstraints: '30,60,120,300,500,600',
-          },
-        }
-      );
-      fileItem.fileSize = uploadFile.size;
-      fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
-      fileItem.uploadId = retUpload.Data?.UploadId; //"";
-      fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
-    } catch (ex) {
-      console.log(ex);
-    }
-    return fileItem;
-  }
 
+  async uploadFileAsync(uploadFile,appName,ChunkSizeInKB) {
+    var retUpload = await lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
+      Data: {
+        FileName: uploadFile?.name,
+        ChunkSizeInKB: ChunkSizeInKB,
+        FileSize: uploadFile?.size,
+        thumbSize: {
+          width: 200, //Kích thước của file ảnh Thum bề ngang
+          height: 200, //Kích thước của file ảnh Thum bề dọc
+        },
+        IsPublic: true,
+        ThumbConstraints: '30,60,120,300,500,600',
+      },
+    })
+    var chunSizeInfBytes = ChunkSizeInKB * 1024;
+    var sizeInBytes = uploadFile?.size;
+          var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
+          if (uploadFile?.size % chunSizeInfBytes > 0) {
+            numOfChunks++;
+          }
+    for (var i = 0; i < numOfChunks; i++) {
+      var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
+      var end = start + chunSizeInfBytes; //Vị trí cuối
+      if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
+      var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
+      var fileChunk = new File([blogPart], uploadFile.name, {
+        type: uploadFile.type,
+      }); //Gói lại thành 1 file chunk để upload
+      try {
+        var uploadChunk = await lvFileClientAPI.formPostWithToken(
+          `api/${appName}/files/upload`,
+          {
+            FilePart: fileChunk,
+            UploadId: retUpload.Data?.UploadId,
+            Index: i,
+          }
+        );
+        console.log(uploadChunk);
+      } catch (ex) {}
+    }
+    return retUpload;
+  } 
   addFileObservable(
     fileItem: any,
     isAddFile: boolean = true,
@@ -1150,58 +1157,16 @@ export class AttachmentComponent implements OnInit, OnChanges {
         uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var obj = from(
-        lvFileClientAPI.postAsync(`api/${appName}/files/register`, {
-          Data: {
-            FileName: uploadFile?.name,
-            ChunkSizeInKB: ChunkSizeInKB,
-            FileSize: uploadFile?.size,
-            thumbSize: {
-              width: 200, //Kích thước của file ảnh Thum bề ngang
-              height: 200, //Kích thước của file ảnh Thum bề dọc
-            },
-            IsPublic: true,
-            ThumbConstraints: '30,60,120,300,500,600',
-          },
-        })
+        this.uploadFileAsync(uploadFile,appName,ChunkSizeInKB)
       );
 
       var chunSizeInfBytes = ChunkSizeInKB * 1024;
       var sizeInBytes = 0;
       return obj.pipe(
         mergeMap((retUpload, i) => {
-          if (!retUpload) return null;
-          // update len server urs và thumbnail
-          fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
-          fileItem.uploadId = retUpload.Data?.UploadId; //"";
-          fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
-
-          //this.displayThumbnail(res.recID, res.pathDisk);
-          var sizeInBytes = uploadFile?.size;
-          var numOfChunks = Math.floor(uploadFile.size / chunSizeInfBytes);
-          if (uploadFile?.size % chunSizeInfBytes > 0) {
-            numOfChunks++;
-          }
-          //api/lv-docs/files/upload
-          for (var i = 0; i < numOfChunks; i++) {
-            var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
-            var end = start + chunSizeInfBytes; //Vị trí cuối
-            if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
-            var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
-            var fileChunk = new File([blogPart], uploadFile.name, {
-              type: uploadFile.type,
-            }); //Gói lại thành 1 file chunk để upload
-            try {
-              var uploadChunk = lvFileClientAPI.formPostWithToken(
-                `api/${appName}/files/upload`,
-                {
-                  FilePart: fileChunk,
-                  UploadId: retUpload.Data?.UploadId,
-                  Index: i,
-                }
-              );
-              console.log(uploadChunk);
-            } catch (ex) {}
-          }
+          fileItem.thumbnail = retUpload.Data?.RelUrlThumb;
+          fileItem.uploadId = retUpload.Data?.UploadId; 
+          fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; 
           if (isAddFile)
           {
             fileItem.createdOn = new Date();
@@ -1358,7 +1323,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
   //   });
   //   window.localStorage.setItem('lv-file-api-token', retToken.access_token);
   // }
-
+  
   async addFileLargeLong(
     fileItem: FileUpload,
     isAddFile: boolean = true
@@ -1387,39 +1352,14 @@ export class AttachmentComponent implements OnInit, OnChanges {
         uploadFile = this.lstRawFile.find((x) => x.name == fileItem.item.name);
       else uploadFile = fileItem.item?.rawFile; // Nguyên thêm dấu ? để không bị bắt lỗi
       var appName = environment.appName; // Tam thoi de hard
-      fileItem = await this.serviceAddFile(fileItem);
-      if (isAddFile) this.addFile(fileItem);
+      var retUpload = await this.uploadFileAsync(uploadFile,appName,this.dmSV.ChunkSizeInKB);
+      fileItem.fileSize = uploadFile.size;
+      fileItem.thumbnail = retUpload.Data?.RelUrlThumb; //"";
+      fileItem.uploadId = retUpload.Data?.UploadId; //"";
+      fileItem.urlPath = retUpload.Data?.RelUrlOfServerPath; //"";
+      //fileItem = await this.serviceAddFile(fileItem);
 
-      //this.displayThumbnail(res.recID, res.pathDisk);
-      var sizeInBytes = fileItem.fileSize; // uploadFile.size;
-      var chunSizeInfBytes = this.dmSV.ChunkSizeInKB * 1024;
-      var numOfChunks = Math.floor(fileItem.fileSize / chunSizeInfBytes);
-      if (fileItem.fileSize % chunSizeInfBytes > 0) {
-        numOfChunks++;
-      }
-      //api/lv-docs/files/upload
-      for (var i = 0; i < numOfChunks; i++) {
-        var start = i * chunSizeInfBytes; //Vị trí bắt đầu băm file
-        var end = start + chunSizeInfBytes; //Vị trí cuối
-        if (end > sizeInBytes) end = sizeInBytes; //Nếu điểm cắt cuối vượt quá kích thước file chặn lại
-        var blogPart = uploadFile.slice(start, end); //Lấy dữ liệu của chunck dựa vào đầu cuối
-        var fileChunk = new File([blogPart], uploadFile.name, {
-          type: uploadFile.type,
-        }); //Gói lại thành 1 file chunk để upload
-        try {
-          var uploadChunk = await lvFileClientAPI.formPostWithToken(
-            `api/${appName}/files/upload`,
-            {
-              FilePart: fileChunk,
-              UploadId: fileItem.uploadId,
-              Index: i,
-            }
-          );
-          console.log(uploadChunk);
-        } catch (ex) {
-          console.log(ex);
-        }
-      }
+      if (isAddFile) this.addFile(fileItem);
     } catch (ex) {
       fileItem.uploadId = '0';
       // this.notificationsService.notify(ex);
