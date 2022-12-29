@@ -88,13 +88,12 @@
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span [ngbPopover]="popperAttachment" #p="ngbPopover" [openDelay]="500" (mouseenter)="p.open()"
-                (mouseleave)="p.close()" placement="right">
+              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
+                (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right
+                left">
+                <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments">
+                </codx-attachment-temp>
               </span>
-
-              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments"
-                [openViewPopup]="checkPermissionRead(data)">
-              </codx-attachment-temp>
 
             </div>
           </div>
