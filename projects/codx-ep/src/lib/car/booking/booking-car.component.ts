@@ -231,6 +231,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
   onActionClick(evt?) {
     if (evt.type == 'add') {
+      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
     }
   }

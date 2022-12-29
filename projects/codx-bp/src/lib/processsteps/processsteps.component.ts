@@ -144,7 +144,6 @@ export class ProcessStepsComponent
   listCountPhases: any;
   actived = false;
   isBlock: any = true;
-  idView = '';
   loadingData = false;
   heightFlowChart = 0;
   widthElement = 300;
@@ -274,7 +273,7 @@ export class ProcessStepsComponent
 
   //Thay doi viewModel
   chgViewModel(type) {
-    let view = this.views.find((x) => x.id == type);  
+    let view = this.views.find((x) => x.id == type);
     if (view) this.view?.viewChange(view);
     this.changeDetectorRef.detectChanges();
   }
@@ -359,7 +358,7 @@ export class ProcessStepsComponent
           }
           this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
-          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
+          this.isBlockClickMoreFunction();
           this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
         }
@@ -367,7 +366,7 @@ export class ProcessStepsComponent
     });
   }
 
-  edit(data) {
+  edit(data, isView = false) {
     if (data) {
       this.view.dataService.dataSelected = data;
     }
@@ -387,6 +386,8 @@ export class ProcessStepsComponent
             this.view.dataService.dataSelected?.stepType,
             this.formModelMenu,
             this.process,
+            null,
+            isView
           ],
           option
         );
@@ -687,7 +688,7 @@ export class ProcessStepsComponent
           }
           this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
-          this.isBlockClickMoreFunction(this.dataTreeProcessStep);
+          this.isBlockClickMoreFunction();
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -703,7 +704,7 @@ export class ProcessStepsComponent
 
   //#region event
   click(evt: ButtonModel) {
-    this.isBlockClickMoreFunction(this.dataTreeProcessStep);
+    this.isBlockClickMoreFunction();
     if (this.listCountPhases <= 0 && evt.id != 'P') {
       return this.notiService.notify(this.msgBP001);
     }
@@ -762,9 +763,9 @@ export class ProcessStepsComponent
     this.clickMF(e.e, e.data);
   }
   dblClick(e,data){
-    e.stopPropagation() 
+    e.stopPropagation()
     let stepType = data.stepType;
-    this.titleAction = this.getTitleAction("", data.stepType);
+    this.titleAction = this.getTitleAction("Xem", data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
     if (funcMenu) {
       this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
@@ -776,7 +777,7 @@ export class ProcessStepsComponent
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
-            this.edit(data);            
+            this.edit(data,!this.isEdit);
           });
       });
     }
@@ -1300,7 +1301,10 @@ export class ProcessStepsComponent
     }
   }
 
-  isBlockClickMoreFunction(listData) {
+  isBlockClickMoreFunction() {
+    let kanban = this.kanban?.columns?.datacolums??[];
+    let viewList = this.dataTreeProcessStep??[];
+    let listData = viewList.length>0?viewList:kanban;
     const check = listData.length > 0 ? true : false;
     if (check) {
       this.listCountPhases = listData.length;

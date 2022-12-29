@@ -78,6 +78,7 @@ export class PopupAddProcessStepsComponent
   linkQuesiton = '';
   hideExtend = false;
   folderID = '';
+  isView = false;
   constructor(
     private inject: Injector,
     private bpService: CodxBpService,
@@ -101,6 +102,7 @@ export class PopupAddProcessStepsComponent
     this.formModelMenu = dt?.data[3];
     this.process = dt?.data[4];
     this.recIDCopied = dt?.data[5];
+    this.isView = dt?.data[6];
     if (this.processSteps.parentID && this.action == 'add') {
       this.lockParentId = true;
     }

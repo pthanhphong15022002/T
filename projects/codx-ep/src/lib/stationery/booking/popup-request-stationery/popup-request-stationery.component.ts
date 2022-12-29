@@ -302,6 +302,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
           this.dialogAddBookingStationery,
           this.formModel
         );
+        return;
       }
       this.data.approval = this.approvalRule;
       let bDay = new Date(this.dialogAddBookingStationery.value.bookingOn);

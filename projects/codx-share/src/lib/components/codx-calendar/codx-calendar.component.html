@@ -1,208 +1,118 @@
-<codx-views
-  #view
-  [funcID]="funcID"
-  [service]="'WP'"
-  [entityName]="functionList?.entityName"
-  [views]="views"
-  [autoLoad]="false"
->
+<codx-views #view [funcID]="funcID" [service]="'WP'" [entityName]="functionList?.entityName" [views]="views"
+  [autoLoad]="false">
 </codx-views>
 <ng-template #templateLeft>
-  <div class="row codx-calendar">
-    <div class="col-md-2">
-      <ejs-calendar
-        #calendar_mini
-        [firstDayOfWeek]="1"
-        locale="vi"
-        (change)="changeDayOfMonth($event)"
-        cssClass="width-calendar"
-        class="e-customStyle"
-        title="Lịch các nhân"
-        (navigated)="changeNewMonth($event)"
-        [value]="dateChange"
-      >
-      </ejs-calendar>
-      <ng-container #listParam>
-        <div class="row title-calendar w-100">
-          <div class="col-md-10 mt-2">
-            <codx-label
-              fiedName="Calendar"
-              default="Calendar"
-              class="pt-3"
-            ></codx-label>
-          </div>
-          <span
-            [ngClass]="
+  <div class="bg-body p-5 rounded-3">
+    <div class="d-flex codx-calendar">
+      <div class="w-250px me-5">
+        <ejs-calendar #calendar_mini [firstDayOfWeek]="1" locale="vi" (change)="changeDayOfMonth($event)"
+          cssClass="width-calendar" class="e-customStyle" title="Lịch các nhân" (navigated)="changeNewMonth($event)"
+          [value]="dateChange">
+        </ejs-calendar>
+        <ng-container #listParam>
+          <div class="d-flex align-items-center mt-3 title-calendar">
+            <div class="w-100">
+              <codx-label fiedName="Calendar" default="Calendar" class="fw-bold"></codx-label>
+            </div>
+            <div class="me-2">
+              <span [ngClass]="
               !isCollapsed
                 ? 'icon-keyboard_arrow_up icon-20 icon-gray col-md-1 pt-1 ps-7'
                 : 'icon-keyboard_arrow_down icon-20 icon-gray col-md-1 pt-1 ps-7'
-            "
-            (click)="collapse.toggle()"
-            [attr.aria-expanded]="!isCollapsed"
-            aria-controls="collapseExample"
-          ></span>
-        </div>
-        <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-          <div class="row pt-3" *ngIf="WP_NotesParam != null">
-            <div class="w-5px col-md-1">
-              <li
-                [style.background-color]="WP_NotesParam?.ShowColor"
-                [style.color]="WP_NotesParam?.ShowColor"
-              ></li>
+            " (click)="collapse.toggle()" [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample"></span>
             </div>
-            <div class="show-list-event col-md-8">
-              <codx-label
-                name="lblNote"
-                formName="WP_Notes"
-                default="Ghi chú"
-              ></codx-label>
-            </div>
-            <div class="show-event-check col-md-2">
-              <codx-input
-                type="checkbox"
-                field="WP_Notes"
-                [checked]="
+          </div>
+          <div #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+            <div class="d-flex align-items-center mt-3" *ngIf="WP_NotesParam != null">
+              <div class="w-5px me-2">
+                <li [style.background-color]="WP_NotesParam?.ShowColor" [style.color]="WP_NotesParam?.ShowColor"></li>
+              </div>
+              <div class="w-100 show-list-event">
+                <codx-label name="lblNote" formName="WP_Notes" default="Ghi chú"></codx-label>
+              </div>
+              <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                <codx-input type="checkbox" field="WP_Notes" [checked]="
                   checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'
-                "
-                labelPosition="Before"
-                [disabled]="false"
-                class="test-check"
-                (valueChange)="valueChangeSetting($event)"
-              >
-              </codx-input>
+                " labelPosition="Before" [disabled]="false" class="test-check"
+                  (valueChange)="valueChangeSetting($event)">
+                </codx-input>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row" *ngIf="TM_TasksParam != null">
-            <div class="w-5px col-md-1">
-              <li
-                [style.background-color]="TM_TasksParam?.ShowColor"
-                [style.color]="TM_TasksParam?.ShowColor"
-              ></li>
-            </div>
-            <div class="show-list-event col-md-8">
-              <codx-label
-                name="lblTask"
-                formName="WP_Task"
-                default="Công việc cá nhân"
-              ></codx-label>
-            </div>
-            <div class="show-event-check col-md-2">
-              <codx-input
-                type="checkbox"
-                field="TM_Tasks"
-                [checked]="
+            <div class="d-flex mt-3 align-items-center" *ngIf="TM_TasksParam != null">
+              <div class="w-5px me-2">
+                <li [style.background-color]="TM_TasksParam?.ShowColor" [style.color]="TM_TasksParam?.ShowColor"></li>
+              </div>
+              <div class="show-list-event w-100">
+                <codx-label name="lblTask" formName="WP_Task" default="Công việc cá nhân"></codx-label>
+              </div>
+              <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                <codx-input type="checkbox" field="TM_Tasks" [checked]="
                   checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'
-                "
-                labelPosition="Before"
-                [disabled]="false"
-                class="test-check"
-                (valueChange)="valueChangeSetting($event)"
-              >
-              </codx-input>
+                " labelPosition="Before" [disabled]="false" class="test-check"
+                  (valueChange)="valueChangeSetting($event)">
+                </codx-input>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row" *ngIf="CO_MeetingsParam != null">
-            <div class="w-5px col-md-1">
-              <li
-                [style.background-color]="CO_MeetingsParam?.ShowColor"
-                [style.color]="CO_MeetingsParam?.ShowColor"
-              ></li>
-            </div>
-            <div class="show-list-event col-md-8">
-              <codx-label
-                name="lblMeeting"
-                formName="CO_Meetings"
-                default="Lịch họp cá nhân"
-              >
-              </codx-label>
-            </div>
-            <div class="show-event-check col-md-2">
-              <codx-input
-                type="checkbox"
-                field="CO_Meetings"
-                [checked]="
+            <div class="d-flex mt-3 align-items-center" *ngIf="CO_MeetingsParam != null">
+              <div class="w-5px me-2">
+                <li [style.background-color]="CO_MeetingsParam?.ShowColor" [style.color]="CO_MeetingsParam?.ShowColor">
+                </li>
+              </div>
+              <div class="show-list-event w-100">
+                <codx-label name="lblMeeting" formName="CO_Meetings" default="Lịch họp cá nhân">
+                </codx-label>
+              </div>
+              <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                <codx-input type="checkbox" field="CO_Meetings" [checked]="
                   checkCO_MeetingsParam == 'true' ||
                   checkCO_MeetingsParam == '1'
-                "
-                labelPosition="Before"
-                [disabled]="false"
-                class="test-check"
-                (valueChange)="valueChangeSetting($event)"
-              >
-              </codx-input>
+                " labelPosition="Before" [disabled]="false" class="test-check"
+                  (valueChange)="valueChangeSetting($event)">
+                </codx-input>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row" *ngIf="EP_BookingRoomsParam != null">
-            <div class="w-5px col-md-1">
-              <li
-                [style.background-color]="EP_BookingRoomsParam?.ShowColor"
-                [style.color]="EP_BookingRoomsParam?.ShowColor"
-              ></li>
-            </div>
-            <div class="show-list-event col-md-8">
-              <codx-label
-                name="lblBookingRoom"
-                formName="EP_BookingRooms"
-                default="Đặt phòng"
-              >
-              </codx-label>
-            </div>
-            <div class="show-event-check col-md-2">
-              <codx-input
-                type="checkbox"
-                field="EP_BookingRooms"
-                [checked]="
+            <div class="d-flex mt-3 align-items-center" *ngIf="EP_BookingRoomsParam != null">
+              <div class="w-5px me-2">
+                <li [style.background-color]="EP_BookingRoomsParam?.ShowColor"
+                  [style.color]="EP_BookingRoomsParam?.ShowColor"></li>
+              </div>
+              <div class="show-list-event w-100">
+                <codx-label name="lblBookingRoom" formName="EP_BookingRooms" default="Đặt phòng">
+                </codx-label>
+              </div>
+              <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                <codx-input type="checkbox" field="EP_BookingRooms" [checked]="
                   checkEP_BookingRoomsParam == 'true' ||
                   checkEP_BookingRoomsParam == '1'
-                "
-                labelPosition="Before"
-                [disabled]="false"
-                class="test-check"
-                (valueChange)="valueChangeSetting($event)"
-              >
-              </codx-input>
+                " labelPosition="Before" [disabled]="false" class="test-check"
+                  (valueChange)="valueChangeSetting($event)">
+                </codx-input>
+              </div>
             </div>
-          </div>
-          <br />
-          <div class="row" *ngIf="EP_BookingCarsParam != null">
-            <div class="w-5px col-md-1">
-              <li
-                [style.background-color]="EP_BookingCarsParam?.ShowColor"
-                [style.color]="EP_BookingCarsParam?.ShowColor"
-              ></li>
-            </div>
-            <div class="show-list-event col-md-8">
-              <codx-label
-                name="lblBookingCar"
-                formName="EP_BookingCars"
-                default="Đặt xe"
-              >
-              </codx-label>
-            </div>
-            <div class="show-event-check col-md-2">
-              <codx-input
-                type="checkbox"
-                field="EP_BookingCars"
-                [checked]="
+            <div class="d-flex mt-3 align-items-center" *ngIf="EP_BookingCarsParam != null">
+              <div class="w-5px me-2">
+                <li [style.background-color]="EP_BookingCarsParam?.ShowColor"
+                  [style.color]="EP_BookingCarsParam?.ShowColor"></li>
+              </div>
+              <div class="show-list-event w-100">
+                <codx-label name="lblBookingCar" formName="EP_BookingCars" default="Đặt xe">
+                </codx-label>
+              </div>
+              <div class="show-event-check me-2 w-50px d-flex justify-content-end">
+                <codx-input type="checkbox" field="EP_BookingCars" [checked]="
                   checkEP_BookingCarsParam == 'true' ||
                   checkEP_BookingCarsParam == '1'
-                "
-                labelPosition="Before"
-                [disabled]="false"
-                class="test-check"
-                (valueChange)="valueChangeSetting($event)"
-              >
-              </codx-input>
+                " labelPosition="Before" [disabled]="false" class="test-check"
+                  (valueChange)="valueChangeSetting($event)">
+                </codx-input>
+              </div>
             </div>
           </div>
-        </div>
-      </ng-container>
-    </div>
-    <div class="col-md-10">
-      <ng-template #calendar_setting></ng-template>
+        </ng-container>
+      </div>
+      <div class="w-100">
+        <ng-template #calendar_setting></ng-template>
+      </div>
     </div>
   </div>
 </ng-template>
