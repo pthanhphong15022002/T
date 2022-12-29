@@ -30,7 +30,7 @@
         --primary: #3699ff;
         --primary-active: #005dc7;
         --primary-inverse: #FFFFFF;
-        --primary-darkest: #032b53;
+        --primary-darkest: #073563;
         --primary-darker: #005DC7;
         --primary-dark: #187DE4;
         --primary-light: #cae8f1;
@@ -51,7 +51,7 @@
         --primary: #ff7619;
         --primary-active: #ff6602;
         --primary-inverse: #FFFFFF;
-        --primary-darkest: #521e01;
+        --primary-darkest: #722b05;
         --primary-darker: #f15711;
         --primary-dark: #ff6822;
         --primary-light: #ffdebf;
@@ -72,7 +72,7 @@
         --primary: #28e0ce;
         --primary-active: #1ead9f;
         --primary-inverse: #FFFFFF;
-        --primary-darkest: #01524e;
+        --primary-darkest: #035e59;
         --primary-darker: #0b9b8d;
         --primary-dark: #23d3c1;
         --primary-light: #bef0ec;
@@ -93,7 +93,7 @@
         --primary: #27d65c;
         --primary-active: #179b3f;
         --primary-inverse: #FFFFFF;
-        --primary-darkest: #01520f;
+        --primary-darkest: #025c11;
         --primary-darker: #0f8633;
         --primary-dark: #14ad42;
         --primary-light: #b5ffbf;
@@ -376,6 +376,10 @@
     .e-bigger.e-small .e-calendar .e-content td.e-today span.e-day,
     .e-bigger.e-small .e-calendar .e-content td.e-focused-date.e-today span.e-day {
         border-color: var(--primary-dark) !important;
+    }
+
+    .e-calendar .e-content td.e-today span.e-day {
+        color: var(--text-dark) !important;
     }
 
     .e-date-wrapper span.e-input-group-icon.e-date-icon.e-icons.e-active {

@@ -566,6 +566,8 @@ export class ProcessesComponent
       this.moreFunc == 'BPT205' ||
       this.moreFunc == 'BPT305' ||
       this.moreFunc == 'BPT605' ||
+      this.moreFunc == 'BPT304' ||
+      this.moreFunc == 'BPT604' ||
       this.moreFunc == 'BPT204'
     ) {
       let option = new SidebarModel();
@@ -688,9 +690,9 @@ export class ProcessesComponent
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT105':
-      case 'BPT605':
-      case 'BPT305':
       case 'BPT205':
+      case 'BPT305':
+      case 'BPT605':
       case 'BPT104':
       case 'BPT204':
       case 'BPT304':

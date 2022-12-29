@@ -26,8 +26,9 @@
                 <span class="">{{ data.activities }}</span>
               </div>
               <div class="d-flex me-3">
-                <span class="icon-attach_file text-primary icon-16 me-1"></span>
-                <span class=" ">{{ data.attachments }}</span>
+                <!-- <span class="icon-attach_file text-primary icon-16 me-1"></span> -->
+                <codx-attachment-temp [objectID]="data?.recIDProcess" [formModel]="view.formModel" [count]="data.attachments">
+                </codx-attachment-temp>
               </div>
             </div>
           </div>

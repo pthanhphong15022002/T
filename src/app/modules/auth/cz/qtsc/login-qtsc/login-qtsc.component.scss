@@ -5,7 +5,12 @@
 		margin: 0 auto;
 	}
 
-
+	.login-pic {
+		height: calc(100vh - 260px);
+		display: flex;
+		align-items: center;
+		min-height: 450px !important;
+	}
 
 	/**Custom*/
 	.login {

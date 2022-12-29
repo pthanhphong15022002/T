@@ -628,52 +628,104 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region EAccidentBusiness
-  getEmployeeAccidentModel() {
+    //#region EAccidentBusiness
+    getEmployeeAccidentModel(){
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAccidentsBusiness',
+        'GetEmployeeAccidentsModelAsync'
+      );
+    }
+  
+    UpdateEmployeeAccidentInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAccidentsBusiness',
+        'EditEAccidentAsync',
+        data
+      );
+    }
+  
+    AddEmployeeAccidentInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAccidentsBusiness',
+        'AddEAccidentAsync',
+        data
+      );
+    }
+  
+    DeleteEmployeeAccidentInfo(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAccidentsBusiness',
+        'DeleteEAccidentAsync',
+        data
+      );
+    }
+  
+    getListAccidentByDataRequest(data) {
+      return this.api.execSv<any>(
+        'HR',
+        'HR',
+        'EAccidentsBusiness',
+        'LoadDataEAccidentAsync',
+        data
+      );
+    }
+  
+    //#endregion
+
+  //#region EDayOffBusiness
+  getEmployeeDayOffModel(){
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
-      'GetEmployeeAccidentsModelAsync'
+      'EDayOffsBusiness',
+      'GetEmployeeDayOffModelAsync'
     );
   }
 
-  UpdateEmployeeAccidentInfo(data) {
+  UpdateEmployeeDayOffInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
-      'EditEAccidentAsync',
+      'EDayOffsBusiness',
+      'UpdateEmployeeDayOffInfoAsync',
       data
     );
   }
 
-  AddEmployeeAccidentInfo(data) {
+  AddEmployeeDayOffInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
-      'AddEAccidentAsync',
+      'EDayOffsBusiness',
+      'AddEmployeeDayOffInfoAsync',
       data
     );
   }
 
-  DeleteEmployeeAccidentInfo(data) {
+  DeleteEmployeeDayOffInfo(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
-      'DeleteEAccidentAsync',
+      'EDayOffsBusiness',
+      'DeleteEmployeeDayOffInfoAsync',
       data
     );
   }
 
-  getListAccidentByDataRequest(data) {
+  getListDayOffByDataRequest(data) {
     return this.api.execSv<any>(
       'HR',
       'HR',
-      'EAccidentsBusiness',
-      'LoadDataEAccidentAsync',
+      'EDayOffsBusiness',
+      'GetListDayOffByDataRequestAsync',
       data
     );
   }

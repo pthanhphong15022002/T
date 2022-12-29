@@ -55,7 +55,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
   @Input() data!: any;
-  curResource:any;
   fGroupAddBookingRoom: FormGroup;
   formModel: FormModel;
   dialogRef: DialogRef;
@@ -72,7 +71,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   calendarID: any;
   popover: any;
   idUserSelected: string;
-  editTempResource:string;
   roomCapacity: any;
   returnData = null;
   checkLoopS = true;
@@ -177,6 +175,16 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onInit(): void {
+      this.api.execSv(
+        'EP',
+        'ERM.Business.EP',
+        'ResourcesBusiness',
+        'GetListAvailableResourceAsync',
+        ['1',new Date(),new Date()]
+      ).subscribe(res=>{
+        let x= res;
+      });
+    
     this.codxEpService.getSettingValue('System').subscribe((sys:any)=>{
       if(sys){
         this.ep8Avaiable= JSON.parse(sys.dataValue)?.EP8;
@@ -658,10 +666,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
-    if(this.data.resourceID == null && !this.isAdd){
-      this.data.resourceID=this.editTempResource;
-    }
-    if (!this.saveCheck) {
+    if (true) {
       if (this.isAdd) {
         this.data.requester = this.authService?.userValue?.userName;
       }
