@@ -101,6 +101,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.entity = this.dialog.formModel.entityName;
 
     this.user = this.authStore.get();
+
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.title =
@@ -120,7 +121,7 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    this.isAddPermission(this.process.owner);
+    // this.isAddPermission(this.process.owner);
     this.ownerOld = this.process.owner;
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
@@ -421,8 +422,9 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process?.permissions != null &&
       this.process?.permissions.length > 0
     ) {
+      // member type is zero for onwer of proccess
       this.process.permissions
-        .filter((x) => x.objectID === this.tmpPermission.objectID)
+        .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
         .forEach((element) => {
           this.updatePermission(emp, element, this.onwerRole);
           this.isExitUserPermiss = true;
@@ -447,9 +449,10 @@ export class PopupAddProcessesComponent implements OnInit {
       tmpPermission.objectName = emp?.userName;
       if (emp.administrator) {
         tmpPermission.objectType = '7';
-      } else if (this.checkAdminOfBP(emp.userID)) {
-        tmpPermission.objectType = '7';
       }
+      // else if (this.checkAdminOfBP(emp.userID)) {
+      //   tmpPermission.objectType = '7';
+      // }
     }
     // BE handle update onwer
     tmpPermission.objectType = '1';
@@ -481,25 +484,29 @@ export class PopupAddProcessesComponent implements OnInit {
       this.CheckAllExistNameProccess(this.process.recID);
     }
   }
-  checkAdminOfBP(userid: any) {
-    let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
-    return check;
-  }
+  // checkAdminOfBP(userid: any) {
+  //   let check: boolean;
+  // this.bpService.checkAdminOfBP(userid).subscribe((res) =>{
+
+  //   });
+  // }
 
   acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.userId)) {
-      this.isAcceptEdit = true;
-    } else {
+    }
+    // else if (this.checkAdminOfBP(this.user.userId))
+    //  {
+    //   this.isAcceptEdit = true;
+    // }
+    else {
       this.isAcceptEdit = false;
     }
   }
 
   addAvatar() {
     //this.imageAvatar.clearData();
-    //this.imageAvatar.referType = this.process.versionNo; 
+    //this.imageAvatar.referType = this.process.versionNo;
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }

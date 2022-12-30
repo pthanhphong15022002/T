@@ -398,7 +398,7 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 }
 
 .aside .aside-footer .menu-title {
-  color: var(--title-color);
+  color: var(--primary-lighter);
 }
 
 .upload-img .position-absolute.top-100.start-100 {
@@ -898,6 +898,8 @@ codx-tag .codx-tag:hover {
 
 codx-layout-add .codx-tab {
   position: relative;
+  display: block;
+  width: 750px !important;
 }
 
 codx-layout-add .codx-tab .tab-content {
@@ -909,6 +911,7 @@ codx-layout-add .codx-tab .tab-content {
   bottom: 0;
   min-width: auto !important;
   width: auto !important;
+  display: block !important;
 }
 
 codx-layout-add .card-header {
