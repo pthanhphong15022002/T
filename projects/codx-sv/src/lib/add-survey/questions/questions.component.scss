@@ -414,6 +414,13 @@
     line-height: 40px;
   }
 
+  .icon-MF-image-outside-answer {
+    position: inherit !important;
+    top: -44px;
+    left: -10px;
+    border-radius: 30px;
+  }
+
   .m-w-100 {
     max-width: 100% !important;
   }
@@ -573,6 +580,11 @@
 
   .min-h-253px {
     min-height: 253px !important;
+  }
+
+  .border-gray {
+    border: 1px solid lightgray;
+    box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
   }
 }
 

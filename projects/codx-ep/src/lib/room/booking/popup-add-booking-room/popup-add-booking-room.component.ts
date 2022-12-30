@@ -1,3 +1,5 @@
+import { editAlert } from '@syncfusion/ej2-angular-spreadsheet';
+import { Resource } from './../../../models/resource.model';
 import { Subscriber } from 'rxjs';
 import {
   ChangeDetectorRef,
@@ -47,7 +49,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   @ViewChild('popupDevice', { static: true }) popupDevice;
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
-  @ViewChild('form') form: any;
+  @ViewChild('form') form: any;  
+  @ViewChild('cusCBB') cusCBB: any;
 
   @Output() closeEdit = new EventEmitter();
   @Output() onDone = new EventEmitter();
@@ -168,9 +171,20 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         ':' +
         ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
     }
+    
   }
 
   onInit(): void {
+      this.api.execSv(
+        'EP',
+        'ERM.Business.EP',
+        'ResourcesBusiness',
+        'GetListAvailableResourceAsync',
+        ['1',new Date(),new Date()]
+      ).subscribe(res=>{
+        let x= res;
+      });
+    
     this.codxEpService.getSettingValue('System').subscribe((sys:any)=>{
       if(sys){
         this.ep8Avaiable= JSON.parse(sys.dataValue)?.EP8;
@@ -252,7 +266,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                       this.endTime = this.calendarEndTime;
                     }
                   }
-                });
+                });                
+                this.validateStartEndTime(this.startTime,this.endTime);
+                this.getResourceForCurrentTime();
               }
             });
         }
@@ -272,6 +288,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               if (this.isAdd) {
                 this.endTime = this.calendarEndTime;
               }
+              this.validateStartEndTime(this.startTime,this.endTime);
+              this.getResourceForCurrentTime();
             }
           });
         }
@@ -300,8 +318,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                         if (this.isAdd) {
                           this.endTime = this.calendarEndTime;
                         }
-                      }
+                      }                      
                     });
+                    this.validateStartEndTime(this.startTime,this.endTime);
+                    this.getResourceForCurrentTime();
                   }
                 });
             }
@@ -321,6 +341,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                 if (this.isAdd) {
                   this.endTime = this.calendarEndTime;
                 }
+                this.validateStartEndTime(this.startTime,this.endTime);
+                this.getResourceForCurrentTime();
               }
             });
           }
@@ -644,7 +666,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   onSaveForm(approval: boolean = false) {
-    if (!this.saveCheck) {
+    if (true) {
       if (this.isAdd) {
         this.data.requester = this.authService?.userValue?.userName;
       }
@@ -926,15 +948,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         }
         return;
       }
-      // if (!this.validateStartEndTime(this.startTime, this.endTime)) {
-      //   this.checkLoop = !this.checkLoop;
-      //   if (!this.checkLoop) {
-      //     this.notificationsService.notifyCode('EP002');
-      //   }
-      //   return;
-      // }
-      //this.isFullDay=false;
+      this.validateStartEndTime(this.startTime, this.endTime);
       this.changeDetectorRef.detectChanges();
+
     }
   }
 
@@ -1060,41 +1076,12 @@ export class PopupAddBookingRoomComponent extends UIComponent {
         tempEndTime[1],
         0
       );
-
-      // if (
-      //   this.data.startDate <= new Date() ||
-      //   this.data.endDate <= new Date()
-      // ) {
-      //   return false;
-      // }
-      // if (this.data.startDate >= this.data.endDate) {
-      //   let tmpStartT = new Date(this.data.startDate);
-      //   let tmpEndH = tmpStartT.getHours();
-      //   let tmpEndM = tmpStartT.getMinutes();
-      //   if (tmpEndM < 30) {
-      //     tmpEndM = 30;
-      //   } else {
-      //     tmpEndH = tmpEndH + 1;
-      //     tmpEndM = 0;
-      //   }
-      //   this.data.endDate = new Date(
-      //     tmpStartT.getFullYear(),
-      //     tmpStartT.getMonth(),
-      //     tmpStartT.getDate(),
-      //     tmpEndH,
-      //     tmpEndM,
-      //     0,
-      //     0
-      //   );
-      //   this.endTime =
-      //     ('0' + tmpEndH.toString()).slice(-2) +
-      //     ':' +
-      //     ('0' + tmpEndM.toString()).slice(-2);
-      // }
+      this.getResourceForCurrentTime();
       this.changeDetectorRef.detectChanges();
     }
     return true;
   }
+  
 
   openPopupLink() {
     this.callfc.openForm(this.addLink, '', 500, 300, this.funcID);
@@ -1532,6 +1519,69 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.attendeesList.splice(this.attendeesList.indexOf(tempDelete), 1);
     this.data.attendees = this.attendeesList.length + 1;
     this.changeDetectorRef.detectChanges();
+  }
+  cbbResource=[];  
+  fields: Object = { text: 'resourceName', value: 'resourceID' };
+  cbbResourceName:string;
+  getResourceForCurrentTime(){
+    this.codxEpService.getAvailableResources('1',this.data.startDate,this.data.endDate,this.data.recID).subscribe((res:any)=>{
+      if(res){
+        this.cbbResource=[];
+        Array.from(res).forEach((item:any)=>{
+          let tmpRes= new Resource();
+          tmpRes.resourceID=item.resourceID;
+          tmpRes.resourceName=item.resourceName;
+          tmpRes.capacity=item.capacity;
+          tmpRes.equipments=item.equipments;          
+          this.cbbResource.push(tmpRes);
+        });
+        let resourceStillAvailable= false;
+        if(this.data.resourceID!=null){
+          this.cbbResource.forEach(item=>{
+            if(item.resourceID == this.data.resourceID){
+              resourceStillAvailable = true;
+            }
+          });
+          if(!resourceStillAvailable){
+            this.data.resourceID=null;
+            this.tmplstDevice = [];
+            this.cusCBB.value=null;
+          }
+          else{
+            this.cbxResourceChange(this.data.resourceID);            
+            this.cusCBB.value=this.data.resourceID;
+          }
+        }
+
+        this.detectorRef.detectChanges();
+      }
+    })
+  }
+
+  cbxResourceChange(evt:any){
+    if(evt){
+      this.data.resourceID=evt;
+      let selectResource= this.cbbResource.filter((obj) => {
+        return obj.resourceID == evt;
+      });
+      if(selectResource){
+        this.roomCapacity = selectResource[0].capacity;
+        this.tmplstDevice = [];
+        selectResource[0].equipments.forEach((item) => {
+            let tmpDevice = new Device();
+            tmpDevice.id = item.equipmentID;
+            tmpDevice.isSelected = false;
+            this.vllDevices.forEach((vlItem) => {
+              if (tmpDevice.id == vlItem.value) {
+                tmpDevice.text = vlItem.text;
+                tmpDevice.icon = vlItem.icon;
+              }
+            });
+            this.tmplstDevice.push(tmpDevice);
+          });
+      }
+      this.detectorRef.detectChanges();
+    }
   }
   connectMeetingNow() {
     this.codxEpService

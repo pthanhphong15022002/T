@@ -101,14 +101,14 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
         this.codxOmService.getlistOrgUnit(this.userInfo.companyID).subscribe((res:any)=>{
           if(res){
             this.orgUnitTree= res;           
-            Array.from(this.orgUnitTree.childrens).forEach((item:any)=>{
+            Array.from(this.orgUnitTree.listChildrens).forEach((item:any)=>{
               let temp = new DistributeOKR();
               temp.okrName= this.dataKR.okrName;
               temp.orgUnitID= item.orgUnitID;
               temp.orgUnitName= item.orgUnitName;
               temp.umid=this.dataKR.umid;
-              temp.distributePct=100/this.orgUnitTree.CountChild;
-              temp.distributeValue= this.dataKR.target/this.orgUnitTree.CountChild;
+              temp.distributePct=100/this.orgUnitTree.countChild;
+              temp.distributeValue= this.dataKR.target/this.orgUnitTree.countChild;
               this.listDistribute.push(temp);
             })
             this.detectorRef.detectChanges();
@@ -126,6 +126,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     switch (event) {
     }
   }
+  
 
   //-----------------------End-------------------------------//
 
@@ -153,23 +154,18 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Func------------------------//
-  //Sửa trọng số KR
-  editWeight(obRecID: any) {
-    //OM_WAIT: tiêu đề tạm thời gán cứng
-    let popupTitle='Thay đổi trọng số cho KRs';
-    let subTitle='Tính kết quả thực hiện cho mục tiêu';
-    let dModel = new DialogModel();
-    dModel.IsFull = true;
-    let dialogShowKR = this.callfunc.openForm(
-      PopupOKRWeightComponent,
-      '',
-      null,
-      null,
-      null,
-      [obRecID, OMCONST.VLL.OKRType.KResult, popupTitle,subTitle],
-      '',
-      dModel
-    );
+  
+  
+  onSaveForm(){
+    this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.KR,
+      'DistributeKRAsync',
+      [this.dataKR.recID,'R',this.listDistribute]
+    ).subscribe(res=>{
+      let x= res;
+    })
   }
 
   //-----------------------End-------------------------------//
@@ -183,7 +179,30 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-
+  valueChange(evt:any){
+    if(evt && evt.field){
+      this.listDistribute[evt.field].distributeValue= evt.data;
+      this.detectorRef.detectChanges();
+    }
+  }
+  percentChange(evt:any){
+    if(evt && evt.field){
+      this.listDistribute[evt.field].distributePct= evt.data;
+      this.detectorRef.detectChanges();
+    }
+  }
+  umidChange(evt:any){
+    if(evt && evt.field){
+      this.listDistribute[evt.field].umid= evt.data;
+      this.detectorRef.detectChanges();
+    }
+  }
+  nameChange(evt:any){
+    if(evt && evt.field){
+      this.listDistribute[evt.field].okrName= evt.data;
+      this.detectorRef.detectChanges();
+    }
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
