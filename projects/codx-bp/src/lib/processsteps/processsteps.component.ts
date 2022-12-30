@@ -150,7 +150,7 @@ export class ProcessStepsComponent
   dataClick: any;
   dataColums = [];
   isHover = null;
-  listCountActivities:number =0;
+  listCountActivities: number = 0;
 
   constructor(
     inject: Injector,
@@ -321,7 +321,10 @@ export class ProcessStepsComponent
                   obj.items.push(processStep);
                 }
               });
-              if (this.kanban) this.kanban.addCard(processStep);
+              if (this.kanban) {
+                this.kanban.addCard(processStep);
+                if(this.kanban?.dataSource?.length==1)this.kanban.refresh();
+              }
             } else {
               this.view.dataService.data.forEach((obj) => {
                 if (obj.items.length > 0) {
@@ -389,7 +392,7 @@ export class ProcessStepsComponent
             this.formModelMenu,
             this.process,
             null,
-            isView
+            isView,
           ],
           option
         );
@@ -707,7 +710,11 @@ export class ProcessStepsComponent
   //#region event
   click(evt: ButtonModel) {
     this.isBlockClickMoreFunction();
-    if (this.listCountPhases <= 0 && evt.id != 'P' && this.listCountActivities ==0) {
+    if (
+      this.listCountPhases <= 0 &&
+      evt.id != 'P' &&
+      this.listCountActivities == 0
+    ) {
       return this.notiService.notify(this.msgBP001);
     }
     if (
@@ -764,6 +771,7 @@ export class ProcessStepsComponent
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
+<<<<<<< HEAD
   async dblClick(e,data){
     e.stopPropagation();
     if(!data.recID){
@@ -779,8 +787,12 @@ export class ProcessStepsComponent
   }
 
   openPopupViewProcessStep(data){
+=======
+  dblClick(e, data) {
+    e.stopPropagation();
+>>>>>>> 5583dc0e05abfc5be47d60356863de8da4398a96
     let stepType = data.stepType;
-    this.titleAction = this.getTitleAction("Xem", data.stepType);
+    this.titleAction = this.getTitleAction('Xem', data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
     if (funcMenu) {
       this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
@@ -792,7 +804,7 @@ export class ProcessStepsComponent
             this.formModelMenu.gridViewName = funcMenu.gridViewName;
             this.formModelMenu.funcID = funcMenu.funcID;
             this.formModelMenu.entityName = funcMenu.entityName;
-            this.edit(data,true);
+            this.edit(data, true);
           });
       });
     }
@@ -1317,9 +1329,9 @@ export class ProcessStepsComponent
   }
 
   isBlockClickMoreFunction() {
-    let kanban = this.kanban?.columns?.datacolums??[];
-    let viewList = this.dataTreeProcessStep??[];
-    let listData = viewList.length>0?viewList:kanban;
+    let kanban = this.kanban?.columns?.datacolums ?? [];
+    let viewList = this.dataTreeProcessStep ?? [];
+    let listData = viewList.length > 0 ? viewList : kanban;
     const check = listData.length > 0 ? true : false;
     if (check) {
       this.listCountPhases = listData.length;
