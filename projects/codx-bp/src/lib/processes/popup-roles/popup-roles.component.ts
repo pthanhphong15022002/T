@@ -60,6 +60,7 @@ export class PopupRolesComponent implements OnInit {
   nemberType = '';
   approveStatus = '';
   checkRoles = true;
+  adminRoles = false;
   constructor(
     private auth: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -74,12 +75,12 @@ export class PopupRolesComponent implements OnInit {
     this.user = this.auth.get();
     this.data = JSON.parse(JSON.stringify(dt?.data[1]));
     this.title = dt.data[0];
+    this.adminRoles = this.data[2];
     console.log(dt.data[1]);
     this.process = this.data;
-    if (this.process.permissions.length > 0 && this.process.permissions != null)
-      this.permissions = this.process?.permissions.sort(
-        (a, b) => parseInt(a.memberType) - parseInt(b.memberType)
-      );
+    // if (this.process.permissions.length > 0 && this.process.permissions != null)
+    //   this.permissions = this.process?.permissions.sort((a, b) =>this.process.owner === a.objectID ? -1 : 1 );
+    this.groupBy(this.process.permissions);
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -107,6 +108,16 @@ export class PopupRolesComponent implements OnInit {
         this.checkRoles = res.msgBodyData[0];
       });
   }
+
+    groupBy(list) {
+      this.api.execSv<any>('BP','BP','ProcessesBusiness','SortListPermissionsOfRolesAsync', [list]).subscribe(res => {
+        if(res != null){
+          this.process.permissions = res.sort((a,b) => (''+ a.objectID).localeCompare(this.process.owner) ? 1 : -1);
+        }
+      })
+  }
+
+
 
   // ngOnChanges(changes: SimpleChanges): void {
   //   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
@@ -141,7 +152,8 @@ export class PopupRolesComponent implements OnInit {
       this.process.permissions[this.currentPemission].read = this.read;
       this.process.permissions[this.currentPemission].download = this.download;
       this.process.permissions[this.currentPemission].share = this.share;
-      this.process.permissions[this.currentPemission].allowPermit = this.allowPermit;
+      this.process.permissions[this.currentPemission].allowPermit =
+        this.allowPermit;
       this.process.permissions[this.currentPemission].delete = this.deletePerm;
       this.process.permissions[this.currentPemission].edit = this.edit;
       this.process.permissions[this.currentPemission].publish = this.publish;
@@ -154,12 +166,14 @@ export class PopupRolesComponent implements OnInit {
       this.process.permissions != null &&
       this.process.permissions.length > 0
     ) {
-      this.bpSv.updatePermissionProcess(this.process, this.lstTmp).subscribe((res) => {
-        if (res.permissions.length > 0) {
-          this.notifi.notifyCode('SYS034');
-          this.dialog.close(res);
-        }
-      });
+      this.bpSv
+        .updatePermissionProcess(this.process, this.lstTmp)
+        .subscribe((res) => {
+          if (res.permissions.length > 0) {
+            this.notifi.notifyCode('SYS034');
+            this.dialog.close(res);
+          }
+        });
     }
   }
 
@@ -299,7 +313,7 @@ export class PopupRolesComponent implements OnInit {
       for (var i = 0; i < value.length; i++) {
         var data = value[i];
         var perm = new BP_ProcessPermissions();
-        if(data.id != this.process.owner){
+        if (data.id != this.process.owner) {
           perm.startDate = this.startDate;
           perm.endDate = this.endDate;
           perm.objectName = data.text != null ? data.text : data.objectName;
@@ -311,10 +325,10 @@ export class PopupRolesComponent implements OnInit {
             this.process.permissions,
             perm
           );
+          this.groupBy(this.process.permissions);
         }
-
       }
-      this.changePermission(this.currentPemission);
+      this.changePermission(0);
     }
   }
 
@@ -327,8 +341,12 @@ export class PopupRolesComponent implements OnInit {
       if (perm != null && list.length > 0) {
         index = list.findIndex(
           (x) =>
-            (x.objectID != null && x.objectID === perm.objectID && x.memberType == "2") ||
-            (x.objectID == null && x.objectType == perm.objectType && x.memberType == "2")
+            (x.objectID != null &&
+              x.objectID === perm.objectID &&
+              x.memberType == '2') ||
+            (x.objectID == null &&
+              x.objectType == perm.objectType &&
+              x.memberType == '2')
         );
       }
     } else {
@@ -360,12 +378,10 @@ export class PopupRolesComponent implements OnInit {
       }
 
       list.push(Object.assign({}, perm));
-      var i = list
-        .sort((a, b) => parseInt(a.memberType) - parseInt(b.memberType))
-        .findIndex((x) => x.objectID == perm.objectID);
-      this.currentPemission = i;
+
+
     }
-    return list.sort((a, b) => parseInt(a.memberType) - parseInt(b.memberType));
+    return list;
   }
   //#endregion
 
@@ -411,6 +427,7 @@ export class PopupRolesComponent implements OnInit {
   checkAdminUpdate() {
     if (
       this.user.administrator ||
+      this.adminRoles ||
       this.user.userID == this.process.owner ||
       this.process.permissions[this.currentPemission].objectType == '1' ||
       this.process.permissions[this.currentPemission].objectType == '7'
@@ -421,7 +438,7 @@ export class PopupRolesComponent implements OnInit {
   }
 
   checkAssignRemove(i) {
-    if (this.user.administrator || this.user.userID == this.process.owner) {
+    if (this.user.administrator || this.adminRoles || this.user.userID == this.process.owner ) {
       if (
         !this.process.permissions[i].autoCreate &&
         this.process.permissions[i].memberType == '2'

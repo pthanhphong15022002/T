@@ -398,7 +398,7 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 }
 
 .aside .aside-footer .menu-title {
-  color: var(--title-color);
+  color: var(--primary-lighter);
 }
 
 .upload-img .position-absolute.top-100.start-100 {
@@ -1528,4 +1528,8 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 
 .user-mini-nav-custom a {
   color: var(--primary-dark);
+}
+
+.nav-pills .nav-link:hover {
+  cursor: pointer;
 }
