@@ -469,19 +469,22 @@ export class PopupAddProcessStepsComponent
   }
 
   changeQuestion(e) {
-    this.processSteps['reference'] = e?.data;
-    let url = window.location.href;
-    let index = url.indexOf('/bp/');
-    if (index != -1)
-      this.linkQuesiton =
-        url.substring(0, index) +
-        Util.stringFormat(
-          '/sv/add-survey?funcID={0}&title={1}&recID={2}',
-          'SVT01',
-          '',
-          e?.data
-        );
+    if(e?.data){
+      this.processSteps['reference'] = e?.data;
+      let url = window.location.href;
+      let index = url.indexOf('/bp/');
+      if (index != -1)
+        this.linkQuesiton =
+          url.substring(0, index) +
+          Util.stringFormat(
+            '/sv/add-survey?funcID={0}&title={1}&recID={2}',
+            'SVT01',
+            '',
+            e?.data
+          );       
     this.changeDef.detectChanges();
+    }
+   
   }
   viewDetailSurveys() {
     // let url = 'sv/surveys/SVT01';

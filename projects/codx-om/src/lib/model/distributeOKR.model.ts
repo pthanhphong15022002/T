@@ -6,4 +6,5 @@ export class DistributeOKR {
     distributePct:number;
     umid:string;
     okrName:string;
+    isActive: boolean;
   }

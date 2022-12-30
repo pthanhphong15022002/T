@@ -113,13 +113,13 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     //Thêm
     if(this.type == "add")
     {
-      if(this.formModel.functionID == OMCONST.FUNCID.Company)
+      if(this.formModel.functionID == OMCONST.FUNCID.COMP)
         this.dataOKR.oKRLevel = "1";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Department)
+      else if(this.formModel.functionID == OMCONST.FUNCID.DEPT)
         this.dataOKR.oKRLevel = "3";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Team)
+      else if(this.formModel.functionID == OMCONST.FUNCID.ORG)
         this.dataOKR.oKRLevel = "5";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Person)
+      else if(this.formModel.functionID == OMCONST.FUNCID.PERS)
         this.dataOKR.oKRLevel = "9";
       this.dataOKR.interval = "Q";
       this.dataOKR.parentID = this.okrPlans?.recID;
