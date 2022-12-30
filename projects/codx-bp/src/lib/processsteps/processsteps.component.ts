@@ -771,7 +771,6 @@ export class ProcessStepsComponent
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
-<<<<<<< HEAD
   async dblClick(e,data){
     e.stopPropagation();
     if(!data.recID){
@@ -787,10 +786,6 @@ export class ProcessStepsComponent
   }
 
   openPopupViewProcessStep(data){
-=======
-  dblClick(e, data) {
-    e.stopPropagation();
->>>>>>> 5583dc0e05abfc5be47d60356863de8da4398a96
     let stepType = data.stepType;
     this.titleAction = this.getTitleAction('Xem', data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
