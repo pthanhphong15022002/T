@@ -578,6 +578,15 @@
     .codx-badge .badge-primary {
         background-color: var(--primary);
     }
+
+    .e-schedule .e-month-view .e-date-header-wrap table td.e-current-day,
+    .e-schedule .e-month-agenda-view .e-date-header-wrap table td.e-current-day {
+        color: var(--primary-darker);
+    }
+
+    .e-schedule .e-month-view .e-current-date .e-date-header {
+        background-color: var(--primary-dark);
+    }
 }
 
 
