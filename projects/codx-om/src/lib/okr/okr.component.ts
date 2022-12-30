@@ -40,7 +40,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   dataOKR = [];
   dataOKRPlans = null;
   //title//
-  titleRoom = 'Phòng kinh doanh';
   dtCompany = null;
   headerTitle = '';
   /////////
@@ -55,7 +54,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Năm
   year = null;
   dataDate = null;
-
+  curUser:any;
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelOB = new FormModel();
@@ -64,6 +63,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   krFuncID: any;
   addKRTitle = '';
   addOBTitle = '';
+  isAffterRender=false;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -78,6 +78,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
+    
+    this.funcIDChanged();
+    this.formModelChanged();
     this.views = [
       {
         id: '1',
@@ -101,15 +104,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
-    this.funcIDChanged();
-    this.formModelChanged();
-    var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe((item) => {
-      if (item) {
-        this.headerTitle = item.orgUnitName;
-        this.dtCompany = item;
-      }
-    });
+    this.curUser = this.auth.get();
+    // this.cache.getCompany(user.userID).subscribe((item) => {
+    //   if (item) {
+    //     this.dtCompany = item;
+    //   }
+    // });
   }
 
   //-----------------------End-------------------------------//
@@ -118,6 +118,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Sự kiện thay đổi view (funcID thay đổi - load lại page với data mới)
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
+    this.headerTitle='';
     this.funcIDChanged();
     this.formModelChanged();
 
@@ -192,27 +193,34 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Lấy fucID con
   funcIDChanged() {
     switch (this.funcID) {
-      case OMCONST.FUNCID.Company:
-        this.krFuncID = OMCONST.KRFuncID.Company;
-        this.obFuncID = OMCONST.OBFuncID.Company;
+      case OMCONST.FUNCID.COMP:
+        this.krFuncID = OMCONST.KRFUNCID.COMP;
+        this.obFuncID = OMCONST.OBFUNCID.COMP;        
+        this.headerTitle = this.curUser?.employee?.companyName !=null? this.curUser?.employee?.companyName :"";
+        this.headerTitle = this.headerTitle !=''? this.headerTitle :'Công ty Quang Trung';
         break;
-      case OMCONST.FUNCID.Department:
-        this.krFuncID = OMCONST.KRFuncID.Department;
-        this.obFuncID = OMCONST.OBFuncID.Department;
+      case OMCONST.FUNCID.DEPT:
+        this.krFuncID = OMCONST.KRFUNCID.DEPT;
+        this.obFuncID = OMCONST.OBFUNCID.DEPT;
+        this.headerTitle = this.curUser?.employee?.departmentName !=null? this.curUser?.employee?.departmentName :"";
+        
         break;
-      case OMCONST.FUNCID.Team:
-        this.krFuncID = OMCONST.KRFuncID.Team;
-        this.obFuncID = OMCONST.OBFuncID.Team;
+      case OMCONST.FUNCID.ORG:
+        this.krFuncID = OMCONST.KRFUNCID.ORG;
+        this.obFuncID = OMCONST.OBFUNCID.ORG;        
+        this.headerTitle = this.curUser?.employee?.orgUnitName !=null? this.curUser?.employee?.orgUnitName :"";
         break;
-      case OMCONST.FUNCID.Person:
-        this.krFuncID = OMCONST.KRFuncID.Person;
-        this.obFuncID = OMCONST.OBFuncID.Person;
+      case OMCONST.FUNCID.PERS:
+        this.krFuncID = OMCONST.KRFUNCID.PERS;
+        this.obFuncID = OMCONST.OBFUNCID.PERS;
+        this.headerTitle = this.curUser?.employee?.employeeName !=null? this.curUser?.employee?.employeeName :"";
         break;
     }
+    this.isAffterRender=false;
+    this.detectorRef.detectChanges();
   }
   //Lấy form Model con
   formModelChanged() {
-    //Lấy Form Model cho KR và OB
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;

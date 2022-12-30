@@ -107,8 +107,9 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
               temp.orgUnitID= item.orgUnitID;
               temp.orgUnitName= item.orgUnitName;
               temp.umid=this.dataKR.umid;
-              temp.distributePct=100/this.orgUnitTree.countChild;
-              temp.distributeValue= this.dataKR.target/this.orgUnitTree.countChild;
+              temp.isActive=false;
+              temp.distributePct=0;
+              temp.distributeValue= 0;
               this.listDistribute.push(temp);
             })
             this.detectorRef.detectChanges();
@@ -157,17 +158,19 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   
   
   onSaveForm(){
+    let lastListDistribute =this.listDistribute.filter((item) => {
+      return item?.isActive ==true;
+    });
     this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
       'DistributeKRAsync',
-      [this.dataKR.recID,'R',this.listDistribute]
+      [this.dataKR.recID,'R',lastListDistribute]
     ).subscribe(res=>{
       let x= res;
     })
   }
-
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Event-----------------------//
@@ -201,6 +204,26 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     if(evt && evt.field){
       this.listDistribute[evt.field].okrName= evt.data;
       this.detectorRef.detectChanges();
+    }
+  }
+  disabledChild(evt:any,index:number){
+    if(evt && index!=null){
+      this.listDistribute[index].isActive=!this.listDistribute[index].isActive;
+      if(!this.listDistribute[index].isActive){
+        
+        this.listDistribute[index].distributePct =0;
+        this.listDistribute[index].distributeValue =0;
+      }
+      this.detectorRef.detectChanges();
+      let activeChild= this.listDistribute.filter((child) => {
+        return child?.isActive == true;
+      });
+      this.listDistribute.forEach(item=>{
+        if(item.isActive){
+          item.distributePct =100/activeChild.length;
+          item.distributeValue =this.dataKR.target/activeChild.length;
+        }
+      });
     }
   }
   //-----------------------End-------------------------------//
