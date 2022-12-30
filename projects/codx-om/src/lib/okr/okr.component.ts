@@ -195,7 +195,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.gridView,
       this.formModelKR,
       "add",
-      this.dataOKRPlans.recID,
+      this.dataOKRPlans,
       null
     ]
     );    
