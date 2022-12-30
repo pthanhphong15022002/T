@@ -62,6 +62,7 @@ export class StorageComponent
   listStorage = [];
   checkDESC = false;
   gridViewSetup: any = [];
+  dataService: CRUDService;
 
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
   @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
@@ -76,7 +77,7 @@ export class StorageComponent
   @ViewChild('detail') lstComment: TemplateRef<any>;
 
   constructor(
-    inject: Injector,
+    private inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
@@ -93,20 +94,10 @@ export class StorageComponent
         this.gridViewSetup = res;
       }
     });
+    this.dataService = new CRUDService(inject);
   }
 
-  onInit(): void {
-    // this.storageService.data.subscribe((res) => {
-    //   if (res) {
-    //     var data = res[0]?.data;
-    //     var type = res[0]?.type;
-    //     if (type == 'add') {
-    //
-    //       this.view.dataService.add(data).subscribe();
-    //     }
-    //   }
-    // })
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
@@ -252,10 +243,12 @@ export class StorageComponent
     this.a = this.detail.createComponent(ListPostComponent);
     if (arr?.length == 0) {
       this.generateGuid();
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
+      this.dataService.predicate = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
+      this.a.instance.dataService = this.dataService;
     } else {
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(RecID))`;
-      this.a.instance.dataValueWP = `[${arr.join(';')}]`;
+      this.dataService.predicates = `(CreatedBy="${this.user?.userID}") and (@0.Contains(RecID))`;
+      this.dataService.dataValues = `[${arr.join(';')}]`;
+      this.a.instance.dataService = this.dataService;
     }
     this.a.instance.isShowCreate = false;
     this.a.instance.formModel = formModel;
