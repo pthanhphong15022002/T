@@ -59,7 +59,7 @@ export class PopupRolesComponent implements OnInit {
   autoCreate: any;
   nemberType = '';
   approveStatus = '';
-  checkRoles = true;
+  checkRoles = false;
   adminRoles = false;
   constructor(
     private auth: AuthStore,
@@ -75,15 +75,10 @@ export class PopupRolesComponent implements OnInit {
     this.user = this.auth.get();
     this.data = JSON.parse(JSON.stringify(dt?.data[1]));
     this.title = dt.data[0];
-    this.adminRoles = this.data[2];
-    console.log(dt.data[1]);
     this.process = this.data;
-    // if (this.process.permissions.length > 0 && this.process.permissions != null)
-    //   this.permissions = this.process?.permissions.sort((a, b) =>this.process.owner === a.objectID ? -1 : 1 );
     this.groupBy(this.process.permissions);
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
-        console.log(res.datas);
         this.listRoles = res.datas;
       }
     });
@@ -99,7 +94,8 @@ export class PopupRolesComponent implements OnInit {
 
   ngAfterViewInit(): void {
     //Tạo sẵn check quyền, vì db quyền của module này chưa có
-    this.api
+    if(!this.user.administrator){
+      this.api
       .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
         this.user.userID,
         'BP',
@@ -107,6 +103,7 @@ export class PopupRolesComponent implements OnInit {
       .subscribe((res) => {
         this.checkRoles = res.msgBodyData[0];
       });
+    }
   }
 
     groupBy(list) {
@@ -116,16 +113,6 @@ export class PopupRolesComponent implements OnInit {
         }
       })
   }
-
-
-
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-  //   //Add '${implements OnChanges}' to the class.
-  //   this.permissions = this.process?.permissions.sort(
-  //     (a, b) => parseInt(a.memberType) - parseInt(b.memberType)
-  //   );
-  // }
 
   //#region save
   onSave() {
@@ -427,7 +414,7 @@ export class PopupRolesComponent implements OnInit {
   checkAdminUpdate() {
     if (
       this.user.administrator ||
-      this.adminRoles ||
+      this.checkRoles ||
       this.user.userID == this.process.owner ||
       this.process.permissions[this.currentPemission].objectType == '1' ||
       this.process.permissions[this.currentPemission].objectType == '7'
@@ -438,7 +425,7 @@ export class PopupRolesComponent implements OnInit {
   }
 
   checkAssignRemove(i) {
-    if (this.user.administrator || this.adminRoles || this.user.userID == this.process.owner ) {
+    if (this.user.administrator || this.checkRoles || this.user.userID == this.process.owner ) {
       if (
         !this.process.permissions[i].autoCreate &&
         this.process.permissions[i].memberType == '2'

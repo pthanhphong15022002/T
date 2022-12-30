@@ -12,24 +12,24 @@ export const OMCONST = {
         Reports: 'ReportsBusiness',
     },
     FUNCID: {
-        Company:'OMT01',
-        Department:'OMT02',
-        Team:'OMT03',
-        Person:'OMT04',
+        COMP:'OMT01',
+        DEPT:'OMT02',
+        ORG:'OMT03',
+        PERS:'OMT04',
     },
     
-    OBFuncID:{
-        Company:'OMT011',
-        Department:'OMT021',
-        Team:'OMT031',
-        Person:'OMT041',
+    OBFUNCID:{
+        COMP:'OMT011',
+        DEPT:'OMT021',
+        ORG:'OMT031',
+        PERS:'OMT041',
     },
 
-    KRFuncID:{
-        Company:'OMT012',
-        Department:'OMT022',
-        Team:'OMT032',
-        Person:'OMT042',
+    KRFUNCID:{
+        COMP:'OMT012',
+        DEPT:'OMT022',
+        ORG:'OMT032',
+        PERS:'OMT042',
     },
 
     MFUNCID: {

@@ -1,3 +1,4 @@
+import { AssignDashboardComponent } from './dashboard/assigndashboard/assigndashboard.component';
 import { LayoutNoAsideToolbarFluidComponent } from './../../../codx-share/src/lib/_layout/_noAsideToolbarFluid/_noAsideToolbarFluid.component';
 import { AddEditComponent } from './setting/rangeskanban/addEdit/addEdit.component';
 import { TasksComponent } from './tasks/tasks.component';
@@ -51,8 +52,6 @@ import { PopupShareSprintsComponent } from './sprints/popup-share-sprints/popup-
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { TMMeetingsComponent } from './tmmeetings/tmmeetings.component';
 import { PopupAddMeetingComponent } from './tmmeetings/popup-add-meeting/popup-add-meeting.component';
-import { DeptDashboardComponent } from './dashboard/deptdashboard/deptdashboard.component';
-import { CompDashboardComponent } from './dashboard/compdashboard/compdashboard.component';
 import { ViewListMeetComponent } from './tmmeetings/view-list-meet/view-list-meet.component';
 import { MeetingDetailComponent } from './tmmeetings/meeting-detail/meeting-detail.component';
 import { TaskExtendsComponent } from './taskextends/taskextends.component';
@@ -68,6 +67,7 @@ import { CoreModule } from '@core/core.module';
 import { PopupTabsViewsDetailsComponent } from './popup-tabs-views-details/popup-tabs-views-details.component';
 import { PopupRescheduleMeetingComponent } from './tmmeetings/popup-reschedule-meeting/popup-reschedule-meeting.component';
 import { PopupAddResourcesComponent } from './tmmeetings/popup-add-resources/popup-add-resources.component';
+import { TreeMapModule } from '@syncfusion/ej2-angular-treemap';
 
 export const routes: Routes = [
   {
@@ -104,12 +104,8 @@ export const routes: Routes = [
         component: TeamDashboardComponent,
       },
       {
-        path: 'deptdashboard/:funcID',
-        component: DeptDashboardComponent,
-      },
-      {
-        path: 'compdashboard/:funcID',
-        component: CompDashboardComponent,
+        path: 'assigndashboard/:funcID',
+        component: AssignDashboardComponent,
       },
 
       // {
@@ -223,8 +219,7 @@ const T_Component: Type<any>[] = [
   TasksComponent,
   MyDashboardComponent,
   TeamDashboardComponent,
-  DeptDashboardComponent,
-  CompDashboardComponent,
+  AssignDashboardComponent,
   TMMeetingsComponent,
   PopupAddMeetingComponent,
   ViewListMeetComponent,
@@ -237,7 +232,7 @@ const T_Component: Type<any>[] = [
   PopupStatusMeetingComponent,
   PopupTabsViewsDetailsComponent,
   PopupRescheduleMeetingComponent,
-  PopupAddResourcesComponent
+  PopupAddResourcesComponent,
 ];
 @NgModule({
   imports: [
@@ -254,6 +249,7 @@ const T_Component: Type<any>[] = [
     AccumulationChartAllModule,
     ProgressBarModule,
     CircularGaugeModule,
+    TreeMapModule,
     DatePickerModule,
     TabModule,
     FormsModule,
