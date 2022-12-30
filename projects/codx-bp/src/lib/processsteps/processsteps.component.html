@@ -85,7 +85,7 @@
                 fiedName="Reference"
                 formName="BPCheckList"
                 gridViewName="grvBPCheckList"
-                default="Đầu mục thực hiện"
+                default="{{ item.stepName }}"
               ></codx-label>
             </label>
             <div class="check-list text-dark">
@@ -98,17 +98,23 @@
                 <div class="Activities mb-3">
                   <div class="check-list text-dark">
                     <ng-container
-                      *ngFor="let text of item?.reference.split(';')"
+                      *ngFor="let text of item?.reference.split(';') ; let i = index "
                     >
                       <div>
-                        <codx-input
+                        <span>{{ i + 1 }}</span><span>
+                          <codx-label name="lblSymboy" default="."></codx-label> 
+                        </span>
+                        <span >
+                          <span>{{text}}</span>
+                        </span>
+                        <!-- <codx-input
                           type="checkbox"
                           [label]="text"
                           [checked]="false"
                           labelPosition="After"
                           [disabled]="false"
                           class="test-check me-4 mb-2"
-                        ></codx-input>
+                        ></codx-input> -->
                       </div>
                     </ng-container>
                   </div>
