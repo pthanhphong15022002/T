@@ -6,7 +6,15 @@
     <div class="row">
       <div class="col-4 form-group">
         <codx-label [formModel]="form.formModel" fiedName="PeriodID"></codx-label>
-        <codx-dropdown-calendar cssPopup="h-500px w-800px" [value]="date" [selectedType]="'q'" [displayOption]="ops" cssClass="w-100" class="me-4" (change)="changeCalendar($event)"
+        <codx-dropdown-calendar 
+          cssPopup="h-500px w-800px" 
+          [value]="okrPlans?.toDate" 
+          [selectedType]="formatInterval(okrPlans?.interval)" 
+          [displayOption]="ops" 
+          cssClass="w-100" 
+          class="me-4" 
+          (change)="changeCalendar($event)"
+          [disabled]="true"
         ></codx-dropdown-calendar >
       </div>
       <div class="col-4 form-group">
