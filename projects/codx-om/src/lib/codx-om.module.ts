@@ -18,7 +18,6 @@ import { OKRTasksComponent } from './okr/okr-tasks/okr-tasks.component';
 import { OkrPlansComponent } from './okr/okr-plans/okr-plans.component';
 import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
-import { PopupDistributeKRComponent } from './popup/popup-distribute-kr/popup-distribute-kr.component';
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
 import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
@@ -79,7 +78,6 @@ const routes: Routes = [
     PopupAddKRComponent,
     PopupShowKRComponent,
     PopupShowOBComponent,
-    PopupDistributeKRComponent,
     PopupDistributeOKRComponent,
     OkrTargetsComponent,
     OkrAddComponent,

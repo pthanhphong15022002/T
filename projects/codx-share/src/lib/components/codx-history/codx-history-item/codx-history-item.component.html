@@ -83,7 +83,7 @@
                     <div class="">
                         <p *ngIf="data.description" class="m-0" [innerHTML]="data.description"></p>
                         <p *ngIf="data.createdOn" class="m-0 text-gray-400">{{data.createdOn | timefrom}}</p>
-                        <p *ngIf="data.comment" class="m-0 log-comment" [innerHTML]="data.comment"></p>
+                        <p *ngIf="!isNullOrEmpty(data.comment)" class="log-comment">{{data.comment}}</p>
                     </div>
                     <ng-container *ngIf="lstFile">
                         <div class="row px-4 justify-content-between">
@@ -156,24 +156,9 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="w-100">
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
-                    <span class="ms-2">
-                        <ng-container *ngFor="let item of data.sendToObject">
-                            <span [ngbPopover]="tmpEUserHover" triggers="mouseenter:mouseleave">
-                                <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30">
-                                </codx-img>
-                            </span>
-                            <ng-template #tmpEUserHover>
-                                <div class="d-flex">
-                                    <span>
-                                        <codx-img [objectId]="item.objectID" [objectType]="'AD_Users'" [width]="30"
-                                            [imageType]="'circle'">
-                                        </codx-img>
-                                    </span>
-                                    <span class="ms-2">
-                                        {{item.objectName}}
-                                    </span>
-                                </div>
-                            </ng-template>
+                    <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
+                        <ng-container
+                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.sendToObjects }">
                         </ng-container>
                     </span>
                 </div>
@@ -196,42 +181,22 @@
             <div class="me-3">
                 <codx-img [objectName]="data.createdName" [objectId]="data.createdBy" objectType="AD_Users" [width]="30"></codx-img>
             </div>
-            <div class="d-flex justify-content-between align-items-center flex-wrap">
-                <div class="w-100">
+            <div class="d-flex flex-column">
+                <div class="d-flex">
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
-                    <span class="ms-3">
-                        <ng-container *ngFor="let item of data.sendToObjects">
-                            <span [ngbPopover]="tmpTUserHover" triggers="mouseenter:mouseleave">
-                                <codx-img [objectId]="item.objectID" [objectName]="item.objectName" [objectType]="'AD_Users'" [width]="30" [imageType]="'circle'">
-                                </codx-img>
-                            </span>
-                            
+                    <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
+                        <ng-container
+                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.sendToObjects }">
                         </ng-container>
                     </span>
                 </div>
                 <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
                     {{data.createdOn | timefrom}}
                 </div>
-                <!-- <div>
-                    <button class="btn btn-seen">
-                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
-                    </button>
-                </div> -->
             </div>
         </div>
     </div>
-    <ng-template #tmpTUserHover let-item>
-        <div class="d-flex">
-            <span>
-                <codx-img [objectId]="item.objectID" [objectName]="item.objectName" [objectType]="'AD_Users'" [width]="30"
-                    [imageType]="'circle'">
-                </codx-img>
-            </span>
-            <span class="ms-2">
-                {{item.objectName}}
-            </span>
-        </div>
-    </ng-template>
+    
 </ng-template>
 <!-- END TASK -->
 <!-- TASK -->
@@ -247,24 +212,15 @@
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="w-100">
                     <span *ngIf="data.description" [innerHTML]="data.description"></span>
-                    <span class="ms-3">
-                        <ng-container *ngFor="let item of data.sendToObjects">
-                            <span [ngbPopover]="tmpTUserHover" triggers="mouseenter:mouseleave">
-                                <codx-img [objectId]="item.objectID" [objectName]="item.objectName" [objectType]="'AD_Users'" [width]="30" [imageType]="'circle'">
-                                </codx-img>
-                            </span>
-                            
+                    <span class="ms-3" *ngIf="data.sendToObjects?.length > 0">
+                        <ng-container
+                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.sendToObjects }">
                         </ng-container>
                     </span>
                 </div>
                 <div class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
                     {{data.createdOn | timefrom}}
                 </div>
-                <!-- <div>
-                    <button class="btn btn-seen">
-                        <codx-label [classList]="'text-primary'" formModel="" name="btnSeen" default="Xem"></codx-label>
-                    </button>
-                </div> -->
             </div>
         </div>
     </div>
@@ -300,39 +256,65 @@
                     </div>
                 </div>
             </div>
-            <div class="row p-4">
-                <table class="table w-100">
-                    <thead class="border-bottom bg-light">
-                        <th scope="col-4">
-                            <codx-label [formModel]="formModel" name="lblFieldName" [default]="'Thông tin'">
-                            </codx-label>
-                        </th>
-                        <th scope="col-4">
-                            <codx-label [formModel]="formModel" name="lblOldValue" [default]="'Giá trị cũ'">
-                            </codx-label>
-                        </th>
-                        <th scope="col-4">
-                            <codx-label [formModel]="formModel" name="lblNewValue" [default]="'Giá trị mới'">
-                            </codx-label>
-                        </th>
-                    </thead>
-                    <tbody>
-                        <ng-container *ngIf="data.datas">
-                            <tr class="my-2" *ngFor="let item of data.datas">
-                                <td scope="col-4">
-                                    <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
-                                </td>
-                                <td scope="col-4">
-                                    {{item.oldValue | formatvalue:formModel:item.fieldName | async}}
-                                </td>
-                                <td scope="col-4">
-                                    {{item.newValue | formatvalue:formModel:item.fieldName | async}}
-                                </td>
-                            </tr>
-                        </ng-container>
-                    </tbody>
-                </table>
-            </div>
+            <ng-container *ngIf="data.datas">
+                <div class="row p-4">
+                    <table class="table" style="width:100%">
+                        <thead class="border-bottom bg-light">
+                            <th scope="col-4">
+                                <codx-label [formModel]="formModel" name="lblFieldName" [default]="'Thông tin'">
+                                </codx-label>
+                            </th>
+                            <th scope="col-4">
+                                <codx-label [formModel]="formModel" name="lblOldValue" [default]="'Giá trị cũ'">
+                                </codx-label>
+                            </th>
+                            <th scope="col-4">
+                                <codx-label [formModel]="formModel" name="lblNewValue" [default]="'Giá trị mới'">
+                                </codx-label>
+                            </th>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngFor="let item of data.datas">
+                                <tr class="my-2">
+                                    <ng-container *ngIf="isObject(item.oldValue);else primitiveValue">
+                                        <td scope="col-4">
+                                            <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
+                                        </td>
+                                        <td scope="col-4" >
+                                            <div style="max-height: 200px;overflow: auto;">
+                                                <!-- <pre>
+                                                    {{item.oldValue}}
+                                                </pre> -->
+                                                <codx-jsonformatter [value]="item.oldValue"></codx-jsonformatter>
+                                            </div>
+                                        </td>
+                                        <td scope="col-4">
+                                            <div style="max-height: 200px;overflow: auto;">
+                                                <!-- <pre>
+                                                    {{item.newValue}}
+                                                </pre> -->
+                                                <codx-jsonformatter [value]="item.newValue"></codx-jsonformatter>
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                    <ng-template #primitiveValue>
+                                        <td scope="col-4">
+                                            <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
+                                        </td>
+                                        <td scope="col-4">
+                                            {{item.oldValue | formatvalue:formModel:item.fieldName | async}}
+                                        </td>
+                                        <td scope="col-4">
+                                            {{item.newValue | formatvalue:formModel:item.fieldName | async}}
+                                        </td>
+                                    </ng-template>
+                                </tr>
+                            </ng-container>
+                            
+                        </tbody>
+                    </table>
+                </div>        
+            </ng-container>
         </div>
     </div>
 
@@ -439,7 +421,7 @@
                     <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
                         {{data.createdOn | timefrom}}
                     </div>
-                    <div *ngIf="data.comment" class="comment text-nowrap">
+                    <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
                         <span [innerHTML]="data.comment"></span>
                     </div>
                 </div>
@@ -469,7 +451,7 @@
                     <div *ngIf="data.createdOn" class="text-gray-400 fw-normal flex-grow-1 fs-7" data-toggle="tooltip">
                         {{data.createdOn | timefrom}}
                     </div>
-                    <div *ngIf="data.comment" class="comment text-nowrap">
+                    <div *ngIf="!isNullOrEmpty(data.comment)" class="comment text-nowrap">
                         <span [innerHTML]="data.comment"></span>
                     </div>
                 </div>
@@ -478,3 +460,55 @@
     </div>
 </ng-template>
 <!-- END C2 -->
+
+
+<!-- template list employeee -->
+<ng-template #templateListEmployee let-objects>
+    <div ngbDropdown class="symbol-more" [container]="'body'">
+        <div ngbDropdownToggle class="btn d-flex align-items-center btn-vimgs p-0 ms-0 mt-1 symbol symbol-30px"
+            type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+            style="padding: 0 !important ; margin-left: 0 !important; border:none">
+            <div class="d-flex align-items-center">
+                <div>
+                    <codx-img 
+                        [objectId]="objects[0].objectID" 
+                        [objectName]="objects[0].objectName"
+                        [objectType]="'AD_Users'" 
+                        [width]="30"
+                        [referType]="'avt'"
+                        [imageType]="'circle'">
+                    </codx-img>
+                </div>
+                <div *ngIf="objects.length > 1" class="symbol symbol-30px symbol-circle ">
+                    <div class="d-flex round-user justify-content-center align-items-center text-white w-30px h-30px bg-secondary">+{{(objects.length - 1)}}</div>
+                </div>
+            </div>
+        </div>
+        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+            <div class="py-2">
+                <codx-label default="Danh sách nhân viên" class="fw-bold"></codx-label>
+                <span class="fw-bold">{{objects.length}}</span>
+            </div>
+            <!-- <codx-searchbar (searchEvent)="searchUser($event)"></codx-searchbar> -->
+            <div class="history-list-employees">
+                <ng-container *ngFor="let object of objects">
+                    <div class="d-flex align-items-center my-2">
+                        <div class="me-2">
+                            <codx-img 
+                                [objectId]="object.objectID" 
+                                [objectName]="object.objectName"
+                                [objectType]="'AD_Users'" 
+                                [width]="30"
+                                [referType]="'avt'"
+                                [imageType]="'circle'">
+                            </codx-img>
+                        </div>
+                        <div>
+                            <span class="fs-6">{{object.objectName}}</span>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
