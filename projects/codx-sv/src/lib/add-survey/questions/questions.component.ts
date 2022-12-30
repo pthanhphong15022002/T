@@ -466,12 +466,17 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       .closed.subscribe((x) => {
         if (x.event?.status == 'Y') {
           var data = JSON.parse(JSON.stringify(this.questions));
+          let tempQuestion = this.questions[seqNoSession];
           data = data.filter((x) => x.seqNo != seqNoSession);
           data.forEach((x, index) => {
             x.seqNo = index;
           });
           this.questions = data;
           this.change.detectChanges();
+          this.SVServices.signalSave.next('saving');
+          if (this.questions.length + 1 == seqNoSession + 1)
+            this.setTimeoutDeleteData([tempQuestion]);
+          else this.setTimeoutDeleteData([tempQuestion], this.questions);
         }
       });
   }
@@ -489,7 +494,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     else data[seqNoQuestion - 1].active = true;
     this.questions[seqNoSession].children = data;
     this.SVServices.signalSave.next('saving');
-    this.setTimeoutDeleteDate([tempQuestion]);
+    this.setTimeoutDeleteData([tempQuestion]);
   }
 
   addOtherAnswer(indexSession, indexQuestion) {
@@ -914,6 +919,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     tempQuestion.seqNo = seqNoSession + 1;
     tempQuestion.category = 'S';
     tempQuestion.recID = this.GUID;
+    tempQuestion.parentID = null;
     this.questions.splice(seqNoSession + 1, 0, tempQuestion);
     this.questions.forEach((x, index) => (x.seqNo = index));
     this.questions[seqNoSession].active = false;
@@ -927,13 +933,29 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     } else {
       var lstUp = [];
       var lstDown = [];
-      lstUp = lstMain.slice(0, seqNoSession + 1);
-      lstDown = lstMain.slice(seqNoSession + 1, lstMain.length);
+      // lstUp = lstMain.slice(0, seqNoSession + 1);
+      // lstDown = lstMain.slice(seqNoSession + 1, lstMain.length);
+
+      //Tách thành lst của session trên và sesion dưới
+      lstUp = lstMain.slice(0, itemActive.seqNo + 1);
+      lstDown = lstMain.slice(itemActive.seqNo + 1, lstMain.length);
+      //Update lại parentID cho đúng với session mới tạo
+      lstUp.forEach((x) => (x.parentID = this.questions[seqNoSession].recID));
+      lstDown.forEach(
+        (x) => (x.parentID = this.questions[seqNoSession + 1].recID)
+      );
       this.questions[seqNoSession + 1]['children'] = lstDown;
       this.questions[seqNoSession]['children'] = lstUp;
     }
     this.clickToScroll(seqNoSession + 1, this.GUID, 'S');
     this.SVServices.signalSave.next('saving');
+    if (this.questions.length - 1 == seqNoSession + 1) {
+      if (itemActive.category == 'Q')
+        this.setTimeoutSaveData([tempQuestion], true, lstDown);
+      else this.setTimeoutSaveData([tempQuestion], true);
+    } else if (this.questions.length - 1 != seqNoSession + 1) {
+      this.setTimeoutSaveData([tempQuestion], true, this.questions);
+    }
   }
 
   lstDataAdd: any = [];
@@ -1366,7 +1388,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   deleteDataTimeout = new Map();
-  setTimeoutDeleteDate(data) {
+  setTimeoutDeleteData(data, listUpdate = null) {
     this.lstDataDelete.push(data[0]);
     clearTimeout(this.deleteDataTimeout?.get(this.lstDataDelete[0].recID));
     this.deleteDataTimeout?.delete(
@@ -1374,11 +1396,11 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     );
     this.deleteDataTimeout.set(
       this.lstDataDelete[0].recID,
-      setTimeout(this.onDelete.bind(this, this.lstDataDelete), 2000)
+      setTimeout(this.onDelete.bind(this, this.lstDataDelete, listUpdate), 2000)
     );
   }
 
-  onSave(transID, data, isModeAdd, list, dataAnswer = null) {
+  onSave(transID, data, isModeAdd, listUpdate, dataAnswer = null) {
     let isArr = Array.isArray(data);
     if (isArr) data.forEach((x) => delete x.id);
     else delete data.id;
@@ -1387,7 +1409,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         transID,
         data,
         isModeAdd,
-        list,
+        listUpdate,
       ])
       .subscribe((res) => {
         if (res) {
@@ -1400,10 +1422,11 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.lstDataAdd = [];
   }
 
-  onDelete(data) {
+  onDelete(data, listUpdate) {
     this.api
       .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'DeleteAsync', [
         data,
+        listUpdate,
       ])
       .subscribe((res) => {
         if (res) {

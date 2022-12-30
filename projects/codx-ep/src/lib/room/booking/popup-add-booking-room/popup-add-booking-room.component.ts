@@ -857,7 +857,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           }
         }
         if (approval) {
-          if(this.data.approval!='0'){
+          if(this.approvalRule!='0'){
 
             this.codxEpService
             .getCategoryByEntityName(this.formModel.entityName)

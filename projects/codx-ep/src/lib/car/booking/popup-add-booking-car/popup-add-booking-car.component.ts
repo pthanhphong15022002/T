@@ -706,7 +706,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
             this.returnData = res.save;
           }
           if (approval) {
-            if(this.data.approval!='0'){
+            if(this.approvalRule!='0'){
               this.codxEpService
               .getCategoryByEntityName(this.formModel.entityName)
               .subscribe((res: any) => {

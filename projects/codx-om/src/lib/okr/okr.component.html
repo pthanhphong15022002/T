@@ -1,4 +1,4 @@
-<codx-views #view [views]="views"> </codx-views>
+<codx-views #view [views]="views" (viewChanged)="viewChanged($event)"> </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
     <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR"></lib-okr-toolbar>
