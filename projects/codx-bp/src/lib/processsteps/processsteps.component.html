@@ -32,7 +32,7 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
     [rootData]="data"
-    (dblclick)="dblClick($event,data)"
+    (dblclick)="dblClick($event, data)"
   >
   </codx-card-img>
 </ng-template>
@@ -57,23 +57,29 @@
           (mouseleave)="closeMFTypeA()"
         >
           <ng-container *ngFor="let item of data?.items">
-            <div
-              [ngClass]="!hideMoreFCChild && checkBackground(item?.recID) ? 'color-hover' : ''"
-              class="d-flex align-item-center psteps-item"
-              #p="ngbPopover"
-              [ngbPopover]="!hideMoreFCChild ? hoverMoreFunction : ''"
-              (mouseenter)="openMF(item, p)"
-              autoClose="outside"
-              placement="right"
-              (dblclick)="dblClick($event,item)"
-            >
-              <i
-                class="{{
-                  showIconByStepType(item.stepType)
-                }} me-2 ms-1 icon-16"
-              ></i>
-              <div class="test-check me-4">{{ item.stepName }}</div>
-            </div>
+            <ng-container *ngIf="item.stepType!='C'">
+              <div
+                [ngClass]="
+                  !hideMoreFCChild && checkBackground(item?.recID)
+                    ? 'color-hover'
+                    : ''
+                "
+                class="d-flex align-item-center psteps-item"
+                #p="ngbPopover"
+                [ngbPopover]="!hideMoreFCChild ? hoverMoreFunction : ''"
+                (mouseenter)="openMF(item, p)"
+                autoClose="outside"
+                placement="right"
+                (dblclick)="dblClick($event, item)"
+              >
+                <i
+                  class="{{
+                    showIconByStepType(item.stepType)
+                  }} me-2 ms-1 icon-16"
+                ></i>
+                <div class="test-check me-4">{{ item.stepName }}</div>
+              </div>
+            </ng-container>
           </ng-container>
         </div>
       </ng-container>
@@ -98,14 +104,18 @@
                 <div class="Activities mb-3">
                   <div class="check-list text-dark">
                     <ng-container
-                      *ngFor="let text of item?.reference.split(';') ; let i = index "
+                      *ngFor="
+                        let text of item?.reference.split(';');
+                        let i = index
+                      "
                     >
                       <div>
-                        <span>{{ i + 1 }}</span><span>
-                          <codx-label name="lblSymboy" default="."></codx-label> 
+                        <span>{{ i + 1 }}</span
+                        ><span>
+                          <codx-label name="lblSymboy" default="."></codx-label>
                         </span>
-                        <span >
-                          <span>{{text}}</span>
+                        <span>
+                          <span>{{ text }}</span>
                         </span>
                         <!-- <codx-input
                           type="checkbox"
@@ -328,7 +338,7 @@
                 <div class="card card-steplist">
                   <div
                     class="steplist-hearder border border-gray-200 rounded px-6 py-4"
-                    (dblclick)="dblClick($event,item)"
+                    (dblclick)="dblClick($event, item)"
                   >
                     <!-- <div class="example-handle" cdkDragHandle>
                       <span class="icon-reorder"></span>
@@ -414,7 +424,7 @@
                                 [desc2Tmp]="cardTitleTmp"
                                 [footer]="cardImgFooter"
                                 [moreFuncCss]="'me-15'"
-                                (dblclick)="dblClick($event,item1)"
+                                (dblclick)="dblClick($event, item1)"
                               >
                               </codx-temp-full>
 
@@ -449,7 +459,7 @@
   </div>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <div >
+  <div>
     <div
       class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
         data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
@@ -748,13 +758,13 @@
 <ng-template #hoverMoreFunction>
   <div class="more-function">
     <codx-mfunc
-    type="hover"
-    [formModel]="view.formModel"
-    (clickMF)="clickMF($event, dataHover)"
-    [isBookMark]="false"
-    [dataItem]="dataHover"
-  >
-  </codx-mfunc>
+      type="hover"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, dataHover)"
+      [isBookMark]="false"
+      [dataItem]="dataHover"
+    >
+    </codx-mfunc>
   </div>
 </ng-template>
 <ng-template #showAllparentName let-text>
@@ -762,20 +772,22 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div class="envelop" (dblclick)="dblClick($event,data)">
-    <div class="d-flex align-items-center justify-content-between cursor-pointer w-100  has-actions-menu">
+  <div class="envelop" (dblclick)="dblClick($event, data)">
+    <div
+      class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
+    >
       <div class="line-colums">{{ data.headerText }}</div>
     </div>
-    <div class="show-more" >   
-        <codx-mfunc
+    <div class="show-more">
+      <codx-mfunc
+        [hidden]="this.hideMoreFC"
         type="hover"
         [formModel]="view.formModel"
-        (clickMF)="clickMFColums($event,data.keyField)"
-        [dataItem]="moreDefaut"  
+        (clickMF)="clickMFColums($event, data.keyField)"
+        [dataItem]="moreDefaut"
         [isBookMark]="false"
       >
       </codx-mfunc>
     </div>
   </div>
 </ng-template>
-
