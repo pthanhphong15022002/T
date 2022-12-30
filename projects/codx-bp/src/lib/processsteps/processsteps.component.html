@@ -756,7 +756,7 @@
 </ng-template>
 
 <ng-template #viewColumKaban let-data>
-  <div class="envelop">
+  <div class="envelop" (dblclick)="dblClick($event,data)">
     <div class="d-flex align-items-center justify-content-between cursor-pointer w-100  has-actions-menu">
       <div class="line-colums">{{ data.headerText }}</div>
     </div>
