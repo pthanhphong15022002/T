@@ -76,7 +76,7 @@
         --primary-darker: #0b9b8d;
         --primary-dark: #23d3c1;
         --primary-light: #bef0ec;
-        --primary-lighter: #f4ffff;
+        --primary-lighter: #eafafa;
         --primary-lightest: #f4fcfa;
 
         --text-primary: #13a597;
@@ -97,7 +97,7 @@
         --primary-darker: #0f8633;
         --primary-dark: #14ad42;
         --primary-light: #b5ffbf;
-        --primary-lighter: #f4fff5;
+        --primary-lighter: #eafaeb;
         --primary-lightest: #f4fcf5;
 
         --text-primary: #0f8633;
@@ -577,6 +577,16 @@
 
     .codx-badge .badge-primary {
         background-color: var(--primary);
+    }
+
+    .e-schedule .e-month-view .e-date-header-wrap table td.e-current-day,
+    .e-schedule .e-month-agenda-view .e-date-header-wrap table td.e-current-day {
+        color: var(--primary-darker);
+    }
+
+    .e-schedule .e-month-view .e-current-date .e-date-header,
+    .e-schedule .e-month-agenda-view .e-current-date .e-date-header {
+        background-color: var(--primary-dark);
     }
 }
 

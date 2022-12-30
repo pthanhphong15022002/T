@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {
+  CallFuncService,
   CodxFormComponent,
   CodxListviewComponent,
   CRUDService,
@@ -15,12 +16,14 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
 } from 'codx-core';
 import { max } from 'moment';
 import { CardType } from 'projects/codx-fd/src/lib/models/model';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
+import { PopupSubEContractComponent } from '../popup-sub-econtract/popup-sub-econtract.component';
 
 @Component({
   selector: 'lib-popup-econtract',
@@ -50,6 +53,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     private notify: NotificationsService,
     private hrSevice: CodxHrService,
     private codxShareService: CodxShareService,
+    private callfunc: CallFuncService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
@@ -60,6 +64,8 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.formModel.formName = 'EContracts';
       this.formModel.gridViewName = 'grvEContracts';
     }
+    console.log('data', data);
+
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
@@ -85,6 +91,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.hrSevice.getEContractDefault().subscribe((res) => {
         if (res) {
           this.data = res;
+          this.data.employeeID = this.employeeId;
           this.formModel.currentData = this.data;
           console.log('default contract data', this.data);
           this.formGroup.patchValue(this.data);
@@ -100,14 +107,18 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     }
   }
 
-  onSaveForm(isClose: boolean) {
+  onSaveForm(closeForm: boolean) {
     if (this.actionType == 'add' || this.actionType == 'copy') {
+      this.data.contractTypeID = '1';
+
       this.hrSevice.addEContract(this.data).subscribe((res) => {
         if (res) {
+          //code test
+
           this.data = res;
           (this.listView.dataService as CRUDService).add(res).subscribe();
           this.actionType = 'edit';
-          if (isClose) {
+          if (closeForm) {
             this.dialog && this.dialog.close();
           }
         }
@@ -116,7 +127,7 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
       this.hrSevice.editEContract(this.data).subscribe((res) => {
         if (res) {
           (this.listView.dataService as CRUDService).update(res).subscribe();
-          if (isClose) {
+          if (closeForm) {
             this.dialog && this.dialog.close();
           }
         }
@@ -178,5 +189,47 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     console.log(this.listView);
   }
 
-  click(data) {}
+  click(data) {
+    if (this.data) {
+      this.actionType = 'edit';
+      this.data = data;
+      this.formModel.currentData = this.data;
+      this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();
+    }
+  }
+
+  addSubContract() {
+    let optionSub = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    optionSub.Width = '550px';
+    optionSub.zIndex = 1001;
+    // let popupSubContract = this.callfunc.openSide(
+    //   PopupSubEContractComponent,
+    //   {
+    //     actionType: 'add',
+    //     salarySelected: null,
+    //     headerText: 'Hợp đồng lao động',
+    //     employeeId: this.data.employeeID,
+    //   },
+    //   optionSub
+    // );
+    let popupSubContract = this.callfc.openForm(
+      PopupSubEContractComponent,
+      '',
+      550,
+      screen.height,
+      '',
+      {
+        employeeId: this.data.employeeID,
+        contractNo: this.data.contractNo,
+        formModel: this.formModel,
+        formGroup: this.formGroup,
+      }
+    );
+    popupSubContract.closed.subscribe((res) => {
+      if (res) {
+      }
+    });
+  }
 }

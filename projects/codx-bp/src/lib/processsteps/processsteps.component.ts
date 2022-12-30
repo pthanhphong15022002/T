@@ -151,7 +151,7 @@ export class ProcessStepsComponent
   dataColums = [];
   isHover = null;
   listCountActivities: number = 0;
-
+  isBlockClickMore: boolean;
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -169,10 +169,10 @@ export class ProcessStepsComponent
       }
     });
   }
-  // ngOnChanges(changes: SimpleChanges): void {
-  //   this.chgViewModel(this.viewMode);
-  //   this.changeDetectorRef.detectChanges()
-  // }
+  ngOnChanges(changes: SimpleChanges): void {
+    // this.chgViewModel(this.viewMode);
+    // this.changeDetectorRef.detectChanges()
+  }
 
   onInit(): void {
     this.actived = this.process?.actived;
@@ -231,6 +231,7 @@ export class ProcessStepsComponent
     this.childFunc.map((obj) => {
       if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
     });
+    this.isBlockClickMore=false;
   }
 
   ngAfterViewInit(): void {
@@ -363,7 +364,7 @@ export class ProcessStepsComponent
           }
           this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
-          this.isBlockClickMoreFunction();
+          this.blockClickMoreFunction();
           this.notiService.notifyCode('SYS006');
           this.changeDetectorRef.detectChanges();
         }
@@ -693,7 +694,7 @@ export class ProcessStepsComponent
           }
           this.isClosePopup.emit(true);
           this.dataTreeProcessStep = this.view.dataService.data;
-          this.isBlockClickMoreFunction();
+          this.blockClickMoreFunction();
           this.changeDetectorRef.detectChanges();
         }
       });
@@ -709,16 +710,17 @@ export class ProcessStepsComponent
 
   //#region event
   click(evt: ButtonModel) {
-    this.isBlockClickMoreFunction();
+    if(this.isBlockClickMore) {
+      this.blockClickMoreFunction();
+    }
     if (
       this.listCountPhases <= 0 &&
-      evt.id != 'P' &&
-      this.listCountActivities == 0
+      evt.id != 'P'
     ) {
       return this.notiService.notify(this.msgBP001);
     }
     if (
-      this.listCountPhases > 0 &&
+      this.listCountActivities <= 0 &&
       evt.id != 'A' &&
       this.isBlock &&
       evt.id != 'P'
@@ -1323,23 +1325,55 @@ export class ProcessStepsComponent
     }
   }
 
-  isBlockClickMoreFunction() {
-    let kanban = this.kanban?.columns?.datacolums ?? [];
+  blockClickMoreFunction() {
+
+    let kanban = this.kanban?.columns ?? [];
     let viewList = this.dataTreeProcessStep ?? [];
-    let listData = viewList.length > 0 ? viewList : kanban;
+    this.isBlockClickMore = true;
+    let listData:any;
+    let viewType: string = '';
+    if(viewList.length>0){
+      listData = viewList;
+      viewType='viewList';
+    }
+    else {
+      listData = kanban;
+      viewType='kanban';
+    }
     const check = listData.length > 0 ? true : false;
     if (check) {
       this.listCountPhases = listData.length;
-      this.isBlock = true;
-      listData.forEach((x) => {
-        if (x.items.length > 0) {
-          this.isBlock = false;
-        }
-      });
+      this.isBlock= this.isCheckViewKanbanList(listData, viewType)
     } else {
-      this.listCountPhases = listData.length;
+      this.listCountPhases=0;
+      this.listCountActivities=0;
       this.isBlock = true;
+      this.isBlockClickMore = false;
     }
+  }
+  isCheckViewKanbanList(listData:any, viewType:any){
+    let index:number = 0;
+    if(viewType =='kanban'){
+        while(listData.length>index){
+          if(listData[index].dataColums.length > 0)
+          {
+            this.listCountActivities=listData[index].dataColums.length;
+            return false;
+          }
+          index++;
+      }
+    }
+    else if(viewType =='viewList'){
+      while(listData.length>index){
+          if(listData[index].items.length > 0 )
+          {
+            this.listCountActivities=listData[index].items.length;
+            return false;
+          }
+          index++;
+      }
+    }
+    return true;
   }
 
   openMF(data, p) {
