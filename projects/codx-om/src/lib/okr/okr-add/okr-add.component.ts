@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, Optional } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ApiHttpService, AuthStore, DialogData, DialogRef, FormModel } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, FormModel, NotificationsService } from 'codx-core';
 import { share } from 'rxjs';
 import { OMCONST } from '../../codx-om.constant';
 import { CodxOmService } from '../../codx-om.service';
@@ -55,6 +55,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   constructor(
     private codxOmService: CodxOmService,
     private formBuilder: FormBuilder,
+    private notifySvr: NotificationsService,
     private auth: AuthStore,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -122,7 +123,13 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
         this.dataOKR.oKRLevel = "9";
       this.dataOKR.interval = "Q";
       this.dataOKR.parentID = this.parentID;
-      this.codxOmService.addOKR(this.dataOKR).subscribe();
+      this.codxOmService.addOKR(this.dataOKR).subscribe(item=>{
+        if(item) 
+        {
+          this.notifySvr.notifyCode("");
+          this.dialog.close(item);
+        }
+      });
     }
     else
     {

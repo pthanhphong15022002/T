@@ -23,7 +23,6 @@ import {
 } from 'codx-core';
 import { CodxOmService } from '../codx-om.service';
 import { PopupAddKRComponent } from '../popup/popup-add-kr/popup-add-kr.component';
-import { PopupDistributeKRComponent } from '../popup/popup-distribute-kr/popup-distribute-kr.component';
 import { PopupShowKRComponent } from '../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';

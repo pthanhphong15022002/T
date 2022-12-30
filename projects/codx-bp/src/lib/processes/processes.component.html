@@ -143,21 +143,29 @@
               </span>
             </div>
             <div class="d-flex me-3 align-items-center">
-              <span
+              <!-- <span
                 [ngbPopover]="popperAttachment"
-                #p="ngbPopover"
+                #attachments="ngbPopover"
                 [openDelay]="500"
                 (mouseenter)="p.open()"
                 (mouseleave)="p.close()"
-                placement="right">
-              </span>
-
+                placement="bottom top right
+                left">
                 <codx-attachment-temp
                   [objectID]="data?.recID"
                   [formModel]="view.formModel"
                   [count]="data.attachments"
                   [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
+              </span> -->
+
+              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
+              (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right
+              left">
+              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments" [openViewPopup]="checkPermissionRead(data)">
+              </codx-attachment-temp>
+            </span>
+
             </div>
           </div>
           <!-- <codx-img [width]="25" [objectId]="data?.owner" objectType="AD_Users">
@@ -243,7 +251,8 @@
                 <codx-attachment-temp
                   [objectID]="data?.recID"
                   [formModel]="view.formModel"
-                  [count]="data.attachments">
+                  [count]="data.attachments"
+                  [openViewPopup]="checkPermissionRead(data)">
                 </codx-attachment-temp>
               </span>
             </div>

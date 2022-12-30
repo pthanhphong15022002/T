@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { isObject } from '@syncfusion/ej2-base';
 import { FormModel, ApiHttpService, AuthService, CacheService, NotificationsService, CallFuncService } from 'codx-core';
 import { environment } from 'src/environments/environment';
 @Component({
@@ -63,4 +64,22 @@ export class CodxHistoryItemComponent implements OnInit {
     }
   }
 
+  //check value string is null or empty
+  isNullOrEmpty(value:string):boolean{
+    if(!value.trim()){
+      return true;
+    }
+    return false;
+  }
+  // Check data type is object || josn || array
+  isObject(value:any):boolean {
+    try
+    {
+      JSON.parse(value);
+      return true;
+    } catch 
+    {
+        return false;
+    }
+  }
 }

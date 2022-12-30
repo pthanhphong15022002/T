@@ -398,7 +398,7 @@ export class OpenFolderComponent implements OnInit {
 
   addFile(fileItem: any) {
     var that = this;
-    var done = this.fileService.addFile(fileItem,this.isDM).toPromise();
+    var done = this.fileService.addFile(fileItem,this.isDM , null ).toPromise();
     if (done) {
       done.then(item => {
         if (item.status == 0) {
