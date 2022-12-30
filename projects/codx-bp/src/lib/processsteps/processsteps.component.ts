@@ -773,8 +773,21 @@ export class ProcessStepsComponent
   receiveMF(e: any) {
     this.clickMF(e.e, e.data);
   }
-  dblClick(e, data) {
+  async dblClick(e,data){
     e.stopPropagation();
+    if(!data.recID){
+      await this.bpService.getProcessStepDetailsByRecID(data?.keyField).subscribe(async (dt) => {
+        if (dt) {
+          this.openPopupViewProcessStep(dt);
+        }
+      });
+    }else{
+      this.openPopupViewProcessStep(data);
+    }
+    
+  }
+
+  openPopupViewProcessStep(data){
     let stepType = data.stepType;
     this.titleAction = this.getTitleAction('Xem', data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);

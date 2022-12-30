@@ -540,6 +540,45 @@
     .extend-function hr {
         background-color: var(--primary);
     }
+
+    .page-item.active .page-link {
+        background-color: var(--primary);
+    }
+
+    .page-item {
+        &:focus {
+            .page-link {
+                background-color: var(--primary-light);
+                color: var(--primary-darker);
+            }
+        }
+
+        &:hover {
+
+            .page-link {
+                background-color: var(--primary-light);
+                color: var(--primary-darker) !important;
+            }
+        }
+
+    }
+
+    .page-item:hover .page-link i {
+        color: var(--primary-darker) !important;
+    }
+
+    codx-view-kanban .e-kanban .e-kanban-table .e-header-cells {
+        background-color: var(--primary-dark);
+    }
+
+    .progress-bar {
+        background-color: var(--primary);
+    }
+
+    .codx-badge .badge-primary {
+        background-color: var(--primary);
+    }
 }
+
 
 /// end 22/12/2022
