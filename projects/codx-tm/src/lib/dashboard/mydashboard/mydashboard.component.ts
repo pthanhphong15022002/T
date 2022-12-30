@@ -1,8 +1,24 @@
+import { CallFuncService, UserModel } from 'codx-core';
 import { CodxTMService } from '../../codx-tm.service';
 import { AuthStore, DataRequest, UIComponent } from 'codx-core';
-import { Component, ViewChild, TemplateRef, Injector } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  TemplateRef,
+  Injector,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { ViewModel } from 'codx-core';
 import { ViewType } from 'codx-core';
+import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
+import {
+  IItemClickEventArgs,
+  IItemMoveEventArgs,
+  ILoadEventArgs,
+  TreeMapTheme,
+} from '@syncfusion/ej2-angular-treemap';
+
 @Component({
   selector: 'mydashboard',
   templateUrl: './mydashboard.component.html',
@@ -10,116 +26,161 @@ import { ViewType } from 'codx-core';
 })
 export class MyDashboardComponent extends UIComponent {
   @ViewChild('content') content: TemplateRef<any>;
-  model: DataRequest;
-  funcID: string;
-  user: any;
-  data: any;
-  taskOfDay: any;
-  fromDate: Date;
-  toDate: Date;
-  daySelected: Date;
-  daySelectedFrom: Date;
-  daySelectedTo: Date;
-  week: number;
-  month: number;
-  beginMonth: Date;
-  endMonth: Date;
+  @ViewChildren('my_dashboard') templates: QueryList<any>;
   views: Array<ViewModel> = [];
+  model: DataRequest;
 
-  //#region gauge
-  tooltip: Object = {
-    enable: true,
+  chartSettings2: ChartSettings = {
+    title: 'Tỷ lệ công việc được giao',
+    seriesSetting: [
+      {
+        type: 'Bar',
+        xName: 'category',
+        yName: 'quantity',
+        columnSpacing: 0.1,
+      },
+    ],
   };
 
-  labelStyle: Object = {
-    position: 'Inside',
-    useRangeColor: true,
-    font: {
-      size: '0px',
-      color: 'white',
-      fontFamily: 'Roboto',
-      fontStyle: 'Regular',
+  chartSettings6: ChartSettings = {
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'status',
+        yName: 'value',
+        innerRadius: '80%',
+        radius: '70%',
+        startAngle: 0,
+        explodeIndex: 1,
+        explode: true,
+        endAngle: 360,
+      },
+    ],
+  };
+
+  chartSettings7: ChartSettings = {
+    title: 'Thống kê công việc hoàn thành và số giờ thực hiện',
+    seriesSetting: [
+      {
+        type: 'Column',
+        name: 'Tasks',
+        xName: 'label',
+        yName: 'value',
+        cornerRadius: { topLeft: 10, topRight: 10 },
+      },
+    ],
+  };
+
+  panels = [];
+  datas = [];
+
+  funcID: string;
+  user: UserModel;
+
+  dataSource: any;
+  dataSource2: any = [
+    { category: 'Được giao', quantity: 345 },
+    { category: 'Tự tạo', quantity: 150 },
+  ];
+  CarSales: object[] = [
+    { Continent: 'China', Company: 'Volkswagen', Sales: 3005994 },
+    { Continent: 'China', Company: 'General Motors', Sales: 1230044 },
+    { Continent: 'China', Company: 'Honda', Sales: 1197023 },
+    { Continent: 'United States', Company: 'General Motors', Sales: 3042775 },
+    { Continent: 'United States', Company: 'Ford', Sales: 2599193 },
+    { Continent: 'United States', Company: 'Toyota', Sales: 2449587 },
+    { Continent: 'Japan', Company: 'Toyota', Sales: 1527977 },
+    { Continent: 'Japan', Company: 'Honda', Sales: 706982 },
+    { Continent: 'Japan', Company: 'Suzuki', Sales: 623041 },
+    { Continent: 'Germany', Company: 'Volkswagen', Sales: 655977 },
+    { Continent: 'Germany', Company: 'Mercedes', Sales: 310845 },
+    { Continent: 'Germany', Company: 'BMW', Sales: 261931 },
+    { Continent: 'United Kingdom', Company: 'Ford ', Sales: 319442 },
+    { Continent: 'United Kingdom', Company: 'Vauxhall', Sales: 251146 },
+    { Continent: 'United Kingdom', Company: 'Volkswagen', Sales: 206994 },
+    { Continent: 'India', Company: 'Maruti Suzuki', Sales: 1443654 },
+    { Continent: 'India', Company: 'Hyundai', Sales: 476241 },
+    { Continent: 'India', Company: 'Mahindra', Sales: 205041 },
+    { Continent: 'France', Company: 'Renault', Sales: 408183 },
+    { Continent: 'France', Company: 'Peugeot', Sales: 336242 },
+    { Continent: 'France', Company: 'Citroen', Sales: 194986 },
+    { Continent: 'Brazil', Company: 'Flat Chrysler', Sales: 368842 },
+    { Continent: 'Brazil', Company: 'General Motors', Sales: 348351 },
+    { Continent: 'Brazil', Company: 'Volkswagen', Sales: 245895 },
+    { Continent: 'Italy', Company: 'Flat Chrysler', Sales: 386260 },
+    { Continent: 'Italy', Company: 'Volkswagen', Sales: 138984 },
+    { Continent: 'Italy', Company: 'Ford', Sales: 125144 },
+    { Continent: 'Canada', Company: 'Ford', Sales: 305086 },
+    { Continent: 'Canada', Company: 'FCA', Sales: 278011 },
+    { Continent: 'Canada', Company: 'GM', Sales: 266884 },
+  ];
+
+  public itemMove = (args: IItemMoveEventArgs) => {
+    args.item['data'].Sales = args.item['weight'];
+    args.treemap.tooltipSettings.format =
+      args.item['groupIndex'] === 0
+        ? 'Country: ${Continent}<br>Sales: ${Sales}'
+        : 'Country: ${Continent}<br>Company: ${Company}<br>Sales: ${Sales}';
+  };
+  public itemClick = (args: IItemClickEventArgs) => {
+    args.item['data'].Sales = args.item['weight'];
+    args.treemap.tooltipSettings.format =
+      args.item['groupIndex'] === 0
+        ? 'Country: ${Continent}<br>Sales: ${Sales}'
+        : 'Country: ${Continent}<br>Company: ${Company}<br>Sales: ${Sales}';
+  };
+  // custom code start
+  public load = (args: ILoadEventArgs) => {
+    let theme: string = location.hash.split('/')[1];
+    theme = theme ? theme : 'Material';
+    args.treemap.theme = <TreeMapTheme>(
+      (theme.charAt(0).toUpperCase() + theme.slice(1))
+        .replace(/-dark/i, 'Dark')
+        .replace(/contrast/i, 'Contrast')
+    );
+  };
+  // custom code end
+  titleSettings: object = {
+    text: 'Car Sales by Country - 2017',
+    textStyle: {
+      size: '15px',
     },
   };
-
-  majorTicks: Object = {
-    height: 0,
+  public tooltipSettings: object = {
+    visible: true,
+    format: 'Country: ${Continent}<br>Company: ${Company}<br>Sales: ${Sales}',
   };
-
-  minorTicks: Object = {
-    width: 0,
-  };
-
-  majorTicks1: Object = {
-    position: 'Outside',
-    height: 1,
-    width: 1,
-    offset: 0,
-    interval: 30,
-  };
-  majorTicks2: Object = {
-    height: 0,
-  };
-
-  lineStyle: Object = {
-    width: 0,
-  };
-
-  labelStyle1: Object = { position: 'Outside', font: { size: '13px' } };
-  labelStyle2: Object = { position: 'Outside', font: { size: '0px' } };
-  //#endregion gauge
-
-  legendSettings1: Object = {
+  public legendSettings: object = {
+    visible: true,
     position: 'Top',
-    visible: true,
+    shape: 'Rectangle',
   };
-
-  legendSettings2: Object = {
-    position: 'Right',
-    visible: true,
-    textWrap: 'Wrap',
-    height: '30%',
-    width: '50%',
-    shapeHeight: 7,
-    shapeWidth: 7,
+  weightValuePath: string = 'Sales';
+  palette: string[] = [
+    '#C33764',
+    '#AB3566',
+    '#993367',
+    '#853169',
+    '#742F6A',
+    '#632D6C',
+    '#532C6D',
+    '#412A6F',
+    '#312870',
+    '#1D2671',
+  ];
+  leafItemSettings: object = {
+    labelPath: 'Company',
+    border: { color: 'white', width: 0.5 },
   };
-
-  radius: Object = { topLeft: 10, topRight: 10 };
-
-  //#region chartcolumn
-  dataColumn: Object[] = [];
-  dataLine: Object[] = [];
-  columnXAxis: Object = {
-    interval: 1,
-    valueType: 'Category',
-    rangePadding: 'None',
-    majorGridLines: { width: 0 },
-    majorTickLines: { width: 0 },
-    lineStyle: { width: 0 },
-    labelStyle: {
-      color: 'dark',
-    },
+  border: object = {
+    color: 'white',
+    width: 0.5,
   };
-
-  columnYAxis: Object = {
-    minimum: 0,
-    interval: 10,
-    labelStyle: {
-      color: 'gray',
-    },
-  };
-
-  chartArea: Object = {
-    border: {
-      width: 0,
-    },
-  };
-
-  //#endregion chartcolumn
 
   constructor(
     private inject: Injector,
     private auth: AuthStore,
+    private callfunc: CallFuncService,
     private tmService: CodxTMService
   ) {
     super(inject);
@@ -135,6 +196,13 @@ export class MyDashboardComponent extends UIComponent {
   }
 
   onInit(): void {
+    this.panels = JSON.parse(
+      '[{"id":"0.5424032823689648_layout","row":0,"col":0,"sizeX":3,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.26516454554256064_layout","row":0,"col":3,"sizeX":3,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.5994517199966756_layout","row":0,"col":6,"sizeX":3,"sizeY":2,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7626223401346761_layout","row":2,"col":0,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.8917770078511407_layout","row":2,"col":3,"sizeX":3,"sizeY":4,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.4942285241369997_layout","row":2,"col":6,"sizeX":3,"sizeY":7,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7295624332564068_layout","row":6,"col":0,"sizeX":6,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datas = JSON.parse(
+      '[{"panelId":"0.5424032823689648_layout","data":"1"},{"panelId":"0.26516454554256064_layout","data":"2"},{"panelId":"0.5994517199966756_layout","data":"3"},{"panelId":"0.7626223401346761_layout","data":"4"},{"panelId":"0.8917770078511407_layout","data":"5"},{"panelId":"0.4942285241369997_layout","data":"6"},{"panelId":"0.7295624332564068_layout","data":"7"}]'
+    );
+    this.getGeneralData();
   }
 
   ngAfterViewInit(): void {
@@ -152,24 +220,12 @@ export class MyDashboardComponent extends UIComponent {
   }
 
   private getGeneralData() {
-    this.tmService
-      .getMyDBData(this.model, this.daySelected)
-      .subscribe((res) => {
-        this.data = res;
-        console.log(this.data)
+    this.tmService.getMyDBData(this.model, null).subscribe((res) => {
+      if (res) {
+        this.dataSource = res;
+        console.log(this.dataSource.dataBarChart.barChart);
         this.detectorRef.detectChanges();
-      });
-  }
-
-  onChangeValueSelectedWeek(data) {
-    this.fromDate = this.toDate = data?.toDate;
-    this.daySelected = data?.daySelected;
-    this.daySelectedFrom = data?.daySelectedFrom;
-    this.daySelectedTo = data?.daySelectedTo;
-    this.week = data?.week;
-    this.month = data?.month + 1;
-    this.beginMonth = data?.beginMonth;
-    this.endMonth = data?.endMonth;
-    this.getGeneralData();
+      }
+    });
   }
 }
