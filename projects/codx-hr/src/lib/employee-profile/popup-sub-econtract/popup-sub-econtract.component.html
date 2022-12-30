@@ -1,0 +1,153 @@
+<codx-form
+#form
+[headerText]="'Phụ lục hợp đồng lao động'"
+[body]="body"
+[formModel]="fmSubContract"
+[footer]="footer"
+[dialog]="dialog"
+[data]="oSubContract"
+*ngIf="isAfterRender"
+>
+<ng-template #body>
+    <div class="form-group row">
+        <codx-label
+            fiedName="RefContractNo"
+            [formModel]="fmSubContract"
+        ></codx-label>
+        <codx-input
+            field="refContractNo"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+            [disabled]="true"
+        >
+        </codx-input>
+    </div>
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+                fiedName="ContractNo"
+                [formModel]="fmSubContract"
+            ></codx-label>
+            <codx-input
+                field="contractNo"
+                [formModel]="fmSubContract"
+                [Group]="fgSubContract"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+                fiedName="SignedDate"
+                [formModel]="fmSubContract"
+            ></codx-label>
+            <codx-input
+                field="signedDate"
+                [formModel]="fmSubContract"
+                [Group]="fgSubContract"
+            ></codx-input>
+        </div>
+    </div>
+
+    <!-- <div class="form-group row">
+        <codx-label
+            fiedName="PassportNo"
+            [formModel]="fmSubContract"
+        ></codx-label>
+        <codx-input
+            field="passportNo"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+        ></codx-input>
+    </div> -->
+
+    <div class="form-group row">
+        <div class="col-6">
+            <codx-label
+            fiedName="EffectedDate"
+            [formModel]="fmSubContract"
+            >
+            </codx-label>
+            <codx-input
+            type="datetime"
+            format="d"
+            field="effectedDate"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+            ></codx-input>
+        </div>
+        <div class="col-6">
+            <codx-label
+            fiedName="ExpiredDate"
+            [formModel]="fmSubContract"                
+            >
+            </codx-label>
+            <codx-input
+            field="expiredDate"
+            type="datetime"
+            format="d"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+            ></codx-input>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <codx-label
+            fiedName="Content"
+            [formModel]="fmSubContract"
+        ></codx-label>
+        <codx-input
+            field="content"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+        >
+        </codx-input>
+    </div> 
+    <div class="form-group row">
+        <codx-label
+            fiedName="SignerID"
+            [formModel]="fmSubContract"
+        ></codx-label>
+        <codx-input
+            field="signerID"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+            (valueChange)="valueChange($event)"
+        ></codx-input>
+    </div>
+    <div class="form-group row">
+        <codx-label
+            fiedName="SignerPosition"
+            [formModel]="fmSubContract"
+        ></codx-label>
+        <codx-input
+            field="signerPosition"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+        ></codx-input>
+    </div>
+    <div class="form-group row">
+        <codx-label
+            fiedName="Note"
+            [formModel]="fmSubContract"
+        ></codx-label>
+        <codx-input
+            field="note"
+            [formModel]="fmSubContract"
+            [Group]="fgSubContract"
+        ></codx-input>
+    </div>
+</ng-template>
+</codx-form>
+
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="onSaveForm(false)">
+        <i class="icon-save"></i>
+        <codx-label
+          default="Lưu"
+          name="lblSave"
+          [formModel]="fmSubContract"
+        ></codx-label>
+      </button>
+    </div>
+  </ng-template>
