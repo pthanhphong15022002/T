@@ -29,7 +29,6 @@ import {
   RequestOption,
   Util,
 } from 'codx-core';
-import { TabComponent } from '@syncfusion/ej2-angular-navigations';
 
 @Component({
   selector: 'lib-add-edit',
@@ -159,6 +158,7 @@ export class AddEditComponent implements OnInit {
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
+    data['lineNo'] = idx + 1;
     this.grid.addRow(data, idx);
   }
 
@@ -172,6 +172,7 @@ export class AddEditComponent implements OnInit {
           .exec<any>('EI', 'GoodsBusiness', 'GetAsync', e.value)
           .subscribe((res) => {
             if (res) {
+              e.data['itemID'] = res.itemID;
               this.dicCbx.set(e.field, res);
               this.updateLine(res, e.data, e.idx);
             }
