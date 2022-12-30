@@ -614,7 +614,7 @@ export class ProcessesComponent
         950,
         650,
         '',
-        [this.titleAction, e],
+        [this.titleAction, e, this.isAdminBp],
         ''
       )
       .closed.subscribe((e) => {

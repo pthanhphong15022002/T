@@ -4,7 +4,7 @@
       <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 border-right role-left">
         <div class="user-mini-nav">
           <div *ngIf="process != null && process?.permissions != null">
-            <ng-container *ngFor="let perm of permissions; index as i;">
+            <ng-container *ngFor="let perm of process.permissions; index as i;">
               <div *ngIf="perm.approveStatus !== '3' && perm.approveStatus !== '4'" (click)="changePermission(i)"
                 [ngClass]="i == this.currentPemission.toString()?'user-nav-active':null"
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">

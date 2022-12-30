@@ -422,7 +422,7 @@ export class PopupAddProcessesComponent implements OnInit {
       this.process?.permissions.length > 0
     ) {
       this.process.permissions
-        .filter((x) => x.objectID === this.tmpPermission.objectID)
+        .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
         .forEach((element) => {
           this.updatePermission(emp, element, this.onwerRole);
           this.isExitUserPermiss = true;
@@ -499,7 +499,7 @@ export class PopupAddProcessesComponent implements OnInit {
 
   addAvatar() {
     //this.imageAvatar.clearData();
-    //this.imageAvatar.referType = this.process.versionNo; 
+    //this.imageAvatar.referType = this.process.versionNo;
     this.imageAvatar.referType = 'avt';
     this.imageAvatar.uploadFile();
   }
