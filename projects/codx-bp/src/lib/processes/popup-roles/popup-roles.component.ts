@@ -299,17 +299,20 @@ export class PopupRolesComponent implements OnInit {
       for (var i = 0; i < value.length; i++) {
         var data = value[i];
         var perm = new BP_ProcessPermissions();
-        perm.startDate = this.startDate;
-        perm.endDate = this.endDate;
-        perm.objectName = data.text != null ? data.text : data.objectName;
-        perm.objectID = data.id;
-        perm.memberType = '2';
-        perm.autoCreate = false;
-        perm.objectType = data.objectType;
-        this.process.permissions = this.checkUserPermission(
-          this.process.permissions,
-          perm
-        );
+        if(data.id != this.process.owner){
+          perm.startDate = this.startDate;
+          perm.endDate = this.endDate;
+          perm.objectName = data.text != null ? data.text : data.objectName;
+          perm.objectID = data.id;
+          perm.memberType = '2';
+          perm.autoCreate = false;
+          perm.objectType = data.objectType;
+          this.process.permissions = this.checkUserPermission(
+            this.process.permissions,
+            perm
+          );
+        }
+
       }
       this.changePermission(this.currentPemission);
     }
@@ -324,8 +327,8 @@ export class PopupRolesComponent implements OnInit {
       if (perm != null && list.length > 0) {
         index = list.findIndex(
           (x) =>
-            (x.objectID != null && x.objectID === perm.objectID && x.objectType == perm.objectType && x.approveStatus == "5") ||
-            (x.objectID == null && x.objectType == perm.objectType && x.approveStatus == "5")
+            (x.objectID != null && x.objectID === perm.objectID && x.memberType == "2") ||
+            (x.objectID == null && x.objectType == perm.objectType && x.memberType == "2")
         );
       }
     } else {
