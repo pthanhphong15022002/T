@@ -258,7 +258,7 @@
             </div>
             <ng-container *ngIf="data.datas">
                 <div class="row p-4">
-                    <table class="table w-100">
+                    <table class="table" style="width:100%">
                         <thead class="border-bottom bg-light">
                             <th scope="col-4">
                                 <codx-label [formModel]="formModel" name="lblFieldName" [default]="'Thông tin'">
@@ -275,25 +275,26 @@
                         </thead>
                         <tbody>
                             <ng-container *ngFor="let item of data.datas">
-                                <tr class="overflow-auto my-2">
+                                <tr class="my-2">
                                     <ng-container *ngIf="isObject(item.oldValue);else primitiveValue">
                                         <td scope="col-4">
                                             <codx-label [formModel]="formModel" [fiedName]="item.fieldName"></codx-label>
                                         </td>
                                         <td scope="col-4" >
                                             <div style="max-height: 200px;overflow: auto;">
-                                                <pre>
+                                                <!-- <pre>
                                                     {{item.oldValue}}
-                                                </pre>
+                                                </pre> -->
+                                                <codx-jsonformatter [value]="item.oldValue"></codx-jsonformatter>
                                             </div>
                                         </td>
                                         <td scope="col-4">
                                             <div style="max-height: 200px;overflow: auto;">
-                                                <pre>
+                                                <!-- <pre>
                                                     {{item.newValue}}
-                                                </pre>
+                                                </pre> -->
+                                                <codx-jsonformatter [value]="item.newValue"></codx-jsonformatter>
                                             </div>
-                                            
                                         </td>
                                     </ng-container>
                                     <ng-template #primitiveValue>
