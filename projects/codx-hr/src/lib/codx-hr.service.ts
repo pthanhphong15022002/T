@@ -406,6 +406,7 @@ export class CodxHrService {
     );
   }
 
+  //#region HR_ETrainCourses
   getEmployeeTrainCourse(data) {
     return this.api.execSv<any>(
       'HR',
@@ -415,6 +416,28 @@ export class CodxHrService {
       data
     );
   }
+  
+  updateEmployeeTrainCourseInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'EditETraincourseAsync',
+      data
+    );
+  }
+
+  addETraincourse(data: any){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'AddETraincourseAsync',
+      data
+    );
+  }
+  //#endregion
+
   //#region EWorkPermitsBusiness
   // getListWorkPermitByEmployeeID(employeeID: string) {
   //   return this.api.execSv<any>(
@@ -485,15 +508,6 @@ export class CodxHrService {
     );
   }
 
-  updateEmployeeTrainCourseInfo(data) {
-    return this.api.execSv<any>(
-      'HR',
-      'HR',
-      'ETrainCoursesBusiness',
-      'EditEmployeeTraincourseInfoAsync',
-      data
-    );
-  }
 
   updateEmployeeWorkPermitDetail(data) {
     return this.api.execSv<any>(

@@ -30,7 +30,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   data;
   dataForm2;
   actionType: string;
-  isSaved: boolean;
+  isSaved: boolean = false;
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
@@ -73,6 +73,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         this.hrService.getEmployeeTrainCourse(this.employId).subscribe((p) => {
           console.log('thong tin dao tao nhan vien', p);
           this.data = p;
+
+          
           this.formModel.currentData = this.data;
           this.formGroup.patchValue(this.data);
           this.isAfterRender = true;
@@ -107,14 +109,32 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(closeForm: boolean) {
-    this.hrService.updateEmployeeTrainCourseInfo(this.data).subscribe((res) => {
-      if (res) {
-        this.notitfy.notifyCode('SYS007');
-        if (closeForm) {
-          this.dialog && this.dialog.close();
+    if (this.actionType == 'add' || this.actionType == 'copy') {
+      //Code cung
+      this.data.trainCourseID = '123';
+      this.data.employeeID = this.employId;
+
+      this.hrService.addETraincourse(this.data).subscribe((res) => {
+        if (res) {
+          this.notitfy.notifyCode('SYS007');
+          this.actionType = 'edit';
+          if(closeForm){
+            this.dialog && this.dialog.close();
+          }
         }
-      } else this.notitfy.notifyCode('DM034');
-    });
+      });
+    }
+    else{
+      this.hrService.updateEmployeeTrainCourseInfo(this.data).subscribe((res) => {
+        if (res) {
+          this.notitfy.notifyCode('SYS007');
+          if (closeForm) {
+            this.dialog && this.dialog.close();
+          }
+        } else this.notitfy.notifyCode('DM034');
+      });
+    }
+    
   }
 
   onSaveForm2() {
@@ -131,11 +151,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   click(data) {}
 
   insertECertificate() {
-    this.data.isUpdateCertificate = true;
-    if (
-      this.actionType == 'edit' ||
-      (this.actionType == 'add' && this.isSaved == true)
-    ) {
+    if (this.actionType == 'edit') {
       let modelECertificate = JSON.parse(JSON.stringify(this.data));
       modelECertificate.refTrainCource = this.data.recID;
       delete modelECertificate.recID;
@@ -152,22 +168,19 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       });
     } else if (this.actionType == 'add' && this.isSaved == false) {
       //Thông báo lưu record trainning trước khi cập nhật Chứng chỉ
-      this.notitfy.notifyCode('SYS007');
+      this.notitfy.notify('Bạn cần lưu thông tin đào tạo trước khi cập nhật chứng chỉ');
     }
     this.cr.detectChanges();
   }
 
-
-  setIssuedPlace(){
-    if(this.data.trainSupplierID){
-      this.data.issuedPlace = this.data.trainSupplierID
-      this.formGroup.patchValue({issuedPlace: this.data.issuedPlace})
+  setIssuedPlace() {
+    if (this.data.trainSupplierID) {
+      this.data.issuedPlace = this.data.trainSupplierID;
+      this.formGroup.patchValue({ issuedPlace: this.data.issuedPlace });
       this.cr.detectChanges();
-    }
-    else{
+    } else {
       //Thông báo chưa chọn nơi đào tạo
+      this.notitfy.notify('Chưa chọn nơi đào tạo');
     }
-    
   }
-  
 }
