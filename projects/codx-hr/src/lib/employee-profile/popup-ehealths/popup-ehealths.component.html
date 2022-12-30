@@ -146,7 +146,7 @@
     [formModel]="formModel"
     [typeMF]="'hover'"
     [title]="data.employeeID"
-    [icoTitleCss]="'icon-attach_money'"
+    [icoTitleCss]="'icon-i-calendar2-event-fill'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
     [subTitleTmp]="tmplateEJobSalaries"
     [dataItem]="data"
@@ -159,12 +159,12 @@
 
 <ng-template #tmplateEJobSalaries let-data1>
   <div class="d-flex flex-column">
-    <div>
-      <i class="icon-edit_fill"></i
+    <div  class="pb-1 pt-2">
+      <i class="icon-i-bag-plus me-1"></i
       >{{ (data1.effectedDate | fmDT) + " - " + (data1.expiredDate | fmDT) }}
     </div>
     <div>
-      <i class="icon-list_alt"></i
+      <i class="icon-i-file-earmark-text me-1"></i
       >{{ data1.decisionNo + "*" + (data1.signedDate | fmDT) }}
     </div>
   </div>

@@ -359,13 +359,15 @@
 </ng-template>
 
 <ng-template #tmplateECertificateTitle let-data>
-    <div>{{data.certificateID}}<i class="icon-i-arrow-down-left-circle-fill"></i>{{data.certificateGradeID}}</div>
+    <div class="d-flex align-items-center pb-2">
+        {{data.certificateID}}
+        <i class="icon-i-arrow-down-left-circle-fill icon_style ps-1"></i>{{data.certificateGradeID}}</div>
 </ng-template>
 
 <ng-template #tmplateECertificateMenuList let-data>
     <div class="d-flex flex-column">
-        <div><i class ="icon-calendar_today"></i>{{data.issuedDate | fmDT}} <i class="icon-i-arrow-down-left-circle-fill"></i>{{data.trainSupplierID}}</div>
-        <div><i class = "icon-edit_fill"></i>{{data.certificateType}} | <i class=""></i>{{data.ranking}}<i class="icon-i-arrow-down-left-circle-fill"></i>{{data.totalScore}}</div>
+        <div class="d-flex align-items-center pb-2"><i class ="icon-calendar_today pe-1"></i>{{data.issuedDate | fmDT}} <i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1"></i>{{data.trainSupplierID}}</div>
+        <div class="d-flex align-items-center"><i class = "icon-category pe-1"></i>{{data.certificateType}} | <i class=""></i>{{data.ranking}}<i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1 "></i>{{data.totalScore}}</div>
     </div>
 </ng-template>
 

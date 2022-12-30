@@ -23,11 +23,11 @@
 
 .roledetail a.menu-item:hover {
   cursor: pointer;
-  background-color: var(--gray-100);
+  background-color: var(--primary-lightest);
 }
 
 .roledetail a.menu-item.active {
-  background-color: var(--gray-200);
+  background-color: var(--primary-lighter);
 }
 
 .rounded-top-ad {
@@ -59,4 +59,16 @@
 
 .roledetail .nav-tabs .nav-link.active {
   border-bottom-color: var(--primary) !important;
+}
+
+.roledetail {
+  max-width: 1280px;
+  margin: 0 auto;
+
+}
+
+.roledetail-aside {
+  border-right: 1px var(--gray-150) solid;
+  height: calc(100vh - 80px);
+  overflow: auto;
 }

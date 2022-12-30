@@ -141,6 +141,7 @@ import { CodxClearCacheComponent } from './components/codx-clear-cache/codx-clea
 import { CodxCalendarComponent } from './components/codx-calendar/codx-calendar.component';
 import { CalendarCenterComponent } from './components/codx-calendar/calendar-center/calendar-center.component';
 import { CodxViewCardComponent } from './components/codx-view-card/codx-view-card.component';
+import { CodxJsonformatterComponent } from './components/codx-history/codx-history-item/codx-jsonformatter/codx-jsonformatter.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -238,7 +239,8 @@ const T_Component: Type<any>[] = [
   PopupMoreChartComponent,
   CodxCalendarComponent,
   CalendarCenterComponent,
-  CodxViewCardComponent
+  CodxViewCardComponent,
+  CodxJsonformatterComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
@@ -286,6 +288,7 @@ const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
     SliderModule,
     LazyLoadImageModule,
     DragDropModule,
+    
   ],
   exports: [T_Component, T_Pipe],
 })

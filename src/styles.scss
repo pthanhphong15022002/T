@@ -372,10 +372,6 @@ hr {
   font-weight: 400 !important;
 }
 
-.form-group codx-label .codx-label {
-  margin-bottom: 4px !important;
-}
-
 [data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-arrow {
   opacity: 0;
 }
@@ -402,7 +398,7 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 }
 
 .aside .aside-footer .menu-title {
-  color: var(--title-color);
+  color: var(--primary-lighter);
 }
 
 .upload-img .position-absolute.top-100.start-100 {
@@ -684,7 +680,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 }
 
 .btn.btn-32:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-  padding: 0.3275rem calc(0.85rem + 1px) !important;
+  padding: 0.35rem calc(0.85rem + 1px) 0.15rem !important;
 }
 
 .row-group {
@@ -1532,4 +1528,8 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 
 .user-mini-nav-custom a {
   color: var(--primary-dark);
+}
+
+.nav-pills .nav-link:hover {
+  cursor: pointer;
 }

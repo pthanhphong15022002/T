@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { Post } from '@shared/models/post';
 import 'lodash';
-import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile, Util } from 'codx-core';
+import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogModel, DialogRef, NotificationsService, UploadFile, Util } from 'codx-core';
 import { Permission } from '@shared/models/file.model';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
@@ -25,7 +25,6 @@ import { Observable, of } from 'rxjs';
 })
 export class PopupAddPostComponents implements OnInit, AfterViewInit {
 
-  data: any;
   message: string = '';
   user: any;
   showEmojiPicker = false;
@@ -44,11 +43,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   tagWith: string = '';
   tags: any[] = [];
   lstTagUser: any[] = [];
-  @ViewChild('atmCreate') atmCreate: AttachmentComponent;
-  @ViewChild('atmEdit') atmEdit: AttachmentComponent;
-  @ViewChild('codxFileCreated') codxFileCreated: ImageGridComponent;
-  @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
-  //Variable for control share
+  
   CATEGORY = {
     POST: "1",
     COMMENTS: "2",
@@ -84,6 +79,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   objectName = '';
   dataShare: Post = null;
   dataEdit: Post = null;
+  data:Post = null;
   emojiMode = 'apple';
   status: string = "";
   dialogData: any;
@@ -91,7 +87,16 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   listFileUpload:any[] = [];
   width = 720;
   height = window.innerHeight;
+  grvSetup:any = null;
+  mssgShareOne:string = "";
+  mssgShareMore:string = "";
+  mssgTagOne:string = "";
+  mssgTagMore:string = "";
   @Input() isShow: boolean;
+  @ViewChild('atmCreate') atmCreate: AttachmentComponent;
+  @ViewChild('atmEdit') atmEdit: AttachmentComponent;
+  @ViewChild('codxFileCreated') codxFileCreated: ImageGridComponent;
+  @ViewChild('codxFileEdit') codxFileEdit: ImageGridComponent;
   constructor(
     private dt: ChangeDetectorRef,
     public atSV: AttachmentService,
@@ -100,55 +105,103 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
     private dmSV: CodxDMService,
     private api: ApiHttpService,
     private callFunc: CallFuncService,
-    private authStore: AuthService,
-    @Optional() dd?: DialogData,
-    @Optional() dialog?: DialogRef
-
-  ) {
-
-    this.user = authStore.userValue;
-    this.dialogData = dd.data;
-    this.dialogRef = dialog;
+    private authStore: AuthStore,
+    @Optional() dialogData?: DialogData,
+    @Optional() dialogRef?: DialogRef
+  ) 
+  {
+    this.user = authStore.get();
+    this.dialogData = dialogData.data;
+    this.dialogRef = dialogRef;
     this.headerText = this.dialogData.headerText;
-
   }
-  ngAfterViewInit(): void {
-  }
-
+  
   ngOnInit() {
     if (this.dialogData.status == this.STATUS.EDIT) {
-      this.dataEdit = this.dialogData.post;
+      this.data = this.dialogData.post;
       this.message = this.dataEdit.content;
       this.permissions = this.dataEdit.permissions;
       this.shareControl = this.dataEdit.shareControl;
     }
     else
     {
+      this.data = new Post();
       if (this.dialogData.status == this.STATUS.SHARE) {
         this.dataShare = this.dialogData.post;
         this.entityName = this.dialogData.refType;
       }
       this.getValueShare(this.SHARECONTROLS.EVERYONE);
     }
-    this.cache.message('WP011').subscribe((mssg: any) => {
-      this.title = Util.stringFormat(mssg.defaultName, this.user.userName);
-      this.dt.detectChanges();
-    });
-    this.getMessageNoti("SYS009");
-    this.dt.detectChanges();
+    this.getMssgDefault();
   }
-  getMessageNoti(mssgCode:string){
-    this.cache.message(mssgCode).subscribe((mssg:any) =>{
+  ngAfterViewInit(): void {
+  }
+  getGridViewSetup(funcID){
+    if(funcID){
+      this.cache.functionList(funcID).subscribe((func) => {
+        if(func){
+          // get grv set up
+          console.log(func);
+          let formName = func.formName;
+          let grvName = func.gridViewName;
+          this.cache.gridViewSetup(formName,grvName).subscribe((grv) => {
+            if(grv){
+              console.log(grv);
+              this.grvSetup = JSON.stringify(grv);
+            }
+          });
+        }
+      });
+    }
+  }
+  getMssgDefault(){
+    // mssg share one
+    this.cache.message('WP001').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgShareOne = mssg.customName;
+      } 
+    });
+    // mssg share more
+    this.cache.message('WP002').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgTagOne = mssg.customName;
+      } 
+    });
+    // mssg tag one
+    this.cache.message('WP018').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgTagMore = mssg.customName;
+      } 
+    });
+    // mssg tag more
+    this.cache.message('WP019').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgShareMore = mssg.customName;
+      } 
+    });
+    // mssg default content
+    this.cache.message('WP011').subscribe((mssg: any) => {
+      if(mssg?.customName)
+      {
+        if(this.user?.userName){
+          this.title = Util.stringFormat(mssg.customName, this.user.userName);
+        }
+      }
+    });
+    
+    this.cache.message("SYS009").subscribe((mssg:any) =>{
       if(mssg?.defaultName){
         this.mssgNoti = mssg.defaultName;
-        this.dt.detectChanges();
       }
     })
   }
   
   click() {
     switch (this.dialogData.status) {
-
       case this.STATUS.EDIT:
         this.editPost();
         break;
@@ -162,8 +215,8 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   }
 
   valueChange(e: any) {
-    if(!e) return;
-    if (e.data) {
+    if (e?.data) 
+    {
       this.message = e.data;
     } 
     else 
@@ -172,46 +225,51 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
     }
     this.dt.detectChanges();
   }
-  getValueShare(shareControl: string, data: any[] = null) {
-    if (data?.length > 0) {
-      this.permissions = []
-      this.shareName = "";
-      switch (shareControl) {
-        case this.SHARECONTROLS.OWNER:
-        case this.SHARECONTROLS.EVERYONE:
-        case this.SHARECONTROLS.MYGROUP:
-        case this.SHARECONTROLS.MYTEAM:
-        case this.SHARECONTROLS.MYDEPARMENTS:
-        case this.SHARECONTROLS.MYDIVISION:
-        case this.SHARECONTROLS.MYCOMPANY:
-          break;
-        case this.SHARECONTROLS.OGRHIERACHY:
-        case this.SHARECONTROLS.DEPARMENTS:
-        case this.SHARECONTROLS.POSITIONS:
-        case this.SHARECONTROLS.ROLES:
-        case this.SHARECONTROLS.GROUPS:
-        default:
-          data.forEach((x: any) => {
+  getValueShare(shareControl: string, permissions: any[] = null) {
+    
+    switch (shareControl) {
+      case this.SHARECONTROLS.OWNER:
+      case this.SHARECONTROLS.EVERYONE:
+      case this.SHARECONTROLS.MYGROUP:
+      case this.SHARECONTROLS.MYTEAM:
+      case this.SHARECONTROLS.MYDEPARMENTS:
+      case this.SHARECONTROLS.MYDIVISION:
+      case this.SHARECONTROLS.MYCOMPANY:
+        break;
+      case this.SHARECONTROLS.OGRHIERACHY:
+      case this.SHARECONTROLS.DEPARMENTS:
+      case this.SHARECONTROLS.POSITIONS:
+      case this.SHARECONTROLS.ROLES:
+      case this.SHARECONTROLS.GROUPS:
+      default:
+        if(Array.isArray(permissions) && permissions.length > 0)
+        {
+          if(this.data.permissions.length == 0){
+            this.data.permissions = [];
+          }
+          this.data.shareName = "";
+          permissions.forEach((x: any) => {
             let p = new Permission();
             p.objectType = x.objectType;
             p.objectID = x.id;
             p.objectName = x.text;
             p.memberType = this.MEMBERTYPE.SHARE;
-            this.permissions.push(p);
+            this.data.permissions.push(p);
           });
-          if (data.length > 1) {
+          let _permisison = permissions[0];
+          if (permissions.length > 1) {
             this.cache.message('WP002').subscribe((mssg: any) => {
               if (mssg)
-                this.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1, data[0].objectName);
+              this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + _permisison.text + '</b>', permissions.length - 1, _permisison.objectName);
             });
           }
           else {
             this.cache.message('WP001').subscribe((mssg: any) => {
               if (mssg)
-                this.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
+              this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + _permisison.text + '</b>');
             });
           }
-      }
+        }
     }
     this.dt.detectChanges();
   }
@@ -469,7 +527,9 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
   addTagsUser(value: any) {
     let data = value.dataSelected;
     if (data && data.length > 0) {
-      this.tags = [];
+      if(this.permissions.length == 0){
+        this.permissions = [];
+      }
       this.lstTagUser = data;
       data.forEach((x: any) => {
         let p = new Permission();
@@ -477,7 +537,7 @@ export class PopupAddPostComponents implements OnInit, AfterViewInit {
         p.objectID = x.UserID;
         p.objectName = x.UserName;
         p.memberType = this.MEMBERTYPE.TAGS
-        this.tags.push(p);
+        this.permissions.push(p);
       });
       if (data.length > 1) {
         this.cache.message('WP019').subscribe((mssg: any) => {

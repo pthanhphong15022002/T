@@ -1,10 +1,10 @@
-<codx-views #view [views]="views"> </codx-views>
+<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" > </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
     <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR"></lib-okr-toolbar>
-    <div class="pt-5 pb-2 text-center">
+    <div class="pt-5 pb-2 text-center" >
       <codx-label
-        [default]="titleRoom"
+        [default]="headerTitle"
         fiedName="titleRoom"
         class="fw-bold fs-2"
       ></codx-label>
@@ -48,7 +48,7 @@
                   <div>
                     <div class="my-2">
                       <span
-                        >{{ titleRoom }} chưa thiết lập mục tiêu cho
+                        >{{ headerTitle }} chưa thiết lập mục tiêu cho
                         Q2/2022</span
                       >
                     </div>
