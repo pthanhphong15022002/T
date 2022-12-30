@@ -16,7 +16,6 @@ import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
-import { PopupDistributeKRComponent } from '../../popup/popup-distribute-kr/popup-distribute-kr.component';
 import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/popup-distribute-okr.component';
 import { E } from '@angular/cdk/keycodes';
 
@@ -266,18 +265,18 @@ export class OkrTargetsComponent implements OnInit {
         this.editKR(kr, o, popupTitle);
         break;
       }
-      case OMCONST.MFUNCID.Copy: {
-        this.copyKR(kr, o, popupTitle);
-        break;
-      }
+      // case OMCONST.MFUNCID.Copy: {
+      //   this.copyKR(kr, o, popupTitle);
+      //   break;
+      // }
       case OMCONST.MFUNCID.Delete: {
         this.deleteKR(kr);
         break;
       }
-      // case 'SYS04': {
-      //   this.distributeKR(kr,o);
-      //   break;
-      // }
+      case 'SYS04': {
+        this.distributeKR(kr);
+        break;
+      }
     }
   }
   //Xem chi tiết OB
@@ -310,5 +309,18 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  
+  distributeKR(kr:any){
+    let dModel = new DialogModel();    
+    dModel.IsFull = true;
+    let dialogDisKR = this.callfunc.openForm(
+      PopupDistributeOKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
+      '',
+      dModel
+    );
+  }
 }

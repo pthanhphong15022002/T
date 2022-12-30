@@ -267,7 +267,7 @@ export class LoginComponent implements OnInit, OnDestroy {
               this.api
                 .get(`auth/GetInfoToken?token=${this.auth.get().token}`)
                 .pipe(
-                  map((data) => {
+                  map((data: any) => {
                     if (data && data.userID) {
                       document.location.href =
                         this.returnUrl + '&token=' + this.auth.get().token;
@@ -280,7 +280,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             } else {
               if (this.returnUrl.indexOf(data.tenant) > 0)
                 this.router.navigate([`${this.returnUrl}`]);
-              else if (environment.tenantFirst)
+              else if (environment.saas == 1)
                 this.router.navigate(['/tenants']);
               else this.router.navigate([`${data.tenant}/${this.returnUrl}`]);
             }
