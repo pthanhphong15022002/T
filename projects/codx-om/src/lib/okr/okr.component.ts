@@ -97,7 +97,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 20;
     this.dataRequest.predicate = 'ParentID=@0';
-    
+
   }
 
   onInit(): void {
@@ -168,7 +168,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
-  //Lấy OKR Plan  
+  //Lấy OKR Plan
   getOKRPlans(periodID: any, interval: any, year: any) {
     this.okrService
       .getOKRPlans(periodID, interval, year)
@@ -180,15 +180,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           this.dataRequest.dataValue = item.recID;
           //----------
           this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
-            if (item) {              
-              //this.dataOKR = this.dataOKR.concat(item); //Nối mảng nên dữ liệu bị trùng              
+            if (item) {
+              //this.dataOKR = this.dataOKR.concat(item); //Nối mảng nên dữ liệu bị trùng
               this.dataOKR = item;
             }
           });
         }
       });
   }
-  
+
   //Lấy fucID con
   funcIDChanged() {
     switch (this.funcID) {
@@ -235,7 +235,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  
+
   //Lấy data danh sách mục tiêu
   getGridViewSetup() {
     this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
@@ -307,11 +307,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.dataOKRPlans.recID,
       null,
     ]);
-      "add",
-      this.dataOKRPlans,
-      null
-    ]
-    );    
+    //   "add",
+    //   this.dataOKRPlans,
+    //   null
+    //  ]
+    // );
   }
   //Thêm mới KR
   addKR(o: any = null) {

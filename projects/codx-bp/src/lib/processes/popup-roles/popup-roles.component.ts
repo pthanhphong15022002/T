@@ -80,7 +80,7 @@ export class PopupRolesComponent implements OnInit {
     this.process = this.data;
     // if (this.process.permissions.length > 0 && this.process.permissions != null)
     //   this.permissions = this.process?.permissions.sort((a, b) =>this.process.owner === a.objectID ? -1 : 1 );
-    this.groupBy(this.process);
+    this.groupBy(this.process.permissions);
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         console.log(res.datas);
@@ -325,7 +325,7 @@ export class PopupRolesComponent implements OnInit {
             this.process.permissions,
             perm
           );
-          this.groupBy(this.process);
+          this.groupBy(this.process.permissions);
         }
       }
       this.changePermission(0);
