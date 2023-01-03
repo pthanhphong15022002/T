@@ -285,7 +285,7 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'purple',
     name: 'Purple',
-    color: '#6c09ad',
+    color: '#5710b2',
     enable: true,
   },
 ];
