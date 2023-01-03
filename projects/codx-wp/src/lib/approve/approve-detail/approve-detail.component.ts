@@ -45,8 +45,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     private sanitizer: DomSanitizer
 
     ) { }
-  
-
   ngOnInit(): void {
     this.getPostInfor(this.objectID);
     this.cache.functionList(this.funcID).subscribe((func: any) => 
@@ -64,6 +62,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       this.getPostInfor(this.objectID);
     }
   }
+  // get data detail
   getPostInfor(objectID:string){
     if(objectID)
     {
@@ -140,7 +139,8 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
             .subscribe((option:any) =>{
               if(option?.event?.status == "Y")
               {
-                this.updateApprovalStatus(this.data.recID, "5").subscribe((res:any) => {
+                this.updateApprovalStatus(this.data.recID, "5")
+                .subscribe((res:any) => {
                     if(res)
                     {
                       this.data.approveStatus = "5";
