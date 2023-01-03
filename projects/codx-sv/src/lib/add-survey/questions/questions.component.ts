@@ -638,11 +638,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   copyNoSession(itemSession, itemQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(itemQuestion));
+    var itemQuestionNew = JSON.parse(JSON.stringify(itemQuestion));
     this.generateGuid();
-    delete itemQuestion.id;
-    itemQuestion.recID = this.GUID;
-    itemQuestion.answers.forEach((z) => {
+    delete itemQuestionNew.id;
+    itemQuestionNew.recID = this.GUID;
+    itemQuestionNew.seqNo = itemQuestion.seqNo + 1;
+    itemQuestionNew.answers.forEach((z) => {
       delete z.id;
       z.recID = this.generateGUID();
     });
@@ -650,13 +651,18 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       JSON.stringify(this.questions[itemSession.seqNo].children)
     );
     data[itemQuestion.seqNo].active = false;
-    data.splice(itemQuestion.seqNo + 1, 0, itemQuestion);
+    data.splice(itemQuestionNew.seqNo + 1, 0, itemQuestionNew);
     data.forEach((x, index) => {
       x.seqNo = index;
-      if (x.parentID == dataTemp.recID) x.parentID = this.GUID;
+      if (x.parentID == itemQuestion.recID) x.parentID = itemSession.recID;
     });
     this.questions[itemSession.seqNo].children = data;
-    this.copyFileNoSession(dataTemp, itemQuestion);
+    // Check nếu là session cuối cùng thì không phần update seqNo
+    this.SVServices.signalSave.next('saving');
+    if (itemQuestionNew.seqNo == this.questions[itemSession.seqNo].children.length - 1)
+      this.setTimeoutSaveData(itemQuestionNew, true);
+    else this.setTimeoutSaveData(itemQuestionNew, true, data);
+    this.copyFileNoSession(itemQuestion, itemQuestionNew);
   }
 
   copyFileNoSession(itemQuestion, itemQuestionNew) {
