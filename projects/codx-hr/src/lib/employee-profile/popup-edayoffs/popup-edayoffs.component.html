@@ -1,6 +1,6 @@
 <layout-list-detail
     #lstDetail
-    [title]="headerText"
+    [title]="headerText"text-primary
     [formModel]="formModel"
     [footer]="footer"
     [dialog]="dialog"
@@ -102,35 +102,46 @@
 
         <div class="form-group row">
             <div class="col-6">
-                <codx-label
-                    fiedName="IsSubHoliday"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="isSubHoliday"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
-
-                <codx-label
-                    fiedName="IsSubWeekOff"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="isSubWeekOff"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
-
-                <codx-label
-                    fiedName="IsSubSunday"
-                    [formModel]="formModel"
-                ></codx-label>
-                <codx-input
-                    field="isSubSunday"
-                    [formModel]="formModel"
-                    [Group]="formGroup"
-                ></codx-input>
+                <div class="text-primary">
+                    <codx-label 
+                        default="Loại trừ các ngày"
+                    ></codx-label>
+                </div>
+                <div>
+                    <codx-input
+                        field="isSubHoliday"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    <codx-label
+                        fiedName="IsSubHoliday"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+                
+                <div>
+                    <codx-input
+                        field="isSubWeekOff"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    <codx-label
+                        fiedName="IsSubWeekOff"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
+                
+                <div>
+                    <codx-input
+                        field="isSubSunday"
+                        [formModel]="formModel"
+                        [Group]="formGroup"
+                    ></codx-input>
+                    <codx-label
+                        fiedName="IsSubSunday"
+                        [formModel]="formModel"
+                    ></codx-label>
+                </div>
             </div>
             <div class="col-6">
                 <codx-label
@@ -195,9 +206,9 @@
             ></codx-input>
         </div>
 
-        <div class="row">
+        <div class="row text-primary">
             <codx-label
-                default="Thông tin loại nghỉ chế độ"
+                default="THÔNG TIN LOẠI NGHỈ CHẾ ĐỘ"
                 [formModel]="formModel"
             ></codx-label>
         </div>

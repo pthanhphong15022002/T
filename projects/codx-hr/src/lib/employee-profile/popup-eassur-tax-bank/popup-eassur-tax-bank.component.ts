@@ -39,19 +39,27 @@ export class PopupEAssurTaxBankComponent extends UIComponent implements OnInit {
     if(this.formModel){
       this.isAfterRender = true
     }
-    this.data = dialog?.dataService?.dataSelected
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
   }
 
   onInit(): void {
+  }
+
+  ngAfterViewInit() {
+    this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        this.dialog && this.dialog.close(this.data);
+      }
+    })
   }
 
   onSaveForm(){
     console.log(this.data);
     
     this.hrService.updateEmployeeAssurTaxBankAccountInfo(this.data).subscribe(p => {
-      if(p === "True"){
+      if(p =! null){
         this.notify.notifyCode('SYS007')
-        // this.dialog.close();
+        this.dialog.close();
       }
     })
   }

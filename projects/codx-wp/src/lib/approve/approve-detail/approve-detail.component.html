@@ -2,6 +2,7 @@
     [header]="header" 
     [body]="body" 
     (clickMF)="clickMF($event)" 
+    [hideMF]="data.approveStatus == 5"
     [formModel]="formModel" 
     [dataItem]="data"
     [footer]="footer">
@@ -210,5 +211,4 @@
         </ng-template>
     </div>
 </ng-template>
-
 <ng-template #footer></ng-template>
