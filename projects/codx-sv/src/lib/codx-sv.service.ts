@@ -223,7 +223,7 @@ export class CodxSvService {
       'DM',
       'FileBussiness',
       'CopyListFileAsync',
-      lstDataUpload
+      [lstDataUpload]
     );
   }
 }
