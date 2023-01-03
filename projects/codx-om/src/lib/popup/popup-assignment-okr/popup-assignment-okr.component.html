@@ -66,37 +66,45 @@
                     <span class="ps-2 fs-5 fw-bolder">{{orgUnitTree?.orgUnitName}}</span>
                 </div>
                 <!--content-->
-                <div class="d-flex flex-column" *ngIf=" listDistribute && listDistribute?.length>0">
-                  <ng-container class="d-flex flex-column" *ngFor="let item of listDistribute; let i=index;">
+                <div class="d-flex flex-column" >
+                  <ng-container class="d-flex flex-column" >
                     <div class="my-2 d-flex flex-row justify-content-center" >
-                      <div class=" col-4 mx-1 d-flex flex-row ">
+                      <div class=" col-4 mx-1 d-flex flex-row border-1 border-bottom border-secondary">
                         <div class="d-flex justify-content-center align-items-center" style="height:30px;width:30px"><span
-                            class=" icon-check_circle justify-content-center align-items-center text-light" [ngClass]="item.isActive ? 'text-primary' : 'text-muted'" 
-                            (click)="disabledChild($event,i)" ></span>
+                            class=" text-primary icon-check_circle justify-content-center align-items-center text-light"  
+                            ></span>
                         </div>  
-                        <codx-inplace [type]="'text'" emptyText="" style="width:100%;" [disabled]="true" [ngClass]="item.isActive ? '' : 'disabledCss'" 
+                        <ejs-dropdownlist
+                          id='orgCbb' 
+                          class="w-100"
+                          #cusCBB [dataSource]='cbbOrg'
+                          [fields]='fields' 
+                          [placeholder]="'Phân công cho...'" 
+                          (valueChange)="cbxOrgChange($event)"
+                        ></ejs-dropdownlist>
+                         <!-- <codx-inplace [type]="'combobox'" [dataSource]='cbbOrg' emptyText=""  style="width:100%;" [disabled]="true"
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item?.orgUnitName"></codx-inplace>
+                          [value]="assignmentOKR?.orgUnitName"></codx-inplace>  -->
                       </div>
-                      <div class=" col-1  mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="percentChange($event)" [field]="i"
-                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.distributePct">
+                      <div class=" col-1  mx-1" >
+                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="percentChange($event)" 
+                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="assignmentOKR.distributePct">
                         </codx-inplace>
                       </div>
-                      <div class="col-1 mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="valueChange($event)" [field]="i"
+                      <div class="col-1 mx-1">
+                        <codx-inplace [type]="'number'" emptyText="" (valueChange)="valueChange($event)" 
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item.distributeValue"> </codx-inplace>
+                          [value]="assignmentOKR.distributeValue"> </codx-inplace>
                       </div>
-                      <div class="col-1  mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" [field]="i"
-                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="item.umid">
+                      <div class="col-1  mx-1">
+                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="umidChange($event)" 
+                          cssClass=" px-1 border-bottom border-1 border-secondary rounded-0" [value]="assignmentOKR.umid">
                         </codx-inplace>
                       </div>
-                      <div class=" col-3  mx-1" [ngClass]="item.isActive ? '' : 'disabledCss'" >
-                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="nameChange($event)" [field]="i"
+                      <div class=" col-3  mx-1">
+                        <codx-inplace [type]="'text'" emptyText="" (valueChange)="nameChange($event)" 
                           cssClass=" w-100 px-1 border-bottom border-1 border-secondary rounded-0"
-                          [value]="item.okrName"> </codx-inplace>
+                          [value]="assignmentOKR.okrName"> </codx-inplace>
                       </div>
                     </div>
                   </ng-container>

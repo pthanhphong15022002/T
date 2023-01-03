@@ -249,7 +249,7 @@ export class CodxOmService {
   }
   //Lấy danh sách Bộ mục tiêu
   getOKRPlans(periodID: string, interval: string, year: any) {
-    periodID = '2022'; //Tạm để cứng chờ khi tạo được periodID
+    periodID = '2023'; //Tạm để cứng chờ khi tạo được periodID
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
