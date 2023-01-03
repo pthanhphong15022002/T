@@ -282,6 +282,12 @@ const themeDatas: ThemeFlag[] = [
     color: '#0f8633',
     enable: true,
   },
+  {
+    id: 'purple',
+    name: 'Purple',
+    color: '#41058E',
+    enable: true,
+  },
 ];
 
 const themeDefault = themeDatas[0];
