@@ -154,8 +154,6 @@ export class PopupAddProcessStepsComponent
   }
 
   onInit(): void {
-    console.log(this.processSteps);
-
     this.loadData();
     this.getListUser();
 

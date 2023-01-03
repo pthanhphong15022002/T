@@ -16,7 +16,7 @@
 </ng-template>
 <ng-template #body>
   <div class="container p-0">
-    <ng-container *ngIf="lstApproval; else templateEmpty">
+    <ng-container *ngIf="loaded; else templateEmpty">
       <ng-container *ngFor="let item of lstApproval">
         <div class="d-flex align-items-top border-top py-3 pe-2">
           <div [style]="setStyles(item.title | vll:'ES022':'color'|async)"
