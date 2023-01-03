@@ -595,6 +595,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
           lstUploadNew.forEach((i) => {
             delete i['recID'];
             delete i['id'];
+            i.storeType = '';
             if (i.objectID == x.recID)
               i.objectID = itemSessionNew.children[indexS].recID;
           });
@@ -613,6 +614,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
             lstUploadNew.forEach((x) => {
               delete x['recID'];
               delete x['id'];
+              x.storeType = '';
               if (x.objectID == z.recID)
                 x.objectID =
                   itemSessionNew.children[indexS].answers[indexA].recID;
@@ -622,8 +624,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       });
     }
     this.lstEditIV = [...this.lstEditIV, ...lstUploadNew];
-    this.SVServices.onSaveListFile(lstUploadNew).subscribe(res => {
-      debugger
+    this.SVServices.onSaveListFile(lstUploadNew).subscribe((res) => {
+      debugger;
     });
   }
 
