@@ -403,13 +403,13 @@ export class PopupAddProcessesComponent implements OnInit {
   valueCbx(e) {}
   //#endregion event
 
-  async valueChangeUser(e) {
+  valueChangeUser(e) {
     if (e.data) {
       this.process.owner = e?.data;
       this.isAddPermission(this.process.owner);
     }
   }
-  async isAddPermission(id) {
+  isAddPermission(id) {
     this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
@@ -445,7 +445,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.callActionSave();
   }
 
-  async updatePermission(
+  updatePermission(
     emp: tmpUser,
     tmpPermission: BP_ProcessPermissions,
     role: string
