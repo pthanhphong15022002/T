@@ -121,7 +121,7 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    // this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
     this.ownerOld = this.process.owner;
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
@@ -409,7 +409,8 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
   isAddPermission(id) {
-    this.api
+    if(id!=null){
+      this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
         if (res) {
@@ -418,6 +419,8 @@ export class PopupAddProcessesComponent implements OnInit {
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
         }
       });
+    }
+
   }
   updateOrCreatProccess(emp: tmpUser) {
     if (
