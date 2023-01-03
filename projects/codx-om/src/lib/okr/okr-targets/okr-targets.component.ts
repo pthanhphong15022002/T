@@ -33,6 +33,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() formModelKR: any;
   @Input() krFuncID: any;
   @Input() obFuncID: any;
+  @Input() funcID: any;
   
   dtStatus = [];
   openAccordion = [];
@@ -318,7 +319,7 @@ export class OkrTargetsComponent implements OnInit {
       null,
       null,
       null,
-      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult,this.funcID],
       '',
       dModel
     );
