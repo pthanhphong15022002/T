@@ -69,12 +69,12 @@
     }
 
     &.sapphire {
-        --primary: #28e0ce;
+        --primary: #08ad9d;
         --primary-active: #1ead9f;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #035e59;
-        --primary-darker: #0b9b8d;
-        --primary-dark: #23d3c1;
+        --primary-darker: #027c70;
+        --primary-dark: #009384;
         --primary-light: #bef0ec;
         --primary-lighter: #eafafa;
         --primary-lightest: #f4fcfa;
@@ -90,7 +90,7 @@
     }
 
     &.green {
-        --primary: #27d65c;
+        --primary: #15ad44;
         --primary-active: #179b3f;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #025c11;
@@ -108,6 +108,27 @@
         --arrow-color: #0f8633;
         --bg-color: #0f8633;
         --border-light: #c8ffcd;
+    }
+
+    &.purple {
+        --primary: #6d13e4;
+        --primary-active: #50058e;
+        --primary-inverse: #FFFFFF;
+        --primary-darkest: #430791;
+        --primary-darker: #5710b2;
+        --primary-dark: #6011c7;
+        --primary-light: #e9cefa;
+        --primary-lighter: #ede0f7;
+        --primary-lightest: #f5ebfc;
+
+        --text-primary: #5710b2;
+        --bs-active-primary: #5710b2;
+        --title-color: #5710b2;
+        --icon-color: #5710b2;
+        --bullet-color: #5710b2;
+        --arrow-color: #5710b2;
+        --bg-color: #5710b2;
+        --border-light: #dbc5f5;
     }
 
     &.dark {

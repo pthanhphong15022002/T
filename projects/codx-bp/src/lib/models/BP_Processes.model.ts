@@ -181,13 +181,13 @@ export class tmpPermission{
 export class ColumnsModel{
    allowDrop :boolean = true;
    allowDrag :boolean = true;
-   allowToggle :boolean = false;  
+   allowToggle :boolean = false;
    color :string;
    dataValue : string
    headerText :string;
    isExpanded:boolean =false ;
    keyField :string;
-   maxCount :number = 0 
+   maxCount :number = 0
    minCount :number = 0
    predicate :string
    showAddButton :boolean =false ;
