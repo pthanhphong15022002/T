@@ -73,7 +73,6 @@ export class PopupAddProcessesComponent implements OnInit {
   emp: tmpUser;
   onwerRole: string = 'onwer';
   userRole: string = 'user';
-  checkUserRoles = false;
   folderID: string = ''; // Id of versionNo
   folderName: string = ''; // versionNo
   parentID: string = ''; // Id of proccess
@@ -122,7 +121,7 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    // this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
     this.ownerOld = this.process.owner;
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
@@ -204,7 +203,7 @@ export class PopupAddProcessesComponent implements OnInit {
       }
       this.revisions.push(versions);
       this.process.versions = this.revisions;
-      if (this.action == 'add' || this.action == 'copy') {
+      if(this.action == 'add' || this.action == 'copy'){
         this.process.versions[0].recID = this.folderID;
       }
       data = [
@@ -229,7 +228,7 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option), 0)
       .subscribe((res) => {
         this.attachment?.clearData();
-        this.imageAvatar.clearData();
+        this.imageAvatar.clearData() ;
         if (res) {
           this.dialog.close([res.save]);
         } else this.dialog.close();
@@ -241,8 +240,8 @@ export class PopupAddProcessesComponent implements OnInit {
       .save((option: any) => this.beforeSave(option))
       .subscribe((res) => {
         if (res.update) {
-          this.attachment?.clearData();
-          this.imageAvatar.clearData();
+        this.attachment?.clearData();
+        this.imageAvatar.clearData() ;
           this.dialog.close(res.update);
         }
       });
@@ -404,13 +403,14 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion event
 
   valueChangeUser(e) {
-    if (e.data) {
+    if(e.data){
       this.process.owner = e?.data;
       this.isAddPermission(this.process.owner);
     }
   }
   isAddPermission(id) {
-    this.api
+    if(id!=null){
+      this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
         if (res) {
@@ -419,6 +419,8 @@ export class PopupAddProcessesComponent implements OnInit {
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
         }
       });
+    }
+
   }
   updateOrCreatProccess(emp: tmpUser) {
     if (
@@ -427,10 +429,7 @@ export class PopupAddProcessesComponent implements OnInit {
     ) {
       // member type is zero for onwer of proccess
       this.process.permissions
-        .filter(
-          (x) =>
-            x.objectID === this.tmpPermission.objectID && x.memberType == '0'
-        )
+        .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
         .forEach((element) => {
           this.updatePermission(emp, element, this.onwerRole);
           this.isExitUserPermiss = true;
@@ -490,7 +489,12 @@ export class PopupAddProcessesComponent implements OnInit {
       this.CheckAllExistNameProccess(this.process.recID);
     }
   }
+  // checkAdminOfBP(userid: any) {
+  //   let check: boolean;
+  // this.bpService.checkAdminOfBP(userid).subscribe((res) =>{
 
+  //   });
+  // }
 
   acceptEdit() {
     if (this.user.administrator) {
