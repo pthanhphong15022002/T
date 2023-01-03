@@ -267,8 +267,8 @@ export class PopupAddEmployeesComponent implements OnInit {
           case "":
             break;
         }
-        if (typeof e.data !== 'string') {
-          this.employee[field] = e.data.fromDate
+        if (typeof data !== 'string') {
+          this.employee[field] = data.fromDate
             ? e.data.fromDate.toISOString()
             : null;
         } else this.employee[field] = e.data;

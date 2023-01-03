@@ -61,9 +61,10 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.cache.message('BP001').subscribe((res) => {
       if (res) {
         this.firstNameVersion = Util.stringFormat(
-          res.defaultName,
+          res.defaultName.trim(),
           ': ' + 'V0.0'
         );
+        console.log(res.defaultName);
       }
     });
 
