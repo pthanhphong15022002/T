@@ -20,9 +20,9 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
   gridView: any;
   formModel: any;
   okrAddGroup: FormGroup;
-  ops = ['q'];
+  ops = ['m','q','y'];
   date = new Date();
-  parentID: any;
+  okrPlans: any;
   userID:any;
   objRequied = [];
   //Chờ c thương thiết lập vll
@@ -64,7 +64,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     if(dt?.data[0]) this.gridView = dt?.data[0];
     if(dt?.data[1]) this.formModel = dt?.data[1];
     if(dt?.data[2]) this.type = dt?.data[2];
-    if(dt?.data[3]) this.parentID = dt?.data[3];
+    if(dt?.data[3]) this.okrPlans = dt?.data[3];
     if(this.type == "edit") {
       this.headerText = "Chỉnh sửa mục tiêu"
       this.dataOKR =  dt?.data[4];
@@ -113,16 +113,16 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     //Thêm
     if(this.type == "add")
     {
-      if(this.formModel.functionID == OMCONST.FUNCID.Company)
+      if(this.formModel.functionID == OMCONST.FUNCID.COMP)
         this.dataOKR.oKRLevel = "1";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Department)
+      else if(this.formModel.functionID == OMCONST.FUNCID.DEPT)
         this.dataOKR.oKRLevel = "3";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Team)
+      else if(this.formModel.functionID == OMCONST.FUNCID.ORG)
         this.dataOKR.oKRLevel = "5";
-      else if(this.formModel.functionID == OMCONST.FUNCID.Person)
+      else if(this.formModel.functionID == OMCONST.FUNCID.PERS)
         this.dataOKR.oKRLevel = "9";
       this.dataOKR.interval = "Q";
-      this.dataOKR.parentID = this.parentID;
+      this.dataOKR.parentID = this.okrPlans?.recID;
       this.codxOmService.addOKR(this.dataOKR).subscribe(item=>{
         if(item) 
         {
@@ -135,5 +135,10 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
     {
       this.codxOmService.updateOKR(this.dataOKR).subscribe();
     }
+  }
+
+  formatInterval(val:any)
+  {
+    return val.toLowerCase()
   }
 }

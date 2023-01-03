@@ -48,6 +48,7 @@ export class Post {
   shareIcon:string;
   shareText:string;
   shareName: string;
+  tagName:string;
   shortConent: string;
   createdBy:string;
   createdName:string;

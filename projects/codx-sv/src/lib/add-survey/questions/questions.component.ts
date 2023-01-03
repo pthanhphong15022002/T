@@ -442,18 +442,26 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     console.log('check delete card', this.questions);
   }
 
-  mergeSession(seqNoSession) {
-    if (this.questions[seqNoSession].children.length == 0)
-      this.questions.splice(seqNoSession, 1);
+  mergeSession(itemSession) {
+    if (this.questions[itemSession.seqNo].children.length == 0)
+      this.questions.splice(itemSession.seqNo, 1);
     else {
-      var dataChildren = this.questions[seqNoSession].children;
-      this.questions[seqNoSession - 1].children =
-        this.questions[seqNoSession - 1].children.concat(dataChildren);
-      this.questions[seqNoSession - 1].children.forEach((x, index) => {
+      var dataChildren = this.questions[itemSession.seqNo].children;
+      dataChildren.forEach(
+        (x) => (x.parentID = this.questions[itemSession.seqNo - 1].recID)
+      );
+      this.questions[itemSession.seqNo - 1].children =
+        this.questions[itemSession.seqNo - 1].children.concat(dataChildren);
+      this.questions[itemSession.seqNo - 1].children.forEach((x, index) => {
         x.seqNo = index;
       });
-      this.questions.splice(seqNoSession, 1);
+      this.questions.splice(itemSession.seqNo, 1);
     }
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutDeleteData(
+      [itemSession],
+      this.questions[itemSession.seqNo - 1].children
+    );
     console.log('check mergeSession', this.questions);
   }
 
@@ -529,16 +537,28 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   copySession(itemSession) {
-    this.generateGuid();
-    delete itemSession.id;
-    itemSession.recID = this.GUID;
+    let itemSessionNew = JSON.parse(JSON.stringify(itemSession));
+    delete itemSessionNew.id;
+    itemSessionNew.recID = this.generateGUID();
     var data = JSON.parse(JSON.stringify(this.questions));
     data[itemSession.seqNo].active = false;
-    data.splice(itemSession.seqNo + 1, 0, itemSession);
+    data.splice(itemSession.seqNo + 1, 0, itemSessionNew);
     data.forEach((x, index) => {
       x.seqNo = index;
     });
+    itemSessionNew.seqNo = data.length - 1;
     this.questions = data;
+    if (itemSessionNew.children && itemSessionNew.children.length > 0)
+      itemSessionNew.children.forEach((x) => {
+        delete x.id;
+        x.recID = this.generateGUID();
+      });
+    // this.SVServices.signalSave.next('saving');
+    // if (this.questions.length - 1 == itemSession.seqNo + 1) {
+    //   this.setTimeoutSaveData([itemSessionNew], true);
+    // } else {
+    //   this.setTimeoutSaveData([itemSessionNew], true, this.questions);
+    // }
   }
 
   copyNoSession(itemSession, itemQuestion) {
@@ -717,6 +737,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       typeFile: typeFile,
       modeFile: modeFile,
       data: this.itemActive,
+      inline: inline,
+      itemAnswer: itemAnswer,
     };
     var dialog = this.callfc.openForm(
       PopupUploadComponent,
@@ -738,9 +760,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                 t.questions[seqNoQuestion].children[seqNoQuestion].answers[
                   itemAnswer.seqNo
                 ].hasPicture = true;
-                t.questions[seqNoQuestion].children[seqNoQuestion].answers[
-                  itemAnswer.seqNo
-                ].recID = res.event?.dataUpload[0].objectID;
+                // t.questions[seqNoQuestion].children[seqNoQuestion].answers[
+                //   itemAnswer.seqNo
+                // ].recID = res.event?.dataUpload[0].objectID;
               } else {
                 if (modeFile == 'change') {
                   t.lstEditIV = t.lstEditIV.filter(
@@ -751,8 +773,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                 }
                 this.questions[seqNoSession].children[seqNoQuestion].qPicture =
                   true;
-                this.questions[seqNoSession].children[seqNoQuestion].recID =
-                  res.event?.dataUpload[0].objectID;
+                // this.questions[seqNoSession].children[seqNoQuestion].recID =
+                //   res.event?.dataUpload[0].objectID;
               }
               this.lstEditIV.push(res.event?.dataUpload[0]);
               this.SVServices.signalSave.next('saving');
@@ -982,6 +1004,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     tempQuestion.seqNo = itemActive.category == 'S' ? 0 : itemActive.seqNo + 1;
     tempQuestion.category = category;
     tempQuestion.recID = this.GUID;
+    tempQuestion.parentID = this.questions[seqNoSession].recID;
     delete tempQuestion.id;
     this.questions[seqNoSession].children.splice(
       itemActive.category == 'S' ? 0 : itemActive.seqNo + 1,
@@ -1251,6 +1274,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   sortSession() {
     var obj = {
       data: this.questions,
+      transID: this.recID,
     };
     var dialog = this.callfc.openForm(
       SortSessionComponent,
@@ -1401,9 +1425,11 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   onSave(transID, data, isModeAdd, listUpdate, dataAnswer = null) {
-    let isArr = Array.isArray(data);
-    if (isArr) data.forEach((x) => delete x.id);
-    else delete data.id;
+    if (isModeAdd) {
+      let isArr = Array.isArray(data);
+      if (isArr) data.forEach((x) => delete x.id);
+      else delete data.id;
+    }
     this.api
       .execSv('SV', 'ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
         transID,

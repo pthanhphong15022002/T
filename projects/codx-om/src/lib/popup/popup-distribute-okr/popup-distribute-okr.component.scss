@@ -174,3 +174,7 @@
 .e-tab-header {
   z-index: 1;
 }
+.disabledCss {
+  pointer-events: none;
+  opacity: 0.4;
+}
