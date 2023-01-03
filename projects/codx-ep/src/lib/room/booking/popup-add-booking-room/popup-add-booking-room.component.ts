@@ -1315,15 +1315,29 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueQuantityChange(event?) {
-    this.lstStationery.forEach((item) => {
-      if (item.id == event?.field) {
-        item.quantity = event?.data;
-      }
-    });
-
-    this.lstStationery = this.lstStationery.filter((item) => {
-      return item.quantity != 0;
-    });
+    if(event?.data && event?.field){
+        this.lstStationery.forEach((item) => {
+          if (item.id === event?.field) {
+            if(event.data>0){    
+              item.quantity = event.data;  
+            }else{    
+              item.quantity = 0;
+            }
+          }
+        });    
+        this.changeDetectorRef.detectChanges();
+      
+    }
+    // this.lstStationery = this.lstStationery.filter((item) => {
+    //   return item.quantity != 0;
+    // });
+  }
+  deleteStationery(id:any){
+    if(id){
+      this.lstStationery = this.lstStationery.filter((item) => {
+        return item?.id != id;
+      });
+    }
   }
   //////////////////////////
   attendeesCheckChange(event: any, userID: any) {
