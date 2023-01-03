@@ -226,7 +226,7 @@ export class CodxBpService {
       data
     );
   }
-  checkAdminOfBP(userId: string) {
+  async checkAdminOfBP(userId: string){
     return this.api.exec<boolean>(
       'BP',
       'ProcessesBusiness',
