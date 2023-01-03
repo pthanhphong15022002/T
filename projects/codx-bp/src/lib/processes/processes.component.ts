@@ -744,7 +744,7 @@ export class ProcessesComponent
       this.oldName.trim().toLocaleUpperCase() ===
       this.newName.trim().toLocaleUpperCase()
     ) {
-      this.CheckExistNameProccess(this.oldName);
+      this.CheckExistNameProccess(this.newName);
     } else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
