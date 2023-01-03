@@ -192,7 +192,7 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    this.isAdminBp = this.checkAdminOfBP(this.userId);
+    // this.isAdminBp = await this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -614,7 +614,7 @@ export class ProcessesComponent
         950,
         650,
         '',
-        [this.titleAction, e, this.isAdminBp],
+        [this.titleAction, e],
         ''
       )
       .closed.subscribe((e) => {
@@ -744,7 +744,7 @@ export class ProcessesComponent
       this.oldName.trim().toLocaleUpperCase() ===
       this.newName.trim().toLocaleUpperCase()
     ) {
-      this.CheckExistNameProccess(this.oldName);
+      this.CheckExistNameProccess(this.newName);
     } else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
@@ -788,11 +788,6 @@ export class ProcessesComponent
 
   async changeDataMF(e, data) {
     if (e != null && data != null) {
-      let isOwner = data?.owner == this.userId ? true : false;
-      let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
-
-      // checkGroup = await this.checkGroupId(data);
-      // this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':
@@ -1118,9 +1113,9 @@ export class ProcessesComponent
     }
   }
 
-  checkAdminOfBP(userid: any) {
+  async checkAdminOfBP(userid: any) {
     let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
+    (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
     return check;
   }
 

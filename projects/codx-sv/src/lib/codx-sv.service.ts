@@ -206,4 +206,24 @@ export class CodxSvService {
       [transID, data, isModeAdd]
     );
   }
+
+  onSaveFile(dataUpload) {
+    return this.api.execSv(
+      'DM',
+      'DM',
+      'FileBussiness',
+      'CopyAsync',
+      dataUpload
+    );
+  }
+
+  onSaveListFile(lstDataUpload) {
+    return this.api.execSv(
+      'DM',
+      'DM',
+      'FileBussiness',
+      'CopyListFileAsync',
+      lstDataUpload
+    );
+  }
 }

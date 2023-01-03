@@ -898,6 +898,8 @@ codx-tag .codx-tag:hover {
 
 codx-layout-add .codx-tab {
   position: relative;
+  display: block;
+  width: 750px !important;
 }
 
 codx-layout-add .codx-tab .tab-content {
@@ -909,6 +911,7 @@ codx-layout-add .codx-tab .tab-content {
   bottom: 0;
   min-width: auto !important;
   width: auto !important;
+  display: block !important;
 }
 
 codx-layout-add .card-header {
@@ -1532,4 +1535,10 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 
 .nav-pills .nav-link:hover {
   cursor: pointer;
+}
+
+.card-img-mwp.img-storage .codx-image.h-100 {
+  height: 150px !important;
+  max-height: 150px;
+  min-height: 150px;
 }

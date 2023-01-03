@@ -191,6 +191,10 @@ export class AddEditComponent implements OnInit {
       this.calculateLine(e.data);
       this.updateInvoices();
     }
+
+    if (e.field.toLowerCase() === 'salesamt') {
+      this.updateInvoices();
+    }
   }
 
   clickMF(e) {}
@@ -204,7 +208,7 @@ export class AddEditComponent implements OnInit {
         opt.className = 'InvoicesBusiness';
         opt.assemblyName = 'EI';
         opt.service = 'EI';
-        opt.data = [this.invoices, this.grid.dataSource];
+        opt.data = [this.form.formGroup.value, this.grid.dataSource];
         return true;
       })
       .subscribe();
@@ -235,10 +239,12 @@ export class AddEditComponent implements OnInit {
     let lines = this.grid.dataSource;
     let salesAmt: number = 0,
       quantity: number = 0,
-      totalAmt: number = 0;
+      totalAmt: number = 0,
+      discount: number = 0;
 
     lines.forEach((e: InvoiceLine) => {
       let q: number, s: number, t: number;
+
       if (e.quantity && typeof e.quantity == 'string')
         q = parseFloat(e.quantity);
       else q = e.quantity;
@@ -255,7 +261,8 @@ export class AddEditComponent implements OnInit {
         t = parseFloat(e.totalAmt);
       else t = e.totalAmt;
 
-      totalAmt += t;
+      if (e.lineType !== '3') totalAmt += t;
+      else totalAmt -= s;
     });
 
     //Clear
@@ -267,11 +274,12 @@ export class AddEditComponent implements OnInit {
     this.invoices.quantity = quantity;
     this.invoices.salesAmt = salesAmt;
     this.invoices.totalAmt = totalAmt;
+    this.form.formGroup.patchValue(this.invoices);
   }
 
   calculateLine(data: InvoiceLine) {
     data.salesAmt = this.salesAmount(data.quantity, data.salesPrice);
-    data.vatAmt = this.updateVATAtm(data.salesPrice, data.vatid);
+    data.vatAmt = this.updateVATAtm(data.salesAmt, data.vatid);
     data.totalAmt = this.updateTotalAtm(data.salesAmt, data.vatAmt);
     return data;
   }

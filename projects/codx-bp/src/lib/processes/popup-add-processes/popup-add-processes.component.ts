@@ -101,6 +101,7 @@ export class PopupAddProcessesComponent implements OnInit {
     this.entity = this.dialog.formModel.entityName;
 
     this.user = this.authStore.get();
+
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) {
         this.title =
@@ -402,11 +403,14 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion event
 
   valueChangeUser(e) {
-    this.process.owner = e?.data;
-    this.isAddPermission(this.process.owner);
+    if(e.data){
+      this.process.owner = e?.data;
+      this.isAddPermission(this.process.owner);
+    }
   }
   isAddPermission(id) {
-    this.api
+    if(id!=null){
+      this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
         if (res) {
@@ -415,12 +419,15 @@ export class PopupAddProcessesComponent implements OnInit {
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
         }
       });
+    }
+
   }
   updateOrCreatProccess(emp: tmpUser) {
     if (
       this.process?.permissions != null &&
       this.process?.permissions.length > 0
     ) {
+      // member type is zero for onwer of proccess
       this.process.permissions
         .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
         .forEach((element) => {
@@ -443,16 +450,17 @@ export class PopupAddProcessesComponent implements OnInit {
     role: string
   ) {
     if (role === this.onwerRole) {
+      tmpPermission.objectType = '1';
       tmpPermission.objectID = emp?.userID;
       tmpPermission.objectName = emp?.userName;
       if (emp.administrator) {
         tmpPermission.objectType = '7';
-      } else if (this.checkAdminOfBP(emp.userID)) {
+      }
+      else if (this.checkAdminOfBP(emp.userID)) {
         tmpPermission.objectType = '7';
       }
     }
     // BE handle update onwer
-    tmpPermission.objectType = '1';
     tmpPermission.memberType = '0';
     tmpPermission.autoCreate = true;
 
@@ -481,20 +489,31 @@ export class PopupAddProcessesComponent implements OnInit {
       this.CheckAllExistNameProccess(this.process.recID);
     }
   }
-  checkAdminOfBP(userid: any) {
-    let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
-    return check;
-  }
+  // checkAdminOfBP(userid: any) {
+  //   let check: boolean;
+  // this.bpService.checkAdminOfBP(userid).subscribe((res) =>{
+
+  //   });
+  // }
 
   acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.userId)) {
+    }
+    else if (this.checkAdminOfBP(this.user.userId))
+     {
       this.isAcceptEdit = true;
-    } else {
+    }
+    else {
       this.isAcceptEdit = false;
     }
+  }
+  async checkAdminOfBP(userid: any) {
+    var check = false;
+    await (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => {
+      check = res ? true : false;
+    });
+    return check;
   }
 
   addAvatar() {

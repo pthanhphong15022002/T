@@ -47,6 +47,8 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
   dataVideo: any;
   modeFile: any;
   urlVideo: any;
+  inline: any;
+  itemAnswer: any;
   @ViewChild('listViewImage') listViewImage: CodxListviewComponent;
   @ViewChild('listViewVideo') listViewVideo: CodxListviewComponent;
   @ViewChild('ATM_Choose_Image') ATM_Choose_Image: AttachmentComponent;
@@ -68,7 +70,9 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
     this.typeFile = dt.data?.typeFile;
     this.modeFile = dt.data?.modeFile;
     this.data = dt.data?.data;
+    this.inline = dt.data?.inline;
     this.functionList = dt.data.functionList;
+    this.itemAnswer = dt.data?.itemAnswer;
     this.user = auth.get();
     this.dataValueImage = `WP_Comments;SV_Surveys;false;${this.user?.userID};image`;
     this.dataValueVideo = `WP_Comments;SV_Surveys;false;${this.user?.userID};video`;
@@ -101,7 +105,12 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
       delete dataUpload['uploadId'];
       dataUpload.history = null;
       dataUpload.objectType = this.functionList.entityName;
-      dataUpload.objectID = recID;
+      if (this.inline == false) dataUpload.objectID = recID;
+      else {
+        if (this.itemAnswer) {
+          dataUpload.objectID = this.itemAnswer.recID;
+        } else dataUpload.objectID = this.data.recID;
+      }
       let result = {
         referType: referType,
         dataUpload: [dataUpload],
@@ -160,8 +169,13 @@ export class PopupUploadComponent extends UIComponent implements OnInit {
 
   async selectedFile(e) {
     this.generateGuid();
-    let recID = JSON.parse(JSON.stringify(this.guidID));
-    e.data[0].objectID = recID;
+    if (this.inline == false) {
+      let recID = JSON.parse(JSON.stringify(this.guidID));
+      e.data[0].objectID = recID;
+    } else {
+      if (this.itemAnswer) e.data[0].objectID = this.itemAnswer.recID;
+      else e.data[0].objectID = this.data.recID;
+    }
     let files = e.data;
     // up file
     if (files.length > 0) {

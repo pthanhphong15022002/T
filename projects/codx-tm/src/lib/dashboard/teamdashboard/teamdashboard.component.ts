@@ -5,22 +5,30 @@ import {
   TemplateRef,
   Injector,
   ViewEncapsulation,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
-import { GradientService } from '@syncfusion/ej2-angular-circulargauge';
 import { RangeColorModel } from '@syncfusion/ej2-angular-progressbar';
-import { AuthStore, DataRequest, UIComponent, ViewModel, ViewType } from 'codx-core';
+import {
+  AuthStore,
+  DataRequest,
+  UIComponent,
+  UserModel,
+  ViewModel,
+  ViewType,
+} from 'codx-core';
+import { ChartSettings } from 'projects/codx-om/src/lib/model/chart.model';
 import { CodxTMService } from '../../codx-tm.service';
-import { StatusTask } from '../../models/enum/enum';
 
 @Component({
   selector: 'teamdashboard',
   templateUrl: './teamdashboard.component.html',
   styleUrls: ['./teamdashboard.component.scss'],
-  providers: [GradientService],
   encapsulation: ViewEncapsulation.None,
 })
 export class TeamDashboardComponent extends UIComponent implements OnInit {
   @ViewChild('content') content: TemplateRef<any>;
+  @ViewChildren('team_dashboard') templates: QueryList<any>;
   views: Array<ViewModel> = [];
   funcID: string;
   model: DataRequest;
@@ -33,7 +41,7 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   month: number;
   beginMonth: Date;
   endMonth: Date;
-  user: any;
+  user: UserModel;
   isDesc: boolean = true;
   tasksByGroup: object;
   status: any = {
@@ -172,6 +180,43 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     { text: 'Thời gian thực hiện' },
   ];
 
+  chartSettings2: ChartSettings = {
+    title: 'Tỷ lệ công việc theo nhóm',
+    seriesSetting: [
+      {
+        type: 'Pie',
+        xName: 'status',
+        yName: 'value',
+        innerRadius: '80%',
+        radius: '70%',
+        startAngle: 0,
+        explodeIndex: 1,
+        explode: true,
+        endAngle: 360,
+      },
+    ],
+    service: 'OM',
+    assembly: 'ERM.Business.OM',
+    className: 'DashBoardBusiness',
+    method: 'GetChartData1Async',
+  };
+
+  chartSettings5: ChartSettings = {
+    title: 'Thống kê công việc hoàn thành và số giờ thực hiện',
+    seriesSetting: [
+      {
+        type: 'Column',
+        name: 'Tasks',
+        xName: 'label',
+        yName: 'value',
+        cornerRadius: { topLeft: 10, topRight: 10 },
+      },
+    ],
+  };
+
+  panels = [];
+  datas = [];
+
   constructor(
     private inject: Injector,
     private auth: AuthStore,
@@ -190,6 +235,12 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
   }
 
   onInit(): void {
+    this.panels = JSON.parse(
+      '[{"id":"0.5293183694893755_layout","row":6,"col":6,"sizeX":3,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.7462735198778399_layout","row":6,"col":0,"sizeX":6,"sizeY":3,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.932033280876619_layout","row":1,"col":6,"sizeX":3,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.6076202141678433_layout","row":1,"col":3,"sizeX":3,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.5296463903570827_layout","row":1,"col":0,"sizeX":3,"sizeY":5,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null},{"id":"0.18375208371519292_layout","row":0,"col":0,"sizeX":9,"sizeY":1,"minSizeX":1,"minSizeY":1,"maxSizeX":null,"maxSizeY":null}]'
+    );
+    this.datas = JSON.parse(
+      '[{"panelId":"0.5293183694893755_layout","data":"6"},{"panelId":"0.7462735198778399_layout","data":"5"},{"panelId":"0.932033280876619_layout","data":"4"},{"panelId":"0.6076202141678433_layout","data":"3"},{"panelId":"0.5296463903570827_layout","data":"2"},{"panelId":"0.18375208371519292_layout","data":"1"}]'
+    );
     this.getGeneralData();
   }
 
@@ -207,92 +258,10 @@ export class TeamDashboardComponent extends UIComponent implements OnInit {
     this.detectorRef.detectChanges();
   }
 
-  private getGeneralData() {
+  getGeneralData() {
     this.tmService.getTeamDBData(this.model).subscribe((res: any) => {
       if (res) {
-        const {
-          efficiency,
-          tasksByGroup,
-          status,
-          dataBarChart,
-          rateDoneTaskOnTime,
-          qtyTasks,
-          vltasksByEmpWithName,
-          hoursByEmpWithName,
-        } = res;
-        this.tasksByGroup = tasksByGroup;
-        this.status = status;
-        this.dataBarChart = dataBarChart;
-        this.rateDoneTaskOnTime = rateDoneTaskOnTime;
-        this.qtyTasks = qtyTasks;
-        this.piedata = [
-          {
-            x: 'Chưa thực hiện',
-            y: status.newTasks,
-          },
-          {
-            x: 'Đang thực hiên',
-            y: status.processingTasks,
-          },
-          {
-            x: 'Hoàn tất',
-            y: status.doneTasks,
-          },
-          {
-            x: 'Hoãn lại',
-            y: status.postponeTasks,
-          },
-          {
-            x: 'Bị huỷ',
-            y: status.canceledTasks,
-          },
-        ];
-        if (vltasksByEmpWithName) {
-          vltasksByEmpWithName.map((task) => {
-            let newTasks = 0;
-            let processingTasks = 0;
-            let doneTasks = 0;
-            let postponeTasks = 0;
-            task.tasks.map((task) => {
-              switch (task.status) {
-                case StatusTask.New:
-                  newTasks = newTasks + 1;
-                  break;
-                case StatusTask.Processing:
-                  processingTasks = processingTasks + 1;
-                  break;
-                case StatusTask.Done:
-                  doneTasks = doneTasks + 1;
-                  break;
-                case StatusTask.Postpone:
-                  postponeTasks = postponeTasks + 1;
-                  break;
-              }
-            });
-            this.vlWork.push({
-              id: task.id,
-              qtyTasks: task.qtyTasks,
-              owner: task.owner,
-              status: {
-                new: (newTasks / task.qtyTasks) * 100,
-                processing: (processingTasks / task.qtyTasks) * 100,
-                done: (doneTasks / task.qtyTasks) * 100,
-              },
-            });
-          });
-        }
-        if (hoursByEmpWithName) {
-          this.hrWork = hoursByEmpWithName;
-        }
-        this.detectorRef.detectChanges();
       }
     });
-  }
-
-  sort() {
-    this.isDesc = !this.isDesc;
-    this.vlWork = this.vlWork.reverse();
-    this.hrWork = this.hrWork.reverse();
-    this.detectorRef.detectChanges();
   }
 }
