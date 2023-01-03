@@ -69,12 +69,12 @@
     }
 
     &.sapphire {
-        --primary: #28e0ce;
+        --primary: #08ad9d;
         --primary-active: #1ead9f;
         --primary-inverse: #FFFFFF;
         --primary-darkest: #035e59;
-        --primary-darker: #0b9b8d;
-        --primary-dark: #23d3c1;
+        --primary-darker: #027c70;
+        --primary-dark: #009384;
         --primary-light: #bef0ec;
         --primary-lighter: #eafafa;
         --primary-lightest: #f4fcfa;
@@ -108,6 +108,27 @@
         --arrow-color: #0f8633;
         --bg-color: #0f8633;
         --border-light: #c8ffcd;
+    }
+
+    &.purple {
+        --primary: #760ebb;
+        --primary-active: #50058e;
+        --primary-inverse: #FFFFFF;
+        --primary-darkest: #430169;
+        --primary-darker: #60089b;
+        --primary-dark: #6c09ad;
+        --primary-light: #e9cefa;
+        --primary-lighter: #ede0f7;
+        --primary-lightest: #f5ebfc;
+
+        --text-primary: #41058E;
+        --bs-active-primary: #41058E;
+        --title-color: #41058E3;
+        --icon-color: #41058E;
+        --bullet-color: #41058E;
+        --arrow-color: #41058E;
+        --bg-color: #41058E;
+        --border-light: #dbc5f5;
     }
 
     &.dark {
