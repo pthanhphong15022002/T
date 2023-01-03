@@ -4,6 +4,8 @@ import { ChangeDetectorRef, Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
+  CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
@@ -34,6 +36,7 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
 
   isAfterRender = false;
   @ViewChild('form') form: CodxFormComponent;
+  @ViewChild('listView') listView: CodxListviewComponent;
 
   constructor(
     private injector: Injector,
@@ -70,15 +73,28 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       .then((item) => {
         this.formGroup = item;
         console.log('form test:', this.formGroup);
-        this.hrService.getEmployeeTrainCourse(this.employId).subscribe((p) => {
-          console.log('thong tin dao tao nhan vien', p);
-          this.data = p;
+        if (this.actionType == 'add') {
+          this.hrService.getDataETrainDefault().subscribe((res) => {
+            if (res) {
+              this.data = res;
+              this.data.employeeID = this.employId;
+              this.formModel.currentData = this.data;
+              this.formGroup.patchValue(this.data);
+              this.isAfterRender = true;
+            }
+          });
+        } else {
+          this.hrService
+            .getEmployeeTrainCourse(this.employId)
+            .subscribe((p) => {
+              console.log('thong tin dao tao nhan vien', p);
+              this.data = p;
 
-          
-          this.formModel.currentData = this.data;
-          this.formGroup.patchValue(this.data);
-          this.isAfterRender = true;
-        });
+              this.formModel.currentData = this.data;
+              this.formGroup.patchValue(this.data);
+              this.isAfterRender = true;
+            });
+        }
       });
 
     this.hrService
@@ -118,23 +134,31 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
         if (res) {
           this.notitfy.notifyCode('SYS007');
           this.actionType = 'edit';
-          if(closeForm){
+          if (this.listView) {
+            (this.listView.dataService as CRUDService).add(res).subscribe();
+          }
+          if (closeForm) {
             this.dialog && this.dialog.close();
           }
         }
       });
+    } else {
+      this.hrService
+        .updateEmployeeTrainCourseInfo(this.data)
+        .subscribe((res) => {
+          if (res) {
+            this.notitfy.notifyCode('SYS007');
+            if (this.listView) {
+              (this.listView.dataService as CRUDService)
+                .update(res)
+                .subscribe();
+            }
+            if (closeForm) {
+              this.dialog && this.dialog.close();
+            }
+          } else this.notitfy.notifyCode('DM034');
+        });
     }
-    else{
-      this.hrService.updateEmployeeTrainCourseInfo(this.data).subscribe((res) => {
-        if (res) {
-          this.notitfy.notifyCode('SYS007');
-          if (closeForm) {
-            this.dialog && this.dialog.close();
-          }
-        } else this.notitfy.notifyCode('DM034');
-      });
-    }
-    
   }
 
   onSaveForm2() {
@@ -146,9 +170,18 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     });
   }
 
-  afterRenderListView(data) {}
+  afterRenderListView(event) {
+    this.listView = event;
+    console.log(this.listView);
+  }
 
-  click(data) {}
+  click(data) {
+    this.data = JSON.parse(JSON.stringify(data));
+    this.formGroup.patchValue(this.data);
+    this.formModel.currentData = this.data;
+    this.actionType = 'edit';
+    this.cr.detectChanges();
+  }
 
   insertECertificate() {
     if (this.actionType == 'edit') {
@@ -168,7 +201,9 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
       });
     } else if (this.actionType == 'add' && this.isSaved == false) {
       //Thông báo lưu record trainning trước khi cập nhật Chứng chỉ
-      this.notitfy.notify('Bạn cần lưu thông tin đào tạo trước khi cập nhật chứng chỉ');
+      this.notitfy.notify(
+        'Bạn cần lưu thông tin đào tạo trước khi cập nhật chứng chỉ'
+      );
     }
     this.cr.detectChanges();
   }
