@@ -121,7 +121,7 @@ export class PopupAddProcessesComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-    // this.isAddPermission(this.process.owner);
+    this.isAddPermission(this.process.owner);
     this.ownerOld = this.process.owner;
     this.processOldCopy = dt?.data[2];
     this.idSetValueOld = this.processOldCopy?.idOld;
@@ -403,11 +403,14 @@ export class PopupAddProcessesComponent implements OnInit {
   //#endregion event
 
   valueChangeUser(e) {
-    this.process.owner = e?.data;
-    this.isAddPermission(this.process.owner);
+    if(e.data){
+      this.process.owner = e?.data;
+      this.isAddPermission(this.process.owner);
+    }
   }
   isAddPermission(id) {
-    this.api
+    if(id!=null){
+      this.api
       .execSv<any>('SYS', 'ERM.Business.AD', 'UsersBusiness', 'GetAsync', id)
       .subscribe((res) => {
         if (res) {
@@ -416,6 +419,8 @@ export class PopupAddProcessesComponent implements OnInit {
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
         }
       });
+    }
+
   }
   updateOrCreatProccess(emp: tmpUser) {
     if (
@@ -451,9 +456,9 @@ export class PopupAddProcessesComponent implements OnInit {
       if (emp.administrator) {
         tmpPermission.objectType = '7';
       }
-      // else if (this.checkAdminOfBP(emp.userID)) {
-      //   tmpPermission.objectType = '7';
-      // }
+      else if (this.checkAdminOfBP(emp.userID)) {
+        tmpPermission.objectType = '7';
+      }
     }
     // BE handle update onwer
     tmpPermission.memberType = '0';
@@ -495,13 +500,20 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
     }
-    // else if (this.checkAdminOfBP(this.user.userId))
-    //  {
-    //   this.isAcceptEdit = true;
-    // }
+    else if (this.checkAdminOfBP(this.user.userId))
+     {
+      this.isAcceptEdit = true;
+    }
     else {
       this.isAcceptEdit = false;
     }
+  }
+  async checkAdminOfBP(userid: any) {
+    var check = false;
+    await (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => {
+      check = res ? true : false;
+    });
+    return check;
   }
 
   addAvatar() {

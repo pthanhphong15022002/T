@@ -11,7 +11,7 @@
 </ng-container>
 <ng-template #panelLeftRef>
   <div class="container container-md h-100 bg-body rounded-4 scroll-y">
-    <ng-container *ngIf="data;else empty">
+    <ng-container *ngIf="loaded;else empty">
       <div class="w-larger p-9">
         <codx-input 
           type="textarea" 

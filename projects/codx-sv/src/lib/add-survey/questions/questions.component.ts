@@ -473,18 +473,25 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       )
       .closed.subscribe((x) => {
         if (x.event?.status == 'Y') {
-          var data = JSON.parse(JSON.stringify(this.questions));
+          var dataTemp = JSON.parse(JSON.stringify(this.questions));
           let tempQuestion = this.questions[seqNoSession];
-          data = data.filter((x) => x.seqNo != seqNoSession);
-          data.forEach((x, index) => {
+          dataTemp = dataTemp.filter((x) => x.seqNo != seqNoSession);
+          dataTemp.forEach((x, index) => {
             x.seqNo = index;
           });
-          this.questions = data;
+          this.questions = dataTemp;
           this.change.detectChanges();
+          let data = [...[tempQuestion], ...tempQuestion.children];
           this.SVServices.signalSave.next('saving');
           if (this.questions.length + 1 == seqNoSession + 1)
-            this.setTimeoutDeleteData([tempQuestion]);
-          else this.setTimeoutDeleteData([tempQuestion], this.questions);
+            this.setTimeoutDeleteData(
+              tempQuestion.children.length > 0 ? data : [tempQuestion]
+            );
+          else
+            this.setTimeoutDeleteData(
+              tempQuestion.children.length > 0 ? data : [tempQuestion],
+              this.questions
+            );
         }
       });
   }
@@ -540,25 +547,86 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     let itemSessionNew = JSON.parse(JSON.stringify(itemSession));
     delete itemSessionNew.id;
     itemSessionNew.recID = this.generateGUID();
-    var data = JSON.parse(JSON.stringify(this.questions));
-    data[itemSession.seqNo].active = false;
-    data.splice(itemSession.seqNo + 1, 0, itemSessionNew);
-    data.forEach((x, index) => {
+    var dataTemp = JSON.parse(JSON.stringify(this.questions));
+    dataTemp[itemSession.seqNo].active = false;
+    dataTemp.splice(itemSession.seqNo + 1, 0, itemSessionNew);
+    dataTemp.forEach((x, index) => {
       x.seqNo = index;
     });
-    itemSessionNew.seqNo = data.length - 1;
-    this.questions = data;
+    itemSessionNew.seqNo = dataTemp.length - 1;
+    this.questions = dataTemp;
     if (itemSessionNew.children && itemSessionNew.children.length > 0)
       itemSessionNew.children.forEach((x) => {
         delete x.id;
         x.recID = this.generateGUID();
+        x.parentID = itemSessionNew.recID;
+        x.answers.forEach((z) => {
+          delete z.id;
+          z.recID = this.generateGUID();
+        });
       });
+    let data = [...[itemSessionNew], ...itemSessionNew.children];
     // this.SVServices.signalSave.next('saving');
+    // // Check nếu là session cuối cùng thì không phần update seqNo
     // if (this.questions.length - 1 == itemSession.seqNo + 1) {
-    //   this.setTimeoutSaveData([itemSessionNew], true);
+    //   this.setTimeoutSaveData(
+    //     itemSessionNew.children.length > 0 ? data : [itemSessionNew],
+    //     true
+    //   );
     // } else {
-    //   this.setTimeoutSaveData([itemSessionNew], true, this.questions);
+    //   this.setTimeoutSaveData(
+    //     itemSessionNew.children.length > 0 ? data : [itemSessionNew],
+    //     true,
+    //     this.questions
+    //   );
     // }
+    //Xử lí copy hình ảnh nếu có
+    let lstUploadNew = [];
+    if (itemSession.children.length > 0) {
+      itemSession.children.forEach((x, indexS) => {
+        //Clone lstUpdate của questions
+        if (x.qPicture || x.category == 'V' || x.category == 'P') {
+          this.lstEditIV.forEach((y) => {
+            if (y.objectID == x.recID) {
+              lstUploadNew.push(JSON.parse(JSON.stringify(y)));
+            }
+          });
+          //update lại objectID cho lst của questions
+          lstUploadNew.forEach((i) => {
+            delete i['recID'];
+            delete i['id'];
+            i.storeType = '';
+            if (i.objectID == x.recID)
+              i.objectID = itemSessionNew.children[indexS].recID;
+          });
+        }
+        //Clone lstUpdate của answers
+        if (x.answers.length > 0) {
+          x.answers.forEach((z, indexA) => {
+            if (z.hasPicture) {
+              this.lstEditIV.forEach((i) => {
+                if (i.objectID == z.recID) {
+                  lstUploadNew.push(JSON.parse(JSON.stringify(i)));
+                }
+              });
+            }
+            //update lại objectID cho lst của answers
+            lstUploadNew.forEach((x) => {
+              delete x['recID'];
+              delete x['id'];
+              x.storeType = '';
+              if (x.objectID == z.recID)
+                x.objectID =
+                  itemSessionNew.children[indexS].answers[indexA].recID;
+            });
+          });
+        }
+      });
+    }
+    this.lstEditIV = [...this.lstEditIV, ...lstUploadNew];
+    this.SVServices.onSaveListFile(lstUploadNew).subscribe((res) => {
+      debugger;
+    });
   }
 
   copyNoSession(itemSession, itemQuestion) {
@@ -760,6 +828,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
                 t.questions[seqNoQuestion].children[seqNoQuestion].answers[
                   itemAnswer.seqNo
                 ].hasPicture = true;
+                t.questions[seqNoQuestion].children[seqNoQuestion].APicture =
+                  true;
                 // t.questions[seqNoQuestion].children[seqNoQuestion].answers[
                 //   itemAnswer.seqNo
                 // ].recID = res.event?.dataUpload[0].objectID;
@@ -1375,9 +1445,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   saveDataTimeout = new Map();
   setTimeoutSaveData(data, isModeAdd, list = null) {
-    let isArray = Array.isArray(data);
-    if (isArray) this.lstDataAdd.push(data[0]);
-    else this.lstDataAdd.push(data);
+    this.lstDataAdd = [...this.lstDataAdd, ...data];
     clearTimeout(this.saveDataTimeout?.get(this.lstDataAdd[0].recID));
     this.saveDataTimeout?.delete(
       this.saveDataTimeout?.get(this.lstDataAdd[0].recID)
@@ -1413,7 +1481,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   deleteDataTimeout = new Map();
   setTimeoutDeleteData(data, listUpdate = null) {
-    this.lstDataDelete.push(data[0]);
+    this.lstDataDelete = [...this.lstDataDelete, ...data];
     clearTimeout(this.deleteDataTimeout?.get(this.lstDataDelete[0].recID));
     this.deleteDataTimeout?.delete(
       this.deleteDataTimeout?.get(this.lstDataDelete[0].recID)
@@ -1457,6 +1525,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.SVServices.signalSave.next('done');
+          data.forEach((x) => {
+            this.delFileInline(x.recID);
+          });
         } else this.notification.alertCode('');
       });
     this.lstDataDelete = [];

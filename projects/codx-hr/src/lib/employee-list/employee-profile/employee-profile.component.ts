@@ -146,7 +146,7 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 4;
+  crrTab: number = 3;
   //EDayOff
   lstDayOffs: any = []
 
