@@ -62,6 +62,10 @@ codx-wrapper {
     background-color: var(--bg-card);
 }
 
+codx-setting-paramater .bg-body {
+    background-color: var(--bg-card) !important;
+}
+
 .card .card-header .card-title,
 .card .card-header .card-title .card-label {
     color: var(--text-body);
@@ -335,6 +339,89 @@ a {
 
 .bg-secondary {
     background-color: var(--bg-card) !important;
+}
+
+.codx-form.card .card-header .btn {
+    color: var(--primary);
+}
+
+h6,
+.h6,
+h5,
+.h5,
+h4,
+.h4,
+h3,
+.h3,
+h2,
+.h2,
+h1,
+.h1 {
+    color: var(--text-title);
+}
+
+.e-switch-wrapper .e-switch-inner,
+.e-css.e-switch-wrapper .e-switch-inner {
+    background-color: #3e404c;
+    border-color: #4a4e6a;
+}
+
+.codx-theme .e-switch-wrapper .e-switch-on {
+    background-color: var(--text-primary) !important;
+}
+
+.bg-white {
+    background-color: var(--bg-card) !important;
+}
+
+.card-footer[_ngcontent-ueb-c389] {
+    background-color: var(--bg-card) !important;
+    border-color: 1px var(--border-list);
+}
+
+.e-input-group .e-input[readonly],
+.e-input-group.e-control-wrapper .e-input[readonly],
+.e-float-input input[readonly],
+.e-float-input.e-control-wrapper input[readonly],
+.e-float-input textarea[readonly],
+.e-float-input.e-control-wrapper textarea[readonly] {
+    background: var(--bg-card) !important;
+    color: var(--text-title) !important;
+}
+
+.separator {
+    border-color: var(--border-list);
+}
+
+.main-right,
+.main-left {
+    background-color: var(--bg-card);
+}
+
+.codx-card-custom .stepper-body {
+    background-color: var(--bg-body);
+}
+
+.dropzone.dropzone-default {
+    background: var(--primary);
+}
+
+.dropzone.dropzone-default span {
+    color: var(--text-title);
+}
+
+.codx-card-custom .codx-stepper .stepper-item .stepper-icon {
+    background-color: transparent;
+}
+
+.btn.btn-bg-white {
+    border-color: var(--bg-card);
+    background-color: var(--bg-card);
+}
+
+.btn.btn-bg-white i {
+    color: var(--primary);
+
 }
 
 //end dark
