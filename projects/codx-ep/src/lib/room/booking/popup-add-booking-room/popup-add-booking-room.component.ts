@@ -238,7 +238,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       
     });
     //Lấy giờ làm việc
-    this.codxEpService.getEPCarSetting('4').subscribe((approvalSetting: any) => {
+    this.codxEpService.getEPRoomSetting('4').subscribe((approvalSetting: any) => {
       if (approvalSetting) {
         this.approvalRule = JSON.parse(approvalSetting.dataValue)[0]?.ApprovalRule;
       }

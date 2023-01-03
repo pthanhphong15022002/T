@@ -788,11 +788,6 @@ export class ProcessesComponent
 
   async changeDataMF(e, data) {
     if (e != null && data != null) {
-      let isOwner = data?.owner == this.userId ? true : false;
-      let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
-
-      // checkGroup = await this.checkGroupId(data);
-      // this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':

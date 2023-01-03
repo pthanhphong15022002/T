@@ -1,3 +1,13 @@
+.rounded-pill-left {
+  border-top-left-radius: 50rem;
+  border-bottom-left-radius: 50rem;
+}
+
+.rounded-pill-right {
+  border-top-right-radius: 50rem;
+  border-bottom-right-radius: 50rem;
+}
+
 .label1 {
   width: 16px;
   height: 16px;
@@ -12,23 +22,4 @@
   border-radius: 25%;
   background-color: #20bdae;
   margin-right: 6px;
-}
-
-.taskbox-list {
-  max-height: calc(100vh - 250px);
-  overflow: auto;
-}
-
-.rateDoneTask_wrap {
-  margin-left: 40px;
-}
-
-@media (max-width: 1366px) {
-  .rateDoneTask {
-    font-size: 10px;
-  }
-
-  .rateDoneTask_wrap {
-    margin-left: 10px;
-  }
 }

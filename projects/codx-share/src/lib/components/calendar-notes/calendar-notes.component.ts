@@ -122,9 +122,17 @@ export class CalendarNotesComponent
     this.cache.functionList('WPT08').subscribe((res) => {
       if (res) this.functionList = res;
     });
+    this.getDataByModeMonth();
   }
 
   onInit(): void {
+    this.getMaxPinNote();
+    this.loadData();
+  }
+
+  ngAfterViewInit() {}
+
+  getDataByModeMonth() {
     if (this.typeCalendar == 'month') {
       let myInterVal = setInterval(() => {
         if (this.calendar) {
@@ -148,13 +156,9 @@ export class CalendarNotesComponent
           const lDayOfMonth = moment(numbL).add(1, 'day').toISOString();
           this.getParamCalendar(fDayOfMonth, lDayOfMonth, true);
         }
-      }, 200);
+      }, 500);
     }
-    this.getMaxPinNote();
-    this.loadData();
   }
-
-  ngAfterViewInit() {}
 
   loadData() {
     this.noteService.data.subscribe((res) => {
@@ -323,27 +327,7 @@ export class CalendarNotesComponent
           this.setEvent(eleEvent, obj);
         }
       }
-    }, 500);
-  }
-
-  compareDate(calendarDate, daySelected) {
-    var date = new Date(Date.parse(calendarDate));
-    var dateParse = date.toLocaleDateString();
-    if (dateParse == daySelected) {
-      return dateParse;
-    } else {
-      return null;
-    }
-  }
-
-  getDataByToDay(calendarDate, toDate) {
-    var date = new Date(Date.parse(calendarDate));
-    var dateParse = date.toLocaleDateString();
-    if (dateParse == toDate) {
-      return dateParse;
-    } else {
-      return null;
-    }
+    }, 1000);
   }
 
   changeDayOfWeek(e) {
@@ -755,7 +739,6 @@ export class CalendarNotesComponent
     let calendarEP_Room = 0;
     let calendarEP_Car = 0;
     let countShowCalendar = 0;
-    let countTmp = 0;
     if (args) {
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
@@ -770,7 +753,6 @@ export class CalendarNotesComponent
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarTM++;
-              countTmp++;
               break;
             }
           }
@@ -779,7 +761,6 @@ export class CalendarNotesComponent
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarCO++;
-              countTmp++;
               break;
             }
           }
@@ -790,7 +771,6 @@ export class CalendarNotesComponent
             if (date == dateParse.toLocaleDateString()) {
               if (this.WP_Notes[y]?.showCalendar == true) {
                 calendarWP++;
-                countTmp++;
                 if (this.WP_Notes[y]?.showCalendar == false) {
                   countShowCalendar += 1;
                 } else {
@@ -805,7 +785,6 @@ export class CalendarNotesComponent
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarEP_Room++;
-              countTmp++;
               break;
             }
           }
@@ -814,7 +793,6 @@ export class CalendarNotesComponent
             var dataLocal = dateParse.toLocaleDateString();
             if (date == dataLocal) {
               calendarEP_Car++;
-              countTmp++;
               break;
             }
           }
@@ -970,7 +948,6 @@ export class CalendarNotesComponent
           let interVal = setInterval(() => {
             if (eleTest && eleTest.length > 0) {
               clearInterval(interVal);
-              var plusNo = 0;
               if (eleTest.length > 3) {
                 eleTest.forEach((x, index) => {
                   if (index >= 2) {
@@ -992,7 +969,7 @@ export class CalendarNotesComponent
             }
           });
         }
-      });
+      }, 500);
     }
   }
 
@@ -1226,7 +1203,6 @@ export class CalendarNotesComponent
                 ...lstTemp,
               ];
           }
-        
         }
       });
   }
