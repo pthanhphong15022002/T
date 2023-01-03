@@ -457,9 +457,9 @@ export class PopupAddProcessesComponent implements OnInit {
       if (emp.administrator) {
         tmpPermission.objectType = '7';
       }
-      // else if (this.checkAdminOfBP(emp.userID)) {
-      //   tmpPermission.objectType = '7';
-      // }
+      else if (this.checkAdminOfBP(emp.userID)) {
+        tmpPermission.objectType = '7';
+      }
     }
     // BE handle update onwer
     tmpPermission.memberType = '0';
@@ -496,13 +496,20 @@ export class PopupAddProcessesComponent implements OnInit {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
     }
-    // else if (this.checkAdminOfBP(this.user.userId))
-    //  {
-    //   this.isAcceptEdit = true;
-    // }
+    else if (this.checkAdminOfBP(this.user.userId))
+     {
+      this.isAcceptEdit = true;
+    }
     else {
       this.isAcceptEdit = false;
     }
+  }
+  async checkAdminOfBP(userid: any) {
+    var check = false;
+    await (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => {
+      check = res ? true : false;
+    });
+    return check;
   }
 
   addAvatar() {
