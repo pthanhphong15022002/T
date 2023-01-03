@@ -39,7 +39,7 @@
           [default]="stepType == 'A' ? 'Công đoạn' : 'Bước công việc'">
         </codx-label>
         <codx-input field="parentID" [formModel]="form.formModel" [Group]="form.formGroup" [model]="processSteps"
-          (valueChange)="valueChangeCbx($event)" [disabled]="lockParentId" [disabled]="isView">
+          (valueChange)="valueChangeCbx($event)" [disabled]="lockParentId || isView" >
         </codx-input>
       </div>
       <div class="form-group" *ngIf="
