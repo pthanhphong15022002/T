@@ -554,7 +554,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         x.recID = this.generateGUID();
       });
     // this.SVServices.signalSave.next('saving');
-    // if (this.questions.length - 1 == itemSession.seqNo + 1) {
+    // if (this.questions.length - 1 == itemSession.seqNo + 1) { 
     //   this.setTimeoutSaveData([itemSessionNew], true);
     // } else {
     //   this.setTimeoutSaveData([itemSessionNew], true, this.questions);
