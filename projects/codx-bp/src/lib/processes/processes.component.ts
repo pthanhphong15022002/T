@@ -192,7 +192,7 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    this.isAdminBp = this.checkAdminOfBP(this.userId);
+    // this.isAdminBp = await this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -744,7 +744,7 @@ export class ProcessesComponent
       this.oldName.trim().toLocaleUpperCase() ===
       this.newName.trim().toLocaleUpperCase()
     ) {
-      this.CheckExistNameProccess(this.oldName);
+      this.CheckExistNameProccess(this.newName);
     } else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
@@ -1113,9 +1113,9 @@ export class ProcessesComponent
     }
   }
 
-  checkAdminOfBP(userid: any) {
+  async checkAdminOfBP(userid: any) {
     let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
+    (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
     return check;
   }
 

@@ -18,6 +18,7 @@ import { OkrAddComponent } from '../okr-add/okr-add.component';
 import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
 import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/popup-distribute-okr.component';
 import { E } from '@angular/cdk/keycodes';
+import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/popup-assignment-okr.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -33,6 +34,7 @@ export class OkrTargetsComponent implements OnInit {
   @Input() formModelKR: any;
   @Input() krFuncID: any;
   @Input() obFuncID: any;
+  @Input() funcID: any;
   
   dtStatus = [];
   openAccordion = [];
@@ -313,12 +315,12 @@ export class OkrTargetsComponent implements OnInit {
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
-      PopupDistributeOKRComponent,
+      PopupAssignmentOKRComponent,
       '',
       null,
       null,
       null,
-      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult,this.funcID],
       '',
       dModel
     );

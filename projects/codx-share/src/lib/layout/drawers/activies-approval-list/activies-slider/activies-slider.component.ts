@@ -24,7 +24,7 @@ export class ActiviesSliderComponent implements OnInit {
     pageSize:20,
     page: 1
   }
-
+  loaded:boolean = true;
   totalPage:number = 0;
   isScroll = true;
   pageIndex:number = 0;
@@ -57,14 +57,21 @@ export class ActiviesSliderComponent implements OnInit {
       'ERM.Business.BG',
       'NotificationBusinesss',
       'GetApprovalAsync',
-      [this.model]
-    ).subscribe((res:any[]) => {
+      [this.model])
+      .subscribe((res:any[]) => {
       if(res){
         this.lstApproval = res[0];
         let totalRecord = res[1];
         this.totalPage = totalRecord / this.model.pageSize;
         this.isScroll = false;
         this.dt.detectChanges();
+      }
+      else
+      {
+        if(this.lstApproval.length == 0)
+        {
+          this.loaded = false;
+        }
       }
     });
   }

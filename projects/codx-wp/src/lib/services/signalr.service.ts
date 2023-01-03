@@ -53,6 +53,7 @@ export class SignalRService {
 
     // chat emit
     this.hubConnection.on('ChatEmit', (data) => {
+      debugger
       this.signalChat.emit(data);
     });
     // group emit
@@ -63,9 +64,9 @@ export class SignalRService {
   //#endregion
 
   //#region Post to server
-  sendData(message, method = null) {
+  sendData(data, method = null) {
     if (method) {
-      this.hubConnection.invoke(method, message);
+      this.hubConnection.invoke(method, data);
     }
   }
 

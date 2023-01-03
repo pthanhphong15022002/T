@@ -1,5 +1,5 @@
 import { Permission } from '@shared/models/file.model';
-import { DistributeOKR } from './../../model/distributeOKR.model';
+import { DistributeOKR } from '../../model/distributeOKR.model';
 import { C } from '@angular/cdk/keycodes';
 import {
   AfterViewInit,
@@ -37,11 +37,11 @@ import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.componen
 import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.component';
 
 @Component({
-  selector: 'popup-distribute-okr',
-  templateUrl: './popup-distribute-okr.component.html',
-  styleUrls: ['./popup-distribute-okr.component.scss'],
+  selector: 'popup-assignment-okr',
+  templateUrl: './popup-assignment-okr.component.html',
+  styleUrls: ['./popup-assignment-okr.component.scss'],
 })
-export class PopupDistributeOKRComponent extends UIComponent implements AfterViewInit {
+export class PopupAssignmentOKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
   @ViewChild('body') body: TemplateRef<any>;
 
@@ -61,6 +61,9 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   distributeType=OMCONST.VLL.OKRType.KResult;
   listDistribute=[];
 
+  cbbOrg=[];  
+  fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
+  assignmentOKR:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -72,7 +75,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = 'Phân bổ - Kết quả chính'; //dialogData?.data[2];
+    this.headerText = 'Phân công - Kết quả chính'; //dialogData?.data[2];
     this.dialogRef = dialogRef;    
     this.okrName=dialogData.data[0];    
     this.recID=dialogData.data[1];
@@ -99,6 +102,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
 
   onInit(): void {
     this.getKRAndOBParent();
+    
     this.cache.getCompany(this.curUser.userID).subscribe(item=>{
       if(item) 
       {
@@ -123,15 +127,18 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
             this.orgUnitTree= res;           
             Array.from(this.orgUnitTree.listChildrens).forEach((item:any)=>{
               let temp = new DistributeOKR();
-              temp.okrName= this.dataKR.okrName;
               temp.orgUnitID= item.orgUnitID;
               temp.orgUnitName= item.orgUnitName;
-              temp.umid=this.dataKR.umid;
-              temp.isActive=false;
-              temp.distributePct=0;
-              temp.distributeValue= 0;
-              this.listDistribute.push(temp);
-            })
+              this.cbbOrg.push(temp)
+            });
+            this.assignmentOKR=new DistributeOKR();
+            this.assignmentOKR.okrName= this.dataKR.okrName;
+            this.assignmentOKR.orgUnitID= item.orgUnitID;
+            this.assignmentOKR.orgUnitName= item.orgUnitName;
+            this.assignmentOKR.umid=this.dataKR.umid;
+            this.assignmentOKR.isActive=false;
+            this.assignmentOKR.distributePct=100;
+            this.assignmentOKR.distributeValue=this.dataKR.target;
             this.detectorRef.detectChanges();
             this.isAfterRender=true;
           }
@@ -207,7 +214,11 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
-
+  cbxOrgChange(evt:any){
+    if(evt){      
+      this.detectorRef.detectChanges();
+    }
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
@@ -235,26 +246,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
       this.detectorRef.detectChanges();
     }
   }
-  disabledChild(evt:any,index:number){
-    if(evt && index!=null){
-      this.listDistribute[index].isActive=!this.listDistribute[index].isActive;
-      if(!this.listDistribute[index].isActive){
-        
-        this.listDistribute[index].distributePct =0;
-        this.listDistribute[index].distributeValue =0;
-      }
-      this.detectorRef.detectChanges();
-      let activeChild= this.listDistribute.filter((child) => {
-        return child?.isActive == true;
-      });
-      this.listDistribute.forEach(item=>{
-        if(item.isActive){
-          item.distributePct =100/activeChild.length;
-          item.distributeValue =this.dataKR.target/activeChild.length;
-        }
-      });
-    }
-  }
+  
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//

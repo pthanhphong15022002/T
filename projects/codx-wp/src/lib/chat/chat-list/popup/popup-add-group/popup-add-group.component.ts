@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthStore, CodxListviewComponent, CRUDService, DataRequest, DialogData, DialogRef, ImageViewerComponent, NotificationsService } from 'codx-core';
 import { WP_Groups } from 'projects/codx-wp/src/lib/models/WP_Groups.model';
@@ -38,6 +38,7 @@ export class PopupAddGroupComponent implements OnInit {
     this.dialogRef = dialogRef;
     this.user = this.auth.get();
   }
+  
 
   ngOnInit(): void {
     this.setData();

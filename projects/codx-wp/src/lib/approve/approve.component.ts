@@ -175,81 +175,81 @@ export class ApproveComponent extends UIComponent {
     });
   }
   clickMF(event: any, data: any) {
-    if (event.functionID) {
-      let headerText = event.text + ' ' + this.functionName;
-      switch (event.functionID) {
-        case 'SYS02': //delete
-          this.deletedPost(data);
-          break;
-        case 'SYS03': //edit
-          let option = new DialogModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
-            // tin tức sự kiện
-            option.IsFull = true;
-            let object = {
-              headerText: headerText,
-              data: data,
-            };
-            let popup = this.callFuc.openForm(
-              PopupEditComponent,
-              '',
-              0,
-              0,
-              this.view.funcID,
-              object,
-              '',
-              option
-            );
-            popup.closed.subscribe((res: any) => {
-              if (res?.event) {
-                this.view.dataService.update(res.event).subscribe();
-              }
-            });
-          } // MXH
-          else {
-            this.api
-              .execSv(
-                this.service,
-                this.assemblyName,
-                'CommentsBusiness',
-                'GetPostByIDAsync',
-                [data.recID]
-              )
-              .subscribe((res: any) => {
-                if (res) {
-                  let obj = {
-                    data: res,
-                    status: 'edit',
-                    headerText: headerText,
-                  };
-                  let option = new DialogModel();
-                  option.DataService = this.view.dataService;
-                  option.FormModel = this.view.formModel;
-                  let popup = this.callfc.openForm(
-                    PopupAddPostComponent,
-                    headerText,
-                    700,
-                    550,
-                    '',
-                    obj,
-                    '',
-                    option
-                  );
-                  popup.closed.subscribe((res: any) => {
-                    if (res?.event) {
-                      this.view.dataService.update(res.event).subscribe();
-                    }
-                  });
-                }
-              });
-          }
-          break;
-        default:
-          break;
-      }
-    }
+    // if (event.functionID) {
+    //   let headerText = event.text + ' ' + this.functionName;
+    //   switch (event.functionID) {
+    //     case 'SYS02': //delete
+    //       this.deletedPost(data);
+    //       break;
+    //     case 'SYS03': //edit
+    //       let option = new DialogModel();
+    //       option.DataService = this.view.dataService;
+    //       option.FormModel = this.view.formModel;
+    //       if (this.view.funcID == 'WPT0211' || this.view.funcID == 'WPT0212') {
+    //         // tin tức sự kiện
+    //         option.IsFull = true;
+    //         let object = {
+    //           headerText: headerText,
+    //           data: data,
+    //         };
+    //         let popup = this.callFuc.openForm(
+    //           PopupEditComponent,
+    //           '',
+    //           0,
+    //           0,
+    //           this.view.funcID,
+    //           object,
+    //           '',
+    //           option
+    //         );
+    //         popup.closed.subscribe((res: any) => {
+    //           if (res?.event) {
+    //             this.view.dataService.update(res.event).subscribe();
+    //           }
+    //         });
+    //       } // MXH
+    //       else {
+    //         this.api
+    //           .execSv(
+    //             this.service,
+    //             this.assemblyName,
+    //             'CommentsBusiness',
+    //             'GetPostByIDAsync',
+    //             [data.recID]
+    //           )
+    //           .subscribe((res: any) => {
+    //             if (res) {
+    //               let obj = {
+    //                 data: res,
+    //                 status: 'edit',
+    //                 headerText: headerText,
+    //               };
+    //               let option = new DialogModel();
+    //               option.DataService = this.view.dataService;
+    //               option.FormModel = this.view.formModel;
+    //               let popup = this.callfc.openForm(
+    //                 PopupAddPostComponent,
+    //                 headerText,
+    //                 700,
+    //                 550,
+    //                 '',
+    //                 obj,
+    //                 '',
+    //                 option
+    //               );
+    //               popup.closed.subscribe((res: any) => {
+    //                 if (res?.event) {
+    //                   this.view.dataService.update(res.event).subscribe();
+    //                 }
+    //               });
+    //             }
+    //           });
+    //       }
+    //       break;
+    //     default:
+    //       break;
+    //   }
+    // }
   }
 
   beforDeletedPost(option: RequestOption, data: any) {
