@@ -62,15 +62,14 @@ export class PopupTitleComponent extends UIComponent implements OnInit {
   }
 
   onEditNote() {
-    this.dataNote.transID = this.dataNoteBook.recID;
-    this.dataNote['recID'] = this.dataNoteBook.recID;
-    this.dataNote.title = this.note.title;
-    this.dataNote.isNote = false;
-    if (this.dataNote.noteType !== 'text') this.dataNote.checkList.pop();
+    this.dataNote.data.transID = this.dataNoteBook.recID;
+    this.dataNote.data.title = this.note.title;
+    this.dataNote.data.isNote = false;
+    if (this.dataNote.data.noteType !== 'text') this.dataNote.data.checkList.pop();
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.dataNote?.recID,
-        this.dataNote,
+        this.dataNote.data.recID,
+        this.dataNote.data,
       ])
       .subscribe((res) => {
         if (res) {

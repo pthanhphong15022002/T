@@ -367,7 +367,7 @@ export class CalendarNotesComponent
         clearInterval(myInterval);
         this.setEventWeek();
       }
-    }, 500);
+    }, 1000);
   }
 
   changeDayOfMonth(args: any) {
