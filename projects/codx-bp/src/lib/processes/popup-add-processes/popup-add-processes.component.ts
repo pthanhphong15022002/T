@@ -454,7 +454,7 @@ export class PopupAddProcessesComponent implements OnInit {
       tmpPermission.objectType = '1';
       tmpPermission.objectID = emp?.userID;
       tmpPermission.objectName = emp?.userName;
-      if (emp.administrator || this.checkUserRoles) {
+      if (emp.administrator) {
         tmpPermission.objectType = '7';
       }
       // else if (this.checkAdminOfBP(emp.userID)) {
