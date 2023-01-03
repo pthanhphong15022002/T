@@ -445,6 +445,7 @@ export class PopupAddProcessesComponent implements OnInit {
     role: string
   ) {
     if (role === this.onwerRole) {
+      tmpPermission.objectType = '1';
       tmpPermission.objectID = emp?.userID;
       tmpPermission.objectName = emp?.userName;
       if (emp.administrator) {
@@ -455,7 +456,6 @@ export class PopupAddProcessesComponent implements OnInit {
       // }
     }
     // BE handle update onwer
-    tmpPermission.objectType = '1';
     tmpPermission.memberType = '0';
     tmpPermission.autoCreate = true;
 
