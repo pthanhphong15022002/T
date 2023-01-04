@@ -138,6 +138,12 @@ var childRoutes = [
       import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
   },
   {
+    path: 'ac',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ac/src/lib/codx-ac.module').then((m) => m.AcModule),
+  },
+  {
     path: 'report',
     canActivate: [AuthGuard],
     loadChildren: () =>
