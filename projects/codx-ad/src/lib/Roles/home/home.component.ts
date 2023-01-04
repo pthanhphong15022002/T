@@ -99,6 +99,13 @@ export class RolesComponent extends UIComponent implements OnInit, OnDestroy {
     this.codxService.navigate('', this.urlDetailRoles, { recID: recID });
   }
 
+  changeDataMF(evt: any, item: any) {
+    if (item.isSystem) {
+      var dl = evt.find((x: { functionID: string }) => x.functionID == 'SYS02');
+      if (dl) dl.disabled = true;
+    }
+  }
+
   openFormEdit(data, type = 'edit') {
     var obj = {
       role: data,

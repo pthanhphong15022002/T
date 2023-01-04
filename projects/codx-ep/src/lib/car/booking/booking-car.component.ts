@@ -78,6 +78,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   listDriver: any[];
   tempDriverName='';  
   driverName='';
+  queryParams: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -98,6 +99,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }
     });
     this.funcID = this.router.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -114,6 +116,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){
+      this.request.predicate=this.queryParams?.predicate;
+      this.request.dataValue=this.queryParams?.dataValue;
+    }
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';
@@ -230,7 +236,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.detectorRef.detectChanges();
   }
   onActionClick(evt?) {
-    if (evt.type == 'add') {
+    if (evt.type == 'add' && evt.data?.resourceId!=null) {
+      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
     }
   }
@@ -346,8 +353,8 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    
-    this.codxEpService
+    if(data.approval!='0'){
+      this.codxEpService
       .getCategoryByEntityName(this.formModel.entityName)
       .subscribe((res: any) => {
         this.codxEpService
@@ -371,6 +378,18 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
             }
           });
       });
+    }    
+    else
+    {
+      data.approveStatus = '5';
+      data.status = '5';
+      data.write = false;
+      data.delete = false;
+      this.view.dataService.update(data).subscribe(); 
+      this.notificationsService.notifyCode('ES007');
+      this.codxEpService.afterApprovedManual(this.formModel.entityName, data.recID,'5').subscribe();
+      
+    }
   }
   addNew(evt?) {
     if (evt != null) {

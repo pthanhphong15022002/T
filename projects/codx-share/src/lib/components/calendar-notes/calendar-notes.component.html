@@ -1,5 +1,5 @@
 <div class="cal-notes">
-  <div class="more-btn" *ngIf="showHeader">
+  <div class="more-btn">
     <span
       class="icon-edit-one icon-18 icon-gray btn btn-icon btn-active-light-primary position-relative"
       (click)="openFormAddNote()"
@@ -213,7 +213,6 @@
     <div class="form-calendar">
       <selectweek
         *ngIf="typeCalendar == 'week'"
-        (onChangeWeek)="setEventWeek()"
         (onChangeValue)="changeDayOfWeek($event)"
         (onChangeNewWeek)="changeNewWeek($event)"
       >
@@ -234,169 +233,7 @@
       </ejs-calendar>
     </div>
   </div>
-  <ng-container *ngIf="showListParam">
-    <div class="row title-calendar w-100">
-      <div class="col-md-10 mt-2">
-        <codx-label
-          fiedName="Calendar"
-          default="Calendar"
-          class="pt-3"
-        ></codx-label>
-      </div>
-      <span class="icon-more_vert icon-20 icon-gray col-md-2 pt-1 ps-6"></span>
-    </div>
-    <div class="flex pt-3" *ngIf="WP_NotesParam != null">
-      <div class="w-5px">
-        <li
-          [style.background-color]="WP_NotesParam?.ShowColor"
-          [style.color]="WP_NotesParam?.ShowColor"
-        ></li>
-      </div>
-      <div class="show-list-event">
-        <codx-label
-          name="lblNote"
-          formName="WP_Notes"
-          default="Ghi chú"
-        ></codx-label>
-      </div>
-      <div class="show-event-check">
-        <codx-input
-          type="checkbox"
-          field="WP_Notes"
-          [checked]="checkWP_NotesParam == 'true' || checkWP_NotesParam == '1'"
-          labelPosition="Before"
-          [disabled]="false"
-          class="test-check"
-          (valueChange)="valueChangeSetting($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <br />
-    <div class="flex" *ngIf="TM_TasksParam != null">
-      <div class="w-5px">
-        <li
-          [style.background-color]="TM_TasksParam?.ShowColor"
-          [style.color]="TM_TasksParam?.ShowColor"
-        ></li>
-      </div>
-      <div class="show-list-event">
-        <codx-label
-          name="lblTask"
-          formName="WP_Task"
-          default="Công việc cá nhân"
-        ></codx-label>
-      </div>
-      <div class="show-event-check">
-        <codx-input
-          type="checkbox"
-          field="TM_Tasks"
-          [checked]="checkTM_TasksParam == 'true' || checkTM_TasksParam == '1'"
-          labelPosition="Before"
-          [disabled]="false"
-          class="test-check"
-          (valueChange)="valueChangeSetting($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <br />
-    <div class="flex" *ngIf="CO_MeetingsParam != null">
-      <div class="w-5px">
-        <li
-          [style.background-color]="CO_MeetingsParam?.ShowColor"
-          [style.color]="CO_MeetingsParam?.ShowColor"
-        ></li>
-      </div>
-      <div class="show-list-event">
-        <codx-label
-          name="lblMeeting"
-          formName="CO_Meetings"
-          default="Lịch họp cá nhân"
-        >
-        </codx-label>
-      </div>
-      <div class="show-event-check">
-        <codx-input
-          type="checkbox"
-          field="CO_Meetings"
-          [checked]="
-            checkCO_MeetingsParam == 'true' || checkCO_MeetingsParam == '1'
-          "
-          labelPosition="Before"
-          [disabled]="false"
-          class="test-check"
-          (valueChange)="valueChangeSetting($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <br />
-    <div class="flex" *ngIf="EP_BookingRoomsParam != null">
-      <div class="w-5px">
-        <li
-          [style.background-color]="EP_BookingRoomsParam?.ShowColor"
-          [style.color]="EP_BookingRoomsParam?.ShowColor"
-        ></li>
-      </div>
-      <div class="show-list-event">
-        <codx-label
-          name="lblBookingRoom"
-          formName="EP_BookingRooms"
-          default="Đặt phòng"
-        >
-        </codx-label>
-      </div>
-      <div class="show-event-check">
-        <codx-input
-          type="checkbox"
-          field="EP_BookingRooms"
-          [checked]="
-            checkEP_BookingRoomsParam == 'true' ||
-            checkEP_BookingRoomsParam == '1'
-          "
-          labelPosition="Before"
-          [disabled]="false"
-          class="test-check"
-          (valueChange)="valueChangeSetting($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-    <br />
-    <div class="flex" *ngIf="EP_BookingCarsParam != null">
-      <div class="w-5px">
-        <li
-          [style.background-color]="EP_BookingCarsParam?.ShowColor"
-          [style.color]="EP_BookingCarsParam?.ShowColor"
-        ></li>
-      </div>
-      <div class="show-list-event">
-        <codx-label
-          name="lblBookingCar"
-          formName="EP_BookingCars"
-          default="Đặt xe"
-        >
-        </codx-label>
-      </div>
-      <div class="show-event-check">
-        <codx-input
-          type="checkbox"
-          field="EP_BookingCars"
-          [checked]="
-            checkEP_BookingCarsParam == 'true' ||
-            checkEP_BookingCarsParam == '1'
-          "
-          labelPosition="Before"
-          [disabled]="false"
-          class="test-check"
-          (valueChange)="valueChangeSetting($event)"
-        >
-        </codx-input>
-      </div>
-    </div>
-  </ng-container>
-  <div class="lstView" *ngIf="showList">
+  <div class="lstView">
     <codx-listview
       #listview
       [itemTemplate]="dataPara"
@@ -417,7 +254,7 @@
         }"
       >
         <div class="checkbox-list">
-          <div *ngIf="item.memo != null">
+          <div *ngIf="item.noteType == 'text'; else other">
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
@@ -492,7 +329,7 @@
               <span [innerHTML]="item.memo"></span>
             </div>
           </div>
-          <div *ngIf="item.memo == null">
+          <ng-template #other>
             <div class="action-menu d-flex">
               <div class="d-flex align-items-center">
                 <a class="action-item" (click)="openFormUpdateNote(item)">
@@ -564,7 +401,7 @@
               <span class="icon-push_pin icon-16" type="button"></span>
             </div>
             <div class="d-flex flex-column note-option">
-              <div *ngFor="let itemList of item.CheckList; index as i">
+              <div *ngFor="let itemList of item.checkList; index as i">
                 <div *ngIf="itemList.status == null">
                   <div class="my-2 note-list">
                     <ul>
@@ -591,7 +428,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </ng-template>
         </div>
       </div>
     </div>

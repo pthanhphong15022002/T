@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Permission } from '@shared/models/file.model';
+import { Post } from '@shared/models/post';
 
 import {
   CodxListviewComponent,
@@ -29,8 +30,7 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { WP_Comments } from '../../../models/WP_Comments.model';
-import { PopupAddPostComponent } from './popup-add-post/popup-add-post.component';
-import { PopupAddPostComponents } from './popup-add/popup-add.component';
+import { PopupAddPostComponent } from './popup-add/popup-add-post.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
@@ -165,23 +165,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
                 this.gridViewSetup = grd;
               }
             });
-          // get more function
-          // this.cache
-          //   .moreFunction(func.formName, func.gridViewName)
-          //   .subscribe((mFC: any) => {
-          //     if (mFC) {
-          //       //this.defaultMoreFC = mFC;
-          //       if (typeof mFC == 'object' && !Array.isArray(mFC)) {
-          //         for (let i of Object.keys(mFC)) {
-          //           this.defaultMoreFC.push(mFC[i]);
-          //         }
-          //       }
-          //       else if(Array.isArray(mFC))
-          //       {
-          //         this.defaultMoreFC = mFC;
-          //       }
-          //     }
-          //   });
         }
       });
     }
@@ -259,19 +242,10 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         });
     }
   }
+  //tạo bài viết
   openPopupAdd() {
-    let data = new WP_Comments();
-    let permission = new Permission();
+    let data = new Post();
     let headerText = 'Tạo bài viết';
-    permission.memberType = '2'; //share
-    permission.objectType = '9';
-    permission.createdBy = this.user.userID;
-    permission.createdOn = new Date();
-    data.shareControl = '9';
-    data.refType = 'WP_Comments';
-    data.createdBy = this.user.userID;
-    data.createdName = this.user.userName;
-    data.permissions.push(permission);
     var obj = {
       data: data,
       status: 'create',
@@ -297,6 +271,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       }
     });
   }
+  // edit bài viết
   openPopupEdit(post: any) {
     let headerText = 'Chỉnh sửa bài viết';
     let data = JSON.parse(JSON.stringify(post));
@@ -320,19 +295,18 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     );
     popup.closed.subscribe((res: any) => {
       if (res?.event?.recID) {
-        (this.listview.dataService as CRUDService).add(res.event).subscribe();
+        (this.listview.dataService as CRUDService)
+        .update(res.event).subscribe();
         this.notifySvr.notifyCode('WP021');
       }
     });
   }
+  // share bài viết
   openPopupShare(post: any) {
-    if (post) {
+    if (post) 
+    {
       let data = new WP_Comments();
-      data.shareControl = '9';
-      data.refType = 'WP_Comments';
       data.refID = post.recID;
-      data.createdBy = this.user.userID;
-      data.createdName = this.user.userName;
       data.shares = JSON.parse(JSON.stringify(post));
       let headerText = 'Chia sẻ bài viết';
       var obj = {
@@ -361,6 +335,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       });
     }
   }
+  // lưu trữ bài viết
   openPopupSave(post: any) {
     if (post) {
       let data = JSON.parse(JSON.stringify(post));

@@ -9,7 +9,7 @@
         <div class="p-2"> -->
           <!-- ///noi dung -->
           <div class="process-detail-header">
-            <div class="fw-bold text-dark fs-4 mb-2 line-clamp line-clamp-3" #processName>
+            <div class="fw-bold text-dark fs-4 mb-2 line-clamp-processname" #processName>
               {{
               process?.processName
               | formatvalue
@@ -95,8 +95,8 @@
         </div>
         <div class="justify-content-end">
           <div class="left-button me-3">
-            <div class="d-flex justify-content-end">
-              <codx-imgs class="" [objectId]="avata" objectType="AD_Users" [numberImages]="6">
+            <div class="d-flex justify-content-end user">
+              <codx-imgs class="" [objectId]="listuserStr" objectType="AD_Users" [numberImages]="8">
               </codx-imgs>
             </div>
             <div class="overflow-hidden btn-group me-3 button-add" *ngIf="process.actived && name != 'Flowchart'">
@@ -142,11 +142,11 @@
       <div class="card-body px-0 prod-body" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
         data-kt-scroll-height="auto" data-kt-scroll-dependencies=".view-details-header"
         data-kt-scroll-wrappers=".stepper-body, .no-header, .view-details-content"
-        [attr.data-kt-scroll-offset]="'60px'">
+        [attr.data-kt-scroll-offset]="'65px'">
         <ng-container>
           <ng-container *ngIf="process && childFunc?.length > 0">
             <codx-processsteps #viewProcessSteps [process]="process" [funcID]="funcID" [childFunc]="childFunc"
-              [formModel]="formModelFlowChart" [isEdit]="isEdit"  (getObjectFile)="getObjectFile($event)"
+              [formModel]="formModelFlowChart" [isEdit]="isEdit"  (getObjectFile)="getObjectFile($event)" [viewMode] = "viewMode"
               (isClosePopup)="getListUser()"></codx-processsteps>
           </ng-container>
         </ng-container>

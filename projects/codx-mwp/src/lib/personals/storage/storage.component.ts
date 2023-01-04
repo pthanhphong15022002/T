@@ -48,7 +48,7 @@ export class StorageComponent
 {
   user: any;
   dataValue = '';
-  predicate = 'CreatedBy=@0';
+  predicate = '';
   data: any;
   recID: any;
   checkFormComment = false;
@@ -62,6 +62,7 @@ export class StorageComponent
   listStorage = [];
   checkDESC = false;
   gridViewSetup: any = [];
+  dataService: CRUDService;
 
   @ViewChild('lstCardStorage') lstCardStorage: CodxCardCenterComponent;
   @ViewChild('lstStorage') lstStorage: AddUpdateStorageComponent;
@@ -73,10 +74,9 @@ export class StorageComponent
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('moreFC') moreFC: TemplateRef<any>;
-  @ViewChild('detail') lstComment: TemplateRef<any>;
 
   constructor(
-    inject: Injector,
+    private inject: Injector,
     private authStore: AuthStore,
     private route: ActivatedRoute,
     private modalService: NgbModal,
@@ -93,20 +93,10 @@ export class StorageComponent
         this.gridViewSetup = res;
       }
     });
+    this.dataService = new CRUDService(inject);
   }
 
-  onInit(): void {
-    // this.storageService.data.subscribe((res) => {
-    //   if (res) {
-    //     var data = res[0]?.data;
-    //     var type = res[0]?.type;
-    //     if (type == 'add') {
-    //
-    //       this.view.dataService.add(data).subscribe();
-    //     }
-    //   }
-    // })
-  }
+  onInit(): void {}
 
   ngAfterViewInit() {
     ScrollComponent.reinitialization();
@@ -228,12 +218,12 @@ export class StorageComponent
   }
 
   dataUpdate: any = [];
-  dataComments: any = [];
   a: any;
   openStorageDetail(e) {
     this.dataUpdate = e;
     this.dataSort = [];
     this.checkFormComment = true;
+    this.detail = null;
     this.detectorRef.detectChanges();
 
     var arr: any = new Array();
@@ -250,19 +240,48 @@ export class StorageComponent
       funcID: 'WP',
     };
     this.a = this.detail.createComponent(ListPostComponent);
-    if (arr?.length == 0) {
-      this.generateGuid();
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
-    } else {
-      this.a.instance.predicateWP = `(CreatedBy="${this.user?.userID}") and (@0.Contains(RecID))`;
-      this.a.instance.dataValueWP = `[${arr.join(';')}]`;
-    }
+    this.a.instance.dataService = null;
     this.a.instance.isShowCreate = false;
     this.a.instance.formModel = formModel;
     this.a.instance.moreFunc = true;
     this.a.instance.moreFuncTmp = this.moreFC;
-    this.detectorRef.detectChanges();
-    this.dataComments = this.a.instance.listview?.dataService?.data;
+    if (arr?.length == 0) {
+      this.generateGuid();
+      this.dataService.predicate = `(RecID="${this.guidID}")`;
+      this.a.instance.dataService = this.dataService;
+      let myInterval = setInterval(() => {
+        if (this.a.instance.listview) {
+          clearInterval(myInterval);
+          (this.a.instance.listview?.dataService as CRUDService).predicate =
+            this.dataService.predicate;
+          (this.a.instance.listview?.dataService as CRUDService).dataValue =
+            this.dataService.dataValue;
+          this.a.instance.listview?.dataService
+            .setPredicate(this.predicate, [this.dataValue])
+            .subscribe((res) => {
+              this.detectorRef.detectChanges();
+            });
+        }
+      }, 200);
+    } else {
+      this.dataService.predicates = `(@0.Contains(RecID))`;
+      this.dataService.dataValues = `[${arr.join(';')}]`;
+      this.a.instance.dataService = this.dataService;
+      let myInterval = setInterval(() => {
+        if (this.a.instance.listview) {
+          clearInterval(myInterval);
+          (this.a.instance.listview?.dataService as CRUDService).predicates =
+            this.dataService.predicates;
+          (this.a.instance.listview?.dataService as CRUDService).dataValues =
+            this.dataService.dataValues;
+          this.a.instance.listview?.dataService
+            .setPredicate(this.predicate, [this.dataValue])
+            .subscribe((res) => {
+              this.detectorRef.detectChanges();
+            });
+        }
+      }, 200);
+    }
   }
 
   guidID: any;

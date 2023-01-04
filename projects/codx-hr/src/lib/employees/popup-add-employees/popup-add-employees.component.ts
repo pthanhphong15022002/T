@@ -15,6 +15,7 @@ import {
   DialogData,
   DialogRef,
   FormModel,
+  LayoutAddComponent,
   NotificationsService,
   Util,
 } from 'codx-core';
@@ -70,6 +71,7 @@ export class PopupAddEmployeesComponent implements OnInit {
   grvSetup:any = {};
   arrFieldRequire:any[] = [];
   mssgCode:string = "SYS009";
+  @ViewChild("form") form:LayoutAddComponent;
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -111,7 +113,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         });
     }
   }
-
+  // get grvsetup
   getGridViewSetup(formModel:FormModel){
     if(formModel)
     { 
@@ -214,15 +216,17 @@ export class PopupAddEmployeesComponent implements OnInit {
       }
     }
   }
-
+  // update employee
   updateEmployeeAsync(employee: any) {
     if (employee) {
       this.api
         .execAction<boolean>('HR_Employees', [employee], 'UpdateAsync', true)
         .subscribe((res: any) => {
           if (!res?.error) {
+            this.notifiSV.notifyCode('SYS007');
             this.dialogRef.close(res.data);
-          } else {
+          } 
+          else {
             this.notifiSV.notifyCode('SYS021');
             this.dialogRef.close(null);
           }
@@ -246,14 +250,14 @@ export class PopupAddEmployeesComponent implements OnInit {
       });
     }
   }
-
+  //value change
   dataChange(e: any) {
-    if (e) {
-      if (typeof e.data !== 'string') {
-        this.employee[e.field] = e.data.fromDate
-          ? e.data.fromDate.toISOString()
-          : null;
-      } else this.employee[e.field] = e.data;
+    debugger
+    if (e) 
+    {
+      let field = Util.camelize(e.field);
+      let data = e.data;
+      this.employee[field] = data;
     }
   }
 }

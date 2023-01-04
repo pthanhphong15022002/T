@@ -40,14 +40,20 @@ export class PopupEmployeePartyInfoComponent extends UIComponent implements OnIn
     if(this.formModel){
       this.isAfterRender = true
     }
-    this.data = dialog?.dataService?.dataSelected
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
    }
 
-
+   ngAfterViewInit() {
+    this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        this.dialog && this.dialog.close(this.data);
+      }
+    })
+  }
 
 onSaveForm(){
   this.hrService.saveEmployeeUnionAndPartyInfo(this.data).subscribe(p => {
-    if(p === "True"){
+    if(p != null){
       this.notify.notifyCode('SYS007')
       this.dialog.close()
     }

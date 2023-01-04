@@ -1,0 +1,21 @@
+.dialog-list-detail {
+    background-color: var(--bg-body);
+}
+
+.dialog-list-detail .left-body {
+    height: calc(100% - 42px);
+
+}
+
+.dialog-list-detail .card-item {
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    border-top: 1px var(--border-list) solid;
+
+}
+
+.dialog-list-detail .container-fluid {
+    padding: 0 !important;
+}

@@ -9,6 +9,7 @@
 <ng-template #itemTemplate>
   <div class="bg-white row subheader">
     <div class="justify-content-start saving ps-12 col-md-9 d-flex">
+      <span class="icon-arrow_back ps-6 pt-3 icon-24" (click)="back()"></span>
       <svg
         class="icon_survey"
         version="1.1"
@@ -82,6 +83,7 @@
         triggers="mouseenter:mouseleave"
         placement="bottom"
         [autoClose]="'outside'"
+        (click)="review()"
       ></span>
       <ng-template #show>
         <codx-label fiedName="Show" default="Xem trước"></codx-label>
@@ -135,13 +137,13 @@
         </ng-template>
         <ng-template #content class="pd-t-20">
           <div class="scroll-y ques-scroll">
-          <app-questions
-            #app_question
-            [formModel]="view.formModel"
-            [dataService]="view.dataService"
-            *ngIf="mode == 'Q'"
-          ></app-questions>
-        </div>
+            <app-questions
+              #app_question
+              [formModel]="view.formModel"
+              [dataService]="view.dataService"
+              *ngIf="mode == 'Q'"
+            ></app-questions>
+          </div>
         </ng-template>
       </e-tabitem>
       <e-tabitem>

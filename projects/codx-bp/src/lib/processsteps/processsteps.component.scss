@@ -114,7 +114,7 @@
 
   .processStep {
     padding: 12px 8px 0px 12px;
-  }
+   }
 
   .bg-footer {
     margin-left: -12px;
@@ -301,7 +301,7 @@ codx-views {
 .show-more{
   opacity: 0;
 }
-.show-more:hover{
+.envelop:hover .show-more{
   opacity: 1;
 }
 
@@ -316,7 +316,7 @@ codx-views {
   background-color: #e2e3ee;
 }
 .envelop{
-  width: 300px;
+  width: 100%;
   position: relative; 
   height: 30px; 
   display: flex;
@@ -326,4 +326,24 @@ codx-views {
     background: white;
     border-radius: 20px;
   }
+}
+.psteps-list{
+  width: 100%;
+  .color-hover{
+    background-color: aliceblue;
+    cursor: context-menu;
+  }
+  .psteps-item{
+    margin: 0;
+    padding: 5px !important;
+    border-radius: 0 15px 15px 0;
+  }
+}
+
+:host ::ng-deep .popover-body{
+  padding: 0 !important;
+}
+
+.more-function codx-mfunc{
+  top: -15px !important;
 }

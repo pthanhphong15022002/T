@@ -50,7 +50,7 @@ export class PopupAddKRComponent extends UIComponent {
   typePlan = '';
   planMonth = [];
   planQuarter = [];
-
+  allowCopyField=[];
   listTarget = [];
   formModel: FormModel;
   dialogRef: DialogRef;
@@ -62,6 +62,7 @@ export class PopupAddKRComponent extends UIComponent {
   funcID: any;
   tempTarget: any;
   dataOKRPlans: any;
+  funcType:any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -70,16 +71,16 @@ export class PopupAddKRComponent extends UIComponent {
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
-    super(injector);
-    this.kr = dialogData.data[0];
-    this.o = dialogData.data[1];
-    this.formModel = dialogData.data[2];
-    this.isAdd = dialogData?.data[3];
-    this.headerText = dialogData?.data[4];
-    this.funcID = dialogData?.data[5];
-    this.dataOKRPlans = dialogData?.data[6];
-    this.dialogRef = dialogRef;
-    if (!this.isAdd) {
+    super(injector);   
+    
+    this.funcType = dialogData?.data[0];  
+    this.headerText = dialogData?.data[1];
+    this.o = dialogData.data[2];
+    this.kr = dialogData.data[3];
+    this.dataOKRPlans = dialogData?.data[4];
+    this.dialogRef= dialogRef;
+    this.formModel= dialogRef.formModel;
+    if (this.funcType == OMCONST.MFUNCID.Edit || this.funcType == OMCONST.MFUNCID.Copy ) {
       this.typePlan = this.kr.plan;
     }
   }
@@ -88,13 +89,16 @@ export class PopupAddKRComponent extends UIComponent {
   ngAfterViewInit(): void {}
 
   onInit(): void {
-    // this.codxOmService.getFormModel('OMT03').then(res=>{
-    //   this.formModel=res;
-    //   this.initForm();
-    // })
-    this.cache.valueList('OM006').subscribe((res) => {
-      if (res) {
-        var x = res;
+    this.cache.gridViewSetup(this.formModel?.formName, this.formModel?.gridViewName)
+    .subscribe((gv: any) => {      
+      if (gv) {
+        for (const key in gv) {
+          const element = gv[key];
+          if(element.allowCopy){
+            element.fieldName =element.fieldName.charAt(0).toLowerCase() + element.fieldName.slice(1);
+            this.allowCopyField.push(element.fieldName);
+          }
+        }
       }
     });
     this.initForm();
@@ -105,9 +109,16 @@ export class PopupAddKRComponent extends UIComponent {
       .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
       .then((item) => {
         this.fGroupAddKR = item;
-        if (this.isAdd) {
+        if (this.funcType == OMCONST.MFUNCID.Add) {
           this.kr = this.fGroupAddKR.value;
-          this.kr.parentID = this.o?.recID;
+        }
+        if (this.funcType == OMCONST.MFUNCID.Copy) {
+          let tmpKR = this.fGroupAddKR.value;
+          this.allowCopyField.forEach(field=>{
+            tmpKR[field]=this.kr[field];
+          });
+          this.kr=null;
+          this.kr=tmpKR;
         }
         this.isAfterRender = true;
       });
@@ -117,7 +128,7 @@ export class PopupAddKRComponent extends UIComponent {
 
   //-----------------------Base Event------------------------//
 
-  valueChange(evt: any) {
+  valuePlanChange(evt: any) {
     if (evt && evt.field) {
       if (this.kr.plan == OMCONST.VLL.Plan.Month) {
         this.planMonth[evt.field] = evt.data;
@@ -129,6 +140,12 @@ export class PopupAddKRComponent extends UIComponent {
     this.detectorRef.detectChanges();
   }
 
+  valueChange(evt: any) {
+    if (evt && evt.field) {
+      this.kr[evt.field]=evt.data;      
+    }
+    this.detectorRef.detectChanges();
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
@@ -144,7 +161,7 @@ export class PopupAddKRComponent extends UIComponent {
   beforeSave(option: RequestOption) {
     let itemData = this.fGroupAddKR.value;
     option.methodName = '';
-    option.data = [itemData, this.isAdd];
+    option.data = [itemData, this.funcType];
     return true;
   }
 
@@ -154,7 +171,7 @@ export class PopupAddKRComponent extends UIComponent {
     this.kr.approveStatus='1';
     this.kr.approveControl='1';
     this.kr.okrType=OMCONST.VLL.OKRType.KResult;
-    this.kr.parentID = '2fe69da4-7217-11ed-b6e9-d89ef34ba7ae';
+    this.kr.transID = this.dataOKRPlans.recID;
     //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);
@@ -164,14 +181,25 @@ export class PopupAddKRComponent extends UIComponent {
       this.calculatorTarget();
       this.onSaveTarget();
     }
-    if (this.isAdd) {
+    if (this.funcType == OMCONST.MFUNCID.Add) {
       this.methodAdd(this.kr);
-    } else {
+    } else if(this.funcType == OMCONST.MFUNCID.Edit) {
       this.methodEdit(this.kr);
+    } else if(this.funcType == OMCONST.MFUNCID.Copy) {
+      this.methodCopy(this.kr);
     }
   }
   methodAdd(kr: any) {
     this.codxOmService.addKR(this.kr).subscribe((res: any) => {
+      if (res) {
+        var x = res;
+        this.afterSave(res);
+      }
+    });
+  }
+
+  methodCopy(kr: any) {
+    this.codxOmService.copyKR(this.kr).subscribe((res: any) => {
       if (res) {
         var x = res;
         this.afterSave(res);
@@ -206,16 +234,16 @@ export class PopupAddKRComponent extends UIComponent {
   //Thiết lập OKRLevel theo funcID
   OKRLevel() {
     switch (this.funcID) {
-      case OMCONST.FUNCID.Company:
+      case OMCONST.FUNCID.COMP:
         this.kr.okrLevel = OMCONST.VLL.OKRLevel.Company;
         break;
-      case OMCONST.FUNCID.Department:
+      case OMCONST.FUNCID.DEPT:
         this.kr.okrLevel = OMCONST.VLL.OKRLevel.Department;
         break;
-      case OMCONST.FUNCID.Team:
+      case OMCONST.FUNCID.ORG:
         this.kr.okrLevel = OMCONST.VLL.OKRLevel.Team;
         break;
-      case OMCONST.FUNCID.Person:
+      case OMCONST.FUNCID.PERS:
         this.kr.okrLevel = OMCONST.VLL.OKRLevel.Person;
         break;
     }

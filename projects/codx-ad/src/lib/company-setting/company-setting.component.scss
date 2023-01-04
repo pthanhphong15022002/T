@@ -91,9 +91,16 @@
   opacity: 1;
 }
 
-.button_change_email {
-  margin: 34px;
-  margin-left: 169px;
+.img_option,
+.img_optionFull {
+  position: relative;
+}
+
+.button_change_email,
+.button_change_main {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 
 /* hover image mail header */
@@ -220,4 +227,8 @@ lib-company-setting .e-tab .e-tab-header.e-vertical:before {
 .e-toolbar-items .e-toolbar-item {
   margin-bottom: 6px !important;
   min-height: 34px !important;
+}
+
+.memory-store .e-control-wrapper.e-slider-container.e-horizontal {
+  height: 16px;
 }

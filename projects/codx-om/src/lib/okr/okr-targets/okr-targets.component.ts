@@ -1,3 +1,4 @@
+import { CodxOmService } from './../../codx-om.service';
 import { OMCONST } from './../../codx-om.constant';
 import { Component, Input, OnInit } from '@angular/core';
 import {
@@ -7,6 +8,7 @@ import {
   FormModel,
   DialogModel,
   ApiHttpService,
+  NotificationsService,
 } from 'codx-core';
 import { ChartSettings } from '../../model/chart.model';
 import { PopupAddKRComponent } from '../../popup/popup-add-kr/popup-add-kr.component';
@@ -14,8 +16,9 @@ import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-
 import { PopupShowKRComponent } from '../../popup/popup-show-kr/popup-show-kr.component';
 import { OkrAddComponent } from '../okr-add/okr-add.component';
 import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.component';
-import { PopupDistributeKRComponent } from '../../popup/popup-distribute-kr/popup-distribute-kr.component';
 import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/popup-distribute-okr.component';
+import { E } from '@angular/cdk/keycodes';
+import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/popup-assignment-okr.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -27,11 +30,16 @@ export class OkrTargetsComponent implements OnInit {
   @Input() dataOKR: any;
   @Input() formModel: any;
   @Input() gridView: any;
+  @Input() formModelOB: any;
+  @Input() formModelKR: any;
+  @Input() krFuncID: any;
+  @Input() obFuncID: any;
+  @Input() funcID: any;
+  
   dtStatus = [];
   openAccordion = [];
-
-  formModelKR = new FormModel();
-
+  krTitle='';
+  obTitle='';
   chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
@@ -123,10 +131,24 @@ export class OkrTargetsComponent implements OnInit {
   constructor(
     private callfunc: CallFuncService,
     private cache: CacheService,
-    private api: ApiHttpService
+    private codxOmService: CodxOmService,
+    private api: ApiHttpService,
+    private notificationsService :NotificationsService,
   ) {}
 
   ngOnInit(): void {
+    //Lấy tiêu đề theo FuncID cho Popup
+    this.cache.functionList(this.krFuncID).subscribe((res) => {
+      if (res) {
+        this.krTitle = res.description.charAt(0).toLowerCase() + res.description.slice(1);
+      }
+    });
+    this.cache.functionList(this.obFuncID).subscribe((res) => {
+      if (res) {
+        this.obTitle = res.description.charAt(0).toLowerCase() + res.description.slice(1);
+        
+      }
+    });
     this.progress = this.dataOKRPlans?.progress;
     this.api
       .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
@@ -202,26 +224,59 @@ export class OkrTargetsComponent implements OnInit {
 
   editKR(kr: any, o: any, popupTitle: any) {
     let option = new SidebarModel();
-    option.Width = '550px';
-    option.FormModel = this.formModel;
+    option.FormModel = this.formModelKR;
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [kr, o, this.formModelKR, false, popupTitle, this.dataOKRPlans],
+      [OMCONST.MFUNCID.Edit, popupTitle, o, kr, this.dataOKRPlans],
       option
     );
   }
+  
+  
+  copyKR(kr: any, o: any, popupTitle: any) {
+    let option = new SidebarModel();
+    option.FormModel = this.formModelKR;
+
+    let dialogKR = this.callfunc.openSide(
+      PopupAddKRComponent,
+      [OMCONST.MFUNCID.Copy, popupTitle, o, kr, this.dataOKRPlans],
+      option
+    );
+  }
+  
+  deleteKR(kr: any) {
+    if(kr!=null){
+      this.codxOmService.deleteKR(kr).subscribe((res:any)=>{
+        if(res){          
+          this.notificationsService.notifyCode('SYS008');
+        }
+        else{
+          
+          this.notificationsService.notifyCode('SYS022');
+        }
+      })
+    }
+  }
 
   clickKRMF(e: any, kr: any, o: any) {
-    let popupTitle = e.text + ' kết quả chính';
+    let popupTitle = e.text + ' '+ this.krTitle;
     var funcID = e?.functionID;
     switch (funcID) {
-      case 'SYS03': {
+      case OMCONST.MFUNCID.Edit: {
         this.editKR(kr, o, popupTitle);
         break;
       }
+      // case OMCONST.MFUNCID.Copy: {
+      //   this.copyKR(kr, o, popupTitle);
+      //   break;
+      // }
+      case OMCONST.MFUNCID.Delete: {
+        this.deleteKR(kr);
+        break;
+      }
       case 'SYS04': {
-        this.distributeKR(kr,o);
+        this.distributeKR(kr);
         break;
       }
     }
@@ -256,16 +311,16 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  distributeKR(kr:any,ob:any){
+  distributeKR(kr:any){
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
-      PopupDistributeOKRComponent,
+      PopupAssignmentOKRComponent,
       '',
       null,
       null,
       null,
-      [ob.okrName,kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult],
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult,this.funcID],
       '',
       dModel
     );

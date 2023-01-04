@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, AuthService, AuthStore, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
-import { off } from 'process';
+import { ApiHttpService, AuthService, AuthStore, CodxService, DataRequest, DialogData, DialogRef, NotificationsService, ScrollComponent } from 'codx-core';
 
 @Component({
   selector: 'lib-activies-slider',
@@ -9,6 +8,7 @@ import { off } from 'process';
 })
 
 export class ActiviesSliderComponent implements OnInit {
+  
   dialog: DialogRef;
   user:any = null;
   lstApproval:any[] = [];
@@ -24,7 +24,7 @@ export class ActiviesSliderComponent implements OnInit {
     pageSize:20,
     page: 1
   }
-
+  loaded:boolean = true;
   totalPage:number = 0;
   isScroll = true;
   pageIndex:number = 0;
@@ -35,6 +35,7 @@ export class ActiviesSliderComponent implements OnInit {
     private dt:ChangeDetectorRef,
     private notiSV:NotificationsService,
     private auth:AuthStore,
+    private codxService:CodxService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   )
@@ -56,14 +57,21 @@ export class ActiviesSliderComponent implements OnInit {
       'ERM.Business.BG',
       'NotificationBusinesss',
       'GetApprovalAsync',
-      [this.model]
-    ).subscribe((res:any[]) => {
+      [this.model])
+      .subscribe((res:any[]) => {
       if(res){
         this.lstApproval = res[0];
         let totalRecord = res[1];
         this.totalPage = totalRecord / this.model.pageSize;
         this.isScroll = false;
         this.dt.detectChanges();
+      }
+      else
+      {
+        if(this.lstApproval.length == 0)
+        {
+          this.loaded = false;
+        }
       }
     });
   }
@@ -91,8 +99,20 @@ export class ActiviesSliderComponent implements OnInit {
         this.dt.detectChanges();
       }
     });
+
+    
   }
 
+  //view detail
+  clickViewDetail(item){
+    if(item.transID){
+      let query = {
+        predicate:"RecID=@0",
+        dataValue:item.transID
+      };
+      this.codxService.openUrlNewTab(item.function,"",query);
+    }
+  }
   approvalAsync(recID:string ,transID:string, status:string){
     if(recID && transID && status)
     {
@@ -143,3 +163,4 @@ enum ApprovalStatus {
   approved = "5",
   denied = "4"
 };
+

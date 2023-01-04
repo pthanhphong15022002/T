@@ -87,7 +87,7 @@
           <li class="paginate_button cursor-pointer page-item previous" [class.disabled]="activePage == 1"
             id="kt_ecommerce_products_table_previous" (click)="previewPage()">
             <a aria-controls="kt_ecommerce_products_table" data-dt-idx="0" tabindex="0" class="page-link"><i
-                class="previous"></i></a>
+                class="icon-navigate_before"></i></a>
           </li>
           <ng-container *ngFor="let item of arrayPaging">
             <li class="paginate_button cursor-pointer page-item" [class.active]="activePage==item"
@@ -98,7 +98,7 @@
           <li class="paginate_button cursor-pointer page-item next" [class.disabled]="activePage == pageTotal"
             id="kt_ecommerce_products_table_next" (click)="nextPage()">
             <a aria-controls="kt_ecommerce_products_table" data-dt-idx="6" tabindex="0" class="page-link"><i
-                class="next"></i></a>
+                class="icon-navigate_next"></i></a>
           </li>
         </ul>
       </div>

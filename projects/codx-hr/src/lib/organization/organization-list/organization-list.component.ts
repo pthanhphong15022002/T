@@ -48,7 +48,6 @@ export class OrganizationListComponent
   // change orgUnitID
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orgUnitID.currentValue != changes.orgUnitID.previousValue) {
-      this.orgUnitID = changes.orgUnitID.currentValue;
       if (this.dataService) {
         this.dataService.setPredicates([], [this.orgUnitID]).subscribe();
       }

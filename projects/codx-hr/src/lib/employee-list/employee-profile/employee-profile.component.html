@@ -18,17 +18,17 @@
               <div class="mt-9 px-2">
                 <div class="d-flex flex-column text-center mb-4">
                   <div
-                    class="mb-2 d-flex justify-conteuser-leftt-between align-items-center"
+                    class="mb-2 d-flex justify-content-between align-items-center"
                   >
                     <div
-                      class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center"
+                      class="w-25px h-25px border rounded-circle d-flex align-items-center "
                     >
                       <span
                         class="icon-arrow_back_ios icon-16 text-hover-primary me-1 text-white"
                         (click)="previousEmp()"
                       ></span>
                     </div>
-
+                    <div class="d-flex justify-content-center">
                     <div class="position-relative">
                       <codx-img
                         class="me-4 pic-emloyee"
@@ -262,14 +262,10 @@
                         </div>
                       </div>
                     </div>
-
-                    <div
-                      class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center"
-                    >
-                      <span
-                        (click)="nextEmp()"
-                        class="icon-arrow_forward_ios icon-16 text-hover-primary ms-1 text-white"
-                      ></span>
+                  </div>
+                    <div class="w-25px h-25px border rounded-circle d-flex align-items-center justify-content-center">
+                      <span (click)="nextEmp()"
+                        class="icon-arrow_forward_ios icon-16 text-hover-primary ms-1 text-white"></span>
                     </div>
                   </div>
                   <!-- ngPopup -->
@@ -865,7 +861,7 @@
           <div class="d-flex flex-column" *ngIf="crrTab == 5">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeAwardsInfo()"
+              (click)="addEmployeeAwardsInfo('add',null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -879,7 +875,7 @@
             </div>
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEmployeeDisciplinesInfo()"
+              (click)="addEmployeeDisciplinesInfo('add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -975,7 +971,7 @@
         [attr.aria-expanded]="!objCollapes['1']"
       >
         <span
-          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
         ></span>
       </a>
       <a
@@ -983,7 +979,10 @@
         (click)="collapse('1', '1')"
         [attr.aria-expanded]="!objCollapes['1']"
       >
-        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
+        >
+
+        </span>
       </a>
     </div>
   </div>
@@ -1000,9 +999,10 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <!-- thong tin chung -->
+       
         <div class="user-profile overview d-block mb-3" id="MWP00201">
           <div id="1" #1="ngbCollapse" [(ngbCollapse)]="objCollapes['1']">
-            <div class="rounded-2 p-4">
+            <div class="rounded-2 p-4  ">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
                   <div class="user-status d-flex align-items-center">
@@ -1060,11 +1060,8 @@
                       default="Thông tin bản thân"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editEmployeeSelfInfo()"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-edit icon-18 text-primary" (click)="editEmployeeSelfInfo()"></span>
                     </a>
                   </div>
                   <div class="d-flex form-group">
@@ -1453,11 +1450,8 @@
                       default="Thông tin đảng - đoàn"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editEmployeePartyInfo()"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-edit icon-18 text-primary" (click)="editEmployeePartyInfo()"></span>
                     </a>
                   </div>
 
@@ -1537,11 +1531,8 @@
                       default="Quan hệ gia đình"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-add icon-18"
-                        (click)="handleEFamilyInfo('add', null)"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-add icon-18 text-primary" (click)="handleEFamilyInfo('add', null)"></span>
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -1654,11 +1645,8 @@
                       default="Bảo hiểm - mã số thuế - tài khoản cá nhân"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editAssuranceTaxBankAccountInfo()"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-edit icon-18 text-primary" (click)="editAssuranceTaxBankAccountInfo()"></span>
                     </a>
                   </div>
                   <div class="row form-group">
@@ -1795,11 +1783,8 @@
                       default="Hộ chiếu (Passport)"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-add icon-18"
-                        (click)="handleEmployeePassportInfo('add', null)"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-add icon-18 text-primary" (click)="handleEmployeePassportInfo('add', null)"></span>
                     </a>
                   </div>
                   <div
@@ -1921,11 +1906,8 @@
                       default="Thị thực (visa)"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-add icon-18"
-                        (click)="handleEmployeeVisaInfo('add', null)"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-add icon-18 text-primary" (click)="handleEmployeeVisaInfo('add', null)"></span>
                     </a>
                   </div>
 
@@ -2039,13 +2021,8 @@
                         default="Giấy phép lao động"
                       >
                       </codx-label>
-                      <a
-                        class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                      >
-                        <span
-                          class="icon-add icon-18"
-                          (click)="handleEmployeeWorkingPermitInfo('add', null)"
-                        ></span>
+                      <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                        <span class="icon-add icon-18 text-primary" (click)="handleEmployeeWorkingPermitInfo('add', null)"></span>
                       </a>
                     </div>
                     <div
@@ -2174,6 +2151,7 @@
             </div>
           </div>
         </div>
+     
       </ng-container>
     </div>
   </div>
@@ -2181,52 +2159,34 @@
 
 <!-- pane_1 -->
 <ng-template #jobInfo>
-  <div
-    class="pw-content w-100 scroll-y"
-    data-kt-scroll="true"
-    data-kt-scroll-activate="{default: true}"
-    data-kt-scroll-max-height="auto"
-    data-kt-scroll-dependencies=".pw-profile,.pw-menu"
-    data-kt-scroll-wrappers=".employee-container"
-    data-kt-scroll-offset="0px"
-  >
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label name="lblInfoPersonal" [formModel]="view.formModel" default="THÔNG TIN CÔNG VIỆC">
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a class="btn btn-xs btn-icon btn-white btn-hover-primary me-3" (click)="collapse('2', '0')"
+        [attr.aria-expanded]="!objCollapes['2']">
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"></span>
+      </a>
+      <a class="btn btn-xs btn-icon btn-white btn-hover-primary" (click)="collapse('2', '1')"
+        [attr.aria-expanded]="!objCollapes['2']">
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
+
+  <div class="pw-content w-100 scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
+    data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px">
     <div class="user-content flex-row-fluid">
       <ng-container>
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblInfoPersonal"
-                [formModel]="view.formModel"
-                default="THÔNG TIN CÔNG VIỆC"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('2', '0')"
-                [attr.aria-expanded]="!objCollapes['2']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('2', '1')"
-                [attr.aria-expanded]="!objCollapes['2']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
+         
 
-          <div #2="ngbCollapse" [(ngbCollapse)]="objCollapes['2']">
+          <div #2="ngbCollapse" [(ngbCollapse)]="objCollapes['2']" class="">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
                 <div class="d-flex align-items-center">
@@ -2281,33 +2241,25 @@
                       default="Thông tin chung"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editEmployeeSelfInfo()"
-                      ></span>
-                    </a>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-edit icon-18 text-primary" (click)="editEmployeeSelfInfo()"></span>
+                    </a> 
                   </div>
                   <!-- documentNo-status -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="documentNo">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="documentNo"
-                      >
+                    <div class="col d-flex align-items-center" id="documentNo">
+                     
+                        <span class="icon-article icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="documentNo">
                       </codx-label>
-
+                   
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.documentNo }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="status">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="status"
-                      >
+                    <div class="col d-flex align-items-center" id="status">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="status">
                       </codx-label>
                       <span #status>
                         <codx-vll
@@ -2325,23 +2277,19 @@
                   </div>
                   <!-- joinedOn-hiredOn -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="joinedOn">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="joinedOn"
-                      >
+                    <div class="col d-flex align-items-center" id="joinedOn">
+                    
+                        <span class="icon-i-calendar2-event-fill icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="joinedOn">
                       </codx-label>
+                    
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.joinedOn }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="hiredOn">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="hiredOn"
-                      >
+                    <div class="col d-flex align-items-center" id="hiredOn">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="hiredOn">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.hiredOn }}</span>
@@ -2350,23 +2298,19 @@
                   </div>
                   <!-- userID-employeeID -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="userID">
-                      <codx-label
-                        [formModel]="view.formModel"
-                        fiedName="userID"
-                        class="text-gray-600 me-2"
-                      >
+                    <div class="col d-flex align-items-center" id="userID">
+                  
+                        <span class="icon-perm_contact_calendar icon-14 text-gray-600 me-1"></span>
+                      <codx-label [formModel]="view.formModel" fiedName="userID" class="text-gray-600 me-2">
                       </codx-label>
+                  
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.userID }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="employeeID">
-                      <codx-label
-                        [formModel]="view.formModel"
-                        class="text-gray-600 me-2"
-                        fiedName="employeeID"
-                      >
+                    <div class="col d-flex align-items-center" id="employeeID">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label [formModel]="view.formModel" class="text-gray-600 me-2" fiedName="employeeID">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.employeeID }}</span>
@@ -2375,23 +2319,19 @@
                   </div>
                   <!-- positionID-jobLevel -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="positionID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="positionID"
-                      >
+                    <div class="col d-flex align-items-center" id="positionID">
+                   
+                      <span class="icon-book icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="positionID">
                       </codx-label>
+                  
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.positionName }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="jobLevel">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="jobLevel"
-                      >
+                    <div class="col d-flex align-items-center" id="jobLevel">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="jobLevel">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.jobLevel }}</span>
@@ -2401,13 +2341,12 @@
 
                   <!-- orgUnitID -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="orgUnitID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="orgUnitID"
-                      >
+                    <div class="col d-flex align-items-center" id="orgUnitID">
+                      
+                        <span class="icon-connection-point icon-14 text-gray-600 me-1 text-primary"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="orgUnitID">
                       </codx-label>
+                  
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.orgUnitID }}</span>
                       </span>
@@ -2416,23 +2355,19 @@
 
                   <!-- lineManager-indirectManager -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="lineManager">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="lineManager"
-                      >
+                    <div class="col d-flex align-items-center" id="lineManager">
+                      
+                        <span class="icon-supervised_user_circle icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="lineManager">
                       </codx-label>
+                 
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.lineManager }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="indirectManager">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="indirectManager"
-                      >
+                    <div class="col d-flex align-items-center" id="indirectManager">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="indirectManager">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.indirectManager }}</span>
@@ -2442,12 +2377,8 @@
 
                   <!-- locationID -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="locationID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName=""
-                      >
+                    <div class="col d-flex align-items-center" id="locationID">
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.locationID }}</span>
@@ -2457,22 +2388,19 @@
 
                   <!-- labourType-labourConditions -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="labourType">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="labourType"
-                      >
+                    <div class="col d-flex align-items-center" id="labourType">
+                     
+                        <span class="icon-person_pin_circle icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="labourType">
                       </codx-label>
+                    
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.labourType }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="labourConditions">
-                      <codx-label
-                        [formModel]="view.formModel"
-                        fiedName="labourConditions"
-                      >
+                    <div class="col d-flex align-items-center" id="labourConditions">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label [formModel]="view.formModel" fiedName="labourConditions">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.labourConditions }}</span>
@@ -2482,24 +2410,24 @@
 
                   <!-- isTUnion-tUnionDate -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="isTUnion">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isTUnion"
-                      >
+                    <div class="col d-flex align-items-center" id="isTUnion">
+                     
+                        <div class="bg-primary rounded-circle w-15px h-15px me-1">
+                          <span class="icon-i-check icon-14 text-white me-1"></span>
+                        </div>
+                      
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isTUnion">
                       </codx-label>
+                    
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isTUnion }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="tUnionDate">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="tUnionDate"
-                      >
+                    <div class="col d-flex align-items-center" id="tUnionDate">      
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="tUnionDate">
                       </codx-label>
+                    
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.tUnionDate }}</span>
                       </span>
@@ -2508,23 +2436,26 @@
 
                   <!-- isExpertRecruit-isExpertTrain -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="isExpertRecruit">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isExpertRecruit"
-                      >
+                    <div class="col d-flex align-items-center" id="isExpertRecruit">
+                    
+                        <div class="bg-primary rounded-circle w-15px h-15px me-1">
+                          <span class="icon-i-check icon-14 text-white me-1"></span>
+                        </div>
+                       
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isExpertRecruit">
                       </codx-label>
+                   
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isExpertRecruit }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="isExpertTrain">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isExpertTrain"
-                      >
+                    <div class="col d-flex align-items-center" id="isExpertTrain">
+                     
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <div class="bg-primary rounded-circle w-15px h-15px me-1">
+                        <span class="icon-i-check icon-14 text-white me-1"></span>
+                      </div>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isExpertTrain">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isExpertTrain }}</span>
@@ -2543,33 +2474,26 @@
                       default="THÔNG TIN CHẤM CÔNG"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editEmployeeTimeCardInfo()"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-edit icon-18 text-primary" (click)="editEmployeeTimeCardInfo()"></span>
                     </a>
                   </div>
                   <!-- timeCardNo-shiftCalendarID -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="timeCardNo">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="timeCardNo"
-                      >
+                    <div class="col d-flex align-items-center" id="timeCardNo">
+                     
+                        <span class="icon-fingerprint icon-14  me-1 "></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="timeCardNo">
                       </codx-label>
+                   
 
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.timeCardNo }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="shiftCalendarID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="shiftCalendarID"
-                      >
+                    <div class="col d-flex align-items-center" id="shiftCalendarID">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="shiftCalendarID">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.shiftCalendarID }}</span>
@@ -2578,14 +2502,12 @@
                   </div>
                   <!-- aLObjectID-->
                   <div class="row form-group">
-                    <div class="col d-flex" id="aLObjectID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="aLObjectID"
-                      >
+                    <div class="col d-flex align-items-center" id="aLObjectID">
+                     
+                        <span class="icon-i-calendar2-month icon-14  me-1 "></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="aLObjectID">
                       </codx-label>
-
+                    
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.aLObjectID }}</span>
                       </span>
@@ -2593,24 +2515,22 @@
                   </div>
                   <!-- isNotScan-isNotOTKow -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="isNotScan">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isNotScan"
-                      >
+                    <div class="col d-flex align-items-center" id="isNotScan">
+                     
+                        <div class="bg-primary rounded-circle w-15px h-15px me-1">
+                          <span class="icon-i-check icon-14 text-white me-1"></span>
+                        </div>
+                        
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isNotScan">
                       </codx-label>
-
+                    
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isNotScan }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="isNotOTKow">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isNotOTKow"
-                      >
+                    <div class="col d-flex align-items-center" id="isNotOTKow">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isNotOTKow">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isNotOTKow }}</span>
@@ -2619,24 +2539,22 @@
                   </div>
                   <!-- isNotLateEarly-isNotCLeaveKow-->
                   <div class="row form-group">
-                    <div class="col d-flex" id="isNotLateEarly">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isNotLateEarly"
-                      >
+                    <div class="col d-flex align-items-center" id="isNotLateEarly">
+                     
+                        <div class="bg-primary rounded-circle w-15px h-15px me-1">
+                           <span class="icon-i-check icon-14 text-white me-1"></span>
+                        </div>
+                       
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isNotLateEarly">
                       </codx-label>
-
+                   
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isNotScan }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="isNotCLeaveKow">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isNotCLeaveKow"
-                      >
+                    <div class="col d-flex align-items-center"  id="isNotCLeaveKow">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isNotCLeaveKow">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isNotCLeaveKow }}</span>
@@ -2655,33 +2573,25 @@
                       default="THÔNG TIN TÍNH LƯƠNG"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
-                      <span
-                        class="icon-edit icon-18"
-                        (click)="editEmployeeCaculateSalaryInfo()"
-                      ></span>
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
+                      <span class="icon-edit icon-18 text-primary" (click)="editEmployeeCaculateSalaryInfo()"></span>
                     </a>
                   </div>
                   <!-- payrollGroupID-currencyID -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="payrollGroupID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="payrollGroupID"
-                      >
+                    <div class="col d-flex align-items-center" id="payrollGroupID">
+                     
+                        <span class="icon-supervisor_account icon-14  me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="payrollGroupID">
                       </codx-label>
-
+                  
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.timeCardNo }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="currencyID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="currencyID"
-                      >
+                    <div class="col d-flex align-items-center" id="currencyID">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="currencyID">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.currencyID }}</span>
@@ -2690,24 +2600,22 @@
                   </div>
                   <!-- taxTableID-isSettleTax -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="taxTableID">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="taxTableID"
-                      >
+                    <div class="col d-flex align-items-center" id="taxTableID">
+                     
+                        <div class="d-flex align-items-center border border-danger me-1" style="width: 13px;height: 11px;">
+                           <span class="icon-u_dollar-sign-alt icon-10 text-danger me-1 fw-bold"></span>
+                        </div>
+                       
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="taxTableID">
                       </codx-label>
-
+                   
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.taxTableID }}</span>
                       </span>
                     </div>
-                    <div class="col d-flex" id="isSettleTax">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="isSettleTax"
-                      >
+                    <div class="col d-flex align-items-center" id="isSettleTax">
+                      <span class="icon-i-circle-fill icon-circle-group icon-14 text-gray-600 me-1"></span>
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="isSettleTax">
                       </codx-label>
                       <span class="text-dark fw-bold">
                         <span>{{ infoPersonal.isSettleTax }}</span>
@@ -2716,12 +2624,11 @@
                   </div>
                   <!-- advanceAmount -->
                   <div class="row form-group">
-                    <div class="col d-flex" id="advanceAmount">
-                      <codx-label
-                        class="text-gray-600 me-2"
-                        [formModel]="view.formModel"
-                        fiedName="advanceAmount"
-                      >
+                    <div class="col d-flex align-items-center" id="advanceAmount">
+                     
+                        <span class="icon-money icon-14 text-gray-600 me-1"></span>
+                      
+                      <codx-label class="text-gray-600 me-2" [formModel]="view.formModel" fiedName="advanceAmount">
                       </codx-label>
 
                       <span class="text-dark fw-bold">
@@ -2784,6 +2691,28 @@
 
 <!-- pane_2 -->
 <ng-template #benefit>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblBenefit"
+        [formModel]="view.formModel"
+        default="Phúc lợi"
+      >
+      </codx-label>
+    </div>
+
+    <div class="d-flex">
+      <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-3" (click)="collapse('3', '0')"
+        [attr.aria-expanded]="!objCollapes['3']">
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"></span>
+      </a>
+      <a class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="collapse('3', '1')"
+        [attr.aria-expanded]="!objCollapes['3']">
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -2796,38 +2725,7 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblBenefit"
-                [formModel]="view.formModel"
-                default="Phúc lợi"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('3', '0')"
-                [attr.aria-expanded]="!objCollapes['3']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('3', '1')"
-                [attr.aria-expanded]="!objCollapes['3']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
+          
           <div id="3" #3="ngbCollapse" [(ngbCollapse)]="objCollapes['3']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -2877,7 +2775,7 @@
                       default="Mức lương"
                     >
                     </codx-label>
-                    <a class="btn btn-xs btn-icon btn-light btn-hover-primary">
+                    <a class="btn btn-xs btn-icon btn-white btn-hover-primary">
                     </a>
                   </div>
                   <div class="d-flex flex-wrap py-3 px-4">
@@ -2988,7 +2886,7 @@
                         </codx-temp-full>
                         <ng-template #footerBenefit let-data>
                           <div class="d-flex align-items-center mt-1">
-                            <span class="icon-attach_money"></span
+                            <span class="icon-i-plus-circle me-1 icon-16"></span
                             >{{ data.benefitID }}
                           </div>
                           <div class="d-flex align-items-center mt-1">
@@ -2996,8 +2894,8 @@
                             >{{ data.benefitAmt }}
                           </div>
 
-                          <div class="d-flex align-items-center mt-3">
-                            <span class="icon-calendar_today"></span>Hiệu lực:
+                          <div class="d-flex align-items-center mt-1">
+                            <span class="icon-i-calendar2-event-fill me-2 text-gray-600 icon-12 ms-1"></span>Hiệu lực:
                             {{ data.effectedDate | fmDT }}
                             -
                             {{ data.expiredDate | fmDT }}
@@ -3243,7 +3141,7 @@
         [attr.aria-expanded]="!objCollapes['4']"
       >
         <span
-          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
         ></span>
       </a>
       <a
@@ -3251,7 +3149,9 @@
         (click)="collapse('4', '1')"
         [attr.aria-expanded]="!objCollapes['4']"
       >
-        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);">
+
+        </span>
       </a>
     </div>
   </div>
@@ -3324,7 +3224,62 @@
                 #41="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['4.1']"
               >
-                <div class="mb-1"></div>
+                <div class="mb-1 px-3">
+                  <div *ngIf="crrEContract"
+                          class="border rounded py-4 px-4 has-action-menu"
+                        >
+                        <div class="row">
+                          <div class="col">
+                            <div class="d-flex align-items-center pt-2">
+                              <i class="icon-home_work icon-14 text-gray-600 me-1"></i
+                              >{{ crrEContract.contractTypeID }}
+                            </div>
+                          </div>
+                          <div class="col">
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-home_work icon-14 text-gray-600 me-1"></i
+                                >{{ crrEContract.effectedDate | fmDT }} - {{crrEContract.expiredDate | fmDT}}
+                              </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="d-flex align-items-center pt-2">
+                              <i class="icon-home_work icon-14 text-gray-600 me-1"></i
+                              >{{ crrEContract.note }}
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="d-flex flex-wrap mb-1">
+                              <div class="d-flex align-items-center">
+                                <span class="me-1 icon-date_range icon-14 text-gray-800"></span>
+                                <span class="text-dark">
+                                  <span>{{ crrEContract?.contractNo }}</span>
+                                </span>
+                              </div>
+                              <div class="d-flex align-items-center">
+                                <span
+                                  class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+                                ></span>
+                                <span class="fw-bold text-primary">
+                                  <span>{{ crrEContract?.signedDate | fmDT }}</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="more-function">
+                          <codx-mfunc
+                            type="hover"
+                            [formModel]="view.formModel"
+                            (clickMF)="clickMF($event, crrEContract, 'eContract')"
+                            [isBookMark]="false"
+                            [dataItem]="crrEContract"
+                          >
+                          </codx-mfunc>
+                        </div>
+                  </div>
+                </div>
               </div>
             </div>
             <hr />
@@ -3412,7 +3367,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="editEmployeeSelfInfo()"
+                    (click)="HandleEmployeeDayOffInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3494,7 +3449,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="editEmployeeSelfInfo()"
+                    (click)="addEBusinessTravel()"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3608,7 +3563,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2
+                    <codx-gridview-v2
                       idField="recID"
                       [columnsGrid]="expColumnGrid"
                       [service]="'HR'"
@@ -3625,7 +3580,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eExperiences')"
-                    ></codx-gridview-v2> -->
+                    ></codx-gridview-v2>
                   </div>
                 </div>
               </div>
@@ -3640,6 +3595,37 @@
 
 <!-- pane_4 -->
 <ng-template #knowledge>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblKnowledge"
+        [formModel]="view.formModel"
+        default="Kiến thức"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('5', '0')"
+        [attr.aria-expanded]="!objCollapes['5']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('5', '1')"
+        [attr.aria-expanded]="!objCollapes['5']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
+        ></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -3652,37 +3638,7 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblKnowledge"
-                [formModel]="view.formModel"
-                default="Kiến thức"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('5', '0')"
-                [attr.aria-expanded]="!objCollapes['5']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('5', '1')"
-                [attr.aria-expanded]="!objCollapes['5']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
-          <hr />
+
           <div id="5" #5="ngbCollapse" [(ngbCollapse)]="objCollapes['5']">
             <!-- Degree -->
             <div class="rounded-2 p-4">
@@ -3764,21 +3720,21 @@
                           ></codx-temp-full>
                           <ng-template #tmplateEDegreesMenuList let-data>
                             <div class="d-flex flex-column">
-                              <div>
-                                <i class="icon-home_work"></i
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-home_work icon-14 text-gray-600 me-1"></i
                                 >{{ item.trainSupplierID }}
                               </div>
-                              <div>
-                                <i class="icon-calendar_today"></i
+                              <div class="pt-2" >
+                                <i class="icon-calendar_today icon-14 text-gray-600 me-1 "></i
                                 >{{ item.courseName }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-14 text-gray-600 me-1 icon-circle-group"
                                 ></i
                                 >{{ item.trainForm }} |
-                                <i class="icon-airplanemode_active"></i>
+                                <i class="icon-airplanemode_active icon-14 text-gray-600 me-1"></i>
                                 {{ item.ranking }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-14 text-gray-600 me-1 icon-circle-group"
                                 ></i>
                                 {{ item.totalScore }}
                               </div>
@@ -3787,11 +3743,11 @@
 
                           <ng-template #titleTemplate let-data>
                             <div class="d-flex flex-column">
-                              <div>
-                                <i class="icon-school"></i
+                              <div class="d-flex align-items-center">
+                                <i class="icon-school  text-gray-600 me-1 icon-14"></i
                                 >{{ item.degreeName }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 me-1 ms-1"
                                 ></i
                                 >{{ item.issuedDate | fmDT }}
                               </div>
@@ -3880,7 +3836,8 @@
                             [formModel]="formModel"
                             [typeMF]="'hover'"
                             [titleTmp]="tmplateECertificateTitle"
-                            [icoTitleCss]="'icon-list_alt'"
+                            [titleCss]="'text-dark fw-bold'"
+                            [icoTitleCss]="'icon-list_alt icon-14'"
                             [subTitleTmp]="tmplateECertificateMenuList"
                             cardCss="card codx_cardcenter px-2 pt-4 pb-2"
                             typeMF="hover"
@@ -3888,31 +3845,31 @@
                           ></codx-temp-full>
 
                           <ng-template #tmplateECertificateTitle let-data>
-                            <div>
-                              {{ data.certificateID
-                              }}<i
-                                class="icon-i-arrow-down-left-circle-fill"
-                              ></i
-                              >{{ data.certificateGradeID }}
+                            <div class="d-flex align-items-center">
+                              <i
+                                class="icon-i-arrow-down-left-circle-fill icon-14 me-1 "
+                              ></i>
+                              <span class="text-dark fw-bold">{{ data.certificateID
+                              }}{{ data.certificateGradeID }}</span>
                             </div>
                           </ng-template>
 
                           <ng-template #tmplateECertificateMenuList let-data>
                             <div class="d-flex flex-column">
-                              <div>
-                                <i class="icon-calendar_today"></i
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-calendar_today me-1 icon-14 text-gray-600"></i
                                 >{{ data.issuedDate | fmDT }}
                                 <i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 ms-1"
                                 ></i
                                 >{{ data.trainSupplierID }}
                               </div>
-                              <div>
-                                <i class="icon-edit_fill"></i
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-category icon-14 text-primary me-1"></i
                                 >{{ data.certificateType }} | <i class=""></i
                                 >{{ data.ranking
                                 }}<i
-                                  class="icon-i-arrow-down-left-circle-fill"
+                                  class="icon-i-arrow-down-left-circle-fill icon-circle-group text-gray-600 ms-1 me-1"
                                 ></i
                                 >{{ data.totalScore }}
                               </div>
@@ -4169,6 +4126,37 @@
 
 <!-- pane_5 -->
 <ng-template #rewardDiscipline>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblRewardDiscipline"
+        [formModel]="view.formModel"
+        default="Khen thưởng - Kỷ luật"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('6', '0')"
+        [attr.aria-expanded]="!objCollapes['6']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('6', '1')"
+        [attr.aria-expanded]="!objCollapes['6']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
+        ></span>
+      </a>
+    </div>
+  </div>
+  <hr>
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -4181,36 +4169,7 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblRewardDiscipline"
-                [formModel]="view.formModel"
-                default="Khen thưởng - Kỷ luật"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('6', '0')"
-                [attr.aria-expanded]="!objCollapes['6']"
-              >
-                <span
-                  class="icon-keyboard_arrow_down icon-18 text-hover-primary"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('6', '1')"
-                [attr.aria-expanded]="!objCollapes['6']"
-              >
-                <span
-                  class="icon-keyboard_arrow_up icon-18 text-hover-primary"
-                ></span>
-              </a>
-            </div>
-          </div>
+          
           <ngx-skeleton-loader
             count="5"
             animation="progress"
@@ -4238,7 +4197,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeAwardsInfo()"
+                    (click)="addEmployeeAwardsInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4312,7 +4271,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="addEmployeeDisciplinesInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4388,7 +4347,7 @@
         [attr.aria-expanded]="!objCollapes['7']"
       >
         <span
-          class="icon-keyboard_arrow_down icon-18 text-hover-primary"
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
         ></span>
       </a>
       <a
@@ -4396,7 +4355,8 @@
         (click)="collapse('7', '1')"
         [attr.aria-expanded]="!objCollapes['7']"
       >
-        <span class="icon-keyboard_arrow_up icon-18 text-hover-primary"></span>
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);"
+        ></span>
       </a>
     </div>
   </div>
@@ -4574,7 +4534,7 @@
                                   class="icon-i-circle icon-12 me-3 text-gray-600 pf-circle"
                                 ></span
                                 ><span
-                                  class="icon-date_range icon-16 me-2 text-gray-600"
+                                  class="icon-i-calendar-event icon-16 me-2 text-gray-600"
                                 ></span
                                 ><span class="text-gray-600 me-3">{{
                                   vaccine.injectDate | fmDT
@@ -4632,7 +4592,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEDisease('add', null)"
+                    (click)="HandleEmployeeDiseaseInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4718,7 +4678,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEmployeeDisciplinesInfo()"
+                    (click)="HandleEmployeeAccidentInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4750,7 +4710,7 @@
                   <div
                     class="d-flex justify-content-between text-dark fw-bold text-uppercase mt-6 mb-3"
                   >
-                    <!-- <codx-gridview-v2
+                    <codx-gridview-v2
                       idField="recID"
                       [service]="'HR'"
                       [gridViewName]="'grvEAccidents'"
@@ -4766,7 +4726,7 @@
                       [contentEditable]="false"
                       [allowResizing]="true"
                       (clickMF)="clickMF($event, null, 'eAccidents')"
-                    ></codx-gridview-v2> -->
+                    ></codx-gridview-v2>
                   </div>
                 </div>
               </div>

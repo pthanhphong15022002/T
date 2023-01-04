@@ -4,28 +4,29 @@
 </codx-layout-add>
 <ng-template #tabGeneralInfo>
   <ng-container *ngIf="form && form.formGroup">
-    
-    <div class="row">
-      <div class="col-6 form-group">
+
+    <div class="row mx-0">
+      <div class="col-6 form-group ps-0">
         <codx-label fiedName="StartDate" [formModel]="form.formModel">
         </codx-label>
         <!-- <codx-input
       ControlName="startDate"
-      format="f"
+      format="F"
       type="datetime"
       class="test-datetime"
       [formModel]="form.formModel"
       [Group]="form.formGroup"
     >
     </codx-input> -->
-        <codx-input field="startDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
+
+        <codx-input field="startDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.startDate"
           (valueChange)="startDateChange($event)">
         </codx-input>
       </div>
-      <div class="col-6 form-group">
+      <div class="col-6 form-group pe-0">
         <codx-label fiedName="EndDate" [formModel]="form.formModel">
         </codx-label>
-        <codx-input field="endDate" format="f" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
+        <codx-input field="endDate" format="F" type="datetime" class="test-datetime" [crrValue]="data?.endDate"
           (valueChange)="endDateChange($event)">
         </codx-input>
       </div>
@@ -35,9 +36,11 @@
         <codx-label fiedName="ResourceID" [formModel]="form.formModel">
         </codx-label>
       </div>
-      <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
+      <!-- <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)">
-      </codx-input>
+      </codx-input> -->
+      <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields' [placeholder]="'Chọn xe...'"
+        (valueChange)="cbxResourceChange($event)"></ejs-dropdownlist>
       <div class="row">
         <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start flex-wrap">
@@ -59,8 +62,8 @@
         </div>
       </div>
     </div>
-    <div class="row form-group d-flex flex-row justify-content-start align-items-center">
-      <div class="col-1">
+    <div class="row form-group mx-0">
+      <div class="col-1 ps-0">
         <codx-input #checkbox class="test-switch" type="switch" [disabled]="true" [checked]="driverCheck"
           (valueChange)="valueChange($event)">
         </codx-input>
@@ -74,7 +77,7 @@
           (valueChange)="valueChange($event)">
         </codx-input>
       </div>
-      <div class="col-5">
+      <div class="col-5 pe-0">
         <codx-label name="lblUseCard" default="Có sử dụng thẻ" [formModel]="form.formModel"></codx-label>
       </div>
     </div>
@@ -103,14 +106,14 @@
       </codx-input>
     </div>
 
-    <div class="row">
-      <div class="col-7 form-group">
+    <div class="row mx-0">
+      <div class="col-7 form-group ps-0">
         <codx-label fiedName="Requester" [formModel]="form.formModel">
         </codx-label>
         <codx-input ControlName="requester" [formModel]="form.formModel" [Group]="form.formGroup" disabled="true">
         </codx-input>
       </div>
-      <div class="col-5 form-group">
+      <div class="col-5 form-group pe-0">
         <codx-label fiedName="Phone" [formModel]="form.formModel"> </codx-label>
         <codx-input type="number" ControlName="phone" [formModel]="form.formModel" [Group]="form.formGroup">
         </codx-input>
@@ -122,10 +125,10 @@
         <codx-label default="Lái xe & người đi cùng" fiedName="Note">
         </codx-label>
         <div class="d-flex flex-row text-end align-items-end">
-          
+
           <div class="mx-2">
-            <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources" [dataShared]="[]"
-              [multiple]="true" [showInput]="false">
+            <codx-input type="Share" refValue="TM003" (valueChange)="eventApply($event)" field="resources"
+              [dataShared]="[]" [multiple]="true" [showInput]="false">
             </codx-input>
           </div>
         </div>
@@ -288,33 +291,31 @@
       <codx-label name="lblCardInfo" default="Thông tin thẻ" class="text-primary">
       </codx-label>
     </div>
-    <div class="form-group row">
-      <div class="col-12">
-        <codx-label name="lblCardInfo" default="Mã số thẻ"> </codx-label>
-        <codx-input type="text" [disabled]="true"> </codx-input>
-      </div>
+    <div class="form-group">
+      <codx-label name="lblCardInfo" default="Mã số thẻ"> </codx-label>
+      <codx-input type="text" [disabled]="true"> </codx-input>
     </div>
-    <div class="form-group row">
-      <div class="col-6">
+    <div class="form-group row mx-0">
+      <div class="col-6 ps-0">
         <codx-label name="lblCardInfo" default="Người cấp thẻ"> </codx-label>
         <codx-input type="text" [disabled]="true"> </codx-input>
       </div>
 
-      <div class="col-6">
+      <div class="col-6 pe-0">
         <codx-label name="lblCardInfo" default="Ngày cấp thẻ"> </codx-label>
-        <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
+        <codx-input type="datetime" [disabled]="true" format="F" class="test-datetime">
         </codx-input>
       </div>
     </div>
-    <div class="form-group row">
-      <div class="col-6">
+    <div class="form-group row mx-0">
+      <div class="col-6 ps-0">
         <codx-label name="lblCardInfo" default="Người trả thẻ"> </codx-label>
         <codx-input type="text" [disabled]="true"> </codx-input>
       </div>
 
-      <div class="col-6">
+      <div class="col-6 pe-0">
         <codx-label name="lblCardInfo" default="Ngày trả thẻ"> </codx-label>
-        <codx-input type="datetime" [disabled]="true" format="f" class="test-datetime">
+        <codx-input type="datetime" [disabled]="true" format="F" class="test-datetime">
         </codx-input>
       </div>
     </div>

@@ -206,7 +206,7 @@
   [RightTemlate]="tmpContent"
   *ngIf="isAfterRender"
 >
-  <ng-template #body>
+  <!-- <ng-template #body>
     <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="DiseaseID" [formModel]="formModel"></codx-label>
@@ -381,7 +381,7 @@
         [Group]="formGroup"
       ></codx-input>
     </div>
-  </ng-template>
+  </ng-template> -->
 
   <ng-template #footer>
     <div class="d-flex justify-content-end">
@@ -397,7 +397,7 @@
   </ng-template>
 </layout-list-detail>
 
-<ng-template #footer>
+<!-- <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="onSaveForm()">
       <i class="icon-save"></i>
@@ -408,7 +408,7 @@
       ></codx-label>
     </button>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #LeftTemlate>
   <codx-listview
@@ -445,12 +445,12 @@
 </ng-template>
 
 <ng-template #tmplateEDiseases let-data1>
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column pt-1 ">
     <div>
       <i class ="icon-calendar_today"></i>{{data1.fromDate | fmDT}} -
       {{data1.toDate | fmDT}}
     </div>
-    <div *ngIf="data1.note != null">
+    <div *ngIf="data1.note != null" class="pt-1">
       <i class="icon-edit"></i
       >{{ data1.note}}
     </div>
