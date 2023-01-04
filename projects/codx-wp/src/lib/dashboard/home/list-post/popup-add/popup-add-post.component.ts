@@ -24,7 +24,11 @@ export class PopupAddPostComponent implements OnInit {
   data:WP_Comments = null;
   status: "create" | "edit" | "share" = "create"
   fileUpload:any[] = [];
-  mssgNoti:string = "";
+  grvSetup:any = null;
+  mssgShareOne:string = "";
+  mssgShareMore:string = "";
+  mssgTagOne:string = "";
+  mssgTagMore:string = "";
   // emoji  
   showEmojiPicker:boolean = false;
   emojiMode = 'apple';
@@ -73,16 +77,65 @@ export class PopupAddPostComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getData();
+    this.setData();
   }
 
-  getData(){
+  // set data default
+  setData(){
     if(this.dialogData)
     {
       this.headerText = this.dialogData.headerText;
       this.status = this.dialogData.status;
       this.data = this.dialogData.data;
+      if(this.user && this.status !== "edit")
+      {
+        this.data.createdBy = this.user.userID;
+        this.data.createdName = this.user.userName;
+        this.data.shareControl = this.SHARECONTROLS.EVERYONE;
+        this.data.refType = 'WP_Comments';
+      }
     }
+    // get grv set up
+    this.cache.gridViewSetup("Comments","grvComments")
+    .subscribe((grv:any) => {
+      if(grv){
+        this.grvSetup = grv;
+      }
+    });
+    this.getMssgDefault();
+  }
+
+  // get mssg default
+  getMssgDefault(){
+    // mssg share one
+    this.cache.message('WP001').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgShareOne = mssg.customName;
+      } 
+    });
+    // mssg share more
+    this.cache.message('WP002').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgShareMore = mssg.customName;
+      } 
+    });
+    // mssg tag one
+    this.cache.message('WP018').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgTagOne = mssg.customName;
+      } 
+    });
+    // mssg tag more
+    this.cache.message('WP019').subscribe((mssg: any) => {
+      if (mssg?.customName)
+      {
+        this.mssgTagMore = mssg.customName;
+      } 
+    });
+    // mssg placeholderText content
     this.cache.message('WP011').subscribe((mssg: any) => {
       if(mssg?.defaultName)
       {
@@ -90,17 +143,6 @@ export class PopupAddPostComponent implements OnInit {
         this.dt.detectChanges();
       }
     });
-    this.cache.gridViewSetup("Comments","grvComments").subscribe((grd:any) => {
-      if(grd){
-        console.log('gridViewSetup',grd)
-      }
-    });
-    this.cache.message("SYS009").subscribe((mssg:any) =>{
-      if(mssg?.defaultName){
-        this.mssgNoti = mssg.defaultName;
-        this.dt.detectChanges();
-      }
-    })
   }
 
   //open control share
@@ -109,13 +151,16 @@ export class PopupAddPostComponent implements OnInit {
       this.callFC.openForm(controlShare, '', 420, window.innerHeight);
     }
   }
+
   // value change
   valueChange(event:any){
-    if (event.data){
+    if (event?.data){
+      this.data.comments = event.data; 
       this.data.content = event.data;
       this.dt.detectChanges();
     } 
   }
+
   // upload file 
   addFile(files: any) {
     if(files){
@@ -139,7 +184,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // remove file 
   removeFile(file: any) {
-    if(file){
+    if(file?.fileName){
       this.fileUpload = this.fileUpload.filter(x => x.fileName != file.fileName);
       this.dt.detectChanges();
     }
@@ -147,12 +192,9 @@ export class PopupAddPostComponent implements OnInit {
 
   // select file
   getfileCount(event: any) {
-    if(event)
+    if(event?.data?.length > 0)
     {
-      let files = event.data;
-      if(files?.length > 0){
-        this.codxFile.addFiles(files);
-      }
+      this.codxFile.addFiles(event.data);
     }
   }
 
@@ -177,30 +219,34 @@ export class PopupAddPostComponent implements OnInit {
 
   // submit
   submit(){
-    switch(this.status){
-      case "create":
-        this.publishPost();
-        break;
-      case "edit":
-        this.editPost();
-        break;
-      case "share":
-        this.sharePost();
-        break;
-      default:
-        break
+    if(this.status){
+      switch(this.status){
+        case "create":
+          this.publishPost();
+          break;
+        case "edit":
+          this.editPost();
+          break;
+        case "share":
+          this.sharePost();
+          break;
+        default:
+          break
+      };
     }
   }
 
   // create Post 
   publishPost(){
-    if (!this.data.content && this.fileUpload.length == 0) {
-      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
-      this.notifySvr.notify(mssgStr);
+    if (!this.data?.content && this.fileUpload?.length == 0) 
+    {
+      if(this.grvSetup["Comments"]["headerText"]){
+        this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+      }
       return;
     }
     this.data.category = "1" // post;
-    this.data.approveControl = "0"; 
+    this.data.approveControl = "0"; // tạm thời chưa bật xét duyệt
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -224,12 +270,11 @@ export class PopupAddPostComponent implements OnInit {
                     files.push(element.data)
                   });;
                 }
-                else{
+                else
+                {
                   files.push(res2.data);
                 }
                 res1.files = JSON.parse(JSON.stringify(files));
-                console.log(res1.files);
-
                 this.dialogRef.close(res1);
               }
               else 
@@ -251,9 +296,11 @@ export class PopupAddPostComponent implements OnInit {
   }
   // edit post
   editPost(){
-    if (!this.data.content && this.fileUpload.length == 0) {
-      let mssgStr = Util.stringFormat(this.mssgNoti,'Nội dung');
-      this.notifySvr.notify(mssgStr);
+    if (!this.data.content && this.fileUpload.length == 0) 
+    {
+      if(this.grvSetup["Comments"]["headerText"]){
+        this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
+      }
       return;
     }
     this.api.execSv<any>(
@@ -290,12 +337,7 @@ export class PopupAddPostComponent implements OnInit {
   }
   // share post
   sharePost(){
-    if (!this.data.content && this.fileUpload.length == 0) {
-      let mssgStr = Util.stringFormat('Nội dung');
-      this.notifySvr.notify(mssgStr);
-      return;
-    }
-    this.data.category = "4" // share;
+    this.data.category = "4";
     this.data.approveControl = "0"; 
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
@@ -348,25 +390,21 @@ export class PopupAddPostComponent implements OnInit {
   addPerrmissonShares(event:any){
     if(event?.length > 0)
     {
-      let data = event;
-      this.data.shareControl = data[0].objectType;
-      if(this.data.permissions == null || this.data.permissions.length == 0)
+      let _permisisons = event;
+      let _permission = _permisisons[0];
+      this.data.shareControl = _permission.objectType;
+      if(this.data.permissions.length == 0)
       {
         this.data.permissions = [];
       }
       else
       {
-        let permissions = this.data.permissions.filter((e:any) => e.memberType != "2");
-        if(permissions?.length == 0){
-          this.data.permissions = [];
-        }
-        else
-        {
-          this.data.permissions = JSON.parse(JSON.stringify(permissions));
-        }
+        // remove permissions share old
+        this.data.permissions = this.data.permissions.filter((e:any) => e.memberType != "2");
       }
       switch (this.data.shareControl) {
         case this.SHARECONTROLS.OWNER:
+          break;
         case this.SHARECONTROLS.EVERYONE:
         case this.SHARECONTROLS.MYGROUP:
         case this.SHARECONTROLS.MYTEAM:
@@ -375,10 +413,11 @@ export class PopupAddPostComponent implements OnInit {
         case this.SHARECONTROLS.MYCOMPANY:
           let permission = new Permission();
             permission.memberType = this.MEMBERTYPE.SHARE;
-            permission.objectType = data[0].objectType;
+            permission.objectType = _permission.objectType;
             permission.createdBy = this.user.userID,
             permission.createdOn = new Date();
             this.data.permissions.push(permission);
+            this.data.shareName = "";
           break;
         case this.SHARECONTROLS.OGRHIERACHY:
         case this.SHARECONTROLS.DEPARMENTS:
@@ -386,7 +425,7 @@ export class PopupAddPostComponent implements OnInit {
         case this.SHARECONTROLS.ROLES:
         case this.SHARECONTROLS.GROUPS:
         case this.SHARECONTROLS.USER:
-          data.forEach((x: any) => {
+          _permisisons.forEach((x: any) => {
             let p = new Permission();
             p.memberType = this.MEMBERTYPE.SHARE;
             p.objectType = x.objectType;
@@ -396,17 +435,17 @@ export class PopupAddPostComponent implements OnInit {
             p.createdOn = new Date();
             this.data.permissions.push(p);
           });
-          let mssgCode = data.length > 1 ? "WP002" : "WP001";
-          this.cache.message(mssgCode).subscribe((mssg: any) => {
-            if (mssg?.defaultName)
-              if(mssgCode == "WP002"){
-                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>', data.length - 1, data[data.length - 1].objectName);
-              }
-              else
-              {
-                this.data.shareName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].text + '</b>');
-              }
-          });  
+          let _permissionName = _permission.text;
+          if(_permisisons.length == 1){
+            // share one
+            this.data.shareName = Util.stringFormat(this.mssgShareOne, `<b>${_permissionName}</b>`);
+          }
+          else{
+            //share more
+            let _permissionLength = _permisisons.length - 1;
+            let _permisisonType =  _permission.objectName;
+            this.data.shareName = Util.stringFormat(this.mssgShareMore,`<b>${_permissionName}</b>`, _permissionLength, _permisisonType);
+          }
           break;
         default:
           break;
@@ -417,23 +456,15 @@ export class PopupAddPostComponent implements OnInit {
 
   // add permission tag
   addPerrmissonTags(event:any){
-    if(event?.dataSelected?.length > 0){
-      let data = event.dataSelected;
-      if(this.data.permissions == null || this.data.permissions.length == 0)
+    if(event?.dataSelected?.length > 0)
+    {
+      let _permissons = event.dataSelected;
+
+      if(this.data.permissions?.length == 0)
       {
         this.data.permissions = [];
       }
-      else
-      {
-        let permissions = this.data.permissions.filter((e:any) => e.memberType != "3");
-        if(permissions?.length == 0){
-          this.data.permissions = [];
-        }
-        else{
-          this.data.permissions = JSON.parse(JSON.stringify(permissions));
-        }
-      }
-      data.forEach((x: any) => {
+      _permissons.forEach((x: any) => {
         let p = new Permission();
         p.memberType = this.MEMBERTYPE.TAGS;
         p.objectID = x.UserID;
@@ -443,19 +474,20 @@ export class PopupAddPostComponent implements OnInit {
         p.createdOn = new Date();
         this.data.permissions.push(p);
       });
-      let mssgCode = data.length > 1 ? "WP019" : "WP018";
-      this.cache.message(mssgCode).subscribe((mssg: any) => {
-        if (mssg?.defaultName)
-          if (mssgCode == "WP019") {
-            this.data.tagName = Util.stringFormat(mssg.defaultName, '<b>' + data[data.length - 1].UserName + '</b>', data.length - 1);
-          }  
-          else
-          {
-            this.data.tagName = Util.stringFormat(mssg.defaultName, '<b>' + data[0].UserName + '</b>');
-          }
-        });
-     }
-     this.dt.detectChanges();
+      let _permisisonTag = this.data.permissions.filter(x => x.memberType == this.MEMBERTYPE.TAGS);
+      let _permissionName = _permisisonTag[0].objectName;
+      if(_permissons.length == 1){
+        // share one
+        this.data.tagName = Util.stringFormat(this.mssgTagOne, `<b>${_permissionName}</b>`);
+      }
+      else
+      {
+        //share more
+        let _permissionLength = _permisisonTag.length - 1;
+        this.data.tagName = Util.stringFormat(this.mssgTagMore,`<b>${_permissionName}</b>`, _permissionLength);
+      }
+      this.dt.detectChanges();
+    }
   }
 
   // delete file

@@ -234,32 +234,29 @@ export class EmployeesComponent extends UIComponent {
     }
   }
   edit(event: any, data: any) {
-    if (event && data) {
+    if (event && data) 
+    {
       this.view.dataService.dataSelected = data;
-      this.view.dataService
-        .edit(this.view.dataService.dataSelected)
-        .subscribe((res: any) => {
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.Width = '800px';
-          let object = {
-            employee: data,
-            action: 'edit',
-            title: `${event.text}  ${this.functionName}`,
-          };
-          let popup = this.callfc.openSide(
-            PopupAddEmployeesComponent,
-            object,
-            option
-          );
-          popup.closed.subscribe((result) => {
-            if (result?.event) {
-              let dataUpdate = result.event;
-              this.view.dataService.update(dataUpdate).subscribe();
-            }
-          });
-        });
+      let option = new SidebarModel();
+      option.DataService = this.view.dataService;
+      option.FormModel = this.view.formModel;
+      option.Width = '800px';
+      let object = {
+        employee: data,
+        action: 'edit',
+        title: `${event.text} ${this.functionName}`,
+      };
+      let popup = this.callfc.openSide(
+        PopupAddEmployeesComponent,
+        object,
+        option
+      );
+      popup.closed.subscribe((result) => {
+        if (result?.event) {
+          let dataUpdate = result.event;
+          this.view.dataService.update(dataUpdate).subscribe();
+        }
+      });
     }
   }
 

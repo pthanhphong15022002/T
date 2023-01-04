@@ -397,7 +397,7 @@
               </div>
             </div>
             <!-- Bộ nhớ tài khoảng -->
-            <div class="form-group col-6">
+            <div class="form-group">
               <div class="body_detail p-6">
                 <div class="d-flex justify-content-between">
                   <div class="fw-bold text-dark">
@@ -410,38 +410,39 @@
                     >
                     </codx-label>
                   </div>
-                  <button class="btn btn-icon btn-white">
-                    <i class="icon-create icon-18"></i>
-                  </button>
                 </div>
                 <div class="footer_content">
-                  <div class="row pb-5">
+                  <div class="row pb-3">
                     <div>
                       <codx-label
                         default="Bộ nhớ tài khoản của bạn được chia sẽ trên các ứng dụng của hệ thống ERM"
                       >
                       </codx-label>
                     </div>
-                    <div class="bg-success-o-60">
-                      <div id="container">
-                        <div class="wrap">
-                          <div class="sliderwrap">
-                            <ejs-slider
-                              id="minrange"
-                              [type]="minType"
-                              [min]="0"
-                              [max]="formatBytes(data.storage)"
-                              [value]="formatBytes(data.memory)"
-                              [readonly]="true"
-                            >
-                            </ejs-slider>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="bg-success-o-60 mt-6">
+                          <div id="container">
+                            <div class="wrap">
+                              <div class="sliderwrap memory-store">
+                                <ejs-slider
+                                  id="minrange"
+                                  [type]="minType"
+                                  [min]="0"
+                                  [max]="formatBytes(data.storage)"
+                                  [value]="formatBytes(data.memory)"
+                                  [readonly]="true"
+                                >
+                                </ejs-slider>
+                              </div>
+                            </div>
                           </div>
                         </div>
+                        <div
+                          [innerHTML]="innerHTML(data.memory, data.storage)"
+                        ></div>
                       </div>
                     </div>
-                    <div
-                      [innerHTML]="innerHTML(data.memory, data.storage)"
-                    ></div>
                   </div>
                 </div>
               </div>

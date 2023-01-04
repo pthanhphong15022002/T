@@ -39,13 +39,8 @@
       <!-- <codx-input ControlName="resourceID" [formModel]="form.formModel" [Group]="form.formGroup"
         (valueChange)="valueCbxCarChange($event)">
       </codx-input> -->
-      <ejs-dropdownlist
-        id='resource' 
-        #cusCBB [dataSource]='cbbResource'
-        [fields]='fields' 
-        [placeholder]="'Chọn xe...'" 
-        (valueChange)="cbxResourceChange($event)"
-      ></ejs-dropdownlist>
+      <ejs-dropdownlist id='resource' #cusCBB [dataSource]='cbbResource' [fields]='fields' [placeholder]="'Chọn xe...'"
+        (valueChange)="cbxResourceChange($event)"></ejs-dropdownlist>
       <div class="row">
         <div *ngIf="tmplstDevice != null && tmplstDevice?.length > 0" class="d-flex flex-row justify-content-between">
           <div class="d-flex justify-content-start flex-wrap">

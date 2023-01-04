@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, Optional, TemplateRef, ViewChild } from '@angular/core';
 import { MODEL_CHANGED } from '@syncfusion/ej2-angular-richtexteditor';
-import { DateTime } from '@syncfusion/ej2-charts';
+import { DateTime, Thickness } from '@syncfusion/ej2-charts';
 import { DialogRef, CRUDService, ApiHttpService, AuthService, DialogData, ScrollComponent, RequestModel, DataRequest, CacheService, CodxService } from 'codx-core';
 
 @Component({
@@ -23,6 +23,7 @@ export class NotifyDrawerSliderComponent implements OnInit {
     pageSize:20,
     page: 1
   }
+  loaded:boolean = true;
   user:any = null;
   totalPage:number = 0;
   isScroll = true;
@@ -52,14 +53,15 @@ export class NotifyDrawerSliderComponent implements OnInit {
   clickCloseFrom(){
     this.dialogRef.close();
   }
-  getNotifyAsync(){
+  getNotifyAsync()
+  {
     this.api.execSv(
       'BG',
       'ERM.Business.BG',
       'NotificationBusinesss',
       'GetAsync',
-      [this.model]
-    ).subscribe((res:any[]) => {
+      [this.model])
+      .subscribe((res:any[]) => {
       if(res)
       {
         this.lstNotify = res[0];
@@ -67,6 +69,12 @@ export class NotifyDrawerSliderComponent implements OnInit {
         this.totalPage = totalRecord / this.model.pageSize;
         this.isScroll = false;
         this.dt.detectChanges();
+      }
+      else
+      {
+        if(Array.isArray(this.lstNotify) && this.lstNotify.length == 0){
+          this.loaded = false;
+        }
       }
     });
   }

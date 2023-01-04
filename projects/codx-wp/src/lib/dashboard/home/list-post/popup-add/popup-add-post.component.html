@@ -33,6 +33,7 @@
                                 [name]="'WP001'" 
                                 [value]="data.shareControl" 
                                 [showText]="true" 
+                                [className]="'fw-bolder'"
                                 [showIcon]="true" 
                                 [path]="'assets/themes/sys/default/img/'"
                                 [icoCss]="'symbol-12px symbol-circle'"  
@@ -236,21 +237,41 @@
                 </codx-img>
                 <div class="d-flex flex-column flex-grow-1 ms-2">
                     <div class="d-flex align-items-center">
-                        <span class="text-gray-800 fw-bolder">{{post.createdName}}</span>
+                        <div class="user-name fw-bolder me-2">
+                            <span>{{post.createdName}}</span>
+                        </div>
+                        <ng-container *ngIf="post.tagName">
+                            <ng-container
+                                *ngTemplateOutlet="templateTags; context: { $implicit: post }">
+                            </ng-container>
+                        </ng-container>
                     </div>
                     <div class="d-flex text-info-date">
-                        <span class="text-gray-500 me-2">{{post.createdOn | timefrom}}</span>
-                        <span class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
-                            <codx-vll 
-                                [name]="'WP001'" 
-                                [value]="data.shareControl" 
-                                [showText]="true" 
-                                [showIcon]="true" 
-                                [path]="'assets/themes/sys/default/img/'"
-                                [icoCss]="'symbol-12px symbol-circle'"  
-                                [showBgColor]="true">
-                            </codx-vll>
-                        </span>
+                        <div class="text-gray-500 me-2">{{post.createdOn | timefrom}}</div>
+                        <div class="d-flex align-items-center justify-content-start ">
+                            <ng-container *ngIf="post.shareControl">
+                                <div class="bg-gray-200 rounded-1 px-1 d-flex align-items-center">
+                                    <codx-vll 
+                                        [name]="'WP001'" 
+                                        [value]="post.shareControl" 
+                                        [showText]="true" 
+                                        [className]="'fw-bolder'"
+                                        [showIcon]="true" 
+                                        [path]="'assets/themes/sys/default/img/'"
+                                        [icoCss]="'symbol-12px symbol-circle'"  
+                                        [showBgColor]="true">
+                                    </codx-vll>
+                                    <i class="icon-arrow_drop_down icon-18 text-dark"></i> 
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="post.shareName">
+                                <div class="ms-2">
+                                    <ng-container
+                                        *ngTemplateOutlet="templateShares; context: { $implicit: post }">
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -140,6 +140,7 @@ export class ProcessesComponent
   employee: any;
   checkGroupPerm = '';
   popupOld: any;
+  msgCodeExistNameProcess='BP008'; // gán tạm chờ message code
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -192,7 +193,7 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    this.isAdminBp = this.checkAdminOfBP(this.userId);
+    // this.isAdminBp = await this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -566,6 +567,8 @@ export class ProcessesComponent
       this.moreFunc == 'BPT205' ||
       this.moreFunc == 'BPT305' ||
       this.moreFunc == 'BPT605' ||
+      this.moreFunc == 'BPT304' ||
+      this.moreFunc == 'BPT604' ||
       this.moreFunc == 'BPT204'
     ) {
       let option = new SidebarModel();
@@ -688,9 +691,9 @@ export class ProcessesComponent
         this.Updaterevisions(e?.data, data);
         break;
       case 'BPT105':
-      case 'BPT605':
-      case 'BPT305':
       case 'BPT205':
+      case 'BPT305':
+      case 'BPT605':
       case 'BPT104':
       case 'BPT204':
       case 'BPT304':
@@ -738,29 +741,17 @@ export class ProcessesComponent
       this.notification.notifyCode('SYS007');
       this.changeDetectorRef.detectChanges();
       this.dialogPopup.close();
-    } else if (
-      this.oldName.trim().toLocaleUpperCase() ===
-      this.newName.trim().toLocaleUpperCase()
-    ) {
-      this.CheckExistNameProccess(this.oldName);
-    } else {
+    }
+    else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
   }
   CheckAllExistNameProccess(newName, idProccess) {
     this.bpService.isCheckExitName(newName, idProccess).subscribe((res) => {
       if (res) {
-        this.CheckExistNameProccess(newName);
-      } else {
-        this.actionReName(newName);
-      }
-    });
-  }
-  CheckExistNameProccess(newName) {
-    this.notificationsService.alertCode('BP008').subscribe((x) => {
-      if (x.event?.status == 'N') {
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
         return;
-      } else if (x.event?.status == 'Y') {
+      } else {
         this.actionReName(newName);
       }
     });
@@ -786,11 +777,6 @@ export class ProcessesComponent
 
   async changeDataMF(e, data) {
     if (e != null && data != null) {
-      let isOwner = data?.owner == this.userId ? true : false;
-      let fullRole = this.isAdmin || isOwner || this.isAdminBp ? true : false;
-
-      // checkGroup = await this.checkGroupId(data);
-      // this.checkGroupPerm = checkGroup;
       e.forEach((res) => {
         switch (res.functionID) {
           case 'SYS005':
@@ -1109,18 +1095,21 @@ export class ProcessesComponent
   acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.userId)) {
-      this.isAcceptEdit = true;
-    } else if (!this.user.edit) {
+    }
+    // else if (this.checkAdminOfBP(this.user.userId))
+    //  {
+    //   this.isAcceptEdit = true;
+    // }
+    else if (!this.user.edit) {
       this.isAcceptEdit = false;
     }
   }
 
-  checkAdminOfBP(userid: any) {
-    let check: boolean;
-    this.bpService.checkAdminOfBP(userid).subscribe((res) => (check = res));
-    return check;
-  }
+  // async checkAdminOfBP(userid: any) {
+  //   let check: boolean;
+  //   (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
+  //   return check;
+  // }
 
   deleteBin() {
     // xoa toan bo thung rac ham nay chưa dung

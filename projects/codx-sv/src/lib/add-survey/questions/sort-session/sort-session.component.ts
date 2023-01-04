@@ -23,6 +23,7 @@ export class SortSessionComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   data: any;
   dataSession: any;
+  transID: any;
   constructor(
     private injector: Injector,
     private notification: NotificationsService,
@@ -32,6 +33,7 @@ export class SortSessionComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialogRef;
     this.data = JSON.parse(JSON.stringify(dt.data.data));
+    this.transID = dt.data?.transID;
   }
 
   onInit(): void {
@@ -48,7 +50,11 @@ export class SortSessionComponent extends UIComponent implements OnInit {
 
   onSave() {
     this.api
-      .execAction('SV_Questions', this.dataSession, 'UpdateAsync')
+      .execSv('SV', 'SV', 'QuestionsBusiness', 'SaveAsync', [
+        this.transID,
+        this.dataSession,
+        false,
+      ])
       .subscribe((res) => {
         if (res) {
           this.data.sort((a, b) => a.seqNo - b.seqNo);
@@ -65,7 +71,6 @@ export class SortSessionComponent extends UIComponent implements OnInit {
     });
     this.dataSession = JSON.parse(JSON.stringify(this.data));
     this.dataSession.forEach((x) => {
-      x['modifiedOn'] = new Date();
       delete x.children;
       delete x.active;
     });

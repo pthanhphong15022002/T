@@ -6,7 +6,7 @@
   [footer]="footer"
   [dialog]="dialogRef"
   [openMore]="true"
-  [tabContent]="[tabInfoPersonal, tabInfoEmploy, tabInfoPrivate, tabInfoLaw]"
+  [tabContent]="[tabInfoEmploy, tabInfoPersonal, tabInfoPrivate, tabInfoLaw]"
   [data]="employee"
 >
 </codx-layout-add>
@@ -193,131 +193,133 @@
 </ng-template>
 
 <ng-template #tabInfoEmploy>
-  <div id="InfoEmploy">
-    <div class="text-primary mb-3 fw-bold">
-      <codx-label
-        [formModel]="form.formModel"
-        name="lblEmployee"
-        default="Nhân viên"
-      ></codx-label>
+  <ng-container *ngIf="form.formGroup">
+    <div id="InfoEmploy">
+      <div class="text-primary mb-3 fw-bold">
+        <codx-label
+          [formModel]="form.formModel"
+          name="lblEmployee"
+          default="Nhân viên"
+        ></codx-label>
+      </div>
     </div>
-  </div>
-  <div class="row-group">
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="PositionID"
-            default="Chức danh công việc"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="positionID"
-            [virtual]="{ itemHeight: 100 }"
-            [popupSettings]="{ width: '300px' }"
-            (valueChange)="dataChange($event)"
-          >
-          </codx-input>
+    <div class="row-group">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="PositionID"
+              default="Chức danh công việc"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="positionID"
+              [virtual]="{ itemHeight: 100 }"
+              [popupSettings]="{ width: '300px' }"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="OrgUnitID"
+              default="Bộ phận"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="orgUnitID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="DepartmentID"
+              default="Phòng ban"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="departmentID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="DivisionID"
+              default="Khối"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="divisionID"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="JoinedOn"
+              default="Ngày vào làm"
+            ></codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              field="joinedOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <codx-label
+              [formModel]="form.formModel"
+              fiedName="HiredOn"
+              default="Ngày trở thành nhân viên chính thức"
+            >
+            </codx-label>
+            <codx-input
+              [Group]="form.formGroup"
+              [formModel]="form.formModel"
+              [disabled]="action != 'edit'"
+              field="hiredOn"
+              (valueChange)="dataChange($event)"
+            >
+            </codx-input>
+          </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="OrgUnitID"
-            default="Bộ phận"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="orgUnitID"
-            (valueChange)="dataChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="DepartmentID"
-            default="Phòng ban"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="departmentID"
-            (valueChange)="dataChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row" *ngIf="isCorporation">
-      <div class="col">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="DivisionID"
-            default="Khối"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="divisionID"
-            (valueChange)="dataChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="JoinedOn"
-            default="Ngày vào làm"
-          ></codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="joinedOn"
-            (valueChange)="dataChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-      <div class="col-6">
-        <div class="form-group">
-          <codx-label
-            [formModel]="form.formModel"
-            fiedName="HiredOn"
-            default="Ngày trở thành nhân viên chính thức"
-          >
-          </codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            [disabled]="action != 'edit'"
-            field="hiredOn"
-            (valueChange)="dataChange($event)"
-          >
-          </codx-input>
-        </div>
-      </div>
-    </div>
-  </div>
+  </ng-container>
 </ng-template>
 
 <ng-template #tabInfoPrivate>

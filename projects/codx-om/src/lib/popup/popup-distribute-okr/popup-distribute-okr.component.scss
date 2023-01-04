@@ -1,5 +1,5 @@
 .bgEDEDED {
-  background-color: #ededed !important;
+  background-color: #EDEDED;
 }
 
 #om-tab .e-tab-header {
@@ -173,4 +173,8 @@
 }
 .e-tab-header {
   z-index: 1;
+}
+.disabledCss {
+  pointer-events: none;
+  opacity: 0.4;
 }

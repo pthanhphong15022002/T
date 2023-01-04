@@ -2175,6 +2175,8 @@
       </a>
     </div>
   </div>
+  <hr />
+
   <div class="pw-content w-100 scroll-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-max-height="auto" data-kt-scroll-dependencies=".pw-profile,.pw-menu"
     data-kt-scroll-wrappers=".employee-container" data-kt-scroll-offset="0px">
@@ -2183,7 +2185,6 @@
         <!-- thong tin chung -->
         <div class="user-profile overview d-block mb-3" id="MWP00201">
          
-          <hr />
 
           <div #2="ngbCollapse" [(ngbCollapse)]="objCollapes['2']" class="">
             <div class="rounded-2 p-4">
@@ -2690,6 +2691,28 @@
 
 <!-- pane_2 -->
 <ng-template #benefit>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblBenefit"
+        [formModel]="view.formModel"
+        default="Phúc lợi"
+      >
+      </codx-label>
+    </div>
+
+    <div class="d-flex">
+      <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-3" (click)="collapse('3', '0')"
+        [attr.aria-expanded]="!objCollapes['3']">
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"></span>
+      </a>
+      <a class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="collapse('3', '1')"
+        [attr.aria-expanded]="!objCollapes['3']">
+        <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);"></span>
+      </a>
+    </div>
+  </div>
+  <hr />
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -2702,28 +2725,7 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblBenefit"
-                [formModel]="view.formModel"
-                default="Phúc lợi"
-              >
-              </codx-label>
-            </div>
-
-            <div class="d-flex">
-              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-3" (click)="collapse('3', '0')"
-                [attr.aria-expanded]="!objCollapes['3']">
-                <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"></span>
-              </a>
-              <a class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="collapse('3', '1')"
-                [attr.aria-expanded]="!objCollapes['3']">
-                <span class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(-90deg);"></span>
-              </a>
-            </div>
-          </div>
-          <hr />
+          
           <div id="3" #3="ngbCollapse" [(ngbCollapse)]="objCollapes['3']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -3166,23 +3168,6 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label name="lblProcessingInfo" [formModel]="view.formModel" default="Quá trình nhân sự">
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a class="btn btn-xs btn-icon btn-light btn-hover-primary me-3" (click)="collapse('4', '0')"
-                [attr.aria-expanded]="!objCollapes['4']">
-                <span class="icon-double_arrow icon-18 text-hover-primary"></span>
-              </a>
-              <a class="btn btn-xs btn-icon btn-light btn-hover-primary" (click)="collapse('4', '1')"
-                [attr.aria-expanded]="!objCollapes['4']">
-                <span class="icon-double_arrow icon-18 text-hover-primary"></span>
-              </a>
-            </div>
-          </div>
-          <hr />
           <div id="4" #4="ngbCollapse" [(ngbCollapse)]="objCollapes['4']">
             <div class="rounded-2 p-4">
               <div class="d-flex align-items-center justify-content-between">
@@ -3239,7 +3224,62 @@
                 #41="ngbCollapse"
                 [(ngbCollapse)]="objCollapes['4.1']"
               >
-                <div class="mb-1"></div>
+                <div class="mb-1 px-3">
+                  <div *ngIf="crrEContract"
+                          class="border rounded py-4 px-4 has-action-menu"
+                        >
+                        <div class="row">
+                          <div class="col">
+                            <div class="d-flex align-items-center pt-2">
+                              <i class="icon-home_work icon-14 text-gray-600 me-1"></i
+                              >{{ crrEContract.contractTypeID }}
+                            </div>
+                          </div>
+                          <div class="col">
+                              <div class="d-flex align-items-center pt-2">
+                                <i class="icon-home_work icon-14 text-gray-600 me-1"></i
+                                >{{ crrEContract.effectedDate | fmDT }} - {{crrEContract.expiredDate | fmDT}}
+                              </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col">
+                            <div class="d-flex align-items-center pt-2">
+                              <i class="icon-home_work icon-14 text-gray-600 me-1"></i
+                              >{{ crrEContract.note }}
+                            </div>
+                          </div>
+                          <div class="col">
+                            <div class="d-flex flex-wrap mb-1">
+                              <div class="d-flex align-items-center">
+                                <span class="me-1 icon-date_range icon-14 text-gray-800"></span>
+                                <span class="text-dark">
+                                  <span>{{ crrEContract?.contractNo }}</span>
+                                </span>
+                              </div>
+                              <div class="d-flex align-items-center">
+                                <span
+                                  class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+                                ></span>
+                                <span class="fw-bold text-primary">
+                                  <span>{{ crrEContract?.signedDate | fmDT }}</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="more-function">
+                          <codx-mfunc
+                            type="hover"
+                            [formModel]="view.formModel"
+                            (clickMF)="clickMF($event, crrEContract, 'eContract')"
+                            [isBookMark]="false"
+                            [dataItem]="crrEContract"
+                          >
+                          </codx-mfunc>
+                        </div>
+                  </div>
+                </div>
               </div>
             </div>
             <hr />
@@ -3327,7 +3367,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="editEmployeeSelfInfo()"
+                    (click)="HandleEmployeeDayOffInfo('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -3409,7 +3449,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="editEmployeeSelfInfo()"
+                    (click)="addEBusinessTravel()"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"
@@ -4086,6 +4126,37 @@
 
 <!-- pane_5 -->
 <ng-template #rewardDiscipline>
+  <div class="d-flex justify-content-between mb-2 mt-6">
+    <div class="fw-bold fs-4 text-primary">
+      <codx-label
+        name="lblRewardDiscipline"
+        [formModel]="view.formModel"
+        default="Khen thưởng - Kỷ luật"
+      >
+      </codx-label>
+    </div>
+    <div class="d-flex">
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
+        (click)="collapse('6', '0')"
+        [attr.aria-expanded]="!objCollapes['6']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
+        ></span>
+      </a>
+      <a
+        class="btn btn-xs btn-icon btn-light btn-hover-primary"
+        (click)="collapse('6', '1')"
+        [attr.aria-expanded]="!objCollapes['6']"
+      >
+        <span
+          class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
+        ></span>
+      </a>
+    </div>
+  </div>
+  <hr>
   <div
     class="pw-content w-100 scroll-y"
     data-kt-scroll="true"
@@ -4098,36 +4169,7 @@
     <div class="user-content flex-row-fluid">
       <ng-container>
         <div class="user-profile overview d-block mb-3" id="MWP00201">
-          <div class="d-flex justify-content-between mb-2 mt-6">
-            <div class="fw-bold fs-4 text-primary">
-              <codx-label
-                name="lblRewardDiscipline"
-                [formModel]="view.formModel"
-                default="Khen thưởng - Kỷ luật"
-              >
-              </codx-label>
-            </div>
-            <div class="d-flex">
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary me-3"
-                (click)="collapse('6', '0')"
-                [attr.aria-expanded]="!objCollapes['6']"
-              >
-                <span
-                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600" style="transform: rotate(90deg);"
-                ></span>
-              </a>
-              <a
-                class="btn btn-xs btn-icon btn-light btn-hover-primary"
-                (click)="collapse('6', '1')"
-                [attr.aria-expanded]="!objCollapes['6']"
-              >
-                <span
-                  class="icon-double_arrow icon-18 text-hover-primary text-gray-600"style="transform: rotate(-90deg);"
-                ></span>
-              </a>
-            </div>
-          </div>
+          
           <ngx-skeleton-loader
             count="5"
             animation="progress"

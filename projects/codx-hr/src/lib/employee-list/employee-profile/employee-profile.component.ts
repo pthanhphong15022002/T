@@ -1,3 +1,4 @@
+import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
 import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
 import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
 import { PopupEBasicSalariesComponent } from './../../employee-profile/popup-ebasic-salaries/popup-ebasic-salaries.component';
@@ -57,6 +58,7 @@ import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/po
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
+import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -96,6 +98,8 @@ export class EmployeeProfileComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
 
   infoPersonal: any = {};
+
+  crrEContract : any ;
 
   formModelVisa: FormModel;
   formModelPassport: FormModel;
@@ -146,7 +150,9 @@ export class EmployeeProfileComponent extends UIComponent {
 
   employeeID;
   hrEContract;
-  crrTab: number = 4;
+  crrTab: number = 3;
+  //EDayOff
+  lstDayOffs: any = []
 
   //EAsset salary
   lstAsset: any = [];
@@ -355,6 +361,17 @@ export class EmployeeProfileComponent extends UIComponent {
             if (res) this.lstAppointions = res[0];
             console.log('lit e appoint', this.lstAppointions);
           });
+
+        //Dayoff
+        let rqDayoff = new DataRequest()
+        rqDayoff.gridViewName = 'grvEDayOffs';
+        rqDayoff.entityName = 'HR_EDayOffs';
+        rqDayoff.predicate = 'EmployeeID=@0';
+        rqDayoff.dataValue = params.employeeID;
+        rqDayoff.page = 1;
+        this.hrService.getListDisciplineByDataRequest(rqDayoff).subscribe((res) => {
+          if (res) this.lstDayOffs = res[0];
+        });
 
         //Discipline
         let rqDiscipline = new DataRequest();
@@ -775,6 +792,21 @@ export class EmployeeProfileComponent extends UIComponent {
           }
           //this.lstSkill = res;
           //this.lstExperience = res;
+        });
+
+
+        //HR_EContracts
+        let rqContract = new DataRequest();
+        rqContract.entityName = 'HR_EContracts';
+        rqContract.dataValues = params.employeeID + ';false;true';
+        rqContract.predicates = 'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2'
+        rqContract.page = 1;
+        rqContract.pageSize = 1;
+
+        this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+          if (res && res[0]) {
+            this.crrEContract = res[0][0];
+          }
         });
       }
     });
@@ -1444,13 +1476,18 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
-        isAdd: false,
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res){
+        console.log('data tra ve dang doan', res.event);
+        
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -1470,7 +1507,11 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res){
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -1485,16 +1526,19 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeSelfInfoComponent,
       PopupESelfInfoComponent,
       {
-        isAdd: true,
         headerText: 'Thông tin bản thân',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      
+      if (res){
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
     // })
   }
@@ -1686,6 +1730,30 @@ export class EmployeeProfileComponent extends UIComponent {
       // console.log('data tra ve', res.event);
       // console.log('lst passport', this.lstPassport);
 
+      if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
+    });
+  }
+
+  HandleEmployeeDayOffInfo(actionType: string, data: any){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      // EmployeeWorkingLisenceDetailComponent,
+      PopupEdayoffsComponent,
+      {
+        actionType: actionType,
+        indexSelected: this.lstDayOffs.indexOf(data),
+        lstDayOffs: this.lstDayOffs,
+        headerText: 'Nghỉ phép',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       this.df.detectChanges();
     });
@@ -2182,6 +2250,40 @@ export class EmployeeProfileComponent extends UIComponent {
 
   //#endregion
 
+
+  //#region  HR_EBusinessTravels
+  addEBusinessTravel(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEmpBusinessTravelsComponent,
+      {
+        actionType: 'add',
+        dataSelected: null,
+        headerText: 'Nhật kí công tác',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+
+
+  //#endregion
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }

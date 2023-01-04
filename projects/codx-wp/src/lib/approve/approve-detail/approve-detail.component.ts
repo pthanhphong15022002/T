@@ -1,13 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { Dialog } from '@syncfusion/ej2-angular-popups';
 import { ApiHttpService, AuthService, CacheService, CallFuncService, CRUDService, DataRequest, DialogModel, FormModel, NotificationsService, RequestOption, VLLPipe } from 'codx-core';
 import { Observable } from 'rxjs';
-import { PopupAddPostComponents } from '../../dashboard/home/list-post/popup-add/popup-add.component';
-import { WP_News } from '../../models/WP_News.model';
+import { PopupAddPostComponent } from '../../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupEditComponent } from '../../news/popup/popup-edit/popup-edit.component';
-import { ApproveComponent } from '../approve.component';
 
 @Component({
   selector: 'approve-view-detail',
@@ -45,8 +41,6 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
     private sanitizer: DomSanitizer
 
     ) { }
-  
-
   ngOnInit(): void {
     this.getPostInfor(this.objectID);
     this.cache.functionList(this.funcID).subscribe((func: any) => 
@@ -64,6 +58,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
       this.getPostInfor(this.objectID);
     }
   }
+  // get data detail
   getPostInfor(objectID:string){
     if(objectID)
     {
@@ -125,7 +120,7 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
                     let option = new DialogModel();
                     option.DataService = this.dataService;
                     option.FormModel = this.formModel;
-                    this.callFuc.openForm(PopupAddPostComponents,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
+                    this.callFuc.openForm(PopupAddPostComponent,'',700,550,'',obj,'',option).closed.subscribe((res:any) => {
                       if (res?.event) 
                       {
                         this.dataService.update(res.event).subscribe();
@@ -140,7 +135,8 @@ export class ApproveDetailComponent implements OnInit,OnChanges {
             .subscribe((option:any) =>{
               if(option?.event?.status == "Y")
               {
-                this.updateApprovalStatus(this.data.recID, "5").subscribe((res:any) => {
+                this.updateApprovalStatus(this.data.recID, "5")
+                .subscribe((res:any) => {
                     if(res)
                     {
                       this.data.approveStatus = "5";

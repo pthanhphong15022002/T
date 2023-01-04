@@ -18,7 +18,6 @@ import { OKRTasksComponent } from './okr/okr-tasks/okr-tasks.component';
 import { OkrPlansComponent } from './okr/okr-plans/okr-plans.component';
 import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
-import { PopupDistributeKRComponent } from './popup/popup-distribute-kr/popup-distribute-kr.component';
 import { OkrTargetsComponent } from './okr/okr-targets/okr-targets.component';
 import { OkrAddComponent } from './okr/okr-add/okr-add.component';
 import { OkrReviewsComponent } from './okr/okr-reviews/okr-reviews.component';
@@ -29,6 +28,7 @@ import { PopupOKRWeightComponent } from './popup/popup-okr-weight/popup-okr-weig
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.component';
 import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
+import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
 
 const routes: Routes = [
   {
@@ -79,8 +79,8 @@ const routes: Routes = [
     PopupAddKRComponent,
     PopupShowKRComponent,
     PopupShowOBComponent,
-    PopupDistributeKRComponent,
     PopupDistributeOKRComponent,
+    PopupAssignmentOKRComponent,
     OkrTargetsComponent,
     OkrAddComponent,
     OkrReviewsComponent,
