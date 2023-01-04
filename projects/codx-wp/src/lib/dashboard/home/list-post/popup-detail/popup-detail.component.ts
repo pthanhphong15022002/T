@@ -45,32 +45,20 @@ export class PopupDetailComponent implements OnInit {
     private cache:CacheService,
     @Optional() dd?: DialogData,
     @Optional() dialogRef?: DialogRef
-  ) {
+  ) 
+  {
     this.dialogRef = dialogRef;
     this.file = dd.data;
   }
 
   ngOnInit(): void {
-    this.getValueIcon("L1480");
-    let objectID = this.file.objectID ? this.file.objectID : this.file.objectId; 
-    this.getPostByID(objectID,this.file.recID,this.file.referType);
-  }
-  getValueIcon(vll:string){
-    if(vll)
+    if(this.file)
     {
-      this.cache.valueList(vll).subscribe((res) => {
-        if (res && res?.datas) {
-          this.vllL1480 = res.datas;
-          if(this.vllL1480.length > 0){
-            this.dVll["0"] = null;
-            this.vllL1480.forEach((element:any) => {
-              this.dVll[element.value + ""] = element;
-            });
-          }
-        }
-      });
+      this.getPostByID(this.file.objectID,this.file.recID,this.file.referType);
     }
   }
+  
+  //get post by file ref
   getPostByID(postID: string,fileID:string,referType:string) {
     if(postID && fileID && referType)
     {
@@ -80,23 +68,18 @@ export class PopupDetailComponent implements OnInit {
         this.assemplyName,
         this.className,
         'GetDetailPostByIDAsync',
-        [postID,fileID,referType]
-      )
-      .subscribe((res: any) => {
-        if (res) 
+        [postID,fileID,referType])
+        .subscribe((res: any) => {
+        if(res) 
         {
-          this.post = res;
-          this.dt.detectChanges();
+          this.post = JSON.parse(JSON.stringify(res));
         }
       });
     }
   }
 
+  //close popup
   clickClosePopup() {
     this.dialogRef.close();
-  }
-
-  pushComment(data: any) {
-
   }
 }

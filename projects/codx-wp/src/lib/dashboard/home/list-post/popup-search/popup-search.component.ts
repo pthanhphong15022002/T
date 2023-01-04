@@ -12,13 +12,19 @@ export class PopupSearchPostComponent implements OnInit {
   @Input() formModel:FormModel = null;
   dialogRef:DialogRef = null;
   lstData:any[] = null;
-  // portal
+  strEmtyData:string ="";
   funcID:string = "";
   entityName:string = "";
   predicateWP: string = '(ApproveControl=@0 or (ApproveControl=@1 && ApproveStatus = @2)) && Stop =false && Category !=@3';
   dataValueWP: string = '0;1;5;2';
   lstUserTag:any[] = [];
   lstUserShare:any[] = [];
+  filter: any = {};
+  page:number = 0;
+  pageSize:number = 5;
+  countData:number = 0;
+  strData:string = "";
+  mssgResult:string ="";
   CATEGORY = {
     POST: "1",
     COMMENTS: "2",
@@ -40,12 +46,7 @@ export class PopupSearchPostComponent implements OnInit {
     this.searchEvent("");
   }
 
-  filter: any = {};
-  page:number = 0;
-  pageSize:number = 5;
-  countData:number = 0;
-  strData:string = "";
-  mssgResult:string ="";
+  // get message
   getMessage(mssgCode:string){
     if(!mssgCode) return;
     this.cache.message(mssgCode).subscribe((mssg:any)=>{
@@ -58,12 +59,6 @@ export class PopupSearchPostComponent implements OnInit {
     });
   }
   searchEvent(searchValue:string){
-    // if(!searchValue) {
-    //   this.lstData = [];
-    //   this.countData = 0;
-    //   this.dt.detectChanges();
-    //   return;
-    // }
     this.api
       .execSv<any>(
         'SYS',
@@ -96,53 +91,28 @@ export class PopupSearchPostComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  showListTag(data:any)
-  {
+  openPopupEdit(item){
 
   }
-
-  closeListTag(data:any)
-  {
+  removePost(item){
 
   }
-
-  showListShare(data:any)
-  {    
-  
-  }
-
-  closeListShare(data:any)
-  {
+  openPopupShare(item){
 
   }
-  openEditModal(data:any)
-  {
+  openPopupSave(item){
 
   }
-  removePost(data:any)
-  {
+  valueChange($event){
 
   }
-  openModalShare(data:any)
-  {
+  naviagteWPNew(post:any){
 
   }
-  openModalDownload(data:any)
-  {
+  clickViewDetail($event){
 
   }
-  clickViewDetail(event:any)
-  {
+  getFiles($event, item){
 
-  }
-  naviagteWPNew(data:any){
-
-  }
-  getFiles(files:any, data:any)
-  {
-
-  }
-  valueChange(event:any){
-    
   }
 }

@@ -1,12 +1,18 @@
 import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
-import { ApiHttpService, DialogData, DialogRef, NotificationsService, UrlUtil } from 'codx-core';
+import {
+  ApiHttpService,
+  DialogData,
+  DialogRef,
+  NotificationsService,
+  UrlUtil,
+} from 'codx-core';
 import { CodxTasksService } from '../codx-tasks.service';
 import * as moment from 'moment';
 
 @Component({
   selector: 'app-popup-update-status',
   templateUrl: './popup-update-status.component.html',
-  styleUrls: ['./popup-update-status.component.css']
+  styleUrls: ['./popup-update-status.component.css'],
 })
 export class PopupUpdateStatusComponent implements OnInit {
   comment: string = '';
@@ -18,14 +24,14 @@ export class PopupUpdateStatusComponent implements OnInit {
   completed: any;
   completedOn: any;
   moreFunc: any;
-  maxHoursControl: any
-  maxHours : any
-  updateControl:any
+  maxHoursControl: any;
+  maxHours: any;
+  updateControl: any;
   url: string;
   status: string;
   title: string = 'Cập nhật tình trạng công việc ';
-  funcID: any
-  crrCompleted: any
+  funcID: any;
+  crrCompleted: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -36,28 +42,29 @@ export class PopupUpdateStatusComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
-    this.funcID = this.data.funcID
+    this.funcID = this.data.funcID;
   }
 
   ngOnInit(): void {
-    this.task = JSON.parse(JSON.stringify(this.data?.taskAction));;
+    this.task = JSON.parse(JSON.stringify(this.data?.taskAction));
     this.moreFunc = this.data.moreFunc;
-    this.title = this.moreFunc.customName ;
-    this.maxHoursControl = this.data.maxHoursControl ;
+    this.title = this.moreFunc.customName;
+    this.maxHoursControl = this.data.maxHoursControl;
     this.maxHours = this.data.maxHours;
-    this.updateControl= this.data.updateControl
+    this.updateControl = this.data.updateControl;
     this.url = this.moreFunc.url;
     this.status = UrlUtil.getUrl('defaultValue', this.url);
     this.completedOn = moment(new Date()).toDate();
     if (this.task.estimated > 0) {
-      this.completed = this.task.estimated
+      this.completed = this.task.estimated;
     } else {
       this.timeStart = moment(
         new Date(
           this.task.startOn
             ? this.task.startOn
-            : (this.task.startDate
-              ? this.task.startDate : this.task.createdOn)
+            : this.task.startDate
+            ? this.task.startDate
+            : this.task.createdOn
         )
       ).toDate();
       var time = (
@@ -66,23 +73,30 @@ export class PopupUpdateStatusComponent implements OnInit {
       ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
-    if (this.status=="90" && this.maxHoursControl != '0' && Number.parseFloat(this.completed) > Number.parseFloat(this.maxHours)) {
-      this.notiService.notifyCode('TM058',0,[this.maxHours])  ///truyền có tham số
+    if (
+      this.status == '90' &&
+      this.maxHoursControl != '0' &&
+      Number.parseFloat(this.completed) > Number.parseFloat(this.maxHours)
+    ) {
+      this.notiService.notifyCode('TM058', 0, [this.maxHours]); ///truyền có tham số
       return;
-     }  
+    }
     // this.crrCompleted = this.completed;
   }
   changeTime(data) {
     if (!data.data) return;
     this.completedOn = data.data.fromDate;
     if (this.completed <= 0) {
-      var time = (((this.completedOn?.getTime() - this.timeStart.getTime()) / 3600000).toFixed(2));
+      var time = (
+        (this.completedOn?.getTime() - this.timeStart.getTime()) /
+        3600000
+      ).toFixed(2);
       this.completed = Number.parseFloat(time).toFixed(2);
     }
     this.changeDetectorRef.detectChanges();
   }
-  changeComment(data){
-    this.comment = data?.data ;
+  changeComment(data) {
+    this.comment = data?.data;
   }
   changeEstimated(data) {
     if (!data.data) return;
@@ -100,7 +114,7 @@ export class PopupUpdateStatusComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       return;
     }
-    this.completed = Number.parseFloat(num).toFixed(2)
+    this.completed = Number.parseFloat(num).toFixed(2);
     // this.crrCompleted = this.completed;
   }
 
@@ -116,15 +130,20 @@ export class PopupUpdateStatusComponent implements OnInit {
     ];
   }
   saveData() {
-    if (this.status=="90" && this.maxHoursControl && this.maxHoursControl != '0' && Number.parseFloat(this.completed) > Number.parseFloat(this.maxHours)){
-      this.notiService.notifyCode('TM058',0,[this.maxHours]) ;
+    if (
+      this.status == '90' &&
+      this.maxHoursControl &&
+      this.maxHoursControl != '0' &&
+      Number.parseFloat(this.completed) > Number.parseFloat(this.maxHours)
+    ) {
+      this.notiService.notifyCode('TM058', 0, [this.maxHours]);
       return;
-    }  
+    }
     if (this.updateControl == '2') {
-      if (this.comment==null || this.comment.trim() == ''){
-         this.notiService.notifyCode("TM057")
-       return ;
-      } 
+      if (this.comment == null || this.comment.trim() == '') {
+        this.notiService.notifyCode('TM057');
+        return;
+      }
     }
     this.tmSv
       .setStatusTask(
@@ -137,17 +156,25 @@ export class PopupUpdateStatusComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res && res.length > 0) {
-          this.dialog.close(res)
+          this.dialog.close(res);
           this.notiService.notifyCode('TM009');
-          if(this.task.category=='3'&& this.status=='80'){
-            this.tmSv.sendAlertMail(this.task.recID,'TM_0004',this.funcID).subscribe() ; 
-          } 
-          if(this.status=='90'&& res[0]?.approveControl=="1"){
-            this.tmSv.sendAlertMail(this.task.recID,'TM_0012',this.funcID).subscribe() ; 
-          } 
-
+          if (this.task.category == '3' && this.status == '80') {
+            this.tmSv
+              .sendAlertMail(this.task.recID, 'TM_0004', this.funcID)
+              .subscribe();
+          }
+          if (this.status == '90') {
+            if (res[0]?.approveControl == '1')
+              this.tmSv
+                .sendAlertMail(this.task.recID, 'TM_0012', this.funcID)
+                .subscribe();
+            else
+              this.tmSv
+                .sendAlertMail(this.task.recID, 'TM_0005', this.funcID)
+                .subscribe();
+          }
         } else {
-          this.dialog.close()
+          this.dialog.close();
           this.notiService.notifyCode('TM008');
         }
       });

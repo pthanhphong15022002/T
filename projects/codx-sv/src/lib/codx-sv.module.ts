@@ -28,6 +28,7 @@ import { PopupUploadComponent } from './add-survey/questions/popup-upload/popup-
 import { AddSurveyComponent } from './add-survey/add-survey.component';
 import { QuestionsComponent } from './add-survey/questions/questions.component';
 import { ChartAllModule } from '@syncfusion/ej2-angular-charts';
+import { ReviewComponent } from './add-survey/review/review.component';
 
 export const routes: Routes = [
   {
@@ -37,6 +38,10 @@ export const routes: Routes = [
       {
         path: 'add-survey',
         component: AddSurveyComponent,
+      },
+      {
+        path: 'review',
+        component: ReviewComponent,
       },
     ],
   },
@@ -64,6 +69,7 @@ const Component: Type<any>[] = [
   SettingComponent,
   AnswersComponent,
   QuestionsComponent,
+  ReviewComponent,
 ];
 
 @NgModule({

@@ -61,6 +61,7 @@ export class PopupRolesComponent implements OnInit {
   approveStatus = '';
   checkRoles = false;
   adminRoles = false;
+  lstTest = [];
   constructor(
     private auth: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -76,7 +77,20 @@ export class PopupRolesComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dt?.data[1]));
     this.title = dt.data[0];
     this.process = this.data;
-    this.groupBy(this.process.permissions);
+    this.process.permissions = this.groupBy(
+      this.process.permissions,
+      'objectType',
+    ).sort((a, b) =>
+    ('' + a.objectID).localeCompare(this.process.owner)
+    ? 1
+    : a.memberType > b.memberType
+    ? 0
+    : -1
+    );
+
+    // this.groupBy(this.process.permissions);
+    // this.process.permissions = this.process.permissions.groupBy1();
+    // this.process.permissions = this.groupBy1(this.process.permissions, 'objectID');
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -84,6 +98,7 @@ export class PopupRolesComponent implements OnInit {
     });
     this.startDate = null;
     this.endDate = null;
+    // this.groupBy1();
   }
 
   ngOnInit(): void {
@@ -94,26 +109,50 @@ export class PopupRolesComponent implements OnInit {
 
   ngAfterViewInit(): void {
     //Tạo sẵn check quyền, vì db quyền của module này chưa có
-    if(!this.user.administrator){
+    if (!this.user.administrator) {
       this.api
-      .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
-        this.user.userID,
-        'BP',
-      ])
-      .subscribe((res) => {
-        this.checkRoles = res.msgBodyData[0];
-      });
+        .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
+          this.user.userID,
+          'BP',
+        ])
+        .subscribe((res) => {
+          this.checkRoles = res.msgBodyData[0];
+        });
     }
   }
 
-    groupBy(list) {
-      this.api.execSv<any>('BP','BP','ProcessesBusiness','SortListPermissionsOfRolesAsync', [list]).subscribe(res => {
-        if(res != null){
-          this.process.permissions = res.sort((a,b) => (''+ a.objectID).localeCompare(this.process.owner) ? 1 : -1);
-        }
-      })
-  }
+  // groupBy(list) {
+  //   this.api
+  //     .execSv<any>(
+  //       'BP',
+  //       'BP',
+  //       'ProcessesBusiness',
+  //       'SortListPermissionsOfRolesAsync',
+  //       [list]
+  //     )
+  //     .subscribe((res) => {
+  //       if (res != null) {
+  //         this.process.permissions = res.sort((a, b) =>
+  //           ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
+  //         );
+  //       }
+  //     });
+  // }
 
+  groupBy(arr, key1) {
+    var lstGroup = [];
+    var group = arr.reduce(function (rv, x) {
+      (rv[x[key1]] = rv[x[key1]] || []).push(x);
+      return rv;
+    }, {});
+    for (var key of Object.keys(group)) {
+      var tmp = group[key];
+      for (var item in Object.keys(tmp)) {
+        lstGroup.push(tmp[item]);
+      }
+    }
+    return lstGroup.sort((a,b) => b.objectID > a.objectID ? 1 : -1);
+  }
   //#region save
   onSave() {
     if (this.startDate != null && this.endDate != null) {
@@ -304,7 +343,7 @@ export class PopupRolesComponent implements OnInit {
           perm.startDate = this.startDate;
           perm.endDate = this.endDate;
           perm.objectName = data.text != null ? data.text : data.objectName;
-          perm.objectID = data.id;
+          perm.objectID = data.id != null ? data.id : null;
           perm.memberType = '2';
           perm.autoCreate = false;
           perm.objectType = data.objectType;
@@ -312,7 +351,8 @@ export class PopupRolesComponent implements OnInit {
             this.process.permissions,
             perm
           );
-          this.groupBy(this.process.permissions);
+
+          // this.groupBy(this.process.permissions);
         }
       }
       this.changePermission(0);
@@ -365,10 +405,14 @@ export class PopupRolesComponent implements OnInit {
       }
 
       list.push(Object.assign({}, perm));
-
-
     }
-    return list;
+    return this.groupBy(list, 'objectType').sort((a, b) =>
+    ('' + a.objectID).localeCompare(this.process.owner)
+    ? 1
+    : a.memberType > b.memberType
+    ? 1
+    : -1
+    );
   }
   //#endregion
 
@@ -425,7 +469,11 @@ export class PopupRolesComponent implements OnInit {
   }
 
   checkAssignRemove(i) {
-    if (this.user.administrator || this.checkRoles || this.user.userID == this.process.owner ) {
+    if (
+      this.user.administrator ||
+      this.checkRoles ||
+      this.user.userID == this.process.owner
+    ) {
       if (
         !this.process.permissions[i].autoCreate &&
         this.process.permissions[i].memberType == '2'

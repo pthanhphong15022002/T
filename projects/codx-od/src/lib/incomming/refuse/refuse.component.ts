@@ -13,6 +13,7 @@ export class RefuseComponent implements OnInit {
   data:any;
   status: any;
   headerText:any;
+  funcID:any;
   constructor(
     private notifySvr : NotificationsService,
     private odService: DispatchService,
@@ -23,6 +24,7 @@ export class RefuseComponent implements OnInit {
     if(dt?.data?.data) this.data = dt?.data?.data
     if(dt?.data?.headerText) this.headerText = dt?.data?.headerText
     if(dt?.data?.status) this.status = dt?.data?.status
+    if(dt?.data?.funcID) this.funcID = dt?.data?.funcID
     this.dialog = dialog;
   }
   updateForm :FormGroup;
@@ -35,7 +37,7 @@ export class RefuseComponent implements OnInit {
   }
   onSave()
   {
-    this.odService.complete(this.data.recID,this.updateForm.value.comment,this.status).subscribe((item)=>{
+    this.odService.complete(this.data.recID,this.updateForm.value.comment,this.status,this.funcID).subscribe((item)=>{
       if(item.status == 0) this.dialog.close(item.data);
       this.notifySvr.notify(item.message);
     }) 
