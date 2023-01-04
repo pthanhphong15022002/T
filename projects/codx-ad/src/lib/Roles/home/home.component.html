@@ -61,6 +61,7 @@
   <codx-temp-full
     (clickMF)="clickMF($event, data)"
     (click)="LinkDetail(data.recID, data.roleName, data.isSystem)"
+    (changeDataMF)="changeDataMF($event, data)"
     [typeMF]="'hover'"
     cardCss="card-template border-bottom border-gray-200 p-3"
     [formModel]="view.formModel"

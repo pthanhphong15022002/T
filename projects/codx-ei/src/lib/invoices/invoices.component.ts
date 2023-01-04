@@ -74,6 +74,9 @@ export class InvoicesComponent extends UIComponent {
         type: ViewType.grid,
         active: true,
         sameData: true,
+        model: {
+          frozenColumns: 1,
+        },
       },
     ];
   }

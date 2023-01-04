@@ -407,6 +407,17 @@ export class CodxHrService {
   }
 
   //#region HR_ETrainCourses
+
+  getDataETrainDefault() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'GetDataETrainDefaultAsync',
+      null
+    );
+  }
+
   getEmployeeTrainCourse(data) {
     return this.api.execSv<any>(
       'HR',
@@ -416,7 +427,7 @@ export class CodxHrService {
       data
     );
   }
-  
+
   updateEmployeeTrainCourseInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -427,7 +438,7 @@ export class CodxHrService {
     );
   }
 
-  addETraincourse(data: any){
+  addETraincourse(data: any) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -507,7 +518,6 @@ export class CodxHrService {
       data
     );
   }
-
 
   updateEmployeeWorkPermitDetail(data) {
     return this.api.execSv<any>(
@@ -642,60 +652,60 @@ export class CodxHrService {
   }
   //#endregion
 
-    //#region EAccidentBusiness
-    getEmployeeAccidentModel(){
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'GetEmployeeAccidentsModelAsync'
-      );
-    }
-  
-    UpdateEmployeeAccidentInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'EditEAccidentAsync',
-        data
-      );
-    }
-  
-    AddEmployeeAccidentInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'AddEAccidentAsync',
-        data
-      );
-    }
-  
-    DeleteEmployeeAccidentInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'DeleteEAccidentAsync',
-        data
-      );
-    }
-  
-    getListAccidentByDataRequest(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'LoadDataEAccidentAsync',
-        data
-      );
-    }
-  
-    //#endregion
+  //#region EAccidentBusiness
+  getEmployeeAccidentModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'GetEmployeeAccidentsModelAsync'
+    );
+  }
+
+  UpdateEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'EditEAccidentAsync',
+      data
+    );
+  }
+
+  AddEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'AddEAccidentAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'DeleteEAccidentAsync',
+      data
+    );
+  }
+
+  getListAccidentByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'LoadDataEAccidentAsync',
+      data
+    );
+  }
+
+  //#endregion
 
   //#region EDayOffBusiness
-  getEmployeeDayOffModel(){
+  getEmployeeDayOffModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1522,6 +1532,16 @@ export class CodxHrService {
     );
   }
 
+  getCrrEContract(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'GetCrrEContractAsync',
+      dataRequest
+    );
+  }
+
   loadDataEContract(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
@@ -1563,6 +1583,49 @@ export class CodxHrService {
   }
   //#endregion
 
+  //#region HR_EBusinessTravels
+
+  getEBTravelDefaultAsync() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'GetEBTravelDefaultAsync',
+      null
+    );
+  }
+
+  addEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'AddEBusinessTravelsAsync',
+      [data]
+    );
+  }
+
+  editEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'EditEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  deleteEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'DeleteEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  //#endregion
   //#region
   getDataDefault(
     funcID: string,

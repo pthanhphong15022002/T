@@ -18,6 +18,7 @@ export class CompanyInforComponent extends UIComponent {
   data :any = null;
   views: Array<ViewModel> = [];
   userPermission:any = null;
+  loaded:boolean = true;
   @ViewChild('panelLeftRef') panelLefRef :  TemplateRef<any>;
   constructor(
     private injector:Injector,
@@ -48,6 +49,7 @@ export class CompanyInforComponent extends UIComponent {
     }
     
   }
+  // get permission by user
   getUserPermission(funcID:string){
     if(funcID){
       this.api.execSv("SYS","ERM.Business.SYS","CommonBusiness","GetUserPermissionsAsync",[funcID])
@@ -77,6 +79,9 @@ export class CompanyInforComponent extends UIComponent {
           this.data = {...companyPost};
           this.detectorRef.detectChanges();
         }
+        else{
+          this.loaded = false;
+        }
       });
     }
   }
@@ -91,11 +96,15 @@ export class CompanyInforComponent extends UIComponent {
       let popup = this.callc.openForm(CompanyEditComponent,"",0,0,"",this.data,"",option);
       popup.closed.subscribe((res:any)=>{
         if(res?.event){
-          let result = res.event;
-          this.data = JSON.parse(JSON.stringify(result));
-            this.notifySvr.notifyCode('SYS007');
+          let isAppro = res.event[0];
+          if(!isAppro)
+          {
+            let result = res.event[1];
+            this.data = JSON.parse(JSON.stringify(result));
             this.detectorRef.detectChanges();
           }
+          this.notifySvr.notifyCode('WP024');
+        }
       });
     }
   }

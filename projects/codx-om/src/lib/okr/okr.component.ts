@@ -40,9 +40,15 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   dataOKR = [];
   dataOKRPlans = null;
   //title//
-  titleRoom = 'Phòng kinh doanh';
   dtCompany = null;
-  headerTitle = '';
+  compName = '';
+  deptName = '';
+  orgName = '';
+  persName = '';
+  compFuncID = OMCONST.FUNCID.COMP;
+  deptFuncID = OMCONST.FUNCID.DEPT;
+  orgFuncID = OMCONST.FUNCID.ORG;
+  persFuncID = OMCONST.FUNCID.PERS;
   /////////
   auth: AuthStore;
   okrService: CodxOmService;
@@ -55,7 +61,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Năm
   year = null;
   dataDate = null;
-
+  curUser: any;
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelOB = new FormModel();
@@ -64,6 +70,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   krFuncID: any;
   addKRTitle = '';
   addOBTitle = '';
+  isAffterRender = false;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -78,15 +85,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
+    this.funcIDChanged();
+    this.formModelChanged();
     this.views = [
       {
         id: '1',
         type: ViewType.content,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           panelRightRef: this.panelRight,
-          contextMenu: '',
         },
       },
     ];
@@ -97,19 +105,31 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 20;
     this.dataRequest.predicate = 'ParentID=@0';
-    
   }
 
   onInit(): void {
-    this.funcIDChanged();
-    this.formModelChanged();
-    var user = this.auth.get();
-    this.cache.getCompany(user.userID).subscribe((item) => {
-      if (item) {
-        this.headerTitle = item.orgUnitName;
-        this.dtCompany = item;
-      }
-    });
+    this.curUser = this.auth.get();
+
+    this.compName =
+      this.curUser?.employee?.companyName != null
+        ? this.curUser?.employee?.companyName
+        : '';
+    this.compName = this.compName != '' ? this.compName : 'Công ty';
+
+    this.deptName =
+      this.curUser?.employee?.departmentName != null
+        ? this.curUser?.employee?.departmentName
+        : '';
+
+    this.orgName =
+      this.curUser?.employee?.orgUnitName != null
+        ? this.curUser?.employee?.orgUnitName
+        : '';
+
+    this.persName =
+      this.curUser?.employee?.employeeName != null
+        ? this.curUser?.employee?.employeeName
+        : '';
   }
 
   //-----------------------End-------------------------------//
@@ -118,9 +138,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Sự kiện thay đổi view (funcID thay đổi - load lại page với data mới)
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
+    this.detectorRef.detectChanges();
+
     this.funcIDChanged();
     this.formModelChanged();
-
+    this.detectorRef.detectChanges();
   }
 
   //Hàm click
@@ -168,51 +190,55 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
-  //Lấy OKR Plan  
+  //Lấy OKR Plan
   getOKRPlans(periodID: any, interval: any, year: any) {
-    this.okrService
-      .getOKRPlans(periodID, interval, year)
-      .subscribe((item: any) => {
-        if (item) {
-          this.dataOKRPlans = null;//Làm mới Plane
-          this.dataOKRPlans = item;
-          //----------
-          this.dataRequest.dataValue = item.recID;
-          //----------
-          this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
-            if (item) {              
-              //this.dataOKR = this.dataOKR.concat(item); //Nối mảng nên dữ liệu bị trùng              
-              this.dataOKR = item;
-            }
-          });
-        }
-      });
+    if (!this.curUser.administrator) {
+      this.okrService
+        .getOKRPlans(periodID, interval, year)
+        .subscribe((item: any) => {
+          //Reset data View
+          this.dataOKRPlans = null;
+          this.dataOKR = null;
+          if (item) {
+            this.dataOKRPlans = item;
+            //----------
+            this.dataRequest.dataValue = item.recID;
+            //----------
+            this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
+              if (item) {
+                this.dataOKR = item;
+              }
+            });
+          }
+        });
+    }
   }
-  
+
   //Lấy fucID con
   funcIDChanged() {
     switch (this.funcID) {
-      case OMCONST.FUNCID.Company:
-        this.krFuncID = OMCONST.KRFuncID.Company;
-        this.obFuncID = OMCONST.OBFuncID.Company;
+      case OMCONST.FUNCID.COMP:
+        this.krFuncID = OMCONST.KRFUNCID.COMP;
+        this.obFuncID = OMCONST.OBFUNCID.COMP;
         break;
-      case OMCONST.FUNCID.Department:
-        this.krFuncID = OMCONST.KRFuncID.Department;
-        this.obFuncID = OMCONST.OBFuncID.Department;
+      case OMCONST.FUNCID.DEPT:
+        this.krFuncID = OMCONST.KRFUNCID.DEPT;
+        this.obFuncID = OMCONST.OBFUNCID.DEPT;
         break;
-      case OMCONST.FUNCID.Team:
-        this.krFuncID = OMCONST.KRFuncID.Team;
-        this.obFuncID = OMCONST.OBFuncID.Team;
+      case OMCONST.FUNCID.ORG:
+        this.krFuncID = OMCONST.KRFUNCID.ORG;
+        this.obFuncID = OMCONST.OBFUNCID.ORG;
         break;
-      case OMCONST.FUNCID.Person:
-        this.krFuncID = OMCONST.KRFuncID.Person;
-        this.obFuncID = OMCONST.OBFuncID.Person;
+      case OMCONST.FUNCID.PERS:
+        this.krFuncID = OMCONST.KRFUNCID.PERS;
+        this.obFuncID = OMCONST.OBFUNCID.PERS;
         break;
     }
+    this.isAffterRender = true;
+    this.detectorRef.detectChanges();
   }
   //Lấy form Model con
   formModelChanged() {
-    //Lấy Form Model cho KR và OB
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
@@ -235,7 +261,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
     });
   }
-  
+
   //Lấy data danh sách mục tiêu
   getGridViewSetup() {
     this.okrService.loadFunctionList(this.view.funcID).subscribe((fuc) => {
@@ -307,6 +333,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.dataOKRPlans.recID,
       null,
     ]);
+    //   "add",
+    //   this.dataOKRPlans,
+    //   null
+    //  ]
+    // );
   }
   //Thêm mới KR
   addKR(o: any = null) {

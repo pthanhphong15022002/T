@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ComponentRef,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
 
 @Component({
@@ -27,6 +27,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   mode: any = 'Q';
   title: any;
   signal: any = null;
+  url: any;
 
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
@@ -45,6 +46,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       if (queryParams?.title) {
         this.title = queryParams.title;
       }
+      this.url = queryParams;
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
@@ -92,4 +94,16 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   onSubmit() {}
+
+  back() {
+    this.codxService.navigate('SVT01');
+  }
+
+  review() {
+    this.codxService.openUrlNewTab('', 'sv/review', {
+      funcID: this.funcID,
+      title: this.title,
+      recID: this.recID,
+    });
+  }
 }

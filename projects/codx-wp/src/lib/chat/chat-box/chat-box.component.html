@@ -45,17 +45,17 @@
         </div>
     </div>
     <div class="chat-box-body">
-        <ng-container *ngFor="let item of messages; let index = i">
+        <ng-container *ngFor="let item of arrMessages; let index = i">
             <div class="codx-message d-flex" [class.justify-content-end]="item.userID == user.userID">
-                <span class="message-content" [class.my-message]="item.userID == user.userID">
-                    {{item.message}}
-                </span>
                 <span class="message-img" *ngIf="item.userID != user.userID">
                     <codx-img 
                         [objectId]="item.userID" 
                         [width]="30"
                         [objectType]="'AD_Users'">
                     </codx-img>
+                </span>
+                <span class="message-content" [class.my-message]="item.userID == user.userID">
+                    {{item.message}}
                 </span>
             </div>
         </ng-container>

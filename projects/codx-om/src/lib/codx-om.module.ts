@@ -28,6 +28,7 @@ import { PopupOKRWeightComponent } from './popup/popup-okr-weight/popup-okr-weig
 import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.component';
 import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
+import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
 
 const routes: Routes = [
   {
@@ -79,6 +80,7 @@ const routes: Routes = [
     PopupShowKRComponent,
     PopupShowOBComponent,
     PopupDistributeOKRComponent,
+    PopupAssignmentOKRComponent,
     OkrTargetsComponent,
     OkrAddComponent,
     OkrReviewsComponent,

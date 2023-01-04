@@ -905,52 +905,63 @@ export class CodxTasksComponent
             this.itemSelected = res[0];
             this.detectorRef.detectChanges();
             this.notiService.notifyCode('TM009');
-            if (taskAction.category == '3' && status == '80')
-              this.tmSv
-                .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
-                .subscribe();
-            if (status == '90') {
-              if (this.itemSelected.taskGroupID) {
-                this.api
-                  .execSv<any>(
-                    'TM',
-                    'ERM.Business.TM',
-                    'TaskGroupBusiness',
-                    'GetAsync',
-                    taskAction.taskGroupID
-                  )
-                  .subscribe((res) => {
-                    if (res && res.approveControl == '1') {
-                      this.tmSv
-                        .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
-                        .subscribe();
-                    }
-                  });
-              } else {
-                this.api
-                  .execSv<any>(
-                    'SYS',
-                    'ERM.Business.SYS',
-                    'SettingValuesBusiness',
-                    'GetByModuleWithCategoryAsync',
-                    ['TMParameters', '1']
-                  )
-                  .subscribe((res) => {
-                    if (res) {
-                      let param = JSON.parse(res.dataValue);
-                      if (param?.ApproveControl == '1') {
-                        this.tmSv
-                          .sendAlertMail(
-                            taskAction.recID,
-                            'TM_0012',
-                            this.funcID
-                          )
-                          .subscribe();
-                      }
-                    }
-                  });
-              }
-            }
+            //send mail BE
+            // if (taskAction.category == '3' && status == '80')
+            //   this.tmSv
+            //     .sendAlertMail(taskAction.recID, 'TM_0004', this.funcID)
+            //     .subscribe();
+            // if (status == '90') {
+            //   if (this.itemSelected.taskGroupID) {
+            //     this.api
+            //       .execSv<any>(
+            //         'TM',
+            //         'ERM.Business.TM',
+            //         'TaskGroupBusiness',
+            //         'GetAsync',
+            //         taskAction.taskGroupID
+            //       )
+            //       .subscribe((res) => {
+            //         if (res && res.approveControl == '1') {
+            //           this.tmSv
+            //             .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
+            //             .subscribe();
+            //         } else
+            //           this.tmSv
+            //             .sendAlertMail(taskAction.recID, 'TM_0005', this.funcID)
+            //             .subscribe();
+            //       });
+            //   } else {
+            //     this.api
+            //       .execSv<any>(
+            //         'SYS',
+            //         'ERM.Business.SYS',
+            //         'SettingValuesBusiness',
+            //         'GetByModuleWithCategoryAsync',
+            //         ['TMParameters', '1']
+            //       )
+            //       .subscribe((res) => {
+            //         if (res) {
+            //           let param = JSON.parse(res.dataValue);
+            //           if (param?.ApproveControl == '1') {
+            //             this.tmSv
+            //               .sendAlertMail(
+            //                 taskAction.recID,
+            //                 'TM_0012',
+            //                 this.funcID
+            //               )
+            //               .subscribe();
+            //           } else
+            //             this.tmSv
+            //               .sendAlertMail(
+            //                 taskAction.recID,
+            //                 'TM_0005',
+            //                 this.funcID
+            //               )
+            //               .subscribe();
+            //         }
+            //       });
+            //   }
+            // }
             if (kanban) kanban.updateCard(taskAction);
           } else this.notiService.notifyCode('SYS021');
         });
@@ -1375,9 +1386,10 @@ export class CodxTasksComponent
           );
           this.dialogExtends.closed.subscribe((e) => {
             if (e?.event && e?.event != null) {
-              this.tmSv
-                .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
-                .subscribe();
+              //gửi mail FE
+              // this.tmSv
+              //   .sendAlertMail(data?.recID, 'TM_0015', this.funcID)
+              //   .subscribe();
               e?.event.forEach((obj) => {
                 this.view.dataService.update(obj).subscribe();
               });
@@ -1618,7 +1630,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask,"",funcID],
+        [data, 'view', isAssignTask, '', funcID],
         option
       );
     }
