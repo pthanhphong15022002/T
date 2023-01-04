@@ -77,7 +77,7 @@ export class PopupRolesComponent implements OnInit {
     this.data = JSON.parse(JSON.stringify(dt?.data[1]));
     this.title = dt.data[0];
     this.process = this.data;
-    this.process.permissions = this.groupBy1(
+    this.process.permissions = this.groupBy(
       this.process.permissions,
       'objectType',
       'objectID'
@@ -122,25 +122,25 @@ export class PopupRolesComponent implements OnInit {
     }
   }
 
-  groupBy(list) {
-    this.api
-      .execSv<any>(
-        'BP',
-        'BP',
-        'ProcessesBusiness',
-        'SortListPermissionsOfRolesAsync',
-        [list]
-      )
-      .subscribe((res) => {
-        if (res != null) {
-          this.process.permissions = res.sort((a, b) =>
-            ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
-          );
-        }
-      });
-  }
+  // groupBy(list) {
+  //   this.api
+  //     .execSv<any>(
+  //       'BP',
+  //       'BP',
+  //       'ProcessesBusiness',
+  //       'SortListPermissionsOfRolesAsync',
+  //       [list]
+  //     )
+  //     .subscribe((res) => {
+  //       if (res != null) {
+  //         this.process.permissions = res.sort((a, b) =>
+  //           ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
+  //         );
+  //       }
+  //     });
+  // }
 
-  groupBy1(arr, key1, key2) {
+  groupBy(arr, key1, key2) {
     var lstGroup = [];
     var group = arr.reduce(function (rv, x) {
       (rv[x[key1] + ',' + x[key2]] = rv[x[key1] + ',' + x[key2]] || []).push(x);
@@ -409,7 +409,7 @@ export class PopupRolesComponent implements OnInit {
 
       list.push(Object.assign({}, perm));
     }
-    return this.groupBy1(list, 'objectType', 'objectID');
+    return this.groupBy(list, 'objectType', 'objectID');
   }
   //#endregion
 
