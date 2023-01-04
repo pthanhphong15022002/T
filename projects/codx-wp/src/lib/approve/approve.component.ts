@@ -15,7 +15,7 @@ import {
   RequestOption,
   DialogModel,
 } from 'codx-core';
-import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add-post/popup-add-post.component';
+import { PopupAddPostComponent } from '../dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupEditComponent } from '../news/popup/popup-edit/popup-edit.component';
 
 @Component({

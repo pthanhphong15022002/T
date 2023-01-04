@@ -113,7 +113,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         });
     }
   }
-
+  // get grvsetup
   getGridViewSetup(formModel:FormModel){
     if(formModel)
     { 
@@ -248,31 +248,13 @@ export class PopupAddEmployeesComponent implements OnInit {
       });
     }
   }
-
+  //value change
   dataChange(e: any) {
-    debugger
-    if (this.form && e) 
-    {
-      let field = Util.camelize(e.field);
-      let data = e.data;
-      if(field)
-      {
-        switch(field){
-          case "positionID":
-            break;
-          case "":
-            break;
-          case "":
-            break;
-          case "":
-            break;
-        }
-        if (typeof data !== 'string') {
-          this.employee[field] = data.fromDate
-            ? e.data.fromDate.toISOString()
-            : null;
-        } else this.employee[field] = e.data;
-      }
-    }
+    // if (e) 
+    // {
+    //   let field = Util.camelize(e.field);
+    //   let data = e.data;
+    //   this.employee[field] = data;
+    // }
   }
 }
