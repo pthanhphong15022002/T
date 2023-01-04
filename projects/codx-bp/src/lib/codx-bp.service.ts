@@ -227,7 +227,7 @@ export class CodxBpService {
     );
   }
   async checkAdminOfBP(userId: string){
-    return this.api.exec<boolean>(
+    return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'CheckAdminPermissionBPAsync',
@@ -235,7 +235,7 @@ export class CodxBpService {
     );
   }
 
-  isCheckExitName(nameProcess: String, id: String): Observable<any> {
+  isCheckExitName(nameProcess: string, id: string): Observable<any> {
     return this.api.execSv<any>(
       'BP',
       'BP',

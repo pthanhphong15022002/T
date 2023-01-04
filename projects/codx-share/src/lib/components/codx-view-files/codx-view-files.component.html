@@ -1,0 +1,9 @@
+<div class="codx-view-files">
+    <ng-container *ngFor="let item of files">
+        <div [class.pic-1]="fileCount == 1" [class.pic-2]="fileCount == 2" [class.pic-3]="fileCount == 3" [class.pic-1]="fileCount == 4">
+            <ng-container *ngIf="item.referType == 'image'">
+                
+            </ng-container>
+        </div>
+    </ng-container>
+</div>
