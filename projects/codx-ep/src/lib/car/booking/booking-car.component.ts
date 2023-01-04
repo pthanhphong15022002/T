@@ -78,6 +78,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   listDriver: any[];
   tempDriverName='';  
   driverName='';
+  queryParams: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -98,6 +99,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       }
     });
     this.funcID = this.router.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -114,6 +116,10 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '2';
     this.request.idField = 'recID';
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){
+      this.request.predicate=this.queryParams?.predicate;
+      this.request.dataValue=this.queryParams?.dataValue;
+    }
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';

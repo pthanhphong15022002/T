@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  //open popup search portal
   clickShowPopupSearch() {
     let option = new DialogModel();
     option.IsFull = true;

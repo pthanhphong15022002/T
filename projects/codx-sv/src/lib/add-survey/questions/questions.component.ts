@@ -143,14 +143,18 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontFormat: 'B',
     };
     this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) this.funcID = queryParams.funcID;
-      if (queryParams?.recID) {
-        this.recID = queryParams.recID;
+      if (queryParams?.funcID) {
+        this.funcID = queryParams.funcID;
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) {
+            this.functionList = res;
+            if (queryParams?.recID) {
+              this.recID = queryParams.recID;
+            }
+            this.loadData();
+          }
+        });
       }
-      this.loadData();
-    });
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) this.functionList = res;
     });
   }
 
@@ -553,10 +557,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     dataTemp.forEach((x, index) => {
       x.seqNo = index;
     });
-    itemSessionNew.seqNo = dataTemp.length - 1;
     this.questions = dataTemp;
     if (itemSessionNew.children && itemSessionNew.children.length > 0)
-      itemSessionNew.children.forEach((x) => {
+      itemSessionNew.children.forEach((x, index) => {
+        x.seqNo = index;
         delete x.id;
         x.recID = this.generateGUID();
         x.parentID = itemSessionNew.recID;
@@ -565,22 +569,28 @@ export class QuestionsComponent extends UIComponent implements OnInit {
           z.recID = this.generateGUID();
         });
       });
+    //Update lại seqNo cho questions
+    itemSessionNew.seqNo = itemSession.seqNo + 1;
     let data = [...[itemSessionNew], ...itemSessionNew.children];
-    // this.SVServices.signalSave.next('saving');
-    // // Check nếu là session cuối cùng thì không phần update seqNo
-    // if (this.questions.length - 1 == itemSession.seqNo + 1) {
-    //   this.setTimeoutSaveData(
-    //     itemSessionNew.children.length > 0 ? data : [itemSessionNew],
-    //     true
-    //   );
-    // } else {
-    //   this.setTimeoutSaveData(
-    //     itemSessionNew.children.length > 0 ? data : [itemSessionNew],
-    //     true,
-    //     this.questions
-    //   );
-    // }
+    this.SVServices.signalSave.next('saving');
+    // Check nếu là session cuối cùng thì không phần update seqNo
+    if (this.questions.length - 1 == itemSession.seqNo + 1) {
+      this.setTimeoutSaveData(
+        itemSessionNew.children.length > 0 ? data : [itemSessionNew],
+        true
+      );
+    } else {
+      this.setTimeoutSaveData(
+        itemSessionNew.children.length > 0 ? data : [itemSessionNew],
+        true,
+        this.questions
+      );
+    }
     //Xử lí copy hình ảnh nếu có
+    this.copyFileSession(itemSession, itemSessionNew);
+  }
+
+  copyFileSession(itemSession, itemSessionNew) {
     let lstUploadNew = [];
     if (itemSession.children.length > 0) {
       itemSession.children.forEach((x, indexS) => {
@@ -592,13 +602,15 @@ export class QuestionsComponent extends UIComponent implements OnInit {
             }
           });
           //update lại objectID cho lst của questions
-          lstUploadNew.forEach((i) => {
-            delete i['recID'];
-            delete i['id'];
-            i.storeType = '';
-            if (i.objectID == x.recID)
-              i.objectID = itemSessionNew.children[indexS].recID;
-          });
+          if (lstUploadNew.length > 0) {
+            lstUploadNew.forEach((i) => {
+              delete i['recID'];
+              delete i['id'];
+              i.storeType = '';
+              if (i.objectID == x.recID)
+                i.objectID = itemSessionNew.children[indexS].recID;
+            });
+          }
         }
         //Clone lstUpdate của answers
         if (x.answers.length > 0) {
@@ -611,39 +623,103 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               });
             }
             //update lại objectID cho lst của answers
-            lstUploadNew.forEach((x) => {
-              delete x['recID'];
-              delete x['id'];
-              x.storeType = '';
-              if (x.objectID == z.recID)
-                x.objectID =
-                  itemSessionNew.children[indexS].answers[indexA].recID;
-            });
+            if (lstUploadNew.length > 0) {
+              lstUploadNew.forEach((x) => {
+                delete x['recID'];
+                delete x['id'];
+                x.storeType = '';
+                if (x.objectID == z.recID)
+                  x.objectID =
+                    itemSessionNew.children[indexS].answers[indexA].recID;
+              });
+            }
           });
         }
       });
     }
     this.lstEditIV = [...this.lstEditIV, ...lstUploadNew];
-    this.SVServices.onSaveListFile(lstUploadNew).subscribe((res) => {
-      debugger;
-    });
+    this.SVServices.onSaveListFile(lstUploadNew).subscribe((res) => {});
   }
 
   copyNoSession(itemSession, itemQuestion) {
-    var dataTemp = JSON.parse(JSON.stringify(itemQuestion));
+    var itemQuestionNew = JSON.parse(JSON.stringify(itemQuestion));
     this.generateGuid();
-    delete itemQuestion.id;
-    itemQuestion.recID = this.GUID;
+    delete itemQuestionNew.id;
+    itemQuestionNew.recID = this.GUID;
+    itemQuestionNew.seqNo = itemQuestion.seqNo + 1;
+    itemQuestionNew.answers.forEach((z) => {
+      delete z.id;
+      z.recID = this.generateGUID();
+    });
     var data = JSON.parse(
       JSON.stringify(this.questions[itemSession.seqNo].children)
     );
     data[itemQuestion.seqNo].active = false;
-    data.splice(itemQuestion.seqNo + 1, 0, itemQuestion);
+    data.splice(itemQuestionNew.seqNo + 1, 0, itemQuestionNew);
     data.forEach((x, index) => {
       x.seqNo = index;
-      if (x.parentID == dataTemp.recID) x.parentID = this.GUID;
+      if (x.parentID == itemQuestion.recID) x.parentID = itemSession.recID;
     });
     this.questions[itemSession.seqNo].children = data;
+    // Check nếu là session cuối cùng thì không phần update seqNo
+    this.SVServices.signalSave.next('saving');
+    if (
+      itemQuestionNew.seqNo ==
+      this.questions[itemSession.seqNo].children.length - 1
+    )
+      this.setTimeoutSaveData([itemQuestionNew], true);
+    else this.setTimeoutSaveData([itemQuestionNew], true, data);
+    this.copyFileNoSession(itemQuestion, itemQuestionNew);
+  }
+
+  copyFileNoSession(itemQuestion, itemQuestionNew) {
+    let lstUploadNew = [];
+    //Clone lstUpdate của questions
+    if (
+      itemQuestion.qPicture ||
+      itemQuestion.category == 'V' ||
+      itemQuestion.category == 'P'
+    ) {
+      this.lstEditIV.forEach((y) => {
+        if (y.objectID == itemQuestion.recID) {
+          lstUploadNew.push(JSON.parse(JSON.stringify(y)));
+        }
+      });
+      //update lại objectID cho lst của questions
+      if (lstUploadNew.length > 0) {
+        lstUploadNew.forEach((i) => {
+          delete i['recID'];
+          delete i['id'];
+          i.storeType = '';
+          if (i.objectID == itemQuestion.recID)
+            i.objectID = itemQuestionNew.recID;
+        });
+      }
+    }
+    //Clone lstUpdate của answers
+    if (itemQuestion.answers.length > 0) {
+      itemQuestion.answers.forEach((z, indexA) => {
+        if (z.hasPicture) {
+          this.lstEditIV.forEach((i) => {
+            if (i.objectID == z.recID) {
+              lstUploadNew.push(JSON.parse(JSON.stringify(i)));
+            }
+          });
+        }
+        //update lại objectID cho lst của answers
+        if (lstUploadNew.length > 0) {
+          lstUploadNew.forEach((x) => {
+            delete x['recID'];
+            delete x['id'];
+            x.storeType = '';
+            if (x.objectID == z.recID)
+              x.objectID = itemQuestionNew.answers[indexA].recID;
+          });
+        }
+      });
+    }
+    this.lstEditIV = [...this.lstEditIV, ...lstUploadNew];
+    this.SVServices.onSaveListFile(lstUploadNew).subscribe((res) => {});
   }
 
   clickMF(functionID, eleAttachment = null) {
@@ -1526,7 +1602,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         if (res) {
           this.SVServices.signalSave.next('done');
           data.forEach((x) => {
-            this.delFileInline(x.recID);
+            if (x.answers && x.answers.length > 0) this.delFileInline(x.recID);
           });
         } else this.notification.alertCode('');
       });

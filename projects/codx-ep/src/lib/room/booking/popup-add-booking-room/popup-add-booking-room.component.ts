@@ -705,6 +705,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       }
 
       //Check số lượng VPP đi kèm
+      this.tmplstStationery = [];
+      this.lstStationery.forEach((item) => {
+        this.tmplstStationery.push(item);
+      });
+      
       if (this.lstStationery.length > 0) {
         this.api
           .exec('EP', 'ResourcesBusiness', 'CheckAvailableResourceAsync', [
@@ -712,9 +717,9 @@ export class PopupAddBookingRoomComponent extends UIComponent {
           ])
           .subscribe((res: any[]) => {
             if (res && res.length > 0) {
-              let unAvailResource = res.join(', ');
+              let unAvaiResource = res.join(', ');
               this.notificationsService
-                .alertCode('EP015', null, unAvailResource)
+                .alertCode('EP015', null, unAvaiResource)
                 .subscribe((x) => {
                   this.saveCheck = false;
                   return;
@@ -767,11 +772,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   this.saveCheck = false;
                   return;
                 } else {
-                  this.attendeesValidateStep(approval);
+                  //this.attendeesValidateStep(approval);
                 }
               });
             } else {
-              this.attendeesValidateStep(approval);
+              //this.attendeesValidateStep(approval);
             }
           }
         });
@@ -782,11 +787,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.saveCheck = false;
               return;
             } else {
-              this.attendeesValidateStep(approval);
+              //this.attendeesValidateStep(approval);
             }
           });
         } else {
-          this.attendeesValidateStep(approval);
+          //this.attendeesValidateStep(approval);
         }
       }
       this.saveCheck = true;
@@ -1315,15 +1320,29 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueQuantityChange(event?) {
-    this.lstStationery.forEach((item) => {
-      if (item.id == event?.field) {
-        item.quantity = event?.data;
-      }
-    });
-
-    this.lstStationery = this.lstStationery.filter((item) => {
-      return item.quantity != 0;
-    });
+    if(event?.data && event?.field){
+        this.lstStationery.forEach((item) => {
+          if (item.id === event?.field) {
+            if(event.data>0){    
+              item.quantity = event.data;  
+            }else{    
+              item.quantity = 0;
+            }
+          }
+        });    
+        this.changeDetectorRef.detectChanges();
+      
+    }
+    // this.lstStationery = this.lstStationery.filter((item) => {
+    //   return item.quantity != 0;
+    // });
+  }
+  deleteStationery(id:any){
+    if(id){
+      this.lstStationery = this.lstStationery.filter((item) => {
+        return item?.id != id;
+      });
+    }
   }
   //////////////////////////
   attendeesCheckChange(event: any, userID: any) {
