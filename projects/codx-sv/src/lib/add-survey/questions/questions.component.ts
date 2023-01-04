@@ -659,9 +659,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[itemSession.seqNo].children = data;
     // Check nếu là session cuối cùng thì không phần update seqNo
     this.SVServices.signalSave.next('saving');
-    if (itemQuestionNew.seqNo == this.questions[itemSession.seqNo].children.length - 1)
-      this.setTimeoutSaveData(itemQuestionNew, true);
-    else this.setTimeoutSaveData(itemQuestionNew, true, data);
+    if (
+      itemQuestionNew.seqNo ==
+      this.questions[itemSession.seqNo].children.length - 1
+    )
+      this.setTimeoutSaveData([itemQuestionNew], true);
+    else this.setTimeoutSaveData([itemQuestionNew], true, data);
     this.copyFileNoSession(itemQuestion, itemQuestionNew);
   }
 

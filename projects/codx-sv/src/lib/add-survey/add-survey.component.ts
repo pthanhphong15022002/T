@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   ComponentRef,
 } from '@angular/core';
-import { UIComponent, ViewModel, ViewType } from 'codx-core';
+import { CodxService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
 
 @Component({
@@ -34,7 +34,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
-    private SVService: CodxSvService
+    private SVService: CodxSvService,
   ) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
@@ -91,5 +91,9 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     else if (e.selectedIndex == 2) this.mode = 'S';
   }
 
-  onSubmit() {}
+  onSubmit() { }
+
+  back() {
+    this.codxService.navigate('SVT01');
+  }
 }

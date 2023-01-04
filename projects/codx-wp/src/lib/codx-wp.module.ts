@@ -27,7 +27,6 @@ import { AddNoteComponent } from './dashboard/home/add-note/add-note.component';
 import { PopupTitleComponent } from './dashboard/home/add-note/save-note/popup-title/popup-title.component';
 import { SaveNoteComponent } from './dashboard/home/add-note/save-note/save-note.component';
 import { HomeComponent } from './dashboard/home/home.component';
-import { PopupAddPostComponents } from './dashboard/home/list-post/popup-add/popup-add.component';
 import { PopupDetailComponent } from './dashboard/home/list-post/popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './dashboard/home/list-post/popup-save/popup-save.component';
 import { PopupSearchPostComponent } from './dashboard/home/list-post/popup-search/popup-search.component';
@@ -46,7 +45,7 @@ import { LayoutNewsComponent } from './layout-news/layout-news.component';
 import { LayoutApprovalComponent } from './layout-approval/layout-approval.component';
 import { LayoutPortalComponent } from './dashboard/layout-portal.component';
 import { CodxChatComponent } from './chat/codx-chat/codx-chat.component';
-import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add-post/popup-add-post.component';
+import { PopupAddPostComponent } from './dashboard/home/list-post/popup-add/popup-add-post.component';
 import { PopupAddGroupComponent } from './chat/chat-list/popup/popup-add-group/popup-add-group.component';
 import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
@@ -177,7 +176,6 @@ const Component: Type<any>[] =
     AddNoteComponent,
     SaveNoteComponent,
     PostComponent,
-    PopupAddPostComponents,
     PopupSavePostComponent,
     MyTeamComponent,
     UpdateNotePinComponent,
