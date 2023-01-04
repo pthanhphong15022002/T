@@ -25,3 +25,10 @@
 .lay-survey .row.row-content>.col-12 {
     padding: 0;
 }
+
+.lay-survey .moreFC .popover {
+    white-space: nowrap;
+    border: 1px aqua solid;
+    min-width: 150px;
+
+}
