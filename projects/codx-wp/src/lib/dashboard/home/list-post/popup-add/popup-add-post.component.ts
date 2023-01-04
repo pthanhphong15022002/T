@@ -296,7 +296,7 @@ export class PopupAddPostComponent implements OnInit {
   }
   // edit post
   editPost(){
-    if (!this.data.content && this.fileUpload.length == 0) 
+    if (!this.data.content && this.data.files.length == 0 && this.data.category != "4") 
     {
       if(this.grvSetup["Comments"]["headerText"]){
         this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
