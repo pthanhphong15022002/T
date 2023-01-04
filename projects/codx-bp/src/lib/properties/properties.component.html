@@ -316,8 +316,11 @@
                             <div class="d-flex flex-column w-100">
                               <div class="pb-1">
                                 <div class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                                  <codx-label class="text-dark fw-bold fs-5 button-version cursor-pointer"
-                                   [formModel]="form.formModel" default="Phiên bản đầu tiên"></codx-label>
+                                  <!-- <codx-label class="text-dark fw-bold fs-5 button-version cursor-pointer"
+                                   [formModel]="form.formModel" [default]="firstNameVersion"></codx-label> -->
+                                   <span class="text-dark fw-bold fs-5 button-version cursor-pointer">
+                                    {{firstNameVersion}}
+                                  </span>
                                 </div>
                                 <ng-template #firstVersionNo>
                                   <div class="text-dark fw-bold fs-5 button-version cursor-pointer" >

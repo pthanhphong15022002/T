@@ -143,14 +143,18 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontFormat: 'B',
     };
     this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) this.funcID = queryParams.funcID;
-      if (queryParams?.recID) {
-        this.recID = queryParams.recID;
+      if (queryParams?.funcID) {
+        this.funcID = queryParams.funcID;
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) {
+            this.functionList = res;
+            if (queryParams?.recID) {
+              this.recID = queryParams.recID;
+            }
+            this.loadData();
+          }
+        });
       }
-      this.loadData();
-    });
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) this.functionList = res;
     });
   }
 
@@ -659,9 +663,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[itemSession.seqNo].children = data;
     // Check nếu là session cuối cùng thì không phần update seqNo
     this.SVServices.signalSave.next('saving');
-    if (itemQuestionNew.seqNo == this.questions[itemSession.seqNo].children.length - 1)
-      this.setTimeoutSaveData(itemQuestionNew, true);
-    else this.setTimeoutSaveData(itemQuestionNew, true, data);
+    if (
+      itemQuestionNew.seqNo ==
+      this.questions[itemSession.seqNo].children.length - 1
+    )
+      this.setTimeoutSaveData([itemQuestionNew], true);
+    else this.setTimeoutSaveData([itemQuestionNew], true, data);
     this.copyFileNoSession(itemQuestion, itemQuestionNew);
   }
 

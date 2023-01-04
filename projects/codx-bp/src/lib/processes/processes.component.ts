@@ -194,7 +194,6 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    // this.isAdminBp = await this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -1097,17 +1096,21 @@ export class ProcessesComponent
       });
   }
 
-  acceptEdit() {
+  async acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
+      return;
     }
-    // else if (this.checkAdminOfBP(this.user.userId))
-    //  {
-    //   this.isAcceptEdit = true;
-    // }
-    else if (!this.user.edit) {
-      this.isAcceptEdit = false;
-    }
+    (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
+        if(res){
+          this.isAcceptEdit = true;
+        }
+        else if (!this.user.edit) {
+          this.isAcceptEdit = false;
+        }
+        this.isAdminBp=res;
+        return;
+      });
   }
 
   // async checkAdminOfBP(userid: any) {
