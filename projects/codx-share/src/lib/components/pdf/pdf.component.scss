@@ -1,7 +1,6 @@
 @import "/node_modules/codx-core/assets/sass/init";
 
 ::ng-deep {
-
   .e-device .e-dlg-content,
   .e-device .e-dlg-content * {
     font-size: inherit;
@@ -105,7 +104,7 @@
       min-height: 42px;
     }
 
-    .e-tab .e-tab-header+.e-content {
+    .e-tab .e-tab-header + .e-content {
       padding: 0 20px;
       height: calc(100% - 60px) !important;
       overflow-y: auto;
@@ -203,7 +202,11 @@
     }
 
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-text,
-    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-icon {
+    .e-tab
+      .e-tab-header
+      .e-toolbar-item.e-active
+      .e-tab-wrap:hover
+      .e-tab-icon {
       color: var(--primary-dark);
     }
 
@@ -312,9 +315,10 @@
     }
 
     .chooseSignFile {
-
       .e-input-group:not(.e-success):not(.e-warning):not(.e-error),
-      .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
+      .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(
+          .e-error
+        ) {
         border-color: transparent;
         color: $dark;
         font-weight: 500;
@@ -323,7 +327,9 @@
   }
 
   .e-input-group.e-input-focus:not(.e-success):not(.e-warning):not(.e-error),
-  .e-input-group.e-control-wrapper.e-input-focus:not(.e-success):not(.e-warning):not(.e-error) {
+  .e-input-group.e-control-wrapper.e-input-focus:not(.e-success):not(
+      .e-warning
+    ):not(.e-error) {
     border-color: transparent;
     border-color: transparent;
     border-radius: 0px;
@@ -495,7 +501,6 @@
     color: white !important;
   }
 
-
   .main-left {
     .e-listview .e-list-header {
       display: none !important;
@@ -511,7 +516,10 @@
     display: none !important;
   }
 
-  html[dir="ltr"] ngx-extended-pdf-viewer #outerContainer.sidebarOpen #viewerContainer:not(.pdfPresentationMode) {
+  html[dir="ltr"]
+    ngx-extended-pdf-viewer
+    #outerContainer.sidebarOpen
+    #viewerContainer:not(.pdfPresentationMode) {
     left: 0 !important;
   }
 
@@ -520,7 +528,7 @@
     border-image: none !important;
   }
 
-  .reason_Info>p {
+  .reason_Info > p {
     margin: 0;
   }
 
@@ -542,7 +550,6 @@
       // display: block;
       // margin-bottom: 10px;
     }
-
   }
 }
 

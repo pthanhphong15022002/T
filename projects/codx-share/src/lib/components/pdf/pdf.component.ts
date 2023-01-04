@@ -50,6 +50,8 @@ import {
 import { text } from 'stream/consumers';
 import { environment } from 'src/environments/environment';
 import { style } from '@angular/animations';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { NgxExtendedPdfViewerCommonModule } from 'ngx-extended-pdf-viewer/lib/ngx-extended-pdf-viewer-common.module';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -441,7 +443,7 @@ export class PdfComponent
         document.getElementById('input-Cmt') as HTMLInputElement
       ).value;
       let tmpCmt: comment = {
-        author: this.user.userID,
+        author: this.user.userName,
         content: this.curCmtContent,
       };
       this.curSelectedHLA.comment = tmpCmt;
@@ -681,7 +683,6 @@ export class PdfComponent
   }
 
   saveToDB(tmpArea: tmpSignArea) {
-    debugger;
     let es_SignArea = tmpArea;
     if (this.imgConfig.includes(tmpArea.labelType)) {
       tmpArea.labelValue = tmpArea.labelValue.replace(
@@ -703,7 +704,6 @@ export class PdfComponent
             )
             .subscribe((res) => {
               if (res) {
-                console.log('save event', res);
                 this.lstAreas = res;
                 this.detectorRef.detectChanges();
               }
@@ -1187,8 +1187,9 @@ export class PdfComponent
         });
       }
     }
-
-    if (rendedPage.childElementCount > 1) {
+    let ngxService: NgxExtendedPdfViewerService =
+      new NgxExtendedPdfViewerService();
+    if (ngxService.isRenderQueueEmpty()) {
       this.getListHighlights();
     }
   }
@@ -1953,6 +1954,13 @@ export class PdfComponent
           this.detectorRef.detectChanges();
         }
       });
+    this.esService
+      .changeSFCacheBytes(
+        this.curFileUrl.replace(environment.urlUpload + '/', '')
+      )
+      .subscribe((res) => {
+        console.log('change sf url', res);
+      });
     this.detectorRef.detectChanges();
   }
 
@@ -2273,9 +2281,7 @@ export class PdfComponent
   }
 
   show(e) {
-    const PDFViewerApplication: IPDFViewerApplication = (window as any)
-      .PDFViewerApplication;
-    console.log('pdf', PDFViewerApplication.pdfViewer._pages[this.curPage - 1]);
+    console.log('event', e);
   }
 
   //pop up
@@ -2355,11 +2361,6 @@ export class PdfComponent
   removeHLA(key: string) {
     let idx = this.lstHighlightTextArea.findIndex((x) => x.group == key);
     if (idx != -1 && this.lstHighlightTextArea[idx].isAdded == false) {
-      console.log(
-        'lst',
-        document.getElementsByName(`highlighted[data-id=${key}]`)
-      );
-
       this.lstHighlightTextArea.splice(idx, 1);
       this.lstKey.splice(idx, 1);
       this.detectorRef.detectChanges();
@@ -2423,10 +2424,7 @@ export class PdfComponent
             this.lstHighlightTextArea.push(value);
           }
         }
-        console.log(
-          'add page to',
-          ngxService.addPageToRenderQueue(this.pageMax)
-        );
+        console.log('get list highlight');
       });
   }
 
@@ -2437,6 +2435,7 @@ export class PdfComponent
   confirmRemoveHLA() {
     let lstDelHLA = document.getElementsByClassName('hla-check-delete');
     let isChange = false;
+    let rerenderPages = [];
     Array.from(lstDelHLA).forEach((hla: HTMLElement) => {
       if (hla.getAttribute('aria-Checked').toLowerCase() == 'true') {
         let delKey = hla.parentElement.dataset.id;
@@ -2444,6 +2443,7 @@ export class PdfComponent
           if (hl.isAdded) {
             isChange = true;
           }
+          rerenderPages.push(hl.locations[0].pageNumber);
           return hl.group != delKey;
         });
         this.lstKey = this.lstKey.filter((key) => key != delKey);
@@ -2451,11 +2451,11 @@ export class PdfComponent
     });
     if (isChange == false) return;
     this.lstHighlightTextArea.forEach((area) => (area.isAdded = false));
-    this.confirmHighlightText(true);
+    this.confirmHighlightText(true, rerenderPages);
     this.detectorRef.detectChanges();
   }
 
-  confirmHighlightText(isClearHLA: boolean) {
+  confirmHighlightText(isClearHLA: boolean, rerenderPages = []) {
     let needHLList = this.lstHighlightTextArea.filter(
       (area) => area.isAdded == false
     );
@@ -2466,21 +2466,82 @@ export class PdfComponent
         this.fileInfo.fileID,
         this.fileInfo.fileName,
         isClearHLA,
-        needHLList
+        needHLList,
+        rerenderPages
       )
-      .subscribe((res: Map<string, Array<highLightTextArea>>) => {
+      .subscribe((res) => {
         this.lstHighlightTextArea = this.lstHighlightTextArea.filter(
           (area) => area.isAdded != false
         );
-        let tmpUrl = this.curFileUrl;
-        this.curFileUrl = '';
-        this.curFileUrl = tmpUrl;
-        let ngxService: NgxExtendedPdfViewerService =
-          new NgxExtendedPdfViewerService();
-        ngxService.addPageToRenderQueue(this.pageMax);
-        // this.getListHighlights();
+        setTimeout(
+          (tmpUrl) => {
+            this.curFileUrl = tmpUrl;
+          },
+          10,
+          res
+        );
+        // let rerenderPages = document.querySelectorAll('.canvasWrapper>canvas');
+        // let times = Object.keys(res).length;
+        // const pdfViewer: IPDFViewerApplication = (window as any)
+        //   .PDFViewerApplication;
+        // const src = this.curFileUrl;
+        // console.log(pdfViewer, 'PDFViewerApplication.cleanup caught exception');
+
+        // if (
+        //   pdfViewer != null &&
+        //   pdfViewer.pdfViewer != null &&
+        //   pdfViewer.pdfDocument != null &&
+        //   pdfViewer.pdfThumbnailViewer != null
+        // ) {
+        //   pdfViewer.cleanup = () => {
+        //     try {
+        //       pdfViewer.pdfViewer.cleanup();
+        //       pdfViewer.pdfThumbnailViewer.cleanup();
+        //       if (
+        //         pdfViewer.pdfViewer.renderer !== 'svg' &&
+        //         pdfViewer.pdfDocument != null
+        //       ) {
+        //         pdfViewer.pdfDocument.cleanup().catch((e: any) => {
+        //           console.error(
+        //             'PDFViewerApplication.pdfDocument.cleanup caught exception',
+        //             src,
+        //             e
+        //           );
+        //         });
+        //       }
+        //       console.info('[PDFViewerApplication] cleanup success', src);
+        //     } catch (e) {
+        //       console.log(e, 'PDFViewerApplication.cleanup caught exception');
+        //     }
+        //   };
+        // }
+
+        // for (const [pageNo, pageInfo] of Object.entries(res)) {
+        //   let canvas = Array.from(rerenderPages).find(
+        //     (page: HTMLCanvasElement) => {
+        //       return (
+        //         page.parentElement?.parentElement?.getAttribute(
+        //           'data-page-number'
+        //         ) == pageNo
+        //       );
+        //     }
+        //   );
+        //   if (canvas) {
+        //     let ctx = (canvas as HTMLCanvasElement).getContext('2d');
+        //     let tmpImg = document.createElement('img') as HTMLImageElement;
+        //     tmpImg.src = 'data:image/png;base64,' + pageInfo.base64;
+        //     tmpImg.onload = () => {
+        //       ctx.drawImage(tmpImg, 0, 0);
+        //       times--;
+        //       if (times == 0) {
+        //         this.getListHighlights();
+        //       }
+        //     };
+        //   }
+        // }
       });
   }
+
   clickHighlightText() {
     var selection = window.getSelection().getRangeAt(0);
 
@@ -2535,7 +2596,7 @@ export class PdfComponent
             },
           ],
           createdDate: new Date(),
-          author: '',
+          author: this.user.userID,
           comment: {
             author: '',
             content: '',

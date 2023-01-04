@@ -1295,13 +1295,22 @@ export class CodxEsService {
     );
   }
 
-  highlightText(fileUrl, fileID, fileName, isClear, lstHLArea) {
+  changeSFCacheBytes(fileUrl) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ChangeSignFileAsync',
+      [fileUrl]
+    );
+  }
+  highlightText(fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'HighlightTextAsync',
-      [fileUrl, fileID, fileName, isClear, lstHLArea]
+      [fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages]
     );
   }
 

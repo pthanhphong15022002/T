@@ -326,6 +326,7 @@
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
+        (pdfLoadingStarts)="show($event)"
         (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
         [showBookmarkButton]="false"
