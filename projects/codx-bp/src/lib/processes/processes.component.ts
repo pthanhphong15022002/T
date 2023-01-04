@@ -140,7 +140,7 @@ export class ProcessesComponent
   employee: any;
   checkGroupPerm = '';
   popupOld: any;
-  msgCodeExistNameProcess='BP008'; // gán tạm chờ message code
+  msgCodeExistNameProcess='BP008';
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -193,7 +193,6 @@ export class ProcessesComponent
     ];
     this.afterLoad();
     this.acceptEdit();
-    // this.isAdminBp = await this.checkAdminOfBP(this.userId);
   }
 
   afterLoad() {
@@ -1092,25 +1091,22 @@ export class ProcessesComponent
       });
   }
 
-  acceptEdit() {
+  async acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
+      return;
     }
-    // else if (this.checkAdminOfBP(this.user.userId))
-    //  {
-    //   this.isAcceptEdit = true;
-    // }
-    else if (!this.user.edit) {
-      this.isAcceptEdit = false;
-    }
+    (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
+        if(res){
+          this.isAcceptEdit = true;
+        }
+        else if (!this.user.edit) {
+          this.isAcceptEdit = false;
+        }
+        this.isAdminBp=res;
+        return;
+      });
   }
-
-  // async checkAdminOfBP(userid: any) {
-  //   let check: boolean;
-  //   (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
-  //   return check;
-  // }
-
   deleteBin() {
     // xoa toan bo thung rac ham nay chưa dung
     if (this.view.dataService?.data.length > 0) {
