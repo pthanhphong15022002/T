@@ -9,3 +9,19 @@
 .top-60 {
     margin-top: -60px;
 }
+
+.lay-survey div.wrapper {
+    padding-top: 0;
+}
+
+.lay-survey codx-wrapper {
+    padding: 0;
+}
+
+.lay-survey .row.row-content {
+    margin: 0;
+}
+
+.lay-survey .row.row-content>.col-12 {
+    padding: 0;
+}

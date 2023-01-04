@@ -46,7 +46,7 @@
 
   .inplace-editor-control-section #formId {
     padding-top: 20px;
-    margin-bottom: 45px;
+    margin-bottom: 20px;
     border: 1px solid gray;
     box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
     border-radius: 5px;
@@ -54,7 +54,7 @@
 
   #formSession {
     padding-top: 20px;
-    margin-bottom: 45px;
+    margin-bottom: 20px;
     border: 1px solid gray;
     box-shadow: 0 2px 3px 0 rgb(0 0 0 / 36%);
     border-radius: unset;
@@ -67,7 +67,7 @@
     margin: 0 30px;
   }
 
-  .inplace-editor-control-section .form-horizontal .form-group > * {
+  .inplace-editor-control-section .form-horizontal .form-group>* {
     width: 100%;
   }
 
@@ -90,19 +90,13 @@
     text-align: center;
   }
 
-  .inplace-editor-control-section.form-layout
-    .control-wrapper
-    .form-horizontal
-    .control-label {
+  .inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
     padding: 15px 15px 15px 0;
     font-weight: 600;
   }
 
   @media (max-width: 768px) {
-    .inplace-editor-control-section.form-layout
-      .control-wrapper
-      .form-horizontal
-      .control-label {
+    .inplace-editor-control-section.form-layout .control-wrapper .form-horizontal .control-label {
       padding-top: 7px;
       margin-bottom: 0;
     }
@@ -136,9 +130,7 @@
     width: 100% !important;
   }
 
-  ejs-inplaceeditor
-    .e-editable-value-wrapper.e-editable-open
-    + .e-editable-inline {
+  ejs-inplaceeditor .e-editable-value-wrapper.e-editable-open+.e-editable-inline {
     font-size: 14px !important;
   }
 
@@ -333,23 +325,29 @@
     width: 214px !important;
     height: 48px !important;
   }
+
   hr {
     background-color: darkslategray;
   }
+
   .icon-image {
     padding-top: 10px;
     padding-right: 10px;
   }
+
   .answer-other {
     width: 105px !important;
   }
+
   .size-input-other {
     padding-left: 28px;
   }
+
   .text-or {
     margin-top: 7px;
     font-weight: 500;
   }
+
   .add-answer-other {
     margin-top: 7px;
     padding-left: 3px;
@@ -527,6 +525,7 @@
   td {
     padding: 1rem;
   }
+
   th,
   td {
     text-align: center;
@@ -548,6 +547,7 @@
   .primary {
     color: #1a73e8;
   }
+
   .pb-10px {
     padding-bottom: 10px;
   }
@@ -556,7 +556,7 @@
     width: fit-content !important;
   }
 
-  .e-radio + label .e-label {
+  .e-radio+label .e-label {
     font-size: 14px !important;
   }
 
@@ -590,4 +590,10 @@
 
 .e-tab .e-tab-header {
   text-align: center !important;
+  background-color: var(--bg-body);
+
+}
+
+.e-tab .e-tab-header .e-toolbar-items {
+  margin-top: -1px;
 }
