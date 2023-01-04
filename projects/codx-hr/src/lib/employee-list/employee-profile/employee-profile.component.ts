@@ -294,7 +294,7 @@ export class EmployeeProfileComponent extends UIComponent {
           if (params?.filter) this.request.filter = JSON.parse(params?.filter);
           this.request.pageSize = 20;
           this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
-            if (res) {
+            if (res && res[0]) {
               this.listEmp.push(...res[0]);
               let index = this.listEmp?.findIndex(
                 (p) => p.employeeID == params.employeeID
@@ -314,7 +314,7 @@ export class EmployeeProfileComponent extends UIComponent {
         if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
           this.request.page += 1;
           this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
-            if (res) {
+            if (res && res[0]) {
               this.listEmp.push(...res[0]);
             }
           });
