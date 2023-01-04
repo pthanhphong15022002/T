@@ -1146,7 +1146,7 @@ export class ProcessesComponent
     this.view.dataService.dataSelected = data;
     this.bpService.restoreBinById(data.recID).subscribe((res) => {
       if (res) {
-        // this.notification.notifyCode('SYS034');
+        this.notification.notifyCode('SYS034');
         this.view.dataService.remove(data).subscribe();
         this.detectorRef.detectChanges();
       }

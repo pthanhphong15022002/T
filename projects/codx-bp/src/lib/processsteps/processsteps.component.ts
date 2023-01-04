@@ -152,6 +152,7 @@ export class ProcessStepsComponent
   isHover = null;
   listCountActivities: number = 0;
   isBlockClickMore: boolean;
+  language: 'VN';
 
   constructor(
     inject: Injector,
@@ -165,6 +166,7 @@ export class ProcessStepsComponent
     this.user = this.authStore.get();
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
+        this.language = mf[0]["language"];
         var mfAdd = mf.find((f) => f.functionID == 'SYS01');
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
@@ -790,7 +792,8 @@ export class ProcessStepsComponent
 
   openPopupViewProcessStep(data){
     let stepType = data.stepType;
-    this.titleAction = this.getTitleAction('Xem', data.stepType);
+    let title = this.language === "VN" ? "Xem" : "View";
+    this.titleAction = this.getTitleAction(title, data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
     if (funcMenu) {
       this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
@@ -1459,7 +1462,7 @@ export class ProcessStepsComponent
   showPoupStepName(e,p){
     let parent = e.currentTarget.parentElement.offsetWidth;
     let child = e.currentTarget.offsetWidth;
-    if(parent < child +15){
+    if(parent <= child){
       p.open();   
     }
   }
