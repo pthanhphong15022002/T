@@ -924,7 +924,10 @@ export class CodxTasksComponent
                       this.tmSv
                         .sendAlertMail(taskAction.recID, 'TM_0012', this.funcID)
                         .subscribe();
-                    }
+                    } else
+                      this.tmSv
+                        .sendAlertMail(taskAction.recID, 'TM_0005', this.funcID)
+                        .subscribe();
                   });
               } else {
                 this.api
@@ -946,7 +949,14 @@ export class CodxTasksComponent
                             this.funcID
                           )
                           .subscribe();
-                      }
+                      } else
+                        this.tmSv
+                          .sendAlertMail(
+                            taskAction.recID,
+                            'TM_0005',
+                            this.funcID
+                          )
+                          .subscribe();
                     }
                   });
               }
@@ -1618,7 +1628,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask,"",funcID],
+        [data, 'view', isAssignTask, '', funcID],
         option
       );
     }
