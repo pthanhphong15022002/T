@@ -116,3 +116,6 @@
   position: relative;
   bottom: 130px;
 }
+/* :host ::ng-deep codx-wrapper{
+  overflow: hidden !important;
+} */
