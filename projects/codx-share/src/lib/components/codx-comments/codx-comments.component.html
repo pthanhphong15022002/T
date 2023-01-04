@@ -42,7 +42,7 @@
                 </ng-container>
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
                     <video #video controls class="w-100 rounded min-h-250px">
-                        <source [src]="fileUpload.srcVideo || fileUpload.data" type="video/mp4">
+                        <source [src]="fileUpload.data || fileUpload.source" type="video/mp4">
                     </video>
                 </ng-container>
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
@@ -134,7 +134,7 @@
                     </ng-container>
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.VIDEO">
                         <video #video controls class="w-100 rounded min-h-250px">
-                            <source [src]="fileUpload.srcVideo || fileUpload.data" type="video/mp4">
+                            <source [src]="fileUpload.data || fileUpload.source" type="video/mp4">
                         </video>
                     </ng-container>
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.APPLICATION">
