@@ -146,13 +146,15 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       if (queryParams?.funcID) {
         this.funcID = queryParams.funcID;
         this.cache.functionList(this.funcID).subscribe((res) => {
-          if (res) this.functionList = res;
+          if (res) {
+            this.functionList = res;
+            if (queryParams?.recID) {
+              this.recID = queryParams.recID;
+            }
+            this.loadData();
+          }
         });
       }
-      if (queryParams?.recID) {
-        this.recID = queryParams.recID;
-      }
-      this.loadData();
     });
   }
 
