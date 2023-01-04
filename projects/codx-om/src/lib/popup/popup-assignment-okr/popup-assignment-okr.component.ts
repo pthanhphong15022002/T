@@ -133,8 +133,6 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
             });
             this.assignmentOKR=new DistributeOKR();
             this.assignmentOKR.okrName= this.dataKR.okrName;
-            this.assignmentOKR.orgUnitID= item.orgUnitID;
-            this.assignmentOKR.orgUnitName= item.orgUnitName;
             this.assignmentOKR.umid=this.dataKR.umid;
             this.assignmentOKR.isActive=false;
             this.assignmentOKR.distributePct=100;
@@ -193,15 +191,16 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   
   
   onSaveForm(){
-    let lastListDistribute =this.listDistribute.filter((item) => {
-      return item?.isActive ==true;
-    });
+    if(this.assignmentOKR.orgUnitID==null){
+      this.notificationsService.notify("Đối tượng phân công không được bỏ trống!",'2',null);
+      return;
+    }
     this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
       'DistributeKRAsync',
-      [this.dataKR.recID,this.distributeType,lastListDistribute]
+      [this.dataKR.recID,this.distributeType,[this.assignmentOKR]]
     ).subscribe(res=>{
       let x= res;
       this.dialogRef && this.dialogRef.close();
@@ -215,34 +214,18 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
 
   //-----------------------Custom Func-----------------------//
   cbxOrgChange(evt:any){
-    if(evt){      
+    if(evt){     
+      this.assignmentOKR.orgUnitID= evt;
       this.detectorRef.detectChanges();
     }
   }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-  valueChange(evt:any){
-    if(evt && evt.field){
-      this.listDistribute[evt.field].distributeValue= evt.data;
-      this.detectorRef.detectChanges();
-    }
-  }
-  percentChange(evt:any){
-    if(evt && evt.field){
-      this.listDistribute[evt.field].distributePct= evt.data;
-      this.detectorRef.detectChanges();
-    }
-  }
-  umidChange(evt:any){
-    if(evt && evt.field){
-      this.listDistribute[evt.field].umid= evt.data;
-      this.detectorRef.detectChanges();
-    }
-  }
+  
   nameChange(evt:any){
-    if(evt && evt.field){
-      this.listDistribute[evt.field].okrName= evt.data;
+    if(evt && evt?.data){
+      this.assignmentOKR.okrName= evt.data;
       this.detectorRef.detectChanges();
     }
   }

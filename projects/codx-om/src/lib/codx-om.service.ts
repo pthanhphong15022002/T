@@ -352,6 +352,17 @@ export class CodxOmService {
       [recID]
     );
   }
+  //Lấy danh sách OKR phụ thuộc
+  //(Bao gồm danh sách các OB được phân công, phân bổ từ OB hiện tại)
+  getListAssign(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetListAssignAsync',
+      [recID]
+    );
+  }
   //Thêm một mục tiêu
   addOKR(okr:any) {
     return this.api.execSv(

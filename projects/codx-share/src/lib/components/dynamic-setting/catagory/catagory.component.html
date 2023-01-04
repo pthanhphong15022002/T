@@ -151,33 +151,67 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'4'">
-              <codx-input
+              <ng-container
                 *ngIf="
-                  data.isCustomize == '0' &&
-                  (dataValue
-                    | value : 'FieldName' : data.fieldName : 'ApprovalRule')
+                  data.controlType == 'CheckBox' ||
+                    data.controlType == 'Switch';
+                  text
                 "
-                [style]="
-                  data.controlType == 'TextBox' ||
-                  data.controlType == 'Combobox'
-                    ? 'width: 200px'
-                    : ''
-                "
-                [type]="data | type"
-                [name]="data.controlType"
-                placeholder=""
-                ngDefaultControl
-                [refType]="data.referedType"
-                [refValue]="data.referedValue || data.referdValue"
-                [loadFull]="true"
-                [field]="data.fieldName"
-                [crrValue]="
-                  dataValue
-                    | value : 'FieldName' : data.fieldName : 'ApprovalRule'
-                "
-                (valueChange)="valueChange($event, data, autoDefault)"
               >
-              </codx-input>
+                <codx-input
+                  *ngIf="
+                    data.isCustomize == '0' &&
+                    (dataValue
+                      | value : 'FieldName' : data.fieldName : 'ApprovalRule')
+                  "
+                  [type]="data | type"
+                  [name]="data.controlType"
+                  placeholder=""
+                  ngDefaultControl
+                  [refType]="data.referedType"
+                  [refValue]="data.referedValue || data.referdValue"
+                  [loadFull]="true"
+                  [field]="data.fieldName"
+                  [checked]="
+                    (dataValue
+                      | value
+                        : 'FieldName'
+                        : data.fieldName
+                        : 'ApprovalRule') == '1'
+                  "
+                  (valueChange)="valueChange($event, data, autoDefault)"
+                >
+                </codx-input>
+              </ng-container>
+              <ng-template #text>
+                <codx-input
+                  *ngIf="
+                    data.isCustomize == '0' &&
+                    (dataValue
+                      | value : 'FieldName' : data.fieldName : 'ApprovalRule')
+                  "
+                  [style]="
+                    data.controlType == 'TextBox' ||
+                    data.controlType == 'Combobox'
+                      ? 'width: 200px'
+                      : ''
+                  "
+                  [type]="data | type"
+                  [name]="data.controlType"
+                  placeholder=""
+                  ngDefaultControl
+                  [refType]="data.referedType"
+                  [refValue]="data.referedValue || data.referdValue"
+                  [loadFull]="true"
+                  [field]="data.fieldName"
+                  [crrValue]="
+                    dataValue
+                      | value : 'FieldName' : data.fieldName : 'ApprovalRule'
+                  "
+                  (valueChange)="valueChange($event, data, autoDefault)"
+                >
+                </codx-input>
+              </ng-template>
             </ng-container>
 
             <ng-container *ngSwitchCase="'2'">

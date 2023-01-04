@@ -132,12 +132,15 @@
         <ng-container *ngTemplateOutlet="item.contentTmp; context: { $implicit: item }"></ng-container>
       </ng-container>
       <ng-template #noContentTemp>
-        <div class="my-3">
+        <div class="my-3" *ngIf="item.content">
           <div [innerHTML]="item.content"></div>
         </div>
       </ng-template>
       <div class="mt-2">
-        <codx-file [objectID]="item.recID" objectType="WP_Comments" (evtViewDetail)="clickViewDetail($event)">
+        <codx-file 
+          [objectID]="item.recID" 
+          objectType="WP_Comments" 
+          (evtViewDetail)="clickViewDetail($event)">
         </codx-file>
       </div>
       <ng-container *ngIf="item.refType == 'WP_News'; else tmpSharePost">

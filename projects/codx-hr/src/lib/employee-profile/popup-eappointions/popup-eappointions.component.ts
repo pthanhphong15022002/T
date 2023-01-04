@@ -61,7 +61,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
 
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.dialog.formModel.funcID;
+    // this.funcID = this.dialog.formModel.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEAppointions = data?.data?.lstEAppointions
