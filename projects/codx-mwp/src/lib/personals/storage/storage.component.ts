@@ -252,12 +252,13 @@ export class StorageComponent
       let myInterval = setInterval(() => {
         if (this.a.instance.listview) {
           clearInterval(myInterval);
+          (this.a.instance.listview?.dataService as CRUDService).predicate =
+            this.dataService.predicate;
+          (this.a.instance.listview?.dataService as CRUDService).dataValue =
+            this.dataService.dataValue;
           this.a.instance.listview?.dataService
-            .setPredicate(this.dataService.predicate, [
-              this.dataService.dataValue,
-            ])
+            .setPredicate(this.predicate, [this.dataValue])
             .subscribe((res) => {
-              console.log("check data predicate", res);
               this.detectorRef.detectChanges();
             });
         }
@@ -269,13 +270,13 @@ export class StorageComponent
       let myInterval = setInterval(() => {
         if (this.a.instance.listview) {
           clearInterval(myInterval);
+          (this.a.instance.listview?.dataService as CRUDService).predicates =
+            this.dataService.predicates;
+          (this.a.instance.listview?.dataService as CRUDService).dataValues =
+            this.dataService.dataValues;
           this.a.instance.listview?.dataService
-            .setPredicates(
-              [this.dataService.predicates],
-              [this.dataService.dataValues]
-            )
+            .setPredicate(this.predicate, [this.dataValue])
             .subscribe((res) => {
-              console.log("check data predicates", res);
               this.detectorRef.detectChanges();
             });
         }
