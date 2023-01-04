@@ -104,8 +104,7 @@
               [Group]="form.formGroup" (valueChange)="valueChange($event)" [disabled] ="isView">
             </codx-input>
           </div>
-
-          <button class="button-mail" *ngIf="stepType == 'E'" (click)="handelMail()" disabled="isView" [ngStyle]="isView ? {'background': '#e9ecef'} : {}">
+          <button class="button-mail" *ngIf="stepType == 'E'" (click)="handelMail()" disabled="{{isView}}" [ngStyle]="isView ? {'background': '#e9ecef'} : {}">
             <span class="icon-email icon-20 text-primary-600 py-2"></span>
           </button>
         </div>
@@ -173,7 +172,7 @@
             </span>
           </div>
           <div>
-            <button class="button-mail mt-5" (click)="handelMail()">
+            <button class="button-mail mt-5" (click)="handelMail()" disabled="{{isView}}" [ngStyle]="isView ? {'background': '#e9ecef'} : {}">
               <span class="icon-email icon-20 text-primary-600 py-2"></span>
             </button>
           </div>

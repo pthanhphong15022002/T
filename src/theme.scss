@@ -132,12 +132,12 @@
     }
 
     &.dark {
-        --primary: #2a2b3a;
+        // --primary: #2a2b3a;
         --primary-active: #3a3c50;
 
         --primary-darkest: #14141d;
-        --primary-darker: #1b1b2b;
-        --primary-dark: #202131;
+        //--primary-darker: #1b1b2b;
+        //--primary-dark: #202131;
         --primary-light: #2a2b3a;
         --primary-lighter: #19192c;
         --primary-lightest: #181a29;
@@ -477,6 +477,11 @@
         border-color: var(--primary-light) !important;
     }
 
+    .e-radio:checked+label::before {
+        background-color: var(--primary);
+        border-color: var(--primary);
+    }
+
     .codx-search.codx-focus {
         border-color: var(--primary-light) !important;
     }
@@ -609,6 +614,15 @@
     .e-schedule .e-month-agenda-view .e-current-date .e-date-header {
         background-color: var(--primary-dark);
     }
+
+    .codx-tab .tab-content {
+        border-color: var(--border-light);
+    }
+
+    codx-layout-add .lay-add-tab-footer {
+        border-color: var(--border-light);
+    }
+
 }
 
 

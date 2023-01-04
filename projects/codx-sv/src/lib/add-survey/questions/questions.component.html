@@ -111,7 +111,7 @@
                             *ngTemplateOutlet="
                               template_card_image_video;
                               context: {
-                                seqNoSession: itemSession.seqNo,
+                                itemSession: itemSession,
                                 itemQuestion: itemQuestion
                               }
                             "
@@ -122,7 +122,7 @@
                             *ngTemplateOutlet="
                               template_card_title;
                               context: {
-                                seqNoSession: itemSession.seqNo,
+                                itemSession: itemSession,
                                 itemQuestion: itemQuestion
                               }
                             "
@@ -176,7 +176,7 @@
                           <div class="col-md-4 d-flex justify-content-end">
                             <span
                               (click)="
-                                copyCard(itemSession.seqNo, itemQuestion, 'Q')
+                                copyCard(itemSession, itemQuestion, 'Q')
                               "
                               class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
                             ></span>
@@ -1485,7 +1485,7 @@
 </ng-template>
 <ng-template
   #template_card_image_video
-  let-seqNoSession="seqNoSession"
+  let-itemSession="itemSession"
   let-itemQuestion="itemQuestion"
 >
   <div class="d-flex">
@@ -1506,13 +1506,13 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard(seqNoSession, itemQuestion, 'P-V')"
+            (click)="copyCard(itemSession, itemQuestion, 'P-V')"
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
             (click)="
               deleteCard(
-                seqNoSession,
+                itemSession.seqNo,
                 itemQuestion.seqNo,
                 itemQuestion.recID,
                 'Not-S'
@@ -1595,7 +1595,7 @@
                   <li>
                     <a
                       (click)="
-                        deleteFile(seqNoSession, itemQuestion, data.objectID)
+                        deleteFile(itemSession.seqNo, itemQuestion, data.objectID)
                       "
                       ngbDropdownItem
                       href="javascript:void(0)"
@@ -1647,7 +1647,7 @@
 </ng-template>
 <ng-template
   #template_card_title
-  let-seqNoSession="seqNoSession"
+  let-itemSession="itemSession"
   let-itemQuestion="itemQuestion"
 >
   <div class="d-flex">
@@ -1667,13 +1667,13 @@
         </ejs-inplaceeditor>
         <ng-container #questionMF *ngIf="itemQuestion?.active" class="d-flex">
           <span
-            (click)="copyCard(seqNoSession, itemQuestion, 'T')"
+            (click)="copyCard(itemSession, itemQuestion, 'T')"
             class="icon-content_copy icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"
           ></span>
           <span
             (click)="
               deleteCard(
-                seqNoSession,
+                itemSession.seqNo,
                 itemQuestion.seqNo,
                 itemQuestion.recID,
                 'Not-S'

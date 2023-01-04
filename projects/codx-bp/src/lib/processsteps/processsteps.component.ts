@@ -152,6 +152,7 @@ export class ProcessStepsComponent
   isHover = null;
   listCountActivities: number = 0;
   isBlockClickMore: boolean;
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -478,9 +479,9 @@ export class ProcessStepsComponent
     } else {
       // doi parent
       phaseOld?.items.splice(index, 1);
-      if (index < phaseOld.length - 1) {
-        for (var i = index; i < phaseOld.length; i++) {
-          phaseOld[i].stepNo--;
+      if (index < phaseOld?.items.length) {
+        for (var i = index; i < phaseOld?.items.length; i++) {
+          phaseOld["items"][i].stepNo--;
         }
       }
       var indexParentNew = this.view.dataService.data.findIndex(
@@ -1454,5 +1455,12 @@ export class ProcessStepsComponent
     let dt = this.kanban.columns.find((x) => x.keyField == key);
     let dataColums = dt?.dataColums;
     return dataColums;
+  }
+  showPoupStepName(e,p){
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if(parent < child +15){
+      p.open();   
+    }
   }
 }
