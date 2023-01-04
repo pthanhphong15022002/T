@@ -1532,7 +1532,7 @@ export class CodxHrService {
     );
   }
 
-  getCrrEContract(dataRequest: DataRequest){
+  getCrrEContract(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1583,6 +1583,49 @@ export class CodxHrService {
   }
   //#endregion
 
+  //#region HR_EBusinessTravels
+
+  getEBTravelDefaultAsync() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'GetEBTravelDefaultAsync',
+      null
+    );
+  }
+
+  addEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'AddEBusinessTravelsAsync',
+      [data]
+    );
+  }
+
+  editEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'EditEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  deleteEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'DeleteEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  //#endregion
   //#region
   getDataDefault(
     funcID: string,
