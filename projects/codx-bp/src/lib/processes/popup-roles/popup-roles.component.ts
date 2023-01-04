@@ -80,13 +80,12 @@ export class PopupRolesComponent implements OnInit {
     this.process.permissions = this.groupBy(
       this.process.permissions,
       'objectType',
-      'objectID'
     ).sort((a, b) =>
-      ('' + a.objectID).localeCompare(this.process.owner)
-        ? 1
-        : a.memberType > b.memberType
-        ? 0
-        : -1
+    ('' + a.objectID).localeCompare(this.process.owner)
+    ? 1
+    : a.memberType > b.memberType
+    ? 0
+    : -1
     );
 
     // this.groupBy(this.process.permissions);
@@ -140,10 +139,10 @@ export class PopupRolesComponent implements OnInit {
   //     });
   // }
 
-  groupBy(arr, key1, key2) {
+  groupBy(arr, key1) {
     var lstGroup = [];
     var group = arr.reduce(function (rv, x) {
-      (rv[x[key1] + ',' + x[key2]] = rv[x[key1] + ',' + x[key2]] || []).push(x);
+      (rv[x[key1]] = rv[x[key1]] || []).push(x);
       return rv;
     }, {});
     for (var key of Object.keys(group)) {
@@ -152,7 +151,7 @@ export class PopupRolesComponent implements OnInit {
         lstGroup.push(tmp[item]);
       }
     }
-    return lstGroup
+    return lstGroup.sort((a,b) => b.objectID > a.objectID ? 1 : -1);
   }
   //#region save
   onSave() {
@@ -407,7 +406,13 @@ export class PopupRolesComponent implements OnInit {
 
       list.push(Object.assign({}, perm));
     }
-    return this.groupBy(list, 'objectType', 'objectID');
+    return this.groupBy(list, 'objectType').sort((a, b) =>
+    ('' + a.objectID).localeCompare(this.process.owner)
+    ? 1
+    : a.memberType > b.memberType
+    ? 1
+    : -1
+    );
   }
   //#endregion
 
