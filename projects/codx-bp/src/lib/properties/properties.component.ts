@@ -18,9 +18,9 @@ import {
   DialogData,
   DialogRef,
   NotificationsService,
+  Util,
 } from 'codx-core';
 import { CodxBpService } from '../codx-bp.service';
-import { B } from '@angular/cdk/keycodes';
 import { CodxTreeHistoryComponent } from 'projects/codx-share/src/lib/components/codx-tree-history/codx-tree-history.component';
 import { environment } from 'src/environments/environment';
 import { CodxHistoryComponent } from 'projects/codx-share/src/lib/components/codx-history/codx-history.component';
@@ -58,6 +58,7 @@ export class PropertiesComponent implements OnInit {
   entityName: any;
   flowChart= '';
   objectID: any;
+  firstNameVersion:string = '';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -84,6 +85,13 @@ export class PropertiesComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.cache.message('BP001').subscribe((res) => {
+      if (res) {
+        this.firstNameVersion = Util.stringFormat(
+          res.defaultName,''
+        ).trim()+': '+'V0.0';
+      }
+    });
     this.openProperties(this.data.recID);
     this.changeDetectorRef.detectChanges();
   }

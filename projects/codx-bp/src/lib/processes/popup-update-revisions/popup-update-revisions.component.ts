@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation,ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, Util } from 'codx-core';
 import moment from 'moment';
@@ -42,6 +42,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     private callfc: CallFuncService,
     private authStore: AuthStore,
     private cache: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -58,21 +59,17 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.user = this.authStore.get();
     this.revisions = this.getProcess.versions.sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
     this.title = this.titleAction;
+
+  };
+  ngOnInit(): void {
     this.cache.message('BP001').subscribe((res) => {
       if (res) {
         this.firstNameVersion = Util.stringFormat(
-          res.defaultName.trim(),
-          ': ' + 'V0.0'
-        );
-        console.log(res.defaultName);
+          res.defaultName,''
+        ).trim()+': '+'V0.0';
+        this.changeDetectorRef.detectChanges();
       }
     });
-
-  };
-
-
-
-  ngOnInit(): void {
   }
 
   onClose() {

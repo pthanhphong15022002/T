@@ -49,7 +49,8 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   headerText: string;
   formModelCheckin = new FormModel();
   dtStatus: any;
-  openAccordion = [];
+  openAccordionAlign = [];
+  openAccordionAssign = [];
   dataKR: any;
   title='';
   krRecID:any;
@@ -122,6 +123,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     },
     offset: 0,
   };
+  listAssign: any;
 
   load(args: ILoadedEventArgs): void {
     // custom code start
@@ -173,6 +175,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     
     this.getKRData();    
     this.getListAlign();
+    this.getListAssign()
   }
 
   //-----------------------End-------------------------------//
@@ -221,12 +224,24 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
           }
         });
   }
-  getItemOKR(i: any, recID: any) {
-    this.openAccordion[i] = !this.openAccordion[i];
+  getListAssign(){
+    this.codxOmService
+        .getListAssign(this.krRecID)
+        .subscribe((res: any) => {
+          if (res) {
+            this.listAssign = res;           
+          }
+        });
+  }
+  getItemOKRAlign(i: any, recID: any) {
+    this.openAccordionAlign[i] = !this.openAccordionAlign[i];
     // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
     //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
     //     if(item) this.dataOKR[i].child = item
     //   });
+  }
+  getItemOKRAssign(i: any, recID: any) {
+    this.openAccordionAssign[i] = !this.openAccordionAssign[i];
   }
 
   //#region Chart
