@@ -1,16 +1,10 @@
-<div class="row mx-0">
+<div class="row mx-0 h-100">
     <div class="col-8 p-5 bg-gray-200 show-pic position-relative">
         <ng-container [ngSwitch]="file.referType">
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
                 <div class="w-100 h-100 img-full">
-                    <codx-img 
-                        [recId]="file.recID" 
-                        [objectId]="file.objectID" 
-                        objectType="WP_Comments"
-                        imageType="square"
-                        [width]="800"
-                        [referType]="'image'"
-                        cssClass="w-100 h-auto image">
+                    <codx-img [recId]="file.recID" [objectId]="file.objectID" objectType="WP_Comments"
+                        imageType="square" [width]="800" [referType]="'image'" cssClass="w-100 h-auto image">
                     </codx-img>
                 </div>
             </ng-container>
@@ -61,12 +55,8 @@
     <div class="col-4 mt-5 ps-6" *ngIf="post">
         <div class="d-flex">
             <div class="me-2">
-                <codx-img 
-                    [objectId]="post.createdBy" 
-                    [objectName]="post.createdName"
-                    [imageType]="'circle'"
-                    objectType="AD_Users" 
-                    [width]="40">
+                <codx-img [objectId]="post.createdBy" [objectName]="post.createdName" [imageType]="'circle'"
+                    objectType="AD_Users" [width]="40">
                 </codx-img>
             </div>
             <div class="text-info-date ms-2">
@@ -79,13 +69,8 @@
                 <div class="mt-2">
                     <span class="text-gray-600 fs-7 me-2">{{post.createdOn | timefrom}}</span>
                     <span *ngIf="post.shareControl" class="rounded-1 py-1 px-2 bg-gray-200">
-                        <codx-vll 
-                            [name]="'WP001'" 
-                            [value]="post.shareControl" 
-                            [showText]="true" 
-                            [showIcon]="true" 
-                            [path]="'assets/themes/sys/default/img/'"
-                            [icoCss]="'symbol-12px symbol-circle'"  
+                        <codx-vll [name]="'WP001'" [value]="post.shareControl" [showText]="true" [showIcon]="true"
+                            [path]="'assets/themes/sys/default/img/'" [icoCss]="'symbol-12px symbol-circle'"
                             [showBgColor]="true">
                         </codx-vll>
                     </span>
@@ -97,13 +82,8 @@
         </div>
         <!-- comment -->
         <div>
-            <treeview-comment
-                [funcID]="'WP'"
-                [fromModel]="dialogRef.formModel"
-                [objectType]="'WP_Comments'"
-                [dataComment]="post"
-                [objectID]="post.recID"
-                >
+            <treeview-comment [funcID]="'WP'" [fromModel]="dialogRef.formModel" [objectType]="'WP_Comments'"
+                [dataComment]="post" [objectID]="post.recID">
             </treeview-comment>
         </div>
     </div>

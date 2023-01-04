@@ -81,7 +81,7 @@ export class PopupAddProcessesComponent implements OnInit {
   moreFunctionEdit: string = 'edit';
   listPermissionCopy: BP_ProcessPermissions[] = [];
   onwerOldCoppy: string = '';
-  msgCodeExistNameProcess='BP008'; // gán tạm chờ message code
+  msgCodeExistNameProcess='BP008';
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -156,7 +156,7 @@ export class PopupAddProcessesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.acceptEdit();
+    // this.acceptEdit();
     this.isDisable = true;
     if (this.action === this.moreFunctionEdit) {
       this.showLabelAttachment = this.process?.attachments > 0 ? true : false;
@@ -441,13 +441,9 @@ export class PopupAddProcessesComponent implements OnInit {
       tmpPermission.objectType = '1';
       tmpPermission.objectID = emp?.userID;
       tmpPermission.objectName = emp?.userName;
-      // let check = await this.checkAdminOfBP(emp?.userID);
       if (emp.administrator) {
         tmpPermission.objectType = '7';
       }
-      // else if (true) {
-      //   tmpPermission.objectType = '7';
-      // }
     }
     tmpPermission.autoCreate = true;
     tmpPermission.edit = true;
@@ -459,13 +455,6 @@ export class PopupAddProcessesComponent implements OnInit {
     tmpPermission.delete = true;
     tmpPermission.allowPermit = true;
     tmpPermission.download = true;
-
-    // (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
-    //   if(res){
-    //     tmpPermission.objectType = '7';
-    //   }
-    // });
-
   }
   callActionSave() {
     if (
@@ -479,23 +468,22 @@ export class PopupAddProcessesComponent implements OnInit {
     }
   }
 
-  async acceptEdit() {
-    if (this.user.administrator) {
-      this.isAcceptEdit = true;
-      return;
-    }
-    else {
-      this.isAcceptEdit = false;
-    }
-    // (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
-    //   if(res){
-    //     this.isAcceptEdit = true;
-    //   }
-    //   this.isAcceptEdit = false;
-    //   return;
-    // });
-  }
-  // async checkAdminOfBP(userid: any) {
+  // async acceptEdit() {
+  //   if (this.user.administrator) {
+  //     this.isAcceptEdit = true;
+  //     return;
+  //   }
+  //   (await this.bpService.checkAdminOfBP(this.user?.userID)).subscribe((res) => {
+  //     if(res){
+  //       this.isAcceptEdit = true;
+  //     return;
+  //     }
+  //     else {
+  //       this.isAcceptEdit = false;
+  //       return;
+  //     }
+
+  //   });
   // }
 
   addAvatar() {

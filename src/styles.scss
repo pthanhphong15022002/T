@@ -1542,3 +1542,13 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   max-height: 150px;
   min-height: 150px;
 }
+
+.dialog-extend {
+  position: fixed;
+  right: 0;
+  width: 320px;
+  bottom: 0;
+  z-index: 9999;
+  background-color: white;
+  top: 97px;
+}
