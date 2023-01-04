@@ -152,9 +152,7 @@ export class PopupRolesComponent implements OnInit {
         lstGroup.push(tmp[item]);
       }
     }
-    return lstGroup.sort((a, b) =>
-      a.objectID > b.objectID ? 1 : a.memberType > b.memberType ? 0 : -1
-    );
+    return lstGroup
   }
   //#region save
   onSave() {
