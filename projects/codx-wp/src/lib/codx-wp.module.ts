@@ -61,6 +61,7 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: HomeComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -108,6 +109,7 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: CompanyInforComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -118,6 +120,7 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: ApproveComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -128,6 +131,7 @@ export const routes: Routes = [
       {
         path: ':funcID',
         component: OrgorganizationComponent,
+        data: { noReuse: true },
       },
     ],
   },
@@ -144,6 +148,7 @@ export const routes: Routes = [
   {
     path: 'wp/portal/wp',
     redirectTo: 'portal/WP',
+    data: { noReuse: true },
     pathMatch: 'full',
   },
   {

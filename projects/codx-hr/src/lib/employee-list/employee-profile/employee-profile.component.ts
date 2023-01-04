@@ -1319,13 +1319,18 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
-        isAdd: false,
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res){
+        console.log('data tra ve dang doan', res.event);
+        
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -1345,7 +1350,11 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res){
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -1360,16 +1369,19 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeSelfInfoComponent,
       PopupESelfInfoComponent,
       {
-        isAdd: true,
         headerText: 'Thông tin bản thân',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      
+      if (res){
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
     // })
   }

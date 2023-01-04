@@ -37,14 +37,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     if(this.formModel){
       this.isAfterRender = true
     }
-    this.data = dialog?.dataService?.dataSelected
-
-    
-    // this.formModel.entityName = 'HR_Employees';
-    // this.formModel.formName = 'Employees';
-    // this.formModel.gridViewName = 'grvEmployees';
-    // this.formModel.funcID = 'HRT03a1';
-    // this.formModel.entityPer = 'HR_Employees';
+    this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected))
   }
 
   onInit(): void {
@@ -62,9 +55,11 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    console.log('check form', this.form);
-    console.log('form', this.form);
-    console.log('self info', this.data)
+    this.dialog.closed.subscribe(res => {
+      if(!res.event){
+        this.dialog && this.dialog.close(this.data);
+      }
+    })
   }
 
   swipeToRightTab(e) {
@@ -90,7 +85,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
 
   handleOnSaveEmployeeContactInfo(){
     this.hrService.saveEmployeeContactInfo(this.data).subscribe(p => {
-      if(p === "True"){
+      if(p != null){
         this.notitfy.notifyCode('SYS007')
         this.dialog.close()
       }
@@ -114,7 +109,7 @@ export class PopupESelfInfoComponent extends UIComponent implements OnInit {
     }
 
     this.hrService.saveEmployeeSelfInfo(this.data).subscribe(p => {
-      if(p === "True"){
+      if(p != null){
         this.notitfy.notifyCode('SYS007')
         this.dialog.close()
       }
