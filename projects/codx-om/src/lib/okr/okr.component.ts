@@ -41,14 +41,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   dataOKRPlans = null;
   //title//
   dtCompany = null;
-  compName='';
-  deptName='';
-  orgName='';
-  persName='';  
-  compFuncID=OMCONST.FUNCID.COMP;
-  deptFuncID=OMCONST.FUNCID.DEPT;
-  orgFuncID=OMCONST.FUNCID.ORG;
-  persFuncID=OMCONST.FUNCID.PERS;
+  compName = '';
+  deptName = '';
+  orgName = '';
+  persName = '';
+  compFuncID = OMCONST.FUNCID.COMP;
+  deptFuncID = OMCONST.FUNCID.DEPT;
+  orgFuncID = OMCONST.FUNCID.ORG;
+  persFuncID = OMCONST.FUNCID.PERS;
   /////////
   auth: AuthStore;
   okrService: CodxOmService;
@@ -61,7 +61,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Năm
   year = null;
   dataDate = null;
-  curUser:any;
+  curUser: any;
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelOB = new FormModel();
@@ -70,7 +70,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   krFuncID: any;
   addKRTitle = '';
   addOBTitle = '';
-  isAffterRender=false;
+  isAffterRender = false;
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -85,7 +85,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
-    
     this.funcIDChanged();
     this.formModelChanged();
     this.views = [
@@ -93,10 +92,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         id: '1',
         type: ViewType.content,
         active: true,
-        sameData: true,
+        sameData: false,
         model: {
           panelRightRef: this.panelRight,
-          contextMenu: '',
         },
       },
     ];
@@ -107,22 +105,31 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.dataRequest.page = 1;
     this.dataRequest.pageSize = 20;
     this.dataRequest.predicate = 'ParentID=@0';
-
   }
 
   onInit(): void {
-    this.curUser = this.auth.get();  
+    this.curUser = this.auth.get();
 
-        this.compName = this.curUser?.employee?.companyName !=null? this.curUser?.employee?.companyName :"";
-        this.compName = this.compName !=''? this.compName :'Công ty';
-        
-        this.deptName = this.curUser?.employee?.departmentName !=null? this.curUser?.employee?.departmentName :"";
-             
-        this.orgName = this.curUser?.employee?.orgUnitName !=null? this.curUser?.employee?.orgUnitName :"";
-        
-        this.persName = this.curUser?.employee?.employeeName !=null? this.curUser?.employee?.employeeName :"";
-        
-    
+    this.compName =
+      this.curUser?.employee?.companyName != null
+        ? this.curUser?.employee?.companyName
+        : '';
+    this.compName = this.compName != '' ? this.compName : 'Công ty';
+
+    this.deptName =
+      this.curUser?.employee?.departmentName != null
+        ? this.curUser?.employee?.departmentName
+        : '';
+
+    this.orgName =
+      this.curUser?.employee?.orgUnitName != null
+        ? this.curUser?.employee?.orgUnitName
+        : '';
+
+    this.persName =
+      this.curUser?.employee?.employeeName != null
+        ? this.curUser?.employee?.employeeName
+        : '';
   }
 
   //-----------------------End-------------------------------//
@@ -132,7 +139,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
     this.detectorRef.detectChanges();
-    
+
     this.funcIDChanged();
     this.formModelChanged();
     this.detectorRef.detectChanges();
@@ -185,25 +192,25 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   //Lấy OKR Plan
   getOKRPlans(periodID: any, interval: any, year: any) {
-    if(!this.curUser.administrator){
+    if (!this.curUser.administrator) {
       this.okrService
-      .getOKRPlans(periodID, interval, year)
-      .subscribe((item: any) => {
-        //Reset data View
-        this.dataOKRPlans = null;
-        this.dataOKR=null;
-        if (item) {
-          this.dataOKRPlans = item;
-          //----------
-          this.dataRequest.dataValue = item.recID;
-          //----------
-          this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
-            if (item) {
-              this.dataOKR = item;
-            }
-          });
-        }
-      });
+        .getOKRPlans(periodID, interval, year)
+        .subscribe((item: any) => {
+          //Reset data View
+          this.dataOKRPlans = null;
+          this.dataOKR = null;
+          if (item) {
+            this.dataOKRPlans = item;
+            //----------
+            this.dataRequest.dataValue = item.recID;
+            //----------
+            this.okrService.getOKR(this.dataRequest).subscribe((item: any) => {
+              if (item) {
+                this.dataOKR = item;
+              }
+            });
+          }
+        });
     }
   }
 
@@ -220,14 +227,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         break;
       case OMCONST.FUNCID.ORG:
         this.krFuncID = OMCONST.KRFUNCID.ORG;
-        this.obFuncID = OMCONST.OBFUNCID.ORG;        
+        this.obFuncID = OMCONST.OBFUNCID.ORG;
         break;
       case OMCONST.FUNCID.PERS:
         this.krFuncID = OMCONST.KRFUNCID.PERS;
         this.obFuncID = OMCONST.OBFUNCID.PERS;
         break;
     }
-    this.isAffterRender=true;
+    this.isAffterRender = true;
     this.detectorRef.detectChanges();
   }
   //Lấy form Model con
