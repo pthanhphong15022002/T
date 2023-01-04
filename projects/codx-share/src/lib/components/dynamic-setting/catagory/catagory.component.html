@@ -171,8 +171,17 @@
                 [refValue]="data.referedValue || data.referdValue"
                 [loadFull]="true"
                 [field]="data.fieldName"
+                [checked]="
+                  (data.controlType == 'CheckBox' ||
+                    data.controlType == 'Switch') &&
+                  (dataValue
+                    | value : 'FieldName' : data.fieldName : 'ApprovalRule') ==
+                    '1'
+                "
                 [crrValue]="
-                  dataValue
+                  data.controlType != 'CheckBox' &&
+                    data.controlType != 'Switch' &&
+                    dataValue
                     | value : 'FieldName' : data.fieldName : 'ApprovalRule'
                 "
                 (valueChange)="valueChange($event, data, autoDefault)"
