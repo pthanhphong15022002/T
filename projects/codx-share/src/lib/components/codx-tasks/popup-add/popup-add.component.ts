@@ -95,7 +95,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   gridViewSetup: any;
   changTimeCount = 2;
   dataReferences = [];
-  disabledProject =false
+  disabledProject = false;
 
   @ViewChild('contentAddUser') contentAddUser;
   @ViewChild('contentListTask') contentListTask;
@@ -154,7 +154,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   tabContent: any[] = [];
   titleAction = '';
   disableDueDate = false;
-  titleViewTask ="Xem"
+  titleViewTask = 'Xem';
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -180,7 +180,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     this.titleAction = dt?.data[3];
     this.functionID = dt?.data[4];
     this.taskCopy = dt?.data[5];
-    this.disabledProject =dt?.data[6]
+    this.disabledProject = dt?.data[6];
     this.dialog = dialog;
     this.user = this.authStore.get();
 
@@ -190,7 +190,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
     this.cache.functionList(this.functionID).subscribe((f) => {
       if (f) {
-        this.titleViewTask = f.language=="VN" ? "Xem chi tiết" :"View"
+        this.titleViewTask = f.language == 'VN' ? 'Xem chi tiết' : 'View';
         this.cache
           .gridViewSetup(f.formName, f.gridViewName)
           .subscribe((res) => {
@@ -199,18 +199,12 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             }
           });
       }
-    })
-     this.cache
-      .gridViewSetup(
-        'TaskGoals',
-        "grvTaskGoals"
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.planholderTaskGoal = res["Memo"]?.description;
-        }
-      });
-    ;
+    });
+    this.cache.gridViewSetup('TaskGoals', 'grvTaskGoals').subscribe((res) => {
+      if (res) {
+        this.planholderTaskGoal = res['Memo']?.description;
+      }
+    });
     // this.functionID = this.dialog.formModel.funcID;
     // this.cache
     //   .gridViewSetup(
@@ -598,8 +592,11 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             this.tmSv
               .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
               .subscribe();
-          }
-   
+          } else
+            this.tmSv
+              .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
+              .subscribe();
+
           if (task?.category == '1' && task.verifyControl == '1')
             this.tmSv
               .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
@@ -690,19 +687,21 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
             res.trim() == '' ||
             res.split(';')?.length != listDepartmentID.split(';')?.length
           )
-          this.notiService.notifyCode('TM065');
+            this.notiService.notifyCode('TM065');
           this.valueSelectUser(res);
         } else this.notiService.notifyCode('TM065');
       });
     }
     if (listPositionID != '') {
       listPositionID = listPositionID.substring(0, listPositionID.length - 1);
-      this.tmSv.getListUserIDByListPositionsID(listPositionID).subscribe((res) => {
-        if (res && res.length > 0 ) {
-          if (!res[1]) this.notiService.notifyCode('TM066');
-          this.valueSelectUser(res[0]);
-        } else this.notiService.notifyCode('TM066');
-      });
+      this.tmSv
+        .getListUserIDByListPositionsID(listPositionID)
+        .subscribe((res) => {
+          if (res && res.length > 0) {
+            if (!res[1]) this.notiService.notifyCode('TM066');
+            this.valueSelectUser(res[0]);
+          } else this.notiService.notifyCode('TM066');
+        });
     }
   }
 
@@ -1049,8 +1048,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
   //referen new
   loadDataReferences() {
     this.dataReferences = [];
-    if (this.task.refID)
-      this.getReferencesByCategory3(this.task);
+    if (this.task.refID) this.getReferencesByCategory3(this.task);
   }
 
   getReferencesByCategory3(task) {
