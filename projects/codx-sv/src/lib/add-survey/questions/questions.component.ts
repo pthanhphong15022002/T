@@ -143,14 +143,16 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       fontFormat: 'B',
     };
     this.router.queryParams.subscribe((queryParams) => {
-      if (queryParams?.funcID) this.funcID = queryParams.funcID;
+      if (queryParams?.funcID) {
+        this.funcID = queryParams.funcID;
+        this.cache.functionList(this.funcID).subscribe((res) => {
+          if (res) this.functionList = res;
+        });
+      }
       if (queryParams?.recID) {
         this.recID = queryParams.recID;
       }
       this.loadData();
-    });
-    this.cache.functionList(this.funcID).subscribe((res) => {
-      if (res) this.functionList = res;
     });
   }
 

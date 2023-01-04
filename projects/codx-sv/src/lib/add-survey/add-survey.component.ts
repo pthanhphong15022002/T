@@ -27,6 +27,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   mode: any = 'Q';
   title: any;
   signal: any = null;
+  url: any;
 
   @ViewChild('itemTemplate') panelLeftRef: TemplateRef<any>;
   @ViewChild('app_question') app_question: ComponentRef<any>;
@@ -34,7 +35,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   constructor(
     private injector: Injector,
     private change: ChangeDetectorRef,
-    private SVService: CodxSvService,
+    private SVService: CodxSvService
   ) {
     super(injector);
     this.router.queryParams.subscribe((queryParams) => {
@@ -45,6 +46,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
       if (queryParams?.title) {
         this.title = queryParams.title;
       }
+      this.url = queryParams;
     });
     this.cache.functionList(this.funcID).subscribe((res) => {
       if (res) this.functionList = res;
@@ -91,9 +93,17 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
     else if (e.selectedIndex == 2) this.mode = 'S';
   }
 
-  onSubmit() { }
+  onSubmit() {}
 
   back() {
     this.codxService.navigate('SVT01');
+  }
+
+  review() {
+    this.codxService.openUrlNewTab('', 'sv/review', {
+      funcID: this.funcID,
+      title: this.title,
+      recID: this.recID,
+    });
   }
 }
