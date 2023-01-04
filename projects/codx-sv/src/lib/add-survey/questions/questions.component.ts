@@ -663,8 +663,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       itemQuestionNew.seqNo ==
       this.questions[itemSession.seqNo].children.length - 1
     )
-      this.setTimeoutSaveData(itemQuestionNew, true);
-    else this.setTimeoutSaveData(itemQuestionNew, true, data);
+      this.setTimeoutSaveData([itemQuestionNew], true);
+    else this.setTimeoutSaveData([itemQuestionNew], true, data);
     this.copyFileNoSession(itemQuestion, itemQuestionNew);
   }
 
