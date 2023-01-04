@@ -79,6 +79,8 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
         })
       }
       this.formGroup.patchValue(this.data)
+      this.fromdateVal = this.data.fromDate
+      this.todateVal = this.data.toDate
       this.isAfterRender = true
     })
   }

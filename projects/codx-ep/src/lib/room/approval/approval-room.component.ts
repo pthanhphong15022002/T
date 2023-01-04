@@ -61,6 +61,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   tempAttendees = '';
   selectBookingItems = [];
   selectBookingAttendees = '';
+  queryParams: any;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -68,6 +69,7 @@ export class ApprovalRoomsComponent extends UIComponent {
   ) {
     super(injector);
     this.funcID = this.router.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -82,6 +84,10 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
     this.request.idField = 'recID';
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){
+      this.request.predicate=this.queryParams?.predicate;
+      this.request.dataValue=this.queryParams?.dataValue;
+    }
 
     this.modelResource = new ResourceModel();
     this.modelResource.assemblyName = 'EP';

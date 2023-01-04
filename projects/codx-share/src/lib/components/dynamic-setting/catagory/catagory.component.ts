@@ -245,6 +245,8 @@ export class CatagoryComponent implements OnInit {
           );
           break;
         case 'cpnapprovals':
+          let dtvalue = this.dataValue.find((x) => x.FieldName == value);
+          if (dtvalue.ApprovalRule == '0') return;
           dialogModel.IsFull = true;
           var category = this.categories[value];
           if (!category) return;
