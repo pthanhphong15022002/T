@@ -48,7 +48,7 @@ export class StorageComponent
 {
   user: any;
   dataValue = '';
-  predicate = 'CreatedBy=@0';
+  predicate = '';
   data: any;
   recID: any;
   checkFormComment = false;
@@ -74,7 +74,6 @@ export class StorageComponent
   @ViewChild('itemTemplate') itemTemplate!: TemplateRef<any>;
   @ViewChild('listView') listView: CodxListviewComponent;
   @ViewChild('moreFC') moreFC: TemplateRef<any>;
-  @ViewChild('detail') lstComment: TemplateRef<any>;
 
   constructor(
     private inject: Injector,
@@ -219,12 +218,12 @@ export class StorageComponent
   }
 
   dataUpdate: any = [];
-  dataComments: any = [];
   a: any;
   openStorageDetail(e) {
     this.dataUpdate = e;
     this.dataSort = [];
     this.checkFormComment = true;
+    this.detail = null;
     this.detectorRef.detectChanges();
 
     var arr: any = new Array();
@@ -241,21 +240,47 @@ export class StorageComponent
       funcID: 'WP',
     };
     this.a = this.detail.createComponent(ListPostComponent);
-    if (arr?.length == 0) {
-      this.generateGuid();
-      this.dataService.predicate = `(CreatedBy="${this.user?.userID}") and (RecID="${this.guidID}")`;
-      this.a.instance.dataService = this.dataService;
-    } else {
-      this.dataService.predicates = `(CreatedBy="${this.user?.userID}") and (@0.Contains(RecID))`;
-      this.dataService.dataValues = `[${arr.join(';')}]`;
-      this.a.instance.dataService = this.dataService;
-    }
+    this.a.instance.dataService = null;
     this.a.instance.isShowCreate = false;
     this.a.instance.formModel = formModel;
     this.a.instance.moreFunc = true;
     this.a.instance.moreFuncTmp = this.moreFC;
-    this.detectorRef.detectChanges();
-    this.dataComments = this.a.instance.listview?.dataService?.data;
+    if (arr?.length == 0) {
+      this.generateGuid();
+      this.dataService.predicate = `(RecID="${this.guidID}")`;
+      this.a.instance.dataService = this.dataService;
+      let myInterval = setInterval(() => {
+        if (this.a.instance.listview) {
+          clearInterval(myInterval);
+          this.a.instance.listview?.dataService
+            .setPredicate(this.dataService.predicate, [
+              this.dataService.dataValue,
+            ])
+            .subscribe((res) => {
+              console.log("check data predicate", res);
+              this.detectorRef.detectChanges();
+            });
+        }
+      }, 200);
+    } else {
+      this.dataService.predicates = `(@0.Contains(RecID))`;
+      this.dataService.dataValues = `[${arr.join(';')}]`;
+      this.a.instance.dataService = this.dataService;
+      let myInterval = setInterval(() => {
+        if (this.a.instance.listview) {
+          clearInterval(myInterval);
+          this.a.instance.listview?.dataService
+            .setPredicates(
+              [this.dataService.predicates],
+              [this.dataService.dataValues]
+            )
+            .subscribe((res) => {
+              console.log("check data predicates", res);
+              this.detectorRef.detectChanges();
+            });
+        }
+      }, 200);
+    }
   }
 
   guidID: any;
