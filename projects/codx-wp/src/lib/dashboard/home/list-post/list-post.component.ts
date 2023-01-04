@@ -30,8 +30,7 @@ import {
 } from 'codx-core';
 import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { WP_Comments } from '../../../models/WP_Comments.model';
-import { PopupAddPostComponent } from './popup-add-post/popup-add-post.component';
-import { PopupAddPostComponents } from './popup-add/popup-add.component';
+import { PopupAddPostComponent } from './popup-add/popup-add-post.component';
 import { PopupDetailComponent } from './popup-detail/popup-detail.component';
 import { PopupSavePostComponent } from './popup-save/popup-save.component';
 
