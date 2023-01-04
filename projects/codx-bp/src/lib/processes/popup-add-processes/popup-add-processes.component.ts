@@ -81,6 +81,7 @@ export class PopupAddProcessesComponent implements OnInit {
   moreFunctionEdit: string = 'edit';
   listPermissionCopy: BP_ProcessPermissions[] = [];
   onwerOldCoppy: string = '';
+  msgCodeExistNameProcess='BP008'; // gán tạm chờ message code
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -342,20 +343,12 @@ export class PopupAddProcessesComponent implements OnInit {
       .isCheckExitName(this.process.processName, id)
       .subscribe((res) => {
         if (res) {
-          this.CheckExistNameProccess();
+          this.notiService.notifyCode(this.msgCodeExistNameProcess);
+          return;
         } else {
           this.actionSave();
         }
       });
-  }
-  CheckExistNameProccess() {
-    this.notiService.alertCode('BP008').subscribe((x) => {
-      if (x.event?.status == 'N') {
-        return;
-      } else if (x.event?.status == 'Y') {
-        this.actionSave();
-      }
-    });
   }
   //#endregion method
   isUpdateCreateProcess() {
@@ -368,13 +361,6 @@ export class PopupAddProcessesComponent implements OnInit {
       this.onUpdate();
     }
   }
-  //#region check date
-  isCheckFromToDate(toDate) {
-    var to = new Date(toDate);
-    if (to <= new Date()) return true;
-    else return false;
-  }
-  ////#endregion
 
   //#region event
   valueChange(e) {
@@ -444,26 +430,26 @@ export class PopupAddProcessesComponent implements OnInit {
     this.callActionSave();
   }
 
-  updatePermission(
+  async updatePermission(
     emp: tmpUser,
     tmpPermission: BP_ProcessPermissions,
     role: string
   ) {
+    // BE handle update onwer
+    tmpPermission.memberType = '0';
     if (role === this.onwerRole) {
       tmpPermission.objectType = '1';
       tmpPermission.objectID = emp?.userID;
       tmpPermission.objectName = emp?.userName;
+      // let check = await this.checkAdminOfBP(emp?.userID);
       if (emp.administrator) {
         tmpPermission.objectType = '7';
       }
-      else if (this.checkAdminOfBP(emp.userID)) {
-        tmpPermission.objectType = '7';
-      }
+      // else if (true) {
+      //   tmpPermission.objectType = '7';
+      // }
     }
-    // BE handle update onwer
-    tmpPermission.memberType = '0';
     tmpPermission.autoCreate = true;
-
     tmpPermission.edit = true;
     tmpPermission.create = true;
     tmpPermission.publish = true;
@@ -473,6 +459,13 @@ export class PopupAddProcessesComponent implements OnInit {
     tmpPermission.delete = true;
     tmpPermission.allowPermit = true;
     tmpPermission.download = true;
+
+    // (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
+    //   if(res){
+    //     tmpPermission.objectType = '7';
+    //   }
+    // });
+
   }
   callActionSave() {
     if (
@@ -480,41 +473,30 @@ export class PopupAddProcessesComponent implements OnInit {
       this.action == this.moreFunctionEdit
     ) {
       this.actionSave();
-    } else if (
-      this.process?.processName.trim().toLocaleLowerCase() ===
-      this.nameOld?.trim().toLocaleLowerCase()
-    ) {
-      this.CheckExistNameProccess();
-    } else {
+    }
+    else {
       this.CheckAllExistNameProccess(this.process.recID);
     }
   }
-  // checkAdminOfBP(userid: any) {
-  //   let check: boolean;
-  // this.bpService.checkAdminOfBP(userid).subscribe((res) =>{
 
-  //   });
-  // }
-
-  acceptEdit() {
+  async acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    }
-    else if (this.checkAdminOfBP(this.user.userId))
-     {
-      this.isAcceptEdit = true;
+      return;
     }
     else {
       this.isAcceptEdit = false;
     }
+    // (await this.bpService.checkAdminOfBP(this.user.userId)).subscribe((res) => {
+    //   if(res){
+    //     this.isAcceptEdit = true;
+    //   }
+    //   this.isAcceptEdit = false;
+    //   return;
+    // });
   }
-  async checkAdminOfBP(userid: any) {
-    var check = false;
-    await (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => {
-      check = res ? true : false;
-    });
-    return check;
-  }
+  // async checkAdminOfBP(userid: any) {
+  // }
 
   addAvatar() {
     //this.imageAvatar.clearData();

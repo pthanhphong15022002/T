@@ -26,8 +26,14 @@
             <div class="my-3">
                 <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                     <ng-container *ngIf="fileUpload.recID;else imageSrc">
-                        <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
-                            cssClass="pic" imageType="square" [imgOn]="date">
+                        <codx-img 
+                            [recId]="fileUpload.recID" 
+                            [objectId]="fileUpload.objectID" 
+                            [width]="100"
+                            cssClass="pic" 
+                            imageType="square" 
+                            [imgOn]="date"
+                            [referType]="'image'">
                         </codx-img>
                     </ng-container>
                     <ng-template #imageSrc>
@@ -119,7 +125,7 @@
                     <ng-container *ngIf="fileUpload.referType == REFERTYPE.IMAGE">
                         <ng-container *ngIf="fileUpload.recID;else imageSrc">
                             <codx-img [recId]="fileUpload.recID" [objectId]="fileUpload.objectID" [width]="100"
-                                cssClass="pic" imageType="square"  [imgOn]="date">
+                                cssClass="pic" imageType="square"  [referType]="'image'" [imgOn]="date">
                             </codx-img>
                         </ng-container>
                         <ng-template #imageSrc>
@@ -165,7 +171,7 @@
                         </ng-template>
                     </div>
                     <span class="d-flex align-items-center text-gray-600 text-hover-underline" (click)="replyTo(data)">
-                        <codx-label formName="WPW_Comments" name="lblReply" default="Trả lời"></codx-label>
+                        <codx-label formName="WP_Comments" name="lblReply" default="Trả lời"></codx-label>
                     </span>
                 </div>
 

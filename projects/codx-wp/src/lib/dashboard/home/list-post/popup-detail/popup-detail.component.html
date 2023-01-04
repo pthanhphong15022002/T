@@ -4,7 +4,7 @@
             <ng-container *ngSwitchCase="FILE_REFERTYPE.IMAGE">
                 <div class="w-100 h-100 img-full">
                     <codx-img [recId]="file.recID" [objectId]="file.objectID" objectType="WP_Comments"
-                        imageType="square" [width]="800" cssClass="w-100 h-auto image">
+                        imageType="square" [width]="800" [referType]="'image'" cssClass="w-100 h-auto image">
                     </codx-img>
                 </div>
             </ng-container>
