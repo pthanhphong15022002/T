@@ -348,7 +348,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     }
   }
   onActionClick(evt?) {
-    if (evt.type == 'add') {
+    if (evt.type == 'add'&& evt.data?.resourceId!=null) {
       
     this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
