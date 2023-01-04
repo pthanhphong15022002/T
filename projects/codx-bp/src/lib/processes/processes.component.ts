@@ -140,6 +140,7 @@ export class ProcessesComponent
   employee: any;
   checkGroupPerm = '';
   popupOld: any;
+  msgCodeExistNameProcess='BP008'; // gán tạm chờ message code
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -740,29 +741,17 @@ export class ProcessesComponent
       this.notification.notifyCode('SYS007');
       this.changeDetectorRef.detectChanges();
       this.dialogPopup.close();
-    } else if (
-      this.oldName.trim().toLocaleUpperCase() ===
-      this.newName.trim().toLocaleUpperCase()
-    ) {
-      this.CheckExistNameProccess(this.newName);
-    } else {
+    }
+    else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
     }
   }
   CheckAllExistNameProccess(newName, idProccess) {
     this.bpService.isCheckExitName(newName, idProccess).subscribe((res) => {
       if (res) {
-        this.CheckExistNameProccess(newName);
-      } else {
-        this.actionReName(newName);
-      }
-    });
-  }
-  CheckExistNameProccess(newName) {
-    this.notificationsService.alertCode('BP008').subscribe((x) => {
-      if (x.event?.status == 'N') {
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
         return;
-      } else if (x.event?.status == 'Y') {
+      } else {
         this.actionReName(newName);
       }
     });
@@ -1106,18 +1095,21 @@ export class ProcessesComponent
   acceptEdit() {
     if (this.user.administrator) {
       this.isAcceptEdit = true;
-    } else if (this.checkAdminOfBP(this.user.userId)) {
-      this.isAcceptEdit = true;
-    } else if (!this.user.edit) {
+    }
+    // else if (this.checkAdminOfBP(this.user.userId))
+    //  {
+    //   this.isAcceptEdit = true;
+    // }
+    else if (!this.user.edit) {
       this.isAcceptEdit = false;
     }
   }
 
-  async checkAdminOfBP(userid: any) {
-    let check: boolean;
-    (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
-    return check;
-  }
+  // async checkAdminOfBP(userid: any) {
+  //   let check: boolean;
+  //   (await this.bpService.checkAdminOfBP(userid)).subscribe((res) => (check = res));
+  //   return check;
+  // }
 
   deleteBin() {
     // xoa toan bo thung rac ham nay chưa dung

@@ -58,6 +58,7 @@ import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/po
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
+import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -97,6 +98,8 @@ export class EmployeeProfileComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
 
   infoPersonal: any = {};
+
+  crrEContract : any ;
 
   formModelVisa: FormModel;
   formModelPassport: FormModel;
@@ -627,6 +630,21 @@ export class EmployeeProfileComponent extends UIComponent {
           }
           //this.lstSkill = res;
           //this.lstExperience = res;
+        });
+
+
+        //HR_EContracts
+        let rqContract = new DataRequest();
+        rqContract.entityName = 'HR_EContracts';
+        rqContract.dataValues = params.employeeID + ';false;true';
+        rqContract.predicates = 'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2'
+        rqContract.page = 1;
+        rqContract.pageSize = 1;
+
+        this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+          if (res && res[0]) {
+            this.crrEContract = res[0][0];
+          }
         });
       }
     });
@@ -2076,6 +2094,40 @@ export class EmployeeProfileComponent extends UIComponent {
 
   //#endregion
 
+
+  //#region  HR_EBusinessTravels
+  addEBusinessTravel(){
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEmpBusinessTravelsComponent,
+      {
+        actionType: 'add',
+        dataSelected: null,
+        headerText: 'Nhật kí công tác',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+
+
+  //#endregion
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }
