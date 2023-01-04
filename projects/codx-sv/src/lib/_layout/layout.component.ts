@@ -11,12 +11,14 @@ export class LayoutComponent extends LayoutBaseComponent {
   override aside = false;
   override asideFixed = false;
   override toolbar = false;
+  header = false;
   // override asideTheme: 'dark' | 'light' | 'transparent' = 'transparent';
   constructor(inject: Injector) {
     super(inject);
+
   }
 
-  onInit(): void {}
+  onInit(): void { }
 
-  onAfterViewInit(): void {}
+  onAfterViewInit(): void { }
 }
