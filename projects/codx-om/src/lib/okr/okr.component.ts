@@ -185,7 +185,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   //Lấy OKR Plan
   getOKRPlans(periodID: any, interval: any, year: any) {
-    this.okrService
+    if(!this.curUser.administrator){
+      this.okrService
       .getOKRPlans(periodID, interval, year)
       .subscribe((item: any) => {
         //Reset data View
@@ -203,6 +204,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
           });
         }
       });
+    }
   }
 
   //Lấy fucID con
