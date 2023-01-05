@@ -1,9 +1,9 @@
 <codx-views #view [funcID]="funcID" [views]="views" [autoLoad]="false" [viewActiveType]="viewType.content"
   (onLoading)="onLoading($event)"></codx-views>
 <ng-template #itemTemplate>
-  <div class="bg-white row subheader">
-    <div class="justify-content-start saving ps-12 col-md-9 d-flex">
-      <span class="icon-arrow_back ps-6 pt-3 icon-24" (click)="back()"></span>
+  <div class="bg-white p-2 subheader d-flex align-items-center justify-content-between">
+    <div class="saving ps-9 d-flex align-items-center">
+      <span class="icon-arrow_back pe-6 icon-24" (click)="back()"></span>
       <svg class="icon_survey" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 40 40"
         style="enable-background: new 0 0 40 40" xml:space="preserve">
@@ -18,38 +18,49 @@
           </path>
         </g>
       </svg>
-      <span class="title ps-6 pt-10px">{{ title }}</span>
-      <span class="icon-bookmarks icon-24 ps-6 pt-3"></span>
+      <span class="title ps-3">{{ title }}</span>
+      <span class="icon-bookmarks icon-20 ps-6"></span>
       <codx-label *ngIf="signal == 'done'" fiedName="Saving" [default]="'Đã lưu tất cả trong thay đổi'"
         class="pt-16px ps-6"></codx-label>
       <codx-label *ngIf="signal == 'saving'" fiedName="Saving" [default]="'Đang lưu...'"
         class="pt-16px ps-6"></codx-label>
     </div>
-    <div class="justify-content-end col-md-3">
-      <span class="icon icon-color_lens icon-24 pe-6 pt-2" [ngbPopover]="customUI" triggers="mouseenter:mouseleave"
-        placement="bottom" [autoClose]="'outside'"></span>
+    <div class="justify-content-end d-flex align-items-center">
+      <span class="btn btn-icon btn-white w-36px h-30px ms-2" [ngbPopover]="customUI" triggers="mouseenter:mouseleave"
+        placement="bottom" [autoClose]="'outside'">
+        <i class="icon icon-color_lens icon-22"></i>
+      </span>
       <ng-template #customUI>
         <codx-label fiedName="CustomUI" default="Tùy chỉnh giao diện"></codx-label>
       </ng-template>
-      <span class="icon icon-remove_red_eye icon-24 pe-6 pt-2" [ngbPopover]="show" triggers="mouseenter:mouseleave"
-        placement="bottom" [autoClose]="'outside'"></span>
+
+      <span class="btn btn-icon btn-white w-36px h-30px ms-2" [ngbPopover]="show" triggers="mouseenter:mouseleave"
+        placement="bottom" [autoClose]="'outside'" (click)="review()">
+        <i class="icon icon-remove_red_eye icon-22"></i>
+      </span>
       <ng-template #show>
         <codx-label fiedName="Show" default="Xem trước"></codx-label>
       </ng-template>
-      <span class="icon icon-undo icon-24 pe-6 pt-2" [ngbPopover]="undo" triggers="mouseenter:mouseleave"
-        placement="bottom" [autoClose]="'outside'"></span>
+      <span class="btn btn-icon btn-white w-36px h-30px ms-2" [ngbPopover]="undo" triggers="mouseenter:mouseleave"
+        placement="bottom" [autoClose]="'outside'">
+        <i class="icon icon-undo icon-22"></i>
+      </span>
       <ng-template #undo>
         <codx-label fiedName="Undo" default="Hủy"></codx-label>
       </ng-template>
-      <span class="icon icon-redo icon-24 pe-6 pt-2" [ngbPopover]="redo" triggers="mouseenter:mouseleave"
-        placement="bottom" [autoClose]="'outside'"></span>
+      <span class="btn btn-icon btn-white w-36px h-30px ms-2" [ngbPopover]="redo" triggers="mouseenter:mouseleave"
+        placement="bottom" [autoClose]="'outside'">
+        <i class="icon icon-redo icon-22"></i>
+      </span>
       <ng-template #redo>
         <codx-label fiedName="Redo" default="Làm lại"></codx-label>
       </ng-template>
-      <button type="button" class="btn btn-primary btn-submit pe-6" (click)="onSubmit()">
+      <button type="button" class="btn btn-primary btn-submit ms-2" (click)="onSubmit()">
         <codx-label fiedName="Submit" default="Gửi"></codx-label>
       </button>
-      <span class="icon icon-more_vert icon-24 pe-6 pt-2 ps-6"></span>
+      <span class="btn btn-icon btn-white w-36px h-30px ms-2 me-9">
+        <i class="icon icon-more_vert icon-22"></i>
+      </span>
     </div>
   </div>
   <ejs-tab headerPlacement="Top" (selected)="onSelected($event)">

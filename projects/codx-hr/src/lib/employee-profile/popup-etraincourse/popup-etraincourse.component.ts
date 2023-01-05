@@ -1,6 +1,6 @@
 import { FormGroup, Validators } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { ChangeDetectorRef, Injector } from '@angular/core';
+import { ChangeDetectorRef, Injector, ViewEncapsulation } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
@@ -18,6 +18,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   selector: 'lib-popup-etraincourse',
   templateUrl: './popup-etraincourse.component.html',
   styleUrls: ['./popup-etraincourse.component.scss'],
+  encapsulation:ViewEncapsulation.None
 })
 export class PopupETraincourseComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;

@@ -1,3 +1,4 @@
+import { ComboBoxComponent } from '@syncfusion/ej2-angular-dropdowns';
 import { CodxHrService } from './../../codx-hr.service';
 import { Injector } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';

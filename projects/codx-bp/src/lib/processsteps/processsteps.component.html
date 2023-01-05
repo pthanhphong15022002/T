@@ -432,22 +432,21 @@
 <ng-template #titleTmp let-data>
   <div style=" width: 100%">
     <div
-      class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{ data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'}}"
-      style="cursor: context-menu; width: 100%"
+      class="fw-bold line-clamp line-clamp-1 {{ data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'}}"
+      style="cursor: context-menu; display: -webkit-inline-box;"
+      #p="ngbPopover"
+      [ngbPopover]="data?.stepName"
+      [openDelay]="500"
+      (mouseenter)="showPoupStepName($event,p)"
+      (mouseleave)="p.close()"
+      placement="top bottom right "
     >
       <codx-label
         name="lblStepNo"
         [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"></codx-label>
       <span>{{ " " + data?.stepNo }}</span>
       <codx-label name="lblSplit" default=":"></codx-label>
-      <span 
-        #p="ngbPopover"
-        [ngbPopover]="data?.stepName"
-        [openDelay]="500"
-        (mouseenter)="showPoupStepName($event,p)"
-        (mouseleave)="p.close()"
-        placement="top bottom right "
-      >
+      <span>
         {{ " " + data?.stepName }} 
       </span>
     </div>
