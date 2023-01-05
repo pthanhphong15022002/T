@@ -27,6 +27,7 @@ import { PopupShowKRComponent } from '../popup/popup-show-kr/popup-show-kr.compo
 import { OkrAddComponent } from './okr-add/okr-add.component';
 import { OkrPlansComponent } from './okr-plans/okr-plans.component';
 import { ActivatedRoute } from '@angular/router';
+import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-share.component';
 
 @Component({
   selector: 'lib-okr',
@@ -380,18 +381,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
    //Chia sẻ bộ mục tiêu
    sharePlan() {
-    let dialog = this.callfc.openSide(OkrAddComponent, [
+    let dialog = this.callfc.openSide(OkrPlanShareComponent, [
       this.gridView,
-      this.formModelKR,
-      'add',
+      this.view.formModel,
       this.dataOKRPlans,
       null,
     ]);
-    //   "add",
-    //   this.dataOKRPlans,
-    //   null
-    //  ]
-    // );
   }
   //-----------------------End-------------------------------//
 }

@@ -232,4 +232,14 @@ export class CodxSvService {
       lstDataUpload,
     ]);
   }
+
+  onSubmit(data) {
+    return this.api.execSv(
+      'SV',
+      'SV',
+      'RespondentsBusiness',
+      'SaveAsync',
+      [data, true]
+    );
+  }
 }
