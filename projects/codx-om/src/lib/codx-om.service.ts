@@ -249,7 +249,7 @@ export class CodxOmService {
   }
   //Lấy danh sách Bộ mục tiêu
   getOKRPlans(periodID: string, interval: string, year: any) {
-    periodID = '2022'; //Tạm để cứng chờ khi tạo được periodID
+    //periodID = '2023'; //Tạm để cứng chờ khi tạo được periodID
     return this.api.execSv(
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
@@ -349,6 +349,17 @@ export class CodxOmService {
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.OKR,
       'GetListAlignAsync',
+      [recID]
+    );
+  }
+  //Lấy danh sách OKR phụ thuộc
+  //(Bao gồm danh sách các OB được phân công, phân bổ từ OB hiện tại)
+  getListAssign(recID:string) {
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'GetListAssignAsync',
       [recID]
     );
   }

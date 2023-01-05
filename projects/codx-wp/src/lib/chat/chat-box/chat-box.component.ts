@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, HostBinding, Input, OnInit, AfterViewInit } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, DialogData, DialogRef } from 'codx-core';
+import { ApiHttpService, AuthStore, DialogData, DialogRef, NotificationsService } from 'codx-core';
 import { WP_Messages } from '../../models/WP_Messages.model';
 import { SignalRService } from '../../services/signalr.service';
 
@@ -14,7 +14,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
 
   group:any = {};
   user:any = {};
-  messages:any[] = [];
+  arrMessages:any[] = [];
   message:WP_Messages = new WP_Messages();
   constructor
   (
@@ -22,6 +22,7 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
     private auth:AuthStore,
     private signalR: SignalRService,
     private sanitizer: DomSanitizer,
+    private notifiSV:NotificationsService,
     private dt:ChangeDetectorRef,
   ) 
   {
@@ -36,15 +37,16 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
       this.message.userID = this.user.userID;
       this.message.groupID = this.groupID;
       this.getGroupInfo(this.groupID);
-      this.getDataChat();
     }
   }
 
   ngAfterViewInit(): void {
     this.signalR.signalChat.subscribe((res:any) => {
-      if(res){
+      if(res)
+      {
+        debugger
         let data = JSON.parse(JSON.stringify(res));
-        this.messages.push(data);
+        this.arrMessages.push(data);
         this.dt.detectChanges();
       }
     })
@@ -56,11 +58,18 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
         "WP",
         "ERM.Business.WP",
         "GroupBusiness",
-        "GetGoupChatBydIDAsync",
+        "GetGoupChatByIDAsync",
         [groupID])
-      .subscribe((res:any) =>{
-        if(res){
-          this.group = JSON.parse(JSON.stringify(res));
+        .subscribe((res:any[]) =>{
+        if(res)
+        {
+          let dataGroup = res[0];
+          let dataMessages = res[1];
+          this.group = JSON.parse(JSON.stringify(dataGroup));
+          if(dataMessages)
+          {
+            this.arrMessages = JSON.parse(JSON.stringify(dataMessages[0]));
+          }
         }
       });
     }
@@ -98,24 +107,40 @@ export class ChatBoxComponent implements OnInit, AfterViewInit{
   sendMessage(){
     if(this.message.message)
     {
-      this.api.execSv("WP","ERM.Business.WP","ChatBusiness","SendMessageAsync",[this.message])
+      this.api.execSv(
+      "WP",
+      "ERM.Business.WP",
+      "ChatBusiness",
+      "SendMessageAsync",
+      [this.message])
       .subscribe((res:any) => {
-        if(res){
-          let data = JSON.parse(JSON.stringify(this.message));
+        if(res)
+        {
           this.message.message = "";
-          this.signalR.sendData(data,"SendMessageToGroup");
+          this.signalR.sendData(res,"SendMessageToGroup");
         }
       })
     }
   }
   // get list chat
-  getDataChat(){
-    this.api.execSv("WP","ERM.Business.WP","ChatBusiness","GetListChatByGroupIDAsync",[this.groupID,0])
-    .subscribe((res:any[]) => {
-      console.log(res)
-      if(res[1] > 0){
-        this.messages = JSON.parse(JSON.stringify(res[0]));
-      }
-    })
+  getDataChat(groupID:string){
+    if(groupID){
+      this.api.execSv(
+        "WP",
+        "ERM.Business.WP",
+        "ChatBusiness",
+        "GetMessageByGroupIDAsync",
+        [this.groupID,0])
+        .subscribe((res:any[]) => {
+          if(res[1] > 0)
+          {
+            this.arrMessages = JSON.parse(JSON.stringify(res[0]));
+          }
+        });
+    }
+    else
+    {
+      this.notifiSV.notifyCode("SYS001");
+    }
   }
 }

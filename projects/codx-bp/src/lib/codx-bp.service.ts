@@ -9,7 +9,11 @@ import {
   Observable,
   of,
 } from 'rxjs';
-import { BP_Processes, tmpInforSentEMail, BP_ProcessPermissions } from './models/BP_Processes.model';
+import {
+  BP_Processes,
+  tmpInforSentEMail,
+  BP_ProcessPermissions,
+} from './models/BP_Processes.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +25,7 @@ export class CodxBpService {
   isProcess = this.bpProcesses.asObservable();
   getFlowChartNew = new BehaviorSubject<any>(null);
   crrFlowChart = this.getFlowChartNew.asObservable();
-  
+
   funcIDParent = new BehaviorSubject<any>(null);
 
   getListFunctionMenuCreatedStepAsync(funcID) {
@@ -84,13 +88,13 @@ export class CodxBpService {
     );
   }
 
-  updatePermissionProcess(data: any, lstTmp: BP_ProcessPermissions[]){
+  updatePermissionProcess(data: any, lstTmp: BP_ProcessPermissions[]) {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'UpdatePermissionProcessAsync',
       [data, lstTmp]
-    )
+    );
   }
 
   getOwnersByParentID(data) {
@@ -117,7 +121,7 @@ export class CodxBpService {
       data
     );
   }
-  getListUserIDByListPositionsID(listPositionID){
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -135,7 +139,13 @@ export class CodxBpService {
     );
   }
 
-  setViewRattings(recID: string, ratting: string, comment: string, funcID: string, entityName: string){
+  setViewRattings(
+    recID: string,
+    ratting: string,
+    comment: string,
+    funcID: string,
+    entityName: string
+  ) {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
@@ -144,25 +154,20 @@ export class CodxBpService {
     );
   }
 
-  loadUserName(id: string){
-    return this.api.exec<any>(
-      'AD',
-      'UsersBusiness',
-      'GetAsync',
-      id
-    );
+  loadUserName(id: string) {
+    return this.api.exec<any>('AD', 'UsersBusiness', 'GetAsync', id);
   }
 
-  loadProcess(id: string){
-    return this.api.exec<any>(
-      'BP',
-      'ProcessesBusiness',
-      'GetAsync',
-      id
-    );
+  loadProcess(id: string) {
+    return this.api.exec<any>('BP', 'ProcessesBusiness', 'GetAsync', id);
   }
 
-  setApproveStatus(recID: string, permission: BP_ProcessPermissions, funcID: string, entity: string){
+  setApproveStatus(
+    recID: string,
+    permission: BP_ProcessPermissions,
+    funcID: string,
+    entity: string
+  ) {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
@@ -171,7 +176,7 @@ export class CodxBpService {
     );
   }
 
-  updateHistoryViewProcessesAsync(id: string){
+  updateHistoryViewProcessesAsync(id: string) {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
@@ -186,21 +191,34 @@ export class CodxBpService {
   public ChangeData = new BehaviorSubject<boolean>(null);
   isChangeData = this.ChangeData.asObservable();
 
-  searchDataProcess(gridModel,searchKey): Observable<any> {
+  searchDataProcess(gridModel, searchKey): Observable<any> {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
       'GetProcessesByKeyAsync',
-      [gridModel,searchKey]
+      [gridModel, searchKey]
     );
   }
 
-  updateRevision(funcID,recID,verNo, verName,comment, entityName, fucntionIdMain ): Observable<any> {
-    return this.api
-      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'UpdateVersionAsync', [funcID, recID, verNo, verName, comment,entityName,fucntionIdMain]);
+  updateRevision(
+    funcID,
+    recID,
+    verNo,
+    verName,
+    comment,
+    entityName,
+    fucntionIdMain
+  ): Observable<any> {
+    return this.api.execSv<any>(
+      'BP',
+      'BP',
+      'ProcessesBusiness',
+      'UpdateVersionAsync',
+      [funcID, recID, verNo, verName, comment, entityName, fucntionIdMain]
+    );
   }
 
-  updateReleaseProcess(data){
+  updateReleaseProcess(data) {
     return this.api.exec<any>(
       'BP',
       'ProcessesBusiness',
@@ -208,14 +226,23 @@ export class CodxBpService {
       data
     );
   }
-  checkAdminOfBP(userId ): Observable<any> {
-    return this.api
-      .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'CheckAdminPermissionBPAsync', [userId]);
+  async checkAdminOfBP(userId: string){
+    return this.api.exec<any>(
+      'BP',
+      'ProcessesBusiness',
+      'CheckAdminPermissionBPAsync',
+      [userId]
+    );
   }
 
-  isCheckExitName(nameProcess: String, id: String):  Observable<any>{
-    return this.api
-    .execSv<any>('BP', 'BP', 'ProcessesBusiness', 'isExitNameProcessAsync', [nameProcess,id]);
+  isCheckExitName(nameProcess: string, id: string): Observable<any> {
+    return this.api.execSv<any>(
+      'BP',
+      'BP',
+      'ProcessesBusiness',
+      'isExitNameProcessAsync',
+      [nameProcess, id]
+    );
   }
 
   deleteBin(data) {
@@ -243,7 +270,7 @@ export class CodxBpService {
     );
   }
 
-  getRoles(recID: String){
-    return this.api.exec<any>('AD','RolesBusiness','GetAsync', recID);
+  getRoles(recID: String) {
+    return this.api.exec<any>('AD', 'RolesBusiness', 'GetAsync', recID);
   }
 }

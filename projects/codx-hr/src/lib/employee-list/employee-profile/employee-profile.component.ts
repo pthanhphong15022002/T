@@ -58,6 +58,7 @@ import { PopupEhealthsComponent } from '../../employee-profile/popup-ehealths/po
 import { PopupEVaccineComponent } from '../../employee-profile/popup-evaccine/popup-evaccine.component';
 import { PopupEDiseasesComponent } from '../../employee-profile/popup-ediseases/popup-ediseases.component';
 import { PopupEContractComponent } from '../../employee-profile/popup-econtract/popup-econtract.component';
+import { PopupEmpBusinessTravelsComponent } from '../../employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 
 @Component({
   selector: 'lib-employee-profile',
@@ -97,6 +98,8 @@ export class EmployeeProfileComponent extends UIComponent {
   views: Array<ViewModel> | any = [];
 
   infoPersonal: any = {};
+
+  crrEContract: any;
 
   formModelVisa: FormModel;
   formModelPassport: FormModel;
@@ -146,9 +149,9 @@ export class EmployeeProfileComponent extends UIComponent {
   className = 'EExperiencesBusiness';
 
   hrEContract;
-  crrTab: number = 4;
+  crrTab: number = 3;
   //EDayOff
-  lstDayOffs: any = []
+  lstDayOffs: any = [];
 
   //EAsset salary
   lstAsset: any = [];
@@ -291,7 +294,7 @@ export class EmployeeProfileComponent extends UIComponent {
           if (params?.filter) this.request.filter = JSON.parse(params?.filter);
           this.request.pageSize = 20;
           this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
-            if (res) {
+            if (res && res[0]) {
               this.listEmp.push(...res[0]);
               let index = this.listEmp?.findIndex(
                 (p) => p.employeeID == params.employeeID
@@ -311,7 +314,7 @@ export class EmployeeProfileComponent extends UIComponent {
         if (index > -1 && !this.listEmp[index + 1]?.employeeID) {
           this.request.page += 1;
           this.hrService.getModelFormEmploy(this.request).subscribe((res) => {
-            if (res) {
+            if (res && res[0]) {
               this.listEmp.push(...res[0]);
             }
           });
@@ -359,15 +362,17 @@ export class EmployeeProfileComponent extends UIComponent {
           });
 
         //Dayoff
-        let rqDayoff = new DataRequest()
+        let rqDayoff = new DataRequest();
         rqDayoff.gridViewName = 'grvEDayOffs';
         rqDayoff.entityName = 'HR_EDayOffs';
         rqDayoff.predicate = 'EmployeeID=@0';
         rqDayoff.dataValue = params.employeeID;
         rqDayoff.page = 1;
-        this.hrService.getListDisciplineByDataRequest(rqDayoff).subscribe((res) => {
-          if (res) this.lstDayOffs = res[0];
-        });
+        this.hrService
+          .getListDisciplineByDataRequest(rqDayoff)
+          .subscribe((res) => {
+            if (res) this.lstDayOffs = res[0];
+          });
 
         //Discipline
         let rqDiscipline = new DataRequest();
@@ -376,9 +381,11 @@ export class EmployeeProfileComponent extends UIComponent {
         rqDiscipline.predicate = 'EmployeeID=@0';
         rqDiscipline.dataValue = params.employeeID;
         rqDiscipline.page = 1;
-        this.hrService.getListDisciplineByDataRequest(rqDiscipline).subscribe((res) => {
-          if (res) this.lstDiscipline = res[0];
-        });
+        this.hrService
+          .getListDisciplineByDataRequest(rqDiscipline)
+          .subscribe((res) => {
+            if (res) this.lstDiscipline = res[0];
+          });
 
         //Asset
         let rqAsset = new DataRequest();
@@ -627,6 +634,21 @@ export class EmployeeProfileComponent extends UIComponent {
           }
           //this.lstSkill = res;
           //this.lstExperience = res;
+        });
+
+        //HR_EContracts
+        let rqContract = new DataRequest();
+        rqContract.entityName = 'HR_EContracts';
+        rqContract.dataValues = params.employeeID + ';false;true';
+        rqContract.predicates =
+          'EmployeeID=@0 and IsAppendix=@1 and IsCurrent=@2';
+        rqContract.page = 1;
+        rqContract.pageSize = 1;
+
+        this.hrService.getCrrEContract(rqContract).subscribe((res) => {
+          if (res && res[0]) {
+            this.crrEContract = res[0][0];
+          }
         });
       }
     });
@@ -1301,13 +1323,18 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupEmployeePartyInfoComponent,
       {
-        isAdd: false,
         headerText: 'Thông tin Đảng - Đoàn',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res) {
+        console.log('data tra ve dang doan', res.event);
+
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -1327,7 +1354,11 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
   }
 
@@ -1342,16 +1373,18 @@ export class EmployeeProfileComponent extends UIComponent {
     option.FormModel = this.view.formModel;
     option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
-      // EmployeeSelfInfoComponent,
       PopupESelfInfoComponent,
       {
-        isAdd: true,
         headerText: 'Thông tin bản thân',
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
-      if (!res?.event) this.view.dataService.clear();
+      if (res) {
+        this.infoPersonal = JSON.parse(JSON.stringify(res.event));
+        this.df.detectChanges();
+        this.view.dataService.clear();
+      }
     });
     // })
   }
@@ -1548,7 +1581,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  HandleEmployeeDayOffInfo(actionType: string, data: any){
+  HandleEmployeeDayOffInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1717,7 +1750,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  HandleEmployeeAccidentInfo(actionType: string, data: any){
+  HandleEmployeeAccidentInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1773,11 +1806,15 @@ export class EmployeeProfileComponent extends UIComponent {
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
     option.Width = '850px';
-    let dialogAdd = this.callfunc.openSide(PopupEappointionsComponent, {
-      actionType: actionType,
-      indexSelected: this.lstAppointions.indexOf(data),
-      lstEAppointions: this.lstAppointions,
-    });
+    let dialogAdd = this.callfunc.openSide(
+      PopupEappointionsComponent,
+      {
+        actionType: actionType,
+        indexSelected: this.lstAppointions.indexOf(data),
+        lstEAppointions: this.lstAppointions,
+      },
+      option
+    );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
       this.df.detectChanges();
@@ -2064,6 +2101,38 @@ export class EmployeeProfileComponent extends UIComponent {
 
   //#endregion
 
+  //#region  HR_EBusinessTravels
+  addEBusinessTravel() {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.FormModel = this.view.formModel
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEmpBusinessTravelsComponent,
+      {
+        actionType: 'add',
+        dataSelected: null,
+        headerText: 'Nhật kí công tác',
+        employeeId: this.data.employeeID,
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      if (res) {
+        // this.hrService
+        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
+        //   .subscribe((p) => {
+        //     this.crrJobSalaries = p;
+        //   });
+        console.log('current val', res.event);
+        this.crrJobSalaries = res.event;
+        this.df.detectChanges();
+      }
+      if (res?.event) this.view.dataService.clear();
+    });
+  }
+
+  //#endregion
   addSkill() {
     this.hrService.addSkill(null).subscribe();
   }
@@ -2144,5 +2213,9 @@ export class EmployeeProfileComponent extends UIComponent {
         );
       }
     }
+  }
+
+  addTest(){
+    this.hrService.addTest().subscribe();
   }
 }

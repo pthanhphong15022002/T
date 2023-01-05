@@ -327,10 +327,17 @@ export class CalendarNotesComponent
           this.setEvent(eleEvent, obj);
         }
       }
-    }, 1000);
+    }, 200);
   }
 
+  firstChangeDOW = 1;
   changeDayOfWeek(e) {
+    if (this.firstChangeDOW == 1) {
+      this.getParamCalendar(
+        moment(e.fromDate).toISOString(),
+        moment(e.toDate).toISOString()
+      );
+    }
     var data = e.daySelected;
     let myInterval = setInterval(() => {
       if (this.lstView) {
@@ -338,17 +345,29 @@ export class CalendarNotesComponent
         this.setDate(data, this.lstView);
       }
     }, 100);
+    this.change.detectChanges();
   }
 
   changeNewWeek(args: any) {
     if (this.lstView) {
       this.lstView.dataService.data = [];
     }
-    this.getParamCalendar(
-      moment(args.fromDate).toISOString(),
-      moment(args.toDate).toISOString()
-    );
-    this.change.detectChanges();
+    if (this.firstChangeDOW == 0) {
+      this.getParamCalendar(
+        moment(args.fromDate).toISOString(),
+        moment(args.toDate).toISOString()
+      );
+    }
+    this.firstChangeDOW = 0;
+    let myInterval = setInterval(() => {
+      if (
+        this.dataResourceModel.length > 0 &&
+        this.countDataOfE == this.countEvent
+      ) {
+        clearInterval(myInterval);
+        this.setEventWeek();
+      }
+    }, 1000);
   }
 
   changeDayOfMonth(args: any) {
@@ -423,7 +442,7 @@ export class CalendarNotesComponent
             );
             this.change.detectChanges();
           }
-        });
+        }, 500);
       }
       this.FDdate = fromDate;
       this.TDate = toDate;

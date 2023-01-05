@@ -311,9 +311,9 @@ export class DispatchService implements OnDestroy {
        return this.api.execSv<any>('TM','ERM.Business.TM','TaskBusiness','GetListTaskTreeByRefIDAsync', recID)
      }
      //Completed
-     complete(recID:string , comment:string , status:any)
+     complete(recID:string , comment:string , status:any , funcID:any)
      {
-       return this.api.exec<any>('OD','DispatchesBusiness','CompletedAsync', [recID,comment,status])
+       return this.api.exec<any>('OD','DispatchesBusiness','CompletedAsync', [recID,comment,status,funcID])
      }
     
 }

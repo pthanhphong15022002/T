@@ -1,6 +1,8 @@
 <div class="d-flex w-100 h-100 dialog-list-detail">
   <div class="content-left border-end w-300px min-w-300px" *ngIf="leftTemlate">
-    <div class="left-header h-40px">Header</div>
+    <div class="left-header h-40px">
+      <ng-container [ngTemplateOutlet]="headerTemplate"> </ng-container>
+    </div>
     <div class="left-body w-100 scroll-y">
       <ng-container [ngTemplateOutlet]="leftTemlate"> </ng-container>
     </div>

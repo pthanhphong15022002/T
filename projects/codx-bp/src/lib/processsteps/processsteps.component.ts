@@ -152,6 +152,8 @@ export class ProcessStepsComponent
   isHover = null;
   listCountActivities: number = 0;
   isBlockClickMore: boolean;
+  language: 'VN';
+
   constructor(
     inject: Injector,
     private bpService: CodxBpService,
@@ -164,6 +166,7 @@ export class ProcessStepsComponent
     this.user = this.authStore.get();
     this.cache.moreFunction('CoDXSystem', null).subscribe((mf) => {
       if (mf) {
+        this.language = mf[0]["language"];
         var mfAdd = mf.find((f) => f.functionID == 'SYS01');
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
@@ -478,9 +481,9 @@ export class ProcessStepsComponent
     } else {
       // doi parent
       phaseOld?.items.splice(index, 1);
-      if (index < phaseOld.length - 1) {
-        for (var i = index; i < phaseOld.length; i++) {
-          phaseOld[i].stepNo--;
+      if (index < phaseOld?.items.length) {
+        for (var i = index; i < phaseOld?.items.length; i++) {
+          phaseOld["items"][i].stepNo--;
         }
       }
       var indexParentNew = this.view.dataService.data.findIndex(
@@ -789,7 +792,8 @@ export class ProcessStepsComponent
 
   openPopupViewProcessStep(data){
     let stepType = data.stepType;
-    this.titleAction = this.getTitleAction('Xem', data.stepType);
+    let title = this.language === "VN" ? "Xem" : "View";
+    this.titleAction = this.getTitleAction(title, data.stepType);
     let funcMenu = this.childFunc.find((x) => x.id == stepType);
     if (funcMenu) {
       this.cache.gridView(funcMenu.gridViewName).subscribe((res) => {
@@ -1454,5 +1458,12 @@ export class ProcessStepsComponent
     let dt = this.kanban.columns.find((x) => x.keyField == key);
     let dataColums = dt?.dataColums;
     return dataColums;
+  }
+  showPoupStepName(e,p){
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if(parent <= child){
+      p.open();   
+    }
   }
 }

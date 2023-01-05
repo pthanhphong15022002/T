@@ -211,32 +211,26 @@ export class ReportinglineComponent extends UIComponent {
       this.view.dataService
         .copy(data)
         .subscribe((res) => {
-          let option = new SidebarModel();
-          option.DataService = this.view.dataService;
-          option.FormModel = this.view.formModel;
-          option.Width = '550px';
-          let object = {
-            dataService: this.view.dataService,
-            formModel: this.view.formModel,
-            data: res,
-            function: this.view.formModel.funcID,
-            isAddMode: true,
-            titleMore: event.text,
-          };
-          this.callfc.openSide(
-            CodxFormDynamicComponent,
-            object,
-            option,
-            this.view.formModel.funcID
-          );
-          // popup.closed.subscribe((res:any) => {
-          //   debugger
-          //   if(res?.event?.save)
-          //   {
-          //     let node = res.event.save.data;
-          //     this.codxTreeView.setNodeTree(node);
-          //   }
-          // });
+          if(res){
+            let option = new SidebarModel();
+            option.DataService = this.view.dataService;
+            option.FormModel = this.view.formModel;
+            option.Width = '550px';
+            let object = {
+              dataService: this.view.dataService,
+              formModel: this.view.formModel,
+              data: res,
+              function: this.view.formModel.funcID,
+              isAddMode: true,
+              titleMore: event.text,
+            };
+            this.callfc.openSide(
+              CodxFormDynamicComponent,
+              object,
+              option,
+              this.view.formModel.funcID
+            );
+          }
         });
     }
   }

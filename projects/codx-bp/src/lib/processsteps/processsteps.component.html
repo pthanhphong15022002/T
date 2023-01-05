@@ -15,8 +15,7 @@
   (onActions)="onActions($event)"
   (viewChanged)="viewChanged($event)"
   [viewActiveType]="viewMode"
-  [toolbarDisplay]="false"
->
+  [toolbarDisplay]="false">
 </codx-views>
 
 <ng-template #cardKanban let-data let-setting="setting">
@@ -32,8 +31,7 @@
     [footer]="cardImgFooter"
     [dataItem]="data"
     [rootData]="data"
-    (dblclick)="dblClick($event, data)"
-  >
+    (dblclick)="dblClick($event, data)">
   </codx-card-img>
 </ng-template>
 
@@ -42,27 +40,25 @@
     <div class="Activities mb-3">
       <label class="text-dark fw-bold mb-5" *ngIf="isKanban">{{
         data.stepName
-      }}</label>
+        }}</label>
       <ng-container *ngIf="checkAction(data)">
         <label class="text-danger fw-bold mb-2">
           <codx-label
             name="Action"
             [formModel]="view.formModel"
-            default="Hoạt động"
-          ></codx-label>
+            default="Hoạt động"></codx-label>
         </label>
         <div
           class="check-list text-dark"
           (mouseenter)="openMFTypeA()"
-          (mouseleave)="closeMFTypeA()"
-        >
+          (mouseleave)="closeMFTypeA()">
           <ng-container *ngFor="let item of data?.items">
             <ng-container *ngIf="item.stepType!='C'">
               <div
                 [ngClass]="
-                  !hideMoreFCChild && checkBackground(item?.recID)
-                    ? 'color-hover'
-                    : ''
+                !hideMoreFCChild && checkBackground(item?.recID)
+                ? 'color-hover'
+                : ''
                 "
                 class="d-flex align-item-center psteps-item"
                 #p="ngbPopover"
@@ -70,13 +66,11 @@
                 (mouseenter)="openMF(item, p)"
                 autoClose="outside"
                 placement="right"
-                (dblclick)="dblClick($event, item)"
-              >
+                (dblclick)="dblClick($event, item)">
                 <i
                   class="{{
-                    showIconByStepType(item.stepType)
-                  }} me-2 ms-1 icon-16"
-                ></i>
+                  showIconByStepType(item.stepType)
+                  }} me-2 ms-1 icon-16"></i>
                 <div class="test-check me-4">{{ item.stepName }}</div>
               </div>
             </ng-container>
@@ -91,27 +85,24 @@
                 fiedName="Reference"
                 formName="BPCheckList"
                 gridViewName="grvBPCheckList"
-                default="{{ item.stepName }}"
-              ></codx-label>
+                default="{{ item.stepName }}"></codx-label>
             </label>
             <div class="check-list text-dark">
               <ng-container
                 *ngIf="
-                  item?.reference != null &&
-                  item?.reference.split(';').length > 0
+                item?.reference != null &&
+                item?.reference.split(';').length> 0
                 "
-              >
+                >
                 <div class="Activities mb-3">
                   <div class="check-list text-dark">
                     <ng-container
                       *ngFor="
-                        let text of item?.reference.split(';');
-                        let i = index
-                      "
-                    >
+                      let text of item?.reference.split(';');
+                      let i= index
+                      ">
                       <div>
-                        <span>{{ i + 1 }}</span
-                        ><span>
+                        <span>{{ i + 1 }}</span><span>
                           <codx-label name="lblSymboy" default="."></codx-label>
                         </span>
                         <span>
@@ -140,8 +131,7 @@
             [fiedName]="'Reference'"
             [formName]="'BPQuestionnaires'"
             [gridViewName]="'grvBPQuestionnaires'"
-            default="Bảng khảo sát"
-          ></codx-label>
+            default="Bảng khảo sát"></codx-label>
         </label>
         <ng-container *ngFor="let item of data?.items">
           <ng-container *ngIf="item.stepType == 'Q'">
@@ -149,8 +139,7 @@
               class="cursor-pointer text-hover-primary"
               *ngIf="item.reference"
               [innerHtml]="viewQuestion(item.reference)"
-              (click)="viewDetailSurveys(viewQuestion(item.reference))"
-            ></div>
+              (click)="viewDetailSurveys(viewQuestion(item.reference))"></div>
           </ng-container>
         </ng-container>
       </ng-container>
@@ -160,8 +149,7 @@
         <codx-label
           fiedName="lblAttachments"
           [formModel]="view.formModel"
-          default="Tài liệu "
-        >
+          default="Tài liệu ">
         </codx-label>
       </label>
       <div class="align-items-center">
@@ -180,8 +168,7 @@
           [functionID]="funcID"
           displayThumb="full"
           pageSize="2"
-          heightScroll="100"
-        >
+          heightScroll="100">
         </codx-attachment>
       </div>
     </div>
@@ -190,40 +177,37 @@
 <ng-template #cardImgFooter let-data>
   <div
     class="d-flex bg-footer {{ data?.color ? '' : 'bg-light-warning' }}"
-    [style.background]="data?.color"
-  >
+    [style.background]="data?.color">
     <div class="d-flex flex-column w-100 p-3">
       <div class="d-flex align-items-center">
         <div class="d-flex align-items-center card-icon-nowrap me-1">
-          <span class="me-1 icon-16 icon-access_alarm"></span
-          ><span class="fw-bolb">
+          <span class="me-1 icon-16 icon-access_alarm"></span><span
+            class="fw-bolb">
             <codx-label name="lblTime" default="Thời gian:"></codx-label>
           </span>
         </div>
         <div class="badge badge-white my-1 me-3 text-danger">
           <span #duration>
             {{
-              data?.duration
-                | formatvalue
-                  : view.formModel
-                  : "duration"
-                  : duration
-                  : "BPActivity"
-                  : "grvBPActivity"
-                | async
-            }}</span
-          >&nbsp;
+            data?.duration
+            | formatvalue
+            : view.formModel
+            : "duration"
+            : duration
+            : "BPActivity"
+            : "grvBPActivity"
+            | async
+            }}</span>&nbsp;
           <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
         </div>
       </div>
-      <ng-container *ngIf="data?.owners != null && data?.owners.length > 0">
+      <ng-container *ngIf="data?.owners != null && data?.owners.length> 0">
         <div class="d-flex align-items-center card-icon-nowrap me-1">
-          <span class="me-1 icon-person_pin_circle"></span
-          ><span class="fw-bolb">
+          <span class="me-1 icon-person_pin_circle"></span><span
+            class="fw-bolb">
             <codx-label
               name="lblRecruitmentStaff"
-              default="Nhân viên tuyển dụng"
-            ></codx-label>
+              default="Nhân viên tuyển dụng"></codx-label>
           </span>
         </div>
         <div class="d-flex align-items-center mt-2">
@@ -231,8 +215,7 @@
             [width]="25"
             [objectId]="getOwnerID(data?.owners)"
             objectType="AD_Users"
-            [numberImages]="10"
-          >
+            [numberImages]="10">
           </codx-imgs>
         </div>
       </ng-container>
@@ -312,20 +295,17 @@
           </div>
         </div>
       </div> -->
-
       <ng-container
         *ngIf="view.dataService.data?.length == 0"
-        [ngTemplateOutlet]="tmpEmpty"
-      >
+        [ngTemplateOutlet]="tmpEmpty">
       </ng-container>
       <!-- drop -->
-      <ng-container *ngIf="view.dataService.data?.length > 0">
+      <ng-container *ngIf="view.dataService.data?.length> 0">
         <div
           cdkDropList
           class="list mw-900px"
           style="margin: 0 auto"
-          (cdkDropListDropped)="drop($event, null)"
-        >
+          (cdkDropListDropped)="drop($event, null)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let item of dataTreeProcessStep">
               <div
@@ -333,17 +313,15 @@
                 cdkDrag
                 [cdkDragDisabled]="lockParent"
                 [cdkDragStartDelay]="200"
-                [cdkDragData]="item"
-              >
+                [cdkDragData]="item">
                 <div class="card card-steplist">
                   <div
-                    class="steplist-hearder border border-gray-200 rounded px-6 py-4"
-                    (dblclick)="dblClick($event, item)"
-                  >
+                    class="steplist-hearder border border-gray-200 rounded px-6
+                    py-4"
+                    (dblclick)="dblClick($event, item)">
                     <!-- <div class="example-handle" cdkDragHandle>
                       <span class="icon-reorder"></span>
                     </div> -->
-
                     <codx-temp-full
                       [hideMF]="hideMoreFC"
                       (clickMF)="clickMF($event, item)"
@@ -353,31 +331,26 @@
                       [desc]="item?.memo"
                       [footer]="footerBase"
                       [dataItem]="item"
-                      [moreFuncCss]="'me-15'"
-                    >
+                      [moreFuncCss]="'me-15'">
                     </codx-temp-full>
                   </div>
                   <div
                     cdkDropList
                     class="list"
                     [cdkDropListData]="item?.items || []"
-                    (cdkDropListDropped)="drop($event, item.recID)"
-                  >
+                    (cdkDropListDropped)="drop($event, item.recID)">
                     <ng-container
-                      *ngIf="!item?.items || item?.items?.length == 0"
-                    >
+                      *ngIf="!item?.items || item?.items?.length == 0">
                       <div
                         style="height: 15px; width: 100%"
                         cdkDrag
                         [cdkDragDisabled]="true"
-                        [cdkDragData]="null"
-                      >
+                        [cdkDragData]="null">
                         <!-- (click)="clickAddActivity(item)" -->
                         <!-- <h3> 
                           Thêm công việc để hoàn thiện quy trình ---Kéo công
                           việc vào đây !-Test đừng ai bắt lỗi , please ! ^^!
                         </h3> -->
-
                         <!-- <div class="dropzone-msg dz-message needsclick">
                           <div class="dropzone-msg-title mb-2">
                             <codx-label
@@ -399,15 +372,14 @@
                         <!-- </div> -->
                       </div>
                     </ng-container>
-                    <ng-container *ngIf="item?.items?.length > 0">
+                    <ng-container *ngIf="item?.items?.length> 0">
                       <ng-container *ngFor="let item1 of item.items">
                         <div
                           class="card card-steplist p-0"
                           cdkDrag
                           [cdkDragDisabled]="lockChild"
                           [cdkDragStartDelay]="200"
-                          [cdkDragData]="item1"
-                        >
+                          [cdkDragData]="item1">
                           <div class="ps-6 pt-4">
                             <div class="steplist-item step-danger rounded p-4">
                               <!-- <div class="example-handle" cdkDragHandle>
@@ -424,8 +396,7 @@
                                 [desc2Tmp]="cardTitleTmp"
                                 [footer]="cardImgFooter"
                                 [moreFuncCss]="'me-15'"
-                                (dblclick)="dblClick($event, item1)"
-                              >
+                                (dblclick)="dblClick($event, item1)">
                               </codx-temp-full>
 
                               <!-- <ng-container *ngIf="item?.items?.length > 0">
@@ -459,46 +430,43 @@
   </div>
 </ng-template>
 <ng-template #titleTmp let-data>
-  <div>
+  <div style=" width: 100%">
     <div
-      class="w-100 me-6 fw-bold line-clamp line-clamp-1 {{
-        data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'
-      }}"
+      class="fw-bold line-clamp line-clamp-1 {{ data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'}}"
+      style="cursor: context-menu; display: -webkit-inline-box;"
       #p="ngbPopover"
-      [ngbPopover]="setWidth(data?.stepName) ? data?.stepName : null"
+      [ngbPopover]="data?.stepName"
       [openDelay]="500"
-      (mouseenter)="p.open()"
+      (mouseenter)="showPoupStepName($event,p)"
       (mouseleave)="p.close()"
       placement="top bottom right "
-      style="cursor: context-menu"
     >
       <codx-label
         name="lblStepNo"
-        [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"
-      ></codx-label
-      >{{ " " + data?.stepNo }}
+        [default]="data.stepType == 'P' ? 'Công đoạn' : 'Bước'"></codx-label>
+      <span>{{ " " + data?.stepNo }}</span>
       <codx-label name="lblSplit" default=":"></codx-label>
-      <span>{{ " " + data?.stepName }} </span>
+      <span>
+        {{ " " + data?.stepName }} 
+      </span>
     </div>
   </div>
 
   <div class="step-rignt w-100px min-w-100px">
     <span
       class="text-danger"
-      *ngIf="data.stepType == 'P' || data.stepType == 'A'"
-    >
+      *ngIf="data.stepType == 'P' || data.stepType == 'A'">
       <span #duration>
         {{
-          data?.duration
-            | formatvalue
-              : view.formModel
-              : "duration"
-              : duration
-              : "BPActivity"
-              : "grvBPActivity"
-            | async
-        }}</span
-      >&nbsp;
+        data?.duration
+        | formatvalue
+        : view.formModel
+        : "duration"
+        : duration
+        : "BPActivity"
+        : "grvBPActivity"
+        | async
+        }}</span>&nbsp;
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
     <!-- Bo nut them chi tiet -->
@@ -510,15 +478,13 @@
               <ng-container *ngFor="let menu of childFuncOfP">
                 <div
                   class="icon-MF cursor-pointer pt-1 pb-2"
-                  (click)="clickMenu(data, menu)"
-                >
+                  (click)="clickMenu(data, menu)">
                   <span
                     class="{{ menu.icon }} icon-18 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
                     triggers="mouseenter:mouseleave"
                     placement="right left"
-                    [autoClose]="'outside'"
-                  ></span>
+                    [autoClose]="'outside'"></span>
                 </div>
               </ng-container>
             </ng-container>
@@ -526,15 +492,13 @@
               <ng-container *ngFor="let menu of childFuncOfA">
                 <div
                   class="icon-MF cursor-pointer pt-1 pb-2"
-                  (click)="clickMenu(data, menu)"
-                >
+                  (click)="clickMenu(data, menu)">
                   <span
                     class="{{ menu.icon }} icon-18 text-hover-primary "
                     [ngbPopover]="hoverViewText(menu.text)"
                     triggers="mouseenter:mouseleave"
                     placement="right left"
-                    [autoClose]="'outside'"
-                  ></span>
+                    [autoClose]="'outside'"></span>
                 </div>
               </ng-container>
             </ng-container>
@@ -549,17 +513,16 @@
   <ng-container [ngTemplateOutlet]="content"></ng-container>
   <div
     *ngIf="
-      data?.attachments > 0 && data.stepType != 'P' && data.stepType != 'A'
+    data?.attachments> 0 && data.stepType != 'P' && data.stepType != 'A'
     "
     class="d-flex align-items-center justify-content-between mt-4"
-  >
+    >
     <div class="d-flex align-items-center mb-2">
       <div class="fw-bold text-primary">
         <codx-label
           fiedName="lblAttachments"
           [formModel]="view.formModel"
-          default="Tài liệu "
-        >
+          default="Tài liệu ">
         </codx-label>
       </div>
     </div>
@@ -578,18 +541,16 @@
       allowMultiFile="1"
       [formModel]="view.formModel"
       [functionID]="funcID"
-      displayThumb="full"
-    >
+      displayThumb="full">
     </codx-attachment>
   </ng-container>
 
-  <div class="mt-5" *ngIf="data?.owners != null && data?.owners.length > 0">
+  <div class="mt-5" *ngIf="data?.owners != null && data?.owners.length> 0">
     <codx-imgs
       [width]="25"
       [objectId]="getOwnerID(data?.owners)"
       objectType="AD_Users"
-      [numberImages]="10"
-    >
+      [numberImages]="10">
     </codx-imgs>
   </div>
 
@@ -605,8 +566,8 @@
       </div>
     </ng-container>
     <ng-container
-      *ngIf="data?.reference != null && data?.reference.split(';').length > 0"
-    >
+      *ngIf="data?.reference != null && data?.reference.split(';').length> 0"
+      >
       <div class="Activities mb-3">
         <div class="check-list text-dark">
           <ng-container *ngFor="let item of data?.reference.split(';')">
@@ -617,8 +578,7 @@
                 [checked]="false"
                 labelPosition="After"
                 [disabled]="false"
-                class="test-check me-4 mb-2"
-              ></codx-input>
+                class="test-check me-4 mb-2"></codx-input>
             </div>
           </ng-container>
         </div>
@@ -631,21 +591,19 @@
   <div>
     <span
       class="text-danger"
-      *ngIf="data.stepType == 'P' || data.stepType == 'A'"
-    >
+      *ngIf="data.stepType == 'P' || data.stepType == 'A'">
       <span>{{ data?.duration }} </span>
       <span #duration>
         {{
-          data?.duration
-            | formatvalue
-              : view.formModel
-              : "duration"
-              : duration
-              : "BPActivity"
-              : "grvBPActivity"
-            | async
-        }}</span
-      >&nbsp;
+        data?.duration
+        | formatvalue
+        : view.formModel
+        : "duration"
+        : duration
+        : "BPActivity"
+        : "grvBPActivity"
+        | async
+        }}</span>&nbsp;
       <span>{{ data?.interval | vll : vllInterval : "text" | async }}</span>
     </span>
     <codx-mfunc
@@ -654,8 +612,7 @@
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, data)"
       [isBookMark]="false"
-      [dataItem]="data"
-    >
+      [dataItem]="data">
     </codx-mfunc>
   </div>
 </ng-template>
@@ -668,42 +625,35 @@
         <div
           type="button"
           class="me-1 btn btn-sm btn-white d-flex align-items-center"
-          (click)="download()"
-        >
+          (click)="download()">
           <span class="icon-arrow_downward icon-16 me-1"></span>
           <codx-label
             default="Tải về"
             [fiedName]="'Download'"
-            class="me-2"
-          ></codx-label>
+            class="me-2"></codx-label>
         </div>
 
         <div
           type="button"
           class="me-1 btn btn-sm btn-white d-flex align-items-center"
-          (click)="printFlowchart()"
-        >
+          (click)="printFlowchart()">
           <span class="icon-print icon-16 me-1"></span>
           <codx-label
             default="In"
             [fiedName]="'Print'"
-            class="me-2"
-          ></codx-label>
+            class="me-2"></codx-label>
         </div>
         <div class="me-1" *ngIf="!hideMoreFC">
           <div
             type="button"
             class="btn btn-sm btn-light-primary d-flex align-items-center"
-            (click)="addFile($event)"
-          >
-            <i class="icon-upload icon-16"></i
-            ><span>
+            (click)="addFile($event)">
+            <i class="icon-upload icon-16"></i><span>
               <codx-label
                 name="UploadFile"
                 formName="Processes"
                 gridViewName="grvProcesses"
-                default="Tải ảnh"
-              >
+                default="Tải ảnh">
               </codx-label>
             </span>
           </div>
@@ -729,8 +679,7 @@
       [isSaveSelected]="1"
       allowExtensions=".jpg,.png"
       (fileSave)="fileSave($event)"
-      displayThumb="full"
-    >
+      displayThumb="full">
     </codx-attachment>
   </ng-container>
   <ng-container *ngIf="dataFile">
@@ -746,7 +695,7 @@
         <img
           src="../assets/themes/sys/default/img/DataEmpty.svg"
           class="w-200px"
-        />
+          />
         <div class="fs-5 text-dark fw-bold mt-2 text-center">
           {{ "SYS011" | mssg | async }}
         </div>
@@ -762,8 +711,7 @@
       [formModel]="view.formModel"
       (clickMF)="clickMF($event, dataHover)"
       [isBookMark]="false"
-      [dataItem]="dataHover"
-    >
+      [dataItem]="dataHover">
     </codx-mfunc>
   </div>
 </ng-template>
@@ -774,8 +722,8 @@
 <ng-template #viewColumKaban let-data>
   <div class="envelop" (dblclick)="dblClick($event, data)">
     <div
-      class="d-flex align-items-center justify-content-between cursor-pointer w-100 has-actions-menu"
-    >
+      class="d-flex align-items-center justify-content-between cursor-pointer
+      w-100 has-actions-menu">
       <div class="line-colums">{{ data.headerText }}</div>
     </div>
     <div class="show-more">
@@ -785,8 +733,7 @@
         [formModel]="view.formModel"
         (clickMF)="clickMFColums($event, data.keyField)"
         [dataItem]="moreDefaut"
-        [isBookMark]="false"
-      >
+        [isBookMark]="false">
       </codx-mfunc>
     </div>
   </div>

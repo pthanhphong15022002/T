@@ -13,6 +13,7 @@ import{
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CalendarView } from '@syncfusion/ej2-angular-calendars';
 
 @Component({
   selector: 'lib-popup-efamilies',
@@ -20,6 +21,12 @@ import{
   styleUrls: ['./popup-efamilies.component.css']
 })
 export class PopupEFamiliesComponent extends UIComponent implements OnInit {
+  start: CalendarView = 'Year';
+  depth: CalendarView = 'Year';
+  format: string = 'MM/yyyy'
+  fromdateVal: any
+  todateVal: any
+
   formModel: FormModel;
   formGroup: FormGroup;
   employId;
@@ -27,6 +34,7 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   dialog: DialogRef;
   lstFamilyMembers;
   indexSelected;
+  isEmployee = false;
   familyMemberObj;
   funcID;
   headerText: ''
@@ -52,7 +60,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     // if(this.formModel){
     //   this.isAfterRender = true
     // }
-    // this.funcID = this.dialog.formModel.funcID;
     if(!this.formModel){
       this.formModel = new FormModel();
       this.formModel.formName = 'EFamilies'
@@ -66,6 +73,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
       
     }
     this.employId = data?.data?.employeeId;
+    this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName).subscribe(grv => {
+      console.log('grv:', grv);
+      
+    })
   }
 
   initForm(){
@@ -78,23 +89,25 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
           console.log(this.formModel.currentData)
           console.log('thong tin ng than', p)
           this.familyMemberObj = p
-          this.familyMemberObj.iDCardNo = this.familyMemberObj.idCardNo
-      this.familyMemberObj.iDIssuedOn = this.familyMemberObj.idIssuedOn 
-      this.familyMemberObj.iDIssuedBy = this.familyMemberObj.idIssuedBy
-      this.familyMemberObj.pITNumber = this.familyMemberObj.pitNumber
-      this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
+      //     this.familyMemberObj.idCardNo = this.familyMemberObj.idCardNo
+      // this.familyMemberObj.idIssuedOn = this.familyMemberObj.idIssuedOn 
+      // this.familyMemberObj.idIssuedBy = this.familyMemberObj.idIssuedBy
+      // this.familyMemberObj.pidNumber = this.familyMemberObj.pitNumber
+      ///this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
       this.formGroup.patchValue(this.familyMemberObj)
       this.isAfterRender = true
           this.formModel.currentData = this.familyMemberObj
         })
       }
       else{
-        this.familyMemberObj.iDCardNo = this.familyMemberObj.idCardNo
-      this.familyMemberObj.iDIssuedOn = this.familyMemberObj.idIssuedOn 
-      this.familyMemberObj.iDIssuedBy = this.familyMemberObj.idIssuedBy
-      this.familyMemberObj.pITNumber = this.familyMemberObj.pitNumber
-      this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
+      //   this.familyMemberObj.iDCardNo = this.familyMemberObj.idCardNo
+      // this.familyMemberObj.iDIssuedOn = this.familyMemberObj.idIssuedOn 
+      // this.familyMemberObj.iDIssuedBy = this.familyMemberObj.idIssuedBy
+      // this.familyMemberObj.pITNumber = this.familyMemberObj.pitNumber
+      // this.familyMemberObj.sIRegisterNo = this.familyMemberObj.siRegisterNo
       this.formGroup.patchValue(this.familyMemberObj)
+      this.fromdateVal = this.familyMemberObj.registerFrom
+      this.todateVal = this.familyMemberObj.registerTo
       this.isAfterRender = true
       }
     })
@@ -104,22 +117,24 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
+    this.familyMemberObj.registerFrom = this.fromdateVal
+    this.familyMemberObj.registerTo = this.todateVal
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.familyMemberObj.recID
     }
     this.familyMemberObj.employeeID = this.employId
 
-    this.familyMemberObj.idCardNo = this.familyMemberObj.iDCardNo
-    this.familyMemberObj.idIssuedOn = this.familyMemberObj.iDIssuedOn 
-    this.familyMemberObj.idIssuedBy = this.familyMemberObj.iDIssuedBy
-    this.familyMemberObj.pitNumber = this.familyMemberObj.pITNumber
-    this.familyMemberObj.siRegisterNo = this.familyMemberObj.sIRegisterNo
+    // this.familyMemberObj.idCardNo = this.familyMemberObj.iDCardNo
+    // this.familyMemberObj.idIssuedOn = this.familyMemberObj.iDIssuedOn 
+    // this.familyMemberObj.idIssuedBy = this.familyMemberObj.iDIssuedBy
+    // this.familyMemberObj.pitNumber = this.familyMemberObj.pITNumber
+    // this.familyMemberObj.siRegisterNo = this.familyMemberObj.sIRegisterNo
 
-    delete this.familyMemberObj.iDCardNo
-    delete this.familyMemberObj.iDIssuedOn
-    delete this.familyMemberObj.iDIssuedBy
-    delete this.familyMemberObj.pITNumber
-    delete this.familyMemberObj.sIRegisterNo
+    // delete this.familyMemberObj.iDCardNo
+    // delete this.familyMemberObj.iDIssuedOn
+    // delete this.familyMemberObj.iDIssuedBy
+    // delete this.familyMemberObj.pITNumber
+    // delete this.familyMemberObj.sIRegisterNo
 
     if(this.actionType === 'add' || this.actionType === 'copy'){
       console.log('data luu xuong be', this.familyMemberObj);
@@ -158,15 +173,36 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.familyMemberObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.familyMemberObj)) 
     this.indexSelected = this.lstFamilyMembers.findIndex(p => p.recID = this.familyMemberObj.recID);
+    this.fromdateVal = this.familyMemberObj.registerFrom
+    this.todateVal = this.familyMemberObj.registerTo
     this.actionType ='edit'
     this.formGroup?.patchValue(this.familyMemberObj);
     this.cr.detectChanges();
+  }
+
+  handleClickCheckBoxIsEmploy(e){
+    let isChecked = e.target.checked
+    if(isChecked == true){
+      this.isEmployee = true;
+    }
+    else{
+      this.isEmployee = false;
+    }
   }
 
   
   afterRenderListView(evt){
     this.listView = evt;
     console.log(this.listView);
+  }
+
+  UpdateRegisterFrom(e){
+    this.fromdateVal = e
+  }
+
+  UpdateRegisterTo(e){
+    this.todateVal = e
+    
   }
 
 }

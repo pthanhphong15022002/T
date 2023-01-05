@@ -91,7 +91,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.dueDate = this.task?.dueDate;
     this.dueDate = this.task?.dueDate;
     this.taskName = this.task?.taskName;
- 
+
     this.vllShare = dt?.data[1] ? dt?.data[1] : this.vllShare;
     this.vllRole = dt?.data[2] ? dt?.data[2] : this.vllRole;
     this.title = dt?.data[3] ? dt?.data[3] : this.title;
@@ -160,7 +160,8 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.task.refType = this.refType;
     this.task.taskName = this.taskName;
     if (this.taskParent) {
-      this.task.parentID = this.taskParent.category=="1" ? null : this.taskParent.recID;
+      this.task.parentID =
+        this.taskParent.category == '1' ? null : this.taskParent.recID;
       this.task.dueDate = this.taskParent.dueDate;
       this.task.endDate = this.taskParent.endDate;
       this.task.startDate = this.taskParent.startDate;
@@ -168,14 +169,16 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
       this.task.taskName = this.taskParent.taskName;
       this.task.memo = this.taskParent.memo;
       this.task.memo2 = this.taskParent.memo2;
-      this.task.priority= this.taskParent.priority;
+      this.task.priority = this.taskParent.priority;
       this.task.taskGroupID = this.taskParent.taskGroupID;
       this.task.projectID = this.taskParent.projectID;
       this.task.location = this.taskParent.location;
       this.task.tags = this.taskParent.tags;
-      this.task.refID = this.refID? this.refID : this.taskParent.recID;
+      this.task.refID = this.refID ? this.refID : this.taskParent.recID;
       this.task.refNo = this.taskParent.taskID;
-      this.task.taskType = this.taskParent.taskType ? this.taskParent.taskType :"TM_Tasks" ;
+      this.task.taskType = this.taskParent.taskType
+        ? this.taskParent.taskType
+        : 'TM_Tasks';
       this.copyListTodo(this.taskParent.taskID);
       if (this.task.startDate && this.task.endDate) this.changTimeCount = 0;
       else if (this.task.startDate || this.task.endDate)
@@ -345,10 +348,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
-          if (this.param?.ConfirmControl == '1')
-            this.tmSv
-              .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
-              .subscribe();
+           //send mail FE
+          // if (this.param?.ConfirmControl == '1')
+          //   this.tmSv
+          //     .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
+          //     .subscribe();
+          // else
+          //   this.tmSv
+          //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
+          //     .subscribe();
 
           //lưu his giao việc
           var objectType = this.formModel.entityName;
@@ -399,11 +407,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
                   .subscribe();
               }
             });
-
-          // if (!isContinue) {
-          //   this.closePanel();
-          // }
-          // this.resetForm();
         } else {
           this.notiService.notifyCode('TM038');
           return;
@@ -511,7 +514,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           if (res && res.length > 0) {
             if (!res[1]) this.notiService.notifyCode('TM066');
             assignTo = res[0];
-            this.valueSelectUser(assignTo);       
+            this.valueSelectUser(assignTo);
           } else this.notiService.notifyCode('TM066');
         });
     }
@@ -719,7 +722,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
     this.param.CompletedControl = taskGroup.completedControl;
   }
 
-   //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
+  //#regionreferences -- viet trong back end nhung khong co tmp chung nen viet fe
   // loadDataReferences() {
   //   if (this.task.category == '1') {
   //     this.dataReferences = [];
@@ -764,8 +767,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   //referen new
   loadDataReferences() {
     this.dataReferences = [];
-    if (this.task.refID)
-      this.getReferencesByCategory3(this.task);
+    if (this.task.refID) this.getReferencesByCategory3(this.task);
   }
 
   getReferencesByCategory3(task) {

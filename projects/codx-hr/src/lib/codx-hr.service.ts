@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataRequest } from '@shared/models/data.request';
 import { LayoutModel } from '@shared/models/layout.model';
-import { ApiHttpService, AuthStore, CacheService } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
 import {
   BehaviorSubject,
   finalize,
@@ -71,7 +71,8 @@ export class CodxHrService {
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe((gv: any) => {
+      this.cache.gridViewSetup(formName, gridView).subscribe((grvSetup: any) => {
+        let gv = Util.camelizekeyObj(grvSetup);
         var model = {};
         model['write'] = [];
         model['delete'] = [];
@@ -81,35 +82,33 @@ export class CodxHrService {
           const user = this.auth.get();
           for (const key in gv) {
             const element = gv[key];
-            element.fieldName =
-              element.fieldName.charAt(0).toLowerCase() +
-              element.fieldName.slice(1);
+            element.fieldName = Util.camelize(element.fieldName);
             model[element.fieldName] = [];
-            if (element.fieldName == 'owner') {
-              model[element.fieldName].push(user.userID);
-            } else if (element.fieldName == 'bUID') {
-              model[element.fieldName].push(user['buid']);
-            } else if (element.fieldName == 'createdOn') {
-              model[element.fieldName].push(new Date());
-            } else if (element.fieldName == 'stop') {
-              model[element.fieldName].push(false);
-            } else if (element.fieldName == 'orgUnitID') {
-              model[element.fieldName].push(user['buid']);
-            } else if (
-              element.dataType == 'Decimal' ||
-              element.dataType == 'Int'
-            ) {
-              model[element.fieldName].push(0);
-            } else if (
-              element.dataType == 'Bool' ||
-              element.dataType == 'Boolean'
-            )
-              model[element.fieldName].push(false);
-            else if (element.fieldName == 'createdBy') {
-              model[element.fieldName].push(user.userID);
-            } else {
-              model[element.fieldName].push(null);
-            }
+            // if (element.fieldName == 'owner') {
+            //   model[element.fieldName].push(user.userID);
+            // } else if (element.fieldName == 'bUID') {
+            //   model[element.fieldName].push(user['buid']);
+            // } else if (element.fieldName == 'createdOn') {
+            //   model[element.fieldName].push(new Date());
+            // } else if (element.fieldName == 'stop') {
+            //   model[element.fieldName].push(false);
+            // } else if (element.fieldName == 'orgUnitID') {
+            //   model[element.fieldName].push(user['buid']);
+            // } else if (
+            //   element.dataType == 'Decimal' ||
+            //   element.dataType == 'Int'
+            // ) {
+            //   model[element.fieldName].push(0);
+            // } else if (
+            //   element.dataType == 'Bool' ||
+            //   element.dataType == 'Boolean'
+            // )
+            //   model[element.fieldName].push(false);
+            // else if (element.fieldName == 'createdBy') {
+            //   model[element.fieldName].push(user.userID);
+            // } else {
+            //   model[element.fieldName].push(null);
+            // }
 
             let modelValidator = [];
             if (element.isRequire) {
@@ -407,6 +406,17 @@ export class CodxHrService {
   }
 
   //#region HR_ETrainCourses
+
+  getDataETrainDefault() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'ETrainCoursesBusiness',
+      'GetDataETrainDefaultAsync',
+      null
+    );
+  }
+
   getEmployeeTrainCourse(data) {
     return this.api.execSv<any>(
       'HR',
@@ -416,7 +426,7 @@ export class CodxHrService {
       data
     );
   }
-  
+
   updateEmployeeTrainCourseInfo(data) {
     return this.api.execSv<any>(
       'HR',
@@ -427,7 +437,7 @@ export class CodxHrService {
     );
   }
 
-  addETraincourse(data: any){
+  addETraincourse(data: any) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -507,7 +517,6 @@ export class CodxHrService {
       data
     );
   }
-
 
   updateEmployeeWorkPermitDetail(data) {
     return this.api.execSv<any>(
@@ -642,60 +651,60 @@ export class CodxHrService {
   }
   //#endregion
 
-    //#region EAccidentBusiness
-    getEmployeeAccidentModel(){
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'GetEmployeeAccidentsModelAsync'
-      );
-    }
-  
-    UpdateEmployeeAccidentInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'EditEAccidentAsync',
-        data
-      );
-    }
-  
-    AddEmployeeAccidentInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'AddEAccidentAsync',
-        data
-      );
-    }
-  
-    DeleteEmployeeAccidentInfo(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'DeleteEAccidentAsync',
-        data
-      );
-    }
-  
-    getListAccidentByDataRequest(data) {
-      return this.api.execSv<any>(
-        'HR',
-        'HR',
-        'EAccidentsBusiness',
-        'LoadDataEAccidentAsync',
-        data
-      );
-    }
-  
-    //#endregion
+  //#region EAccidentBusiness
+  getEmployeeAccidentModel() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'GetEmployeeAccidentsModelAsync'
+    );
+  }
+
+  UpdateEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'EditEAccidentAsync',
+      data
+    );
+  }
+
+  AddEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'AddEAccidentAsync',
+      data
+    );
+  }
+
+  DeleteEmployeeAccidentInfo(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'DeleteEAccidentAsync',
+      data
+    );
+  }
+
+  getListAccidentByDataRequest(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EAccidentsBusiness',
+      'LoadDataEAccidentAsync',
+      data
+    );
+  }
+
+  //#endregion
 
   //#region EDayOffBusiness
-  getEmployeeDayOffModel(){
+  getEmployeeDayOffModel() {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -1522,6 +1531,16 @@ export class CodxHrService {
     );
   }
 
+  getCrrEContract(dataRequest: DataRequest) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EContractsBusiness',
+      'GetCrrEContractAsync',
+      dataRequest
+    );
+  }
+
   loadDataEContract(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
@@ -1563,6 +1582,49 @@ export class CodxHrService {
   }
   //#endregion
 
+  //#region HR_EBusinessTravels
+
+  getEBTravelDefaultAsync() {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'GetEBTravelDefaultAsync',
+      null
+    );
+  }
+
+  addEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'AddEBusinessTravelsAsync',
+      [data]
+    );
+  }
+
+  editEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'EditEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  deleteEBusinessTravels(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBusinessTravelsBusiness',
+      'DeleteEBusinessTravelsAsync',
+      data
+    );
+  }
+
+  //#endregion
   //#region
   getDataDefault(
     funcID: string,
@@ -1576,4 +1638,14 @@ export class CodxHrService {
     ]);
   }
   //#endregion
+
+  addTest(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'AddTestAsync',
+      null
+    );
+  }
 }

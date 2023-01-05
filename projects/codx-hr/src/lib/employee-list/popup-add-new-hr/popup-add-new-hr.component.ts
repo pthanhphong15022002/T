@@ -65,17 +65,17 @@ export class PopupAddNewHRComponent
   hrID;
   tabInfo: any[] = [
     {
-      icon: 'icon-info',
+      icon: 'icon-assignment_ind',
       text: 'Thông tin nhân viên',
       name: 'emmployeeInfo',
     },
     {
-      icon: 'icon-receipt_long',
+      icon: 'icon-person',
       text: 'Thông tin cá nhân',
       name: 'personalInfo',
     },
     {
-      icon: 'icon-business_center',
+      icon: 'icon-folder_special',
       text: 'Pháp lý',
       name: 'legalInfo',
     },
