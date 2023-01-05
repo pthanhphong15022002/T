@@ -1,3 +1,4 @@
+import { from, map, Observable } from 'rxjs';
 import { CodxBpService } from './../../codx-bp.service';
 import {
   BP_Processes,
@@ -80,17 +81,11 @@ export class PopupRolesComponent implements OnInit {
     this.process.permissions = this.groupBy(
       this.process.permissions,
       'objectType',
+      'objectID'
     ).sort((a, b) =>
-    ('' + a.objectID).localeCompare(this.process.owner)
-    ? 1
-    : a.memberType > b.memberType
-    ? 0
-    : -1
+      ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
     );
 
-    // this.groupBy(this.process.permissions);
-    // this.process.permissions = this.process.permissions.groupBy1();
-    // this.process.permissions = this.groupBy1(this.process.permissions, 'objectID');
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
@@ -98,7 +93,6 @@ export class PopupRolesComponent implements OnInit {
     });
     this.startDate = null;
     this.endDate = null;
-    // this.groupBy1();
   }
 
   ngOnInit(): void {
@@ -108,7 +102,6 @@ export class PopupRolesComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    //Tạo sẵn check quyền, vì db quyền của module này chưa có
     if (!this.user.administrator) {
       this.api
         .callSv('SYS', 'AD', 'UserRolesBusiness', 'CheckUserRolesAsync', [
@@ -139,30 +132,37 @@ export class PopupRolesComponent implements OnInit {
   //     });
   // }
 
-  groupBy(arr, key1) {
+  groupBy(arr, key1, key2) {
     var lstGroup = [];
-    var group = arr.reduce(function (rv, x) {
-      (rv[x[key1]] = rv[x[key1]] || []).push(x);
-      return rv;
-    }, {});
+    var group = arr.reduce(
+      (result, item) => ({
+        ...result,
+        [item[key1] + ',' + item[key2]]: [
+          ...(result[item[key1] + ',' + item[key2]] || []),
+          item,
+        ],
+      }),
+      {}
+    );
     for (var key of Object.keys(group)) {
-      var tmp = group[key];
+      var tmp = group[key].sort(
+        (a, b) => Number(b.memberType) - Number(a.memberType)
+      );
+      // var tmp1 = tmp.reduce(function (rv, x) {
+      //   (rv[x[key2]] = rv[x[key2]] || []).push(x);
+      //   return rv;
+      // }, {})
       for (var item in Object.keys(tmp)) {
         lstGroup.push(tmp[item]);
       }
     }
-    return lstGroup.sort((a,b) => b.objectID > a.objectID ? 1 : -1);
+    return lstGroup.sort((a, b) => (b.objectID > a.objectID ? 1 : -1));
   }
   //#region save
   onSave() {
     if (this.startDate != null && this.endDate != null) {
       if (this.startDate >= this.endDate) {
-        this.notifi.notify('Vui lòng chọn ngày bắt đầu nhỏ hơn ngày kết thúc!');
-        return;
-      }
-      //Chưa có mssg code
-      if (!this.isCheckFromToDate(this.startDate)) {
-        this.notifi.notify('Vui lòng chọn ngày bắt đầu lớn hơn ngày hiện tại!');
+        this.notifi.notifyCode('TM034');
         return;
       }
     }
@@ -406,12 +406,8 @@ export class PopupRolesComponent implements OnInit {
 
       list.push(Object.assign({}, perm));
     }
-    return this.groupBy(list, 'objectType').sort((a, b) =>
-    ('' + a.objectID).localeCompare(this.process.owner)
-    ? 1
-    : a.memberType > b.memberType
-    ? 1
-    : -1
+    return this.groupBy(list, 'objectType', 'objectID').sort((a, b) =>
+      ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
     );
   }
   //#endregion
