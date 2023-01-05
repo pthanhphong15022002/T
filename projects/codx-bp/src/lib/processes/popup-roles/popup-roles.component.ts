@@ -80,8 +80,9 @@ export class PopupRolesComponent implements OnInit {
     this.process = this.data;
     this.process.permissions = this.groupBy(
       this.process.permissions,
-      'objectType', 'objectID'
-    ).sort((a,b) =>
+      'objectType',
+      'objectID'
+    ).sort((a, b) =>
       ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
     );
 
@@ -133,16 +134,20 @@ export class PopupRolesComponent implements OnInit {
 
   groupBy(arr, key1, key2) {
     var lstGroup = [];
-    var group = arr.reduce((result, item) => ({
-      ...result,
-      [item[key1] + ','+ item[key2]]: [
-        ...(result[item[key1] + ','+ item[key2]] || []),
-        item,
-      ],
-    }),
-    {},);
+    var group = arr.reduce(
+      (result, item) => ({
+        ...result,
+        [item[key1] + ',' + item[key2]]: [
+          ...(result[item[key1] + ',' + item[key2]] || []),
+          item,
+        ],
+      }),
+      {}
+    );
     for (var key of Object.keys(group)) {
-      var tmp = group[key].sort((a,b)=> Number(b.memberType) - Number(a.memberType));
+      var tmp = group[key].sort(
+        (a, b) => Number(b.memberType) - Number(a.memberType)
+      );
       // var tmp1 = tmp.reduce(function (rv, x) {
       //   (rv[x[key2]] = rv[x[key2]] || []).push(x);
       //   return rv;
@@ -151,7 +156,7 @@ export class PopupRolesComponent implements OnInit {
         lstGroup.push(tmp[item]);
       }
     }
-    return lstGroup.sort((a,b) => b.objectID > a.objectID ? 1 : -1);
+    return lstGroup.sort((a, b) => (b.objectID > a.objectID ? 1 : -1));
   }
   //#region save
   onSave() {
