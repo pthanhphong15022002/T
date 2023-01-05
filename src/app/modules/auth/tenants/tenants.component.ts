@@ -22,7 +22,6 @@ export class TenantsComponent implements OnInit {
     // this.router.navigate(['/tester']);
     this.getTenants().subscribe((tenants: Array<any>) => {
       this.lstTenant = tenants;
-      console.log('users', this.lstTenant);
     });
   }
 

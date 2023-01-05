@@ -182,7 +182,7 @@ export class CodxTMService {
   getValueCMParameter(predicate, dataValue) {
     return this.api.execSv(
       'SYS',
-      'CM',
+      'Core',
       'ParametersBusiness',
       'GetByPredicate',
       [predicate, dataValue]

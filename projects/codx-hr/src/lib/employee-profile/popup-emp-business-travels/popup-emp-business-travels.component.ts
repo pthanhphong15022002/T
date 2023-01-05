@@ -35,7 +35,7 @@ export class PopupEmpBusinessTravelsComponent
   formGroup: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
-  headerText: string = "";
+  headerText: string = '';
   funcID;
   employId;
   data;
@@ -71,7 +71,7 @@ export class PopupEmpBusinessTravelsComponent
     this.cache.functionList(this.funcID).subscribe((funcList) => {
       if (funcList) {
         console.log(funcList);
-        this.headerText = this.headerText + " 1 " + funcList.description;
+        this.headerText = this.headerText + ' 1 ' + funcList.description;
         this.cr.detectChanges();
       }
     });
@@ -118,7 +118,7 @@ export class PopupEmpBusinessTravelsComponent
           this.formModel.entityName,
           this.idField
         )
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res) {
             this.data = res?.data;
             this.data.employeeID = this.employId;
@@ -126,7 +126,7 @@ export class PopupEmpBusinessTravelsComponent
             this.formGroup.patchValue(this.data);
             this.cr.detectChanges();
             this.isAfterRender = true;
-          } 
+          }
         });
     } else {
       this.formModel.currentData = this.data;

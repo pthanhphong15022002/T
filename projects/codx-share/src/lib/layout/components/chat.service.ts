@@ -38,7 +38,7 @@ export class ChatService {
   public searchUser(opts: DataRequest) {
     return this.api.execSv<Post>(
       'SYS',
-      'ERM.Business.CM',
+      'ERM.Business.Core',
       'DataBusiness',
       'LoadDataAsync',
       opts

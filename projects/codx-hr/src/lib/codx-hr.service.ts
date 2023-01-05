@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataRequest } from '@shared/models/data.request';
 import { LayoutModel } from '@shared/models/layout.model';
-import { ApiHttpService, AuthStore, CacheService, FormModel, NotificationsService, Util } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  FormModel,
+  NotificationsService,
+  Util,
+} from 'codx-core';
 import {
   BehaviorSubject,
   finalize,
@@ -29,7 +36,7 @@ export class CodxHrService {
     private cache: CacheService,
     private auth: AuthStore,
     private fb: FormBuilder,
-    private notiService: NotificationsService,
+    private notiService: NotificationsService
   ) {}
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
@@ -72,64 +79,65 @@ export class CodxHrService {
 
   getFormGroup(formName, gridView): Promise<FormGroup> {
     return new Promise<FormGroup>((resolve, reject) => {
-      this.cache.gridViewSetup(formName, gridView).subscribe((grvSetup: any) => {
-        let gv = Util.camelizekeyObj(grvSetup);
-        var model = {};
-        model['write'] = [];
-        model['delete'] = [];
-        model['assign'] = [];
-        model['share'] = [];
-        if (gv) {
-          const user = this.auth.get();
-          for (const key in gv) {
-            const element = gv[key];
-            element.fieldName = Util.camelize(element.fieldName);
-            model[element.fieldName] = [];
-            // if (element.fieldName == 'owner') {
-            //   model[element.fieldName].push(user.userID);
-            // } else if (element.fieldName == 'bUID') {
-            //   model[element.fieldName].push(user['buid']);
-            // } else if (element.fieldName == 'createdOn') {
-            //   model[element.fieldName].push(new Date());
-            // } else if (element.fieldName == 'stop') {
-            //   model[element.fieldName].push(false);
-            // } else if (element.fieldName == 'orgUnitID') {
-            //   model[element.fieldName].push(user['buid']);
-            // } else if (
-            //   element.dataType == 'Decimal' ||
-            //   element.dataType == 'Int'
-            // ) {
-            //   model[element.fieldName].push(0);
-            // } else if (
-            //   element.dataType == 'Bool' ||
-            //   element.dataType == 'Boolean'
-            // )
-            //   model[element.fieldName].push(false);
-            // else if (element.fieldName == 'createdBy') {
-            //   model[element.fieldName].push(user.userID);
-            // } else {
-            //   model[element.fieldName].push(null);
-            // }
-            model[element.fieldName].push(null);
+      this.cache
+        .gridViewSetup(formName, gridView)
+        .subscribe((grvSetup: any) => {
+          let gv = Util.camelizekeyObj(grvSetup);
+          var model = {};
+          model['write'] = [];
+          model['delete'] = [];
+          model['assign'] = [];
+          model['share'] = [];
+          if (gv) {
+            const user = this.auth.get();
+            for (const key in gv) {
+              const element = gv[key];
+              element.fieldName = Util.camelize(element.fieldName);
+              model[element.fieldName] = [];
+              // if (element.fieldName == 'owner') {
+              //   model[element.fieldName].push(user.userID);
+              // } else if (element.fieldName == 'bUID') {
+              //   model[element.fieldName].push(user['buid']);
+              // } else if (element.fieldName == 'createdOn') {
+              //   model[element.fieldName].push(new Date());
+              // } else if (element.fieldName == 'stop') {
+              //   model[element.fieldName].push(false);
+              // } else if (element.fieldName == 'orgUnitID') {
+              //   model[element.fieldName].push(user['buid']);
+              // } else if (
+              //   element.dataType == 'Decimal' ||
+              //   element.dataType == 'Int'
+              // ) {
+              //   model[element.fieldName].push(0);
+              // } else if (
+              //   element.dataType == 'Bool' ||
+              //   element.dataType == 'Boolean'
+              // )
+              //   model[element.fieldName].push(false);
+              // else if (element.fieldName == 'createdBy') {
+              //   model[element.fieldName].push(user.userID);
+              // } else {
+              //   model[element.fieldName].push(null);
+              // }
 
-            let modelValidator = [];
-            if (element.isRequire) {
-              modelValidator.push(Validators.required);
+              let modelValidator = [];
+              if (element.isRequire) {
+                modelValidator.push(Validators.required);
+              }
+              if (element.fieldName == 'email') {
+                modelValidator.push(Validators.email);
+              }
+              if (modelValidator.length > 0) {
+                model[element.fieldName].push(modelValidator);
+              }
             }
-            if (element.fieldName == 'email') {
-              modelValidator.push(Validators.email);
-            }
-            if (modelValidator.length > 0) {
-              model[element.fieldName].push(modelValidator);
-            }
+            model['write'].push(false);
+            model['delete'].push(false);
+            model['assign'].push(false);
+            model['share'].push(false);
           }
-          model['write'].push(false);
-          model['delete'].push(false);
-          model['assign'].push(false);
-          model['share'].push(false);
-        }
-        resolve(this.fb.group(model, { updateOn: 'blur' }));
-      });
+          resolve(this.fb.group(model, { updateOn: 'blur' }));
+        });
     });
   }
 
@@ -1474,11 +1482,13 @@ export class CodxHrService {
   //#endregion
 
   getHRDataDefault(funcID: string, entityName: string, idField: string) {
-    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+    return this.api.execSv<any>(
+      'HR',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
   }
   //#region HR_EAccidents
   loadDataEAccident(dataRequest: DataRequest) {
@@ -1632,8 +1642,8 @@ export class CodxHrService {
     funcID: string,
     entityName: string,
     idField: string
-  ){
-    return this.api.execSv<any>('HR', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+  ): Observable<object> {
+    return this.api.execSv('HR', 'Core', 'DataBusiness', 'GetDefaultAsync', [
       funcID,
       entityName,
       idField,
@@ -1704,24 +1714,16 @@ export class CodxHrService {
           let headerText = gridViewSetup[fieldName]?.headerText ?? fieldName;
 
           if (fieldName == 'Email' && formGroup.value.email != null) {
-            this.notiService.notifyCode(
-              'E0003',
-              0,
-              '"' + headerText + '"'
-            );
+            this.notiService.notifyCode('E0003', 0, '"' + headerText + '"');
           } else {
-            this.notiService.notifyCode(
-              'SYS009',
-              0,
-              '"' + headerText + '"'
-            );
+            this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
           }
         }
       });
   }
   //#endregion
 
-  addTest(){
+  addTest() {
     return this.api.execSv<any>(
       'HR',
       'HR',
