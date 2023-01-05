@@ -2114,6 +2114,7 @@ export class EmployeeProfileComponent extends UIComponent {
         dataSelected: null,
         headerText: 'Nhật kí công tác',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020404',
       },
       option
     );
