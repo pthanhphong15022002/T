@@ -10,22 +10,20 @@
       <codx-input field="processName" [Group]="form.formGroup" [formModel]="form.formModel">
       </codx-input>
     </div>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm công đoạn">
-            </codx-label>
-            <codx-input field="groupID" [Group]="form.formGroup" [formModel]="form.formModel">
-            </codx-input>
-          </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm công đoạn">
+          </codx-label>
+          <codx-input field="groupID" [Group]="form.formGroup" [formModel]="form.formModel">
+          </codx-input>
         </div>
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label fiedName="Status" [formModel]="form.formModel" default="Tình trạng"></codx-label>
-            <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="Status" [disabled]="isDisable">
-            </codx-input>
-          </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="Status" [formModel]="form.formModel" default="Tình trạng"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="Status" [disabled]="isDisable">
+          </codx-input>
         </div>
       </div>
     </div>
@@ -33,12 +31,10 @@
     <div class="form-group">
       <codx-label name="Memo" [formModel]="form.formModel" default="Mô tả">
       </codx-label>
-      <div class="d-flex justify-content-between align-items-center">
-        <div style="width: 100% h-100px">
-          <codx-input [field]="'memo'" [formModel]="form.formModel" [Group]="form.formGroup"
-            (valueChange)="valueChange($event)">
-          </codx-input>
-        </div>
+      <div class="w-100">
+        <codx-input [field]="'memo'" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
+        </codx-input>
       </div>
     </div>
     <div class="row">
