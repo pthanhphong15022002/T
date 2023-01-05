@@ -135,13 +135,15 @@
     <!--Footer-->
     <div class="pt-5 d-flex justify-content-center">
 
-      <div class="btn-group">
-        <button class="btn btn-outline-primary me-2">
-          <codx-label name="lblCancel" default="Huỷ"></codx-label>
-        </button>
-        <button class="btn btn-primary" (click)="onSaveForm()">
-          <codx-label name="lblSave" default="Lưu"></codx-label>
-        </button>
+      <div class="btn-group"> 
+        <span type="button" 
+          class="me-2 btn d-flex py-2 px-4 btn-sm btn-outline btn-outline-primary btn-active-light-primary  rounded justify-content-center">
+          <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3"></codx-label>
+        </span>
+        <span type="button" (click)="onSaveForm()"
+          class="d-flex py-2 px-4 btn-primary rounded justify-content-center ">
+          <codx-label name="lblSave" class=" px-3 fw-bold" default="Lưu" ></codx-label>
+        </span>
       </div>
     </div>
   

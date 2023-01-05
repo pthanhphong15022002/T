@@ -787,11 +787,11 @@ export class PopupAddBookingRoomComponent extends UIComponent {
               this.saveCheck = false;
               return;
             } else {
-              //this.attendeesValidateStep(approval);
+              this.attendeesValidateStep(approval);
             }
           });
         } else {
-          //this.attendeesValidateStep(approval);
+          this.attendeesValidateStep(approval);
         }
       }
       this.saveCheck = true;
