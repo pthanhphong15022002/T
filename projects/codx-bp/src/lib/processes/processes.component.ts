@@ -738,9 +738,13 @@ export class ProcessesComponent
       return;
     }
     if (this.oldName.trim() === this.newName.trim()) {
-      this.notification.notifyCode('SYS007');
-      this.changeDetectorRef.detectChanges();
-      this.dialogPopup.close();
+      if(this.isRename){
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess); 
+      }else{
+        this.notification.notifyCode('SYS007');
+        this.changeDetectorRef.detectChanges();
+        this.dialogPopup.close();
+      }
     }
     else {
       this.CheckAllExistNameProccess(this.newName, this.idProccess);
@@ -749,7 +753,7 @@ export class ProcessesComponent
   CheckAllExistNameProccess(newName, idProccess) {
     this.bpService.isCheckExitName(newName, idProccess).subscribe((res) => {
       if (res) {
-        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);  
         return;
       } else {
         this.actionReName(newName);
@@ -769,7 +773,6 @@ export class ProcessesComponent
           this.notification.notifyCode('SYS007');
           if(this.isRename){
             this.beforeRestoreBinById(this.itemSelected);
-            this.isRename = false;
           }
           this.changeDetectorRef.detectChanges();
         }
@@ -1028,7 +1031,9 @@ export class ProcessesComponent
   //   return strTime;
   // }
 
-  PopoverDetail(p: any, emp) {
+  PopoverDetail(e ,p: any, emp) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;     
     if(this.popupOld?.popoverClass !== p?.popoverClass ) {
       this.popupOld?.close();
     }
@@ -1037,7 +1042,7 @@ export class ProcessesComponent
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp.memo != null || emp.processName != null) {
-        p.open();
+        if(parent <= child) {p.open();}
       }
     } else p.close();
     this.popupOld = p;
@@ -1146,8 +1151,11 @@ export class ProcessesComponent
     this.view.dataService.dataSelected = data;
     this.bpService.restoreBinById(data.recID).subscribe((res) => {
       if (res) {
-        this.notification.notifyCode('SYS034');
+        if(!this.isRename){
+          this.notification.notifyCode('SYS034');
+        }       
         this.view.dataService.remove(data).subscribe();
+        this.isRename = false;
         this.detectorRef.detectChanges();
       }
     });
