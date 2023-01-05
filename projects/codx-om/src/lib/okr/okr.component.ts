@@ -65,6 +65,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelOB = new FormModel();
+  formModel = new FormModel();
   funcID: any;
   obFuncID: any;
   krFuncID: any;
@@ -81,12 +82,14 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
     //var x= this.authService.userValue;
+    
   }
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
     this.funcIDChanged();
     this.formModelChanged();
+
     this.views = [
       {
         id: '1',
@@ -242,6 +245,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Lấy form Model con
   formModelChanged() {
+    this.codxOmService.getFormModel(this.funcID).then((planFM) => {
+      if (planFM) {
+        this.formModel = planFM;
+      }
+    });
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;

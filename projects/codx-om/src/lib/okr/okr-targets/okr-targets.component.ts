@@ -124,8 +124,7 @@ export class OkrTargetsComponent implements OnInit {
   Objs = [];
   ObjQty = 0;
   Krs = [];
-  KrQty = 0;
-
+  KrQty = 0;  
   progress: number = 0;
 
   constructor(
@@ -134,7 +133,10 @@ export class OkrTargetsComponent implements OnInit {
     private codxOmService: CodxOmService,
     private api: ApiHttpService,
     private notificationsService :NotificationsService,
-  ) {}
+
+  ) {
+    
+  }
 
   ngOnInit(): void {
     //Lấy tiêu đề theo FuncID cho Popup
@@ -178,11 +180,6 @@ export class OkrTargetsComponent implements OnInit {
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
-    // Tạo FormModel cho OKRs
-    this.formModelKR.entityName = 'OM_OKRs';
-    this.formModelKR.gridViewName = 'grvOKRs';
-    this.formModelKR.formName = 'OKRs';
-    this.formModelKR.entityPer = 'OM_OKRs';
   }
   //Lấy danh sách kr của mục tiêu
   getItemOKR(i: any, recID: any) {
