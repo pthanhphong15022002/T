@@ -99,11 +99,9 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
             this.isAfterRender = true;
           } else {
             this.notify.notify('Error');
-          }
-        });
+        }
+      });
     } else {
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
       this.isAfterRender = true;
     }

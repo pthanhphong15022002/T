@@ -180,16 +180,16 @@ export class CodxEpService {
       resolve(obj);
     });
   }
-  getListAvailableResource(resourceType: string,startTime:any, endTime:any) {
+  getListAvailableResource(resourceType: string, startTime: any, endTime: any) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
       'GetListAvailableResourceAsync',
-      [resourceType,startTime,endTime]
+      [resourceType, startTime, endTime]
     );
   }
-  
+
   deleteFile(objectID, objectType, delForever) {
     return this.api
       .execSv(
@@ -271,7 +271,7 @@ export class CodxEpService {
       [resourceID]
     );
   }
-  
+
   rescheduleBooking(recID: string, startDate: any, endDate: any) {
     return this.api.execSv(
       'EP',
@@ -473,7 +473,7 @@ export class CodxEpService {
   ): Observable<any> {
     return this.api.execSv(
       'EP',
-      'ERM.Business.CM',
+      'ERM.Business.Core',
       'DataBusiness',
       'ReleaseAsync',
       [
@@ -520,14 +520,14 @@ export class CodxEpService {
     resourceType: string,
     startDate: string,
     endDate: string,
-    recID:string
+    recID: string
   ) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
       'ResourcesBusiness',
       'GetListAvailableResourceAsync',
-      [resourceType, startDate, endDate,recID]
+      [resourceType, startDate, endDate, recID]
     );
   }
 
@@ -571,7 +571,7 @@ export class CodxEpService {
     );
   }
 
-  getListUserIDByListPositionsID(listPositionID){
+  getListUserIDByListPositionsID(listPositionID) {
     return this.api.execSv<any>(
       'HR',
       'HR',
@@ -581,7 +581,7 @@ export class CodxEpService {
     );
   }
 
-  afterApprovedManual(entity: string, recID: string, status:string) {
+  afterApprovedManual(entity: string, recID: string, status: string) {
     return this.api.execSv(
       'EP',
       'ERM.Business.EP',
@@ -593,7 +593,7 @@ export class CodxEpService {
   //#endregion
 
   //#Setting SYS
-  getSettingValue(para:any) {
+  getSettingValue(para: any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
@@ -612,7 +612,7 @@ export class CodxEpService {
       'Calendar'
     );
   }
-  getCalendarWeekdays(calendarID:any) {
+  getCalendarWeekdays(calendarID: any) {
     return this.api.execSv(
       'BS',
       'ERM.Business.BS',
@@ -630,33 +630,33 @@ export class CodxEpService {
       'EPParameters'
     );
   }
-  getEPRoomSetting(category:any) {
+  getEPRoomSetting(category: any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
       'GetByModuleWithCategoryAsync',
-      ['EPRoomParameters',category]
+      ['EPRoomParameters', category]
     );
   }
 
-  getEPCarSetting(category:any) {
+  getEPCarSetting(category: any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
       'GetByModuleWithCategoryAsync',
-      ['EPCarParameters',category]
+      ['EPCarParameters', category]
     );
   }
 
-  getEPStationerySetting(category:any) {
+  getEPStationerySetting(category: any) {
     return this.api.execSv(
       'SYS',
       'ERM.Business.SYS',
       'SettingValuesBusiness',
       'GetByModuleWithCategoryAsync',
-      ['EPStationeryParameters',category]
+      ['EPStationeryParameters', category]
     );
   }
   //#endregion

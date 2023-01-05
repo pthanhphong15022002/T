@@ -40,7 +40,7 @@ export class ApprovalCarsComponent extends UIComponent {
 
   // [entityName]="'ES_ApprovalTrans'"
   // [method]="'LoadDataAsync'"
-  // [assemblyName]="'CM'"
+  // [assemblyName]="'Core'"
   // [service]="'ES'"
   // [className]="'DataBusiness'"
   // [selectedFirst]="true"

@@ -245,7 +245,7 @@ export class CodxTasksComponent
       this.funcID != 'MWP0064';
 
     this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011') {
+    if (this.funcID != 'TMT03011'&& this.funcID != 'TMT05011') {
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
@@ -265,6 +265,7 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.dataObj = this.dataObj;
 
     // if (
     //   this.funcID != 'TMT0201' &&

@@ -87,13 +87,13 @@ export class PopupEditCalendarComponent extends UIComponent {
       });
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   getParams() {
     this.api
       .execSv<any>(
         'SYS',
-        'ERM.Business.CM',
+        'ERM.Business.Core',
         'ParametersBusiness',
         'GetOneField',
         ['TMParameters', null, 'CalendarID']

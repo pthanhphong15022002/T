@@ -94,7 +94,7 @@ export class PopupEWorkPermitsComponent extends UIComponent implements OnInit {
           this.formModel.entityName,
           this.idField
         )
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res) {
             this.data = res?.data;
             this.data.employeeID = this.employId;

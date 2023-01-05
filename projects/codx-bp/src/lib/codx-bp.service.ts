@@ -273,4 +273,15 @@ export class CodxBpService {
   getRoles(recID: String) {
     return this.api.exec<any>('AD', 'RolesBusiness', 'GetAsync', recID);
   }
+  getUserNameByListId(listUser: any) {
+    return this.api
+    .execSv<any>(
+      'SYS',
+      'AD',
+      'UsersBusiness',
+      'LoadUserListByIDAsync',
+      JSON.stringify(listUser)
+    );
+  }
+
 }
