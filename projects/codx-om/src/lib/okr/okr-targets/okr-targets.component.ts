@@ -135,10 +135,10 @@ export class OkrTargetsComponent implements OnInit {
     private notificationsService :NotificationsService,
 
   ) {
-    
   }
 
   ngOnInit(): void {
+    this.formModel=this.formModel;
     //Lấy tiêu đề theo FuncID cho Popup
     this.cache.functionList(this.krFuncID).subscribe((res) => {
       if (res) {

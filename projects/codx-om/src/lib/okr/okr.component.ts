@@ -89,20 +89,24 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.funcIDChanged();
     this.formModelChanged();
+    this.codxOmService.getFormModel(this.funcID).then(fm=>{
+      if(fm){
 
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
+        this.formModel=fm;
+      }
+      this.views = [
+        {
+          id: '1',
+          type: ViewType.content,
+          active: true,
+          sameData: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
         },
-      },
-    ];
-    this.getGridViewSetup();
-
+      ];
+      this.getGridViewSetup();
+    });  
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.entityName = 'OM_OKRs';
     this.dataRequest.page = 1;
@@ -198,7 +202,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   //Lấy OKR Plan
   getOKRPlans(periodID: any, interval: any, year: any) {
-    if (!this.curUser.administrator) {
+    if (true) {
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
