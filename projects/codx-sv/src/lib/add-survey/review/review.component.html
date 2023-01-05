@@ -81,7 +81,7 @@
                   >
                     <form id="formId" class="form-horizontal example-box">
                       <ng-container #body>
-                        <div *ngIf="itemQuestion.category == 'Q'">
+                        <div *ngIf="itemQuestion.category == 'Q'" class="ms-6">
                           <div *ngIf="!itemQuestion.showAnswer">
                             <ng-container
                               *ngTemplateOutlet="
@@ -110,6 +110,7 @@
                             itemQuestion.category == 'P' ||
                             itemQuestion.category == 'V'
                           "
+                          class="ms-6"
                         >
                           <ng-container
                             *ngTemplateOutlet="
@@ -121,7 +122,7 @@
                             "
                           ></ng-container>
                         </div>
-                        <div *ngIf="itemQuestion.category == 'T'">
+                        <div *ngIf="itemQuestion.category == 'T'" class="ms-6">
                           <ng-container
                             *ngTemplateOutlet="
                               template_card_title;
@@ -601,108 +602,7 @@
     </div>
   </div>
   <div
-    *ngIf="
-      (itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') &&
-      itemQuestion?.active
-    "
-    class="w-700 pt-6 ps-6"
-  >
-    <div class="row">
-      <div class="col">
-        <codx-label
-          fiedName="Row"
-          default="Hàng"
-          class="text-row-column"
-        ></codx-label>
-        <div class="e-input-group e-input-group1 pd-t-5p answerRow">
-          <div *ngFor="let itemAnswerR of itemQuestion.answers">
-            <div
-              *ngIf="!itemAnswerR.isColumn"
-              class="d-flex w-100 pd-t-5p has-action-menu"
-            >
-              <span>{{ itemAnswerR.seqNo + 1 }}.</span>
-              <input
-                class="e-input pd-10"
-                type="text"
-                placeholder="Thêm hàng"
-                [value]="itemAnswerR.answer"
-                (focus)="focusIn($event.target)"
-                (blur)="focusOut($event.target)"
-                [(ngModel)]="itemAnswerR.answer"
-              />
-              <span class="icon-close icon-24 pd-s-e-10"></span>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex pd-t-5p ps-6">
-          <span>{{ amountOfRow }}.</span>
-          <input
-            class="e-input pd-10"
-            type="text"
-            placeholder="Thêm hàng"
-            (focus)="focusIn($event.target)"
-            (blur)="focusOut($event.target)"
-          />
-        </div>
-      </div>
-      <div class="col">
-        <codx-label
-          fiedName="Column"
-          default="Cột"
-          class="text-row-column"
-        ></codx-label>
-        <div class="e-input-group e-input-group2 pd-t-5p answerColumn">
-          <div *ngFor="let itemAnswerC of itemQuestion.answers">
-            <div
-              *ngIf="itemAnswerC.isColumn"
-              class="d-flex w-100 pd-t-5p has-action-menu"
-            >
-              <span
-                class="icon-radio_button_unchecked icon-radio ms-6"
-                *ngIf="itemQuestion.answerType == 'O2'"
-              ></span>
-              <span
-                class="icon-check_box_outline_blank"
-                *ngIf="itemQuestion.answerType == 'C2'"
-              ></span>
-              <input
-                class="e-input pd-10"
-                type="text"
-                [value]="itemAnswerC.answer"
-                placeholder="Thêm cột"
-                (focus)="focusIn($event.target)"
-                (blur)="focusOut($event.target)"
-              />
-              <span class="icon-close icon-24 pd-s-e-10"></span>
-            </div>
-          </div>
-        </div>
-        <div class="d-flex pd-t-5p ps-6">
-          <span
-            class="icon-radio_button_unchecked icon-radio ms-6"
-            *ngIf="itemQuestion.answerType == 'O2'"
-          ></span>
-          <span
-            class="icon-check_box_outline_blank"
-            *ngIf="itemQuestion.answerType == 'C2'"
-          ></span>
-          <input
-            class="e-input pd-10"
-            type="text"
-            placeholder="Thêm cột"
-            (focus)="focusIn($event.target)"
-            (blur)="focusOut($event.target)"
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div
-    *ngIf="
-      (itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2') &&
-      !itemQuestion?.active
-    "
+    *ngIf="itemQuestion.answerType == 'O2' || itemQuestion.answerType == 'C2'"
   >
     <table>
       <tr>
@@ -719,14 +619,21 @@
           {{ itemR.answer }}
         </td>
         <td *ngFor="let itemC of filterDataColumn(itemQuestion.answers)">
-          <span
-            class="icon-radio_button_unchecked icon-radio ms-6"
+          <codx-input
             *ngIf="itemQuestion.answerType == 'O2'"
-          ></span>
-          <span
-            class="icon-check_box_outline_blank"
+            type="radio"
+            labelPosition="After"
+            [disabled]="false"
+            class="test-check"
+            name="group"
+          ></codx-input>
+          <codx-input
             *ngIf="itemQuestion.answerType == 'C2'"
-          ></span>
+            class="check-circle"
+            type="checkbox"
+            field="check"
+          >
+          </codx-input>
         </td>
       </tr>
     </table>
@@ -1060,22 +967,24 @@
   </div>
 </ng-template>
 <ng-template #template_card_session let-itemSession="itemSession">
-  <div class="d-flex">
-    <div class="form-group question w-100" style="margin-top: -50px">
-      <div class="title-des d-flex">
-        <span *ngIf="itemSession.question" style="color: white">{{
-          itemSession.question
-        }}</span>
-        <span *ngIf="!itemSession.question" style="color: white">{{
-          "Câu hỏi"
-        }}</span>
+  <div class="ms-6">
+    <div class="d-flex">
+      <div class="form-group question w-100" style="margin-top: -50px">
+        <div class="title-des d-flex">
+          <span *ngIf="itemSession.question" style="color: white">{{
+            itemSession.question
+          }}</span>
+          <span *ngIf="!itemSession.question" style="color: white">{{
+            "Câu hỏi"
+          }}</span>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="form-group question">
-    <div class="title-des">
-      <span *ngIf="itemSession.comment">{{ itemSession.comment }}</span>
-      <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
+    <div class="form-group question">
+      <div class="title-des">
+        <span *ngIf="itemSession.comment">{{ itemSession.comment }}</span>
+        <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
+      </div>
     </div>
   </div>
 </ng-template>
