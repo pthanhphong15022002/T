@@ -93,13 +93,48 @@
       <div class="separator my-2"></div>
 
       <div class="px-5">
-        <span>
-          <codx-label
-            fiedName="lblChangeTheme"
-            [formModel]="formModel"
-            default="Change theme"
-          ></codx-label>
-        </span>
+        <div
+          class="menu-item"
+          data-kt-menu-trigger="hover"
+          data-kt-menu="true"
+          data-kt-menu-placement="left-start"
+          data-kt-menu-flip="bottom"
+        >
+          <a class="menu-link px-5 cursor-pointer">
+            <span class="menu-title position-relative">
+              <codx-label
+              fiedName="lblChangeTheme"
+              [formModel]="formModel"
+              default="Change theme"
+            ></codx-label>
+              <span
+                class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0"
+              >
+                {{ themeMode.name }}
+                <span [inlineSVG]="themeMode.icon" class="svg-icon svg-icon-2 ms-2"></span>
+              </span>
+            </span>
+          </a>
+          <div class="menu-sub menu-sub-dropdown w-175px py-4">
+            <div
+              *ngFor="let t of themeModes"
+              class="menu-item px-3 cursor-pointer"
+              (click)="updateSettting('', '', t.id)"
+              data-toggle="tooltip"
+              [title]="t.name"
+            >
+              <a
+                class="menu-link d-flex px-5"
+                [ngClass]="t.id === themeMode.id ? 'active' : ''"
+              >
+                <span class="symbol symbol-20px me-4">
+                  <span [inlineSVG]="t.icon" class="svg-icon svg-icon-2 ms-2"></span>
+                </span>
+                {{ t.name }}
+              </a>
+            </div>
+          </div>
+        </div>
         <div class="mt-3 d-flex">
           <div class="theme-color">
             <div class="symbol-list d-flex flex-wrap mb-4">
@@ -121,16 +156,15 @@
           </div>
         </div>
       </div>
+
       <div class="separator my-2"></div>
 
       <div
-        #ele
         class="menu-item px-5"
         data-kt-menu-trigger="hover"
         data-kt-menu="true"
         data-kt-menu-placement="left-start"
         data-kt-menu-flip="bottom"
-        (mouseenter)="mouseEnter(ele, sub)"
       >
         <a class="menu-link px-5 cursor-pointer">
           <span class="menu-title position-relative">
@@ -142,21 +176,21 @@
             <span
               class="fs-8 rounded bg-light px-3 py-2 position-absolute translate-middle-y top-50 end-0"
             >
-              {{ language.name }}{{ " " }}
+              {{ language.name }}
               <img
                 class="w-15px h-15px rounded-1 ms-2"
                 [src]="language.flag"
-                alt="metronic"
+                alt="flag"
               />
             </span>
           </span>
         </a>
 
-        <div #sub class="menu-sub menu-sub-dropdown w-175px py-4">
+        <div class="menu-sub menu-sub-dropdown w-175px py-4">
           <div
             *ngFor="let l of langs"
             class="menu-item px-3 cursor-pointer"
-            (click)="updateSettting(l.lang, '')"
+            (click)="updateSettting(l.lang, '', '')"
             data-toggle="tooltip"
             [title]="l.enable ? '' : 'Coming soon'"
           >
@@ -165,7 +199,7 @@
               [ngClass]="l.lang === language.lang ? 'active' : ''"
             >
               <span class="symbol symbol-20px me-4">
-                <img class="rounded-1" [src]="l.flag" alt="metronic" />
+                <img class="rounded-1" [src]="l.flag" alt="flag" />
               </span>
               {{ l.name }}
             </a>

@@ -249,7 +249,7 @@ export class CodxEsService {
             // } else {
             //   model[element.fieldName].push(null);
             // }
-
+            model[element.fieldName].push(null);
             let modelValidator = [];
             if (element.isRequire) {
               modelValidator.push(Validators.required);

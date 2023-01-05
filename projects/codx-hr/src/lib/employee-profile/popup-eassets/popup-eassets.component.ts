@@ -32,6 +32,7 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
   lstAssets
   indexSelected
   actionType
+  idField = 'RecID';
   funcID
   employeeId
   isAfterRender = false
@@ -40,7 +41,19 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
   
   onInit(): void {
-    this.InitForm()
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.InitForm();
+            }
+          });
+      }
+    });
   }
 
   constructor(
@@ -57,13 +70,14 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
     //   this.isAfterRender = true
     // }
     // this.data = dialog?.dataService?.dataSelected
-    if(!this.formModel){
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EAssets'
-      this.formModel.entityName = 'HR_EAssets'
-      this.formModel.gridViewName = 'grvEAssets'
-    }
+    // if(!this.formModel){
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EAssets'
+    //   this.formModel.entityName = 'HR_EAssets'
+    //   this.formModel.gridViewName = 'grvEAssets'
+    // }
     this.dialog = dialog;
+    this.funcID = data?.data?.funcID;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId
     this.actionType = data?.data?.actionType;
@@ -72,32 +86,64 @@ export class PopupEAssetsComponent extends UIComponent implements OnInit {
 
     if(this.actionType === 'edit' || this.actionType === 'copy'){
       this.assetObj = JSON.parse(JSON.stringify(this.lstAssets[this.indexSelected]))
-      console.log('data truyen vao asset', this.assetObj);
+      // console.log('data truyen vao asset', this.assetObj);
       
-      this.formModel.currentData = this.assetObj
+      // this.formModel.currentData = this.assetObj
     }
   }
 
   InitForm(){
-    this.hrService
-    .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-    .then((item) => {
-      this.formGroup = item;  
-      if(this.actionType == 'add'){
-        this.hrService.getEmployeeAssetsModel().subscribe(p => {
-          console.log('thong tin ho chieu', p);
-          this.assetObj = p;
-          this.formModel.currentData = this.assetObj
-          // this.dialog.dataService.dataSelected = this.data
-          console.log('du lieu formmodel',this.formModel.currentData);
-        })  
-      }
-      this.formGroup.patchValue(this.assetObj)
-      this.isAfterRender = true
-    }); 
+    // this.hrService
+    // .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    // .then((item) => {
+    //   this.formGroup = item;  
+    //   if(this.actionType == 'add'){
+    //     this.hrService.getEmployeeAssetsModel().subscribe(p => {
+    //       console.log('thong tin ho chieu', p);
+    //       this.assetObj = p;
+    //       this.formModel.currentData = this.assetObj
+    //       // this.dialog.dataService.dataSelected = this.data
+    //       console.log('du lieu formmodel',this.formModel.currentData);
+    //     })  
+    //   }
+    //   this.formGroup.patchValue(this.assetObj)
+    //   this.isAfterRender = true
+    // }); 
+
+    if(this.actionType == 'add'){
+      this.hrService
+      .getDataDefault(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        this.idField
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.assetObj = res?.data;
+          this.assetObj.employeeID = this.employeeId;
+          this.formModel.currentData = this.assetObj;
+          this.formGroup.patchValue(this.assetObj);
+          this.cr.detectChanges();
+          this.isAfterRender = true;
+        }
+    })
+  }
+  else{
+    if(this.actionType === 'edit' || this.actionType === 'copy'){
+      this.formGroup.patchValue(this.assetObj);
+      this.formModel.currentData = this.assetObj
+      this.cr.detectChanges();
+      this.isAfterRender = true;
+    }
+  }
   }
 
   onSaveForm(){
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.assetObj.recID
     }

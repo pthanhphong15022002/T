@@ -66,6 +66,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   dataRequest = new DataRequest();
   formModelKR = new FormModel();
   formModelOB = new FormModel();
+  formModel = new FormModel();
   funcID: any;
   obFuncID: any;
   krFuncID: any;
@@ -82,25 +83,31 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
     //var x= this.authService.userValue;
+    
   }
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
     this.funcIDChanged();
     this.formModelChanged();
-    this.views = [
-      {
-        id: '1',
-        type: ViewType.content,
-        active: true,
-        sameData: false,
-        model: {
-          panelRightRef: this.panelRight,
-        },
-      },
-    ];
-    this.getGridViewSetup();
+    this.codxOmService.getFormModel(this.funcID).then(fm=>{
+      if(fm){
 
+        this.formModel=fm;
+      }
+      this.views = [
+        {
+          id: '1',
+          type: ViewType.content,
+          active: true,
+          sameData: false,
+          model: {
+            panelRightRef: this.panelRight,
+          },
+        },
+      ];
+      this.getGridViewSetup();
+    });  
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.entityName = 'OM_OKRs';
     this.dataRequest.page = 1;
@@ -196,7 +203,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   //Lấy OKR Plan
   getOKRPlans(periodID: any, interval: any, year: any) {
-    if (!this.curUser.administrator) {
+    if (true) {
       this.okrService
         .getOKRPlans(periodID, interval, year)
         .subscribe((item: any) => {
@@ -243,6 +250,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
   //Lấy form Model con
   formModelChanged() {
+    this.codxOmService.getFormModel(this.funcID).then((planFM) => {
+      if (planFM) {
+        this.formModel = planFM;
+      }
+    });
     this.codxOmService.getFormModel(this.krFuncID).then((krFM) => {
       if (krFM) {
         this.formModelKR = krFM;
