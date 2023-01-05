@@ -1432,14 +1432,16 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '800px';
+    option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEexperiencesComponent,
       {
-        isAdd: true,
         employeeId: this.data.employeeID,
         actionType: actionType,
         headerText: 'Kinh nghiệm trước đây',
+        funcID: 'HRT03020405',
+        lstExperience: this.lstExperience,
+        indexSelected: this.lstExperience.indexOf(data)
       },
       option
     );
@@ -1621,6 +1623,7 @@ export class EmployeeProfileComponent extends UIComponent {
         // selectedWorkPermit: data,
         headerText: 'Giấy phép lao động',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020106',
       },
       option
     );
@@ -1792,6 +1795,7 @@ export class EmployeeProfileComponent extends UIComponent {
         indexSelected: this.lstAsset.indexOf(data),
         lstAssets: this.lstAsset,
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020304',
         headerText: 'Tài sản cấp phát',
       },
       option
@@ -1813,7 +1817,10 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         indexSelected: this.lstAppointions.indexOf(data),
+        employeeId: this.data.employeeID,
         lstEAppointions: this.lstAppointions,
+        funcID: 'HRT03020402',
+        headerText: 'Bổ nhiệm - Điều chuyển',
       },
       option
     );
