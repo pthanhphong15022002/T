@@ -1994,6 +1994,7 @@ export class EmployeeProfileComponent extends UIComponent {
         salarySelected: data,
         headerText: 'Tiêm Vaccine',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020702'
       },
       option
     );
