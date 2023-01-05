@@ -1,9 +1,9 @@
-<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary h-100'" 
+<codx-form [headerText]="headerText" [dialog]="dialogRef" [bodyCss]="'bg-secondary'" 
 [body]="body" *ngIf="isAfterRender">
 </codx-form>
 
 <ng-template #body>
-  <div class="w-100 h-100 bg-white d-flex flex-column">
+    <div class="w-100 h-100 bg-white d-flex flex-column">
     <span class="pt-5 bg-secondary row"></span>
     <!-- <div class="pt-5 pb-2 text-center">
       <codx-label [default]="'Mục tiêu: '+obName" fiedName="titleO" class="fw-bold fs-4"></codx-label>
@@ -67,7 +67,7 @@
                 </div>
                 <!--content-->
                 <div class="d-flex flex-column" *ngIf=" listDistribute && listDistribute?.length>0">
-                  <ng-container class="d-flex flex-column" *ngFor="let item of listDistribute; let i=index;">
+                  <ng-container class=" flex-grow-1 overflow-auto d-flex flex-column" *ngFor="let item of listDistribute; let i=index;">
                     <div class="my-2 d-flex flex-row justify-content-center" >
                       <div class=" col-4 mx-1 d-flex flex-row ">
                         <div class="d-flex justify-content-center align-items-center" style="height:30px;width:30px"><span
@@ -135,14 +135,17 @@
     <!--Footer-->
     <div class="pt-5 d-flex justify-content-center">
 
-      <div class="btn-group">
-        <button class="btn btn-outline-primary me-2">
-          <codx-label name="lblCancel" default="Huỷ"></codx-label>
-        </button>
-        <button class="btn btn-primary" (click)="onSaveForm()">
-          <codx-label name="lblSave" default="Lưu"></codx-label>
-        </button>
+      <div class="btn-group"> 
+        <span type="button" 
+          class="me-2 btn d-flex py-2 px-4 btn-sm btn-outline btn-outline-primary btn-active-light-primary  rounded justify-content-center">
+          <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3"></codx-label>
+        </span>
+        <span type="button" (click)="onSaveForm()"
+          class="d-flex py-2 px-4 btn-primary rounded justify-content-center ">
+          <codx-label name="lblSave" class=" px-3 fw-bold" default="Lưu" ></codx-label>
+        </span>
       </div>
     </div>
+  
   </div>
 </ng-template>
