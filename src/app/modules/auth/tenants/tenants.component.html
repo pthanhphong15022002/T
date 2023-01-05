@@ -1,5 +1,25 @@
-<ul>
-  <li [routerLink]="['/tester']">Tét tờ</li>
-  <li [routerLink]="['/democodx']">Co đê ích đì mô</li>
-  <li [routerLink]="['/codxsass']">Co đê ích sát</li>
-</ul>
+<div class="lstTenant">
+  <div
+    class="tenant d-flex justify-content-between"
+    *ngFor="let tn of lstTenant"
+  >
+    <codx-temp-full
+      [title]="tn.tenantName"
+      [subTitle]="tn.web"
+      [imageObjType]="'AD_Users'"
+      [imageId]="'ADMIN'"
+    >
+    </codx-temp-full>
+    <button
+      type="button"
+      class="btn btn-sm btn-primary"
+      [routerLink]="['/' + tn.tenantID]"
+    >
+      <codx-label
+        name="lblConnectTN"
+        default="Kết nối"
+        [formModel]=""
+      ></codx-label>
+    </button>
+  </div>
+</div>

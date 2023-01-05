@@ -162,6 +162,11 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.changeCalendar(event.data);
         break;
       }
+      case 'SharePlan':
+      {
+        this.sharePlan();
+        break;
+      }
     }
   }
   //Thời gian thay đổi
@@ -173,7 +178,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       toDate: data.toDate,
     };
     if (data.type == 'year') {
-      this.periodID = '';
+      this.periodID = this.year;
       this.interval = 'Y';
     } else if (data.type == 'quarter') {
       this.periodID = data.text;
@@ -328,7 +333,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.gridView,
       this.formModelKR,
       'add',
-      this.dataOKRPlans.recID,
+      this.dataOKRPlans,
       null,
     ]);
     //   "add",
@@ -361,6 +366,20 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       dialogKR = null;
     });
   }
-
+   //Chia sẻ bộ mục tiêu
+   sharePlan() {
+    let dialog = this.callfc.openSide(OkrAddComponent, [
+      this.gridView,
+      this.formModelKR,
+      'add',
+      this.dataOKRPlans,
+      null,
+    ]);
+    //   "add",
+    //   this.dataOKRPlans,
+    //   null
+    //  ]
+    // );
+  }
   //-----------------------End-------------------------------//
 }

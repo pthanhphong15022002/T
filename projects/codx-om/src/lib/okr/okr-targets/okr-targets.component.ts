@@ -246,7 +246,7 @@ export class OkrTargetsComponent implements OnInit {
   }
   
   deleteKR(kr: any) {
-    if(kr!=null){
+    if(false){//Cần thêm kịch bản khi xóa KR
       this.codxOmService.deleteKR(kr).subscribe((res:any)=>{
         if(res){          
           this.notificationsService.notifyCode('SYS008');
@@ -315,7 +315,7 @@ export class OkrTargetsComponent implements OnInit {
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
-      PopupAssignmentOKRComponent,
+      PopupDistributeOKRComponent,
       '',
       null,
       null,

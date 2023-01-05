@@ -17,6 +17,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 import { CodxHrService } from '../../codx-hr.service';
 
 @Component({
@@ -39,14 +40,21 @@ export class PopupEmpBusinessTravelsComponent
   employId;
   data;
 
+  idField = 'RecID';
+
+  dataValues;
+  predicates = 'EmployeeID=@0';
+
   isAfterRender = false;
   actionType: string;
-
+  ops = ['y'];
+  date = new Date('01-04-2040');
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
     private notitfy: NotificationsService,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
@@ -54,41 +62,80 @@ export class PopupEmpBusinessTravelsComponent
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EBusinessTravels';
-      this.formModel.entityName = 'HR_EBusinessTravels';
-      this.formModel.gridViewName = 'grvEBusinessTravels';
-    }
-    this.funcID = this.dialog?.formModel?.funcID;
+    this.funcID = data?.data?.funcID;
+    // if (!this.formModel) {
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EBusinessTravels';
+    //   this.formModel.entityName = 'HR_EBusinessTravels';
+    //   this.formModel.gridViewName = 'grvEBusinessTravels';
+    // }
     this.employId = data?.data?.employeeId;
+
+    this.dataValues = this.employId;
   }
 
   onInit(): void {
-    if (this.formModel) {
-      this.hrService
-        .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-        .then((fg) => {
-          if (fg) {
-            this.formGroup = fg;
-            this.initForm();
-          }
-        });
-    }
+    // if(this.formModel){
+    //   this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((fg) => {
+    //     if (fg) {
+    //       this.formGroup = fg;
+    //       this.initForm();
+    //     }
+    //   });
+    // }
+    // else {
+
+    this.codxShareService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
+    // }
   }
 
   initForm() {
     if (this.actionType == 'add') {
-      this.hrService.getEBTravelDefaultAsync().subscribe((res) => {
-        if (res) {
-          this.data = res;
-          this.data.employeeID = this.employId;
-          this.formModel.currentData = this.data;
-          this.formGroup.patchValue(this.data);
-          this.cr.detectChanges();
-          this.isAfterRender = true;
-        }
-      });
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.data = res;
+            this.data.employeeID = this.employId;
+            this.formModel.currentData = this.data;
+            this.formGroup.patchValue(this.data);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          } else
+            this.hrService.getEBTravelDefaultAsync().subscribe((res) => {
+              if (res) {
+                this.data = res;
+                this.data.employeeID = this.employId;
+                this.formModel.currentData = this.data;
+                this.formGroup.patchValue(this.data);
+                this.cr.detectChanges();
+                this.isAfterRender = true;
+              }
+            });
+        });
+    } else {
+      this.formModel.currentData = this.data;
+      this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();
+      this.isAfterRender = true;
     }
   }
 
@@ -128,10 +175,10 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   click(data) {
-    if(data){
+    if (data) {
       this.data = data;
       this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data)
+      this.formGroup.patchValue(this.data);
 
       this.cr.detectChanges();
       this.actionType = 'edit';
@@ -141,6 +188,20 @@ export class PopupEmpBusinessTravelsComponent
   swipeToRightTab(e) {
     if (e.isSwiped) {
       e.cancel = true;
+    }
+  }
+
+  valueChange(event) {
+    console.log(event);
+    if (event && event.data) {
+      let predicates =
+        this.predicates + ' and @1.Contains(' + event.field + ')';
+      let dataValues = this.dataValues + ';' + event.data;
+
+      (this.listView.dataService as CRUDService)
+        .setPredicates([predicates], [dataValues])
+        .subscribe();
+      this.cr.detectChanges();
     }
   }
 }
