@@ -10,7 +10,7 @@
                 class="cursor-pointer d-flex justify-content-between has-action-menu-od user-nav-item p-2">
                 <div class="d-flex justify-content-between list-title w-100">
                   <div class="d-flex align-items-top">
-                    <div *ngIf="perm.objectID == null || perm.objectID == ''; then thenAvatar1 else elsethenAvatar1">
+                    <div *ngIf="perm.objectType != '1' && perm.objectType != 'U' ; then thenAvatar1 else elsethenAvatar1">
                     </div>
                     <ng-template #thenAvatar1>
                       <!-- <codx-temp-full imageSrc="../../../assets/codx/user/user-admin.svg" [imageWidth]="25"

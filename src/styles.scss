@@ -1560,3 +1560,8 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   white-space: nowrap;
   margin-right: 5px;
 }
+
+codx-header .btn .badge {
+  top: auto !important;
+  z-index: 99;
+}

@@ -139,6 +139,7 @@ export class OkrAddComponent implements OnInit , AfterViewInit{
 
   formatInterval(val:any)
   {
-    return val.toLowerCase()
+    if(val) return val.toLowerCase();
+    return ""
   }
 }
