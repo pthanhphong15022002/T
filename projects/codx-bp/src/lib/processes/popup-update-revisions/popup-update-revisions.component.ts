@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, Util } from 'codx-core';
 import moment from 'moment';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { from, map, Observable } from 'rxjs';
 import { CodxBpService } from '../../codx-bp.service';
 import { BP_Processes, BP_ProcessRevisions } from '../../models/BP_Processes.model';
 import { PopupViewDetailProcessesComponent } from '../../popup-view-detail-processes/popup-view-detail-processes.component';
@@ -37,6 +38,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
   isAdmin: false;
   isAdminBp: false;
   firstNameVersion: string = '';
+  listUserName:any;
   constructor(
     private bpService: CodxBpService,
     private callfc: CallFuncService,
@@ -70,6 +72,11 @@ export class PopupUpdateRevisionsComponent implements OnInit {
         this.changeDetectorRef.detectChanges();
       }
     });
+    var listnew= this.revisions.map(x => x.createdBy)
+    this.bpService.getUserNameByListId(listnew).subscribe((res)=> {
+      this.listUserName= res;
+    });
+
   }
 
   onClose() {
