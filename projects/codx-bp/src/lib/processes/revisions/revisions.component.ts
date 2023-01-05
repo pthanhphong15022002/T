@@ -54,7 +54,7 @@ export class RevisionsComponent implements OnInit {
   enterComment: any;
   enterName: any;
   msgCodeNameVersionIsExist: string = 'BP002';
-  user:any='';
+  user: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
@@ -135,14 +135,16 @@ export class RevisionsComponent implements OnInit {
     //   return this.msgErrorValidExit;
     // }
 
-    for(let element of this.revisions) {
-      if (element.versionName && element?.versionName.toUpperCase() == nameVersion.trim().toUpperCase()) {
+    for (let element of this.revisions) {
+      if (
+        element.versionName &&
+        element?.versionName.toUpperCase() == nameVersion.trim().toUpperCase()
+      ) {
         check = false;
         return this.msgErrorValidExit;
       }
     }
     return this.msgSucess;
-
   }
 
   onSave() {
@@ -155,12 +157,11 @@ export class RevisionsComponent implements OnInit {
         break;
       case this.msgSucess:
         this.isUpdate = true;
-        this.actionSave()
+        this.actionSave();
         break;
     }
-
   }
-  actionSave(){
+  actionSave() {
     if (this.isUpdate) {
       this.bpService
         .updateRevision(
@@ -170,8 +171,8 @@ export class RevisionsComponent implements OnInit {
           this.verName,
           this.comment,
           this.entityName,
-          this.fucntionIdMain,
-          this.user.userName
+          this.fucntionIdMain
+          //this.user.userName
         )
         .subscribe((res) => {
           if (res) {
