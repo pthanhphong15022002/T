@@ -1574,7 +1574,9 @@ export class CodxTasksComponent
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-          (this.funcID == 'TMT0206' || this.funcID != 'MWP0063')
+          //    (this.funcID == 'TMT0206' || this.funcID != 'MWP0063') // Hảo sửa k hiện more function 3/1/2023
+          this.funcID == 'TMT0206' &&
+          this.funcID != 'MWP0063'
         ) {
           x.disabled = true;
         }
@@ -1618,7 +1620,7 @@ export class CodxTasksComponent
       option.Width = '800px';
       this.callfc.openSide(
         PopupAddComponent,
-        [data, 'view', isAssignTask,"",funcID],
+        [data, 'view', isAssignTask, '', funcID],
         option
       );
     }
