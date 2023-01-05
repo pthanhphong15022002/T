@@ -105,7 +105,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
       )
       .subscribe((res) => {
         if (res) {
-          this.visaObj = res;
+          this.visaObj = res?.data;
           this.visaObj.employeeID = this.employId;
           this.formModel.currentData = this.visaObj;
           this.formGroup.patchValue(this.visaObj);
@@ -125,7 +125,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
 }
 
   onInit(): void {
-    this.codxShareService.getFormModel(this.funcID).then((formModel) => {
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
         this.hrService
@@ -141,6 +141,11 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.visaObj.recID
     }
