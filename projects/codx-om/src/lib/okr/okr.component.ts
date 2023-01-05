@@ -138,8 +138,6 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //Sự kiện thay đổi view (funcID thay đổi - load lại page với data mới)
   viewChanged(evt: any) {
     this.funcID = this.router.snapshot.params['funcID'];
-    this.detectorRef.detectChanges();
-
     this.funcIDChanged();
     this.formModelChanged();
     this.detectorRef.detectChanges();

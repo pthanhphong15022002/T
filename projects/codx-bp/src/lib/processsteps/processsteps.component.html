@@ -433,7 +433,7 @@
   <div style=" width: 100%">
     <div
       class="fw-bold line-clamp line-clamp-1 {{ data?.stepType == 'P' ? 'fs-3 mb-2' : 'fs-5 mb-1'}}"
-      style="cursor: context-menu;display: inline;"
+      style="cursor: context-menu; display: -webkit-inline-box;"
       #p="ngbPopover"
       [ngbPopover]="data?.stepName"
       [openDelay]="500"
