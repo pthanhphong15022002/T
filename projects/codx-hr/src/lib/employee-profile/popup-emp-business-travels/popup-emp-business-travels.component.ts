@@ -86,7 +86,6 @@ export class PopupEmpBusinessTravelsComponent
     //   });
     // }
     // else {
-
     this.codxShareService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
