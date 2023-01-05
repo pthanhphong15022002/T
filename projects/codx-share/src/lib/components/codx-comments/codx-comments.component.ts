@@ -49,7 +49,10 @@ export class CodxCommentsComponent implements OnInit {
     private callFuc: CallFuncService,
     private notifySvr:NotificationsService,
     private dt:ChangeDetectorRef
-  ){}
+  )
+  {
+
+  }
   ngOnInit(): void {
     this.user = this.auth.userValue;
     this.cache.valueList('L1480').subscribe((res) => {
@@ -57,11 +60,13 @@ export class CodxCommentsComponent implements OnInit {
         this.lstData = res.datas;
       }
     });
-    if(!this.new && this.data){
+    if(!this.new && this.data)
+    {
       this.message = this.data.content;
       this.getFileByObjectID();
     }
   }
+  // get file by objectID
   getFileByObjectID(){
     this.api.execSv(
       "DM","ERM.Business.DM",
@@ -73,16 +78,17 @@ export class CodxCommentsComponent implements OnInit {
         let file = result[0];
         if(file && file.referType == this.REFERTYPE.VIDEO)
         {
-          file['srcVideo'] = `${environment.apiUrl}/api/dm/filevideo/${file.recID}?access_token=${this.user.token}`;
+          file["source"] = `${environment.urlUpload}/${file.url}`;
         }
         this.fileUpload = file; 
+        this.data.files = JSON.parse(JSON.stringify(file));
         this.dt.detectChanges();
     }});
   }
   valueChange(value:any){
     let text = value.data.toString().trim();
-    if(text){
-      this.message = text;
+    if(value?.data){
+      this.message = value?.data;
       this.dt.detectChanges();
     }
   }
@@ -119,92 +125,66 @@ export class CodxCommentsComponent implements OnInit {
         {
           if(this.data && this.edit)
           { // update
-            this.data = res;
+            this.data = JSON.parse(JSON.stringify(res));
             this.new = !this.new;
-            if(this.fileDelete){
-              this.api.execSv("DM",
+            if(this.fileDelete)
+            {
+              this.api.execSv(
+              "DM",
               "ERM.Business.DM",
               "FileBussiness",
               "DeleteByObjectIDAsync",
-              [this.data.recID.toString(), 'WP_Comments', true]).subscribe(async (result:any) => {
-                if(result)
-                {
-                  if(this.fileUpload){
-                    this.codxATM.objectId = res.recID;
-                    let files = [];
-                    files.push(this.fileUpload);
-                    this.codxATM.fileUploadList = files;
-                    this.codxATM.objectType = this.objectType;
-                    (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
-                      if(result){
-                        this.date = new Date();
-                        this.fileUpload = result.data;
-                        this.dt.detectChanges();
-                        this.evtSendComment.emit(res);
-                        this.notifySvr.notifyCode("SYS006");
-                      }
-                    });
-                  }
-                }
-                else
-                {
-                  let fileName = this.fileUpload.fileName;
-                  this.cache.message("DM006").subscribe((mssg:any) =>{
-                    if(mssg && mssg.defaultName){
-                      let strMssg = Util.stringFormat(mssg.defaultName,fileName);
-                      this.notifySvr.notify(strMssg);
-                    }
-                  });
-                  this.evtSendComment.emit(res);
+              [this.data.recID.toString(), 'WP_Comments', true])
+              .subscribe();
+            }
+            if(this.fileUpload)
+            {
+              this.codxATM.objectId = res.recID;
+              this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));;
+              this.codxATM.objectType = this.objectType;
+              (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
+                if(result){
+                  this.date = new Date();
+                  this.fileUpload = result.data;
                   this.dt.detectChanges();
+                  this.evtSendComment.emit(res);
+                  this.notifySvr.notifyCode("SYS006");
                 }
               });
             }
-            
+            this.evtSendComment.emit(res);
+            this.dt.detectChanges();
           }
           else
           { // add
             this.message = "";
-            if(this.fileUpload){
+            if(this.fileUpload)
+            {
+              this.data.files = JSON.parse(JSON.stringify(this.fileUpload));
               this.codxATM.objectId = res.recID;
-              let files = [];
-              files.push(this.fileUpload);
-              this.codxATM.fileUploadList = files;
+              this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));
               this.codxATM.objectType = this.objectType;
-              this.cache.message("DM006").subscribe((mssg:any) =>{
-                if(mssg && mssg.defaultName)
-                {
-                  let strMssg = Util.stringFormat(mssg.defaultName,this.fileUpload);
-                  console.log(strMssg);
-                }
-              });
               (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
                 if(result){
                   this.date = new Date();
-                  this.fileUpload = null;
+                  this.fileUpload = [];
                   this.dt.detectChanges();
                   this.evtSendComment.emit(res);
                   this.notifySvr.notifyCode("WP034");
                 }
                 else
                 {
-                  let fileName = this.fileUpload.fileName;
-                  this.cache.message("DM006").subscribe((mssg:any) =>{
-                    if(mssg && mssg.defaultName){
-                      let strMssg = Util.stringFormat(mssg.defaultName,fileName);
-                      this.notifySvr.notify(strMssg);
-                    }
-                  });
                   this.evtSendComment.emit(res);
+                  this.notifySvr.notifyCode("WP034");
                   this.dt.detectChanges();
                 }
               });
             }
             else
             {
-              this.dt.detectChanges();
               this.evtSendComment.emit(res);
               this.notifySvr.notifyCode("WP034");
+              this.dt.detectChanges();
             }
           }
         }
@@ -216,6 +196,7 @@ export class CodxCommentsComponent implements OnInit {
   }
 
   editComment(){
+    debugger
     this.edit = true;
     this.new = true;
     this.message = this.data.content;

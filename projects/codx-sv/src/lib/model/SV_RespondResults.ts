@@ -1,4 +1,4 @@
-export class SV_RespondResults {
+class SV_RespondResults {
     seqNo: number;
     answer: string;
     other: boolean;

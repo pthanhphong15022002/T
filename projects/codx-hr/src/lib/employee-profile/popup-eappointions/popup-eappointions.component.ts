@@ -33,6 +33,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   indexSelected
   headerText;
   actionType;
+  idField = 'RecID';
   funcID;
   isAfterRender = false;
   employId;
@@ -40,7 +41,19 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
   @ViewChild('listView') listView: CodxListviewComponent;
 
   onInit(): void {
-    this.initForm();
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   constructor(
@@ -61,7 +74,7 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
 
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.dialog.formModel.funcID;
+    this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstEAppointions = data?.data?.lstEAppointions
@@ -71,30 +84,61 @@ export class PopupEappointionsComponent extends UIComponent implements OnInit {
 
     if(this.actionType === 'edit' || this.actionType ==='copy'){
       this.EAppointionObj = JSON.parse(JSON.stringify(this.lstEAppointions[this.indexSelected]));
-      this.formModel.currentData = this.EAppointionObj
+      // this.formModel.currentData = this.EAppointionObj
     }
   }
 
   initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrService.getEmployeePassportModel().subscribe(p => {
-            console.log('thong tin ho chieu', p);
-            this.EAppointionObj = p;
-            this.formModel.currentData = this.EAppointionObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
-          })  
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     this.formGroup = item;  
+    //     if(this.actionType == 'add'){
+    //       this.hrService.getEmployeePassportModel().subscribe(p => {
+    //         console.log('thong tin ho chieu', p);
+    //         this.EAppointionObj = p;
+    //         this.formModel.currentData = this.EAppointionObj
+    //         // this.dialog.dataService.dataSelected = this.data
+    //         console.log('du lieu formmodel',this.formModel.currentData);
+    //       })  
+    //     }
+    //     this.formGroup.patchValue(this.EAppointionObj)
+    //     this.isAfterRender = true
+    //   }); 
+    if(this.actionType == 'add'){
+      this.hrService
+      .getDataDefault(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        this.idField
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.EAppointionObj = res?.data;
+          this.EAppointionObj.employeeID = this.employId;
+          this.formModel.currentData = this.EAppointionObj;
+          this.formGroup.patchValue(this.EAppointionObj);
+          this.cr.detectChanges();
+          this.isAfterRender = true;
         }
-        this.formGroup.patchValue(this.EAppointionObj)
-        this.isAfterRender = true
-      }); 
+    })
+  }
+  else{
+    if(this.actionType === 'edit' || this.actionType === 'copy'){
+      this.formGroup.patchValue(this.EAppointionObj);
+      this.formModel.currentData = this.EAppointionObj
+      this.cr.detectChanges();
+      this.isAfterRender = true;
+    }
+  }
   }
 
   onSaveForm(){
+        // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.EAppointionObj.recID
     }

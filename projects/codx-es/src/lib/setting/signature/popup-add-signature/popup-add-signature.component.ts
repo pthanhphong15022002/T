@@ -79,8 +79,8 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
     this.data = JSON.parse(JSON.stringify(dialog?.dataService?.dataSelected));
 
     //set gia trị data oTP != otp
-    this.data.oTPControl = this.data?.otpControl;
-    this.data.oTPPin = this.data?.otpPin;
+    // this.data.oTPControl = this.data?.otpControl;
+    // this.data.oTPPin = this.data?.otpPin;
 
     //delete otp
     // delete this.data?.otpControl;
@@ -162,12 +162,12 @@ export class PopupAddSignatureComponent implements OnInit, AfterViewInit {
 
   beforeSave(option: RequestOption) {
     //set gia trị data oTP != otp
-    this.data.otpControl = this.data.oTPControl;
-    this.data.otpPin = this.data.oTPPin;
+    // this.data.otpControl = this.data.oTPControl;
+    // this.data.otpPin = this.data.oTPPin;
 
     //delete oTP
-    delete this.data?.oTPControl;
-    delete this.data?.oTPPin;
+    // delete this.data?.oTPControl;
+    // delete this.data?.oTPPin;
 
     let itemData = this.data;
     if (this.isAdd) {

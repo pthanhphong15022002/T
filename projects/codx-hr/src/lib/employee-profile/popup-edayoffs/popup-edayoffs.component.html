@@ -326,15 +326,20 @@
                 ></codx-input>
             </div>
             <div class="col-6">
-                <codx-label
+                <div>
+                    <codx-label
                     fiedName="IsNewChildUnder32W"
                     [formModel]="formModel"
                 ></codx-label>
-                <codx-input
+                </div>
+                <div>
+                    <codx-input
                     field="isNewChildUnder32W"
                     [formModel]="formModel"
                     [Group]="formGroup"
                 ></codx-input>
+                </div>
+                
             </div>
         </div>
 
@@ -429,9 +434,9 @@
         [formModel]="formModel"
         [typeMF]="'hover'"
         [title]="data.periodType"
-        [icoTitleCss]="'icon-list_alt'"
+        [icoTitleCss]="'icon-i-arrow-left-circle-fill'"
         [subTitleTmp]="tmplateEDayOffsMenuList"
-        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2 ms-4"
         [hideMF]="true"
         typeMF="hover"
         [dataItem]="data"
@@ -441,10 +446,17 @@
 
 <ng-template #tmplateEDayOffsMenuList let-data>
     <div class="d-flex flex-column">
-        <div><i class ="icon-calendar_today"></i>{{(data.beginDate | fmDT) + ' - ' + (data.endDate | fmDT)}}
-        <i class="icon-access_time"></i>
-        {{data.totalDaysOff}}
+        <div class="d-flex justify-content-center align-items-center pt-1 pb-1">
+            <div>
+                <i class ="icon-event icon-16 pe-1"></i> {{(data.beginDate | fmDT) + ' - ' + (data.endDate | fmDT)}}
+            </div>
+          
+            <div class="ms-7 d-flex align-items-center">
+                <i class="icon-access_time"></i>
+                {{data.totalDaysOff}}
+            </div>
+       
         </div>
-        <div><i class = "icon-edit_fill"></i>{{data.reason}}</div>
+        <div class="d-flex align-items-center"><i class = "icon-edit"></i>{{data.reason}}</div>
     </div>
 </ng-template>

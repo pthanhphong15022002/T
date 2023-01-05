@@ -12,6 +12,7 @@ import {
   NotificationsService,
   UIComponent,
 } from 'codx-core';
+import { CodxShareService } from 'projects/codx-share/src/public-api';
 
 @Component({
   selector: 'lib-popup-evisas',
@@ -28,6 +29,7 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   actionType
   headerText: ''
   funcID;
+  idField = 'RecID';
   indexSelected
   employId;
   isAfterRender = false;
@@ -39,19 +41,20 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
     private notify: NotificationsService,
     private cr: ChangeDetectorRef,
     private hrService: CodxHrService,
+    private codxShareService: CodxShareService,
     @Optional() dialog?: DialogRef,
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if(!this.formModel){
-      this.formModel = new FormModel();
-      this.formModel.formName = 'EVisas';
-      this.formModel.entityName = 'HR_EVisas';
-      this.formModel.gridViewName = 'grvEVisas';
-    }
+    // if(!this.formModel){
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'EVisas';
+    //   this.formModel.entityName = 'HR_EVisas';
+    //   this.formModel.gridViewName = 'grvEVisas';
+    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.dialog.formModel.funcID;
+    this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.employId = data?.data?.employeeId;
     this.lstVisas = data?.data?.lstVisas
@@ -61,7 +64,10 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
 
     if(this.actionType === 'edit' || this.actionType === 'copy'){
       this.visaObj = JSON.parse(JSON.stringify(this.lstVisas[this.indexSelected]));
-      this.formModel.currentData = this.visaObj
+      // this.formGroup.patchValue(this.visaObj);
+      // this.formModel.currentData = this.visaObj
+      // this.cr.detectChanges();
+      // this.isAfterRender = true;
     }
   }
 
@@ -73,29 +79,73 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   //   })
   // }
     initForm(){
-      this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        console.log('form group vua lay ra', item);
+    //   this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     console.log('form group vua lay ra', item);
         
-        this.formGroup = item;  
-        if(this.actionType === 'add'){
-          this.hrService.getEmployeeVisaModel().subscribe(p => {
-            this.visaObj = p;
-            this.formModel.currentData = this.visaObj
-            // this.dialog.dataService.dataSelected = this.data
-        })
+    //     this.formGroup = item;  
+    //     if(this.actionType === 'add'){
+    //       this.hrService.getEmployeeVisaModel().subscribe(p => {
+    //         this.visaObj = p;
+    //         this.formModel.currentData = this.visaObj
+    //         // this.dialog.dataService.dataSelected = this.data
+    //     })
+    //     }
+    //     this.formGroup.patchValue(this.visaObj)
+    //     this.isAfterRender = true
+    // });
+
+    if(this.actionType == 'add'){
+      this.hrService
+      .getDataDefault(
+        this.formModel.funcID,
+        this.formModel.entityName,
+        this.idField
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.visaObj = res?.data;
+          this.visaObj.employeeID = this.employId;
+          this.formModel.currentData = this.visaObj;
+          this.formGroup.patchValue(this.visaObj);
+          this.cr.detectChanges();
+          this.isAfterRender = true;
         }
-        this.formGroup.patchValue(this.visaObj)
-        this.isAfterRender = true
+    })
+  }
+  else{
+    if(this.actionType === 'edit' || this.actionType === 'copy'){
+      this.formGroup.patchValue(this.visaObj);
+      this.formModel.currentData = this.visaObj
+      this.cr.detectChanges();
+      this.isAfterRender = true;
+    }
+  }
+}
+
+  onInit(): void {
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
     });
   }
 
-  onInit(): void {
-    this.initForm();
-  }
-
   onSaveForm(){
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.visaObj.recID
     }

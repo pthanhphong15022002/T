@@ -12,6 +12,7 @@ import {
   NotificationsService,
   CacheService,
   Util,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { filter, from, map } from 'rxjs';
@@ -53,10 +54,12 @@ export class RevisionsComponent implements OnInit {
   enterComment: any;
   enterName: any;
   msgCodeNameVersionIsExist: string = 'BP002';
+  user:any='';
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private cache: CacheService,
+    private authStore: AuthStore,
     private change: ChangeDetectorRef,
     private bpService: CodxBpService,
     @Optional() dt?: DialogData,
@@ -70,6 +73,7 @@ export class RevisionsComponent implements OnInit {
     this.process = this.data?.data;
     this.fucntionIdMain = this.data?.funcIdMain;
     this.revisions = this.process?.versions;
+    this.user = this.authStore.get();
     this.headerText = dt?.data.more.defaultName;
     this.verNo = 'V' + this.revisions.length.toString() + '.0';
     this.cache.message('BP001').subscribe((res) => {
@@ -166,7 +170,8 @@ export class RevisionsComponent implements OnInit {
           this.verName,
           this.comment,
           this.entityName,
-          this.fucntionIdMain
+          this.fucntionIdMain,
+          this.user.userName
         )
         .subscribe((res) => {
           if (res) {
