@@ -164,12 +164,12 @@
 
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
-      color: $primary-dark;
+      color: var(--primary-dark);
     }
 
     .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item .e-tab-wrap:hover .e-tab-icon {
-      color: $primary-dark;
+      color: var(--primary-dark);
     }
 
     .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
@@ -187,7 +187,7 @@
       border: 0 !important;
       margin: 0 2px 0 0;
       border-radius: 0 !important;
-      border-bottom: 2px solid $primary-dark !important;
+      border-bottom: 2px solid var(--primary-dark) !important;
     }
 
     .e-tab .e-tab-header .e-toolbar-item:hover,
@@ -204,22 +204,22 @@
 
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-icon {
-      color: $primary-dark;
+      color: var(--primary-dark);
     }
 
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-icon {
-      color: $primary-dark;
+      color: var(--primary-dark);
     }
 
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-ileft .e-tab-icon,
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-iright .e-tab-icon {
-      color: $primary-dark;
+      color: var(--primary-dark);
     }
 
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-ileft .e-tab-text,
     .e-tab .e-tab-header .e-toolbar-item.e-active.e-iright .e-tab-text {
-      color: $primary-dark;
+      color: var(--primary-dark);
     }
 
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-text {
@@ -306,7 +306,7 @@
     .e-toolbar .e-tbar-btn.e-btn:hover .e-icons,
     .e-toolbar .e-tbar-btn.e-btn:active .e-icons,
     .e-toolbar .e-tbar-btn.e-btn:focus .e-icons {
-      //color: $primary-dark;
+      //color: var(--primary-dark);
       padding: 0;
       border-radius: 0px !important;
     }
@@ -381,7 +381,7 @@
   //   .e-toolbar .e-tbar-btn.e-btn:hover .e-icons,
   //   .e-toolbar .e-tbar-btn.e-btn:active .e-icons,
   //   .e-toolbar .e-tbar-btn.e-btn:focus .e-icons {
-  //     color: $primary-dark;
+  //     color: var(--primary-dark);
   //     padding: 0;
   //   }
   //   .chooseSignFile
@@ -559,4 +559,8 @@
 .img {
   width: 100%;
   height: 100%;
+}
+
+.stepper-toolbar input.e-lib.e-input {
+  width: 46px !important;
 }

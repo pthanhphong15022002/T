@@ -1,14 +1,36 @@
-<codx-views #view [views]="views"> </codx-views>
+<codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false"> </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
-    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR"></lib-okr-toolbar>
-    <div class="pt-5 pb-2 text-center">
+    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="formModelKR"></lib-okr-toolbar>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
       <codx-label
-        [default]="titleRoom"
+        [default]="compName"
         fiedName="titleRoom"
         class="fw-bold fs-2"
       ></codx-label>
     </div>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID==deptFuncID">
+      <codx-label
+        [default]="deptName"
+        fiedName="titleRoom"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID==orgFuncID">
+      <codx-label
+        [default]="orgName"
+        fiedName="titleRoom"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+    <div class="pt-5 pb-2 text-center" *ngIf="funcID==persFuncID">
+      <codx-label
+        [default]="persName"
+        fiedName="titleRoom"
+        class="fw-bold fs-2"
+      ></codx-label>
+    </div>
+
     <div class="p-om-okr d-flex justify-content-center">
       <ejs-tab id="om-tab">
         <e-tabitems>
@@ -26,7 +48,7 @@
             <ng-template #content>
               <ng-container
                 *ngIf="
-                  dataOKRPlans && dataOKR && dataOKR.length > 0;
+                  dataOKRPlans !=null;
                   else elseOKR
                 "
               >
@@ -39,6 +61,7 @@
                   [krFuncID]="krFuncID"
                   [formModelKR]="formModelKR"                  
                   [formModelOB]="formModelOB"
+                  [funcID]="funcID"
                 ></lib-okr-targets>
               </ng-container>
               <ng-template #elseOKR>
@@ -48,7 +71,7 @@
                   <div>
                     <div class="my-2">
                       <span
-                        >{{ titleRoom }} chưa thiết lập mục tiêu cho
+                        >{{ compName }} chưa thiết lập mục tiêu cho
                         Q2/2022</span
                       >
                     </div>

@@ -1,18 +1,11 @@
-import { ChangeDetectorRef, Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, Optional, ViewChild, ViewEncapsulation,ChangeDetectorRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { FileUpload, View } from '@shared/models/file.model';
-import { FileService } from '@shared/services/file.service';
-import { Day } from '@syncfusion/ej2-angular-schedule';
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, NotificationsService, Util } from 'codx-core';
+import { AuthStore, CacheService, CallFuncService, DialogData, DialogModel, DialogRef, Util } from 'codx-core';
 import moment from 'moment';
-import { type } from 'os';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
-import { Subject, from, observable, Observable, of } from 'rxjs';
 import { CodxBpService } from '../../codx-bp.service';
 import { BP_Processes, BP_ProcessRevisions } from '../../models/BP_Processes.model';
 import { PopupViewDetailProcessesComponent } from '../../popup-view-detail-processes/popup-view-detail-processes.component';
-import { RevisionsComponent } from '../revisions/revisions.component';
 @Component({
   selector: 'lib-popup-update-revisions',
   templateUrl: './popup-update-revisions.component.html',
@@ -37,11 +30,10 @@ export class PopupUpdateRevisionsComponent implements OnInit {
   isHaveFile = false;
   revisions: BP_ProcessRevisions[] = [];
   getProcess = new BP_Processes;
-  test1 = '';
   user: any;
   dateLanguage: any;
   moreFunc: any;
-  userId = "";
+  userId:string = '';
   isAdmin: false;
   isAdminBp: false;
   firstNameVersion: string = '';
@@ -49,8 +41,8 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     private bpService: CodxBpService,
     private callfc: CallFuncService,
     private authStore: AuthStore,
-    private change: ChangeDetectorRef,
     private cache: CacheService,
+    private changeDetectorRef: ChangeDetectorRef,
     public sanitizer: DomSanitizer,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
@@ -67,20 +59,17 @@ export class PopupUpdateRevisionsComponent implements OnInit {
     this.user = this.authStore.get();
     this.revisions = this.getProcess.versions.sort((a, b) => moment(b.createdOn).valueOf() - moment(a.createdOn).valueOf());
     this.title = this.titleAction;
+
+  };
+  ngOnInit(): void {
     this.cache.message('BP001').subscribe((res) => {
       if (res) {
         this.firstNameVersion = Util.stringFormat(
-          res.defaultName,
-          ': ' + 'V0.0'
-        );
+          res.defaultName,''
+        ).trim()+': '+'V0.0';
+        this.changeDetectorRef.detectChanges();
       }
     });
-
-  };
-
-
-
-  ngOnInit(): void {
   }
 
   onClose() {
@@ -133,7 +122,7 @@ export class PopupUpdateRevisionsComponent implements OnInit {
           this.openProcessStep(proesses, false);
         }
       })
-    }   
+    }
   }
   //#endregion event
 }

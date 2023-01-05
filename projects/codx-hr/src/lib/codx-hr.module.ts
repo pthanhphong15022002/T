@@ -80,6 +80,9 @@ import { PopupEDiseasesComponent } from './employee-profile/popup-ediseases/popu
 import { PopupEappointionsComponent } from './employee-profile/popup-eappointions/popup-eappointions.component';
 import { PopupEContractComponent } from './employee-profile/popup-econtract/popup-econtract.component';
 import { PopupEaccidentsComponent } from './employee-profile/popup-eaccidents/popup-eaccidents.component';
+import { PopupSubEContractComponent } from './employee-profile/popup-sub-econtract/popup-sub-econtract.component';
+import { PopupEdayoffsComponent } from './employee-profile/popup-edayoffs/popup-edayoffs.component';
+import { PopupEmpBusinessTravelsComponent } from './employee-profile/popup-emp-business-travels/popup-emp-business-travels.component';
 
 export const routes: Routes = [
   {
@@ -270,7 +273,10 @@ const T_Component: Type<any>[] = [
   PopupEDiseasesComponent,
   PopupEappointionsComponent,
   PopupEContractComponent,
-  PopupEaccidentsComponent
+  PopupEaccidentsComponent,
+  PopupSubEContractComponent,
+  PopupEdayoffsComponent,
+  PopupEmpBusinessTravelsComponent
 ];
 @NgModule({
   imports: [

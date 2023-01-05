@@ -113,7 +113,7 @@ export class PopupAddEmployeesComponent implements OnInit {
         });
     }
   }
-
+  // get grvsetup
   getGridViewSetup(formModel:FormModel){
     if(formModel)
     { 
@@ -216,15 +216,17 @@ export class PopupAddEmployeesComponent implements OnInit {
       }
     }
   }
-
+  // update employee
   updateEmployeeAsync(employee: any) {
     if (employee) {
       this.api
         .execAction<boolean>('HR_Employees', [employee], 'UpdateAsync', true)
         .subscribe((res: any) => {
           if (!res?.error) {
+            this.notifiSV.notifyCode('SYS007');
             this.dialogRef.close(res.data);
-          } else {
+          } 
+          else {
             this.notifiSV.notifyCode('SYS021');
             this.dialogRef.close(null);
           }
@@ -248,31 +250,14 @@ export class PopupAddEmployeesComponent implements OnInit {
       });
     }
   }
-
+  //value change
   dataChange(e: any) {
     debugger
-    if (this.form && e) 
+    if (e) 
     {
       let field = Util.camelize(e.field);
       let data = e.data;
-      if(field)
-      {
-        switch(field){
-          case "positionID":
-            break;
-          case "":
-            break;
-          case "":
-            break;
-          case "":
-            break;
-        }
-        if (typeof e.data !== 'string') {
-          this.employee[field] = e.data.fromDate
-            ? e.data.fromDate.toISOString()
-            : null;
-        } else this.employee[field] = e.data;
-      }
+      this.employee[field] = data;
     }
   }
 }

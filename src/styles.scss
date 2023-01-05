@@ -372,10 +372,6 @@ hr {
   font-weight: 400 !important;
 }
 
-.form-group codx-label .codx-label {
-  margin-bottom: 4px !important;
-}
-
 [data-kt-aside-minimize=on] .aside:not(.aside-hoverable) .aside-menu .menu-arrow {
   opacity: 0;
 }
@@ -402,7 +398,7 @@ erm-quick-links-inner .w-250px.dropdown-menu {
 }
 
 .aside .aside-footer .menu-title {
-  color: var(--title-color);
+  color: var(--primary-lighter);
 }
 
 .upload-img .position-absolute.top-100.start-100 {
@@ -495,14 +491,13 @@ codx-view-list-detail .codx-detail-footer {
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
-
-  border-bottom: 2px var(--text-primary) solid !important;
+  border-bottom: 2px #333 solid !important;
   border-radius: 0;
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-active span,
 .e-tab .e-tab-header .e-toolbar-item.e-active {
-  color: var(--text-primary) !important;
+  color: #333 !important;
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
@@ -512,7 +507,6 @@ codx-view-list-detail .codx-detail-footer {
 .e-tab .e-tab-header .e-toolbar-item:not(.e-separator) {
   margin: 0;
 }
-
 
 .nav-link {
   display: block;
@@ -684,7 +678,7 @@ codx-view-list-detail .nav-tabs .nav-item.show .nav-link {
 }
 
 .btn.btn-32:not(.btn-outline):not(.btn-dashed):not(.border-hover):not(.border-active):not(.btn-flush):not(.btn-icon) {
-  padding: 0.3275rem calc(0.85rem + 1px) !important;
+  padding: 0.35rem calc(0.85rem + 1px) 0.15rem !important;
 }
 
 .row-group {
@@ -900,8 +894,22 @@ codx-tag .codx-tag:hover {
   opacity: 0.9;
 }
 
+codx-layout-add .codx-tab {
+  position: relative;
+  display: block;
+  width: 750px !important;
+}
+
 codx-layout-add .codx-tab .tab-content {
-  height: calc(100vh - 155px) !important;
+  height: 100% !important;
+  position: absolute;
+  left: 207px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  min-width: auto !important;
+  width: auto !important;
+  display: block !important;
 }
 
 codx-layout-add .card-header {
@@ -1330,9 +1338,9 @@ codx-vll {
   padding-right: 5px;
 }
 
-.tab-content>.active {
+.tab-horizone.tab-footer .tab-content>.active {
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 .tab-content .mt-3.tab-tch {
@@ -1503,4 +1511,57 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
 
 .stepper-body codx-attachment .overflow-auto.mh-200px {
   max-height: none !important;
+}
+
+#dropdownContent .card .card-header {
+  padding-bottom: 5px !important;
+}
+
+#dropdownContent div.has-action-menu {
+  margin: 0 !important;
+  padding: 2px !important;
+}
+
+#dropdownContent .e-list-item {
+  padding: 4px 8px !important;
+  border-bottom: 1px var(--gray-150) solid;
+}
+
+.user-mini-nav-custom a {
+  color: var(--primary-dark);
+}
+
+.nav-pills .nav-link:hover {
+  cursor: pointer;
+}
+
+.card-img-mwp.img-storage .codx-image.h-100 {
+  height: 150px !important;
+  max-height: 150px;
+  min-height: 150px;
+}
+
+.dialog-extend {
+  position: fixed;
+  right: 0;
+  width: 320px;
+  bottom: 0;
+  z-index: 9999;
+  background-color: white;
+  top: 97px;
+}
+
+.btn.w-36px {
+  min-width: 36px !important;
+  width: 36px !important;
+}
+
+.lay-survey .moreFC .popover {
+  white-space: nowrap;
+  margin-right: 5px;
+}
+
+codx-header .btn .badge {
+  top: auto !important;
+  z-index: 99;
 }

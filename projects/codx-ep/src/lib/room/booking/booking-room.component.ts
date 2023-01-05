@@ -90,6 +90,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   tempAttendees = '';
   selectBookingItems = [];
   selectBookingAttendees = '';
+  queryParams: any;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -100,6 +101,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   ) {
     super(injector);
     this.funcID = this.activatedRoute.snapshot.params['funcID'];
+    this.queryParams = this.router.snapshot.queryParams;
     this.codxEpService.getFormModel(this.funcID).then((res) => {
       if (res) {
         this.formModel = res;
@@ -121,6 +123,10 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.request.method = 'GetListBookingAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '1';
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){
+      this.request.predicate=this.queryParams?.predicate;
+      this.request.dataValue=this.queryParams?.dataValue;
+    }
     this.request.idField = 'recID';
     //lấy list resource vẽ header schedule
     this.modelResource = new ResourceModel();
@@ -342,7 +348,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     }
   }
   onActionClick(evt?) {
-    if (evt.type == 'add') {
+    if (evt.type == 'add'&& evt.data?.resourceId!=null) {
+      
+    this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
     }
   }

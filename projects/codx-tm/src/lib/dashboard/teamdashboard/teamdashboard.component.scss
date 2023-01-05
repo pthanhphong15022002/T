@@ -101,3 +101,13 @@ ejs-richtexteditor .e-content.e-lib {
 .e-tab .e-tab-header:not(.e-vertical)::before {
   border-width: 0;
 }
+
+.rounded-pill-left {
+  border-top-left-radius: 50rem;
+  border-bottom-left-radius: 50rem;
+}
+
+.rounded-pill-right {
+  border-top-right-radius: 50rem;
+  border-bottom-right-radius: 50rem;
+}
