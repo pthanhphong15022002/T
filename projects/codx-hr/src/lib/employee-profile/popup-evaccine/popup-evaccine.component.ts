@@ -30,7 +30,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   data: any;
   currentEJobSalaries: any;
   funcID: string;
-  idField: string = "recID";
+  idField: string = 'recID';
   actionType: string;
   employeeId: string;
   isAfterRender = false;
@@ -69,17 +69,19 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
-        this.hrService.getFormGroup(this.formModel.formName, this.formModel.gridViewName).then(formGroup =>{
-          if(formGroup){
-            this.formGroup = formGroup;
-            this.initForm();
-          }
-        })
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((formGroup) => {
+            if (formGroup) {
+              this.formGroup = formGroup;
+              this.initForm();
+            }
+          });
       }
     });
   }
 
-  initForm(){
+  initForm() {
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -87,7 +89,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
           this.formModel.entityName,
           this.idField
         )
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res) {
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
@@ -95,7 +97,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
             this.formGroup.patchValue(this.data);
             this.cr.detectChanges();
             this.isAfterRender = true;
-          } 
+          }
         });
     } else {
       this.formModel.currentData = this.data;

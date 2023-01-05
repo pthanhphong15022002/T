@@ -2,7 +2,14 @@ import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataRequest } from '@shared/models/data.request';
 import { LayoutModel } from '@shared/models/layout.model';
-import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
+import {
+  ApiHttpService,
+  AuthStore,
+  CacheService,
+  FormModel,
+  NotificationsService,
+  Util,
+} from 'codx-core';
 import {
   BehaviorSubject,
   finalize,
@@ -28,7 +35,8 @@ export class CodxHrService {
     private api: ApiHttpService,
     private cache: CacheService,
     private auth: AuthStore,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private notiService: NotificationsService
   ) {}
   loadEmployByPosition(positionID: string, _status: string): Observable<any> {
     return this.api
@@ -1640,6 +1648,78 @@ export class CodxHrService {
       entityName,
       idField,
     ]);
+  }
+
+  getFormModel(functionID): Promise<FormModel> {
+    return new Promise<FormModel>((resolve, rejects) => {
+      this.cache.functionList(functionID).subscribe((funcList) => {
+        var formModel = new FormModel();
+        if (funcList) {
+          formModel.entityName = funcList?.entityName;
+          formModel.formName = funcList?.formName;
+          formModel.gridViewName = funcList?.gridViewName;
+          formModel.funcID = funcList?.functionID;
+          formModel.entityPer = funcList?.entityPer;
+
+          this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+            this.cache.setGridView(formModel.gridViewName, gridView);
+            this.cache
+              .gridViewSetup(formModel.formName, formModel.gridViewName)
+              .subscribe((gridViewSetup) => {
+                this.cache.setGridViewSetup(
+                  formModel.formName,
+                  formModel.gridViewName,
+                  gridViewSetup
+                );
+                resolve(formModel);
+              });
+          });
+        }
+      });
+    });
+  }
+
+  setCacheFormModel(formModel: FormModel) {
+    this.cache.gridView(formModel.gridViewName).subscribe((gridView) => {
+      this.cache.setGridView(formModel.gridViewName, gridView);
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((gridViewSetup) => {
+          this.cache.setGridViewSetup(
+            formModel.formName,
+            formModel.gridViewName,
+            gridViewSetup
+          );
+        });
+    });
+  }
+
+  notifyInvalid(formGroup: FormGroup, formModel: FormModel) {
+    let gridViewSetup;
+    const invalid = [];
+    const controls = formGroup.controls;
+    for (const name in controls) {
+      if (controls[name].invalid) {
+        invalid.push(name);
+        break;
+      }
+    }
+    let fieldName = invalid[0].charAt(0).toUpperCase() + invalid[0].slice(1);
+
+    this.cache
+      .gridViewSetup(formModel.formName, formModel.gridViewName)
+      .subscribe((res) => {
+        if (res) {
+          gridViewSetup = res;
+          let headerText = gridViewSetup[fieldName]?.headerText ?? fieldName;
+
+          if (fieldName == 'Email' && formGroup.value.email != null) {
+            this.notiService.notifyCode('E0003', 0, '"' + headerText + '"');
+          } else {
+            this.notiService.notifyCode('SYS009', 0, '"' + headerText + '"');
+          }
+        }
+      });
   }
   //#endregion
 
