@@ -39,7 +39,6 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
-import { SV_RespondResults } from '../../model/SV_RespondResults';
 
 @Component({
   selector: 'app-questions',
@@ -536,7 +535,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion]['other'] = true;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
-      this.questions[indexSession].children[indexQuestion],
+      [this.questions[indexSession].children[indexQuestion]],
       false
     );
   }
