@@ -1653,6 +1653,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstVisas: this.lstVisa,
         headerText: 'Thị thực',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020105',
       },
       option
     );
