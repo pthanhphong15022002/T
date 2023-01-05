@@ -329,32 +329,6 @@ export class ProcessesComponent
   }
 
   searchChange($event) {
-    // try {
-    //   this.textSearch = $event;
-    //   this.searchKey.next($event);
-    //   this.isSearch == true;
-    //   if (this.textSearch == null || this.textSearch == '') {
-    //     this.views.forEach((item) => {
-    //       item.active = false;
-    //       item.hide = false;
-    //       if (item.text == 'Search') item.hide = true;
-    //       if (item.text == this.viewActive.text) item.active = true;
-    //     });
-    //     this.changeDetectorRef.detectChanges();
-    //   } else {
-    // this.views.forEach((item) => {
-    //   item.hide = true;
-    //   if (item.text == 'Search') item.hide = false;
-    // });
-    // this.changeDetectorRef.detectChanges();
-    // this.isSearch = true;
-    //     this.pageNumberCliked= this.pageNumberDefault;
-    //     this.getHomeProcessSearch();
-    //   }
-    // } catch (ex) {
-    //   this.changeDetectorRef.detectChanges();
-    // }
-    // this.view.dataService.searchText
     this.view.dataService.search($event).subscribe();
     this.changeDetectorRef.detectChanges();
   }
@@ -739,7 +713,7 @@ export class ProcessesComponent
     }
     if (this.oldName.trim() === this.newName.trim()) {
       if(this.isRename){
-        this.notificationsService.notifyCode(this.msgCodeExistNameProcess); 
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
       }else{
         this.notification.notifyCode('SYS007');
         this.changeDetectorRef.detectChanges();
@@ -753,7 +727,7 @@ export class ProcessesComponent
   CheckAllExistNameProccess(newName, idProccess) {
     this.bpService.isCheckExitName(newName, idProccess).subscribe((res) => {
       if (res) {
-        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);  
+        this.notificationsService.notifyCode(this.msgCodeExistNameProcess);
         return;
       } else {
         this.actionReName(newName);
@@ -1033,7 +1007,7 @@ export class ProcessesComponent
 
   PopoverDetail(e ,p: any, emp) {
     let parent = e.currentTarget.parentElement.offsetWidth;
-    let child = e.currentTarget.offsetWidth;     
+    let child = e.currentTarget.offsetWidth;
     if(this.popupOld?.popoverClass !== p?.popoverClass ) {
       this.popupOld?.close();
     }
@@ -1135,9 +1109,9 @@ export class ProcessesComponent
             if (x.event?.status == 'N') {
               return;
             } else if (x.event?.status == 'Y') {
-              // mở form 
+              // mở form
               this.isRename = true;
-              this.reName(data);             
+              this.reName(data);
             }
           });
         }else{
@@ -1153,14 +1127,13 @@ export class ProcessesComponent
       if (res) {
         if(!this.isRename){
           this.notification.notifyCode('SYS034');
-        }       
+        }
         this.view.dataService.remove(data).subscribe();
         this.isRename = false;
         this.detectorRef.detectChanges();
       }
     });
   }
- 
 
   //chang data
   viewChanged(e) {
