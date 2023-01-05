@@ -30,7 +30,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   data: any;
   currentEJobSalaries: any;
   funcID: string;
-  idField: string = "recID";
+  idField: string = 'recID';
   actionType: string;
   employeeId: string;
   isAfterRender = false;
@@ -69,17 +69,19 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
-        this.hrService.getFormGroup(this.formModel.formName, this.formModel.gridViewName).then(formGroup =>{
-          if(formGroup){
-            this.formGroup = formGroup;
-            this.initForm();
-          }
-        })
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((formGroup) => {
+            if (formGroup) {
+              this.formGroup = formGroup;
+              this.initForm();
+            }
+          });
       }
     });
   }
 
-  initForm(){
+  initForm() {
     if (this.actionType == 'add') {
       this.hrService
         .getDataDefault(
@@ -88,14 +90,16 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
           this.idField
         )
         .subscribe((res) => {
-          if (res) {
+          if (res && res.data) {
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
             this.cr.detectChanges();
             this.isAfterRender = true;
-          } 
+          } else {
+            this.notify.notify('Error');
+          }
         });
     } else {
       this.formModel.currentData = this.data;
@@ -106,6 +110,11 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(isClose: boolean) {
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrService.addEVaccine(this.data).subscribe((res) => {
         if (res) {
