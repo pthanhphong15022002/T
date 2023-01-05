@@ -609,7 +609,7 @@ export class CatagoryComponent implements OnInit {
                 this.api
                   .execSv(
                     'SYS',
-                    'ERM.Business.CM',
+                    'ERM.Business.Core',
                     'DataBusiness',
                     'GetDefaultEntityAsync',
                     'SYS_SettingValues'
@@ -659,7 +659,7 @@ export class CatagoryComponent implements OnInit {
         this.api
           .execSv(
             'SYS',
-            'ERM.Business.CM',
+            'ERM.Business.Core',
             'DataBusiness',
             'GetDefaultEntityAsync',
             'SYS_SettingValues'

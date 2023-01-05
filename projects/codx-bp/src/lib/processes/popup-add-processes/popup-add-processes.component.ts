@@ -82,6 +82,7 @@ export class PopupAddProcessesComponent implements OnInit {
   listPermissionCopy: BP_ProcessPermissions[] = [];
   onwerOldCoppy: string = '';
   msgCodeExistNameProcess='BP008';
+  isCheckExistOnwer: boolean = false;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -403,31 +404,38 @@ export class PopupAddProcessesComponent implements OnInit {
           this.perms = [];
           this.emp = res;
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
+          this.isCheckExistOnwer=true;
         }
       });
     }
 
   }
   updateOrCreatProccess(emp: tmpUser) {
-    if (
-      this.process?.permissions != null &&
-      this.process?.permissions.length > 0
-    ) {
-      // member type is zero for onwer of proccess
-      this.process.permissions
-        .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
-        .forEach((element) => {
-          this.updatePermission(emp, element, this.onwerRole);
-          this.isExitUserPermiss = true;
-        });
-      if (!this.isExitUserPermiss) {
-        this.process.permissions.push(this.tmpPermission);
+    if(this.isCheckExistOnwer){
+      if (
+        this.process?.permissions != null &&
+        this.process?.permissions.length > 0
+      ) {
+        // member type is zero for onwer of proccess
+        this.process.permissions
+          .filter((x) => x.objectID === this.tmpPermission.objectID && x.memberType =="0")
+          .forEach((element) => {
+            this.updatePermission(emp, element, this.onwerRole);
+            this.isExitUserPermiss = true;
+          });
+        if (!this.isExitUserPermiss) {
+          this.process.permissions.push(this.tmpPermission);
+        }
+      } else {
+        this.perms.push(this.tmpPermission);
+        this.process.permissions = this.perms;
       }
-    } else {
-      this.perms.push(this.tmpPermission);
-      this.process.permissions = this.perms;
+      this.callActionSave();
     }
-    this.callActionSave();
+    else {
+      this.notiService.notifyCode('Nhập onwer kia');
+    }
+
   }
 
   async updatePermission(

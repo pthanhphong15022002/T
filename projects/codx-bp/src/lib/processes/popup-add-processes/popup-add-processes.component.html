@@ -1,65 +1,29 @@
-<codx-form
-  [headerText]="title"
-  [subHeader]="subHeader"
-  [formModel]="dialog.formModel"
-  [body]="body"
-  [footer]="footer"
-  [data]="process"
-  [dialog]="dialog"
-  [openMore]="true"
-  #form
->
+<codx-form [headerText]="title" [subHeader]="subHeader" [formModel]="dialog.formModel" [body]="body" [footer]="footer"
+  [data]="process" [dialog]="dialog" [openMore]="true" #form>
 
   <ng-template #body>
     <div class="form-group">
       <div>
-        <codx-label
-          fiedName="ProcessName"
-          [formModel]="form.formModel"
-          default="Tên quy trình"
-        >
+        <codx-label fiedName="ProcessName" [formModel]="form.formModel" default="Tên quy trình">
         </codx-label>
       </div>
-      <codx-input
-        field="processName"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-      >
+      <codx-input field="processName" [Group]="form.formGroup" [formModel]="form.formModel">
       </codx-input>
     </div>
-    <div class="form-group">
-      <div class="row">
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label
-              fiedName="GroupID"
-              [formModel]="form.formModel"
-              default="Nhóm công đoạn"
-            >
-            </codx-label>
-            <codx-input
-              field="groupID"
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-            >
-            </codx-input>
-          </div>
+    <div class="row">
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="GroupID" [formModel]="form.formModel" default="Nhóm công đoạn">
+          </codx-label>
+          <codx-input field="groupID" [Group]="form.formGroup" [formModel]="form.formModel">
+          </codx-input>
         </div>
-        <div class="col-6">
-          <div class="form-group">
-            <codx-label
-              fiedName="Status"
-              [formModel]="form.formModel"
-              default="Tình trạng"
-            ></codx-label>
-            <codx-input
-              [Group]="form.formGroup"
-              [formModel]="form.formModel"
-              field="Status"
-              [disabled]="isDisable"
-            >
-            </codx-input>
-          </div>
+      </div>
+      <div class="col-6">
+        <div class="form-group">
+          <codx-label fiedName="Status" [formModel]="form.formModel" default="Tình trạng"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="Status" [disabled]="isDisable">
+          </codx-input>
         </div>
       </div>
     </div>
@@ -67,143 +31,70 @@
     <div class="form-group">
       <codx-label name="Memo" [formModel]="form.formModel" default="Mô tả">
       </codx-label>
-      <div class="d-flex justify-content-between align-items-center">
-        <div style="width: 100%">
-          <codx-input
-            [field]="'memo'"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            (valueChange)="valueChange($event)"
-          >
-          </codx-input>
-        </div>
+      <div class="w-100">
+        <codx-input [field]="'memo'" [formModel]="form.formModel" [Group]="form.formGroup"
+          (valueChange)="valueChange($event)">
+        </codx-input>
       </div>
     </div>
     <div class="row">
       <div class="col-6">
         <div class="form-group">
-          <codx-label
-            fiedName="ActivedOn"
-            [formModel]="form.formModel"
-            default="Ngày hiệu lực"
-          ></codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="activedOn"
-          >
+          <codx-label fiedName="ActivedOn" [formModel]="form.formModel" default="Ngày hiệu lực"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="activedOn">
           </codx-input>
         </div>
       </div>
       <div class="col-6">
         <div class="form-group">
-          <codx-label
-            fiedName="ExpiredOn"
-            [formModel]="form.formModel"
-            default="Ngày hết hạn"
-          ></codx-label>
-          <codx-input
-            [Group]="form.formGroup"
-            [formModel]="form.formModel"
-            field="expiredOn"
-          >
+          <codx-label fiedName="ExpiredOn" [formModel]="form.formModel" default="Ngày hết hạn"></codx-label>
+          <codx-input [Group]="form.formGroup" [formModel]="form.formModel" field="expiredOn">
           </codx-input>
         </div>
       </div>
     </div>
     <div class="form-group">
-      <codx-label
-        class="fw-bold fs-6"
-        fiedName="Owner"
-        [formModel]="form.formModel"
-        default="Quản lý quy trình"
-      >
+      <codx-label class="fw-bold fs-6" fiedName="Owner" [formModel]="form.formModel" default="Quản lý quy trình">
       </codx-label>
-      <codx-input
-        [disabled]="funcID == 'BPT2' ? true : false"
-        [Group]="form.formGroup"
-        [formModel]="form.formModel"
-        field="owner"
-        (valueChange)="valueChangeUser($event)"
-      >
+      <codx-input [disabled]="funcID == 'BPT2' ? true : false" [Group]="form.formGroup" [formModel]="form.formModel"
+        field="owner" (valueChange)="valueChangeUser($event)">
       </codx-input>
     </div>
 
     <div class="form-group">
-      <codx-label
-        class="fw-bold fs-6"
-        name="lblAvatarProcess"
-        [formModel]="form.formModel"
-        default="Hình hiển thị"
-      >
+      <codx-label class="fw-bold fs-6" name="lblAvatarProcess" [formModel]="form.formModel" default="Hình hiển thị">
       </codx-label>
       <ng-container [ngTemplateOutlet]="avatarProcess"></ng-container>
     </div>
     <ng-container>
-      <div
-        class="d-flex align-items-center justify-content-between mt-4"
-        *ngIf="showLabelAttachment"
-        style="float: left; clear: left"
-      >
+      <div class="d-flex align-items-center justify-content-between mt-4" *ngIf="showLabelAttachment"
+        style="float: left; clear: left">
         <div class="d-flex align-items-center mb-2">
           <span class="icon-attach_file icon-18 me-2 text-primary"></span>
           <div class="fw-bold text-primary">
-            <codx-label
-              fiedName="Attachments"
-              [formModel]="form.formModel"
-              default="Tài liệu đính kèm"
-            >
+            <codx-label fiedName="Attachments" [formModel]="form.formModel" default="Tài liệu đính kèm">
             </codx-label>
           </div>
         </div>
       </div>
       <div>
-        <codx-attachment
-          #attachment
-          [objectId]="process.recID"
-          [objectType]="form.formModel.entityName"
-          hideFolder="1"
-          hideImageUpload="0"
-          hideImageThumb="0"
-          hideUploadBtn="1"
-          hideDes="1"
-          type="inline"
-          allowMultiFile="1"
-          [formModel]="dialog.formModel"
-          (fileAdded)="fileAdded($event)"
-          (fileCount)="getfileCount($event)"
-          displayThumb="full"
-          showMessage="0"
-          [fdID]="folderID"
-          [fdName]="folderName"
-          [dataSelected]="process"
-        >
+        <codx-attachment #attachment [objectId]="process.recID" [objectType]="form.formModel.entityName" hideFolder="1"
+          hideImageUpload="0" hideImageThumb="0" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1"
+          [formModel]="dialog.formModel" (fileAdded)="fileAdded($event)" (fileCount)="getfileCount($event)"
+          displayThumb="full" showMessage="0" [fdID]="folderID" [fdName]="folderName" [dataSelected]="process">
         </codx-attachment>
       </div>
     </ng-container>
   </ng-template>
   <ng-template #footer>
     <div class="d-flex justify-content-between">
-      <button
-        type="button"
-        class="btn btn-light-primary me-3"
-        (click)="addFile($event)"
-      >
-        <i class="icon-cloud_upload fs-5"></i
-        ><span>
-          <codx-label
-            name="UploadFile"
-            [formModel]="form.formModel"
-            default="Upload File"
-          ></codx-label>
+      <button type="button" class="btn btn-light-primary me-3" (click)="addFile($event)">
+        <i class="icon-cloud_upload fs-5"></i><span>
+          <codx-label name="UploadFile" [formModel]="form.formModel" default="Upload File"></codx-label>
         </span>
       </button>
       <button type="button" class="btn btn-primary ms-1" (click)="onSave()">
-        <codx-label
-          name="Save"
-          [formModel]="form.formModel"
-          default="Lưu"
-        ></codx-label>
+        <codx-label name="Save" [formModel]="form.formModel" default="Lưu"></codx-label>
       </button>
     </div>
   </ng-template>
@@ -211,64 +102,35 @@
   <ng-template #avatarProcess>
     <div class="dropzone dropzone-default dropzone-primary d-flex flex-center flex-column" (click)="addAvatar()">
       <div class="dropzone-msg dz-message needsclick">
-        <ng-container  *ngIf="linkAvatar!=''">
-          <img [src]="linkAvatar" class="image-maxsize"/>
+        <ng-container *ngIf="linkAvatar!=''">
+          <img [src]="linkAvatar" class="image-maxsize" />
         </ng-container>
-        <ng-container *ngIf="linkAvatar==''" >
+        <ng-container *ngIf="linkAvatar==''">
           <div class="dropzone-msg-title mb-2">
             <i class="icon-image icon-30"></i>
           </div>
           <div class="dropzone-msg-title mb-2">
-            <codx-label
-              name="lblContentAddAvatar"
-              [formModel]="form.formModel"
-              default="Chọn hình ảnh"
-              class="fw-bold"
-            >
+            <codx-label name="lblContentAddAvatar" [formModel]="form.formModel" default="Chọn hình ảnh" class="fw-bold">
             </codx-label>
           </div>
           <span class="dropzone-msg-desc">
-            <codx-label
-              name="lblRequiredAvatar"
-              [formModel]="form.formModel"
-              default="(Nên chọn hình ảnh có kích thước ...px đến ...px)"
-              class="fw-bold"
-            ></codx-label>
+            <codx-label name="lblRequiredAvatar" [formModel]="form.formModel"
+              default="(Nên chọn hình ảnh có kích thước ...px đến ...px)" class="fw-bold"></codx-label>
           </span>
         </ng-container>
 
       </div>
     </div>
-    <codx-attachment
-      #imageAvatar
-      [objectId]="process.recID"
-      [objectType]="form.formModel.entityName"
-      hideFolder="1"
-      hideImageUpload="1"
-      hideImageThumb="1"
-      hideUploadBtn="1"
-      hideDes="1"
-      type="inline"
-      allowMultiFile="0"
-      [formModel]="dialog.formModel"
-      allowExtensions=".jpg,.png"
-      [isSaveSelected]="0"
-      (fileAdded)="fileImgAdded($event)"
-      displayThumb="full"
-      showMessage="0"
-      category="0"
-    >
+    <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="form.formModel.entityName" hideFolder="1"
+      hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
+      [formModel]="dialog.formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
+      displayThumb="full" showMessage="0" category="0">
     </codx-attachment>
 
   </ng-template>
 </codx-form>
 
 <ng-template #subHeader>
-  <codx-tag
-    [entityName]="dialog.formModel.entityName"
-    [isEdit]="true"
-    [disabled]="false"
-    [value]="process?.tags || ''"
-    (valueChange)="valueChangeTag($event)"
-  ></codx-tag>
+  <codx-tag [entityName]="dialog.formModel.entityName" [isEdit]="true" [disabled]="false" [value]="process?.tags || ''"
+    (valueChange)="valueChangeTag($event)"></codx-tag>
 </ng-template>

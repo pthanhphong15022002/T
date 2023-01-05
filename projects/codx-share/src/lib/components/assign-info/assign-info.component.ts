@@ -123,7 +123,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   setDefault() {
     this.task.taskID = '';
     this.api
-      .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      .execSv<number>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
         'TM_Tasks',
         'taskID',
@@ -348,7 +348,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
-           //send mail FE
+          //send mail FE
           // if (this.param?.ConfirmControl == '1')
           //   this.tmSv
           //     .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)

@@ -59,6 +59,7 @@ export class PropertiesComponent implements OnInit {
   flowChart= '';
   objectID: any;
   firstNameVersion:string = '';
+  listUserName:any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notificationsService: NotificationsService,
@@ -93,6 +94,11 @@ export class PropertiesComponent implements OnInit {
       }
     });
     this.openProperties(this.data.recID);
+    var listnew= this.process.versions.map(x => x.createdBy)
+    this.bpSV.getUserNameByListId(listnew).subscribe((res)=> {
+      this.listUserName= res;
+    });
+
     this.changeDetectorRef.detectChanges();
   }
 

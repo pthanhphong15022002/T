@@ -245,7 +245,7 @@ export class CodxTasksComponent
       this.funcID != 'MWP0064';
 
     this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011') {
+    if (this.funcID != 'TMT03011'&& this.funcID != 'TMT05011') {
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
@@ -265,6 +265,7 @@ export class CodxTasksComponent
     this.requestSchedule.className = 'TaskBusiness';
     this.requestSchedule.method = 'GetTasksWithScheduleAsync';
     this.requestSchedule.idField = 'taskID';
+    this.requestSchedule.dataObj = this.dataObj;
 
     // if (
     //   this.funcID != 'TMT0201' &&
@@ -1586,7 +1587,9 @@ export class CodxTasksComponent
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-          (this.funcID == 'TMT0206' || this.funcID != 'MWP0063')
+          //    (this.funcID == 'TMT0206' || this.funcID != 'MWP0063') // Hảo sửa k hiện more function 3/1/2023
+          this.funcID == 'TMT0206' &&
+          this.funcID != 'MWP0063'
         ) {
           x.disabled = true;
         }
