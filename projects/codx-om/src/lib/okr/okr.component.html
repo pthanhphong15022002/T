@@ -1,7 +1,7 @@
 <codx-views #view [views]="views" (viewChanged)="viewChanged($event)" [autoLoad]="false"> </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
-    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="formModelKR"></lib-okr-toolbar>
+    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar>
     <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
       <codx-label
         [default]="compName"
@@ -55,7 +55,7 @@
                 <lib-okr-targets
                   [dataOKRPlans]="dataOKRPlans"
                   [dataOKR]="dataOKR"
-                  [formModel]="view?.formModel"
+                  [formModel]="formModel"
                   [gridView]="gridView"
                   [obFuncID]="obFuncID"
                   [krFuncID]="krFuncID"
