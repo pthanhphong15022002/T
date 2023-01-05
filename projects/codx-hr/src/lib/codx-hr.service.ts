@@ -1639,4 +1639,14 @@ export class CodxHrService {
     ]);
   }
   //#endregion
+
+  addTest(){
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBusinessTravelsBusiness',
+      'AddTestAsync',
+      null
+    );
+  }
 }

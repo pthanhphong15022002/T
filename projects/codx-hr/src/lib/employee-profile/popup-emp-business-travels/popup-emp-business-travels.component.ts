@@ -39,9 +39,13 @@ export class PopupEmpBusinessTravelsComponent
   employId;
   data;
 
+  dataValues;
+  predicates = 'EmployeeID=@0';
+
   isAfterRender = false;
   actionType: string;
-
+  ops = ['y'];
+  date = new Date('01-04-2040');
   constructor(
     private injector: Injector,
     private cr: ChangeDetectorRef,
@@ -62,6 +66,8 @@ export class PopupEmpBusinessTravelsComponent
     }
     this.funcID = this.dialog?.formModel?.funcID;
     this.employId = data?.data?.employeeId;
+
+    this.dataValues = this.employId;
   }
 
   onInit(): void {
@@ -128,10 +134,10 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   click(data) {
-    if(data){
+    if (data) {
       this.data = data;
       this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data)
+      this.formGroup.patchValue(this.data);
 
       this.cr.detectChanges();
       this.actionType = 'edit';
@@ -141,6 +147,18 @@ export class PopupEmpBusinessTravelsComponent
   swipeToRightTab(e) {
     if (e.isSwiped) {
       e.cancel = true;
+    }
+  }
+
+  valueChange(event) {
+    console.log(event);
+    if (event && event.data ) {
+      let predicates =
+        this.predicates + ' and @1.Contains('+event.field+')';
+      let dataValues = this.dataValues + ';'+ event.data;
+
+      (this.listView.dataService as CRUDService).setPredicates([predicates], [dataValues]).subscribe()
+      this.cr.detectChanges();
     }
   }
 }
