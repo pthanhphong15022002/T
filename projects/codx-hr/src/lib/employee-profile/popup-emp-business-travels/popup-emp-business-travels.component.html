@@ -8,6 +8,7 @@
   [leftTemlate]="LeftTemlate"
   [RightTemlate]="body"
   *ngIf="isAfterRender"
+  [headerTemplate]="filterTemlate"
 >
 </layout-list-detail>
 <ng-template #body>
@@ -193,6 +194,25 @@
   </div>
 </ng-template>
 
+<ng-template #filterTemlate>
+  <div class="d-flex me-3">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="true"
+      type="valuelist"
+      field="PeriodType"
+      [refValue]="'HR009'"
+      (valueChange)="valueChange($event)"
+    ></codx-dropdown-select>
+    <codx-dropdown-calendar
+      [value]="date"
+      [displayOption]="ops"
+      [selectedType]="'y'"
+    ></codx-dropdown-calendar>
+  </div>
+</ng-template>
+
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="onSaveForm(false)">
@@ -227,8 +247,8 @@
     [entityName]="'HR_EBusinessTravels'"
     [className]="'EBusinessTravelsBusiness'"
     [method]="'LoadDataEBTravelsAsync'"
-    [predicate]="'EmployeeID=@0'"
-    [dataValue]="employId"
+    [predicates]="predicates"
+    [dataValues]="dataValues"
     [itemTemplate]="itemTemplate"
     (afterRender)="afterRenderListView($event)"
     [selectFirst]="true"
@@ -253,8 +273,8 @@
   <div class="d-flex flex-column mt-1">
     <div class="d-flex align-items-center mb-1">
       <span
-        class="me-1 icon-i-arrow-down-left-circle-fill icon-14"
-        style="color: blueviolet"
+        class="me-1 icon-home_work icon-14"
+        style="color: gray"
       ></span>
       <span #trainCourseID class="text-dark">
         {{ dataEBTravels?.businessPlace }}
@@ -262,7 +282,7 @@
     </div>
     <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center">
-        <span class="me-1 icon-date_range icon-14 text-gray-800"></span>
+        <span class="me-1 icon-event icon-14 text-gray-600"></span>
         <span class="text-dark">
           <span
             >{{ dataEBTravels?.beginDate | fmDT }} -
@@ -270,9 +290,9 @@
           >
         </span>
       </div>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center ms-7">
         <span
-          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+          class="icon-access_time  ms-2 me-2 text-gray-600" 
         ></span>
         <span class="fw-bold text-primary">
           <span>{{ dataEBTravels?.days }}</span>
@@ -281,14 +301,21 @@
     </div>
     <div class="d-flex flex-wrap mb-1">
       <div class="d-flex align-items-center">
-        <span class="icon-connection-point icon-14 text-primary me-1"></span>
+        <span class="icon-edit icon-14 text-gray-600 me-1"></span>
         <span class="text-primary"> {{ dataEBTravels?.businessPurpose }} </span>
       </div>
       <ng-container *ngIf="dataEBTravels.isOversea">
         <span class="text-gray-500 me-1 ms-1">|</span>
         <div class="d-flex align-items-center">
-          <span class="icon-connection-point icon-14 text-primary me-1"></span>
-          <span class="text-primary"> {{ dataEBTravels?.country }} </span>
+          <span class="icon-flight_takeoff icon-14 text-primary me-1"></span>
+          <span class="text-primary" #country>
+            {{ dataEBTravels?.country }}
+            {{
+              dataEBTravels?.country
+                | formatvalue : this.formModel : "country" : country
+                | async
+            }}</span
+          >
         </div>
       </ng-container>
     </div>

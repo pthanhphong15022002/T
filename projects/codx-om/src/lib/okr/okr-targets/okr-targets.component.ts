@@ -124,8 +124,7 @@ export class OkrTargetsComponent implements OnInit {
   Objs = [];
   ObjQty = 0;
   Krs = [];
-  KrQty = 0;
-
+  KrQty = 0;  
   progress: number = 0;
 
   constructor(
@@ -134,9 +133,12 @@ export class OkrTargetsComponent implements OnInit {
     private codxOmService: CodxOmService,
     private api: ApiHttpService,
     private notificationsService :NotificationsService,
-  ) {}
+
+  ) {
+  }
 
   ngOnInit(): void {
+    this.formModel=this.formModel;
     //Lấy tiêu đề theo FuncID cho Popup
     this.cache.functionList(this.krFuncID).subscribe((res) => {
       if (res) {
@@ -178,11 +180,6 @@ export class OkrTargetsComponent implements OnInit {
     this.cache.valueList('OM002').subscribe((item) => {
       if (item?.datas) this.dtStatus = item?.datas;
     });
-    // Tạo FormModel cho OKRs
-    this.formModelKR.entityName = 'OM_OKRs';
-    this.formModelKR.gridViewName = 'grvOKRs';
-    this.formModelKR.formName = 'OKRs';
-    this.formModelKR.entityPer = 'OM_OKRs';
   }
   //Lấy danh sách kr của mục tiêu
   getItemOKR(i: any, recID: any) {
@@ -246,7 +243,7 @@ export class OkrTargetsComponent implements OnInit {
   }
   
   deleteKR(kr: any) {
-    if(kr!=null){
+    if(false){//Cần thêm kịch bản khi xóa KR
       this.codxOmService.deleteKR(kr).subscribe((res:any)=>{
         if(res){          
           this.notificationsService.notifyCode('SYS008');
@@ -315,7 +312,7 @@ export class OkrTargetsComponent implements OnInit {
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
-      PopupAssignmentOKRComponent,
+      PopupDistributeOKRComponent,
       '',
       null,
       null,

@@ -39,7 +39,6 @@ import { TemplateSurveyOtherComponent } from './template-survey-other.component/
 import { PopupQuestionOtherComponent } from './template-survey-other.component/popup-question-other/popup-question-other.component';
 import { PopupUploadComponent } from './popup-upload/popup-upload.component';
 import { SortSessionComponent } from './sort-session/sort-session.component';
-import { SV_RespondResults } from '../../model/SV_RespondResults';
 
 @Component({
   selector: 'app-questions',
@@ -536,7 +535,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.questions[indexSession].children[indexQuestion]['other'] = true;
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
-      this.questions[indexSession].children[indexQuestion],
+      [this.questions[indexSession].children[indexQuestion]],
       false
     );
   }
@@ -1203,6 +1202,8 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       tempQuestion.recID = !youtube ? data[0].objectID : this.generateGUID();
       tempQuestion.url = youtube ? data : null;
       tempQuestion.videoID = videoID;
+      if (dataQuestion.category == 'S')
+        tempQuestion.parentID = dataQuestion.recID;
       this.questions[seqNoSession].children.splice(
         dataQuestion.seqNo + 1,
         0,
@@ -1211,11 +1212,20 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.questions[seqNoSession].children.forEach(
         (x, index) => (x.seqNo = index)
       );
-      this.questions[seqNoSession].children[dataQuestion.seqNo].active = false;
-      this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
-        true;
-      this.itemActive =
-        this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
+      //active card video, picture này để phát triển sau, chưa ưu tiên
+      // if(dataQuestion.category == 'S')
+      //   this.questions[seqNoSession].active = false;
+      // else
+      //   this.questions[seqNoSession].children[dataQuestion.seqNo].active = false;
+      // this.questions[seqNoSession].children[dataQuestion.seqNo + 1].active =
+      //   true;
+      //active card video, picture này để phát triển sau, chưa ưu tiên
+
+      if (dataQuestion.category == 'S')
+        this.itemActive = this.questions[seqNoSession].children[0];
+      else
+        this.itemActive =
+          this.questions[seqNoSession].children[dataQuestion.seqNo + 1];
       // this.clickToScroll(dataQuestion.seqNo + 1);
     } else if (modeFile == 'change' && youtube) {
       this.questions[seqNoSession].children[dataQuestion.seqNo + 1].videoID =
@@ -1230,7 +1240,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       this.questions[seqNoSession].children[dataQuestion.seqNo].recID =
         data[0].objectID;
       this.setTimeoutSaveData(
-        this.questions[seqNoSession].children[dataQuestion.seqNo],
+        [this.questions[seqNoSession].children[dataQuestion.seqNo]],
         isModeAdd
       );
     }
@@ -1244,7 +1254,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     }
     this.SVServices.signalSave.next('saving');
     this.setTimeoutSaveData(
-      this.questions[seqNoSession].children[dataQuestion.seqNo + 1],
+      dataQuestion.category == 'S'
+        ? [this.questions[seqNoSession].children[0]]
+        : [this.questions[seqNoSession].children[dataQuestion.seqNo + 1]],
       isModeAdd,
       this.questions[seqNoSession].children
     );

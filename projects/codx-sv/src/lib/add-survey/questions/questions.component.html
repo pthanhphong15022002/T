@@ -1022,7 +1022,7 @@
           </div>
         </ng-container>
       </div>
-      <img [src]="getUrlImageOfVideo(itemQuestion.videoID)" *ngIf="itemQuestion?.url" />
+      <img [src]="getUrlImageOfVideo(itemQuestion.videoID)" *ngIf="itemQuestion?.url && itemQuestion?.videoID" />
     </div>
   </ng-container>
 </ng-template>
