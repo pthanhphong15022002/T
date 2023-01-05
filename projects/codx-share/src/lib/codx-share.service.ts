@@ -105,11 +105,13 @@ export class CodxShareService {
   }
 
   getESDataDefault(funcID: string, entityName: string, idField: string) {
-    return this.api.execSv<any>('ES', 'CM', 'DataBusiness', 'GetDefaultAsync', [
-      funcID,
-      entityName,
-      idField,
-    ]);
+    return this.api.execSv<any>(
+      'ES',
+      'Core',
+      'DataBusiness',
+      'GetDefaultAsync',
+      [funcID, entityName, idField]
+    );
   }
 
   setCacheFormModel(formModel: FormModel) {
@@ -185,7 +187,7 @@ export class CodxShareService {
     }
     return this.api.execSv<any>(
       service,
-      'ERM.Business.CM',
+      'ERM.Business.Core',
       'DataBusiness',
       'LoadDataCbxAsync',
       [dataRequest]
@@ -514,7 +516,7 @@ export class CodxShareService {
     return dialogComment;
   }
 
-  #region_calendar
+  #region_calendar;
   getDataTM_Tasks(requestData) {
     return this.api.execSv(
       'TM',
@@ -540,7 +542,7 @@ export class CodxShareService {
       'WP',
       'ERM.Business.WP',
       'NotesBusiness',
-      'GetListIsPinAsync',
+      'GetListIsPinAsync'
     );
   }
 
@@ -563,9 +565,9 @@ export class CodxShareService {
       requestData
     );
   }
-  #endregion_calendar
+  #endregion_calendar;
 
-  #region_EP_BookingCars
+  #region_EP_BookingCars;
   getListAttendees(recID: any) {
     return this.api.execSv(
       'EP',
@@ -575,9 +577,9 @@ export class CodxShareService {
       [recID]
     );
   }
-  #endregion_EP_BookingCars
+  #endregion_EP_BookingCars;
 
-  #region_EP_BookingRooms
+  #region_EP_BookingRooms;
   getListItems(recID: any) {
     return this.api.execSv(
       'EP',
@@ -587,8 +589,8 @@ export class CodxShareService {
       [recID]
     );
   }
-  #endregionEP_BookingRooms
-  
+  #endregionEP_BookingRooms;
+
   getListResource(resourceType: string) {
     return this.api.execSv(
       'EP',
@@ -598,7 +600,6 @@ export class CodxShareService {
       [resourceType]
     );
   }
-
 }
 
 //#region Model

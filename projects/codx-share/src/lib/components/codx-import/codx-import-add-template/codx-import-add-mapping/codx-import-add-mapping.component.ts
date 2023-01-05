@@ -877,7 +877,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
     request.page = 1;
     request.pageSize = 20;
     this.api
-      .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request)
+      .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataCbxAsync', request)
       .subscribe((item) => {
         if (item[0]) {
           var data = JSON.parse(item[0]);
