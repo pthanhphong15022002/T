@@ -8,6 +8,7 @@
   [leftTemlate]="LeftTemlate"
   [RightTemlate]="body"
   *ngIf="isAfterRender"
+  [headerTemplate]="filterTemlate"
 >
 </layout-list-detail>
 <ng-template #body>
@@ -193,6 +194,25 @@
   </div>
 </ng-template>
 
+<ng-template #filterTemlate>
+  <div class="d-flex me-3">
+    <codx-dropdown-select
+      [cssClass]="'rounded-pill border-1'"
+      cssPopup="h-350px w-300px"
+      [isMulti]="true"
+      type="valuelist"
+      field="PeriodType"
+      [refValue]="'HR009'"
+      (valueChange)="valueChange($event)"
+    ></codx-dropdown-select>
+    <codx-dropdown-calendar
+      [value]="date"
+      [displayOption]="ops"
+      [selectedType]="'y'"
+    ></codx-dropdown-calendar>
+  </div>
+</ng-template>
+
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button class="btn btn-primary" (click)="onSaveForm(false)">
@@ -227,8 +247,8 @@
     [entityName]="'HR_EBusinessTravels'"
     [className]="'EBusinessTravelsBusiness'"
     [method]="'LoadDataEBTravelsAsync'"
-    [predicate]="'EmployeeID=@0'"
-    [dataValue]="employId"
+    [predicates]="predicates"
+    [dataValues]="dataValues"
     [itemTemplate]="itemTemplate"
     (afterRender)="afterRenderListView($event)"
     [selectFirst]="true"

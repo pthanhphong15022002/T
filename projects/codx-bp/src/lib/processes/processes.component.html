@@ -60,27 +60,31 @@
           </codx-vll>
         </div>
         <div class="d-flex justify-content-between">
-          <div
-            #processName
-            class="fs-6 fw-bold line-clamp-card"
-            [ngbPopover]="setTextPopover(data?.processName)"
-            #p="ngbPopover"
-            [openDelay]="500"
-            (mouseenter)="PopoverDetail(p, data)"
-            placement="bottom right top"
-            [popoverClass]="data.recID"
-          >
-            {{
-            data?.processName
-            | formatvalue
-            : view.formModel
-            : "processName"
-            : processName
-            : "Processes"
-            : "grvProcesses"
-            | async
-            }}
+          <div style="width: 100%;">
+            <div
+              #processName
+              class="fs-6 fw-bold line-clamp-card process-name"
+              [ngbPopover]="setTextPopover(data?.processName)"
+              #p="ngbPopover"
+              [openDelay]="500"
+              (mouseenter)="PopoverDetail($event, p, data)"
+              (mouseleave)="p.close()"
+              placement="bottom right top"
+              [popoverClass]="data.recID"
+            >
+              {{
+              data?.processName
+              | formatvalue
+              : view.formModel
+              : "processName"
+              : processName
+              : "Processes"
+              : "grvProcesses"
+              | async
+              }}
+            </div>
           </div>
+         
           <span
             *ngIf="!checkPermissionRead(data)"
             class="icon-security text-primary icon-18"></span>
@@ -190,13 +194,15 @@
     <td class="rowphoto">
       <div class="d-flex flex-column">
         <div class="box">
-          <div #processName class="fw-bold line-clamp"
+          <div #processName class="fw-bold line-clamp process-name"
             [ngbPopover]="setTextPopover(data?.processName)"
             #p="ngbPopover"
             [openDelay]="500"
-            (mouseenter)="PopoverDetail(p, data)"
+            (mouseenter)="PopoverDetail($event,p, data)"
+            (mouseleave)="p.close()"
             placement="bottom right top"
-            [popoverClass]="data.recID">
+            [popoverClass]="data.recID"
+          >
             {{
             data?.processName
             | formatvalue
@@ -319,16 +325,16 @@
         }}
       </div>
     </td>
-    <!-- (mouseleave)="PopoverDetail(p, null)" -->
     <td class="rowphoto">
       <div
         *ngIf="data.memo">
-        <div class="line-clamp"
+        <div class="line-clamp process-name"
           #memo
           [ngbPopover]="setTextPopover(data?.memo)"
           #p="ngbPopover"
           [openDelay]="500"
-          (mouseenter)="PopoverDetail(p, data)"
+          (mouseenter)="PopoverDetail($event,p, data)"
+          (mouseleave)="p.close()"
           placement="bottom right top"
           [popoverClass]="data.recID"
           [ngClass]="data.recID"
