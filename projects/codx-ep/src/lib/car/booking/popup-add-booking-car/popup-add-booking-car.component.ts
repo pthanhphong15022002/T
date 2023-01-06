@@ -827,7 +827,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         );
       } else {
         this.driver = null;
-        this.notificationsService.notifyCode('EP008');
+        //this.notificationsService.notifyCode('EP008');
       }
       this.detectorRef.detectChanges();
     });
@@ -854,7 +854,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
             }
             if (!res.msgBodyData[0]) {
               this.driver = null;
-              this.notificationsService.notifyCode('EP008'); //Tài xế ko săn sàng
+              //this.notificationsService.notifyCode('EP008'); //Tài xế ko săn sàng
             }
           }
           this.detectorRef.detectChanges();

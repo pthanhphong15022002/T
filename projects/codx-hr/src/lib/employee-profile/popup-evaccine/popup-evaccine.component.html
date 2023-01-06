@@ -10,103 +10,74 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <!-- <div class="form-group row">
-      <div class="col-6">
-        <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
-        <codx-input
-          field="decisionNo"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-      <div class="col-6">
-        <codx-label fiedName="IsCurrent" [formModel]="formModel"></codx-label>
-        <codx-input
-          disabled="true"
-          field="isCurrent"
-          [formModel]="formModel"
-          [Group]="formGroup"
-        ></codx-input>
-      </div>
-    </div>
     <div class="form-group row">
       <div class="col-6">
         <codx-label
-          fiedName="EffectedDate"
+          fiedName="VaccineTypeID"
           [formModel]="formModel"
         ></codx-label>
         <codx-input
-          field="effectedDate"
+          field="VaccineTypeID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="ExpiredDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="VaccineName" [formModel]="formModel"></codx-label>
         <codx-input
-          field="expiredDate"
+          field="VaccineName"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
     </div>
     <div class="form-group row">
-      <codx-label fiedName="JSalary" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="jSalary"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group row">
       <div class="col-6">
-        <codx-label fiedName="SignedDate" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="HopitalID" [formModel]="formModel"></codx-label>
         <codx-input
-          field="signedDate"
+          field="HopitalID"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
       <div class="col-6">
-        <codx-label fiedName="SignStatus" [formModel]="formModel"></codx-label>
+        <codx-label fiedName="InjectDate" [formModel]="formModel"></codx-label>
         <codx-input
-          field="signStatus"
+          field="InjectDate"
           [formModel]="formModel"
           [Group]="formGroup"
         ></codx-input>
       </div>
     </div>
-
     <div class="form-group row">
-      <codx-label fiedName="SignerID" [formModel]="formModel"></codx-label>
-      <codx-input
-        field="signerID"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
+      <div class="col-6">
+        <codx-label fiedName="Cost" [formModel]="formModel"></codx-label>
+        <codx-input
+          field="Cost"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
+      <div class="col-6">
+        <codx-label
+          fiedName="NextInjectDate"
+          [formModel]="formModel"
+        ></codx-label>
+        <codx-input
+          field="NextInjectDate"
+          [formModel]="formModel"
+          [Group]="formGroup"
+        ></codx-input>
+      </div>
     </div>
-
     <div class="form-group row">
-      <codx-label
-        fiedName="SignerPosition"
-        [formModel]="formModel"
-      ></codx-label>
-      <codx-input
-        field="signerPosition"
-        [formModel]="formModel"
-        [Group]="formGroup"
-      ></codx-input>
-    </div>
-
-    <div class="form-group rpw">
       <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
       <codx-input
-        field="note"
+        field="Note"
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div> -->
+    </div>
   </ng-template>
 
   <ng-template #footer>
@@ -126,9 +97,8 @@
 <ng-template #LeftTemlate>
   <codx-listview
     #listView
-    [type]="'cardView'"
     [service]="'HR'"
-    [assemblyName]="'CM'"
+    [assemblyName]="'Core'"
     [entityName]="'HR_EVaccines'"
     [className]="'DataBusiness'"
     [method]="'LoadDataAsync'"
@@ -159,7 +129,7 @@
 
 <ng-template #tmplateEJobSalaries let-data1>
   <div class="d-flex flex-column">
-    <div><i class=" icon-list_alt"></i>{{ data1.injectDate | fmDT }}</div>
+    <div><i class="icon-list_alt"></i>{{ data1.injectDate | fmDT }}</div>
     <div><i class="icon-edit_fill"></i>{{ data1.note }}</div>
   </div>
 </ng-template>

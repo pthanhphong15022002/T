@@ -119,3 +119,6 @@
 /* :host ::ng-deep codx-wrapper{
   overflow: hidden !important;
 } */
+.process-name{
+  display: -webkit-inline-box !important;
+}

@@ -168,17 +168,18 @@ export class OKRTasksComponent extends UIComponent implements AfterViewInit {
     };
 
     this.buttons = [
-      {
-        id: '1',
-        icon: 'icon-format_list_bulleted icon-18',
-        text: ' List',
-      },
-      {
-        id: '2',
-        icon: 'icon-appstore icon-18',
-        text: ' Card',
-      },
+      // {
+      //   id: '1',
+      //   icon: 'icon-format_list_bulleted icon-18',
+      //   text: ' List',
+      // },
+      // {
+      //   id: '2',
+      //   icon: 'icon-appstore icon-18',
+      //   text: ' Card',
+      // },
     ];
+    this.views = [];
   }
 
   ngAfterViewInit(): void {

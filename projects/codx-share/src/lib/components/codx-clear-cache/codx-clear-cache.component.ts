@@ -29,7 +29,7 @@ export class CodxClearCacheComponent implements OnInit {
 
   ngOnInit(): void {
     this.api
-      .execSv('SYS', 'ERM.Business.CM', 'CMBusiness', 'GetListCacheName')
+      .execSv('SYS', 'ERM.Business.Core', 'CMBusiness', 'GetListCacheName')
       .subscribe((res: any) => {
         this.listCache = res || [];
       });

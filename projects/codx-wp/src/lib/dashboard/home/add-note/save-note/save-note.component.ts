@@ -62,7 +62,7 @@ export class SaveNoteComponent extends UIComponent implements OnInit {
   }
 
   // getData() {
-  //   this.api.exec('ERM.Business.CM', 'DataBusiness', 'LoadDataAsync', this.dialog.formModel).subscribe(res => {
+  //   this.api.exec('ERM.Business.Core', 'DataBusiness', 'LoadDataAsync', this.dialog.formModel).subscribe(res => {
   //
   //   })
   // }
