@@ -32,7 +32,7 @@ import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-sha
 @Component({
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
-  styleUrls: ['./okr.component.css'],
+  styleUrls: ['./okr.component.scss'],
 })
 export class OKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
@@ -73,6 +73,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   addKRTitle = '';
   addOBTitle = '';
   isAffterRender = false;
+
   constructor(
     inject: Injector,
     private activatedRoute: ActivatedRoute,
@@ -170,8 +171,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         this.changeCalendar(event.data);
         break;
       }
-      case 'SharePlan':
-      {
+      case 'SharePlan': {
         this.sharePlan();
         break;
       }
