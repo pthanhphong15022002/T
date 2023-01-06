@@ -710,7 +710,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   openPopupLink() {
     let option = new DialogModel();
-    option.zIndex = 5000;
+    option.zIndex = 3000;
     this.dialogPopupLink = this.callFuncService.openForm(
       this.addLink,
       '',
@@ -724,13 +724,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   openPopupTemplate(item: any) {
+    let option = new DialogModel();
+    option.zIndex = 2000;
     this.dialog1 = this.callFuncService.openForm(
       TemplateComponent,
       '',
       1200,
       700,
       '',
-      item
+      item,
+      '',
+      option
     );
     this.dialog1.closed.subscribe((e) => {
       if (e?.event) {
