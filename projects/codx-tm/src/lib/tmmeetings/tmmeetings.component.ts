@@ -129,7 +129,7 @@ export class TMMeetingsComponent
         this.tmService.urlback = f.url;
       }
     });
-    if (this.funcID == 'TMT03011') {
+    if (this.funcID == 'TMT03011' || this.funcID == 'TMT05011') {
       this.funcID = 'TMT0501';
     }
     this.cache.moreFunction('TMMeetings', 'grvTMMeetings').subscribe((res) => {
