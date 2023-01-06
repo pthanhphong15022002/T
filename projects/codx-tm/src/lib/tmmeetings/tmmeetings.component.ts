@@ -443,6 +443,7 @@ export class TMMeetingsComponent
         this.delete(data);
         break;
       case 'TMT05011':
+      case 'TMT05012':
         // this.viewDetail(e.data, data);
         this.viewDetail(data);
         break;
