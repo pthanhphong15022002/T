@@ -2007,6 +2007,7 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         vaccineSelected: data,
+        listData: this.lstVaccine,
         headerText: 'Tiêm Vaccine',
         employeeId: this.data.employeeID,
         funcID: 'HRT03020702'
@@ -2097,6 +2098,7 @@ export class EmployeeProfileComponent extends UIComponent {
         salarySelected: null,
         headerText: 'Hợp đồng lao động',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020401'
       },
       option
     );
