@@ -1,5 +1,5 @@
 <layout-list-detail #lstDetail [title]="headerText" [formModel]="formModel" [footer]="footer" [dialog]="dialog"
-    [data]="data" [leftTemlate]="LeftTemlate" [RightTemlate]="body" *ngIf="isAfterRender">
+    [data]="skillObj" [leftTemlate]="LeftTemlate" [RightTemlate]="body" *ngIf="isAfterRender">
     <ng-template #body>
         <div class="form-group row">
             <codx-label fiedName="SkillID" [formModel]="formModel">
