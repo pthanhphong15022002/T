@@ -26,6 +26,14 @@ var childRoutes = [
       ),
   },
   {
+    path: 'dp',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-dp/src/lib/codx-dp.module').then(
+        (m) => m.CodxDpModule
+      ),
+  },
+  {
     path: 'error',
     loadChildren: () =>
       import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
