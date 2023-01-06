@@ -98,7 +98,8 @@ export class CodxCommentsComponent implements OnInit {
       return;
     }
     let comment = new Post()
-    if(this.data){
+    if(this.data)
+    {
       comment = this.data;
     }
     comment.content = this.message;
@@ -142,7 +143,8 @@ export class CodxCommentsComponent implements OnInit {
               this.codxATM.objectId = res.recID;
               this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));;
               this.codxATM.objectType = this.objectType;
-              (await this.codxATM.saveFilesObservable()).subscribe((result:any)=>{
+              (await this.codxATM.saveFilesObservable())
+              .subscribe((result:any)=>{
                 if(result){
                   this.date = new Date();
                   this.fileUpload = result.data;
@@ -160,7 +162,7 @@ export class CodxCommentsComponent implements OnInit {
             this.message = "";
             if(this.fileUpload)
             {
-              this.data.files = JSON.parse(JSON.stringify(this.fileUpload));
+              res.files = JSON.parse(JSON.stringify(this.fileUpload));
               this.codxATM.objectId = res.recID;
               this.codxATM.fileUploadList = JSON.parse(JSON.stringify(this.fileUpload));
               this.codxATM.objectType = this.objectType;

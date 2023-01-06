@@ -56,6 +56,7 @@
           field="Cost"
           [formModel]="formModel"
           [Group]="formGroup"
+          [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -98,7 +99,7 @@
   <codx-listview
     #listView
     [service]="'HR'"
-    [assemblyName]="'CM'"
+    [assemblyName]="'Core'"
     [entityName]="'HR_EVaccines'"
     [className]="'DataBusiness'"
     [method]="'LoadDataAsync'"

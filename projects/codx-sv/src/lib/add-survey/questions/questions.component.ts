@@ -250,7 +250,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     return dataTemp;
   }
 
-  valueChange(e, dataQuestion) {
+  valueChangeMandatory(e, dataQuestion) {
     if (e) {
       this.questions[dataQuestion.seqNo].mandatory = e.data;
     }
@@ -1045,15 +1045,24 @@ export class QuestionsComponent extends UIComponent implements OnInit {
   }
 
   addTemplateSession(seqNoSession, data) {
+    debugger;
+    let lstDataAdd = data;
     data.forEach((x, index) => {
       this.questions.splice(seqNoSession + index + 1, 0, x);
+      x.children.forEach((y) => {
+        y.parentID = x.recID;
+        lstDataAdd.push(y);
+      });
     });
     this.questions.forEach((x, index) => (x.seqNo = index));
     console.log('check addTemplateSession', this.questions);
     this.change.detectChanges();
+    this.SVServices.signalSave.next('saving');
+    this.setTimeoutSaveData(lstDataAdd, true, this.questions);
   }
 
   addTemplateQuestion(itemActive, seqNoSession, data) {
+    debugger;
     data.forEach((x, index) => {
       this.questions[seqNoSession].children.splice(
         itemActive.seqNo + index + 1,
@@ -1075,6 +1084,12 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     );
     console.log('check addTemplateQuestion', this.questions);
     this.change.detectChanges();
+    // this.SVServices.signalSave.next('saving');
+    // this.setTimeoutSaveData(
+    //   [data],
+    //   true,
+    //   this.questions[seqNoSession].children
+    // );
   }
 
   addSession(itemActive, seqNoSession) {
@@ -1619,6 +1634,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
         } else this.notification.alertCode('');
       });
     this.lstDataDelete = [];
+  }
+
+  valueChangeEJS(e, itemSession) {
+    debugger
   }
 
   // onUpdateList(data) {

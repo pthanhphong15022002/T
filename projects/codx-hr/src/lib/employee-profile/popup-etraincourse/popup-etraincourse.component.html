@@ -120,7 +120,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="inYear"
+                field="InYear"
+                [showSpinButton]="false"
               >
               </codx-input>
             </div>
@@ -132,7 +133,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="totalScore"
+                field="TotalScore"
+                [showSpinButton]="false"
               ></codx-input>
             </div>
           </div>
@@ -146,7 +148,7 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="ranking"
+                field="Ranking"
               ></codx-input>
             </div>
             <div class="col-6">
@@ -157,7 +159,7 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="result"
+                field="Result"
               ></codx-input>
             </div>
           </div>
@@ -257,6 +259,30 @@
               </codx-input>
             </div>
           </div>
+          <div class="form-group row">
+            <div class="col-6">
+              <codx-label
+                fiedName="DecisionNo"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="DecisionNo"
+              ></codx-input>
+            </div>
+            <div class="col-6">
+              <codx-label
+                fiedName="IssuedDate"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="formGroup"
+                [formModel]="formModel"
+                field="IssuedDate"
+              ></codx-input>
+            </div>
+          </div>
 
           <div class="form-group row">
             <div class="col-6">
@@ -334,6 +360,7 @@
                 [Group]="formGroup"
                 [formModel]="formModel"
                 field="limitMonths"
+                [showSpinButton]="false"
               ></codx-input>
             </div>
           </div>
@@ -393,7 +420,7 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="contractNo"
+                field="ContractNo"
               >
               </codx-input>
             </div>
@@ -420,7 +447,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                field="contractAmount"
+                field="ContractAmount"
+                [showSpinButton]="false"
               >
               </codx-input>
             </div>
@@ -432,8 +460,8 @@
               <codx-input
                 [Group]="formGroup"
                 [formModel]="formModel"
-                [data]=""
-                field="contractMonths"
+                field="ContractMonths"
+                [showSpinButton]="false"
               >
               </codx-input>
             </div>
