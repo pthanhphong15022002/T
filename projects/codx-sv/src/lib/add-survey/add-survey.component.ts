@@ -100,7 +100,7 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
   }
 
   review() {
-    this.codxService.openUrlNewTab('', 'sv/review', {
+    this.codxService.openUrlNewTab('', 'tester/sv/review', {
       funcID: this.funcID,
       title: this.title,
       recID: this.recID,
