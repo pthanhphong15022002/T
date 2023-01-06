@@ -158,7 +158,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
           this.visaObj.recID = p.recID;
           this.notify.notifyCode('SYS007');
           this.lstVisas.push(JSON.parse(JSON.stringify(this.visaObj)));
-          console.log('list visa', this.lstVisas);
 
           if (this.listView) {
             (this.listView.dataService as CRUDService)
@@ -187,7 +186,6 @@ export class PopupEVisasComponent extends UIComponent implements OnInit {
   }
 
   click(data) {
-    console.log('formdata', data);
     this.visaObj = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.visaObj));
     // this.indexSelected = this.lstVisas.indexOf(this.visaObj)

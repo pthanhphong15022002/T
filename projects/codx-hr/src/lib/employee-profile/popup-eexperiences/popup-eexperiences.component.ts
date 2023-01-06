@@ -1,4 +1,4 @@
-import { dialog } from '@syncfusion/ej2-angular-spreadsheet';
+
 import { FormGroup } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
 import { Injector, ChangeDetectorRef } from '@angular/core';
@@ -151,7 +151,6 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
           this.data.recID = p.recID;
           this.notify.notifyCode('SYS007');
           this.lstExperience.push(JSON.parse(JSON.stringify(this.data)));
-          console.log('list visa', this.lstExperience);
 
           if (this.listView) {
             (this.listView.dataService as CRUDService)
@@ -188,7 +187,6 @@ export class PopupEexperiencesComponent extends UIComponent implements OnInit {
   }
 
   click(data) {
-    console.log(data);
     this.data = data;
     this.formModel.currentData = JSON.parse(JSON.stringify(this.data));
     this.actionType = 'edit';
