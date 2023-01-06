@@ -210,16 +210,6 @@ export class CodxEpService {
       .subscribe();
   }
 
-  getParams(formName, fieldName) {
-    return this.api.execSv(
-      'SYS',
-      'ERM.Business.SYS',
-      'SettingValuesBusiness',
-      'GetOneField',
-      [formName, null, fieldName]
-    );
-  }
-
   getListResource(resourceType: string) {
     return this.api.execSv(
       'EP',
