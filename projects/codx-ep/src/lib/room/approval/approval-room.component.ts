@@ -84,9 +84,9 @@ export class ApprovalRoomsComponent extends UIComponent {
     this.request.service = 'EP';
     this.request.method = 'GetListApprovalAsync';
     this.request.idField = 'recID';
-    if(this.queryParams?.predicate && this.queryParams?.dataValue){
-      this.request.predicate=this.queryParams?.predicate;
-      this.request.dataValue=this.queryParams?.dataValue;
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.request.predicate = this.queryParams?.predicate;
+      this.request.dataValue = this.queryParams?.dataValue;
     }
 
     this.modelResource = new ResourceModel();
@@ -273,13 +273,10 @@ export class ApprovalRoomsComponent extends UIComponent {
                         .subscribe((res) => {
                           //Duyệt VPP tự dộng
                           this.codxEpService
-                            .getParams(
-                              'EPStationeryParameters',
-                              'AutoApproveItem'
-                            )
-                            .subscribe((res) => {
+                            .getEPStationerySetting('1')
+                            .subscribe((res:any) => {
                               if (res) {
-                                let dataValue = res[0].dataValue;
+                                let dataValue = res.dataValue;
                                 let json = JSON.parse(dataValue);
                                 if (
                                   json.AutoApproveItem &&
