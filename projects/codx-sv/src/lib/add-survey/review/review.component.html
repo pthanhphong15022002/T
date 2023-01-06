@@ -324,11 +324,10 @@
   </div>
   <div class="e-input-group" *ngIf="itemQuestion.answerType == 'C'">
     <codx-input
-      type="radio"
+      type="checkbox"
       labelPosition="After"
       [disabled]="false"
       class="test-check"
-      name="group"
       [label]="itemAnswer.answer"
       field="C"
       [checked]="itemAnswer.choose"
@@ -351,8 +350,6 @@
     <codx-input
       type="text"
       class="border-0"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
       [crrValue]="itemAnswer.answer"
       field="T"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
@@ -369,9 +366,10 @@
       type="textarea"
       class="test-textarea"
       ngDefaultControl
-      field="memo"
       rows="auto"
-      [crrValue]="empty"
+      [crrValue]="itemAnswer.answer"
+      field="T2"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     >
     </codx-input>
   </div>
@@ -439,22 +437,24 @@
     </table>
   </div>
   <div class="ms-6" *ngIf="itemQuestion.answerType == 'D'">
-    <codx-input type="datetime" format="d"> </codx-input>
+    <codx-input
+      type="datetime"
+      format="d"
+      class="test-datetime"
+      [crrValue]="itemAnswer.answer"
+      field="D"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+    ></codx-input>
   </div>
   <div class="d-flex ms-6" *ngIf="itemQuestion.answerType == 'H'">
-    <input
-      class="e-input"
-      type="text"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-    />
-    <span>:</span>
-    <input
-      class="e-input"
-      type="text"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-    />
+    <codx-input
+      type="datetime"
+      format="t"
+      class="test-datetime"
+      [crrValue]="itemAnswer.answer"
+      field="H"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+    ></codx-input>
   </div>
   <ng-container
     #iconRight
