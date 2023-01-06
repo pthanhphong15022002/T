@@ -35,6 +35,7 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
   actionType
   notitfy: NotificationsService;
   funcID;
+  idField = 'RecID';
   employId;
   isAfterRender = false;
   headerText: ''
@@ -67,40 +68,83 @@ export class PopupEDisciplinesComponent extends UIComponent implements OnInit {
     this.employId = data?.data?.employeeId;
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.dialog.formModel.funcID;
+    this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.lstDiscipline = data?.data?.lstDiscipline
     this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
 
     if(this.actionType === 'edit' || this.actionType ==='copy'){
       this.disciplineObj = JSON.parse(JSON.stringify(this.lstDiscipline[this.indexSelected]));
-      this.formModel.currentData = this.disciplineObj
+      // this.formModel.currentData = this.disciplineObj
     }
   }
   
   initForm(){
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrService.getEmployeeAwardModel().subscribe(p => {
-            this.disciplineObj = p;
-            this.formModel.currentData = this.disciplineObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
-          })  
-        }
-        this.formGroup.patchValue(this.disciplineObj)
-        this.isAfterRender = true
-      }); 
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     this.formGroup = item;  
+    //     if(this.actionType == 'add'){
+    //       this.hrService.getEmployeeAwardModel().subscribe(p => {
+    //         this.disciplineObj = p;
+    //         this.formModel.currentData = this.disciplineObj
+    //         // this.dialog.dataService.dataSelected = this.data
+    //         console.log('du lieu formmodel',this.formModel.currentData);
+    //       })  
+    //     }
+    //     this.formGroup.patchValue(this.disciplineObj)
+    //     this.isAfterRender = true
+    //   }); 
+
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.disciplineObj = res?.data;
+            this.disciplineObj.employeeID = this.employId;
+            this.formModel.currentData = this.disciplineObj;
+            this.formGroup.patchValue(this.disciplineObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.disciplineObj);
+        this.formModel.currentData = this.disciplineObj;
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
   onInit(): void {
-      this.initForm()
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
   
   onSaveForm(){
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.disciplineObj.recID
     }
