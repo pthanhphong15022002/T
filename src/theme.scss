@@ -45,6 +45,9 @@
         --arrow-color: #005dc7;
         --bg-color: #005dc7;
         --border-light: #D3E8FF;
+        --bg-aside-dark: #041b33;
+
+
     }
 
     &.orange {
@@ -66,6 +69,7 @@
         --arrow-color: #fd492a;
         --bg-color: #fd492a;
         --border-light: #ffdac8;
+        --bg-aside-dark: #3f1704;
     }
 
     &.sapphire {
@@ -87,6 +91,7 @@
         --arrow-color: #13a597;
         --bg-color: #13a597;
         --border-light: #c8fffc;
+        --bg-aside-dark: #032e2c;
     }
 
     &.green {
@@ -108,6 +113,7 @@
         --arrow-color: #0f8633;
         --bg-color: #0f8633;
         --border-light: #c8ffcd;
+        --bg-aside-dark: #032909;
     }
 
     &.purple {
@@ -129,6 +135,7 @@
         --arrow-color: #5710b2;
         --bg-color: #5710b2;
         --border-light: #dbc5f5;
+        --bg-aside-dark: #1e033f;
     }
 
     &.dark {
@@ -174,6 +181,7 @@
         --gray-900: #FFFFFF;
 
         @import "src/theme-dark.scss";
+
         color: var(--text-body);
     }
 

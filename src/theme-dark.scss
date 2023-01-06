@@ -38,6 +38,15 @@
     fill: var(-text-gray-600);
 }
 
+
+// .aside.aside-light {
+//     background-color: var(--bg-aside-dark);
+// }
+
+// .aside-menu .menu .menu-item .menu-link.active {
+//     background-color: rgba(0, 0, 0, 0.15) !important;
+// }
+
 ejs-listview {
     background-color: var(--bg-card);
 }
@@ -453,6 +462,22 @@ h1,
 .codx-search>input {
     background-color: transparent;
     color: var(--text-title);
+}
+
+.e-kanban {
+    background: var(--bg-body);
+}
+
+.e-kanban .card {
+    background: var(--bg-card);
+}
+
+codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card {
+    border: var(--border-gray);
+}
+
+.e-kanban .e-kanban-table.e-content-table .e-card {
+    background: transparent;
 }
 
 //end dark
