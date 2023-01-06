@@ -470,7 +470,7 @@
         <div 
           class="view-all symbol symbol-35px symbol-circle" 
           #search="ngbPopover"
-          (click)="seachUser(data,search)" 
+          (click)="seachUser($event,data,search)" 
           [ngbPopover]="searchOwner"
           autoClose="outside"
           placement="bottom top left right"        
