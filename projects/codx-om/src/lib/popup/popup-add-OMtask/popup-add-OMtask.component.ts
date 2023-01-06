@@ -1,4 +1,3 @@
-import { CodxOmService } from './../../codx-om.service';
 import { Injector, Optional, ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import {
@@ -11,13 +10,14 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { FormGroup } from '@angular/forms';
+import { CodxOmService } from 'projects/codx-om/src/public-api';
 
 @Component({
-  selector: 'lib-popup-add-task',
-  templateUrl: './popup-add-task.component.html',
-  styleUrls: ['./popup-add-task.component.scss'],
+  selector: 'lib-popup-add-OMtask',
+  templateUrl: './popup-add-OMtask.component.html',
+  styleUrls: ['./popup-add-OMtask.component.scss'],
 })
-export class PopupAddTaskComponent extends UIComponent {
+export class PopupAddOMTaskComponent extends UIComponent {
   @ViewChild('attachment') attachment: AttachmentComponent;
   headerText: string = 'Tạo công việc';
   data: any;
@@ -39,7 +39,6 @@ export class PopupAddTaskComponent extends UIComponent {
     super(injector);
     this.dialogRef = dialogRef;
     this.data = dialogData;
-    debugger;
     this.formModel = this.dialogRef?.formModel;
   }
 
@@ -51,7 +50,6 @@ export class PopupAddTaskComponent extends UIComponent {
     this.omService.getFormGroup('OMTasks', 'grvOMTasks').then((item) => {
       this.fGroupAddTask = item;
       this.fGroupAddTask.patchValue({ refType: 'OM_Tasks', status: '1' });
-      console.log('Form', this.fGroupAddTask.value);
       this.isAfterRender = true;
     });
   }
@@ -93,7 +91,6 @@ export class PopupAddTaskComponent extends UIComponent {
     option.assemblyName = 'TM';
     option.className = 'TaskBusiness';
     option.methodName = 'AddTaskAsync';
-    debugger;
     option.data = [itemData, 'OMT013'];
     return true;
   }

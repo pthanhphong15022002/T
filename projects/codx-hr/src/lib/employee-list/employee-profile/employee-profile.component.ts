@@ -1746,6 +1746,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
+        funcID: 'HRT03020601',
       },
       option
     );
@@ -1851,6 +1852,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -2007,6 +2009,7 @@ export class EmployeeProfileComponent extends UIComponent {
       {
         actionType: actionType,
         vaccineSelected: data,
+        listData: this.lstVaccine,
         headerText: 'Tiêm Vaccine',
         employeeId: this.data.employeeID,
         funcID: 'HRT03020702'
@@ -2097,6 +2100,7 @@ export class EmployeeProfileComponent extends UIComponent {
         salarySelected: null,
         headerText: 'Hợp đồng lao động',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020401'
       },
       option
     );

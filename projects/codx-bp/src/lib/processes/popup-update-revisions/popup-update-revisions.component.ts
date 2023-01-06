@@ -98,7 +98,6 @@ export class PopupUpdateRevisionsComponent implements OnInit {
             user.postion= this.index;
             this.listUserShow.push(user);
             this.index++;
-          console.log(user);
         },
         );
       });
