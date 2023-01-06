@@ -1746,6 +1746,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
+        funcID: 'HRT03020601',
       },
       option
     );
@@ -1851,6 +1852,7 @@ export class EmployeeProfileComponent extends UIComponent {
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
