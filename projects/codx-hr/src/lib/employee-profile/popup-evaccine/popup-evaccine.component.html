@@ -56,6 +56,7 @@
           field="Cost"
           [formModel]="formModel"
           [Group]="formGroup"
+          [showSpinButton]="false"
         ></codx-input>
       </div>
       <div class="col-6">
@@ -98,7 +99,7 @@
   <codx-listview
     #listView
     [service]="'HR'"
-    [assemblyName]="'CM'"
+    [assemblyName]="'Core'"
     [entityName]="'HR_EVaccines'"
     [className]="'DataBusiness'"
     [method]="'LoadDataAsync'"
@@ -115,10 +116,8 @@
   <codx-temp-full
     [formModel]="formModel"
     [typeMF]="'hover'"
-    [title]="data?.vaccineTypeID + ' - ' + (data.vaccineName ?? '')"
-    [icoTitleCss]="'icon-i-arrow-left-circle-fill'"
     cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-    [subTitleTmp]="tmplateEJobSalaries"
+    [footer]="footerEVaccines"
     [dataItem]="data"
     typeMF="hover"
     [hideMF]="true"
@@ -127,9 +126,50 @@
   </codx-temp-full>
 </ng-template>
 
-<ng-template #tmplateEJobSalaries let-data1>
-  <div class="d-flex flex-column">
-    <div><i class="icon-list_alt"></i>{{ data1.injectDate | fmDT }}</div>
-    <div><i class="icon-edit_fill"></i>{{ data1.note }}</div>
+<ng-template #footerEVaccines let-data1>
+  <div class="d-flex flex-column mt-1">
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span
+          class="me-1 icon-i-arrow-down-left-circle-fill icon-14"
+          style="color: blueviolet"
+        ></span>
+        <span class="text-dark" #vaccineTypeID>
+          {{
+            data1?.vaccineTypeID
+              | formatvalue : formModel : "vaccineTypeID" : vaccineTypeID
+              | async
+          }}
+        </span>
+      </div>
+      <div class="d-flex align-items-center" *ngIf="data1?.vaccineName && data1?.vaccineName!=''">
+        <span
+          class="icon-i-arrow-down-left-circle-fill fs-icon fs-10 ms-2 me-2 text-gray-400"
+        ></span>
+        <span class="text-primary">
+          <span #vaccineName>{{
+            data1?.vaccineName
+              | formatvalue : formModel : "vaccineName" : vaccineName
+              | async
+          }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="me-1 icon-i-calendar4-event icon-14 text-gray-600"></span>
+        <span class="text-dark">
+          <span>{{ data1.injectDate | fmDT }}</span>
+        </span>
+      </div>
+    </div>
+    <div class="d-flex flex-wrap mb-1">
+      <div class="d-flex align-items-center">
+        <span class="icon-edit_fill icon-14 me-1"></span>
+        <span class="text-dark" #note>
+          {{ data1?.note | formatvalue : formModel : "note" : note | async }}
+        </span>
+      </div>
+    </div>
   </div>
 </ng-template>

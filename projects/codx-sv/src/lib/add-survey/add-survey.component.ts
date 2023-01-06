@@ -11,6 +11,8 @@ import {
 } from '@angular/core';
 import { CodxService, UIComponent, ViewModel, ViewType } from 'codx-core';
 import { CodxSvService } from '../codx-sv.service';
+import { SV_Questions } from '../model/SV_Questions';
+import { SV_Surveys } from '../model/SV_Surveys';
 
 @Component({
   selector: 'app-add-survey',
@@ -55,6 +57,77 @@ export class AddSurveyComponent extends UIComponent implements OnInit {
 
   onInit(): void {
     this.getSignalAfterSave();
+  }
+
+  generateGUID() {
+    var d = new Date().getTime(); //Timestamp
+    var d2 =
+      (typeof performance !== 'undefined' &&
+        performance.now &&
+        performance.now() * 1000) ||
+      0; //Time in microseconds since page-load or 0 if unsupported
+    var GUID;
+    return (GUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
+      /[xy]/g,
+      function (c) {
+        var r = Math.random() * 16; //random number between 0 and 16
+        if (d > 0) {
+          //Use timestamp until depleted
+          r = (d + r) % 16 | 0;
+          d = Math.floor(d / 16);
+        } else {
+          //Use microseconds since page-load if supported
+          r = (d2 + r) % 16 | 0;
+          d2 = Math.floor(d2 / 16);
+        }
+        return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+      }
+    ));
+  }
+
+  questionAdd: SV_Questions = new SV_Questions();
+
+  surveys: SV_Surveys = new SV_Surveys();
+  addSV() {
+    this.surveys.title = 'Đăng ký sự kiện';
+    this.surveys.memo = 'Đăng ký sự kiện';
+    this.api
+      .exec('ERM.Business.SV', 'SurveysBusiness', 'SaveAsync', [
+        this.surveys,
+        null,
+        true,
+      ])
+      .subscribe((res) => {
+        debugger;
+        if (res) {
+        }
+      });
+  }
+  add() {
+    var dataAnswerTemp = [
+      {
+        seqNo: 0,
+        answer: `Tùy chọn 1`,
+      },
+    ];
+    this.questionAdd.transID = 'dced3e82-8d71-11ed-9499-00155d035517';
+    this.questionAdd.seqNo = 0;
+    this.questionAdd.category = 'S';
+    this.questionAdd.question = 'Câu hỏi session 1';
+    this.questionAdd.answers = null;
+    this.questionAdd.answerType = null;
+    this.questionAdd.parentID = null;
+
+    this.api
+      .exec('ERM.Business.SV', 'QuestionsBusiness', 'SaveAsync', [
+        'dced3e82-8d71-11ed-9499-00155d035517',
+        [this.questionAdd],
+        true,
+      ])
+      .subscribe((res) => {
+        if (res) {
+        }
+      });
   }
 
   getSignalAfterSave() {

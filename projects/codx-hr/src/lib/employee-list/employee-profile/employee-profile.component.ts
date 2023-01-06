@@ -1721,6 +1721,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstDiscipline: this.lstDiscipline,
         headerText: 'Kỷ luật',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020602',
       },
       option
     );
@@ -1745,6 +1746,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAwards: this.lstAwards,
         employeeId: this.data.employeeID,
         headerText: 'Khen thưởng',
+        funcID: 'HRT03020601',
       },
       option
     );
@@ -1770,6 +1772,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAccident: this.lstAccident,
         employeeId: this.data.employeeID,
         headerText: 'Tai nạn lao động',
+        funcID: 'HRT03020704'
       },
       option
     );
@@ -1842,12 +1845,14 @@ export class EmployeeProfileComponent extends UIComponent {
         indexSelected: this.lstCertificates.indexOf(data),
         lstCertificates: this.lstCertificates,
         headerText: 'Chứng chỉ',
+        funcID: 'HRT03020502',
         employeeId: this.data.employeeID,
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (!res?.event) this.view.dataService.clear();
+      this.df.detectChanges();
     });
   }
 
@@ -1875,7 +1880,7 @@ export class EmployeeProfileComponent extends UIComponent {
     });
   }
 
-  addEmployeeSkillsInfo() {
+  HandleEmployeeSkillsInfo(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
@@ -1884,9 +1889,13 @@ export class EmployeeProfileComponent extends UIComponent {
     let dialogAdd = this.callfunc.openSide(
       PopupESkillsComponent,
       {
-        isAdd: true,
+        lstESkill: this.lstESkill,
+        indexSelected: this.lstESkill.indexOf(data),
+        actionType: actionType,
+        // isAdd: true,
         headerText: 'Kỹ năng',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020503',
       },
       option
     );
@@ -1909,6 +1918,7 @@ export class EmployeeProfileComponent extends UIComponent {
         headerText: 'Đào tạo',
         employeeId: this.data.employeeID,
         actionType: 'add',
+        funcID: 'HRT03020504'
       },
       option
     );
@@ -1991,15 +2001,15 @@ export class EmployeeProfileComponent extends UIComponent {
   addEditEVaccines(actionType: string, data: any) {
     // this.hrService.addEVaccine(null).subscribe();
     // return;
-    this.view.dataService.dataSelected = this.data;
+    // this.view.dataService.dataSelected = data;
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEVaccineComponent,
       {
         actionType: actionType,
-        salarySelected: data,
+        vaccineSelected: data,
+        listData: this.lstVaccine,
         headerText: 'Tiêm Vaccine',
         employeeId: this.data.employeeID,
         funcID: 'HRT03020702'
@@ -2090,6 +2100,7 @@ export class EmployeeProfileComponent extends UIComponent {
         salarySelected: null,
         headerText: 'Hợp đồng lao động',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020401'
       },
       option
     );
