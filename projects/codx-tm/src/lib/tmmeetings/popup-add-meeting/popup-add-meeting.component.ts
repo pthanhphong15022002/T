@@ -29,6 +29,7 @@ import {
   CallFuncService,
   CacheService,
   AlertConfirmInputConfig,
+  DialogModel,
 } from 'codx-core';
 import moment from 'moment';
 import { TemplateComponent } from '../template/template.component';
@@ -713,11 +714,17 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   }
 
   openPopupLink() {
+    let option = new DialogModel();
+    option.zIndex = 5000;
     this.dialogPopupLink = this.callFuncService.openForm(
       this.addLink,
       '',
       500,
-      10
+      10,
+      '',
+      null,
+      '',
+      option
     );
   }
 
