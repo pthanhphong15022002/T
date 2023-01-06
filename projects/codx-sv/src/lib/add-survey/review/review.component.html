@@ -318,7 +318,6 @@
       [label]="itemAnswer.answer"
       field="O"
       [checked]="itemAnswer.choose"
-      [crrValue]="itemAnswer.choose"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
   </div>
@@ -331,7 +330,6 @@
       [label]="itemAnswer.answer"
       field="C"
       [checked]="itemAnswer.choose"
-      [crrValue]="itemAnswer.choose"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
   </div>
@@ -456,25 +454,6 @@
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
   </div>
-  <ng-container
-    #iconRight
-    *ngIf="
-      itemQuestion.active &&
-      (itemQuestion.answerType == 'O' || itemQuestion.answerType == 'C')
-    "
-  >
-    <div class="has-action-menu" *ngIf="!itemAnswer.other">
-      <div class="action-menu">
-        <span class="icon-image icon-24 pd-10"></span>
-      </div>
-    </div>
-    <div
-      [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-      *ngIf="itemQuestion.answers?.length > 1"
-    >
-      <span class="icon-close icon-24 pd-s-e-10"></span>
-    </div>
-  </ng-container>
 </ng-template>
 <ng-template
   #tempAnswers_showAnswer
