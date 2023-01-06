@@ -54,6 +54,10 @@
         "dist/codx-dm/codx-dm",
         "dist/codx-dm"
       ],
+      "codx-dp": [
+        "dist/codx-dp/codx-dp",
+        "dist/codx-dp"
+      ],
       "codx-ei": [
         "dist/codx-ei/codx-ei",
         "dist/codx-ei"

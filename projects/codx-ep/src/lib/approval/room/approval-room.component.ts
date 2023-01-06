@@ -209,10 +209,7 @@ export class ApprovalRoomsComponent extends UIComponent {
                         .subscribe((res) => {
                           //Duyệt VPP tự dộng
                           this.codxEpService
-                            .getParams(
-                              'EPStationeryParameters',
-                              'AutoApproveItem'
-                            )
+                          .getEPStationerySetting('1')
                             .subscribe((res) => {
                               if (res) {
                                 let dataValue = res[0].dataValue;

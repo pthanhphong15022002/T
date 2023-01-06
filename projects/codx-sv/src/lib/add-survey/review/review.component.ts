@@ -23,6 +23,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   respondents: SV_Respondents = new SV_Respondents();
 
   questions: any = [];
+  lstAnswers: any = [];
   functionList: any;
   recID: any;
   funcID: any;
@@ -100,6 +101,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
+          console.log("check data", this.questions)
           this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
           this.itemSessionFirst = JSON.parse(JSON.stringify(this.questions[0]));
           //hàm lấy safe url của các question là video youtube
@@ -130,6 +132,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
             if (y.answers) {
               y.answers.forEach((z) => {
                 z['choose'] = false;
+                this.lstAnswers.push(z);
               });
             }
           });
@@ -201,7 +204,12 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.questions[itemSession.seqNo].children[itemQuestion.seqNo].answers[
           itemAnswer.seqNo
         ]['choose'] = !e.data;
-      } else if (e.field == 'T' || e.field == 'T2' || e.field == 'D' || e.field == 'H') {
+      } else if (
+        e.field == 'T' ||
+        e.field == 'T2' ||
+        e.field == 'D' ||
+        e.field == 'H'
+      ) {
         results = [
           {
             seqNo: 0,
@@ -212,7 +220,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         ];
         this.questions[itemSession.seqNo].children[
           itemQuestion.seqNo
-        ].answers[0].answer = e.value;
+        ].answers[0].answer = e.data;
       } else
         results = [
           {
