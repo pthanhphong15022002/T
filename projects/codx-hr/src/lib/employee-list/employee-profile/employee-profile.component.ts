@@ -1771,6 +1771,7 @@ export class EmployeeProfileComponent extends UIComponent {
         lstAccident: this.lstAccident,
         employeeId: this.data.employeeID,
         headerText: 'Tai nạn lao động',
+        funcID: 'HRT03020704'
       },
       option
     );
@@ -1915,6 +1916,7 @@ export class EmployeeProfileComponent extends UIComponent {
         headerText: 'Đào tạo',
         employeeId: this.data.employeeID,
         actionType: 'add',
+        funcID: 'HRT03020504'
       },
       option
     );

@@ -89,25 +89,30 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
           this.formModel.entityName,
           this.idField
         )
-        .subscribe((res: any) => {
-          if (res) {
+        .subscribe((res) => {
+          if (res && res.data) {
             this.data = res?.data;
             this.data.employeeID = this.employeeId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
             this.cr.detectChanges();
             this.isAfterRender = true;
-          }
-        });
+          } else {
+            this.notify.notify('Error');
+        }
+      });
     } else {
-      this.formModel.currentData = this.data;
-      this.formGroup.patchValue(this.data);
       this.cr.detectChanges();
       this.isAfterRender = true;
     }
   }
 
   onSaveForm(isClose: boolean) {
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.hrService.addEVaccine(this.data).subscribe((res) => {
         if (res) {
