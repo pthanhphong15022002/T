@@ -201,7 +201,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
         this.questions[itemSession.seqNo].children[itemQuestion.seqNo].answers[
           itemAnswer.seqNo
         ]['choose'] = !e.data;
-      } else if (e.field == 'T' || e.field == 'T2') {
+      } else if (e.field == 'T' || e.field == 'T2' || e.field == 'D' || e.field == 'H') {
         results = [
           {
             seqNo: 0,

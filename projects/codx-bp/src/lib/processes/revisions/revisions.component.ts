@@ -172,7 +172,6 @@ export class RevisionsComponent implements OnInit {
           this.comment,
           this.entityName,
           this.fucntionIdMain
-          //this.user.userName
         )
         .subscribe((res) => {
           if (res) {
