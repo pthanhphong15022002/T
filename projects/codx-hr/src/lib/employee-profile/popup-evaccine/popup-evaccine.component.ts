@@ -28,7 +28,6 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   data: any;
-  currentEJobSalaries: any;
   funcID: string;
   idField: string = 'recID';
   actionType: string;
@@ -47,12 +46,6 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    // if (!this.formModel) {
-    //   this.formModel = new FormModel();
-    //   this.formModel.entityName = 'HR_EVaccines';
-    //   this.formModel.formName = 'EVaccines';
-    //   this.formModel.gridViewName = 'grvEVaccines';
-    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
@@ -60,8 +53,7 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
     this.funcID = data?.data?.funcID;
 
     if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.data = JSON.parse(JSON.stringify(data?.data?.salarySelected));
-      this.formModel.currentData = this.data;
+      this.data = JSON.parse(JSON.stringify(data?.data?.vaccineSelected));
     }
   }
 
@@ -102,7 +94,9 @@ export class PopupEVaccineComponent extends UIComponent implements OnInit {
         }
       });
     } else {
-      this.cr.detectChanges();
+      this.formModel.currentData = this.data;
+      this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();;
       this.isAfterRender = true;
     }
   }
