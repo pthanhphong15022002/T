@@ -150,9 +150,42 @@ export class QuestionsComponent extends UIComponent implements OnInit {
             if (queryParams?.recID) {
               this.recID = queryParams.recID;
             }
-            this.loadData();
+            this.loadData(this.recID);
           }
         });
+      } else {
+        this.questions = [
+          {
+            seqNo: 0,
+            question: null,
+            answers: null,
+            other: false,
+            mandatory: false,
+            answerType: null,
+            category: 'S',
+            children: [
+              {
+                seqNo: 0,
+                question: 'Câu hỏi 1',
+                answers: [
+                  {
+                    seqNo: 0,
+                    answer: 'Tùy chọn 1',
+                    other: false,
+                    isColumn: false,
+                    hasPicture: false,
+                  },
+                ],
+                other: true,
+                mandatory: false,
+                answerType: 'O',
+                category: 'Q',
+              },
+            ],
+          },
+        ];
+        this.questions[0].children[0]['active'] = true;
+        this.itemActive = this.questions[0].children[0];
       }
     });
   }
@@ -179,12 +212,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     }
   }
 
-  loadData() {
+  loadData(recID) {
     this.questions = null;
     this.api
-      .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [
-        this.recID,
-      ])
+      .exec('ERM.Business.SV', 'QuestionsBusiness', 'GetByRecIDAsync', [recID])
       .subscribe((res: any) => {
         if (res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
@@ -1505,7 +1536,7 @@ export class QuestionsComponent extends UIComponent implements OnInit {
       !this.questions[seqNoSession].children[seqNoQuestion]['showAnswer'];
   }
 
-  valueChangeAnswer(event, seqNoSession, seqNoQuestion, seqNoAnswer) {
+  valueChangeShowAnswer(event, seqNoSession, seqNoQuestion, seqNoAnswer) {
     if (event.data == true) {
       var dataTemp = JSON.parse(
         JSON.stringify(
@@ -1636,8 +1667,39 @@ export class QuestionsComponent extends UIComponent implements OnInit {
     this.lstDataDelete = [];
   }
 
-  valueChangeEJS(e, itemSession) {
-    debugger
+  valueChangeSessionEJS(e, itemSession, field) {
+    if (e && e != itemSession[field]) {
+      let dataTemp = JSON.parse(JSON.stringify(this.questions));
+      dataTemp[itemSession.seqNo][field] = e;
+      this.SVServices.signalSave.next('saving');
+      this.setTimeoutSaveData([dataTemp[itemSession.seqNo]], false);
+    }
+  }
+
+  valueChangeQuestionEJS(e, itemSession, itemQuestion, field) {
+    if (e && e != itemQuestion[field]) {
+      let dataTemp = JSON.parse(JSON.stringify(this.questions));
+      dataTemp[itemSession.seqNo].children[itemQuestion.seqNo][field] = e;
+      this.SVServices.signalSave.next('saving');
+      this.setTimeoutSaveData(
+        [dataTemp[itemSession.seqNo].children[itemQuestion.seqNo]],
+        false
+      );
+    }
+  }
+
+  valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
+    if (e.data && e.data != itemAnswer[e.field]) {
+      let dataTemp = JSON.parse(JSON.stringify(this.questions));
+      dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[
+        itemAnswer.seqNo
+      ][e.field] = e.data;
+      this.SVServices.signalSave.next('saving');
+      this.setTimeoutSaveData(
+        [dataTemp[seqNoSession].children[itemQuestion.seqNo]],
+        false
+      );
+    }
   }
 
   // onUpdateList(data) {
