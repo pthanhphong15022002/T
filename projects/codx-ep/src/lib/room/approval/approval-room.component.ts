@@ -12,6 +12,7 @@ import {
   ViewType,
 } from 'codx-core';
 import { CodxEpService } from '../../codx-ep.service';
+import { FuncID } from '../../models/enum/enum';
 
 @Component({
   selector: 'approval-room',
@@ -268,13 +269,13 @@ export class ApprovalRoomsComponent extends UIComponent {
                           booking,
                           category.processID,
                           'EP_Bookings',
-                          'EPT31'
+                          FuncID.BookingStationery
                         )
                         .subscribe((res) => {
                           //Duyệt VPP tự dộng
                           this.codxEpService
                             .getEPStationerySetting('1')
-                            .subscribe((res:any) => {
+                            .subscribe((res: any) => {
                               if (res) {
                                 let dataValue = res.dataValue;
                                 let json = JSON.parse(dataValue);
