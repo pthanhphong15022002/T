@@ -1485,7 +1485,8 @@ export class ProcessStepsComponent
     }
   }
 
-  seachUser(value,p){
+  seachUser(e,value,p){
+    e.stopPropagation();
     // p.open();
     this.popupSearch = p;
     this.listUserSearch = value;
@@ -1502,6 +1503,9 @@ export class ProcessStepsComponent
     this.listUserSearch = resouscesSearch;
   }
   closePopup(){
+    console.log("thuan ----------");
+    
+    return true;
     // this.popupSearch.close();
   }
 }
