@@ -1642,8 +1642,8 @@ export class CodxHrService {
     funcID: string,
     entityName: string,
     idField: string
-  ): Observable<object> {
-    return this.api.execSv('HR', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+  ){
+    return this.api.execSv<any>('HR', 'Core', 'DataBusiness', 'GetDefaultAsync', [
       funcID,
       entityName,
       idField,

@@ -84,6 +84,9 @@
                         (evtAddFile)="addFile($event)" 
                         [edit]='true'>
                     </codx-file>
+                    <!-- <codx-view-files #codxViewFiles [allowEdit]="true" [formModel]="dialogRef.formModel" [objectType]="'WP_Comments'">
+
+                    </codx-view-files> -->
                 </ng-template>
             </div>
             <!-- template chia sẻ -->
@@ -145,8 +148,8 @@
                                 objectType="WP_Comments" 
                                 hideFolder="1" 
                                 hideUploadBtn="1" 
-                                hideDes="1" type="inline"
-                                allowExtensions=".jpg,.png" 
+                                hideDes="1" 
+                                type="inline"
                                 allowMultiFile="1" 
                                 [showMessage]="0" 
                                 (fileCount)="getfileCount($event)"

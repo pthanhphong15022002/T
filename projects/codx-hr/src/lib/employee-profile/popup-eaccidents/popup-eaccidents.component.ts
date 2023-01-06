@@ -1,12 +1,7 @@
 import { FormGroup } from '@angular/forms';
-import { CodxHrService } from '../../codx-hr.service'
+import { CodxHrService } from '../../codx-hr.service';
 import { Injector, ChangeDetectorRef } from '@angular/core';
-import { 
-  Component, 
-  OnInit,
-  Optional,
-  ViewChild  
-} from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 
 import {
   CodxFormComponent,
@@ -17,22 +12,24 @@ import {
   FormModel,
   NotificationsService,
   UIComponent,
- } from 'codx-core';
+} from 'codx-core';
 
 @Component({
   selector: 'lib-popup-eaccidents',
   templateUrl: './popup-eaccidents.component.html',
-  styleUrls: ['./popup-eaccidents.component.css']
+  styleUrls: ['./popup-eaccidents.component.css'],
 })
-export class PopupEaccidentsComponent  extends UIComponent implements OnInit {
+export class PopupEaccidentsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formGroup: FormGroup;
-  grvSetup
-  headerText: ''
-  indexSelected
+  grvSetup;
+  headerText: '';
+  indexSelected;
   dialog: DialogRef;
   accidentObj;
   employeeId: string;
+  funcID: string;
+  idField: string = 'recID';
   lstAccident;
   actionType;
   data;
@@ -49,81 +46,96 @@ export class PopupEaccidentsComponent  extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.entityName = 'HR_EAccidents';
-      this.formModel.formName = 'EAccidents';
-      this.formModel.gridViewName = 'grvEAccidents';
-    }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
     this.lstAccident = data?.data?.lstAccident;
-    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+    this.funcID = data?.data?.funcID;
+    this.indexSelected =
+      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
 
     if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.accidentObj = JSON.parse(JSON.stringify(this.lstAccident[this.indexSelected]));
-      this.formModel.currentData = this.accidentObj;
+      this.accidentObj = JSON.parse(
+        JSON.stringify(this.lstAccident[this.indexSelected])
+      );
     }
-   }
+  }
 
-   initForm() {
-    this.hrSevice
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrSevice.getEmployeeAccidentModel().subscribe(p => {
-            console.log('thong tin ho chieu', p);
-            this.accidentObj = p;
-            this.formModel.currentData = this.accidentObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
-          })  
-        }
-        this.formGroup.patchValue(this.accidentObj)
-        this.isAfterRender = true
-      }); 
+  initForm() {
+    if (this.actionType == 'add') {
+      this.hrSevice
+        .getDataDefault(this.funcID, this.formModel.entityName, this.idField)
+        .subscribe((res) => {
+          if (res && res.data) {
+            this.accidentObj = res.data;
+            this.accidentObj.employeeID = this.employeeId;
+            this.formModel.currentData = this.accidentObj;
+            this.formGroup.patchValue(this.accidentObj);
+            this.isAfterRender = true;
+            this.cr.detectChanges();
+          }
+        });
+    } else {
+      this.formModel.currentData = this.accidentObj;
+      this.formGroup.patchValue(this.accidentObj);
+      this.isAfterRender = true;
+    }
   }
 
   onInit(): void {
-    this.initForm();
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
-  onSaveForm(){
-    if(this.actionType === 'copy' || this.actionType === 'add'){
-      delete this.accidentObj.recID
-    }
-    this.accidentObj.employeeID = this.employeeId 
-    console.log(this.accidentObj.employeeID);
+  onSaveForm() {
     
-    if(this.actionType === 'add' || this.actionType === 'copy'){
-      this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe(p => {
-        if(p != null){
-          this.accidentObj.recID = p.recID
-          this.notitfy.notifyCode('SYS007')
+    if (this.actionType === 'copy' || this.actionType === 'add') {
+      delete this.accidentObj.recID;
+    }
+    this.accidentObj.employeeID = this.employeeId;
+    console.log(this.accidentObj.employeeID);
+
+    if (this.actionType === 'add' || this.actionType === 'copy') {
+      this.hrSevice.AddEmployeeAccidentInfo(this.accidentObj).subscribe((p) => {
+        if (p != null) {
+          this.accidentObj.recID = p.recID;
+          this.notitfy.notifyCode('SYS007');
           this.lstAccident.push(JSON.parse(JSON.stringify(this.accidentObj)));
-          if(this.listView){
-            (this.listView.dataService as CRUDService).add(this.accidentObj).subscribe();
+          if (this.listView) {
+            (this.listView.dataService as CRUDService)
+              .add(this.accidentObj)
+              .subscribe();
           }
           // this.dialog.close(p)
-        }
-        else this.notitfy.notifyCode('DM034')
+        } else this.notitfy.notifyCode('DM034');
       });
-    } 
-    else{
-      this.hrSevice.UpdateEmployeeAccidentInfo(this.formModel.currentData).subscribe(p => {
-        if(p != null){
-          this.notitfy.notifyCode('SYS007')
-        this.lstAccident[this.indexSelected] = p;
-        if(this.listView){
-          (this.listView.dataService as CRUDService).update(this.lstAccident[this.indexSelected]).subscribe()
-        }
-          // this.dialog.close(this.data)
-        }
-        else this.notitfy.notifyCode('DM034')
-      });
+    } else {
+      this.hrSevice
+        .UpdateEmployeeAccidentInfo(this.formModel.currentData)
+        .subscribe((p) => {
+          if (p != null) {
+            this.notitfy.notifyCode('SYS007');
+            this.lstAccident[this.indexSelected] = p;
+            if (this.listView) {
+              (this.listView.dataService as CRUDService)
+                .update(this.lstAccident[this.indexSelected])
+                .subscribe();
+            }
+            // this.dialog.close(this.data)
+          } else this.notitfy.notifyCode('DM034');
+        });
     }
   }
 
@@ -141,11 +153,12 @@ export class PopupEaccidentsComponent  extends UIComponent implements OnInit {
   click(data) {
     console.log('formdata', data);
     this.accidentObj = data;
-    this.formModel.currentData = JSON.parse(JSON.stringify(this.accidentObj)) 
-    this.indexSelected = this.lstAccident.findIndex(p => p.recID == this.accidentObj.recID);
-    this.actionType ='edit'
+    this.formModel.currentData = JSON.parse(JSON.stringify(this.accidentObj));
+    this.indexSelected = this.lstAccident.findIndex(
+      (p) => p.recID == this.accidentObj.recID
+    );
+    this.actionType = 'edit';
     this.formGroup?.patchValue(this.accidentObj);
     this.cr.detectChanges();
   }
-
 }

@@ -1,6 +1,6 @@
 <codx-layout-add #form [title]="title" [tabInfo]="tabInfo" [formModel]="formModel" [subHeader]="" [subHeaderText]=""
   [footer]="footer" [dialog]="dialogRef" (setTitle)="setTitle($event)" [openMore]="true"
-  [tabContent]="[tabGeneralInfo, tabPeopleInfo, tabStationery, tabMoreInfo, tabReminder]" [data]="data">
+  [tabContent]="this.ep8Avaiable != null && (this.ep8Avaiable ==true || this.ep8Avaiable=='1') ? [tabGeneralInfo, tabPeopleInfo, tabStationery , tabMoreInfo, tabReminder] :[tabGeneralInfo, tabPeopleInfo, tabMoreInfo, tabReminder]" [data]="data">
   <ng-template #tabGeneralInfo>
     <ng-container *ngIf="form && form.formGroup">
 
