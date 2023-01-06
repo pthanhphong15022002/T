@@ -244,7 +244,7 @@ export class CodxTasksComponent
       this.funcID != 'MWP0064';
 
     this.modelResource = new ResourceModel();
-    if (this.funcID != 'TMT03011'&& this.funcID != 'TMT05011') {
+    if (this.funcID != 'TMT03011' && this.funcID != 'TMT05011') {
       this.modelResource.assemblyName = 'HR';
       this.modelResource.className = 'OrganizationUnitsBusiness';
       this.modelResource.service = 'HR';
@@ -1587,9 +1587,16 @@ export class CodxTasksComponent
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-          //    (this.funcID == 'TMT0206' || this.funcID != 'MWP0063') // Hảo sửa k hiện more function 3/1/2023
-          this.funcID == 'TMT0206' &&
-          this.funcID != 'MWP0063'
+          (this.funcID == 'TMT0206' || this.funcID == 'MWP0063') // Hảo sửa k hiện more function 3/1/2023 => ok lỗi do anh đặt điều kiện sai nên a bật lại :v
+        ) {
+          x.disabled = true;
+        }
+        //an voi ca TMT03011
+        if (
+          this.funcID == 'TMT03011' &&
+          data.category == '1' &&
+          data.createdBy != this.user?.userID &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;
         }
@@ -1599,7 +1606,11 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062' || this.funcID == 'OMT013')
+    if (
+      this.funcID == 'TMT0203' ||
+      this.funcID == 'MWP0062' ||
+      this.funcID == 'OMT013'
+    )
       this.isAssignTask = true;
     else this.isAssignTask = false;
     switch (evt.id) {
