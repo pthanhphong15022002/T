@@ -361,9 +361,19 @@
         itemQuestion.answerType == 'C' ||
         itemQuestion.answerType == 'L'
       ">
-      <input class="e-input" type="text" placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+      <!-- <input class="e-input" type="text" placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
         (focus)="focusIn($event.target)" (blur)="focusOut($event.target)" [value]="itemAnswer.answer"
-        [disabled]="itemAnswer.other ? true : false" />
+        [disabled]="itemAnswer.other ? true : false" (change)="changeInput($event)"/> -->
+        <codx-input
+        type="text"
+        class="border-0"
+        placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+        [disabled]="itemAnswer.other ? true : false"
+        [crrValue]="itemAnswer.answer"
+        field="answer"
+        (valueChange)="valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)"
+      >
+      </codx-input>
     </div>
     <div class="e-input-group short-text" *ngIf="itemQuestion.answerType == 'T'">
       <input class="e-input" type="text" placeholder="Văn bản câu trả lời ngắn" (focus)="focusIn($event.target)"
@@ -508,7 +518,7 @@
       ">
       <codx-input #input_check id="input_check{{ itemAnswer.seqNo }}" class="check-circle" [checked]="itemAnswer?.check"
         [label]="itemAnswer.answer" type="checkbox" field="check" (valueChange)="
-          valueChangeAnswer(
+        valueChangeShowAnswer(
             $event,
             seqNoSession,
             itemQuestion.seqNo,
@@ -546,7 +556,7 @@
           ">
           <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Câu hỏi" submitOnEnter="false" type="RTE"
             name="rte" data-underline="false" [model]="titleEditorModel" [validationRules]="commentRule"
-            [value]="itemQuestion.question">
+            [value]="itemQuestion.question" (valueChange)="valueChangeQuestionEJS($event, itemSession, itemQuestion, 'question')">
           </ejs-inplaceeditor>
         </div>
       </div>
@@ -554,7 +564,7 @@
         <div class="title-des">
           <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mô tả" submitOnEnter="false" type="RTE"
             name="rte" data-underline="false" [model]="titleEditorModel" [validationRules]="commentRule"
-            [value]="itemQuestion.comment">
+            [value]="itemQuestion.comment" (valueChange)="valueChangeQuestionEJS($event, itemSession, itemQuestion, 'comment')">
           </ejs-inplaceeditor>
         </div>
       </div>
@@ -1061,9 +1071,9 @@
   <div class="d-flex">
     <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex">
-        <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mẫu không có tiêu đề" submitOnEnter="false"
+        <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" submitOnEnter="false"
           type="RTE" name="rte" data-underline="false" [model]="titleEditorModel" [validationRules]=""
-          [value]="itemSession.question" (valueChange)="valueChangeEJS($event, itemSession)">
+          [value]="itemSession.question" (valueChange)="valueChangeSessionEJS($event, itemSession, 'question')">
         </ejs-inplaceeditor>
         <ng-container #questionMF>
           <!-- <span
@@ -1105,8 +1115,9 @@
   </div>
   <div class="form-group question">
     <div class="title-des">
-      <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mô tả biểu mẫu" submitOnEnter="false" type="RTE"
-        name="rte" data-underline="false" [model]="descriptionEditorModel" [validationRules]="">
+      <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" submitOnEnter="false" type="RTE"
+        name="rte" data-underline="false" [model]="descriptionEditorModel" [validationRules]=""
+        [value]="itemSession.comment ? itemSession.comment : ''" (valueChange)="valueChangeSessionEJS($event, itemSession, 'comment')">
       </ejs-inplaceeditor>
     </div>
   </div>
