@@ -69,21 +69,23 @@ export class PopupEContractComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.employeeId = data?.data?.employeeId;
+    this.funcID = data?.data?.funcID;
     this.actionType = data?.data?.actionType;
     this.data = JSON.parse(JSON.stringify(data?.data?.salarySelected));
   }
 
   onInit(): void {
-    if (this.formModel) {
-      this.codxShareService
-        .getFormGroup(this.formModel?.formName, this.formModel?.gridViewName)
-        .then((res) => {
-          if (res) {
-            this.formGroup = res;
+    this.hrSevice.getFormModel(this.funcID).then(formModel => {
+      if(formModel){
+        this.formModel = formModel;
+        this.hrSevice.getFormGroup(this.formModel.formName, this.formModel.gridViewName).then(fg => {
+          if(fg){
+            this.formGroup = fg;
             this.initForm();
           }
-        });
-    }
+        })
+      }
+    })
   }
 
   initForm() {

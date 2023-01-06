@@ -40,7 +40,6 @@ import { PopupExtendComponent } from './popup-extend/popup-extend.component';
 import { CodxImportComponent } from '../codx-import/codx-import.component';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { PopupUpdateStatusComponent } from './popup-update-status/popup-update-status.component';
-import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'codx-tasks-share', ///tên vậy để sửa lại sau
@@ -294,6 +293,7 @@ export class CodxTasksComponent
         break;
       case 'TMT0203':
       case 'MWP0062':
+      case 'OMT013':
         this.requestSchedule.predicate = 'Category=@0 and CreatedBy=@1';
         this.requestSchedule.dataValue = '2;' + this.user.userID;
         break;
@@ -1599,7 +1599,7 @@ export class CodxTasksComponent
 
   click(evt: ButtonModel) {
     this.titleAction = evt.text;
-    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062')
+    if (this.funcID == 'TMT0203' || this.funcID == 'MWP0062' || this.funcID == 'OMT013')
       this.isAssignTask = true;
     else this.isAssignTask = false;
     switch (evt.id) {

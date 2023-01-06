@@ -8,9 +8,6 @@
           <div class="d-flex flex-column w-100">
             <div class="pb-1">
               <div class="button-version" *ngIf="item.versionNo.startsWith('V0'); else firstVersionNo">
-                <!-- <codx-label class="text-dark fw-bold fs-5 button-version cursor-pointer"  fiedName="versionName" formName="ProcessRevisions"
-                gridViewName="grvProcessRevisions"
-                  (click)="getProcessesStep(item)" [default]="firstNameVersion"></codx-label> -->
                   <span class="text-dark fw-bold fs-5 button-version cursor-pointer" (click)="getProcessesStep(item)">
                     {{firstNameVersion}}
                   </span>
@@ -37,13 +34,15 @@
               <ng-container *ngIf="isCheckNotUserNameLogin; else elseNotDone">
                 <div *ngFor="let itemUser of listUserShow">
                   <span class="text-primary" *ngIf="itemUser.userID==item.createdBy && itemUser.postion==i">
-                    <codx-label default="Cập nhật bởi, "></codx-label> {{ itemUser.userName }}
+                    <codx-label name="lblCreatedBy" formName="ProcessRevisions"
+                    gridViewName="grvProcessRevisions" default="Cập nhật bởi"></codx-label>, {{ itemUser.userName }}
                   </span>
                 </div>
               </ng-container>
               <ng-template #elseNotDone>
                 <span class="text-primary">
-                  <codx-label default="Cập nhật bởi, "></codx-label> {{ userNameLogin }}
+                  <codx-label name="lblCreatedBy" formName="ProcessRevisions"
+                    gridViewName="grvProcessRevisions" default="Cập nhật bởi"></codx-label>, {{ userNameLogin }}
                 </span>
               </ng-template>
               <span class="text-gray-500 mx-1"> |</span>

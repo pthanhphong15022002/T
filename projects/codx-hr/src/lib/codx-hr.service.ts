@@ -1470,6 +1470,26 @@ export class CodxHrService {
     );
   }
 
+  addESlkillInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'AddEmployeeSkillInfoAsync',
+      [data]
+    );
+  }
+
+  updateEskillInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'UpdateEmployeeSkillInfoAsync',
+      data
+    );
+  }
+
   deleteESkill(recID: string) {
     return this.api.execSv<any>(
       'HR',
