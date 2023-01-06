@@ -38,6 +38,15 @@
     fill: var(-text-gray-600);
 }
 
+
+// .aside.aside-light {
+//     background-color: var(--bg-aside-dark);
+// }
+
+// .aside-menu .menu .menu-item .menu-link.active {
+//     background-color: rgba(0, 0, 0, 0.15) !important;
+// }
+
 ejs-listview {
     background-color: var(--bg-card);
 }
@@ -422,6 +431,53 @@ h1,
 .btn.btn-bg-white i {
     color: var(--primary);
 
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: var(--primary);
+    background-color: var(--bg-card);
+    border-color: var(--border-list);
+}
+
+.feed-box {
+    background-color: var(--bg-input);
+}
+
+.codx-toast-container .e-toast-success {
+    background-color: var(--primary-lightest) !important;
+}
+
+.pw-content,
+.employee-info-main .pw-menu {
+    background-color: var(--bg-card) !important;
+}
+
+.e-richtexteditor .e-rte-content,
+.e-richtexteditor .e-source-content {
+    background: var(--bg-input);
+    border-color: var(--border-list);
+}
+
+.codx-search>input {
+    background-color: transparent;
+    color: var(--text-title);
+}
+
+.e-kanban {
+    background: var(--bg-body);
+}
+
+.e-kanban .card {
+    background: var(--bg-card);
+}
+
+codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card {
+    border: var(--border-gray);
+}
+
+.e-kanban .e-kanban-table.e-content-table .e-card {
+    background: transparent;
 }
 
 //end dark

@@ -2001,15 +2001,14 @@ export class EmployeeProfileComponent extends UIComponent {
   addEditEVaccines(actionType: string, data: any) {
     // this.hrService.addEVaccine(null).subscribe();
     // return;
-    this.view.dataService.dataSelected = this.data;
+    // this.view.dataService.dataSelected = data;
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEVaccineComponent,
       {
         actionType: actionType,
-        salarySelected: data,
+        vaccineSelected: data,
         headerText: 'Tiêm Vaccine',
         employeeId: this.data.employeeID,
         funcID: 'HRT03020702'

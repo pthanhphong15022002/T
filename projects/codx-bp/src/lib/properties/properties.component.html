@@ -334,11 +334,18 @@
                                 </ng-template>
                               </div>
                               <div class="pb-1 d-flex">
-                                <div *ngFor="let itemUser of listUserName">
-                                  <span class="text-primary" *ngIf="itemUser.userID==item.createdBy"  >
-                                    <codx-label default="Cập nhật bởi, "></codx-label> {{ itemUser.userName }}
+                                <ng-container *ngIf="isCheckNotUserNameLogin; else elseNotDone">
+                                  <div *ngFor="let itemUser of listUserShow">
+                                    <span class="text-primary" *ngIf="itemUser.userID==item.createdBy && itemUser.postion==i">
+                                      <codx-label default="Cập nhật bởi, "></codx-label> {{ itemUser.userName }}
+                                    </span>
+                                  </div>
+                                </ng-container>
+                                <ng-template #elseNotDone>
+                                  <span class="text-primary">
+                                    <codx-label default="Cập nhật bởi, "></codx-label> {{ userNameLogin }}
                                   </span>
-                                </div>
+                                </ng-template>
                                 <span class="text-gray-500 mx-1"> |</span>
                                 <span class="text-primary">
                                   {{item.createdOn| timefrom}}

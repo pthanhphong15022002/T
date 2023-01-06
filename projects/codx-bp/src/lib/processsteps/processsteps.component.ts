@@ -1486,7 +1486,7 @@ export class ProcessStepsComponent
   }
 
   seachUser(value,p){
-    p.open();
+    // p.open();
     this.popupSearch = p;
     this.listUserSearch = value;
     this.listUser = value;
