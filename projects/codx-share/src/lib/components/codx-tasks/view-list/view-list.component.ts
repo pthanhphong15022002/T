@@ -12,6 +12,7 @@ import {
   ApiHttpService,
   FormModel,
   CallFuncService,
+  AuthStore,
 } from 'codx-core';
 
 @Component({
@@ -29,6 +30,7 @@ export class ViewListComponent implements OnInit {
   @Input() vllStatus?: any;
   @Input() listRoles?: any;
   @Input() showMoreFunc?: any;
+  @Input() user : any ;
 
   listTaskResousceSearch = [];
   listTaskResousce = [];
@@ -46,7 +48,9 @@ export class ViewListComponent implements OnInit {
     private callfc: CallFuncService,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-  ) {}
+  ) {
+ 
+  }
 
   ngOnInit(): void {}
 
@@ -90,10 +94,19 @@ export class ViewListComponent implements OnInit {
             (x.functionID == 'SYS02' ||
               x.functionID == 'SYS03' ||
               x.functionID == 'SYS04') &&
-              this.formModel?.funcID == 'TMT0206'
+              (this.formModel?.funcID == 'TMT0206' ||  this.formModel?.funcID == 'MWP0063')
           ) {
             x.disabled = true;
           }
+            //an voi fun TMT03011
+        if (
+          this.formModel?.funcID == 'TMT03011' &&
+          data.category == '1' &&
+          data.createdBy != this.user.userID &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
+        ) {
+          x.disabled = true;
+        }
       });
     }
   }

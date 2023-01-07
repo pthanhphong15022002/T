@@ -119,19 +119,7 @@ export class TMMeetingsComponent
   ) {
     super(inject);
     this.user = this.authStore.get();
-
-    if (!this.funcID)
-      this.funcID = this.activedRouter.snapshot.params['funcID'];
-
-    this.tmService.functionParent = this.funcID;
-    this.cache.functionList(this.funcID).subscribe((f) => {
-      if (f) {
-        this.tmService.urlback = f.url;
-      }
-    });
-    if (this.funcID == 'TMT03011') {
-      this.funcID = 'TMT0501';
-    }
+    
     this.cache.moreFunction('TMMeetings', 'grvTMMeetings').subscribe((res) => {
       if (res) this.listMoreFunc = res;
     });
@@ -147,6 +135,8 @@ export class TMMeetingsComponent
     this.button = {
       id: 'btnAdd',
     };
+  if (!this.funcID)
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
 
     let body = document.body;
     if (body.classList.contains('toolbar-fixed'))
@@ -443,6 +433,7 @@ export class TMMeetingsComponent
         this.delete(data);
         break;
       case 'TMT05011':
+      case 'TMT05012':
         // this.viewDetail(e.data, data);
         this.viewDetail(data);
         break;
