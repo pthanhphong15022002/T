@@ -84,7 +84,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //   this.changeDetect.detectChanges();
   // }
 
-
+   //#region Open form
+   show(){
+    this.isShow = !this.isShow;
+  }
+  //#endregion
   //Setting class status Active
   updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
@@ -117,33 +121,35 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  continue(currentTab) {
-    if (this.currentTab > 1) return;
+   //Tiếp tục qua tab
+   async continue(currentTab) {
+    if (this.currentTab > 2) return;
+
     let oldNode = currentTab;
     let newNode = oldNode + 1;
+
     switch (currentTab) {
       case 0:
-       // Phuc làm ở đây
-            this.updateNodeStatus(oldNode, newNode);
-            this.currentTab++;
-            this.processTab++;
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab == 0 && this.processTab++;
         break;
       case 1:
-        // Bảo + Thuận làm ở đây
-
+        this.newNode = newNode;
+        this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
-            this.currentTab++;
-            this.processTab++;
-        break;
-
-      case 2:
-         // Thảo làm ở đây
-        this.updateNodeStatus(oldNode, newNode);
-
         this.currentTab++;
-        this.processTab++;
+        this.processTab == 1 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
+        break;
+      case 2:
+        this.updateNodeStatus(oldNode, newNode);
+        this.currentTab++;
+        this.processTab == 2 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
     }
+
     this.changeDetectorRef.detectChanges();
   }
 
