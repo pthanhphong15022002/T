@@ -99,8 +99,8 @@
               <ng-container [ngTemplateOutlet]="General"></ng-container>
 
             </div>
-            <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
-              <h1>Thiết lập gia doan nè Thuận - ai làm việc nấy không và html</h1>
+            <div *ngIf="currentTab == 1" [ngTemplateOutlet]="stage">
+              <!-- Thiet lap giai doan -->
             </div>
             <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
               <h1>Quy trình động nè - ai làm việc nấy không và html</h1>
@@ -458,3 +458,263 @@
     </div>
   </ng-container>
 </ng-template>
+
+<!-- Thiết lập giai đoạn của thuận -->
+<ng-template #stage>
+  <div class="background-stage">
+    <div class="stage-top">
+      <div class="lefts">
+        <span>Thiết lập giai đoạn</span>
+      </div>
+      <div class="rights">
+        <div class="button-group">
+          <button type="button" class="btn btn-primary">
+            <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>      
+          </button>
+          <button>
+            <span
+              class="icon-replay icon-22 text-primary-600 py-2"
+              style="font-weight: 600; margin-left: 5px">
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <span>Mẫu giai đoạn: cơ hội</span>
+      <button type="button" class="btn btn-outline-primary">Đổi mẫu</button>
+      <button type="button" class="btn btn-outline-primary">Lưu mẫu mới</button>
+    </div>
+    <div class="stage-body row">
+      <div class="stage-body-left col-3">
+        <div class="header">
+          <span>Giai đoạn</span>
+          <button>
+            <span
+              class="icon-replay icon-22 text-primary-600 py-2"
+              style="font-weight: 600; margin-left: 5px">
+            </span>
+          </button>
+        </div>
+        <div class="main">
+          <!-- danh sách giai đoạn -->
+          <div *ngFor="let item of [1,2,3,4,5,6,6,7,7,2,12,3,42,3,2,43,3,243,12,14]; let i = index">
+            <div>{{i}}</div>
+            <div>Thuận {{item}}</div>
+          </div>
+          <!-- danh sách giai đoạn -->
+        </div>
+      </div>
+      <div class="stage-body-right col-9">
+        <div class="header" >
+          <div>Tiếp nhận yêu cầu</div>
+          <button>
+            <span
+              class="icon-replay icon-22 text-primary-600 py-2"
+              style="font-weight: 600; margin-left: 5px">
+            </span>
+          </button>
+        </div>
+        <div class="main">
+          <!-- Thêm teplate vào đây -->
+          <ng-container *ngIf="currentTab == 10" [ngTemplateOutlet]="stage"></ng-container>
+          <!-- Thêm teplate vào đây -->
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #job>
+  <div class="background">
+    <div class="header-job">
+        <div class="left">
+            <div>
+                <span class="title">Công việc</span>
+            </div>
+            <div>
+                <span style="color: #898989">Công việc mặc định người phụ trách
+                    phải thực hiện trong giai
+                    đoạn</span>
+            </div>
+        </div>
+        <div class="right">
+            <div class="time ml-2">
+                <div class="d-flex align-items-center">
+                    <span style="font-weight: 400; color: #4e4e4e">Thời hạn công
+                        việc so với giai đoạn</span>
+                    <span
+                        class="icon-replay icon-22 text-primary-600 py-2"
+                        style="font-weight: 600; margin-left: 5px"></span>
+                </div>
+                <div>
+                    <span style="float: right; color: #2274ae">0 ngày / 5 ngày</span>
+                </div>
+            </div>
+            <div class="group-button">
+                <button class="button-custom">
+                    <span
+                        class="icon-add icon-20 text-primary-600 py-2"
+                        style="font-weight: 600"></span>
+                </button>
+                <button class="button-custom">
+                    <span
+                        class="icon-add_task icon-20 text-primary-600 py-2"
+                        style="font-weight: 600"></span>
+                </button>
+                <button class="button-custom" (click)="showStage()">
+                    <span
+                        class="icon-expand_more icon-20 text-primary-600 py-2"
+                        style="font-weight: 600"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="main" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+        <div class="button-add-new" *ngIf="data.length == 0">
+            <div>
+                <button class="button-custom">
+                    <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+                    <span>Thêm nhóm công việc</span>
+                </button>
+            </div>
+            <div>
+                <button class="button-custom">
+                    <span class="icon-add icon-20 text-primary-600 py-2"></span>
+                    <span>Thêm công việc</span>
+                </button>
+            </div>
+        </div>
+        <div class="main-body" *ngIf="data.length > 0">
+            <div cdkDropList class="list" (cdkDropListDropped)="drop1($event)">
+                <div cdkDropListGroup>
+                    <ng-container *ngFor="let item of data">
+                        <div class="mb-3 card-job-list" cdkDrag
+                            [cdkDragData]="item">
+                            <div class="card-job">
+                                <div class="card-job-header">
+                                    <div class="background-icon">
+                                        <span
+                                            class="icon-add_circle icon-20
+                                            text-primary-600 py-2"></span>
+                                    </div>
+                                    <div class="background-icon">
+                                        <span
+                                            class="icon-supervised_user_circle
+                                            icon-20 text-primary-600 py-2"></span>
+                                    </div>
+                                    <div class="steplist-hearder ms-5">
+                                        <div>
+                                            <span
+                                                class=""
+                                                style="font-size: 1.2rem;
+                                                font-weight: 500">{{ item.item
+                                                }}</span>
+                                            <span
+                                                class="icon-message icon-20
+                                                text-primary-600 py-2 ms-2"
+                                                style="color: #06a9f7"></span>
+                                        </div>
+                                        <div class="">
+                                            <span style="color: #06a9f7">20%</span>
+                                            <span
+                                                class="ms-5"
+                                                style="font-weight: 400; color:
+                                                #606060">
+                                                Thời hạn 1.5 giờ
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    cdkDropList
+                                    class="list"
+                                    [cdkDropListData]="item?.data || []"
+                                    (cdkDropListDropped)="drop($event)">
+                                    <ng-container *ngFor="let item1 of
+                                        item.data">
+                                        <div
+                                            cdkDrag
+                                            [cdkDragStartDelay]="200"
+                                            [cdkDragData]="item1">
+                                            <div style="margin-left: 50px">
+                                                <div class="card-job-header">
+                                                    <div class="background-icon"
+                                                        style="background-color:
+                                                        #3ef8e9;">
+                                                        <span
+                                                            class="icon-add_circle
+                                                            icon-20
+                                                            text-primary-600
+                                                            py-2"
+                                                            (click)="addFile($event)"></span>
+                                                    </div>
+                                                    <div
+                                                        class="background-icon">
+                                                        <span
+                                                            class="icon-supervised_user_circle
+                                                            icon-20
+                                                            text-primary-600
+                                                            py-2"></span>
+                                                    </div>
+                                                    <div class="steplist-hearder
+                                                        ms-5">
+                                                        <div>
+                                                            <span
+                                                                class=""
+                                                                style="font-size:
+                                                                1.2rem;
+                                                                font-weight:
+                                                                500">{{
+                                                                item1.item }}</span>
+                                                            <span
+                                                                class="icon-message
+                                                                icon-20
+                                                                text-primary-600
+                                                                py-2 ms-2"
+                                                                style="color:
+                                                                #06a9f7"></span>
+                                                        </div>
+                                                        <div class="">
+                                                            <span style="color:
+                                                                #06a9f7">20%</span>
+                                                            <span
+                                                                class="ms-5"
+                                                                style="font-weight:
+                                                                400; color:
+                                                                #606060">
+                                                                Thời hạn 1.5 giờ
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <codx-attachment
+                                                        #attachment
+                                                        hideFolder="1"
+                                                        hideImageUpload="0"
+                                                        hideImageThumb="0"
+                                                        hideUploadBtn="1"
+                                                        hideDes="1"
+                                                        type="inline"
+                                                        allowMultiFile="1"
+                                                        displayThumb="full"
+                                                        showMessage="1">
+                                                    </codx-attachment>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+  </div>
+</ng-template>
+<!-- End Thiết lập giai đoạn -->
