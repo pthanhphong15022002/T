@@ -19,6 +19,7 @@ import { PopupShowOBComponent } from '../../popup/popup-show-ob/popup-show-ob.co
 import { PopupDistributeOKRComponent } from '../../popup/popup-distribute-okr/popup-distribute-okr.component';
 import { E } from '@angular/cdk/keycodes';
 import { PopupAssignmentOKRComponent } from '../../popup/popup-assignment-okr/popup-assignment-okr.component';
+import { PopupAssignmentOKRCComponent } from '../../popup/popup-assigment-okr-c/popup-assignment-okr-c.component';
 
 @Component({
   selector: 'lib-okr-targets',
@@ -191,6 +192,7 @@ export class OkrTargetsComponent implements OnInit {
   }
 
   clickMF(e: any,data:any) {
+    debugger;
     var funcID = e?.functionID;
     switch (funcID) {
       //Chỉnh sửa
@@ -204,6 +206,19 @@ export class OkrTargetsComponent implements OnInit {
         ]);
         break;
       }
+      //Phân công mục tiêu
+      case 'OMT022': //site tester
+      case 'OMT012':
+        {
+          let option = new DialogModel();
+          option.IsFull = true;
+          this.callfunc.openForm(PopupAssignmentOKRCComponent,"",null,null,this.formModel.funcID,
+          [
+            "Phân công mục tiêu",
+            data
+          ],"",option);
+          break;
+        }
     }
   }
   // Thêm/sửa  KR

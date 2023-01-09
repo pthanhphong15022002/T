@@ -62,7 +62,7 @@ export class PopupTitleComponent extends UIComponent implements OnInit {
   }
 
   onEditNote() {
-    this.dataNote.transID = this.dataNoteBook.recID;
+    this.dataNote['transID'] = this.dataNoteBook.recID;
     this.dataNote.title = this.note.title;
     this.dataNote.isNote = false;
     if (this.dataNote.noteType !== 'text') this.dataNote.checkList.pop();

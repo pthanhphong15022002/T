@@ -71,6 +71,7 @@ export class ActiviesSliderComponent implements OnInit {
         if(this.lstApproval.length == 0)
         {
           this.loaded = false;
+          this.dt.detectChanges();
         }
       }
     });

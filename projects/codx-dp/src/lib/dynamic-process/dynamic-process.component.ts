@@ -7,8 +7,10 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthStore, ButtonModel, NotificationsService, UIComponent, ViewModel, ViewType , DialogModel,
   SidebarModel,
   CallFuncService,
-  Util, } from 'codx-core';
+  Util,
+  RequestOption, } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
+import { dynamicProcess } from '../models/dynamicProcess.model';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -32,9 +34,6 @@ implements OnInit, AfterViewInit {
  @Input() showButtonAdd = true;
 
 
- // get api DP Proccess
- method = 'GetListProcessesAsync';
-
  // create variables
  crrFunID:string = '';
  funcID: string =  '';
@@ -45,6 +44,20 @@ implements OnInit, AfterViewInit {
 
  heightWin: any;
  widthWin: any;
+ itemSelected: any;
+ titleAction:any;
+ moreFunc: any;
+ entityName: any;
+
+// create variables for list
+listDynamicProcess: dynamicProcess[]=[];
+
+
+ //test chưa có api
+ popoverDetail: any;
+ popupOld: any;
+ popoverList: any;
+ method = 'GetListProcessesAsync';
 
   constructor(
     private inject: Injector,
@@ -79,21 +92,14 @@ implements OnInit, AfterViewInit {
         break;
     }
   }
-  clickMF(e: any, data?: any){
-
-  }
-  changeDataMF(e:any, data?:any){
-
-  }
   ngAfterViewInit(): void {
     this.views=[{
       type: ViewType.card,
-      sameData: true,
-      active: true,
-      model: {
-        template: this.templateViewCard,
-        headerTemplate: this.headerTemplate,
-      },
+        sameData: true,
+        active: true,
+        model: {
+          template: this.templateViewCard,
+        },
     }];
     this.changeDetectorRef.detectChanges();
   }
@@ -131,12 +137,87 @@ implements OnInit, AfterViewInit {
 
   }
 
-  update() {
-    this.changeDetectorRef.detectChanges();
-
-  }
-
-  delete() {
+  edit(data:any) {
     this.changeDetectorRef.detectChanges();
   }
+  copy(data:any) {
+    this.changeDetectorRef.detectChanges();
+  }
+
+  delete(data:any) {
+    this.view.dataService.dataSelected = data;
+    this.view.dataService
+      .delete([this.view.dataService.dataSelected], true, (opt) =>
+        this.beforeDel(opt)
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.view.dataService.onAction.next({ type: 'delete', data: data });
+        }
+      });
+    this.changeDetectorRef.detectChanges();
+  }
+  beforeDel(opt: RequestOption) {
+    var itemSelected = opt.data[0];
+    // chưa có api
+    opt.methodName = 'DeletedDynamicProcessesAsync';
+    opt.data = [itemSelected.recID, true];
+    return true;
+  }
+
+  // More functions
+  receiveMF(e: any) {
+    this.clickMF(e.e, e.data);
+  }
+
+  clickMF(e: any, data?: any) {
+    this.itemSelected = data;
+    this.titleAction = e.text;
+    this.moreFunc = e.functionID;
+    this.entityName = e?.data?.entityName;
+    switch (e.functionID) {
+      case 'SYS01':
+        this.add();
+        break;
+      case 'SYS03':
+        this.edit(data);
+        break;
+      case 'SYS04':
+        this.copy(data);
+        break;
+      case 'SYS02':
+        this.delete(data);
+        break;
+    }
+  }
+
+  //#region đang test
+  setTextPopover(text){
+    return (text);
+  }
+
+  PopoverDetail(e ,p: any, emp) {
+    let parent = e.currentTarget.parentElement.offsetWidth;
+    let child = e.currentTarget.offsetWidth;
+    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+      this.popupOld?.close();
+    }
+
+    if (emp != null) {
+      this.popoverList?.close();
+      this.popoverDetail = emp;
+      if (emp.memo != null || emp.processName != null) {
+        if(parent <= child) {p.open();}
+      }
+    } else p.close();
+    this.popupOld = p;
+  }
+
+  checkPermissionRead(data) {
+    let isRead = data.read;
+
+    return isRead ? true : false;
+  }
+
+  //#endregion đang test
 }

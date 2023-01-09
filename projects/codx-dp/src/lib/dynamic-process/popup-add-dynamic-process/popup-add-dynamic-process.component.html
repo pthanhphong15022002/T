@@ -3,7 +3,7 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label default="Thông tin quy trình"> </codx-label>
+          <codx-label default="Tạo quy trình"> </codx-label>
         </h2>
       </div>
       <div class="d-flex align-items-center">
@@ -69,20 +69,19 @@
       </div>
       <div class="d-flex justify-content-end">
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
-          <i
-            class="icon-close icon-18 text-hover-danger"
-            (click)="this.dialog.close()"
-          ></i>
+          <i class="icon-close icon-18 text-hover-danger" (click)="this.dialog.close()"></i>
         </div>
       </div>
     </div>
-     <!-- body rieng -->
-  <div class="stepper-body pt-2 w-100" >
-    <div
-      class="card shadow-none border-0 rounded-0 mx-auto w-100 w-md-800px h-100"
-    >
-      <div class="mb-10 mt-10 text-center tab-pane-header">
-        <!-- <h2 class="h2-title">
+    <!-- body rieng -->
+    <div class="stepper-body pt-2 w-100">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 witdh-body">
+        <div class="mt-10 text-center tab-pane-header">
+          <h2 class="h2-title float-left">
+            <codx-label *ngIf="currentTab == 0" name="lblGeneral" default="Thông tin quy trình">
+            </codx-label>
+          </h2>
+          <!-- <h2 class="h2-title">
             <codx-label *ngIf="currentTab == 0" name="lblUploadFile" [formModel]="formModelCustom"
               default="Upload file">
             </codx-label>
@@ -93,69 +92,107 @@
               [formModel]="formModelCustom">
             </codx-label>
           </h2> -->
-      </div>
-      <div
-        class="card-body hover-scroll-overlay-y"
-        data-kt-scroll="true"
-        data-kt-scroll-activate="{default: true}"
-        data-kt-scroll-height="auto"
-        data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
-        data-kt-scroll-wrappers=".stepper-body"
-        data-kt-scroll-offset="0px"
-      >
-        <div class="tab-content">
-          <div
-            class="tab-pane fade"
-            id="pane_1"
-            [ngClass]="currentTab == 0 ? 'active show' : ''"
-          >
-            <h1>Thiết lập gia doan của Phúc - ai làm việc nấy không và html</h1>
-          </div>
-          <div
-            class="tab-pane fade"
-            id="pane_2"
-            [ngClass]="currentTab == 1 ? 'active show' : ''"
-          >
-            <h1>Thiết lập gia doan nè Thuận - ai làm việc nấy không và html</h1>
-          </div>
-          <div
-            class="tab-pane fade"
-            id="pane_3"
-            [ngClass]="currentTab == 2 ? 'active show' : ''"
-          >
-            <h1>Quy trình động nè - ai làm việc nấy không và html</h1>
+        </div>
+        <div class="card-body hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
+          <div class="tab-content">
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
+              <div class="background">
+                <div class="header-job">
+                  <div class="left">
+                    <div>
+                      <codx-label class="title" name="lblGeneral" default="Công việc"></codx-label>
+                    </div>
+                    <div>
+                      <codx-label name="lblGeneral" default="Thông tin chung của quy trình" style="color: #898989">
+                      </codx-label>
+                    </div>
+                  </div>
+                  <div class="right">
+                    <div class="group-button">
+                      <button class="button-custom" (click)="show()">
+                        <span class="icon-expand_more icon-20 text-primary-600 py-2" style="font-weight: 600"></span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="main" [ngClass]="isShow ? 'show-main' : 'hidden-main'">
+                  <div>
+                    bỏ vào đây nha
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="pane_2" [ngClass]="currentTab == 1 ? 'active show' : ''">
+              <h1>Thiết lập gia doan nè Thuận - ai làm việc nấy không và html</h1>
+            </div>
+            <div class="tab-pane fade" id="pane_3" [ngClass]="currentTab == 2 ? 'active show' : ''">
+              <h1>Quy trình động nè - ai làm việc nấy không và html</h1>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="d-flex flex-stack justify-content-between card-footer border-0">
-        <div class="left">
-          <button
-            type="button"
-            class="btn btn-primary me-3"
-            *ngIf="currentTab != 0"
-            (click)="previous(currentTab)"
-          >
-            <codx-label
-              name="lblBack"
-              [formModel]="'thêm formModel vào'"
-              default="Quay lại"
-            >
-            </codx-label>
+        <div class="d-flex flex-stack justify-content-between card-footer border-0">
+          <div class="left">
+            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
+              <codx-label name="lblBack" default="Quay lại">
+              </codx-label>
+            </button>
+          </div>
+          <div *ngIf="currentTab == 0"></div>
+          <button type="button" class="btn btn-primary" (click)="!(currentTab == 2) ? continue(currentTab) : onSave()">
+            <codx-label *ngIf="!(currentTab == 2)" [name]="'lblContinue'" [default]="'Tiếp tục'"></codx-label>
+            <codx-label *ngIf="(currentTab == 2)" [name]="'lblSave'" [default]="'Lưu'"></codx-label>
+
           </button>
         </div>
-        <button type="button" class="btn btn-primary">
-          <codx-label
-            name="lblContinue"
-            [formModel]="'thêm formModel vào'"
-            default="Tiếp tục"
-          ></codx-label>
-        </button>
       </div>
     </div>
   </div>
-  </div>
 </div>
 
-
 <ng-template #footer> </ng-template>
+
+<ng-template #dynamicFields>
+  <ng-container>
+    <div class="background">
+      <div class="header-job">
+        <div class="left">
+          <div>
+            <span class="title">{{ "Tên của gia đoạn" }}</span>
+          </div>
+          <div>
+            <span style="color: #898989">
+              <codx-label name="lblExpression">
+                Kéo thả để sắp xếp các trường tùy chỉnh</codx-label
+              >
+            </span>
+          </div>
+        </div>
+        <div class="right">
+          <div class="time ml-2">
+            <div class="d-flex align-items-center">
+                <span
+                class="icon-add icon-22 text-primary-600 py-2"
+                style="font-weight: 600; margin-left: 5px"
+              ></span>
+              <span
+                class="icon-replay icon-22 text-primary-600 py-2"
+                style="font-weight: 600; margin-left: 5px"
+              ></span>
+              <span
+                class="icon-expand_more icon-22 text-primary-600 py-2"
+                style="font-weight: 600"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div [ngClass]="true ? 'main show-main' : 'main hidden-main'">
+        <div>bỏ vào đây nha</div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
