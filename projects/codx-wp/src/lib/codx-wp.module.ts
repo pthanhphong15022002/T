@@ -152,7 +152,8 @@ export const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'portal/WP',
+    redirectTo: 'wp/portal/wp',
+    data: { noReuse: true },
     pathMatch: 'full',
   },
 

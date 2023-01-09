@@ -1,10 +1,20 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
 import {
   CdkDragDrop,
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import { DialogData, DialogRef, ApiHttpService, CallFuncService } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
+import { DP_Process } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -13,6 +23,9 @@ import {
 })
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
+  @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
+
+  process = new DP_Process();
 
   dialog: any;
   currentTab = 1; //Bước hiện tại
@@ -20,14 +33,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   newNode: number; //vị trí node mới
   oldNode: number; // Vị trí node cũ
-
-  isShow = false; //Check mở form
+  funcID: any;
+  isShow = true; //Check mở form
   isAddNew = true;
   attachment: any;
+  linkAvatar = '';
+  vllShare = 'ES014';
+  showID = true;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-  @Optional() dialog: DialogRef,
-  @Optional() data: DialogData) {
+    private api: ApiHttpService,
+    private callfc: CallFuncService,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
     this.dialog = dialog;
   }
   isShowstage = true;
@@ -121,62 +140,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //#region onSave
-  onSave(){
-
-  }
+  onSave() {}
   //#endregion
 
   //#region Change Tab
   //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
     //if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (tabNo != this.currentTab) {
+    if (tabNo != this.currentTab) {
       this.updateNodeStatus(this.currentTab, tabNo);
       this.currentTab = tabNo;
     }
   }
-
-  //Quay lại
-  // previous(currentTab) {
-  //   let oldNode = currentTab;
-  //   this.updateNodeStatus(oldNode, newNode);
-  //   this.currentTab--;
-  // }
-
-  //Tiếp tục qua tab
-  // async continue(currentTab) {
-  //   if (this.currentTab > 2) return;
-
-  //   let oldNode = currentTab;
-  //   let newNode = oldNode + 1;
-
-  //   switch (currentTab) {
-  //     case 0:
-  //       this.updateNodeStatus(oldNode, newNode);
-  //       this.currentTab++;
-  //       this.totalTab == 0 && this.totalTab++;
-  //       break;
-  //     case 1:
-  //       this.newNode = newNode;
-  //       this.oldNode = oldNode;
-  //       this.updateNodeStatus(oldNode, newNode);
-  //       this.currentTab++;
-  //       this.totalTab == 1 && this.totalTab++;
-  //       this.changeDetect.detectChanges();
-  //       break;
-  //     case 2:
-  //       this.updateNodeStatus(oldNode, newNode);
-  //       this.currentTab++;
-  //       this.totalTab == 2 && this.totalTab++;
-  //       this.changeDetect.detectChanges();
-  //       break;
-  //   }
-
-  //   this.changeDetect.detectChanges();
-  // }
-
-   //#region Open form
-   show(){
+  //#region Open form
+  show() {
     this.isShow = !this.isShow;
   }
   showStage(){
@@ -215,8 +192,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-   //Tiếp tục qua tab
-   async continue(currentTab) {
+  //Tiếp tục qua tab
+  async continue(currentTab) {
     if (this.currentTab > 2) return;
 
     let oldNode = currentTab;
@@ -253,7 +230,54 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }
-  saveAndClose(){
+  saveAndClose() {}
+
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+
+  //Avt
+  addAvatar() {
+    this.imageAvatar.referType = 'avt';
+    this.imageAvatar.uploadFile();
+  }
+  fileImgAdded(e) {
+    if (e?.data && e?.data?.length > 0) {
+      var countListFile = e.data.length;
+      this.linkAvatar = e?.data[countListFile - 1].avatar;
+
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  getAvatar(process) {
+    let avatar = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .subscribe((res) => {
+        if (res && res?.url) {
+          this.linkAvatar = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+  //end
+
+
+  //Control share
+  sharePerm(share) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  applyShare(e){
 
   }
 
@@ -282,4 +306,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#region Trường tùy chỉnh 
   
   //#region 
+  clickRoles(e){
+
+  }
+  //end
+  //#endregion
+
+  //#region Trường tùy chỉnh
+
+  //#region
 }

@@ -312,6 +312,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       var obj = {
         data: data,
         status: 'share',
+        refType:'WP_Comments',
         headerText: headerText,
       };
       let option = new DialogModel();
