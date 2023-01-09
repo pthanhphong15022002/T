@@ -192,4 +192,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //end
   //#endregion
+
+  //#region Trường tùy chỉnh
+
+  //#region
 }

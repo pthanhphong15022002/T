@@ -13,7 +13,7 @@ export class Notes {
   createdOn: string;
   createdBy: string;
   tags: string;
-  fileCount: string;
+  fileCount: number;
   isNote: boolean;
   files: any[];
   calendarDate: any;
