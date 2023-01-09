@@ -399,7 +399,8 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.showLabelAttachment = this.task.attachments > 0 ? true : false;
         if (this.action == 'edit' && this.task.category == '2') {
           this.disableDueDate = true;
-          if (this.param?.EditControl == '0') this.readOnly = true;
+          if (this.param?.EditControl != '1') this.readOnly = true;
+          debugger
         }
         this.changeDetectorRef.detectChanges();
       }

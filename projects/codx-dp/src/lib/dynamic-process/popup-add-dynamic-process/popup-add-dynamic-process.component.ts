@@ -18,6 +18,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   isShow = false; //Check mở form
   isAddNew = true;
+  dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
   @Optional() dialog: DialogRef,
@@ -44,46 +45,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
-
-  //Quay lại
-  // previous(currentTab) {
-  //   let oldNode = currentTab;
-  //   this.updateNodeStatus(oldNode, newNode);
-  //   this.currentTab--;
-  // }
-
-  //Tiếp tục qua tab
-  // async continue(currentTab) {
-  //   if (this.currentTab > 2) return;
-
-  //   let oldNode = currentTab;
-  //   let newNode = oldNode + 1;
-
-  //   switch (currentTab) {
-  //     case 0:
-  //       this.updateNodeStatus(oldNode, newNode);
-  //       this.currentTab++;
-  //       this.totalTab == 0 && this.totalTab++;
-  //       break;
-  //     case 1:
-  //       this.newNode = newNode;
-  //       this.oldNode = oldNode;
-  //       this.updateNodeStatus(oldNode, newNode);
-  //       this.currentTab++;
-  //       this.totalTab == 1 && this.totalTab++;
-  //       this.changeDetect.detectChanges();
-  //       break;
-  //     case 2:
-  //       this.updateNodeStatus(oldNode, newNode);
-  //       this.currentTab++;
-  //       this.totalTab == 2 && this.totalTab++;
-  //       this.changeDetect.detectChanges();
-  //       break;
-  //   }
-
-  //   this.changeDetect.detectChanges();
-  // }
-
    //#region Open form
    show(){
     this.isShow = !this.isShow;
@@ -138,15 +99,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.processTab == 1 && this.processTab++;
-        this.changeDetectorRef.detectChanges();
+        this.processTab++;
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        this.processTab == 2 && this.processTab++;
-        this.changeDetectorRef.detectChanges();
+        this.processTab++;
         break;
     }
 
@@ -164,6 +122,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //#region Trường tùy chỉnh 
-  
+  clickShow(id){
+    var element = document.getElementById(id);
+    if (element) {
+     let isClose = element.classList.contains('hidden-main');
+     let isShow = element.classList.contains('show-main');
+      if (isClose) {
+        element.classList.remove('icon-add_box');
+        element.classList.add('hidden-main');
+      } else if (isShow) {
+        element.classList.remove('hidden-main');
+        element.classList.add('icon-add_box');
+      }
+   }
+  }
   //#region 
 }
