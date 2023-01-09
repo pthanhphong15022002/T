@@ -760,7 +760,10 @@ export class CalendarNotesComponent
       var date = args.date;
       if (typeof args.date !== 'string') date = date.toLocaleDateString();
       let myInterval = setInterval(() => {
-        if (this.dataResourceModel.length > 0) {
+        if (
+          this.dataResourceModel.length > 0 &&
+          this.countDataOfE == this.countEvent
+        ) {
           clearInterval(myInterval);
           for (let y = 0; y < this.TM_Tasks?.length; y++) {
             var dateParse = new Date(this.TM_Tasks[y]?.calendarDate);
@@ -985,7 +988,7 @@ export class CalendarNotesComponent
             }
           });
         }
-      });
+      }, 800);
     }
   }
 
