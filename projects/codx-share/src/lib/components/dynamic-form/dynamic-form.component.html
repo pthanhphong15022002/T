@@ -1,12 +1,26 @@
-<codx-views #view [views]="views" [service]="service" [entityName]="entityName" [predicate]="predicate"
-  [dataValue]="dataValue" [idField]="idField" [button]="buttons" (buttonClick)="click($event)"
-  (viewChanged)="viewChanged($event, view)">
+<codx-views
+  #view
+  [views]="views"
+  [service]="service"
+  [entityName]="entityName"
+  [predicate]="predicate"
+  [dataValue]="dataValue"
+  [idField]="idField"
+  [button]="buttons"
+  (buttonClick)="click($event)"
+  (viewChanged)="viewChanged($event, view)"
+>
 </codx-views>
 
 <ng-template #morefunction let-data>
   <div class="d-flex align-items-center" style="height: 30px">
     <!-- <div class="action-menu"> -->
-    <codx-mfunc [dataItem]="data" [formModel]="viewBase.formModel" (clickMF)="clickMF($event, data)" type="view">
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="viewBase.formModel"
+      (clickMF)="clickMF($event, data)"
+      type="view"
+    >
     </codx-mfunc>
     <!-- </div> -->
   </div>
@@ -18,4 +32,14 @@
       type="view"
       >
 </codx-mfunc> -->
+</ng-template>
+
+<ng-template #tabRef>
+  <codx-tabs
+    [entityName]="view.formModel.entityName"
+    [formModel]="view.formModel"
+    [objectID]="''"
+    [funcID]="view.formModel.funcID"
+    [TabControl]="tabs"
+  ></codx-tabs>
 </ng-template>

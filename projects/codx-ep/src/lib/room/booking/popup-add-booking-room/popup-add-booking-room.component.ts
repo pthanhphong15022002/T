@@ -150,41 +150,32 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
     this.userInfo = authStore.get();
     this.user = this.authStore.get();
-    if (this.isAdd) {
-      if (this.optionalData != null) {
-        this.data.bookingOn = this.optionalData.startDate;
-        this.data.resourceID = this.optionalData.resourceId;
-      } else {
-        this.data.bookingOn = new Date();
+    
+      if (this.isAdd) {
+        if (this.optionalData != null) {
+          this.data.bookingOn = this.optionalData.startDate;
+          this.data.resourceID = this.optionalData.resourceId;
+        } else {
+          this.data.bookingOn = new Date();
+        }
+        this.data.attendees = 1;
+        this.data.reminder = 0;
+      } else if (!this.isAdd) {
+        let tmpStartTime = new Date(this.data?.startDate);
+        let tmpEndTime = new Date(this.data?.endDate);
+        this.startTime =
+          ('0' + tmpStartTime.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+        this.endTime =
+          ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+          ':' +
+          ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
       }
-      this.data.attendees = 1;
-      this.data.reminder = 0;
-    } else if (!this.isAdd) {
-      let tmpStartTime = new Date(this.data?.startDate);
-      let tmpEndTime = new Date(this.data?.endDate);
-      this.startTime =
-        ('0' + tmpStartTime.getHours()).toString().slice(-2) +
-        ':' +
-        ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
-      this.endTime =
-        ('0' + tmpEndTime.getHours()).toString().slice(-2) +
-        ':' +
-        ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
-    }
+     
   }
 
-  onInit(): void {
-    this.api
-      .execSv(
-        'EP',
-        'ERM.Business.EP',
-        'ResourcesBusiness',
-        'GetListAvailableResourceAsync',
-        ['1', new Date(), new Date()]
-      )
-      .subscribe((res) => {
-        let x = res;
-      });
+  onInit(): void {  
 
     this.codxEpService.getSettingValue('System').subscribe((sys: any) => {
       if (sys) {
@@ -614,7 +605,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   initForm() {
     this.codxEpService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroupBooking(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         if (item) {
           this.fGroupAddBookingRoom = item;

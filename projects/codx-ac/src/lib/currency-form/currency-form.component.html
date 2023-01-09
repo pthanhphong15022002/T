@@ -2,8 +2,10 @@
   #view
   [views]="views"
   [button]="button"
-  service="BS"
   entityName="BS_Currencies"
   (buttonClick)="click($event)"
+  [moreFuncs]="moreFunction"
 >
 </codx-views>
+
+<ng-template #itemTemplate let-data></ng-template>

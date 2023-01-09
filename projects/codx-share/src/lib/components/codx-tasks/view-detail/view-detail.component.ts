@@ -1,4 +1,3 @@
-
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -23,7 +22,7 @@ import {
   TM_Parameter,
   TM_TaskGroups,
 } from '../model/task.model';
-import { CRUDService } from 'codx-core/public-api';
+import { AuthStore, CRUDService } from 'codx-core/public-api';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
@@ -44,6 +43,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() vllApproveStatus?: any;
   @Input() showMoreFunc?: any;
   @Input() dataService: CRUDService;
+  @Input() user: any;
   dataTree?: any[];
   dataReferences?: any[];
   @Input() taskID: string;
@@ -65,7 +65,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     { name: 'AssignTo', textDefault: 'Giao việc', isActive: false },
     { name: 'References', textDefault: 'Nguồn công việc', isActive: false },
   ];
-  loadParam = false ;
+  loadParam = false;
   param?: TM_Parameter = new TM_Parameter();
 
   constructor(
@@ -96,18 +96,18 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
     this.viewTags = '';
     this.dataTree = [];
     this.dataReferences = [];
-    this.loadParam = false ;
+    this.loadParam = false;
     this.api
       .exec<any>('TM', 'TaskBusiness', 'GetTaskDetailsByTaskIDAsync', this.id)
-      .subscribe( (res) => {
+      .subscribe((res) => {
         if (res) {
           this.itemSelected = res;
           this.viewTags = this.itemSelected?.tags;
           if (this.itemSelected.taskGroupID) {
             this.getTaskGroup(this.itemSelected.taskGroupID);
-          }else  {
+          } else {
             this.param = JSON.parse(JSON.stringify(this.paramDefaut));
-            this.loadParam = true ;
+            this.loadParam = true;
           }
 
           this.loadTreeView();
@@ -225,7 +225,16 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
           (x.functionID == 'SYS02' ||
             x.functionID == 'SYS03' ||
             x.functionID == 'SYS04') &&
-          this.formModel?.funcID == 'TMT0206'
+            (this.formModel?.funcID == 'TMT0206' ||  this.formModel?.funcID == 'MWP0063')
+        ) {
+          x.disabled = true;
+        }
+        //an voi fun TMT03011
+        if (
+          this.formModel?.funcID == 'TMT03011' &&
+          data.category == '1' &&
+          data.createdBy != this.user.userID && !this.user?.administrator &&
+          (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;
         }
@@ -403,7 +412,7 @@ export class ViewDetailComponent implements OnInit, AfterViewInit, OnChanges {
       )
       .subscribe((res) => {
         if (res) {
-          this.loadParam = true
+          this.loadParam = true;
           this.convertParameterByTaskGroup(res);
           this.changeDetectorRef.detectChanges();
         }

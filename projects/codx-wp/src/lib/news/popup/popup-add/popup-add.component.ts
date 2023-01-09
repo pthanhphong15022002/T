@@ -78,25 +78,21 @@ export class PopupAddComponent implements OnInit {
     private changedt: ChangeDetectorRef,
     private callFunc: CallFuncService,
     private cache: CacheService,
-    @Optional() dd?: DialogData,
+    @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
-
-  ) {
-    this.newsType = dd.data;
+  ) 
+  {
+    this.newsType = dialogData.data;
     this.dialogRef = dialogRef;
     this.user = auth.userValue;
   }
-
-
-
   ngOnInit(): void {
     this.setDataDefault();
   }
   ngAfterViewInit(): void {
   }
-
+  // set data
   setDataDefault() {
-    debugger
     this.data = new WP_News();
     this.data.newsType = this.newsType;
     this.data.shareControl = "9";
@@ -105,16 +101,15 @@ export class PopupAddComponent implements OnInit {
         this.messageImage = mssg.customName;
       }
     });
-    this.cache.functionList(this.dialogRef.formModel.funcID).subscribe((func:any) => {
+    this.cache.functionList(this.dialogRef.formModel.funcID)
+    .subscribe((func:any) => {
       if(func){
-        console.log(func);
         this.headerText = `Thêm ${func.customName}`;
         let formName = func.formName;
         let grvName = func.gridViewName;
         this.cache.gridViewSetup(formName, grvName)
         .subscribe((grv:any) => {
           if(grv){
-            console.log(grv);
             this.grvSetup = grv;
               let arrField =  Object.values(grv).filter((x:any) => x.isRequire);
               if(arrField){
@@ -125,10 +120,11 @@ export class PopupAddComponent implements OnInit {
       }
     });
   }
-
+  // open popup share
   openFormShare(content: any) {
     this.callFunc.openForm(content, '', 420, window.innerHeight);
   }
+  // insert post
   clickInsertNews(){
     if(this.arrFieldRequire.length > 0)
     {
@@ -180,6 +176,7 @@ export class PopupAddComponent implements OnInit {
         }
       });
   }
+  // release post
   releaseNews() {
     if(this.arrFieldRequire.length > 0)
     {
@@ -208,24 +205,22 @@ export class PopupAddComponent implements OnInit {
         [this.data])
         .subscribe(async (res:any[]) => {
         if (res) {
-          let checkApproval = res[0];
           let data = res[1];
           if (this.fileUpload.length > 0 && data.recID) {
             this.codxATM.objectId = data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe(
               (res2: any) => {
-                if (res2) {
-                  let result = checkApproval ? null : data
-                  this.dialogRef.close(result);
+                if (res2) 
+                {
+                  this.dialogRef.close(data);
                 }
               }
             );
           }
           else
           {
-            let result = checkApproval ? null : data
-            this.dialogRef.close(result);
+            this.dialogRef.close(data);
           }
         }
         else

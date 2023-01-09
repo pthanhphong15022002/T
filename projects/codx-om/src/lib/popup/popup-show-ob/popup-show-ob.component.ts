@@ -150,6 +150,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
     this.dialogRef = dialogRef;
     this.obRecID = dialogData.data[0];    
     this.title = dialogData.data[1];
+    this.formModel=dialogRef.formModel;
   
   }
   //-----------------------Base Func-------------------------//
@@ -337,19 +338,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-  checkinSave() {}
-
-  checkinCancel() {
-    this.dialogCheckIn.close();
-  }
-
-  popupUploadFile(evt: any) {
-    this.attachment.uploadFile();
-  }
-  fileCount(evt: any) {}
-
-  fileAdded(evt: any) {}
-
+  
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//

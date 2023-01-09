@@ -357,10 +357,7 @@
                     <span class="icon-i-signpost-2 text-primary"></span>
                     <codx-label default="Phụ thuộc" class="ps-2 fs-5 fw-bolder" name="lblLink"></codx-label>
                   </div>
-                  <!--Content-->
-                  <div class="ms-5 ps-5 pt-5">
-                    <span class="icon-i-signpost-2 text-primary"></span>
-                  </div>
+                  <!--Content-->                  
                 </div>
               </div>
             </ng-template>
@@ -373,7 +370,9 @@
               </div>
             </ng-template>
             <ng-template #content>
-              <lib-okr-tasks></lib-okr-tasks>
+              <div class="d-flex justify-content-center">
+                Công việc
+              </div>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -411,8 +410,8 @@
             <ng-template #content>
               <div class="d-flex justify-content-center">
                 <div class="w-75 mt-5">
-                  <codx-tree-history [objectID]="dataOKR.recID" [objectType]="'OM_OKRCompany'" [actionType]="'C'"
-                    [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="'OMT01'">
+                  <codx-tree-history [objectID]="dataOKR.recID" [objectType]="formModel?.entityName" [actionType]="'C'"
+                    [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="formModel?.funcID">
                   </codx-tree-history>
                 </div>
               </div>

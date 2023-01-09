@@ -7,7 +7,7 @@
 
   <!-- view-list -->
   <ng-template #itemViewList let-data>
-    <lib-view-list-meet [formModel]="view.formModel" [data]="data" (clickMoreFunction)="receiveMF($event)"
+    <lib-view-list-meet [formModel]="view.formModel" [data]="data" [user]="user" (clickMoreFunction)="receiveMF($event)"
       [itemSelected]="itemSelected" (viewDetail)="viewDetail($event)">
     </lib-view-list-meet>
   </ng-template>

@@ -33,7 +33,7 @@
                                 [name]="'WP001'" 
                                 [value]="data.shareControl" 
                                 [showText]="true" 
-                                [className]="'fw-bolder'"
+                                [className]="'text-gray-600'"
                                 [showIcon]="true" 
                                 [path]="'assets/themes/sys/default/img/'"
                                 [icoCss]="'symbol-12px symbol-circle'"  
@@ -53,8 +53,8 @@
             </div>
         </div>
         <div class="addpost-scroll">
-            <!-- text -->
-            <div>
+            <!-- contents -->
+            <div class="wp-contents">
                 <codx-input 
                     format="ed3" 
                     [class]="'border-none'" 
@@ -64,8 +64,8 @@
                     (valueChange)="valueChange($event)">
                 </codx-input>
             </div>
-            <!-- files -->
-            <div>
+            <!-- contents - files -->
+            <div class="wp-contents-files">
                 <ng-container *ngIf="status == 'edit';else codxFileNew">
                     <codx-file #codxFile 
                         [objectID]="data.recID" 
@@ -89,27 +89,29 @@
                     </codx-view-files> -->
                 </ng-template>
             </div>
-            <!-- template chia sẻ -->
-            <ng-container *ngIf="data.shares">
-                <div class="border-start border rounded-3">
-                    <div>
-                        <ng-container [ngSwitch]="data.refType">
-                            <!-- chia sẻ bài viết -->
-                            <ng-container *ngSwitchCase="'WP_Comments'">
-                                <ng-container
-                                    *ngTemplateOutlet="templateSharePost; context: { $implicit: data.shares }">
-                                </ng-container>
-                            </ng-container>
-                            <!-- chia sẻ tin tức sự kiện -->
-                            
-                            <!-- chia sẻ hệ thống phản hồi -->
-                            <ng-container *ngSwitchCase="'FD_Cards'">
-                                <ng-container
-                                    *ngTemplateOutlet="templateShareCard; context: { $implicit: data.card }">
-                                </ng-container>
+            <!-- template chia sẻ --> 
+            <ng-container *ngIf="data.category == '4' && data.refType">
+                <div class="wp-template-share">
+                    <ng-container [ngSwitch]="data.refType">
+                        <!-- chia sẻ bài viết -->
+                        <ng-container *ngSwitchCase="'WP_Comments'">
+                            <ng-container
+                                *ngTemplateOutlet="templateSharePost; context: { $implicit: data.shares }">
                             </ng-container>
                         </ng-container>
-                    </div>
+                        <!-- chia sẻ tin tức sự kiện -->
+                        <ng-container *ngSwitchCase="'WP_News'">
+                            <ng-container
+                                *ngTemplateOutlet="templateShareNews; context: { $implicit: data.news }">
+                            </ng-container>
+                        </ng-container>
+                        <!-- chia sẻ hệ thống phản hồi -->
+                        <ng-container *ngSwitchCase="'FD_Cards'">
+                            <ng-container
+                                *ngTemplateOutlet="templateShareCard; context: { $implicit: data.card }">
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
                 </div>
             </ng-container>
         </div>
@@ -121,17 +123,25 @@
             </div>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-emoji">
-                    <button (click)="clickEmoji()" type="button" data-toggle="tooltip" title="Cảm xúc"
-                        class="btn btn-icon btn-md ms-2 btn-emoji">
-                        <i class="icon-tag_faces icon-24 text-warning"></i>
-                    </button>
-                    <ng-container *ngIf="showEmojiPicker">
-                        <div class="emoji">
-                            <emoji-mart [showSingleCategory]="true" 
-                            [showPreview]="false" [set]="emojiMode" [perLine]="7"
-                                (emojiSelect)="addEmoji($event)"></emoji-mart>
+                    <div ngbDropdown class="symbol-more">
+                        <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button 
+                                type="button" 
+                                title="Cảm xúc"
+                                class="btn btn-icon btn-md ms-2 btn-emoji">
+                                    <i class="icon-tag_faces icon-24 text-warning"></i>
+                            </button>
                         </div>
-                    </ng-container>
+                        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+                            <emoji-mart 
+                                [showSingleCategory]="true" 
+                                [showPreview]="false" 
+                                [set]="emojiMode" 
+                                [perLine]="7"
+                                (emojiSelect)="addEmoji($event)">
+                            </emoji-mart>
+                        </div>
+                    </div>
                 </div>
                 <div>
                     <button (click)="clickTagsUser()" type="button" data-toggle="tooltip" title="Gắn thẻ"
@@ -140,7 +150,10 @@
                     </button>
                 </div>
                 <div class="btn-upload">
-                    <button (click)="clickUploadFile()" type="button" data-toggle="tooltip" title="Hình ảnh"
+                    <button (click)="clickUploadFile()" 
+                        type="button" 
+                        data-toggle="tooltip" 
+                        title="Hình ảnh"
                         class="btn btn-icon btn-md ms-2 ng-star-inserted">
                         <i class="icon-photo icon-24 text-success"></i>
                         <div class="d-none">
@@ -218,11 +231,10 @@
                 </div>
             </div>
         </div>
-
     </ng-template>
     <!-- template share bài viết -->
     <ng-template #templateSharePost let-post>
-        <div>
+        <div class="WP_Comments">
             <div class="pic-feed p-4">
                 <div class="pic-feed-img">
                     <codx-file [objectID]="post.recID"></codx-file>
@@ -258,7 +270,7 @@
                                         [name]="'WP001'" 
                                         [value]="post.shareControl" 
                                         [showText]="true" 
-                                        [className]="'fw-bolder'"
+                                        [className]="'text-gray-600'"
                                         [showIcon]="true" 
                                         [path]="'assets/themes/sys/default/img/'"
                                         [icoCss]="'symbol-12px symbol-circle'"  
@@ -280,9 +292,20 @@
             </div>
         </div>
     </ng-template>
+    <ng-template #templateShareNews let-news>
+        <div class="WP_News">
+            <ng-container *ngIf="news.recID">
+                <codx-file 
+                    [objectID]="news.recID"
+                    [objectType]="'WP_News'"
+                    [funcID]="dialogRef.formModel.funcID">
+                </codx-file>  
+            </ng-container>
+        </div>
+    </ng-template>
     <!-- template share card -->
     <ng-template #templateShareCard let-card>
-        <div>
+        <div class="FD_Cards">
             
         </div>
     </ng-template>

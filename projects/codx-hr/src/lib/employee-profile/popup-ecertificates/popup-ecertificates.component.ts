@@ -33,6 +33,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
   indexSelected;
   actionType
   funcID;
+  idField = 'RecID';
   employId;
   isAfterRender = false;
   headerText: ''
@@ -49,12 +50,12 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if(!this.formModel){
-      this.formModel = new FormModel();
-      this.formModel.formName = 'ECertificates'
-      this.formModel.entityName = 'HR_ECertificates'
-      this.formModel.gridViewName = 'grvECertificates'
-    }
+    // if(!this.formModel){
+    //   this.formModel = new FormModel();
+    //   this.formModel.formName = 'ECertificates'
+    //   this.formModel.entityName = 'HR_ECertificates'
+    //   this.formModel.gridViewName = 'grvECertificates'
+    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.funcID = this.dialog.formModel.funcID
@@ -65,35 +66,78 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     
     if(this.actionType === 'edit' || this.actionType ==='copy'){
       this.certificateObj = JSON.parse(JSON.stringify(this.lstCertificates[this.indexSelected]));
-      this.formModel.currentData = this.certificateObj
+      // this.formModel.currentData = this.certificateObj
     }
-    console.log('employid', this.employId)
-    console.log('formmdel', this.formModel);
+    // console.log('employid', this.employId)
+    // console.log('formmdel', this.formModel);
     }
 
     initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrService.getECertificateModel().subscribe(p => {
-            this.certificateObj = p;
-            this.formModel.currentData = this.certificateObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel', this.formModel.currentData);
-          })  
-        }
-        this.formGroup.patchValue(this.certificateObj)
-        this.isAfterRender = true
-      }); 
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     this.formGroup = item;  
+    //     if(this.actionType == 'add'){
+    //       this.hrService.getECertificateModel().subscribe(p => {
+    //         this.certificateObj = p;
+    //         this.formModel.currentData = this.certificateObj
+    //         // this.dialog.dataService.dataSelected = this.data
+    //         console.log('du lieu formmodel', this.formModel.currentData);
+    //       })  
+    //     }
+    //     this.formGroup.patchValue(this.certificateObj)
+    //     this.isAfterRender = true
+    //   }); 
+
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.certificateObj = res?.data;
+            this.certificateObj.employeeID = this.employId;
+            this.formModel.currentData = this.certificateObj;
+            this.formGroup.patchValue(this.certificateObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.certificateObj);
+        this.formModel.currentData = this.certificateObj;
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
   onInit(): void {
-    this.initForm();
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   onSaveForm(){
+    // if (this.formGroup.invalid) {
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+    
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.certificateObj.recID
     }

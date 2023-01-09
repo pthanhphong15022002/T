@@ -1,31 +1,30 @@
 import {
   ApiHttpService,
-  AuthStore,
   DialogData,
   DialogRef,
   CacheService,
   CRUDService,
   RequestOption,
+  UIComponent,
 } from 'codx-core';
 import {
   Component,
   OnInit,
   ChangeDetectorRef,
-  Input,
   Optional,
   ViewChild,
+  Injector,
 } from '@angular/core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { AttachmentService } from 'projects/codx-share/src/lib/components/attachment/attachment.service';
 import { Notes, NoteType, TempNote } from '@shared/models/notes.model';
-import { falseLine } from '@syncfusion/ej2-gantt/src/gantt/base/css-constants';
 
 @Component({
   selector: 'app-popup-add-update',
   templateUrl: './popup-add-update.component.html',
   styleUrls: ['./popup-add-update.component.scss'],
 })
-export class PopupAddUpdate implements OnInit {
+export class PopupAddUpdate extends UIComponent implements OnInit {
   title: any;
   memo: any;
   recID: any;
@@ -56,13 +55,13 @@ export class PopupAddUpdate implements OnInit {
   @ViewChild('attachment') attachment: AttachmentComponent;
 
   constructor(
+    private injector: Injector,
     public atSV: AttachmentService,
-    private cache: CacheService,
-    private api: ApiHttpService,
     private changeDetectorRef: ChangeDetectorRef,
     @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
   ) {
+    super(injector);
     this.dialog = dialog;
     this.formType = dt?.data[0].type;
     this.transID = dt?.data[0].parentID;
@@ -77,7 +76,6 @@ export class PopupAddUpdate implements OnInit {
         };
         this.note.checkList.push(dtt);
       }
-      
     }
     this.cache.functionList('MWP00941').subscribe((res) => {
       if (res) {
@@ -87,7 +85,7 @@ export class PopupAddUpdate implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  onInit(): void {
     this.cache.functionList(this.functionList.funcID).subscribe((res) => {
       if (res) {
         this.header =
@@ -204,7 +202,8 @@ export class PopupAddUpdate implements OnInit {
 
   saveNoteBookDetails() {
     // this.attachment.saveFiles();
-    if (this.formType == 'add' || this.formType == 'copy') this.addNoteBookDetails();
+    if (this.formType == 'add' || this.formType == 'copy')
+      this.addNoteBookDetails();
     else this.updateNote();
   }
 
@@ -220,25 +219,21 @@ export class PopupAddUpdate implements OnInit {
             this.attachment.saveFiles();
             this.checkUpload = true;
           }
-          this.dialog.close();
+          this.dialog.close(res.save);
         }
       });
   }
 
   updateNote() {
-    this.note.fileCount = this.fileCount;
     this.dialog.dataService
       .save((opt: any) => this.beforeSave(opt))
       .subscribe((res) => {
         if (res.update) {
           if (this.checkFile == true) {
-            this.attachment.objectId = res.recID;
+            this.attachment.objectId = res.update.recID;
             this.attachment.saveFiles();
           }
-          (this.dialog.dataService as CRUDService)
-            .update(res.update)
-            .subscribe();
-          this.dialog.close();
+          this.dialog.close(res.update);
         }
       });
   }
@@ -267,8 +262,10 @@ export class PopupAddUpdate implements OnInit {
     this.note.transID = this.transID;
     this.note.checkList = this.listNote;
     if (this.formType == 'edit') {
+      this.note.fileCount += this.fileCount;
       if (this.note.noteType !== 'text') this.note.checkList.pop();
     } else {
+      this.note.fileCount = this.fileCount;
       if (this.type !== 'text') this.note.checkList.pop();
     }
     this.note.noteType = this.type;
@@ -290,18 +287,7 @@ export class PopupAddUpdate implements OnInit {
   }
 
   fileAdded(e) {
-    // if (e) {
-    //   var dt = e.data;
-    //   var count = 0;
-    //   dt.forEach((res) => {
-    //     if (res.status == '0') {
-    //       count++;
-    //     }
-    //   });
-    //   this.fileCount = count;
-    //   this.updateNote2(this.dataAdd);
-    //   if (this.checkUpdate == true) this.updateNote();
-    // }
+    if (e.data) this.fileCount = e.data.length;
   }
 
   valueChangeTag(e) {
