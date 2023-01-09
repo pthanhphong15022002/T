@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnInit,
-  Optional,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 
 @Component({
@@ -18,7 +11,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   dialog: any;
   currentTab = 0; //Bước hiện tại
-  totalTab = 0; // Tổng bước đã đi qua
+  processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
   oldNode: number; // Vị trí node cũ
@@ -26,9 +19,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isShow = false; //Check mở form
   isAddNew = true;
   constructor(
-    private changeDetect: ChangeDetectorRef,
-    @Optional() dialog: DialogRef,
-    @Optional() data: DialogData) {
+    private changeDetectorRef: ChangeDetectorRef,
+  @Optional() dialog: DialogRef,
+  @Optional() data: DialogData) {
     this.dialog = dialog;
   }
 
@@ -45,54 +38,51 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#region Change Tab
   //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
-    let newNo = tabNo;
-    let oldNo = this.currentTab;
-
-    if (tabNo <= this.totalTab && tabNo != this.currentTab) {
-      this.updateNodeStatus(oldNo, newNo);
+    //if (tabNo <= this.processTab && tabNo != this.currentTab) {
+      if (tabNo != this.currentTab) {
+      this.updateNodeStatus(this.currentTab, tabNo);
       this.currentTab = tabNo;
     }
   }
 
   //Quay lại
-  previous(currentTab) {
-    let oldNode = currentTab;
-    let newNode = oldNode - 1;
-    this.updateNodeStatus(oldNode, newNode);
-    this.currentTab--;
-  }
+  // previous(currentTab) {
+  //   let oldNode = currentTab;
+  //   this.updateNodeStatus(oldNode, newNode);
+  //   this.currentTab--;
+  // }
 
   //Tiếp tục qua tab
-  async continue(currentTab) {
-    if (this.currentTab > 2) return;
+  // async continue(currentTab) {
+  //   if (this.currentTab > 2) return;
 
-    let oldNode = currentTab;
-    let newNode = oldNode + 1;
+  //   let oldNode = currentTab;
+  //   let newNode = oldNode + 1;
 
-    switch (currentTab) {
-      case 0:
-        this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.totalTab == 0 && this.totalTab++;
-        break;
-      case 1:
-        this.newNode = newNode;
-        this.oldNode = oldNode;
-        this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.totalTab == 1 && this.totalTab++;
-        this.changeDetect.detectChanges();
-        break;
-      case 2:
-        this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.totalTab == 2 && this.totalTab++;
-        this.changeDetect.detectChanges();
-        break;
-    }
+  //   switch (currentTab) {
+  //     case 0:
+  //       this.updateNodeStatus(oldNode, newNode);
+  //       this.currentTab++;
+  //       this.totalTab == 0 && this.totalTab++;
+  //       break;
+  //     case 1:
+  //       this.newNode = newNode;
+  //       this.oldNode = oldNode;
+  //       this.updateNodeStatus(oldNode, newNode);
+  //       this.currentTab++;
+  //       this.totalTab == 1 && this.totalTab++;
+  //       this.changeDetect.detectChanges();
+  //       break;
+  //     case 2:
+  //       this.updateNodeStatus(oldNode, newNode);
+  //       this.currentTab++;
+  //       this.totalTab == 2 && this.totalTab++;
+  //       this.changeDetect.detectChanges();
+  //       break;
+  //   }
 
-    this.changeDetect.detectChanges();
-  }
+  //   this.changeDetect.detectChanges();
+  // }
 
 
   //Setting class status Active
@@ -100,7 +90,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
     );
-
     let newClassName = (nodes[newNode] as HTMLElement).className;
     switch (newClassName) {
       case 'stepper-item':
@@ -122,16 +111,49 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         (nodes[oldNode] as HTMLElement).classList.remove('active');
         break;
     }
-    if (oldNode > newNode && this.currentTab == this.totalTab) {
+    if (oldNode > newNode && this.currentTab == this.processTab) {
     } else {
       (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
     }
   }
-  //#endregion
 
-  //#region Open form
-  show(){
-    this.isShow = !this.isShow;
+  continue(currentTab) {
+    if (this.currentTab > 1) return;
+    let oldNode = currentTab;
+    let newNode = oldNode + 1;
+    switch (currentTab) {
+      case 0:
+       // Phuc làm ở đây
+            this.updateNodeStatus(oldNode, newNode);
+            this.currentTab++;
+            this.processTab++;
+        break;
+      case 1:
+        // Bảo + Thuận làm ở đây
+
+        this.updateNodeStatus(oldNode, newNode);
+            this.currentTab++;
+            this.processTab++;
+        break;
+
+      case 2:
+         // Thảo làm ở đây
+        this.updateNodeStatus(oldNode, newNode);
+
+        this.currentTab++;
+        this.processTab++;
+        break;
+    }
+    this.changeDetectorRef.detectChanges();
   }
-  //#endregion
+
+  previous(currentTab) {
+    let oldNode = currentTab;
+    let newNode = oldNode - 1;
+    this.updateNodeStatus(oldNode, newNode);
+    this.currentTab--;
+  }
+  saveAndClose(){
+
+  }
 }
