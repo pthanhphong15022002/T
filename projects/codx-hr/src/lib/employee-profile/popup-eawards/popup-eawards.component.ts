@@ -35,6 +35,7 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   actionType
   headerText: ''
   funcID;
+  idField = 'RecID';
   employId;
   valueYear;
   isAfterRender = false;
@@ -56,17 +57,17 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
     //   this.isAfterRender = true
     // }
     // this.data = dialog?.dataService?.dataSelected
-    if(!this.formModel)
-      {
-        this.formModel = new FormModel();
-        this.formModel.formName = 'EAwards'
-        this.formModel.entityName = 'HR_EAwards'
-        this.formModel.gridViewName = 'grvEAwards'
-      }
+    // if(!this.formModel)
+    //   {
+    //     this.formModel = new FormModel();
+    //     this.formModel.formName = 'EAwards'
+    //     this.formModel.entityName = 'HR_EAwards'
+    //     this.formModel.gridViewName = 'grvEAwards'
+    //   }
 
       this.dialog = dialog;
       this.headerText = data?.data?.headerText;
-      this.funcID = this.dialog.formModel.funcID;
+      this.funcID = data?.data?.funcID;
       this.employId = data?.data?.employeeId;
       this.actionType = data?.data?.actionType;
       this.lstAwards = data?.data?.lstAwards
@@ -74,33 +75,76 @@ export class PopupEAwardsComponent extends UIComponent implements OnInit {
   
       if(this.actionType === 'edit' || this.actionType ==='copy'){
         this.awardObj = JSON.parse(JSON.stringify(this.lstAwards[this.indexSelected]));
-        this.formModel.currentData = this.awardObj
+        // this.formModel.currentData = this.awardObj
       }
   }
 
   initForm(){
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;  
-        if(this.actionType == 'add'){
-          this.hrService.getEmployeeAwardModel().subscribe(p => {
-            this.awardObj = p;
-            this.formModel.currentData = this.awardObj
-            // this.dialog.dataService.dataSelected = this.data
-            console.log('du lieu formmodel',this.formModel.currentData);
-          })  
-        }
-        this.formGroup.patchValue(this.awardObj)
-        this.isAfterRender = true
-      }); 
+    // this.hrService
+    //   .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+    //   .then((item) => {
+    //     this.formGroup = item;  
+    //     if(this.actionType == 'add'){
+    //       this.hrService.getEmployeeAwardModel().subscribe(p => {
+    //         this.awardObj = p;
+    //         this.formModel.currentData = this.awardObj
+    //         // this.dialog.dataService.dataSelected = this.data
+    //         console.log('du lieu formmodel',this.formModel.currentData);
+    //       })  
+    //     }
+    //     this.formGroup.patchValue(this.awardObj)
+    //     this.isAfterRender = true
+    //   }); 
+
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.awardObj = res?.data;
+            this.awardObj.employeeID = this.employId;
+            this.formModel.currentData = this.awardObj;
+            this.formGroup.patchValue(this.awardObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.awardObj);
+        this.formModel.currentData = this.awardObj;
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
   onInit(): void {
-    this.initForm();
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   onSaveForm(){
+    if (this.formGroup.invalid) {
+      this.hrService.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.awardObj.recID
     }

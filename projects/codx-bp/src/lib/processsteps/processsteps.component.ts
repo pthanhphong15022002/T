@@ -152,7 +152,12 @@ export class ProcessStepsComponent
   isHover = null;
   listCountActivities: number = 0;
   isBlockClickMore: boolean;
-  language: 'VN';
+  language = 'VN';
+  listUserSearch = [];
+  listUser = [];
+  isDragDrop = true;
+  iconUser = "";
+  popupSearch: any;
 
   constructor(
     inject: Injector,
@@ -171,6 +176,14 @@ export class ProcessStepsComponent
         if (mfAdd) this.titleAdd = mfAdd?.customName;
       }
     });
+    this.cache.valueList("BP021").subscribe((value) => {
+     if(value){
+        let userValue = value?.datas.find((u) => u.value =="P");
+        this.iconUser = './assets/themes/sys/default/img/' + userValue?.icon;
+        console.log(this.iconUser);
+        
+     }      
+    })
   }
   ngOnChanges(changes: SimpleChanges): void {
     // this.chgViewModel(this.viewMode);
@@ -235,6 +248,8 @@ export class ProcessStepsComponent
       if (obj.id != 'P' && obj.id != 'A') this.childFuncOfA.push(obj);
     });
     this.isBlockClickMore=false;
+
+
   }
 
   ngAfterViewInit(): void {
@@ -888,8 +903,8 @@ export class ProcessStepsComponent
 
   onActions(e: any) {
     switch (e.type) {
-      case 'drop':
-        this.onDragDrop(e.data);
+      case 'drop':     
+         this.onDragDrop(e.data);
         break;
       case 'drag':
         this.crrParentID = e?.data?.parentID;
@@ -899,11 +914,12 @@ export class ProcessStepsComponent
   }
 
   onDragDrop(data) {
-    if (!this.actived || !this.isEdit) {
+    if (!this.actived || !this.isEdit || this.lockChild) {
       data.parentID = this.crrParentID;
       return;
     }
     if (this.crrParentID == data?.parentID) return;
+    this.lockChild = true;
     this.bpService
       .updateDataDrapDrop([data?.recID, data.parentID, null]) //tam truyen stepNo null roi tính sau;
       .subscribe((res) => {
@@ -932,8 +948,10 @@ export class ProcessStepsComponent
             this.view.dataService.update(parentOld).subscribe();
             if (this.kanban) this.kanban.updateCard(data);
           }
+          this.lockChild = false;
           this.notiService.notifyCode('SYS007');
         } else {
+          this.lockChild = false
           this.notiService.notifyCode(' SYS021');
         }
       });
@@ -1465,5 +1483,29 @@ export class ProcessStepsComponent
     if(parent <= child){
       p.open();   
     }
+  }
+
+  seachUser(e,value,p){
+    e.stopPropagation();
+    // p.open();
+    this.popupSearch = p;
+    this.listUserSearch = value;
+    this.listUser = value;
+  }
+  searchName(e) {
+      var resouscesSearch = [];
+      if (e.trim() == '') {
+        this.listUserSearch = this.listUser;
+      return; 
+    }
+    let value = e.trim().toLowerCase(); 
+    resouscesSearch = this.listUser.filter(item => item.objectName.toString().toLowerCase().search(value) >= 0)
+    this.listUserSearch = resouscesSearch;
+  }
+  closePopup(){
+    console.log("thuan ----------");
+    
+    return true;
+    // this.popupSearch.close();
   }
 }

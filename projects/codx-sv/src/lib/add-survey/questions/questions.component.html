@@ -135,7 +135,7 @@
                               class="icon-delete_outline icon-24 pd-10 btn btn-icon btn-active-light-primary position-relative"></span>
                             <span class="split"></span>
                             <codx-label fiedName="" default="Bắt buộc" class="pd-10"></codx-label>
-                            <codx-input type="switch" class="pd-t-10" (valueChange)="valueChange($event, itemQuestion)"
+                            <codx-input type="switch" class="pd-t-10" (valueChange)="valueChangeMandatory($event, itemQuestion)"
                               [crrValue]="itemQuestion.mandatory"></codx-input>
                             <div ngbDropdown class="dropdown" container="body">
                               <a href="javascript:void(0)" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon"
@@ -361,9 +361,19 @@
         itemQuestion.answerType == 'C' ||
         itemQuestion.answerType == 'L'
       ">
-      <input class="e-input" type="text" placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+      <!-- <input class="e-input" type="text" placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
         (focus)="focusIn($event.target)" (blur)="focusOut($event.target)" [value]="itemAnswer.answer"
-        [disabled]="itemAnswer.other ? true : false" />
+        [disabled]="itemAnswer.other ? true : false" (change)="changeInput($event)"/> -->
+        <codx-input
+        type="text"
+        class="border-0"
+        placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
+        [disabled]="itemAnswer.other ? true : false"
+        [crrValue]="itemAnswer.answer"
+        field="answer"
+        (valueChange)="valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)"
+      >
+      </codx-input>
     </div>
     <div class="e-input-group short-text" *ngIf="itemQuestion.answerType == 'T'">
       <input class="e-input" type="text" placeholder="Văn bản câu trả lời ngắn" (focus)="focusIn($event.target)"
@@ -464,6 +474,16 @@
         <span>{{ valueFrom }}</span>
         <input class="e-input ps-6" type="text" placeholder="Nhãn (không bắt buộc)" (focus)="focusIn($event.target)"
           (blur)="focusOut($event.target)" />
+          <!-- <codx-input
+          type="text"
+          class="border-0"
+          placeholder="{{ itemAnswer.answer ? '' : 'Nhãn (không bắt buộc)' }}"
+          [disabled]="itemAnswer.other ? true : false"
+          [crrValue]="itemAnswer.answer"
+          field="R"
+          (valueChange)="valueChangeAnswer($event, seqNoSession, itemQuestion, itemAnswer)"
+        >
+        </codx-input> -->
       </div>
       <div class="d-flex e-input-group e-input-group-full pd-10">
         <span>{{ valueTo }}</span>
@@ -508,7 +528,7 @@
       ">
       <codx-input #input_check id="input_check{{ itemAnswer.seqNo }}" class="check-circle" [checked]="itemAnswer?.check"
         [label]="itemAnswer.answer" type="checkbox" field="check" (valueChange)="
-          valueChangeAnswer(
+        valueChangeShowAnswer(
             $event,
             seqNoSession,
             itemQuestion.seqNo,
@@ -546,7 +566,7 @@
           ">
           <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Câu hỏi" submitOnEnter="false" type="RTE"
             name="rte" data-underline="false" [model]="titleEditorModel" [validationRules]="commentRule"
-            [value]="itemQuestion.question">
+            [value]="itemQuestion.question" (valueChange)="valueChangeQuestionEJS($event, itemSession, itemQuestion, 'question')">
           </ejs-inplaceeditor>
         </div>
       </div>
@@ -554,7 +574,7 @@
         <div class="title-des">
           <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mô tả" submitOnEnter="false" type="RTE"
             name="rte" data-underline="false" [model]="titleEditorModel" [validationRules]="commentRule"
-            [value]="itemQuestion.comment">
+            [value]="itemQuestion.comment" (valueChange)="valueChangeQuestionEJS($event, itemSession, itemQuestion, 'comment')">
           </ejs-inplaceeditor>
         </div>
       </div>
@@ -1061,9 +1081,9 @@
   <div class="d-flex">
     <div class="form-group question w-100 position-relative">
       <div class="title-des d-flex">
-        <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mẫu không có tiêu đề" submitOnEnter="false"
+        <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" submitOnEnter="false"
           type="RTE" name="rte" data-underline="false" [model]="titleEditorModel" [validationRules]=""
-          [value]="itemSession.question">
+          [value]="itemSession.question" (valueChange)="valueChangeSessionEJS($event, itemSession, 'question')">
         </ejs-inplaceeditor>
         <ng-container #questionMF>
           <!-- <span
@@ -1105,8 +1125,9 @@
   </div>
   <div class="form-group question">
     <div class="title-des">
-      <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" emptyText="Mô tả biểu mẫu" submitOnEnter="false" type="RTE"
-        name="rte" data-underline="false" [model]="descriptionEditorModel" [validationRules]="">
+      <ejs-inplaceeditor #inplaceCommentEditor mode="Inline" submitOnEnter="false" type="RTE"
+        name="rte" data-underline="false" [model]="descriptionEditorModel" [validationRules]=""
+        [value]="itemSession.comment ? itemSession.comment : ''" (valueChange)="valueChangeSessionEJS($event, itemSession, 'comment')">
       </ejs-inplaceeditor>
     </div>
   </div>

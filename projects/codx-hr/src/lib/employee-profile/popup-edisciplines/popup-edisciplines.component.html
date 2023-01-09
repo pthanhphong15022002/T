@@ -86,15 +86,20 @@
 
     <div class="form-group row">
         <div class="col-6">
-            <codx-label
+            <div>
+                <codx-label
                 fiedName="IsLimit"
                 [formModel]="formModel"
             ></codx-label>
-            <codx-input
+            </div>
+            <div>
+                <codx-input
                 field="isLimit"
                 [Group]="formGroup"
                 [formModel]="formModel"
             ></codx-input>
+            </div>
+            
         </div>
         <div class="col-6">
             <codx-label
@@ -133,6 +138,16 @@
             ></codx-input>
         </div>
     </div>
+
+    <div class="extend-function">
+        <hr>
+        <div class="d-flex justify-content-center">
+          <div class="d-flex align-items-center w-auto extend-title">
+            <span class="text-primary text-hover-primary_darker fw-bold me-1">
+            </span>
+          </div>
+        </div>
+      </div>
 
     <div class="form-group row">
         <div class="col-6">

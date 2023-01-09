@@ -307,8 +307,15 @@
       <ng-container *ngIf="dataEBTravels.isOversea">
         <span class="text-gray-500 me-1 ms-1">|</span>
         <div class="d-flex align-items-center">
-          <span class="icon-flight_takeoff icon-14 text-warning me-1"></span>
-          <span class="text-primary"> {{ dataEBTravels?.country }} </span>
+          <span class="icon-flight_takeoff icon-14 text-primary me-1"></span>
+          <span class="text-primary" #country>
+            {{ dataEBTravels?.country }}
+            {{
+              dataEBTravels?.country
+                | formatvalue : this.formModel : "country" : country
+                | async
+            }}</span
+          >
         </div>
       </ng-container>
     </div>

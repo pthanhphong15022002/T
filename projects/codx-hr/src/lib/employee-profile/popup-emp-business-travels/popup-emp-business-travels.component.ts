@@ -35,7 +35,7 @@ export class PopupEmpBusinessTravelsComponent
   formGroup: FormGroup;
   formModel: FormModel;
   dialog: DialogRef;
-  headerText: '';
+  headerText: string = '';
   funcID;
   employId;
   data;
@@ -68,6 +68,13 @@ export class PopupEmpBusinessTravelsComponent
     //   this.formModel.formName = 'EBusinessTravels';
     //   this.formModel.entityName = 'HR_EBusinessTravels';
     //   this.formModel.gridViewName = 'grvEBusinessTravels';
+    this.cache.functionList(this.funcID).subscribe((funcList) => {
+      if (funcList) {
+        console.log(funcList);
+        this.headerText = this.headerText + ' 1 ' + funcList.description;
+        this.cr.detectChanges();
+      }
+    });
     // }
     this.employId = data?.data?.employeeId;
 
@@ -87,7 +94,7 @@ export class PopupEmpBusinessTravelsComponent
     // }
     // else {
 
-    this.codxShareService.getFormModel(this.funcID).then((formModel) => {
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
         this.hrService
@@ -111,25 +118,15 @@ export class PopupEmpBusinessTravelsComponent
           this.formModel.entityName,
           this.idField
         )
-        .subscribe((res) => {
+        .subscribe((res: any) => {
           if (res) {
-            this.data = res;
+            this.data = res?.data;
             this.data.employeeID = this.employId;
             this.formModel.currentData = this.data;
             this.formGroup.patchValue(this.data);
             this.cr.detectChanges();
             this.isAfterRender = true;
-          } else
-            this.hrService.getEBTravelDefaultAsync().subscribe((res) => {
-              if (res) {
-                this.data = res;
-                this.data.employeeID = this.employId;
-                this.formModel.currentData = this.data;
-                this.formGroup.patchValue(this.data);
-                this.cr.detectChanges();
-                this.isAfterRender = true;
-              }
-            });
+          }
         });
     } else {
       this.formModel.currentData = this.data;
@@ -140,6 +137,11 @@ export class PopupEmpBusinessTravelsComponent
   }
 
   onSaveForm(isCloseForm: boolean) {
+    // if(this.formGroup.invalid){
+    //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
+
     if (this.actionType == 'add' || this.actionType == 'copy') {
       this.data.contractTypeID = '1';
 

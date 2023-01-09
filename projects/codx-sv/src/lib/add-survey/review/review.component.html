@@ -308,55 +308,76 @@
   let-itemQuestion="itemQuestion"
   let-itemAnswer="itemAnswer"
 >
-  <!-- <div
-    class="e-input-group"
-    *ngIf="
-      itemQuestion.answerType == 'O' ||
-      itemQuestion.answerType == 'C' ||
-      itemQuestion.answerType == 'L'
-    "
-  >
-    <input
-      class="e-input"
-      type="text"
-      placeholder="{{ itemAnswer.other ? 'Khác...' : '' }}"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-      [value]="itemAnswer.answer"
-      [disabled]="itemAnswer.other ? true : false"
-    />
-  </div> -->
   <div class="e-input-group" *ngIf="itemQuestion.answerType == 'O'">
-    <codx-input
+    <codx-input *ngIf="!itemAnswer.other"
       type="radio"
       labelPosition="After"
       [disabled]="false"
       class="test-check"
       name="group"
       [label]="itemAnswer.answer"
+      field="O"
+      [checked]="itemAnswer.choose"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
+    <div class="d-flex" *ngIf="itemAnswer.other">
+      <codx-input
+        type="radio"
+        labelPosition="After"
+        [disabled]="false"
+        class="test-check"
+        name="group"
+        [label]="'Mục khác:'"
+        field="O"
+        [checked]="itemAnswer.choose"
+        (valueChange)="
+          valueChange($event, itemSession, itemQuestion, itemAnswer)
+        "
+      ></codx-input>
+      <codx-input
+        type="text"
+        class="border-0"
+        [crrValue]="itemAnswer.answer"
+        field="O"
+        (valueChange)="
+          valueChange($event, itemSession, itemQuestion, itemAnswer)
+        "
+      >
+      </codx-input>
+    </div>
   </div>
   <div class="e-input-group" *ngIf="itemQuestion.answerType == 'C'">
     <codx-input
-      type="radio"
+      type="checkbox"
       labelPosition="After"
       [disabled]="false"
       class="test-check"
-      name="group"
       [label]="itemAnswer.answer"
+      field="C"
+      [checked]="itemAnswer.choose"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
   </div>
   <div
-    class="e-input-group short-text ms-6"
+    class="e-input-group short-text ms-6 w-200px"
     *ngIf="itemQuestion.answerType == 'T'"
   >
-    <input
+    <!-- <input #input
       class="e-input"
       type="text"
-      placeholder="Văn bản câu trả lời ngắn"
       (focus)="focusIn($event.target)"
       (blur)="focusOut($event.target)"
-    />
+      [value]="itemAnswer.answer"
+      (change)="valueChange(input, itemSession, itemQuestion, itemAnswer, 'T')"
+    /> -->
+    <codx-input
+      type="text"
+      class="border-0"
+      [crrValue]="itemAnswer.answer"
+      field="T"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+    >
+    </codx-input>
   </div>
   <div
     class="e-input-group long-text ms-6"
@@ -368,9 +389,10 @@
       type="textarea"
       class="test-textarea"
       ngDefaultControl
-      field="memo"
       rows="auto"
-      [crrValue]="empty"
+      [crrValue]="itemAnswer.answer"
+      field="T2"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     >
     </codx-input>
   </div>
@@ -438,42 +460,25 @@
     </table>
   </div>
   <div class="ms-6" *ngIf="itemQuestion.answerType == 'D'">
-    <codx-input type="datetime" format="d"> </codx-input>
+    <codx-input
+      type="datetime"
+      format="d"
+      class="test-datetime"
+      [crrValue]="itemAnswer.answer"
+      field="D"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+    ></codx-input>
   </div>
   <div class="d-flex ms-6" *ngIf="itemQuestion.answerType == 'H'">
-    <input
-      class="e-input"
-      type="text"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-    />
-    <span>:</span>
-    <input
-      class="e-input"
-      type="text"
-      (focus)="focusIn($event.target)"
-      (blur)="focusOut($event.target)"
-    />
+    <codx-input
+      type="datetime"
+      format="t"
+      class="test-datetime"
+      [crrValue]="itemAnswer.answer"
+      field="H"
+      (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
+    ></codx-input>
   </div>
-  <ng-container
-    #iconRight
-    *ngIf="
-      itemQuestion.active &&
-      (itemQuestion.answerType == 'O' || itemQuestion.answerType == 'C')
-    "
-  >
-    <div class="has-action-menu" *ngIf="!itemAnswer.other">
-      <div class="action-menu">
-        <span class="icon-image icon-24 pd-10"></span>
-      </div>
-    </div>
-    <div
-      [ngClass]="itemAnswer.other ? 'm-l-6' : ''"
-      *ngIf="itemQuestion.answers?.length > 1"
-    >
-      <span class="icon-close icon-24 pd-s-e-10"></span>
-    </div>
-  </ng-container>
 </ng-template>
 <ng-template
   #tempAnswers_showAnswer
@@ -566,13 +571,13 @@
             itemQuestion?.active ? 'title-des title-des-hover' : 'title-des'
           "
         >
-          <span *ngIf="itemQuestion.question">{{ itemQuestion.question }}</span>
+          <span *ngIf="itemQuestion.question" [innerHTML]="itemQuestion.question"></span>
           <span *ngIf="!itemQuestion.question">{{ "Câu hỏi" }}</span>
         </div>
       </div>
       <div class="form-group question" *ngIf="itemQuestion.hideComment">
         <div class="title-des">
-          <span *ngIf="itemQuestion.comment">{{ itemQuestion.comment }}</span>
+          <span *ngIf="itemQuestion.comment" [innerHTML]="itemQuestion.comment"></span>
           <span *ngIf="!itemQuestion.comment">{{ "Mô tả" }}</span>
         </div>
       </div>
@@ -687,7 +692,7 @@
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       class="d-flex size-input-other"
       *ngIf="
         (itemQuestion?.active && itemQuestion.answerType == 'O') ||
@@ -731,7 +736,7 @@
           ></codx-label>
         </div>
       </ng-container>
-    </div>
+    </div> -->
   </div>
 </ng-template>
 <ng-template
@@ -881,7 +886,9 @@
     <div class="position-relative">
       <div
         class="row mt-2 justify-content-between pd-10"
-        *ngIf="lstEditIV.length > 0"
+        *ngIf="
+          lstEditIV.length > 0 && !itemQuestion.url && !itemQuestion.videoID
+        "
       >
         <ng-container *ngFor="let data of lstEditIV">
           <div
@@ -916,10 +923,15 @@
           </div>
         </ng-container>
       </div>
-      <img
-        [src]="getUrlImageOfVideo(itemQuestion.videoID)"
-        *ngIf="itemQuestion?.url"
-      />
+      <div *ngIf="itemQuestion.url && itemQuestion.videoID">
+        <iframe
+          width="100%"
+          height="380"
+          [src]="itemQuestion.url"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
     </div>
   </ng-container>
 </ng-template>
@@ -949,14 +961,14 @@
       <div
         [ngClass]="itemSession.seqNo == 0 ? 'title-des-index0' : 'title-des'"
       >
-        <span *ngIf="itemSession.question">{{ itemSession.question }}</span>
+        <span *ngIf="itemSession.question" [innerHTML]="itemSession.question"></span>
         <span *ngIf="!itemSession.question">{{ "Câu hỏi" }}</span>
       </div>
     </div>
   </div>
   <div class="form-group ms-6">
     <div class="title-des">
-      <span *ngIf="itemSession.comment">{{ itemSession.comment }}</span>
+      <span *ngIf="itemSession.comment" [innerHTML]="itemSession.comment"></span>
       <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
     </div>
   </div>
@@ -971,9 +983,7 @@
     <div class="d-flex">
       <div class="form-group question w-100" style="margin-top: -50px">
         <div class="title-des d-flex">
-          <span *ngIf="itemSession.question" style="color: white">{{
-            itemSession.question
-          }}</span>
+          <span *ngIf="itemSession.question" style="color: white" [innerHTML]="itemSession.question"></span>
           <span *ngIf="!itemSession.question" style="color: white">{{
             "Câu hỏi"
           }}</span>
@@ -982,7 +992,7 @@
     </div>
     <div class="form-group question">
       <div class="title-des">
-        <span *ngIf="itemSession.comment">{{ itemSession.comment }}</span>
+        <span *ngIf="itemSession.comment" [innerHTML]="itemSession.comment"></span>
         <span *ngIf="!itemSession.comment">{{ "Mô tả biểu mẫu" }}</span>
       </div>
     </div>

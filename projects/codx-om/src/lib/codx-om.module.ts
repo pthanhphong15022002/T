@@ -1,4 +1,3 @@
-import { PopupAddTaskComponent } from './popup/popup-add-task/popup-add-task.component';
 import { PopupViewVersionComponent } from './popup/popup-view-version/popup-view-version.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -14,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '@shared/shared.module';
 import { CodxShareModule } from 'projects/codx-share/src/public-api';
-import { OKRTasksComponent } from './okr/okr-tasks/okr-tasks.component';
 import { OkrPlansComponent } from './okr/okr-plans/okr-plans.component';
 import { OkrToolbarComponent } from './okr/okr-toolbar/okr-toolbar.component';
 import { PopupAddKRComponent } from './popup/popup-add-kr/popup-add-kr.component';
@@ -29,6 +27,7 @@ import { CircularGaugeModule } from '@syncfusion/ej2-angular-circulargauge';
 import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.component';
 import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
 import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
+import { OkrPlanShareComponent } from './okr/okr-plans/okr-plans-share/okr-plans-share.component';
 
 const routes: Routes = [
   {
@@ -72,8 +71,6 @@ const routes: Routes = [
     DashboardComponent,
     ReportsComponent,
     ReviewsComponent,
-    OKRTasksComponent,
-    PopupAddTaskComponent,
     OkrPlansComponent,
     OkrToolbarComponent,
     PopupAddKRComponent,
@@ -84,12 +81,11 @@ const routes: Routes = [
     OkrTargetsComponent,
     OkrAddComponent,
     OkrReviewsComponent,
-    OKRTasksComponent,
     PopupCheckInComponent,
     PopupSaveVersionComponent,
     PopupViewVersionComponent,
-    OKRTasksComponent,
     PopupOKRWeightComponent,
+    OkrPlanShareComponent
   ],
   imports: [
     RouterModule.forChild(routes),

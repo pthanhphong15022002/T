@@ -12,6 +12,7 @@ import {
   NotificationsService,
   CacheService,
   Util,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { filter, from, map } from 'rxjs';
@@ -53,10 +54,12 @@ export class RevisionsComponent implements OnInit {
   enterComment: any;
   enterName: any;
   msgCodeNameVersionIsExist: string = 'BP002';
+  user: any;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private notiService: NotificationsService,
     private cache: CacheService,
+    private authStore: AuthStore,
     private change: ChangeDetectorRef,
     private bpService: CodxBpService,
     @Optional() dt?: DialogData,
@@ -70,6 +73,7 @@ export class RevisionsComponent implements OnInit {
     this.process = this.data?.data;
     this.fucntionIdMain = this.data?.funcIdMain;
     this.revisions = this.process?.versions;
+    this.user = this.authStore.get();
     this.headerText = dt?.data.more.defaultName;
     this.verNo = 'V' + this.revisions.length.toString() + '.0';
     this.cache.message('BP001').subscribe((res) => {
@@ -131,14 +135,16 @@ export class RevisionsComponent implements OnInit {
     //   return this.msgErrorValidExit;
     // }
 
-    for(let element of this.revisions) {
-      if (element.versionName && element?.versionName.toUpperCase() == nameVersion.trim().toUpperCase()) {
+    for (let element of this.revisions) {
+      if (
+        element.versionName &&
+        element?.versionName.toUpperCase() == nameVersion.trim().toUpperCase()
+      ) {
         check = false;
         return this.msgErrorValidExit;
       }
     }
     return this.msgSucess;
-
   }
 
   onSave() {
@@ -151,12 +157,11 @@ export class RevisionsComponent implements OnInit {
         break;
       case this.msgSucess:
         this.isUpdate = true;
-        this.actionSave()
+        this.actionSave();
         break;
     }
-
   }
-  actionSave(){
+  actionSave() {
     if (this.isUpdate) {
       this.bpService
         .updateRevision(
