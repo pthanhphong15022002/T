@@ -220,39 +220,27 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       //   },
       // },
     ];
-    // if(this.queryParams?.predicate && this.queryParams?.dataValue){      
-    //   let ele = document.getElementsByTagName('codx-view-schedule')[0];
-    //   setInterval(()=> this.navigate(),2000);
-    // }  
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
+      this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
+        if(res){
+          setInterval(()=> this.navigate(res.startDate),2000);
+        }
+      });
+    }  
     this.detectorRef.detectChanges();
   }
 
   
-  navigate() {
+  navigate(date) {
     if(!this.navigated){
-      let ele = document.getElementsByTagName('codx-view-schedule')[0];
+      let ele = document.getElementsByTagName('codx-schedule')[0];
       if (ele) {
-        (window.ng.getComponent(ele) as CodxScheduleComponent).selectedDate = new Date('2023-02-02');      
-        this.detectorRef.detectChanges();
-        this.navigated =true;
-        
+        if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
+          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
+          this.navigated=true;
+        }        
       }
     }
-    // if (
-    //   event.data.fromDate == 'Invalid Date' &&
-    //   event.data.toDate == 'Invalid Date'
-    // )
-    //   return;
-    // if (
-    //   (event?.type == 'navigate' && event.data.fromDate && event.data.toDate) ||
-    //   event?.data?.type == undefined
-    // ) {
-    //   var obj = {
-    //     fromDate: event.data.fromDate,
-    //     toDate: event.data.toDate,
-    //     type: event?.data.type,
-    //   };
-    // }
   }
 
   getResourceName(resourceID: any) {

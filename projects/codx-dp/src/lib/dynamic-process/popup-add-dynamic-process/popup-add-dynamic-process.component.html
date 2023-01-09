@@ -1,0 +1,127 @@
+<div class="card-body p-0 codx-card-custom">
+  <div class="codx-stepper stepper stepper-pills">
+    <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
+      <div class="d-flex align-items-center">
+        <h2 class="h2-title">
+          <codx-label default="Tạo quy trình">
+          </codx-label>
+        </h2>
+      </div>
+      <div class="d-flex align-items-center">
+        <div class="stepper-nav flex-center flex-wrap" #status>
+          <div [ngClass]="
+                isAddNew? 'stepper-item active' : 'stepper-item approve'
+              " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(0)">
+              <div class="stepper-wrapper d-flex align-items-center flex-column">
+                <div class="stepper-icon h-30px">
+                  <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                  <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                  <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                    <span class="icon-check icon-18"></span>
+                  </div>
+                  <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
+                    <span class="icon-check icon-18"></span>
+                  </div>
+                </div>
+                <div class="stepper-label" [ngClass]="currentTab == 0 ? 'fw-bold text-primary' : ''">
+                  <codx-label name="lblGeneral" default="Thông tin quy trình"></codx-label>
+                </div>
+              </div>
+          </div>
+          <div [ngClass]="
+            isAddNew ? 'stepper-item active' : 'stepper-item approve'
+              " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(1)">
+              <div class="stepper-wrapper d-flex align-items-center flex-column">
+                <div class="stepper-icon h-30px">
+                  <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                  <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                  <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                    <span class="icon-check icon-18"></span>
+                  </div>
+                  <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
+                    <span class="icon-check icon-18"></span>
+                  </div>
+                </div>
+                <div class="stepper-label" [ngClass]="currentTab == 1 ? 'fw-bold text-primary' : ''">
+                  <codx-label name="lblStage" default="Thiết lập giai đoạn"></codx-label>
+                </div>
+              </div>
+          </div>
+          <div [ngClass]="
+            isAddNew ? 'stepper-item active' : 'stepper-item approve'
+              " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(2)">
+              <div class="stepper-wrapper d-flex align-items-center flex-column">
+                <div class="stepper-icon h-30px">
+                  <i class="stepper-default icon-24 icon-radio_button_checked"></i>
+                  <i class="stepper-active icon-30 text-primary icon-radio_button_checked"></i>
+                  <div class="stepper-approve badge badge-primary badge-lg badge-circle p-1">
+                    <span class="icon-check icon-18"></span>
+                  </div>
+                  <div class="stepper-approve-disabled badge badge-light-primary badge-lg badge-circle p-1">
+                    <span class="icon-check icon-18"></span>
+                  </div>
+                </div>
+                <div class="stepper-label" [ngClass]="currentTab == 2 ? 'fw-bold text-primary' : ''">
+                  <codx-label name="lblCustom" default="Trường tùy chỉnh"></codx-label>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end">
+        <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
+          <i class="icon-close icon-18"></i>
+        </div>
+      </div>
+    </div>
+    <div class="stepper-body pt-2 w-100" *ngIf="currentTab < 3">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 witdh-body h-100">
+        <div class="mb-10 mt-10 tab-pane-header">
+          <h2 class="h2-title float-left">
+            <codx-label *ngIf="currentTab == 0" name="lblGeneral" default="Thông tin quy trình">
+            </codx-label>
+            <codx-label *ngIf="currentTab == 1" name="lblStage" default="Thiết lập giai đoạn">
+            </codx-label>
+            <codx-label *ngIf="currentTab == 2" name="lblCustom" default="Trường tùy chỉnh">
+            </codx-label>
+          </h2>
+        </div>
+        <div class="card-body hover-scroll-overlay-y" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+          data-kt-scroll-height="auto" data-kt-scroll-dependencies=".tab-pane-header,.tab-pane-footer"
+          data-kt-scroll-wrappers=".stepper-body" data-kt-scroll-offset="0px">
+          <div class="tab-content">
+            <!--Body thông tin quy trình-->
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 0 ? 'active show' : ''">
+
+            </div>
+            <!--Thiết lập giai đoạn-->
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 1 ? 'active show' : ''">
+
+            </div>
+            <!--Trường tùy chỉnh-->
+            <div class="tab-pane fade" id="pane_1" [ngClass]="currentTab == 2 ? 'active show' : ''">
+
+            </div>
+          </div>
+        </div>
+        <div class="d-flex flex-stack justify-content-between card-footer border-0">
+          <div class="left">
+            <button type="button" class="btn btn-primary me-3" *ngIf="currentTab != 0" (click)="previous(currentTab)">
+              <codx-label name="lblBack"  default="Quay lại">
+              </codx-label>
+            </button>
+          </div>
+          <div *ngIf="currentTab == 0"></div>
+          <button *ngIf="!(currentTab == 2)" type="button" class="btn btn-primary"
+            (click)="continue(currentTab)" [ngClass]="
+                isAddNew == false
+                ? 'disabled'
+                : ''
+            ">
+            <codx-label name="lblContinue" default="Tiếp tục"></codx-label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
