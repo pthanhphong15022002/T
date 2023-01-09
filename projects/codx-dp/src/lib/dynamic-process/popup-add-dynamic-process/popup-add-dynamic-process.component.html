@@ -469,10 +469,14 @@
       </div>
       <div class="rights">
         <div class="button-group">
-          <button type="button" class="btn btn-primary">
+          <button type="button" class="btn btn-primary d-flex align-items-center" style="padding: 0 15px 0 0 !important;">
+            <span
+            class="icon-add icon-22 text-primary-600 py-2"
+            style="font-weight: 600; margin-left: 5px">
+          </span>
             <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
           </button>
-          <button>
+          <button class="button-custom">
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px">
@@ -490,7 +494,7 @@
       <div class="stage-body-left col-3">
         <div class="header">
           <span>Giai đoạn</span>
-          <button>
+          <button class="button-custom">
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px">
@@ -499,7 +503,7 @@
         </div>
         <div class="main">
           <!-- danh sách giai đoạn -->
-          <div *ngFor="let item of [1,2,3,4,5,6,6,7,7,2,12,3,42,3,2,43,3,243,12,14]; let i = index">
+          <div *ngFor="let item of [1,2,3,4,5,6,6,7,7,2,12,3,42,3,2,43,3,243,12,14]; let i = index" class="list-stage">
             <div>{{i}}</div>
             <div>Thuận {{item}}</div>
           </div>
@@ -509,7 +513,7 @@
       <div class="stage-body-right col-9">
         <div class="header" >
           <div>Tiếp nhận yêu cầu</div>
-          <button>
+          <button class="button-custom">
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px">
