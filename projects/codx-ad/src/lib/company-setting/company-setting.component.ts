@@ -64,6 +64,10 @@ export class CompanySettingComponent
   minType = 'MinRange';
   memory: number;
   storage: number;
+  curStorage: number;
+  maxStorage: number;
+  kbToGb = 1024 * 1024;
+  inner = '';
   // image main logo
   check?: string;
   imageUpload: UploadFile = new UploadFile();
@@ -225,45 +229,56 @@ export class CompanySettingComponent
   loadData() {
     this.adService.getListCompanySettings().subscribe((response) => {
       if (response) {
-        if (response) {
-          this.data = response;
-          if (this.data.logoFull) {
-            var bytes = this.base64ToArrayBuffer(this.data.logoFull);
-            let blob = new Blob([bytes], { type: 'image/jpeg' });
-            let url = window.URL.createObjectURL(blob);
-            let image = this.sanitizer.bypassSecurityTrustUrl(url);
-            this.image = image;
-          }
-
-          if (this.data.logo) {
-            var bytes = this.base64ToArrayBuffer(this.data.logo);
-            let blob = new Blob([bytes], { type: 'image/jpeg' });
-            let url = window.URL.createObjectURL(blob);
-            let image = this.sanitizer.bypassSecurityTrustUrl(url);
-            this.imageLogo = image;
-          }
-
-          if (this.data.timeZone) this.getURLEmbed(this.data.timeZone);
-          // this.data.companyCode.toString().toLowerCase();
-          this.detectorRef.detectChanges();
+        this.data = response;
+        if (this.data.logoFull) {
+          var bytes = this.base64ToArrayBuffer(this.data.logoFull);
+          let blob = new Blob([bytes], { type: 'image/jpeg' });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.image = image;
         }
+
+        if (this.data.logo) {
+          var bytes = this.base64ToArrayBuffer(this.data.logo);
+          let blob = new Blob([bytes], { type: 'image/jpeg' });
+          let url = window.URL.createObjectURL(blob);
+          let image = this.sanitizer.bypassSecurityTrustUrl(url);
+          this.imageLogo = image;
+        }
+        if (this.data.storage < 0) {
+          this.maxStorage = Number(this.data.memory);
+          this.cache.message('AD016').subscribe((res) => {
+            this.inner = res.customName;
+          });
+        } else {
+          this.cache.message('AD015').subscribe((res) => {
+            this.maxStorage = Number(this.data.storage);
+            this.inner = res.customName;
+          });
+        }
+        this.curStorage = Number(this.data.memory);
+        if (this.data.timeZone) this.getURLEmbed(this.data.timeZone);
+        // this.data.companyCode.toString().toLowerCase();
+        this.detectorRef.detectChanges();
       }
     });
   }
 
-  formatBytes(bytes) {
-    var gb = (bytes / (1024 * 1024 * 1024)).toFixed(0);
+  formatBytes(kbytes) {
+    let gb = (kbytes / this.kbToGb).toFixed(0);
     return gb;
   }
 
   innerHTML(memory, storage) {
-    var me = (memory / (1024 * 1024 * 1024)).toFixed(1) + ' GB ';
-    var sto = (storage / (1024 * 1024 * 1024)).toFixed(1) + ' GB';
-    var inner = '';
-    if (memory && storage) {
-      inner += '<div>Đã dùng ' + me + 'trong số ' + sto + '</div>';
-    }
-    return inner;
+    let me = (memory / this.kbToGb).toFixed(1);
+    me = Number(me) < 1 ? memory + ' KB' : me + ' GB ';
+
+    let sto = (storage / this.kbToGb).toFixed(1);
+    sto = Number(sto) < 1 ? storage + ' KB' : sto + ' GB ';
+
+    this.inner = this.inner.replace('{0}', me).replace('{1}', sto);
+
+    return this.inner;
   }
 
   txtToLower(e: any) {
