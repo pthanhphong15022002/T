@@ -82,7 +82,6 @@ export class PopupAddProcessesComponent implements OnInit {
   listPermissionCopy: BP_ProcessPermissions[] = [];
   onwerOldCoppy: string = '';
   msgCodeExistNameProcess='BP008';
-  isCheckExistOnwer: boolean = false;
   constructor(
     private cache: CacheService,
     private callfc: CallFuncService,
@@ -218,6 +217,13 @@ export class PopupAddProcessesComponent implements OnInit {
     } else if (this.action == this.moreFunctionEdit) {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
+      if(this.process.versions.length > 0 && this.process.versions !== null ) {
+        this.process.versions.forEach(x=> {
+          if(x.versionNo === this.process.versionNo) {
+            x.activedOn = this.process.activedOn;
+          }
+        });
+      }
       data = [this.process, this.funcID, this.entity, this.ownerOld];
     }
 
@@ -404,14 +410,12 @@ export class PopupAddProcessesComponent implements OnInit {
           this.perms = [];
           this.emp = res;
           this.updatePermission(this.emp, this.tmpPermission, this.onwerRole);
-          this.isCheckExistOnwer=true;
         }
       });
     }
 
   }
   updateOrCreatProccess(emp: tmpUser) {
-    if(this.isCheckExistOnwer){
       if (
         this.process?.permissions != null &&
         this.process?.permissions.length > 0
@@ -431,11 +435,6 @@ export class PopupAddProcessesComponent implements OnInit {
         this.process.permissions = this.perms;
       }
       this.callActionSave();
-    }
-    else {
-      this.notiService.notifyCode('Nhập onwer kia');
-    }
-
   }
 
   async updatePermission(

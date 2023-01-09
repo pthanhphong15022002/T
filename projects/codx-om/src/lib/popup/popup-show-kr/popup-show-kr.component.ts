@@ -152,6 +152,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     this.krRecID=dialogData.data[0];
     this.title = dialogData.data[1];
     this.krParentID = dialogData.data[2];
+    this.formModel=dialogRef.formModel;
 
     
   }

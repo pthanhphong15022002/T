@@ -320,10 +320,7 @@
       field="O"
       [crrValue]="itemAnswer.answer"
       [checked]="
-        lstQuestionTemp[itemSession.seqNo].children[itemQuestion.seqNo]
-          .answers[0].seqNo == itemAnswer.seqNo
-          ? true
-          : false
+        checkAnswer(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)
       "
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>

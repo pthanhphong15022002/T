@@ -250,7 +250,7 @@
         >
           <ejs-tab id="om-tab-child">
             <e-tabitems>
-              <e-tabitem>
+              <e-tabitem >
                 <ng-template #headerText>
                   <div class="d-flex align-items-center">
                     <i class="icon-vpn_key me-2"></i>
@@ -339,7 +339,7 @@
                   </div>
                 </ng-template>
               </e-tabitem>
-              <e-tabitem>
+              <e-tabitem class="e-active">
                 <ng-template #headerText>
                   <div class="d-flex align-items-center">
                     <i class="icon-link me-2"></i>
@@ -389,7 +389,15 @@
                     ></codx-label>
                   </div>
                 </ng-template>
-                <ng-template #content> Ghi chú </ng-template>
+                <ng-template #content> 
+                  <div class="d-flex justify-content-center">
+                    <div class="w-75 mt-5">
+                      <codx-tree-history [objectID]="data.recID" [objectType]="formModelOB.entityName" [actionType]="'C'"
+                        [addNew]="true" [viewIcon]="false" [viewVote]="true" [funcID]="formModelOB.funcID">
+                      </codx-tree-history>
+                    </div>
+                  </div>
+                </ng-template>
               </e-tabitem>
             </e-tabitems>
           </ejs-tab>

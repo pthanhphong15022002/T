@@ -37,6 +37,28 @@ export const OMCONST = {
         Delete:'SYS02',
         Edit:'SYS03',
         Copy:'SYS04',
+
+        //distribute OB
+        DOBComp:'OMT011',
+        DOBDept:'OMT021',
+        DOBOrg:'OMT031',
+        DOBPers:'OMT041',
+        //assign KR
+        AOBComp:'OMT012',
+        AOBDept:'OMT022',
+        AOBOrg:'OMT032',
+        AOBPers:'OMT042',
+
+        //distribute KR
+        DKRComp:'OMT013',
+        DKRDept:'OMT023',
+        DKROrg:'OMT033',
+        DKRPers:'OMT043',
+        //assign KR
+        AKRComp:'OMT014',
+        AKRDept:'OMT024',
+        AKROrg:'OMT034',
+        AKRPers:'OMT044',
     },
     
     VLL: {

@@ -92,6 +92,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   lstQuestionTemp: any;
+  lstQuestion: any;
   loadData() {
     this.questions = null;
     this.api
@@ -208,12 +209,14 @@ export class ReviewComponent extends UIComponent implements OnInit {
       inline: 'nearest',
     });
     this.itemSession = this.questions[pageNum];
+    this.lstQuestion = JSON.parse(JSON.stringify(this.lstQuestionTemp));
     this.change.detectChanges();
   }
 
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
-    if (!e.data) return;
-    //Xóa các field không có trong bảng SV_RespondResults để chép qua
+    debugger;
+    if (!e.data && !e.component) return;
+    // Xóa các field không có trong bảng SV_RespondResults để chép qua
     // delete itemAnswer.recID;
     // delete itemAnswer.id;
     // delete itemAnswer.hasPicture;
@@ -221,54 +224,58 @@ export class ReviewComponent extends UIComponent implements OnInit {
     // delete itemAnswer.column;
     let results: any;
     if (e.component) {
-      if (e.field == 'O' || e.field == 'C') {
-        this.lstQuestionTemp[itemSession.seqNo].children[
-          itemQuestion.seqNo
-        ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
-      } else if (
-        e.field == 'T' ||
-        e.field == 'T2' ||
-        e.field == 'D' ||
-        e.field == 'H'
-      ) {
-        results = [
-          {
-            seqNo: 0,
-            answer: e.data,
-            other: 0,
-            columnNo: 0,
-          },
-        ];
-      } else
-        results = [
-          {
-            seqNo: itemAnswer.seqNo,
-            answer: itemAnswer.answer,
-            other: itemAnswer.other,
-            columnNo: 0,
-          },
-        ];
-      let responds = {
-        questionID: itemQuestion.recID,
-        question: itemQuestion.question,
-        scores: 0,
-        results: results,
-      };
-      console.log('check count valueChange', this.lstQuestionTemp[itemSession.seqNo].children[
+      // if (e.field == 'O' || e.field == 'C') {
+      this.lstQuestionTemp[itemSession.seqNo].children[
         itemQuestion.seqNo
-      ].answers[0]);
+      ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
+      // } else if (
+      //   e.field == 'T' ||
+      //   e.field == 'T2' ||
+      //   e.field == 'D' ||
+      //   e.field == 'H'
+      // ) {
+      //   results = [
+      //     {
+      //       seqNo: 0,
+      //       answer: e.data,
+      //       other: 0,
+      //       columnNo: 0,
+      //     },
+      //   ];
+      // } else
+      //   results = [
+      //     {
+      //       seqNo: itemAnswer.seqNo,
+      //       answer: itemAnswer.answer,
+      //       other: itemAnswer.other,
+      //       columnNo: 0,
+      //     },
+      //   ];
+      // let responds = {
+      //   questionID: itemQuestion.recID,
+      //   question: itemQuestion.question,
+      //   scores: 0,
+      //   results: results,
+      // };
+      // console.log(
+      //   'check count valueChange',
+      //   this.lstQuestionTemp[itemSession.seqNo].children[itemQuestion.seqNo]
+      //     .answers[0]
+      // );
     }
   }
 
   checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer) {
-    let seqNo = JSON.parse(
-      JSON.stringify(
-        this.lstQuestionTemp[seqNoSession].children[seqNoQuestion].answers[0]
-          .seqNo
-      )
-    );
-    if (seqNo == seqNoAnswer) return true;
-    else return false;
+    if (this.lstQuestion) {
+      let seqNo = JSON.parse(
+        JSON.stringify(
+          this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[0]
+            .seqNo
+        )
+      );
+      if (seqNo == seqNoAnswer) return true;
+      else return false;
+    } else return false;
   }
 
   onSubmit() {
