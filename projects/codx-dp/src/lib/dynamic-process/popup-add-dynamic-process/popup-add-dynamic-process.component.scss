@@ -146,6 +146,24 @@
                 overflow-y: scroll;
                 .list-stage{
                     display: flex;
+                    align-items: center;
+                    .order{
+                        width: 45px;
+                        height: 45px;
+                        border-radius: 50%;
+                        background: #b6ddff;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 1.2rem;
+                        font-weight: 600;
+                    }
+                    .content{
+                        padding: 10px;
+                    }
+                }
+                .list-stage:hover{
+                    background: #a9d4ff;
                 }
             }
         }
