@@ -573,13 +573,13 @@
     </div>
     <div>
       <span>Mẫu giai đoạn: cơ hội</span>
-      <button type="button" class="btn btn-outline-primary">Đổi mẫu</button>
-      <button type="button" class="btn btn-outline-primary">Lưu mẫu mới</button>
+      <button type="button" class="btn btn-outline-primary ms-2">Đổi mẫu</button>
+      <button type="button" class="btn btn-outline-primary ms-2">Lưu mẫu mới</button>
     </div>
     <div class="stage-body row">
       <div class="stage-body-left col-3">
         <div class="header">
-          <span>Giai đoạn</span>
+          <span class="">Giai đoạn</span>
           <button class="button-custom">
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
@@ -623,8 +623,8 @@
         </div>
         <div class="main">
           <!-- Thêm teplate vào đây -->
-          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="job"></ng-container> -->
-          <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="successStage"></ng-container>
+          <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="job"></ng-container>
+          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="successStage"></ng-container> -->
           <!-- Thêm teplate vào đây -->
         </div>
       </div>
@@ -635,7 +635,7 @@
 <ng-template #job>
   <div class="background-job">
     <div class="header-job">
-        <div class="left">
+        <div class="left"  style="margin: auto 10px;">
             <div>
                 <span class="title">Công việc</span>
             </div>
