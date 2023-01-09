@@ -35,6 +35,8 @@ import { PopupPersonalComponent } from './popup-personal/popup-personal.componen
 import { LowerCasePipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TN_OrderModule } from '../models/tmpModule.model';
+import { PopupModuleDetailComponent } from './popup-module-detail/popup-module-detail.component';
 
 @Component({
   selector: 'lib-company-setting',
@@ -79,7 +81,12 @@ export class CompanySettingComponent
   @Input() childProperty: any[];
   optionMailHeader: any = 'mailheader';
   tenant: any;
-
+  vllL1449;
+  setting;
+  //bought modules
+  lstModule: Array<TN_OrderModule> = [];
+  lstInstalledModule: Array<TN_OrderModule> = [];
+  lstNotInstallModule: Array<TN_OrderModule> = [];
   constructor(
     private inject: Injector,
     private activedRouter: ActivatedRoute,
@@ -101,6 +108,28 @@ export class CompanySettingComponent
         this.moreFunc = res;
       }
     });
+    this.cache.valueList('L1449').subscribe((res) => {
+      this.vllL1449 = res?.datas;
+    });
+    this.adService.getTenantDefaultSetting().subscribe((res) => {
+      this.setting = JSON.parse(res.dataValue);
+    });
+    this.adService
+      .getLstBoughtModule()
+      .subscribe((res: Array<TN_OrderModule>) => {
+        if (res) {
+          this.lstModule = res;
+          this.lstModule.forEach((md) => {
+            if (md.boughtModule.refID == null) {
+              if (md.bought) {
+                this.lstInstalledModule.push(md);
+              } else {
+                this.lstNotInstallModule.push(md);
+              }
+            }
+          });
+        }
+      });
     this.loadData();
   }
   ngAfterViewInit(): void {
@@ -348,5 +377,22 @@ export class CompanySettingComponent
       this.urlEmbedSafe = this.sanitizer.bypassSecurityTrustResourceUrl(url);
       this.changeDetectorRef.detectChanges();
     }
+  }
+
+  openModuleDetail(module) {
+    let data = {
+      module: module,
+      lstModule: this.lstModule,
+      currency: this.setting?.CurrencyID,
+      vllL1449: this.vllL1449,
+    };
+    let popuMD = this.callfc.openForm(
+      PopupModuleDetailComponent,
+      '',
+      900,
+      900,
+      this.funcID,
+      data
+    );
   }
 }

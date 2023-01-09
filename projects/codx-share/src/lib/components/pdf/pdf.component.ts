@@ -13,6 +13,7 @@ import {
   SimpleChanges,
   ViewChild,
   ViewChildren,
+  OnDestroy,
 } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import {
@@ -24,8 +25,15 @@ import {
 } from 'codx-core';
 import Konva from 'konva';
 import { qr } from './model/mode';
-import { tmpAreaName, tmpSignArea } from './model/tmpSignArea.model';
 import {
+  comment,
+  highLightTextArea,
+  location,
+  tmpAreaName,
+  tmpSignArea,
+} from './model/tmpSignArea.model';
+import {
+  IPDFViewerApplication,
   NgxExtendedPdfViewerComponent,
   NgxExtendedPdfViewerService,
   pdfDefaultOptions,
@@ -41,6 +49,9 @@ import {
 } from 'projects/codx-es/src/lib/codx-es.model';
 import { text } from 'stream/consumers';
 import { environment } from 'src/environments/environment';
+import { style } from '@angular/animations';
+import { NgxUiLoaderService } from 'ngx-ui-loader';
+import { NgxExtendedPdfViewerCommonModule } from 'ngx-extended-pdf-viewer/lib/ngx-extended-pdf-viewer-common.module';
 @Component({
   selector: 'lib-pdf',
   templateUrl: './pdf.component.html',
@@ -49,7 +60,7 @@ import { environment } from 'src/environments/environment';
 })
 export class PdfComponent
   extends UIComponent
-  implements AfterViewInit, OnChanges
+  implements AfterViewInit, OnChanges, OnDestroy
 {
   constructor(
     private inject: Injector,
@@ -60,13 +71,16 @@ export class PdfComponent
     private notificationsService: NotificationsService
   ) {
     pdfDefaultOptions.renderInteractiveForms = false;
-    pdfDefaultOptions.annotationEditorEnabled = true;
+    pdfDefaultOptions.annotationEditorEnabled = false;
+    pdfDefaultOptions.doubleTapZoomFactor = null;
+
     super(inject);
     this.user = this.authStore.get();
 
     this.funcID = this.router.snapshot.params['funcID'];
   }
 
+  env = environment;
   //Input
   @Input() recID = '';
   @Input() isEditable = true;
@@ -108,7 +122,19 @@ export class PdfComponent
   contextMenu: any;
   needAddKonva = null;
   tr: Konva.Transformer;
+  showHand = true;
 
+  //highlight
+  isInteractPDF = false;
+  lstHighlightTextArea: Array<highLightTextArea> = [];
+  lstKey: Array<string> = [];
+  curSelectedHLA: highLightTextArea;
+  curCmtContent = '';
+  deleteHLAMode = false;
+
+  defaultColor = 'rgb(255, 255, 40)';
+  defaultAddedColor = 'transparent';
+  selectedColor = 'rgb(114, 255, 234)';
   //vll
   vllActions;
 
@@ -116,7 +142,7 @@ export class PdfComponent
   pageMax;
   getSignAreas;
   pageStep;
-  curPage = 1;
+  curPage = 0;
 
   //zoom
   zoomValue: any = 100;
@@ -220,6 +246,7 @@ export class PdfComponent
     { text: 'Vùng ký' },
     { text: 'History' },
     { text: 'Comment' },
+    { text: 'Highlight' },
   ];
   public headerLeftName = [{ text: 'Xem nhanh' }, { text: 'Chữ ký số' }];
 
@@ -228,6 +255,7 @@ export class PdfComponent
 
   vllSupplier: any;
   onInit() {
+    this.curSelectedHLA = null;
     this.cache.valueList('ES029').subscribe((res) => {
       if (res) {
         this.vllSupplier = res.datas;
@@ -386,8 +414,53 @@ export class PdfComponent
             this.removeArea();
           }
         });
-      this.detectorRef.detectChanges();
     }
+
+    document.onclick = (e) => {
+      let hlaCmt = document.getElementById('hla-Cmt');
+      if (hlaCmt) {
+        if (
+          e.target &&
+          (e.target as HTMLElement).classList.contains('highlighted')
+        ) {
+          hlaCmt.style.display = 'initial';
+          hlaCmt.style.top = e.clientY + 20 + 'px';
+          hlaCmt.style.left = e.clientX + 5 + 'px';
+          this.curCmtContent = this.curSelectedHLA.comment?.content ?? '';
+          let inputCmt = document.getElementById(
+            'input-Cmt'
+          ) as HTMLInputElement;
+          inputCmt.value = this.curCmtContent;
+        } else {
+          if (!(e.target as HTMLElement).classList.contains('hla-Cmt')) {
+            hlaCmt.style.display = 'none';
+          }
+        }
+      }
+    };
+    //add cmt
+    document.getElementById('add-cmt-btn').onclick = (e) => {
+      this.curCmtContent = (
+        document.getElementById('input-Cmt') as HTMLInputElement
+      ).value;
+      let tmpCmt: comment = {
+        author: this.user.userName,
+        content: this.curCmtContent,
+      };
+      this.curSelectedHLA.comment = tmpCmt;
+      this.changeHLComment();
+    };
+
+    //remove cmt
+    document.getElementById('delete-cmt-btn').onclick = (e) => {
+      this.curSelectedHLA.comment = {
+        author: '',
+        content: '',
+      };
+      this.curCmtContent = '';
+      (document.getElementById('input-Cmt') as HTMLInputElement).value = '';
+      this.changeHLComment();
+    };
   }
 
   //remove area
@@ -515,6 +588,7 @@ export class PdfComponent
             : true
         );
         this.tr?.forceUpdate();
+        this.curSelectedArea.draggable(this.tr.draggable());
         this.tr?.nodes([this.curSelectedArea]);
         layerChildren.add(this.tr);
         if (this.curSelectedAnnotID != area.recID) {
@@ -531,6 +605,7 @@ export class PdfComponent
             : this.lstSignDateType[0];
           this.curSelectedAnnotID = area.recID;
         }
+        this.showHand = false;
         this.detectorRef.detectChanges();
       }
     } else {
@@ -603,14 +678,16 @@ export class PdfComponent
   //loaded pdf
   loadedPdf(e: any) {
     this.pageMax = e.pagesCount;
-    this.curPage = this.pageMax;
+
     let ngxService: NgxExtendedPdfViewerService =
       new NgxExtendedPdfViewerService();
-    ngxService.addPageToRenderQueue(this.pageMax);
+    if (this.curPage == 0) {
+      this.curPage = this.pageMax;
+    }
+    ngxService.addPageToRenderQueue(this.curPage);
   }
 
   saveToDB(tmpArea: tmpSignArea) {
-    debugger;
     let es_SignArea = tmpArea;
     if (this.imgConfig.includes(tmpArea.labelType)) {
       tmpArea.labelValue = tmpArea.labelValue.replace(
@@ -632,7 +709,6 @@ export class PdfComponent
             )
             .subscribe((res) => {
               if (res) {
-                console.log('save event', res);
                 this.lstAreas = res;
                 this.detectorRef.detectChanges();
               }
@@ -752,7 +828,8 @@ export class PdfComponent
       let virtual = document.createElement('div');
       let id = 'layer' + e.pageNumber.toString();
       virtual.id = id;
-      virtual.style.zIndex = '2';
+      virtual.className = 'manualCanvasLayer';
+      virtual.style.zIndex = this.isInteractPDF ? '-1' : '2';
       virtual.style.border = '1px solid blue';
       virtual.style.position = 'absolute';
       virtual.style.top = '0';
@@ -1065,6 +1142,7 @@ export class PdfComponent
         stage.on('click', (click: any) => {
           let layerChildren = this.lstLayer.get(e.pageNumber);
           if (click.target == stage) {
+            this.showHand = true;
             if (this.contextMenu) {
               this.contextMenu.style.display = 'none';
             }
@@ -1082,31 +1160,6 @@ export class PdfComponent
                 (area) => area.recID == this.curSelectedArea.id()
               );
               this.goToSelectedAnnotation(tmpArea);
-
-              //   this.isEditable == false
-              //     ? false
-              //     : this.curSelectedArea.draggable()
-              // );
-              // this.tr?.draggable(
-              //   this.isEditable == false
-              //     ? false
-              //     : this.curSelectedArea.draggable()
-              // );
-
-              // let attrs = this.curSelectedArea?.attrs;
-              // let name: tmpAreaName = JSON.parse(attrs.name);
-              // this.tr?.enabledAnchors(
-              //   this.isEditable == false
-              //     ? []
-              //     : name.Type == 'img'
-              //     ? this.checkIsUrl(name.LabelValue)
-              //       ? this.fullAnchor
-              //       : this.textAnchor
-              //     : this.textAnchor
-              // );
-              // this.tr?.forceUpdate();
-              // this.tr?.nodes([this.curSelectedArea]);
-              // layerChildren.add(this.tr);
             } else {
               let idx = this.curSelectedArea
                 .id()
@@ -1139,10 +1192,19 @@ export class PdfComponent
         });
       }
     }
-    // }
+    let ngxService: NgxExtendedPdfViewerService =
+      new NgxExtendedPdfViewerService();
+    if (ngxService.isRenderQueueEmpty()) {
+      this.getListHighlights();
+    }
   }
 
   getTextLayerInfo(txtLayer: TextLayerRenderedEvent) {
+    if (txtLayer?.source.textLayerDiv?.nextElementSibling != null) {
+      (
+        txtLayer?.source.textLayerDiv?.nextElementSibling as HTMLElement
+      ).style.zIndex = '-1';
+    }
     if (txtLayer.pageNumber == this.pageMax) {
       txtLayer?.source.textDivs.forEach((div) => {
         if (Number(div.style.top.replace('px', '')) > this.maxTop) {
@@ -1159,7 +1221,7 @@ export class PdfComponent
 
   */
   saveQueue = new Map();
-  saveAfterX = 1000;
+  saveAfterX = 500;
 
   resetTime(tmpArea: tmpSignArea) {
     clearTimeout(this.saveQueue?.get(tmpArea.recID));
@@ -1287,7 +1349,7 @@ export class PdfComponent
             height: tmpName.LabelType == '8' ? 200 : 100,
             id: recID,
             name: JSON.stringify(tmpName),
-            draggable: true,
+            draggable: draggable,
           });
 
           if (isSaveToDB) {
@@ -1518,7 +1580,7 @@ export class PdfComponent
             draggable: true,
             name: this.curSelectedArea.name(),
           });
-          imgArea?.scale({ x: this.xScale, y: this.yScale });
+          imgArea?.scale(this.curSelectedArea.scale());
           this.curSelectedArea.destroy();
           this.curSelectedArea = imgArea;
 
@@ -1566,6 +1628,7 @@ export class PdfComponent
         id: recID,
         align: 'left',
       });
+      textArea.scale(this.curSelectedArea.scale());
       this.curSelectedArea.destroy();
       this.curSelectedArea = textArea;
       let curLayer = this.lstLayer.get(curArea?.location.pageNumber + 1); //xoa cho nay ne
@@ -1582,8 +1645,8 @@ export class PdfComponent
     //save to db
     let y = this.curSelectedArea.position().y;
     let x = this.curSelectedArea.position().x;
-    let w = this.xScale;
-    let h = this.yScale;
+    let w = this.curSelectedArea.scale().x / this.xScale;
+    let h = this.curSelectedArea.scale().y / this.yScale;
 
     let tmpArea: tmpSignArea = {
       signer: tmpName.Signer,
@@ -1896,6 +1959,13 @@ export class PdfComponent
           this.detectorRef.detectChanges();
         }
       });
+    this.esService
+      .changeSFCacheBytes(
+        this.curFileUrl.replace(environment.urlUpload + '/', '')
+      )
+      .subscribe((res) => {
+        console.log('change sf url', res);
+      });
     this.detectorRef.detectChanges();
   }
 
@@ -1909,6 +1979,9 @@ export class PdfComponent
     } else if (!isNaN(Number(e)) && Number(e) <= 100 && Number(e) >= 10) {
       this.ngxPdfView.zoom = e;
     } else {
+      if (type == 'in' && this.zoomValue < 100) {
+        this.zoomValue += 10;
+      }
       // this.zoomValue = 10;
     }
     this.detectorRef.detectChanges();
@@ -2212,8 +2285,8 @@ export class PdfComponent
     });
   }
 
-  show(area) {
-    let doc = document.getElementById(area.recID);
+  show(e) {
+    console.log('event', e);
   }
 
   //pop up
@@ -2245,6 +2318,367 @@ export class PdfComponent
   changeTab(currTab) {
     this.currentTab = currTab;
   }
+
+  changeEditMode() {
+    this.isInteractPDF = !this.isInteractPDF;
+    this.showHand = false;
+    let lstLayer = document.getElementsByClassName('manualCanvasLayer');
+    Array.from(lstLayer).forEach((ele: HTMLElement) => {
+      ele.style.zIndex = this.isInteractPDF ? '-1' : '2';
+    });
+    this.detectorRef.detectChanges();
+  }
+
+  getHLText(key): highLightTextArea {
+    let hla = this.lstHighlightTextArea.find((x) => x.group == key);
+    return hla;
+  }
+
+  goToSelectedHighlightText(key) {
+    this.curSelectedHLA = this.lstHighlightTextArea.find((x) => x.group == key);
+    let curSelectHL = document.getElementsByClassName('highlighted');
+    let selectedSpans = Array.from(curSelectHL).filter((ele: HTMLElement) => {
+      return ele.dataset.id == key;
+    });
+    selectedSpans.forEach((ele: HTMLElement) => {
+      ele.style.backgroundColor = this.selectedColor;
+    });
+
+    let unselectedSpans = Array.from(curSelectHL).filter((ele: HTMLElement) => {
+      return ele.dataset.id != key;
+    });
+    unselectedSpans?.forEach((ele: HTMLElement) => {
+      ele.style.backgroundColor = this.defaultColor;
+    });
+
+    let curSelectHLLst = document.getElementsByClassName('highlightedList');
+    this.curPage = this.curSelectedHLA.locations[0].pageNumber;
+    Array.from(curSelectHLLst).forEach((ele: HTMLElement) => {
+      if (ele.dataset.id != key) {
+        ele.style.backgroundColor = this.defaultColor;
+      } else {
+        ele.style.backgroundColor = this.selectedColor;
+      }
+    });
+    this.detectorRef.detectChanges();
+  }
+
+  changeHLComment() {
+    this.esService
+      .changeHLComment(
+        this.curFileUrl.replace(environment.urlUpload + '/', ''),
+        this.fileInfo.fileID,
+        this.fileInfo.fileName,
+        this.curSelectedHLA.group,
+        this.curCmtContent,
+        this.curPage
+      )
+      .subscribe((res) => {
+        console.log('doi cmt', this.curCmtContent);
+      });
+  }
+
+  removeHLA(key: string) {
+    let idx = this.lstHighlightTextArea.findIndex((x) => x.group == key);
+    if (idx != -1 && this.lstHighlightTextArea[idx].isAdded == false) {
+      this.lstHighlightTextArea.splice(idx, 1);
+      this.lstKey.splice(idx, 1);
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  getListHighlights() {
+    let exHLLst = document.getElementsByClassName('highlighted');
+    Array.from(exHLLst).forEach((ele: HTMLElement) => {
+      ele.remove();
+    });
+    let ngxService: NgxExtendedPdfViewerService =
+      new NgxExtendedPdfViewerService();
+
+    this.esService
+      .getListAddedAnnoataion(
+        this.curFileUrl.replace(environment.urlUpload + '/', ''),
+        ngxService.currentlyRenderedPages()
+      )
+      .subscribe((lst: Map<string, Array<location>>) => {
+        this.lstKey = [];
+        let lstTextLayer = document.getElementsByClassName('textLayer');
+        for (let [key, value] of Object.entries(lst)) {
+          let textLayer = Array.from(lstTextLayer).find(
+            (tLayer: HTMLElement) => {
+              let pNum = tLayer.parentElement?.dataset?.pageNumber;
+              return pNum == value?.locations[0]?.pageNumber;
+            }
+          );
+          if (textLayer) {
+            let textLayerRect = textLayer?.getBoundingClientRect();
+            let top = textLayerRect.top;
+            let left = textLayerRect.left;
+            let width = textLayerRect.width;
+            let height = textLayerRect.height;
+            this.lstKey.push(key);
+            let isFromAnotherApp = value.fromAnotherApp == true ? 0 : 1;
+            value?.locations?.forEach((location: location) => {
+              let span = document.createElement('span');
+              span.style.height = location.height * this.yScale + 'px';
+              span.style.width = location.width * this.xScale + 'px';
+              span.style.top =
+                (location.top - location.height * isFromAnotherApp) *
+                  this.yScale +
+                'px';
+              span.style.left =
+                (location.left - location.width * isFromAnotherApp) *
+                  this.xScale +
+                'px';
+              span.style.zIndex = '2';
+              span.dataset.id = key;
+              span.classList.add('highlighted');
+              span.style.backgroundColor = this.defaultAddedColor;
+              span.onclick = () => {
+                this.goToSelectedHighlightText(key);
+              };
+              textLayer.appendChild(span);
+            });
+            value?.locations?.forEach((location: location) => {
+              location.height = location.height / this.yScale;
+              location.width = location.width / this.xScale;
+              location.top = (location.top - location.height) / this.yScale;
+              location.left = (location.left - location.width) / this.xScale;
+            });
+            this.lstHighlightTextArea.push(value);
+          }
+        }
+        console.log('get list highlight');
+      });
+  }
+
+  changeRemoveHLAMode() {
+    this.deleteHLAMode = !this.deleteHLAMode;
+  }
+
+  removeUnsaveHLA() {
+    let lstUnsave = this.lstHighlightTextArea.filter(
+      (hla) => hla.isAdded == false
+    );
+    lstUnsave.forEach((hla) => {
+      let lstSpan = document.querySelectorAll(
+        `.highlighted[data-id='${hla.group}']`
+      );
+      Array.from(lstSpan).forEach((ele: HTMLElement) => {
+        ele.remove();
+      });
+      this.lstKey = this.lstKey.filter((key) => key != hla.group);
+    });
+    this.detectorRef.detectChanges();
+  }
+  confirmRemoveHLA() {
+    let lstDelHLA = document.getElementsByClassName('hla-check-delete');
+    let isChange = false;
+    let lstRemoveHLA = [];
+    Array.from(lstDelHLA).forEach((hla: HTMLElement) => {
+      if (hla.getAttribute('aria-Checked').toLowerCase() == 'true') {
+        let delKey = hla.parentElement.dataset.id;
+        let delHLA = this.lstHighlightTextArea.find((hl) => {
+          if (hl.isAdded) {
+            isChange = true;
+          }
+          return hl.group == delKey;
+        });
+        lstRemoveHLA.push(delHLA);
+        this.lstKey = this.lstKey.filter((key) => key != delKey);
+      }
+    });
+    if (isChange == false || lstRemoveHLA.length == 0) return;
+    this.esService
+      .removeHighlightText(
+        this.curFileUrl.replace(environment.urlUpload + '/', ''),
+        this.fileInfo.fileID,
+        this.fileInfo.fileName,
+        lstRemoveHLA
+      )
+      .subscribe((res) => {
+        this.curFileUrl = '';
+        setTimeout(
+          (tmpUrl) => {
+            let curFile = this.lstFiles.find((x) => x == this.fileInfo);
+            (curFile as any).fileUrl = environment.urlUpload + '/' + res;
+            this.fileInfo.fileUrl = environment.urlUpload + '/' + res;
+            this.curFileUrl = environment.urlUpload + '/' + res;
+          },
+          10,
+          res
+        );
+      });
+    // this.lstHighlightTextArea.forEach((area) => (area.isAdded = false));
+    // this.confirmHighlightText(true, rerenderPages);
+    this.detectorRef.detectChanges();
+  }
+
+  confirmHighlightText(isClearHLA: boolean, rerenderPages = []) {
+    let needHLList = this.lstHighlightTextArea.filter(
+      (area) => area.isAdded == false
+    );
+    if (needHLList.length < 1 && !isClearHLA) return;
+    this.esService
+      .highlightText(
+        this.curFileUrl.replace(environment.urlUpload + '/', ''),
+        this.fileInfo.fileID,
+        this.fileInfo.fileName,
+        isClearHLA,
+        needHLList,
+        rerenderPages
+      )
+      .subscribe((res) => {
+        // this.detectorRef.detectChanges();
+        this.curFileUrl = '';
+        setTimeout(
+          (tmpUrl) => {
+            let curFile = this.lstFiles.find((x) => x == this.fileInfo);
+            (curFile as any).fileUrl = environment.urlUpload + '/' + res;
+            this.fileInfo.fileUrl = environment.urlUpload + '/' + res;
+            this.curFileUrl = environment.urlUpload + '/' + res;
+            this.getListHighlights();
+          },
+          10,
+          res
+        );
+        // let rerenderPages = document.querySelectorAll('.canvasWrapper>canvas');
+        // let times = Object.keys(res).length;
+        // const pdfViewer: IPDFViewerApplication = (window as any)
+        //   .PDFViewerApplication;
+        // const src = this.curFileUrl;
+        // console.log(pdfViewer, 'PDFViewerApplication.cleanup caught exception');
+
+        // if (
+        //   pdfViewer != null &&
+        //   pdfViewer.pdfViewer != null &&
+        //   pdfViewer.pdfDocument != null &&
+        //   pdfViewer.pdfThumbnailViewer != null
+        // ) {
+        //   pdfViewer.cleanup = () => {
+        //     try {
+        //       pdfViewer.pdfViewer.cleanup();
+        //       pdfViewer.pdfThumbnailViewer.cleanup();
+        //       if (
+        //         pdfViewer.pdfViewer.renderer !== 'svg' &&
+        //         pdfViewer.pdfDocument != null
+        //       ) {
+        //         pdfViewer.pdfDocument.cleanup().catch((e: any) => {
+        //           console.error(
+        //             'PDFViewerApplication.pdfDocument.cleanup caught exception',
+        //             src,
+        //             e
+        //           );
+        //         });
+        //       }
+        //       console.info('[PDFViewerApplication] cleanup success', src);
+        //     } catch (e) {
+        //       console.log(e, 'PDFViewerApplication.cleanup caught exception');
+        //     }
+        //   };
+        // }
+
+        // for (const [pageNo, pageInfo] of Object.entries(res)) {
+        //   let canvas = Array.from(rerenderPages).find(
+        //     (page: HTMLCanvasElement) => {
+        //       return (
+        //         page.parentElement?.parentElement?.getAttribute(
+        //           'data-page-number'
+        //         ) == pageNo
+        //       );
+        //     }
+        //   );
+        //   if (canvas) {
+        //     let ctx = (canvas as HTMLCanvasElement).getContext('2d');
+        //     let tmpImg = document.createElement('img') as HTMLImageElement;
+        //     tmpImg.src = 'data:image/png;base64,' + pageInfo.base64;
+        //     tmpImg.onload = () => {
+        //       ctx.drawImage(tmpImg, 0, 0);
+        //       times--;
+        //       if (times == 0) {
+        //         this.getListHighlights();
+        //       }
+        //     };
+        //   }
+        // }
+      });
+  }
+
+  clickHighlightText() {
+    var selection = window.getSelection().getRangeAt(0);
+
+    var rects = selection.getClientRects();
+    if (rects.length == 0) return;
+    let lstTextLayer = document.getElementsByClassName('textLayer');
+
+    let textLayer = Array.from(lstTextLayer).find((tLayer: HTMLElement) => {
+      let pNum = tLayer.parentElement?.dataset?.pageNumber;
+      return pNum == this.curPage.toString();
+    });
+
+    let textLayerRect = textLayer?.getBoundingClientRect();
+    let top = textLayerRect.top;
+    let left = textLayerRect.left;
+    let width = textLayerRect.width;
+    let height = textLayerRect.height;
+    let tmpLstHLA: Array<highLightTextArea> = [];
+    let tmpGroup = Guid.newGuid().toString();
+    this.lstKey.push(tmpGroup);
+    Array.from(rects).forEach((rect) => {
+      let span = document.createElement('span');
+      span.style.height = rect.height + 'px';
+      span.style.width = rect.width + 'px';
+      span.style.top = rect.top - top + 'px';
+      span.style.left = rect.left - left + 'px';
+      span.style.zIndex = '2';
+      span.dataset.id = tmpGroup;
+      span.classList.add('highlighted');
+      span.style.backgroundColor = this.defaultColor;
+      span.onclick = () => {
+        this.goToSelectedHighlightText(tmpGroup);
+      };
+      let isValid =
+        rect.height > 0 &&
+        rect.width > 0 &&
+        rect.top - top > 0 &&
+        rect.left - left > 0;
+      if (textLayer && isValid) {
+        textLayer.appendChild(span);
+        let tmpHLA: highLightTextArea = {
+          color: span.style.backgroundColor,
+          locations: [
+            {
+              top: Number(span.style.top.replace('px', '')) / this.yScale,
+              left: Number(span.style.left.replace('px', '')) / this.xScale,
+              width: rect.width / this.xScale,
+              height: rect.height / this.yScale,
+              pageNumber:
+                Number(textLayer.parentElement?.dataset?.pageNumber) ??
+                this.curPage,
+            },
+          ],
+          createdDate: new Date(),
+          author: this.user.userID,
+          comment: {
+            author: '',
+            content: '',
+          },
+          group: tmpGroup,
+          isAdded: false,
+          isChange: false,
+        };
+        tmpLstHLA.push(tmpHLA);
+      }
+    });
+    if (tmpLstHLA.length > 0) {
+      this.lstHighlightTextArea = this.lstHighlightTextArea.concat(tmpLstHLA);
+      this.detectorRef.detectChanges();
+    }
+  }
+
+  addComment() {}
+
+  ngOnDestroy() {}
   //#endregion
 }
 //create new guid
