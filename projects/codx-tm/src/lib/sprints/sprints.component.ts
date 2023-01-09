@@ -272,12 +272,14 @@ export class SprintsComponent extends UIComponent {
 
   shareBoard(e, data) {
     var listUserDetail = [];
+    let isAdmin = this.user?.administrator || data?.createdBy==this.user?.userID
     if (data.iterationID) {
       var obj = {
         boardAction: data,
         listUserDetail: listUserDetail,
         title: e?.customName,
         vllShare: 'TM003',
+        isAdmin : isAdmin
       };
       this.api
         .execSv<any>(
@@ -325,6 +327,10 @@ export class SprintsComponent extends UIComponent {
             x.functionID == 'SYS04') &&
           data.iterationID == this.user.userID
         ) {
+          x.disabled = true;
+        }
+        // an edit và delete 
+        if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID && !this.user?.administrator) {
           x.disabled = true;
         }
         //an giao viec

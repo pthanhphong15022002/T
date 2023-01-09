@@ -231,6 +231,10 @@ export class TMMeetingsComponent
   changeDataMF(e: any, data: any) {
     if (e) {
       e.forEach((x) => {
+        // an edit và delete 
+        if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
+          x.disabled = true;
+        }
         //an giao viec
         if (x.functionID == 'SYS005') {
           x.disabled = true;
@@ -767,4 +771,5 @@ export class TMMeetingsComponent
   //     return this.resourcesNew.emit(idNew.join(';'));
   //   }
   // }
+
 }

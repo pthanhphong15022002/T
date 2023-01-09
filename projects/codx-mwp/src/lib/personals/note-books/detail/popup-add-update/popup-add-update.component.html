@@ -54,7 +54,8 @@
             [functionID]="functionList.funcID"
             [objectId]="note?.recID"
             [allowMultiFile]="1"
-            [idBrowse]="'add'"
+            [idBrowse]="'1'"
+            (fileAdded)="fileAdded($event)"
           >
           </codx-attachment>
         </div>

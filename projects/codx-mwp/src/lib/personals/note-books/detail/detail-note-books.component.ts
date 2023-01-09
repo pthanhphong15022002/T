@@ -126,7 +126,7 @@ export class DetailNoteBooksComponent extends UIComponent {
                 template: this.memo,
               },
               {
-                field: 'Đính kèm',
+                field: 'attachments',
                 headerText: res.Attachments.headerText,
                 template: this.fileCount,
               },
@@ -231,7 +231,7 @@ export class DetailNoteBooksComponent extends UIComponent {
         let option = new DialogModel();
         option.DataService = this.view?.dataService;
         option.FormModel = this.view?.formModel;
-        this.dialog = this.callfc.openForm(
+        let dialog = this.callfc.openForm(
           PopupAddUpdate,
           '',
           1438,
@@ -241,6 +241,9 @@ export class DetailNoteBooksComponent extends UIComponent {
           '',
           option
         );
+        dialog.closed.subscribe((res) => {
+          this.view.dataService.update(res.update).subscribe();
+        });
       });
   }
 
@@ -250,7 +253,7 @@ export class DetailNoteBooksComponent extends UIComponent {
       .delete([this.view.dataService.dataSelected], true, (option: any) =>
         this.beforeDelete(option, this.view.dataService.dataSelected)
       )
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         if (res) {
           this.view.dataService.remove(res).subscribe();
           this.api
@@ -258,8 +261,8 @@ export class DetailNoteBooksComponent extends UIComponent {
               'DM',
               'ERM.Business.DM',
               'FileBussiness',
-              'DeleteByObjectIDAsync',
-              [data.recID, 'WP_Notes', true]
+              'DeleteListFileByListObjectIDAsync',
+              [res.recID, this.view.entityName, true]
             )
             .subscribe();
         }
