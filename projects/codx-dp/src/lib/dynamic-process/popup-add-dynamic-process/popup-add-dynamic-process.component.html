@@ -9,7 +9,7 @@
       <div class="d-flex align-items-center">
         <div class="stepper-nav flex-center flex-wrap" #status>
           <div [ngClass]="
-                isAddNew? 'stepper-item active' : 'stepper-item approve'
+                isAddNew ? 'stepper-item active' : 'stepper-item approve'
               " data-kt-stepper-element="nav" data-kt-stepper-action="step" (click)="clickTab(0)">
             <div class="stepper-wrapper d-flex align-items-center flex-column">
               <div class="stepper-icon h-30px">
@@ -393,14 +393,6 @@
         <div class="dropzone-msg-title mb-2">
           <i class="icon-image icon-30"></i>
         </div>
-        <!-- <div class="dropzone-msg-title mb-2">
-          <codx-label name="lblContentAddAvatar" default="Chọn hình ảnh" class="fw-bold">
-          </codx-label>
-        </div>
-        <span class="dropzone-msg-desc">
-          <codx-label name="lblRequiredAvatar"
-            default="(Nên chọn hình ảnh có kích thước ...px đến ...px)" class="fw-bold"></codx-label>
-        </span> -->
       </ng-container>
 
     </div>
