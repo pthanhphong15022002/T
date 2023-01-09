@@ -220,44 +220,51 @@ export class PopupAddEmployeesComponent implements OnInit {
   updateEmployeeAsync(employee: any) {
     if (employee) {
       this.api
-        .execAction<boolean>('HR_Employees', [employee], 'UpdateAsync', true)
+        .execSv("HR","ERM.Business.HR","EmployeesBusiness","UpdateAsync",[employee])
         .subscribe((res: any) => {
-          if (!res?.error) {
+          if (res) 
+          {
             this.notifiSV.notifyCode('SYS007');
-            this.dialogRef.close(res.data);
           } 
-          else {
+          else 
+          {
             this.notifiSV.notifyCode('SYS021');
-            this.dialogRef.close(null);
           }
+          this.dialogRef.close(res);
         });
     }
   }
+  // add employee
   addEmployeeAsync(employee: any) {
     if (employee) {
-      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","InsertAsync",[employee])
-      .subscribe((res:any[]) => {
-        if(res[0]){
-          let data = res[1];
+      this.api.execSv("HR","ERM.Business.HR","EmployeesBusiness","SaveAsync",[employee])
+      .subscribe((res:any) => {
+        if(res)
+        {
           this.notifiSV.notifyCode("SYS006");
-          this.dialogRef.close(data);
         }
         else
         {
           this.notifiSV.notifyCode('SYS023');
-          this.dialogRef.close(null);
         }
+        this.dialogRef.close(res);
       });
     }
   }
   //value change
   dataChange(e: any) {
-    debugger
     if (e) 
     {
       let field = Util.camelize(e.field);
       let data = e.data;
       this.employee[field] = data;
+      if(field == "PositionID"){
+        let itemSelected = e.component?.itemsSelected;
+        if(Array.isArray(itemSelected))
+        {
+          this.employee["PositionName"] = itemSelected[0]["PositionName"];
+        }
+      }
     }
   }
 }
