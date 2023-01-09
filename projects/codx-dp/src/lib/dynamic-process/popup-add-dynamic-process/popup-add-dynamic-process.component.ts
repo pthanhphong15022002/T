@@ -28,7 +28,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Process();
 
   dialog: any;
-  currentTab = 1; //Bước hiện tại
+  currentTab = 0; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -51,7 +51,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   isShowstage = true;
   data = [
-    { 
+    {
       item: "Spacing utilities that apply",
       name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
       data:[
@@ -78,7 +78,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         },
       ]
     },
-    { 
+    {
       item: "Item 2",
       name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
       data:[
@@ -105,7 +105,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         },
       ]
     },
-    { 
+    {
       item: "Item 3",
       name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
       data:[
@@ -299,13 +299,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       );
     }
   }
-  
+
   drop1(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.data, event.previousIndex, event.currentIndex);
   }
-  //#region Trường tùy chỉnh 
-  
-  //#region 
+  //#region Trường tùy chỉnh
+
+  //#region
   clickRoles(e){
 
   }
