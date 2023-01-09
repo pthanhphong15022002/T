@@ -1,4 +1,9 @@
 import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import {
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -23,7 +28,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Process();
 
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -31,6 +36,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   funcID: any;
   isShow = true; //Check mở form
   isAddNew = true;
+  attachment: any;
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
@@ -43,6 +49,91 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
   }
+  isShowstage = true;
+  data = [
+    { 
+      item: "Spacing utilities that apply",
+      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
+      data:[
+        {
+          item: "Item 112",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Spacing utilities that apply",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 117",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+      ]
+    },
+    { 
+      item: "Item 2",
+      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
+      data:[
+        {
+          item: "Item 118",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 119",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 116",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+      ]
+    },
+    { 
+      item: "Item 3",
+      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
+      data:[
+        {
+          item: "Item 1111",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 1131",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 11134",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+      ]
+    },
+
+  ]
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
@@ -64,6 +155,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#region Open form
   show() {
     this.isShow = !this.isShow;
+  }
+  showStage(){
+    this.isShowstage = !this.isShowstage;
   }
   //#endregion
   //Setting class status Active
@@ -187,6 +281,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   }
 
+  show1(){
+    this.isShow = !this.isShow;
+  }
+  addFile(e) {
+    this.attachment.uploadFile();
+  }
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
+  
+  drop1(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+  }
+  //#region Trường tùy chỉnh 
+  
+  //#region 
   clickRoles(e){
 
   }

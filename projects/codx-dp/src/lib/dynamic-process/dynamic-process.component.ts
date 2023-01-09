@@ -11,6 +11,7 @@ import { AuthStore, ButtonModel, NotificationsService, UIComponent, ViewModel, V
   RequestOption, } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { dynamicProcess } from '../models/dynamicProcess.model';
+import { dynamicProcessPermissions } from '../models/dynamicProcessPermissions.model';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -27,7 +28,6 @@ implements OnInit, AfterViewInit {
 
  // view child
  @ViewChild('templateViewCard', { static: true })templateViewCard: TemplateRef<any>;
- @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
 
  // Input
  @Input() dataObj?: any;
@@ -51,6 +51,7 @@ implements OnInit, AfterViewInit {
 
 // create variables for list
 listDynamicProcess: dynamicProcess[]=[];
+listUserInUse: dynamicProcessPermissions[]=[];
 
 
  //test chưa có api
@@ -78,6 +79,9 @@ listDynamicProcess: dynamicProcess[]=[];
     this.button = {
       id: this.btnAdd,
     };
+
+    // gán tạm để test
+    this.getListUser();
   }
 
   afterLoad() {
@@ -217,6 +221,14 @@ listDynamicProcess: dynamicProcess[]=[];
     let isRead = data.read;
 
     return isRead ? true : false;
+  }
+
+  getListUser() {
+    this.codxDpService.getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714').subscribe((res) => {
+      if (res) {
+        this.listUserInUse = res;
+      }
+    });
   }
 
   //#endregion đang test

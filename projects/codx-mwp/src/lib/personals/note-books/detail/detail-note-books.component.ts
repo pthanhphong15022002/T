@@ -261,10 +261,12 @@ export class DetailNoteBooksComponent extends UIComponent {
               'DM',
               'ERM.Business.DM',
               'FileBussiness',
-              'DeleteListFileByListObjectIDAsync',
-              [res.recID, this.view.entityName, true]
+              'DeleteFilesAsync',
+              [res.recID]
             )
-            .subscribe();
+            .subscribe(res => {
+              debugger
+            });
         }
       });
   }

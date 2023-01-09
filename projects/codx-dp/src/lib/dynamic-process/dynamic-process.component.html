@@ -1,4 +1,5 @@
-<!-- <codx-views
+<!-- BẢO GÁN TẠM ĐỂ TEST NHA -->
+<codx-views
   #view
   [funcID]="'BPT1'"
   service="BP"
@@ -14,7 +15,8 @@
   [autoLoad]="true"
   idField="recID"
   [autoSearch]="true"
-  (searchChanged)="searchDynamicProcess($event)"></codx-views>
+  (searchChanged)="searchDynamicProcess($event)"
+></codx-views>
 
 <ng-template #templateViewCard let-data>
   <codx-card-img
@@ -35,16 +37,15 @@
     (clickMF)="clickMF($event, data)"
   >
   </codx-card-img>
-
   <ng-template #footerbg let-data>
     <div
-      class="d-flex bg-footer m-n3 mt-0"
-      >
+      class="d-flex bg-footer m-n3 mt-2">
+      <div class="d-flex flex-column w-100 p-3 pt-0">
         <div class="d-flex justify-content-between">
           <div style="width: 100%;">
             <div
               #processName
-              class="fs-6 fw-bold line-clamp-card process-name"
+              class="fs-6 fw-bold line-clamp line-clamp-1 pt-6"
               [ngbPopover]="setTextPopover(data?.processName)"
               #p="ngbPopover"
               [openDelay]="500"
@@ -65,126 +66,19 @@
               }}
             </div>
           </div>
-
-          <span
-            *ngIf="!checkPermissionRead(data)"
-            class="icon-security text-primary icon-18"></span>
         </div>
-
-        <div class="d-flex align-items-center mt-1">
-          <div class="badge badge-white my-1 me-3">{{ data?.versionNo }}</div>
-          <div class="d-flex align-items-center card-icon-nowrap">
-            <span class="me-1 icon-16 icon-access_alarm"></span><span
-              class="line-clamp" #activedOn>
-              {{
-              data.activedOn
-              | formatvalue
-              : view.formModel
-              : "activedOn"
-              : activedOn
-              : "Processes"
-              : "grvProcesses"
-              | async
-              }}
-            </span>
+        <div class="footerCard-item">
+          <div class="d-flex justify-content-start mt-1">
+            <div class="me-2 mt-1"> <i class="icon-adjust"></i></div>
+            <div class="me-2 mt-1">{{data.processNo}} </div>
+            <div class="ms-auto">
+            <codx-imgs [width]="25" [objectId]="listUserInUse" objectType="AD_Users" [numberImages]="2">
+            </codx-imgs>
           </div>
-        </div>
-        <div class="d-flex flex-wrap justify-content-between my-1">
-          <div class="d-flex align-items-center">
-            <div class="d-flex me-3 align-items-center">
-              <span
-                class="icon-server text-dark icon-14 me-1"
-                #phases="ngbPopover"
-                [ngbPopover]="popperPhases"
-                [openDelay]="500"
-                (mouseenter)="phases.open()"
-                (mouseleave)="phases.close()"
-                placement="right"></span>
-              <span #phases class="">
-                {{ data.phases }}
-              </span>
-            </div>
-            <div class="d-flex me-3 align-items-center">
-              <span
-                class="icon-format_list_numbered text-danger icon-16 me-1"
-                #activitiest="ngbPopover"
-                [ngbPopover]="popperActivitiest"
-                [openDelay]="500"
-                (mouseenter)="activitiest.open()"
-                (mouseleave)="activitiest.close()"
-                placement="right "></span>
-              <span #activities class="">
-                {{ data.activities }}
-              </span>
-            </div>
-            <div class="d-flex me-3 align-items-center">
-              <span [ngbPopover]="popperAttachment" #attachments="ngbPopover" [openDelay]="500"
-              (mouseenter)="attachments.open()" (mouseleave)="attachments.close()" placement="bottom top right
-              left">
-              <codx-attachment-temp [objectID]="data?.recID" [formModel]="view.formModel" [count]="data.attachments" [openViewPopup]="checkPermissionRead(data)">
-              </codx-attachment-temp>
-            </span>
-
-            </div>
           </div>
-          <codx-imgs
-            [width]="25"
-            [objectId]="data?.owner"
-            objectType="AD_Users"
-            [numberImages]="3">
-          </codx-imgs>
-        </div>
-      </div>
-  </ng-template>
-
-</ng-template>
-
-<ng-template #popperAttachment>
-  <span>
-    <codx-label
-      name="lblAttachments"
-      [formModel]="view.formModel"
-      default="Tài
-      liệu đính kèm"></codx-label>
-  </span>
-</ng-template>
-<ng-template #popperPhases>
-  <span>
-    <codx-label
-      name="lblPhases"
-      [formModel]="view.formModel"
-      default="Số lượng
-      công đoạn"></codx-label>
-  </span>
-</ng-template>
-<ng-template #popperActivitiest>
-  <span>
-    <codx-label
-      name="lblActivities"
-      [formModel]="view.formModel"
-      default="Số
-      lượng bước công việc"></codx-label>
-  </span>
-</ng-template>
-
-
-
-<ng-template #headerTemplate>
-  <ng-container *ngIf="view.formModel.funcID == 'BPT7'">
-    <div class="nondata-container w-100 mb-2">
-      <div
-        class="d-flex justify-content-between page-heading align-items-center
-        p-2">
-        <codx-label
-          fiedName="lbl"
-          default="Các mục trong thùng rác sẽ xóa vĩnh
-          viễn trong 30 ngày"></codx-label>
-        <div class="cursor-pointer">
-
         </div>
       </div>
     </div>
-  </ng-container>
+  </ng-template>
 </ng-template>
 
- -->
