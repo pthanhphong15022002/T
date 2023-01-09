@@ -162,4 +162,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   saveAndClose(){
 
   }
+
+  //#region Trường tùy chỉnh 
+  
+  //#region 
 }

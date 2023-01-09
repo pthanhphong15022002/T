@@ -152,5 +152,47 @@
   </div>
 </div>
 
-
 <ng-template #footer> </ng-template>
+
+<ng-template #dynamicFields>
+  <ng-container>
+    <div class="background">
+      <div class="header-job">
+        <div class="left">
+          <div>
+            <span class="title">{{ "Tên của gia đoạn" }}</span>
+          </div>
+          <div>
+            <span style="color: #898989">
+              <codx-label name="lblExpression">
+                Kéo thả để sắp xếp các trường tùy chỉnh</codx-label
+              >
+            </span>
+          </div>
+        </div>
+        <div class="right">
+          <div class="time ml-2">
+            <div class="d-flex align-items-center">
+                <span
+                class="icon-add icon-22 text-primary-600 py-2"
+                style="font-weight: 600; margin-left: 5px"
+              ></span>
+              <span
+                class="icon-replay icon-22 text-primary-600 py-2"
+                style="font-weight: 600; margin-left: 5px"
+              ></span>
+              <span
+                class="icon-expand_more icon-22 text-primary-600 py-2"
+                style="font-weight: 600"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div [ngClass]="true ? 'main show-main' : 'main hidden-main'">
+        <div>bỏ vào đây nha</div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

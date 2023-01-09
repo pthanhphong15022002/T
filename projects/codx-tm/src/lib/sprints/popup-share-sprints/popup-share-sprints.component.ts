@@ -34,6 +34,7 @@ export class PopupShareSprintsComponent implements OnInit {
   listUserDetail = [];
   taskBoard: any;
   vllShare: any;
+  isAdmin = false ;
   constructor(
     private api: ApiHttpService,
     private tmSv: CodxTMService,
@@ -44,6 +45,7 @@ export class PopupShareSprintsComponent implements OnInit {
   ) {
     this.data = dt?.data;
     this.dialog = dialog;
+    this.isAdmin = this.data?.isAdmin;
     this.taskBoard = this.data.boardAction;
     this.title = this.data?.title;
     this.vllShare = this.data?.vllShare;

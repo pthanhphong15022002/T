@@ -1,53 +1,80 @@
-<codx-form headerText="{{title}}" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialog"></codx-form>
+<codx-form
+  headerText="{{ title }}"
+  subHeaderText=""
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+></codx-form>
 <ng-template #body>
-    <div class="card-body align-items-center justify-content-between">
-        <!-- <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm" /> -->
-    </div>
-    <div class="list-shared">
-        <ng-container *ngFor="let item of listUserDetail">
-            <div class="d-flex align-items-center justify-content-between user-hover mb-3">
-                <div class="d-flex align-items-center w-100">
-                    <span class="me-3">
-                        <codx-img [width]="30" [objectId]="item?.userID" objectType="AD_Users">
-                        </codx-img>
-                    </span>
-                    <span class="text-dark fw-bold">
-                        {{item?.userName}}
-                    </span>
-                </div>
-                <div class="ms-3">
-                    <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
-                        <span class="icon-close icon-18 text-gray-500 text-hover-danger"></span>
-                    </a>
-                    <!-- <button class="btn btn-icon btn-xs" type="button" (click)="showControl(p,item.userID)"
+  <div class="card-body align-items-center justify-content-between">
+    <!-- <input type="text" class="form-control" [(ngModel)]='searchField' placeholder="Tìm kiếm" /> -->
+  </div>
+  <div class="list-shared">
+    <ng-container *ngFor="let item of listUserDetail">
+      <div
+        class="d-flex align-items-center justify-content-between user-hover mb-3"
+      >
+        <div class="d-flex align-items-center w-100">
+          <span class="me-3">
+            <codx-img
+              [width]="30"
+              [objectId]="item?.userID"
+              objectType="AD_Users"
+            >
+            </codx-img>
+          </span>
+          <span class="text-dark fw-bold">
+            {{ item?.userName }}
+          </span>
+        </div>
+        <div class="ms-3">
+          <a (click)="onDeleteUser(item.userID)" style="cursor: pointer">
+            <span
+              class="icon-close icon-18 text-gray-500 text-hover-danger"
+            ></span>
+          </a>
+          <!-- <button class="btn btn-icon btn-xs" type="button" (click)="showControl(p,item.userID)"
                         [ngbPopover]="popContent" popoverClass="empPopoverClass" #p="ngbPopover" placement="bottom"
                         container="body" autoClose="outside" triggers="manual" aria-haspopup="true"
                         aria-expanded="false">
                         <span class="icon-more_vert icon-20"></span>
                     </button> -->
-
-                </div>
-            </div>
-        </ng-container>
-    </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 </ng-template>
 <ng-template #footer>
-    <div class="d-flex justify-content-between ">
-        <codx-input type="Share" [refValue]="vllShare" [dataShared]="[]" [multiple]="true" [showInput]="false"
-            (valueChange)="eventApply($event)"></codx-input>
-        <button style="float: right;" type="button" class="btn btn-primary" (click)="saveData()">
-            <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
-        </button>
-    </div>
+  <div class="d-flex justify-content-between">
+    <codx-input
+      type="Share"
+      [refValue]="vllShare"
+      [dataShared]="[]"
+      [multiple]="true"
+      [showInput]="false"
+      (valueChange)="eventApply($event)"
+    ></codx-input>
+    <button
+      style="float: right"
+      type="button"
+      class="btn btn-primary"
+      (click)="saveData()"
+    >
+      <codx-label name="Save" formName="Sprints" default="Lưu"></codx-label>
+    </button>
+  </div>
 </ng-template>
 
 <ng-template #popContent>
-    <a class="dropdown-item">
-        <div class="d-flex align-items-center" (click)="onDeleteUser(userID)">
-            <span class="icon-delete icon-18"></span>
-            <span class="ms-3">
-                <codx-label name="Delete" formName="Sprints" default="Xóa"></codx-label>
-            </span>
-        </div>
-    </a>
+  <a class="dropdown-item">
+    <div
+      class="d-flex align-items-center"
+      (click)="isAdmin ? onDeleteUser(userID) : ''"
+    >
+      <span class="icon-delete icon-18"></span>
+      <span class="ms-3">
+        <codx-label name="Delete" formName="Sprints" default="Xóa"></codx-label>
+      </span>
+    </div>
+  </a>
 </ng-template>
