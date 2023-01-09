@@ -11,7 +11,7 @@ import { DialogData, DialogRef } from 'codx-core';
 @Component({
   selector: 'lib-popup-add-dynamic-process',
   templateUrl: './popup-add-dynamic-process.component.html',
-  styleUrls: ['./popup-add-dynamic-process.component.css'],
+  styleUrls: ['./popup-add-dynamic-process.component.scss'],
 })
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
@@ -20,8 +20,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   currentTab = 0; //Bước hiện tại
   totalTab = 0; // Tổng bước đã đi qua
 
-  newNode: number; //vị trí node mớis
+  newNode: number; //vị trí node mới
   oldNode: number; // Vị trí node cũ
+
+  isShow = false; //Check mở form
   isAddNew = true;
   constructor(
     private changeDetect: ChangeDetectorRef,
@@ -34,7 +36,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     // this.updateNodeStatus(0,1);
   }
 
+  //#region onSave
+  onSave(){
+
+  }
+  //#endregion
+
   //#region Change Tab
+  //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
     let newNo = tabNo;
     let oldNo = this.currentTab;
@@ -45,6 +54,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
+  //Quay lại
   previous(currentTab) {
     let oldNode = currentTab;
     let newNode = oldNode - 1;
@@ -52,6 +62,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.currentTab--;
   }
 
+  //Tiếp tục qua tab
   async continue(currentTab) {
     if (this.currentTab > 2) return;
 
@@ -83,6 +94,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetect.detectChanges();
   }
 
+
+  //Setting class status Active
   updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
       (this.status.nativeElement as HTMLElement).childNodes
@@ -113,6 +126,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     } else {
       (nodes[oldNode] as HTMLElement).classList.add('approve-disabled');
     }
+  }
+  //#endregion
+
+  //#region Open form
+  show(){
+    this.isShow = !this.isShow;
   }
   //#endregion
 }
