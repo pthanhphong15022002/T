@@ -7,9 +7,9 @@
             <a class="btn btn-icon btn-primary"><i class="icon-add fs-1"></i></a>
             <div class="d-flex btn-postnews">
 
-                <a (click)="clickShowPopupCreate(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
+                <a (click)="openPopupAdd(NEWSTYPE.VIDEO)" class="btn btn-icon btn-primary me-3"><i
                         class="icon-video_call fs-1"></i></a>
-                <a (click)="clickShowPopupCreate(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
+                <a (click)="openPopupAdd(NEWSTYPE.POST)" class="btn btn-icon btn-primary"><i
                         class="icon-post_add fs-1"></i></a>
             </div>
         </span>
@@ -84,7 +84,7 @@
                                     </div>
                                 </div>
                                 <ng-container *ngIf="data.allowShare">
-                                    <button (click)="clickPopupShare(data)"
+                                    <button (click)="openPopupShare(data)"
                                         class="btn btn-icon btn-sm btn-light-primary">
                                         <span class="icon-share">
                                         </span>
