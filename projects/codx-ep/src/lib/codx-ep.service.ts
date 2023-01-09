@@ -108,6 +108,14 @@ export class CodxEpService {
         model['assign'] = [];
         model['share'] = [];
         if (gv) {
+          let grv = {
+          'ResourceID':null,
+          'ReasonID':null,
+          'Title':null,
+          'AgencyName':null,
+          'Address':null,
+        }
+        gv=Object.assign(grv, gv);
           const user = this.auth.get();
           for (const key in gv) {
             const element = gv[key];
