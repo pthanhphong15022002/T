@@ -82,6 +82,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   tempDriverName='';  
   driverName='';
   queryParams: any;
+  navigated=false;
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -237,10 +238,13 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       //   },
       // },
     ];
-    // if(this.queryParams?.predicate && this.queryParams?.dataValue){      
-    //   let ele = document.getElementsByTagName('codx-view-schedule')[0];
-    //   this.navigate(ele);
-    // }  
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
+      this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
+        if(res){
+          setInterval(()=> this.navigate(res.startDate),2000);
+        }
+      });
+    }  
     this.detectorRef.detectChanges();
   }
   onActionClick(evt?) {
@@ -249,12 +253,15 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       this.addNew(evt.data);
     }
   }
-  navigate(ele:any) {
-    if (ele) {
-      let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
-      cmp.selectedDate = new Date(2023,2,1,0,0,0,0);
-      cmp.isNavigateInside = true;
-      this.detectorRef.detectChanges();
+  navigate(date) {
+    if(!this.navigated){
+      let ele = document.getElementsByTagName('codx-schedule')[0];
+      if (ele) {
+        if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
+          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
+          this.navigated=true;
+        }        
+      }
     }
   }
   changeDataMF(event, data: any) {
