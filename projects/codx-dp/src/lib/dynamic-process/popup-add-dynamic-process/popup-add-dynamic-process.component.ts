@@ -4,7 +4,7 @@ import { DialogData, DialogRef } from 'codx-core';
 @Component({
   selector: 'lib-popup-add-dynamic-process',
   templateUrl: './popup-add-dynamic-process.component.html',
-  styleUrls: ['./popup-add-dynamic-process.component.css'],
+  styleUrls: ['./popup-add-dynamic-process.component.scss'],
 })
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
@@ -104,4 +104,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   saveAndClose(){
     
   }
+
+  //#region Trường tùy chỉnh 
+  
+  //#region 
 }
