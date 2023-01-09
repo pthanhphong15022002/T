@@ -1011,15 +1011,41 @@ export class CodxEsService {
     );
   }
 
-  addHighlightText(lstHighlightTextArea: Array<highLightTextArea>) {
+  // addHighlightText(lstHighlightTextArea: Array<highLightTextArea>) {
+  //   return this.api.execSv(
+  //     'ES',
+  //     'ERM.Business.ES',
+  //     'ApprovalTransBusiness',
+  //     'AddHighlightTextAsync',
+  //     lstHighlightTextArea
+  //   );
+  // }
+
+  changeHLComment(fileUrl, fileID, fileName, name, cmt, page) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
-      'AddHighlightTextAsync',
-      lstHighlightTextArea
+      'ChangeCommentAsync',
+      [fileUrl, fileID, fileName, name, cmt, page]
     );
   }
+
+  removeHighlightText(
+    fileUrl,
+    fileID,
+    fileName,
+    lstHighlightTextArea: Array<highLightTextArea>
+  ) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'RemoveHighlightAsync',
+      [fileUrl, fileID, fileName, lstHighlightTextArea]
+    );
+  }
+
   getListAddedAnnoataion(fileUrl, lstRenderedPages) {
     return this.api.execSv(
       'ES',

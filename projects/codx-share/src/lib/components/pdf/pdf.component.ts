@@ -132,7 +132,8 @@ export class PdfComponent
   curCmtContent = '';
   deleteHLAMode = false;
 
-  defaultColor = 'rgb(255,255,0)';
+  defaultColor = 'rgb(255, 255, 40)';
+  defaultAddedColor = 'transparent';
   selectedColor = 'rgb(114, 255, 234)';
   //vll
   vllActions;
@@ -141,7 +142,7 @@ export class PdfComponent
   pageMax;
   getSignAreas;
   pageStep;
-  curPage = 1;
+  curPage = 0;
 
   //zoom
   zoomValue: any = 100;
@@ -447,6 +448,7 @@ export class PdfComponent
         content: this.curCmtContent,
       };
       this.curSelectedHLA.comment = tmpCmt;
+      this.changeHLComment();
     };
 
     //remove cmt
@@ -457,6 +459,7 @@ export class PdfComponent
       };
       this.curCmtContent = '';
       (document.getElementById('input-Cmt') as HTMLInputElement).value = '';
+      this.changeHLComment();
     };
   }
 
@@ -675,11 +678,13 @@ export class PdfComponent
   //loaded pdf
   loadedPdf(e: any) {
     this.pageMax = e.pagesCount;
-    this.curPage = this.pageMax;
 
     let ngxService: NgxExtendedPdfViewerService =
       new NgxExtendedPdfViewerService();
-    ngxService.addPageToRenderQueue(this.pageMax);
+    if (this.curPage == 0) {
+      this.curPage = this.pageMax;
+    }
+    ngxService.addPageToRenderQueue(this.curPage);
   }
 
   saveToDB(tmpArea: tmpSignArea) {
@@ -2358,6 +2363,21 @@ export class PdfComponent
     this.detectorRef.detectChanges();
   }
 
+  changeHLComment() {
+    this.esService
+      .changeHLComment(
+        this.curFileUrl.replace(environment.urlUpload + '/', ''),
+        this.fileInfo.fileID,
+        this.fileInfo.fileName,
+        this.curSelectedHLA.group,
+        this.curCmtContent,
+        this.curPage
+      )
+      .subscribe((res) => {
+        console.log('doi cmt', this.curCmtContent);
+      });
+  }
+
   removeHLA(key: string) {
     let idx = this.lstHighlightTextArea.findIndex((x) => x.group == key);
     if (idx != -1 && this.lstHighlightTextArea[idx].isAdded == false) {
@@ -2397,19 +2417,23 @@ export class PdfComponent
             let width = textLayerRect.width;
             let height = textLayerRect.height;
             this.lstKey.push(key);
-
+            let isFromAnotherApp = value.fromAnotherApp == true ? 0 : 1;
             value?.locations?.forEach((location: location) => {
               let span = document.createElement('span');
               span.style.height = location.height * this.yScale + 'px';
               span.style.width = location.width * this.xScale + 'px';
               span.style.top =
-                (location.top - location.height) * this.yScale + 'px';
+                (location.top - location.height * isFromAnotherApp) *
+                  this.yScale +
+                'px';
               span.style.left =
-                (location.left - location.width) * this.xScale + 'px';
+                (location.left - location.width * isFromAnotherApp) *
+                  this.xScale +
+                'px';
               span.style.zIndex = '2';
               span.dataset.id = key;
               span.classList.add('highlighted');
-              span.style.backgroundColor = this.defaultColor;
+              span.style.backgroundColor = this.defaultAddedColor;
               span.onclick = () => {
                 this.goToSelectedHighlightText(key);
               };
@@ -2432,26 +2456,61 @@ export class PdfComponent
     this.deleteHLAMode = !this.deleteHLAMode;
   }
 
+  removeUnsaveHLA() {
+    let lstUnsave = this.lstHighlightTextArea.filter(
+      (hla) => hla.isAdded == false
+    );
+    lstUnsave.forEach((hla) => {
+      let lstSpan = document.querySelectorAll(
+        `.highlighted[data-id='${hla.group}']`
+      );
+      Array.from(lstSpan).forEach((ele: HTMLElement) => {
+        ele.remove();
+      });
+      this.lstKey = this.lstKey.filter((key) => key != hla.group);
+    });
+    this.detectorRef.detectChanges();
+  }
   confirmRemoveHLA() {
     let lstDelHLA = document.getElementsByClassName('hla-check-delete');
     let isChange = false;
-    let rerenderPages = [];
+    let lstRemoveHLA = [];
     Array.from(lstDelHLA).forEach((hla: HTMLElement) => {
       if (hla.getAttribute('aria-Checked').toLowerCase() == 'true') {
         let delKey = hla.parentElement.dataset.id;
-        this.lstHighlightTextArea = this.lstHighlightTextArea.filter((hl) => {
+        let delHLA = this.lstHighlightTextArea.find((hl) => {
           if (hl.isAdded) {
             isChange = true;
           }
-          rerenderPages.push(hl.locations[0].pageNumber);
-          return hl.group != delKey;
+          return hl.group == delKey;
         });
+        lstRemoveHLA.push(delHLA);
         this.lstKey = this.lstKey.filter((key) => key != delKey);
       }
     });
-    if (isChange == false) return;
-    this.lstHighlightTextArea.forEach((area) => (area.isAdded = false));
-    this.confirmHighlightText(true, rerenderPages);
+    if (isChange == false || lstRemoveHLA.length == 0) return;
+    this.esService
+      .removeHighlightText(
+        this.curFileUrl.replace(environment.urlUpload + '/', ''),
+        this.fileInfo.fileID,
+        this.fileInfo.fileName,
+        lstRemoveHLA
+      )
+      .subscribe((res) => {
+        this.curFileUrl = '';
+        setTimeout(
+          (tmpUrl) => {
+            let curFile = this.lstFiles.find((x) => x == this.fileInfo);
+            (curFile as any).fileUrl = environment.urlUpload + '/' + res;
+            this.fileInfo.fileUrl = environment.urlUpload + '/' + res;
+            this.curFileUrl = environment.urlUpload + '/' + res;
+          },
+          10,
+          res
+        );
+      });
+    // this.lstHighlightTextArea.forEach((area) => (area.isAdded = false));
+    // this.confirmHighlightText(true, rerenderPages);
     this.detectorRef.detectChanges();
   }
 
@@ -2470,12 +2529,15 @@ export class PdfComponent
         rerenderPages
       )
       .subscribe((res) => {
-        this.lstHighlightTextArea = this.lstHighlightTextArea.filter(
-          (area) => area.isAdded != false
-        );
+        // this.detectorRef.detectChanges();
+        this.curFileUrl = '';
         setTimeout(
           (tmpUrl) => {
-            this.curFileUrl = tmpUrl;
+            let curFile = this.lstFiles.find((x) => x == this.fileInfo);
+            (curFile as any).fileUrl = environment.urlUpload + '/' + res;
+            this.fileInfo.fileUrl = environment.urlUpload + '/' + res;
+            this.curFileUrl = environment.urlUpload + '/' + res;
+            this.getListHighlights();
           },
           10,
           res
