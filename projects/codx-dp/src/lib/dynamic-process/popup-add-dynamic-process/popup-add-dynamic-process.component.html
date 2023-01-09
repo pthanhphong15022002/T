@@ -510,16 +510,16 @@
         </div>
         <div class="main">
           <!-- Thêm teplate vào đây -->
-          <ng-container *ngIf="currentTab == 10" [ngTemplateOutlet]="stage"></ng-container>
+          <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="job"></ng-container>
           <!-- Thêm teplate vào đây -->
         </div>
       </div>
     </div>
   </div>
 </ng-template>
-
+<!-- Công Việc -->
 <ng-template #job>
-  <div class="background">
+  <div class="background-job">
     <div class="header-job">
         <div class="left">
             <div>
@@ -541,29 +541,34 @@
                         style="font-weight: 600; margin-left: 5px"></span>
                 </div>
                 <div>
-                    <span style="float: right; color: #2274ae">0 ngày / 5 ngày</span>
+                    <span style="float: right; color: #2274ae; font-size: 1.1rem;">0 ngày 4:05 giờ / 5 ngày 0:00 giờ</span>
                 </div>
             </div>
             <div class="group-button">
                 <button class="button-custom">
                     <span
                         class="icon-add icon-20 text-primary-600 py-2"
-                        style="font-weight: 600"></span>
+                        style="font-weight: 500"></span>
                 </button>
                 <button class="button-custom">
                     <span
                         class="icon-add_task icon-20 text-primary-600 py-2"
-                        style="font-weight: 600"></span>
+                        style="font-weight: 500"></span>
                 </button>
-                <button class="button-custom" (click)="showStage()">
+                <button *ngIf="!isShowstage" class="button-custom" (click)="showStage()">
                     <span
                         class="icon-expand_more icon-20 text-primary-600 py-2"
-                        style="font-weight: 600"></span>
+                        style="font-weight: 500"></span>
+                </button>
+                <button *ngIf="isShowstage" class="button-custom" (click)="showStage()">
+                    <span
+                        class="icon-expand_less icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
                 </button>
             </div>
         </div>
     </div>
-    <div class="main" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+    <div class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
         <div class="button-add-new" *ngIf="data.length == 0">
             <div>
                 <button class="button-custom">
@@ -710,6 +715,7 @@
     </div>
   </div>
 </ng-template>
+<!-- Công Việc -->
 <ng-template #successStage>
 
 </ng-template>
