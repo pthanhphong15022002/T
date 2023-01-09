@@ -1,0 +1,190 @@
+<div class="background">
+    <div class="header-job">
+        <div class="left">
+            <div>
+                <span class="title">Công việc</span>
+            </div>
+            <div>
+                <span style="color: #898989">Công việc mặc định người phụ trách
+                    phải thực hiện trong giai
+                    đoạn</span>
+            </div>
+        </div>
+        <div class="right">
+            <div class="time ml-2">
+                <div class="d-flex align-items-center">
+                    <span style="font-weight: 400; color: #4e4e4e">Thời hạn công
+                        việc so với giai đoạn</span>
+                    <span
+                        class="icon-replay icon-22 text-primary-600 py-2"
+                        style="font-weight: 600; margin-left: 5px"></span>
+                </div>
+                <div>
+                    <span style="float: right; color: #2274ae">0 ngày / 5 ngày</span>
+                </div>
+            </div>
+            <div class="group-button">
+                <button class="button-custom">
+                    <span
+                        class="icon-add icon-20 text-primary-600 py-2"
+                        style="font-weight: 600"></span>
+                </button>
+                <button class="button-custom">
+                    <span
+                        class="icon-add_task icon-20 text-primary-600 py-2"
+                        style="font-weight: 600"></span>
+                </button>
+                <button class="button-custom" (click)="show()">
+                    <span
+                        class="icon-expand_more icon-20 text-primary-600 py-2"
+                        style="font-weight: 600"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="main" [ngClass]="isShow ? 'show-main' : 'hidden-main'">
+        <div class="button-add-new" *ngIf="data.length == 0">
+            <div>
+                <button class="button-custom">
+                    <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+                    <span>Thêm nhóm công việc</span>
+                </button>
+            </div>
+            <div>
+                <button class="button-custom">
+                    <span class="icon-add icon-20 text-primary-600 py-2"></span>
+                    <span>Thêm công việc</span>
+                </button>
+            </div>
+        </div>
+        <div class="main-body" *ngIf="data.length > 0">
+            <div cdkDropList class="list" (cdkDropListDropped)="drop1($event)">
+                <div cdkDropListGroup>
+                    <ng-container *ngFor="let item of data">
+                        <div class="mb-3 card-job-list" cdkDrag
+                            [cdkDragData]="item">
+                            <div class="card-job">
+                                <div class="card-job-header">
+                                    <div class="background-icon">
+                                        <span
+                                            class="icon-add_circle icon-20
+                                            text-primary-600 py-2"></span>
+                                    </div>
+                                    <div class="background-icon">
+                                        <span
+                                            class="icon-supervised_user_circle
+                                            icon-20 text-primary-600 py-2"></span>
+                                    </div>
+                                    <div class="steplist-hearder ms-5">
+                                        <div>
+                                            <span
+                                                class=""
+                                                style="font-size: 1.2rem;
+                                                font-weight: 500">{{ item.item
+                                                }}</span>
+                                            <span
+                                                class="icon-message icon-20
+                                                text-primary-600 py-2 ms-2"
+                                                style="color: #06a9f7"></span>
+                                        </div>
+                                        <div class="">
+                                            <span style="color: #06a9f7">20%</span>
+                                            <span
+                                                class="ms-5"
+                                                style="font-weight: 400; color:
+                                                #606060">
+                                                Thời hạn 1.5 giờ
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    cdkDropList
+                                    class="list"
+                                    [cdkDropListData]="item?.data || []"
+                                    (cdkDropListDropped)="drop($event)">
+                                    <ng-container *ngFor="let item1 of
+                                        item.data">
+                                        <div
+                                            cdkDrag
+                                            [cdkDragStartDelay]="200"
+                                            [cdkDragData]="item1">
+                                            <div style="margin-left: 50px">
+                                                <div class="card-job-header">
+                                                    <div class="background-icon"
+                                                        style="background-color:
+                                                        #3ef8e9;">
+                                                        <span
+                                                            class="icon-add_circle
+                                                            icon-20
+                                                            text-primary-600
+                                                            py-2"
+                                                            (click)="addFile($event)"></span>
+                                                    </div>
+                                                    <div
+                                                        class="background-icon">
+                                                        <span
+                                                            class="icon-supervised_user_circle
+                                                            icon-20
+                                                            text-primary-600
+                                                            py-2"></span>
+                                                    </div>
+                                                    <div class="steplist-hearder
+                                                        ms-5">
+                                                        <div>
+                                                            <span
+                                                                class=""
+                                                                style="font-size:
+                                                                1.2rem;
+                                                                font-weight:
+                                                                500">{{
+                                                                item1.item }}</span>
+                                                            <span
+                                                                class="icon-message
+                                                                icon-20
+                                                                text-primary-600
+                                                                py-2 ms-2"
+                                                                style="color:
+                                                                #06a9f7"></span>
+                                                        </div>
+                                                        <div class="">
+                                                            <span style="color:
+                                                                #06a9f7">20%</span>
+                                                            <span
+                                                                class="ms-5"
+                                                                style="font-weight:
+                                                                400; color:
+                                                                #606060">
+                                                                Thời hạn 1.5 giờ
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <codx-attachment
+                                                        #attachment
+                                                        hideFolder="1"
+                                                        hideImageUpload="0"
+                                                        hideImageThumb="0"
+                                                        hideUploadBtn="1"
+                                                        hideDes="1"
+                                                        type="inline"
+                                                        allowMultiFile="1"
+                                                        displayThumb="full"
+                                                        showMessage="1">
+                                                    </codx-attachment>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>

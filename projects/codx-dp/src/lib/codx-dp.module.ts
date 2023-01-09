@@ -14,6 +14,8 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicProcessComponent } from './dynamic-process/dynamic-process.component';
+import { JobComponent } from './dp-processes/job/job.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   {
@@ -23,6 +25,11 @@ const routes: Routes = [
       {
         path: 'test/:funcID',
         component: DynamicProcessComponent,
+        data: { noReuse: true },
+      },
+      {
+        path: 'job',
+        component: JobComponent,
         data: { noReuse: true },
       },
       {
@@ -40,7 +47,8 @@ const T_Component: Type<any>[] = [
 @NgModule({
   declarations: [
     CodxDpComponent,
-    LayoutComponent
+    LayoutComponent,
+    JobComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -54,6 +62,7 @@ const T_Component: Type<any>[] = [
     CodxShareModule,
     CodxReportModule,
     NgbModule,
+    DragDropModule,
   ],
   exports: [RouterModule],
   providers: [AccumulationTooltipService],
