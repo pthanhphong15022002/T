@@ -128,7 +128,8 @@
         [typeMF]="'hover'"
         [title]="data.assetCategory"
         [subTitleTmp]="tmplateEPassportsMenuList"
-        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2 ms-4"
+        [icoTitleCss]="'icon-i-question-circle-fill icon-14'"
         [hideMF]="true"
         typeMF="hover"
         [dataItem]="data"
@@ -138,8 +139,16 @@
 
 <ng-template #tmplateEPassportsMenuList let-data>
     <div class="d-flex flex-column">
-        <div><i class="icon-list_alt"></i>{{data.assetNo}}</div>
-        <div><i class = "icon-calendar_today"></i>{{data.issuedDate | fmDT}} 
+        <div class=" d-flex pt-1 pb-1">
+            <div class="pe-1">
+                <i class="icon-i-layout-text-sidebar-reverse icon-14 "> </i>
+            </div>
+            <div>
+                {{data.assetNo}}
+            </div>
+           </div>
+        <div style="margin-left: -2px;">
+            <i class = "icon-event"></i>{{data.issuedDate | fmDT}} 
             <span *ngIf="data.isReturned">| Đã thu hồi gán cứng</span>
             <span *ngIf="data.isAllowReturn">| Có thu hồi gán cứng</span>
         </div>

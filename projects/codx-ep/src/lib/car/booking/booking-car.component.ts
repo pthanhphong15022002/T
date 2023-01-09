@@ -1,3 +1,5 @@
+declare var window: any;
+
 import {
   Component,
   TemplateRef,
@@ -14,6 +16,7 @@ import {
   CallFuncService,
   NotificationsService,
   AuthService,
+  CodxScheduleComponent,
 } from 'codx-core';
 import { ButtonModel, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { DataRequest } from '@shared/models/data.request';
@@ -189,6 +192,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    
     this.viewBase.dataService.methodDelete = 'DeleteBookingAsync';
     this.views = [
       {
@@ -233,12 +237,24 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
       //   },
       // },
     ];
+    // if(this.queryParams?.predicate && this.queryParams?.dataValue){      
+    //   let ele = document.getElementsByTagName('codx-view-schedule')[0];
+    //   this.navigate(ele);
+    // }  
     this.detectorRef.detectChanges();
   }
   onActionClick(evt?) {
-    if (evt.type == 'add') {
+    if (evt.type == 'add' && evt.data?.resourceId!=null) {
       this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
       this.addNew(evt.data);
+    }
+  }
+  navigate(ele:any) {
+    if (ele) {
+      let cmp = window.ng.getComponent(ele) as CodxScheduleComponent;
+      cmp.selectedDate = new Date(2023,2,1,0,0,0,0);
+      cmp.isNavigateInside = true;
+      this.detectorRef.detectChanges();
     }
   }
   changeDataMF(event, data: any) {

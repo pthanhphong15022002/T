@@ -123,7 +123,7 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
   setDefault() {
     this.task.taskID = '';
     this.api
-      .execSv<number>('TM', 'CM', 'DataBusiness', 'GetDefaultAsync', [
+      .execSv<number>('TM', 'Core', 'DataBusiness', 'GetDefaultAsync', [
         this.functionID,
         'TM_Tasks',
         'taskID',
@@ -348,14 +348,15 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
           this.notiService.notifyCode('TM006');
           this.dialog.close(res);
           var taskParent = res[1][0];
-          if (this.param?.ConfirmControl == '1')
-            this.tmSv
-              .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
-              .subscribe();
-          else
-            this.tmSv
-              .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
-              .subscribe();
+          //send mail FE
+          // if (this.param?.ConfirmControl == '1')
+          //   this.tmSv
+          //     .sendAlertMail(taskParent?.recID, 'TM_0008', this.functionID)
+          //     .subscribe();
+          // else
+          //   this.tmSv
+          //     .sendAlertMail(taskParent?.recID, 'TM_0001', this.functionID)
+          //     .subscribe();
 
           //lưu his giao việc
           var objectType = this.formModel.entityName;
@@ -406,11 +407,6 @@ export class AssignInfoComponent implements OnInit, AfterViewInit {
                   .subscribe();
               }
             });
-
-          // if (!isContinue) {
-          //   this.closePanel();
-          // }
-          // this.resetForm();
         } else {
           this.notiService.notifyCode('TM038');
           return;

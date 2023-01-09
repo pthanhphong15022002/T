@@ -26,6 +26,14 @@ var childRoutes = [
       ),
   },
   {
+    path: 'dp',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-dp/src/lib/codx-dp.module').then(
+        (m) => m.CodxDpModule
+      ),
+  },
+  {
     path: 'error',
     loadChildren: () =>
       import('./pages/errors/errors.module').then((m) => m.ErrorsModule),
@@ -137,6 +145,12 @@ var childRoutes = [
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('projects/codx-ad/src/lib/codx-ad.module').then((m) => m.ADModule),
+  },
+  {
+    path: 'ac',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('projects/codx-ac/src/lib/codx-ac.module').then((m) => m.AcModule),
   },
   {
     path: 'report',

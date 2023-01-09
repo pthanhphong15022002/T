@@ -897,7 +897,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas, headerText: 'Trả lại', status: '4' },
+            {
+              data: datas,
+              headerText: 'Trả lại',
+              status: '4',
+              funcID: this.formModel.funcID,
+            },
             '',
             option
           )
@@ -918,7 +923,12 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
             600,
             400,
             null,
-            { data: datas, headerText: 'Chuyển lại', status: '3' },
+            {
+              data: datas,
+              headerText: 'Chuyển lại',
+              status: '3',
+              funcID: this.formModel.funcID,
+            },
             '',
             option
           )
@@ -1220,7 +1230,7 @@ export class ViewDetailComponent implements OnInit, OnChanges, AfterViewInit {
     this.api
       .execSv(
         this.view.service,
-        'ERM.Business.CM',
+        'ERM.Business.Core',
         'DataBusiness',
         'ReleaseAsync',
         [

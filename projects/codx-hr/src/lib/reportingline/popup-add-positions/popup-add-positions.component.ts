@@ -152,6 +152,7 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
+    debugger
     if (this.action) {
       this.isNew = this.action === 'add' ? true : false;
       this.api

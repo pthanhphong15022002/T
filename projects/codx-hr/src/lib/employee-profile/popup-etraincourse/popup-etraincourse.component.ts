@@ -1,6 +1,6 @@
 import { FormGroup, Validators } from '@angular/forms';
 import { CodxHrService } from './../../codx-hr.service';
-import { ChangeDetectorRef, Injector } from '@angular/core';
+import { ChangeDetectorRef, Injector, ViewEncapsulation } from '@angular/core';
 import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import {
   CodxFormComponent,
@@ -18,6 +18,7 @@ import { Thickness } from '@syncfusion/ej2-angular-charts';
   selector: 'lib-popup-etraincourse',
   templateUrl: './popup-etraincourse.component.html',
   styleUrls: ['./popup-etraincourse.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class PopupETraincourseComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
@@ -25,7 +26,8 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
   formGroup2: FormGroup;
   formModel2: FormModel;
   dialog: DialogRef;
-  headerText: '';
+  headerText: string = '';
+  idField: string = 'recID';
   funcID;
   employId;
   IsAfterRender = false;
@@ -50,72 +52,67 @@ export class PopupETraincourseComponent extends UIComponent implements OnInit {
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType;
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.formName = 'ETrainCourses';
-      this.formModel.entityName = 'HR_ETrainCourses';
-      this.formModel.gridViewName = 'grvETrainCourses';
-    }
-    this.funcID = this.dialog.formModel.funcID;
+
+    this.funcID = data?.data?.funcID;
     this.employId = data?.data?.employeeId;
-    console.log('employeeid', this.employId);
-    console.log('formmodel', this.formModel);
-    this.formModel2 = new FormModel();
-    this.formModel2.formName = 'ECertificates';
-    this.formModel2.entityName = 'HR_ECertificates';
-    this.formModel2.gridViewName = 'grvECertificates';
-    console.log('formmodel2', this.formModel2);
   }
 
   initForm() {
-    this.hrService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((item) => {
-        this.formGroup = item;
-        console.log('form test:', this.formGroup);
-        if (this.actionType == 'add') {
-          this.hrService.getDataETrainDefault().subscribe((res) => {
-            if (res) {
-              this.data = res;
-              this.data.employeeID = this.employId;
-              this.formModel.currentData = this.data;
-              this.formGroup.patchValue(this.data);
-              this.isAfterRender = true;
-            }
-          });
-        } else {
-          this.hrService
-            .getEmployeeTrainCourse(this.employId)
-            .subscribe((p) => {
-              console.log('thong tin dao tao nhan vien', p);
-              this.data = p;
-
-              this.formModel.currentData = this.data;
-              this.formGroup.patchValue(this.data);
-              this.isAfterRender = true;
-            });
-        }
-      });
-
-    this.hrService
-      .getFormGroup(this.formModel2.formName, this.formModel2.gridViewName)
-      .then((item) => {
-        this.formGroup2 = item;
-        console.log('form2 test', this.formGroup2);
-        this.hrService
-          .getEmployeeCertificatesInfoById(this.employId)
-          .subscribe((p) => {
-            console.log('thong tin chung chi nhan vien', p);
-            this.dataForm2 = p;
-            this.formModel2.currentData = this.dataForm2;
-            this.formGroup2.patchValue(this.dataForm2);
+    if (this.actionType == 'add') {
+      this.hrService
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res) => {
+          if (res) {
+            this.data = res?.data;
+            this.data.employeeID = this.employId;
+            this.formModel.currentData = this.data;
+            this.formGroup.patchValue(this.data);
+            this.cr.detectChanges();
             this.isAfterRender = true;
-          });
-      });
+          }
+        });
+    } else {
+      this.formModel.currentData = this.data;
+      this.formGroup.patchValue(this.data);
+      this.cr.detectChanges();
+      this.isAfterRender = true;
+    }
+
+    // this.hrService
+    //   .getFormGroup(this.formModel2.formName, this.formModel2.gridViewName)
+    //   .then((item) => {
+    //     this.formGroup2 = item;
+    //     console.log('form2 test', this.formGroup2);
+    //     this.hrService
+    //       .getEmployeeCertificatesInfoById(this.employId)
+    //       .subscribe((p) => {
+    //         console.log('thong tin chung chi nhan vien', p);
+    //         this.dataForm2 = p;
+    //         this.formModel2.currentData = this.dataForm2;
+    //         this.formGroup2.patchValue(this.dataForm2);
+    //         this.isAfterRender = true;
+    //       });
+    //   });
   }
 
   onInit(): void {
-    this.initForm();
+    this.hrService.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrService
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
   swipeToRightTab(e) {

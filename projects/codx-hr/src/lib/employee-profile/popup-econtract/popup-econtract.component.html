@@ -189,7 +189,7 @@
   <codx-listview
     #listView
     [service]="'HR'"
-    [assemblyName]="'CM'"
+    [assemblyName]="'Core'"
     [entityName]="'HR_EContracts'"
     [className]="'DataBusiness'"
     [method]="'LoadDataAsync'"
@@ -214,11 +214,9 @@
   ></codx-temp-full>
 </ng-template>
 <ng-template #templateEContractTitle let-data>
-  <div class="d-flex align-items-center">
+  <div class="d-flex align-items-center ms-7 pb-1">
     <i class="icon-i-arrow-down-left-circle-fill icon-14 me-1"></i>
-    <span class="text-dark fw-bold"
-      >{{ data.contractTypeID }}</span
-    >
+    <span class="text-dark fw-bold">{{ data.contractTypeID }}</span>
   </div>
 </ng-template>
 
@@ -239,14 +237,14 @@
 </ng-template> -->
 
 <ng-template #templateEContractFooter let-dt>
-  <div class="d-flex flex-column">
+  <div class="d-flex flex-column ms-7">
     <div>
-      <i class="icon-edit_fill"></i
-      >{{ (dt.effectedDate | fmDT) + " - " + (dt.expiredDate | fmDT) }}
+      <i class="icon-i-calendar4-event icon-14"></i>
+      {{ (dt.effectedDate | fmDT) + " - " + (dt.expiredDate | fmDT) }}
     </div>
     <div>
-      <i class="icon-list_alt"></i
-      >{{ dt.decisionNo + "*" + (dt.signedDate | fmDT) }}
+      <i class="icon-i-layout-text-sidebar-reverse icon-14"></i>
+      {{ dt.decisionNo + "*" + (dt.signedDate | fmDT) }}
     </div>
   </div>
 </ng-template>

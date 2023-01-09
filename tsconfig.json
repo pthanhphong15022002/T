@@ -38,6 +38,10 @@
       "@core/*": [
         "src/core/*"
       ],
+      "codx-ac": [
+        "dist/codx-ac/codx-ac",
+        "dist/codx-ac"
+      ],
       "codx-ad": [
         "dist/codx-ad/codx-ad",
         "dist/codx-ad"
@@ -49,6 +53,10 @@
       "codx-dm": [
         "dist/codx-dm/codx-dm",
         "dist/codx-dm"
+      ],
+      "codx-dp": [
+        "dist/codx-dp/codx-dp",
+        "dist/codx-dp"
       ],
       "codx-ei": [
         "dist/codx-ei/codx-ei",

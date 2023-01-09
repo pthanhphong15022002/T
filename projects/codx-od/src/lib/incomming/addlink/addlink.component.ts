@@ -56,9 +56,9 @@ export class AddLinkComponent implements OnInit {
   }
 
   searchText(val: any) {
-    /* this.api.execSv<any>("OD","ERM.Business.CM", "DataBusiness", "GetFullTextSearchDataAsync",
+    /* this.api.execSv<any>("OD","ERM.Business.Core", "DataBusiness", "GetFullTextSearchDataAsync",
     {
-     /*filter:{} 
+     /*filter:{}
       query: "Phòng CNTT",
       functionID: "ODT3",
       entityName: "OD_Dispatches",
@@ -68,7 +68,7 @@ export class AddLinkComponent implements OnInit {
       console.log(item);
     }); */
     this.api
-      .execSv<any>('OD', 'CM', 'DataBusiness', 'SearchFullTextAdvAsync', {
+      .execSv<any>('OD', 'Core', 'DataBusiness', 'SearchFullTextAdvAsync', {
         query: val,
         functionID: this.dialog?.formModel?.funcID,
         entityName: 'OD_Dispatches',
@@ -91,12 +91,10 @@ export class AddLinkComponent implements OnInit {
         ''
       )
       .subscribe((item) => {
-        if (item) 
-        {
-          this.notifySvr.notify("Liên kết thành công");
+        if (item) {
+          this.notifySvr.notify('Liên kết thành công');
           this.dialog.close();
-        }
-        else this.notifySvr.notify("Liên kết không thành công");
+        } else this.notifySvr.notify('Liên kết không thành công');
       });
   }
 }

@@ -165,7 +165,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       this.dataIEConnections?.password
     );
     /*  this.api.execSv<any>(this.service,"AD","IEMappingsBusiness","GetItemByMappingTemplateAsync",this.dataIEConnections?.mappingTemplate).subscribe(item2=>{
-      if(item2) 
+      if(item2)
       {
         this.dataSave.dataIEMapping = item2
       }
@@ -202,8 +202,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
   async onSave() {
     if (this.type == 'add') {
       this.attachment.objectId = this.dataIEConnections.recID;
-      for (var i = 0; i < this.gridView.dataService.data.length; i++) 
-      {
+      for (var i = 0; i < this.gridView.dataService.data.length; i++) {
         this.gridView.dataService.data[i].sourceTable =
           this.importAddTmpGroup.value.sheetImport;
         delete this.gridView.dataService.data[i].mappingName;
@@ -215,17 +214,10 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
           if (
             this.dataSave.dataIEFieldMapping &&
             this.dataSave.dataIEFieldMapping.length > 0
-          )
-          {
+          ) {
             var result = [];
-            for (
-              var i = 0;
-              i < this.dataSave.dataIEFieldMapping.length;
-              i++
-            ) {
-              result = result.concat(
-                this.dataSave.dataIEFieldMapping[i].data
-              );
+            for (var i = 0; i < this.dataSave.dataIEFieldMapping.length; i++) {
+              result = result.concat(this.dataSave.dataIEFieldMapping[i].data);
             }
             result.forEach(function (v) {
               delete v.RecID;
@@ -233,59 +225,52 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
             });
             if (result.length > 0) {
               this.api
-              .execSv<any>(
-                'SYS',
-                'AD',
-                'IEFieldMappingBusiness',
-                'AddItemAsync',
-                JSON.stringify(result)
-              )
-              .subscribe((item) => {
-                if (item) {
-                  this.api
-                  .execSv<any>(
-                    'SYS',
-                    'AD',
-                    'IETablesBusiness',
-                    'AddItemAsync',
-                    JSON.stringify(this.gridView.dataService.data)
-                  )
-                  .subscribe((item2) => {
-                    if (item2) {
-                      this.api
+                .execSv<any>(
+                  'SYS',
+                  'AD',
+                  'IEFieldMappingBusiness',
+                  'AddItemAsync',
+                  JSON.stringify(result)
+                )
+                .subscribe((item) => {
+                  if (item) {
+                    this.api
                       .execSv<any>(
                         'SYS',
                         'AD',
-                        'IEConnectionsBusiness',
+                        'IETablesBusiness',
                         'AddItemAsync',
-                        this.dataIEConnections
+                        JSON.stringify(this.gridView.dataService.data)
                       )
-                      .subscribe((item3) => {
-                        if(item3)
-                        {
-                          this.dialog.close();
-                          this.notifySvr.notifyCode('OD008');
-                        }
-                        else this.notifySvr.notifyCode('SYS021');
+                      .subscribe((item2) => {
+                        if (item2) {
+                          this.api
+                            .execSv<any>(
+                              'SYS',
+                              'AD',
+                              'IEConnectionsBusiness',
+                              'AddItemAsync',
+                              this.dataIEConnections
+                            )
+                            .subscribe((item3) => {
+                              if (item3) {
+                                this.dialog.close();
+                                this.notifySvr.notifyCode('OD008');
+                              } else this.notifySvr.notifyCode('SYS021');
+                            });
+                        } else this.notifySvr.notifyCode('SYS021');
                       });
-                    }
-                    else this.notifySvr.notifyCode('SYS021')
-                  })
-                } else this.notifySvr.notifyCode('SYS021');
+                  } else this.notifySvr.notifyCode('SYS021');
 
-                // if(item) this.notifySvr.notifyCode('OD008');
-                // else this.notifySvr.notifyCode('SYS021');
-              });
-            }
-            else
-            {
+                  // if(item) this.notifySvr.notifyCode('OD008');
+                  // else this.notifySvr.notifyCode('SYS021');
+                });
+            } else {
               this.dialog.close();
               this.notifySvr.notifyCode('OD008');
             }
-          }
-          else this.notifySvr.notifyCode('SYS021');
-        } 
-        else this.notifySvr.notify('Vui lòng đính kèm file');
+          } else this.notifySvr.notifyCode('SYS021');
+        } else this.notifySvr.notify('Vui lòng đính kèm file');
       });
     } else {
       if (this.dataSave.dataIETable.length > 0) {
@@ -426,7 +411,7 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
     request.page = 1;
     request.pageSize = 5;
     this.api
-      .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request)
+      .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataCbxAsync', request)
       .subscribe((item) => {
         if (item[0]) {
           var data = JSON.parse(item[0]);
@@ -446,12 +431,12 @@ export class CodxImportAddTemplateComponent implements OnInit, OnChanges {
       });
     /*  request.comboboxName = "EntityImport";
     this.api
-    .execSv('SYS', 'CM', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
+    .execSv('SYS', 'Core', 'DataBusiness', 'LoadDataCbxAsync', request).subscribe(item=>{
       if(item[0])
       {
-       
+
       }
-        
+
     }) */
     this.cache.valueList('SYS010').subscribe((item) => {
       if (item) {

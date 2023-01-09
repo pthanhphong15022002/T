@@ -486,13 +486,13 @@ codx-view-list-detail .codx-detail-footer {
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: 2px var(--text-primary) solid !important;
+  border-bottom: 2px #333 solid !important;
   border-radius: 0;
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-active span,
 .e-tab .e-tab-header .e-toolbar-item.e-active {
-  color: var(--text-primary) !important;
+  color: #333 !important;
 }
 
 .e-tab .e-tab-header .e-toolbar-item.e-icon .e-tab-wrap {
@@ -1556,4 +1556,19 @@ codx-view-schedule .container-fluid.h-50px .mt-4 {
   z-index: 9999;
   background-color: white;
   top: 97px;
+}
+
+.btn.w-36px {
+  min-width: 36px !important;
+  width: 36px !important;
+}
+
+.lay-survey .moreFC .popover {
+  white-space: nowrap;
+  margin-right: 5px;
+}
+
+codx-header .btn .badge {
+  top: auto !important;
+  z-index: 99;
 }

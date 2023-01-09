@@ -827,7 +827,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
         );
       } else {
         this.driver = null;
-        this.notificationsService.notifyCode('EP008');
+        //this.notificationsService.notifyCode('EP008');
       }
       this.detectorRef.detectChanges();
     });
@@ -854,7 +854,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
             }
             if (!res.msgBodyData[0]) {
               this.driver = null;
-              this.notificationsService.notifyCode('EP008'); //Tài xế ko săn sàng
+              //this.notificationsService.notifyCode('EP008'); //Tài xế ko săn sàng
             }
           }
           this.detectorRef.detectChanges();
@@ -1194,7 +1194,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
       if(selectResource){
         this.carCapacity = selectResource[0].capacity;
         this.tmplstDevice = [];
-        selectResource[0].equipments.forEach((item) => {
+        if(selectResource[0].equipments!=null){
+          selectResource[0].equipments.forEach((item) => {
             let tmpDevice = new Device();
             tmpDevice.id = item.equipmentID;
             tmpDevice.isSelected = false;
@@ -1206,6 +1207,8 @@ export class PopupAddBookingCarComponent extends UIComponent {
             });
             this.tmplstDevice.push(tmpDevice);
           });
+        }
+        
       }      
       this.driverChangeWithCar(evt);
       this.detectorRef.detectChanges();

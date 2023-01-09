@@ -174,7 +174,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
     if (this.task.taskGroupID != null) {
       this.logicTaskGroup(this.task.taskGroupID);
     } else this.getParam();
-
     this.action = dt?.data[1];
     this.showAssignTo = dt?.data[2];
     this.titleAction = dt?.data[3];
@@ -225,7 +224,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.action == 'add') {
-      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062') {
+      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062' || this.functionID == 'OMT013') {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -233,7 +232,7 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
       this.openTask();
     } else if (this.action == 'copy') {
       this.task.status = '10';
-      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062') {
+      if (this.functionID == 'TMT0203' || this.functionID == 'MWP0062'|| this.functionID == 'OMT013') {
         this.task.category = '3';
       } else {
         this.task.category = '1';
@@ -588,21 +587,22 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         this.attachment?.clearData();
         if (res && res.save) {
           var task = res.save[0];
-          if (task.category == '3') {
-            if (this.param?.ConfirmControl == '1')
-              this.tmSv
-                .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
-                .subscribe();
-            else
-              this.tmSv
-                .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
-                .subscribe();
-          }
+          //send mail FE
+          // if (task.category == '3') {
+          //   if (this.param?.ConfirmControl == '1')
+          //     this.tmSv
+          //       .sendAlertMail(task?.recID, 'TM_0008', this.functionID)
+          //       .subscribe();
+          //   else
+          //     this.tmSv
+          //       .sendAlertMail(task?.recID, 'TM_0001', this.functionID)
+          //       .subscribe();
+          // }
 
-          if (task?.category == '1' && task.verifyControl == '1')
-            this.tmSv
-              .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
-              .subscribe();
+          // if (task?.category == '1' && task.verifyControl == '1')
+          //   this.tmSv
+          //     .sendAlertMail(task?.recID, 'TM_0018', this.functionID)
+          //     .subscribe();
         }
       });
   }
@@ -620,9 +620,10 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
                   var task = res.update;
                   this.dialog.close(res.update);
                   this.attachment?.clearData();
-                  this.tmSv
-                    .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
-                    .subscribe();
+                  //send mail FE
+                  // this.tmSv
+                  //   .sendAlertMail(task?.recID, 'TM_0002', this.functionID)
+                  //   .subscribe();
                 }
               } else {
                 this.dialog.close();

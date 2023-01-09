@@ -12,7 +12,7 @@ import { PopupOKRWeightComponent } from '../../popup/popup-okr-weight/popup-okr-
 export class OkrToolbarComponent implements OnInit {
   @Input() data:any;
   @Input() dataChild:any;
-
+  @Input() formModel:any;
   buttonAddKR: ButtonModel;
   buttonAddO: ButtonModel;
   button?: ButtonModel;
@@ -56,7 +56,15 @@ export class OkrToolbarComponent implements OnInit {
     };
     this.click.emit(obj);
   }
-
+  //Hàm chia sẻ tạm thời
+  sharePlan()
+  {
+    var obj = 
+    {
+      id : "SharePlan",
+    };
+    this.click.emit(obj);
+  }
   editWeight(planRecID: any) {
     //OM_WAIT: tiêu đề tạm thời gán cứng
     let popupTitle='Thay đổi trọng số cho mục tiêu';

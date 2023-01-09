@@ -1,13 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
-import { Post } from '@shared/models/post';
-import { Thickness } from '@syncfusion/ej2-angular-charts';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { CodxViewFilesComponent } from 'projects/codx-share/src/lib/components/codx-view-files/codx-view-files.component';
 import { ImageGridComponent } from 'projects/codx-share/src/lib/components/image-grid/image-grid.component';
 import { WP_Comments } from 'projects/codx-wp/src/lib/models/WP_Comments.model';
-import { json } from 'stream/consumers';
-import { isThisTypeNode } from 'typescript';
+
 
 @Component({
   selector: 'wp-popup-add-post',
@@ -60,6 +58,8 @@ export class PopupAddPostComponent implements OnInit {
   }
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   @ViewChild("codxFile") codxFile:ImageGridComponent;
+  @ViewChild("codxViewFiles") codxViewFiles:CodxViewFilesComponent;
+
   constructor(
     private api:ApiHttpService,
     private callFC:CallFuncService,
@@ -215,6 +215,7 @@ export class PopupAddPostComponent implements OnInit {
   // clikc uploadFile
   clickUploadFile(){
     this.codxATM.uploadFile();
+    // this.codxViewFiles.uploadFiles();
   }
 
   // submit
@@ -296,7 +297,7 @@ export class PopupAddPostComponent implements OnInit {
   }
   // edit post
   editPost(){
-    if (!this.data.content && this.fileUpload.length == 0) 
+    if (!this.data.content && this.data.files.length == 0 && this.data.category != "4") 
     {
       if(this.grvSetup["Comments"]["headerText"]){
         this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);

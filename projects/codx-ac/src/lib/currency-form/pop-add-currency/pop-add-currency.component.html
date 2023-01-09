@@ -1,0 +1,208 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [footer]="footer"
+  [data]="currencies"
+  subToolbarCss="text-end"
+>
+</codx-form>
+
+<ng-template popup adde #body>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="CurrencyID"
+        default="Mã tiền tệ"
+      ></codx-label>
+        <codx-input
+                [formModel]="form.formModel"
+                field="CurrencyID"
+                [crrValue]="curID"
+                (valueChange)="valueChangecurID($event)"
+              >
+        </codx-input>
+      </div>   
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="Symbol"
+        default="Ký hiệu"      
+      ></codx-label>
+      <codx-input
+      field="Symbol"
+      [crrValue]="symbol"
+      [formModel]="form.formModel"
+      (valueChange)="valueChangesymbol($event)"
+    >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-label
+        [formModel]="form.formModel"
+        fiedName="CurrencyName"
+        default="Tên tiền tệ"      
+      ></codx-label>
+      <codx-input
+      field="CurrencyName"
+      [formModel]="form.formModel"
+      [crrValue]="curName"
+      (valueChange)="valueChangecurName($event)"
+    >
+    </codx-input>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="TranslateName"
+        default="Phát âm"
+      ></codx-label>
+        <codx-input
+                field="TranslateName"
+                [formModel]="form.formModel"
+                [Group]="form.formGroup"
+                
+              >
+              </codx-input>
+      </div>   
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="PrecisionName"
+        default="Đọc số nguyên"      
+      ></codx-label>
+      <codx-input
+      field="PrecisionName"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="PRoundOff"
+        default="Số lẻ đơn giá"      
+      ></codx-label>
+      <codx-input
+      field="PRoundOff"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    >
+    </codx-input>
+      </div>
+    </div>
+    <div class="col-6 pe-0">
+      <div class="form-group">
+        <codx-label
+        [formModel]="form.formModel"
+        fiedName="ARoundOff"
+        default="Số lẻ thành tiền"      
+      ></codx-label>
+      <codx-input
+      field="ARoundOff"
+      [formModel]="form.formModel"
+      [Group]="form.formGroup"
+    >
+    </codx-input>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 pe-0" id="boxexchange">
+    <codx-input
+    type="switch"
+    field="Multiply"
+    [checked]="true"
+    (valueChange)="valueChange($event)"
+  >
+  </codx-input>
+    <div>
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="Multiply"
+        default="Nhân tỷ giá"      
+      ></codx-label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Ngày xác định tỷ giá</label> 
+  </div>
+  
+  <div class="row mx-0 mt-3">
+    <div class="col-6 ps-0">
+      <div class="form-group">
+  <codx-input
+    type="switch"
+    field="Calculation"
+    (valueChange)="valueChangelb($event)"
+  >
+  </codx-input>
+    <div  *ngIf="fiedName">
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="Calculation"
+        default="Ngày chính xác"
+      ></codx-label> 
+    </div>
+    <div  *ngIf="!fiedName">
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="Calculation"
+        default="Ngày gần nhất"
+      ></codx-label> 
+    </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <codx-input
+    type="checkbox"
+    field="Stop"
+    [formModel]="form.formModel"
+    [Group]="form.formGroup"
+  >
+  </codx-input>
+    <div class="exchangerate">
+      <codx-label
+        [formModel]="form.formModel"
+        fiedName="Stop"
+        default="Ngưng sử dụng"      
+      ></codx-label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label  
+      >Tỷ giá</label> 
+  </div>
+ 
+</ng-template>
+<ng-template #footer>
+  <div class="boxbtn">
+  <button class="btnsavenew">
+    <codx-label
+      name="btnSaveNew"
+      formName="System"
+      default="Lưu & Thêm "
+    ></codx-label>
+  </button>
+  <button class="btnsave" (click)="onSave()">
+    <codx-label name="btnSave" formName="System" default="Lưu"></codx-label>
+  </button>
+</div>
+</ng-template>

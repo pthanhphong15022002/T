@@ -212,25 +212,25 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
 
   //-----------------------Custom Event-----------------------//
   valueChange(evt:any){
-    if(evt && evt.field){
+    if(evt && evt.field !=null){
       this.listDistribute[evt.field].distributeValue= evt.data;
       this.detectorRef.detectChanges();
     }
   }
   percentChange(evt:any){
-    if(evt && evt.field){
+    if(evt && evt.field !=null){
       this.listDistribute[evt.field].distributePct= evt.data;
       this.detectorRef.detectChanges();
     }
   }
   umidChange(evt:any){
-    if(evt && evt.field){
+    if(evt && evt.field !=null){
       this.listDistribute[evt.field].umid= evt.data;
       this.detectorRef.detectChanges();
     }
   }
   nameChange(evt:any){
-    if(evt && evt.field){
+    if(evt && evt.field !=null){
       this.listDistribute[evt.field].okrName= evt.data;
       this.detectorRef.detectChanges();
     }

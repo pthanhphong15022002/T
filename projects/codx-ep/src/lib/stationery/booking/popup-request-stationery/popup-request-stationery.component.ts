@@ -127,7 +127,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     });
 
     this.epService
-      .getParams('EPStationeryParameters', 'NagetivePhysical')
+      .getEPStationerySetting('1')
       .subscribe((res: any) => {
         let dataValue = res[0].dataValue;
         let json = JSON.parse(dataValue);
@@ -364,14 +364,14 @@ export class PopupRequestStationeryComponent extends UIComponent {
 
   startSave(approval) {
     this.dialogAddBookingStationery.patchValue({
-      title: this.dialogAddBookingStationery.value.note,
+      title: this.dialogAddBookingStationery.value.reasonID,
       approval: this.approvalRule,
     });
 
     this.data.bookingOn = this.dialogAddBookingStationery.value.bookingOn;
     this.data.reasonID = this.dialogAddBookingStationery.value.reasonID;
     this.data.note = this.dialogAddBookingStationery.value.note;
-    this.data.title = this.dialogAddBookingStationery.value.note;
+    this.data.title = this.dialogAddBookingStationery.value.reasonID;
     this.data.approval = this.approvalRule;
     this.data.resourceType = this.dialogAddBookingStationery.value.resourceType;
     this.data.issueStatus = this.dialogAddBookingStationery.value.issueStatus;

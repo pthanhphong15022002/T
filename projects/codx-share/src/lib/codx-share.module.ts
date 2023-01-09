@@ -142,6 +142,7 @@ import { CodxCalendarComponent } from './components/codx-calendar/codx-calendar.
 import { CalendarCenterComponent } from './components/codx-calendar/calendar-center/calendar-center.component';
 import { CodxViewCardComponent } from './components/codx-view-card/codx-view-card.component';
 import { CodxJsonformatterComponent } from './components/codx-history/codx-history-item/codx-jsonformatter/codx-jsonformatter.component';
+import { CodxViewFilesComponent } from './components/codx-view-files/codx-view-files.component';
 
 const T_Component: Type<any>[] = [
   AssignInfoComponent,
@@ -240,7 +241,8 @@ const T_Component: Type<any>[] = [
   CodxCalendarComponent,
   CalendarCenterComponent,
   CodxViewCardComponent,
-  CodxJsonformatterComponent
+  CodxJsonformatterComponent,
+  CodxViewFilesComponent
 ];
 
 const T_Pipe: Type<any>[] = [TruncatePipe, FileImage];
