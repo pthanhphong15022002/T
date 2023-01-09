@@ -1,5 +1,20 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, Optional, ViewChild } from '@angular/core';
-import { DialogData, DialogRef } from 'codx-core';
+import {
+  CdkDragDrop,
+  moveItemInArray,
+  transferArrayItem,
+} from '@angular/cdk/drag-drop';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
+import { DialogData, DialogRef, ApiHttpService, CallFuncService } from 'codx-core';
+import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
+import { environment } from 'src/environments/environment';
+import { DP_Process } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -8,6 +23,9 @@ import { DialogData, DialogRef } from 'codx-core';
 })
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
+  @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
+
+  process = new DP_Process();
 
   dialog: any;
   currentTab = 0; //Bước hiện tại
@@ -15,39 +33,135 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   newNode: number; //vị trí node mới
   oldNode: number; // Vị trí node cũ
-
-  isShow = false; //Check mở form
+  funcID: any;
+  isShow = true; //Check mở form
   isAddNew = true;
+  attachment: any;
+  linkAvatar = '';
+  vllShare = 'ES014';
+  showID = true;
   dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-  @Optional() dialog: DialogRef,
-  @Optional() data: DialogData) {
+    private api: ApiHttpService,
+    private callfc: CallFuncService,
+    @Optional() dialog: DialogRef,
+    @Optional() data: DialogData
+  ) {
     this.dialog = dialog;
   }
+  isShowstage = true;
+  data = [
+    {
+      item: "Spacing utilities that apply",
+      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
+      data:[
+        {
+          item: "Item 112",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Spacing utilities that apply",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 117",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+      ]
+    },
+    {
+      item: "Item 2",
+      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
+      data:[
+        {
+          item: "Item 118",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 119",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 116",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+      ]
+    },
+    {
+      item: "Item 3",
+      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
+      data:[
+        {
+          item: "Item 1111",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 1131",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+        {
+          item: "Item 11134",
+          data:{
+            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
+            item:"Item3"
+          }
+        },
+      ]
+    },
+
+  ]
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
   }
 
   //#region onSave
-  onSave(){
-
-  }
+  onSave() {}
   //#endregion
 
   //#region Change Tab
   //Click từng tab - mặc định thêm mới = 0
   clickTab(tabNo) {
     //if (tabNo <= this.processTab && tabNo != this.currentTab) {
-      if (tabNo != this.currentTab) {
+    if (tabNo != this.currentTab) {
       this.updateNodeStatus(this.currentTab, tabNo);
       this.currentTab = tabNo;
     }
   }
+
+  
+
    //#region Open form
    show(){
     this.isShow = !this.isShow;
+  }
+  showStage(){
+    this.isShowstage = !this.isShowstage;
   }
   //#endregion
   //Setting class status Active
@@ -82,8 +196,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-   //Tiếp tục qua tab
-   async continue(currentTab) {
+  //Tiếp tục qua tab
+  async continue(currentTab) {
     if (this.currentTab > 2) return;
 
     let oldNode = currentTab;
@@ -117,9 +231,87 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.updateNodeStatus(oldNode, newNode);
     this.currentTab--;
   }
-  saveAndClose(){
+  saveAndClose() {}
+
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+
+  //Avt
+  addAvatar() {
+    this.imageAvatar.referType = 'avt';
+    this.imageAvatar.uploadFile();
+  }
+  fileImgAdded(e) {
+    if (e?.data && e?.data?.length > 0) {
+      var countListFile = e.data.length;
+      this.linkAvatar = e?.data[countListFile - 1].avatar;
+
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  getAvatar(process) {
+    let avatar = [
+      '',
+      this.funcID,
+      process?.recID,
+      'BP_Processes',
+      'inline',
+      1000,
+      process?.processName,
+      'avt',
+      false,
+    ];
+    this.api
+      .execSv<any>('DM', 'DM', 'FileBussiness', 'GetAvatarAsync', avatar)
+      .subscribe((res) => {
+        if (res && res?.url) {
+          this.linkAvatar = environment.urlUpload + '/' + res?.url;
+          this.changeDetectorRef.detectChanges();
+        }
+      });
+  }
+  //end
+
+
+  //Control share
+  sharePerm(share) {
+    this.callfc.openForm(share, '', 420, window.innerHeight);
+  }
+
+  applyShare(e){
 
   }
+
+  show1(){
+    this.isShow = !this.isShow;
+  }
+  addFile(e) {
+    this.attachment.uploadFile();
+  }
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
+
+  drop1(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+  }
+  //#region Trường tùy chỉnh
+
+  //#region
+  clickRoles(e){
+
+  }
+  //end
+  //#endregion
 
   //#region Trường tùy chỉnh 
   clickShow(id){
