@@ -91,6 +91,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
     });
   }
 
+  lstQuestionTemp: any;
   loadData() {
     this.questions = null;
     this.api
@@ -100,6 +101,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
+          this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
           this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
           this.itemSessionFirst = JSON.parse(JSON.stringify(this.questions[0]));
           //hàm lấy safe url của các question là video youtube
@@ -115,8 +117,23 @@ export class ReviewComponent extends UIComponent implements OnInit {
               this.lstEditIV = res;
             }
           });
+          this.getDataAnswer(this.lstQuestionTemp);
         }
       });
+  }
+
+  getDataAnswer(lstData) {
+    let objAnswer = {
+      seqNo: null,
+      answer: null,
+      other: false,
+      columnNo: 0,
+    };
+    lstData.forEach((x) => {
+      x.children.forEach((y) => {
+        y.answers = [objAnswer];
+      });
+    });
   }
 
   getHierarchy(dataSession, dataQuestion) {
@@ -195,13 +212,25 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
+    if (!e.data) return;
+    //Xóa các field không có trong bảng SV_RespondResults để chép qua
+    // delete itemAnswer.recID;
+    // delete itemAnswer.id;
+    // delete itemAnswer.hasPicture;
+    // delete itemAnswer.isColumn;
+    // delete itemAnswer.column;
     let results: any;
-    if (e) {
+    if (e.component) {
       if (e.field == 'O' || e.field == 'C') {
-        this.questions[itemSession.seqNo].children[itemQuestion.seqNo].answers[
-          itemAnswer.seqNo
-        ]['choose'] = !e.data;
-      } else if (e.field == 'T' || e.field == 'T2' || e.field == 'D' || e.field == 'H') {
+        this.lstQuestionTemp[itemSession.seqNo].children[
+          itemQuestion.seqNo
+        ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
+      } else if (
+        e.field == 'T' ||
+        e.field == 'T2' ||
+        e.field == 'D' ||
+        e.field == 'H'
+      ) {
         results = [
           {
             seqNo: 0,
@@ -210,9 +239,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
             columnNo: 0,
           },
         ];
-        this.questions[itemSession.seqNo].children[
-          itemQuestion.seqNo
-        ].answers[0].answer = e.value;
       } else
         results = [
           {
@@ -228,24 +254,37 @@ export class ReviewComponent extends UIComponent implements OnInit {
         scores: 0,
         results: results,
       };
-      this.respondents.responds.push(responds);
+      console.log('check count valueChange', this.lstQuestionTemp[itemSession.seqNo].children[
+        itemQuestion.seqNo
+      ].answers[0]);
     }
   }
 
+  checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer) {
+    let seqNo = JSON.parse(
+      JSON.stringify(
+        this.lstQuestionTemp[seqNoSession].children[seqNoQuestion].answers[0]
+          .seqNo
+      )
+    );
+    if (seqNo == seqNoAnswer) return true;
+    else return false;
+  }
+
   onSubmit() {
-    this.respondents.email = this.user.email;
-    this.respondents.respondent = this.user.userName;
-    this.respondents.position = this.user.positionID;
-    this.respondents.department = this.user.departmentID;
-    this.respondents.objectType = '';
-    this.respondents.objectID = '';
-    this.respondents.finishedOn = new Date();
-    this.respondents.transID = this.recID;
-    this.respondents.scores = 0;
-    this.respondents.duration = 20;
-    this.respondents.pending = true;
-    this.SVServices.onSubmit(this.respondents).subscribe((res) => {
-      debugger;
-    });
+    // this.respondents.email = this.user.email;
+    // this.respondents.respondent = this.user.userName;
+    // this.respondents.position = this.user.positionID;
+    // this.respondents.department = this.user.departmentID;
+    // this.respondents.objectType = '';
+    // this.respondents.objectID = '';
+    // this.respondents.finishedOn = new Date();
+    // this.respondents.transID = this.recID;
+    // this.respondents.scores = 0;
+    // this.respondents.duration = 20;
+    // this.respondents.pending = true;
+    // this.SVServices.onSubmit(this.respondents).subscribe((res) => {
+    //   debugger;
+    // });
   }
 }

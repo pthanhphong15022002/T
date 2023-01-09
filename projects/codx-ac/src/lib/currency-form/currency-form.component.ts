@@ -8,7 +8,7 @@ import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.com
   styleUrls: ['./currency-form.component.css']
 })
 export class CurrencyFormComponent extends UIComponent {
-  @ViewChild('morefunction') morefunction: TemplateRef<any>;
+  @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
   constructor(
     private inject: Injector,
@@ -23,8 +23,19 @@ export class CurrencyFormComponent extends UIComponent {
   dialog: DialogRef;
   button?: ButtonModel;
   headerText = '';
-  moreFunc = [
-    
+  moreFunction = [
+    {
+      id: 'edit',
+      icon: 'icon-edit',
+      text: 'Chỉnh sửa',
+      textColor: '#307CD2',
+    },
+    {
+      id: 'delete',
+      icon: 'icon-delete',
+      text: 'Xóa',
+      textColor: '#F54E60',
+    },
   ];
   onInit(): void {
     this.button = {
@@ -32,23 +43,25 @@ export class CurrencyFormComponent extends UIComponent {
     };
   }
   ngAfterViewInit(): void {
-    this.views = [{
+    this.views = [
+      {
       type: ViewType.grid,
       sameData: true,
       active: true,
-    }];
+      },
+  ];
     this.dt.detectChanges();
   }
-  viewChanged(evt: any, view: ViewsComponent) {
-    this.cache
-      .gridViewSetup(view.function.formName, view.function.gridViewName)
-      .subscribe(() => {});
-  }
-  selectedChange(val: any) {
-    console.log(val);
-    this.itemSelected = val.data;
-    this.dt.detectChanges();
-  }
+  // viewChanged(evt: any, view: ViewsComponent) {
+  //   this.cache
+  //     .gridViewSetup(view.function.formName, view.function.gridViewName)
+  //     .subscribe(() => {});
+  // }
+  // selectedChange(val: any) {
+  //   console.log(val);
+  //   this.itemSelected = val.data;
+  //   this.dt.detectChanges();
+  // }
   clickMF(e: any, data?: any) {
     switch (e.functionID) {
       case 'edit':
@@ -64,6 +77,9 @@ export class CurrencyFormComponent extends UIComponent {
       case 'btnAdd':
         this.add();
         break;
+      case 'edit':
+        
+        break;
     }
   }
   add() {
@@ -77,7 +93,7 @@ export class CurrencyFormComponent extends UIComponent {
       option.DataService = this.view.dataService;
       option.FormModel = this.view.formModel;
       option.Width = '550px';
-      this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, '', option);
+      this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, obj, option,this.view.funcID);
       this.dialog.closed.subscribe((x) => {
         if (x.event == null && this.view.dataService.hasSaved)
           this.view.dataService

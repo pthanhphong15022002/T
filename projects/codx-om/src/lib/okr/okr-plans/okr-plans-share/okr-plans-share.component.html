@@ -7,7 +7,7 @@
       <codx-label [default]="'Đến'"></codx-label>
     </div>
     <codx-input type="share"  [refValue]="'DM001'" 
-        refType="P" field="popup" [ngClass]="'w-100'" >
+        refType="P" field="popup" [ngClass]="'w-100'"  (valueChange)="changeInput($event,'from')">
     </codx-input>
   </div>
   <div class="d-flex justify-content-center align-items-center mt-5">
@@ -16,23 +16,34 @@
     </div>
     
     <codx-input type="share"  [refValue]="'DM001'" 
-        refType="P" field="popup" [ngClass]="'w-100'" >
+        refType="P" field="popup" [ngClass]="'w-100'" (valueChange)="changeInput($event,'to')">
     </codx-input>
   </div>
   <div class="py-5">
     <div class="mb-2">
       <codx-label [default]="'Nội dung chia sẻ'" class="fw-bold mb-2"></codx-label>
     </div>
-    <codx-input [type]="'textarea'" [height]="'500px'"></codx-input>
+    <codx-input [type]="'textarea'" [height]="'400px'" [Group]="shareGroup" [ControlName]="'note'"></codx-input>
   </div>
-  <div class="py-2">
+  <div class="py-4">
     <div class="d-flex justify-content-between align-items-center">
       <codx-label [default]="'Cho phép chỉnh sửa?'"></codx-label>
-      <codx-input [type]="'switch'"></codx-input>
+      <codx-input [type]="'switch'" [Group]="shareGroup" [ControlName]="'write'"></codx-input>
     </div>
-    <div class="d-flex justify-content-between align-items-center mt-2">
+    <div class="d-flex justify-content-between align-items-center mt-4">
       <codx-label [default]="'Cho phép chia sẻ lại với người khác?'"></codx-label>
-      <codx-input [type]="'switch'"></codx-input>
+      <codx-input [type]="'switch'" [Group]="shareGroup" [ControlName]="'share'"></codx-input>
+    </div>
+  </div>
+  <div>
+    <div class="mb-2">
+      <codx-label default="Giới hạn thời gian chia sẻ" class="text-primary"></codx-label>
+    </div>
+    <div class="d-flex justify-content-between align-items-center px-2">
+      <codx-label default="Từ ngày"></codx-label>
+      <codx-input [type]="'datetime'" format="d" ngClass="w-120px" [Group]="shareGroup" [ControlName]="'startedOn'"></codx-input>
+      <codx-label default="Đến ngày"></codx-label>
+      <codx-input [type]="'datetime'" format="d" ngClass="w-120px" [Group]="shareGroup" [ControlName]="'expiredOn'"></codx-input>
     </div>
   </div>
 </ng-template>
