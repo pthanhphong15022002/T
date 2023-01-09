@@ -1240,7 +1240,7 @@ export class CodxHrService {
 
   //#region HR_EHealths
 
-  loadDataEHealths(dataRequest: DataRequest) {
+  loadListDataEHealthsByDatarequest(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1255,7 +1255,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'AddEHealthsAsync',
+      'AddEHealthAsync',
       [data]
     );
   }
@@ -1265,7 +1265,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'EditEHealthsAsync',
+      'EditEHealthAsync',
       data
     );
   }
@@ -1275,7 +1275,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'DeleteEHealthsAsync',
+      'DeleteEmployeEHealthInfoAsync',
       data
     );
   }

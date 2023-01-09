@@ -1,4 +1,4 @@
-<layout-list-detail
+<!-- <layout-list-detail
   #lstDetail
   [title]="headerText"
   [formModel]="formModel"
@@ -10,7 +10,7 @@
   *ngIf="isAfterRender"
 >
   <ng-template #body>
-    <!-- <div class="form-group row">
+    <div class="form-group row">
       <div class="col-6">
         <codx-label fiedName="DecisionNo" [formModel]="formModel"></codx-label>
         <codx-input
@@ -106,7 +106,7 @@
         [formModel]="formModel"
         [Group]="formGroup"
       ></codx-input>
-    </div> -->
+    </div>
   </ng-template>
 
   <ng-template #footer>
@@ -168,4 +168,386 @@
       >{{ data1.decisionNo + "*" + (data1.signedDate | fmDT) }}
     </div>
   </div>
+</ng-template> -->
+
+<ng-template #footer1>
+  <div class="d-flex justify-content-end">
+    <button class="btn btn-primary" (click)="onSaveForm()">
+      <i class="icon-save"></i>
+      <codx-label
+        default="Lưu"
+        name="lblSave"
+        [formModel]="formModel"
+      ></codx-label>
+    </button>
+  </div>
 </ng-template>
+
+<codx-form
+  #form
+  title="Khám sức khỏe"
+  headerText="Khám sức khỏe"
+  [body]="tmpContent"
+  [footer]="footer1"
+  [formModel]="formModel"
+  [dialog]="dialog"
+  [data]="healthObj"
+  *ngIf="isAfterRender"
+>
+  <ng-template #tmpContent>
+    <ejs-tab
+      #leftToolbar
+      (selecting)="swipeToRightTab($event)"
+      heightAdjustMode="Fill"
+    >
+      <e-tabitems>
+        <e-tabitem>
+          <ng-template #headerText>
+            <codx-label default="Thông tin chung"></codx-label>
+          </ng-template>
+          <ng-template #content>
+            <div class="pt-6">
+              <codx-label
+                default="THÔNG TIN CHUNG"
+                class="text-primary"
+              ></codx-label>
+            </div>
+
+            <div class="form-group row pt-2">
+              <div class="col-6">
+                <codx-label
+                  fiedName="HealthPeriodID"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="healthPeriodID"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="HealthDate"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="healthDate"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <codx-label
+                fiedName="HospitalID"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="hospitalID"
+              >
+              </codx-input>
+            </div>
+            <div class="form-group">
+              <codx-label
+                fiedName="HealthPlace"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="healthPlace"
+              >
+              </codx-input>
+            </div>
+            <div class="form-group row">
+              <div class="col-6">
+                <codx-label
+                  fiedName="DoctorName"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="doctorName"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="HealthFee"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="healthFee"
+                    [showSpinButton]="false"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <codx-label fiedName="Note" [formModel]="formModel"></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="note"
+              >
+              </codx-input>
+            </div>
+            <div>
+              <codx-label class="text-primary" default="Kết luận"></codx-label>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-6">
+                <codx-label
+                  fiedName="HealthType"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="healthType"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="PreviousDiseases"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="previousDiseases"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <codx-label
+                fiedName="Injury"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="injury"
+              >
+              </codx-input>
+            </div>
+
+            <div class="form-group">
+              <codx-label
+                fiedName="FinalConclusion"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="finalConclusion"
+              >
+              </codx-input>
+            </div>
+
+            <div class="form-group">
+              <codx-label
+                fiedName="Suggestion"
+                [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                [Group]="form.formGroup"
+                [formModel]="form.formModel"
+                field="suggestion"
+              >
+              </codx-input>
+            </div>
+          </ng-template>
+        </e-tabitem>
+
+        <e-tabitem>
+          <ng-template #headerText>
+            <codx-label default="I. Khám thể lực"></codx-label>
+          </ng-template>
+          <ng-template #content>
+            <div class="pt-6">
+              <codx-label
+                default="I. KHÁM THỂ LỰC"
+                class="text-primary"
+              ></codx-label>
+            </div>
+            <div class="form-group row pt-2">
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_High"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_High"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_Weigh"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_Weigh"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_PulseTension"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_PulseTension"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_BloodPressure"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_BloodPressure"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_BMI"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="P_BMI"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_Pignet"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_Pignet"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_ThoraxInhale"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_ThoraxInhale"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_ThoraxExhale"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_ThoraxExhale"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <div class="col-6">
+                <codx-label
+                  fiedName="P_ThoraxAverage"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="p_ThoraxAverage"
+                  ></codx-input>
+                </div>
+              </div>
+              <div class="col-6">
+                <codx-label
+                  fiedName="HType_Physical"
+                  [formModel]="formModel"
+                ></codx-label>
+                <div>
+                  <codx-input
+                    [Group]="form.formGroup"
+                    [formModel]="form.formModel"
+                    field="hType_Physical"
+                  ></codx-input>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <codx-label
+                  fiedName="P_Note"
+                  [formModel]="formModel"
+              ></codx-label>
+              <codx-input
+                  field="p_Note"
+                  [formModel]="formModel"
+                  [Group]="formGroup"
+              ></codx-input>
+          </div>
+          </ng-template>
+        </e-tabitem>
+      </e-tabitems>
+    </ejs-tab>
+  </ng-template>
+</codx-form>

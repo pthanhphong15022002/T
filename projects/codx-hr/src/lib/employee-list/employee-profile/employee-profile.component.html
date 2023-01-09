@@ -908,7 +908,7 @@
           <div class="d-flex flex-column" *ngIf="crrTab == 6">
             <div
               class="d-flex btn btn-hover-primary"
-              (click)="addEHealths('add', null)"
+              (click)="HandleEmployeeEHealths('add', null)"
             >
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -920,6 +920,23 @@
               >
               </codx-label>
             </div>
+
+            <div
+              class="d-flex btn btn-hover-primary"
+              (click)="DeleteEmployeeEHealths('0e55cdd5-a3e7-4da3-b2c4-700345d2ea07')"
+            >
+              <span
+                class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
+              ></span>
+              <codx-label
+                fiedName="lbl"
+                default="Xóa khám sức khỏe"
+                [formModel]="view.formModel"
+              >
+              </codx-label>
+            </div>
+
+            
             <div
               class="d-flex btn btn-hover-primary"
               (click)="addEditEVaccines('add', null)"
@@ -1571,8 +1588,8 @@
                         <codx-temp-full
                           (clickMF)="clickMF($event, item, 'family')"
                           cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-                          [imageId]="'ADMIN'"
-                          imageObjType="AD_Users"
+                          [imageId]="item.recID"
+                          [imageObjType]="'HR_EFamilies'"
                           [imageWidth]="40"
                           [formModel]="view.formModel"
                           [title]="item?.relationName"
@@ -4702,7 +4719,7 @@
                 <div class="d-flex align-items-center ms-5">
                   <button
                     class="btn btn-icon btn-sm position-relative ms-2"
-                    (click)="addEHealths('add', null)"
+                    (click)="HandleEmployeeEHealths('add', null)"
                   >
                     <span
                       class="icon-add icon-20 text-gray-600 text-hover-primary"

@@ -22,7 +22,7 @@
                     data-kt-menu-attach="parent"
                     data-kt-menu-placement="bottom-end"
                     data-kt-menu-flip="bottom"
-                    [funcId]="funcID"
+                    [funcId]="'HRT03020103'"
                     [isAllowEdit]="true"
                 >
                 </codx-img>
@@ -30,11 +30,12 @@
             <div class="col-6">
                 <div class="form-group" >
                     <codx-input 
+                    (focus)="focus($event)"
                         [formModel]="formModel"
                         [Group]="formGroup"
                         field="isEmployee"
                     ></codx-input>               
-                    <codx-label [formModel]="formModel" fiedName="IsEmployee"></codx-label>
+                    <codx-label class="px-2" [formModel]="formModel" fiedName="IsEmployee"></codx-label>
                 </div>
 
                 <div class="form-group">
