@@ -28,6 +28,7 @@ import { PopupShowOBComponent } from './popup/popup-show-ob/popup-show-ob.compon
 import { PopupDistributeOKRComponent } from './popup/popup-distribute-okr/popup-distribute-okr.component';
 import { PopupAssignmentOKRComponent } from './popup/popup-assignment-okr/popup-assignment-okr.component';
 import { OkrPlanShareComponent } from './okr/okr-plans/okr-plans-share/okr-plans-share.component';
+import { PopupAssignmentOKRCComponent } from './popup/popup-assigment-okr-c/popup-assignment-okr-c.component';
 
 const routes: Routes = [
   {
@@ -78,6 +79,7 @@ const routes: Routes = [
     PopupShowOBComponent,
     PopupDistributeOKRComponent,
     PopupAssignmentOKRComponent,
+    PopupAssignmentOKRCComponent,
     OkrTargetsComponent,
     OkrAddComponent,
     OkrReviewsComponent,
