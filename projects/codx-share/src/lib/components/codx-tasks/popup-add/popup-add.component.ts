@@ -400,7 +400,6 @@ export class PopupAddComponent implements OnInit, AfterViewInit {
         if (this.action == 'edit' && this.task.category == '2') {
           this.disableDueDate = true;
           if (this.param?.EditControl != '1') this.readOnly = true;
-          debugger
         }
         this.changeDetectorRef.detectChanges();
       }
