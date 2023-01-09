@@ -1470,6 +1470,26 @@ export class CodxHrService {
     );
   }
 
+  addESlkillInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'AddEmployeeSkillInfoAsync',
+      [data]
+    );
+  }
+
+  updateEskillInfo(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'ESkillsBusiness',
+      'UpdateEmployeeSkillInfoAsync',
+      data
+    );
+  }
+
   deleteESkill(recID: string) {
     return this.api.execSv<any>(
       'HR',
@@ -1642,8 +1662,8 @@ export class CodxHrService {
     funcID: string,
     entityName: string,
     idField: string
-  ): Observable<object> {
-    return this.api.execSv('HR', 'Core', 'DataBusiness', 'GetDefaultAsync', [
+  ){
+    return this.api.execSv<any>('HR', 'Core', 'DataBusiness', 'GetDefaultAsync', [
       funcID,
       entityName,
       idField,

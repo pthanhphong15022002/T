@@ -38,6 +38,15 @@
     fill: var(-text-gray-600);
 }
 
+
+// .aside.aside-light {
+//     background-color: var(--bg-aside-dark);
+// }
+
+.aside-menu .menu .menu-item .menu-link.active {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
 ejs-listview {
     background-color: var(--bg-card);
 }
@@ -95,6 +104,10 @@ codx-view-list-detail .e-pane {
 
     .btn {
         color: var(--primary-dark);
+
+        span {
+            color: var(--primary-dark);
+        }
     }
 
     .dialog-title,
@@ -308,7 +321,8 @@ codx-view-list-detail .codx-detail-footer {
 
 .e-grid .e-headercell,
 .e-grid .e-detailheadercell {
-    background-color: var(--primary) !important;
+    background-color: var(--primary-darker) !important;
+    color: var(--text-title);
 }
 
 .e-row:hover .e-rowcell {
@@ -422,6 +436,130 @@ h1,
 .btn.btn-bg-white i {
     color: var(--primary);
 
+}
+
+.nav-tabs .nav-link.active,
+.nav-tabs .nav-item.show .nav-link {
+    color: var(--primary);
+    background-color: var(--bg-card);
+    border-color: var(--border-list);
+}
+
+.feed-box {
+    background-color: var(--bg-input);
+}
+
+.codx-toast-container .e-toast-success {
+    background-color: var(--primary-lightest) !important;
+}
+
+.pw-content,
+.employee-info-main .pw-menu {
+    background-color: var(--bg-card) !important;
+}
+
+.e-richtexteditor .e-rte-content,
+.e-richtexteditor .e-source-content {
+    background: var(--bg-input);
+    border-color: var(--border-list);
+}
+
+.codx-search>input {
+    background-color: transparent;
+    color: var(--text-title);
+}
+
+.e-kanban {
+    background: var(--bg-body);
+}
+
+.e-kanban .card {
+    background: var(--bg-card);
+}
+
+codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-card-wrapper .e-card {
+    border: var(--border-gray);
+}
+
+.e-kanban .e-kanban-table.e-content-table .e-card {
+    background: transparent;
+}
+
+.e-tab .e-tab-header .e-toolbar-item.e-active span,
+.e-tab .e-tab-header .e-toolbar-item.e-active {
+    color: var(--text-body) !important;
+}
+
+.e-tab .e-content .e-item {
+    background: inherit;
+    color: var(--text-title);
+}
+
+.e-input-group:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left).e-disabled,
+.e-input-group.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap,
+.e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error):not(.e-float-icon-left).e-disabled,
+.e-input-group.e-control-wrapper.e-float-icon-left:not(.e-success):not(.e-warning):not(.e-error).e-disabled .e-input-in-wrap {
+    background: var(--bg-input);
+    color: var(--text-des);
+}
+
+.e-input-group.e-disabled .e-input-group-icon,
+.e-input-group.e-control-wrapper.e-disabled .e-input-group-icon {
+    border-color: var(--border-list);
+}
+
+.e-tab .e-tab-header::before {
+    border-color: var(--border-list);
+}
+
+.e-tab .e-tab-header .e-toolbar-item.e-active {
+    border-color: var(--primary) !important;
+}
+
+.card-footer {
+    background-color: var(--bg-card);
+}
+
+.e-dialog .card-footer .btn {
+    color: var(--text-title);
+}
+
+.e-dlg-header,
+.e-dlg-header * {
+    color: var(--text-title);
+}
+
+.e-grid .e-rowcell {
+    color: var(--text-body) !important;
+}
+
+.e-grid td.e-active {
+    background: var(--primary-lightest);
+}
+
+.e-row:hover .e-rowcell {
+    background-color: var(--primary-lighter) !important;
+}
+
+.e-schedule .e-timeline-view .e-resource-left-td,
+.e-schedule .e-timeline-month-view .e-resource-left-td {
+    background-color: var(--bg-card);
+    border-color: var(--border-light);
+    color: var(--text-body);
+}
+
+.e-schedule .e-timeline-view .e-date-header-wrap table td,
+.e-schedule .e-timeline-month-view .e-date-header-wrap table td {
+    background-color: var(--bg-card);
+    border-color: var(--border-light);
+    color: var(--text-body);
+}
+
+.e-schedule .e-timeline-view .e-resource-cells,
+.e-schedule .e-timeline-month-view .e-resource-cells {
+    background-color: var(--bg-card);
+    border-color: var(--border-light);
+    color: var(--text-body);
 }
 
 //end dark

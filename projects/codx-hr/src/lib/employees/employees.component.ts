@@ -26,6 +26,7 @@ import {
   UIComponent,
 } from 'codx-core';
 import moment from 'moment';
+import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { CodxExportComponent } from 'projects/codx-share/src/lib/components/codx-export/codx-export.component';
 import { catchError, map, finalize, Observable, of } from 'rxjs';
 import { CodxHrService } from '../codx-hr.service';
@@ -73,6 +74,7 @@ export class EmployeesComponent extends UIComponent {
   ) {
     super(injector);
   }
+
   onInit(): void {
     this.router.params.subscribe((param: any) => {
       if (param) {

@@ -51,6 +51,7 @@ export class PopupAddEmployeesComponent implements OnInit {
       name: 'tabInfoLaw',
     },
   ];
+  isCorporation = false;
   dialogRef: any;
   dialogData: any = null;
   employee: HR_Employees;
@@ -68,10 +69,10 @@ export class PopupAddEmployeesComponent implements OnInit {
   gridViewSetup: any;
   action: 'add' | 'edit' | 'copy' = 'add';
   paramaterHR: any = null;
-  grvSetup:any = {};
-  arrFieldRequire:any[] = [];
-  mssgCode:string = "SYS009";
-  @ViewChild("form") form:LayoutAddComponent;
+  grvSetup: any = {};
+  arrFieldRequire: any[] = [];
+  mssgCode: string = 'SYS009';
+  @ViewChild('form') form: LayoutAddComponent;
   constructor(
     private auth: AuthService,
     private notifiSV: NotificationsService,
@@ -79,6 +80,7 @@ export class PopupAddEmployeesComponent implements OnInit {
     private fb: FormBuilder,
     private cache: CacheService,
     private api: ApiHttpService,
+
     @Optional() dialogData?: DialogData,
     @Optional() dialogRef?: DialogRef
   ) {
@@ -114,18 +116,19 @@ export class PopupAddEmployeesComponent implements OnInit {
     }
   }
   // get grvsetup
-  getGridViewSetup(formModel:FormModel){
-    if(formModel)
-    { 
-      this.cache.gridViewSetup(formModel.formName, formModel.gridViewName).subscribe((grd:any) => {
-        if(grd){
-          this.grvSetup = grd;
-          let arrField =  Object.values(grd).filter((x:any) => x.isRequire);
-          if(arrField){
-            this.arrFieldRequire = arrField.map((x:any) => x.fieldName);
+  getGridViewSetup(formModel: FormModel) {
+    if (formModel) {
+      this.cache
+        .gridViewSetup(formModel.formName, formModel.gridViewName)
+        .subscribe((grd: any) => {
+          if (grd) {
+            this.grvSetup = grd;
+            let arrField = Object.values(grd).filter((x: any) => x.isRequire);
+            if (arrField) {
+              this.arrFieldRequire = arrField.map((x: any) => x.fieldName);
+            }
           }
-        }
-      });
+        });
     }
   }
   // set title popup
@@ -193,22 +196,18 @@ export class PopupAddEmployeesComponent implements OnInit {
 
   // btn save
   OnSaveForm() {
-    let arrFieldUnValid:string = "";
-    if(this.arrFieldRequire.length > 0)
-    {
+    let arrFieldUnValid: string = '';
+    if (this.arrFieldRequire.length > 0) {
       this.arrFieldRequire.forEach((field) => {
         let key = Util.camelize(field);
-        if (!this.employee[key])
-        {
-          arrFieldUnValid += this.grvSetup[field]['headerText'] + ";";
+        if (!this.employee[key]) {
+          arrFieldUnValid += this.grvSetup[field]['headerText'] + ';';
         }
       });
     }
-    if(arrFieldUnValid){
-      this.notifiSV.notifyCode(this.mssgCode,0,arrFieldUnValid);
-    }
-    else
-    {
+    if (arrFieldUnValid) {
+      this.notifiSV.notifyCode(this.mssgCode, 0, arrFieldUnValid);
+    } else {
       if (this.action == 'edit') {
         this.updateEmployeeAsync(this.employee);
       } else {

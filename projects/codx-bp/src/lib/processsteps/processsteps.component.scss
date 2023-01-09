@@ -360,6 +360,7 @@ codx-views {
   display: flex;
   position: relative;
   position: relative;
+  padding-top: 2px;
   .view-all{
     background-color: #040404b7;
     width: 25px;
@@ -368,7 +369,7 @@ codx-views {
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 0;
+    top: 2px;
     left: 0;
     color: white;
     opacity: 0.6;

@@ -304,13 +304,19 @@ const themeDatas: ThemeFlag[] = [
   {
     id: 'sapphire',
     name: 'Sapphire',
-    color: '#0b9b8d',
+    color: '#009384',
     enable: true,
   },
   {
     id: 'green',
     name: 'Green',
     color: '#0f8633',
+    enable: true,
+  },
+  {
+    id: 'purple',
+    name: 'Purple',
+    color: '#5710b2',
     enable: true,
   },
 ];

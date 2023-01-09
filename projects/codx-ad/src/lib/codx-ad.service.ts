@@ -190,14 +190,13 @@ export class CodxAdService {
   }
 
   deleteFile(objectID, objectType, delForever) {
-    return this.api
-      .execSv(
-        'DM',
-        'ERM.Business.DM',
-        'FileBussiness',
-        'DeleteByObjectIDAsync',
-        [objectID, objectType, delForever]
-      )
+    return this.api.execSv(
+      'DM',
+      'ERM.Business.DM',
+      'FileBussiness',
+      'DeleteByObjectIDAsync',
+      [objectID, objectType, delForever]
+    );
   }
 
   stopUser(data) {
@@ -293,6 +292,27 @@ export class CodxAdService {
       'UsersBusiness',
       'GetUserGroupByUserIDAsync',
       groupID
+    );
+  }
+
+  //get lst bought module
+  getLstBoughtModule() {
+    return this.api.execSv(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetListBoughtModuleAsync',
+      ''
+    );
+  }
+
+  getTenantDefaultSetting() {
+    return this.api.execSv<any>(
+      'SYS',
+      'ERM.Business.AD',
+      'UsersBusiness',
+      'GetTenantDefaultSettingAsync',
+      ''
     );
   }
 }

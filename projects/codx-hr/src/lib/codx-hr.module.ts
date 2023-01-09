@@ -68,6 +68,7 @@ import { PopupAddNewHRComponent } from './employee-list/popup-add-new-hr/popup-a
 import { TmpGridViewComponent } from './employee-list/employee-profile/tmp-grid-view/tmp-grid-view.component';
 import { PopupEAssetsComponent } from './employee-profile/popup-eassets/popup-eassets.component';
 import { PopupEPassportsComponent } from './employee-profile/popup-epassports/popup-epassports.component';
+import { EmployeePositionsComponent } from './employee-list/employee-profile/employee-positions/employee-positions.component';
 import { PopupEexperiencesComponent } from './employee-profile/popup-eexperiences/popup-eexperiences.component';
 import { OrganizationOrgchartComponent } from './organization/organization-orgchart/organization-orgchart.component';
 import { OrganizationMasterDetailComponent } from './organization/organization-master-detail/organization-master-detail.component';
@@ -260,6 +261,7 @@ const T_Component: Type<any>[] = [
   PopupETraincourseComponent,
   PopupEVisasComponent,
   PopupEWorkPermitsComponent,
+  EmployeePositionsComponent,
   PopupEJobSalariesComponent,
   PopupEBasicSalariesComponent,
   PopupEexperiencesComponent,
