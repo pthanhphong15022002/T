@@ -170,7 +170,7 @@
       <ng-container *ngIf="item.isContentTmp; else noContentShareTemp">
       </ng-container>
       <ng-template #noContentShareTemp>
-        <div class="my-3">
+        <div class="my-3" *ngIf="item.content">
           <div [innerHTML]="item.content | safe: 'html'"></div>
         </div>
       </ng-template>
@@ -186,7 +186,9 @@
 <!-- content body -->
 <ng-template #containTemplate let-item>
   <ng-container *ngIf="item.isFeedBack; else WPComment">
-    <codx-view-card [card]="item.card"></codx-view-card>
+    <ng-container *ngIf="item.card">
+      <codx-view-card [card]="item.card"></codx-view-card>
+    </ng-container>
   </ng-container>
   <ng-template #WPComment>
     <div class="pic-feed mb-2">
