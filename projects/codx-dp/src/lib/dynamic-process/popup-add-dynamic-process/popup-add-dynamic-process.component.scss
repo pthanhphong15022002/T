@@ -104,6 +104,17 @@
     height: 20vh;
 }
 
+.button-custom {
+  border: none;
+  outline: none;
+  background: none;
+  color: #0077b1;
+
+  span {
+      font-weight: 400;
+  }
+}
+
 //thuan
 .background-stage {
     .stage-top {
