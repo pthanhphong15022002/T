@@ -36,11 +36,11 @@
   }
   
   input:checked + .slider {
-    background-color: #2196F3;
+    background-color: #0082D6;
   }
   
   input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
+    box-shadow: 0 0 1px #0082D6;
   }
   
   input:checked + .slider:before {
@@ -57,8 +57,8 @@
   .slider.round:before {
     border-radius: 50%;
   }
-  #boxexchange{
-    display: flex;
+  .textexchange{
+    margin-left: 43px;
   }
   .exchangerate{
     margin-top: 5px;
@@ -89,10 +89,11 @@
     position: absolute;
     top: 0;
     left: 0;
-    height: 25px;
-    width: 25px;
-    background-color: #eee;
+    height: 20px;
+    width: 20px;
+    background-color: white;
     border-radius: 50%;
+    border: 2px solid gray;
   }
   
   /* On mouse-over, add a grey background color */
@@ -102,7 +103,8 @@
   
   /* When the radio button is checked, add a blue background */
   .container input:checked ~ .checkmark {
-    background-color: #2196F3;
+    background-color: white;
+    border: 2px solid #0082D6;
   }
   
   /* Create the indicator (the dot/circle - hidden when not checked) */
@@ -119,10 +121,39 @@
   
   /* Style the indicator (dot/circle) */
   .container .checkmark:after {
-       top: 9px;
-      left: 9px;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: white;
+    top: 2px;
+    left: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: #0082D6;
+    border-radius: 50%;
+  }
+  .boxbtn{
+    margin-right: 21px;
+    margin-bottom: 10px;
+  }
+  .btnsavenew{
+    height: 35px;
+    border: 1px solid #FF6E03;
+    background-color: white;
+    color: #FF6E03;
+    font-weight: bold;
+    border-radius: 7px;;
+  }
+  .btnsave{
+    height: 35px;
+    width: 62px;
+    border-radius: 5px;
+    background-color: #FF4900;
+    border: none;
+    color: white;
+  }
+  /* .textexchanges{
+    margin-top: 10px;
+    color:#0082D6 ;
+    font-weight: bold;
+    font-size: 18px;
+  } */
+  #boxexchange{
+    display: flex;
   }

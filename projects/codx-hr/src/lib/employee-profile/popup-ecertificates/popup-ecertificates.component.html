@@ -360,14 +360,16 @@
 
 <ng-template #tmplateECertificateTitle let-data>
     <div class="d-flex align-items-center pb-2">
+
+        <i class="icon-i-arrow-down-left-circle-fill icon-14 ps-1 pe-1"></i>
         {{data.certificateID}}
         <i class="icon-i-arrow-down-left-circle-fill icon_style ps-1"></i>{{data.certificateGradeID}}</div>
 </ng-template>
 
 <ng-template #tmplateECertificateMenuList let-data>
     <div class="d-flex flex-column">
-        <div class="d-flex align-items-center pb-2"><i class ="icon-calendar_today pe-1"></i>{{data.issuedDate | fmDT}} <i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1"></i>{{data.trainSupplierID}}</div>
-        <div class="d-flex align-items-center"><i class = "icon-category pe-1"></i>{{data.certificateType}} | <i class=""></i>{{data.ranking}}<i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1 "></i>{{data.totalScore}}</div>
+        <div class="d-flex align-items-center pb-2"><i class ="icon-event pe-1"></i>{{data.issuedDate | fmDT}} <i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1"></i>{{data.trainSupplierID}}</div>
+        <div class="d-flex align-items-center"><i class = "icon-category pe-1 text-primary"></i>{{data.certificateType}} | <i class=""></i>{{data.ranking}}<i class="icon-i-arrow-down-left-circle-fill icon_style ps-1 pe-1 "></i>{{data.totalScore}}</div>
     </div>
 </ng-template>
 

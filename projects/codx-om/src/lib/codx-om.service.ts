@@ -258,7 +258,16 @@ export class CodxOmService {
       [periodID, interval, year,]);
   }
   
-  
+  //Chia sẻ bộ mục tiêu
+  shareOKRPlans(recID: any , okrsShare: any) {
+    //periodID = '2023'; //Tạm để cứng chờ khi tạo được periodID
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKRPlan,
+      'ShareAsync', 
+      [recID, okrsShare]);
+  }
   //endregion
 
   //region: KR
