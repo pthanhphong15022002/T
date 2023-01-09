@@ -506,7 +506,7 @@
         </div>
       </div>
       <div class="stage-body-right col-9">
-        <div class="header" >
+        <div >
           <div>Tiếp nhận yêu cầu</div>
           <button>
             <span
@@ -514,10 +514,22 @@
               style="font-weight: 600; margin-left: 5px">
             </span>
           </button>
+          <!-- <div class="d-flex justify-content-end">
+            <div class="me-auto"> <strong>Thành công</strong></div>
+            <div>
+              <codx-input class="test-check" type="switch" style="width:100%" field="read"
+              >
+            </codx-input>
+            </div>
+            <div class="icon-more_vert" style="cursor: pointer;">
+
+            </div>
+          </div> -->
         </div>
         <div class="main">
           <!-- Thêm teplate vào đây -->
-          <ng-container *ngIf="currentTab == 10" [ngTemplateOutlet]="stage"></ng-container>
+          <ng-container *ngIf="currentTab == 10" [ngTemplateOutlet]="job"></ng-container>
+          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="successStage"></ng-container> -->
           <!-- Thêm teplate vào đây -->
         </div>
       </div>
@@ -719,6 +731,7 @@
 </ng-template>
 <ng-template #successStage>
 
+  <div class="card p-3 mb-5 shadow-lg">Regular shadow</div>
 </ng-template>
 <ng-template #failStage>
 
