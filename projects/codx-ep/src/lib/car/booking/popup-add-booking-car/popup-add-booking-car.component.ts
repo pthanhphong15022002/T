@@ -541,7 +541,7 @@ export class PopupAddBookingCarComponent extends UIComponent {
 
   initForm() {
     this.codxEpService
-      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .getFormGroupBooking(this.formModel.formName, this.formModel.gridViewName)
       .then((item) => {
         this.fGroupAddBookingCar = item;
         this.isAfterRender = true;
