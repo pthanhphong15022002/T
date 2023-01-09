@@ -40,7 +40,8 @@ const T_Component: Type<any>[] = [
 @NgModule({
   declarations: [
     CodxDpComponent,
-    LayoutComponent
+    LayoutComponent,
+    DynamicProcessComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -59,7 +60,7 @@ const T_Component: Type<any>[] = [
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class CodxDpModule { 
+export class CodxDpModule {
   public static forRoot(
     config?: EnvironmentConfig
   ): ModuleWithProviders<CodxCoreModule> {
