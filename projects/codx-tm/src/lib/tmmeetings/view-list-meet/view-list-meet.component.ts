@@ -28,6 +28,7 @@ import { PopupAddResourcesComponent } from '../popup-add-resources/popup-add-res
 export class ViewListMeetComponent implements OnInit {
   @Input() data?: any;
   @Input() formModel?: FormModel;
+  @Input() user?: any;
 
   @Output() clickMoreFunction = new EventEmitter<any>();
   @Output() viewDetail = new EventEmitter<any>();
@@ -71,6 +72,10 @@ export class ViewListMeetComponent implements OnInit {
   changeDataMF(e: any, data: any) {
     if (e) {
       e.forEach((x) => {
+        // an edit và delete 
+        if ((x.functionID == 'SYS02' || x.functionID == 'SYS03') && data?.createdBy != this.user?.userID  && !this.user?.administrator) {
+          x.disabled = true;
+        }
         //an giao viec
         if (x.functionID == 'SYS005') {
           x.disabled = true;

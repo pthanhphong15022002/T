@@ -26,13 +26,12 @@ export const routes: Routes = [
     component: LayoutNoAsideComponent,
     children: [
       {
-        path: 'currency/:funcID',
+        path: 'currencies/:funcID',
         component: CurrencyFormComponent,
       },
     ],
   },
 ];
-
 
 @NgModule({
   declarations: [
@@ -57,10 +56,8 @@ export const routes: Routes = [
     SplitterModule,
     CodxReportModule,
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AcModule { }
+export class AcModule {}

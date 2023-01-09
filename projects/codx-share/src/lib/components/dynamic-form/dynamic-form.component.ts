@@ -17,6 +17,7 @@ import {
 import { Component, Injector, TemplateRef, ViewChild } from '@angular/core';
 import { CodxExportComponent } from '../codx-export/codx-export.component';
 import { ActivatedRoute } from '@angular/router';
+import { TabModel } from '../codx-tabs/model/tabControl.model';
 
 @Component({
   selector: 'codx-dynamic-form',
@@ -40,6 +41,7 @@ export class DynamicFormComponent extends UIComponent {
   idField: string = 'recID';
   dataSelected: any;
   function: any = {};
+  tabs: TabModel[] = [];
   constructor(
     private inject: Injector,
     private callfunc: CallFuncService,

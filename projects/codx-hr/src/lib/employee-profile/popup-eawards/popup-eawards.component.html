@@ -31,7 +31,7 @@
       </div>
       <div class="col-6">
         <codx-label fiedName="InYear" [formModel]="formModel"></codx-label>
-         <ejs-datepicker
+        <ejs-datepicker
           #picker
           start="Decade"
           depth="Decade"
@@ -179,32 +179,26 @@
 </ng-template>
 
 <ng-template #itemTemplate let-data>
-  <codx-temp-full
-    [formModel]="formModel"
-    [typeMF]="'hover'"
-    [title]="data.awardID"
-    [icoTitleCss]="'icon-list_alt'"
-    [subTitleTmp]="tmplateEAWardsMenuList"
-    cardCss="card codx_cardcenter px-2 pt-4 pb-2"
-    [hideMF]="true"
-    typeMF="hover"
-    [dataItem]="data"
-    (click)="click(data)"
-  ></codx-temp-full>
+    <codx-temp-full [formModel]="formModel" [typeMF]="'hover'" [title]="data.awardPlace" [icoTitleCss]="'icon-i-question-circle-fill icon-16 ms-1 pb-1'"
+        [subTitleTmp]="tmplateEAWardsMenuList" cardCss="card codx_cardcenter px-2 pt-4 pb-2  " [hideMF]="true"
+        typeMF="hover" [dataItem]="data" (click)="click(data)"></codx-temp-full>
 </ng-template>
 
 <ng-template #tmplateEAWardsMenuList let-data>
-  <div class="d-flex flex-column ps-1">
-    <div>
-      <i class="icon-calendar_today icon-12"></i>
-      {{ data.issuedDate | date : "yyyy" }}
-      <i class="icon-i-arrow-down-left-circle-fill icon_style"></i>
-      {{ data.awardDate | fmDT }}
-      <i class="icon-i-layout-text-sidebar-reverse icon-12"></i>
-      {{ data.decisionNo }}
+    <div class="d-flex flex-column ps-1">
+        <div class="d-flex align-items-center">
+           
+            <i class="icon-event icon-16 pe-1"></i>
+            {{data.issuedDate | date:'yyyy'}}
+            <i class="icon-i-arrow-down-left-circle-fill icon_style pe-1"></i>
+            {{data.awardDate | fmDT}}
+            <i class="icon-i-layout-text-sidebar-reverse icon-12 pe-1 ps-1"></i>
+            {{data.decisionNo}}
+        </div>
+        <div class="d-flex align-items-center"><i class="icon-edit"></i>{{data.awardFormCategory}}</div>
     </div>
     <div><i class="icon-edit_fill"></i>{{ data.awardFormCategory }}</div>
-  </div>
+ 
 </ng-template>
 
 <!-- <ng-template #footer>
