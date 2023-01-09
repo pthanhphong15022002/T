@@ -1,3 +1,4 @@
+declare var window: any;
 import { title } from 'process';
 import {
   Component,
@@ -24,6 +25,7 @@ import {
   FormModel,
   NotificationsService,
   AuthService,
+  CodxScheduleComponent,
 } from 'codx-core';
 import { CodxReportViewerComponent } from 'projects/codx-report/src/lib/codx-report-viewer/codx-report-viewer.component';
 import { PopupAddReportComponent } from 'projects/codx-report/src/lib/popup-add-report/popup-add-report.component';
@@ -91,6 +93,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   selectBookingItems = [];
   selectBookingAttendees = '';
   queryParams: any;
+  navigated=false;
   constructor(
     private injector: Injector,
     private callFuncService: CallFuncService,
@@ -123,9 +126,9 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.request.method = 'GetListBookingAsync';
     this.request.predicate = 'ResourceType=@0';
     this.request.dataValue = '1';
-    if(this.queryParams?.predicate && this.queryParams?.dataValue){
-      this.request.predicate=this.queryParams?.predicate;
-      this.request.dataValue=this.queryParams?.dataValue;
+    if (this.queryParams?.predicate && this.queryParams?.dataValue) {
+      this.request.predicate = this.queryParams?.predicate;
+      this.request.dataValue = this.queryParams?.dataValue;
     }
     this.request.idField = 'recID';
     //lấy list resource vẽ header schedule
@@ -217,8 +220,29 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       //   },
       // },
     ];
+    if(this.queryParams?.predicate && this.queryParams?.dataValue){    
+      this.codxEpService.getBookingByRecID(this.queryParams?.dataValue).subscribe((res:any)=>{
+        if(res){
+          setInterval(()=> this.navigate(res.startDate),2000);
+        }
+      });
+    }  
     this.detectorRef.detectChanges();
   }
+
+  
+  navigate(date) {
+    if(!this.navigated){
+      let ele = document.getElementsByTagName('codx-schedule')[0];
+      if (ele) {
+        if((window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.element.id=='Schedule'){
+          (window.ng.getComponent(ele) as CodxScheduleComponent).scheduleObj.first.selectedDate = new Date(date);
+          this.navigated=true;
+        }        
+      }
+    }
+  }
+
   getResourceName(resourceID: any) {
     this.tempRoomName = '';
     this.listRoom.forEach((r) => {
@@ -298,21 +322,20 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
-            func.functionID == 'SYS04' /*MF chép*/||            
+            func.functionID == 'SYS04' /*MF chép*/ ||
             func.functionID == 'EP4T1103' /*MF gửi duyệt*/
           ) {
             func.disabled = false;
-          } 
+          }
 
-          if (            
+          if (
             func.functionID == 'EP4T1102' /*MF sửa*/ ||
-            func.functionID == 'EP4T1101' /*MF xóa*/ 
+            func.functionID == 'EP4T1101' /*MF xóa*/
           ) {
             func.disabled = true;
           }
-
         });
-      } else if(data.approveStatus == '5' || data.approveStatus == '3'){
+      } else if (data.approveStatus == '5' || data.approveStatus == '3') {
         event.forEach((func) => {
           if (
             func.functionID == 'SYS02' /*MF sửa*/ ||
@@ -321,7 +344,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
           ) {
             func.disabled = true;
           }
-          if (            
+          if (
             func.functionID == 'EP4T1102' /*MF mời*/ ||
             func.functionID == 'EP4T1101' /*MF dời*/ ||
             func.functionID == 'SYS04' /*MF chép*/
@@ -329,17 +352,17 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
             func.disabled = false;
           }
         });
-      } else{
+      } else {
         event.forEach((func) => {
           if (func.functionID == 'SYS04' /*MF chép*/) {
             func.disabled = false;
           }
-          if (                
-            func.functionID == 'EP4T1103' /*MF gửi duyệt*/||
+          if (
+            func.functionID == 'EP4T1103' /*MF gửi duyệt*/ ||
             func.functionID == 'SYS02' /*MF sửa*/ ||
             func.functionID == 'SYS03' /*MF xóa*/ ||
             func.functionID == 'EP4T1102' /*MF mời*/ ||
-            func.functionID == 'EP4T1101' /*MF dời*/ 
+            func.functionID == 'EP4T1101' /*MF dời*/
           ) {
             func.disabled = true;
           }
@@ -347,12 +370,12 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
       }
     }
   }
-  onActionClick(evt?) {
-    if (evt.type == 'add'&& evt.data?.resourceId!=null) {
-      
-    this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
-      this.addNew(evt.data);
+  onActionClick(event?) {
+    if (event.type == 'add' && event.data?.resourceId != null) {
+      this.popupTitle = this.buttons.text + ' ' + this.funcIDName;
+      this.addNew(event.data);
     }
+    
   }
   clickMF(event, data) {
     this.popupTitle = event?.text + ' ' + this.funcIDName;
@@ -370,7 +393,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
         this.popupTitle = event?.text;
         this.reschedule(data);
         break;
-      case 'EP4T1102': //Mời      
+      case 'EP4T1102': //Mời
         this.popupTitle = event?.text;
         this.invite(data);
         break;
@@ -381,50 +404,42 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
   }
   release(data: any) {
     if (
-      this.authService.userValue.userID != data?.owner 
+      this.authService.userValue.userID != data?.owner
       //&& !this.authService.userValue.administrator
     ) {
       this.notificationsService.notifyCode('TM052');
       return;
     }
-    if(data.approval!='0'){
+    if (data.approval != '0') {
       this.codxEpService
-      .getCategoryByEntityName(this.formModel.entityName)
-      .subscribe((res: any) => {
-        this.codxEpService
-          .release(
-            data,
-            res?.processID,
-            'EP_Bookings',
-            this.funcID
-          )
-          .subscribe((res) => {
-            if (res?.msgCodeError == null && res?.rowCount) {
-              this.notificationsService.notifyCode('ES007');
-              data.approveStatus = '3';
-              data.status = '3';
-              data.write = false;
-              data.delete = false;
-              this.view.dataService.update(data).subscribe();    
-
-            } else {
-              this.notificationsService.notifyCode(res?.msgCodeError);              
-            }
-          });
-      });
-    }
-    else
-    {
+        .getCategoryByEntityName(this.formModel.entityName)
+        .subscribe((res: any) => {
+          this.codxEpService
+            .release(data, res?.processID, 'EP_Bookings', this.funcID)
+            .subscribe((res) => {
+              if (res?.msgCodeError == null && res?.rowCount) {
+                this.notificationsService.notifyCode('ES007');
+                data.approveStatus = '3';
+                data.status = '3';
+                data.write = false;
+                data.delete = false;
+                this.view.dataService.update(data).subscribe();
+              } else {
+                this.notificationsService.notifyCode(res?.msgCodeError);
+              }
+            });
+        });
+    } else {
       data.approveStatus = '5';
       data.status = '5';
       data.write = false;
       data.delete = false;
-      this.view.dataService.update(data).subscribe(); 
+      this.view.dataService.update(data).subscribe();
       this.notificationsService.notifyCode('ES007');
-      this.codxEpService.afterApprovedManual(this.formModel.entityName, data.recID,'5').subscribe();
-      
+      this.codxEpService
+        .afterApprovedManual(this.formModel.entityName, data.recID, '5')
+        .subscribe();
     }
-    
   }
   reschedule(data: any) {
     if (

@@ -16,6 +16,7 @@ import {
 } from 'codx-core';
 import { AnyARecord } from 'dns';
 import { resolve } from 'path';
+import { highLightTextArea } from 'projects/codx-share/src/lib/components/pdf/model/tmpSignArea.model';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Approvers, tmpBG_TrackLogs } from './codx-es.model';
@@ -1000,6 +1001,51 @@ export class CodxEsService {
     );
   }
 
+  // addHighlightText(lstHighlightTextArea: Array<highLightTextArea>) {
+  //   return this.api.execSv(
+  //     'ES',
+  //     'ERM.Business.ES',
+  //     'ApprovalTransBusiness',
+  //     'AddHighlightTextAsync',
+  //     lstHighlightTextArea
+  //   );
+  // }
+
+  changeHLComment(fileUrl, fileID, fileName, name, cmt, page) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ChangeCommentAsync',
+      [fileUrl, fileID, fileName, name, cmt, page]
+    );
+  }
+
+  removeHighlightText(
+    fileUrl,
+    fileID,
+    fileName,
+    lstHighlightTextArea: Array<highLightTextArea>
+  ) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'RemoveHighlightAsync',
+      [fileUrl, fileID, fileName, lstHighlightTextArea]
+    );
+  }
+
+  getListAddedAnnoataion(fileUrl, lstRenderedPages) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'GetListHighlightAsync',
+      [fileUrl, lstRenderedPages]
+    );
+  }
+
   cancelSignfile(sfRecID: string, comment: string) {
     return this.api.execSv<any>(
       'ES',
@@ -1262,6 +1308,25 @@ export class CodxEsService {
       'ApprovalTransBusiness',
       'GenerateQRCodeAsync',
       data
+    );
+  }
+
+  changeSFCacheBytes(fileUrl) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'ChangeSignFileAsync',
+      [fileUrl]
+    );
+  }
+  highlightText(fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages) {
+    return this.api.execSv(
+      'ES',
+      'ERM.Business.ES',
+      'ApprovalTransBusiness',
+      'HighlightTextAsync',
+      [fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages]
     );
   }
 
