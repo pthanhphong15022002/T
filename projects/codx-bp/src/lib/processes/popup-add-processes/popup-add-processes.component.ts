@@ -217,6 +217,13 @@ export class PopupAddProcessesComponent implements OnInit {
     } else if (this.action == this.moreFunctionEdit) {
       op.method = 'UpdateProcessesAsync';
       op.className = 'ProcessesBusiness';
+      if(this.process.versions.length > 0 && this.process.versions !== null ) {
+        this.process.versions.forEach(x=> {
+          if(x.versionNo === this.process.versionNo) {
+            x.activedOn = this.process.activedOn;
+          }
+        });
+      }
       data = [this.process, this.funcID, this.entity, this.ownerOld];
     }
 
