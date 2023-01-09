@@ -18,8 +18,8 @@ import { CodxShareModule } from 'projects/codx-share/src/public-api';
 import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DynamicProcessComponent } from './dynamic-process/dynamic-process.component';
-import { GeneralProcessComponent } from './general-process/general-process.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 
 const routes: Routes = [
   {
@@ -36,10 +36,10 @@ const routes: Routes = [
       },
     ],
   },
-  {
-    path: 'general/:funcID',
-    component: GeneralProcessComponent,
-  },
+  // {
+  //   path: 'general/:funcID',
+  //   component: GeneralProcessComponent,
+  // },
 ];
 
 const T_Component: Type<any>[] = [LayoutComponent];
@@ -49,7 +49,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     CodxDpComponent,
     LayoutComponent,
     DynamicProcessComponent,
-    GeneralProcessComponent,
+    PopupAddDynamicProcessComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
