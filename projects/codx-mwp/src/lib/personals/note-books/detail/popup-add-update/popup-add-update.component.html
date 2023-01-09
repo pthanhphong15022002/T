@@ -55,6 +55,7 @@
             [objectId]="note?.recID"
             [allowMultiFile]="1"
             [idBrowse]="'add'"
+            (fileAdded)="fileAdded($event)"
           >
           </codx-attachment>
         </div>
