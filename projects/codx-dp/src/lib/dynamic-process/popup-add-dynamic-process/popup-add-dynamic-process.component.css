@@ -2,4 +2,7 @@
     height: 100%;
     margin: 0 20px;
   }
-  
+
+.float-left{
+  float: left;
+}
