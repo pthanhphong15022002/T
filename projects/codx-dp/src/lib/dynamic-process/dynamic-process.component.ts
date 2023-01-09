@@ -1,4 +1,10 @@
-import { AfterViewInit, Component, Injector, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Injector,
+  Input,
+  OnInit,
+} from '@angular/core';
 import {
   ButtonModel,
   DialogModel,
@@ -9,7 +15,7 @@ import {
   CallFuncService,
   Util,
 } from 'codx-core';
-import { GeneralProcessComponent } from '../general-process/general-process.component';
+import { PopupAddDynamicProcessComponent } from './popup-add-dynamic-process/popup-add-dynamic-process.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -59,24 +65,17 @@ export class DynamicProcessComponent
   }
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
-
+      var obj = res;
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
-      let dialogAdd = this.callFunc.openForm(
-        GeneralProcessComponent,
+      dialogModel.zIndex = 999;
+      var dialog = this.callfc.openForm(
+        PopupAddDynamicProcessComponent,
         '',
-        800,
-        700,
+        this.widthWin,
+        this.heightWin,
         '',
-        {
-          isAddNew: true,
-          formModel: this.view?.formModel,
-          option: option,
-        },
+        obj,
         '',
         dialogModel
       );

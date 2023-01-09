@@ -5,6 +5,7 @@
     <div
       class="flex-column flex-lg-row-auto main-left w-250px w-xxl-275px"
       [class.hideCol]="hideThumbnail"
+      style="user-select: none"
     >
       <ejs-tab
         #leftToolbar
@@ -253,6 +254,7 @@
             <e-items>
               <e-item
                 id="zoomIn"
+                (click)="changeZoom('in', $event)"
                 [disabled]="zoomValue >= 100"
                 prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom"
               >
@@ -268,9 +270,34 @@
               >
               </e-item>
               <e-item
-                *ngIf="hasPermission"
                 prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
                 id="download"
+              >
+              </e-item>
+
+              <e-item
+                (click)="clickHighlightText()"
+                prefixIcon="e-style btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+              ></e-item>
+              <e-item
+                (click)="confirmHighlightText(false)"
+                prefixIcon="e-circle-check
+                btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+              ></e-item>
+              <e-item
+                (click)="removeUnsaveHLA()"
+                prefixIcon="e-close
+              btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+              ></e-item>
+
+              <e-item
+                (click)="changeEditMode()"
+                prefixIcon="e-repeat btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+              >
+              </e-item>
+              <e-item
+                (click)="changeRemoveHLAMode()"
+                prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               >
               </e-item>
               <e-item
@@ -297,12 +324,14 @@
         [(zoom)]="zoomValue"
         (zoomChange)="changeZoom('', $event)"
         [(page)]="curPage"
-        [showHandToolButton]="false"
+        [handTool]="showHand"
+        [showHandToolButton]="showHand"
         [useBrowserLocale]="false"
         [language]="'vn'"
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
+        (pdfLoadingStarts)="show($event)"
         (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
         [showBookmarkButton]="false"
@@ -310,9 +339,9 @@
         [customSidebar]="withoutSidebar"
         [customThumbnail]="ngxThumbnail"
         [enableDragAndDrop]="false"
-        [handTool]="false"
         [contextMenuAllowed]="false"
         [enablePinchOnMobile]="false"
+        (updateFindMatchesCount)="show($event)"
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
         (textLayerRendered)="getTextLayerInfo($event)"
@@ -341,6 +370,7 @@
     <div
       class="actions flex-column flex-lg-row-auto main-right"
       [class.hideCol]="hideActions"
+      style="user-select: none"
     >
       <ejs-tab
         #rightToolbar
@@ -389,7 +419,7 @@
                         imgCss="me-2"
                         [title]="
                           approver.fullName ??
-                          (approver.roleType | vll: 'ES014':'text' | async)
+                          (approver.roleType | vll : 'ES014' : 'text' | async)
                         "
                         [subTitle]="approver.position ?? ''"
                         [baseHeaderRightTmp]="footer"
@@ -507,14 +537,14 @@
                     >
                       <codx-temp-full
                         [title]="
-                          (area.labelType | vll: 'ES015':'text' | async) +
+                          (area.labelType | vll : 'ES015' : 'text' | async) +
                           ' - ' +
                           getAreaOwnerName(area.signer)
                         "
                         [resourceObjType]="'AD_Users'"
                         [icoCss]="
                           'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
-                          (area.labelType | vll: 'ES015':'icon' | async)
+                          (area.labelType | vll : 'ES015' : 'icon' | async)
                         "
                         [iconCss2]="
                           area.recID != curSelectedAnnotID
@@ -585,7 +615,8 @@
                               [id]="area.recID"
                               *ngIf="!isPublic"
                               class="img"
-                              [src]="area.labelValue"
+                              [src]="env.urlUpload + '/' + area.labelValue"
+                              onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'"
                             />
                             <codx-img
                               *ngIf="isPublic && area.labelType == 'S1'"
@@ -697,7 +728,8 @@
                             [name]="'lblSignDateType0'"
                             [default]="lstSignDateType[0]"
                             [formModel]=""
-                          ></codx-label>
+                          >
+                          </codx-label>
                           <codx-input
                             class="me-4 date-Type"
                             name="date-Type"
@@ -706,12 +738,13 @@
                             labelPosition="After"
                             (valueChange)="changeUseSignDate()"
                           >
-                          </codx-input
-                          ><codx-label
+                          </codx-input>
+                          <codx-label
                             [name]="'lblSignDateType1'"
                             [default]="lstSignDateType[1]"
                             [formModel]=""
-                          ></codx-label>
+                          >
+                          </codx-label>
                           <!-- </div> -->
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
@@ -902,6 +935,63 @@
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
+          <e-tabitem *ngIf="lstKey">
+            <ng-template #headerText>
+              <codx-label
+                name="lblHeaderRight4"
+                [formModel]=""
+                [default]="headerRightName[4].text"
+                class="text-header d-block"
+              ></codx-label>
+            </ng-template>
+            <ng-template #content>
+              <ejs-toolbar>
+                <e-items>
+                  <e-item
+                    [prefixIcon]="'e-circle-remove'"
+                    (click)="confirmRemoveHLA()"
+                  ></e-item>
+                </e-items>
+              </ejs-toolbar>
+
+              <div class="highlightAreas">
+                <div
+                  class="highlightedList"
+                  [style]="
+                    'border: 1px solid black; margin-bottom: 10px; padding: 5px; background-color: ' +
+                    defaultColor
+                  "
+                  (click)="goToSelectedHighlightText(key)"
+                  *ngFor="let key of lstKey"
+                  [attr.data-id]="key"
+                >
+                  <codx-temp-full
+                    [title]="
+                      getHLText(key)?.author + ' ' + getHLText(key)?.createdDate
+                    "
+                    [resourceObjType]="'AD_Users'"
+                    [icoCss]="
+                      'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom'
+                    "
+                    [subTitle]="
+                      'Trang ' + getHLText(key)?.locations[0]?.pageNumber
+                    "
+                    [subTitleCss]="'page-end'"
+                    [desc]="getHLText(key)?.comment?.content"
+                  >
+                  </codx-temp-full>
+                  <codx-input
+                    [attr.data-id]="key"
+                    *ngIf="deleteHLAMode"
+                    type="checkbox"
+                    class="hla-check-delete me-2"
+                    name="select"
+                  >
+                  </codx-input>
+                </div>
+              </div>
+            </ng-template>
+          </e-tabitem>
         </e-tabitems>
       </ejs-tab>
     </div>
@@ -960,5 +1050,51 @@
         class="text-header d-block"
       ></codx-label>
     </button>
+  </div>
+</div>
+
+<div
+  id="hla-Cmt"
+  class="hla-Cmt"
+  style="
+    display: none;
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border: 1px solid black;
+  "
+>
+  <div style="z-index: 2" class="hla-Cmt">
+    <div class="row">
+      <!-- <input class="hla-Cmt" type="text" /> -->
+      <input
+        class="hla-Cmt"
+        id="input-Cmt"
+        type="text"
+        [(value)]="curCmtContent"
+      />
+    </div>
+    <div class="row d-flex justify-content-end" class="hla-Cmt">
+      <div class="btn col-2" class="hla-Cmt">
+        <button id="add-cmt-btn" class="hla-Cmt">
+          <codx-label
+            name="lblHLACommentAdd"
+            [formModel]=""
+            [default]="'OK'"
+            class="text-header d-block hla-Cmt"
+          ></codx-label>
+        </button>
+      </div>
+      <div class="btn col-2" class="hla-Cmt">
+        <button id="delete-cmt-btn" class="hla-Cmt">
+          <codx-label
+            name="lblHLACommentDel"
+            [formModel]=""
+            [default]="'Xóa'"
+            class="text-header d-block hla-Cmt"
+          ></codx-label>
+        </button>
+      </div>
+    </div>
   </div>
 </div>

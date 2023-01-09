@@ -2,11 +2,12 @@ import { Component, OnInit, Optional } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
 
 @Component({
-  selector: 'codx-general-process',
-  templateUrl: './general-process.component.html',
-  styleUrls: ['./general-process.component.css'],
+  selector: 'lib-popup-add-dynamic-process',
+  templateUrl: './popup-add-dynamic-process.component.html',
+  styleUrls: ['./popup-add-dynamic-process.component.css']
 })
-export class GeneralProcessComponent implements OnInit {
+export class PopupAddDynamicProcessComponent implements OnInit {
+
   dialog: any;
   currentTab = 0;
   isAddNew = true;
@@ -22,4 +23,5 @@ export class GeneralProcessComponent implements OnInit {
   clickTab(tabNo) {
 
   }
+
 }
