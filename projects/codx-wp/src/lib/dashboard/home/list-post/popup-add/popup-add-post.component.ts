@@ -1,3 +1,4 @@
+import { C } from '@angular/cdk/keycodes';
 import { ChangeDetectorRef, Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { Permission } from '@shared/models/file.model';
 import { ApiHttpService, AuthService, AuthStore, CacheService, CallFuncService, CRUDService, DialogData, DialogRef, NotificationsService, Util } from 'codx-core';
@@ -27,15 +28,6 @@ export class PopupAddPostComponent implements OnInit {
   mssgShareMore:string = "";
   mssgTagOne:string = "";
   mssgTagMore:string = "";
-  // emoji  
-  showEmojiPicker:boolean = false;
-  emojiMode = 'apple';
-  // end emoji
-  // popup
-  showCBB:boolean = false;
-  width:number = 720;
-  height:number = window.innerHeight;
-  // end popup
   MEMBERTYPE = {
     CREATED: "1",
     SHARE: "2",
@@ -56,6 +48,15 @@ export class PopupAddPostComponent implements OnInit {
     GROUPS: "G",
     USER: "U",
   }
+  // emoji  
+  emojiMode = 'apple';
+  // end emoji
+  // popup
+  showCBB:boolean = false;
+  width:number = 720;
+  height:number = window.innerHeight;
+  // end popup
+  
   @ViewChild("codxATM") codxATM:AttachmentComponent;
   @ViewChild("codxFile") codxFile:ImageGridComponent;
   @ViewChild("codxViewFiles") codxViewFiles:CodxViewFilesComponent;
@@ -87,12 +88,25 @@ export class PopupAddPostComponent implements OnInit {
       this.headerText = this.dialogData.headerText;
       this.status = this.dialogData.status;
       this.data = this.dialogData.data;
-      if(this.user && this.status !== "edit")
+      if(this.user && this.status != "edit")
       {
         this.data.createdBy = this.user.userID;
         this.data.createdName = this.user.userName;
         this.data.shareControl = this.SHARECONTROLS.EVERYONE;
-        this.data.refType = 'WP_Comments';
+        this.data.content = "";
+        if(this.status == "share"){
+          // bài share
+          this.data.category = "4";
+          this.data.refType = this.dialogData.refType;
+        }
+        else
+        {
+
+          // bài viết
+          this.data.category = "1";
+          this.data.refType ="WP_Comments";
+        }
+        
       }
     }
     // get grv set up
@@ -102,6 +116,7 @@ export class PopupAddPostComponent implements OnInit {
         this.grvSetup = grv;
       }
     });
+    // get message
     this.getMssgDefault();
   }
 
@@ -154,11 +169,27 @@ export class PopupAddPostComponent implements OnInit {
 
   // value change
   valueChange(event:any){
-    if (event?.data){
+    if (event?.data)
+    {
       this.data.comments = event.data; 
       this.data.content = event.data;
-      this.dt.detectChanges();
     } 
+    this.dt.detectChanges();
+  }
+
+  // chose emoji
+  addEmoji(event:any)
+  {
+    let _content = this.data.content;
+    if(!_content)
+    {
+      _content = event.emoji.native;  
+    }
+    else
+    {
+      _content = this.data.content + event.emoji.native; 
+    }
+    this.data.content  = _content;
   }
 
   // upload file 
@@ -198,14 +229,7 @@ export class PopupAddPostComponent implements OnInit {
     }
   }
 
-  // open popup emoji
-  clickEmoji(){
-    this.showEmojiPicker = !this.showEmojiPicker;
-  }
-  // chose emoji
-  addEmoji(event:any){
-    this.data.content = this.data.content + event.emoji.native;
-  }
+  
 
   // click tag 
   clickTagsUser(){
