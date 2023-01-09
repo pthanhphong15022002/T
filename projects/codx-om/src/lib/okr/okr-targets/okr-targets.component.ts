@@ -264,24 +264,62 @@ export class OkrTargetsComponent implements OnInit {
         this.editKR(kr, o, popupTitle);
         break;
       }
-      // case OMCONST.MFUNCID.Copy: {
-      //   this.copyKR(kr, o, popupTitle);
-      //   break;
-      // }
+      case OMCONST.MFUNCID.Copy: {
+        this.copyKR(kr, o, popupTitle);
+        break;
+      }
       case OMCONST.MFUNCID.Delete: {
         this.deleteKR(kr);
         break;
       }
-      case 'SYS04': {
+
+      //phân bổ OB
+      case OMCONST.MFUNCID.DOBComp: 
+      case OMCONST.MFUNCID.DOBDept: 
+      case OMCONST.MFUNCID.DOBOrg: 
+      case OMCONST.MFUNCID.DOBPers:       
+      {
+        
+        break;
+      }
+
+      //phân công OB
+      case OMCONST.MFUNCID.AOBComp: 
+      case OMCONST.MFUNCID.AOBDept: 
+      case OMCONST.MFUNCID.AOBOrg: 
+      case OMCONST.MFUNCID.AOBPers:       
+      {
+        
+        break;
+      }
+
+      //phân bổ KR
+      case OMCONST.MFUNCID.DKRComp: 
+      case OMCONST.MFUNCID.DKRDept: 
+      case OMCONST.MFUNCID.DKROrg: 
+      case OMCONST.MFUNCID.DKRPers:       
+      {
         this.distributeKR(kr);
         break;
       }
+      
+      //phân công KR
+      case OMCONST.MFUNCID.AKRComp: 
+      case OMCONST.MFUNCID.AKRDept: 
+      case OMCONST.MFUNCID.AKROrg: 
+      case OMCONST.MFUNCID.AKRPers:       
+      {
+        this.assignmentKR(kr);
+        break;
+      }
+      
     }
   }
   //Xem chi tiết OB
   showOB(obj: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
+    dModel.FormModel= this.formModelOB;
     let dialogShowOB = this.callfunc.openForm(
       PopupShowOBComponent,
       '',
@@ -297,6 +335,7 @@ export class OkrTargetsComponent implements OnInit {
   showKR(kr: any) {
     let dModel = new DialogModel();
     dModel.IsFull = true;
+    dModel.FormModel= this.formModelKR;
     let dialogShowKR = this.callfunc.openForm(
       PopupShowKRComponent,
       '',
@@ -312,6 +351,20 @@ export class OkrTargetsComponent implements OnInit {
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
+      PopupDistributeOKRComponent,
+      '',
+      null,
+      null,
+      null,
+      [kr.okrName,kr.recID,OMCONST.VLL.OKRType.KResult,this.funcID],
+      '',
+      dModel
+    );
+  }
+  assignmentKR(kr:any){
+    let dModel = new DialogModel();    
+    dModel.IsFull = true;
+    let dialogAssgKR = this.callfunc.openForm(
       PopupDistributeOKRComponent,
       '',
       null,
