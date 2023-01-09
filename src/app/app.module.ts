@@ -16,6 +16,7 @@ import {
 } from 'ngx-ui-loader';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormModel } from 'codx-core';
 
 import {
   AuthService,
@@ -41,6 +42,7 @@ import { AppConfigService } from '@core/services/config/app-config.service';
 import { AppConfig } from '@core/services/config/app-config';
 import { RouteReuseStrategy } from '@angular/router';
 import { CodxEiModule } from 'projects/codx-ei/src/public-api';
+import { SosComponent } from '@pages/sos/sos.component';
 
 
 registerLocaleData(localeFr);
@@ -88,7 +90,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
 };
 
 @NgModule({
-  declarations: [AppComponent, FileComponent],
+  declarations: [AppComponent, FileComponent,SosComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -100,7 +102,7 @@ const ngxUiLoaderConfig: NgxUiLoaderConfig = {
     NgxUiLoaderModule.forRoot(ngxUiLoaderConfig),
     NgxUiLoaderRouterModule, //.forRoot({ showForeground: false }), // import this module for showing loader automatically when navigating between app routes
     NgxUiLoaderHttpModule,
-
+    
     SharedModule,
     CoreModule,
     ERMModule,
