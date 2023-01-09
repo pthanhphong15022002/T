@@ -1,13 +1,4 @@
-.om-d-all-bg
+.w-120px
 {
-    min-width: 110px;
-    height: 130px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.om-add-share > div
-{
-    background: #F4F7FF;
-    padding: 5px 0;
+    width: 120px;
 }

@@ -1,1 +1,48 @@
-<p>dynamic-process works!</p>
+<!-- <codx-views
+#view
+[views]="views"
+[button]="showButtonAdd ? button : null"
+(buttonClick)="click($event)"
+[moreFuncs]="moreFuncs"
+[autoSearch]="false"
+[autoLoad]="true"
+[dataObj]="dataObj"
+(searchChanged)="searchDy
+namicProcess($event)"
+></codx-views> -->
+<codx-views
+  #view
+  service=""
+   assemblyName="" entityName="" className=""
+  [method]="method"
+  [views]="views"
+  [button]="showButtonAdd ? button : null"
+  (buttonClick)="click($event)"
+  [dataObj]="dataObj"
+  [moreFuncs]="moreFuncs"
+  [autoLoad]="true"
+  idField="recID"
+  (onDragDrop)="onDragDrop($event)"
+  >
+</codx-views>
+
+
+  <!-- <codx-card-img
+    cardCss="card-process border border-gray-200 rounded-2 h-100
+    w-225px card-no-body"
+    [imageObjType]="'BP_Processes'"
+    imgCss="w-100 h-150px"
+    [imageObjName]="data?.processName"
+    [imageId]="data?.recID"
+    [imgOn]="data?.modifiedOn"
+    [imageWidth]="1000"
+    [imageReferType]="'avt'"
+    [rootData]="data"
+    [dataItem]="data"
+    [formModel]="view.formModel"
+    [typeMF]="'hover'"
+    (clickMF)="clickMF($event, data)"
+    (changeDataMF)="changeDataMF($event, data)"
+  >
+  </codx-card-img> -->
+
