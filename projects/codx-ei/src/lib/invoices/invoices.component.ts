@@ -7,7 +7,6 @@ import {
 } from 'codx-core';
 import { Component, Injector, ViewChild, TemplateRef } from '@angular/core';
 import { AddEditComponent } from './popups/add-edit/add-edit.component';
-import { futimesSync } from 'fs';
 
 @Component({
   selector: 'lib-invoices',
@@ -21,7 +20,7 @@ export class InvoicesComponent extends UIComponent {
   funcName = '';
   moreFuncName = '';
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
-
+  @ViewChild('templateMore') templateMore?: TemplateRef<any>;
   constructor(private injector: Injector) {
     super(injector);
   }
@@ -29,6 +28,18 @@ export class InvoicesComponent extends UIComponent {
 
   //#region Init
   onInit(): void {
+    // let g = {
+    //   itemID: '0101010001',
+    //   itemName: 'Bia Heineken 330ml',
+    //   itemGroupID: '01-BIA',
+    //   itemType: '1',
+    //   UMID: 'LON',
+    //   VATControl: '1',
+    //   Owner: 'ADMIN',
+    //   CreatedBy: 'ADMIN',
+    // };
+
+    // this.api.exec<any>('EI', 'GoodsBusiness', 'SaveAsync', g).subscribe();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
@@ -63,9 +74,12 @@ export class InvoicesComponent extends UIComponent {
         sameData: true,
         model: {
           frozenColumns: 1,
+          template2: this.templateMore,
         },
       },
     ];
+    this.view.dataService.methodSave = 'AddAsync';
+    this.view.dataService.methodUpdate = 'EditAsync';
   }
   //#endregion
 
@@ -76,6 +90,22 @@ export class InvoicesComponent extends UIComponent {
         this.add();
         break;
     }
+  }
+
+  clickMF(e, data) {
+    this.edit(data);
+  }
+
+  activeMore(e) {
+    e.forEach((x) => {
+      if (
+        x.functionID == 'SYS02' ||
+        x.functionID == 'SYS03' ||
+        x.functionID == 'SYS04'
+      ) {
+        x.disabled = false;
+      }
+    });
   }
   //#endregion
 
@@ -97,9 +127,40 @@ export class InvoicesComponent extends UIComponent {
           '',
           op
         );
+
+        p.closed.subscribe((x) => {
+          if (!x?.event) this.view.dataService.clear();
+        });
       }
     });
   }
 
+  edit(data?) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+      // this.view.dataService.dataSelected.userID = data._uuid;
+    }
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res: any) => {
+        let op = new DialogModel();
+        op.FormModel = this.view.formModel;
+        op.DataService = this.view.dataService;
+        op.IsFull = true;
+        let p = this.callfc.openForm(
+          AddEditComponent,
+          '',
+          null,
+          null,
+          this.view.funcID,
+          ['edit', this.moreFuncName + ' ' + this.funcName],
+          '',
+          op
+        );
+        p.closed.subscribe((x) => {
+          if (!x?.event) this.view.dataService.clear();
+        });
+      });
+  }
   //#endregion
 }

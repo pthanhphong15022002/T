@@ -307,9 +307,14 @@
             <codx-label fiedName="Setting" default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới">
             </codx-label>
           </div>
-          <div class="col-6">
-            <codx-input field="setting" type="text">
-            </codx-input>
+          <div class="col-6 row">
+            <div class="col-11">
+              <codx-input class="form-control" field="setting" type="text">
+              </codx-input>
+            </div>
+            <div class="col-1">
+              <i class="icon-settings form-control-feedback"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -332,9 +337,15 @@
               default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau">
             </codx-label>
           </div>
-          <div class="col-6">
-            <codx-input field="closeInstanceControl" type="text">
-            </codx-input>
+          <div class="col-6 row">
+            <div class="col-11">
+              <codx-input field="closeInstanceControl" type="text">
+              </codx-input>
+            </div>
+            <div class="col-1">
+              <codx-label fiedName="CloseInstanceControl" default="Ngày">
+              </codx-label>
+            </div>
           </div>
         </div>
       </div>
@@ -427,26 +438,16 @@
           <div>
             <span style="color: #898989">
               <codx-label name="lblExpression">
-                Kéo thả để sắp xếp các trường tùy chỉnh</codx-label
-              >
+                Kéo thả để sắp xếp các trường tùy chỉnh</codx-label>
             </span>
           </div>
         </div>
         <div class="right">
           <div class="time ml-2">
             <div class="d-flex align-items-center">
-                <span
-                class="icon-add icon-22 text-primary-600 py-2"
-                style="font-weight: 600; margin-left: 5px"
-              ></span>
-              <span
-                class="icon-replay icon-22 text-primary-600 py-2"
-                style="font-weight: 600; margin-left: 5px"
-              ></span>
-              <span
-                class="icon-expand_more icon-22 text-primary-600 py-2"
-                style="font-weight: 600"
-              ></span>
+              <span class="icon-add icon-22 text-primary-600 py-2" style="font-weight: 600; margin-left: 5px"></span>
+              <span class="icon-replay icon-22 text-primary-600 py-2" style="font-weight: 600; margin-left: 5px"></span>
+              <span class="icon-expand_more icon-22 text-primary-600 py-2" style="font-weight: 600"></span>
             </div>
           </div>
         </div>
@@ -459,7 +460,7 @@
   </ng-container>
 </ng-template>
 
-<!-- Thiết lập giai đoạn của thuận -->
+<!-- Thiết lập giai đoạn của thuận + Bảo -->
 <ng-template #stage>
   <div class="background-stage">
     <div class="stage-top">
@@ -469,7 +470,7 @@
       <div class="rights">
         <div class="button-group">
           <button type="button" class="btn btn-primary">
-            <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>      
+            <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
           </button>
           <button>
             <span
@@ -723,4 +724,11 @@
   </div>
 </ng-template>
 <!-- Công Việc -->
+<ng-template #successStage>
+
+</ng-template>
+<ng-template #failStage>
+
+</ng-template >
+
 <!-- End Thiết lập giai đoạn -->

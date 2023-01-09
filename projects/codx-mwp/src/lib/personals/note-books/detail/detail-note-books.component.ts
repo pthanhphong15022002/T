@@ -19,6 +19,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { PopupAddUpdate } from './popup-add-update/popup-add-update.component';
+import { A } from '@angular/cdk/keycodes';
 @Component({
   selector: 'app-detail-note-books',
   templateUrl: './detail-note-books.component.html',
@@ -262,9 +263,11 @@ export class DetailNoteBooksComponent extends UIComponent {
               'ERM.Business.DM',
               'FileBussiness',
               'DeleteListFileByListObjectIDAsync',
-              [res.recID, this.view.entityName, true]
+              [res.recID,true,null]
             )
-            .subscribe();
+            .subscribe(res => {
+              debugger
+            });
         }
       });
   }

@@ -58,7 +58,7 @@ export class PopupECertificatesComponent extends UIComponent implements OnInit {
     // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.funcID = this.dialog.formModel.funcID
+    this.funcID = data?.data?.funcID
     this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType
     this.lstCertificates = data?.data?.lstCertificates
