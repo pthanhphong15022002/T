@@ -1,49 +1,66 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ApiHttpService, AuthStore, CacheService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogRef, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, RequestOption, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, RequestOption, SidebarModel, UIComponent } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { Invoices } from 'projects/codx-ei/src/lib/models/invoice.model';
 import { CurrencyFormComponent } from '../currency-form.component';
 import { Currency } from '../models/Currency.model';
+import { PopSettingExchangeComponent } from '../pop-setting-exchange/pop-setting-exchange.component';
 
 @Component({
   selector: 'lib-pop-add-currency',
   templateUrl: './pop-add-currency.component.html',
   styleUrls: ['./pop-add-currency.component.css']
 })
-export class PopAddCurrencyComponent implements OnInit {
+export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   @ViewChild('form') public form: CodxFormComponent;
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @Input() headerText: string;
-  @Output() loadData = new EventEmitter();
   currencies: Currency;
+  formType:any;
   dialog!: DialogRef;
+  dialogsetting :DialogRef;
   data: any;
   gridViewSetup:any;
-  curID = '';
-  symbol = '';
-  curName ='';
+  curID :string;
+  symbol :string;
+  curName :string;
   fiedName : boolean = false;
+  disabled : boolean = false;
+  title:any;
   constructor(
-    private cache: CacheService,
-    private api: ApiHttpService,
+    private inject: Injector,
+    override cache: CacheService,
+    override api: ApiHttpService,
     private dt: ChangeDetectorRef, 
+    private callfunc: CallFuncService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData,
   ) { 
+    super(inject);
     this.dialog = dialog;
+    this.dialogsetting = dialog;
     this.headerText = dialogData.data?.headerText;
+    this.formType = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
+    this.curID = '';
+    this.symbol = '';
+    this.curName = '';
     this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
     });
+    if (this.currencies.currencyID != null) {
+      this.curID = this.currencies.currencyID;
+      this.symbol = this.currencies.symbol;
+      this.curName = this.currencies.currencyName;
+      this.disabled = true;
     }
-  ngOnInit(): void {
-   
+    }
+    onInit(): void {
   }
 
   ngAfterViewInit() {
@@ -74,19 +91,19 @@ export class PopAddCurrencyComponent implements OnInit {
       );
       return;
     }
-    this.dialog.dataService
+    if (this.formType == 'add') {
+      this.dialog.dataService
       .save((opt: RequestOption) => {
         opt.methodName = 'AddAsync';
         opt.className = 'CurrenciesBusiness';
         opt.assemblyName = 'BS';
         opt.service = 'BS';
-        opt.data = this.currencies;
+        opt.data = [this.currencies];
         return true;
       })
       .subscribe((res) => {
         if (res.save) {
           this.dialog.close(res.save);
-          location.reload();
           this.dt.detectChanges();
         }else{
           this.notification.notifyCode(
@@ -98,6 +115,25 @@ export class PopAddCurrencyComponent implements OnInit {
         }
 
       });
+    }
+    if (this.formType == 'edit') {
+      this.dialog.dataService
+      .save((opt: RequestOption) => {
+        opt.methodName = 'UpdateAsync';
+        opt.className = 'CurrenciesBusiness';
+        opt.assemblyName = 'BS';
+        opt.service = 'BS';
+        opt.data = [this.currencies];
+        return true;
+      })
+      .subscribe((res) => {
+        if (res.save) {
+          this.dialog.close(res.save);
+          this.dt.detectChanges();
+        }
+      });
+    }
+    
   }
   valueChangecurID(e: any) {
     if (e) {
@@ -117,18 +153,20 @@ export class PopAddCurrencyComponent implements OnInit {
       this.currencies[e.field] = this.curName;
     }
   }
-  valueChange(e: any) {
-    if (e) {
-      this.currencies[e.field] = e.data;
-    }
-  }
-  valueChangelb(e: any) {
-    if (e.data) {
-      this.currencies[e.field] = '1';
-      this.fiedName = e.data;
-    }else{
-      this.currencies[e.field] = '0';
-      this.fiedName = e.data;
-    }
-  }
+  // opensetting(){
+  //   this.title = 'Thiết lập tỷ giá';
+  //   this.dialogsetting.dataService!.addNew().subscribe((res: any) => {
+  //     var obj = {
+  //       headerText: this.title,
+  //       data : this.currencies
+  //     };
+  //     let op = new DialogModel();
+  //     op.DataService = this.dialogsetting.dataService;
+  //     op.FormModel = this.dialogsetting.formModel;
+  //     this.dialogsetting = this.callfunc.openForm(PopSettingExchangeComponent, this.headerText,
+  //       400,300,this.dialogsetting.dataService.funcID,obj,'', op,);
+  //   });  
+    
+    
+  // }
 }

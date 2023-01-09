@@ -7,7 +7,7 @@ export class Currency {
   precisionName:any; 
   symbol:any; 
   prefix:any; 
-  multiphy:any; 
+  multiply:any; 
   calculation:any; 
   proundType:any; 
   proundOff:any; 
