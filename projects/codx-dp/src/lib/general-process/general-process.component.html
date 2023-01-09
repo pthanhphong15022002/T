@@ -3,7 +3,7 @@
     <div class="stepper-header d-flex flex-wrap flex-stack ps-6">
       <div class="d-flex align-items-center">
         <h2 class="h2-title">
-          <codx-label default="Thông tin quy trình">
+          <codx-label default="Tạo quy trình">
           </codx-label>
         </h2>
       </div>
@@ -74,6 +74,14 @@
       <div class="d-flex justify-content-end">
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
           <i class="icon-close icon-18"></i>
+        </div>
+      </div>
+    </div>
+    <div class="stepper-body pt-2 w-100" *ngIf="currentTab < 3">
+      <div class="card shadow-none border-0 rounded-0 mx-auto w-100 h-100">
+        <div class="mb-10 mt-10 text-center tab-pane-header">
+          <h2 class="h2-title">
+          </h2>
         </div>
       </div>
     </div>
