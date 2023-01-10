@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -9,12 +10,14 @@ import {
   ElementRef,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService, CallFuncService } from 'codx-core';
+import { DialogData, DialogRef, ApiHttpService, CallFuncService, SidebarModel } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { DP_Process } from '../../models/models';
+import { PopupJobComponent } from './popup-job/popup-job.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -24,11 +27,11 @@ import { DP_Process } from '../../models/models';
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-
+  @ViewChild('setJobPopup') setJobPopup : TemplateRef<any>;
   process = new DP_Process();
 
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -46,6 +49,100 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   settingProcess = true;
   memoProcess = true;
   //!--ID SHOW FORM !--//
+
+  //stage-nvthuan
+  popupJob: DialogRef;
+  dataStage = [
+    { 
+      id: 1,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 12,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 13,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 14,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 15,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    { 
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+  ]
+  listJob=[
+      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
+      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
+      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
+      {id: 'M', icon: 'icon-i-calendar-week', text: 'Lịch họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
+      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
+  ]
+
+  jobType = '';
+  //stage-nvthuan
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -309,9 +406,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#region 
 
   //#stage -- nvthuan
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<string[]>,data =null) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      if(data){
+        moveItemInArray(data, event.previousIndex, event.currentIndex);
+      }else{
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      }
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -327,6 +428,31 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#job -- nvthuan
   addFile(e) {
     this.attachment.uploadFile();
+  }
+  setJob() {
+    this.popupJob = this.callfc.openForm(
+      this.setJobPopup,
+      '',
+      400,
+      400
+    );
+  }
+  getTypeJob(e){
+    if(e.target.checked){
+      this.jobType = e.target.value;
+    }
+  }
+  openPopupJob(){
+    this.popupJob.close();
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1100;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      [],
+      option,
+      
+    );
   }
   //#job
 }
