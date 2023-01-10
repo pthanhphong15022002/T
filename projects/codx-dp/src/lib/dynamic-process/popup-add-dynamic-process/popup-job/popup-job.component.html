@@ -1,0 +1,111 @@
+<codx-form
+  #form
+  [headerText]="title"
+  subHeaderText=""
+  [subHeader]="subHeader"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="formModelMenu"
+  [data]="job"
+  [openMore]="true"
+></codx-form>
+
+<ng-template #subHeader>
+  <div class="ms-4" *ngIf="stepType == 'A'">
+    <codx-input
+      class="me-2"
+      type="colorpicker"
+      [showText]="false"
+      [modeSwitcher]="false"
+      [crrValue]=""
+      field="color"
+    >
+    </codx-input>
+  </div>
+</ng-template>
+
+<ng-template #body>
+    <div class="card-form">
+        <div class="form-group">
+            <div>
+              <codx-label fiedName="StepName" [formModel]=""
+                default="Tên công việc">
+              </codx-label>
+            </div>
+            <codx-input field="stepName" [formModel]=""
+              [Group]=""
+              (valueChange)="valueChange($event)">
+            </codx-input>
+        </div> 
+
+        <div class="form-group">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <codx-label fiedName="Interval" [formModel]=""
+                    default="Thời lượng công việc">
+                </codx-label>
+                </div>
+                <div>
+                    <codx-label fiedName="Interval" [formModel]=""
+                    default="Nhắc nhở trước khi bắt đầu">
+                </codx-label>
+                </div>
+                <!-- <codx-input field="interval" [formModel]="form.formModel"
+                    [Group]="form.formGroup"
+                    (valueChange)="valueChange($event)">
+                </codx-input> -->
+            </div>
+        </div> 
+        
+        <div class="form-group">
+            <div>
+              <codx-label fiedName="StepName" [formModel]=""
+                default="Công việc liên kết">
+              </codx-label>
+            </div>
+            <codx-input field="stepName" [formModel]=""
+              [Group]=""
+              (valueChange)="valueChange($event)">
+            </codx-input>
+        </div> 
+
+        <div class="form-group">
+            <div>
+              <codx-label fiedName="StepName" [formModel]=""
+                default="Bắt đầu công việc khi">
+              </codx-label>
+            </div>
+            <codx-input field="stepName" [formModel]=""
+              [Group]=""
+              (valueChange)="valueChange($event)">
+            </codx-input>
+        </div> 
+        <div class="form-group">
+            <div>
+              <codx-label fiedName="StepName" [formModel]=""
+                default="Vai trò bộ phận thực hiện">
+              </codx-label>
+            </div>
+            <codx-input field="stepName" [formModel]=""
+              [Group]=""
+              (valueChange)="valueChange($event)">
+            </codx-input>
+        </div> 
+        <div class="form-group">
+            <div>
+              <codx-label fiedName="StepName" [formModel]=""
+                default="Phân công công việc khi">
+              </codx-label>
+            </div>
+            <codx-input field="stepName" [formModel]=""
+              [Group]=""
+              (valueChange)="valueChange($event)">
+            </codx-input>
+        </div> 
+
+    </div>
+</ng-template>
+<ng-template #footer>
+
+</ng-template>

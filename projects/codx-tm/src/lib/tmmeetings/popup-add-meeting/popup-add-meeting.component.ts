@@ -46,6 +46,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   @Input() meeting = new CO_Meetings();
   @ViewChild('addLink', { static: true }) addLink;
   @ViewChild('attachment') attachment: AttachmentComponent;
+  @ViewChild('locationCBB') locationCBB;
 
   crrEstimated: any;
   startTime: any = null;
@@ -98,7 +99,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
   listRoom: TmpRoom[] = [];
   location: any;
   reminder: any;
-  fields: Object = { text: 'location', value: 'resourceID' };
+  fields: Object = { text: 'resourceName', value: 'resourceID' };
   disabledProject = false;
   listResources: string = '';
   constructor(
@@ -133,12 +134,6 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         }
       });
 
-    this.api
-      .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
-      .subscribe((res) => {
-        this.isRoom = res.msgBodyData[0];
-      });
-
     if (this.action == 'add') {
       this.meeting.startDate = new Date();
     }
@@ -149,7 +144,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     // this.getTimeWork(new Date());
 
     // this.getTimeWork(this.selectedDate);
-
+    this.api
+      .callSv('CO', 'CO', 'MeetingsBusiness', 'IsCheckEpWithModuleLAsync')
+      .subscribe((res) => {
+        this.isRoom = res.msgBodyData[0];
+      });
     if (this.action == 'add' || this.action == 'copy') {
       let listUser = this.user?.userID;
 
@@ -164,6 +163,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
         this.listRoles = res.datas;
       }
     });
+    // this.loadRoomAvailable(this.meeting.startDate, this.meeting.endDate);
   }
 
   ngOnInit(): void {
@@ -216,32 +216,35 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
 
   loadRoomAvailable(startDate, endDate) {
     this.api
-      .callSv(
+      .execSv<any>(
         'EP',
         'EP',
         'ResourcesBusiness',
         'GetListAvailableResourceAsync',
-        ['1', startDate, endDate]
+        ['1', startDate, endDate, this.meeting.recID]
       )
       .subscribe((res) => {
-        if (res.msgBodyData[0] && res.msgBodyData[0].length > 0) {
-          var list = [];
+        if (res) {
+          var list = res;
           this.listRoom = [];
-          list = res.msgBodyData[0];
-          list.forEach((element) => {
-            var lstR = [];
-            if (this.listRoom && this.listRoom.length > 0) {
-              this.listRoom.forEach((res) => {
-                if (!lstR.includes(res.resourceID)) lstR.push(res.resourceID);
-              });
-            }
-            if (!lstR.includes(element.resourceID)) {
-              var re = new TmpRoom();
-              re['resourceID'] = element.resourceID;
-              re['location'] = element.resourceName;
-              this.listRoom.push(re);
-            }
+          Array.from(res).forEach((item: any) => {
+            let tmpRes = new TmpRoom();
+            tmpRes.resourceID = item.resourceID;
+            tmpRes.resourceName = item.resourceName;
+            this.listRoom.push(tmpRes);
           });
+          if (this.meeting.location != null) {
+            var check = this.listRoom.some(
+              (x) => x.resourceID == this.meeting.location
+            );
+            if (!check) {
+              this.meeting.location = null;
+              this.locationCBB.value = null;
+            } else {
+              this.cbxChange(this.meeting.location);
+              this.locationCBB.value = this.meeting.location;
+            }
+          }
           this.changDetec.detectChanges();
         }
       });
@@ -1016,7 +1019,7 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
     //cần kiểm tra lại mapping cho 2 field này
     booking.title = data.meetingName; // tiêu đề cuộc họp
     booking.reasonID = null;
-    booking.refID = data.meetingID; //mã lí do cuộc họp
+    booking.refID = data.recID; //mã lí do cuộc họp
     //tạo ds người tham gia cho EP
     let bookingAttendees = [];
     data.resources.forEach((item) => {
