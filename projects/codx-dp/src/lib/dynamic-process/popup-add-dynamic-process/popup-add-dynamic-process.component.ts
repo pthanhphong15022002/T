@@ -326,19 +326,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   //#region Trường tùy chỉnh
-  clickShow(id) {
-    var element = document.getElementById(id);
+  clickShow(e,id){
+    let children = e.currentTarget.children[0];
+    let element = document.getElementById(id);
     if (element) {
-      let isClose = element.classList.contains('hidden-main');
-      let isShow = element.classList.contains('show-main');
-      if (isClose) {
-        element.classList.remove('icon-add_box');
-        element.classList.add('hidden-main');
-      } else if (isShow) {
+     let isClose = element.classList.contains('hidden-main');
+     let isShow = element.classList.contains('show-main');
+      if (isClose){
+        children.classList.add('icon-expand_less');
+        children.classList.remove('icon-expand_more');
         element.classList.remove('hidden-main');
-        element.classList.add('icon-add_box');
+        element.classList.add('show-main');
+      } else if (isShow){
+        element.classList.remove('show-main');
+        element.classList.add('hidden-main');
+        children.classList.remove('icon-expand_less');
+        children.classList.add('icon-expand_more');
       }
-    }
+   }
   }
 
   //add trường tùy chỉnh
