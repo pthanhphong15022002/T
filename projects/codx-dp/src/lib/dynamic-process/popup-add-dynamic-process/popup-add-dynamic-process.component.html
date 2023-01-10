@@ -258,10 +258,10 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show()">
+          <button class="button-custom" (click)="show('general')">
             <span
               [ngClass]="
-                isShow
+              general
                   ? 'icon-expand_more icon-20 text-primary-600 py-2'
                   : 'icon-expand_less icon-20 text-primary-600 py-2'
               "
@@ -271,7 +271,7 @@
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="isShow ? 'show-main' : 'hidden-main'">
+    <div class="main" [ngClass]="general ? 'show-main' : 'hidden-main'">
       <div class="row">
         <div class="col-6">
           <div class="form-group margin-form">
@@ -345,10 +345,10 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show()">
+          <button class="button-custom" (click)="show('role')">
             <span
               [ngClass]="
-                isShow
+                role
                   ? 'icon-expand_more icon-20 text-primary-600 py-2'
                   : 'icon-expand_less icon-20 text-primary-600 py-2'
               "
@@ -358,7 +358,7 @@
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="isShow ? 'show-main' : 'hidden-main'">
+    <div class="main" [ngClass]="role ? 'show-main' : 'hidden-main'">
       <div class="row">
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
@@ -481,10 +481,10 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show()">
+          <button class="button-custom" (click)="show('settingProcess')">
             <span
               [ngClass]="
-                isShow
+              settingProcess
                   ? 'icon-expand_more icon-20 text-primary-600 py-2'
                   : 'icon-expand_less icon-20 text-primary-600 py-2'
               "
@@ -494,7 +494,7 @@
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="isShow ? 'show-main' : 'hidden-main'">
+    <div class="main" [ngClass]="settingProcess ? 'show-main' : 'hidden-main'">
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
@@ -579,10 +579,10 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show()">
+          <button class="button-custom" (click)="show('memoProcess')">
             <span
               [ngClass]="
-                isShow
+              memoProcess
                   ? 'icon-expand_more icon-20 text-primary-600 py-2'
                   : 'icon-expand_less icon-20 text-primary-600 py-2'
               "
@@ -592,7 +592,7 @@
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="isShow ? 'show-main' : 'hidden-main'">
+    <div class="main" [ngClass]="memoProcess ? 'show-main' : 'hidden-main'">
       <div class="form-group margin-form mb-4">
         <codx-input field="memo" type="textarea"> </codx-input>
       </div>

@@ -40,7 +40,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
-  dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
+  //!--ID SHOW FORM !--//
+  general = true;
+  role = true;
+  settingProcess = true;
+  memoProcess = true;
+  //!--ID SHOW FORM !--//
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -132,12 +137,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
-
-  
-
-   //#region Open form
-   show(){
-    this.isShow = !this.isShow;
+  //#region Open form
+  show(id) {
+    switch(id){
+      case 'general':
+        this.general = !this.general;
+      break;
+      case 'role':
+        this.role = !this.role;
+      break;
+      case 'settingProcess':
+        this.settingProcess = !this.settingProcess;
+      break;
+      case 'memoProcess':
+        this.memoProcess = !this.memoProcess;
+      break;
+    }
   }
 
   //#endregion
@@ -190,12 +205,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
-        this.processTab++;
+        this.currentTab++;
+        this.processTab == 1 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        this.processTab++;
+        this.processTab == 2 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
     }
 
@@ -210,7 +228,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   saveAndClose() {}
 
-  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //Avt
   addAvatar() {
