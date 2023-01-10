@@ -40,6 +40,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
+  //!--ID SHOW FORM !--//
+  general = true;
+  role = true;
+  settingProcess = true;
+  memoProcess = true;
+  //!--ID SHOW FORM !--//
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -153,8 +159,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   //#region Open form
-  show() {
-    this.isShow = !this.isShow;
+  show(id) {
+    switch(id){
+      case 'general':
+        this.general = !this.general;
+      break;
+      case 'role':
+        this.role = !this.role;
+      break;
+      case 'settingProcess':
+        this.settingProcess = !this.settingProcess;
+      break;
+      case 'memoProcess':
+        this.memoProcess = !this.memoProcess;
+      break;
+    }
   }
   showStage(){
     this.isShowstage = !this.isShowstage;
@@ -232,7 +251,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   saveAndClose() {}
 
-  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //Avt
   addAvatar() {
@@ -303,14 +322,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   drop1(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.data, event.previousIndex, event.currentIndex);
   }
-  //#region Trường tùy chỉnh
 
   //#region
   clickRoles(e){
 
   }
   //end
-  //#endregion
+  //#endregion ------------------------------------------------------------------------------------- //#endregion
 
   //#region Trường tùy chỉnh
 

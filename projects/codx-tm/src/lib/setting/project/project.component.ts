@@ -79,7 +79,7 @@ export class ProjectComponent extends UIComponent {
       active: true,
       model: {
         resources: this.columnsGrid,
-        template: this.grid,
+        template2: this.grid,
       }
     }];
 

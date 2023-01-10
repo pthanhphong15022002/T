@@ -1,22 +1,23 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Injector,
+import { FormGroup } from '@angular/forms';
+import { CodxHrService } from '../../codx-hr.service'
+import { Injector, ChangeDetectorRef } from '@angular/core';
+import { 
+  Component, 
   OnInit,
   Optional,
-  ViewChild,
+  ViewChild  
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+
 import {
   CodxFormComponent,
   CodxListviewComponent,
+  CRUDService,
   DialogData,
   DialogRef,
   FormModel,
   NotificationsService,
   UIComponent,
-} from 'codx-core';
-import { CodxHrService } from '../../codx-hr.service';
+ } from 'codx-core';
 
 @Component({
   selector: 'lib-popup-ehealths',
@@ -27,11 +28,13 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
-  data: any;
-  currentEJobSalaries: any;
+  healthObj: any;
+  lstEHealth
+  indexSelected
   funcID: string;
   actionType: string;
-  employeeId: string;
+  employId: string;
+  idField = 'RecID';
   isAfterRender = false;
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
@@ -46,32 +49,117 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
     @Optional() data?: DialogData
   ) {
     super(injector);
-    if (!this.formModel) {
-      this.formModel = new FormModel();
-      this.formModel.entityName = 'HR_EHealths';
-      this.formModel.formName = 'EHealths';
-      this.formModel.gridViewName = 'grvEHealths';
-    }
+    // if (!this.formModel) {
+    //   this.formModel = new FormModel();
+    //   this.formModel.entityName = 'HR_EHealths';
+    //   this.formModel.formName = 'EHealths';
+    //   this.formModel.gridViewName = 'grvEHealths';
+    // }
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.employeeId = data?.data?.employeeId;
+    this.funcID = data?.data?.funcID;
+    this.employId = data?.data?.employeeId;
     this.actionType = data?.data?.actionType;
+    this.lstEHealth = data?.data?.lstEHealth;
+    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
     if (this.actionType === 'edit' || this.actionType === 'copy') {
-      this.data = JSON.parse(JSON.stringify(data?.data?.salarySelected));
-      this.formModel.currentData = this.data;
+      this.healthObj = JSON.parse(JSON.stringify(this.lstEHealth[this.indexSelected]));
     }
   }
 
   onInit(): void {
-    this.isAfterRender = true;
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
   }
 
-  onSaveForm() {}
-
-  afterRenderListView(event: any) {
-    this.listView = event;
-    console.log(this.listView);
+  initForm(){
+    if (this.actionType == 'add') {
+      this.hrSevice
+        .getDataDefault(
+          this.formModel.funcID,
+          this.formModel.entityName,
+          this.idField
+        )
+        .subscribe((res: any) => {
+          if (res) {
+            this.healthObj = res?.data;
+            this.healthObj.employeeID = this.employId;
+            this.formModel.currentData = this.healthObj;
+            this.formGroup.patchValue(this.healthObj);
+            this.cr.detectChanges();
+            this.isAfterRender = true;
+          }
+        });
+    } else {
+      if (this.actionType === 'edit' || this.actionType === 'copy') {
+        this.formGroup.patchValue(this.healthObj);
+        this.formModel.currentData = this.healthObj;
+        this.cr.detectChanges();
+        this.isAfterRender = true;
+      }
+    }
   }
 
-  click(data) {}
+  onSaveForm() {
+    if (this.formGroup.invalid) {
+      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+      return;
+    }
+
+    if(this.actionType === 'copy' || this.actionType === 'add'){
+      delete this.healthObj.recID
+    }
+    this.healthObj.employeeID = this.employId 
+    if(this.actionType === 'add' || this.actionType === 'copy'){
+      this.hrSevice.addEHealth(this.healthObj).subscribe(p => {
+        if(p != null){
+          this.healthObj.recID = p.recID
+          this.notify.notifyCode('SYS007')
+          this.lstEHealth.push(JSON.parse(JSON.stringify(this.healthObj)));
+          if(this.listView){
+            (this.listView.dataService as CRUDService).add(this.healthObj).subscribe();
+          }
+          // this.dialog.close(p)
+        }
+        else this.notify.notifyCode('DM034')
+      });
+    } 
+    else{
+      this.hrSevice.editEHealth(this.formModel.currentData).subscribe(p => {
+        if(p != null){
+          this.notify.notifyCode('SYS007')
+        this.lstEHealth[this.indexSelected] = p;
+        if(this.listView){
+          (this.listView.dataService as CRUDService).update(this.lstEHealth[this.indexSelected]).subscribe()
+        }
+          // this.dialog.close(this.data)
+        }
+        else this.notify.notifyCode('DM034')
+      });
+    }
+  }
+
+  swipeToRightTab(e) {
+    if (e.isSwiped) {
+      e.cancel = true;
+    }
+  }
+
+  // afterRenderListView(event: any) {
+  //   this.listView = event;
+  //   console.log(this.listView);
+  // }
+
+  // click(data) {}
 }
