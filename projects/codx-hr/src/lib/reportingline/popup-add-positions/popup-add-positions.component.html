@@ -1,12 +1,5 @@
-<codx-form
-  #form
-  [headerText]="title"
-  subHeaderText=""
-  [body]="body"
-  [footer]="footer"
-  [dialog]="dialogRef"
-  [formModel]="formModel"
->
+<codx-form #form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialogRef"
+  [formModel]="formModel">
 </codx-form>
 
 <ng-template #body>
@@ -14,17 +7,9 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="PositionID"
-            default="Mã chức danh"
-          ></codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'PositionID'"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'PositionID'">
           </codx-input>
           <!-- <codx-input
             [disabled]="true"
@@ -41,18 +26,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="PositionName"
-            default="Tên chức danh công việc"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionName" default="Tên chức danh công việc">
           </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'PositionName'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'PositionName'">
           </codx-input>
           <!-- <codx-input
             type="text"
@@ -67,17 +44,9 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="PositionName2"
-            default="Ngôn ngữ khác"
-          ></codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'PositionName2'"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="PositionName2" default="Ngôn ngữ khác"></codx-label>
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'PositionName2'">
           </codx-input>
           <!-- <codx-input
             type="text"
@@ -92,18 +61,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="JobID"
-            default="Nhóm chức danh"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="JobID" default="Nhóm chức danh">
           </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'JobID'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'JobID'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -121,18 +82,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="JobGroup"
-            default="Chức vụ"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="JobGroup" default="Chức vụ">
           </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'JobGroup'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'JobGroup'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -150,18 +103,10 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="OrgUnitID"
-            default="Nhóm/Team"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="OrgUnitID" default="Nhóm/Team">
           </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'OrgUnitID'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'OrgUnitID'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -179,17 +124,9 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="DepartmentID"
-            default="Phòng/Ban"
-          ></codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'DepartmentID'"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="DepartmentID" default="Phòng/Ban"></codx-label>
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'DepartmentID'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -207,18 +144,10 @@
     <div class="row" *ngIf="isCorporation">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            [formModel]="dialogRef.formModel"
-            fiedName="DivisionID"
-            default="Khối"
-          >
+          <codx-label [formModel]="dialogRef.formModel" fiedName="DivisionID" default="Khối">
           </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'DivisionID'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'DivisionID'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -238,12 +167,8 @@
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="CompanyID" default="Công ty"> </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'CompanyID'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'CompanyID'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -263,16 +188,9 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            fiedName="ReportTo"
-            default="Báo cáo trực tiếp cho"
-          ></codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'reportTo'"
-          >
+          <codx-label fiedName="ReportTo" default="Báo cáo trực tiếp cho"></codx-label>
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'reportTo'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -294,16 +212,9 @@
     <div class="row">
       <div class="col">
         <div class="form-group">
-          <codx-label
-            fiedName="ReportTo2"
-            default="Báo cáo gián tiếp cho"
-          ></codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'ReportTo2'"
-          >
+          <codx-label fiedName="ReportTo2" default="Báo cáo gián tiếp cho"></codx-label>
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'ReportTo2'">
           </codx-input>
           <!-- <codx-input
             type="combobox"
@@ -326,12 +237,8 @@
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="Headcounts" default="Định biên"> </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'Headcounts'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'Headcounts'">
           </codx-input>
           <!-- <codx-input
             class="form-control"
@@ -345,12 +252,8 @@
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="FilledCounts" default="Nhân viên"></codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'FilledCounts'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'FilledCounts'">
           </codx-input>
           <!-- <codx-input
             class="form-control"
@@ -366,12 +269,8 @@
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="Onboard" default="Onboard"> </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'Onboard'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'Onboard'">
           </codx-input>
           <!-- <codx-input
             class="form-control"
@@ -385,12 +284,8 @@
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="Offboard" default="Offboard"> </codx-label>
-          <codx-input
-            class="form-control p-0"
-            [formModel]="form.formModel"
-            [Group]="form.formGroup"
-            [ControlName]="'Offboard'"
-          >
+          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+            [ControlName]="'Offboard'">
           </codx-input>
           <!-- <codx-input
             class="form-control"
@@ -408,10 +303,7 @@
 <ng-template #footer>
   <div class="d-flex justify-content-end">
     <button type="button" class="btn btn-primary" (click)="OnSaveForm()">
-      <codx-label
-        [formModel]="dialogRef.formModel"
-        [default]="'Lưu'"
-      ></codx-label>
+      <codx-label [formModel]="dialogRef.formModel" [default]="'Lưu'"></codx-label>
     </button>
   </div>
 </ng-template>
