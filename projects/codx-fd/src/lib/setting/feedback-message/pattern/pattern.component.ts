@@ -54,6 +54,9 @@ export class PatternComponent extends UIComponent implements OnInit {
       if (res) this.functionList = res;
     });
     this.getCardType('FDS026');
+    this.router.params.subscribe((params) => {
+      if (params.funcID) this.funcID = params.funcID;
+    });
   }
 
   onInit(): void {
@@ -159,6 +162,7 @@ export class PatternComponent extends UIComponent implements OnInit {
       formType: 'add',
       dataUpdate: '',
       formModel: this.functionList,
+      funcID: this.funcID,
     };
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
@@ -197,6 +201,7 @@ export class PatternComponent extends UIComponent implements OnInit {
       formType: 'edit',
       dataUpdate: item,
       formModel: this.functionList,
+      funcID: this.funcID,
     };
     this.view.dataService
       .edit(this.view.dataService.dataSelected)
