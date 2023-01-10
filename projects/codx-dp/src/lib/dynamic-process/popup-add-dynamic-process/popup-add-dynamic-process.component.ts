@@ -48,6 +48,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllShare = 'ES014';
   showID = true;
   dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
+  //
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
+  isShowstage = true;
+  isShowstageCauseSuccess = true;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -57,7 +68,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
   }
-  isShowstage = true;
+
   data = [
     {
       item: 'Spacing utilities that apply',
@@ -309,9 +320,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   drop1(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.data, event.previousIndex, event.currentIndex);
   }
-  //#region Trường tùy chỉnh
-
-  //#region
+  
   clickRoles(e) {}
   //end
   //#endregion
@@ -347,5 +356,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
     this.dialog.closed.subscribe((e) => {});
   }
-  //#region
+  //#endregion
+
+  //#region BẢo gà viết vào đây
+  valueChangeQuyTrinhChuyenDen(){
+
+  }
+  clickMF($event,data){
+
+  }
+
+  showStageCauseSuccess(){
+   this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
+  }
+  //#endregion
+  //#endregion
 }
