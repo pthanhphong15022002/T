@@ -215,42 +215,41 @@
             </ng-container>
 
             <ng-container *ngSwitchCase="'2'">
-              <div
-                class="me-2 h-16px d-flex align-item-center"
-                *ngIf="data.isCustomize == '0'"
-              >
-                <codx-input
-                  type="Switch"
-                  name="Switch"
-                  placeholder=""
-                  [field]="data.fieldName"
-                  [crrValue]="
-                    autoDefault && autoDefault[data.fieldName]
-                      ? !autoDefault[data.fieldName].stop
-                      : false
-                  "
-                  (valueChange)="valueChange($event, data, autoDefault)"
+              <ng-container *ngIf="data.isCustomize == '0'">
+                <div class="me-2 h-16px d-flex align-item-center">
+                  <codx-input
+                    type="Switch"
+                    name="Switch"
+                    placeholder=""
+                    [field]="data.fieldName"
+                    [crrValue]="
+                      autoDefault && autoDefault[data.fieldName]
+                        ? !autoDefault[data.fieldName].stop
+                        : false
+                    "
+                    (valueChange)="valueChange($event, data, autoDefault)"
+                  >
+                  </codx-input>
+                </div>
+                <codx-label
+                  name="lblUseAutoNumber"
+                  formName="Settings"
+                  default="Sử dụng số tự động"
                 >
-                </codx-input>
-              </div>
-              <codx-label
-                name="lblUseAutoNumber"
-                formName="Settings"
-                default="Sử dụng số tự động"
-              >
-              </codx-label>
-              <span class="ms-3">
-                <a
-                  href="javascript:void(0)"
-                  (click)="
-                    autoDefault &&
-                      autoDefault[data.fieldName] &&
-                      openPopup($event, data, 'cpnAutoNumbers')
-                  "
-                  ><span class="w-30px d-flex justify-content-center"
-                    ><span class="icon-edit-one icon-18"></span></span
-                ></a>
-              </span>
+                </codx-label>
+                <span class="ms-3">
+                  <a
+                    href="javascript:void(0)"
+                    (click)="
+                      autoDefault &&
+                        autoDefault[data.fieldName] &&
+                        openPopup($event, data, 'cpnAutoNumbers')
+                    "
+                    ><span class="w-30px d-flex justify-content-center"
+                      ><span class="icon-edit-one icon-18"></span></span
+                  ></a>
+                </span>
+              </ng-container>
             </ng-container>
 
             <ng-container *ngSwitchCase="'5'">
