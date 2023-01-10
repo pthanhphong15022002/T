@@ -22,6 +22,7 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { PopupGeneralComponent } from './dynamic-process/popup-add-dynamic-process/popup-general/popup-general.component';
+import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
 
 const routes: Routes = [
   {
@@ -53,6 +54,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     DynamicProcessComponent,
     PopupAddDynamicProcessComponent,
     PopupGeneralComponent,
+    PopupAddCustomFieldComponent,
   ],
   imports: [
     RouterModule.forChild(routes),
