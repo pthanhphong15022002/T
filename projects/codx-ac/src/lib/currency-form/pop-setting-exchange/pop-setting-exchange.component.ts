@@ -9,11 +9,10 @@ import { PopAddCurrencyComponent } from '../pop-add-currency/pop-add-currency.co
   styleUrls: ['./pop-setting-exchange.component.css']
 })
 export class PopSettingExchangeComponent implements OnInit {
-  @ViewChild('Upload') Upload?:PopAddCurrencyComponent ;
   headerText:string;
   dialog!: DialogRef;
   currencies: Currency;
-  fiedName : any;
+  calculation : any;
   data:any;
   constructor(
     @Optional() dialogsetting?: DialogRef,
@@ -22,21 +21,25 @@ export class PopSettingExchangeComponent implements OnInit {
     this.dialog = dialogsetting;
     this.headerText = dialogData.data?.headerText;
     this.currencies = dialogData.data?.data;
-    this.fiedName = this.currencies.calculation;
-    console.log(this.fiedName);
+    if (this.currencies.calculation == '0') {
+      this.calculation = false;
+    }else{
+      this.calculation = true;
+    }
+    
   }
   
   ngOnInit(): void {
   }
   valueChangelb(e: any) {
-    // console.log(e.data)
-    // // if (e.data) {
-    // //   this.currencies[e.field] = '1';
-    // //   this.fiedName = e.data;
-    // // }else{
-    // //   this.currencies[e.field] = '0';
-    // //   this.fiedName = e.data;
-    // // }
+    
+    if (e.data) {
+      this.currencies[e.field] = '1';
+      
+    }else{
+      this.currencies[e.field] = '0';
+      
+    }
   }
   valueChange(e: any) {
     if (e) {
@@ -44,6 +47,14 @@ export class PopSettingExchangeComponent implements OnInit {
     }
   }
   onSave(){
-    
+    window.localStorage.setItem("dataexchange",JSON.stringify(this.currencies));
+    var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
+    if (dataexchange.Multiply !=null) {
+      this.currencies.multiply = dataexchange.Multiply;
+    }
+    if (dataexchange.Calculation !=null) {
+      this.currencies.calculation = dataexchange.Calculation;
+    }
+    this.dialog.close();
   }
 }

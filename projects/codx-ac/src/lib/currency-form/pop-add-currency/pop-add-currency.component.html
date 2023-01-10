@@ -158,11 +158,14 @@
         [formModel]="form.formModel"
         default="Tỷ giá"      
       ></codx-label>
+      <span class="icon-edit-one text-hover-primary icon-18"
+      (click)="openPopup()"></span>
       <span
-      
+      (click)="opensetting()"
       [inlineSVG]="'./assets/themes/tm/default/img/TMS.svg'"
       class="svg-icon svg-icon-1"
     ></span>
+    
   </div>
  
 </ng-template>

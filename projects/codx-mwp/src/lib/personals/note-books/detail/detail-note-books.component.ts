@@ -266,7 +266,6 @@ export class DetailNoteBooksComponent extends UIComponent {
               [res.recID,true,null]
             )
             .subscribe(res => {
-              debugger
             });
         }
       });
