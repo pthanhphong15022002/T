@@ -652,13 +652,11 @@
 <!--End-->
 
 <!--Roles-->
-<ng-template #roles>
-  <codx-share
-    [multiple]="true"
-    (eventApply)="applyShare($event)"
-    [listName]="vllShare"
-  >
-  </codx-share>
+<ng-template #roles let-dialog>
+  <codx-form headerText="Phân quyền" [body]="bodyRoles" [footer]="footerRoles" [dialog]="dialog"></codx-form>
+  <ng-template #bodyRoles></ng-template>
+  <ng-template #footerRoles></ng-template>
+
 </ng-template>
 <!--END-->
 <!--End-->

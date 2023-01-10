@@ -48,6 +48,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    this.process = JSON.parse(JSON.stringify(data.data.data));
   }
   isShowstage = true;
   data = [
@@ -256,7 +257,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#region
   clickRoles(e){
-
+    this.callfc.openForm(e, '', 500, 500);
   }
   //end
   //#endregion
