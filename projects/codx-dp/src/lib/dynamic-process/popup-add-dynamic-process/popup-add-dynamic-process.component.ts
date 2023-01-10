@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
   CdkDragDrop,
   moveItemInArray,
@@ -9,12 +10,21 @@ import {
   ElementRef,
   OnInit,
   Optional,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService, CallFuncService } from 'codx-core';
+import { PopupJobComponent } from './popup-job/popup-job.component';
+import {
+  DialogData,
+  DialogRef,
+  ApiHttpService,
+  CallFuncService,
+  SidebarModel,
+} from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { DP_Process } from '../../models/models';
+import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -24,11 +34,11 @@ import { DP_Process } from '../../models/models';
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-
+  @ViewChild('setJobPopup') setJobPopup : TemplateRef<any>;
   process = new DP_Process();
 
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 2; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -40,8 +50,107 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
-  dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
-  // More funciton for reason success/failure
+  //!--ID SHOW FORM !--//
+  general = true;
+  role = true;
+  settingProcess = true;
+  memoProcess = true;
+  //!--ID SHOW FORM !--//
+
+  //stage-nvthuan
+  popupJob: DialogRef;
+  dataStage = [
+    {
+      id: 1,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 12,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 13,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 14,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 15,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+    {
+      id: 16,
+      name: 'Tiếp nhận yêu cầu',
+      time: "5",
+      phase: 3,
+    },
+  ]
+  listJob=[
+      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
+      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
+      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
+      {id: 'M', icon: 'icon-i-calendar-week', text: 'Lịch họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
+      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
+  ]
+
+  jobType = '';
+  //stage-nvthuan
+  dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
+  //
   moreDefaut = {
     share: true,
     write: true,
@@ -54,6 +163,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   titleReasonYes: string = 'Có' // title radio button for reason success/failure
   titleReasonNo: string = 'Không' // title radio button for reason success/failure
 
+  isShowstage = true;
+  isShowstageCauseSuccess = true;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -62,73 +174,92 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    this.process = JSON.parse(JSON.stringify(data.data.data));
   }
-  // check close shadow for detail step
-  isShowstage = true;
-  isShowstageCauseSuccess = true;
+
   data = [
     {
-      item: "Spacing utilities that apply",
-      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
-      data:[
+      item: 'Spacing utilities that apply',
+      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
+      data: [
         {
-          item: "Item 112",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 112',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Spacing utilities that apply",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Spacing utilities that apply',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 117",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 117',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
-      ]
+      ],
     },
     {
-      item: "Item 2",
-      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
-      data:[
+      item: 'Item 2',
+      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
+      data: [
         {
-          item: "Item 118",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 118',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 119",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 119',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
-      ]
+        {
+          item: 'Item 116',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
+        },
+      ],
     },
     {
-      item: "Item 3",
-      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
-      data:[
+      item: 'Item 3',
+      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
+      data: [
         {
-          item: "Item 1111",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 1111',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
-      ]
+        {
+          item: 'Item 1131',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
+        },
+        {
+          item: 'Item 11134',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
+        },
+      ],
     },
-
-  ]
+  ];
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
@@ -147,6 +278,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
+
+  //#region Open form
+  show() {
+    this.isShow = !this.isShow;
+  }
+  showStage() {
+    this.isShowstage = !this.isShowstage;
+  }
+  //#endregion
   //Setting class status Active
   updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
@@ -196,15 +336,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
-        this.currentTab++;
-        this.processTab == 1 && this.processTab++;
-        this.changeDetectorRef.detectChanges();
+        this.processTab++;
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        this.processTab == 2 && this.processTab++;
-        this.changeDetectorRef.detectChanges();
+        this.processTab++;
         break;
     }
 
@@ -219,7 +356,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   saveAndClose() {}
 
-  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
 
   //Avt
   addAvatar() {
@@ -258,24 +395,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //end
 
-
   //Control share
   sharePerm(share) {
     this.callfc.openForm(share, '', 420, window.innerHeight);
   }
 
-  applyShare(e){
+  applyShare(e) {}
 
+  addFile(e) {
+    this.attachment.uploadFile();
   }
-
   //#region Trường tùy chỉnh
 
   //#region
   clickRoles(e){
-
+    this.callfc.openForm(e, '', 500, 500);
   }
+
   //end
-  //#endregion
+  //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
+
 
   //#region Trường tùy chỉnh
   clickShow(e,id){
@@ -297,12 +436,45 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
    }
   }
-  //#region
+
+  //add trường tùy chỉnh
+  addCustomField(stepID) {
+    let titleAction = '';
+    let option = new SidebarModel();
+    // option.DataService = this.view?.dataService;
+    // option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    option.zIndex = 1010;
+    var dialogCustomField = this.callfc.openSide(
+      PopupAddCustomFieldComponent,
+      ['add',titleAction],
+      option
+    );
+    this.dialog.closed.subscribe((e) => {});
+  }
+  //#endregion
+
+  //#region BẢo gà viết vào đây
+  valueChangeQuyTrinhChuyenDen(){
+
+  }
+  clickMF($event,data){
+
+  }
+
+  showStageCauseSuccess(){
+   this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
+  }
+
 
   //#stage -- nvthuan
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<string[]>,data =null) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      if(data){
+        moveItemInArray(data, event.previousIndex, event.currentIndex);
+      }else{
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      }
     } else {
       transferArrayItem(
         event.previousContainer.data,
@@ -313,13 +485,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  //#stage
-
-  //#job -- nvthuan
-  addFile(e) {
-    this.attachment.uploadFile();
+  //job -- nvthuan
+  setJob() {
+    this.popupJob = this.callfc.openForm(
+      this.setJobPopup,
+      '',
+      400,
+      400
+    );
   }
-  //#job
+  getTypeJob(e){
+    if(e.target.checked){
+      this.jobType = e.target.value;
+    }
+  }
+  openPopupJob(){
+    this.popupJob.close();
+    let option = new SidebarModel();
+    option.Width = '550px';
+    option.zIndex = 1100;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      [],
+      option,
+
+    );
+  }
+  //#job end
+  //#stage -- end -- nvthuan
 
   //#region for reason successful/failed
   valueChangeSwtich($event:any, typeFeild:any) {
