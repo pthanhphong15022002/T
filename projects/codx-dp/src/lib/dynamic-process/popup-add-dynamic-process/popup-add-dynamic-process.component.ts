@@ -40,12 +40,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
-  //!--ID SHOW FORM !--//
-  general = true;
-  role = true;
-  settingProcess = true;
-  memoProcess = true;
-  //!--ID SHOW FORM !--//
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -101,7 +95,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
             item:"Item3"
           }
-        },      
+        },
       ]
     },
     {
@@ -114,7 +108,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
             item:"Item3"
           }
-        },      
+        },
       ]
     },
 
@@ -137,25 +131,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
-  //#region Open form
-  show(id) {
-    switch(id){
-      case 'general':
-        this.general = !this.general;
-      break;
-      case 'role':
-        this.role = !this.role;
-      break;
-      case 'settingProcess':
-        this.settingProcess = !this.settingProcess;
-      break;
-      case 'memoProcess':
-        this.memoProcess = !this.memoProcess;
-      break;
-    }
-  }
-
-  //#endregion
   //Setting class status Active
   updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
@@ -286,7 +261,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end
   //#endregion
 
-  //#region Trường tùy chỉnh 
+  //#region Trường tùy chỉnh
   clickShow(e,id){
     let children = e.currentTarget.children[0];
     let element = document.getElementById(id);
@@ -306,7 +281,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
    }
   }
-  //#region 
+  //#region
 
   //#stage -- nvthuan
   drop(event: CdkDragDrop<string[]>) {

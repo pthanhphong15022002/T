@@ -258,20 +258,20 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show('general')">
-            <span
-              [ngClass]="
-              general
-                  ? 'icon-expand_more icon-20 text-primary-600 py-2'
-                  : 'icon-expand_less icon-20 text-primary-600 py-2'
-              "
-              style="font-weight: 500"
-            ></span>
-          </button>
+          <button
+          *ngIf="isShowstage"
+          class="button-custom"
+          (click)="clickShow($event,'general-main')"
+        >
+          <span
+            class="icon-expand_less icon-20 text-primary-600 py-2"
+            style="font-weight: 500"
+          ></span>
+        </button>
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="general ? 'show-main' : 'hidden-main'">
+    <div id="general-main" class="main" [ngClass]="'show-main'">
       <div class="row">
         <div class="col-6">
           <div class="form-group margin-form">
@@ -345,20 +345,20 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show('role')">
-            <span
-              [ngClass]="
-                role
-                  ? 'icon-expand_more icon-20 text-primary-600 py-2'
-                  : 'icon-expand_less icon-20 text-primary-600 py-2'
-              "
-              style="font-weight: 500"
-            ></span>
-          </button>
+          <button
+              *ngIf="isShowstage"
+              class="button-custom"
+              (click)="clickShow($event,'role-main')"
+            >
+              <span
+                class="icon-expand_less icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
+            </button>
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="role ? 'show-main' : 'hidden-main'">
+    <div id="role-main" class="main" [ngClass]="'show-main'">
       <div class="row">
         <div class="col-6">
           <div class="d-flex flex-column margin-form mb-4">
@@ -481,20 +481,20 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show('settingProcess')">
-            <span
-              [ngClass]="
-              settingProcess
-                  ? 'icon-expand_more icon-20 text-primary-600 py-2'
-                  : 'icon-expand_less icon-20 text-primary-600 py-2'
-              "
-              style="font-weight: 500"
-            ></span>
-          </button>
+          <button
+              *ngIf="isShowstage"
+              class="button-custom"
+              (click)="clickShow($event,'setting-main')"
+            >
+              <span
+                class="icon-expand_less icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
+            </button>
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="settingProcess ? 'show-main' : 'hidden-main'">
+    <div id="setting-main" class="main" [ngClass]="'show-main'">
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
@@ -579,20 +579,22 @@
       </div>
       <div class="right">
         <div class="group-button">
-          <button class="button-custom" (click)="show('memoProcess')">
-            <span
-              [ngClass]="
-              memoProcess
-                  ? 'icon-expand_more icon-20 text-primary-600 py-2'
-                  : 'icon-expand_less icon-20 text-primary-600 py-2'
-              "
-              style="font-weight: 500"
-            ></span>
-          </button>
+          <div class="group-button">
+            <button
+              *ngIf="isShowstage"
+              class="button-custom"
+              (click)="clickShow($event,'memo-main')"
+            >
+              <span
+                class="icon-expand_less icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    <div class="main" [ngClass]="memoProcess ? 'show-main' : 'hidden-main'">
+    <div id="memo-main" class="main" [ngClass]="'show-main'">
       <div class="form-group margin-form mb-4">
         <codx-input field="memo" type="textarea"> </codx-input>
       </div>
@@ -1026,7 +1028,7 @@
           <button
             *ngIf="!isShowstage"
             class="button-custom"
-           
+
           >
             <span
               class="icon-expand_more icon-20 text-primary-600 py-2"
@@ -1036,7 +1038,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
-          
+
           >
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
