@@ -51,6 +51,7 @@ export class RoleDetailComponent
   sub: Subscription;
   funcIDPara: any;
   views = [];
+  role: any = {};
   formName = '';
   gridViewName = '';
   functionID = '';
@@ -129,7 +130,11 @@ export class RoleDetailComponent
       .subscribe((res: any) => {
         if (res) {
           var data = res;
-          this.myTree = data;
+          this.role = data[0];
+          // if (this.role && this.role.administrator) {
+          //   this.active = false;
+          // }
+          this.myTree = data[1];
           this.df.detectChanges();
           this.asideClick(null, 0, data[0]);
         }
@@ -154,8 +159,11 @@ export class RoleDetailComponent
         [this.recid, item]
       )
       .subscribe((res: any) => {
+        debugger;
         if (res) {
-          this.active = true;
+          if (this.role && this.role.administrator) {
+            this.active = false;
+          } else this.active = true;
           var funtion = res[0] as any[];
           if (funtion.length > 0) {
             this.dataAuthorize = funtion.filter(
