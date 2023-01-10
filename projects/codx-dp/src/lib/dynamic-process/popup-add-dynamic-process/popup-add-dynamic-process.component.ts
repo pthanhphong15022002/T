@@ -40,6 +40,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
+  dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
+  //
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -49,7 +58,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
   }
+  // check close shadow for detail step
   isShowstage = true;
+  isShowstageCauseSuccess = true;
   data = [
     {
       item: "Spacing utilities that apply",

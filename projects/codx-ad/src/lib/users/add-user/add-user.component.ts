@@ -81,6 +81,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
   dataCopy: any;
   dataComment: any;
   contentComment: any;
+  userGroupVisible: boolean = true;
   date = new Date();
   constructor(
     private injector: Injector,
@@ -137,6 +138,7 @@ export class AddUserComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         if (res) {
           this.gridViewSetup = res;
+          this.userGroupVisible = res.UserGroup.isVisible;
         }
       });
     this.cache.message('WP028').subscribe((res) => {

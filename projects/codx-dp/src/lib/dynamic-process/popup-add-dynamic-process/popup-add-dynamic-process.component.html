@@ -790,8 +790,8 @@
             >
             </span>
           </button>
-          <!-- <div class="d-flex justify-content-end">
-            <div class="me-auto"> <strong>Thành công</strong></div>
+          <div class="d-flex justify-content-end">
+            <div class="me-auto"> <h2> <strong>Thành công</strong></h2></div>
             <div>
               <codx-input class="test-check" type="switch" style="width:100%" field="read"
               >
@@ -800,7 +800,7 @@
             <div class="icon-more_vert" style="cursor: pointer;">
 
             </div>
-          </div> -->
+          </div>
         </div>
         <div class="main">
           <!-- Thêm teplate vào đây -->
@@ -1010,53 +1010,105 @@
 </ng-template>
 <!-- Công Việc -->
 <ng-template #successStage>
-  <div class="background-job">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
-          <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
-        </div>
-        <div>
-          <codx-label
-            style="color: #898989"
-            default="Cách thức hoạt động của giai đoạn"
-          ></codx-label>
-        </div>
-      </div>
-      <div class="right">
-        <div class="group-button">
-          <button
-            *ngIf="!isShowstage"
-            class="button-custom"
 
-          >
-            <span
-              class="icon-expand_more icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
-          </button>
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
-          </button>
+  <div class="background-job form-setting-step mb-5">
+      <div class="header-job p-3">
+        <div class="left">
+            <div>
+              <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
+            </div>
+            <div>
+              <codx-label class="text-muted" default="Cách thức hoạt động của giai đoạn"></codx-label>
+            </div>
         </div>
-      </div>
+        <div class="right">
+            <div class="group-button">
+                <!-- <button *ngIf="!isShowstage" class="button-custom" (click)="showStage()">
+                    <span
+                        class="icon-expand_more icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button>
+                <button *ngIf="isShowstage" class="button-custom" (click)="showStage()">
+                    <span
+                        class="icon-expand_less icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button> -->
+            </div>
+        </div>
     </div>
     <div class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
-        <div class="d-flex justify-content-start">
-          <div>Flex item</div>
-          <div>Flex item</div>
-          <div class="ms-auto">Margin left auto</div>
-          <div class="ms-auto">Margin left auto</div>
+        <div class="main-body p-3" *ngIf="data.length > 0">
+          <div class="row">
+            <div class="col-6">
+              <div class="title-switch">
+                <codx-label default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành công:"></codx-label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-6">
+                  <codx-input type="switch" style="width:100%" field="read"></codx-input>
+                  <codx-label style="position: relative !important;bottom: 8% !important;left: 5% !important;"  default="Có"></codx-label>
+                </div>
+                <div class="col-6">
+                  <codx-input type="switch" style="width:100%" field="read"></codx-input>
+                  <codx-label style="position: relative !important;bottom: 8% !important;left: 5% !important;"  default="Không"></codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+                <div class="col-12">
+                  <codx-label default="Quy trình được chuyển đến"></codx-label>
+                </div>
+                <div class="col-12">
+                  <codx-label class="fw-lighter fs-6" default="Quy trình được chuyển đến"></codx-label>
+                </div>
+            </div>
+            <div class="col-6">
+              <codx-input field="applyFor" type="valuelist" refValue="DP019">
+              </codx-input>
+            </div>
+          </div>
         </div>
-      </div>
+    </div>
+  </div>
+
+  <div class="background-job form-cause-success">
+      <div class="header-job p-3">
+        <div class="left">
+            <div>
+              <codx-label class="title" default="Lý do thành công"></codx-label>
+            </div>
+            <div>
+              <codx-label class="text-muted" default="Lý do nhiệm vụ được ghi nhận là thành công"></codx-label>
+            </div>
+        </div>
+        <div class="right">
+            <div class="group-button">
+                <button *ngIf="!isShowstageCauseSuccess" class="button-custom" >
+                    <span
+                        class="icon-expand_more icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button>
+                <button *ngIf="isShowstageCauseSuccess" class="button-custom" >
+                    <span
+                        class="icon-expand_less icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="main-job has-actions-menu" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'" #view>
+      ssssssssssss
+     <div class="actions-menu">
+    <codx-mfunc  [formModel]="view.formModel" [isBookMark]="true" [dataItem]="moreDefaut"type="view">
+  </codx-mfunc>
+     </div>
+        <div class="main-body p-3" *ngIf="data.length > 0">
+
+        </div>
     </div>
   </div>
 </ng-template>
