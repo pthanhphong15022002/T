@@ -1595,7 +1595,7 @@ export class CodxTasksComponent
         if (
           this.funcID == 'TMT03011' &&
           data.category == '1' &&
-          data.createdBy != this.user?.userID &&
+          data.createdBy != this.user?.userID && !this.user?.administrator && 
           (x.functionID == 'SYS02' || x.functionID == 'SYS03')
         ) {
           x.disabled = true;

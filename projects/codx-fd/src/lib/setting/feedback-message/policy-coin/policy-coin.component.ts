@@ -18,7 +18,7 @@ export class PolicyCoinComponent extends UIComponent implements OnInit {
   item: any = {};
   @Input() typeCard: string;
   @Input() isGroup: any;
-  categoryID: string = '1';
+  categoryID: string = '2';
   policyCoinList = [];
   tenant: string;
   funcID;

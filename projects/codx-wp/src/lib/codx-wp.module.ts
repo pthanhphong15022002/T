@@ -51,7 +51,6 @@ import { LayoutChatComponent } from './layout-chat/layout-chat.component';
 import { ChatBoxComponent } from './chat/chat-box/chat-box.component';
 import { CodxCalendarComponent } from 'projects/codx-share/src/lib/components/codx-calendar/codx-calendar.component';
 
-
 export const routes: Routes = [
   {
     path: 'portal',
@@ -144,56 +143,55 @@ export const routes: Routes = [
       },
     ],
   },
+  // {
+  //   path: 'wp/portal/wp',
+  //   redirectTo: 'portal/WP',
+  //   data: { noReuse: true },
+  //   pathMatch: 'full',
+  // },
   {
-    path: 'wp/portal/wp',
+    path: '',
     redirectTo: 'portal/WP',
     data: { noReuse: true },
     pathMatch: 'full',
   },
-  {
-    path: '',
-    redirectTo: 'portal/WP',
-    pathMatch: 'full',
-  },
-
 ];
 
-const Component: Type<any>[] =
-  [
-    LayoutComponent,
-    LayoutNewsComponent,
-    LayoutApprovalComponent,
-    CodxWpComponent,
-    NewsComponent,
-    PopupAddComponent,
-    ViewDetailComponent,
-    CompanyInforComponent,
-    PopupEditComponent,
-    ApproveComponent,
-    ApproveDetailComponent,
-    LayoutPortalComponent,
-    HomeComponent,
-    AddNoteComponent,
-    SaveNoteComponent,
-    PostComponent,
-    PopupSavePostComponent,
-    MyTeamComponent,
-    UpdateNotePinComponent,
-    ViewVideoComponent,
-    PopupDetailComponent,
-    CompanyEditComponent,
-    PopupTitleComponent,
-    ViewTagComponent,
-    PopupSearchComponent,
-    PopupSearchPostComponent,
-    ChatListComponent,
-    CodxChatComponent,
-    LayoutComponent,
-    PopupAddPostComponent,
-    PopupAddGroupComponent,
-    LayoutChatComponent,
-    ChatBoxComponent,
-  ];
+const Component: Type<any>[] = [
+  LayoutComponent,
+  LayoutNewsComponent,
+  LayoutApprovalComponent,
+  CodxWpComponent,
+  NewsComponent,
+  PopupAddComponent,
+  ViewDetailComponent,
+  CompanyInforComponent,
+  PopupEditComponent,
+  ApproveComponent,
+  ApproveDetailComponent,
+  LayoutPortalComponent,
+  HomeComponent,
+  AddNoteComponent,
+  SaveNoteComponent,
+  PostComponent,
+  PopupSavePostComponent,
+  MyTeamComponent,
+  UpdateNotePinComponent,
+  ViewVideoComponent,
+  PopupDetailComponent,
+  CompanyEditComponent,
+  PopupTitleComponent,
+  ViewTagComponent,
+  PopupSearchComponent,
+  PopupSearchPostComponent,
+  ChatListComponent,
+  CodxChatComponent,
+  LayoutComponent,
+  PopupAddPostComponent,
+  PopupAddGroupComponent,
+  LayoutChatComponent,
+  ChatBoxComponent,
+];
 
 @NgModule({
   imports: [
@@ -212,7 +210,6 @@ const Component: Type<any>[] =
   exports: [RouterModule],
   declarations: [Component],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  
 })
 export class CodxWpModule {
   public static forRoot(
