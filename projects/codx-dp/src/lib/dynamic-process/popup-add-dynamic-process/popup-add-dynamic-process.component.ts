@@ -417,24 +417,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
 
   //#region Trường tùy chỉnh
-  clickShow(e,id){
+  clickShow(e, id) {
     let children = e.currentTarget.children[0];
     let element = document.getElementById(id);
     if (element) {
-     let isClose = element.classList.contains('hidden-main');
-     let isShow = element.classList.contains('show-main');
-      if (isClose){
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
+      if (isClose) {
         children.classList.add('icon-expand_less');
         children.classList.remove('icon-expand_more');
         element.classList.remove('hidden-main');
         element.classList.add('show-main');
-      } else if (isShow){
+      } else if (isShow) {
         element.classList.remove('show-main');
         element.classList.add('hidden-main');
         children.classList.remove('icon-expand_less');
         children.classList.add('icon-expand_more');
       }
-   }
+    }
   }
 
   //add trường tùy chỉnh
@@ -447,23 +447,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
       PopupAddCustomFieldComponent,
-      ['add',titleAction],
+      ['add', titleAction],
       option
     );
     this.dialog.closed.subscribe((e) => {});
   }
+
+  popoverSelectView(p, data) {
+    p.open();
+  }
+  selectView(viewNo) {
+    switch (viewNo) {
+      case '1':
+        break;
+      case '2':
+        break;
+      case '3':
+        break;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
   //#endregion
 
   //#region BẢo gà viết vào đây
-  valueChangeQuyTrinhChuyenDen(){
+  valueChangeQuyTrinhChuyenDen() {}
+  clickMF($event, data) {}
 
-  }
-  clickMF($event,data){
-
-  }
-
-  showStageCauseSuccess(){
-   this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
+  showStageCauseSuccess() {
+    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
   }
 
 

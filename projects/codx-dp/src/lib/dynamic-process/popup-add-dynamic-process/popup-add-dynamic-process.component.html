@@ -696,16 +696,22 @@
             ></span>
             <span
               class="icon-settings icon-20 cursor-pointer text-hover-primary py-2 me-3"
+              #p="ngbPopover"
+              [ngbPopover]="popperHandelSetting"
+              (mouseenter)="popoverSelectView(p, data)"
+              placement="bottom right top left"
+              [popoverClass]=""
             ></span>
             <span
               class="icon-expand_more icon-20 cursor-pointer text-hover-primary py-2 me-3"
+              (click)="clickShow($event, 'id-show')"
             ></span>
           </div>
         </div>
       </div>
     </div>
     <!-- id="{{item?.recID}}" -->
-    <div class="main">
+    <div id="id-show" class="main">
       <div>
         <button
           type="button"
@@ -738,6 +744,27 @@
     </div>
   </div>
   <!-- </ng-container>  -->
+
+  <ng-template #popperHandelSetting>
+    <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(1)">
+      <span class="icon-view_column icon-20"></span
+      ><span>
+        <codx-label name="lblSelectFirst" default="1 cột"></codx-label>
+      </span>
+    </div>
+    <div  class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(2)">
+      <span class="icon-view_column icon-20"></span>
+      <span>
+        <codx-label name="lblSelectSecond" default="2 cột"></codx-label>
+      </span>
+    </div>
+    <div  class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(3)">
+      <span class="icon-view_column icon-20"></span>
+      <span>
+        <codx-label name="lblSelectThree" default="3 cột"></codx-label>
+      </span>
+    </div>
+  </ng-template>
 </ng-template>
 
 <!-- Thiết lập giai đoạn của nvthuan + Bảo -->

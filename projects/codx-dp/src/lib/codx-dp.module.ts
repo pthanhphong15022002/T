@@ -31,7 +31,7 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'test/:funcID',
+        path: 'dynamicprocess/:funcID',
         component: DynamicProcessComponent,
       },     
       {
