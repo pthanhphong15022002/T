@@ -136,7 +136,7 @@
     <!-- body rieng -->
     <div class="stepper-body pt-2 w-100">
       <div class="card shadow-none border-0 rounded-0 mx-auto w-100 witdh-body">
-        <div class="mt-10 text-center tab-pane-header">
+        <div class="mt-10 text-center tab-pane-header" *ngIf="currentTab != 1">
           <h2 class="h2-title float-left">
             <codx-label
               *ngIf="currentTab == 0"
@@ -183,7 +183,7 @@
               id="pane_2"
               [ngClass]="currentTab == 1 ? 'active show' : ''"
             >
-              <!-- Thiet lap giai doan -->
+              <!-- Thiet lap giai doan thuan -->
               <ng-container [ngTemplateOutlet]="stage"></ng-container>
             </div>
             <div
@@ -337,7 +337,8 @@
         <div>
           <codx-label
             name="lblGeneral"
-            default="Những người liên quan và có thể thực hiện các chức năng trong quy trình"
+            default="Những người liên quan và có thể thực hiện các chức năng
+            trong quy trình"
             style="color: #898989"
           >
           </codx-label>
@@ -382,7 +383,9 @@
               <codx-label
                 class="fw-normal text-gray-400"
                 fiedName="LocationControl"
-                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa nhiệm vụ"
+                default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+                viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
+                nhiệm vụ"
               >
               </codx-label>
             </div>
@@ -685,6 +688,7 @@
           <div class="d-flex align-items-center">
             <span
               class="icon-add icon-20 cursor-pointer text-hover-primary py-2 me-3"
+              (click)="addCustomField('recID')"
             ></span>
             <span
               class="icon-settings icon-20 cursor-pointer text-hover-primary py-2 me-3"
@@ -698,13 +702,41 @@
     </div>
     <!-- id="{{item?.recID}}" -->
     <div class="main">
-      <div></div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
+          (click)="addCustomField('recID')"
+        >
+          <i class="icon-add icon-20 py-3"></i>
+          <codx-label default="Thêm trường tùy chỉnh"></codx-label>
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <div class="task-name fw-bold text-gray-700 fs-6 text-dark mt-2">
+          Custorm field name
+        </div>
+        <div class="text-gray-400">Mô tả</div>
+        <div class="d-flex">
+          <div class="datatypes me-4">
+            {{ "Kiểu dữ liệu" }}
+          </div>
+          <codx-label
+            class="text-danger"
+            fiedName ="IsRequired"
+            default="Bắt buộc *"
+          ></codx-label>
+          <codx-input type="switch" field="isRequired" [checked]="true">
+          </codx-input>
+        </div>
+      </div>
     </div>
   </div>
   <!-- </ng-container>  -->
 </ng-template>
 
-<!-- Thiết lập giai đoạn của thuận + Bảo -->
+<!-- Thiết lập giai đoạn của nvthuan + Bảo -->
 <ng-template #stage>
   <div class="background-stage">
     <div class="stage-top">
@@ -719,8 +751,8 @@
             style="padding: 0 15px 0 0 !important"
           >
             <span
-              class="icon-add icon-22 text-primary-600 py-2"
-              style="font-weight: 600; margin-left: 5px"
+              class="icon-add icon-20 text-primary-600 py-2"
+              style="font-weight: 600; margin-left: 5px; color: white"
             >
             </span>
             <codx-label [name]="'lblContinue'" [default]="'Thêm'"></codx-label>
@@ -735,7 +767,7 @@
         </div>
       </div>
     </div>
-    <div>
+    <div style="font-weight: 500">
       <span>Mẫu giai đoạn: cơ hội</span>
       <button type="button" class="btn btn-outline-primary ms-2">
         Đổi mẫu
@@ -756,40 +788,33 @@
             </span>
           </button>
         </div>
-        <div class="main">
+        <div
+          class="main"
+          cdkDropList
+          (cdkDropListDropped)="drop($event, dataStage)"
+        >
           <!-- danh sách giai đoạn -->
           <div
-            *ngFor="
-              let item of [
-                1, 2, 3, 4, 5, 6, 6, 7, 7, 2, 12, 3, 42, 3, 2, 43, 3, 243, 12,
-                14
-              ];
-              let i = index
-            "
+            *ngFor="let item of dataStage; let i = index"
             class="list-stage"
+            cdkDrag
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="content">
-              <div>Tiếp nhận yêu cầu</div>
-              <div>Thời hạn 5 ngày 0:00 giờ</div>
-              <div>Công việc 3</div>
+              <div style="font-weight: 600; font-size: 1.2rem">
+                {{ item?.name + item?.id }}
+              </div>
+              <div>Thời hạn {{ item?.time }} ngày 0:00 giờ</div>
+              <div>Công việc {{ item?.phase }}</div>
             </div>
           </div>
-          <!-- danh sách giai đoạn -->
+          <!--end danh sách giai đoạn -->
         </div>
       </div>
       <div class="stage-body-right col-9">
         <div>
-          <div>Tiếp nhận yêu cầu</div>
-          <button class="button-custom">
-            <span
-              class="icon-replay icon-22 text-primary-600 py-2"
-              style="font-weight: 600; margin-left: 5px"
-            >
-            </span>
-          </button>
-          <!-- <div class="d-flex justify-content-end">
-            <div class="me-auto"> <strong>Thành công</strong></div>
+          <div class="d-flex justify-content-end">
+            <div class="me-auto"> <h2> <strong>Thành công</strong></h2></div>
             <div>
               <codx-input class="test-check" type="switch" style="width:100%" field="read"
               >
@@ -798,7 +823,7 @@
             <div class="icon-more_vert" style="cursor: pointer;">
 
             </div>
-          </div> -->
+          </div>
         </div>
         <div class="main">
           <!-- Thêm teplate vào đây -->
@@ -813,7 +838,8 @@
     </div>
   </div>
 </ng-template>
-<!-- Công Việc -->
+
+<!-- Công Việc -- nvthuan -->
 <ng-template #job>
   <div class="background-job">
     <div class="header-job">
@@ -852,7 +878,7 @@
               style="font-weight: 500"
             ></span>
           </button>
-          <button class="button-custom">
+          <button class="button-custom" (click)="setJob()">
             <span
               class="icon-add_task icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -861,7 +887,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
-            (click)="clickShow($event,'job-main')"
+            (click)="clickShow($event, 'job-main')"
           >
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
@@ -1006,55 +1032,156 @@
     </div>
   </div>
 </ng-template>
-<!-- Công Việc -->
+<!-- chon loai cong viec -- nvthuan -->
+<ng-template #setJobPopup>
+  <codx-form
+    [headerText]="'Chọn Loại Công Việc'"
+    [body]="setJobBody"
+    [footer]="setJobFooter"
+    [dialog]="popupJob"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #setJobBody>
+  <div
+    *ngFor="let item of listJob"
+    class="d-flex"
+    style="justify-content: space-between; padding: 10px 0"
+  >
+    <div style="display: flex; align-items: center">
+      <span
+        style="margin-right: 10px"
+        class="icon-20 text-primary-600 py-2 circle"
+        ngClass="{{ item?.icon }}"
+        [ngStyle]="item?.color"
+      ></span>
+      <span style="font-size: 1.2rem; font-weight: 400">{{ item?.text }}</span>
+    </div>
+    <input
+      style="width: 18px"
+      type="radio"
+      name="styleJob"
+      [value]="item?.id"
+      (change)="getTypeJob($event)"
+    />
+  </div>
+</ng-template>
+
+<ng-template #setJobFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Tiếp tục"
+        (click)="openPopupJob()"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+<!--End chon cong viec -->
+<!-- End Công Việc -->
 <ng-template #successStage>
-  <div class="background-job">
-    <div class="header-job p-3">
-      <div class="left">
-        <div>
-          <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
-        </div>
-        <div>
-          <codx-label
-            style="color: #898989"
-            default="Cách thức hoạt động của giai đoạn"
-          ></codx-label>
-        </div>
-      </div>
-      <div class="right">
-        <div class="group-button">
-          <button
-            *ngIf="!isShowstage"
-            class="button-custom"
 
-          >
-            <span
-              class="icon-expand_more icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
-          </button>
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-
-          >
-            <span
-              class="icon-expand_less icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
-          </button>
+  <div class="background-job form-setting-step mb-5">
+      <div class="header-job p-3">
+        <div class="left">
+            <div>
+              <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
+            </div>
+            <div>
+              <codx-label class="text-muted" default="Cách thức hoạt động của giai đoạn"></codx-label>
+            </div>
         </div>
-      </div>
+        <div class="right">
+            <div class="group-button">
+                <!-- <button *ngIf="!isShowstage" class="button-custom" (click)="showStage()">
+                    <span
+                        class="icon-expand_more icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button>
+                <button *ngIf="isShowstage" class="button-custom" (click)="showStage()">
+                    <span
+                        class="icon-expand_less icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button> -->
+            </div>
+        </div>
     </div>
     <div class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
-        <div class="d-flex justify-content-start">
-          <div>Flex item</div>
-          <div>Flex item</div>
-          <div class="ms-auto">Margin left auto</div>
-          <div class="ms-auto">Margin left auto</div>
+        <div class="main-body p-3" *ngIf="data.length > 0">
+          <div class="row">
+            <div class="col-6">
+              <div class="title-switch">
+                <codx-label default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành công:"></codx-label>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="row">
+                <div class="col-6">
+                  <codx-input type="switch" style="width:100%" field="read"></codx-input>
+                  <codx-label style="position: relative !important;bottom: 8% !important;left: 5% !important;"  default="Có"></codx-label>
+                </div>
+                <div class="col-6">
+                  <codx-input type="switch" style="width:100%" field="read"></codx-input>
+                  <codx-label style="position: relative !important;bottom: 8% !important;left: 5% !important;"  default="Không"></codx-label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+                <div class="col-12">
+                  <codx-label default="Quy trình được chuyển đến"></codx-label>
+                </div>
+                <div class="col-12">
+                  <codx-label class="fw-lighter fs-6" default="Quy trình được chuyển đến"></codx-label>
+                </div>
+            </div>
+            <div class="col-6">
+              <codx-input field="applyFor" type="valuelist" refValue="DP019">
+              </codx-input>
+            </div>
+          </div>
         </div>
-      </div>
+    </div>
+  </div>
+
+  <div class="background-job form-cause-success">
+      <div class="header-job p-3">
+        <div class="left">
+            <div>
+              <codx-label class="title" default="Lý do thành công"></codx-label>
+            </div>
+            <div>
+              <codx-label class="text-muted" default="Lý do nhiệm vụ được ghi nhận là thành công"></codx-label>
+            </div>
+        </div>
+        <div class="right">
+            <div class="group-button">
+                <button *ngIf="!isShowstageCauseSuccess" class="button-custom" >
+                    <span
+                        class="icon-expand_more icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button>
+                <button *ngIf="isShowstageCauseSuccess" class="button-custom" >
+                    <span
+                        class="icon-expand_less icon-20 text-primary-600 py-2"
+                        style="font-weight: 500"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="main-job has-actions-menu" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'" #view>
+      ssssssssssss
+     <div class="actions-menu">
+    <codx-mfunc  [formModel]="view.formModel" [isBookMark]="true" [dataItem]="moreDefaut"type="view">
+  </codx-mfunc>
+     </div>
+        <div class="main-body p-3" *ngIf="data.length > 0">
+
+        </div>
     </div>
   </div>
 </ng-template>
