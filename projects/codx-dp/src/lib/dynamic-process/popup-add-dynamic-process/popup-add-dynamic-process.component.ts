@@ -34,7 +34,7 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-  @ViewChild('setJobPopup') setJobPopup : TemplateRef<any>;
+  @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
   process = new DP_Process();
 
   dialog: any;
@@ -63,89 +63,119 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     {
       id: 1,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 12,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 13,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 14,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 15,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-  ]
-  listJob=[
-      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
-      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
-      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
-      {id: 'M', icon: 'icon-i-calendar-week', text: 'Lịch họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
-      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
-  ]
+  ];
+  listJob = [
+    {
+      id: 'P',
+      icon: 'icon-i-layout-three-columns',
+      text: 'Cuộc gọi',
+      funcID: 'BPT101',
+      color: { background: '#f1ff19' },
+    },
+    {
+      id: 'T',
+      icon: 'icon-i-journal-check',
+      text: 'Công việc',
+      funcID: 'BPT103',
+      color: { background: '#ffa319' },
+    },
+    {
+      id: 'E',
+      icon: 'icon-i-envelope',
+      text: 'Gửi mail',
+      funcID: 'BPT104',
+      color: { background: '#4799ff' },
+    },
+    {
+      id: 'M',
+      icon: 'icon-i-calendar-week',
+      text: 'Lịch họp',
+      funcID: 'BPT105',
+      color: { background: '#ff9adb' },
+    },
+    {
+      id: 'Q',
+      icon: 'icon-i-clipboard-check',
+      text: 'Khảo sát',
+      funcID: 'BPT106',
+      color: { background: '#1bc5bd' },
+    },
+  ];
 
   jobType = '';
   //stage-nvthuan
@@ -158,6 +188,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
+
+  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
+  titleReasonYes: string = 'Có'; // title radio button for reason success/failure
+  titleReasonNo: string = 'Không'; // title radio button for reason success/failure
+
   isShowstage = true;
   isShowstageCauseSuccess = true;
 
@@ -403,33 +438,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#region Trường tùy chỉnh
 
   //#region
-  clickRoles(e){
+  clickRoles(e) {
     this.callfc.openForm(e, '', 500, 500);
   }
 
   //end
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
-
   //#region Trường tùy chỉnh
-  clickShow(e,id){
+  clickShow(e, id) {
     let children = e.currentTarget.children[0];
     let element = document.getElementById(id);
     if (element) {
-     let isClose = element.classList.contains('hidden-main');
-     let isShow = element.classList.contains('show-main');
-      if (isClose){
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
+      if (isClose) {
         children.classList.add('icon-expand_less');
         children.classList.remove('icon-expand_more');
         element.classList.remove('hidden-main');
         element.classList.add('show-main');
-      } else if (isShow){
+      } else if (isShow) {
         element.classList.remove('show-main');
         element.classList.add('hidden-main');
         children.classList.remove('icon-expand_less');
         children.classList.add('icon-expand_more');
       }
-   }
+    }
   }
 
   //add trường tùy chỉnh
@@ -442,70 +476,91 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
       PopupAddCustomFieldComponent,
-      ['add',titleAction],
+      ['add', titleAction],
       option
     );
-    this.dialog.closed.subscribe((e) => {});
+    dialogCustomField.closed.subscribe((e) => {
+      if (e.event != null ){
+        //xu ly data đổ về
+          this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  popoverSelectView(p, data) {
+    p.open();
+  }
+  selectView(viewNo) {
+    switch (viewNo) {
+      case '1':
+        break;
+      case '2':
+        break;
+      case '3':
+        break;
+    }
+    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
   //#region BẢo gà viết vào đây
-  valueChangeQuyTrinhChuyenDen(){
+  valueChangeQuyTrinhChuyenDen() {}
+  clickMF($event, data) {}
 
+  showStageCauseSuccess() {
+    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
   }
-  clickMF($event,data){
-
-  }
-
-  showStageCauseSuccess(){
-   this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
-  }
-
 
   //#stage -- nvthuan
-  drop(event: CdkDragDrop<string[]>,data =null) {
+  drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
-      if(data){
+      if (data) {
         moveItemInArray(data, event.previousIndex, event.currentIndex);
-      }else{
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
       }
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
     }
   }
 
   //job -- nvthuan
   setJob() {
-    this.popupJob = this.callfc.openForm(
-      this.setJobPopup,
-      '',
-      400,
-      400
-    );
+    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  getTypeJob(e){
-    if(e.target.checked){
+  getTypeJob(e) {
+    if (e.target.checked) {
       this.jobType = e.target.value;
     }
   }
-  openPopupJob(){
+  openPopupJob() {
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1100;
-    let dialog = this.callfc.openSide(
-      PopupJobComponent,
-      [],
-      option,
-
-    );
+    let dialog = this.callfc.openSide(PopupJobComponent, [], option);
   }
   //#job end
   //#stage -- end -- nvthuan
+
+  //#region for reason successful/failed
+  valueChangeSwtich($event: any, typeFeild: any) {
+    if ($event && $event != null) {
+      if (typeFeild === 'yes') {
+        this.isTurnOnYesNo = $event.data ? true : false;
+      }
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  //#endregion
 }
