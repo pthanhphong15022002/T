@@ -782,14 +782,14 @@
       </div>
       <div class="stage-body-right col-9">
         <div>
-          <div>Tiếp nhận yêu cầu</div>
+          <!-- <div>Tiếp nhận yêu cầu</div>
           <button class="button-custom">
             <span
               class="icon-replay icon-22 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px"
             >
             </span>
-          </button>
+          </button> -->
           <div class="d-flex justify-content-end">
             <div class="me-auto"> <h2> <strong>Thành công</strong></h2></div>
             <div>
@@ -808,7 +808,8 @@
             *ngIf="currentTab == 1"
             [ngTemplateOutlet]="job"
           ></ng-container>
-          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="successStage"></ng-container> -->
+          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="reasonSuccess"></ng-container> -->
+          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="reasonFail"></ng-container> -->
           <!-- Thêm teplate vào đây -->
         </div>
       </div>
@@ -1009,9 +1010,9 @@
   </div>
 </ng-template>
 <!-- Công Việc -->
-<ng-template #successStage>
+<ng-template #reasonSuccess>
 
-  <div class="background-job form-setting-step mb-5">
+  <div class="background-job form-setting-step-success mb-5">
       <div class="header-job p-3">
         <div class="left">
             <div>
@@ -1023,22 +1024,22 @@
         </div>
         <div class="right">
             <div class="group-button">
-                <!-- <button *ngIf="!isShowstage" class="button-custom" (click)="showStage()">
-                    <span
-                        class="icon-expand_more icon-20 text-primary-600 py-2"
-                        style="font-weight: 500"></span>
-                </button>
-                <button *ngIf="isShowstage" class="button-custom" (click)="showStage()">
-                    <span
-                        class="icon-expand_less icon-20 text-primary-600 py-2"
-                        style="font-weight: 500"></span>
-                </button> -->
+              <button
+              *ngIf="isShowstage"
+              class="button-custom"
+              (click)="clickShow($event,'setup-step')"
+            >
+              <span
+                class="icon-expand_less icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
+            </button>
             </div>
         </div>
     </div>
-    <div class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+    <div class="main-job" id="setup-step" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
         <div class="main-body p-3" *ngIf="data.length > 0">
-          <div class="row">
+          <div class="row pt-3 pb-5">
             <div class="col-6">
               <div class="title-switch">
                 <codx-label default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thành công:"></codx-label>
@@ -1047,35 +1048,42 @@
             <div class="col-6">
               <div class="row">
                 <div class="col-6">
-                  <codx-input type="switch" style="width:100%" field="read"></codx-input>
-                  <codx-label style="position: relative !important;bottom: 8% !important;left: 5% !important;"  default="Có"></codx-label>
+                  <codx-input name="group" class="test-check" type="radio" style="width:100%" field="yes" [checked]="isTurnOnYesNo" [label]="titleReasonYes"
+                  (valueChange)="valueChangeSwtich($event, 'yes')"
+                  ></codx-input>
                 </div>
                 <div class="col-6">
-                  <codx-input type="switch" style="width:100%" field="read"></codx-input>
-                  <codx-label style="position: relative !important;bottom: 8% !important;left: 5% !important;"  default="Không"></codx-label>
+                  <codx-input name="group" class="test-check" type="radio" style="width:100%" field="no" [checked]="!isTurnOnYesNo" [label]="titleReasonNo"
+                  (valueChange)="valueChangeSwtich($event, 'no')"
+                  ></codx-input>
                 </div>
               </div>
             </div>
           </div>
-          <div class="row">
+          <div class="row pb-5">
             <div class="col-6">
                 <div class="col-12">
                   <codx-label default="Quy trình được chuyển đến"></codx-label>
                 </div>
                 <div class="col-12">
-                  <codx-label class="fw-lighter fs-6" default="Quy trình được chuyển đến"></codx-label>
+                  <codx-label class="fw-lighter fs-6" default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"></codx-label>
                 </div>
             </div>
             <div class="col-6">
-              <codx-input field="applyFor" type="valuelist" refValue="DP019">
+              <!-- Gán tạm chờ refvalue -->
+              <codx-input field="applyFor" type="valuelist" refValue="">
               </codx-input>
+              <br>
+              <codx-label class="text-danger fst-italic fs-6" default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng">
+
+              </codx-label>
             </div>
           </div>
         </div>
     </div>
   </div>
 
-  <div class="background-job form-cause-success">
+  <div class="background-job form-reason-success">
       <div class="header-job p-3">
         <div class="left">
             <div>
@@ -1087,31 +1095,174 @@
         </div>
         <div class="right">
             <div class="group-button">
-                <button *ngIf="!isShowstageCauseSuccess" class="button-custom" >
-                    <span
-                        class="icon-expand_more icon-20 text-primary-600 py-2"
-                        style="font-weight: 500"></span>
-                </button>
-                <button *ngIf="isShowstageCauseSuccess" class="button-custom" >
-                    <span
-                        class="icon-expand_less icon-20 text-primary-600 py-2"
-                        style="font-weight: 500"></span>
-                </button>
+              <button class="button-custom">
+                <span
+                  class="icon-add icon-20 text-primary-600 py-2"
+                  style="font-weight: 500"
+                ></span>
+              </button>
+              <button
+              *ngIf="isShowstage"
+              class="button-custom"
+              (click)="clickShow($event,'reason-success')"
+            >
+              <span
+                class="icon-expand_less icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
+            </button>
             </div>
         </div>
     </div>
-    <div class="main-job has-actions-menu" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'" #view>
-      ssssssssssss
-     <div class="actions-menu">
-    <codx-mfunc  [formModel]="view.formModel" [isBookMark]="true" [dataItem]="moreDefaut"type="view">
-  </codx-mfunc>
-     </div>
-        <div class="main-body p-3" *ngIf="data.length > 0">
-
+    <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'" #view>
+        <div class="main-body pt-5 ps-5" *ngIf="data.length > 0">
+          <ul class="text-left" style="display:inline-block;vertical-align:middle;">
+            <li class="pb-3">Khách hàng thích sản phẩm mà công ty cung cấp</li>
+            <li class="pb-3">Khách hàng không còn lựa chọn nào khác</li>
+            <li class="pb-3">Sản phẩm công ty cuung cấp vượt mức mong đợi của khách hàng</li>
+            <li class="pb-3">Khác</li>
+          </ul>
         </div>
     </div>
   </div>
 </ng-template>
-<ng-template #failStage> </ng-template>
+<ng-template #reasonFail>
+  <div class="background-job form-setting-step-fail mb-5">
+    <div class="header-job p-3">
+      <div class="left">
+          <div>
+            <codx-label class="title" default="Tùy chỉnh giai đoạn"></codx-label>
+          </div>
+          <div>
+            <codx-label class="text-muted" default="Cách thức hoạt động của giai đoạn"></codx-label>
+          </div>
+      </div>
+      <div class="right">
+          <div class="group-button">
+            <button
+            *ngIf="isShowstage"
+            class="button-custom"
+            (click)="clickShow($event,'setup-step')"
+          >
+            <span
+              class="icon-expand_less icon-20 text-primary-600 py-2"
+              style="font-weight: 500"
+            ></span>
+          </button>
+          </div>
+      </div>
+  </div>
+  <div class="main-job" id="setup-step" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+      <div class="main-body p-3" *ngIf="data.length > 0">
+        <div class="row pt-3 pb-5">
+          <div class="col-6">
+            <div class="title-switch">
+              <codx-label default="Bắt buộc chọn lý do khi đánh dấu nhiệm vụ là thất bại"></codx-label>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="row">
+              <div class="col-6">
+                <codx-input name="group" type="radio" style="width:100%" field="yes" [checked]="isTurnOnYesNo" [label]="titleReasonYes"
+                (valueChange)="valueChangeSwtich($event, 'yes')"
+                ></codx-input>
+              </div>
+              <div class="col-6">
+                <codx-input name="group" type="radio" style="width:100%" field="no" [checked]="!isTurnOnYesNo" [label]="titleReasonNo"
+                (valueChange)="valueChangeSwtich($event, 'no')"
+                ></codx-input>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pb-5">
+          <div class="col-6">
+              <div class="col-12">
+                <codx-label default="Quy trình được chuyển đến"></codx-label>
+              </div>
+              <div class="col-12">
+                <codx-label class="fw-lighter fs-6" default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thất bại"></codx-label>
+              </div>
+          </div>
+          <div class="col-6">
+            <!-- Gán tạm chờ refvalue -->
+            <codx-input field="applyFor" type="valuelist" refValue="">
+            </codx-input>
+            <br>
+            <codx-label class="text-danger fst-italic fs-6" default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng">
+
+            </codx-label>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="background-job form-reason-fail">
+    <div class="header-job p-3">
+      <div class="left">
+          <div>
+            <codx-label class="title" default="Lý do thất bại"></codx-label>
+          </div>
+          <div>
+            <codx-label class="text-muted" default="Lý do nhiệm vụ được ghi nhận là thất bại"></codx-label>
+          </div>
+      </div>
+      <div class="right">
+          <div class="group-button">
+            <button class="button-custom">
+              <span
+                class="icon-add icon-20 text-primary-600 py-2"
+                style="font-weight: 500"
+              ></span>
+            </button>
+            <button
+            *ngIf="isShowstage"
+            class="button-custom"
+            (click)="clickShow($event,'reason-success')"
+          >
+            <span
+              class="icon-expand_less icon-20 text-primary-600 py-2"
+              style="font-weight: 500"
+            ></span>
+          </button>
+          </div>
+      </div>
+  </div>
+  <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'" #view>
+
+    <!-- <div class="main-body pt-5 ps-5" *ngIf="data.length > 0">
+      <ul class="text-left" style="display:inline-block;vertical-align:middle;">
+        <li class="pb-3">Khách hàng thích sản phẩm mà công ty cung cấp</li>
+        <li class="pb-3">Khách hàng không còn lựa chọn nào khác</li>
+        <li class="pb-3">Sản phẩm công ty cuung cấp vượt mức mong đợi của khách hàng</li>
+        <li class="pb-3">Khác</li>
+      </ul>
+    </div> -->
+    <div class="main-body">
+      <div class="position-relative p-9">
+        <div class="position-absolute top-50 start-50 translate-middle">
+          <button type="button" class="btn btn-outline-primary btn-sm pb-5" (click)="onSave()">
+            <i
+            class="icon-add icon-18"
+          >
+          </i>
+            <codx-label [name]="''" [default]="'Thêm lý do'"></codx-label>
+          </button>
+
+        </div>
+<!--
+        <ul class="text-left" style="display:inline-block;vertical-align:middle;">
+          <li class="pb-3">Khách hàng thích sản phẩm mà công ty cung cấp</li>
+          <li class="pb-3">Khách hàng không còn lựa chọn nào khác</li>
+          <li class="pb-3">Sản phẩm công ty cuung cấp vượt mức mong đợi của khách hàng</li>
+          <li class="pb-3">Khác</li>
+        </ul> -->
+      </div>
+    </div>
+
+  </div>
+</div>
+</ng-template>
 
 <!-- End Thiết lập giai đoạn -->

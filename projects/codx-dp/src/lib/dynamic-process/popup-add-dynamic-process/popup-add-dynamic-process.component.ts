@@ -41,7 +41,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllShare = 'ES014';
   showID = true;
   dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
-  //
+  // More funciton for reason success/failure
   moreDefaut = {
     share: true,
     write: true,
@@ -49,6 +49,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
+
+  isTurnOnYesNo:boolean = false//Create variable Click yes/no for reason success/failure
+  titleReasonYes: string = 'Có' // title radio button for reason success/failure
+  titleReasonNo: string = 'Không' // title radio button for reason success/failure
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -315,4 +320,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.attachment.uploadFile();
   }
   //#job
+
+  //#region for reason successful/failed
+  valueChangeSwtich($event:any, typeFeild:any) {
+    if($event && $event !=null){
+      if(typeFeild==='yes'){
+        this.isTurnOnYesNo = $event.data?true:false;
+      }
+      this.changeDetectorRef.detectChanges();
+    }
+
+  }
+
+  //#endregion
 }
