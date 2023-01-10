@@ -685,6 +685,7 @@
           <div class="d-flex align-items-center">
             <span
               class="icon-add icon-20 cursor-pointer text-hover-primary py-2 me-3"
+              (click)="addCustomField('recID')"
             ></span>
             <span
               class="icon-settings icon-20 cursor-pointer text-hover-primary py-2 me-3"
@@ -698,7 +699,35 @@
     </div>
     <!-- id="{{item?.recID}}" -->
     <div class="main">
-      <div></div>
+      <div>
+        <button
+          type="button"
+          class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
+          (click)="addCustomField('recID')"
+        >
+          <i class="icon-add icon-20 py-3"></i>
+          <codx-label default="Thêm trường tùy chỉnh"></codx-label>
+        </button>
+      </div>
+
+      <div class="mb-4">
+        <div class="task-name fw-bold text-gray-700 fs-6 text-dark mt-2">
+          Custorm field name
+        </div>
+        <div class="text-gray-400">Mô tả</div>
+        <div class="d-flex">
+          <div class="datatypes me-4">
+            {{ "Kiểu dữ liệu" }}
+          </div>
+          <codx-label
+            class="text-danger"
+            fiedName ="IsRequired"
+            default="Bắt buộc *"
+          ></codx-label>
+          <codx-input type="switch" field="isRequired" [checked]="true">
+          </codx-input>
+        </div>
+      </div>
     </div>
   </div>
   <!-- </ng-container>  -->

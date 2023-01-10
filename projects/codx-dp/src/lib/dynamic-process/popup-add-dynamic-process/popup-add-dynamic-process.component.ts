@@ -11,10 +11,17 @@ import {
   Optional,
   ViewChild,
 } from '@angular/core';
-import { DialogData, DialogRef, ApiHttpService, CallFuncService } from 'codx-core';
+import {
+  DialogData,
+  DialogRef,
+  ApiHttpService,
+  CallFuncService,
+  SidebarModel,
+} from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { DP_Process } from '../../models/models';
+import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -28,7 +35,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Process();
 
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 2; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -40,7 +47,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
-  dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
+  dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -53,88 +60,87 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isShowstage = true;
   data = [
     {
-      item: "Spacing utilities that apply",
-      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
-      data:[
+      item: 'Spacing utilities that apply',
+      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
+      data: [
         {
-          item: "Item 112",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 112',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Spacing utilities that apply",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Spacing utilities that apply',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 117",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 117',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
-      ]
+      ],
     },
     {
-      item: "Item 2",
-      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
-      data:[
+      item: 'Item 2',
+      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
+      data: [
         {
-          item: "Item 118",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 118',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 119",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 119',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 116",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 116',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
-      ]
+      ],
     },
     {
-      item: "Item 3",
-      name:"Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ",
-      data:[
+      item: 'Item 3',
+      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
+      data: [
         {
-          item: "Item 1111",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 1111',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 1131",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 1131',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
         {
-          item: "Item 11134",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
+          item: 'Item 11134',
+          data: {
+            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
+            item: 'Item3',
+          },
         },
-      ]
+      ],
     },
-
-  ]
+  ];
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
@@ -154,13 +160,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  
-
-   //#region Open form
-   show(){
+  //#region Open form
+  show() {
     this.isShow = !this.isShow;
   }
-  showStage(){
+  showStage() {
     this.isShowstage = !this.isShowstage;
   }
   //#endregion
@@ -272,17 +276,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //end
 
-
   //Control share
   sharePerm(share) {
     this.callfc.openForm(share, '', 420, window.innerHeight);
   }
 
-  applyShare(e){
+  applyShare(e) {}
 
-  }
-
-  show1(){
+  show1() {
     this.isShow = !this.isShow;
   }
   addFile(e) {
@@ -290,13 +291,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      moveItemInArray(
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex
+      );
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
     }
   }
@@ -307,18 +312,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#region Trường tùy chỉnh
 
   //#region
-  clickRoles(e){
-
-  }
+  clickRoles(e) {}
   //end
   //#endregion
 
-  //#region Trường tùy chỉnh 
-  clickShow(id){
+  //#region Trường tùy chỉnh
+  clickShow(id) {
     var element = document.getElementById(id);
     if (element) {
-     let isClose = element.classList.contains('hidden-main');
-     let isShow = element.classList.contains('show-main');
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
       if (isClose) {
         element.classList.remove('icon-add_box');
         element.classList.add('hidden-main');
@@ -326,7 +329,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         element.classList.remove('hidden-main');
         element.classList.add('icon-add_box');
       }
-   }
+    }
   }
-  //#region 
+
+  //add trường tùy chỉnh
+  addCustomField(stepID) {
+    let titleAction = '';
+    let option = new SidebarModel();
+    // option.DataService = this.view?.dataService;
+    // option.FormModel = this.view?.formModel;
+    option.Width = '550px';
+    option.zIndex = 1010;
+    var dialogCustomField = this.callfc.openSide(
+      PopupAddCustomFieldComponent,
+      ['add',titleAction],
+      option
+    );
+    this.dialog.closed.subscribe((e) => {});
+  }
+  //#region
 }
