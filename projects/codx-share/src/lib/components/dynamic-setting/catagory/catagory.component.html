@@ -376,7 +376,8 @@
         >
           {{
             (data.recID | shareSetting : settingFull : dataValue)?.objectName ==
-            "null"
+              "null" ||
+            !(data.recID | shareSetting : settingFull : dataValue)?.objectName
               ? ""
               : (data.recID | shareSetting : settingFull : dataValue)
                   ?.objectName ||
