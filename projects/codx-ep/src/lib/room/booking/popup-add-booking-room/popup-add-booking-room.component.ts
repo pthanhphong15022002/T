@@ -154,33 +154,31 @@ export class PopupAddBookingRoomComponent extends UIComponent {
     this.funcID = this.formModel.funcID;
     this.userInfo = authStore.get();
     this.user = this.authStore.get();
-    
-      if (this.isAdd) {
-        if (this.optionalData != null) {
-          this.data.bookingOn = this.optionalData.startDate;
-          this.data.resourceID = this.optionalData.resourceId;
-        } else {
-          this.data.bookingOn = new Date();
-        }
-        this.data.attendees = 1;
-        this.data.reminder = 0;
-      } else if (!this.isAdd) {
-        let tmpStartTime = new Date(this.data?.startDate);
-        let tmpEndTime = new Date(this.data?.endDate);
-        this.startTime =
-          ('0' + tmpStartTime.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
-        this.endTime =
-          ('0' + tmpEndTime.getHours()).toString().slice(-2) +
-          ':' +
-          ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+
+    if (this.isAdd) {
+      if (this.optionalData != null) {
+        this.data.bookingOn = this.optionalData.startDate;
+        this.data.resourceID = this.optionalData.resourceId;
+      } else {
+        this.data.bookingOn = new Date();
       }
-     
+      this.data.attendees = 1;
+      this.data.reminder = 0;
+    } else if (!this.isAdd) {
+      let tmpStartTime = new Date(this.data?.startDate);
+      let tmpEndTime = new Date(this.data?.endDate);
+      this.startTime =
+        ('0' + tmpStartTime.getHours()).toString().slice(-2) +
+        ':' +
+        ('0' + tmpStartTime.getMinutes()).toString().slice(-2);
+      this.endTime =
+        ('0' + tmpEndTime.getHours()).toString().slice(-2) +
+        ':' +
+        ('0' + tmpEndTime.getMinutes()).toString().slice(-2);
+    }
   }
 
-  onInit(): void {  
-
+  onInit(): void {
     this.codxEpService.getSettingValue('System').subscribe((sys: any) => {
       if (sys) {
         this.ep8Avaiable = JSON.parse(sys.dataValue)?.EP8;
@@ -818,6 +816,8 @@ export class PopupAddBookingRoomComponent extends UIComponent {
             this.startSave(approval);
           }
         });
+    } else {
+      this.startSave(approval);
     }
   }
 
@@ -926,83 +926,7 @@ export class PopupAddBookingRoomComponent extends UIComponent {
                   this.returnData.recID,
                   '5'
                 )
-                .subscribe((res: any) => {
-                  //Duyệt VPP tự dộng
-                  if (this.autoApproveItem === '1') {
-                    //Duyệt theo quy trình
-                    if (this.approvalRuleStationery === '1') {
-                      //Duyệt qua quy trình
-                      this.codxEpService
-                        .getCategoryByEntityName('EP_BookingStationery')
-                        .subscribe((category: any) => {
-                          this.codxEpService
-                            .getBookingByRefID(this.returnData.recID)
-                            .subscribe((res: any) => {
-                              //Gửi duyệt VPP
-                              if (res) {
-                                res.forEach((booking) => {
-                                  this.codxEpService
-                                    .release(
-                                      booking,
-                                      category.processID,
-                                      'EP_Bookings',
-                                      FuncID.BookingStationery
-                                    )
-                                    .subscribe((res) => {
-                                      this.codxEpService
-                                        .getApprovalTransByTransID(booking)
-                                        .subscribe((trans: any) => {
-                                          this.codxEpService
-                                            .approve(trans.recID, '5', '', '')
-                                            .subscribe();
-                                        });
-                                    });
-                                });
-                              }
-                            });
-                        });
-                    } else {
-                      //Duyệt không thông qua quy trình
-                      this.codxEpService
-                        .getBookingByRefID(this.returnData.recID)
-                        .subscribe((res: any) => {
-                          res.forEach((booking) => {
-                            this.codxEpService
-                              .afterApprovedManual(
-                                'EP_Bookings', // entityName 'EP_Bookings'
-                                booking.recID, // recID của booking
-                                '5'
-                              )
-                              .subscribe();
-                          });
-                        });
-                    }
-                  } else {
-                    this.codxEpService
-                      .getCategoryByEntityName('EP_BookingStationery')
-                      .subscribe((category: any) => {
-                        this.codxEpService
-                          .getBookingByRefID(this.returnData.recID)
-                          .subscribe((res: any) => {
-                            //Gửi duyệt VPP
-                            if (res) {
-                              res.forEach((booking) => {
-                                this.codxEpService
-                                  .release(
-                                    booking,
-                                    category.processID,
-                                    'EP_Bookings',
-                                    FuncID.BookingStationery
-                                  )
-                                  .subscribe((res) => {
-                                    debugger;
-                                  });
-                              });
-                            }
-                          });
-                      });
-                  }
-                });
+                .subscribe();
               this.dialogRef && this.dialogRef.close(this.returnData);
             }
             this.dialogRef && this.dialogRef.close(this.returnData);
