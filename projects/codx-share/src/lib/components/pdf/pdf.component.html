@@ -233,7 +233,7 @@
           <ejs-toolbar>
             <e-items>
               <e-item
-                id="zoomOut"
+                (click)="changeZoom('out', $event)"
                 [disabled]="zoomValue <= 10"
                 prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
               >
@@ -245,15 +245,15 @@
             style="width: 100%; min-width: 70px"
             [(dataSource)]="lstZoomValue"
             [(placeholder)]="zoomValue"
-            [fields]="zoomFields"
+            [value]="zoomValue"
             (change)="changeZoom('to', $event)"
           >
+            <!-- [fields]="zoomFields" -->
           </ejs-dropdownlist>
 
           <ejs-toolbar>
             <e-items>
               <e-item
-                id="zoomIn"
                 (click)="changeZoom('in', $event)"
                 [disabled]="zoomValue >= 100"
                 prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom"
@@ -322,7 +322,6 @@
         #ngxPdfView
         [(src)]="curFileUrl"
         [(zoom)]="zoomValue"
-        (zoomChange)="changeZoom('', $event)"
         [(page)]="curPage"
         [handTool]="showHand"
         [showHandToolButton]="showHand"
@@ -331,7 +330,6 @@
         [showUnverifiedSignatures]="true"
         [sidebarVisible]="!hideThumbnail"
         [showSidebarButton]="false"
-        (pdfLoadingStarts)="show($event)"
         (pdfLoaded)="loadedPdf($event)"
         (pageRendered)="pageRendered($event)"
         [showBookmarkButton]="false"
@@ -341,7 +339,6 @@
         [enableDragAndDrop]="false"
         [contextMenuAllowed]="false"
         [enablePinchOnMobile]="false"
-        (updateFindMatchesCount)="show($event)"
         (currentZoomFactor)="('1')"
         pageViewMode="vertical"
         (textLayerRendered)="getTextLayerInfo($event)"

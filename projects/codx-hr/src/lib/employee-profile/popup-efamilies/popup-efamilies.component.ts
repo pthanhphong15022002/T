@@ -57,9 +57,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     // this.formModel = dialog?.FormModel
     this.headerText = data?.data?.headerText;
     this.actionType = data?.data?.actionType
-    // if(this.formModel){
-    //   this.isAfterRender = true
-    // }
     if(!this.formModel){
       this.formModel = new FormModel();
       this.formModel.formName = 'EFamilies'
@@ -70,12 +67,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
       this.familyMemberObj = JSON.parse(JSON.stringify(this.lstFamilyMembers[this.indexSelected]))
       this.formModel.currentData = this.familyMemberObj
       console.log('data dc truyen vao', this.formModel.currentData);
-      
     }
     this.employId = data?.data?.employeeId;
     this.cache.gridViewSetup(this.formModel.formName, this.formModel.gridViewName).subscribe(grv => {
       console.log('grv:', grv);
-      
     })
   }
 
@@ -117,6 +112,12 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm(){
+    let today = new Date()
+    if(this.familyMemberObj.Birthday >= today){
+      this.notify.notifyCode('DM034')
+      return;
+    }
+
     this.familyMemberObj.registerFrom = this.fromdateVal
     this.familyMemberObj.registerTo = this.todateVal
     if(this.actionType === 'copy' || this.actionType === 'add'){
@@ -180,14 +181,16 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.cr.detectChanges();
   }
 
-  handleClickCheckBoxIsEmploy(e){
-    let isChecked = e.target.checked
+
+  focus(evt){
+    let isChecked = evt.checked;
     if(isChecked == true){
       this.isEmployee = true;
     }
     else{
       this.isEmployee = false;
     }
+    this.cr.detectChanges();
   }
 
   
