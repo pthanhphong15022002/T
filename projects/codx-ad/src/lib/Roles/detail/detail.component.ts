@@ -159,6 +159,7 @@ export class RoleDetailComponent
         [this.recid, item]
       )
       .subscribe((res: any) => {
+        debugger;
         if (res) {
           if (this.role && this.role.administrator) {
             this.active = false;
