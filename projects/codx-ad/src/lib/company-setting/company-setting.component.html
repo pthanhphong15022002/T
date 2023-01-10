@@ -312,19 +312,19 @@
                   </codx-label>
                 </div>
                 <div class="row">
-                  <div class="mb-5 col-6" *ngFor="let module of lstInstalledModule">
-                    <div class="h-125px w-100 border p-4 rounded-2">
-                      <codx-temp-full cardCss="card-template mb-3" [typeMF]="'hover'"
-                        [title]="module.boughtModule.moduleName" [desc]="module.boughtModule.description"
-                        [imageSrc]="module.boughtModule?.image" [icoCss]="
-                        'w-40px symbol h-40px rounded-circle me-3'
-                      " [titleLine]="2" typeMF="hover" [dataItem]="module">
-                      </codx-temp-full>
+                  <div class="mb-5 col-6 list-app" *ngFor="let module of lstInstalledModule">
+                    <div class="h-125px min-h-125px w-100 border p-4 rounded-2">
+                      <div class="min-h-70px">
+                        <codx-temp-full cardCss="card-template mb-3" [typeMF]="'hover'"
+                          [title]="module.boughtModule.moduleName" [desc]="module.boughtModule.description"
+                          [imageSrc]="module.boughtModule?.image" [titleLine]="2" typeMF="hover" [dataItem]="module">
+                        </codx-temp-full>
+                      </div>
                       <div class="d-flex w-100 justify-content-end">
-                        <button type="button" class="btn btn-light-primary" (click)="openModuleDetail(module)">
+                        <button type="button" class="btn btn-sm btn-light-primary" (click)="openModuleDetail(module)">
                           <codx-label name="lblModuleDetail" formName="" default="Chi tiết"></codx-label>
                         </button>
-                        <button type="button" class="btn btn-primary ms-2">
+                        <button type="button" class="btn btn-sm btn-primary ms-2">
                           <codx-label name="lblExtend" formName="" default="Gia hạn"></codx-label>
                         </button>
                       </div>
@@ -332,24 +332,24 @@
                   </div>
                 </div>
 
-                <div class="mb-3 mt-6">
+                <div class="fw-bold mb-3 mt-6">
                   <codx-label name="lstNotInstallApps" formName="" default="Ứng dụng chưa cài đặt">
                   </codx-label>
                 </div>
                 <div class="row">
-                  <div class="col-6 mb-5" *ngFor="let module of lstNotInstallModule">
-                    <div class="h-125px w-100 border p-4 rounded-2">
-                      <codx-temp-full cardCss="card-template mb-3" [typeMF]="'hover'"
-                        [title]="module.boughtModule.moduleName" [desc]="module.boughtModule.description"
-                        [imageSrc]="module.boughtModule?.image" [icoCss]="
-                              'w-40px symbol h-40px rounded-circle me-3'
-                            " [titleLine]="2" typeMF="hover" [dataItem]="module">
-                      </codx-temp-full>
+                  <div class="col-6 mb-5 list-app" *ngFor="let module of lstNotInstallModule">
+                    <div class="h-125px min-h-125px w-100 border p-4 rounded-2">
+                      <div class="min-h-70px">
+                        <codx-temp-full cardCss="card-template mb-3" [typeMF]="'hover'"
+                          [title]="module.boughtModule.moduleName" [desc]="module.boughtModule.description"
+                          [imageSrc]="module.boughtModule?.image" [titleLine]="2" typeMF="hover" [dataItem]="module">
+                        </codx-temp-full>
+                      </div>
                       <div class="d-flex w-100 justify-content-end">
-                        <button type="button" class="btn btn-light-primary" (click)="openModuleDetail(module)">
+                        <button type="button" class="btn btn-sm btn-light-primary" (click)="openModuleDetail(module)">
                           <codx-label name="lblModuleDetail" formName="" default="Chi tiết"></codx-label>
                         </button>
-                        <button type="button" class="btn btn-primary ms-2">
+                        <button type="button" class="btn btn-sm btn-primary ms-2">
                           <codx-label name="lblInstall" formName="" default="Cài đặt"></codx-label>
                         </button>
                       </div>
