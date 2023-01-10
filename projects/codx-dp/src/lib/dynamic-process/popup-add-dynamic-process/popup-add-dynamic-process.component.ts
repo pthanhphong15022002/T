@@ -107,13 +107,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
             item:"Item3"
           }
         },
-        {
-          item: "Item 116",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
-        },
       ]
     },
     {
@@ -122,20 +115,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       data:[
         {
           item: "Item 1111",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
-        },
-        {
-          item: "Item 1131",
-          data:{
-            name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
-            item:"Item3"
-          }
-        },
-        {
-          item: "Item 11134",
           data:{
             name:"Đây là điều khác hẳn so với những lần gặp nhau trước đây. ",
             item:"Item3"
@@ -163,16 +142,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
-
-
-   //#region Open form
-   show(){
-    this.isShow = !this.isShow;
-  }
-  showStage(){
-    this.isShowstage = !this.isShowstage;
-  }
-  //#endregion
   //Setting class status Active
   updateNodeStatus(oldNode: number, newNode: number) {
     let nodes = Array.from(
@@ -222,12 +191,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
-        this.processTab++;
+        this.currentTab++;
+        this.processTab == 1 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        this.processTab++;
+        this.processTab == 2 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
     }
 
@@ -242,7 +214,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   saveAndClose() {}
 
-  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //Avt
   addAvatar() {
@@ -291,12 +263,38 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   }
 
-  show1(){
-    this.isShow = !this.isShow;
+  //#region Trường tùy chỉnh
+
+  //#region
+  clickRoles(e){
+
   }
-  addFile(e) {
-    this.attachment.uploadFile();
+  //end
+  //#endregion
+
+  //#region Trường tùy chỉnh
+  clickShow(e,id){
+    let children = e.currentTarget.children[0];
+    let element = document.getElementById(id);
+    if (element) {
+     let isClose = element.classList.contains('hidden-main');
+     let isShow = element.classList.contains('show-main');
+      if (isClose){
+        children.classList.add('icon-expand_less');
+        children.classList.remove('icon-expand_more');
+        element.classList.remove('hidden-main');
+        element.classList.add('show-main');
+      } else if (isShow){
+        element.classList.remove('show-main');
+        element.classList.add('hidden-main');
+        children.classList.remove('icon-expand_less');
+        children.classList.add('icon-expand_more');
+      }
+   }
   }
+  //#region
+
+  //#stage -- nvthuan
   drop(event: CdkDragDrop<string[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -310,45 +308,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  drop1(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.data, event.previousIndex, event.currentIndex);
+  //#stage
+
+  //#job -- nvthuan
+  addFile(e) {
+    this.attachment.uploadFile();
   }
-  //#region Trường tùy chỉnh
-
-  //#region
-  clickRoles(e){
-
-  }
-  //end
-  //#endregion
-
-  //#region Trường tùy chỉnh
-  clickShow(id){
-    var element = document.getElementById(id);
-    if (element) {
-     let isClose = element.classList.contains('hidden-main');
-     let isShow = element.classList.contains('show-main');
-      if (isClose) {
-        element.classList.remove('icon-add_box');
-        element.classList.add('hidden-main');
-      } else if (isShow) {
-        element.classList.remove('hidden-main');
-        element.classList.add('icon-add_box');
-      }
-   }
-  }
-  //#region
-
-  //#region
-  valueChangeQuyTrinhChuyenDen(){
-
-  }
-  clickMF($event,data){
-
-  }
-
-  showStageCauseSuccess(){
-    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
-  }
-  //#endregion
+  //#job
 }

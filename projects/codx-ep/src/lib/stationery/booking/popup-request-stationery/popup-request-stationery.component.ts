@@ -129,7 +129,7 @@ export class PopupRequestStationeryComponent extends UIComponent {
     this.epService
       .getEPStationerySetting('1')
       .subscribe((res: any) => {
-        let dataValue = res[0].dataValue;
+        let dataValue = res.dataValue;
         let json = JSON.parse(dataValue);
         this.nagetivePhysical = json.NagetivePhysical;
       });
