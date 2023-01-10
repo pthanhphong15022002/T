@@ -859,19 +859,9 @@
             ></span>
           </button>
           <button
-            *ngIf="!isShowstage"
-            class="button-custom"
-            (click)="showStage()"
-          >
-            <span
-              class="icon-expand_more icon-20 text-primary-600 py-2"
-              style="font-weight: 500"
-            ></span>
-          </button>
-          <button
             *ngIf="isShowstage"
             class="button-custom"
-            (click)="showStage()"
+            (click)="clickShow($event,'job-main')"
           >
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
@@ -881,7 +871,8 @@
         </div>
       </div>
     </div>
-    <div class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
+
+    <div id="job-main" class="main-job" [ngClass]="'show-main'">
       <div class="button-add-new" *ngIf="data.length == 0">
         <div>
           <button class="button-custom">
@@ -897,7 +888,7 @@
         </div>
       </div>
       <div class="main-body" *ngIf="data.length > 0">
-        <div cdkDropList class="list" (cdkDropListDropped)="drop1($event)">
+        <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let item of data">
               <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="item">
@@ -1035,7 +1026,7 @@
           <button
             *ngIf="!isShowstage"
             class="button-custom"
-            (click)="showStage()"
+           
           >
             <span
               class="icon-expand_more icon-20 text-primary-600 py-2"
@@ -1045,7 +1036,7 @@
           <button
             *ngIf="isShowstage"
             class="button-custom"
-            (click)="showStage()"
+          
           >
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
