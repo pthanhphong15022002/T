@@ -89,6 +89,6 @@ export class TabControl{
 
 export class TmpRoom{
   resourceID: string;
-  location: string;
+  resourceName: string;
 }
 
