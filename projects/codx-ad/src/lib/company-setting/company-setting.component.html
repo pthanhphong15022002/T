@@ -28,6 +28,16 @@
                 </button>
               </div>
 
+              <div class="form-group w-40">
+                <div class="fw-bold text-dark mb-1">
+                  <codx-label fiedName="LegalName" formName="SystemSetting" gridViewName="" default="Tên công ty">
+                  </codx-label>
+                </div>
+                <codx-input type="text" field="legalName" [crrValue]="data?.legalName" placeholder="Tên công ty"
+                  disabled="true" (valueChange)="valueChange($event)">
+                </codx-input>
+              </div>
+
               <div class="form-group">
                 <codx-label fiedName="" formName="SystemSetting" gridViewName="" default="Web Address">
                 </codx-label>
@@ -41,7 +51,7 @@
                 <codx-label fiedName="taxCode" formName="SystemSetting" gridViewName="" default="Mã số thuế">
                 </codx-label>
                 <codx-input disabled="true" type="text" class="form-control" field="taxCode"
-                  [crrValue]="data.taxCode"></codx-input>
+                  [crrValue]="data?.taxCode"></codx-input>
               </div>
               <div class="row pt-3">
                 <div class="col-6">
@@ -162,24 +172,24 @@
                     <div class="fw-bold mb-2">
                       <codx-label formName="CompanySetting" gridViewName="" [default]="">
                       </codx-label>
-                      {{ data.street }}
+                      {{ data?.street }}
                     </div>
                     <div class="text-gray-600">
                       <codx-label fiedName="phone" formName="SystemSetting" gridViewName="" [default]="'Tel: '">
                       </codx-label>
-                      {{ data.phone }} - {{ data.faxNo }}
+                      {{ data?.phone }} - {{ data?.faxNo }}
                     </div>
                     <div class="text-gray-600">
                       <codx-label [default]="'Email: '"></codx-label>
                       <span class="url-contact text-primary">{{
-                        data.email
+                        data?.email
                         }}</span>
                     </div>
                     <div class="text-gray-600">
                       <codx-label fiedName="" formName="SystemSetting" gridViewName=""
                         [default]="'Website: '"></codx-label>
                       <span class="url-contact text-primary">
-                        {{ data.webPage }}</span>
+                        {{ data?.webPage }}</span>
                     </div>
                   </div>
                   <div class="col-7" *ngIf="urlEmbedSafe">
@@ -208,9 +218,9 @@
                     <div class="col-6 ps-0">
                       <div class="d-flex align-items-top">
                         <div class="me-4">
-                          <div *ngIf="data.recID; else imgDefault_personal">
-                            <codx-img [objectId]="data.recID" [objectName]="data.contactName" [imgOn]="data?.modifiedOn"
-                              objectType="AD_CompanySettings" [width]="80">
+                          <div *ngIf="data?.recID; else imgDefault_personal">
+                            <codx-img [objectId]="data?.recID" [objectName]="data?.contactName"
+                              [imgOn]="data?.modifiedOn" objectType="AD_CompanySettings" [width]="80">
                             </codx-img>
                           </div>
                           <ng-template #imgDefault_personal>
@@ -219,20 +229,20 @@
                         </div>
                         <div class="d-flex flex-column space_personal">
                           <div class="fw-bold text-dark fs-5">
-                            <span>{{ data.contactName }}</span>
+                            <span>{{ data?.contactName }}</span>
                           </div>
                           <div class="text-italic text-gray-500">
-                            {{ data.jobTitle }}
+                            {{ data?.jobTitle }}
                           </div>
                           <div class="d-flex">
                             <codx-label fiedName="" class="me-2" formName="SystemSetting" gridViewName=""
                               default="Email">
-                            </codx-label><span>{{ data.personalEmail }}</span>
+                            </codx-label><span>{{ data?.personalEmail }}</span>
                           </div>
                           <div class="d-flex">
                             <codx-label fiedName="" class="me-2" formName="SystemSetting" gridViewName=""
                               default="Phone: ">
-                            </codx-label><span>{{ data.mobile }}</span>
+                            </codx-label><span>{{ data?.mobile }}</span>
                           </div>
                         </div>
                       </div>
@@ -256,10 +266,21 @@
                     <div class="col-6">
                       <codx-label default="Bộ nhớ tài khoản của bạn được chia sẽ trên các ứng dụng của hệ thống ERM">
                       </codx-label>
-                      <div class="sliderwrap memory-store">
-                        <ejs-slider id="minrange" [type]="minType" [min]="0" [max]="formatBytes(maxStorage)"
-                          [value]="formatBytes(curStorage)" [readonly]="true">
-                        </ejs-slider>
+                    </div>
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="bg-success-o-60 mt-6">
+                          <div id="container">
+                            <div class="wrap">
+                              <div class="sliderwrap memory-store">
+                                <ejs-slider id="minrange" [type]="minType" [min]="0" [max]="formatBytes(maxStorage)"
+                                  [value]="formatBytes(curStorage)" [readonly]="true">
+                                </ejs-slider>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div [innerHTML]="innerHTML(data?.memory, data?.storage)"></div>
                       </div>
                       <div [innerHTML]="innerHTML(data.memory, data.storage)"></div>
                     </div>
