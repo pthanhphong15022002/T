@@ -41,6 +41,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllShare = 'ES014';
   showID = true;
   dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
+  //
+  moreDefaut = {
+    share: true,
+    write: true,
+    read: true,
+    download: true,
+    delete: true,
+  };
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -50,7 +58,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ) {
     this.dialog = dialog;
   }
+  // check close shadow for detail step
   isShowstage = true;
+  isShowstageCauseSuccess = true;
   data = [
     {
       item: "Spacing utilities that apply",
@@ -154,7 +164,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  
 
    //#region Open form
    show(){
@@ -313,7 +322,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end
   //#endregion
 
-  //#region Trường tùy chỉnh 
+  //#region Trường tùy chỉnh
   clickShow(id){
     var element = document.getElementById(id);
     if (element) {
@@ -328,5 +337,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       }
    }
   }
-  //#region 
+  //#region
+
+  //#region
+  valueChangeQuyTrinhChuyenDen(){
+
+  }
+  clickMF($event,data){
+
+  }
+
+  showStageCauseSuccess(){
+    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
+  }
+  //#endregion
 }
