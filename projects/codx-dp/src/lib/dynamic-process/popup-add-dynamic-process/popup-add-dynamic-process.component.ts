@@ -457,6 +457,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
   }
 
+
   //#stage -- nvthuan
   drop(event: CdkDragDrop<string[]>,data =null) {
     if (event.previousContainer === event.container) {
@@ -502,4 +503,5 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     );
   }
   //#job end
+  //#stage -- end -- nvthuan
 }
