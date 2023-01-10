@@ -40,6 +40,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
+  //!--ID SHOW FORM !--//
+  general = true;
+  role = true;
+  settingProcess = true;
+  memoProcess = true;
+  //!--ID SHOW FORM !--//
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -153,8 +159,21 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
   //#region Open form
-  show() {
-    this.isShow = !this.isShow;
+  show(id) {
+    switch(id){
+      case 'general':
+        this.general = !this.general;
+      break;
+      case 'role':
+        this.role = !this.role;
+      break;
+      case 'settingProcess':
+        this.settingProcess = !this.settingProcess;
+      break;
+      case 'memoProcess':
+        this.memoProcess = !this.memoProcess;
+      break;
+    }
   }
   showStage(){
     this.isShowstage = !this.isShowstage;
