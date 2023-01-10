@@ -23,6 +23,7 @@ import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noA
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { PopupGeneralComponent } from './dynamic-process/popup-add-dynamic-process/popup-general/popup-general.component';
 import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/popup-job/popup-job.component';
+import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,7 @@ const T_Component: Type<any>[] = [LayoutComponent];
     PopupAddDynamicProcessComponent,
     PopupGeneralComponent,
     PopupJobComponent,
+    PopupAddCustomFieldComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

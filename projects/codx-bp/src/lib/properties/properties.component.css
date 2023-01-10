@@ -345,7 +345,5 @@ div.offcanvas {
 }
 
 .process-rating {
-    height: calc(100vh - 310px);
-    padding-right: 5px;
-    overflow: auto;
+    padding-bottom: 10px;
 }

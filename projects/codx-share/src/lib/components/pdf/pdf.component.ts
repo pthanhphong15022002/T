@@ -146,18 +146,16 @@ export class PdfComponent
 
   //zoom
   zoomValue: any = 100;
-  zoomFields = { text: 'show', value: 'realValue' };
-  lstZoomValue = [
-    { realValue: '10', show: 10 },
-    { realValue: '25', show: 25 },
-    { realValue: '30', show: 30 },
-    { realValue: '50', show: 50 },
-    { realValue: '90', show: 90 },
-    { realValue: '100', show: 100 },
-    // { realValue: 'Auto', show: 'Auto' },
-    // { realValue: 'Fit to Width', show: 'Fit to Width' },
-    // { realValue: 'Fit to page', show: 'Fit to page' },
-  ];
+  lstZoomValue = [10, 25, 30, 50, 90, 100];
+  // zoomFields = { text: 'show', value: 'realValue' };
+  // lstZoomValue = [
+  //   { realValue: '10', show: 10 },
+  //   { realValue: '25', show: 20 },
+  //   { realValue: '30', show: 30 },
+  //   { realValue: '50', show: 50 },
+  //   { realValue: '90', show: 90 },
+  //   { realValue: '100', show: 100 },
+  // ];
 
   //sign area
   holding: number = 0;
@@ -1970,20 +1968,27 @@ export class PdfComponent
   }
 
   changeZoom(type: string, e?: any) {
-    if (
-      !isNaN(Number(e?.value)) &&
-      Number(e?.value) <= 100 &&
-      Number(e?.value) >= 10
-    ) {
-      this.zoomValue = e.value;
-    } else if (!isNaN(Number(e)) && Number(e) <= 100 && Number(e) >= 10) {
-      this.ngxPdfView.zoom = e;
-    } else {
-      if (type == 'in' && this.zoomValue < 100) {
-        this.zoomValue += 10;
+    let idx = this.lstZoomValue.findIndex((x) => x == this.zoomValue);
+    switch (type) {
+      case 'out': {
+        if (idx > 0) {
+          idx -= 1;
+        }
+        break;
       }
-      // this.zoomValue = 10;
+
+      case 'in': {
+        if (idx < this.lstZoomValue.length) {
+          idx += 1;
+        }
+        break;
+      }
+      case 'to': {
+        idx = this.lstZoomValue.findIndex((x) => x == e?.value);
+      }
     }
+    this.zoomValue = this.lstZoomValue.at(idx);
+
     this.detectorRef.detectChanges();
     if (this.curSelectedArea) {
       this.tr?.forceUpdate();

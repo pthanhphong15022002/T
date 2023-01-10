@@ -358,7 +358,7 @@
       class="test-check"
       [label]="itemAnswer.answer"
       field="C"
-      [checked]="itemAnswer.choose"
+      [checked]="checkAnswer(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo, itemQuestion.answerType)"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
   </div>
@@ -377,7 +377,7 @@
     <codx-input
       type="text"
       class="border-0"
-      [crrValue]="itemAnswer.answer"
+      [crrValue]="getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)"
       field="T"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     >
@@ -394,7 +394,7 @@
       class="test-textarea"
       ngDefaultControl
       rows="auto"
-      [crrValue]="itemAnswer.answer"
+      [crrValue]="getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)"
       field="T2"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     >
@@ -468,7 +468,7 @@
       type="datetime"
       format="d"
       class="test-datetime"
-      [crrValue]="itemAnswer.answer"
+      [crrValue]="getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)"
       field="D"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>
@@ -478,7 +478,7 @@
       type="datetime"
       format="t"
       class="test-datetime"
-      [crrValue]="itemAnswer.answer"
+      [crrValue]="getValue(seqNoSession, itemQuestion.seqNo, itemAnswer.seqNo)"
       field="H"
       (valueChange)="valueChange($event, itemSession, itemQuestion, itemAnswer)"
     ></codx-input>

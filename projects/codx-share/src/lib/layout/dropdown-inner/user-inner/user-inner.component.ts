@@ -80,7 +80,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     if (!this.auth.userValue.theme) this.auth.userValue.theme = 'default';
 
     var arr = this.auth.userValue.theme.split('|');
-    let th = arr[0], thMode = arr.length>1?arr[1]:'light';
+    let th = arr[0], thMode = arr.length > 1 ? arr[1] : 'light';
 
     this.setTheme(th.toLowerCase());
     this.setThemeMode(thMode.toLowerCase());
@@ -122,10 +122,10 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       this.setTheme(theme);
       t = this.theme.id + "|" + this.themeMode.id;
     }
-    if (themeMode){
+    if (themeMode) {
       this.setThemeMode(themeMode);
       t = this.theme.id + "|" + this.themeMode.id;
-    } 
+    }
 
     this.api
       .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
@@ -194,7 +194,7 @@ export class UserInnerComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   setThemeMode(value: string) {
     //check exist list theme
     let findThemeMode = this.themeModes.find((x) => x.id == value);
@@ -321,6 +321,12 @@ const themeDatas: ThemeFlag[] = [
     id: 'purple',
     name: 'Purple',
     color: '#5710b2',
+    enable: true,
+  },
+  {
+    id: 'navy',
+    name: 'Navy',
+    color: '#192440',
     enable: true,
   },
 ];
