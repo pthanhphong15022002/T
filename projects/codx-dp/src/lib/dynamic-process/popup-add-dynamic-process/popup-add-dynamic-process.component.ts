@@ -40,7 +40,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   linkAvatar = '';
   vllShare = 'ES014';
   showID = true;
-  dataStep = [] ; //cong đoạn chuẩn để add trường tùy chỉnh
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
@@ -153,11 +152,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.currentTab = tabNo;
     }
   }
-
-  
-
-   //#region Open form
-   show(){
+  //#region Open form
+  show() {
     this.isShow = !this.isShow;
   }
   showStage(){
@@ -213,12 +209,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.newNode = newNode;
         this.oldNode = oldNode;
         this.updateNodeStatus(oldNode, newNode);
-        this.processTab++;
+        this.currentTab++;
+        this.processTab == 1 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
       case 2:
         this.updateNodeStatus(oldNode, newNode);
         this.currentTab++;
-        this.processTab++;
+        this.processTab == 2 && this.processTab++;
+        this.changeDetectorRef.detectChanges();
         break;
     }
 
@@ -233,7 +232,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   saveAndClose() {}
 
-  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM
+  //#region THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //Avt
   addAvatar() {
@@ -304,29 +303,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   drop1(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.data, event.previousIndex, event.currentIndex);
   }
-  //#region Trường tùy chỉnh
 
   //#region
   clickRoles(e){
 
   }
   //end
-  //#endregion
+  //#endregion ------------------------------------------------------------------------------------- //#endregion
 
-  //#region Trường tùy chỉnh 
-  clickShow(id){
-    var element = document.getElementById(id);
-    if (element) {
-     let isClose = element.classList.contains('hidden-main');
-     let isShow = element.classList.contains('show-main');
-      if (isClose) {
-        element.classList.remove('icon-add_box');
-        element.classList.add('hidden-main');
-      } else if (isShow) {
-        element.classList.remove('hidden-main');
-        element.classList.add('icon-add_box');
-      }
-   }
-  }
-  //#region 
+  //#region Trường tùy chỉnh
+
+  //#region
 }
