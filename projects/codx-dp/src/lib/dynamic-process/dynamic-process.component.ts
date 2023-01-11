@@ -123,6 +123,7 @@ listUserInUse: dynamicProcessPermissions[]=[];
 
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
       let dialogAdd = this.callFunc.openForm(
         PopupAddDynamicProcessComponent,
         '',

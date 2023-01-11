@@ -38,7 +38,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Process();
 
   dialog: any;
-  currentTab = 2; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -139,15 +139,14 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       phase: 3,
     },
   ]
-  listJob=[
+  listJobType=[
       {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
       {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
       {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
-      {id: 'M', icon: 'icon-i-calendar-week', text: 'Lịch họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
+      {id: 'M', icon: 'icon-i-calendar-week', text: 'Cuộc họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
       {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
   ]
-
-  jobType = '';
+  jobType: any;
   //stage-nvthuan
   dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
   //
@@ -485,22 +484,33 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       400
     );
   }
-  getTypeJob(e){
-    if(e.target.checked){
-      this.jobType = e.target.value;
-    }
+  selectJob(id){
+    let btn = document.getElementById(id);
+    console.log(btn);
+    
+  }
+  getTypeJob(e,value){
+   debugger
+      this.jobType = value;
+    
   }
   openPopupJob(){
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
-    option.zIndex = 1100;
+    option.zIndex = 1001;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
-      [],
+      [
+        'add',
+        this.jobType
+      ],
       option,
       
     );
+    dialog.closed.subscribe((e) => {
+      this.jobType = null
+    })
   }
   //#job end
   //#stage -- end -- nvthuan
