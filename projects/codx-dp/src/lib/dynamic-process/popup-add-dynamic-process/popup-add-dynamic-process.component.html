@@ -599,7 +599,14 @@
     </div>
     <div id="memo-main" class="main" [ngClass]="'show-main'">
       <div class="form-group margin-form mb-4">
-        <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"> </codx-input>
+        <codx-input
+          field="memo"
+          type="textarea"
+          headerposition="none"
+          format="ed"
+          height="150"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
@@ -729,11 +736,21 @@
         </div>
 
         <div *ngIf="item?.stepField?.length > 0">
-          <div class="d-flex row">
+          <div
+            class="d-flex row"
+            cdkDropList
+            [cdkDropListData]="item?.stepField || []"
+            (cdkDropListDropped)="dropFile($event, item.recID)"
+          >
             <ng-container *ngFor="let item1 of item?.stepField">
-              <div class="mb-4 col-{{12/item.showColumnControl}}">
+              <div
+                class="col-{{ 12 / item.showColumnControl }} p-3"
+                cdkDrag
+                [cdkDragStartDelay]="200"
+                [cdkDragData]="item1"
+              >
                 <div
-                  class="task-name fw-bold text-gray-700 fs-6 text-dark mt-2"
+                  class="fw-bold text-gray-700 fs-6 text-dark mt-2"
                 >
                   {{ item1?.fieldName }}
                 </div>
@@ -852,7 +869,7 @@
             *ngFor="let item of dataStage; let i = index"
             class="list-stage"
             cdkDrag
-            (click)="clickViewReason($event,'custom')"
+            (click)="clickViewReason($event, 'custom')"
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="content">
@@ -865,31 +882,33 @@
           </div>
           <!-- Reason successs -->
           <div
-          class="list-stage cursor-pointer"
-          (click)="clickViewReason($event,'clickReasonsuccesss')"
-        >
-          <div class="order">T</div>
-          <div class="content">
-            <div style="font-weight: 600; font-size: 1.2rem">
-            <codx-label default="Thành công"></codx-label>
+            class="list-stage cursor-pointer"
+            (click)="clickViewReason($event, 'clickReasonsuccesss')"
+          >
+            <div class="order">T</div>
+            <div class="content">
+              <div style="font-weight: 600; font-size: 1.2rem">
+                <codx-label default="Thành công"></codx-label>
+              </div>
+              <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
             </div>
-            <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
           </div>
-        </div>
 
-        <!-- Reason fail -->
-        <div
-        class="list-stage cursor-pointer"
-        (click)="clickViewReason($event,'fail')"
-      >
-        <div class="order">F</div>
-        <div class="content">
-          <div style="font-weight: 600; font-size: 1.2rem">
-          <codx-label default="Thất bại"></codx-label>
+          <!-- Reason fail -->
+          <div
+            class="list-stage cursor-pointer"
+            (click)="clickViewReason($event, 'fail')"
+          >
+            <div class="order">F</div>
+            <div class="content">
+              <div style="font-weight: 600; font-size: 1.2rem">
+                <codx-label default="Thất bại"></codx-label>
+              </div>
+              <codx-label
+                default="Thất bại ở một giai đoạn bất kỳ"
+              ></codx-label>
+            </div>
           </div>
-          <codx-label default="Thất bại ở một giai đoạn bất kỳ"></codx-label>
-        </div>
-      </div>
 
           <!--end danh sách giai đoạn -->
         </div>
@@ -914,7 +933,13 @@
         </div>
         <div class="main">
           <ng-container
-            [ngTemplateOutlet]="viewStepCrr=='custom'?job:(viewStepCrr=='success'?reasonSuccess:reasonFail)"
+            [ngTemplateOutlet]="
+              viewStepCrr == 'custom'
+                ? job
+                : viewStepCrr == 'success'
+                ? reasonSuccess
+                : reasonFail
+            "
           ></ng-container>
         </div>
       </div>

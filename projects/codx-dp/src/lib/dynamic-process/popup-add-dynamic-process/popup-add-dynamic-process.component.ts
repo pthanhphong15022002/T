@@ -239,14 +239,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ],
     },
   ];
+
   crrData: any;
+  isHover = '';
+  dataChild = [];
+  //end data Test
 
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có'; // title radio button for reason success/failure
   titleReasonNo: string = 'Không'; // title radio button for reason success/failure
-  viewReasonSuccess: string = 'viewReasonSuccess' // test click view Reason Success
-  viewReasonFail: string = 'viewReasonFail' // test click view Reason Success
-  ngTemplateOutlet:any;
+  viewReasonSuccess: string = 'viewReasonSuccess'; // test click view Reason Success
+  viewReasonFail: string = 'viewReasonFail'; // test click view Reason Success
+  ngTemplateOutlet: any;
 
   isShowstage = true;
   isShowstageCauseSuccess = true;
@@ -551,6 +555,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
     this.changeDetectorRef.detectChanges();
   }
+
+  dropFile(event: CdkDragDrop<string[]>, recID) {
+    if (event.previousIndex == event.currentIndex) return;
+    let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
+    if (crrIndex == -1) return;
+    this.dataChild = this.arrSteps[crrIndex].stepField;
+    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  checkBackground(i) {
+    if (this.isHover == i) return true;
+    return false;
+  }
   //#endregion
 
   //#region BẢo gà viết vào đây
@@ -603,26 +621,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#stage -- end -- nvthuan
 
   //#region for reason successful/failed
-  valueChangeSwtich($event:any, typeFeild:any) {
-    if($event && $event != null){
-      if(typeFeild === 'yes'){
-        this.isTurnOnYesNo = $event.data?true:false;
+  valueChangeSwtich($event: any, typeFeild: any) {
+    if ($event && $event != null) {
+      if (typeFeild === 'yes') {
+        this.isTurnOnYesNo = $event.data ? true : false;
       }
       this.changeDetectorRef.detectChanges();
     }
-
   }
-  clickViewReason($event:any, view:any){
-    if($event && $event != null){
-      if(view === 'clickReasonsuccesss'){
+  clickViewReason($event: any, view: any) {
+    if ($event && $event != null) {
+      if (view === 'clickReasonsuccesss') {
         // isViewSuccess
         this.viewStepCrr = 'success';
-      }
-      else if(view === 'fail') {
+      } else if (view === 'fail') {
         this.viewStepCrr = 'fail';
 
-      //  this.ngTemplateOutlet = this.reasonFail;
-      }else   this.viewStepCrr = 'custom';
+        //  this.ngTemplateOutlet = this.reasonFail;
+      } else this.viewStepCrr = 'custom';
     }
     this.changeDetectorRef.detectChanges();
   }
