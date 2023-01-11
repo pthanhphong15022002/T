@@ -43,9 +43,9 @@
 //     background-color: var(--bg-aside-dark);
 // }
 
-.aside-menu .menu .menu-item .menu-link.active {
-    background-color: rgba(0, 0, 0, 0.15) !important;
-}
+// .aside-menu .menu .menu-item .menu-link.active {
+//     background-color: rgba(0, 0, 0, 0.15) !important;
+// }
 
 codx-wrapper {
     background-color: var(--bg-body);
@@ -104,7 +104,7 @@ codx-view-list-detail .e-pane {
 
 .e-dialog {
     border: 1px solid #27273a;
-    background-color: transparent;
+    background-color: var(--bg-card);
 
     .btn {
         color: var(--primary);
@@ -587,7 +587,7 @@ codx-user-inner a.menu-link {
     color: var(--primary) !important;
 }
 
-.wp-template-share[_ngcontent-lwt-c623] {
+.wp-template-share {
     border-color: var(--border-gray);
     margin-top: 5px;
 }
@@ -605,8 +605,26 @@ codx-user-inner a.menu-link {
     color: var(--text-des) !important;
 }
 
-ejs-listview {
+ejs-listview,
+.popover {
     background-color: var(--bg-card);
+}
+
+.codx-search {
+    border-color: var(--border-light);
+}
+
+.body_detail {
+    border-color: var(--border-gray);
+}
+
+.list-app .h-125px.min-h-125px {
+    background-color: var(--bg-card);
+}
+
+.btn.btn-light-primary {
+    color: var(--text-des);
+    background-color: var(--primary-light) !important;
 }
 
 //end dark
