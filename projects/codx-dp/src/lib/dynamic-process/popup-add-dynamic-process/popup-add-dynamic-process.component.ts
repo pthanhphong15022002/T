@@ -231,10 +231,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private api: ApiHttpService,
     private callfc: CallFuncService,
     @Optional() dialog: DialogRef,
-    @Optional() data: DialogData
+    @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.process = JSON.parse(JSON.stringify(data.data.data));
+    this.process = JSON.parse(JSON.stringify(dt.data.data));
   }
 
   data = [
@@ -582,11 +582,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   selectJob(id){
     let btn = document.getElementById(id);
     console.log(btn);
-    
+
   }
   getTypeJob(e,value){
     this.jobType = value;
-    
+
   }
   openPopupJob() {
     this.popupJob.close();
@@ -600,7 +600,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.jobType
       ],
       option,
-      
+
     );
     dialog.closed.subscribe((e) => {
       this.jobType = null
