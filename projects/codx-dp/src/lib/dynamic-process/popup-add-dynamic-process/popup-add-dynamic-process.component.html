@@ -861,15 +861,15 @@
           </button>
         </div>
         <div
-          class="main"
+          class="example-list stage-body-main"
           cdkDropList
           (cdkDropListDropped)="drop($event, dataStage)"
         >
           <!-- danh sách giai đoạn -->
           <div
-            *ngFor="let item of dataStage; let i = index"
-            class="list-stage"
             cdkDrag
+            *ngFor="let item of dataStage; let i = index"
+            class="list-stage example-box"
             (click)="clickViewReason($event, 'custom')"
           >
             <div class="order">{{ i + 1 }}</div>
