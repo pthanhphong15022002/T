@@ -36,6 +36,7 @@ export class DP_Processes {
   createdBy:	string;
   modifiedOn:	Date;
   modifiedBy:	string;
+  instanceNoSetting: string;
 }
 
 export class DP_Processes_Permission{

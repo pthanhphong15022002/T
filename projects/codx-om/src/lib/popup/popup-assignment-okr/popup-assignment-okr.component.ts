@@ -75,12 +75,12 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
     @Optional() dialogRef?: DialogRef
   ) {
     super(injector);
-    this.headerText = 'Phân công - Kết quả chính'; //dialogData?.data[2];
     this.dialogRef = dialogRef;    
     this.okrName=dialogData.data[0];    
     this.recID=dialogData.data[1];
     this.distributeType=dialogData.data[2];
     this.funcID=dialogData.data[3];
+    this.headerText = dialogData?.data[4];
     this.curUser= authStore.get();
     
   }

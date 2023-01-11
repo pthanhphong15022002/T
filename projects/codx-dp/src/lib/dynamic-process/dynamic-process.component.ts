@@ -57,7 +57,7 @@ listUserInUse: DP_Processes_Permission[]=[];
  popoverDetail: any;
  popupOld: any;
  popoverList: any;
- method = 'GetListProcessesAsync';
+ method = '';
 
   constructor(
     private inject: Injector,
@@ -71,6 +71,7 @@ listUserInUse: DP_Processes_Permission[]=[];
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
 
   }
 
@@ -122,7 +123,8 @@ listUserInUse: DP_Processes_Permission[]=[];
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
-        dialogModel.FormModel = this.view.formModel
+        dialogModel.FormModel = this.view.formModel;
+
         var dialog = this.callfc.openForm(
           PopupAddDynamicProcessComponent,
           '',

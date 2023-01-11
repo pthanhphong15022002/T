@@ -152,9 +152,7 @@ export class PopupRolesComponent implements OnInit {
       {}
     );
     for (var key of Object.keys(group)) {
-      var tmp = group[key].sort(
-        (a, b) => Number(b.memberType) - Number(a.memberType)
-      );
+      var tmp = group[key];
       // var tmp1 = tmp.reduce(function (rv, x) {
       //   (rv[x[key2]] = rv[x[key2]] || []).push(x);
       //   return rv;
@@ -163,7 +161,7 @@ export class PopupRolesComponent implements OnInit {
         lstGroup.push(tmp[item]);
       }
     }
-    return lstGroup.sort((a, b) => (b.objectID > a.objectID ? 1 : -1));
+    return lstGroup;
   }
   //#region save
   onSave() {
@@ -361,8 +359,9 @@ export class PopupRolesComponent implements OnInit {
 
           // this.groupBy(this.process.permissions);
         }
+        this.currentPemission = this.process.permissions.length - 1;
       }
-      this.changePermission(0);
+      this.changePermission(this.currentPemission);
     }
   }
 
@@ -413,9 +412,7 @@ export class PopupRolesComponent implements OnInit {
 
       list.push(Object.assign({}, perm));
     }
-    return this.groupBy(list, 'objectType', 'objectID').sort((a, b) =>
-      ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
-    );
+    return list;
   }
   //#endregion
 
