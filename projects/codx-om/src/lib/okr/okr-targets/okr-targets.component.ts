@@ -1,6 +1,6 @@
 import { CodxOmService } from './../../codx-om.service';
 import { OMCONST } from './../../codx-om.constant';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import {
   CacheService,
   CallFuncService,
@@ -24,7 +24,7 @@ import { PopupAssignmentOKRCComponent } from '../../popup/popup-assigment-okr-c/
 @Component({
   selector: 'lib-okr-targets',
   templateUrl: './okr-targets.component.html',
-  styleUrls: ['./okr-targets.component.css'],
+  styleUrls: ['./okr-targets.component.scss'],
 })
 export class OkrTargetsComponent implements OnInit {
   @Input() dataOKRPlans: any;
@@ -36,11 +36,13 @@ export class OkrTargetsComponent implements OnInit {
   @Input() krFuncID: any;
   @Input() obFuncID: any;
   @Input() funcID: any;
+  @Input() isHiddenChart: boolean;
   
   dtStatus = [];
   openAccordion = [];
   krTitle='';
   obTitle='';
+  isCollaped=false;
   chartSettings: ChartSettings = {
     title: '',
     primaryXAxis: {
@@ -134,6 +136,7 @@ export class OkrTargetsComponent implements OnInit {
     private codxOmService: CodxOmService,
     private api: ApiHttpService,
     private notificationsService :NotificationsService,
+    private detec :ChangeDetectorRef,
 
   ) {
   }
@@ -153,6 +156,7 @@ export class OkrTargetsComponent implements OnInit {
       }
     });
     this.progress = this.dataOKRPlans?.progress;
+    
     this.api
       .exec('OM', 'DashBoardBusiness', 'GetOKRDashboardByPlanAsync', [
         this.dataOKRPlans?.periodID,
@@ -240,7 +244,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [OMCONST.MFUNCID.Edit, popupTitle, o, kr, this.dataOKRPlans],
+      [OMCONST.MFUNCID.Edit, popupTitle, o, kr],
       option
     );
   }
@@ -252,7 +256,7 @@ export class OkrTargetsComponent implements OnInit {
 
     let dialogKR = this.callfunc.openSide(
       PopupAddKRComponent,
-      [OMCONST.MFUNCID.Copy, popupTitle, o, kr, this.dataOKRPlans],
+      [OMCONST.MFUNCID.Copy, popupTitle, o, kr],
       option
     );
   }
@@ -280,7 +284,8 @@ export class OkrTargetsComponent implements OnInit {
         break;
       }
       case OMCONST.MFUNCID.Copy: {
-        this.copyKR(kr, o, popupTitle);
+        //this.copyKR(kr, o, popupTitle);
+        this.distributeOKR(kr);
         break;
       }
       case OMCONST.MFUNCID.Delete: {
@@ -314,7 +319,7 @@ export class OkrTargetsComponent implements OnInit {
       case OMCONST.MFUNCID.DKROrg: 
       case OMCONST.MFUNCID.DKRPers:       
       {
-        this.distributeKR(kr);
+        this.distributeOKR(kr);
         break;
       }
       
@@ -324,7 +329,7 @@ export class OkrTargetsComponent implements OnInit {
       case OMCONST.MFUNCID.AKROrg: 
       case OMCONST.MFUNCID.AKRPers:       
       {
-        this.assignmentKR(kr);
+        this.assignmentOKR(kr);
         break;
       }
       
@@ -362,7 +367,7 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  distributeKR(kr:any){
+  distributeOKR(kr:any){
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogDisKR = this.callfunc.openForm(
@@ -376,7 +381,7 @@ export class OkrTargetsComponent implements OnInit {
       dModel
     );
   }
-  assignmentKR(kr:any){
+  assignmentOKR(kr:any){
     let dModel = new DialogModel();    
     dModel.IsFull = true;
     let dialogAssgKR = this.callfunc.openForm(
@@ -389,5 +394,19 @@ export class OkrTargetsComponent implements OnInit {
       '',
       dModel
     );
+  }
+  collapeKR(collape:boolean){
+    debugger;
+    if(this.dataOKR && this.openAccordion.length==0){
+      this.openAccordion = new Array(this.dataOKR.length).fill(false);
+    }
+    this.isCollaped= collape;
+    let i=0;
+    this.openAccordion.forEach(item=>{
+      this.openAccordion[i]=collape;
+      i++;
+      this.detec.detectChanges();
+    });
+    this.detec.detectChanges();
   }
 }

@@ -25,6 +25,6 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChangeCbx(e){}
   valueChange(e){}
   saveData(){
-    this.dialog.close()
+    this.dialog.close(this.field)
   }
 }
