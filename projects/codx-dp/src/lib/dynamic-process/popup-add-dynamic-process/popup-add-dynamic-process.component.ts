@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Input,
   OnInit,
   Optional,
   TemplateRef,
@@ -23,8 +24,8 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { DP_Process } from '../../models/models';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
+import { DP_Processes } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -34,11 +35,11 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-  @ViewChild('setJobPopup') setJobPopup : TemplateRef<any>;
-  process = new DP_Process();
+  @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
+  process = new DP_Processes();
 
   dialog: any;
-  currentTab = 2; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -57,95 +58,129 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   memoProcess = true;
   //!--ID SHOW FORM !--//
 
+  isViewSuccess = false;
+  isViewReason = false;
+  viewStepCrr = 'custom';
+
   //stage-nvthuan
   popupJob: DialogRef;
   dataStage = [
     {
       id: 1,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 12,
-      name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      name: 'Đánh giá giả năng',
+      time: '5',
       phase: 3,
     },
     {
       id: 13,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 14,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 15,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
     {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-  ]
-  listJob=[
-      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
-      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
-      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
-      {id: 'M', icon: 'icon-i-calendar-week', text: 'Lịch họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
-      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
-  ]
+  ];
+  listJob = [
+    {
+      id: 'P',
+      icon: 'icon-i-layout-three-columns',
+      text: 'Cuộc gọi',
+      funcID: 'BPT101',
+      color: { background: '#f1ff19' },
+    },
+    {
+      id: 'T',
+      icon: 'icon-i-journal-check',
+      text: 'Công việc',
+      funcID: 'BPT103',
+      color: { background: '#ffa319' },
+    },
+    {
+      id: 'E',
+      icon: 'icon-i-envelope',
+      text: 'Gửi mail',
+      funcID: 'BPT104',
+      color: { background: '#4799ff' },
+    },
+    {
+      id: 'M',
+      icon: 'icon-i-calendar-week',
+      text: 'Lịch họp',
+      funcID: 'BPT105',
+      color: { background: '#ff9adb' },
+    },
+    {
+      id: 'Q',
+      icon: 'icon-i-clipboard-check',
+      text: 'Khảo sát',
+      funcID: 'BPT106',
+      color: { background: '#1bc5bd' },
+    },
+  ];
 
   jobType = '';
   //stage-nvthuan
@@ -158,10 +193,60 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
+  //data test Thao
+  arrSteps = [
+    {
+      recID: '41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
+      stepName: 'Quy trinh test',
+      showColumnControl: 1,
+      stepField: [
+        {
+          fieldName: 'File Name1',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 1,
+        },
+        {
+          fieldName: 'File Name2',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 2,
+        },
+        {
+          fieldName: 'File Name3',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 3,
+        },
+        {
+          fieldName: 'File Name4',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 4,
+        },
+        {
+          fieldName: 'File Name5',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 5,
+        },
+        {
+          fieldName: 'File Name6',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 6,
+        },
+      ],
+    },
+  ];
+  crrData: any;
 
-  isTurnOnYesNo:boolean = false//Create variable Click yes/no for reason success/failure
-  titleReasonYes: string = 'Có' // title radio button for reason success/failure
-  titleReasonNo: string = 'Không' // title radio button for reason success/failure
+  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
+  titleReasonYes: string = 'Có'; // title radio button for reason success/failure
+  titleReasonNo: string = 'Không'; // title radio button for reason success/failure
+  viewReasonSuccess: string = 'viewReasonSuccess' // test click view Reason Success
+  viewReasonFail: string = 'viewReasonFail' // test click view Reason Success
+  ngTemplateOutlet:any;
 
   isShowstage = true;
   isShowstageCauseSuccess = true;
@@ -405,16 +490,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addFile(e) {
     this.attachment.uploadFile();
   }
-  //#region Trường tùy chỉnh
 
-  //#region
-  clickRoles(e){
+  clickRoles(e) {
     this.callfc.openForm(e, '', 500, 500);
   }
 
   //end
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
-
 
   //#region Trường tùy chỉnh
   clickShow(e, id) {
@@ -450,21 +532,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ['add', titleAction],
       option
     );
-    this.dialog.closed.subscribe((e) => {});
+    dialogCustomField.closed.subscribe((e) => {
+      if (e.event != null) {
+        //xu ly data đổ về
+        this.changeDetectorRef.detectChanges();
+      }
+    });
   }
 
   popoverSelectView(p, data) {
+    this.crrData = data;
     p.open();
   }
-  selectView(viewNo) {
-    switch (viewNo) {
-      case '1':
-        break;
-      case '2':
-        break;
-      case '3':
-        break;
-    }
+  selectView(showColumnControl) {
+    this.arrSteps.forEach((x) => {
+      if (x.recID == this.crrData.recID)
+        x.showColumnControl = showColumnControl;
+    });
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
@@ -477,63 +561,70 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
   }
 
-
   //#stage -- nvthuan
-  drop(event: CdkDragDrop<string[]>,data =null) {
+  drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
-      if(data){
+      if (data) {
         moveItemInArray(data, event.previousIndex, event.currentIndex);
-      }else{
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
       }
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
     }
   }
 
   //job -- nvthuan
   setJob() {
-    this.popupJob = this.callfc.openForm(
-      this.setJobPopup,
-      '',
-      400,
-      400
-    );
+    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  getTypeJob(e){
-    if(e.target.checked){
+  getTypeJob(e) {
+    if (e.target.checked) {
       this.jobType = e.target.value;
     }
   }
-  openPopupJob(){
+  openPopupJob() {
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
     option.zIndex = 1100;
-    let dialog = this.callfc.openSide(
-      PopupJobComponent,
-      [],
-      option,
-
-    );
+    let dialog = this.callfc.openSide(PopupJobComponent, [], option);
   }
   //#job end
   //#stage -- end -- nvthuan
 
   //#region for reason successful/failed
   valueChangeSwtich($event:any, typeFeild:any) {
-    if($event && $event !=null){
-      if(typeFeild==='yes'){
+    if($event && $event != null){
+      if(typeFeild === 'yes'){
         this.isTurnOnYesNo = $event.data?true:false;
       }
       this.changeDetectorRef.detectChanges();
     }
 
+  }
+  clickViewReason($event:any, view:any){
+    if($event && $event != null){
+      if(view === 'clickReasonsuccesss'){
+        // isViewSuccess
+        this.viewStepCrr = 'success';
+      }
+      else if(view === 'fail') {
+        this.viewStepCrr = 'fail';
+
+      //  this.ngTemplateOutlet = this.reasonFail;
+      }else   this.viewStepCrr = 'custom';
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   //#endregion

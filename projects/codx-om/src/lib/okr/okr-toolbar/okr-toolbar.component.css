@@ -24,3 +24,12 @@
     border-top-right-radius: 50rem;
     border-bottom-right-radius: 50rem;
 }
+.bg-color{   
+    background-color: var(--text-primary) !important;
+}
+.hover-bg-color:hover{   
+    background-color: var(--text-primary) !important;
+}
+.hover-text-light-color:hover{   
+    color: var(--text-light) !important;;
+}
