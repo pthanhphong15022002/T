@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 import { DP_Processes } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
+import { format } from 'path';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -144,46 +145,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       time: '5',
       phase: 3,
     },
-  ];
-  listJob = [
-    {
-      id: 'P',
-      icon: 'icon-i-layout-three-columns',
-      text: 'Cuộc gọi',
-      funcID: 'BPT101',
-      color: { background: '#f1ff19' },
-    },
-    {
-      id: 'T',
-      icon: 'icon-i-journal-check',
-      text: 'Công việc',
-      funcID: 'BPT103',
-      color: { background: '#ffa319' },
-    },
-    {
-      id: 'E',
-      icon: 'icon-i-envelope',
-      text: 'Gửi mail',
-      funcID: 'BPT104',
-      color: { background: '#4799ff' },
-    },
-    {
-      id: 'M',
-      icon: 'icon-i-calendar-week',
-      text: 'Lịch họp',
-      funcID: 'BPT105',
-      color: { background: '#ff9adb' },
-    },
-    {
-      id: 'Q',
-      icon: 'icon-i-clipboard-check',
-      text: 'Khảo sát',
-      funcID: 'BPT106',
-      color: { background: '#1bc5bd' },
-    },
-  ];
-
-  jobType = '';
+  ]
+  listJobType=[
+      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
+      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
+      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
+      {id: 'M', icon: 'icon-i-calendar-week', text: 'Cuộc họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
+      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
+  ]
+  jobType: any;
   //stage-nvthuan
   dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
   //
@@ -240,7 +210,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ],
     },
   ];
+
   crrData: any;
+  isHover = '';
+  dataChild = [];
+  //end data Test
 
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có'; // title radio button for reason success/failure
@@ -524,8 +498,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addCustomField(stepID) {
     let titleAction = '';
     let option = new SidebarModel();
-    // option.DataService = this.view?.dataService;
-    // option.FormModel = this.view?.formModel;
+    let formModel =  this.dialog?.formModel ;
+    formModel.formName ="DPStepsFields" ;
+    formModel.gridViewName="grvDPStepsFields" ;
+    formModel.entityName ="DP_Steps_Fields"
+    option.FormModel = formModel;
     option.Width = '550px';
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
@@ -551,6 +528,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         x.showColumnControl = showColumnControl;
     });
     this.changeDetectorRef.detectChanges();
+  }
+
+  dropFile(event: CdkDragDrop<string[]>, recID) {
+    if (event.previousIndex == event.currentIndex) return;
+    let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
+    if (crrIndex == -1) return;
+    this.dataChild = this.arrSteps[crrIndex].stepField;
+    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  checkBackground(i) {
+    if (this.isHover == i) return true;
+    return false;
   }
   //#endregion
 
@@ -588,17 +579,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   setJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  getTypeJob(e) {
-    if (e.target.checked) {
-      this.jobType = e.target.value;
-    }
+  selectJob(id){
+    let btn = document.getElementById(id);
+    console.log(btn);
+    
+  }
+  getTypeJob(e,value){
+    this.jobType = value;
+    
   }
   openPopupJob() {
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
-    option.zIndex = 1100;
-    let dialog = this.callfc.openSide(PopupJobComponent, [], option);
+    option.zIndex = 1001;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      [
+        'add',
+        this.jobType
+      ],
+      option,
+      
+    );
+    dialog.closed.subscribe((e) => {
+      this.jobType = null
+    })
   }
   //#job end
   //#stage -- end -- nvthuan
