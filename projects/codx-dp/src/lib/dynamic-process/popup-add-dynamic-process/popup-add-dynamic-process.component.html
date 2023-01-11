@@ -829,6 +829,7 @@
             *ngFor="let item of dataStage; let i = index"
             class="list-stage"
             cdkDrag
+            (click)="clickViewReason($event,'custom')"
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="content">
@@ -842,7 +843,7 @@
           <!-- Reason successs -->
           <div
           class="list-stage cursor-pointer"
-
+          (click)="clickViewReason($event,'clickReasonsuccesss')"
         >
           <div class="order">T</div>
           <div class="content">
@@ -856,7 +857,7 @@
         <!-- Reason fail -->
         <div
         class="list-stage cursor-pointer"
-
+        (click)="clickViewReason($event,'fail')"
       >
         <div class="order">F</div>
         <div class="content">
@@ -889,17 +890,9 @@
           </div>
         </div>
         <div class="main">
-          <!-- Thêm teplate vào đây -->
           <ng-container
-            *ngIf="currentTab == 1"
-            [ngTemplateOutlet]="job"
+            [ngTemplateOutlet]="viewStepCrr=='custom'?job:(viewStepCrr=='success'?reasonSuccess:reasonFail)"
           ></ng-container>
-          <!-- <ng-container
-            *ngIf="currentTab == 1"
-            [ngTemplateOutlet]="customTemplate"
-          ></ng-container> -->
-          <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="reasonFail"></ng-container> -->
-          <!-- Thêm teplate vào đây -->
         </div>
       </div>
     </div>

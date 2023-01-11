@@ -24,8 +24,8 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { DP_Process } from '../../models/models';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
+import { DP_Processes } from '../../models/models';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -36,10 +36,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
-  process = new DP_Process();
+  process = new DP_Processes();
 
   dialog: any;
-  currentTab = 2; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -58,6 +58,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   memoProcess = true;
   //!--ID SHOW FORM !--//
 
+  isViewSuccess = false;
+  isViewReason = false;
+  viewStepCrr = 'custom';
+
   //stage-nvthuan
   popupJob: DialogRef;
   dataStage = [
@@ -69,7 +73,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
     {
       id: 12,
-      name: 'Tiếp nhận yêu cầu',
+      name: 'Đánh giá giả năng',
       time: '5',
       phase: 3,
     },
@@ -568,12 +572,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   clickViewReason($event:any, view:any){
     if($event && $event != null){
-      if(view === 'successs'){
-
+      if(view === 'clickReasonsuccesss'){
+        // isViewSuccess
+        this.viewStepCrr = 'success';
       }
       else if(view === 'fail') {
+        this.viewStepCrr = 'fail';
+
       //  this.ngTemplateOutlet = this.reasonFail;
-      }
+      }else   this.viewStepCrr = 'custom';
     }
     this.changeDetectorRef.detectChanges();
   }
