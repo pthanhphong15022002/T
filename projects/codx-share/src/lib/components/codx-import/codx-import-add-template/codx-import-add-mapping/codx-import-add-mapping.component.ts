@@ -705,7 +705,7 @@ export class CodxImportAddMappingComponent implements OnInit, OnChanges {
       });
   }
   addItem() {
-    this.gridView.addRow();
+    //this.gridView.addRow();
   }
   compare(oldD: any, newD: any) {
     const isSameUser = (a, b) => a.value === b.value && a.display === b.display;

@@ -308,11 +308,17 @@ export class ReviewComponent extends UIComponent implements OnInit {
       if (x.answerType) {
         let respondResult: any = [];
         x.answers.forEach((y) => {
+          let other = false;
+          if(y.other == 1) other = true; 
+          let seqNo = 0;
+          if(y.seqNo) seqNo = y.seqNo;
+          let answer = '';
+          if(y.answer) answer = y.answer;
           let objR = {
-            seqNo: y.seqNo,
-            answer: y.answer,
-            other: y.other,
-            columnNo: 0,
+            seqNo: seqNo,
+            answer: answer,
+            other: other,
+            columnNo: false,
           };
           respondResult.push(objR);
         });
@@ -320,7 +326,7 @@ export class ReviewComponent extends UIComponent implements OnInit {
           let objQ = {
             questionID: x.recID,
             question: x.question,
-            result: respondResult,
+            results: respondResult,
             scores: 0,
           };
           respondQuestion.push(objQ);

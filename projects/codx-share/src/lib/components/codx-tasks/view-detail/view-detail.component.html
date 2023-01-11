@@ -428,7 +428,8 @@
           </div>
 
           <div *ngIf="itemSelected.category == '1' || itemSelected.category == '2'" class="">
-            <codx-imgs [objectId]="itemSelected?.owner" objectType="AD_Users" [numberImages]="5">
+            <codx-imgs [objectId]="itemSelected?.owner" [objectName]="itemSelected?.userName" objectType="AD_Users"
+              [numberImages]="5">
             </codx-imgs>
           </div>
         </div>
@@ -439,7 +440,8 @@
           </codx-label>
         </div>
         <div class="d-flex">
-          <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users">
+          <codx-img [objectId]="itemSelected?.createdBy" [objectName]="itemSelected?.userNameCreate"
+            objectType="AD_Users">
           </codx-img>
         </div>
       </ng-container>
