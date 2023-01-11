@@ -566,6 +566,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
 
   }
+  clickViewReason($event:any, view:any){
+    if($event && $event != null){
+      if(view === 'successs'){
+
+      }
+      else if(view === 'fail') {
+      //  this.ngTemplateOutlet = this.reasonFail;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
 
   //#endregion
 }
