@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 import { DP_Processes } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
+import { format } from 'path';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -497,8 +498,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addCustomField(stepID) {
     let titleAction = '';
     let option = new SidebarModel();
-    // option.DataService = this.view?.dataService;
-    // option.FormModel = this.view?.formModel;
+    let formModel =  this.dialog?.formModel ;
+    formModel.formName ="DPStepsFields" ;
+    formModel.gridViewName="grvDPStepsFields" ;
+    formModel.entityName ="DP_Steps_Fields"
+    option.FormModel = formModel;
     option.Width = '550px';
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(

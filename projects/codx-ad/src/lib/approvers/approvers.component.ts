@@ -34,7 +34,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   resouscesSearch: Array<any> = [];
   popoverCrr: any;
   //End tooltip
-
+  moreFuncName: string = '';
   @ViewChild('item2') itemTemplate: TemplateRef<any>;
   constructor(
     injector: Injector,
@@ -44,7 +44,15 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
   }
   //#endregion
   //#region  Init
-  onInit(): void {}
+  onInit(): void {
+    this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
+      if (res && res.length) {
+        let m = res.find((x) => x.functionID == 'SYS01');
+        if (m) this.moreFuncName = m.defaultName;
+        console.log(this.moreFuncName);
+      }
+    });
+  }
 
   ngAfterViewInit(): void {
     this.views = [
@@ -124,7 +132,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
         option.FormModel = this.view.formModel;
         option.Width = '550px';
         let action = 'add';
-        let title = 'Thêm ' + this.func.defaultName;
+        let title = this.moreFuncName + ' ' + this.func.description;
         let side = this.callfc.openSide(
           AddApproversComponent,
           [title, action],
@@ -152,7 +160,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
       option.FormModel = this.view.formModel;
       option.Width = '550px';
       let action = 'edit';
-      let title = text + ' ' + this.func.defaultName;
+      let title = text + ' ' + this.func.description;
       let side = this.callfc.openSide(
         AddApproversComponent,
         [title, action],
@@ -173,7 +181,7 @@ export class ApproversComponent extends UIComponent implements AfterViewInit {
         option.FormModel = this.view.formModel;
         option.Width = '550px';
         let action = 'add';
-        let title = text + ' ' + this.func.defaultName;
+        let title = text + ' ' + this.func.description;
         let side = this.callfc.openSide(
           AddApproversComponent,
           [title, action],
