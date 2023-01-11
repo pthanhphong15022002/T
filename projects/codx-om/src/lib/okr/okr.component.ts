@@ -1,3 +1,4 @@
+declare var window: any;
 import { OMCONST } from './../codx-om.constant';
 import {
   AfterViewInit,
@@ -86,18 +87,16 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
     //var x= this.authService.userValue;
-    
+    this.codxOmService.getFormModel(this.funcID).then(fm=>{
+      if(fm){
+        this.formModel=fm;
+      }
+    });
   }
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
-    this.funcIDChanged();
-    this.formModelChanged();
-    this.codxOmService.getFormModel(this.funcID).then(fm=>{
-      if(fm){
-
-        this.formModel=fm;
-      }
+    
       this.views = [
         {
           id: '1',
@@ -110,7 +109,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
         },
       ];
       this.getGridViewSetup();
-    });  
+      
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.entityName = 'OM_OKRs';
     this.dataRequest.page = 1;
@@ -119,6 +118,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   }
 
   onInit(): void {
+    this.funcIDChanged();
+    this.formModelChanged();
+    
     this.curUser = this.auth.get();
 
     this.compName =
@@ -141,6 +143,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.curUser?.employee?.employeeName != null
         ? this.curUser?.employee?.employeeName
         : '';
+        
+    this.getOKRPlans(this.periodID, this.interval, this.year);
   }
 
   //-----------------------End-------------------------------//
@@ -315,8 +319,9 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
   //-----------------------Custom Event-----------------------//
   hiddenChart(evt:any){
-    this.isHiddenChart=evt;
-    this.detectorRef.detectChanges();
+    // this.isHiddenChart=evt;
+    // this.detectorRef.detectChanges();
+    window.ng.getComponent(document.getElementById('om-tab-child')).selectingID='2';
   }
   //-----------------------End-------------------------------//
 

@@ -124,11 +124,11 @@
             <codx-label default="Collapse" fiedName="lblCollapse"></codx-label>
             <i class="fas fa-angle-down ms-3"></i>
           </div> -->
-           <div class="d-flex align-items-center border rounded align-items-center p-2 w-90px " (click)="collapeKR(!isCollaped)"  *ngIf="isCollaped==true">
+           <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px " (click)="collapeKR(!isCollaped)"  *ngIf="isCollaped==true">
             <i class="icon-i-arrows-collapse me-2"></i>
             <codx-label default="Collapse" fiedName="lblCollapse"></codx-label>
           </div>
-          <div class="d-flex align-items-center border rounded align-items-center p-2 w-90px"  (click)="collapeKR(!isCollaped)"  *ngIf="isCollaped==false">
+          <div role="button" class="d-flex align-items-center border rounded align-items-center p-2 w-90px"  (click)="collapeKR(!isCollaped)"  *ngIf="isCollaped==false">
             <i class="icon-i-arrows-expand me-2"></i>
             <codx-label default="Expand" fiedName="lblExpand"></codx-label>
           </div>
@@ -203,7 +203,7 @@
               </div>
             </div>
             <div class="d-flex ms-9">
-              <button class="btn btn-icon btn-sm position-relative ms-4" >
+              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="showTabItem(i,0)">
                 <span
                   class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"
                 ></span>
@@ -212,7 +212,7 @@
                   >{{ data.child.length }}</span
                 >
               </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4">
+              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="showTabItem(i,1)">
                 <span
                   class="icon-link icon-20 text-gray-600 text-hover-primary"
                 ></span>
@@ -221,7 +221,7 @@
                   >{{ data?.shares ? data?.shares.length : 0 }}</span
                 >
               </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4">
+              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="showTabItem(i,2)">
                 <span
                   class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"
                 ></span>
@@ -230,7 +230,7 @@
                   >{{ data?.notes ? data?.notes.length : 0 }}</span
                 >
               </button>
-              <button class="btn btn-icon btn-sm position-relative ms-4">
+              <button class="btn btn-icon btn-sm position-relative ms-4" (click)="showTabItem(i,3)">
                 <span
                   class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"
                 ></span>
@@ -256,7 +256,7 @@
           [attr.aria-labelledby]="'heading' + i"
           data-bs-parent="#accordionExample"
         >
-          <ejs-tab id="om-tab-child">
+          <ejs-tab id="om-tab-child" [class]="'tab-child-'+i" #omTab>
             <e-tabitems>
               <e-tabitem >
                 <ng-template #headerText>
