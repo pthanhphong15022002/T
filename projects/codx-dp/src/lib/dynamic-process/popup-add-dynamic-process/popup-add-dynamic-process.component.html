@@ -276,40 +276,40 @@
         <div class="col-6">
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessNo" default="Mã quy trình">
+              <codx-label fiedName="RecID" [formModel]="dialog.formModel" default="Mã quy trình">
               </codx-label>
             </div>
-            <codx-input field="processNo" [disabled]="showID" type="text">
+            <codx-input field="recID" [formModel]="dialog.formModel" [Group]="dialog.formGroup" [disabled]="showID">
             </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="GroupID" default="Nhóm quy trình">
+              <codx-label fiedName="GroupID" [formModel]="dialog.formModel" default="Nhóm quy trình">
               </codx-label>
             </div>
             <codx-input
               field="groupID"
-              type="combobox"
-              refValue="ProcessGroups"
+              [formModel]="dialog.formModel" [Group]="dialog.formGroup"
             >
             </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessName" default="Tên quy trình">
+              <codx-label fiedName="ProcessName" [formModel]="dialog.formModel" default="Tên quy trình">
               </codx-label>
             </div>
-            <codx-input field="processName" type="Text"> </codx-input>
+            <codx-input field="processName" [formModel]="dialog.formModel" [Group]="dialog.formGroup"> </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
               <codx-label
                 fiedName="ApplyFor"
+                [formModel]="dialog.formModel"
                 default="Đối tượng nhiệm vụ áp dụng trong quy trình"
               >
               </codx-label>
             </div>
-            <codx-input field="applyFor" type="valuelist" refValue="DP002">
+            <codx-input field="applyFor" [formModel]="dialog.formModel" [Group]="dialog.formGroup">
             </codx-input>
           </div>
         </div>
@@ -502,14 +502,15 @@
         <div class="row">
           <div class="col-6">
             <codx-label
-              fiedName="Setting"
+              fiedName="InstanceNoSetting"
+              [formModel]="dialog.formModel"
               default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới"
             >
             </codx-label>
           </div>
           <div class="col-6 row">
             <div class="col-11">
-              <codx-input class="form-control" field="setting" type="text">
+              <codx-input [formModel]="dialog.formModel" [Group]="dialog.formGroup" field="instanceNoSetting">
               </codx-input>
             </div>
             <div class="col-1">
@@ -523,6 +524,7 @@
           <div class="col-6">
             <codx-label
               fiedName="ShowInstanceControl"
+              [formModel]="dialog.formModel"
               default="Chỉ xem nhiệm vụ ở tình trạng"
             >
             </codx-label>
@@ -530,8 +532,7 @@
           <div class="col-6">
             <codx-input
               field="showInstanceControl"
-              type="valuelist"
-              refValue="'DP018'"
+              [formModel]="dialog.formModel" [Group]="dialog.formGroup"
             >
             </codx-input>
           </div>
@@ -542,17 +543,18 @@
           <div class="col-6">
             <codx-label
               fiedName="CloseInstanceControl"
+              [formModel]="dialog.formModel"
               default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau"
             >
             </codx-label>
           </div>
           <div class="col-6 row">
             <div class="col-11">
-              <codx-input field="closeInstanceControl" type="text">
+              <codx-input field="closeInstanceControl" [formModel]="dialog.formModel" [Group]="dialog.formGroup">
               </codx-input>
             </div>
             <div class="col-1">
-              <codx-label fiedName="CloseInstanceControl" default="Ngày">
+              <codx-label fiedName="lblDate" default="Ngày">
               </codx-label>
             </div>
           </div>
@@ -567,13 +569,14 @@
         <div>
           <codx-label
             class="title"
-            name="lblGeneral"
+            name="Memo"
+            [formModel]="dialog.formModel"
             default="Hướng dẫn làm việc với quy trình"
           ></codx-label>
         </div>
         <div>
           <codx-label
-            name="lblGeneral"
+            name="lblMemo"
             default="Mô tả chi tiết quy trình"
             style="color: #898989"
           >
@@ -601,10 +604,8 @@
       <div class="form-group margin-form mb-4">
         <codx-input
           field="memo"
-          type="textarea"
-          headerposition="none"
-          format="ed"
-          height="150"
+          [formModel]="dialog.formModel"
+          [Group]="dialog.formGroup"
         >
         </codx-input>
       </div>
@@ -660,19 +661,6 @@
   </codx-share>
 </ng-template>
 <!--End-->
-
-<!--Roles-->
-<ng-template #roles let-dialog>
-  <codx-form
-    headerText="Phân quyền"
-    [body]="bodyRoles"
-    [footer]="footerRoles"
-    [dialog]="dialog"
-  ></codx-form>
-  <ng-template #bodyRoles></ng-template>
-  <ng-template #footerRoles></ng-template>
-</ng-template>
-<!--END-->
 <!--End-->
 
 <!-- Quy trình động - All in ------------------------------------------------------------------------------- -->
