@@ -599,7 +599,14 @@
     </div>
     <div id="memo-main" class="main" [ngClass]="'show-main'">
       <div class="form-group margin-form mb-4">
-        <codx-input field="memo" type="textarea" headerposition="none" format="ed" height="150"> </codx-input>
+        <codx-input
+          field="memo"
+          type="textarea"
+          headerposition="none"
+          format="ed"
+          height="150"
+        >
+        </codx-input>
       </div>
     </div>
   </div>
@@ -731,7 +738,7 @@
         <div *ngIf="item?.stepField?.length > 0">
           <div class="d-flex row">
             <ng-container *ngFor="let item1 of item?.stepField">
-              <div class="mb-4 col-{{12/item.showColumnControl}}">
+              <div class="mb-4 col-{{ 12 / item.showColumnControl }}">
                 <div
                   class="task-name fw-bold text-gray-700 fs-6 text-dark mt-2"
                 >
@@ -803,6 +810,7 @@
             type="button"
             class="btn btn-primary d-flex align-items-center"
             style="padding: 0 15px 0 0 !important"
+            (click)="openAddStage('add')"
           >
             <span
               class="icon-add icon-20 text-primary-600 py-2"
@@ -852,7 +860,7 @@
             *ngFor="let item of dataStage; let i = index"
             class="list-stage"
             cdkDrag
-            (click)="clickViewReason($event,'custom')"
+            (click)="clickViewReason($event, 'custom')"
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="content">
@@ -865,31 +873,33 @@
           </div>
           <!-- Reason successs -->
           <div
-          class="list-stage cursor-pointer"
-          (click)="clickViewReason($event,'clickReasonsuccesss')"
-        >
-          <div class="order">T</div>
-          <div class="content">
-            <div style="font-weight: 600; font-size: 1.2rem">
-            <codx-label default="Thành công"></codx-label>
+            class="list-stage cursor-pointer"
+            (click)="clickViewReason($event, 'clickReasonsuccesss')"
+          >
+            <div class="order">T</div>
+            <div class="content">
+              <div style="font-weight: 600; font-size: 1.2rem">
+                <codx-label default="Thành công"></codx-label>
+              </div>
+              <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
             </div>
-            <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
           </div>
-        </div>
 
-        <!-- Reason fail -->
-        <div
-        class="list-stage cursor-pointer"
-        (click)="clickViewReason($event,'fail')"
-      >
-        <div class="order">F</div>
-        <div class="content">
-          <div style="font-weight: 600; font-size: 1.2rem">
-          <codx-label default="Thất bại"></codx-label>
+          <!-- Reason fail -->
+          <div
+            class="list-stage cursor-pointer"
+            (click)="clickViewReason($event, 'fail')"
+          >
+            <div class="order">F</div>
+            <div class="content">
+              <div style="font-weight: 600; font-size: 1.2rem">
+                <codx-label default="Thất bại"></codx-label>
+              </div>
+              <codx-label
+                default="Thất bại ở một giai đoạn bất kỳ"
+              ></codx-label>
+            </div>
           </div>
-          <codx-label default="Thất bại ở một giai đoạn bất kỳ"></codx-label>
-        </div>
-      </div>
 
           <!--end danh sách giai đoạn -->
         </div>
@@ -909,12 +919,18 @@
               >
               </codx-input>
             </div>
-            <div class="icon-more_vert" style="cursor: pointer"></div>
+            <div class="icon-more_vert" style="cursor: pointer" (click)="openAddStage('edit')"></div>
           </div>
         </div>
         <div class="main">
           <ng-container
-            [ngTemplateOutlet]="viewStepCrr=='custom'?job:(viewStepCrr=='success'?reasonSuccess:reasonFail)"
+            [ngTemplateOutlet]="
+              viewStepCrr == 'custom'
+                ? job
+                : viewStepCrr == 'success'
+                ? reasonSuccess
+                : reasonFail
+            "
           ></ng-container>
         </div>
       </div>
@@ -955,7 +971,7 @@
           </div>
         </div>
         <div class="group-button">
-          <button class="button-custom">
+          <button class="button-custom" (click)="openGroupJob()">
             <span
               class="icon-add icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -967,11 +983,7 @@
               style="font-weight: 500"
             ></span>
           </button>
-          <button
-            *ngIf="isShowstage"
-            class="button-custom"
-            (click)="clickShow($event, 'job-main')"
-          >
+          <button class="button-custom" (click)="clickShow($event, 'job-main')">
             <span
               class="icon-expand_less icon-20 text-primary-600 py-2"
               style="font-weight: 500"
@@ -1115,7 +1127,7 @@
     </div>
   </div>
 </ng-template>
-<!-- chon loai cong viec -- nvthuan -->
+<!-- popup them cong viec -- nvthuan -->
 <ng-template #setJobPopup>
   <codx-form
     [headerText]="'Chọn Loại Công Việc'"
@@ -1152,13 +1164,6 @@
         pageSize="50"
         (valueChange)="getTypeJob($event, item)"
       ></codx-input>
-      <!-- <input
-      style="width: 18px"
-      type="radio"
-      name="styleJob"
-      [value]="item?.id"
-      (change)="getTypeJob($event,item)"
-    /> -->
     </div>
   </div>
 </ng-template>
@@ -1180,7 +1185,264 @@
   </div>
 </ng-template>
 <!--End chon cong viec -->
+
+<!-- End popup them nhom cong viec -- nvthuan -->
+<ng-template #addGroupJobPopup>
+  <codx-form
+    [headerText]="'Thêm Nhóm Công Việc'"
+    [body]="addGroupJobBody"
+    [footer]="addGroupJobFooter"
+    [dialog]="popupGroupJob"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #addGroupJobBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]=""
+          default="Tên nhóm công việc"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="stepName"
+        [formModel]=""
+        [Group]=""
+        type="text"
+        [height]="'100'"
+        (valueChange)="changeValueInput($event)"
+      >
+      </codx-input>
+    </div>
+
+    <div class="form-group d-flex justify-content-between">
+      <div class="w-100 me-2">
+        <div>
+          <codx-label
+            fiedName="StepName"
+            [formModel]=""
+            default="Thời gian dự kiến"
+          ></codx-label>
+        </div>
+        <div class="position-relative">
+          <codx-input
+            field="stepName"
+            [formModel]=""
+            [Group]=""
+            type="text"
+            [height]="'100'"
+            (valueChange)="changeValueInput($event)"
+          ></codx-input>
+          <div class="position-absolute text-gray-400" style="top: 7px; right: 7px;">
+            <codx-label
+              fiedName="StepName"
+              [formModel]=""
+              default="Ngày"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+      <div class="w-100 ms-2">
+        <div class="d-flex justify-content-end">
+          <codx-label
+            fiedName="StepName"
+            [formModel]=""
+            default="Thời gian còn lại "
+          ></codx-label>
+          <span class="text-danger ms-3">5 ngày 00:00 giờ</span>
+        </div>
+        <div class="position-relative">
+          <codx-input
+            field="stepName"
+            [formModel]=""
+            [Group]=""
+            type="text"
+            [height]="'100'"
+            (valueChange)="changeValueInput($event)"
+          ></codx-input>
+          <div class="position-absolute text-gray-400" style="top: 7px; right: 7px;">
+            <codx-label
+              fiedName="StepName"
+              [formModel]=""
+              default="Giờ"
+            ></codx-label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="d-flex">
+        <codx-label
+          class="fw-bolder"
+          fiedName="Permission"
+          default="Người phụ trách"
+        ></codx-label>
+        <i
+          class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+          (click)="shareUser(controlUser)"
+        ></i>
+      </div>
+      <div>
+        <ng-container
+          *ngIf="userGroupJob.length > 0"
+          [ngTemplateOutlet]="showUser"
+          [ngTemplateOutletContext]="{ users: userGroupJob }"
+        ></ng-container>
+        <codx-label
+          *ngIf="userGroupJob.length == 0"
+          class="fw-normal text-gray-400"
+          fiedName="LocationControl"
+          default="Nếu không chọn mặc định là người phụ trách của nhiệm vụ"
+        >
+        </codx-label>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]=""
+          default="Ghi chú"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="stepName"
+        [formModel]=""
+        [Group]=""
+        type="textarea"
+        [height]="'100'"
+        (valueChange)="changeValueInput($event)"
+      >
+      </codx-input>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addGroupJobFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-primary me-5">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Hủy"
+        (click)="popupGroupJob.close()"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Đồng ý"
+        (click)="savePopupGroupJob()"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
+<!--Control group user-->
+<ng-template #controlUser let-dialog>
+  <codx-share
+    [dialog]="dialog"
+    [multiple]="true"
+    (eventApply)="applyUser($event,userGroupJob)"
+    [listName]="'BP021'"
+  >
+  </codx-share>
+</ng-template>
+<!-- controler show user -->
+<ng-template #showUser let-data="users">
+  <div class="mt-3" style="display: block">
+    <ng-container *ngFor="let item of data; index as i">
+      <div class="user-mini-nav" style="background-color: #f4f7ff">
+        <span>
+          <codx-img
+            [width]="25"
+            class="me-2"
+            [objectId]="item?.id"
+            objectType="AD_Users"
+            [objectName]="item?.name"
+          ></codx-img>
+        </span>
+        <span class="text-dark fw-bold"> {{ item?.name }} </span>
+        <span class="mt-1">
+          <a (click)="onDeleteOwner(item?.id, data)" style="cursor: pointer">
+            <span class="icon-close icon-16 text-danger ms-3"></span>
+          </a>
+        </span>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+<!-- chon loai cong viec -- nvthuan -->
+<!-- Popup thêm giai đoạn  -->
+<ng-template #addStage>
+  <codx-form
+    [headerText]="'Thêm Nhóm Công Việc'"
+    [body]="addStageBody"
+    [footer]="addStageFooter"
+    [dialog]="popupAddStage"
+  >
+  </codx-form>
+</ng-template>
+
+<ng-template #addStageBody>
+  <div class="mt-5">
+    <div class="form-group">
+      <div>
+        <codx-label
+          fiedName="StepName"
+          [formModel]=""
+          default="Tên giai đoạn"
+        ></codx-label>
+      </div>
+      <codx-input
+        field="stepName"
+        [formModel]=""
+        [Group]=""
+        type="text"
+        [value]="isAddStage"
+        (valueChange)="changeValueInput($event)"
+      >
+      </codx-input>
+    </div>
+    <div class="form-group text-gray-400" *ngIf="isAddStage">
+      <codx-label
+      fiedName="StepName"
+      [formModel]=""
+      default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
+    ></codx-label>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addStageFooter>
+  <div class="d-flex justify-content-end">
+    <button type="button" class="btn btn-outline-primary me-5">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Hủy"
+        (click)="popupAddStage.close()"
+      ></codx-label>
+    </button>
+    <button type="button" class="btn btn-primary">
+      <codx-label
+        name="Save"
+        formName="Tasks"
+        default="Đồng ý"
+        (click)="saveAddStage()"
+      ></codx-label>
+    </button>
+  </div>
+</ng-template>
+
 <!-- End Công Việc -->
+
 <ng-template #reasonSuccess>
   <div class="background-job form-setting-step-success mb-5">
     <div class="header-job p-3">
