@@ -13,14 +13,14 @@
                 <i class="icon-create text-dark"></i>
             </span>
         </div>
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="editWeight(data?.recID)">
-            <span class="symbol-label bg-om-gray">
-                <i class="fas fa-balance-scale text-dark"></i>
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4 " (click)="editWeight(data?.recID)">
+            <span class="symbol-label bg-om-gray hover-bg-color ">
+                <i class="fas fa-balance-scale w-100 h-100 d-flex justify-content-center align-items-center text-dark"></i>
             </span>
         </div>
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
-            <span class="symbol-label bg-om-gray">
-                <i class="icon-bar_chart text-dark"></i>
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="hiddenChartClick(!isHiddenChart)">
+            <span class="symbol-label " [ngClass]="isHiddenChart? 'bg-om-gray' :'bg-color'">
+                <i class="icon-bar_chart "[ngClass]="isHiddenChart? 'text-dark' :'text-light'"></i>
             </span>
         </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
