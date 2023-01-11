@@ -26,6 +26,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 import { DP_Processes } from '../../models/models';
+import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -143,46 +144,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       time: '5',
       phase: 3,
     },
-  ];
-  listJob = [
-    {
-      id: 'P',
-      icon: 'icon-i-layout-three-columns',
-      text: 'Cuộc gọi',
-      funcID: 'BPT101',
-      color: { background: '#f1ff19' },
-    },
-    {
-      id: 'T',
-      icon: 'icon-i-journal-check',
-      text: 'Công việc',
-      funcID: 'BPT103',
-      color: { background: '#ffa319' },
-    },
-    {
-      id: 'E',
-      icon: 'icon-i-envelope',
-      text: 'Gửi mail',
-      funcID: 'BPT104',
-      color: { background: '#4799ff' },
-    },
-    {
-      id: 'M',
-      icon: 'icon-i-calendar-week',
-      text: 'Lịch họp',
-      funcID: 'BPT105',
-      color: { background: '#ff9adb' },
-    },
-    {
-      id: 'Q',
-      icon: 'icon-i-clipboard-check',
-      text: 'Khảo sát',
-      funcID: 'BPT106',
-      color: { background: '#1bc5bd' },
-    },
-  ];
-
-  jobType = '';
+  ]
+  listJobType=[
+      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
+      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
+      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
+      {id: 'M', icon: 'icon-i-calendar-week', text: 'Cuộc họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
+      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
+  ]
+  jobType: any;
   //stage-nvthuan
   dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
   //
@@ -496,7 +466,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   clickRoles(e) {
-    this.callfc.openForm(e, '', 500, 500);
+    this.callfc.openForm(PopupRolesDynamicComponent, '', 950, 650, '',[e],'',this.dialog);
   }
 
   //end
@@ -605,17 +575,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   setJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  getTypeJob(e) {
-    if (e.target.checked) {
-      this.jobType = e.target.value;
-    }
+  selectJob(id){
+    let btn = document.getElementById(id);
+    console.log(btn);
+    
+  }
+  getTypeJob(e,value){
+    this.jobType = value;
+    
   }
   openPopupJob() {
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
-    option.zIndex = 1100;
-    let dialog = this.callfc.openSide(PopupJobComponent, [], option);
+    option.zIndex = 1001;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      [
+        'add',
+        this.jobType
+      ],
+      option,
+      
+    );
+    dialog.closed.subscribe((e) => {
+      this.jobType = null
+    })
   }
   //#job end
   //#stage -- end -- nvthuan

@@ -93,7 +93,7 @@ export class PopupRolesComponent implements OnInit {
         this.listRoles = res.datas;
       }
     });
-    this.cache.gridViewSetup(this.formModelView.formName, this.formModelView.gridViewName).subscribe((res) => {
+    this.cache.gridViewSetup('BookingRooms', 'grvBookingRooms').subscribe((res) => {
       if (res) {
         this.gridViewSetup = res;
       }
