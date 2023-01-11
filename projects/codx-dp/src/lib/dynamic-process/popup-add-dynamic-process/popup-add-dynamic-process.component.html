@@ -839,6 +839,34 @@
               <div>Công việc {{ item?.phase }}</div>
             </div>
           </div>
+          <!-- Reason successs -->
+          <div
+          class="list-stage cursor-pointer"
+          (click)="clickViewReason($event,'successs')"
+        >
+          <div class="order">T</div>
+          <div class="content">
+            <div style="font-weight: 600; font-size: 1.2rem">
+            <codx-label default="Thành công"></codx-label>
+            </div>
+            <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
+          </div>
+        </div>
+
+        <!-- Reason fail -->
+        <div
+        class="list-stage cursor-pointer"
+        (click)="clickViewReason($event,'fail')"
+      >
+        <div class="order">F</div>
+        <div class="content">
+          <div style="font-weight: 600; font-size: 1.2rem">
+          <codx-label default="Thất bại"></codx-label>
+          </div>
+          <codx-label default="Thất bại ở một giai đoạn bất kỳ"></codx-label>
+        </div>
+      </div>
+
           <!--end danh sách giai đoạn -->
         </div>
       </div>
@@ -862,14 +890,14 @@
         </div>
         <div class="main">
           <!-- Thêm teplate vào đây -->
-          <!-- <ng-container
-            *ngIf="currentTab == 1"
-            [ngTemplateOutlet]="job"
-          ></ng-container> -->
           <ng-container
             *ngIf="currentTab == 1"
-            [ngTemplateOutlet]="reasonSuccess"
+            [ngTemplateOutlet]="job"
           ></ng-container>
+          <!-- <ng-container
+            *ngIf="currentTab == 1"
+            [ngTemplateOutlet]="customTemplate"
+          ></ng-container> -->
           <!-- <ng-container *ngIf="currentTab == 1" [ngTemplateOutlet]="reasonFail"></ng-container> -->
           <!-- Thêm teplate vào đây -->
         </div>

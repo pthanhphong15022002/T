@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Input,
   OnInit,
   Optional,
   TemplateRef,
@@ -162,6 +163,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnYesNo:boolean = false//Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có' // title radio button for reason success/failure
   titleReasonNo: string = 'Không' // title radio button for reason success/failure
+  viewReasonSuccess: string = 'viewReasonSuccess' // test click view Reason Success
+  viewReasonFail: string = 'viewReasonFail' // test click view Reason Success
+  ngTemplateOutlet:any;
 
   isShowstage = true;
   isShowstageCauseSuccess = true;
@@ -527,13 +531,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#region for reason successful/failed
   valueChangeSwtich($event:any, typeFeild:any) {
-    if($event && $event !=null){
-      if(typeFeild==='yes'){
+    if($event && $event != null){
+      if(typeFeild === 'yes'){
         this.isTurnOnYesNo = $event.data?true:false;
       }
       this.changeDetectorRef.detectChanges();
     }
+  }
 
+  clickViewReason($event:any, view:any){
+    if($event && $event != null){
+      if(view === 'successs'){
+
+      }
+      else if(view === 'fail') {
+      //  this.ngTemplateOutlet = this.reasonFail;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
   }
 
   //#endregion
