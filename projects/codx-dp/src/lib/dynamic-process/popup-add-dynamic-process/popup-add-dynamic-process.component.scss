@@ -326,3 +326,20 @@ text-align: center;
 font-weight: 600;
 width: 150px;
 }
+.body-set-job:hover{
+    background-color: #e8f7ff;
+}
+.user-mini-nav {
+    display: inline-flex;
+    align-items: center;
+    height: 29px;
+    padding: 2px 10px 2px 2px !important;
+    border-radius: 20px;
+    margin-bottom: 3px;
+    background-color: #f3f3f3;
+    margin-right: 3px;
+  }
+.color-hover{
+    background-color: aliceblue;
+    cursor: context-menu;
+}

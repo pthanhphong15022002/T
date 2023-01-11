@@ -1,3 +1,4 @@
+import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
 import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
 import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
@@ -164,6 +165,8 @@ export class EmployeeProfileComponent extends UIComponent {
   //Basic salary
   crrEBSalary: any;
   lstEBSalary: any = [];
+
+
   listCrrBenefit: any;
 
   lstESkill: any = [];
@@ -759,13 +762,6 @@ export class EmployeeProfileComponent extends UIComponent {
                 console.log('e salaries', this.lstEBSalary);
               }
             });
-
-        // Benefit
-        this.hrService.GetCurrentBenefit(params.employeeID).subscribe((res) => {
-          if (res?.length) {
-            this.listCrrBenefit = res;
-          }
-        });
 
         //Vaccine
         let rqVaccine = new DataRequest();
@@ -1607,6 +1603,34 @@ export class EmployeeProfileComponent extends UIComponent {
       else this.notify.notifyCode('DM034')
     });
     console.log('delete xong');
+  }
+
+  handlEmployeeBenefit(actionType: string, data: any) {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEbenefitComponent,
+      {
+        employeeId: this.data.employeeID,
+        actionType: actionType,
+        headerText: 'Phụ cấp',
+        funcID: 'HRT030203',
+        listBenefits: this.listCrrBenefit,
+        indexSelected: this.listCrrBenefit.indexOf(data)
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      // if (actionType == 'add') {
+      //   this.listCrrBenefit = res.event;
+      //   console.log('lst ex', this.listCrrBenefit);
+      //   this.df.detectChanges();
+      // }
+      if (!res?.event) this.view.dataService.clear();
+    });
   }
 
   handlEmployeeExperiences(actionType: string, data: any) {

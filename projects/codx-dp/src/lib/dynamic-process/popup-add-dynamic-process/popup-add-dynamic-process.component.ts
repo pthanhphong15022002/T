@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 import { DP_Processes } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
+import { format } from 'path';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -37,6 +38,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
+  @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
+  @ViewChild('addStage') addStagePopup: TemplateRef<any>;
   process = new DP_Processes();
 
   dialog: any;
@@ -65,6 +68,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //stage-nvthuan
   popupJob: DialogRef;
+  popupGroupJob: DialogRef;
+  popupAddStage: DialogRef;
+  userGroupJob = [];
+  nameStage = '';
+  isAddStage = true;
   dataStage = [
     {
       id: 1,
@@ -144,47 +152,17 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       time: '5',
       phase: 3,
     },
-  ];
-  listJob = [
-    {
-      id: 'P',
-      icon: 'icon-i-layout-three-columns',
-      text: 'Cuộc gọi',
-      funcID: 'BPT101',
-      color: { background: '#f1ff19' },
-    },
-    {
-      id: 'T',
-      icon: 'icon-i-journal-check',
-      text: 'Công việc',
-      funcID: 'BPT103',
-      color: { background: '#ffa319' },
-    },
-    {
-      id: 'E',
-      icon: 'icon-i-envelope',
-      text: 'Gửi mail',
-      funcID: 'BPT104',
-      color: { background: '#4799ff' },
-    },
-    {
-      id: 'M',
-      icon: 'icon-i-calendar-week',
-      text: 'Lịch họp',
-      funcID: 'BPT105',
-      color: { background: '#ff9adb' },
-    },
-    {
-      id: 'Q',
-      icon: 'icon-i-clipboard-check',
-      text: 'Khảo sát',
-      funcID: 'BPT106',
-      color: { background: '#1bc5bd' },
-    },
-  ];
-
-  jobType = '';
+  ]
+  listJobType=[
+      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
+      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
+      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
+      {id: 'M', icon: 'icon-i-calendar-week', text: 'Cuộc họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
+      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
+  ]
+  jobType: any;
   //stage-nvthuan
+
   dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
   //
   moreDefaut = {
@@ -240,7 +218,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ],
     },
   ];
+
   crrData: any;
+  isHover = '';
+  dataChild = [];
+  //end data Test
 
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có'; // title radio button for reason success/failure
@@ -524,8 +506,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addCustomField(stepID) {
     let titleAction = '';
     let option = new SidebarModel();
-    // option.DataService = this.view?.dataService;
-    // option.FormModel = this.view?.formModel;
+    let formModel =  this.dialog?.formModel ;
+    formModel.formName ="DPStepsFields" ;
+    formModel.gridViewName="grvDPStepsFields" ;
+    formModel.entityName ="DP_Steps_Fields"
+    option.FormModel = formModel;
     option.Width = '550px';
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
@@ -552,6 +537,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     });
     this.changeDetectorRef.detectChanges();
   }
+
+  dropFile(event: CdkDragDrop<string[]>, recID) {
+    if (event.previousIndex == event.currentIndex) return;
+    let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
+    if (crrIndex == -1) return;
+    this.dataChild = this.arrSteps[crrIndex].stepField;
+    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  checkBackground(i) {
+    if (this.isHover == i) return true;
+    return false;
+  }
   //#endregion
 
   //#region BẢo gà viết vào đây
@@ -563,6 +562,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //#stage -- nvthuan
+  openAddStage(type) {
+    this.isAddStage = type == "add" ? true : false;
+    this.nameStage = type == "add" ? '' : 'Thuan nè';
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+  }
+
+  saveAddStage(){
+
+  }
+
   drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
       if (data) {
@@ -584,24 +593,65 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  //job -- nvthuan
+//job -- nvthuan
   setJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  getTypeJob(e) {
-    if (e.target.checked) {
-      this.jobType = e.target.value;
-    }
+  selectJob(id){
+    let btn = document.getElementById(id);
+  }
+  getTypeJob(e,value){
+    this.jobType = value;
   }
   openPopupJob() {
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
-    option.zIndex = 1100;
-    let dialog = this.callfc.openSide(PopupJobComponent, [], option);
+    option.zIndex = 1001;
+    let dialog = this.callfc.openSide(
+      PopupJobComponent,
+      [
+        'add',
+        this.jobType
+      ],
+      option,
+      
+    );
+    dialog.closed.subscribe((e) => {
+      this.jobType = null
+    })
   }
-  //#job end
-  //#stage -- end -- nvthuan
+//# group job
+openGroupJob() {
+  this.popupGroupJob = this.callfc.openForm(this.addGroupJobPopup, '', 500, 500);
+}
+changeValueInput(event){
+
+}
+shareUser(share) {
+  this.callfc.openForm(share, '', 500, 500);
+}
+onDeleteOwner(objectID,datas) {
+  let index = datas.findIndex(item => item.id == objectID);
+  if (index != -1) datas.splice(index, 1);
+}
+applyUser(event,datas){
+  if (!event) return;
+    let listUser = event;
+    listUser.forEach((element) => {
+      if (!datas.some((item) => item.id == element.id)) {
+        datas.push({
+          id: element.id,
+          name: element.text,
+          type: element.objectType,
+        });
+      }
+    });
+}
+savePopupGroupJob(){
+
+}
+//#End stage -- nvthuan
 
   //#region for reason successful/failed
   valueChangeSwtich($event: any, typeFeild: any) {

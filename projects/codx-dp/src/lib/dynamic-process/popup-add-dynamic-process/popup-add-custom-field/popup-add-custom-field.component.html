@@ -28,13 +28,13 @@
       <div class="form-group row">
         <div class="col-6">
           <codx-label
-            fiedName="FieldName"
+            fiedName="Title"
             [formModel]="form.formModel"
             default="Tên trường dữ liệu"
           >
           </codx-label>
           <codx-input
-            field="fieldName"
+            field="title"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -44,13 +44,13 @@
         <!-- cai nay chua có -->
         <div class="col-6">
           <codx-label
-            fiedName="Interval"
+            fiedName="FieldName"
             [formModel]="form.formModel"
             default="ID trường dữ liệu"
           >
           </codx-label>
           <codx-input
-            field="interval"
+            field="fieldName"
             [formModel]="form.formModel"
             [Group]="form.formGroup"
             (valueChange)="valueChange($event)"
@@ -194,7 +194,7 @@
         <codx-label
           class="text-danger"
           fiedName="IsRequired"
-          [formModel]="form.formModel"
+          [formModel]="form?.formModel"
           default="Bắt buộc *"
         ></codx-label>
         <codx-input type="switch" field="isRequired" [checked]="true">
