@@ -1547,3 +1547,11 @@ codx-header .btn .badge {
 .aside-detail .aside-menu .menu-item.menu-item-active {
   background-color: var(--primary-lightest);
 }
+
+.vll-tag i[class*="fa-"] {
+  margin-right: 3px;
+}
+
+codx-layout-add .codx-tab {
+  min-width: 750px;
+}
