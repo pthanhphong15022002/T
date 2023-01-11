@@ -115,7 +115,10 @@
               </div>
             </ng-template>
             <ng-template #content>
-
+             
+            </ng-template>
+            <ng-template #templateTree let-data>
+              <span>{{ data.orgUnitName }}</span>
             </ng-template>
           </e-tabitem>
           <e-tabitem>
@@ -141,8 +144,8 @@
           <codx-label name="lblCancel" default="Hủy" class="fw-bold px-3"></codx-label>
         </span>
         <span type="button" (click)="onSaveForm()"
-          class="d-flex py-2 px-4 btn-primary rounded justify-content-center ">
-          <codx-label name="lblSave" class=" px-3 fw-bold" default="Lưu" ></codx-label>
+          class="d-flex py-2 px-4 bg-color rounded justify-content-center ">
+          <codx-label name="lblSave" class="text-light px-3 fw-bold" default="Lưu" ></codx-label>
         </span>
       </div>
     </div>
