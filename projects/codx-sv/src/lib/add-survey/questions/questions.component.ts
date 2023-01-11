@@ -931,10 +931,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               clearInterval(myInterval);
               const t = this;
               if (itemAnswer) {
-                t.questions[seqNoQuestion].children[seqNoQuestion].answers[
+                t.questions[seqNoSession].children[seqNoQuestion].answers[
                   itemAnswer.seqNo
                 ].hasPicture = true;
-                t.questions[seqNoQuestion].children[seqNoQuestion].APicture =
+                t.questions[seqNoSession].children[seqNoQuestion].APicture =
                   true;
                 // t.questions[seqNoQuestion].children[seqNoQuestion].answers[
                 //   itemAnswer.seqNo
@@ -1579,7 +1579,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   saveDataTimeout = new Map();
   setTimeoutSaveData(data, isModeAdd, list = null) {
-    this.lstDataAdd = [...this.lstDataAdd, ...data];
+    let checkArray = Array.isArray(data);
+    if (checkArray) this.lstDataAdd = [...this.lstDataAdd, ...data];
+    else this.lstDataAdd = [...this.lstDataAdd, ...[data]];
     clearTimeout(this.saveDataTimeout?.get(this.lstDataAdd[0].recID));
     this.saveDataTimeout?.delete(
       this.saveDataTimeout?.get(this.lstDataAdd[0].recID)
@@ -1690,13 +1692,16 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   valueChangeAnswer(e, seqNoSession, itemQuestion, itemAnswer) {
     if (e.data && e.data != itemAnswer[e.field]) {
-      let dataTemp = JSON.parse(JSON.stringify(this.questions));
-      dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[
+      // let dataTemp = JSON.parse(JSON.stringify(this.questions));
+      // dataTemp[seqNoSession].children[itemQuestion.seqNo].answers[
+      //   itemAnswer.seqNo
+      // ][e.field] = e.data;
+      this.questions[seqNoSession].children[itemQuestion.seqNo].answers[
         itemAnswer.seqNo
       ][e.field] = e.data;
       this.SVServices.signalSave.next('saving');
-      this.setTimeoutSaveData(
-        [dataTemp[seqNoSession].children[itemQuestion.seqNo]],
+      this.setTimeoutSaveDataAnswer(
+        [this.questions[seqNoSession].children[itemQuestion.seqNo]],
         false
       );
     }

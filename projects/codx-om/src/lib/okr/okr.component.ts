@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   Injector,
+  Input,
   Output,
   TemplateRef,
   ViewChild,
@@ -40,6 +41,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   openAccordion = [];
   dataOKR = [];
   dataOKRPlans = null;
+  isHiddenChart =false;
   //title//
   dtCompany = null;
   compName = '';
@@ -161,6 +163,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       }
       case 'btnAddKR': {
         this.addKR();
+        break;
+      }
+      case 'btnAddPlan': {
+        this.addOKRPlans();
         break;
       }
       case 'btnAddO': {
@@ -308,7 +314,10 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-
+  hiddenChart(evt:any){
+    this.isHiddenChart=evt;
+    this.detectorRef.detectChanges();
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Popup-----------------------------//
@@ -362,7 +371,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
 
     let dialogKR = this.callfc.openSide(
       PopupAddKRComponent,
-      [OMCONST.MFUNCID.Add, this.addKRTitle, null, o, this.dataOKRPlans],
+      [OMCONST.MFUNCID.Add, this.addKRTitle, null, o],
       option
     );
 

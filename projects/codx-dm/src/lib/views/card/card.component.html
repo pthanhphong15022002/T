@@ -23,16 +23,16 @@
         <!-- <img alt="" class="mh-15px me-2" src="../../../assets/codx/dms/folder.svg"> -->
       </ng-template>
       <div class="d-flex flex-column w-100 dms-footer-r align-items-center">
-        <div class="text-dark-75 fw-bold file-name text-box-140">{{data.folderName}}
+        <div class="fw-bold file-name">{{data.folderName}}
         </div>
         <div class="d-flex justify-content-between" style="height: 18px">
           <div *ngIf="(!data.isSystem) then createBy2 else nocreateBy2">
           </div>
           <ng-template #createBy2>
-            <span class="text-dark-50">{{data.userName}}</span>
+            <span class="text-gray-500">{{data.userName}}</span>
           </ng-template>
           <ng-template #nocreateBy2>
-            <span class="text-dark-50"></span>
+            <span class="text-gray-500"></span>
           </ng-template>
           <span *ngIf="dmSV.checkView(data.read) == false"
             class="icon-security text-primary icon-18 position-absolute end-0"></span>

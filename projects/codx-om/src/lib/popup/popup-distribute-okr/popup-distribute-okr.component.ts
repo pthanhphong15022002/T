@@ -1,3 +1,4 @@
+import { ConnectorModel, Diagram, DiagramTools, NodeModel, SnapConstraints, SnapSettingsModel } from '@syncfusion/ej2-angular-diagrams';
 import { Permission } from '@shared/models/file.model';
 import { DistributeOKR } from './../../model/distributeOKR.model';
 import { C } from '@angular/cdk/keycodes';
@@ -44,7 +45,18 @@ import { PopupOKRWeightComponent } from '../popup-okr-weight/popup-okr-weight.co
 export class PopupDistributeOKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
   @ViewChild('body') body: TemplateRef<any>;
-
+  datasetting: any = null;
+  dataSource:any = null;
+  public layout: Object = {
+    type: 'HierarchicalTree',
+    verticalSpacing: 60,
+    horizontalSpacing: 60,
+    enableAnimation: true,
+  };
+  public tool: DiagramTools = DiagramTools.ZoomPan;
+  public snapSettings: SnapSettingsModel = {
+    constraints: SnapConstraints.None
+  };
   dialogRef: DialogRef;
   headerText='';
   okrName='';
@@ -58,7 +70,8 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   funcID:'';
   radioKRCheck=true;
   radioOBCheck=false;
-  distributeType=OMCONST.VLL.OKRType.KResult;
+  distributeToType:any;
+  distributeType:any;
   listDistribute=[];
 
   constructor(
@@ -79,7 +92,7 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     this.distributeType=dialogData.data[2];
     this.funcID=dialogData.data[3];
     this.curUser= authStore.get();
-    
+    this.distributeToType=this.distributeType;
   }
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
@@ -150,9 +163,9 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   valueTypeChange(event) {
     
       if (event?.data) {
-        this.distributeType=OMCONST.VLL.OKRType.KResult;
+        this.distributeToType=OMCONST.VLL.OKRType.KResult;
       } else {
-        this.distributeType=OMCONST.VLL.OKRType.Obj;
+        this.distributeToType=OMCONST.VLL.OKRType.Obj;
       }
     this.detectorRef.detectChanges();
   }
@@ -172,10 +185,6 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
       }
     });
   }
-  
-
-  
-
   //-----------------------End-------------------------------//
 
   //-----------------------Validate Func---------------------//
@@ -193,8 +202,8 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
       OMCONST.SERVICES,
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
-      'DistributeKRAsync',
-      [this.dataKR.recID,this.distributeType,lastListDistribute]
+      'DistributeOKRAsync',
+      [this.dataKR.recID,this.distributeToType,lastListDistribute]
     ).subscribe(res=>{
       let x= res;
       this.dialogRef && this.dialogRef.close();
@@ -254,6 +263,39 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
         }
       });
     }
+  }
+  async onSelectionChanged($event) {
+    //await this.setEmployeePredicate($event.dataItem.orgUnitID);
+    // this.employList.onChangeSearch();
+  }
+  public connDefaults(
+    connector: ConnectorModel,
+    diagram: Diagram
+  ): ConnectorModel {
+    connector.targetDecorator.shape = "None";
+    connector.type = "Orthogonal";
+    connector.constraints = 0;
+    connector.cornerRadius = 5;
+    connector.style.strokeColor = "#6d6d6d";
+    return connector;
+  }
+
+  public nodeDefaults(obj: NodeModel): NodeModel {
+    obj.expandIcon = {
+      height: 15,
+      width: 15,
+      shape: "Minus",
+      fill: "lightgray",
+      offset: { x: 0.5, y: 1}
+    };
+    obj.collapseIcon = {
+      height: 15,
+      width: 15,
+      shape: "Plus",
+      fill: "lightgray",
+      offset: { x: 0.5, y: 1 }
+    };
+    return obj;
   }
   //-----------------------End-------------------------------//
 

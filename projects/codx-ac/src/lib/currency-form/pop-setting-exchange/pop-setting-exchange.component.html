@@ -20,23 +20,24 @@
       <codx-input
         type="switch"
         field="Calculation"
-        [checked]="fiedName"
+        [checked]="calculation"
+        (valueChange)="valueChangelb($event)"
       >
       </codx-input>
-        <div  *ngIf="fiedName">
+        <div  *ngIf="calculation">
           <codx-label
             [formModel]="form.formModel"
             fiedName="Calculation"
             default="Ngày chính xác"
           ></codx-label> 
         </div>
-        <!-- <div  *ngIf="!fiedName">
+        <div  *ngIf="!calculation">
           <codx-label
             [formModel]="form.formModel"
             fiedName="Calculation"
             default="Ngày gần nhất"
           ></codx-label> 
-        </div> -->
+        </div>
           </div>
         </div>
       </div>
