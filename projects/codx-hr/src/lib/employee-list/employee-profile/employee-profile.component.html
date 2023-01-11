@@ -706,7 +706,8 @@
               >
               </codx-label>
             </div>
-            <div class="d-flex btn btn-hover-primary">
+            <div class="d-flex btn btn-hover-primary" (click)="handlEmployeeBenefit('add', null)">
+              
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
               ></span>
@@ -3134,12 +3135,12 @@
                     <div class="d-flex align-items-center ms-5">
                       <button
                         class="btn btn-icon btn-sm position-relative ms-2"
-                        (click)="HandleBebefitInfo('add', null)"
+                        (click)="handlEmployeeBenefit('add', null)"
                       >
                         <span
                           class="icon-add icon-20 text-gray-600 text-hover-primary"
                         ></span>
-                      </button>
+                    </button>
                       <span class="text-gray-500 ms-2">|</span>
                       <button
                         class="btn btn-icon btn-sm position-relative ms-1"

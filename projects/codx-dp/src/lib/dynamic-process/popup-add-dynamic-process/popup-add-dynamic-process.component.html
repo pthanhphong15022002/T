@@ -736,11 +736,21 @@
         </div>
 
         <div *ngIf="item?.stepField?.length > 0">
-          <div class="d-flex row">
+          <div
+            class="d-flex row"
+            cdkDropList
+            [cdkDropListData]="item?.stepField || []"
+            (cdkDropListDropped)="dropFile($event, item.recID)"
+          >
             <ng-container *ngFor="let item1 of item?.stepField">
-              <div class="mb-4 col-{{ 12 / item.showColumnControl }}">
+              <div
+                class="col-{{ 12 / item.showColumnControl }} p-3"
+                cdkDrag
+                [cdkDragStartDelay]="200"
+                [cdkDragData]="item1"
+              >
                 <div
-                  class="task-name fw-bold text-gray-700 fs-6 text-dark mt-2"
+                  class="fw-bold text-gray-700 fs-6 text-dark mt-2"
                 >
                   {{ item1?.fieldName }}
                 </div>

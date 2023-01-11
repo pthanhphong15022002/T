@@ -27,6 +27,7 @@ import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 import { DP_Processes } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
+import { format } from 'path';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -217,7 +218,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ],
     },
   ];
+
   crrData: any;
+  isHover = '';
+  dataChild = [];
+  //end data Test
 
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có'; // title radio button for reason success/failure
@@ -501,8 +506,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addCustomField(stepID) {
     let titleAction = '';
     let option = new SidebarModel();
-    // option.DataService = this.view?.dataService;
-    // option.FormModel = this.view?.formModel;
+    let formModel =  this.dialog?.formModel ;
+    formModel.formName ="DPStepsFields" ;
+    formModel.gridViewName="grvDPStepsFields" ;
+    formModel.entityName ="DP_Steps_Fields"
+    option.FormModel = formModel;
     option.Width = '550px';
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
@@ -528,6 +536,20 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         x.showColumnControl = showColumnControl;
     });
     this.changeDetectorRef.detectChanges();
+  }
+
+  dropFile(event: CdkDragDrop<string[]>, recID) {
+    if (event.previousIndex == event.currentIndex) return;
+    let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
+    if (crrIndex == -1) return;
+    this.dataChild = this.arrSteps[crrIndex].stepField;
+    moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  checkBackground(i) {
+    if (this.isHover == i) return true;
+    return false;
   }
   //#endregion
 
