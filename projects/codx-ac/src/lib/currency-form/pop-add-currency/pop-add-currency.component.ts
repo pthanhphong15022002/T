@@ -1,11 +1,14 @@
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
+import { update } from '@syncfusion/ej2-angular-inplace-editor';
 import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, RequestOption, SidebarModel, UIComponent } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { Invoices } from 'projects/codx-ei/src/lib/models/invoice.model';
+import { CodxAcService } from '../../codx-ac.service';
 import { CurrencyFormComponent } from '../currency-form.component';
 import { Currency } from '../models/Currency.model';
+import { PopAddExchangerateComponent } from '../pop-add-exchangerate/pop-add-exchangerate.component';
 import { PopSettingExchangeComponent } from '../pop-setting-exchange/pop-setting-exchange.component';
 
 @Component({
@@ -20,7 +23,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   currencies: Currency;
   formType:any;
   dialog!: DialogRef;
-  dialogsetting :DialogRef;
   data: any;
   gridViewSetup:any;
   curID :string;
@@ -32,16 +34,17 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   constructor(
     private inject: Injector,
     override cache: CacheService,
+    private acService: CodxAcService,
     override api: ApiHttpService,
     private dt: ChangeDetectorRef, 
     private callfunc: CallFuncService,
     private notification: NotificationsService,
     @Optional() dialog?: DialogRef,
     @Optional() dialogData?: DialogData,
+    
   ) { 
     super(inject);
     this.dialog = dialog;
-    this.dialogsetting = dialog;
     this.headerText = dialogData.data?.headerText;
     this.formType = dialogData.data?.formType;
     this.currencies = dialog.dataService!.dataSelected;
@@ -58,6 +61,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       this.symbol = this.currencies.symbol;
       this.curName = this.currencies.currencyName;
       this.disabled = true;
+      
     }
     }
     onInit(): void {
@@ -67,6 +71,10 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
 
   }
   onSave(){
+    var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
+    if (dataexchange.Multiply != null) {
+      this.currencies.multiply = dataexchange.Multiply;
+    }
     if (this.curID.trim() == '' || this.curID == null) {
       this.notification.notifyCode(
         'SYS009',
@@ -127,7 +135,8 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         return true;
       })
       .subscribe((res) => {
-        if (res.save) {
+        console.log(res);
+        if (res.save || res.update) {
           this.dialog.close(res.save);
           this.dt.detectChanges();
         }
@@ -153,20 +162,52 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       this.currencies[e.field] = this.curName;
     }
   }
-  // opensetting(){
-  //   this.title = 'Thiết lập tỷ giá';
-  //   this.dialogsetting.dataService!.addNew().subscribe((res: any) => {
-  //     var obj = {
-  //       headerText: this.title,
-  //       data : this.currencies
-  //     };
-  //     let op = new DialogModel();
-  //     op.DataService = this.dialogsetting.dataService;
-  //     op.FormModel = this.dialogsetting.formModel;
-  //     this.dialogsetting = this.callfunc.openForm(PopSettingExchangeComponent, this.headerText,
-  //       400,300,this.dialogsetting.dataService.funcID,obj,'', op,);
-  //   });  
-    
-    
-  // }
+  opensetting(){
+    this.title = 'Thiết lập tỷ giá';
+    var obj = {
+            headerText: this.title,
+            data : this.currencies
+          };
+    let optionForm = new DialogModel();
+      optionForm.DataService = this.view?.currentView?.dataService;
+      optionForm.FormModel = this.view?.currentView?.formModel;
+      var dialog = this.callfc.openForm(
+        PopSettingExchangeComponent,
+        '',
+        400,
+        300,
+        '',
+        obj,
+        '',
+        optionForm
+      );
+  }
+  openPopup(){
+    this.title = 'Thêm tỷ giá';
+    var obj = {
+            headerText: this.title,
+            data : this.currencies
+          };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ExchangeRates';
+    dataModel.gridViewName = 'grvExchangeRates';
+    dataModel.entityName = 'BS_ExchangeRates';
+    opt.FormModel = dataModel;
+    this.cache.gridViewSetup('ExchangeRates','grvExchangeRates').subscribe(res=>{
+      if(res){
+        var dialogexchange = this.callfc.openForm(
+          PopAddExchangerateComponent,
+          '',
+          300,
+          500,
+          '',
+          obj,
+          '',
+          opt
+        );
+      }
+    });
+
+  }
 }

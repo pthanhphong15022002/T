@@ -588,6 +588,7 @@
           >
             <codx-imgs
               [objectId]="itemSelected?.owner"
+              [objectName]="itemSelected?.userName"
               objectType="AD_Users"
               [numberImages]="5"
             >
@@ -606,7 +607,7 @@
           </codx-label>
         </div>
         <div class="d-flex">
-          <codx-img [objectId]="itemSelected?.createdBy" objectType="AD_Users">
+          <codx-img [objectId]="itemSelected?.createdBy"  [objectName]="itemSelected?.userNameCreate" objectType="AD_Users">
           </codx-img>
         </div>
       </ng-container>

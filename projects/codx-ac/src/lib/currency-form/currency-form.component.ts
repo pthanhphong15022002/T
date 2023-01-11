@@ -10,6 +10,9 @@ import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.com
 export class CurrencyFormComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
+  @ViewChild("morefunc") morefunc: TemplateRef<any>;
+
+  
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef, 
@@ -60,6 +63,8 @@ export class CurrencyFormComponent extends UIComponent {
       sameData: true,
       active: true,
       model : {
+        // template2:this.morefunc,
+        // frozenColumns:1
         resources: this.columnsGrid,
         template: this.itemTemplate,  
       }
@@ -68,21 +73,6 @@ export class CurrencyFormComponent extends UIComponent {
   ];
     this.dt.detectChanges();
   }
-  selectedChange(val: any) {
-    console.log(val);
-    this.itemSelected = val.data;
-    this.dt.detectChanges();
-  }
-  // viewChanged(evt: any, view: ViewsComponent) {
-  //   this.cache
-  //     .gridViewSetup(view.function.formName, view.function.gridViewName)
-  //     .subscribe(() => {});
-  // }
-  // selectedChange(val: any) {
-  //   console.log(val);
-  //   this.itemSelected = val.data;
-  //   this.dt.detectChanges();
-  // }
   clickMF(e: any, data?: any) {
     console.log(e.functionID);
     switch (e.functionID) {

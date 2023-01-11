@@ -63,6 +63,8 @@ export class PopupRolesComponent implements OnInit {
   checkRoles = false;
   adminRoles = false;
   lstTest = [];
+  gridViewSetup: any;
+  formModelView: any;
   constructor(
     private auth: AuthStore,
     private changeDetectorRef: ChangeDetectorRef,
@@ -85,10 +87,15 @@ export class PopupRolesComponent implements OnInit {
     ).sort((a, b) =>
       ('' + a.objectID).localeCompare(this.process.owner) ? 1 : -1
     );
-
+    this.formModelView = dt.data[2]
     this.cache.valueList('BP019').subscribe((res) => {
       if (res && res?.datas.length > 0) {
         this.listRoles = res.datas;
+      }
+    });
+    this.cache.gridViewSetup(this.formModelView.formName, this.formModelView.gridViewName).subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
       }
     });
     this.startDate = null;
