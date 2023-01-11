@@ -122,6 +122,7 @@ listUserInUse: DP_Processes_Permission[]=[];
         let dialogModel = new DialogModel();
         dialogModel.IsFull = true;
         dialogModel.zIndex = 999;
+        dialogModel.FormModel = this.view.formModel
         var dialog = this.callfc.openForm(
           PopupAddDynamicProcessComponent,
           '',
