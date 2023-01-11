@@ -265,7 +265,7 @@
                 </codx-label>
               </div>
               <div class="col-8">
-                <codx-input class="form-control test-datetime"
+                <codx-input class="form-control test-datetime" [placeholder]="gridViewSetup?.StartDate.description"
                   type="datetime" style="width:100%" format="d" [crrValue]="startDate"
                   (valueChange)="valueChange($event, 'startDate')" [disabled]="checkAdminUpdate()">
                 </codx-input>
@@ -280,7 +280,7 @@
               </div>
               <div class="col-8">
                 <codx-input class="form-control test-datetime"
-                  type="datetime" style="width:100%;" format="d" [crrValue]="endDate"
+                  type="datetime" style="width:100%;" format="d" [crrValue]="endDate" [placeholder]="gridViewSetup?.EndDate.description"
                   (valueChange)="valueChange($event, 'endDate')" [disabled]="checkAdminUpdate()">
                 </codx-input>
               </div>
