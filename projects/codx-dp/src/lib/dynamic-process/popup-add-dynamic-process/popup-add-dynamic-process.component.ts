@@ -58,9 +58,28 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   memoProcess = true;
   //!--ID SHOW FORM !--//
 
-  isViewSuccess = false;
-  isViewReason = false;
-  viewStepCrr = 'custom';
+  // create value initialize
+  viewStepCrr: string = 'custom'; // default view step custom settings
+  titleViewStepCrr: string = ''; // default title view step custom settings
+  isTurnOnYesSuccess: boolean = false; //Create variable Click yes for reason success
+  isTurnOnNoSuccess: boolean = false; //Create variable Click no for reason success
+  isSwitchReason: boolean = false; // hidden switch of the reason success/failure
+  isTurnOnYesFailure: boolean = false; //Create variable Click yes for reason failure
+  isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
+  isBlockRadio: boolean = true;
+
+
+  // const value string
+  readonly strEmpty: string = ''; // value empty for methond have variable is null
+  readonly viewStepCustom: string = 'custom'; // const view custom
+  readonly viewStepReasonSuccess: string = 'reasonSuccess'; // const reason success
+  readonly viewStepReasonFail: string = 'reasonFail'; // const reason fail
+  readonly radioYes: string = 'yes'; // const click yes
+  readonly radioNo: string = 'no'; // const click yes
+  readonly titleReasonYes: string = 'Có'; // title radio button yes for reason success/failure
+  readonly titleReasonNo: string = 'Không'; // title radio button no for reason success/failure
+  readonly titleViewStepReasonSuccess: string = 'Thành công'; // title form step reason failure
+  readonly titleViewStepReasonFail: string = 'Thất bại'; // title form step reason failure
 
   //stage-nvthuan
   popupJob: DialogRef;
@@ -79,67 +98,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
     {
       id: 13,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
+      name: 'Giới thiệu sản phẩm',
+      time: 'N/A',
       phase: 3,
     },
     {
       id: 14,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
+      name: 'Báo giá',
+      time: '3',
       phase: 3,
     },
     {
       id: 15,
-      name: 'Tiếp nhận yêu cầu',
+      name: 'Thương thảo hợp đồng',
       time: '5',
       phase: 3,
     },
     {
       id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Tiếp nhận yêu cầu',
+      name: 'Ký hợp đồng',
       time: '5',
       phase: 3,
     },
@@ -194,15 +171,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     delete: true,
   };
 
-  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
-  titleReasonYes: string = 'Có'; // title radio button for reason success/failure
-  titleReasonNo: string = 'Không'; // title radio button for reason success/failure
-  viewReasonSuccess: string = 'viewReasonSuccess' // test click view Reason Success
-  viewReasonFail: string = 'viewReasonFail' // test click view Reason Success
-  ngTemplateOutlet:any;
-
   isShowstage = true;
-  isShowstageCauseSuccess = true;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -301,6 +270,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
+    this.getTitleStepViewSetup();
+
+    // this.isTurnOnYesFailure = true;
+    console.log(this.isTurnOnYesFailure);
   }
 
   //#region onSave
@@ -488,9 +461,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       option
     );
     dialogCustomField.closed.subscribe((e) => {
-      if (e.event != null ){
+      if (e.event != null) {
         //xu ly data đổ về
-          this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
@@ -510,14 +483,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
-
-  //#region BẢo gà viết vào đây
-  valueChangeQuyTrinhChuyenDen() {}
-  clickMF($event, data) {}
-
-  showStageCauseSuccess() {
-    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
-  }
 
   //#stage -- nvthuan
   drop(event: CdkDragDrop<string[]>, data = null) {
@@ -561,28 +526,75 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#stage -- end -- nvthuan
 
   //#region for reason successful/failed
-  valueChangeSwtich($event:any, typeFeild:any) {
-    if($event && $event != null){
-      if(typeFeild === 'yes'){
-        this.isTurnOnYesNo = $event.data?true:false;
+  valueChangeRadioFail($event,value: any,typeRadion:any ,view:any) {
+    if(view === this.viewStepReasonFail) {
+      if (value && typeRadion === this.radioYes ) {
+        this.isTurnOnYesFailure = true;
+        this.isTurnOnNoFailure = false;
+        this.isBlockRadio = false;
       }
-      this.changeDetectorRef.detectChanges();
-    }
-
-  }
-  clickViewReason($event:any, view:any){
-    if($event && $event != null){
-      if(view === 'clickReasonsuccesss'){
-        // isViewSuccess
-        this.viewStepCrr = 'success';
+      if (!value && typeRadion === this.radioNo ){
+        this.isTurnOnYesFailure = false;
+        this.isTurnOnNoFailure = true;
       }
-      else if(view === 'fail') {
-        this.viewStepCrr = 'fail';
-
-      //  this.ngTemplateOutlet = this.reasonFail;
-      }else   this.viewStepCrr = 'custom';
     }
     this.changeDetectorRef.detectChanges();
+    return;
+  }
+  valueChangeRadioSuccess($event,value: any ,view:any) {
+    if(view === this.viewStepReasonSuccess) {
+      if (value == this.radioYes) {
+        this.isTurnOnYesSuccess = true;
+        this.isTurnOnNoSuccess = false;
+      }
+
+
+      else {
+        this.isTurnOnYesSuccess = false;
+        this.isTurnOnNoSuccess = true;
+      }
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  clickViewReason($event: any, view: any, data: any) {
+    if ($event && $event != null) {
+      if (
+        view === this.viewStepReasonSuccess ||
+        view === this.viewStepReasonFail
+      ) {
+        // Click view reason change
+        this.viewStepCrr =
+          view === this.viewStepReasonSuccess
+            ? this.viewStepReasonSuccess
+            : this.viewStepReasonFail;
+
+        // Title view reason change
+        this.titleViewStepCrr =
+          view === this.viewStepReasonSuccess
+            ? this.titleViewStepReasonSuccess
+            : this.titleViewStepReasonFail;
+
+        // Show swtich reason change
+        this.isSwitchReason = true;
+      } else {
+        this.viewStepCrr = this.viewStepCustom;
+        if(data){
+          // gán tạm name để test
+          this.titleViewStepCrr = data.name;
+
+           // hidden swtich reason change
+          this.isSwitchReason = false;
+        }
+
+      }
+    }
+    console.log(this.isTurnOnYesFailure);
+    console.log(this.isTurnOnNoFailure);
+    this.changeDetectorRef.detectChanges();
+  }
+  getTitleStepViewSetup() {
+    this.titleViewStepCrr = this.dataStage[0].name;
   }
 
   //#endregion

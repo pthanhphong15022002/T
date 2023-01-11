@@ -746,19 +746,28 @@
   <!-- </ng-container>  -->
 
   <ng-template #popperHandelSetting>
-    <div class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(1)">
+    <div
+      class="d-flex m-3 text-hover-primary cursor-pointer"
+      (click)="selectView(1)"
+    >
       <span class="icon-view_column icon-20"></span
       ><span>
         <codx-label name="lblSelectFirst" default="1 cột"></codx-label>
       </span>
     </div>
-    <div  class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(2)">
+    <div
+      class="d-flex m-3 text-hover-primary cursor-pointer"
+      (click)="selectView(2)"
+    >
       <span class="icon-view_column icon-20"></span>
       <span>
         <codx-label name="lblSelectSecond" default="2 cột"></codx-label>
       </span>
     </div>
-    <div  class="d-flex m-3 text-hover-primary cursor-pointer" (click)="selectView(3)">
+    <div
+      class="d-flex m-3 text-hover-primary cursor-pointer"
+      (click)="selectView(3)"
+    >
       <span class="icon-view_column icon-20"></span>
       <span>
         <codx-label name="lblSelectThree" default="3 cột"></codx-label>
@@ -829,7 +838,7 @@
             *ngFor="let item of dataStage; let i = index"
             class="list-stage"
             cdkDrag
-            (click)="clickViewReason($event,'custom')"
+            (click)="clickViewReason($event, viewStepCustom, item ?? strEmpty)"
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="content">
@@ -842,31 +851,33 @@
           </div>
           <!-- Reason successs -->
           <div
-          class="list-stage cursor-pointer"
-          (click)="clickViewReason($event,'clickReasonsuccesss')"
-        >
-          <div class="order">T</div>
-          <div class="content">
-            <div style="font-weight: 600; font-size: 1.2rem">
-            <codx-label default="Thành công"></codx-label>
+            class="list-stage cursor-pointer"
+            (click)="clickViewReason($event, viewStepReasonSuccess, strEmpty)"
+          >
+            <div class="order">T</div>
+            <div class="content">
+              <div style="font-weight: 600; font-size: 1.2rem">
+                <codx-label default="Thành công"></codx-label>
+              </div>
+              <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
             </div>
-            <codx-label default="Hoàn thành tất cả giai đoạn"></codx-label>
           </div>
-        </div>
 
-        <!-- Reason fail -->
-        <div
-        class="list-stage cursor-pointer"
-        (click)="clickViewReason($event,'fail')"
-      >
-        <div class="order">F</div>
-        <div class="content">
-          <div style="font-weight: 600; font-size: 1.2rem">
-          <codx-label default="Thất bại"></codx-label>
+          <!-- Reason fail -->
+          <div
+            class="list-stage cursor-pointer"
+            (click)="clickViewReason($event, viewStepReasonFail, strEmpty)"
+          >
+            <div class="order">F</div>
+            <div class="content">
+              <div style="font-weight: 600; font-size: 1.2rem">
+                <codx-label default="Thất bại"></codx-label>
+              </div>
+              <codx-label
+                default="Thất bại ở một giai đoạn bất kỳ"
+              ></codx-label>
+            </div>
           </div>
-          <codx-label default="Thất bại ở một giai đoạn bất kỳ"></codx-label>
-        </div>
-      </div>
 
           <!--end danh sách giai đoạn -->
         </div>
@@ -875,9 +886,11 @@
         <div>
           <div class="d-flex justify-content-end">
             <div class="me-auto">
-              <h2><strong>Thành công</strong></h2>
+              <h2>
+                <strong>{{ titleViewStepCrr }}</strong>
+              </h2>
             </div>
-            <div>
+            <div *ngIf="isSwitchReason">
               <codx-input
                 class="test-check"
                 type="switch"
@@ -891,7 +904,13 @@
         </div>
         <div class="main">
           <ng-container
-            [ngTemplateOutlet]="viewStepCrr=='custom'?job:(viewStepCrr=='success'?reasonSuccess:reasonFail)"
+            [ngTemplateOutlet]="
+              viewStepCrr === viewStepCustom
+                ? job
+                : viewStepCrr === viewStepReasonSuccess
+                ? reasonSuccess
+                : reasonFail
+            "
           ></ng-container>
         </div>
       </div>
@@ -1187,30 +1206,27 @@
           </div>
           <div class="col-6">
             <div class="row">
-              <div class="col-6">
+              <!-- <div class="col-6">
                 <codx-input
-                  name="group"
-                  class="test-check"
+                name="hello"
                   type="radio"
                   style="width: 100%"
-                  field="yes"
-                  [checked]="isTurnOnYesNo"
                   [label]="titleReasonYes"
-                  (valueChange)="valueChangeSwtich($event, 'yes')"
+                  [checked]="isTurnOnYesSuccess"
+                  (valueChange)="valueChangeRadioFail($event,radioYes,viewStepReasonSuccess)"
+                  >
                 ></codx-input>
               </div>
               <div class="col-6">
                 <codx-input
-                  name="group"
-                  class="test-check"
+                  name="hello"
                   type="radio"
                   style="width: 100%"
-                  field="no"
-                  [checked]="!isTurnOnYesNo"
                   [label]="titleReasonNo"
-                  (valueChange)="valueChangeSwtich($event, 'no')"
+                  [checked]="isTurnOnNoSuccess"
+                  (valueChange)="valueChangeRadioFail($event,radioNo,viewStepReasonSuccess)"
                 ></codx-input>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -1345,24 +1361,23 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                  name="group"
+                name="fail-radio"
                   type="radio"
                   style="width: 100%"
-                  field="yes"
-                  [checked]="isTurnOnYesNo"
                   [label]="titleReasonYes"
-                  (valueChange)="valueChangeSwtich($event, 'yes')"
+                  [checked]="isTurnOnYesFailure"
+                  (valueChange)="valueChangeRadioFail($event,true,radioYes,viewStepReasonFail)"
+                  >
                 ></codx-input>
               </div>
               <div class="col-6">
                 <codx-input
-                  name="group"
+                  name="fail-radio"
                   type="radio"
                   style="width: 100%"
-                  field="no"
-                  [checked]="!isTurnOnYesNo"
                   [label]="titleReasonNo"
-                  (valueChange)="valueChangeSwtich($event, 'no')"
+                  [checked]="isTurnOnNoFailure"
+                  (valueChange)="valueChangeRadioFail($event,false,radioNo,viewStepReasonFail)"
                 ></codx-input>
               </div>
             </div>
@@ -1382,7 +1397,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="applyFor" type="valuelist" refValue="">
+            <codx-input field="" type="valuelist" refValue="">
             </codx-input>
             <br />
             <codx-label
