@@ -188,6 +188,53 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
+  //data test Thao
+  arrSteps = [
+    {
+      recID: '41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
+      stepName: 'Quy trinh test',
+      showColumnControl: 1,
+      stepField: [
+        {
+          fieldName: 'File Name1',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 1,
+        },
+        {
+          fieldName: 'File Name2',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 2,
+        },
+        {
+          fieldName: 'File Name3',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 3,
+        },
+        {
+          fieldName: 'File Name4',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 4,
+        },
+        {
+          fieldName: 'File Name5',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 5,
+        },
+        {
+          fieldName: 'File Name6',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 6,
+        },
+      ],
+    },
+  ];
+  crrData: any;
 
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có'; // title radio button for reason success/failure
@@ -435,9 +482,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addFile(e) {
     this.attachment.uploadFile();
   }
-  //#region Trường tùy chỉnh
 
-  //#region
   clickRoles(e) {
     this.callfc.openForm(e, '', 500, 500);
   }
@@ -480,25 +525,22 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       option
     );
     dialogCustomField.closed.subscribe((e) => {
-      if (e.event != null ){
+      if (e.event != null) {
         //xu ly data đổ về
-          this.changeDetectorRef.detectChanges();
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   popoverSelectView(p, data) {
+    this.crrData = data;
     p.open();
   }
-  selectView(viewNo) {
-    switch (viewNo) {
-      case '1':
-        break;
-      case '2':
-        break;
-      case '3':
-        break;
-    }
+  selectView(showColumnControl) {
+    this.arrSteps.forEach((x) => {
+      if (x.recID == this.crrData.recID)
+        x.showColumnControl = showColumnControl;
+    });
     this.changeDetectorRef.detectChanges();
   }
   //#endregion
