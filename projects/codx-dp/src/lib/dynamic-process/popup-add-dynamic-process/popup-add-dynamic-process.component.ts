@@ -26,6 +26,7 @@ import { AttachmentComponent } from 'projects/codx-share/src/lib/components/atta
 import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
 import { DP_Processes } from '../../models/models';
+import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -244,9 +245,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
   titleReasonYes: string = 'Có'; // title radio button for reason success/failure
   titleReasonNo: string = 'Không'; // title radio button for reason success/failure
-  viewReasonSuccess: string = 'viewReasonSuccess' // test click view Reason Success
-  viewReasonFail: string = 'viewReasonFail' // test click view Reason Success
-  ngTemplateOutlet:any;
+  viewReasonSuccess: string = 'viewReasonSuccess'; // test click view Reason Success
+  viewReasonFail: string = 'viewReasonFail'; // test click view Reason Success
+  ngTemplateOutlet: any;
 
   isShowstage = true;
   isShowstageCauseSuccess = true;
@@ -492,7 +493,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   clickRoles(e) {
-    this.callfc.openForm(e, '', 500, 500);
+    this.callfc.openForm(PopupRolesDynamicComponent, '', 950, 650, '',[e],'',this.dialog);
   }
 
   //end
@@ -603,26 +604,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#stage -- end -- nvthuan
 
   //#region for reason successful/failed
-  valueChangeSwtich($event:any, typeFeild:any) {
-    if($event && $event != null){
-      if(typeFeild === 'yes'){
-        this.isTurnOnYesNo = $event.data?true:false;
+  valueChangeSwtich($event: any, typeFeild: any) {
+    if ($event && $event != null) {
+      if (typeFeild === 'yes') {
+        this.isTurnOnYesNo = $event.data ? true : false;
       }
       this.changeDetectorRef.detectChanges();
     }
-
   }
-  clickViewReason($event:any, view:any){
-    if($event && $event != null){
-      if(view === 'clickReasonsuccesss'){
+  clickViewReason($event: any, view: any) {
+    if ($event && $event != null) {
+      if (view === 'clickReasonsuccesss') {
         // isViewSuccess
         this.viewStepCrr = 'success';
-      }
-      else if(view === 'fail') {
+      } else if (view === 'fail') {
         this.viewStepCrr = 'fail';
 
-      //  this.ngTemplateOutlet = this.reasonFail;
-      }else   this.viewStepCrr = 'custom';
+        //  this.ngTemplateOutlet = this.reasonFail;
+      } else this.viewStepCrr = 'custom';
     }
     this.changeDetectorRef.detectChanges();
   }
