@@ -12,8 +12,8 @@
   border-style: none;
 }
 #om-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: solid 2px #0379ff !important;
-  color: #0379ff !important;
+  border-bottom: solid 2px var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 #om-tab > .e-content 
 {
@@ -176,5 +176,12 @@
 }
 .disabledCss {
   pointer-events: none;
-  opacity: 0.4;
+  
+}
+.ob-kr:hover{
+  cursor: pointer;    
+  color: var(--text-primary) !important;
+}
+.bg-color{   
+  background-color: var(--text-primary) !important;
 }

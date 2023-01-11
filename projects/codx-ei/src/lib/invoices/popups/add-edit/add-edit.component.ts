@@ -23,6 +23,7 @@ import {
   CallFuncService,
   CodxFormComponent,
   CodxGridviewV2Component,
+  DataRequest,
   DialogData,
   DialogRef,
   FormModel,
@@ -42,23 +43,28 @@ export class AddEditComponent implements OnInit {
   dialog: DialogRef;
   invoices: Invoices;
   action: string;
-  active = true;
   gridHeight: number;
   fmInvoiceLines: FormModel = {
     formName: 'EIInvoices',
     gridViewName: 'grvEIInvoiceLines',
     entityName: 'EI_InvoiceLines',
   };
+
   fgGoods: FormGroup;
+
   editSettings: EditSettingsModel = {
     allowEditing: true,
     allowAdding: true,
     allowDeleting: true,
     mode: 'Normal',
   };
-  selectedItem: any;
-  selectedIndex: number = 0;
-  data: Array<any> = [];
+
+  //InvoiceLine
+  data: Array<InvoiceLine> = [];
+  rowUpdate: Map<string, any> = new Map<string, any>();
+  rowDelete: Array<InvoiceLine> = [];
+  //InvoiceLine
+
   tabs: TabModel[] = [
     { name: 'History', textDefault: 'Lịch sử', isActive: true },
     { name: 'Attachment', textDefault: 'Đính kèm', isActive: false },
@@ -107,16 +113,26 @@ export class AddEditComponent implements OnInit {
           this.fgGoods = new FormGroup(group);
         }
       });
+    if (this.action === 'edit' && this.invoices) {
+      let option = new DataRequest();
+      option.entityName = 'EI_InvoiceLines';
+      option.predicate = 'TransID=@0';
+      option.dataValue = this.invoices.recID;
+      option.page = 1;
+      this.api
+        .execSv('EI', 'Core', 'DataBusiness', 'LoadDataAsync', option)
+        .subscribe((res: any) => {
+          if (res && res.length >= 2) this.data = res[0];
+        });
+    }
   }
 
   ngAfterViewInit() {
-    this.form.formGroup.patchValue(this.invoices);
     if (this.action == 'add') {
-      this.form.formGroup.patchValue({
-        invoiceDate: new Date(),
-        invoiceType: '1',
-      });
+      this.invoices.invoiceDate = new Date();
+      this.invoices.invoiceType = '1';
     }
+    this.form.formGroup.patchValue(this.invoices);
   }
   //#endregion
 
@@ -131,13 +147,7 @@ export class AddEditComponent implements OnInit {
     this.gridHeight = hBody - (hTab + hNote + 120); //40 là header của tab
   }
 
-  valueChanged(e) {
-    // if (e && e.data) {
-    //   if (e.field === 'UMID') this.selectedItem[e.field.toLowerCase()] = e.data;
-    //   else this.selectedItem[e.field] = e.data;
-    // }
-    console.log(e);
-  }
+  valueChanged(e) {}
 
   mstChange(e) {
     if (e && e.data) {
@@ -158,7 +168,8 @@ export class AddEditComponent implements OnInit {
   addRow() {
     let idx = this.grid.dataSource.length;
     let data = this.grid.formGroup.value;
-    data['lineNo'] = idx + 1;
+    data['isAdd'] = true;
+    data.recID = Util.uid();
     this.grid.addRow(data, idx);
   }
 
@@ -183,7 +194,8 @@ export class AddEditComponent implements OnInit {
     if (
       (e.field.toLowerCase() === 'quantity' ||
         e.field.toLowerCase() === 'salesprice' ||
-        e.field.toLowerCase() === 'vatid') &&
+        e.field.toLowerCase() === 'vatid' ||
+        e.field.toLowerCase() === 'totalamt') &&
       (e.data.salesPrice !== '' ||
         e.data.salesPrice !== undefined ||
         e.data.salesPrice >= 0)
@@ -192,23 +204,46 @@ export class AddEditComponent implements OnInit {
       this.updateInvoices();
     }
 
-    if (e.field.toLowerCase() === 'salesamt') {
+    if (
+      e.field.toLowerCase() === 'salesamt' ||
+      e.field.toLowerCase() === 'lineType'
+    ) {
       this.updateInvoices();
     }
+    this.rowUpdate.set(e.data.recID, e.data);
   }
 
-  clickMF(e) {}
+  clickMF(e, data) {
+    if (e.functionID == 'SYS02') {
+      if (this.action == 'edit') {
+        this.rowDelete.push(data);
+        this.rowUpdate.delete(data.recID);
+      }
+    }
+  }
   //#endregion
 
   //#region CRUD
   save() {
     this.dialog.dataService
       .save((opt: RequestOption) => {
-        opt.methodName = 'AddAsync';
         opt.className = 'InvoicesBusiness';
         opt.assemblyName = 'EI';
         opt.service = 'EI';
-        opt.data = [this.form.formGroup.value, this.grid.dataSource];
+        if (this.action == 'add') {
+          opt.methodName = 'AddAsync';
+          opt.data = [this.form.formGroup.value, this.grid.dataSource];
+        } else {
+          opt.methodName = 'EditAsync';
+          let dataAdd = this.grid.dataSource.filter((x) => x.isAdd);
+          opt.data = [
+            this.form.formGroup.value,
+            dataAdd,
+            Array.from(this.rowUpdate.values()),
+            this.rowDelete,
+          ];
+        }
+
         return true;
       })
       .subscribe();

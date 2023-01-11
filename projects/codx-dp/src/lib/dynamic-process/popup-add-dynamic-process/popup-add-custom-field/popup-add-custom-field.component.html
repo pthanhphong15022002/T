@@ -1,0 +1,215 @@
+<codx-form
+  [headerText]="title"
+  [body]="body"
+  [footer]="footer"
+  [dialog]="dialog"
+  [formModel]="dialog?.formModel"
+  [data]="field"
+  #form
+>
+  <ng-template #body>
+    <div class="card-form">
+      <div class="form-group">
+        <codx-label
+          fiedName="StepID"
+          [formModel]="form.formModel"
+          [default]="'Giai đoạn liên kết'"
+        >
+        </codx-label>
+        <codx-input
+          field="stepID"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          [model]=""
+          (valueChange)="valueChangeCbx($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group row">
+        <div class="col-6">
+          <codx-label
+            fiedName="FieldName"
+            [formModel]="form.formModel"
+            default="Tên trường dữ liệu"
+          >
+          </codx-label>
+          <codx-input
+            field="fieldName"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <!-- cai nay chua có -->
+        <div class="col-6">
+          <codx-label
+            fiedName="Interval"
+            [formModel]="form.formModel"
+            default="ID trường dữ liệu"
+          >
+          </codx-label>
+          <codx-input
+            field="interval"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="DataType"
+          [formModel]="form.formModel"
+          [default]="'Loại dữ liệu'"
+        ></codx-label>
+        <codx-input
+          field="dataType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="DataFormat"
+          [formModel]="form.formModel"
+          [default]="'Định dạng dữ liệu'"
+        >
+        </codx-label>
+        <codx-input
+          field="dataFormat"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="RefType"
+          [formModel]="form.formModel"
+          [default]="'Định dạng dữ liệu'"
+        >
+        </codx-label>
+        <codx-input
+          field="refType"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+          fiedName="RefValue"
+          [formModel]="form.formModel"
+          [default]="'Danh sách tùy chọn'"
+        >
+        </codx-label>
+        <codx-input
+          field="refValue"
+          [formModel]="form.formModel"
+          [Group]="form.formGroup"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-input
+          type="checkbox"
+          (valueChange)="valueChange($event)"
+          labelPosition="After"
+          label="Cho phép chọn nhiều giá trị"
+          [crrValue]="field?.multiselect"
+        ></codx-input>
+      </div>
+
+      <div class="form-group">
+        <div class="col-6">
+          <codx-label
+            fiedName="Rank"
+            [formModel]="form.formModel"
+            default="Loại icon hiển thị"
+          >
+          </codx-label>
+          <codx-input
+            field="rank"
+            [formModel]="form.formModel"
+            [Group]="form.formGroup"
+            (valueChange)="valueChange($event)"
+          >
+          </codx-input>
+        </div>
+        <div class="col-6">
+          <codx-label
+            fiedName="RankIcon"
+            [formModel]="form.formModel"
+            default="Điểm tối đa"
+          > 
+          </codx-label>
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: 25%"
+              aria-valuenow="25"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+          <input
+            id="progressInput"
+            type="range"
+            min="0"
+            max="100"
+            step="1"
+            value="25"
+            (onChange)="valueChange($event)"
+          />
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+          name="Note"
+          [formModel]="form.formModel"
+          default="Mô tả"
+        ></codx-label>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div style="width: 100%">
+            <codx-input
+              [field]="'note'"
+              [formModel]="form.formModel"
+              [Group]="form.formGroup"
+              (valueChange)="valueChange($event)"
+            >
+            </codx-input>
+          </div>
+        </div>
+      </div> 
+      <div class="form-group">
+        <codx-label
+          class="text-danger"
+          fiedName="IsRequired"
+          [formModel]="form.formModel"
+          default="Bắt buộc *"
+        ></codx-label>
+        <codx-input type="switch" field="isRequired" [checked]="true">
+        </codx-input>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div class="d-flex justify-content-end">
+      <button type="button" class="btn btn-primary" (click)="saveData()">
+        <codx-label
+          name="Save"
+          formName="StepsFields"
+          default="Lưu"
+        ></codx-label>
+      </button>
+    </div> </ng-template
+></codx-form>

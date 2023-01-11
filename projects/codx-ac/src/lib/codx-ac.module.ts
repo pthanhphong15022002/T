@@ -18,6 +18,8 @@ import { CodxReportModule } from 'projects/codx-report/src/public-api';
 import { AccumulationTooltipService } from '@syncfusion/ej2-angular-charts';
 import { PopAddCurrencyComponent } from './currency-form/pop-add-currency/pop-add-currency.component';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
+import { PopSettingExchangeComponent } from './currency-form/pop-setting-exchange/pop-setting-exchange.component';
+import { PopAddExchangerateComponent } from './currency-form/pop-add-exchangerate/pop-add-exchangerate.component';
 
 export const routes: Routes = [
   {
@@ -32,13 +34,14 @@ export const routes: Routes = [
   },
 ];
 
-
 @NgModule({
   declarations: [
     CodxAcComponent,
     LayoutComponent,
     CurrencyFormComponent,
-    PopAddCurrencyComponent
+    PopAddCurrencyComponent,
+    PopSettingExchangeComponent,
+    PopAddExchangerateComponent
   ],
   imports: [
     RouterModule.forChild(routes),
@@ -55,10 +58,8 @@ export const routes: Routes = [
     SplitterModule,
     CodxReportModule,
   ],
-  exports: [
-    RouterModule
-  ],
+  exports: [RouterModule],
   providers: [AccumulationTooltipService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AcModule { }
+export class AcModule {}

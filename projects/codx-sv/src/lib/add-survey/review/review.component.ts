@@ -21,7 +21,6 @@ import { SV_Respondents } from '../../model/SV_Respondents';
 })
 export class ReviewComponent extends UIComponent implements OnInit {
   respondents: SV_Respondents = new SV_Respondents();
-
   questions: any = [];
   functionList: any;
   recID: any;
@@ -102,9 +101,13 @@ export class ReviewComponent extends UIComponent implements OnInit {
       .subscribe((res: any) => {
         if (res[0] && res[0].length > 0) {
           this.questions = this.getHierarchy(res[0], res[1]);
-          this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
-          this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
-          this.itemSessionFirst = JSON.parse(JSON.stringify(this.questions[0]));
+          if (this.questions) {
+            this.lstQuestionTemp = JSON.parse(JSON.stringify(this.questions));
+            this.itemSession = JSON.parse(JSON.stringify(this.questions[0]));
+            this.itemSessionFirst = JSON.parse(
+              JSON.stringify(this.questions[0])
+            );
+          }
           //hàm lấy safe url của các question là video youtube
           this.getURLEmbed(res[1]);
           this.SVServices.getFilesByObjectType(
@@ -124,17 +127,19 @@ export class ReviewComponent extends UIComponent implements OnInit {
   }
 
   getDataAnswer(lstData) {
-    let objAnswer = {
-      seqNo: null,
-      answer: null,
-      other: false,
-      columnNo: 0,
-    };
-    lstData.forEach((x) => {
-      x.children.forEach((y) => {
-        y.answers = [objAnswer];
+    if (lstData) {
+      let objAnswer = {
+        seqNo: null,
+        answer: null,
+        other: false,
+        columnNo: 0,
+      };
+      lstData.forEach((x) => {
+        x.children.forEach((y) => {
+          y.answers = [objAnswer];
+        });
       });
-    });
+    }
   }
 
   getHierarchy(dataSession, dataQuestion) {
@@ -144,13 +149,6 @@ export class ReviewComponent extends UIComponent implements OnInit {
       dataQuestion.forEach((x) => {
         if (x.parentID == res.recID) {
           res['children'].push(x);
-          res.children.forEach((y) => {
-            if (y.answers) {
-              y.answers.forEach((z) => {
-                z['choose'] = false;
-              });
-            }
-          });
         }
       });
     });
@@ -213,85 +211,142 @@ export class ReviewComponent extends UIComponent implements OnInit {
     this.change.detectChanges();
   }
 
+  lstAnswer: any = [];
   valueChange(e, itemSession, itemQuestion, itemAnswer) {
-    debugger;
     if (!e.data && !e.component) return;
-    // Xóa các field không có trong bảng SV_RespondResults để chép qua
-    // delete itemAnswer.recID;
-    // delete itemAnswer.id;
-    // delete itemAnswer.hasPicture;
-    // delete itemAnswer.isColumn;
-    // delete itemAnswer.column;
-    let results: any;
     if (e.component) {
-      // if (e.field == 'O' || e.field == 'C') {
-      this.lstQuestionTemp[itemSession.seqNo].children[
-        itemQuestion.seqNo
-      ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
-      // } else if (
-      //   e.field == 'T' ||
-      //   e.field == 'T2' ||
-      //   e.field == 'D' ||
-      //   e.field == 'H'
-      // ) {
-      //   results = [
-      //     {
-      //       seqNo: 0,
-      //       answer: e.data,
-      //       other: 0,
-      //       columnNo: 0,
-      //     },
-      //   ];
-      // } else
-      //   results = [
-      //     {
-      //       seqNo: itemAnswer.seqNo,
-      //       answer: itemAnswer.answer,
-      //       other: itemAnswer.other,
-      //       columnNo: 0,
-      //     },
-      //   ];
-      // let responds = {
-      //   questionID: itemQuestion.recID,
-      //   question: itemQuestion.question,
-      //   scores: 0,
-      //   results: results,
-      // };
-      // console.log(
-      //   'check count valueChange',
-      //   this.lstQuestionTemp[itemSession.seqNo].children[itemQuestion.seqNo]
-      //     .answers[0]
-      // );
+      if (
+        e.field == 'D' ||
+        e.field == 'H' ||
+        e.field == 'T' ||
+        e.field == 'T2'
+      ) {
+        let data = '';
+        if (e.field == 'D' || e.field == 'H') data = e.data.fromDate;
+        else data = e.data;
+        let results = {
+          seqNo: 0,
+          answer: data,
+          other: 0,
+          columnNo: 0,
+        };
+        this.lstQuestionTemp[itemSession.seqNo].children[
+          itemQuestion.seqNo
+        ].answers[0] = results;
+      } else if (e.field == 'C') {
+        if (e.data) this.lstAnswer.push(JSON.parse(JSON.stringify(itemAnswer)));
+        else
+          this.lstAnswer = this.lstAnswer.filter((x) => {
+            x.seqNo == itemAnswer.seqNo;
+          });
+        this.lstQuestionTemp[itemSession.seqNo].children[
+          itemQuestion.seqNo
+        ].answers = this.lstAnswer;
+      } else
+        this.lstQuestionTemp[itemSession.seqNo].children[
+          itemQuestion.seqNo
+        ].answers[0] = JSON.parse(JSON.stringify(itemAnswer));
     }
   }
 
-  checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer) {
+  checkAnswer(seqNoSession, seqNoQuestion, seqNoAnswer, answerType = null) {
     if (this.lstQuestion) {
-      let seqNo = JSON.parse(
-        JSON.stringify(
-          this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[0]
-            .seqNo
-        )
-      );
+      let seqNo = 0;
+      if (!answerType)
+        seqNo = JSON.parse(
+          JSON.stringify(
+            this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[0]
+              .seqNo
+          )
+        );
+      else if (answerType == 'C') {
+        if (
+          this.lstQuestion[seqNoSession].children[seqNoQuestion].answers
+            .length > 1
+        ) {
+          if (
+            seqNoAnswer !=
+            this.lstQuestion[seqNoSession].children[seqNoQuestion].answers
+              .length
+          ) {
+            seqNo = JSON.parse(
+              JSON.stringify(
+                this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
+                  seqNoAnswer
+                ].seqNo
+              )
+            );
+          }
+        } else
+          seqNo = JSON.parse(
+            JSON.stringify(
+              this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[0]
+                .seqNo
+            )
+          );
+      }
       if (seqNo == seqNoAnswer) return true;
       else return false;
     } else return false;
   }
 
+  getValue(seqNoSession, seqNoQuestion, seqNoAnswer) {
+    if (this.lstQuestion) {
+      return this.lstQuestion[seqNoSession].children[seqNoQuestion].answers[
+        seqNoAnswer
+      ].answer;
+    } else return '';
+  }
+
   onSubmit() {
-    // this.respondents.email = this.user.email;
-    // this.respondents.respondent = this.user.userName;
-    // this.respondents.position = this.user.positionID;
-    // this.respondents.department = this.user.departmentID;
-    // this.respondents.objectType = '';
-    // this.respondents.objectID = '';
-    // this.respondents.finishedOn = new Date();
-    // this.respondents.transID = this.recID;
-    // this.respondents.scores = 0;
-    // this.respondents.duration = 20;
-    // this.respondents.pending = true;
-    // this.SVServices.onSubmit(this.respondents).subscribe((res) => {
-    //   debugger;
-    // });
+    let lstAnswers = [];
+    this.lstQuestion.forEach((y) => {
+      lstAnswers = [...lstAnswers, ...y.children];
+    });
+    let respondQuestion: any = [];
+    lstAnswers.forEach((x) => {
+      if (x.answerType) {
+        let respondResult: any = [];
+        x.answers.forEach((y) => {
+          let other = false;
+          if(y.other == 1) other = true; 
+          let seqNo = 0;
+          if(y.seqNo) seqNo = y.seqNo;
+          let answer = '';
+          if(y.answer) answer = y.answer;
+          let objR = {
+            seqNo: seqNo,
+            answer: answer,
+            other: other,
+            columnNo: false,
+          };
+          respondResult.push(objR);
+        });
+        if (respondResult) {
+          let objQ = {
+            questionID: x.recID,
+            question: x.question,
+            results: respondResult,
+            scores: 0,
+          };
+          respondQuestion.push(objQ);
+        }
+      }
+    });
+    this.respondents.email = this.user.email;
+    this.respondents.respondent = this.user.userName;
+    this.respondents.position = this.user.positionID;
+    this.respondents.department = this.user.departmentID;
+    this.respondents.responds = respondQuestion;
+    this.respondents.objectType = '';
+    this.respondents.objectID = '';
+    this.respondents.finishedOn = new Date();
+    this.respondents.transID = this.recID;
+    this.respondents.scores = 0;
+    this.respondents.duration = 20;
+    this.respondents.pending = true;
+    this.SVServices.onSubmit(this.respondents).subscribe((res) => {
+      debugger;
+    });
   }
 }

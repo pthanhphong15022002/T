@@ -17,11 +17,11 @@
             <i class="icon-bar_chart"></i>
           </span>
         </div>
-        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4" (click)="editWeight(dataOKR?.recID)">
-          <span class="symbol-label bg-om-gray">
-            <i class="fas fa-balance-scale text-dark"></i>
+        <div class="symbol symbol-30px symbol-circle cursor-pointer me-4 " (click)="editWeight(dataOKR?.recID)">
+          <span class="symbol-label bg-om-gray hover-bg-color ">
+              <i class="fas fa-balance-scale w-100 h-100 d-flex justify-content-center align-items-center text-dark"></i>
           </span>
-        </div>
+      </div>
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-2">
           <span class="symbol-label bg-om-gray">
             <i class="icon-vertical_align_center text-dark"></i>
@@ -66,7 +66,16 @@
                   <div class="d-flex flex-column align-items-center">
                     <!-- Content Dasboard -->
                     <div class="d-flex justify-content-center align-items-center flex-column w-75">
-
+                      <div class="d-flex align-items-center kr-process w-250px min-w-250px ms-3">
+                        <div class="h-15px w-100 bg-gray-200 rounded-4">
+                          <div class="bg-color rounded-4 h-15px" role="progressbar"
+                            [style.width]="dataOKR.progress + '%'" aria-valuenow="50" aria-valuemin="0"
+                            aria-valuemax="100"></div>
+                        </div>
+                        <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
+                          {{ dataOKR.progress }}%
+                        </div>
+                      </div>
                       <div class="row">
                         <div class="">
                           <codx-chart [title]="chartSettings?.title" [legendSettings]="{ visible: false }"
@@ -76,16 +85,7 @@
                             [method]="chartSettings?.method"></codx-chart>
                         </div>
                       </div>
-                      <div class="d-flex align-items-center kr-process w-250px min-w-250px ms-3">
-                        <div class="h-15px w-100 bg-gray-200 rounded-4">
-                          <div class="bg-primary rounded-4 h-15px" role="progressbar"
-                            [style.width]="dataOKR.progress + '%'" aria-valuenow="50" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                        </div>
-                        <div class="process-per position-absolute top-0 fs-8 text-light" style="left: 30%">
-                          {{ dataOKR.progress }}%
-                        </div>
-                      </div>
+                      
                     </div>
                   </div>
 
@@ -112,7 +112,7 @@
                       </div>
                       <div class="d-flex align-items-center kr-process w-100 ms-3 my-1 col-8">
                         <div class="ms-10 h-15px w-100 bg-gray-200 rounded-4">
-                          <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                          <div class="bg-color rounded-4 h-15px" role="progressbar"
                             [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                             aria-valuemax="100"></div>
                         </div>
@@ -214,7 +214,7 @@
                           <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
                           <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                             <div class="h-15px w-100 bg-gray-200 rounded-4">
-                              <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                              <div class="bg-color rounded-4 h-15px" role="progressbar"
                                 [style.width]="data.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                                 aria-valuemax="100"></div>
                             </div>
@@ -240,28 +240,28 @@
                               <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(data)"> -->
                               <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.child ? data?.child.length : 0
                                 }}</span>
                             </button>
                             <button class="btn btn-icon btn-sm position-relative ms-4">
                               <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.shares ? data?.shares.length : 0
                                 }}</span>
                             </button>
                             <button class="btn btn-icon btn-sm position-relative ms-4">
                               <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.notes ? data?.notes.length : 0
                                 }}</span>
                             </button>
                             <button class="btn btn-icon btn-sm position-relative ms-4">
                               <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.notes ? data?.notes.length : 0
                                 }}</span>
                             </button>
@@ -289,7 +289,7 @@
                               <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
                               <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                                 <div class="h-15px w-100 bg-gray-200 rounded-4">
-                                  <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                                  <div class="bg-color rounded-4 h-15px" role="progressbar"
                                     [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                                     aria-valuemax="100"></div>
                                 </div>
@@ -313,7 +313,7 @@
                                 <button class="btn btn-icon btn-sm position-relative ms-4">
                                   <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item?.shares ? item?.shares.length : 0
                                     }}</span>
                                 </button>
@@ -321,7 +321,7 @@
                                   <span
                                     class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item?.notes ? item?.notes.length : 0
                                     }}</span>
                                 </button>
@@ -329,7 +329,7 @@
                                   <span
                                     class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item?.notes ? item?.notes.length : 0
                                     }}</span>
                                 </button>
@@ -337,7 +337,7 @@
                                   <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(item)"> -->
                                   <span class="icon-attach_file icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item.attachments
                                     ? item?.attachments.length
                                     : 0

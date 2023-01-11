@@ -7,6 +7,7 @@
   [footer]="footer"
   [data]="currencies"
   subToolbarCss="text-end"
+  [openMore]="true"
 >
 </codx-form>
 
@@ -20,10 +21,21 @@
         default="Mã tiền tệ"
       ></codx-label>
         <codx-input
+                *ngIf="currencies.currencyID == null"               
                 [formModel]="form.formModel"
                 field="CurrencyID"
                 [crrValue]="curID"
                 (valueChange)="valueChangecurID($event)"
+              >
+        </codx-input>
+        <codx-input
+                *ngIf="currencies.currencyID != null"
+                [Group]="form.formGroup"               
+                [formModel]="form.formModel"
+                field="CurrencyID"       
+                [crrValue]="curID"
+                (valueChange)="valueChangecurID($event)"         
+                [disabled]="true"
               >
         </codx-input>
       </div>   
@@ -36,6 +48,7 @@
         default="Ký hiệu"      
       ></codx-label>
       <codx-input
+      [Group]="form.formGroup"    
       field="Symbol"
       [crrValue]="symbol"
       [formModel]="form.formModel"
@@ -52,6 +65,7 @@
         default="Tên tiền tệ"      
       ></codx-label>
       <codx-input
+      [Group]="form.formGroup"    
       field="CurrencyName"
       [formModel]="form.formModel"
       [crrValue]="curName"
@@ -70,8 +84,7 @@
         <codx-input
                 field="TranslateName"
                 [formModel]="form.formModel"
-                [Group]="form.formGroup"
-                
+                [Group]="form.formGroup"             
               >
               </codx-input>
       </div>   
@@ -124,52 +137,6 @@
       </div>
     </div>
   </div>
-  <div class="col-6 pe-0" id="boxexchange">
-    <codx-input
-    type="switch"
-    field="Multiply"
-    [checked]="true"
-    (valueChange)="valueChange($event)"
-  >
-  </codx-input>
-    <div>
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Multiply"
-        default="Nhân tỷ giá"      
-      ></codx-label>
-    </div>
-  </div>
-  <div class="form-group">
-    <label>Ngày xác định tỷ giá</label> 
-  </div>
-  
-  <div class="row mx-0 mt-3">
-    <div class="col-6 ps-0">
-      <div class="form-group">
-  <codx-input
-    type="switch"
-    field="Calculation"
-    (valueChange)="valueChangelb($event)"
-  >
-  </codx-input>
-    <div  *ngIf="fiedName">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Calculation"
-        default="Ngày chính xác"
-      ></codx-label> 
-    </div>
-    <div  *ngIf="!fiedName">
-      <codx-label
-        [formModel]="form.formModel"
-        fiedName="Calculation"
-        default="Ngày gần nhất"
-      ></codx-label> 
-    </div>
-      </div>
-    </div>
-  </div>
   <div class="form-group">
     <codx-input
     type="checkbox"
@@ -187,8 +154,18 @@
     </div>
   </div>
   <div class="form-group">
-    <label  
-      >Tỷ giá</label> 
+    <codx-label
+        [formModel]="form.formModel"
+        default="Tỷ giá"      
+      ></codx-label>
+      <span class="icon-edit-one text-hover-primary icon-18"
+      (click)="openPopup()"></span>
+      <span
+      (click)="opensetting()"
+      [inlineSVG]="'./assets/themes/tm/default/img/TMS.svg'"
+      class="svg-icon svg-icon-1"
+    ></span>
+    
   </div>
  
 </ng-template>
