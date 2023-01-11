@@ -696,29 +696,36 @@
           </div>
         </div>
         <div class="right">
-          <div class="time ml-2">
-            <div class="d-flex align-items-center">
+          <div class="group-button d-flex align-items-center ml-2">
+            <button class="button-custom" (click)="addCustomField('recID')">
               <span
-                class="icon-add icon-20 cursor-pointer text-hover-primary py-2 me-3"
-                (click)="addCustomField('recID')"
+                class="icon-add icon-24 cursor-pointer text-hover-primary py-2 me-3"
               ></span>
+            </button>
+            <button
+              class="button-custom"
+              #p="ngbPopover"
+              [ngbPopover]="popperHandelSetting"
+              (mouseenter)="popoverSelectView(p, item)"
+              placement="bottom right top left"
+              [popoverClass]=""
+            >
               <span
-                class="icon-settings icon-20 cursor-pointer text-hover-primary py-2 me-3"
-                #p="ngbPopover"
-                [ngbPopover]="popperHandelSetting"
-                (mouseenter)="popoverSelectView(p, item)"
-                placement="bottom right top left"
-                [popoverClass]=""
+                class="icon-settings icon-24 cursor-pointer text-hover-primary py-2 me-3"
               ></span>
+            </button>
+            <button
+              class="button-custom"
+              (click)="clickShow($event, 'id-show')"
+            >
               <span
-                class="icon-expand_more icon-20 cursor-pointer text-hover-primary py-2 me-3"
-                (click)="clickShow($event, 'id-show')"
+                class="icon-expand_less icon-24 cursor-pointer text-hover-primary py-2 me-3"
               ></span>
-            </div>
+            </button>
           </div>
         </div>
       </div>
-      <div id="id-show" class="main">
+      <div id="id-show" class="main show-main">
         <div *ngIf="item?.stepField?.length == 0" class="position-relative p-9">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
@@ -749,9 +756,7 @@
                 [cdkDragStartDelay]="200"
                 [cdkDragData]="item1"
               >
-                <div
-                  class="fw-bold text-gray-700 fs-6 text-dark mt-2"
-                >
+                <div class="fw-bold text-gray-700 fs-6 text-dark mt-2">
                   {{ item1?.fieldName }}
                 </div>
                 <div class="text-gray-400">{{ item1.note }}</div>

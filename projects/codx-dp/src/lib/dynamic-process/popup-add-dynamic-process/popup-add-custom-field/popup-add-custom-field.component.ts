@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, Optional } from '@angular/core';
 import { CacheService, DialogData, DialogRef } from 'codx-core';
 import { DP_Steps_Fields } from '../../../models/models';
 
+
 @Component({
   selector: 'lib-popup-add-custom-field',
   templateUrl: './popup-add-custom-field.component.html',
@@ -24,7 +25,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
       .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
       .subscribe((res) => {
         if (res) {
-          this.grvSetup= res;
+          this.grvSetup = res;
         }
       });
   }
@@ -32,7 +33,14 @@ export class PopupAddCustomFieldComponent implements OnInit {
   ngOnInit(): void {}
 
   valueChangeCbx(e) {}
-  valueChange(e) {}
+
+  valueChange(e) {
+  }
+
+  valueChangeRating(e) {
+  
+  }
+
   saveData() {
     this.dialog.close(this.field);
   }
