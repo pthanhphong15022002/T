@@ -276,29 +276,52 @@
         <div class="col-6">
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="RecID" [formModel]="dialog.formModel" default="Mã quy trình">
-              </codx-label>
-            </div>
-            <codx-input field="recID" [formModel]="dialog.formModel" [Group]="dialog.formGroup" [disabled]="showID">
-            </codx-input>
-          </div>
-          <div class="form-group margin-form">
-            <div>
-              <codx-label fiedName="GroupID" [formModel]="dialog.formModel" default="Nhóm quy trình">
+              <codx-label
+                fiedName="RecID"
+                [formModel]="dialog.formModel"
+                default="Mã quy trình"
+              >
               </codx-label>
             </div>
             <codx-input
-              field="groupID"
-              [formModel]="dialog.formModel" [Group]="dialog.formGroup"
+              field="recID"
+              [formModel]="dialog.formModel"
+              [Group]="dialog.formGroup"
+              [disabled]="showID"
             >
             </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessName" [formModel]="dialog.formModel" default="Tên quy trình">
+              <codx-label
+                fiedName="GroupID"
+                [formModel]="dialog.formModel"
+                default="Nhóm quy trình"
+              >
               </codx-label>
             </div>
-            <codx-input field="processName" [formModel]="dialog.formModel" [Group]="dialog.formGroup"> </codx-input>
+            <codx-input
+              field="groupID"
+              [formModel]="dialog.formModel"
+              [Group]="dialog.formGroup"
+            >
+            </codx-input>
+          </div>
+          <div class="form-group margin-form">
+            <div>
+              <codx-label
+                fiedName="ProcessName"
+                [formModel]="dialog.formModel"
+                default="Tên quy trình"
+              >
+              </codx-label>
+            </div>
+            <codx-input
+              field="processName"
+              [formModel]="dialog.formModel"
+              [Group]="dialog.formGroup"
+            >
+            </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
@@ -309,7 +332,11 @@
               >
               </codx-label>
             </div>
-            <codx-input field="applyFor" [formModel]="dialog.formModel" [Group]="dialog.formGroup">
+            <codx-input
+              field="applyFor"
+              [formModel]="dialog.formModel"
+              [Group]="dialog.formGroup"
+            >
             </codx-input>
           </div>
         </div>
@@ -510,7 +537,11 @@
           </div>
           <div class="col-6 row">
             <div class="col-11">
-              <codx-input [formModel]="dialog.formModel" [Group]="dialog.formGroup" field="instanceNoSetting">
+              <codx-input
+                [formModel]="dialog.formModel"
+                [Group]="dialog.formGroup"
+                field="instanceNoSetting"
+              >
               </codx-input>
             </div>
             <div class="col-1">
@@ -532,7 +563,8 @@
           <div class="col-6">
             <codx-input
               field="showInstanceControl"
-              [formModel]="dialog.formModel" [Group]="dialog.formGroup"
+              [formModel]="dialog.formModel"
+              [Group]="dialog.formGroup"
             >
             </codx-input>
           </div>
@@ -550,12 +582,15 @@
           </div>
           <div class="col-6 row">
             <div class="col-11">
-              <codx-input field="closeInstanceControl" [formModel]="dialog.formModel" [Group]="dialog.formGroup">
+              <codx-input
+                field="closeInstanceControl"
+                [formModel]="dialog.formModel"
+                [Group]="dialog.formGroup"
+              >
               </codx-input>
             </div>
             <div class="col-1">
-              <codx-label fiedName="lblDate" default="Ngày">
-              </codx-label>
+              <codx-label fiedName="lblDate" default="Ngày"> </codx-label>
             </div>
           </div>
         </div>
@@ -863,7 +898,7 @@
             cdkDrag
             *ngFor="let item of dataStage; let i = index"
             class="list-stage example-box"
-            (click)="clickViewReason($event, 'custom')"
+            (click)="clickViewReason($event, viewStepCustom, item ?? strEmpty)"
           >
             <div class="order">{{ i + 1 }}</div>
             <div class="content">
@@ -877,7 +912,7 @@
           <!-- Reason successs -->
           <div
             class="list-stage cursor-pointer"
-            (click)="clickViewReason($event, 'clickReasonsuccesss')"
+            (click)="clickViewReason($event, viewStepReasonSuccess, strEmpty)"
           >
             <div class="order">T</div>
             <div class="content">
@@ -891,7 +926,7 @@
           <!-- Reason fail -->
           <div
             class="list-stage cursor-pointer"
-            (click)="clickViewReason($event, 'fail')"
+            (click)="clickViewReason($event, viewStepReasonFail, strEmpty)"
           >
             <div class="order">F</div>
             <div class="content">
@@ -924,7 +959,11 @@
               >
               </codx-input>
             </div>
-            <div class="icon-more_vert" style="cursor: pointer" (click)="openAddStage('edit')"></div>
+            <div
+              class="icon-more_vert"
+              style="cursor: pointer"
+              (click)="openAddStage('edit')"
+            ></div>
           </div>
         </div>
         <div class="main">
@@ -1241,7 +1280,10 @@
             [height]="'100'"
             (valueChange)="changeValueInput($event)"
           ></codx-input>
-          <div class="position-absolute text-gray-400" style="top: 7px; right: 7px;">
+          <div
+            class="position-absolute text-gray-400"
+            style="top: 7px; right: 7px"
+          >
             <codx-label
               fiedName="StepName"
               [formModel]=""
@@ -1268,7 +1310,10 @@
             [height]="'100'"
             (valueChange)="changeValueInput($event)"
           ></codx-input>
-          <div class="position-absolute text-gray-400" style="top: 7px; right: 7px;">
+          <div
+            class="position-absolute text-gray-400"
+            style="top: 7px; right: 7px"
+          >
             <codx-label
               fiedName="StepName"
               [formModel]=""
@@ -1354,7 +1399,7 @@
   <codx-share
     [dialog]="dialog"
     [multiple]="true"
-    (eventApply)="applyUser($event,userGroupJob)"
+    (eventApply)="applyUser($event, userGroupJob)"
     [listName]="'BP021'"
   >
   </codx-share>
@@ -1417,10 +1462,10 @@
     </div>
     <div class="form-group text-gray-400" *ngIf="isAddStage">
       <codx-label
-      fiedName="StepName"
-      [formModel]=""
-      default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
-    ></codx-label>
+        fiedName="StepName"
+        [formModel]=""
+        default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
+      ></codx-label>
     </div>
   </div>
 </ng-template>
@@ -1493,53 +1538,60 @@
           </div>
           <div class="col-6">
             <div class="row">
-              <!-- <div class="col-6">
-                <codx-input
-                name="hello"
-                  type="radio"
-                  style="width: 100%"
-                  [label]="titleReasonYes"
-                  [checked]="isTurnOnYesSuccess"
-                  (valueChange)="valueChangeRadioFail($event,radioYes,viewStepReasonSuccess)"
-                  >
-                ></codx-input>
-              </div>
               <div class="col-6">
                 <codx-input
-                  name="hello"
-                  type="radio"
-                  style="width: 100%"
-                  [label]="titleReasonNo"
-                  [checked]="isTurnOnNoSuccess"
-                  (valueChange)="valueChangeRadioFail($event,radioNo,viewStepReasonSuccess)"
-                ></codx-input>
-              </div> -->
+                name="success-radio"
+                type="radio"
+                style="width: 100%"
+                field="yes"
+                [label]="titleReasonYes"
+                [checked]="isTurnOnYesSuccess"
+                [crrValue]="isTurnOnYesSuccess"
+                (valueChange)="valueChangeRadio($event,viewStepReasonSuccess)"
+              >
+              </codx-input
+              >
+              </div>
+
+              <div class="col-6">
+                <codx-input
+                name="success-radio"
+                type="radio"
+                style="width: 100%"
+                field="no"
+                [label]="titleReasonNo"
+                [checked]="isTurnOnNoSuccess"
+                [crrValue]="isTurnOnNoSuccess"
+                (valueChange)="valueChangeRadio($event,viewStepReasonSuccess)"
+              >
+              </codx-input>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row pb-5">
-          <div class="col-6">
-            <div class="col-12">
-              <codx-label default="Quy trình được chuyển đến"></codx-label>
-            </div>
-            <div class="col-12">
-              <codx-label
-                class="fw-lighter fs-6"
-                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
-              ></codx-label>
-            </div>
+      </div>
+      <div class="row pb-5">
+        <div class="col-6">
+          <div class="col-12">
+            <codx-label default="Quy trình được chuyển đến"></codx-label>
           </div>
-          <div class="col-6">
-            <!-- Gán tạm chờ refvalue -->
-            <codx-input field="applyFor" type="valuelist" refValue="">
-            </codx-input>
-            <br />
+          <div class="col-12">
             <codx-label
-              class="text-danger fst-italic fs-6"
-              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
-            >
-            </codx-label>
+              class="fw-lighter fs-6"
+              default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
+            ></codx-label>
           </div>
+        </div>
+        <div class="col-6">
+          <!-- Gán tạm chờ refvalue -->
+          <codx-input field="applyFor" type="valuelist" refValue="">
+          </codx-input>
+          <br />
+          <codx-label
+            class="text-danger fst-italic fs-6"
+            default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
+          >
+          </codx-label>
         </div>
       </div>
     </div>
@@ -1648,24 +1700,28 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                name="fail-radio"
-                  type="radio"
-                  style="width: 100%"
-                  [label]="titleReasonYes"
-                  [checked]="isTurnOnYesFailure"
-                  (valueChange)="valueChangeRadioFail($event,true,radioYes,viewStepReasonFail)"
-                  >
-                ></codx-input>
-              </div>
-              <div class="col-6">
-                <codx-input
                   name="fail-radio"
                   type="radio"
                   style="width: 100%"
-                  [label]="titleReasonNo"
+                  field="yes"
+                  [label]="titleReasonYes"
+                  [checked]="isTurnOnYesFailure"
+                  [crrValue]="isTurnOnYesFailure"
+                  (valueChange)="valueChangeRadio($event,viewStepReasonFail)"
+                >
+                </codx-input>
+              </div>
+              <div class="col-6">
+                <codx-input
+                  type="radio"
+                  name="fail-radio"
+                  field="no"
                   [checked]="isTurnOnNoFailure"
-                  (valueChange)="valueChangeRadioFail($event,false,radioNo,viewStepReasonFail)"
-                ></codx-input>
+                  [crrValue]="isTurnOnNoFailure"
+                  [label]="titleReasonNo"
+                  (valueChange)="valueChangeRadio($event,viewStepReasonFail)"
+                >
+                </codx-input>
               </div>
             </div>
           </div>
@@ -1684,8 +1740,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue="">
-            </codx-input>
+            <codx-input field="" type="valuelist" refValue=""> </codx-input>
             <br />
             <codx-label
               class="text-danger fst-italic fs-6"
