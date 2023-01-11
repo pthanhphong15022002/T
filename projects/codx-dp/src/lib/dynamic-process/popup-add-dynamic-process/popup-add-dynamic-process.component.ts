@@ -38,6 +38,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
   @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
+  @ViewChild('addGroupJobPopup') addGroupJobPopup: TemplateRef<any>;
+  @ViewChild('addStage') addStagePopup: TemplateRef<any>;
   process = new DP_Processes();
 
   dialog: any;
@@ -66,6 +68,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //stage-nvthuan
   popupJob: DialogRef;
+  popupGroupJob: DialogRef;
+  popupAddStage: DialogRef;
+  userGroupJob = [];
+  nameStage = '';
+  isAddStage = true;
   dataStage = [
     {
       id: 1,
@@ -155,6 +162,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ]
   jobType: any;
   //stage-nvthuan
+
   dataStep = []; //cong đoạn chuẩn để add trường tùy chỉnh
   //
   moreDefaut = {
@@ -231,10 +239,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private api: ApiHttpService,
     private callfc: CallFuncService,
     @Optional() dialog: DialogRef,
-    @Optional() data: DialogData
+    @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.process = JSON.parse(JSON.stringify(data.data.data));
+    this.process = JSON.parse(JSON.stringify(dt.data.data));
   }
 
   data = [
@@ -554,6 +562,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //#stage -- nvthuan
+  openAddStage(type) {
+    this.isAddStage = type == "add" ? true : false;
+    this.nameStage = type == "add" ? '' : 'Thuan nè';
+    this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
+  }
+
+  saveAddStage(){
+
+  }
+
   drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
       if (data) {
@@ -575,18 +593,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-  //job -- nvthuan
+//job -- nvthuan
   setJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
   selectJob(id){
     let btn = document.getElementById(id);
     console.log(btn);
-    
+
   }
   getTypeJob(e,value){
     this.jobType = value;
-    
+
   }
   openPopupJob() {
     this.popupJob.close();
@@ -600,14 +618,43 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         this.jobType
       ],
       option,
-      
+
     );
     dialog.closed.subscribe((e) => {
       this.jobType = null
     })
   }
-  //#job end
-  //#stage -- end -- nvthuan
+//# group job
+openGroupJob() {
+  this.popupGroupJob = this.callfc.openForm(this.addGroupJobPopup, '', 500, 500);
+}
+changeValueInput(event){
+
+}
+shareUser(share) {
+  this.callfc.openForm(share, '', 500, 500);
+}
+onDeleteOwner(objectID,datas) {
+  let index = datas.findIndex(item => item.id == objectID);
+  if (index != -1) datas.splice(index, 1);
+}
+applyUser(event,datas){
+  if (!event) return;
+    let listUser = event;
+    listUser.forEach((element) => {
+      if (!datas.some((item) => item.id == element.id)) {
+        datas.push({
+          id: element.id,
+          name: element.text,
+          type: element.objectType,
+        });
+      }
+    });
+}
+savePopupGroupJob(){
+
+}
+//#End stage -- nvthuan
 
   //#region for reason successful/failed
   valueChangeSwtich($event: any, typeFeild: any) {
