@@ -49,7 +49,11 @@
 {
     border-bottom: solid 2px var(--text-primary) !important;
 }
-#om-tab-child .e-tab-header .e-active codx-label , #om-tab-child .e-tab-header .e-active i
+#om-tab-child .e-tab-header .e-active codx-label span , #om-tab-child .e-tab-header .e-active i
+{
+    color: var(--text-primary) !important;
+}
+#om-tab-child .e-tab-header .e-toolbar-item.e-active span
 {
     color: var(--text-primary) !important;
 }
