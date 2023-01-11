@@ -582,6 +582,8 @@ export class ProcessesComponent
   }
 
   roles(e: any) {
+    let dialogModel = new DialogModel();
+    dialogModel.zIndex = 999;
     this.callfc
       .openForm(
         PopupRolesComponent,
@@ -589,8 +591,9 @@ export class ProcessesComponent
         950,
         650,
         '',
-        [this.titleAction, e],
-        ''
+        [this.titleAction, e, this.view?.formModel],
+        '',
+        dialogModel
       )
       .closed.subscribe((e) => {
         if (e?.event && e?.event != null) {
