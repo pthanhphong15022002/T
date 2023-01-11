@@ -72,7 +72,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
   isBlockRadio: boolean = true;
 
-
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
   readonly viewStepCustom: string = 'custom'; // const view custom
@@ -129,14 +128,44 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       time: '5',
       phase: 3,
     },
-  ]
-  listJobType=[
-      {id: 'P', icon: 'icon-i-layout-three-columns', text: 'Cuộc gọi', funcID: 'BPT101', color:{background: '#f1ff19'}},
-      {id: 'T', icon: 'icon-i-journal-check', text: 'Công việc', funcID: 'BPT103', color:{background: '#ffa319'}},
-      {id: 'E', icon: 'icon-i-envelope', text: 'Gửi mail', funcID: 'BPT104', color:{background: '#4799ff'}},
-      {id: 'M', icon: 'icon-i-calendar-week', text: 'Cuộc họp', funcID: 'BPT105',color:{background: '#ff9adb'}},
-      {id: 'Q', icon: 'icon-i-clipboard-check', text: 'Khảo sát', funcID: 'BPT106',color:{background: '#1bc5bd'}},
-  ]
+  ];
+  listJobType = [
+    {
+      id: 'P',
+      icon: 'icon-i-layout-three-columns',
+      text: 'Cuộc gọi',
+      funcID: 'BPT101',
+      color: { background: '#f1ff19' },
+    },
+    {
+      id: 'T',
+      icon: 'icon-i-journal-check',
+      text: 'Công việc',
+      funcID: 'BPT103',
+      color: { background: '#ffa319' },
+    },
+    {
+      id: 'E',
+      icon: 'icon-i-envelope',
+      text: 'Gửi mail',
+      funcID: 'BPT104',
+      color: { background: '#4799ff' },
+    },
+    {
+      id: 'M',
+      icon: 'icon-i-calendar-week',
+      text: 'Cuộc họp',
+      funcID: 'BPT105',
+      color: { background: '#ff9adb' },
+    },
+    {
+      id: 'Q',
+      icon: 'icon-i-clipboard-check',
+      text: 'Khảo sát',
+      funcID: 'BPT106',
+      color: { background: '#1bc5bd' },
+    },
+  ];
   jobType: any;
   //stage-nvthuan
 
@@ -453,7 +482,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   clickRoles(e) {
-    this.callfc.openForm(PopupRolesDynamicComponent, '', 950, 650, '',[e],'',this.dialog);
+    this.callfc.openForm(
+      PopupRolesDynamicComponent,
+      '',
+      950,
+      650,
+      '',
+      [e],
+      '',
+      this.dialog
+    );
   }
 
   //end
@@ -484,10 +522,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   addCustomField(stepID) {
     let titleAction = '';
     let option = new SidebarModel();
-    let formModel =  this.dialog?.formModel ;
-    formModel.formName ="DPStepsFields" ;
-    formModel.gridViewName="grvDPStepsFields" ;
-    formModel.entityName ="DP_Steps_Fields"
+    let formModel = this.dialog?.formModel;
+    formModel.formName = 'DPStepsFields';
+    formModel.gridViewName = 'grvDPStepsFields';
+    formModel.entityName = 'DP_Steps_Fields';
     option.FormModel = formModel;
     option.Width = '550px';
     option.zIndex = 1010;
@@ -533,14 +571,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //#stage -- nvthuan
   openAddStage(type) {
-    this.isAddStage = type == "add" ? true : false;
-    this.nameStage = type == "add" ? '' : 'Thuan nè';
+    this.isAddStage = type == 'add' ? true : false;
+    this.nameStage = type == 'add' ? '' : 'Thuan nè';
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
 
-  saveAddStage(){
-
-  }
+  saveAddStage() {}
 
   drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
@@ -563,18 +599,16 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
   }
 
-//job -- nvthuan
+  //job -- nvthuan
   setJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
-  selectJob(id){
+  selectJob(id) {
     let btn = document.getElementById(id);
     console.log(btn);
-
   }
-  getTypeJob(e,value){
+  getTypeJob(e, value) {
     this.jobType = value;
-
   }
   openPopupJob() {
     this.popupJob.close();
@@ -583,33 +617,32 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.zIndex = 1001;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
-      [
-        'add',
-        this.jobType
-      ],
-      option,
-
+      ['add', this.jobType],
+      option
     );
     dialog.closed.subscribe((e) => {
-      this.jobType = null
-    })
+      this.jobType = null;
+    });
   }
-//# group job
-openGroupJob() {
-  this.popupGroupJob = this.callfc.openForm(this.addGroupJobPopup, '', 500, 500);
-}
-changeValueInput(event){
-
-}
-shareUser(share) {
-  this.callfc.openForm(share, '', 500, 500);
-}
-onDeleteOwner(objectID,datas) {
-  let index = datas.findIndex(item => item.id == objectID);
-  if (index != -1) datas.splice(index, 1);
-}
-applyUser(event,datas){
-  if (!event) return;
+  //# group job
+  openGroupJob() {
+    this.popupGroupJob = this.callfc.openForm(
+      this.addGroupJobPopup,
+      '',
+      500,
+      500
+    );
+  }
+  changeValueInput(event) {}
+  shareUser(share) {
+    this.callfc.openForm(share, '', 500, 500);
+  }
+  onDeleteOwner(objectID, datas) {
+    let index = datas.findIndex((item) => item.id == objectID);
+    if (index != -1) datas.splice(index, 1);
+  }
+  applyUser(event, datas) {
+    if (!event) return;
     let listUser = event;
     listUser.forEach((element) => {
       if (!datas.some((item) => item.id == element.id)) {
@@ -620,57 +653,63 @@ applyUser(event,datas){
         });
       }
     });
-}
-savePopupGroupJob(){
-
-}
-//#End stage -- nvthuan
+  }
+  savePopupGroupJob() {}
+  //#End stage -- nvthuan
 
   //#region for reason successful/failed
-  valueChangeRadioFail($event,value: any,typeRadion:any ,view:any) {
-    if(view === this.viewStepReasonFail) {
-      if (value && typeRadion === this.radioYes ) {
-        this.isTurnOnYesFailure = true;
-        this.isTurnOnNoFailure = false;
-        this.isBlockRadio = false;
-      }
-      if (!value && typeRadion === this.radioNo ){
-        this.isTurnOnYesFailure = false;
-        this.isTurnOnNoFailure = true;
-      }
-    }
-    this.changeDetectorRef.detectChanges();
-    return;
-  }
-  valueChangeRadioSuccess($event,value: any ,view:any) {
-    if(view === this.viewStepReasonSuccess) {
-      if (value == this.radioYes) {
+  valueChangeRadio($event, view: string) {
+    if (view === this.viewStepReasonSuccess) {
+      if ($event.field === 'yes' && $event.component.checked === true) {
         this.isTurnOnYesSuccess = true;
         this.isTurnOnNoSuccess = false;
-      }
-
-
-      else {
+      } else if ($event.field == 'no' && $event.component.checked === true) {
         this.isTurnOnYesSuccess = false;
         this.isTurnOnNoSuccess = true;
       }
-    }
-
-  }
-  clickViewReason($event:any, view:any){
-    if($event && $event != null){
-      if(view === 'clickReasonsuccesss'){
-        // isViewSuccess
-        this.viewStepCrr = 'success';
+    } else {
+      if ($event.field == 'yes' && $event.component.checked === true) {
+        this.isTurnOnYesFailure = true;
+        this.isTurnOnNoFailure = false;
+      } else if ($event.field == 'no' && $event.component.checked === true) {
+        this.isTurnOnNoFailure = true;
+        this.isTurnOnYesFailure = false;
       }
-      else if(view === 'fail') {
-        this.viewStepCrr = 'fail';
-
-      //  this.ngTemplateOutlet = this.reasonFail;
-      }else   this.viewStepCrr = 'custom';
     }
-    console.log(this.isTurnOnYesFailure);
-    console.log(this.isTurnOnNoFailure);
+    this.changeDetectorRef.detectChanges();
+  }
+
+  clickViewReason($event: any, view: any, data: any) {
+    if ($event && $event != null) {
+      if (
+        view === this.viewStepReasonSuccess ||
+        view === this.viewStepReasonFail
+      ) {
+        // Click view reason change
+        this.viewStepCrr =
+          view === this.viewStepReasonSuccess
+            ? this.viewStepReasonSuccess
+            : this.viewStepReasonFail;
+
+        // Title view reason change
+        this.titleViewStepCrr =
+          view === this.viewStepReasonSuccess
+            ? this.titleViewStepReasonSuccess
+            : this.titleViewStepReasonFail;
+
+        // Show swtich reason change
+        this.isSwitchReason = true;
+      } else {
+        this.viewStepCrr = this.viewStepCustom;
+        if (data) {
+          // gán tạm name để test
+          this.titleViewStepCrr = data.name;
+
+          // hidden swtich reason change
+          this.isSwitchReason = false;
+        }
+      }
+    }
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
