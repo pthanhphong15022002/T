@@ -61,7 +61,6 @@ export class PopupAddKRComponent extends UIComponent {
   dialogTargets: DialogRef;
   funcID: any;
   tempTarget: any;
-  dataOKRPlans: any;
   funcType:any;
   constructor(
     private injector: Injector,
@@ -77,7 +76,6 @@ export class PopupAddKRComponent extends UIComponent {
     this.headerText = dialogData?.data[1];
     this.o = dialogData.data[2];
     this.kr = dialogData.data[3];
-    this.dataOKRPlans = dialogData?.data[4];
     this.dialogRef= dialogRef;
     this.formModel= dialogRef.formModel;
     if (this.funcType == OMCONST.MFUNCID.Edit || this.funcType == OMCONST.MFUNCID.Copy ) {
@@ -171,7 +169,6 @@ export class PopupAddKRComponent extends UIComponent {
     this.kr.approveStatus='1';
     this.kr.approveControl='1';
     this.kr.okrType=OMCONST.VLL.OKRType.KResult;
-    this.kr.transID = this.dataOKRPlans.recID;
     //---------------------------------------
     this.OKRLevel();
     this.fGroupAddKR.patchValue(this.kr);

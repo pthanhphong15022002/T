@@ -8,7 +8,7 @@
 </codx-views>
 <ng-template #panelRight>
   <div class="w-100 h-100 bg-white px-5">
-    <lib-okr-toolbar (click)="click($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar>
+    <lib-okr-toolbar (click)="click($event)" (hiddenChart)="hiddenChart($event)" [data]="dataOKRPlans" [dataChild]="dataOKR" [formModel]="view?.formModel"></lib-okr-toolbar>
     <div class="pt-5 pb-2 text-center" *ngIf="funcID==compFuncID">
       <codx-label
         [default]="compName"
@@ -64,6 +64,7 @@
                   [formModelKR]="formModelKR"
                   [formModelOB]="formModelOB"
                   [funcID]="funcID"
+                  [isHiddenChart]="isHiddenChart"
                 ></lib-okr-targets>
               </ng-container>
               <ng-template #elseOKR>
@@ -85,7 +86,7 @@
                     <div class="d-flex justify-content-center">
                       <div
                         class="d-flex align-items-center cursor-pointer border rounded p-2"
-                        (click)="click({ id: 'btnAdd' })"
+                        (click)="click({ id: 'btnAddPlan' })"
                       >
                         <i class="fa-solid fa-bullseye me-3 ms-1"></i>
                         <codx-label

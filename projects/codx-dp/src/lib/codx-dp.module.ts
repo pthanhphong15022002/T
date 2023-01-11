@@ -21,9 +21,9 @@ import { DynamicProcessComponent } from './dynamic-process/dynamic-process.compo
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PopupAddDynamicProcessComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-dynamic-process.component';
-import { PopupGeneralComponent } from './dynamic-process/popup-add-dynamic-process/popup-general/popup-general.component';
 import { PopupJobComponent } from './dynamic-process/popup-add-dynamic-process/popup-job/popup-job.component';
 import { PopupAddCustomFieldComponent } from './dynamic-process/popup-add-dynamic-process/popup-add-custom-field/popup-add-custom-field.component';
+import { PopupRolesDynamicComponent } from './dynamic-process/popup-add-dynamic-process/popup-roles-dynamic/popup-roles-dynamic.component';
 
 const routes: Routes = [
   {
@@ -31,9 +31,9 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: 'test/:funcID',
+        path: 'dynamicprocess/:funcID',
         component: DynamicProcessComponent,
-      },     
+      },
       {
         path: '**',
         redirectTo: 'error/404',
@@ -54,9 +54,9 @@ const T_Component: Type<any>[] = [LayoutComponent];
     LayoutComponent,
     DynamicProcessComponent,
     PopupAddDynamicProcessComponent,
-    PopupGeneralComponent,
     PopupJobComponent,
     PopupAddCustomFieldComponent,
+    PopupRolesDynamicComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

@@ -4,7 +4,7 @@
 <ng-template #alignKR>
   <div class="w-100 h-100 bg-white d-flex flex-column">
     <span class="pt-5 bg-secondary row" ></span>
-    <div class="d-flex align-items-center justify-content-end pt-5 me-5">
+    <div class="d-flex align-items-center justify-content-end pt-2 me-5">
       <div class="d-flex align-items-center">
         <div class="symbol symbol-30px symbol-circle cursor-pointer me-4">
           <span class="symbol-label bg-om-gray">
@@ -28,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="pt-5 pb-2 text-center">
+    <div class="pb-2 text-center">
       <codx-label [default]="title" fiedName="titleKR" class="fw-bold fs-2"></codx-label>
     </div>
     <div class="flex-grow-1 overflow-auto">
@@ -88,12 +88,12 @@
                       </codx-label>
                     </div>
                     <span type="button" (click)="checkIn($event, dataKR)"
-                      class="w-110px d-flex py-2 px-4 btn-primary rounded justify-content-center">
+                      class="w-110px d-flex py-2 px-4 bg-color rounded justify-content-center">
                       <span class="icon-edit_fill btn-text-primary text-light me-1"></span>
-                      <codx-label fiedName="lbl" default="Chỉnh sửa"></codx-label>
+                      <codx-label  class="text-light"  fiedName="lbl" default="Chỉnh sửa"></codx-label>
                     </span>
                   </div>
-                  <div class="container">
+                  <div class="container w-50">
                     <codx-chart [title]="" [enableCrossHair]="true" [legendSettings]="{ visible: false }"
                       [primaryXAxis]="chartSettings?.primaryXAxis" [primaryYAxis]="chartSettings?.primaryYAxis"
                       [seriesSetting]="chartSettings?.seriesSetting" [dataSource]="chartData.data"></codx-chart>
@@ -109,9 +109,9 @@
                       <codx-label name="lbl" default="Lịch sử cập nhật" class="ps-2 fs-5 fw-bolder"></codx-label>
                     </div>
                     <span type="button" (click)="checkIn($event, dataKR)"
-                      class="w-110px d-flex py-2 px-4 btn-primary rounded justify-content-center">
+                      class="w-110px d-flex py-2 px-4 bg-color rounded justify-content-center">
                       <span class="icon-edit_square btn-text-primary text-light me-1"></span>
-                      <codx-label fiedName="lbl" default="Cập nhật"></codx-label>
+                      <codx-label class="text-light" fiedName="lbl" default="Cập nhật"></codx-label>
                     </span>
                   </div>
 
@@ -159,10 +159,10 @@
                               <div
                                 class="d-flex align-items-center kr-process w-200px min-w-200px align-items-center me-2">
                                 <div class="h-15px w-100 bg-secondary rounded-4">
-                                  <div *ngIf="dataKR.checkInMode == '1'" class="bg-primary rounded-4 h-15px"
+                                  <div *ngIf="dataKR.checkInMode == '1'" class="bg-color rounded-4 h-15px"
                                     role="progressbar" [style.width]="item.value + '%'" aria-valuenow="50"
                                     aria-valuemin="0" aria-valuemax="100"></div>
-                                  <div *ngIf="dataKR.checkInMode == '2'" class="bg-primary rounded-4 h-15px"
+                                  <div *ngIf="dataKR.checkInMode == '2'" class="bg-color rounded-4 h-15px"
                                     role="progressbar" [style.width]="progressHistory[index] + '%'" aria-valuenow="50"
                                     aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
@@ -181,7 +181,7 @@
                               </span>
                               <span class="position-relative text-primary icon-attach_file me-2">
                                 <span
-                                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                  class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                   dataKR?.attachment ? 1 : 0 }}</span>
                               </span>
                             </div>
@@ -271,7 +271,7 @@
                           <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
                           <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                             <div class="h-15px w-100 bg-gray-200 rounded-4">
-                              <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                              <div class="bg-color rounded-4 h-15px" role="progressbar"
                                 [style.width]="data.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                                 aria-valuemax="100"></div>
                             </div>
@@ -297,28 +297,28 @@
                               <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(data)"> -->
                               <span class="icon-vpn_key icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.child ? data?.child.length : 0
                                 }}</span>
                             </button>
                             <button class="btn btn-icon btn-sm position-relative ms-4">
                               <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.shares ? data?.shares.length : 0
                                 }}</span>
                             </button>
                             <button class="btn btn-icon btn-sm position-relative ms-4">
                               <span class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.notes ? data?.notes.length : 0
                                 }}</span>
                             </button>
                             <button class="btn btn-icon btn-sm position-relative ms-4">
                               <span class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
                               <span
-                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                 data?.notes ? data?.notes.length : 0
                                 }}</span>
                             </button>
@@ -346,7 +346,7 @@
                               <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
                               <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                                 <div class="h-15px w-100 bg-gray-200 rounded-4">
-                                  <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                                  <div class="bg-color rounded-4 h-15px" role="progressbar"
                                     [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                                     aria-valuemax="100"></div>
                                 </div>
@@ -370,7 +370,7 @@
                                 <button class="btn btn-icon btn-sm position-relative ms-4">
                                   <span class="icon-link icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item?.shares ? item?.shares.length : 0
                                     }}</span>
                                 </button>
@@ -378,7 +378,7 @@
                                   <span
                                     class="icon-format_list_bulleted icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item?.notes ? item?.notes.length : 0
                                     }}</span>
                                 </button>
@@ -386,7 +386,7 @@
                                   <span
                                     class="icon-chat_bubble_outline icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item?.notes ? item?.notes.length : 0
                                     }}</span>
                                 </button>
@@ -394,7 +394,7 @@
                                   <!-- <button class="btn btn-icon btn-sm position-relative ms-4" (click)="addKR(item)"> -->
                                   <span class="icon-attach_file icon-20 text-gray-600 text-hover-primary"></span>
                                   <span
-                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs badge-primary">{{
+                                    class="position-absolute top-0 start-100 translate-middle badge badge-circle badge-xs bg-color">{{
                                     item.attachments
                                     ? item?.attachments.length
                                     : 0
@@ -435,7 +435,7 @@
                           <codx-img [objectId]="data?.createdBy" [objectType]="'AD_Users'"></codx-img>
                           <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                             <div class="h-15px w-100 bg-gray-200 rounded-4">
-                              <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                              <div class="bg-color rounded-4 h-15px" role="progressbar"
                                 [style.width]="data.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                                 aria-valuemax="100"></div>
                             </div>
@@ -510,7 +510,7 @@
                               <codx-img [objectId]="item?.createdBy" [objectType]="'AD_Users'"></codx-img>
                               <div class="d-flex align-items-center kr-process w-200px min-w-200px ms-3">
                                 <div class="h-15px w-100 bg-gray-200 rounded-4">
-                                  <div class="bg-primary rounded-4 h-15px" role="progressbar"
+                                  <div class="bg-color rounded-4 h-15px" role="progressbar"
                                     [style.width]="item.progress + '%'" aria-valuenow="50" aria-valuemin="0"
                                     aria-valuemax="100"></div>
                                 </div>

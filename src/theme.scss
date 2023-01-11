@@ -146,8 +146,8 @@
         --primary-darker: #192440;
         --primary-dark: #222f50;
         --primary-light: #cecffa;
-        --primary-lighter: #e0e4f7;
-        --primary-lightest: #ebebfc;
+        --primary-lighter: #f5faff;
+        --primary-lightest: #f0f4f8;
 
         --text-primary: #192440;
         --bs-active-primary: #192440;
@@ -158,6 +158,10 @@
         --bg-color: #192440;
         --border-light: #dbc5f5;
         --bg-aside-dark: #1e033f;
+
+        codx-wrapper {
+            background-color: #f1f1f1;
+        }
 
         .menu-state-title-primary .menu-item .menu-link.active .menu-title {
             color: #7f80ad;

@@ -8,6 +8,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  Input,
   OnInit,
   Optional,
   TemplateRef,
@@ -23,8 +24,9 @@ import {
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
-import { DP_Process } from '../../models/models';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
+import { DP_Processes } from '../../models/models';
+import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -34,8 +36,8 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 export class PopupAddDynamicProcessComponent implements OnInit {
   @ViewChild('status') status: ElementRef;
   @ViewChild('imageAvatar') imageAvatar: AttachmentComponent;
-  @ViewChild('setJobPopup') setJobPopup : TemplateRef<any>;
-  process = new DP_Process();
+  @ViewChild('setJobPopup') setJobPopup: TemplateRef<any>;
+  process = new DP_Processes();
 
   dialog: any;
   currentTab = 1; //Bước hiện tại
@@ -57,85 +59,89 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   memoProcess = true;
   //!--ID SHOW FORM !--//
 
+  isViewSuccess = false;
+  isViewReason = false;
+  viewStepCrr = 'custom';
+
   //stage-nvthuan
   popupJob: DialogRef;
   dataStage = [
-    { 
+    {
       id: 1,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 12,
-      name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      name: 'Đánh giá giả năng',
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 13,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 14,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 15,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
-    { 
+    {
       id: 16,
       name: 'Tiếp nhận yêu cầu',
-      time: "5",
+      time: '5',
       phase: 3,
     },
   ]
@@ -157,6 +163,61 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     download: true,
     delete: true,
   };
+  //data test Thao
+  arrSteps = [
+    {
+      recID: '41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
+      stepName: 'Quy trinh test',
+      showColumnControl: 1,
+      stepField: [
+        {
+          fieldName: 'File Name1',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 1,
+        },
+        {
+          fieldName: 'File Name2',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 2,
+        },
+        {
+          fieldName: 'File Name3',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 3,
+        },
+        {
+          fieldName: 'File Name4',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 4,
+        },
+        {
+          fieldName: 'File Name5',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 5,
+        },
+        {
+          fieldName: 'File Name6',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 6,
+        },
+      ],
+    },
+  ];
+  crrData: any;
+
+  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
+  titleReasonYes: string = 'Có'; // title radio button for reason success/failure
+  titleReasonNo: string = 'Không'; // title radio button for reason success/failure
+  viewReasonSuccess: string = 'viewReasonSuccess'; // test click view Reason Success
+  viewReasonFail: string = 'viewReasonFail'; // test click view Reason Success
+  ngTemplateOutlet: any;
+
   isShowstage = true;
   isShowstageCauseSuccess = true;
 
@@ -168,6 +229,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     @Optional() data: DialogData
   ) {
     this.dialog = dialog;
+    this.process = JSON.parse(JSON.stringify(data.data.data));
   }
 
   data = [
@@ -395,36 +457,36 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   applyShare(e) {}
 
-  show1() {
-    this.isShow = !this.isShow;
-  }
   addFile(e) {
     this.attachment.uploadFile();
   }
-  
-  clickRoles(e) {}
+
+  clickRoles(e) {
+    this.callfc.openForm(PopupRolesDynamicComponent, '', 950, 650, '',[e],'',this.dialog);
+  }
+
   //end
-  //#endregion
+  //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //#region Trường tùy chỉnh
-  clickShow(e,id){
+  clickShow(e, id) {
     let children = e.currentTarget.children[0];
     let element = document.getElementById(id);
     if (element) {
-     let isClose = element.classList.contains('hidden-main');
-     let isShow = element.classList.contains('show-main');
-      if (isClose){
+      let isClose = element.classList.contains('hidden-main');
+      let isShow = element.classList.contains('show-main');
+      if (isClose) {
         children.classList.add('icon-expand_less');
         children.classList.remove('icon-expand_more');
         element.classList.remove('hidden-main');
         element.classList.add('show-main');
-      } else if (isShow){
+      } else if (isShow) {
         element.classList.remove('show-main');
         element.classList.add('hidden-main');
         children.classList.remove('icon-expand_less');
         children.classList.add('icon-expand_more');
       }
-   }
+    }
   }
 
   //add trường tùy chỉnh
@@ -437,52 +499,63 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
       PopupAddCustomFieldComponent,
-      ['add',titleAction],
+      ['add', titleAction],
       option
     );
-    this.dialog.closed.subscribe((e) => {});
+    dialogCustomField.closed.subscribe((e) => {
+      if (e.event != null) {
+        //xu ly data đổ về
+        this.changeDetectorRef.detectChanges();
+      }
+    });
+  }
+
+  popoverSelectView(p, data) {
+    this.crrData = data;
+    p.open();
+  }
+  selectView(showColumnControl) {
+    this.arrSteps.forEach((x) => {
+      if (x.recID == this.crrData.recID)
+        x.showColumnControl = showColumnControl;
+    });
+    this.changeDetectorRef.detectChanges();
   }
   //#endregion
 
   //#region BẢo gà viết vào đây
-  valueChangeQuyTrinhChuyenDen(){
+  valueChangeQuyTrinhChuyenDen() {}
+  clickMF($event, data) {}
 
+  showStageCauseSuccess() {
+    this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
   }
-  clickMF($event,data){
-
-  }
-
-  showStageCauseSuccess(){
-   this.isShowstageCauseSuccess = !this.isShowstageCauseSuccess;
-  }
-
 
   //#stage -- nvthuan
-  drop(event: CdkDragDrop<string[]>,data =null) {
+  drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
-      if(data){
+      if (data) {
         moveItemInArray(data, event.previousIndex, event.currentIndex);
-      }else{
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        moveItemInArray(
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex
+        );
       }
     } else {
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
-        event.currentIndex,
+        event.currentIndex
       );
     }
   }
 
   //job -- nvthuan
   setJob() {
-    this.popupJob = this.callfc.openForm(
-      this.setJobPopup,
-      '',
-      400,
-      400
-    );
+    this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
   selectJob(id){
     let btn = document.getElementById(id);
@@ -490,11 +563,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     
   }
   getTypeJob(e,value){
-   debugger
-      this.jobType = value;
+    this.jobType = value;
     
   }
-  openPopupJob(){
+  openPopupJob() {
     this.popupJob.close();
     let option = new SidebarModel();
     option.Width = '550px';
@@ -514,4 +586,29 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //#job end
   //#stage -- end -- nvthuan
+
+  //#region for reason successful/failed
+  valueChangeSwtich($event: any, typeFeild: any) {
+    if ($event && $event != null) {
+      if (typeFeild === 'yes') {
+        this.isTurnOnYesNo = $event.data ? true : false;
+      }
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+  clickViewReason($event: any, view: any) {
+    if ($event && $event != null) {
+      if (view === 'clickReasonsuccesss') {
+        // isViewSuccess
+        this.viewStepCrr = 'success';
+      } else if (view === 'fail') {
+        this.viewStepCrr = 'fail';
+
+        //  this.ngTemplateOutlet = this.reasonFail;
+      } else this.viewStepCrr = 'custom';
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+
+  //#endregion
 }

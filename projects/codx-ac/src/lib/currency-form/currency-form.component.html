@@ -5,7 +5,6 @@
   entityName="BS_Currencies"
   (buttonClick)="click($event)"
   [moreFuncs]="moreFunction"
-  (selectedChange)="selectedChange($event)"
 >
 </codx-views>
 <ng-template #itemTemplate let-data>
@@ -44,3 +43,8 @@
 
   </tr>
 </ng-template>
+<!-- <ng-template #morefunc let-data>
+  <codx-mfunc  [formModel]="view.formModel" [isBookMark]="true" [dataItem]="data"
+  (clickMF)="clickMF($event,data)" type="view">
+</codx-mfunc>
+</ng-template> -->

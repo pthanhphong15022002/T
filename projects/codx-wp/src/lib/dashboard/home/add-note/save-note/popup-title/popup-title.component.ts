@@ -68,7 +68,7 @@ export class PopupTitleComponent extends UIComponent implements OnInit {
     if (this.dataNote.noteType !== 'text') this.dataNote.checkList.pop();
     this.api
       .exec<any>('ERM.Business.WP', 'NotesBusiness', 'UpdateNoteAsync', [
-        this.dataNote.recID,
+        this.dataNote.data.recID,
         this.dataNote,
       ])
       .subscribe((res) => {
@@ -77,6 +77,9 @@ export class PopupTitleComponent extends UIComponent implements OnInit {
           this.changeDetectorRef.detectChanges();
           this.dialog.close();
           if (this.dialogRef != undefined) this.dialogRef.close(res);
+        } else {
+          this.dialog.close();
+          this.dialogRef.close();
         }
       });
   }
