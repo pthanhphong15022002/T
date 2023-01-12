@@ -100,25 +100,25 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
       this.taskGroups.editControl = this.taskGroups.editControl ?? '0';
     }
 
-    this.api
-      .execSv<any>(
-        'SYS',
-        'AD',
-        'AutoNumberDefaultsBusiness',
-        'GetFieldAutoNoAsync',
-        [this.functionID, this.dialog.formModel.entityName]
-      )
-      .subscribe((res) => {
-        if (res && res.stop) {
-          this.showInput = false;
-          if (this.action == 'add' || this.action == 'copy') {
-            this.data.taskGroupID = '';
-            this.taskGroups.taskGroupID = '';
-          }
-        } else {
-          this.showInput = true;
-        }
-      });
+    // this.api
+    //   .execSv<any>(
+    //     'SYS',
+    //     'AD',
+    //     'AutoNumberDefaultsBusiness',
+    //     'GetFieldAutoNoAsync',
+    //     [this.functionID, this.dialog.formModel.entityName]
+    //   )
+    //   .subscribe((res) => {
+    //     if (res && res.stop) {
+    //       this.showInput = false;
+    //       if (this.action == 'add' || this.action == 'copy') {
+    //         this.data.taskGroupID = '';
+    //         this.taskGroups.taskGroupID = '';
+    //       }
+    //     } else {
+    //       this.showInput = true;
+    //     }
+    //   });
   }
   ngAfterViewInit(): void {}
 
@@ -165,12 +165,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   getGridViewSetUp() {
     this.cache.functionList(this.functionID).subscribe((func) => {
-      console.log('functuonID: ', func);
       this.cache
         .gridViewSetup(func?.formName, func?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetUp = grd;
-          console.log('gridViewSetUp: ', this.gridViewSetUp);
         });
     });
   }
@@ -550,10 +548,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     var data = [];
     if (this.action === 'add') {
       op.method = 'AddTaskGroupsAsync';
-      data = [this.taskGroups];
+      data = [this.taskGroups,this.functionID];
     } else if (this.action === 'edit') {
       op.method = 'UpdateTaskGroupsAsync';
-      data = [this.taskGroups];
+      data = [this.taskGroups,this.functionID];
     }
 
     op.data = data;
