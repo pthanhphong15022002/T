@@ -1,3 +1,4 @@
+import { CodxDpService } from './../../codx-dp.service';
 import { log } from 'console';
 import {
   CdkDragDrop,
@@ -21,6 +22,9 @@ import {
   ApiHttpService,
   CallFuncService,
   SidebarModel,
+  NotificationsService,
+  FormModel,
+  CacheService,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -28,6 +32,7 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 import { DP_Processes, DP_Processes_Permission,DP_Steps_Fields  } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -43,17 +48,18 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Processes();
 
   dialog: any;
-  currentTab = 1; //Bước hiện tại
+  currentTab = 0; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
   oldNode: number; // Vị trí node cũ
   funcID: any;
   isShow = true; //Check mở form
-  isAddNew = true;
+  action = '';
   attachment: any;
   linkAvatar = '';
   vllShare = 'ES014';
+  multiple = true;
   showID = true;
   //!--ID SHOW FORM !--//
   general = true;
@@ -89,6 +95,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
+  formModel: FormModel;
+  formGroup: FormGroup;
+  refValue = 'DP018';
+  gridViewSetup : any;
   userGroupJob = [];
   nameStage = '';
   isAddStage = true;
@@ -243,11 +253,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private api: ApiHttpService,
     private callfc: CallFuncService,
+    private notiService: NotificationsService,
+    private cache: CacheService,
+    private dpService: CodxDpService,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.process = JSON.parse(JSON.stringify(dt.data.data));
+    this.process = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+    this.action = dt.data.action;
+    this.cache
+      .gridViewSetup(
+        this.dialog.formModel.formName,
+        this.dialog.formModel.gridViewName
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.gridViewSetup = res;
+        }
+      });
   }
 
   data = [
@@ -343,7 +367,50 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //#region onSave
-  onSave() {}
+  beforeSave(op) {
+    var data = [];
+    if(this.action == 'add'){
+      op.methodName = 'AddProcessAsync';
+      op.className = 'ProcessesBusiness';
+      data = [
+        this.process
+      ];
+    }
+    op.data = data;
+  }
+
+  onAdd(){
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option), 0)
+      .subscribe((res) => {
+        this.imageAvatar.clearData() ;
+        if (res) {
+          this.dialog.close([res.save]);
+        } else this.dialog.close();
+      });
+  }
+
+  async onSave() {
+    if(this.process.processName == null || this.process.processName.trim() == ''){
+      this.notiService.notify(
+       'Test'
+      );
+      return;
+    }
+    if (this.imageAvatar?.fileUploadList?.length > 0) {
+      (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
+        if (res) {
+          this.onAdd();
+        }
+      });
+    } else {
+      this.onAdd();
+    }
+  }
+
+  valueChange(e){
+    this.process[e.field] = e.data;
+  }
   //#endregion
 
   //#region Change Tab
@@ -473,11 +540,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //end
 
   //Control share
-  sharePerm(share) {
+  sharePerm(share, type) {
+    switch (type) {
+      case 'supervisor':
+        this.vllShare = 'ES014';
+        break;
+      case 'participants':
+        this.vllShare = 'DM001';
+        break;
+      case 'followers':
+        this.vllShare = 'DM001';
+        break;
+    }
     this.callfc.openForm(share, '', 420, window.innerHeight);
   }
 
-  applyShare(e) {}
+  applyShare(e) {
+
+  }
 
   addFile(e) {
     this.attachment.uploadFile();
