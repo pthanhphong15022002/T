@@ -108,10 +108,6 @@ codx-view-list-detail .e-pane {
 
     .btn {
         color: var(--primary);
-
-        span {
-            color: var(--primary);
-        }
     }
 
     .dialog-title,
@@ -239,6 +235,10 @@ codx-view-list-detail .codx-detail-footer {
 .e-schedule .e-month-agenda-view .e-date-header-wrap table td {
     background-color: var(--bg-card);
     border-color: var(--border-list);
+}
+
+.e-schedule .e-month-agenda-view .e-appointment-wrap {
+    background-color: inherit;
 }
 
 #Schedule .e-work-cells.e-work-days,
@@ -625,6 +625,23 @@ ejs-listview,
 .btn.btn-light-primary {
     color: var(--text-des);
     background-color: var(--primary-light) !important;
+}
+
+.e-work-cells.e-work-hours {
+    background-color: inherit !important;
+}
+
+.e-agenda-item.e-month-agenda-view {
+    background-color: inherit !important;
+    height: auto !important;
+}
+
+.bg-light {
+    background-color: var(--bg-input) !important;
+}
+
+.menu-sub-dropdown {
+    background-color: var(--bg-card);
 }
 
 //end dark

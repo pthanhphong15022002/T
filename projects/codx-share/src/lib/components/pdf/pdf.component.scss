@@ -69,7 +69,7 @@
   }
 
   .main-right {
-    background-color: white;
+    background-color: var(--bg-body);
     width: 350px;
   }
 
@@ -79,7 +79,7 @@
 
   .stepper-toolbar {
     height: 42px;
-    background-color: white;
+    background-color: var(--bg-body);
   }
 
   .e-toolbar .e-tbar-btn {

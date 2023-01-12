@@ -13,15 +13,26 @@
     <div class="form-group">
         <codx-label
             [formModel]="form.formModel"
-            fiedName="toDate"
+            fiedName="ToDate"
             default="Ngày"      
           ></codx-label>
           <codx-input
+          *ngIf="formtype == 'addexrate'"
+          [Group]="form.formGroup"
           [formModel]="form.formModel" 
-          [Group]="form.formGroup"      
-          field="toDate"            
+          [crrValue]="toDate"      
+          field="ToDate"            
         >
         </codx-input>
+        <codx-input
+        *ngIf="formtype == 'editexrate'"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel" 
+        [crrValue]="toDate"      
+        field="ToDate"     
+        [disabled]="true"       
+      >
+      </codx-input>
       </div>
       <div class="form-group">
         <codx-label
@@ -29,7 +40,7 @@
             fiedName="exchangeRate"
             default="Tỷ giá"      
           ></codx-label>
-          <codx-input
+          <codx-input     
           [formModel]="form.formModel"
           [crrValue]="exchangeRate"        
           field="exchangeRate"        
