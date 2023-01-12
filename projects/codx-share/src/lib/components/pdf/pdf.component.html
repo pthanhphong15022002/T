@@ -1,27 +1,13 @@
-<div
-  class="d-flex justify-content-between main-pane stepper-body tab-custom w-100"
->
+<div class="d-flex justify-content-between main-pane stepper-body tab-custom w-100">
   <div class="main-content d-flex flex-column-fluid h-100">
-    <div
-      class="flex-column flex-lg-row-auto main-left w-250px w-xxl-275px"
-      [class.hideCol]="hideThumbnail"
-      style="user-select: none"
-    >
-      <ejs-tab
-        #leftToolbar
-        [class.d-none]="hideThumbnail"
-        heightAdjustMode="Fill"
-        (selected)="changeLeftTab($event)"
-      >
+    <div class="flex-column flex-lg-row-auto main-left w-250px w-xxl-275px" [class.hideCol]="hideThumbnail"
+      style="user-select: none">
+      <ejs-tab #leftToolbar [class.d-none]="hideThumbnail" heightAdjustMode="Fill" (selected)="changeLeftTab($event)">
         <e-tabitems>
           <e-tabitem>
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderLeft0"
-                [formModel]=""
-                [default]="headerLeftName[0].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderLeft0" [formModel]="" [default]="headerLeftName[0].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
             <ng-template #content>
               <div #thumbnailTab id="thumbnailTab"></div>
@@ -34,23 +20,16 @@
           </e-tabitem>
           <e-tabitem>
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderLeft1"
-                [formModel]=""
-                [default]="headerLeftName[1].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderLeft1" [formModel]="" [default]="headerLeftName[1].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
             <ng-template #content>
               <ng-container>
-                <div
-                  class="ca-space d-flex align-items-start cursor-pointer px-2 pb-3"
-                  *ngFor="let ca of lstCA; let idx = index"
-                >
+                <div class="ca-space d-flex align-items-start cursor-pointer px-2 pb-3"
+                  *ngFor="let ca of lstCA; let idx = index">
                   <div class="position-relative symbol me-3">
                     <span class="icon-24 icon-gesture"></span>
-                    <div
-                      class="symbol-badge badge badge-sm badge-circle top-100 start-100 text-white ms-n1 mt-n2"
+                    <div class="symbol-badge badge badge-sm badge-circle top-100 start-100 text-white ms-n1 mt-n2"
                       [ngClass]="{
                         icon: true,
                         'icon-priority_high bg-warning':
@@ -58,99 +37,48 @@
                         'icon-clear bg-danger': !ca.certificate_IsValidNow,
                         'icon-check bg-success':
                           ca.isVerified && ca.certificate_IsValidNow
-                      }"
-                    ></div>
+                      }"></div>
                   </div>
 
                   <div class="ca-memo">
-                    <codx-label
-                      [name]="'lblCAMemo' + idx"
-                      [formModel]=""
-                      [default]="'Certified by ' + ca.signerName"
-                      class="fw-bold mb-2 text-hover-primary"
-                      (click)="goToSelectedCA(ca, idx)"
-                    ></codx-label>
-                    <div
-                      class="ca-more_Info"
-                      *ngIf="lstCACollapseState[idx]?.open"
-                    >
-                      <codx-label
-                        [name]="'lblCAMoreInfo'"
-                        [formModel]=""
-                        [default]="'Signing Time: '"
-                        class="fw-bold mb-2"
-                      >
-                        {{ ca.signedDate }}</codx-label
-                      >
+                    <codx-label [name]="'lblCAMemo' + idx" [formModel]="" [default]="'Certified by ' + ca.signerName"
+                      class="fw-bold mb-2 text-hover-primary" (click)="goToSelectedCA(ca, idx)"></codx-label>
+                    <div class="ca-more_Info" *ngIf="lstCACollapseState[idx]?.open">
+                      <codx-label [name]="'lblCAMoreInfo'" [formModel]="" [default]="'Signing Time: '"
+                        class="fw-bold mb-2">
+                        {{ ca.signedDate }}</codx-label>
                       <div *ngIf="!ca.isVerified">
-                        <ng-container
-                          [ngTemplateOutlet]="failReasons"
-                          [ngTemplateOutletContext]="{ ca: ca }"
-                        >
+                        <ng-container [ngTemplateOutlet]="failReasons" [ngTemplateOutletContext]="{ ca: ca }">
                         </ng-container>
                       </div>
-                      <button
-                        (click)="openPopUpCAProps(ca)"
-                        class="btn btn-link btn-color-gray-800 btn-active-color-primary"
-                      >
-                        <codx-label
-                          [name]="'lblCAProps'"
-                          [formModel]=""
-                          [default]="'Signature Properties'"
-                          class="fw-bold mb-2 fst-italic text-decoration-underline"
-                        ></codx-label>
+                      <button (click)="openPopUpCAProps(ca)"
+                        class="btn btn-link btn-color-gray-800 btn-active-color-primary">
+                        <codx-label [name]="'lblCAProps'" [formModel]="" [default]="'Signature Properties'"
+                          class="fw-bold mb-2 fst-italic text-decoration-underline"></codx-label>
                       </button>
                       <div class="ca_Details">
-                        <codx-label
-                          [name]="'lblCADetails'"
-                          [formModel]=""
-                          [default]="'Signature Detail'"
-                          class="text-header d-block fw-bold"
-                        ></codx-label>
+                        <codx-label [name]="'lblCADetails'" [formModel]="" [default]="'Signature Detail'"
+                          class="text-header d-block fw-bold"></codx-label>
 
-                        <codx-label
-                          [name]="'lblCADetails_Contact'"
-                          [formModel]=""
-                          [default]="'Contact Information: '"
-                          class="text-header"
-                        >
+                        <codx-label [name]="'lblCADetails_Contact'" [formModel]="" [default]="'Contact Information: '"
+                          class="text-header">
                           {{ ca.certificate_IssuedBy.commonName }}
                         </codx-label>
 
-                        <codx-label
-                          [name]="'lblCADetails_Location'"
-                          [formModel]=""
-                          [default]="'Location: '"
-                          class="text-header"
-                          >{{ +ca.signedLocation }}</codx-label
-                        >
+                        <codx-label [name]="'lblCADetails_Location'" [formModel]="" [default]="'Location: '"
+                          class="text-header">{{ +ca.signedLocation }}</codx-label>
 
-                        <codx-label
-                          [name]="'lblCADetails_Reason'"
-                          [formModel]=""
-                          [default]="'Reason: '"
-                          class="text-header"
-                          >{{ ca.signedComment }}</codx-label
-                        >
+                        <codx-label [name]="'lblCADetails_Reason'" [formModel]="" [default]="'Reason: '"
+                          class="text-header">{{ ca.signedComment }}</codx-label>
                       </div>
                     </div>
                   </div>
                 </div>
                 <ng-template #failReasons let-ca="ca">
-                  <codx-label
-                    [name]="'lblFailed'"
-                    [formModel]=""
-                    [default]="'Certificate verification failed'"
-                    class="text-header d-block fw-bold"
-                  ></codx-label>
-                  <div
-                    class="fail_Reasons ms-2"
-                    *ngFor="let reason of ca.vertifications"
-                  >
-                    <div
-                      class="reason_Info ms-2"
-                      *ngIf="!reason.isVerified && reason.message != ''"
-                    >
+                  <codx-label [name]="'lblFailed'" [formModel]="" [default]="'Certificate verification failed'"
+                    class="text-header d-block fw-bold"></codx-label>
+                  <div class="fail_Reasons ms-2" *ngFor="let reason of ca.vertifications">
+                    <div class="reason_Info ms-2" *ngIf="!reason.isVerified && reason.message != ''">
                       <p>{{ reason.message }}</p>
                     </div>
                   </div>
@@ -159,7 +87,7 @@
                   <div class="e-list-wrapper">
                     <span class="e-list-item-content">{{
                       dataSource.items[0].location.pageNumber + 1
-                    }}</span>
+                      }}</span>
                   </div>
                 </ng-template>
               </ng-container>
@@ -169,146 +97,86 @@
       </ejs-tab>
     </div>
     <div class="d-flex flex-column flex-row-fluid main-center">
-      <div
-        class="d-flex d-flex align-items-center justify-content-between stepper-toolbar"
-      >
-        <div
-          class="left_Toolbar d-flex justify-content-start align-items-center"
-        >
+      <div class="d-flex d-flex align-items-center justify-content-between stepper-toolbar">
+        <div class="left_Toolbar d-flex justify-content-start align-items-center">
           <ejs-toolbar>
             <e-items>
-              <e-item
-                [prefixIcon]="
+              <e-item [prefixIcon]="
                   hideThumbnail
                     ? 'btn btn-icon btn-light btn-sm border-0 btn-active-primary   icon-arrow_forward'
                     : 'btn btn-icon btn-light btn-sm border-0 btn-active-primary icon-arrow_back rotate-180'
-                "
-                (click)="changeShowThumbnailState()"
-              ></e-item>
-              <e-item
-                prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="firstPage"
-              >
+                " (click)="changeShowThumbnailState()"></e-item>
+              <e-item prefixIcon="icon-skip_previous icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="firstPage">
               </e-item>
-              <e-item
-                prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="previous"
-              >
+              <e-item prefixIcon="icon-navigate_before icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="previous">
               </e-item>
               <e-item [template]="pageInput" type="Input"></e-item>
-              <e-item
-                prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="next"
-              >
+              <e-item prefixIcon="icon-navigate_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="next">
               </e-item>
-              <e-item
-                prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="lastPage"
-              >
+              <e-item prefixIcon="icon-skip_next icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="lastPage">
               </e-item>
 
-              <e-item
-                id="viewThumbnail"
-                prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              >
+              <e-item id="viewThumbnail"
+                prefixIcon="icon-article icon-18 btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
               </e-item>
             </e-items>
           </ejs-toolbar>
         </div>
-        <div
-          class="chooseSignFile w-100 d-flex justify-content-center align-items-center"
-          #pdfToolbar
-        >
-          <ejs-dropdownlist
-            id="signfilesDropdownList"
-            [(dataSource)]="lstFiles"
-            [fields]="file"
-            (change)="changeSignFile($event)"
-            [(value)]="curFileID"
-          ></ejs-dropdownlist>
+        <div class="chooseSignFile w-100 d-flex justify-content-center align-items-center" #pdfToolbar>
+          <ejs-dropdownlist id="signfilesDropdownList" [(dataSource)]="lstFiles" [fields]="file"
+            (change)="changeSignFile($event)" [(value)]="curFileID"></ejs-dropdownlist>
         </div>
-        <div
-          class="right_Toolbar d-flex justify-content-end align-items-center"
-        >
+        <div class="right_Toolbar d-flex justify-content-end align-items-center">
           <ejs-toolbar>
             <e-items>
-              <e-item
-                (click)="changeZoom('out', $event)"
-                [disabled]="zoomValue <= 10"
-                prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              >
+              <e-item (click)="changeZoom('out', $event)" [disabled]="zoomValue <= 10"
+                prefixIcon="e-zoom-out btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
               </e-item>
             </e-items>
           </ejs-toolbar>
           <!-- id="zoomValuesDropdownList" -->
-          <ejs-dropdownlist
-            style="width: 100%; min-width: 70px"
-            [(dataSource)]="lstZoomValue"
-            [(placeholder)]="zoomValue"
-            [value]="zoomValue"
-            (change)="changeZoom('to', $event)"
-          >
+          <ejs-dropdownlist style="width: 100%; min-width: 70px" [(dataSource)]="lstZoomValue"
+            [(placeholder)]="zoomValue" [value]="zoomValue" (change)="changeZoom('to', $event)">
             <!-- [fields]="zoomFields" -->
           </ejs-dropdownlist>
 
           <ejs-toolbar>
             <e-items>
-              <e-item
-                (click)="changeZoom('in', $event)"
-                [disabled]="zoomValue >= 100"
-                prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom"
-              >
+              <e-item (click)="changeZoom('in', $event)" [disabled]="zoomValue >= 100"
+                prefixIcon="e-zoom-in btn btn-icon btn-white btn-sm border-0  btn-tool-custom">
               </e-item>
             </e-items>
           </ejs-toolbar>
           <ejs-toolbar class="border-start">
             <e-items>
-              <e-item
-                *ngIf="hasPermission"
-                prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="print"
-              >
+              <e-item *ngIf="hasPermission" prefixIcon="e-print btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
+                id="print">
               </e-item>
-              <e-item
-                prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-                id="download"
-              >
+              <e-item prefixIcon="e-download btn btn-icon btn-white btn-sm border-0 btn-tool-custom" id="download">
               </e-item>
 
-              <e-item
-                (click)="clickHighlightText()"
-                prefixIcon="e-style btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              ></e-item>
-              <e-item
-                (click)="confirmHighlightText(false)"
-                prefixIcon="e-circle-check
-                btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              ></e-item>
-              <e-item
-                (click)="removeUnsaveHLA()"
-                prefixIcon="e-close
-              btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              ></e-item>
+              <e-item (click)="clickHighlightText()"
+                prefixIcon="e-style btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
+              <e-item (click)="confirmHighlightText(false)" prefixIcon="e-circle-check
+                btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
+              <e-item (click)="removeUnsaveHLA()" prefixIcon="e-close
+              btn btn-icon btn-white btn-sm border-0 btn-tool-custom"></e-item>
 
-              <e-item
-                (click)="changeEditMode()"
-                prefixIcon="e-repeat btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              >
+              <e-item (click)="changeEditMode()"
+                prefixIcon="e-repeat btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
               </e-item>
-              <e-item
-                (click)="changeRemoveHLAMode()"
-                prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom"
-              >
+              <e-item (click)="changeRemoveHLAMode()"
+                prefixIcon="e-erase btn btn-icon btn-white btn-sm border-0 btn-tool-custom">
               </e-item>
-              <e-item
-                *ngIf="isEditable"
-                [prefixIcon]="
+              <e-item *ngIf="isEditable" [prefixIcon]="
                   !hideActions
                     ? 'btn btn-icon btn-light btn-sm border-0 btn-active-primary icon-arrow_forward'
                     : 'icon-arrow_back btn btn-icon btn-light btn-sm border-0 btn-active-primary  rotate-180'
-                "
-                (click)="changeShowActionsState()"
-              ></e-item>
+                " (click)="changeShowActionsState()"></e-item>
             </e-items>
           </ejs-toolbar>
         </div>
@@ -316,43 +184,20 @@
         </ng-container>
       </div>
       <!-- [customToolbar]="pdfToolbar" -->
-      <ngx-extended-pdf-viewer
-        [showToolbar]="false"
-        *ngIf="curFileUrl"
-        #ngxPdfView
-        [(src)]="curFileUrl"
-        [(zoom)]="zoomValue"
-        [(page)]="curPage"
-        [handTool]="showHand"
-        [showHandToolButton]="showHand"
-        [useBrowserLocale]="false"
-        [language]="'vn'"
-        [showUnverifiedSignatures]="true"
-        [sidebarVisible]="!hideThumbnail"
-        [showSidebarButton]="false"
-        (pdfLoaded)="loadedPdf($event)"
-        (pageRendered)="pageRendered($event)"
-        [showBookmarkButton]="false"
-        [showPropertiesButton]="false"
-        [customSidebar]="withoutSidebar"
-        [customThumbnail]="ngxThumbnail"
-        [enableDragAndDrop]="false"
-        [contextMenuAllowed]="false"
-        [enablePinchOnMobile]="false"
-        (currentZoomFactor)="('1')"
-        pageViewMode="vertical"
-        (textLayerRendered)="getTextLayerInfo($event)"
-      >
+      <ngx-extended-pdf-viewer [showToolbar]="false" *ngIf="curFileUrl" #ngxPdfView [(src)]="curFileUrl"
+        [(zoom)]="zoomValue" [(page)]="curPage" [handTool]="showHand" [showHandToolButton]="showHand"
+        [useBrowserLocale]="false" [language]="'vn'" [showUnverifiedSignatures]="true" [sidebarVisible]="!hideThumbnail"
+        [showSidebarButton]="false" (pdfLoaded)="loadedPdf($event)" (pageRendered)="pageRendered($event)"
+        [showBookmarkButton]="false" [showPropertiesButton]="false" [customSidebar]="withoutSidebar"
+        [customThumbnail]="ngxThumbnail" [enableDragAndDrop]="false" [contextMenuAllowed]="false"
+        [enablePinchOnMobile]="false" (currentZoomFactor)="('1')" pageViewMode="vertical"
+        (textLayerRendered)="getTextLayerInfo($event)">
       </ngx-extended-pdf-viewer>
 
       <ng-template #ngxThumbnail let-PAGE_NUMBER>
         <a class="pdf-viewer-template">
-          <div
-            class="thumbnail"
-            [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
-            data-page-number="PAGE_NUMBER"
-            (click)="goToPage(PAGE_NUMBER)"
-          >
+          <div class="thumbnail" [classList]="PAGE_NUMBER == curPage ? 'border border-primary' : ''"
+            data-page-number="PAGE_NUMBER" (click)="goToPage(PAGE_NUMBER)">
             <div class="image-container d-flex mb-2"></div>
           </div>
         </a>
@@ -364,92 +209,49 @@
         </div>
       </ng-template>
     </div>
-    <div
-      class="actions flex-column flex-lg-row-auto main-right"
-      [class.hideCol]="hideActions"
-      style="user-select: none"
-    >
-      <ejs-tab
-        #rightToolbar
-        id="rightToolbar"
-        [class.d-none]="hideActions"
-        heightAdjustMode="Fill"
-        (selecting)="changeRightTab($event)"
-      >
+    <div class="actions flex-column flex-lg-row-auto main-right" [class.hideCol]="hideActions"
+      style="user-select: none">
+      <ejs-tab #rightToolbar id="rightToolbar" [class.d-none]="hideActions" heightAdjustMode="Fill"
+        (selecting)="changeRightTab($event)">
         <e-tabitems>
           <e-tabitem *ngIf="isEditable && !isPublic">
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderRight0"
-                [formModel]=""
-                [default]="headerRightName[0].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderRight0" [formModel]="" [default]="headerRightName[0].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
 
             <ng-template #content>
               <div style="padding: 0 20px">
                 <div class="position-relative" *ngIf="!isApprover">
                   <div class="mt-3 mb-3 text-primary fw-bold">
-                    <codx-label
-                      name="lblChooseSigner"
-                      [formModel]=""
-                      default="Chọn người kí cần thiết lập"
-                      class="text-header d-block"
-                    ></codx-label>
+                    <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
+                      class="text-header d-block"></codx-label>
                   </div>
-                  <ejs-dropdownlist
-                    id="signatureDropdownList"
-                    [dataSource]="lstSigners"
-                    [(fields)]="person"
-                    (change)="changeSigner($event)"
-                    [itemTemplate]="signer"
-                    [valueTemplate]="signer"
-                    [(value)]="curSignerRecID"
-                  >
+                  <ejs-dropdownlist id="signatureDropdownList" [dataSource]="lstSigners" [(fields)]="person"
+                    (change)="changeSigner($event)" [itemTemplate]="signer" [valueTemplate]="signer"
+                    [(value)]="curSignerRecID">
                     <ng-template #signer let-approver>
-                      <codx-temp-full
-                        cardCss="card-select  px-2 pt-3 pb-2"
-                        [(imageId)]="approver.authorID"
-                        [imageObjType]="'AD_Users'"
-                        [imageWidth]="35"
-                        imgCss="me-2"
-                        [title]="
+                      <codx-temp-full cardCss="card-select  px-2 pt-3 pb-2" [(imageId)]="approver.authorID"
+                        [imageObjType]="'AD_Users'" [imageWidth]="35" imgCss="me-2" [title]="
                           approver.fullName ??
                           (approver.roleType | vll : 'ES014' : 'text' | async)
-                        "
-                        [subTitle]="approver.position ?? ''"
-                        [baseHeaderRightTmp]="footer"
-                        [dataItem]="approver"
-                      >
+                        " [subTitle]="approver.position ?? ''" [baseHeaderRightTmp]="footer" [dataItem]="approver">
                       </codx-temp-full>
                     </ng-template>
                   </ejs-dropdownlist>
                 </div>
                 <div class="mt-3 mb-3 text-primary fw-bold">
-                  <codx-label
-                    name="lblDragAction"
-                    [formModel]=""
-                    default="Kéo & thả chữ ký vào tài liệu"
-                    class="text-header d-block"
-                  >
+                  <codx-label name="lblDragAction" [formModel]="" default="Kéo & thả chữ ký vào tài liệu"
+                    class="text-header d-block">
                   </codx-label>
                 </div>
 
                 <div class="d-flex flex-wrap d-grid align-items-center">
-                  <div
-                    class="card-item me-6 mb-6"
-                    #actions
-                    *ngFor="let action of vllActions; let index = index"
-                    [class.active]="holding == action?.value"
-                    (click)="changeAnnotationItem(action)"
-                  >
-                    <codx-card-center
-                      *ngIf="!isApprover || (isApprover && index != 8)"
-                      cardCss="border h-100 w-125px pt-4 pb-2 "
-                      icoCss="icon-30 mb-1 {{ action?.icon }}"
-                      content="{{ action?.text }}"
-                    >
+                  <div class="card-item me-6 mb-6" #actions *ngFor="let action of vllActions; let index = index"
+                    [class.active]="holding == action?.value" (click)="changeAnnotationItem(action)">
+                    <codx-card-center *ngIf="!isApprover || (isApprover && index != 8)"
+                      cardCss="border h-100 w-125px pt-4 pb-2 " icoCss="icon-30 mb-1 {{ action?.icon }}"
+                      content="{{ action?.text }}">
                     </codx-card-center>
                   </div>
                 </div>
@@ -458,23 +260,13 @@
                 <div class="d-flex align-items-center my-2">
                   <div class="d-flex justify-content-start me-2">
                     <!--begin::Switch-->
-                    <codx-input
-                      type="switch"
-                      labelPosition="After"
-                      field=""
-                      [disabled]="!isEditable"
-                      [crrValue]="needSuggest"
-                      (valueChange)="changeSuggestState($event)"
-                    >
+                    <codx-input type="switch" labelPosition="After" field="" [disabled]="!isEditable"
+                      [crrValue]="needSuggest" (valueChange)="changeSuggestState($event)">
                     </codx-input>
                     <!--end::Switch-->
                   </div>
                   <div class="text-gray-800 text-nowrap">
-                    <codx-label
-                      name="lblSuggestSignArea"
-                      default="Gợi ý trang ký"
-                      class="fw-bold"
-                    ></codx-label>
+                    <codx-label name="lblSuggestSignArea" default="Gợi ý trang ký" class="fw-bold"></codx-label>
                   </div>
                 </div>
                 <!--end::Item-->
@@ -482,21 +274,12 @@
                 <div class="autoSign_Space d-flex align-items-center my-2">
                   <div class="d-flex justify-content-start me-2">
                     <!--begin::Switch-->
-                    <codx-input
-                      type="switch"
-                      field="autoSignLastLine"
-                      [disabled]="!isEditable"
-                      [(crrValue)]="autoSignState"
-                      (valueChange)="changeAutoSignState($event, 0)"
-                    ></codx-input>
+                    <codx-input type="switch" field="autoSignLastLine" [disabled]="!isEditable"
+                      [(crrValue)]="autoSignState" (valueChange)="changeAutoSignState($event, 0)"></codx-input>
                     <!--end::Switch-->
                   </div>
                   <div class="text-gray-800 text-nowrap">
-                    <codx-label
-                      name="lblSignLastLine"
-                      default="Chèn chữ ký tự động"
-                      class="fw-bold"
-                    ></codx-label>
+                    <codx-label name="lblSignLastLine" default="Chèn chữ ký tự động" class="fw-bold"></codx-label>
                   </div>
                 </div>
                 <!--end::Item-->
@@ -506,200 +289,114 @@
 
           <e-tabitem *ngIf="inputUrl == null">
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderRight1"
-                [formModel]=""
-                [default]="headerRightName[1].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderRight1" [formModel]="" [default]="headerRightName[1].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
             <ng-template #content>
               <ng-container>
-                <ejs-listview
-                  id="groupedList"
-                  [(dataSource)]="lstAreas"
-                  [cssClass]="cssClass"
-                  [showHeader]="true"
-                >
+                <ejs-listview id="groupedList" [(dataSource)]="lstAreas" [cssClass]="cssClass" [showHeader]="true">
                   <ng-template #template let-area="">
-                    <div
-                      class="annotationItem py-3 px-3"
-                      *ngIf="
+                    <div class="annotationItem py-3 px-3" *ngIf="
                         !this.isApprover ||
                         (this.isApprover &&
                           area.signer == this.curSignerID &&
                           area.stepNo == this.stepNo)
-                      "
-                      (click)="goToSelectedAnnotation(area)"
-                    >
-                      <codx-temp-full
-                        [title]="
+                      " (click)="goToSelectedAnnotation(area)">
+                      <codx-temp-full [title]="
                           (area.labelType | vll : 'ES015' : 'text' | async) +
                           ' - ' +
                           getAreaOwnerName(area.signer)
-                        "
-                        [resourceObjType]="'AD_Users'"
-                        [icoCss]="
+                        " [resourceObjType]="'AD_Users'" [icoCss]="
                           'symbol symbol-icon symbol-circle symbol-32px me-2 ' +
                           (area.labelType | vll : 'ES015' : 'icon' | async)
-                        "
-                        [iconCss2]="
+                        " [iconCss2]="
                           area.recID != curSelectedAnnotID
                             ? 'icon-expand_more'
                             : 'icon-expand_less'
-                        "
-                        [subTitle]="'Trang ' + (+area.location.pageNumber + 1)"
-                        [subTitleCss]="'page-end'"
-                      >
+                        " [subTitle]="'Trang ' + (+area.location.pageNumber + 1)" [subTitleCss]="'page-end'">
                       </codx-temp-full>
-                      <div
-                        [class.d-none]="
+                      <div [class.d-none]="
                           !isPublic &&
                           (inputUrl != null ||
                             area.recID != curSelectedAnnotID ||
                             area.isLock == true)
-                        "
-                        [formGroup]="formAnnot"
-                      >
-                        <div
-                          class="text-content form-control my-2 ms-12"
-                          *ngIf="
+                        " [formGroup]="formAnnot">
+                        <div class="text-content form-control my-2 ms-12" *ngIf="
                             area.labelType == 6 &&
                             curAnnotFontSize &&
                             curAnnotFontStyle
-                          "
-                        >
-                          <input
-                            type="text"
-                            formControlName="content"
-                            class="w-100 d-block"
-                            [style]="
+                          ">
+                          <input type="text" formControlName="content" class="w-100 d-block" [style]="
                               'font-size: ' +
                               curAnnotFontSize +
                               'px;' +
                               'font-family: ' +
                               curAnnotFontStyle +
                               ';'
-                            "
-                            [ngClass]="{
+                            " [ngClass]="{
                               'fw-bolder': isBold,
                               'fst-italic': isItalic,
                               'text-decoration-underline': isUnd
-                            }"
-                            [defaultValue]="area.labelValue"
-                          />
+                            }" [defaultValue]="area.labelValue" />
                         </div>
 
-                        <div
-                          class="date-content my-2 ms-12"
-                          *ngIf="area.labelType == 5 && curAnnotDateFormat"
-                        >
-                          <ejs-dropdownlist
-                            class="me-2 min-w-70px"
-                            id="dateFormatsDropdownList"
-                            [dataSource]="lstAnnotDateFormat"
-                            [(value)]="curAnnotDateFormat"
-                          >
+                        <div class="date-content my-2 ms-12" *ngIf="area.labelType == 5 && curAnnotDateFormat">
+                          <ejs-dropdownlist class="me-2 min-w-70px" id="dateFormatsDropdownList"
+                            [dataSource]="lstAnnotDateFormat" [(value)]="curAnnotDateFormat">
                           </ejs-dropdownlist>
                           <!-- formControlName="dateFormat" -->
                         </div>
                         <div class="d-flex my-2 ms-12">
-                          <div
-                            class="text-format d-flex align-items-center"
-                            *ngIf="imgConfig.includes(area.labelType)"
-                          >
-                            <img
-                              [id]="area.recID"
-                              *ngIf="!isPublic"
-                              class="img"
+                          <div class="text-format d-flex align-items-center" *ngIf="imgConfig.includes(area.labelType)">
+                            <img [id]="area.recID" *ngIf="!isPublic" class="img"
                               [src]="env.urlUpload + '/' + area.labelValue"
-                              onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'"
-                            />
-                            <codx-img
-                              *ngIf="isPublic && area.labelType == 'S1'"
-                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage"
-                              [imageType]="'square'"
-                              [width]="80"
-                              [objectId]=""
-                              [objectType]=""
-                              data-kt-menu-trigger="click"
-                              data-kt-menu-attach="parent"
-                              data-kt-menu-placement="bottom-end"
-                              data-kt-menu-flip="bottom"
-                              [isAllowEdit]="true"
-                              [funcId]=""
-                              (handleInput)="
+                              onerror="this.src = '/assets/themes/sys/default/img/Avatar_Default.svg'" />
+                            <codx-img *ngIf="isPublic && area.labelType == 'S1'"
+                              class="symbol symbol-120 square me-2 image-inpt-wrapper fullImage" [imageType]="'square'"
+                              [width]="80" [objectId]="" [objectType]="" data-kt-menu-trigger="click"
+                              data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end"
+                              data-kt-menu-flip="bottom" [isAllowEdit]="true" [funcId]="" (handleInput)="
                                 changeSignature_StampImg_Area_Immediate(
                                   area,
                                   $event
                                 )
-                              "
-                            >
+                              ">
                             </codx-img>
                           </div>
-                          <div
-                            class="text-format d-flex align-items-center"
-                            *ngIf="
+                          <div class="text-format d-flex align-items-center" *ngIf="
                               !imgConfig.includes(area.labelType) &&
                               curAnnotFontStyle &&
                               curAnnotFontSize
-                            "
-                          >
-                            <ejs-dropdownlist
-                              class="me-2 min-w-70px"
-                              id="fontStylesDropdownList"
-                              [dataSource]="lstAnnotFontStyle"
-                              [(value)]="curAnnotFontStyle"
-                            >
+                            ">
+                            <ejs-dropdownlist class="me-2 min-w-70px" id="fontStylesDropdownList"
+                              [dataSource]="lstAnnotFontStyle" [(value)]="curAnnotFontStyle">
                             </ejs-dropdownlist>
                             <!-- formControlName="fontStyle" -->
-                            <ejs-dropdownlist
-                              class="me-2 w-100px"
-                              id="fontSizesDropdownList"
-                              [dataSource]="lstAnnotFontSize"
-                              [(value)]="curAnnotFontSize"
-                            >
+                            <ejs-dropdownlist class="me-2 w-100px" id="fontSizesDropdownList"
+                              [dataSource]="lstAnnotFontSize" [(value)]="curAnnotFontSize">
                             </ejs-dropdownlist>
                             <!-- formControlName="fontSize" -->
                           </div>
-                          <div
-                            class="btn-format d-flex align-items-center"
-                            *ngIf="!imgConfig.includes(area.labelType)"
-                          >
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-icon me-1"
-                              [ngClass]="{
+                          <div class="btn-format d-flex align-items-center" *ngIf="!imgConfig.includes(area.labelType)">
+                            <button type="button" class="btn btn-sm btn-icon me-1" [ngClass]="{
                                 btn: true,
                                 'bg-white border': !isBold,
                                 'btn-success': isBold
-                              }"
-                              (click)="changeFontWeight(1)"
-                            >
+                              }" (click)="changeFontWeight(1)">
                               <span class="icon-format_bold"></span>
                             </button>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-icon me-1"
-                              [ngClass]="{
+                            <button type="button" class="btn btn-sm btn-icon me-1" [ngClass]="{
                                 btn: true,
                                 'bg-white border': !isItalic,
                                 'btn-success': isItalic
-                              }"
-                              (click)="changeFontWeight(2)"
-                            >
+                              }" (click)="changeFontWeight(2)">
                               <span class="icon-format_italic"></span>
                             </button>
-                            <button
-                              type="button"
-                              class="btn btn-sm btn-icon"
-                              [ngClass]="{
+                            <button type="button" class="btn btn-sm btn-icon" [ngClass]="{
                                 btn: true,
                                 'bg-white border': !isUnd,
                                 'btn-success': isUnd
-                              }"
-                              (click)="changeFontWeight(3)"
-                            >
+                              }" (click)="changeFontWeight(3)">
                               <span class="icon-format_underlined"></span>
                             </button>
                           </div>
@@ -712,41 +409,20 @@
                               let index = index
                             "
                           > -->
-                          <codx-input
-                            class="me-4 date-Type"
-                            name="date-Type"
-                            type="radio"
-                            [checked]="!useSignDate"
-                            labelPosition="After"
-                            (valueChange)="changeUseCreatedDate()"
-                          >
+                          <codx-input class="me-4 date-Type" name="date-Type" type="radio" [checked]="!useSignDate"
+                            labelPosition="After" (valueChange)="changeUseCreatedDate()">
                           </codx-input>
-                          <codx-label
-                            [name]="'lblSignDateType0'"
-                            [default]="lstSignDateType[0]"
-                            [formModel]=""
-                          >
+                          <codx-label [name]="'lblSignDateType0'" [default]="lstSignDateType[0]" [formModel]="">
                           </codx-label>
-                          <codx-input
-                            class="me-4 date-Type"
-                            name="date-Type"
-                            type="radio"
-                            [checked]="useSignDate"
-                            labelPosition="After"
-                            (valueChange)="changeUseSignDate()"
-                          >
+                          <codx-input class="me-4 date-Type" name="date-Type" type="radio" [checked]="useSignDate"
+                            labelPosition="After" (valueChange)="changeUseSignDate()">
                           </codx-input>
-                          <codx-label
-                            [name]="'lblSignDateType1'"
-                            [default]="lstSignDateType[1]"
-                            [formModel]=""
-                          >
+                          <codx-label [name]="'lblSignDateType1'" [default]="lstSignDateType[1]" [formModel]="">
                           </codx-label>
                           <!-- </div> -->
                         </div>
                         <div class="btn-apply d-flex justify-content-end">
-                          <button
-                            *ngIf="
+                          <button *ngIf="
                               !isPublic && this.isEditable == false
                                 ? false
                                 : area.allowEditAreas == false
@@ -754,64 +430,30 @@
                                 : area.isLock == true
                                 ? false
                                 : true
-                            "
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            (click)="removeArea()"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="Xóa"
-                              [formModel]=""
-                            ></codx-label>
+                            " type="button" class="btn btn-sm btn-primary" (click)="removeArea()">
+                            <codx-label name="lblSave" default="Xóa" [formModel]=""></codx-label>
                           </button>
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            *ngIf="
+                          <button type="button" class="btn btn-sm btn-primary" *ngIf="
                               isEditable &&
                               imgConfig.includes(area.labelType) &&
                               area.labelType != '8' &&
                               !isPublic
-                            "
-                            (click)="changeSignature_StampImg(area)"
-                          >
-                            <codx-label
-                              name="lblChange"
-                              default="Thay đổi"
-                              [formModel]=""
-                            ></codx-label>
+                            " (click)="changeSignature_StampImg(area)">
+                            <codx-label name="lblChange" default="Thay đổi" [formModel]=""></codx-label>
                           </button>
-                          <button
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            *ngIf="
+                          <button type="button" class="btn btn-sm btn-primary" *ngIf="
                               isEditable &&
                               imgConfig.includes(area.labelType) &&
                               area.labelType != '8' &&
                               isPublic
-                            "
-                            (click)="changeSignature_StampImg_Public(area)"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="OK"
-                              [formModel]=""
-                            ></codx-label>
+                            " (click)="changeSignature_StampImg_Public(area)">
+                            <codx-label name="lblSave" default="OK" [formModel]=""></codx-label>
                           </button>
-                          <button
-                            *ngIf="
+                          <button *ngIf="
                               isEditable && !imgConfig.includes(area.labelType)
-                            "
-                            type="button"
-                            class="btn btn-sm btn-primary"
-                            (click)="changeAnnotPro(area.labelType, area.recID)"
-                          >
-                            <codx-label
-                              name="lblSave"
-                              default="OK"
-                              [formModel]=""
-                            ></codx-label>
+                            " type="button" class="btn btn-sm btn-primary"
+                            (click)="changeAnnotPro(area.labelType, area.recID)">
+                            <codx-label name="lblSave" default="OK" [formModel]=""></codx-label>
                           </button>
                         </div>
                       </div>
@@ -821,38 +463,26 @@
                     <div class="e-list-wrapper">
                       <span class="e-list-item-content">{{
                         dataSource.items[0].location.pageNumber + 1
-                      }}</span>
+                        }}</span>
                     </div>
                   </ng-template>
                 </ejs-listview>
 
                 <ng-container class="form-group mt-6" *ngIf="isPublic">
                   <div class="text-center mb-6">
-                    <ul
-                      class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6"
-                    >
-                      <ng-container
-                        *ngFor="let spl of vllSupplier; let index = index"
-                      >
+                    <ul class="flex-center nav nav-tabs nav-pills flex-row border-0 mb-6">
+                      <ng-container *ngFor="let spl of vllSupplier; let index = index">
                         <div class="nav-item m-0">
-                          <button
-                            [disabled]="index != 0"
-                            class="nav-link text-center flex-center rounded-0 min-w-100px"
-                            [ngClass]="currentTab == index ? 'active' : ''"
-                            data-bs-toggle="tab"
-                            id="'#pane_' + index"
-                            (click)="changeTab(index)"
-                          >
+                          <button [disabled]="index != 0" class="nav-link text-center flex-center rounded-0 min-w-100px"
+                            [ngClass]="currentTab == index ? 'active' : ''" data-bs-toggle="tab" id="'#pane_' + index"
+                            (click)="changeTab(index)">
                             <span class="d-flex flex-column">
                               <span>
-                                <img
-                                  [class]="index != 0 ? 'opacity-25' : ''"
-                                  class="h-80px w-80px p-3 user-mini-icon mb-1"
-                                  [src]="
+                                <img [class]="index != 0 ? 'opacity-25' : ''"
+                                  class="h-80px w-80px p-3 user-mini-icon mb-1" [src]="
                                     '../assets/themes/es/default/img/' +
                                     spl.icon
-                                  "
-                                />
+                                  " />
                               </span>
                               <span class="fs-6 fw-bold">
                                 {{ spl.text }}
@@ -866,29 +496,17 @@
 
                   <div class="d-flex justify-content-end">
                     <div>
-                      <button
-                        type="button"
+                      <button type="button"
                         class="btn btn-sm btn-bg-primary text-inverse-primary me-2 mb-2 min-w-60px rounded-4"
-                        [disabled]="!checkedConfirm"
-                      >
-                        <codx-vll
-                          [name]="'ES002'"
-                          [value]="signerInfo?.stepType"
-                          [showText]="true"
-                        >
+                        [disabled]="!checkedConfirm">
+                        <codx-vll [name]="'ES002'" [value]="signerInfo?.stepType" [showText]="true">
                         </codx-vll>
                       </button>
                     </div>
-                    <button
-                      type="button"
+                    <button type="button"
                       class="btn btn-sm btn-bg-warning text-inverse-warning me-2 mb-2 min-w-60px rounded-4"
-                      [disabled]="!checkedConfirm"
-                    >
-                      <codx-label
-                        name="lblRedo"
-                        [formModel]=""
-                        default="Làm lại"
-                      ></codx-label>
+                      [disabled]="!checkedConfirm">
+                      <codx-label name="lblRedo" [formModel]="" default="Làm lại"></codx-label>
                     </button>
 
                     <!-- <button
@@ -911,79 +529,46 @@
 
           <e-tabitem *ngIf="isApprover">
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderRight2"
-                [formModel]=""
-                [default]="headerRightName[2].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderRight2" [formModel]="" [default]="headerRightName[2].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
 
           <e-tabitem *ngIf="isApprover">
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderRight3"
-                [formModel]=""
-                [default]="headerRightName[3].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderRight3" [formModel]="" [default]="headerRightName[3].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
             <ng-template #content></ng-template>
           </e-tabitem>
           <e-tabitem *ngIf="lstKey">
             <ng-template #headerText>
-              <codx-label
-                name="lblHeaderRight4"
-                [formModel]=""
-                [default]="headerRightName[4].text"
-                class="text-header d-block"
-              ></codx-label>
+              <codx-label name="lblHeaderRight4" [formModel]="" [default]="headerRightName[4].text"
+                class="text-header d-block"></codx-label>
             </ng-template>
             <ng-template #content>
               <ejs-toolbar>
                 <e-items>
-                  <e-item
-                    [prefixIcon]="'e-circle-remove'"
-                    (click)="confirmRemoveHLA()"
-                  ></e-item>
+                  <e-item [prefixIcon]="'e-circle-remove'" (click)="confirmRemoveHLA()"></e-item>
                 </e-items>
               </ejs-toolbar>
 
               <div class="highlightAreas">
-                <div
-                  class="highlightedList"
-                  [style]="
+                <div class="highlightedList" [style]="
                     'border: 1px solid black; margin-bottom: 10px; padding: 5px; background-color: ' +
                     defaultColor
-                  "
-                  (click)="goToSelectedHighlightText(key)"
-                  *ngFor="let key of lstKey"
-                  [attr.data-id]="key"
-                >
-                  <codx-temp-full
-                    [title]="
+                  " (click)="goToSelectedHighlightText(key)" *ngFor="let key of lstKey" [attr.data-id]="key">
+                  <codx-temp-full [title]="
                       getHLText(key)?.author + ' ' + getHLText(key)?.createdDate
-                    "
-                    [resourceObjType]="'AD_Users'"
-                    [icoCss]="
+                    " [resourceObjType]="'AD_Users'" [icoCss]="
                       'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom'
-                    "
-                    [subTitle]="
+                    " [subTitle]="
                       'Trang ' + getHLText(key)?.locations[0]?.pageNumber
-                    "
-                    [subTitleCss]="'page-end'"
-                    [desc]="getHLText(key)?.comment?.content"
-                  >
+                    " [subTitleCss]="'page-end'" [desc]="getHLText(key)?.comment?.content">
                   </codx-temp-full>
-                  <codx-input
-                    [attr.data-id]="key"
-                    *ngIf="deleteHLAMode"
-                    type="checkbox"
-                    class="hla-check-delete me-2"
-                    name="select"
-                  >
+                  <codx-input [attr.data-id]="key" *ngIf="deleteHLAMode" type="checkbox" class="hla-check-delete me-2"
+                    name="select">
                   </codx-input>
                 </div>
               </div>
@@ -996,36 +581,19 @@
 </div>
 
 <ng-template #footer let-data>
-  <codx-vll
-    class="footer-left"
-    [showText]="true"
-    name="ES002"
-    [value]="data.stepType"
-  ></codx-vll>
+  <codx-vll class="footer-left" [showText]="true" name="ES002" [value]="data.stepType"></codx-vll>
 </ng-template>
 
 <ng-template #pageInput>
-  <codx-input
-    type="number"
-    id="pageNumber"
-    min="1"
-    [(max)]="pageMax"
-    [(crrValue)]="curPage"
-    (valueChange)="goToPage($event)"
-    [showSpinButton]="false"
-  >
+  <codx-input type="number" id="pageNumber" min="1" [(max)]="pageMax" [(crrValue)]="curPage"
+    (valueChange)="goToPage($event)" [showSpinButton]="false">
   </codx-input>
 </ng-template>
 
 <ng-template #panelLeft> </ng-template>
 <ng-template #confirmCheckbox>
   <div class="pdf-check-add btn-flex flex-center btn-white">
-    <codx-input
-      type="checkbox"
-      class="check-add me-2"
-      name="select"
-      (valueChange)="changeConfirmState($event)"
-    >
+    <codx-input type="checkbox" class="check-add me-2" name="select" (valueChange)="changeConfirmState($event)">
     </codx-input>
     {{ "ES011" | mssg | async }}
     <!-- <codx-label
@@ -1040,58 +608,31 @@
 <div id="contextMenu" style="display: none; position: absolute">
   <div style="z-index: 2">
     <button id="delete-btn">
-      <codx-label
-        name="lblAreaDeleteBtn"
-        [formModel]=""
-        [default]="'Delete'"
-        class="text-header d-block"
-      ></codx-label>
+      <codx-label name="lblAreaDeleteBtn" [formModel]="" [default]="'Delete'" class="text-header d-block"></codx-label>
     </button>
   </div>
 </div>
 
-<div
-  id="hla-Cmt"
-  class="hla-Cmt"
-  style="
+<div id="hla-Cmt" class="hla-Cmt" style="
     display: none;
     position: absolute;
     width: 200px;
     height: 200px;
     border: 1px solid black;
-  "
->
+  ">
   <div style="z-index: 2" class="hla-Cmt">
-    <div class="row">
-      <!-- <input class="hla-Cmt" type="text" /> -->
-      <input
-        class="hla-Cmt"
-        id="input-Cmt"
-        type="text"
-        [(value)]="curCmtContent"
-      />
-    </div>
-    <div class="row d-flex justify-content-end" class="hla-Cmt">
-      <div class="btn col-2" class="hla-Cmt">
-        <button id="add-cmt-btn" class="hla-Cmt">
-          <codx-label
-            name="lblHLACommentAdd"
-            [formModel]=""
-            [default]="'OK'"
-            class="text-header d-block hla-Cmt"
-          ></codx-label>
-        </button>
-      </div>
-      <div class="btn col-2" class="hla-Cmt">
-        <button id="delete-cmt-btn" class="hla-Cmt">
-          <codx-label
-            name="lblHLACommentDel"
-            [formModel]=""
-            [default]="'Xóa'"
-            class="text-header d-block hla-Cmt"
-          ></codx-label>
-        </button>
-      </div>
+    <!-- <input class="hla-Cmt" type="text" /> -->
+    <textarea class="hla-Cmt w-100" id="input-Cmt" type="textarea" [(value)]="curCmtContent">
+      </textarea>
+    <div class="" class="hla-Cmt mt-2 d-flex justify-content-end">
+      <button id="delete-cmt-btn" class="hla-Cmt btn btn-sm btn-light">
+        <codx-label name="lblHLACommentDel" [formModel]="" [default]="'Xóa'"
+          class="text-header d-block hla-Cmt"></codx-label>
+      </button>
+      <button type="button" id="add-cmt-btn" class="hla-Cmt btn btn-sm btn-primary ms-2">
+        <codx-label name="lblHLACommentAdd" [formModel]="" [default]="'OK'"
+          class="text-header d-block hla-Cmt"></codx-label>
+      </button>
     </div>
   </div>
 </div>

@@ -29,7 +29,7 @@ export class DP_Processes {
   options:	string; // json
   attachments:	number;
   comments:	number;
-  permission:	DP_Processes_Permission[]; // objects
+  permission:	DP_Processes_Permission[]; // string
   owner:	string;
   bUID:	string;
   createdOn:	Date;
@@ -59,6 +59,41 @@ export class DP_Processes_Permission{
   createdBy:	string;
   modifiedOn:	Date;
   modifiedBy:	string;
+}
+export class DP_Steps{
+  recID:	string;
+  processID:	string;
+  stepNo:	number;
+  stepName:	string;
+  memo:	string;
+  durationDay:	number;
+  durationHour:	number;
+  numbererval:	string;
+  excludeDayoff:	string;
+  note:	string;
+  assignControl:	string;
+  transferControl:	string;
+  taskControl:	string;
+  leadtimeControl:	boolean;
+  durationControl:	boolean;
+  startControl:	boolean;
+  reScheduleTasks:	boolean;
+  options:	string; // json
+  roles:	string; // objects
+  isSuccessStep:	boolean;
+  isFailStep:	boolean;
+  reasonControl:	boolean;
+  reasons:	string; // objects
+  taskGroups:	string; // objects
+  tasks:	string; // objects
+  fields:	string; // objects
+  isUsed:	boolean;
+  createdOn:	Date;
+  createdBy:	string;
+  modifiedOn:	Date;
+  modifiedBy:	string;
+  showColumnControl:	number;
+
 }
 export class DP_Steps_Fields {
   recID: string;

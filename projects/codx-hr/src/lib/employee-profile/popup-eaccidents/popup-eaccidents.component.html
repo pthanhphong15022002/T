@@ -10,6 +10,10 @@
                 <codx-label default="Thông tin chung"></codx-label>
             </ng-template>
             <ng-template #content>
+                <div class="text-primary pt-6 pb-6">
+                    <codx-label default="THÔNG TIN CHUNG">
+                    </codx-label>
+                </div>
                 <div class="form-group row">
                     <div class="col-6">
                         <codx-label
@@ -176,8 +180,25 @@
             <codx-label default="Giám định y khoa"></codx-label>
           </ng-template>
           <ng-template #content>
+            <div class="d-flex flex-stack fs-6 py-2 mt-4 align-items-center">
+                <div class="fs-6 fw-bold text-uppercase text-primary">
+                  <codx-label
+                    name="lblIsInspect"
+                    [formModel]="formModel"
+                    fiedName="IsInspect"
+                  >
+                  </codx-label>
+                </div>
+                <span class="text-end align-items-end">
+                    <codx-input
+                    field="isInspect"
+                    [formModel]="formModel"
+                    [Group] = "formGroup"
+                ></codx-input>
+                </span>
+              </div>
 
-            <div class="form-group row">
+            <!-- <div class="form-group row text-primary">
                 <codx-label
                     fiedName="IsInspect"
                     [formModel]="formModel"
@@ -187,7 +208,7 @@
                     [formModel]="formModel"
                     [Group] = "formGroup"
                 ></codx-input>
-            </div>
+            </div> -->
 
             <div class="form-group row">
                 <codx-label

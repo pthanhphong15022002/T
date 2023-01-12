@@ -2,18 +2,18 @@
 <codx-views
   #view
   [funcID]="funcID"
-  service="BP"
-  assemblyName="ERM.Business.BP"
-  entityName="BP_Processes"
-  className="ProcessesBusiness"
-  [method]="method"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodGetList"
   [views]="views"
   [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  idField="recID"
+  [idField]="idField"
   [autoSearch]="true"
   (searchChanged)="searchDynamicProcess($event)"
 ></codx-views>
@@ -38,11 +38,10 @@
   >
   </codx-card-img>
   <ng-template #footerbg let-data>
-    <div
-      class="d-flex bg-footer m-n3 mt-2">
+    <div class="d-flex bg-footer m-n3 mt-2">
       <div class="d-flex flex-column w-100 p-3 pt-0">
         <div class="d-flex justify-content-between">
-          <div style="width: 100%;">
+          <div style="width: 100%">
             <div
               #processName
               class="fs-6 fw-bold line-clamp line-clamp-1 pt-6"
@@ -55,14 +54,14 @@
               [popoverClass]="data.recID"
             >
               {{
-              data?.processName
-              | formatvalue
-              : view.formModel
-              : "processName"
-              : processName
-              : "Processes"
-              : "grvProcesses"
-              | async
+                data?.processName
+                  | formatvalue
+                    : view.formModel
+                    : "processName"
+                    : processName
+                    : "Processes"
+                    : "grvProcesses"
+                  | async
               }}
             </div>
           </div>
@@ -70,15 +69,21 @@
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
             <div class="me-2 mt-1"> <i class="icon-adjust"></i></div>
-            <div class="me-2 mt-1">{{data.processNo}} </div>
+            <div class="me-2 mt-1" *ngIf='data?.applyFor==0'>Tiêu chuẩn</div>
+            <div class="me-2 mt-1" *ngIf='data?.applyFor==1'>Lead</div>
+            <div class="me-2 mt-1" *ngIf='data?.applyFor==2'>Cơ hội</div>
             <div class="ms-auto">
-            <codx-imgs [width]="25" [objectId]="listUserInUse" objectType="AD_Users" [numberImages]="2">
-            </codx-imgs>
-          </div>
+              <codx-imgs
+                [width]="25"
+                [objectId]="listUserInUse"
+                objectType="AD_Users"
+                [numberImages]="2"
+              >
+              </codx-imgs>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </ng-template>
 </ng-template>
-
