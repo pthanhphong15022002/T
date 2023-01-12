@@ -25,7 +25,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
-import { DP_Processes } from '../../models/models';
+import { DP_Processes, DP_Processes_Permission } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
 
@@ -70,7 +70,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isSwitchReason: boolean = false; // hidden switch of the reason success/failure
   isTurnOnYesFailure: boolean = false; //Create variable Click yes for reason failure
   isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
-  isBlockRadio: boolean = true;
+  listRoleInStep: DP_Processes_Permission[]=[] // creat list user role in step
+  userPermissions: DP_Processes_Permission; // create object user in step
 
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
@@ -714,6 +715,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   getTitleStepViewSetup() {
     this.titleViewStepCrr = this.dataStage[0].name;
+
+    // test nha
+    // for(let i=0; i<10; i++){
+    //   this.userPermissions.objectName = 'test123'+i;
+    //   this.listRoleInStep.push(this.userPermissions);
+    // }
+
   }
 
   //#endregion
