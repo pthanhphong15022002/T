@@ -1320,13 +1320,13 @@ export class CodxEsService {
       [fileUrl]
     );
   }
-  highlightText(fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages) {
+  highlightText(sfID, edited, fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages) {
     return this.api.execSv(
       'ES',
       'ERM.Business.ES',
       'ApprovalTransBusiness',
       'HighlightTextAsync',
-      [fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages]
+      [sfID, edited, fileUrl, fileID, fileName, isClear, lstHLArea, rerenderPages]
     );
   }
 

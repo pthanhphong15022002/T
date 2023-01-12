@@ -1776,6 +1776,16 @@ export class CodxHrService {
   }
   //#endregion
 
+  getFunctionList(funcID: string){
+    return this.api.execSv<any>(
+      'SYS',
+      'AD',
+      'SystemSettingsBusiness',
+      'GetFunctionAsync',
+      funcID
+    );
+  }
+
   addTest() {
     return this.api.execSv<any>(
       'HR',

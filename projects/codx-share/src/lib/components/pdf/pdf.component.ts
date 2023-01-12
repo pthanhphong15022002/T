@@ -131,7 +131,7 @@ export class PdfComponent
   curSelectedHLA: highLightTextArea;
   curCmtContent = '';
   deleteHLAMode = false;
-
+  sfEdited = false
   defaultColor = 'rgb(255, 255, 40)';
   defaultAddedColor = 'transparent';
   selectedColor = 'rgb(114, 255, 234)';
@@ -252,6 +252,7 @@ export class PdfComponent
   hideThumbnail: boolean = false;
 
   vllSupplier: any;
+  oSignfile: any;
   onInit() {
     this.curSelectedHLA = null;
     this.cache.valueList('ES029').subscribe((res) => {
@@ -2453,7 +2454,6 @@ export class PdfComponent
             this.lstHighlightTextArea.push(value);
           }
         }
-        console.log('get list highlight');
       });
   }
 
@@ -2527,6 +2527,8 @@ export class PdfComponent
     if (needHLList.length < 1 && !isClearHLA) return;
     this.esService
       .highlightText(
+        this.transRecID,
+        this.sfEdited,
         this.curFileUrl.replace(environment.urlUpload + '/', ''),
         this.fileInfo.fileID,
         this.fileInfo.fileName,
@@ -2536,6 +2538,7 @@ export class PdfComponent
       )
       .subscribe((res) => {
         // this.detectorRef.detectChanges();
+        this.sfEdited = true;
         this.curFileUrl = '';
         setTimeout(
           (tmpUrl) => {

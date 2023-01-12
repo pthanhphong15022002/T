@@ -90,10 +90,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
     this.sfRecID = this.data.sfRecID;
     this.transRecID = this.data.transRecID;
-    this.esService.getSFByID(this.data?.oTrans?.transID).subscribe(res =>{
-      console.log(res);
-      
-    })
+    this.esService.getSFByID(this.data?.oTrans?.transID).subscribe((res) => {
+      if (res) {
+        let sf = res?.signFile;
+        if (sf && sf.files) {
+          this.disabled = sf.files[0]?.isEdited;
+        }
+      }
+    });
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
@@ -190,14 +194,15 @@ export class PopupSignForApprovalComponent extends UIComponent {
       case 'SYS206': //lam lai
         this.mode = 2;
         break;
-      case 'SYS208': { //chỉnh sửa pdf
+      case 'SYS208': {
+        //chỉnh sửa pdf
         let hasCA = this.pdfView.lstCA
           ? this.pdfView.lstCA.length != 0
             ? true
             : false
           : false;
         if (hasCA) {
-          this.notify.alertCode('').subscribe((x) => {
+          this.notify.alertCode('ES029').subscribe((x) => {
             if (x.event.status == 'Y') {
               this.disabled = !this.disabled;
               this.pdfView && this.pdfView.changeEditMode();
