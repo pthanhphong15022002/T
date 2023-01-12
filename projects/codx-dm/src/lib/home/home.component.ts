@@ -36,9 +36,6 @@ import {
   AnimationSettingsModel,
   DialogComponent,
 } from '@syncfusion/ej2-angular-popups';
-import { mode } from 'crypto-js';
-import { A } from '@angular/cdk/keycodes';
-
 @Component({
   selector: 'home',
   templateUrl: './home.component.html',
