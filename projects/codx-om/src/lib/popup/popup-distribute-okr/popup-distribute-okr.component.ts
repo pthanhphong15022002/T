@@ -215,15 +215,11 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     let lastListDistribute =this.listDistribute.filter((item) => {
       return item?.isActive ==true;
     });
-    this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.OKR,
-      'DistributeOKRAsync',
-      [this.dataOKR.recID,this.distributeToType,lastListDistribute]
-    ).subscribe(res=>{
+    this.codxOmService.distributeOKR(this.dataOKR.recID,this.distributeToType,lastListDistribute)
+    .subscribe(res=>{
       let x= res;
       this.dialogRef && this.dialogRef.close();
+      
     })
   }
   //-----------------------End-------------------------------//
@@ -233,10 +229,13 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Func-----------------------//
-
+  
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
+  cancel(){
+    this.dialogRef.close();
+  }
   valueChange(evt:any){
     if(evt && evt.field !=null){
       this.listDistribute[evt.field].distributeValue= evt.data;

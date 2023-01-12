@@ -319,6 +319,15 @@ export class CodxOmService {
   //endregion: KR
 
   //region: OKR
+  distributeOKR(recID:string,distributeToType:string, listDistribute:any ){
+    return this.api.execSv(
+      OMCONST.SERVICES,
+      OMCONST.ASSEMBLY,
+      OMCONST.BUSINESS.OKR,
+      'DistributeOKRAsync',
+      [recID,distributeToType,listDistribute]
+    );
+  }
   editOKRWeight(recID:string, type:string, listOKRWeight:any) {
     return this.api.execSv(
       OMCONST.SERVICES,
