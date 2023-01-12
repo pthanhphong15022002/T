@@ -238,8 +238,8 @@ export class PopupAddPostComponent implements OnInit {
 
   // clikc uploadFile
   clickUploadFile(){
-    this.codxATM.uploadFile();
-    // this.codxViewFiles.uploadFiles();
+    // this.codxATM.uploadFile();
+    this.codxViewFiles.uploadFiles();
   }
 
   // submit
@@ -263,7 +263,7 @@ export class PopupAddPostComponent implements OnInit {
 
   // create Post 
   publishPost(){
-    if (!this.data?.content && this.fileUpload?.length == 0) 
+    if (!this.data?.content && this.codxViewFiles.files.length == 0) 
     {
       if(this.grvSetup["Comments"]["headerText"]){
         this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
@@ -321,7 +321,7 @@ export class PopupAddPostComponent implements OnInit {
   }
   // edit post
   editPost(){
-    if (!this.data.content && this.data.files.length == 0 && this.data.category != "4") 
+    if (!this.data.content && this.data.category != "4") 
     {
       if(this.grvSetup["Comments"]["headerText"]){
         this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
@@ -341,13 +341,6 @@ export class PopupAddPostComponent implements OnInit {
             this.codxATM.objectId = this.data.recID;
             this.codxATM.fileUploadList = this.fileUpload;
             (await this.codxATM.saveFilesObservable()).subscribe();
-          }
-          if (this.codxFile.filesDelete.length > 0) 
-          {
-            let filesDeleted = this.codxFile.filesDelete;
-            filesDeleted.forEach((f: any) => {
-              this.deleteFile(f.recID, true);
-            });
           }
           this.data = res;
           this.data.files = this.codxFile.files;
@@ -512,18 +505,6 @@ export class PopupAddPostComponent implements OnInit {
         this.data.tagName = Util.stringFormat(this.mssgTagMore,`<b>${_permissionName}</b>`, _permissionLength);
       }
       this.dt.detectChanges();
-    }
-  }
-
-  // delete file
-  deleteFile(fileID: string, deleted: boolean) {
-    if (fileID) {
-      this.api.execSv(
-        "DM",
-        "ERM.Business.DM",
-        "FileBussiness",
-        "DeleteFileAsync",
-        [fileID, deleted]).subscribe();
     }
   }
 }
