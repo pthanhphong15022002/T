@@ -46,33 +46,44 @@ export class PopupAddPositionsComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.action = dt.data.action;
-    this.title = dt.data.title;
+    debugger
+    this.action = dt.data.isAddMode;
+    this.title = dt.data.titleMore;
     this.data = dt.data.data;
     this.dialogRef = dialog;
-    this.functionID = this.dialogRef.formModel.funcID;
+    this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
-    console.log('dialog ref', this.dialogRef, this.data);
-    this.isCorporation = dt.data.isCorporation;
-
+    this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.position = this.data;
-  }
-
-  ngOnInit(): void {
     this.user = this.auth.userValue;
-    if (this.action != 'edit') {
-      this.getParamerAsync(this.functionID);
-    }
-    this.cacheService
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((gv: any) => {
-        console.log('form', gv);
-      });
-  }
 
+  }
+  blocked:boolean = false;
+  ngOnInit(): void {
+    this.getFucnName(this.functionID);
+    // if (this.action != 'edit') 
+    // {
+    //   this.getParamerAsync(this.functionID);
+    // }
+    //xem lại bật tắt đánh số tự động
+    this.blocked = this.data.positionID ? false : true;
+  }
+  // get function name
+  getFucnName(funcID:string){
+    if(funcID){
+      this.cacheService.functionList(funcID).subscribe(func => {
+        debugger
+        if(func)
+        {
+          this.title = `${this.title} ${func.description}`;
+          this.cacheService
+          .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
+            console.log('form', gv);
+          });
+        }
+      });
+    }
+  }
   paramaterHR: any = null;
   getParamerAsync(funcID: string) {
     if (funcID) {
@@ -82,9 +93,8 @@ export class PopupAddPositionsComponent implements OnInit {
           'ERM.Business.AD',
           'AutoNumberDefaultsBusiness',
           'GenAutoDefaultAsync',
-          [funcID]
-        )
-        .subscribe((res: any) => {
+          [funcID])
+          .subscribe((res: any) => {
           if (res) {
             this.paramaterHR = res;
             if (this.paramaterHR.stop) return;
@@ -101,12 +111,7 @@ export class PopupAddPositionsComponent implements OnInit {
     }
   }
   positionID: string = '';
-  getDefaultPositionID(
-    funcID: string,
-    entityName: string,
-    fieldName: string,
-    data: any = null
-  ) {
+  getDefaultPositionID(funcID: string,entityName: string,fieldName: string) {
     if (funcID && entityName && fieldName) {
       this.api
         .execSv(
@@ -114,8 +119,7 @@ export class PopupAddPositionsComponent implements OnInit {
           'ERM.Business.AD',
           'AutoNumbersBusiness',
           'GenAutoNumberAsync',
-          [funcID, entityName, fieldName, null]
-        )
+          [funcID, entityName, fieldName, null])
         .subscribe((res: any) => {
           if (res) {
             this.positionID = res;
@@ -152,7 +156,6 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
-    debugger
     if (this.action) {
       this.isNew = this.action === 'add' ? true : false;
       this.api

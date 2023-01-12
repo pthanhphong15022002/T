@@ -152,7 +152,7 @@
               </li>
             </ul>
           </div>
-          <a class="btn btn-sm btn-bg-success text-inverse-primary me-2 mb-2 min-w-60px rounded-4" (click)="release()"
+          <a class="btn btn-sm btn-success me-2 mb-2 min-w-60px rounded-4" (click)="release()"
             [ngClass]="user.userID == data.owner ? '' : 'disabled'" [style.visibility]="
               currentTab == 3 &&
               data.files?.length > 0 &&
@@ -160,7 +160,8 @@
                 ? 'visible'
                 : 'hidden'
             ">
-            <codx-label Name="lblAprrove" [formModel]="dialog.formModel" default="Gửi duyệt"></codx-label>
+            <codx-label Name="lblAprrove" class="text-white" [formModel]="dialog.formModel"
+              default="Gửi duyệt"></codx-label>
           </a>
         </ng-container>
         <div class="btn btn-sm btn-bg-white text-inverse-white mb-2">
