@@ -121,7 +121,7 @@ export class BookingRoomComponent extends UIComponent implements AfterViewInit {
     this.modelResource.dataValue = '1';
 
     this.fields = {
-      id: 'bookingNo',
+      id: 'recID',
       subject: { name: 'title' },
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
