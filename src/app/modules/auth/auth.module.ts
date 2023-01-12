@@ -22,6 +22,7 @@ import { ForgotPasswordQTSCComponent } from './cz/qtsc/forgot-password-qtsc/forg
 import { LoginDefaultComponent } from './default/login-default/login-default.component';
 import { LoginQTSCComponent } from './cz/qtsc/login-qtsc/login-qtsc.component';
 import { TenantsComponent } from './tenants/tenants.component';
+import { RedirectToComponent } from './redirect-to/redirect-to.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { TenantsComponent } from './tenants/tenants.component';
     AuthComponent,
     ForgotPasswordDefaultComponent,
     ForgotPasswordQTSCComponent,
-    TenantsComponent
+    TenantsComponent,
+    RedirectToComponent
   ],
   imports: [
     CommonModule,

@@ -1,4 +1,10 @@
-<codx-form #form [headerText]="title" subHeaderText="" [body]="body" [footer]="footer" [dialog]="dialogRef"
+<codx-form #form 
+  [headerText]="title" 
+  subHeaderText="" 
+  [body]="body" 
+  [footer]="footer" 
+  [dialog]="dialogRef"
+  [data]="data"
   [formModel]="formModel">
 </codx-form>
 
@@ -8,17 +14,13 @@
       <div class="col">
         <div class="form-group">
           <codx-label [formModel]="dialogRef.formModel" fiedName="PositionID" default="Mã chức danh"></codx-label>
-          <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
+          <codx-input 
+            class="form-control" 
+            [formModel]="form.formModel" 
+            [Group]="form.formGroup"
+            [disabled]="blocked"
             [ControlName]="'PositionID'">
           </codx-input>
-          <!-- <codx-input
-            [disabled]="true"
-            type="text"
-            field="PositionID"
-            (valueChange)="dataChange($event, 'PositionID')"
-            [crrValue]="data.positionID"
-          >
-          </codx-input> -->
         </div>
       </div>
       <div class="col"></div>
@@ -31,13 +33,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'PositionName'">
           </codx-input>
-          <!-- <codx-input
-            type="text"
-            field="PositionName"
-            (valueChange)="dataChange($event, 'PositionName')"
-            [crrValue]="position?.positionName"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -48,13 +43,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'PositionName2'">
           </codx-input>
-          <!-- <codx-input
-            type="text"
-            field="PositionName2"
-            (valueChange)="dataChange($event, 'PositionName2')"
-            [crrValue]="position?.positionName2"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -66,16 +54,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'JobID'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            class="form-control  p-0"
-            [crrValue]="position?.jobID"
-            field="jobID"
-            refValue="Jobs"
-            (valueChange)="dataChange($event, 'JobID')"
-            loadFull="true"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -87,16 +65,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'JobGroup'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            [crrValue]="position?.jobGroup"
-            field="jobGroup"
-            refValue="JobGroup"
-            (valueChange)="dataChange($event, 'JobGroup')"
-            service="HR"
-            loadFull="true"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -108,16 +76,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'OrgUnitID'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            [crrValue]="position?.orgUnitID"
-            field="orgUnitID"
-            refValue="OrganizationUnits"
-            service="HR"
-            loadFull="true"
-            (valueChange)="dataChange($event, 'OrgUnitID')"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -128,16 +86,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'DepartmentID'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            [crrValue]="position?.departmentID"
-            field="departmentID"
-            (valueChange)="dataChange($event, 'DepartmentID')"
-            refValue="HRDepartments"
-            service="HR"
-            loadFull="true"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -149,17 +97,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'DivisionID'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            (valueChange)="dataChange($event, 'DivisionID')"
-            [crrValue]="position?.divisionID"
-            field="divisionID"
-            refValue="HRDivisions"
-            [popupSettings]="{ width: '300px' }"
-            service="HR"
-            loadFull="true"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -170,18 +107,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'CompanyID'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            class="form-control  p-0"
-            (valueChange)="dataChange($event, 'CompanyID')"
-            [crrValue]="position?.companyID"
-            field="companyID"
-            refValue="HRCompany"
-            [popupSettings]="{ width: '300px' }"
-            service="HR"
-            ngDefaultControl
-            loadFull="true"
-          ></codx-input> -->
         </div>
       </div>
     </div>
@@ -192,20 +117,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'reportTo'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            class="form-control  p-0"
-            (valueChange)="dataChange($event, 'ReportTo')"
-            [crrValue]="position?.reportTo"
-            field="reportTo"
-            refValue="Positions"
-            [virtual]="{ itemHeight: 100 }"
-            [popupSettings]="{ width: '300px' }"
-            service="HR"
-            ngDefaultControl
-            loadFull="true"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -216,20 +127,6 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'ReportTo2'">
           </codx-input>
-          <!-- <codx-input
-            type="combobox"
-            class="form-control  p-0"
-            (valueChange)="dataChange($event, 'ReportTo2')"
-            [crrValue]="position?.reportTo2"
-            field="reportTo2"
-            refValue="Positions"
-            [virtual]="{ itemHeight: 100 }"
-            [popupSettings]="{ width: '300px' }"
-            service="HR"
-            ngDefaultControl
-            loadFull="true"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -240,28 +137,14 @@
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
             [ControlName]="'Headcounts'">
           </codx-input>
-          <!-- <codx-input
-            class="form-control"
-            type="text"
-            (valueChange)="dataChange($event, 'Headcounts')"
-            [crrValue]="position?.headcounts"
-          >
-          </codx-input> -->
         </div>
       </div>
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="FilledCounts" default="Nhân viên"></codx-label>
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'FilledCounts'">
+            [ControlName]="'FilledCounts'" [disabled]="isAdd">
           </codx-input>
-          <!-- <codx-input
-            class="form-control"
-            type="text"
-            (valueChange)="dataChange($event, 'FilledCounts')"
-            [crrValue]="position?.filledCounts"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>
@@ -270,30 +153,16 @@
         <div class="form-group">
           <codx-label fiedName="Onboard" default="Onboard"> </codx-label>
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'Onboard'">
+            [ControlName]="'Onboard'" [disabled]="isAdd">
           </codx-input>
-          <!-- <codx-input
-            class="form-control"
-            type="text"
-            (valueChange)="dataChange($event, 'Onboard')"
-            [crrValue]="position?.onboard"
-          >
-          </codx-input> -->
         </div>
       </div>
       <div class="col">
         <div class="form-group">
           <codx-label fiedName="Offboard" default="Offboard"> </codx-label>
           <codx-input class="form-control" [formModel]="form.formModel" [Group]="form.formGroup"
-            [ControlName]="'Offboard'">
+            [ControlName]="'Offboard'" [disabled]="isAdd">
           </codx-input>
-          <!-- <codx-input
-            class="form-control"
-            (valueChange)="dataChange($event, 'Offboard')"
-            type="text"
-            [crrValue]="position?.offboard"
-          >
-          </codx-input> -->
         </div>
       </div>
     </div>

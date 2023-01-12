@@ -36,12 +36,12 @@
             </div>
             <div class="d-flex align-items-center justify-content-between mt-1">
               <div class="">
-                <button type="button" class="btn btn-sm btn-outline-success me-3"
-                  (click)="approvalAsync(item.recID,item.transID,'5')">
+                <button [disabled]="item.blocked" type="button" class="btn btn-sm btn-outline-success me-3"
+                  (click)="approvalAsync(item,'5')">
                   <codx-label [formModel]="dialog.formModel" name="" default="Duyệt"></codx-label>
                 </button>
-                <button type="button" class="btn btn-sm btn-outline-danger"
-                  (click)="approvalAsync(item.recID,item.transID,'4')">
+                <button [disabled]="item.blocked" type="button" class="btn btn-sm btn-outline-danger"
+                  (click)="approvalAsync(item,'4')">
                   <codx-label class="text-danger" [formModel]="dialog.formModel" name="" default="Từ chối"></codx-label>
                 </button>
               </div>

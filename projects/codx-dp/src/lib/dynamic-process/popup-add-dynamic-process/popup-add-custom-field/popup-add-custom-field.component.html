@@ -136,6 +136,8 @@
             default="Loại icon hiển thị"
           >
           </codx-label>
+          <codx-valuelist [name]="'L1470'" [iconOnly]="true" (valueChange)="valueChangeIcon($event)">
+          </codx-valuelist>
           <codx-input
             field="rank"
             [formModel]="form.formModel"
@@ -173,6 +175,7 @@
               style="width: 100%"
             />
           </div>
+          <!-- <ngx-slider value="100" [options]="options"></ngx-slider> -->
           <!-- <ion-range-slider #sliderElement
           type="double"
           [min]="0"

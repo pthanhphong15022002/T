@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxFilesComponent } from './codx-files.component';
+import { RedirectToComponent } from './redirect-to.component';
 
-describe('CodxFilesComponent', () => {
-  let component: CodxFilesComponent;
-  let fixture: ComponentFixture<CodxFilesComponent>;
+describe('RedirectToComponent', () => {
+  let component: RedirectToComponent;
+  let fixture: ComponentFixture<RedirectToComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxFilesComponent ]
+      declarations: [ RedirectToComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxFilesComponent);
+    fixture = TestBed.createComponent(RedirectToComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

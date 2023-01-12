@@ -102,7 +102,7 @@ export class PopupAddPermissionComponent implements OnInit {
   //#region footer
   onShare() {
     this.per.recIDProcess = this.id;
-    if (this.toPermission == null) {
+    if (this.toPermission == null || this.toPermission.length == 0) {
       this.notificationsService.notifyCode('SYS028');
       return;
     }
@@ -189,7 +189,7 @@ export class PopupAddPermissionComponent implements OnInit {
   }
 
   setToPermissionRequest(data) {
-    if (data != null) {
+    if (data != null && !this.isShare) {
       var lst = [];
       var perm = new BP_ProcessPermissions();
       perm.objectID = data.userID;

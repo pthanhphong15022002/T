@@ -53,8 +53,7 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   userInfo: any;
   orgUnitTree: any;
   isAfterRender=false;
-  dataOB: any;
-  dataKR: any;
+  dataOKR: any;
   funcID:'';
   radioKRCheck=true;
   radioOBCheck=false;
@@ -101,7 +100,7 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   }
 
   onInit(): void {
-    this.getKRAndOBParent();
+    this.getOKRByID();
     
     this.cache.getCompany(this.curUser.userID).subscribe(item=>{
       if(item) 
@@ -132,11 +131,11 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
               this.cbbOrg.push(temp)
             });
             this.assignmentOKR=new DistributeOKR();
-            this.assignmentOKR.okrName= this.dataKR.okrName;
-            this.assignmentOKR.umid=this.dataKR.umid;
+            this.assignmentOKR.okrName= this.dataOKR.okrName;
+            this.assignmentOKR.umid=this.dataOKR.umid;
             this.assignmentOKR.isActive=false;
             this.assignmentOKR.distributePct=100;
-            this.assignmentOKR.distributeValue=this.dataKR.target;
+            this.assignmentOKR.distributeValue=this.dataOKR.target;
             this.detectorRef.detectChanges();
             this.isAfterRender=true;
           }
@@ -166,21 +165,15 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
 
   //-----------------------Get Data Func---------------------//
   
-  getKRAndOBParent(){
+  getOKRByID(){
     this.codxOmService
-    .getKRAndOBParent(this.recID)
+    .getOKRByID(this.recID)
     .subscribe((res: any) => {
       if (res) {
-        this.dataOB = res;
-        this.dataKR = res.child[0];            
-        this.detectorRef.detectChanges();
+        this.dataOKR = res;
       }
     });
   }
-  
-
-  
-
   //-----------------------End-------------------------------//
 
   //-----------------------Validate Func---------------------//
@@ -200,7 +193,7 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
       OMCONST.ASSEMBLY,
       OMCONST.BUSINESS.KR,
       'DistributeKRAsync',
-      [this.dataKR.recID,this.distributeType,[this.assignmentOKR]]
+      [this.dataOKR.recID,this.distributeType,[this.assignmentOKR]]
     ).subscribe(res=>{
       let x= res;
       this.dialogRef && this.dialogRef.close();

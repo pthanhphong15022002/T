@@ -442,7 +442,7 @@ export class OkrTargetsComponent implements OnInit {
     let dModel = new DialogModel();
     dModel.IsFull = true;
     let dialogAssgKR = this.callfunc.openForm(
-      PopupDistributeOKRComponent,
+      PopupAssignmentOKRComponent,
       '',
       null,
       null,

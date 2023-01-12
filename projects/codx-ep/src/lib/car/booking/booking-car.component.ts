@@ -152,7 +152,7 @@ export class BookingCarComponent extends UIComponent implements AfterViewInit {
     ];
 
     this.fields = {
-      id: 'bookingNo',
+      id: 'recID',
       subject: { name: 'title' },
       startTime: { name: 'startDate' },
       endTime: { name: 'endDate' },
