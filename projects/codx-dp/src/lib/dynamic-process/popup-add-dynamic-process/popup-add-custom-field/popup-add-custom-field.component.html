@@ -136,6 +136,8 @@
             default="Loại icon hiển thị"
           >
           </codx-label>
+          <codx-valuelist [name]="'L1470'" [iconOnly]="true" (valueChange)="valueChangeIcon($event)">
+          </codx-valuelist>
           <codx-input
             field="rank"
             [formModel]="form.formModel"

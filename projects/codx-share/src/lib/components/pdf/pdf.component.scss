@@ -527,11 +527,16 @@
     .image-container {
       margin: auto;
       text-align: center;
-      border: 1px solid #d9d9df;
-      border-radius: 3px;
+
+
       width: 160px !important;
       height: 200px !important;
       margin-bottom: 8px;
+
+      img {
+        border: 1px solid #d9d9df;
+        border-radius: 3px;
+      }
     }
 
     .thumbnailImage {
@@ -576,4 +581,8 @@
 #input-Cmt {
   height: 120px;
   border: 1px #eee solid !important;
+}
+
+.btn-tool-custom {
+  width: 30px !important;
 }
