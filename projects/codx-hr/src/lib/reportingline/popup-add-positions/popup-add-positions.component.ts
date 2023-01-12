@@ -51,20 +51,22 @@ export class PopupAddPositionsComponent implements OnInit {
     this.title = dt.data.titleMore;
     this.data = dt.data.data;
     this.dialogRef = dialog;
-    this.functionID = this.dialogRef.formModel.funcID;
+    this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
-    this.isCorporation = dt.data.isCorporation;
+    this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.position = this.data;
     this.user = this.auth.userValue;
 
   }
-
+  blocked:boolean = false;
   ngOnInit(): void {
     this.getFucnName(this.functionID);
-    if (this.action != 'edit') {
-      this.getParamerAsync(this.functionID);
-    }
-    
+    // if (this.action != 'edit') 
+    // {
+    //   this.getParamerAsync(this.functionID);
+    // }
+    //xem lại bật tắt đánh số tự động
+    this.blocked = this.data.positionID ? false : true;
   }
   // get function name
   getFucnName(funcID:string){
@@ -91,9 +93,8 @@ export class PopupAddPositionsComponent implements OnInit {
           'ERM.Business.AD',
           'AutoNumberDefaultsBusiness',
           'GenAutoDefaultAsync',
-          [funcID]
-        )
-        .subscribe((res: any) => {
+          [funcID])
+          .subscribe((res: any) => {
           if (res) {
             this.paramaterHR = res;
             if (this.paramaterHR.stop) return;
@@ -110,12 +111,7 @@ export class PopupAddPositionsComponent implements OnInit {
     }
   }
   positionID: string = '';
-  getDefaultPositionID(
-    funcID: string,
-    entityName: string,
-    fieldName: string,
-    data: any = null
-  ) {
+  getDefaultPositionID(funcID: string,entityName: string,fieldName: string) {
     if (funcID && entityName && fieldName) {
       this.api
         .execSv(
@@ -123,8 +119,7 @@ export class PopupAddPositionsComponent implements OnInit {
           'ERM.Business.AD',
           'AutoNumbersBusiness',
           'GenAutoNumberAsync',
-          [funcID, entityName, fieldName, null]
-        )
+          [funcID, entityName, fieldName, null])
         .subscribe((res: any) => {
           if (res) {
             this.positionID = res;
