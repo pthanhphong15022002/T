@@ -86,10 +86,13 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly viewStepReasonFail: string = 'reasonFail'; // const reason fail
   readonly radioYes: string = 'yes'; // const click yes
   readonly radioNo: string = 'no'; // const click yes
-  readonly titleReasonYes: string = 'Có'; // title radio button yes for reason success/failure
-  readonly titleReasonNo: string = 'Không'; // title radio button no for reason success/failure
+  readonly titleRadioYes: string = 'Có'; // title radio button yes for reason success/failure
+  readonly titleRadioNo: string = 'Không'; // title radio button no for reason success/failure
   readonly titleViewStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly titleViewStepReasonFail: string = 'Thất bại'; // title form step reason failure
+  readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
+  readonly titleCheckBoxSat: string = 'Thứ 7'; // title checkbox saturday form duration
+  readonly titleCheckBoxSun: string = 'Chủ nhật'; // title checkbox sunday form duration
 
   //stage-nvthuan
   popupJob: DialogRef;
@@ -805,6 +808,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   this.userPermissions.objectName = 'test123'+i;
     //   this.listRoleInStep.push(this.userPermissions);
     // }
+
+  }
+  valueMemoSetup($event) {
 
   }
 
