@@ -400,6 +400,8 @@ export class RolesComponent implements OnInit {
         if (item.status == 0) {
           let res = item.data;
           if (res != null) {
+            this.fileEditing = res;
+            this.changePermission(0);
             var files = this.dmSV.listFiles;
             let index = files.findIndex(d => d.recID.toString() === this.id);
             if (index != -1) {
@@ -547,6 +549,7 @@ export class RolesComponent implements OnInit {
       .alert('Thông báo', 'Bạn có chắc chắn muốn xóa?', config)
       .closed.subscribe((x) => {
         if (x.event.status == 'Y') {
+          debugger;
           if (list == null) {
             if (this.fileEditing && this.fileEditing.permissions && this.fileEditing.permissions.length > 0) {
               this.fileEditing.permissions.splice(index, 1);//remove element from array
@@ -574,8 +577,12 @@ export class RolesComponent implements OnInit {
             this.fileEditing.folderID = this.dmSV.getFolderId();
             this.fileEditing.recID = this.id;
             this.folderService.updateFolder(this.fileEditing).subscribe(res => {
-              if (res)
+              if(res)
+              {
+                this.fileEditing = res.data;
                 this.codxView?.dataService.update(this.fileEditing).subscribe();
+                this.changePermission(0);
+              }
             });
           }
         };

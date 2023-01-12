@@ -1,19 +1,19 @@
 <!-- BẢO GÁN TẠM ĐỂ TEST NHA -->
 <codx-views
   #view
-  [funcID]="'BPT01'"
-  service="BP"
-  assemblyName="ERM.Business.BP"
-  entityName="BP_Processes"
-  className="ProcessesBusiness"
-  [method]="method"
+  [funcID]="funcID"
+  [service]="service"
+  [assemblyName]="assemblyName"
+  [entityName]="entityName"
+  [className]="className"
+  [method]="methodGetList"
   [views]="views"
   [button]="showButtonAdd ? button : null"
   (buttonClick)="click($event)"
   [dataObj]="dataObj"
   [moreFuncs]="moreFuncs"
   [autoLoad]="true"
-  idField="recID"
+  [idField]="idField"
   [autoSearch]="true"
   (searchChanged)="searchDynamicProcess($event)"
 ></codx-views>
@@ -68,8 +68,15 @@
         </div>
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
+<<<<<<< HEAD
             <div class="me-2 mt-1"><i class="icon-adjust"></i></div>
             <div class="me-2 mt-1">{{ data.processNo }}</div>
+=======
+            <div class="me-2 mt-1"> <i class="icon-adjust"></i></div>
+            <div class="me-2 mt-1" *ngIf='data?.applyFor==0'>Tiêu chuẩn</div>
+            <div class="me-2 mt-1" *ngIf='data?.applyFor==1'>Lead</div>
+            <div class="me-2 mt-1" *ngIf='data?.applyFor==2'>Cơ hội</div>
+>>>>>>> feb3b979ff16097749c86153344883ea99d87f01
             <div class="ms-auto">
               <codx-imgs
                 [width]="25"
