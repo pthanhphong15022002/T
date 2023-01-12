@@ -688,9 +688,6 @@ export class PopupAddBookingRoomComponent extends UIComponent {
       if (this.isAdd) {
         this.data.requester = this.authService?.userValue?.userName;
       }
-      if(this.data.bookingNo==null){
-        this.data.bookingNo="123123";
-      }
       if (!this.bookingOnCheck()) {
         this.notificationsService.notifyCode('EP001');
         return;
