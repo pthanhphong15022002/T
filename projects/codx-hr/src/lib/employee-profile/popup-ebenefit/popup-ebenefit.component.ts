@@ -116,7 +116,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
     this.benefitObj.employeeID = this.employId 
     if(this.actionType === 'add' || this.actionType === 'copy'){
-      this.hrService.addEmployeePassportInfo(this.benefitObj).subscribe(p => {
+      this.hrService.AddEBenefit(this.benefitObj).subscribe(p => {
         if(p != null){
           this.benefitObj.recID = p.recID
           this.notify.notifyCode('SYS007')
@@ -130,7 +130,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
       });
     } 
     else{
-      this.hrService.updateEmployeePassportInfo(this.formModel.currentData).subscribe(p => {
+      this.hrService.EditEBenefit(this.formModel.currentData).subscribe(p => {
         if(p != null){
           this.notify.notifyCode('SYS007')
         this.listBenefits[this.indexSelected] = p;

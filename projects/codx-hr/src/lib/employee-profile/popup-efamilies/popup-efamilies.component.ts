@@ -192,6 +192,10 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
     this.cr.detectChanges();
   }
 
+  onSelectEmployee(evt){
+    console.log('sau khi chon nhan vien', evt);
+  }
+
   
   afterRenderListView(evt){
     this.listView = evt;

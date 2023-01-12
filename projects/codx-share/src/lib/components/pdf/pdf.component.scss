@@ -1,6 +1,7 @@
 @import "/node_modules/codx-core/assets/sass/init";
 
 ::ng-deep {
+
   .e-device .e-dlg-content,
   .e-device .e-dlg-content * {
     font-size: inherit;
@@ -104,7 +105,7 @@
       min-height: 42px;
     }
 
-    .e-tab .e-tab-header + .e-content {
+    .e-tab .e-tab-header+.e-content {
       padding: 0 20px;
       height: calc(100% - 60px) !important;
       overflow-y: auto;
@@ -202,11 +203,7 @@
     }
 
     .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-text,
-    .e-tab
-      .e-tab-header
-      .e-toolbar-item.e-active
-      .e-tab-wrap:hover
-      .e-tab-icon {
+    .e-tab .e-tab-header .e-toolbar-item.e-active .e-tab-wrap:hover .e-tab-icon {
       color: var(--primary-dark);
     }
 
@@ -315,10 +312,9 @@
     }
 
     .chooseSignFile {
+
       .e-input-group:not(.e-success):not(.e-warning):not(.e-error),
-      .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(
-          .e-error
-        ) {
+      .e-input-group.e-control-wrapper:not(.e-success):not(.e-warning):not(.e-error) {
         border-color: transparent;
         color: $dark;
         font-weight: 500;
@@ -327,9 +323,7 @@
   }
 
   .e-input-group.e-input-focus:not(.e-success):not(.e-warning):not(.e-error),
-  .e-input-group.e-control-wrapper.e-input-focus:not(.e-success):not(
-      .e-warning
-    ):not(.e-error) {
+  .e-input-group.e-control-wrapper.e-input-focus:not(.e-success):not(.e-warning):not(.e-error) {
     border-color: transparent;
     border-color: transparent;
     border-radius: 0px;
@@ -516,10 +510,7 @@
     display: none !important;
   }
 
-  html[dir="ltr"]
-    ngx-extended-pdf-viewer
-    #outerContainer.sidebarOpen
-    #viewerContainer:not(.pdfPresentationMode) {
+  html[dir="ltr"] ngx-extended-pdf-viewer #outerContainer.sidebarOpen #viewerContainer:not(.pdfPresentationMode) {
     left: 0 !important;
   }
 
@@ -528,7 +519,7 @@
     border-image: none !important;
   }
 
-  .reason_Info > p {
+  .reason_Info>p {
     margin: 0;
   }
 
@@ -570,4 +561,19 @@
 
 .stepper-toolbar input.e-lib.e-input {
   width: 46px !important;
+}
+
+#hla-Cmt {
+  background: #fff;
+  border: 1px #ccc solid !important;
+  border-radius: 3px;
+  width: 220px !important;
+  height: 180px !important;
+  box-shadow: 0px 0px 6px 0px rgb(82 63 105 / 5%);
+  padding: 10px !important;
+}
+
+#input-Cmt {
+  height: 120px;
+  border: 1px #eee solid !important;
 }
