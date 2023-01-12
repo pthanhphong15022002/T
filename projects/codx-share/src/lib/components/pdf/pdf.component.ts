@@ -2462,6 +2462,7 @@ export class PdfComponent
   }
 
   removeUnsaveHLA() {
+    window.getSelection().empty()
     let lstUnsave = this.lstHighlightTextArea.filter(
       (hla) => hla.isAdded == false
     );
@@ -2679,6 +2680,7 @@ export class PdfComponent
       this.lstHighlightTextArea = this.lstHighlightTextArea.concat(tmpLstHLA);
       this.detectorRef.detectChanges();
     }
+    
   }
 
   addComment() {}

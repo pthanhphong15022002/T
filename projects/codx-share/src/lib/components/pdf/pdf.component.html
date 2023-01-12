@@ -377,7 +377,7 @@
         (selecting)="changeRightTab($event)"
       >
         <e-tabitems>
-          <e-tabitem *ngIf="isEditable && !isPublic">
+          <e-tabitem *ngIf="isEditable && !isPublic && !isInteractPDF">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight0"
@@ -504,7 +504,7 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem *ngIf="inputUrl == null">
+          <e-tabitem *ngIf="inputUrl == null && !isInteractPDF">
             <ng-template #headerText>
               <codx-label
                 name="lblHeaderRight1"

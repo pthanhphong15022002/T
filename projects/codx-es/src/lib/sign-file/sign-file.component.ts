@@ -309,6 +309,7 @@ export class SignFileComponent extends UIComponent {
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
     var edit = e.filter((x: { functionID: string }) => x.functionID == 'SYS03');
+    var release = e.filter((x: { functionID: string }) => x.functionID == 'EST01105');
 
     if (bookmarked == true) {
       if (bm?.length) bm[0].disabled = true;
@@ -326,6 +327,7 @@ export class SignFileComponent extends UIComponent {
     }
     if (data.approveStatus != 1 && data.approveStatus != 2) {
       if (edit?.length) edit[0].disabled = true;
+      if (release?.length) release[0].disabled = true;
     }
   }
 
