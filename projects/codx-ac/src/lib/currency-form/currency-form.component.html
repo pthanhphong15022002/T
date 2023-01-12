@@ -8,43 +8,7 @@
 >
 </codx-views>
 <ng-template #itemTemplate let-data>
-  <tr>
-    <td>
-      <codx-mfunc  [formModel]="view.formModel" [isBookMark]="true" [dataItem]="data"
-        (clickMF)="clickMF($event,data)" type="view">
-      </codx-mfunc>
-    </td>
-    <td>
-      {{data.currencyID}}
-    </td>
-    <td>
-      {{data.currencyName}}
-    </td>
-    <td>
-      {{data.symbol}}
-    </td>
-
-    <td>
-      <div *ngIf="data.multiply">true</div>
-      <div *ngIf="!data.multiply">false</div>
-    </td>
-    <td>
-      {{data.pRoundOff}}
-    </td>
-    <td>
-      {{data.aRoundOff}}
-    </td>
-    <td>
-      {{data.translateName}}
-    </td>
-    <td>
-      {{data.precisionName}}
-    </td>
-
-  </tr>
-</ng-template>
-<!-- <ng-template #morefunc let-data>
   <codx-mfunc  [formModel]="view.formModel" [isBookMark]="true" [dataItem]="data"
   (clickMF)="clickMF($event,data)" type="view">
 </codx-mfunc>
-</ng-template> -->
+</ng-template>

@@ -12,6 +12,7 @@ import { SystemDialogService } from 'projects/codx-share/src/lib/components/view
 import { FileInfo, FileUpload, ItemInterval, Permission } from '@shared/models/file.model';
 import { resetInfiniteBlocks } from '@syncfusion/ej2-grids';
 import { ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'share',
@@ -71,10 +72,13 @@ export class ShareComponent implements OnInit {
   shareContent = '';
   isShare = true;
   requestTitle = '';
+  ownerID :any;
   toPermission: Permission[];
   byPermission: Permission[];
   ccPermission: Permission[];
   bccPermission: Permission[];  
+
+  shareGroup: FormGroup
 //   @ViewChild(ContextMenuComponent) public basicMenu: ContextMenuComponent;
   @ViewChild('view') view!: ViewsComponent; 
   
@@ -87,6 +91,7 @@ export class ShareComponent implements OnInit {
     private api: ApiHttpService,
     public dmSV: CodxDMService,
     private modalService: NgbModal,
+    private formBuilder: FormBuilder,
     private auth: AuthStore,
     private notificationsService: NotificationsService,
    // private confirmationDialogService: ConfirmationDialogService,
@@ -107,9 +112,13 @@ export class ShareComponent implements OnInit {
     //  this.id = this.data.recID;     
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void { 
+    this.shareGroup = this.formBuilder.group({
+      by: ''
+    });  
     this.user = this.auth.get();       
     if(this.dmSV.breakCumArr.length>0 && this.dmSV.breakCumArr.includes(this.fullName)) this.fullName= null
+    this.getOwner();
   }
 
 
@@ -119,6 +128,21 @@ export class ShareComponent implements OnInit {
     return true;
   }
 
+  getOwner()
+  {
+    if(this.fileEditing && Array.isArray(this.fileEditing.permissions))
+    { 
+      var f = this.fileEditing.permissions.filter(x=>x.objectType == "1");
+      if(f) 
+      { 
+        let o: any = {};
+        o.objectType = f[0].objectType
+        o.objectName = f[0].objectName;
+        o.id = f[0].objectID;
+        this.ownerID = [o]
+      }
+    }
+  }
   validate(item) {
     //  fileName
    // this.errorshow = true;  
