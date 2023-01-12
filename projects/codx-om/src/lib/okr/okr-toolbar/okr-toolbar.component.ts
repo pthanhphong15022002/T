@@ -47,7 +47,6 @@ export class OkrToolbarComponent implements OnInit {
   }
   buttonClick(event:any)
   {
-    debugger;
     this.click.emit(event);
   }
   hiddenChartClick(hiddenChart:any)

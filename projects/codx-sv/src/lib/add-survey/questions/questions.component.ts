@@ -931,10 +931,10 @@ export class QuestionsComponent extends UIComponent implements OnInit {
               clearInterval(myInterval);
               const t = this;
               if (itemAnswer) {
-                t.questions[seqNoQuestion].children[seqNoQuestion].answers[
+                t.questions[seqNoSession].children[seqNoQuestion].answers[
                   itemAnswer.seqNo
                 ].hasPicture = true;
-                t.questions[seqNoQuestion].children[seqNoQuestion].APicture =
+                t.questions[seqNoSession].children[seqNoQuestion].APicture =
                   true;
                 // t.questions[seqNoQuestion].children[seqNoQuestion].answers[
                 //   itemAnswer.seqNo
@@ -1579,7 +1579,9 @@ export class QuestionsComponent extends UIComponent implements OnInit {
 
   saveDataTimeout = new Map();
   setTimeoutSaveData(data, isModeAdd, list = null) {
-    this.lstDataAdd = [...this.lstDataAdd, ...data];
+    let checkArray = Array.isArray(data);
+    if (checkArray) this.lstDataAdd = [...this.lstDataAdd, ...data];
+    else this.lstDataAdd = [...this.lstDataAdd, ...[data]];
     clearTimeout(this.saveDataTimeout?.get(this.lstDataAdd[0].recID));
     this.saveDataTimeout?.delete(
       this.saveDataTimeout?.get(this.lstDataAdd[0].recID)

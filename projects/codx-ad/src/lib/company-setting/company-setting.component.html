@@ -1,7 +1,3 @@
-<!-- <codx-views #view [views]="views" entityName="AD_CompanySettings" service="SYS" assemblyName="AD"
-  className="CompanySettingsBusiness" method="GetListAsync" [dataObj]="dataSelected" idField="recID" [autoLoad]="true">
-</codx-views> -->
-
 <codx-views #view service="SYS" assemblyName="ERM.Business.AD" entityName="AD_CompanySettings"
   className="CompanySettingsBusiness" [method]="''" [views]="views" [autoLoad]="true" idField="recID">
 </codx-views>
@@ -32,31 +28,36 @@
                   <i class="icon-create icon-18"></i>
                 </button>
               </div>
-
-              <div class="form-group w-40">
-                <div class="fw-bold text-dark mb-1">
-                  <codx-label fiedName="LegalName" [formModel]="view.formModel" default="Tên công ty">
-                  </codx-label>
+              <div class="row">
+                <div class="col-6">
+                  <div class="form-group w-40">
+                    <div class="fw-bold text-dark mb-1">
+                      <codx-label fiedName="LegalName" [formModel]="view.formModel" default="Tên công ty">
+                      </codx-label>
+                    </div>
+                    <codx-input type="text" field="legalName" [crrValue]="data?.legalName" placeholder="Tên công ty"
+                      disabled="true">
+                    </codx-input>
+                  </div>
+                  <div class="form-group">
+                    <codx-label fiedName="TaxCode" [formModel]="view.formModel" default="Mã số thuế">
+                    </codx-label>
+                    <codx-input disabled="true" type="text" class="form-control" field="taxCode"
+                      [crrValue]="data?.taxCode">
+                    </codx-input>
+                  </div>
                 </div>
-                <codx-input type="text" field="legalName" [crrValue]="data?.legalName" placeholder="Tên công ty"
-                  disabled="true">
-                </codx-input>
-              </div>
-
-              <div class="form-group">
-                <codx-label fiedName="CompanyCode" [formModel]="view.formModel" default="Web Address">
-                </codx-label>
-                <div *ngIf="tenant">
-                  <codx-input type="text" field="companyCode" [crrValue]="tenant" disabled="true"></codx-input>
+                <div class="col-6">
+                  <div class="form-group">
+                    <codx-label fiedName="CompanyCode" [formModel]="view.formModel" default="Web Address">
+                    </codx-label>
+                    <div *ngIf="tenant">
+                      <codx-input type="text" field="companyCode" [crrValue]="tenant" disabled="true"></codx-input>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="form-group">
-                <codx-label fiedName="TaxCode" [formModel]="view.formModel" default="Mã số thuế">
-                </codx-label>
-                <codx-input disabled="true" type="text" class="form-control" field="taxCode" [crrValue]="data?.taxCode">
-                </codx-input>
-              </div>
               <div class="row pt-3">
                 <div class="col-6">
                   <div class="form-group">
@@ -313,7 +314,7 @@
                 <div class="row">
                   <div class="mb-5 col-6 list-app" *ngFor="let module of lstInstalledModule">
                     <div class="h-125px min-h-125px w-100 border p-4 rounded-2">
-                      <div class="min-h-70px">
+                      <div class="min-h-65px">
                         <codx-temp-full cardCss="card-template mb-3" [typeMF]="'hover'"
                           [title]="module.boughtModule.moduleName" [desc]="module.boughtModule.description"
                           [imageSrc]="module.boughtModule?.image" [titleLine]="2" typeMF="hover" [dataItem]="module">
@@ -339,7 +340,7 @@
                 <div class="row">
                   <div class="col-6 mb-5 list-app" *ngFor="let module of lstNotInstallModule">
                     <div class="h-125px min-h-125px w-100 border p-4 rounded-2">
-                      <div class="min-h-70px">
+                      <div class="min-h-65px">
                         <codx-temp-full cardCss="card-template mb-3" [typeMF]="'hover'"
                           [title]="module.boughtModule.moduleName" [desc]="module.boughtModule.description"
                           [imageSrc]="module.boughtModule?.image" [titleLine]="2" typeMF="hover" [dataItem]="module">
