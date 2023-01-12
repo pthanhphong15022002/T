@@ -65,6 +65,14 @@
   background: #f5f8fa;
 }
 
+.dropzone-msg-title {
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: var(--gray-800);
+}
+
 .dropzone.dropzone-default.dropzone-primary {
   border-color: #3699ff;
 }
@@ -352,3 +360,4 @@
   background-color: #f0f8ff;
 }
 // End Drop drap -- nvthuan
+

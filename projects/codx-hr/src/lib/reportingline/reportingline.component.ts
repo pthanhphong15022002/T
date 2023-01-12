@@ -180,6 +180,7 @@ export class ReportinglineComponent extends UIComponent {
       }
     }
   }
+  // edit position
   edit(event: any, data: any) {
     if (this.view && data && event) {
       this.view.dataService.dataSelected = JSON.parse(JSON.stringify(data));
@@ -210,6 +211,7 @@ export class ReportinglineComponent extends UIComponent {
         });
     }
   }
+  // coppy position
   copy(event: any, data: any) {
     if (event && data) {
       this.view.dataService.dataSelected = data;
@@ -227,12 +229,13 @@ export class ReportinglineComponent extends UIComponent {
             isAddMode: true,
             titleMore: event.text,
           };
-          this.callfc.openSide(
-            CodxFormDynamicComponent,
-            object,
-            option,
-            this.view.formModel.funcID
-          );
+          this.callfc.openSide(PopupAddPositionsComponent,object,option,this.view.formModel.funcID)
+          .closed.subscribe((res)=>{
+            if (res?.event?.save) {
+              let node = res.event.save.data;
+              this.codxTreeView.setNodeTree(node);
+            }
+          });
         }
       });
     }
