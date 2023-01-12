@@ -2,8 +2,9 @@
   [className]="'FolderBussiness'" [assemblyName]="'DM'" idField="recID" [views]="views" [orgView]="orgViews"
   [autoSort]="false" [autoSearch]="false" [selectedFirst]="false" (selectedChange)="onSelectionChanged($event)"
   [button]="button" (buttonClick)="addFile($event)" (viewChanged)="changeView($event)"
-  (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)"  [autoFilter]="false"
-  (onLoading)="onLoading($event)" (sortChanged)="sortChanged($event)" (requestEnded)="requestEnded($event)" (searchChanged)="searchChange($event)" >
+  (viewChanging)="viewChanging($event)" (filterChange)="filterChange($event)" [autoFilter]="false"
+  (onLoading)="onLoading($event)" (sortChanged)="sortChanged($event)" (requestEnded)="requestEnded($event)"
+  (searchChanged)="searchChange($event)">
 </codx-views>
 <ng-template #templateMain let-data>
   <div *ngIf="dmSV.checkUserForder(data); then noContext; else context"></div>
@@ -15,7 +16,7 @@
 
   <ng-template #context>
     <div appDragDropFileFolder [dataDrapDrop]="data" (fileFolderDropped)="fileFolderDropped($event)"
-      class="d-flex align-items-center px-3 py-1 home">
+      class="d-flex align-items-center px-3 py-1 home bg-transparent">
       <div [attr.id]="data.recID" class="leaf d-flex align-items-center" [innerHTML]="dmSV.setFullHtmlNode(data, '')">
       </div>
       <codx-temp-full class="float-start" imgCss="me-3 cursor-pointer" (clickMF)="dmSV.clickMF($event, data , codxview)"
@@ -29,11 +30,11 @@
 
 <!-- view-list -->
 <ng-template #templateRight>
- 
+
   <div *ngIf="isSearch">
   </div>
   <div (scroll)="onScroll($event)" appDragDropFileUpload (fileDropped)="fileUploadDropped($event)"
-    class="w-100 scroll-y home rounded-2" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
+    class="w-100 scroll-y home rounded-2 bg-transparent" data-kt-scroll="true" data-kt-scroll-activate="{default: true}"
     data-kt-scroll-height="auto" data-kt-scroll-wrappers=".wrapper, .dm-wrapper, .dms-card-rowS"
     data-kt-scroll-offset="0">
     <ng-container *ngTemplateOutlet="empty"></ng-container>
@@ -46,13 +47,11 @@
     <div class="d-flex align-items-start justify-content-between result-item border-bottom p-5">
       <div class="d-flex flex-column">
         <div class="d-flex align-items-center">
-          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file" (fileFolderDropped)="fileFolderDropped($event)"
-            [class]="classFile(file, 'float-start')" [imageWidth]="20" [imageSrc]="dmSV.getImage(file)"
-            imgCss="w-20px me-3 cursor-pointer" [title]="
+          <codx-temp-full (dblclick)="dbView(file)" appDragDropFileFolder [dataDrapDrop]="file"
+            (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(file, 'float-start')" [imageWidth]="20"
+            [imageSrc]="dmSV.getImage(file)" imgCss="w-20px me-3 cursor-pointer" [title]="
               file.folderName != undefined ? file.folderName : file.fileName
-            " cardCss="w-250px" [typeMF]="'hover'"
-            [baseHeaderRightTmp]="rightSecurity"
-          >
+            " cardCss="w-250px" [typeMF]="'hover'" [baseHeaderRightTmp]="rightSecurity">
           </codx-temp-full>
           <ng-template #rightSecurity>
             <span *ngIf="dmSV.checkView(file?.read) == false" class="icon-security text-primary icon-18"></span>
@@ -98,39 +97,38 @@
         </div>
       </div>
       <div class="action-menu-item ml-2">
-        <codx-mfunc [formModel]="view.formModel" (clickMF)="dmSV.clickMF($event, file)" (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
+        <codx-mfunc [formModel]="view.formModel" (clickMF)="dmSV.clickMF($event, file)"
+          (changeDataMF)="dmSV.filterMoreFunction($event, file)" [type]="'hover'"></codx-mfunc>
       </div>
     </div>
   </div>
 </ng-template>
 <ng-template #templateCard>
-    <div class="d-flex flex-wrap dms-card p-5">
-      <ng-container  *ngFor="let item of data ; trackBy: trackItem">
-        <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
-          [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item"
-          [formModel]="view.formModel" [view]="codxview">
-        </card>
-      </ng-container>
-    </div>
+  <div class="d-flex flex-wrap dms-card p-5">
+    <ng-container *ngFor="let item of data ; trackBy: trackItem">
+      <card appDragDropFileFolder [dataDrapDrop]="item" (fileFolderDropped)="fileFolderDropped($event)"
+        [class]="classFile(item, 'pe-6 pb-6')" (viewFile)="viewFile($event)" [data]="item" [formModel]="view.formModel"
+        [view]="codxview">
+      </card>
+    </ng-container>
+  </div>
 </ng-template>
 <ng-template #templateSmallCard>
   <div class="d-flex flex-wrap dms-card-sm p-5">
     <ng-container *ngFor="let item of data">
       <codx-temp-full (dblclick)="dbView(item)" appDragDropFileFolder [dataDrapDrop]="item"
-        (fileFolderDropped)="fileFolderDropped($event)"  [class]="classFile(item, 'float-start')"
+        (fileFolderDropped)="fileFolderDropped($event)" [class]="classFile(item, 'float-start')"
         [imageSrc]="dmSV.getImage(item)" (clickMF)="dmSV.clickMF($event, item)" imgCss="card-item img-folder me-3"
         [title]="item.folderName != undefined ? item.folderName : item.fileName"
         (changeDataMF)="dmSV.filterMoreFunction($event, item)" [formModel]="view.formModel" [typeMF]="'hover'"
         [bookmark]="dmSV.showBookmark(item)" subTitle="{{ item.createdOn | date: 'dd/MM/yyyy' }} | {{ item.userName }}"
-        cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3"
-        [baseHeaderRightTmp]="rightSecurity"
-      >
+        cardCss="card-item card-template w-300px sm-card rounded-1 p-3 mb-3 me-3" [baseHeaderRightTmp]="rightSecurity">
       </codx-temp-full>
       <ng-template #rightSecurity>
         <span *ngIf="dmSV.checkView(item.read) == false" class="icon-security text-primary icon-18"></span>
       </ng-template>
     </ng-container>
-    
+
   </div>
 </ng-template>
 <ng-template #templateList>
@@ -165,11 +163,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr  class="border-top dms-list" *ngFor="let item of data" [title]="
+          <tr class="border-top dms-list" *ngFor="let item of data" [title]="
               item.folderName != undefined ? item.folderName : item.fileName
             ">
             <td class="w-5">
-              <codx-mfunc (clickMF)="dmSV.clickMF($event, item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)" type="hover"  [formModel]="view.formModel"></codx-mfunc>
+              <codx-mfunc (clickMF)="dmSV.clickMF($event, item)" (changeDataMF)="dmSV.filterMoreFunction($event, item)"
+                type="hover" [formModel]="view.formModel"></codx-mfunc>
             </td>
             <td class="w-30" (dblclick)="dbView(item)">
               <codx-temp-full appDragDropFileFolder [dataDrapDrop]="item"
@@ -216,7 +215,8 @@
       <div class="d-flex justify-content-between page-heading align-items-center p-2">
         <div class="fw-bold ms-2">{{ dmSV.titleEmptyTrash30 }}</div>
         <div class="cursor-pointer">
-          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="this.dmSV.emptyTrash()">{{ dmSV.titleEmptyAction }}</span>
+          <span class="badge badge-light-primary fw-bold me-auto px-4 py-3" (click)="this.dmSV.emptyTrash()">{{
+            dmSV.titleEmptyAction }}</span>
         </div>
       </div>
     </div>

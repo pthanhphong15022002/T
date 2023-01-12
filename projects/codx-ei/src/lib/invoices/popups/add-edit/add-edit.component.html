@@ -415,7 +415,7 @@
             <codx-input
               field="invoiceType"
               [formModel]="form.formModel"
-              [Group]="form.formGroup"             
+              [Group]="form.formGroup"
             >
             </codx-input>
           </div>
@@ -531,10 +531,16 @@
     [entityName]="fmInvoiceLines.entityName"
     [templateMore]="morefunction"
     [editSettings]="editSettings"
+    [allowFiltering]="true"
+    [allowSorting]="true"
     [dataSource]="data"
+    predicates="TransID=@0"
+    [dataValues]="invoices.recID"
+    service="EI"
     [height]="gridHeight"
     [autoLoad]="false"
     rowHeight="40"
+    (onDelete)="onDeleted($event)"
     (created)="gridCreated($event)"
     (cellChanged)="cellChanged($event)"
   ></codx-gridview-v2>

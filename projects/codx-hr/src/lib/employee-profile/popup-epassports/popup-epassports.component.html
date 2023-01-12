@@ -141,9 +141,9 @@
         [formModel]="formModel"
         [typeMF]="'hover'"
         [title]="data.passportNo"
-        [icoTitleCss]="'icon-list_alt'"
+        [icoTitleCss]="'icon-i-layout-text-sidebar-reverse icon-14 ms-1'"
         [subTitleTmp]="tmplateEPassportsMenuList"
-        cardCss="card codx_cardcenter px-2 pt-4 pb-2"
+        cardCss="card codx_cardcenter px-2 pt-4 pb-2 ms-1"
         [hideMF]="true"
         typeMF="hover"
         [dataItem]="data"
@@ -152,9 +152,9 @@
 </ng-template>
 
 <ng-template #tmplateEPassportsMenuList let-data>
-    <div class="d-flex flex-column">
-        <div><i class ="icon-calendar_today"></i>{{(data.issuedDate | fmDT) + ' - ' + (data.expiredDate | fmDT)}}</div>
-        <div><i class = "icon-edit_fill"></i>{{data.issuedPlace}}</div>
+    <div class="d-flex flex-column" style="margin-left: 1px; padding-top: 2px;">
+        <div class="d-flex align-items-center"><i class ="icon-event"></i>{{(data.issuedDate | fmDT) + ' - ' + (data.expiredDate | fmDT)}}</div>
+        <div class="d-flex align-items-center"><i class = "icon-edit"></i>{{data.issuedPlace}}</div>
     </div>
 </ng-template>
 

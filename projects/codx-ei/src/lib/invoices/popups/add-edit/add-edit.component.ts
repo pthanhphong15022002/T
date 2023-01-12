@@ -30,6 +30,7 @@ import {
   RequestOption,
   Util,
 } from 'codx-core';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'lib-add-edit',
@@ -93,7 +94,7 @@ export class AddEditComponent implements OnInit {
   //#region Init
   ngOnInit(): void {
     this.cache
-      .gridViewSetup('EIInvoiceLines', 'grvEIInvoiceLines')
+      .gridViewSetup('EIInvoices', 'grvEIInvoiceLines')
       .subscribe((res) => {
         if (res) {
           var arrgv = Object.values(res) as any[];
@@ -170,6 +171,9 @@ export class AddEditComponent implements OnInit {
     let data = this.grid.formGroup.value;
     data['isAdd'] = true;
     data.recID = Util.uid();
+    data.write = true;
+    data.delete = true;
+    data.read = true;
     this.grid.addRow(data, idx);
   }
 
@@ -206,7 +210,7 @@ export class AddEditComponent implements OnInit {
 
     if (
       e.field.toLowerCase() === 'salesamt' ||
-      e.field.toLowerCase() === 'lineType'
+      e.field.toLowerCase() === 'linetype'
     ) {
       this.updateInvoices();
     }
@@ -214,11 +218,18 @@ export class AddEditComponent implements OnInit {
   }
 
   clickMF(e, data) {
-    if (e.functionID == 'SYS02') {
-      if (this.action == 'edit') {
-        this.rowDelete.push(data);
-        this.rowUpdate.delete(data.recID);
-      }
+    switch (e.functionID) {
+      case 'SYS02':
+        this.grid.deleteRow(data);
+        break;
+    }
+  }
+
+  onDeleted(e) {
+    if (e) {
+      this.rowDelete.push(e);
+      if (this.rowUpdate.has(e.id)) this.rowUpdate.delete(e.recID);
+      this.updateInvoices();
     }
   }
   //#endregion
@@ -237,7 +248,7 @@ export class AddEditComponent implements OnInit {
           opt.methodName = 'EditAsync';
           let dataAdd = this.grid.dataSource.filter((x) => x.isAdd);
           opt.data = [
-            this.form.formGroup.value,
+            this.invoices,
             dataAdd,
             Array.from(this.rowUpdate.values()),
             this.rowDelete,
@@ -246,7 +257,9 @@ export class AddEditComponent implements OnInit {
 
         return true;
       })
-      .subscribe();
+      .subscribe((res) => {
+        if (res) this.dialog.close();
+      });
   }
   //#endregion
 
@@ -290,14 +303,17 @@ export class AddEditComponent implements OnInit {
         s = parseFloat(e.salesAmt);
       else s = e.salesAmt;
 
-      salesAmt += s;
-
       if (e.totalAmt && typeof e.totalAmt == 'string')
         t = parseFloat(e.totalAmt);
       else t = e.totalAmt;
 
-      if (e.lineType !== '3') totalAmt += t;
-      else totalAmt -= s;
+      if (e.lineType !== '3') {
+        salesAmt += s;
+        totalAmt += t;
+      } else {
+        salesAmt -= s;
+        totalAmt -= s;
+      }
     });
 
     //Clear

@@ -29,6 +29,7 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   formGroup: FormGroup;
   dialog: DialogRef;
   healthObj: any;
+  healthTemp: any;
   lstEHealth
   indexSelected
   funcID: string;
@@ -39,6 +40,9 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   headerText: string;
   @ViewChild('form') form: CodxFormComponent;
   @ViewChild('listView') listView: CodxListviewComponent;
+  @ViewChild('ultrasound') ultrasound: CodxListviewComponent;
+  @ViewChild('bloodtest') bloodtest: CodxListviewComponent;
+  dialog2: DialogRef
 
   constructor(
     private injector: Injector,
@@ -112,10 +116,10 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
   }
 
   onSaveForm() {
-    if (this.formGroup.invalid) {
-      this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
-      return;
-    }
+    // if (this.formGroup.invalid) {
+    //   this.hrSevice.notifyInvalid(this.formGroup, this.formModel);
+    //   return;
+    // }
 
     if(this.actionType === 'copy' || this.actionType === 'add'){
       delete this.healthObj.recID
@@ -154,6 +158,21 @@ export class PopupEhealthsComponent extends UIComponent implements OnInit {
     if (e.isSwiped) {
       e.cancel = true;
     }
+  }
+
+  BloodTestPopup(){
+    this.healthTemp = JSON.parse(JSON.stringify(this.healthObj));
+    this.dialog2 = this.callfc.openForm(this.bloodtest);
+  }
+
+  UltraSoundPopup(){
+    this.healthTemp = JSON.parse(JSON.stringify(this.healthObj));
+    this.dialog2 = this.callfc.openForm(this.ultrasound);    
+  }
+
+  onSave(){
+    this.healthObj = JSON.parse(JSON.stringify(this.healthTemp));
+    this.dialog2.close()
   }
 
   // afterRenderListView(event: any) {

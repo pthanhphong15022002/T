@@ -10,8 +10,7 @@ import { AuthStore, ButtonModel, NotificationsService, UIComponent, ViewModel, V
   Util,
   RequestOption, } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
-import { dynamicProcess } from '../models/dynamicProcess.model';
-import { dynamicProcessPermissions } from '../models/dynamicProcessPermissions.model';
+import { DP_Processes, DP_Processes_Permission } from '../models/models';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -50,15 +49,15 @@ implements OnInit, AfterViewInit {
  entityName: any;
 
 // create variables for list
-listDynamicProcess: dynamicProcess[]=[];
-listUserInUse: dynamicProcessPermissions[]=[];
+listDynamicProcess: DP_Processes[]=[];
+listUserInUse: DP_Processes_Permission[]=[];
 
 
  //test chưa có api
  popoverDetail: any;
  popupOld: any;
  popoverList: any;
- method = 'GetListProcessesAsync';
+ method = '';
 
   constructor(
     private inject: Injector,
@@ -72,6 +71,7 @@ listUserInUse: dynamicProcessPermissions[]=[];
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
 
   }
 
@@ -116,29 +116,26 @@ listUserInUse: dynamicProcessPermissions[]=[];
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+        var obj = {
+          data: res,
+          isAddNew: true
+        };
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.FormModel = this.view.formModel;
 
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      let dialogAdd = this.callFunc.openForm(
-        PopupAddDynamicProcessComponent,
-        '',
-        800,
-        700,
-        '',
-        {
-          isAddNew: true,
-          formModel: this.view?.formModel,
-          option: option,
-        },
-        '',
-        dialogModel
-      );
-    });
-
+        var dialog = this.callfc.openForm(
+          PopupAddDynamicProcessComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+      });
   }
 
   edit(data:any) {

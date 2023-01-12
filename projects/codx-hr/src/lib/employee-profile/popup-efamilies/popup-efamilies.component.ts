@@ -162,7 +162,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
           if(this.listView){
             (this.listView.dataService as CRUDService).update(this.lstFamilyMembers[this.indexSelected]).subscribe()
           }
-          // this.dialog.close(this.familyMemberObj);
         }
         else this.notify.notifyCode('DM034')
       })
@@ -205,7 +204,6 @@ export class PopupEFamiliesComponent extends UIComponent implements OnInit {
 
   UpdateRegisterTo(e){
     this.todateVal = e
-    
   }
 
 }
