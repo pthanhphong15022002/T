@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CodxFilesComponent } from './codx-files.component';
+import { PopupEbenefitComponent } from './popup-ebenefit.component';
 
-describe('CodxFilesComponent', () => {
-  let component: CodxFilesComponent;
-  let fixture: ComponentFixture<CodxFilesComponent>;
+describe('PopupEbenefitComponent', () => {
+  let component: PopupEbenefitComponent;
+  let fixture: ComponentFixture<PopupEbenefitComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CodxFilesComponent ]
+      declarations: [ PopupEbenefitComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodxFilesComponent);
+    fixture = TestBed.createComponent(PopupEbenefitComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
