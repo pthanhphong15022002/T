@@ -20,6 +20,7 @@ import { PopAddCurrencyComponent } from './currency-form/pop-add-currency/pop-ad
 import { LayoutNoAsideComponent } from 'projects/codx-share/src/lib/_layout/_noAside/_noAside.component';
 import { PopSettingExchangeComponent } from './currency-form/pop-setting-exchange/pop-setting-exchange.component';
 import { PopAddExchangerateComponent } from './currency-form/pop-add-exchangerate/pop-add-exchangerate.component';
+import { ChartOfAccountsComponent } from './chart-of-accounts/chart-of-accounts.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,10 @@ export const routes: Routes = [
       {
         path: 'currency/:funcID',
         component: CurrencyFormComponent,
+      },
+      {
+        path: 'chartofaccounts/:funcID',
+        component: ChartOfAccountsComponent,
       },
     ],
   },
@@ -41,7 +46,8 @@ export const routes: Routes = [
     CurrencyFormComponent,
     PopAddCurrencyComponent,
     PopSettingExchangeComponent,
-    PopAddExchangerateComponent
+    PopAddExchangerateComponent,
+    ChartOfAccountsComponent,
   ],
   imports: [
     RouterModule.forChild(routes),

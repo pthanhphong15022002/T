@@ -28,6 +28,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   toDate:any;
   exchange:any;
   formType:any;
+  index:number;
   dialog!: DialogRef;
   data: any;
   gridViewSetup:any;
@@ -67,6 +68,14 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       this.symbol = this.currencies.symbol;
       this.curName = this.currencies.currencyName;
       this.disabled = true;
+      this.api.exec(
+        'ERM.Business.BS',
+        'ExchangeRatesBusiness',
+        'LoadDataExchangeRatesAsync',
+        [this.curID]
+      ).subscribe((res:[])=>{
+        this.objectExchange = res;
+      });   
       
     }
     }
@@ -78,8 +87,10 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   }
   onSave(){
     var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
-    if (dataexchange.Multiply != null) {
-      this.currencies.multiply = dataexchange.Multiply;
+    if (dataexchange != null) {
+      if (dataexchange.Multiply != null) {
+        this.currencies.multiply = dataexchange.Multiply;
+      }     
     }
     if (this.curID.trim() == '' || this.curID == null) {
       this.notification.notifyCode(
@@ -120,7 +131,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           for(var i=0;i<this.objectExchange.length;i++){
             this.objectExchange[i].CurrencyID = this.curID;   
           }
-          console.log(this.objectExchange);
           this.api.exec(
             'ERM.Business.BS',
             'ExchangeRatesBusiness',
@@ -142,7 +152,6 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           );
           return;      
         }
-
       });
     }
     if (this.formType == 'edit') {
@@ -158,8 +167,22 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       .subscribe((res) => {
         console.log(res);
         if (res.save || res.update) {
-          this.dialog.close(res.save);
-          this.dt.detectChanges();
+          for(var i=0;i<this.objectExchange.length;i++){
+            this.objectExchange[i].CurrencyID = this.curID;   
+          }
+          this.api.exec(
+            'ERM.Business.BS',
+            'ExchangeRatesBusiness',
+            'UpdateAsync',
+            [this.objectExchange]
+          ).subscribe((res:[])=>{
+            if(res){
+              window.localStorage.removeItem("dataexchangeRate");
+              window.localStorage.removeItem("dataexchange");
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });     
         }
       });
     }
@@ -207,7 +230,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     this.title = 'Thêm tỷ giá';
     var obj = {
             headerText: this.title,
-            data : this.currencies
+            formtype: 'addexrate'
           };
     let opt = new DialogModel();
     let dataModel = new FormModel();
@@ -228,13 +251,84 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
           opt
         );
         dialogexchange.closed.subscribe((x) => {
-          // var dataexchangeRate = JSON.parse(localStorage.getItem('dataexchangeRate'));
-          // if (dataexchangeRate != null) {
-          //   let customObj = new ExchangeRates();
-          //   customObj.ToDate = dataexchangeRate.toDate;
-          //   customObj.exchangeRate = dataexchangeRate.exchangeRate;
-          //   this.objectExchange.push(customObj);
-          // }
+          var dataexchangeRate = JSON.parse(localStorage.getItem('dataexchangeRate'));
+          if (dataexchangeRate != null) {      
+            let customObj = new ExchangeRates();
+            customObj.toDate = dataexchangeRate.toDate;
+            customObj.exchangeRate = dataexchangeRate.exchangeRate;
+            this.api.exec(
+              'ERM.Business.BS',
+              'ExchangeRatesBusiness',
+              'ValidateExchangeDateAsync',
+              [this.objectExchange,customObj]
+            ).subscribe((res:[])=>{
+              if(res){
+                this.objectExchange.push(customObj);
+               
+              }else{
+                this.notification
+                .notify('Tỷ giá ngày '+formatDate(dataexchangeRate.toDate, 'dd/MM/yyyy', 'en-US')+' đã tồn tại' ,'2');
+              }
+              window.localStorage.removeItem("dataexchangeRate");
+            });            
+          }
+        });
+      }
+    });
+  }
+  deleteExchangerate(data : any){
+    if (this.formType == 'add') {
+      let index = this.objectExchange.findIndex(x => x.toDate == data.toDate);
+      this.objectExchange.splice(index, 1);
+    }else{
+      this.api.exec(
+        'ERM.Business.BS',
+        'ExchangeRatesBusiness',
+        'DeleteAsync',
+        [data]
+      ).subscribe((res:[])=>{
+        if (res) {
+          this.notification
+                .notify("Xóa thành công")
+          let index = this.objectExchange.findIndex(x => x.toDate == data.toDate);
+      this.objectExchange.splice(index, 1);
+        }else{
+          let index = this.objectExchange.findIndex(x => x.toDate == data.toDate);
+      this.objectExchange.splice(index, 1);
+        }
+      });  
+    }
+  }
+  editExchangerate(data:any){
+    this.title = 'Thêm tỷ giá';
+    var obj = {
+            headerText: this.title,
+            dataex : data,
+            formtype: 'editexrate'
+          };
+    let opt = new DialogModel();
+    let dataModel = new FormModel();
+    dataModel.formName = 'ExchangeRates';
+    dataModel.gridViewName = 'grvExchangeRates';
+    dataModel.entityName = 'BS_ExchangeRates';
+    opt.FormModel = dataModel;
+    this.cache.gridViewSetup('ExchangeRates','grvExchangeRates').subscribe(res=>{
+      if(res){  
+        var dialogexchangeedit = this.callfc.openForm(
+          PopAddExchangerateComponent,
+          '',
+          350,
+          500,
+          '',
+          obj,
+          '',
+          opt
+        );
+        dialogexchangeedit.closed.subscribe((x) => {    
+          var dataexchangeRate = JSON.parse(localStorage.getItem('dataexchangeRate'));
+          let index = this.objectExchange.findIndex(x => x.toDate == dataexchangeRate.toDate);
+          this.objectExchange[index] = dataexchangeRate;
+          window.localStorage.removeItem("dataexchangeRate");
         });
       }
     });
