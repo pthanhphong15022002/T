@@ -1567,6 +1567,16 @@ ejs-listview .e-ul li {
   list-style-type: none;
 }
 
-// .card .card-header {
-//   border-bottom: 1px solid #15d8ff;
-// }
+.e-appointment-wrap {
+  margin-top: 42px;
+  padding: 5px !important;
+}
+
+.e-appointment-wrap .e-agenda-item {
+  margin-top: 4px;
+  border-bottom: 1px var(--gray-150) solid;
+}
+
+.card .card-header {
+  border-color: var(--border-list) !important;
+}
