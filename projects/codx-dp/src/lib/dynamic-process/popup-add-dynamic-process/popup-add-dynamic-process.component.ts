@@ -867,6 +867,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           // hidden swtich reason change
           this.isSwitchReason = false;
+          this.crrDataStep = data;
         }
       }
     }
