@@ -1,7 +1,22 @@
-
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CacheService, CallFuncService, DialogModel, LayoutService, PageTitleService, ViewModel, ViewType } from 'codx-core';
+import {
+  CacheService,
+  CallFuncService,
+  DialogModel,
+  LayoutService,
+  PageTitleService,
+  ViewModel,
+  ViewType,
+  ApiHttpService,
+} from 'codx-core';
 import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.component';
 @Component({
   selector: 'codx-home',
@@ -10,18 +25,18 @@ import { PopupSearchPostComponent } from './list-post/popup-search/popup-search.
   encapsulation: ViewEncapsulation.None,
 })
 export class HomeComponent implements OnInit {
-
   constructor(
     private callFC: CallFuncService,
     private page: PageTitleService,
     private cache: CacheService,
-    private router: ActivatedRoute
-  ) { }
+    private router: ActivatedRoute,
+    private api: ApiHttpService
+  ) {}
 
   ngOnInit(): void {
     this.router.params.subscribe((params) => {
       let funcID = params['funcID'];
-      this.cache.functionList(funcID).subscribe(f => {
+      this.cache.functionList(funcID).subscribe((f) => {
         if (f) {
           this.page.setSubTitle(f.customName);
         }
@@ -33,6 +48,15 @@ export class HomeComponent implements OnInit {
   clickShowPopupSearch() {
     let option = new DialogModel();
     option.IsFull = true;
-    this.callFC.openForm(PopupSearchPostComponent, "", 0, 0, "", null, "", option);
+    this.callFC.openForm(
+      PopupSearchPostComponent,
+      '',
+      0,
+      0,
+      '',
+      null,
+      '',
+      option
+    );
   }
 }

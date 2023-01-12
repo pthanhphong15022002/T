@@ -16,6 +16,8 @@ export class OkrToolbarComponent implements OnInit {
   buttonAddKR: ButtonModel;
   buttonAddO: ButtonModel;
   button?: ButtonModel;
+  isHiddenChart=false;
+  @Output() hiddenChart=new EventEmitter<any>();
   @Output() click = new EventEmitter<any>();
   date:any = new Date();
   ops = ['m','q','y'];
@@ -46,6 +48,11 @@ export class OkrToolbarComponent implements OnInit {
   buttonClick(event:any)
   {
     this.click.emit(event);
+  }
+  hiddenChartClick(hiddenChart:any)
+  {
+    this.isHiddenChart=hiddenChart;
+    this.hiddenChart.emit(hiddenChart);
   }
   changeCalendar(event:any)
   {

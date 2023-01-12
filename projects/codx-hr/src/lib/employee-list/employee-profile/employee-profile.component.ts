@@ -1,3 +1,4 @@
+import { PopupEbenefitComponent } from './../../employee-profile/popup-ebenefit/popup-ebenefit.component';
 import { PopupEdayoffsComponent } from './../../employee-profile/popup-edayoffs/popup-edayoffs.component';
 import { PopupEaccidentsComponent } from './../../employee-profile/popup-eaccidents/popup-eaccidents.component';
 import { PopupEappointionsComponent } from './../../employee-profile/popup-eappointions/popup-eappointions.component';
@@ -143,6 +144,9 @@ export class EmployeeProfileComponent extends UIComponent {
   //EAccident
   lstAccident: any = [];
 
+  //EHealth
+  lstEhealth: any= [];
+
   formModel;
   itemDetail;
   EExperienceColumnsGrid: any;
@@ -161,6 +165,8 @@ export class EmployeeProfileComponent extends UIComponent {
   //Basic salary
   crrEBSalary: any;
   lstEBSalary: any = [];
+
+
   listCrrBenefit: any;
 
   lstESkill: any = [];
@@ -347,6 +353,19 @@ export class EmployeeProfileComponent extends UIComponent {
         this.hrService.getEFamilyWithDataRequest(opFamily).subscribe((res) => {
           if (res) this.lstFamily = res[0];
         });
+
+        let rqEhealth = new DataRequest();
+        rqEhealth.gridViewName = 'grvEHealths';
+        rqEhealth.entityName = 'HR_EHealths';
+        rqEhealth.predicate = 'EmployeeID=@0';
+        rqEhealth.dataValue = params.employeeID;
+        rqEhealth.page = 1;
+        this.hrService
+          .loadListDataEHealthsByDatarequest(rqEhealth)
+          .subscribe((res) => {
+            if (res) this.lstEhealth = res[0];
+            console.log('lit e appoint', this.lstAppointions);
+          });
 
         //Appointions
         let rqAppointion = new DataRequest();
@@ -743,13 +762,6 @@ export class EmployeeProfileComponent extends UIComponent {
                 console.log('e salaries', this.lstEBSalary);
               }
             });
-
-        // Benefit
-        this.hrService.GetCurrentBenefit(params.employeeID).subscribe((res) => {
-          if (res?.length) {
-            this.listCrrBenefit = res;
-          }
-        });
 
         //Vaccine
         let rqVaccine = new DataRequest();
@@ -1470,7 +1482,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editEmployeePartyInfo() {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1494,7 +1506,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editAssuranceTaxBankAccountInfo() {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1518,7 +1530,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editEmployeeSelfInfo() {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     // this.view.dataService
     // .edit(this.data)
     // .subscribe((res) => {
@@ -1545,7 +1557,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editEmployeeTimeCardInfo() {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1564,7 +1576,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   editEmployeeCaculateSalaryInfo() {
-    this.view.dataService.dataSelected = this.data;
+    this.view.dataService.dataSelected = this.infoPersonal;
     let option = new SidebarModel();
     option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
@@ -1578,6 +1590,45 @@ export class EmployeeProfileComponent extends UIComponent {
       option
     );
     dialogEdit.closed.subscribe((res) => {
+      if (!res?.event) this.view.dataService.clear();
+    });
+  }
+
+  DeleteEmployeeEHealths(recID: string){
+    console.log('rec ID', recID);
+    this.hrService.deleteEHealth(recID).subscribe( p => {
+      if(p != null){
+        this.notify.notifyCode('SYS007')
+      }
+      else this.notify.notifyCode('DM034')
+    });
+    console.log('delete xong');
+  }
+
+  handlEmployeeBenefit(actionType: string, data: any) {
+    this.view.dataService.dataSelected = this.data;
+    let option = new SidebarModel();
+    // option.DataService = this.view.dataService;
+    option.FormModel = this.view.formModel;
+    option.Width = '850px';
+    let dialogAdd = this.callfunc.openSide(
+      PopupEbenefitComponent,
+      {
+        employeeId: this.data.employeeID,
+        actionType: actionType,
+        headerText: 'Phụ cấp',
+        funcID: 'HRT030203',
+        listBenefits: this.listCrrBenefit,
+        indexSelected: this.listCrrBenefit.indexOf(data)
+      },
+      option
+    );
+    dialogAdd.closed.subscribe((res) => {
+      // if (actionType == 'add') {
+      //   this.listCrrBenefit = res.event;
+      //   console.log('lst ex', this.listCrrBenefit);
+      //   this.df.detectChanges();
+      // }
       if (!res?.event) this.view.dataService.clear();
     });
   }
@@ -2117,37 +2168,29 @@ export class EmployeeProfileComponent extends UIComponent {
 
   //#region HR_EHealths
 
-  addEHealths(actionType: string, data: any) {
-    // this.hrService.addEHealth(null).subscribe();
-    // return;
+  HandleEmployeeEHealths(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
     let option = new SidebarModel();
-    // option.FormModel = this.view.formModel
     option.Width = '850px';
     let dialogAdd = this.callfunc.openSide(
       PopupEhealthsComponent,
       {
         actionType: actionType,
-        salarySelected: data,
+        indexSelected: this.lstEhealth.indexOf(data),
+        lstEhealth: this.lstEhealth,
         headerText: 'Khám sức khỏe',
         employeeId: this.data.employeeID,
+        funcID: 'HRT03020701'
       },
       option
     );
     dialogAdd.closed.subscribe((res) => {
       if (res) {
-        // this.hrService
-        //   .GetCurrentJobSalaryByEmployeeID(this.data.employeeID)
-        //   .subscribe((p) => {
-        //     this.crrJobSalaries = p;
-        //   });
         console.log('current val', res.event);
-        this.crrJobSalaries = res.event;
         this.df.detectChanges();
       }
       if (res?.event) this.view.dataService.clear();
-    });
-  }
+  })}
   //#endregion
 
   //#region HR_EVaccines
@@ -2317,7 +2360,7 @@ export class EmployeeProfileComponent extends UIComponent {
   }
 
   nextEmp() {
-    if (this.listEmp) {
+    if (this.listEmp){
       let index = this.listEmp.findIndex(
         (p) => p.employeeID == this.data.employeeID
       );

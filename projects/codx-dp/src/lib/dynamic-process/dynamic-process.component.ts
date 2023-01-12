@@ -10,7 +10,7 @@ import { AuthStore, ButtonModel, NotificationsService, UIComponent, ViewModel, V
   Util,
   RequestOption, } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
-import { dynamicProcess } from '../models/dynamicProcess.model';
+import { DP_Processes, DP_Processes_Permission } from '../models/models';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -27,7 +27,6 @@ implements OnInit, AfterViewInit {
 
  // view child
  @ViewChild('templateViewCard', { static: true })templateViewCard: TemplateRef<any>;
- @ViewChild('headerTemplate') headerTemplate: TemplateRef<any>;
 
  // Input
  @Input() dataObj?: any;
@@ -47,17 +46,28 @@ implements OnInit, AfterViewInit {
  itemSelected: any;
  titleAction:any;
  moreFunc: any;
- entityName: any;
 
 // create variables for list
-listDynamicProcess: dynamicProcess[]=[];
+listDynamicProcess: DP_Processes[]=[];
+listUserInUse: DP_Processes_Permission[]=[];
 
 
  //test chưa có api
  popoverDetail: any;
  popupOld: any;
  popoverList: any;
- method = 'GetListProcessesAsync';
+
+// Call API Dynamic Proccess
+readonly service = 'DP';
+readonly assemblyName = 'ERM.Business.DP';
+readonly entityName = 'DP_Processes';
+readonly className = 'ProcessesBusiness'
+
+ // Method API dynamic proccess
+readonly methodGetList = 'GetListDynProcessesAsync';
+
+// Get idField
+readonly idField = 'recID'
 
   constructor(
     private inject: Injector,
@@ -71,6 +81,7 @@ listDynamicProcess: dynamicProcess[]=[];
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
+    this.funcID = this.activedRouter.snapshot.params['funcID'];
 
   }
 
@@ -78,6 +89,9 @@ listDynamicProcess: dynamicProcess[]=[];
     this.button = {
       id: this.btnAdd,
     };
+
+    // gán tạm để test
+    this.getListUser();
   }
 
   afterLoad() {
@@ -87,7 +101,7 @@ listDynamicProcess: dynamicProcess[]=[];
 
   click(evt: ButtonModel) {
     switch (evt.id) {
-      case 'btnAdd':
+      case this.btnAdd:
         this.add();
         break;
     }
@@ -112,29 +126,27 @@ listDynamicProcess: dynamicProcess[]=[];
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-      let option = new SidebarModel();
-      option.Width = '800px';
-      option.DataService = this.view?.dataService;
-      option.FormModel = this.view?.formModel;
+        var obj = {
+          data: res,
+          isAddNew: true
+        };
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.FormModel = this.view.formModel;
 
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      let dialogAdd = this.callFunc.openForm(
-        PopupAddDynamicProcessComponent,
-        '',
-        800,
-        700,
-        '',
-        {
-          isAddNew: true,
-          formModel: this.view?.formModel,
-          option: option,
-        },
-        '',
-        dialogModel
-      );
-    });
-
+        var dialog = this.callfc.openForm(
+          PopupAddDynamicProcessComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+      });
+    this.changeDetectorRef.detectChanges();
   }
 
   edit(data:any) {
@@ -174,7 +186,6 @@ listDynamicProcess: dynamicProcess[]=[];
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-    this.entityName = e?.data?.entityName;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
@@ -217,6 +228,14 @@ listDynamicProcess: dynamicProcess[]=[];
     let isRead = data.read;
 
     return isRead ? true : false;
+  }
+
+  getListUser() {
+    this.codxDpService.getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714').subscribe((res) => {
+      if (res) {
+        this.listUserInUse = res;
+      }
+    });
   }
 
   //#endregion đang test

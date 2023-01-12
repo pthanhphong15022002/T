@@ -1,123 +1,135 @@
 export const OMCONST = {
-    SERVICES:'OM',
-    ASSEMBLY: 'ERM.Business.OM',
-    BUSINESS: {
-        DashBoard: 'DashBoardBusiness',
-        OKR : 'OKRBusiness',
-        KR : 'KRBusiness',
-        OB: 'OBBusiness',
-        OKRPlan: 'OKRPlansBusiness',
-        OM: 'OMBusiness',
-        Reviews: 'ReviewsBusiness',
-        Reports: 'ReportsBusiness',
+  SERVICES: 'OM',
+  ASSEMBLY: 'ERM.Business.OM',
+  BUSINESS: {
+    DashBoard: 'DashBoardBusiness',
+    OKR: 'OKRBusiness',
+    KR: 'KRBusiness',
+    OB: 'OBBusiness',
+    OKRPlan: 'OKRPlansBusiness',
+    OM: 'OMBusiness',
+    Reviews: 'ReviewsBusiness',
+    Reports: 'ReportsBusiness',
+  },
+  FUNCID: {
+    COMP: 'OMT01',
+    DEPT: 'OMT02',
+    ORG: 'OMT03',
+    PERS: 'OMT04',
+  },
+
+  OBFUNCID: {
+    COMP: 'OMT011',
+    DEPT: 'OMT021',
+    ORG: 'OMT031',
+    PERS: 'OMT041',
+  },
+
+  KRFUNCID: {
+    COMP: 'OMT012',
+    DEPT: 'OMT022',
+    ORG: 'OMT032',
+    PERS: 'OMT042',
+  },
+
+  MFUNCID: {
+    Add: 'SYS01',
+    Delete: 'SYS02',
+    Edit: 'SYS03',
+    Copy: 'SYS04',
+
+    //distribute OB
+    DOBComp: 'OMT011',
+    DOBDept: 'OMT021',
+    DOBOrg: 'OMT031',
+    DOBPers: 'OMT041',
+    //assign KR
+    AOBComp: 'OMT012',
+    AOBDept: 'OMT022',
+    AOBOrg: 'OMT032',
+    AOBPers: 'OMT042',
+
+    //distribute KR
+    DKRComp: 'OMT013',
+    DKRDept: 'OMT023',
+    DKROrg: 'OMT033',
+    DKRPers: 'OMT043',
+    //assign KR
+    AKRComp: 'OMT014',
+    AKRDept: 'OMT024',
+    AKROrg: 'OMT034',
+    AKRPers: 'OMT044',
+  },
+
+  VLL: {
+    OKRType: {
+      Obj: 'O',
+      KResult: 'R',
+      SKResult: 'S',
     },
-    FUNCID: {
-        COMP:'OMT01',
-        DEPT:'OMT02',
-        ORG:'OMT03',
-        PERS:'OMT04',
-    },
-    
-    OBFUNCID:{
-        COMP:'OMT011',
-        DEPT:'OMT021',
-        ORG:'OMT031',
-        PERS:'OMT041',
+
+    OKRLevel: {
+      Company: '1',
+      Department: '3',
+      Team: '4',
+      Person: '5',
     },
 
-    KRFUNCID:{
-        COMP:'OMT012',
-        DEPT:'OMT022',
-        ORG:'OMT032',
-        PERS:'OMT042',
+    Plan: {
+      Month: 'M',
+      Quarter: 'Q',
     },
+  },
+  GRVNAME: {},
+  FORMMODEL: {},
 
-    MFUNCID: {
-        Add:'SYS01',
-        Delete:'SYS02',
-        Edit:'SYS03',
-        Copy:'SYS04',
-    },
-    
-    VLL: {
-        OKRType:{
-            Obj:'O',
-            KResult:'R',
-            SKResult:'S',
-        },
+  //region format
 
-        OKRLevel:{
-            Company:'1',
-            Department:'3',
-            Team:'4',
-            Person:'5',
-        },
+  //_______________________Base Func_________________________//
 
-        Plan:{
-            Month:'M',
-            Quarter:'Q',
-        }
+  
+  //-----------------------End-------------------------------//
+  
 
-    },
-    GRVNAME: {
-        
-    },
-    FORMMODEL: {
-        
-    },
-    
+  //_______________________Base Event________________________//
 
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Get Data Func_____________________//
 
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Validate Func_____________________//
 
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Logic Func________________________//
 
-    //region format
-    
-//-----------------------Base Func-------------------------//
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Logic Event_______________________//
 
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Custom Func_______________________//
 
-//-----------------------End-------------------------------//
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Custom Event______________________//
 
-//-----------------------Base Event------------------------//
+  
+  //-----------------------End-------------------------------//
+  
+  //_______________________Popup_____________________________//
 
-
-
-//-----------------------End-------------------------------//
-
-//-----------------------Get Data Func---------------------//
-
-
-//-----------------------End-------------------------------//
-
-//-----------------------Validate Func---------------------//
-
-
-
-//-----------------------End-------------------------------//
-
-//-----------------------Logic Func------------------------//
-
-
-//-----------------------End-------------------------------//
-
-
-//-----------------------Logic Event-----------------------//
-
-
-//-----------------------End-------------------------------//
-
-
-//-----------------------Custom Func-----------------------//
-
-
-//-----------------------End-------------------------------//
-
-//-----------------------Custom Event-----------------------//
-
-
-//-----------------------End-------------------------------//
-
-//-----------------------Popup-----------------------------//
-
-
-//-----------------------End-------------------------------//
-}
+  
+  
+  //-----------------------End-------------------------------//
+  
+};

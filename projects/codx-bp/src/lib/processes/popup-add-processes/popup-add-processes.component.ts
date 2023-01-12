@@ -195,7 +195,7 @@ export class PopupAddProcessesComponent implements OnInit {
           for (let i = 0; i < countArray; i++) {
             if (
               this.listPermissionCopy[i].autoCreate &&
-              this.listPermissionCopy[i].objectID != this.onwerOldCoppy
+             (this.listPermissionCopy[i].objectID != this.onwerOldCoppy || (this.listPermissionCopy[i].objectID == this.onwerOldCoppy && this.listPermissionCopy[i].memberType == '1'))
             ) {
               this.process.permissions.push(this.listPermissionCopy[i]);
             }

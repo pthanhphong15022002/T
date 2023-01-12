@@ -63,6 +63,9 @@ export class ApprovalRoomsComponent extends UIComponent {
   selectBookingItems = [];
   selectBookingAttendees = '';
   queryParams: any;
+  private approvalRule = '0';
+  private autoApproveItem = '0';
+
   constructor(
     private injector: Injector,
     private codxEpService: CodxEpService,
@@ -124,12 +127,31 @@ export class ApprovalRoomsComponent extends UIComponent {
         this.listRoom = res;
       }
     });
+
     this.codxEpService
       .getListReason('EP_BookingRooms')
       .subscribe((res: any) => {
         if (res) {
           this.listReason = [];
           this.listReason = res;
+        }
+      });
+
+    this.codxEpService.getEPStationerySetting('1').subscribe((res: any) => {
+      if (res) {
+        let dataValue = res.dataValue;
+        let json = JSON.parse(dataValue);
+        this.autoApproveItem = json.AutoApproveItem;
+      }
+    });
+
+    this.codxEpService
+      .getEPStationerySetting('4')
+      .subscribe((approvalSetting: any) => {
+        if (approvalSetting) {
+          this.approvalRule = JSON.parse(
+            approvalSetting.dataValue
+          )[0]?.ApprovalRule;
         }
       });
   }
@@ -254,49 +276,6 @@ export class ApprovalRoomsComponent extends UIComponent {
             this.notificationsService.notifyCode('SYS034'); //đã duyệt
             data.approveStatus = '5';
             data.status = '5';
-            //Gửi duyệt vpp với refID(BookingStationery) = recID(BookingRoom)
-
-            this.codxEpService
-              .getCategoryByEntityName('EP_BookingStationery')
-              .subscribe((category: any) => {
-                this.codxEpService
-                  .getBookingByRefID(data.recID)
-                  .subscribe((res: any) => {
-                    //Gửi duyệt VPP
-                    res.forEach((booking) => {
-                      this.codxEpService
-                        .release(
-                          booking,
-                          category.processID,
-                          'EP_Bookings',
-                          FuncID.BookingStationery
-                        )
-                        .subscribe((res) => {
-                          //Duyệt VPP tự dộng
-                          this.codxEpService
-                            .getEPStationerySetting('1')
-                            .subscribe((res: any) => {
-                              if (res) {
-                                let dataValue = res.dataValue;
-                                let json = JSON.parse(dataValue);
-                                if (
-                                  json.AutoApproveItem &&
-                                  json.AutoApproveItem == 1
-                                ) {
-                                  this.codxEpService
-                                    .getApprovalTransByTransID(booking)
-                                    .subscribe((trans: any) => {
-                                      this.codxEpService
-                                        .approve(trans.recID, '5', '', '')
-                                        .subscribe();
-                                    });
-                                }
-                              }
-                            });
-                        });
-                    });
-                  });
-              });
           }
           if (status == '4') {
             this.notificationsService.notifyCode('SYS034'); //bị hủy

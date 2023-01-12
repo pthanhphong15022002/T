@@ -1,0 +1,82 @@
+<codx-form
+  #form
+  [headerText]="headerText"
+  [body]="body"
+  [formModel]="dialog.formModel"
+  [dialog]="dialog"
+  [footer]="footer"
+  [data]="exchangerate"
+  subToolbarCss="text-end"
+>
+</codx-form>
+<ng-template popup adde #body>
+    <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="toDate"
+            default="Ngày"      
+          ></codx-label>
+          <codx-input
+          [formModel]="form.formModel" 
+          [Group]="form.formGroup"      
+          field="toDate"            
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="exchangeRate"
+            default="Tỷ giá"      
+          ></codx-label>
+          <codx-input
+          [formModel]="form.formModel"
+          [crrValue]="exchangeRate"        
+          field="exchangeRate"        
+          (valueChange)="valueChange($event)"                 
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="sourceType"
+            default="Nguồn tỷ giá"      
+          ></codx-label>
+          <codx-input
+          [crrValue]="SourceType"
+          (valueChange)="valueChangeSourceType($event)"     
+          field="sourceType"
+          [formModel]="form.formModel"          
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="note"
+            default="Ghi chú"      
+          ></codx-label>
+          <codx-input
+          [crrValue]="note"
+          (valueChange)="valueChangeNote($event)"     
+          field="note"
+          [formModel]="form.formModel"          
+        >
+        </codx-input>
+      </div>
+</ng-template>
+<ng-template #footer>
+    <div class="boxbtn">
+    <button class="btnsavenew">
+      <codx-label
+        name="btnSaveNew"
+        formName="System"
+        default="Lưu & Thêm "
+      ></codx-label>
+    </button>
+    <button class="btnsave" (click)="onSave()">
+      <codx-label name="btnSave" formName="System" default="Lưu"></codx-label>
+    </button>
+  </div>
+  </ng-template>

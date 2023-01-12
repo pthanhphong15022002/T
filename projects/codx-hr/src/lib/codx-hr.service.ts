@@ -1226,21 +1226,9 @@ export class CodxHrService {
   }
   //#endregion
 
-  //#region HR_EBenefits
-  GetCurrentBenefit(empID: string) {
-    return this.api.execSv<any>(
-      'HR',
-      'ERM.Business.HR',
-      'EBenefitsBusiness',
-      'GetCurrentBenefitAsync',
-      [empID]
-    );
-  }
-  //#endregion
-
   //#region HR_EHealths
 
-  loadDataEHealths(dataRequest: DataRequest) {
+  loadListDataEHealthsByDatarequest(dataRequest: DataRequest) {
     return this.api.execSv<any>(
       'HR',
       'ERM.Business.HR',
@@ -1255,7 +1243,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'AddEHealthsAsync',
+      'AddEHealthAsync',
       [data]
     );
   }
@@ -1265,7 +1253,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'EditEHealthsAsync',
+      'EditEHealthAsync',
       data
     );
   }
@@ -1275,7 +1263,7 @@ export class CodxHrService {
       'HR',
       'ERM.Business.HR',
       'EHealthsBusiness',
-      'DeleteEHealthsAsync',
+      'DeleteEmployeEHealthInfoAsync',
       data
     );
   }
@@ -1613,6 +1601,51 @@ export class CodxHrService {
     );
   }
   //#endregion
+
+  //#region HR_EBenefit
+
+  GetCurrentBenefit(data) {
+    return this.api.execSv<any>(
+      'HR',
+      'HR',
+      'EBenefitsBusiness',
+      'GetCurrentBenefitAsync',
+      data
+    );
+  }
+
+  AddEBenefit(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'AddEBenefitAsync',
+      [data]
+    );
+  }
+
+  EditEBenefit(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'EditEBenefitAsync',
+      data
+    );
+  }
+
+  DeleteEBenefit(data: any) {
+    return this.api.execSv<any>(
+      'HR',
+      'ERM.Business.HR',
+      'EBenefitsBusiness',
+      'DeleteEBenefitAsync',
+      data
+    );
+  }
+
+  //#endregion
+
 
   //#region HR_EBusinessTravels
 

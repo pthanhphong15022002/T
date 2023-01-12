@@ -1,5 +1,6 @@
 <codx-views
   #view
+  idField="recID"
   [views]="views"
   [button]="buttons"
   entityName="EI_Invoices"
@@ -8,3 +9,16 @@
 </codx-views>
 
 <ng-template #itemTemplate let-data> aaaaaaaaaaa </ng-template>
+<ng-template #templateMore let-data>
+  <div class="has-action-menu" style="height: 30px">
+    <!-- <div class="action-menu"> -->
+    <codx-mfunc
+      [dataItem]="data"
+      [formModel]="view.formModel"
+      (clickMF)="clickMF($event, data)"
+      (changeDataMF)="activeMore($event)"
+      type="hover"
+    ></codx-mfunc>
+    <!-- </div> -->
+  </div></ng-template
+>

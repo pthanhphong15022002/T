@@ -54,11 +54,12 @@ export class CompanySettingComponent
   @ViewChild('template') template: TemplateRef<any>;
   @ViewChild('itemView') itemView: TemplateRef<any>;
   @ViewChild('leftMenu') leftMenu: TemplateRef<any>;
-  @ViewChild('paneleft') paneleft: TemplateRef<any>;
+  @ViewChild('templateRight') templateRight: TemplateRef<any>;
   @ViewChild('imageAvatar') imageAvatar: ImageViewerComponent;
   items: any;
   views: Array<ViewModel> = [];
   data: AD_CompanySettings;
+  // data: any;
   // data = new AD_CompanySettings();
   dialog!: DialogRef;
   minType = 'MinRange';
@@ -104,6 +105,8 @@ export class CompanySettingComponent
     this.funcID = this.activedRouter.snapshot.params['funcID'];
     var auth = authStore as any;
     this.tenant = auth.tenantStore?.activeTenant;
+    this.loadData();
+
   }
 
   onInit(): void {
@@ -134,19 +137,20 @@ export class CompanySettingComponent
           });
         }
       });
-    this.loadData();
   }
   ngAfterViewInit(): void {
     this.views = [
       {
         type: ViewType.content,
         active: true,
-        sameData: false,
+        sameData: true,
         model: {
-          panelRightRef: this.paneleft,
+          panelRightRef: this.templateRight,
         },
       },
     ];
+    this.changeDetectorRef.detectChanges();
+
   }
   valueChange(e) {
     if (e.data) {
@@ -409,5 +413,9 @@ export class CompanySettingComponent
       this.funcID,
       data
     );
+  }
+
+  viewChanged(e){
+    console.log(e);
   }
 }

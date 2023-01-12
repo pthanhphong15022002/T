@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, Injector, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ButtonModel, CallFuncService, DialogRef, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
+import { ButtonModel, CallFuncService, DialogRef, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.component';
 @Component({
   selector: 'lib-currency-form',
@@ -10,6 +10,9 @@ import { PopAddCurrencyComponent } from './pop-add-currency/pop-add-currency.com
 export class CurrencyFormComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
+  @ViewChild("morefunc") morefunc: TemplateRef<any>;
+
+  
   constructor(
     private inject: Injector,
     private dt: ChangeDetectorRef, 
@@ -41,6 +44,17 @@ export class CurrencyFormComponent extends UIComponent {
     this.button = {
       id: 'btnAdd',
     };
+    this.columnsGrid = [
+      { field: '', headerText: '', width: 20 },
+      { field: 'currencyID', headerText: 'Mã tiền tệ', width: 100 },
+      { field: 'currencyName', headerText: 'Tên tiền tệ', width: 200 },
+      { field: 'symbol', headerText: 'Ký hiệu', width: 200 },
+      { field: 'multiply', headerText: 'Nhân tỷ giá', width: 140 },
+      { field: 'pRoundOff', headerText: 'Số lẻ đơn giá', width: 140 },
+      { field: 'aRoundOff', headerText: 'Số lẻ thành tiền', width: 200 },
+      { field: 'translateName', headerText: 'Phát âm', width: 140 },
+      { field: 'precisionName', headerText: 'Đọc số nguyên', width: 140 },
+    ];
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -48,27 +62,25 @@ export class CurrencyFormComponent extends UIComponent {
       type: ViewType.grid,
       sameData: true,
       active: true,
+      model : {
+        // template2:this.morefunc,
+        // frozenColumns:1
+        resources: this.columnsGrid,
+        template: this.itemTemplate,  
+      }
       },
+      
   ];
     this.dt.detectChanges();
   }
-  // viewChanged(evt: any, view: ViewsComponent) {
-  //   this.cache
-  //     .gridViewSetup(view.function.formName, view.function.gridViewName)
-  //     .subscribe(() => {});
-  // }
-  // selectedChange(val: any) {
-  //   console.log(val);
-  //   this.itemSelected = val.data;
-  //   this.dt.detectChanges();
-  // }
   clickMF(e: any, data?: any) {
+    console.log(e.functionID);
     switch (e.functionID) {
-      case 'edit':
-        // this.update(data);
+      case 'SYS03':
+        this.update(data);
         break;
-      case 'delete':
-        // this.delete(data);
+      case 'SYS02':
+        this.delete(data);
         break;
     }
   }
@@ -103,5 +115,45 @@ export class CurrencyFormComponent extends UIComponent {
             });
       });
     });
+  }
+  update(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res: any) => {
+      var obj = {
+        formType: 'edit',
+        headerText: data.currencyID,
+      };
+      let option = new SidebarModel();
+      option.DataService = this.view?.currentView?.dataService;
+      option.FormModel = this.view?.currentView?.formModel;
+      option.Width = '550px';
+      this.dialog = this.callfunc.openSide(PopAddCurrencyComponent, obj, option);
+    });
+    this.dialog.closed.subscribe((x) => {
+      if (x.event == null && this.view.dataService.hasSaved)
+        this.view.dataService
+          .delete([this.view.dataService.dataSelected])
+          .subscribe(x => {
+            this.dt.detectChanges();
+          });
+    });
+  }
+  delete(data){
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.delete([data], true, (option: RequestOption) =>
+    this.beforeDelete(option,data)
+  ).subscribe(() => {});
+  }
+  beforeDelete(opt: RequestOption,data) {
+    opt.methodName = 'DeleteAsync';
+    opt.className = 'CurrenciesBusiness';
+    opt.assemblyName = 'BS';
+    opt.service = 'BS';
+    opt.data = data;
+    return true;
   }
 }

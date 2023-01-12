@@ -1,3 +1,4 @@
+
 #om-tab
 {
     height: 100% !important;
@@ -46,11 +47,15 @@
 }
 #om-tab-child .e-tab-header .e-toolbar-item.e-active
 {
-    border-bottom: solid 2px #0379FF !important;
+    border-bottom: solid 2px var(--text-primary) !important;
 }
-#om-tab-child .e-tab-header .e-active codx-label , #om-tab-child .e-tab-header .e-active i
+#om-tab-child .e-tab-header .e-active codx-label span , #om-tab-child .e-tab-header .e-active i
 {
-    color: #0379FF;
+    color: var(--text-primary) !important;
+}
+#om-tab-child .e-tab-header .e-toolbar-item.e-active span
+{
+    color: var(--text-primary) !important;
 }
 .p-om-okr
 {
@@ -142,7 +147,19 @@
 {
     height: 18px;
 }
+.w-90px
+{
+    width: 90px;
+}
 .om-p-chart
 {
     height: 170px !important;
+}
+
+.ob-kr:hover{
+    cursor: pointer;    
+    color: var(--text-primary) !important;
+}
+.bg-color{   
+    background-color: var(--text-primary) !important;
 }
