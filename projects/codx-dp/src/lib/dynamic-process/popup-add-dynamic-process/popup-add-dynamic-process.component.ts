@@ -25,7 +25,7 @@ import {
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
-import { DP_Processes } from '../../models/models';
+import { DP_Processes, DP_Steps_Fields } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
 
@@ -182,6 +182,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   arrSteps = [
     {
       recID: '41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
+      processID  :'41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
       stepField: [
@@ -224,8 +225,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       ],
     },
   ];
-
-  crrData: any;
+  fieldNew : DP_Steps_Fields ;
+  crrDataStep: any;
   isHover = '';
   dataChild = [];
   //end data Test
@@ -519,7 +520,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //add trường tùy chỉnh
-  addCustomField(stepID) {
+  addCustomField(stepID, processID) {
+    this.fieldNew.stepID = stepID;
+    this.fieldNew.processID = processID ;
     let titleAction = '';
     let option = new SidebarModel();
     let formModel = this.dialog?.formModel;
@@ -531,24 +534,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.zIndex = 1010;
     var dialogCustomField = this.callfc.openSide(
       PopupAddCustomFieldComponent,
-      ['add', titleAction],
+      [this.fieldNew,'add', titleAction],
       option
     );
     dialogCustomField.closed.subscribe((e) => {
       if (e.event != null) {
         //xu ly data đổ về
+
         this.changeDetectorRef.detectChanges();
       }
     });
   }
 
   popoverSelectView(p, data) {
-    this.crrData = data;
+    this.crrDataStep = data;
     p.open();
   }
   selectView(showColumnControl) {
     this.arrSteps.forEach((x) => {
-      if (x.recID == this.crrData.recID)
+      if (x.recID == this.crrDataStep.recID)
         x.showColumnControl = showColumnControl;
     });
     this.changeDetectorRef.detectChanges();

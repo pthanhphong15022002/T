@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { fail } from 'assert';
 import {
   ApiHttpService,
   AuthStore,
@@ -64,7 +65,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
   listName = '';
   fieldValue = '';
   listCombobox = {};
-  showInput = true;
+  showInput = false;
   titleAction = '';
   verifyName = '';
   approveName = '';
@@ -86,6 +87,19 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     this.titleAction = dt.data[1];
     this.user = this.authStore.get();
     this.functionID = this.dialog.formModel.funcID;
+    if (this.action == 'add' || this.action == 'copy') {
+      //defaut
+      this.taskGroups.maxHoursControl = this.taskGroups.maxHoursControl ?? '0';
+      this.taskGroups.locationControl = this.taskGroups.locationControl ?? '0';
+      this.taskGroups.projectControl = this.taskGroups.projectControl ?? '0';
+      this.taskGroups.planControl = this.taskGroups.planControl ?? '0';
+      this.taskGroups.updateControl = this.taskGroups.updateControl ?? '0';
+      this.taskGroups.autoCompleted = this.taskGroups.autoCompleted ?? '0';
+      this.taskGroups.dueDateControl = this.taskGroups.dueDateControl ?? '0';
+      this.taskGroups.extendControl = this.taskGroups.extendControl ?? '0';
+      this.taskGroups.editControl = this.taskGroups.editControl ?? '0';
+    }
+
     this.api
       .execSv<any>(
         'SYS',
@@ -181,7 +195,7 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   valueChange(data) {
     if (data.data) {
-      this.taskGroups.taskGroupName = data.data;
+      this.taskGroups[data.field] = data.data;
     }
   }
   valueList(data) {
