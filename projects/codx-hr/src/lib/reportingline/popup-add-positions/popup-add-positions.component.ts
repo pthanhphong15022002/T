@@ -70,9 +70,10 @@ export class PopupAddPositionsComponent implements OnInit {
   getFucnName(funcID:string){
     if(funcID){
       this.cacheService.functionList(funcID).subscribe(func => {
+        debugger
         if(func)
         {
-          this.title = `${this.title} ${func.descriptions}`;
+          this.title = `${this.title} ${func.description}`;
           this.cacheService
           .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
             console.log('form', gv);
