@@ -1264,13 +1264,13 @@
     <div class="form-group">
       <div>
         <codx-label
-          fiedName="StepName"
+          fiedName="taskGroupName"
           [formModel]=""
           default="Tên nhóm công việc"
         ></codx-label>
       </div>
       <codx-input
-        field="stepName"
+        field="taskGroupName"
         [formModel]=""
         [Group]=""
         type="text"
@@ -1284,18 +1284,19 @@
       <div class="w-100 me-2">
         <div>
           <codx-label
-            fiedName="StepName"
+            fiedName="durationDay"
             [formModel]=""
             default="Thời gian dự kiến"
           ></codx-label>
         </div>
         <div class="position-relative">
           <codx-input
-            field="stepName"
+            field="durationDay"
             [formModel]=""
             [Group]=""
             type="text"
             [height]="'100'"
+            [min]="0"
             (valueChange)="changeValueInput($event)"
           ></codx-input>
           <div
@@ -1313,7 +1314,7 @@
       <div class="w-100 ms-2">
         <div class="d-flex justify-content-end">
           <codx-label
-            fiedName="StepName"
+            fiedName="durationHour"
             [formModel]=""
             default="Thời gian còn lại "
           ></codx-label>
@@ -1321,11 +1322,12 @@
         </div>
         <div class="position-relative">
           <codx-input
-            field="stepName"
+            field="durationHour"
             [formModel]=""
             [Group]=""
             type="text"
             [height]="'100'"
+            [min]="0"
             (valueChange)="changeValueInput($event)"
           ></codx-input>
           <div
@@ -1373,13 +1375,13 @@
     <div class="form-group">
       <div>
         <codx-label
-          fiedName="StepName"
+          fiedName="memo"
           [formModel]=""
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
-        field="stepName"
+        field="memo"
         [formModel]=""
         [Group]=""
         type="textarea"
@@ -1417,7 +1419,7 @@
   <codx-share
     [dialog]="dialog"
     [multiple]="true"
-    (eventApply)="applyUser($event, userGroupJob)"
+    (eventApply)="applyUser($event, userGroupJob,'roles')"
     [listName]="'BP021'"
   >
   </codx-share>

@@ -21,11 +21,12 @@ import {
   ApiHttpService,
   CallFuncService,
   SidebarModel,
+  Util,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
 import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add-custom-field.component';
-import { DP_Processes, DP_Processes_Permission,DP_Steps_Fields  } from '../../models/models';
+import { DP_Processes, DP_Processes_Permission,DP_Steps_Fields, DP_Steps_TaskGroups  } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
 
@@ -86,6 +87,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titleViewStepReasonFail: string = 'Thất bại'; // title form step reason failure
 
   //stage-nvthuan
+  taskGroups = {};
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
@@ -109,18 +111,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       id: 13,
       name: 'Giới thiệu sản phẩm',
       time: 'N/A',
-      phase: 3,
-    },
-    {
-      id: 14,
-      name: 'Báo giá',
-      time: '3',
-      phase: 3,
-    },
-    {
-      id: 15,
-      name: 'Thương thảo hợp đồng',
-      time: '5',
       phase: 3,
     },
     {
@@ -578,6 +568,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   openAddStage(type) {
     this.isAddStage = type == 'add' ? true : false;
     this.nameStage = type == 'add' ? '' : 'Thuan nè';
+    
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
 
@@ -631,6 +622,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   //# group job
   openGroupJob() {
+    this.taskGroups['recID'] = Util.uid();
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
       '',
@@ -638,7 +630,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500
     );
   }
-  changeValueInput(event) {}
+  changeValueInput(event) {    
+    this.taskGroups[event?.field] = event?.data;  
+  }
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
   }
@@ -646,7 +640,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     let index = datas.findIndex((item) => item.id == objectID);
     if (index != -1) datas.splice(index, 1);
   }
-  applyUser(event, datas) {
+  applyUser(event, datas, status) {
     if (!event) return;
     let listUser = event;
     listUser.forEach((element) => {
@@ -658,8 +652,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
       }
     });
+    this.taskGroups[status] = JSON.parse(JSON.stringify(datas))
   }
-  savePopupGroupJob() {}
+  savePopupGroupJob() {
+    console.log(this.taskGroups);
+    
+  }
   //#End stage -- nvthuan
 
   //#region for reason successful/failed
