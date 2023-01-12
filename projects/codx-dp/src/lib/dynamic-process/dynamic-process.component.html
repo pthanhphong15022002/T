@@ -1,10 +1,10 @@
 <!-- BẢO GÁN TẠM ĐỂ TEST NHA -->
 <codx-views
   #view
-  [funcID]="funcID"
-  service="DP"
-  assemblyName="ERM.Business.DP"
-  entityName="DP_Processes"
+  [funcID]="'BPT01'"
+  service="BP"
+  assemblyName="ERM.Business.BP"
+  entityName="BP_Processes"
   className="ProcessesBusiness"
   [method]="method"
   [views]="views"
@@ -38,11 +38,10 @@
   >
   </codx-card-img>
   <ng-template #footerbg let-data>
-    <div
-      class="d-flex bg-footer m-n3 mt-2">
+    <div class="d-flex bg-footer m-n3 mt-2">
       <div class="d-flex flex-column w-100 p-3 pt-0">
         <div class="d-flex justify-content-between">
-          <div style="width: 100%;">
+          <div style="width: 100%">
             <div
               #processName
               class="fs-6 fw-bold line-clamp line-clamp-1 pt-6"
@@ -55,30 +54,34 @@
               [popoverClass]="data.recID"
             >
               {{
-              data?.processName
-              | formatvalue
-              : view.formModel
-              : "processName"
-              : processName
-              : "Processes"
-              : "grvProcesses"
-              | async
+                data?.processName
+                  | formatvalue
+                    : view.formModel
+                    : "processName"
+                    : processName
+                    : "Processes"
+                    : "grvProcesses"
+                  | async
               }}
             </div>
           </div>
         </div>
         <div class="footerCard-item">
           <div class="d-flex justify-content-start mt-1">
-            <div class="me-2 mt-1"> <i class="icon-adjust"></i></div>
-            <div class="me-2 mt-1">{{data.processNo}} </div>
+            <div class="me-2 mt-1"><i class="icon-adjust"></i></div>
+            <div class="me-2 mt-1">{{ data.processNo }}</div>
             <div class="ms-auto">
-            <codx-imgs [width]="25" [objectId]="listUserInUse" objectType="AD_Users" [numberImages]="2">
-            </codx-imgs>
-          </div>
+              <codx-imgs
+                [width]="25"
+                [objectId]="listUserInUse"
+                objectType="AD_Users"
+                [numberImages]="2"
+              >
+              </codx-imgs>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </ng-template>
 </ng-template>
-
