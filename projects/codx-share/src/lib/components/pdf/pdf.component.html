@@ -221,7 +221,7 @@
             </ng-template>
 
             <ng-template #content>
-              <div style="padding: 0 20px">
+              <div class="mx-5">
                 <div class="position-relative" *ngIf="!isApprover">
                   <div class="mt-3 mb-3 text-primary fw-bold">
                     <codx-label name="lblChooseSigner" [formModel]="" default="Chọn người kí cần thiết lập"
@@ -231,7 +231,7 @@
                     (change)="changeSigner($event)" [itemTemplate]="signer" [valueTemplate]="signer"
                     [(value)]="curSignerRecID">
                     <ng-template #signer let-approver>
-                      <codx-temp-full cardCss="card-select  px-2 pt-3 pb-2" [(imageId)]="approver.authorID"
+                      <codx-temp-full cardCss="card-select px-2 pt-3 pb-2" [(imageId)]="approver.authorID"
                         [imageObjType]="'AD_Users'" [imageWidth]="35" imgCss="me-2" [title]="
                           approver.fullName ??
                           (approver.roleType | vll : 'ES014' : 'text' | async)
@@ -240,17 +240,17 @@
                     </ng-template>
                   </ejs-dropdownlist>
                 </div>
-                <div class="mt-3 mb-3 text-primary fw-bold">
+                <div class="mt-6 mb-3 text-primary fw-bold">
                   <codx-label name="lblDragAction" [formModel]="" default="Kéo & thả chữ ký vào tài liệu"
                     class="text-header d-block">
                   </codx-label>
                 </div>
 
-                <div class="d-flex flex-wrap d-grid align-items-center">
-                  <div class="card-item me-6 mb-6" #actions *ngFor="let action of vllActions; let index = index"
+                <div class="d-flex flex-wrap d-grid align-items-center w-100 row">
+                  <div class="card-item col-6 mb-4" #actions *ngFor="let action of vllActions; let index = index"
                     [class.active]="holding == action?.value" (click)="changeAnnotationItem(action)">
                     <codx-card-center *ngIf="!isApprover || (isApprover && index != 8)"
-                      cardCss="border h-100 w-125px pt-4 pb-2 " icoCss="icon-30 mb-1 {{ action?.icon }}"
+                      cardCss="border h-100 w-100 pt-4 pb-2 " icoCss="icon-30 mb-1 {{ action?.icon }}"
                       content="{{ action?.text }}">
                     </codx-card-center>
                   </div>
@@ -271,7 +271,7 @@
                 </div>
                 <!--end::Item-->
                 <!--begin::Item-->
-                <div class="autoSign_Space d-flex align-items-center my-2">
+                <div class="autoSign_Space d-flex align-items-center mt-2 pb-5">
                   <div class="d-flex justify-content-start me-2">
                     <!--begin::Switch-->
                     <codx-input type="switch" field="autoSignLastLine" [disabled]="!isEditable"
@@ -554,15 +554,15 @@
                 </e-items>
               </ejs-toolbar>
 
-              <div class="highlightAreas">
-                <div class="highlightedList" [style]="
-                    'border: 1px solid black; margin-bottom: 10px; padding: 5px; background-color: ' +
+              <div class="highlightAreas px-3">
+                <div class="highlightedList rounded-2 p-3 mb-2" [style]="
+                    'background-color: ' +
                     defaultColor
                   " (click)="goToSelectedHighlightText(key)" *ngFor="let key of lstKey" [attr.data-id]="key">
                   <codx-temp-full [title]="
                       getHLText(key)?.author + ' ' + getHLText(key)?.createdDate
                     " [resourceObjType]="'AD_Users'" [icoCss]="
-                      'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom'
+                      'icon-edit_fill btn btn-icon btn-white btn-sm border-0 btn-tool-custom me-2'
                     " [subTitle]="
                       'Trang ' + getHLText(key)?.locations[0]?.pageNumber
                     " [subTitleCss]="'page-end'" [desc]="getHLText(key)?.comment?.content">

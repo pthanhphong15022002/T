@@ -33,18 +33,17 @@
                         {{data.positionName}}
                     </div>
                     <div class="text-gray-600 mt-2">
-                        {{(data.orgUnitID||'') +
-                        (data.departmentID ? ' | ' + data.departmentID: '') +
-                        (data.divisionID ? ' | ' + data.divisionID: '')}}
+                        <span *ngIf="data.orgUnitName">{{data.orgUnitName}}</span>
+                        <span *ngIf="data.departmentName">| {{data.departmentName}}</span>
+                        <span *ngIf="data.divisionName">| {{data.divisionName}}</span>
                     </div>
                     <div class="me-5 float-left mt-1">
                         <div class="me-2">
                             <codx-label name="lblReportTo" formName="Positions" default="Báo cáo trực tiếp:">
                             </codx-label>
                         </div>
-                        <div>
-                            <span #reportTo>{{ data.reportTo | formatvalue: view.formModel:"reportTo":reportTo | async
-                                }}</span>
+                        <div *ngIf="data.reportToName">
+                            <span>{{data.reportToName}}</span>
                         </div>
                     </div>
                     <div class="me-5 float-left mt-1">
@@ -52,10 +51,8 @@
                             <codx-label name="lblReportTo2" formName="Positions" default="Báo cáo gián tiếp:">
                             </codx-label>
                         </div>
-                        <div class="me-2">
-                            <span #reportTo2>
-                                {{ data.reportTo2 | formatvalue: view.formModel:"reportTo2":reportTo2 | async}}
-                            </span>
+                        <div class="me-2" *ngIf="data.reportTo2Name">
+                            <span>{{ data.reportTo2Name}}</span>
                         </div>
                     </div>
                 </div>
@@ -69,8 +66,8 @@
                         <codx-label [formModel]="view.formModel" name="lblJobName" default="Nhóm chức danh:">
                         </codx-label>
                     </span>
-                    <span class="text-dark">
-                        <span #jobID>{{ data.jobID | formatvalue: view.formModel:"jobID":jobID | async }}</span>
+                    <span class="text-dark" *ngIf="data.jobName">
+                        <span>{{data.jobName}}</span>
                     </span>
                 </div>
                 <div class="text-gray-700 mt-1">
@@ -78,10 +75,8 @@
                         <codx-label [formModel]="view.formModel" name="lbljobGroup" default="Chức vụ:">
                         </codx-label>
                     </span>
-                    <span class="text-dark">
-                        <span #jobGroupID>
-                            {{ data.jobGroupID | formatvalue: view.formModel: "jobGroupID": jobGroupID | async }}
-                        </span>
+                    <span class="text-dark" *ngIf="data.JobGroupName">
+                        <span>{{data.JobGroupName}}</span>
                     </span>
                 </div>
             </div>
@@ -101,15 +96,15 @@
             <div class="reportingline-cell-quantily w-25">
                 <div class="d-flex flex-column align-items-center">
                     <div class="pos-number text-primary fs-2 fw-bold">
-                        <span>{{(data.filledCounts ? data.filledCounts : 0 )  - (data.onBoard ? data.onBoard : 0) - (data.offBoard ? data.offBoard : 0)}}</span>
+                        <span>{{data.staff > 0? data.staff : 0}}</span>
                     </div>
                     <div class="text-gray-600 mt-1 mb-2">
                         <codx-label [formModel]="view.formModel" name="lblCurrentcounts" default="Chính thức">
                         </codx-label>
                     </div>
-                    <ng-container *ngIf="data.officialStaff">
+                    <ng-container *ngIf="data.staffEmp">
                         <ng-container
-                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.officialStaff }">
+                            *ngTemplateOutlet="templateListEmployee; context: { $implicit: data.staffEmp }">
                         </ng-container>
                     </ng-container>
                 </div>
