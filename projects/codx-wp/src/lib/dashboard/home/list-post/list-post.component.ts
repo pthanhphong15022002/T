@@ -383,8 +383,13 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     if (!event || !data) return;
     data.files = event;
   }
-  clickViewDetail(file: any) {
+  clickViewDetail(file: any){
     if (file) {
+      let _data = {
+        postID:file.objectID,
+        fileID:file.recID,
+        fileReferType:file.referType
+      };
       let option = new DialogModel();
       option.DataService = this.listview.dataService as CRUDService;
       option.FormModel = this.listview.formModel;
@@ -395,7 +400,7 @@ export class ListPostComponent implements OnInit, AfterViewInit {
         0,
         0,
         '',
-        file,
+        _data,
         '',
         option
       );

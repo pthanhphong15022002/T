@@ -22,4 +22,13 @@ export class CodxDpService {
       data
     );
   }
+
+  // // Gán tạm add để show data test
+  // getAddd() {
+  //   return this.api.exec<any>(
+  //     'DP',
+  //     'ProcessesBusiness',
+  //     'AddDynProcessesAsync'
+  //   ).subscribe();
+  // }
 }
