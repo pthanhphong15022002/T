@@ -1,14 +1,30 @@
 import {
-  AfterViewInit, ChangeDetectorRef, Component,
-  inject, Injector, Input, OnInit, TemplateRef, ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  Injector,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { PopupAddDynamicProcessComponent } from './popup-add-dynamic-process/popup-add-dynamic-process.component';
 import { ActivatedRoute } from '@angular/router';
-import { AuthStore, ButtonModel, NotificationsService, UIComponent, ViewModel, ViewType , DialogModel,
+import {
+  AuthStore,
+  ButtonModel,
+  NotificationsService,
+  UIComponent,
+  ViewModel,
+  ViewType,
+  DialogModel,
   SidebarModel,
   CallFuncService,
   Util,
-  RequestOption, } from 'codx-core';
+  RequestOption,
+  DialogRef,
+} from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
 
@@ -17,47 +33,47 @@ import { DP_Processes, DP_Processes_Permission } from '../models/models';
   templateUrl: './dynamic-process.component.html',
   styleUrls: ['./dynamic-process.component.css'],
 })
-export class DynamicProcessComponent extends UIComponent
-implements OnInit, AfterViewInit {
+export class DynamicProcessComponent
+  extends UIComponent
+  implements OnInit, AfterViewInit
+{
+  // View
+  views: Array<ViewModel> = [];
+  moreFuncs: Array<ButtonModel> = [];
+  button?: ButtonModel;
 
- // View
- views: Array<ViewModel> = [];
- moreFuncs: Array<ButtonModel> = [];
- button?: ButtonModel;
+  // view child
+  @ViewChild('templateViewCard', { static: true })
+  templateViewCard: TemplateRef<any>;
 
- // view child
- @ViewChild('templateViewCard', { static: true })templateViewCard: TemplateRef<any>;
+  // Input
+  @Input() dataObj?: any;
+  @Input() showButtonAdd = true;
+  dialog!: DialogRef;
+  // create variables
+  crrFunID: string = '';
+  funcID: string = '';
+  gridViewSetup: any;
 
- // Input
- @Input() dataObj?: any;
- @Input() showButtonAdd = true;
+  // const set value
+  readonly btnAdd: string = 'btnAdd';
 
+  heightWin: any;
+  widthWin: any;
+  itemSelected: any;
+  titleAction: any;
+  moreFunc: any;
+  entityName: any;
 
- // create variables
- crrFunID:string = '';
- funcID: string =  '';
- gridViewSetup: any;
+  // create variables for list
+  listDynamicProcess: DP_Processes[] = [];
+  listUserInUse: DP_Processes_Permission[] = [];
 
- // const set value
- readonly btnAdd:string = 'btnAdd';
-
- heightWin: any;
- widthWin: any;
- itemSelected: any;
- titleAction:any;
- moreFunc: any;
- entityName: any;
-
-// create variables for list
-listDynamicProcess: DP_Processes[]=[];
-listUserInUse: DP_Processes_Permission[]=[];
-
-
- //test chưa có api
- popoverDetail: any;
- popupOld: any;
- popoverList: any;
- method = '';
+  //test chưa có api
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
+  method = '';
 
   constructor(
     private inject: Injector,
@@ -66,13 +82,12 @@ listUserInUse: DP_Processes_Permission[]=[];
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private callFunc: CallFuncService,
+    private callFunc: CallFuncService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
-
   }
 
   onInit(): void {
@@ -84,9 +99,7 @@ listUserInUse: DP_Processes_Permission[]=[];
     this.getListUser();
   }
 
-  afterLoad() {
-
-  }
+  afterLoad() {}
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
@@ -97,55 +110,64 @@ listUserInUse: DP_Processes_Permission[]=[];
     }
   }
   ngAfterViewInit(): void {
-    this.views=[{
-      type: ViewType.card,
+    this.views = [
+      {
+        type: ViewType.card,
         sameData: true,
         active: true,
         model: {
           template: this.templateViewCard,
         },
-    }];
+      },
+    ];
+    this.view.dataService.methodSave = 'AddProcessAsync';
     this.changeDetectorRef.detectChanges();
   }
 
   searchDynamicProcess($event) {
-    if($event)
-    this.changeDetectorRef.detectChanges();
+    if ($event) this.changeDetectorRef.detectChanges();
   }
 
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
-        var obj = {
-          data: res,
-          isAddNew: true
-        };
-        let dialogModel = new DialogModel();
-        dialogModel.IsFull = true;
-        dialogModel.zIndex = 999;
-        dialogModel.FormModel = this.view.formModel;
-
-        var dialog = this.callfc.openForm(
-          PopupAddDynamicProcessComponent,
-          '',
-          this.widthWin,
-          this.heightWin,
-          '',
-          obj,
-          '',
-          dialogModel
-        );
+      var obj = {
+        action: 'add',
+      };
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
+      dialogModel.DataService = this.view?.dataService;
+      dialogModel.FormModel = this.view.formModel;
+      this.dialog = this.callfc.openForm(
+        PopupAddDynamicProcessComponent,
+        '',
+        this.widthWin,
+        this.heightWin,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+        if (e?.event == null)
+          this.view.dataService.delete(
+            [this.view.dataService.dataSelected],
+            false
+          );
       });
+    });
   }
 
-  edit(data:any) {
+  edit(data: any) {
     this.changeDetectorRef.detectChanges();
   }
-  copy(data:any) {
+  copy(data: any) {
     this.changeDetectorRef.detectChanges();
   }
 
-  delete(data:any) {
+  delete(data: any) {
     this.view.dataService.dataSelected = data;
     this.view.dataService
       .delete([this.view.dataService.dataSelected], true, (opt) =>
@@ -193,14 +215,14 @@ listUserInUse: DP_Processes_Permission[]=[];
   }
 
   //#region đang test
-  setTextPopover(text){
-    return (text);
+  setTextPopover(text) {
+    return text;
   }
 
-  PopoverDetail(e ,p: any, emp) {
+  PopoverDetail(e, p: any, emp) {
     let parent = e.currentTarget.parentElement.offsetWidth;
     let child = e.currentTarget.offsetWidth;
-    if(this.popupOld?.popoverClass !== p?.popoverClass ) {
+    if (this.popupOld?.popoverClass !== p?.popoverClass) {
       this.popupOld?.close();
     }
 
@@ -208,7 +230,9 @@ listUserInUse: DP_Processes_Permission[]=[];
       this.popoverList?.close();
       this.popoverDetail = emp;
       if (emp.memo != null || emp.processName != null) {
-        if(parent <= child) {p.open();}
+        if (parent <= child) {
+          p.open();
+        }
       }
     } else p.close();
     this.popupOld = p;
@@ -221,11 +245,13 @@ listUserInUse: DP_Processes_Permission[]=[];
   }
 
   getListUser() {
-    this.codxDpService.getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714').subscribe((res) => {
-      if (res) {
-        this.listUserInUse = res;
-      }
-    });
+    this.codxDpService
+      .getUserByProcessId('675ef83a-f2a6-4798-b377-9071c52fa714')
+      .subscribe((res) => {
+        if (res) {
+          this.listUserInUse = res;
+        }
+      });
   }
 
   //#endregion đang test
