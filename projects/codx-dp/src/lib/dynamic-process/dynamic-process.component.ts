@@ -58,22 +58,32 @@ export class DynamicProcessComponent
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
-  heightWin: any;
-  widthWin: any;
-  itemSelected: any;
-  titleAction: any;
-  moreFunc: any;
-  entityName: any;
+ heightWin: any;
+ widthWin: any;
+ itemSelected: any;
+ titleAction:any;
+ moreFunc: any;
 
   // create variables for list
   listDynamicProcess: DP_Processes[] = [];
   listUserInUse: DP_Processes_Permission[] = [];
 
-  //test chưa có api
-  popoverDetail: any;
-  popupOld: any;
-  popoverList: any;
-  method = '';
+ //test chưa có api
+ popoverDetail: any;
+ popupOld: any;
+ popoverList: any;
+
+// Call API Dynamic Proccess
+readonly service = 'DP';
+readonly assemblyName = 'ERM.Business.DP';
+readonly entityName = 'DP_Processes';
+readonly className = 'ProcessesBusiness'
+
+ // Method API dynamic proccess
+readonly methodGetList = 'GetListDynProcessesAsync';
+
+// Get idField
+readonly idField = 'recID'
 
   constructor(
     private inject: Injector,
@@ -104,7 +114,7 @@ export class DynamicProcessComponent
 
   click(evt: ButtonModel) {
     switch (evt.id) {
-      case 'btnAdd':
+      case this.btnAdd:
         this.add();
         break;
     }
@@ -197,7 +207,6 @@ export class DynamicProcessComponent
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-    this.entityName = e?.data?.entityName;
     switch (e.functionID) {
       case 'SYS01':
         this.add();

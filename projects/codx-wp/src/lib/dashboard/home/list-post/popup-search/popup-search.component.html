@@ -153,11 +153,7 @@
   <div class="p-5 pb-0">
     <div class="d-flex align-items-top">
       <div class="me-3">
-        <codx-img 
-          [objectId]="item.createdBy" 
-          [objectName]="item.createdName" 
-          objectType="AD_Users" 
-          [width]="40">
+        <codx-img [objectId]="item.createdBy" [objectName]="item.createdName" objectType="AD_Users" [width]="40">
         </codx-img>
       </div>
       <div class="d-flex flex-column flex-grow-1">
@@ -166,32 +162,24 @@
             <span class="text-dark fw-bolder me-2">{{ item.createdName }}</span>
           </ng-container>
           <ng-container *ngIf="item.tagName">
-            <ng-container
-                *ngTemplateOutlet="templateTags; context: { $implicit: item }">
+            <ng-container *ngTemplateOutlet="templateTags; context: { $implicit: item }">
             </ng-container>
           </ng-container>
         </div>
-        <div class="d-flex align-items-center text-info-date">
+        <div class="d-flex align-items-center text-info-date mb-1">
           <span class="d-flex algin-items-center me-2 mt-1">
-            <span class="text-gray-600 fs-7 me-2">{{
+            <span class="text-gray-600 fs-7 me-2 mt-1">{{
               item.createdOn | timefrom
               }}</span>
             <span class="rounded-1 py-0 px-2 bg-gray-200 d-flex algin-items-center">
-              <codx-vll
-                [name]="'WP001'"
-                [value]="item.shareControl"
-                [showText]="true"
-                [showIcon]="true"
-                [className]="'fw-bolder'"
-                [icoCss]="'w-13px h-13px'"
-                [path]="'assets/themes/sys/default/img/'"
+              <codx-vll [name]="'WP001'" [value]="item.shareControl" [showText]="true" [showIcon]="true"
+                [className]="'fw-bolder'" [icoCss]="'w-13px h-13px'" [path]="'assets/themes/sys/default/img/'"
                 [showBgColor]="true">
               </codx-vll>
             </span>
           </span>
           <span *ngIf="item.shareName">
-            <ng-container
-                *ngTemplateOutlet="templateShares; context: { $implicit: item }">
+            <ng-container *ngTemplateOutlet="templateShares; context: { $implicit: item }">
             </ng-container>
           </span>
         </div>
@@ -251,14 +239,8 @@
           <div class="post mt-3">
             <div class="border-top border-bottom" (click)="naviagteWPNew(item.news)">
               <div class="feed-1pic position-relative overflow-hidden h-250px">
-                <codx-img 
-                  [width]="600" 
-                  class="h-auto" 
-                  cssClass="pic" 
-                  [objectId]="item.news.recID" 
-                  [objectType]="'WP_News'" 
-                  [imageType]="'square'"
-                  [referType]="'image'">
+                <codx-img [width]="600" class="h-auto" cssClass="pic" [objectId]="item.news.recID"
+                  [objectType]="'WP_News'" [imageType]="'square'" [referType]="'image'">
                 </codx-img>
               </div>
               <div class="p-2" [style]="'background: #f0f8ff'">
@@ -282,12 +264,8 @@
               <div [innerHTML]="item.shares.content" class="mb-2"></div>
               <div class="d-flex">
                 <div class="me-3">
-                  <codx-img
-                    slot="start"
-                    [objectName]="item.shares.createdName"
-                    [objectId]="item.shares.createdBy"
-                    objectType="AD_Users"
-                    [width]="30">
+                  <codx-img slot="start" [objectName]="item.shares.createdName" [objectId]="item.shares.createdBy"
+                    objectType="AD_Users" [width]="30">
                   </codx-img>
                 </div>
                 <div class="d-flex flex-column flex-grow-1">
@@ -310,25 +288,21 @@
       </ng-container>
       <ng-template #noContentShareTemp>
         <div class="my-3">
-          <div [innerHTML]="item.content | safe: 'html'" ></div>
+          <div [innerHTML]="item.content | safe: 'html'"></div>
         </div>
       </ng-template>
       <ng-container *ngTemplateOutlet="containTemplate; context: { $implicit: item }"></ng-container>
     </ng-template>
     <!-- commemt -->
-    <treeview-comment
-      [funcID]="dialogRef.formModel.funcID"
-      [formModel]="dialogRef.formModel"
-      [objectType]="'WP_Comments'"
-      [dataComment]="item"
-      [objectID]="item.recID">
+    <treeview-comment [funcID]="dialogRef.formModel.funcID" [formModel]="dialogRef.formModel"
+      [objectType]="'WP_Comments'" [dataComment]="item" [objectID]="item.recID">
     </treeview-comment>
     <!-- end comment -->
   </div>
   <!-- content body -->
   <ng-template #containTemplate let-item>
     <ng-container *ngIf="item.isFeedBack; else WPComment">
-        <codx-view-card [card]="item.card"></codx-view-card>
+      <codx-view-card [card]="item.card"></codx-view-card>
     </ng-container>
     <ng-template #WPComment>
       <div class="pic-feed mb-2">
@@ -374,59 +348,51 @@
   <!-- template permissions share -->
   <ng-template #templateShares let-data>
     <div ngbDropdown class="symbol-more" [container]="'body'">
-        <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span [innerHTML]="data.shareName"> </span>
+      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span [innerHTML]="data.shareName"> </span>
+      </div>
+      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+        <div class="py-2">
+          <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
         </div>
-        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-            <div class="py-2">
-                <codx-label [formModel]="" default="Danh sách người được chia sẻ" class="fw-bolder"></codx-label>
-            </div>
-            <div class="hr-list-employee">
-                <ng-container *ngFor="let perrmisison of data.permissions">
-                    <ng-container *ngIf="perrmisison.memberType == '2'">
-                      <div class="d-flex align-items-center mt-3">
-                        <codx-img
-                            [objectId]="perrmisison.objectID"
-                            [objectType]="'AD_Users'"
-                            [cssClass]="'me-3'"
-                            [objectName]="perrmisison.objectName"
-                            [width]="30">
-                        </codx-img>
-                        <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
-                    </div>
-                    </ng-container>
-                </ng-container>
-            </div>
+        <div class="hr-list-employee">
+          <ng-container *ngFor="let perrmisison of data.permissions">
+            <ng-container *ngIf="perrmisison.memberType == '2'">
+              <div class="d-flex align-items-center mt-3">
+                <codx-img [objectId]="perrmisison.objectID" [objectType]="'AD_Users'" [cssClass]="'me-3'"
+                  [objectName]="perrmisison.objectName" [width]="30">
+                </codx-img>
+                <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
+      </div>
     </div>
   </ng-template>
   <!-- template permissions tag -->
   <ng-template #templateTags let-data>
     <div ngbDropdown class="symbol-more" [container]="'body'">
-        <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span [innerHTML]="data.tagName"> </span>
+      <div ngbDropdownToggle id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span [innerHTML]="data.tagName"> </span>
+      </div>
+      <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
+        <div class="py-2">
+          <codx-label [formModel]="" default="Danh sách người gắn thẻ" class="fw-bolder"></codx-label>
         </div>
-        <div ngbDropdownMenu class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-            <div class="py-2">
-                <codx-label [formModel]="" default="Danh sách người gắn thẻ" class="fw-bolder"></codx-label>
-            </div>
-            <div class="hr-list-employee">
-                <ng-container *ngFor="let perrmisison of data.permissions">
-                    <ng-container *ngIf="perrmisison.memberType == '3'">
-                      <div class="d-flex align-items-center mt-3">
-                        <codx-img
-                            [objectId]="perrmisison.objectID"
-                            [objectType]="'AD_Users'"
-                            [cssClass]="'me-3'"
-                            [objectName]="perrmisison.objectName"
-                            [width]="30">
-                        </codx-img>
-                        <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
-                    </div>
-                    </ng-container>
-                </ng-container>
-            </div>
+        <div class="hr-list-employee">
+          <ng-container *ngFor="let perrmisison of data.permissions">
+            <ng-container *ngIf="perrmisison.memberType == '3'">
+              <div class="d-flex align-items-center mt-3">
+                <codx-img [objectId]="perrmisison.objectID" [objectType]="'AD_Users'" [cssClass]="'me-3'"
+                  [objectName]="perrmisison.objectName" [width]="30">
+                </codx-img>
+                <span class="ms-2 fs-6">{{perrmisison.objectName}}</span>
+              </div>
+            </ng-container>
+          </ng-container>
         </div>
+      </div>
     </div>
   </ng-template>
 </ng-template>
