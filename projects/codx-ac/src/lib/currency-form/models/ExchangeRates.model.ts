@@ -1,6 +1,6 @@
 export class ExchangeRates {
     recID :any
-    ToDate :any
+    toDate :any
     ToTime :any
     exchangeRate :any 
     AutoUpdated :any

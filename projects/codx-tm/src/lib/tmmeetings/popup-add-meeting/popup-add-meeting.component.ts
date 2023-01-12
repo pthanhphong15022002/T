@@ -303,13 +303,11 @@ export class PopupAddMeetingComponent implements OnInit, AfterViewInit {
       op.method = 'AddMeetingsAsync';
       op.className = 'MeetingsBusiness';
       this.meeting.meetingType = '1';
-      // data = [this.meeting,this.functionID];
-      data = [this.meeting];
+      data = [this.meeting,this.functionID];
     } else if (this.action == 'edit') {
       op.method = 'UpdateMeetingsAsync';
       op.className = 'MeetingsBusiness';
-      //  data = [this.meeting,this.functionID];
-      data = [this.meeting];
+      data = [this.meeting,this.functionID];  
     }
 
     op.data = data;
