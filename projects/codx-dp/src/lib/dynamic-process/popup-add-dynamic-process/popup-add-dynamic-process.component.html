@@ -889,7 +889,7 @@
           </button>
         </div>
         <div
-          class="example-list stage-body-main"
+          class="example-list stage-body-left-main"
           cdkDropList
           (cdkDropListDropped)="drop($event, dataStage)"
         >
@@ -897,21 +897,25 @@
           <div
             cdkDrag
             *ngFor="let item of dataStage; let i = index"
-            class="list-stage example-box"
+            class="list-stage example-box drap-drop"
             (click)="clickViewReason($event, viewStepCustom, item ?? strEmpty)"
           >
             <div class="order">{{ i + 1 }}</div>
-            <div class="content">
+            <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
                 {{ item?.name + item?.id }}
               </div>
-              <div>Thời hạn {{ item?.time }} ngày 0:00 giờ</div>
-              <div>Công việc {{ item?.phase }}</div>
+              <div style="font-size: 1.1rem; font-weight: 500">
+                Thời hạn {{ item?.time }} ngày 0:00 giờ
+              </div>
+              <div style="font-size: 1.1rem; font-weight: 500">
+                Công việc {{ item?.phase }}
+              </div>
             </div>
           </div>
           <!-- Reason successs -->
           <div
-            class="list-stage cursor-pointer"
+            class="list-stage cursor-pointer drap-drop"
             (click)="clickViewReason($event, viewStepReasonSuccess, strEmpty)"
           >
             <div class="order">T</div>
@@ -925,7 +929,7 @@
 
           <!-- Reason fail -->
           <div
-            class="list-stage cursor-pointer"
+            class="list-stage cursor-pointer drap-drop"
             (click)="clickViewReason($event, viewStepReasonFail, strEmpty)"
           >
             <div class="order">F</div>
@@ -985,7 +989,7 @@
 <!-- Công Việc -- nvthuan -->
 <ng-template #job>
   <div class="background-job">
-    <div class="header-job">
+    <div class="header-job mb-5">
       <div class="left" style="margin: auto 10px">
         <div>
           <span class="title">Công việc</span>
@@ -1037,8 +1041,13 @@
       </div>
     </div>
 
-    <div id="job-main" class="main-job" [ngClass]="'show-main'">
-      <div class="button-add-new" *ngIf="data.length == 0">
+    <div
+      id="job-main"
+      class="main-job"
+      [ngClass]="'show-main'"
+      style="margin-top: 10px"
+    >
+      <div class="d-flex justify-content-center" *ngIf="data.length == 0">
         <div>
           <button class="button-custom">
             <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
@@ -1052,19 +1061,20 @@
           </button>
         </div>
       </div>
+      <!-- drap drop công việc ngoài-->
       <div class="main-body" *ngIf="data.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
             <ng-container *ngFor="let item of data">
               <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="item">
                 <div class="card-job">
-                  <div class="card-job-header">
-                    <div class="background-icon">
+                  <div class="d-flex justify-content-start align-items-center">
+                    <div class="icon-container">
                       <span
                         class="icon-add_circle icon-20 text-primary-600 py-2"
                       ></span>
                     </div>
-                    <div class="background-icon">
+                    <div class="icon-container">
                       <span
                         class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
                       ></span>
@@ -1092,9 +1102,9 @@
                       </div>
                     </div>
                   </div>
+                  <!-- kéo thả ở trong  -->
                   <div
                     cdkDropList
-                    class="list"
                     [cdkDropListData]="item?.data || []"
                     (cdkDropListDropped)="drop($event)"
                   >
@@ -1103,11 +1113,15 @@
                         cdkDrag
                         [cdkDragStartDelay]="200"
                         [cdkDragData]="item1"
+                        class="drap-drop"
                       >
                         <div style="margin-left: 50px">
-                          <div class="card-job-header">
+                          <div
+                            class="d-flex justify-content-start align-items-center"
+                            style="font-size: 1rem"
+                          >
                             <div
-                              class="background-icon"
+                              class="icon-container"
                               style="background-color: #3ef8e9"
                             >
                               <span
@@ -1115,7 +1129,7 @@
                                 (click)="addFile($event)"
                               ></span>
                             </div>
-                            <div class="background-icon">
+                            <div class="icon-container">
                               <span
                                 class="icon-supervised_user_circle icon-20 text-primary-600 py-2"
                               ></span>
@@ -1540,58 +1554,59 @@
             <div class="row">
               <div class="col-6">
                 <codx-input
-                name="success-radio"
-                type="radio"
-                style="width: 100%"
-                field="yes"
-                [label]="titleReasonYes"
-                [checked]="isTurnOnYesSuccess"
-                [crrValue]="isTurnOnYesSuccess"
-                (valueChange)="valueChangeRadio($event,viewStepReasonSuccess)"
-              >
-              </codx-input
-              >
+                  name="success-radio"
+                  type="radio"
+                  style="width: 100%"
+                  field="yes"
+                  [label]="titleReasonYes"
+                  [checked]="isTurnOnYesSuccess"
+                  [crrValue]="isTurnOnYesSuccess"
+                  (valueChange)="
+                    valueChangeRadio($event, viewStepReasonSuccess)
+                  "
+                >
+                </codx-input>
               </div>
-
               <div class="col-6">
                 <codx-input
-                name="success-radio"
-                type="radio"
-                style="width: 100%"
-                field="no"
-                [label]="titleReasonNo"
-                [checked]="isTurnOnNoSuccess"
-                [crrValue]="isTurnOnNoSuccess"
-                (valueChange)="valueChangeRadio($event,viewStepReasonSuccess)"
-              >
-              </codx-input>
+                  name="success-radio"
+                  type="radio"
+                  style="width: 100%"
+                  field="no"
+                  [label]="titleReasonNo"
+                  [checked]="isTurnOnNoSuccess"
+                  [crrValue]="isTurnOnNoSuccess"
+                  (valueChange)="
+                    valueChangeRadio($event, viewStepReasonSuccess)
+                  "
+                >
+                </codx-input>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row pb-5">
-        <div class="col-6">
-          <div class="col-12">
-            <codx-label default="Quy trình được chuyển đến"></codx-label>
+        <div class="row pb-5">
+          <div class="col-6">
+            <div class="col-12">
+              <codx-label default="Quy trình được chuyển đến"></codx-label>
+            </div>
+            <div class="col-12">
+              <codx-label
+                class="fw-lighter fs-6"
+                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
+              ></codx-label>
+            </div>
           </div>
-          <div class="col-12">
+          <div class="col-6">
+            <!-- Gán tạm chờ refvalue -->
+            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <br />
             <codx-label
-              class="fw-lighter fs-6"
-              default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
-            ></codx-label>
+              class="text-danger fst-italic fs-6"
+              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
+            >
+            </codx-label>
           </div>
-        </div>
-        <div class="col-6">
-          <!-- Gán tạm chờ refvalue -->
-          <codx-input field="applyFor" type="valuelist" refValue="">
-          </codx-input>
-          <br />
-          <codx-label
-            class="text-danger fst-italic fs-6"
-            default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
-          >
-          </codx-label>
         </div>
       </div>
     </div>
@@ -1707,7 +1722,7 @@
                   [label]="titleReasonYes"
                   [checked]="isTurnOnYesFailure"
                   [crrValue]="isTurnOnYesFailure"
-                  (valueChange)="valueChangeRadio($event,viewStepReasonFail)"
+                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
               </div>
@@ -1719,7 +1734,7 @@
                   [checked]="isTurnOnNoFailure"
                   [crrValue]="isTurnOnNoFailure"
                   [label]="titleReasonNo"
-                  (valueChange)="valueChangeRadio($event,viewStepReasonFail)"
+                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)"
                 >
                 </codx-input>
               </div>
@@ -1825,5 +1840,11 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #RolesInStep>
+
+</ng-template>
+
+
 
 <!-- End Thiết lập giai đoạn -->

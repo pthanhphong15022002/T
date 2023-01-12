@@ -1,4 +1,9 @@
-<codx-views #view entityName="HR_Employees" idField="employeeID" [views]="views" [autoLoad]="false">
+<codx-views 
+  #view 
+  entityName="HR_Employees" 
+  idField="employeeID" 
+  [views]="views" 
+  [autoLoad]="false">
 </codx-views>
 
 <ng-template #panelContent>
@@ -557,30 +562,61 @@
             <div id="MWP00204" class="d-block mb-3">
               <div class="user-profile overview">
                 <div class="fw-bold fs-4 text-primary mb-2 mt-6">
-                  <codx-label name="lblTraining" [formModel]="view.formModel" default="Đào tạo cá nhân">
+                  <codx-label name="lblEducations" [formModel]="view.formModel" default="Đào tạo cá nhân">
                   </codx-label>
                 </div>
                 <div class="border rounded-2 p-6">
-                  <div *ngIf="educations.length" class="text-dark fw-bold text-uppercase mt-8 mb-4">
-                    <codx-label [formModel]="view.formModel" name="lblOutSide" default="Bên ngoài công ty">
-                    </codx-label>
-                  </div>
-                  <div class="user-process process-v swiper-wrapper">
-                    <ng-container *ngFor="let item of educations">
-                      <div>
-                        {{item.courseName}}
-                      </div>
-                    </ng-container>
+                  <div class="d-flex w-100">
                     <ng-container *ngIf="editMode">
-                      <div class="col-xl-4 col-lg-4 col-md-4 mb-4">
-                        <button class="btn btn-sm btn-light" (click)="openPopupEducation()">
+                      <div class="me-4">
+                        <button class="btn btn-sm bg-light" (click)="openPopupEducation()">
                           <i class="icon-add icon-16 ms-n2"></i>
                           <codx-label name="lblAdd" [formModel]="view.formModel" default="Thêm mới">
                           </codx-label>
                         </button>
                       </div>
                     </ng-container>
-
+                    <ng-container *ngIf="employeeInfor?.educations">
+                      <div class="row">
+                        <ng-container *ngFor="let item of employeeInfor.educations">
+                          <div class="col-4">
+                            <div class="w-100">
+                              <div style="line-height: 50px; text-align: center;" class="rounded-circle bg-secondary text-dark w-50px h-50px">
+                                <span>{{item.fromDate | date:"YYYY"}}</span>
+                              </div>
+                            </div>
+                            <div class="mt-3">
+                              <div class="">
+                                <span class="rounded-circle bg-primary text-dark w-15px h-15px">
+                                  <i class="icon-account_balance text-white "></i>
+                                </span>
+                                <span class="d-flex align-items-center justify-content-around">
+                                    <b>
+                                      {{item.institutionName}}
+                                    </b>
+                                    <ng-container *ngIf="editMode">
+                                      <span (click)="deleteEducation(item)">
+                                        <i class="icon-close text-danger cursor-pointer"></i>
+                                      </span>
+                                      <span (click)="openPopupEdit(item)">
+                                        <i class="icon-create cursor-pointer"></i>
+                                      </span>
+                                    </ng-container>  
+                                </span>
+                              </div>
+                              <div>
+                                <span class="rounded-circle bg-primary text-dark w-15px h-15px">
+                                  <i class="icon-article text-white "></i>
+                                </span>
+                                <span>
+                                  {{item.memo}}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </div>
+                    </ng-container>  
                   </div>
                 </div>
               </div>
@@ -642,9 +678,7 @@
                 <div class="list-hoppy">
                   <div *ngFor="let item of employeeHobbie" class="d-flex align-items-center user-item tagitem"
                     [style.background]="item.color">
-                    <div [style.color]="getContrastYIQ(item)">
-                      {{ item.hobbyName }}
-                    </div>
+                    
                     <a class="text-dark text-hover-danger mt-1 ms-1" *ngIf="editMode" (click)="deleteHobby(item)">
                       <span class="icon-close icon-14"></span>
                     </a>

@@ -9,6 +9,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ViewEncapsulation,
 } from '@angular/core';
 import {
   ButtonModel,
@@ -35,6 +36,7 @@ import { OkrPlanShareComponent } from './okr-plans/okr-plans-share/okr-plans-sha
   selector: 'lib-okr',
   templateUrl: './okr.component.html',
   styleUrls: ['./okr.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class OKRComponent extends UIComponent implements AfterViewInit {
   views: Array<ViewModel> | any = [];
@@ -42,7 +44,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   openAccordion = [];
   dataOKR = [];
   dataOKRPlans = null;
-  isHiddenChart =false;
+  isHiddenChart = false;
   //title//
   dtCompany = null;
   compName = '';
@@ -87,29 +89,28 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
     this.auth = inject.get(AuthStore);
     this.okrService = inject.get(CodxOmService);
     //var x= this.authService.userValue;
-    this.codxOmService.getFormModel(this.funcID).then(fm=>{
-      if(fm){
-        this.formModel=fm;
+    this.codxOmService.getFormModel(this.funcID).then((fm) => {
+      if (fm) {
+        this.formModel = fm;
       }
     });
   }
 
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
-    
-      this.views = [
-        {
-          id: '1',
-          type: ViewType.content,
-          active: true,
-          sameData: false,
-          model: {
-            panelRightRef: this.panelRight,
-          },
+    this.views = [
+      {
+        id: '1',
+        type: ViewType.content,
+        active: true,
+        sameData: false,
+        model: {
+          panelRightRef: this.panelRight,
         },
-      ];
-      this.getGridViewSetup();
-      
+      },
+    ];
+    this.getGridViewSetup();
+
     this.dataRequest.funcID = this.funcID;
     this.dataRequest.entityName = 'OM_OKRs';
     this.dataRequest.page = 1;
@@ -120,7 +121,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     this.funcIDChanged();
     this.formModelChanged();
-    
+
     this.curUser = this.auth.get();
 
     this.compName =
@@ -143,7 +144,7 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       this.curUser?.employee?.employeeName != null
         ? this.curUser?.employee?.employeeName
         : '';
-        
+
     this.getOKRPlans(this.periodID, this.interval, this.year);
   }
 
@@ -318,10 +319,12 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-  hiddenChart(evt:any){
+  hiddenChart(evt: any) {
     // this.isHiddenChart=evt;
     // this.detectorRef.detectChanges();
-    window.ng.getComponent(document.getElementById('om-tab-child')).selectingID='2';
+    window.ng.getComponent(
+      document.getElementById('om-tab-child')
+    ).selectingID = '2';
   }
   //-----------------------End-------------------------------//
 
@@ -393,8 +396,8 @@ export class OKRComponent extends UIComponent implements AfterViewInit {
       dialogKR = null;
     });
   }
-   //Chia sẻ bộ mục tiêu
-   sharePlan() {
+  //Chia sẻ bộ mục tiêu
+  sharePlan() {
     let dialog = this.callfc.openSide(OkrPlanShareComponent, [
       this.gridView,
       this.view.formModel,

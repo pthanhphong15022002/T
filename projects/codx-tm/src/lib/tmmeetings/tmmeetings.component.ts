@@ -160,6 +160,7 @@ export class TMMeetingsComponent
     this.request.className = 'MeetingsBusiness';
     this.request.method = 'GetListMeetingsAsync';
     this.request.idField = 'meetingID';
+    this.request.dataObj = this.dataObj;
 
     this.requestSchedule = new ResourceModel();
     this.requestSchedule.service = 'CO';
