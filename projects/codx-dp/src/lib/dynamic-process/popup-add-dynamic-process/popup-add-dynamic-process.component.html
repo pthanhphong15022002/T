@@ -1552,7 +1552,6 @@
               </codx-input
               >
               </div>
-
               <div class="col-6">
                 <codx-input
                 name="success-radio"
@@ -1569,29 +1568,28 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="row pb-5">
-        <div class="col-6">
-          <div class="col-12">
-            <codx-label default="Quy trình được chuyển đến"></codx-label>
+        <div class="row pb-5">
+          <div class="col-6">
+            <div class="col-12">
+              <codx-label default="Quy trình được chuyển đến"></codx-label>
+            </div>
+            <div class="col-12">
+              <codx-label
+                class="fw-lighter fs-6"
+                default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
+              ></codx-label>
+            </div>
           </div>
-          <div class="col-12">
+          <div class="col-6">
+            <!-- Gán tạm chờ refvalue -->
+            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <br />
             <codx-label
-              class="fw-lighter fs-6"
-              default="Chọn quy trình được chuyển đến khi nhiệm vụ được đánh dấu thành công"
-            ></codx-label>
+              class="text-danger fst-italic fs-6"
+              default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
+            >
+            </codx-label>
           </div>
-        </div>
-        <div class="col-6">
-          <!-- Gán tạm chờ refvalue -->
-          <codx-input field="applyFor" type="valuelist" refValue="">
-          </codx-input>
-          <br />
-          <codx-label
-            class="text-danger fst-italic fs-6"
-            default="Lưu ý chỉ chuyển đến các quy trình có nhiệm vụ cùng loại đối tượng áp dụng"
-          >
-          </codx-label>
         </div>
       </div>
     </div>
@@ -1825,5 +1823,11 @@
     </div>
   </div>
 </ng-template>
+
+<ng-template #RolesInStep>
+
+</ng-template>
+
+
 
 <!-- End Thiết lập giai đoạn -->

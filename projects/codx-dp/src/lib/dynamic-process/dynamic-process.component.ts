@@ -46,7 +46,6 @@ implements OnInit, AfterViewInit {
  itemSelected: any;
  titleAction:any;
  moreFunc: any;
- entityName: any;
 
 // create variables for list
 listDynamicProcess: DP_Processes[]=[];
@@ -57,7 +56,18 @@ listUserInUse: DP_Processes_Permission[]=[];
  popoverDetail: any;
  popupOld: any;
  popoverList: any;
- method = '';
+
+// Call API Dynamic Proccess
+readonly service = 'DP';
+readonly assemblyName = 'ERM.Business.DP';
+readonly entityName = 'DP_Processes';
+readonly className = 'ProcessesBusiness'
+
+ // Method API dynamic proccess
+readonly methodGetList = 'GetListDynProcessesAsync';
+
+// Get idField
+readonly idField = 'recID'
 
   constructor(
     private inject: Injector,
@@ -91,7 +101,7 @@ listUserInUse: DP_Processes_Permission[]=[];
 
   click(evt: ButtonModel) {
     switch (evt.id) {
-      case 'btnAdd':
+      case this.btnAdd:
         this.add();
         break;
     }
@@ -136,6 +146,7 @@ listUserInUse: DP_Processes_Permission[]=[];
           dialogModel
         );
       });
+    this.changeDetectorRef.detectChanges();
   }
 
   edit(data:any) {
@@ -175,7 +186,6 @@ listUserInUse: DP_Processes_Permission[]=[];
     this.itemSelected = data;
     this.titleAction = e.text;
     this.moreFunc = e.functionID;
-    this.entityName = e?.data?.entityName;
     switch (e.functionID) {
       case 'SYS01':
         this.add();
