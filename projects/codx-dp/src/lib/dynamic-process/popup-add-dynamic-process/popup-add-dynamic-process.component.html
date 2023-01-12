@@ -720,7 +720,7 @@
         </div>
         <div class="right">
           <div class="group-button d-flex align-items-center ml-2">
-            <button class="button-custom" (click)="addCustomField('recID')">
+            <button class="button-custom" (click)="addCustomField(item.recID, item.processID)">
               <span
                 class="icon-add icon-24 cursor-pointer text-hover-primary py-2 me-3"
               ></span>
@@ -739,7 +739,7 @@
             </button>
             <button
               class="button-custom"
-              (click)="clickShow($event, 'id-show')"
+              (click)="clickShow($event, item.recID)"
             >
               <span
                 class="icon-expand_less icon-24 cursor-pointer text-hover-primary py-2 me-3"
@@ -748,13 +748,13 @@
           </div>
         </div>
       </div>
-      <div id="id-show" class="main show-main">
+      <div id="{{item.recID}}" class="main show-main">
         <div *ngIf="item?.stepField?.length == 0" class="position-relative p-9">
           <div class="position-absolute top-50 start-50 translate-middle">
             <button
               type="button"
               class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
-              (click)="addCustomField('recID')"
+              (click)="addCustomField(item.recID, item.processID)"
             >
               <i class="icon-add icon-18"> </i>
               <codx-label
