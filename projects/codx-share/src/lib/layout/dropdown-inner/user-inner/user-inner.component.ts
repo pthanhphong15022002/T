@@ -128,29 +128,15 @@ export class UserInnerComponent implements OnInit, OnDestroy {
     }
 
     this.api
-      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [
-        l,
-        t,
-      ])
-      .subscribe((res: UserModel) => {
-        this.auth.userSubject.next(res);
-        this.authstore.set(res);
+      .execSv('SYS', 'AD', 'SystemFormatBusiness', 'UpdateSettingAsync', [l, t])
+      .subscribe((res: any) => {
+        var user = this.authstore.get();
+        user.language = l;
+        user.theme = t;
+        this.auth.userSubject.next(user);
+        this.authstore.set(user);
         if (lang) document.location.reload();
       });
-    // this.cache.systemSetting().subscribe((systemSetting: any) => {
-    //   systemSetting.language = this.language.lang.toUpperCase();
-    //   var user = this.authstore.get();
-    //   this.api
-    //     .execAction('AD_SystemSettings', [systemSetting], 'UpdateAsync')
-    //     .subscribe((res) => {
-    //       if (res) {
-    //         user.language = this.language.lang.toUpperCase();
-    //         this.auth.userSubject.next(user);
-    //         this.authstore.set(user);
-    //         if (lang) document.location.reload();
-    //       }
-    //     });
-    // });
   }
 
   setLanguage(lang?: string) {
