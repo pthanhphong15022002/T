@@ -46,33 +46,41 @@ export class PopupAddPositionsComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.action = dt.data.action;
-    this.title = dt.data.title;
+    debugger
+    this.action = dt.data.isAddMode;
+    this.title = dt.data.titleMore;
     this.data = dt.data.data;
     this.dialogRef = dialog;
     this.functionID = this.dialogRef.formModel.funcID;
     this.formModel = this.dialogRef.formModel;
-    console.log('dialog ref', this.dialogRef, this.data);
     this.isCorporation = dt.data.isCorporation;
-
     this.position = this.data;
+    this.user = this.auth.userValue;
+
   }
 
   ngOnInit(): void {
-    this.user = this.auth.userValue;
+    this.getFucnName(this.functionID);
     if (this.action != 'edit') {
       this.getParamerAsync(this.functionID);
     }
-    this.cacheService
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((gv: any) => {
-        console.log('form', gv);
-      });
+    
   }
-
+  // get function name
+  getFucnName(funcID:string){
+    if(funcID){
+      this.cacheService.functionList(funcID).subscribe(func => {
+        if(func)
+        {
+          this.title = `${this.title} ${func.descriptions}`;
+          this.cacheService
+          .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
+            console.log('form', gv);
+          });
+        }
+      });
+    }
+  }
   paramaterHR: any = null;
   getParamerAsync(funcID: string) {
     if (funcID) {
@@ -152,7 +160,6 @@ export class PopupAddPositionsComponent implements OnInit {
   }
 
   OnSaveForm() {
-    debugger
     if (this.action) {
       this.isNew = this.action === 'add' ? true : false;
       this.api
