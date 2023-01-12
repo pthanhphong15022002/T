@@ -131,6 +131,8 @@ readonly idField = 'recID'
       },
     ];
     this.view.dataService.methodSave = 'AddProcessAsync';
+    this.view.dataService.methodUpdate = 'UpdateProcessAsync';
+
     this.changeDetectorRef.detectChanges();
   }
 
@@ -171,6 +173,41 @@ readonly idField = 'recID'
   }
 
   edit(data: any) {
+    if (data) {
+      this.view.dataService.dataSelected = data;
+    }
+    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
+      var obj = {
+        action: 'edit',
+      };
+      let dialogModel = new DialogModel();
+      dialogModel.IsFull = true;
+      dialogModel.zIndex = 999;
+      dialogModel.DataService = this.view?.dataService;
+      dialogModel.FormModel = this.view.formModel;
+      this.dialog = this.callfc.openForm(
+        PopupAddDynamicProcessComponent,
+        '',
+        this.widthWin,
+        this.heightWin,
+        '',
+        obj,
+        '',
+        dialogModel
+      );
+      this.dialog.closed.subscribe((e) => {
+        if (!e?.event) this.view.dataService.clear();
+          if (e?.event == null)
+            this.view.dataService.delete(
+              [this.view.dataService.dataSelected],
+              false
+            );
+          if (e && e.event != null) {
+            this.view.dataService.update(e.event).subscribe();
+            this.detectorRef.detectChanges();
+          }
+      });
+    });
     this.changeDetectorRef.detectChanges();
   }
   copy(data: any) {

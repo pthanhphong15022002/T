@@ -440,12 +440,11 @@ export class OkrTargetsComponent implements OnInit {
   }
   assignmentOKR(okr: any, title: any) {
     let dModel = new DialogModel();
-    dModel.IsFull = true;
     let dialogAssgKR = this.callfunc.openForm(
       PopupAssignmentOKRComponent,
       '',
       null,
-      null,
+      450,
       null,
       [okr.okrName, okr.recID, okr.okrType, this.funcID, title],
       '',
