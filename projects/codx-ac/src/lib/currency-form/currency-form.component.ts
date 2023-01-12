@@ -11,7 +11,7 @@ export class CurrencyFormComponent extends UIComponent {
   @ViewChild('itemTemplate') itemTemplate?: TemplateRef<any>;
   @ViewChild("grid", { static: true }) grid: TemplateRef<any>;
   @ViewChild("morefunc") morefunc: TemplateRef<any>;
-
+  gridViewSetup:any;
   
   constructor(
     private inject: Injector,
@@ -19,6 +19,11 @@ export class CurrencyFormComponent extends UIComponent {
     private callfunc: CallFuncService
     ) {
     super(inject);
+    this.cache.gridViewSetup('Currencies', 'grvCurrencies').subscribe((res) => {
+      if (res) {
+        this.gridViewSetup = res;
+      }
+    });
   }
   views: Array<ViewModel> = [];
   columnsGrid = [];
@@ -41,20 +46,10 @@ export class CurrencyFormComponent extends UIComponent {
     },
   ];
   onInit(): void {
+    var cur = this.gridViewSetup['CurrencyName'].headerText;
     this.button = {
       id: 'btnAdd',
     };
-    this.columnsGrid = [
-      { field: '', headerText: '', width: 20 },
-      { field: 'currencyID', headerText: 'Mã tiền tệ', width: 100 },
-      { field: 'currencyName', headerText: 'Tên tiền tệ', width: 200 },
-      { field: 'symbol', headerText: 'Ký hiệu', width: 200 },
-      { field: 'multiply', headerText: 'Nhân tỷ giá', width: 140 },
-      { field: 'pRoundOff', headerText: 'Số lẻ đơn giá', width: 140 },
-      { field: 'aRoundOff', headerText: 'Số lẻ thành tiền', width: 200 },
-      { field: 'translateName', headerText: 'Phát âm', width: 140 },
-      { field: 'precisionName', headerText: 'Đọc số nguyên', width: 140 },
-    ];
   }
   ngAfterViewInit(): void {
     this.views = [
@@ -66,7 +61,8 @@ export class CurrencyFormComponent extends UIComponent {
         // template2:this.morefunc,
         // frozenColumns:1
         resources: this.columnsGrid,
-        template: this.itemTemplate,  
+        template2: this.itemTemplate,  
+        frozenColumns:1
       }
       },
       
