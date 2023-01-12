@@ -192,7 +192,51 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   arrSteps = [
     {
       recID: '41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
-      processID: '41ebc7b7-8ed2-4f76-9eac-e336695cf6a9',
+      processID: '41ebc7b7-8ed2-4f76-9eac-e336695cf652',
+      stepName: 'Quy trinh test',
+      showColumnControl: 1,
+      stepField: [
+        {
+          fieldName: 'File Name1',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 1,
+        },
+        {
+          fieldName: 'File Name2',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 2,
+        },
+        {
+          fieldName: 'File Name3',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 3,
+        },
+        {
+          fieldName: 'File Name4',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 4,
+        },
+        {
+          fieldName: 'File Name5',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 5,
+        },
+        {
+          fieldName: 'File Name6',
+          note: 'File nay de cho có',
+          dataType: 'Text',
+          sorting: 6,
+        },
+      ],
+    },
+    {
+      recID: '51ebc7b7-8ed2-4f76-9eac-e336695cf656',
+      processID: '51ebc7b7-8ed2-4f76-9eac-e336695cf673',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
       stepField: [
@@ -236,9 +280,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
   ];
   fieldNew: DP_Steps_Fields;
-  crrDataStep: any;
+  crrDataStep : any
+  dataStepCrr = this.arrSteps[0];
   isHover = '';
   dataChild = [];
+  
   //end data Test
 
   isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
@@ -867,7 +913,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
           // hidden swtich reason change
           this.isSwitchReason = false;
-          this.crrDataStep = data;
+          // this.crrDataStep = data;
         }
       }
     }
