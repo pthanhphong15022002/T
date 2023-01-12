@@ -208,6 +208,13 @@ export class IncommingComponent
     this.view.dataService.addNew().subscribe((res: any) => {
       let option = new SidebarModel();
       // option.zIndex = 499;
+      if(!res.dispatchNo)
+      {
+        //kiểm tra xem nếu mã công văn tự động không có thì sinh thêm 
+        this.odService.autoNumber(this.view.formModel.formName,this.view.formModel.funcID,this.view.formModel.entityName,"DispatchNo").subscribe(item=>{
+          if(item) this.view.dataService.dataSelected.dispatchNo = item;
+        })
+      }
       option.DataService = this.view?.currentView?.dataService;
       this.dialog = this.callfunc.openSide(
         IncommingAddComponent,

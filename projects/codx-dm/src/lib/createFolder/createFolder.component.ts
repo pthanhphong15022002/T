@@ -376,6 +376,7 @@ export class CreateFolderComponent implements OnInit {
     if (that.id != '' && this.id != null) {
       this.noeditName = false;
       this.folderService.getFolder(this.id).subscribe(async (res) => {
+        debugger;
         this.checkPermission();
         this.fileEditing = res;
         this.assignRight = res.assign;
