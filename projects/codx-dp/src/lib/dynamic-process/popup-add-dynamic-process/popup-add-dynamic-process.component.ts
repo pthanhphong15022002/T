@@ -602,6 +602,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //add trường tùy chỉnh
   addCustomField(stepID, processID) {
+    this.fieldNew = new DP_Steps_Fields() ;
     this.fieldNew.stepID = stepID;
     this.fieldNew.processID = processID ;
     let titleAction = '';
