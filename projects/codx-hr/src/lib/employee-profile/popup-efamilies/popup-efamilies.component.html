@@ -45,6 +45,7 @@
                         [Group]="formGroup"
                         [formModel]="formModel"
                         field="refEmployeeID"
+                        (valueChange)="onSelectEmployee($event)"
                     ></codx-input>
                 </div>
             </div>
@@ -214,7 +215,7 @@
             <div class="col-6">
                 <codx-label fiedName="PITNumber" [formModel]="formModel"></codx-label>
                 <codx-input 
-                    field="pITNumber"
+                    field="PITNumber"
                     [Group]="formGroup"
                     [formModel]="formModel"
                 ></codx-input>
@@ -222,7 +223,7 @@
             <div class="col-6">
                 <codx-label fiedName="SIRegisterNo" [formModel]="formModel"></codx-label>
                 <codx-input
-                    field="sIRegisterNo"
+                    field="SIRegisterNo"
                     [Group]="formGroup"
                     [formModel]="formModel"
                 ></codx-input>
