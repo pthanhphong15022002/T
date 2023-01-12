@@ -22,6 +22,7 @@ import {
   DialogRef,
   FormModel,
   NotificationsService,
+  SidebarModel,
   UIComponent,
   ViewModel,
   ViewType,
@@ -32,6 +33,7 @@ import { ChartSettings } from '../../model/chart.model';
 import { PopupCheckInComponent } from '../popup-check-in/popup-check-in.component';
 import { PopupDistributeOKRComponent } from '../popup-distribute-okr/popup-distribute-okr.component';
 import { OMCONST } from '../../codx-om.constant';
+import { PopupAddKRComponent } from '../popup-add-kr/popup-add-kr.component';
 
 @Component({
   selector: 'popup-show-kr',
@@ -192,7 +194,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   getKRData(){
     this.codxOmService
-        .getKRByID(this.krRecID)
+        .getOKRByID(this.krRecID)
         .subscribe((res: any) => {
           if (res) {
             this.dataKR = res;      
@@ -383,6 +385,16 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
     }
   }
 
+  editKR(kr: any, o: any, popupTitle: any) {
+    let option = new SidebarModel();
+    option.FormModel = this.formModel;
+
+    let dialogKR = this.callfc.openSide(
+      PopupAddKRComponent,
+      [OMCONST.MFUNCID.Edit, popupTitle, o, kr],
+      option
+    );
+  }
   //-----------------------End-------------------------------//
 
   //-----------------------Logic Event-----------------------//

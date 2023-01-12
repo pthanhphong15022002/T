@@ -149,34 +149,6 @@
                 font-size: 1.2rem;
             }
 
-            .main {
-                height: 63vh;
-                overflow-y: scroll;
-                .list-stage{
-                    display: flex;
-                    align-items: center;
-                    .order{
-                        width: 45px;
-                        height: 45px;
-                        border-radius: 50%;
-                        background: #b6ddff;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        font-size: 1.2rem;
-                        font-weight: 600;
-                    }
-                    .content{
-                        padding: 10px;
-                    }
-                }
-                .list-stage:hover{
-                    background: #e6f2ff;
-                }
-                .list-stage:hover .content{
-                    color: #0172e4;
-                }
-            }
         }
 
         .stage-body-right {
@@ -270,34 +242,6 @@
     .icon-20 {
         font-size: 25px !important;
     }
-    .cdk-drag {
-        display: flex !important;
-    }
-
-    .cdk-drag-preview {
-        display: flex;
-        box-sizing: border-box;
-        border-radius: 4px;
-        box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-            0 8px 10px 1px rgba(0, 0, 0, 0.14),
-            0 3px 14px 2px rgba(0, 0, 0, 0.12);
-    }
-
-    .cdk-drag-placeholder {
-        opacity: 0;
-    }
-
-    .cdk-drag-animating {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-    }
-
-    .example-box:last-child {
-        border: none;
-    }
-
-    .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
-        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-    }
 }
 .button-custom {
     border: none;
@@ -326,3 +270,96 @@ text-align: center;
 font-weight: 600;
 width: 150px;
 }
+.body-set-job:hover{
+    background-color: #e8f7ff;
+}
+.user-mini-nav { //thuan
+    display: inline-flex;
+    align-items: center;
+    height: 29px;
+    padding: 2px 10px 2px 2px !important;
+    border-radius: 20px;
+    margin-bottom: 3px;
+    background-color: #f3f3f3;
+    margin-right: 3px;
+  }
+.color-hover{
+    background-color: aliceblue;
+    cursor: context-menu;
+}
+// drap drop -- nvthuan 
+.example-list {
+    width: 500px;
+    max-width: 100%;
+    min-height: 60px;
+    display: block;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .example-box {
+    color: rgba(0, 0, 0, 0.87);
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    box-sizing: border-box;
+    cursor: move;
+    background: white;
+    padding-left: 10px;
+  }
+  
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .example-box:last-child {
+    border: none;
+  }
+  
+  .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .stage-body-main {
+    height: 63vh;
+    overflow-y: scroll;
+    padding: 0px;
+    .list-stage{
+        display: flex;
+        align-items: center;
+        padding-left: 10px;
+        .content{
+            padding: 10px;
+        }
+    }
+    .list-stage:hover{
+        background: #e6f2ff;
+    }
+    .list-stage:hover .content{
+        color: #0172e4;
+    }
+}
+.order{
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #b6ddff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+// End Drop drap -- nvthuan
