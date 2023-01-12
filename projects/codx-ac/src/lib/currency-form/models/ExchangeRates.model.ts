@@ -1,15 +1,15 @@
 export class ExchangeRates {
-    RecID :any
+    recID :any
     ToDate :any
     ToTime :any
-    ExchangeRate :any 
+    exchangeRate :any 
     AutoUpdated :any
     CreatedOn :any
     Assign :any
     Delete :any
     Write :any
     Share :any
-    SourceType:any
+    sourceType:any
     Note:any
     CreatedBy:any
     ModifiedOn:any
@@ -20,5 +20,6 @@ export class ExchangeRates {
     PositionID:any
     OrgUnitID:any
     DivisionID:any
+    CurrencyID:any
   }
   

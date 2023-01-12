@@ -1,13 +1,15 @@
+import { formatDate } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Injector, Input, OnInit, Optional, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { update } from '@syncfusion/ej2-angular-inplace-editor';
-import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, RequestOption, SidebarModel, UIComponent } from 'codx-core';
+import { ApiHttpService, AuthStore, CacheService, CallFuncService, CodxFormComponent, CodxGridviewV2Component, DialogData, DialogModel, DialogRef, FormModel, ImageViewerComponent, LayoutAddComponent, NotificationsService, RequestOption, SidebarModel, UIComponent, ViewModel, ViewsComponent, ViewType } from 'codx-core';
 import { CodxAdService } from 'projects/codx-ad/src/public-api';
 import { Invoices } from 'projects/codx-ei/src/lib/models/invoice.model';
 import { CodxAcService } from '../../codx-ac.service';
 import { CurrencyFormComponent } from '../currency-form.component';
 import { Currency } from '../models/Currency.model';
+import { ExchangeRates } from '../models/ExchangeRates.model';
 import { PopAddExchangerateComponent } from '../pop-add-exchangerate/pop-add-exchangerate.component';
 import { PopSettingExchangeComponent } from '../pop-setting-exchange/pop-setting-exchange.component';
 
@@ -21,6 +23,10 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
   @ViewChild('grid') public grid: CodxGridviewV2Component;
   @Input() headerText: string;
   currencies: Currency;
+  exchangerate : ExchangeRates;
+  objectExchange:Array<ExchangeRates> = [];
+  toDate:any;
+  exchange:any;
   formType:any;
   dialog!: DialogRef;
   data: any;
@@ -65,10 +71,10 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     }
     }
     onInit(): void {
-  }
+      
+    }
 
   ngAfterViewInit() {
-
   }
   onSave(){
     var dataexchange = JSON.parse(localStorage.getItem('dataexchange'));
@@ -99,7 +105,7 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
       );
       return;
     }
-    if (this.formType == 'add') {
+    if (this.formType == 'add') {   
       this.dialog.dataService
       .save((opt: RequestOption) => {
         opt.methodName = 'AddAsync';
@@ -110,9 +116,24 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
         return true;
       })
       .subscribe((res) => {
-        if (res.save) {
-          this.dialog.close(res.save);
-          this.dt.detectChanges();
+        if (res.save) {        
+          for(var i=0;i<this.objectExchange.length;i++){
+            this.objectExchange[i].CurrencyID = this.curID;   
+          }
+          console.log(this.objectExchange);
+          this.api.exec(
+            'ERM.Business.BS',
+            'ExchangeRatesBusiness',
+            'AddAsync',
+            [this.objectExchange]
+          ).subscribe((res:[])=>{
+            if(res){
+              window.localStorage.removeItem("dataexchangeRate");
+              window.localStorage.removeItem("dataexchange");
+              this.dialog.close();
+              this.dt.detectChanges();
+            }
+          });       
         }else{
           this.notification.notifyCode(
             'SYS031',
@@ -195,19 +216,27 @@ export class PopAddCurrencyComponent extends UIComponent implements OnInit {
     dataModel.entityName = 'BS_ExchangeRates';
     opt.FormModel = dataModel;
     this.cache.gridViewSetup('ExchangeRates','grvExchangeRates').subscribe(res=>{
-      if(res){
+      if(res){  
         var dialogexchange = this.callfc.openForm(
           PopAddExchangerateComponent,
           '',
-          300,
+          350,
           500,
           '',
           obj,
           '',
           opt
         );
+        dialogexchange.closed.subscribe((x) => {
+          // var dataexchangeRate = JSON.parse(localStorage.getItem('dataexchangeRate'));
+          // if (dataexchangeRate != null) {
+          //   let customObj = new ExchangeRates();
+          //   customObj.ToDate = dataexchangeRate.toDate;
+          //   customObj.exchangeRate = dataexchangeRate.exchangeRate;
+          //   this.objectExchange.push(customObj);
+          // }
+        });
       }
     });
-
   }
 }
