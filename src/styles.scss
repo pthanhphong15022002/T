@@ -1555,6 +1555,18 @@ codx-layout-add .codx-tab {
   min-width: 750px;
 }
 
+.highlightAreas .line-clamp-1 {
+  -webkit-line-clamp: inherit !important;
+}
+
+.left_Toolbar .e-numerictextbox {
+  width: 100px !important;
+}
+
+ejs-listview .e-ul li {
+  list-style-type: none;
+}
+
 // .card .card-header {
 //   border-bottom: 1px solid #15d8ff;
 // }

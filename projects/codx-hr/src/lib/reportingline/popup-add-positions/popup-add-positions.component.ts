@@ -26,14 +26,14 @@ import { HR_Positions } from '../../model/HR_Positions.module';
 export class PopupAddPositionsComponent implements OnInit {
   title = 'Thêm mới';
   dialogRef: any;
-  isNew: boolean = true;
   user: any;
   functionID: string;
-  action = '';
-  position: HR_Positions = new HR_Positions();
-  data: any;
+  isAdd = '';
+  data: HR_Positions = new HR_Positions();;
   isCorporation;
   formModel;
+  blocked:boolean = false;
+
   @Output() Savechange = new EventEmitter();
 
   constructor(
@@ -46,142 +46,59 @@ export class PopupAddPositionsComponent implements OnInit {
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
-    this.action = dt.data.action;
-    this.title = dt.data.title;
+    this.isAdd = dt.data.isAddMode;
+    this.title = dt.data.titleMore;
     this.data = dt.data.data;
     this.dialogRef = dialog;
-    this.functionID = this.dialogRef.formModel.funcID;
+    this.functionID = dt.data.function;
     this.formModel = this.dialogRef.formModel;
-    console.log('dialog ref', this.dialogRef, this.data);
-    this.isCorporation = dt.data.isCorporation;
-
-    this.position = this.data;
-  }
-
-  ngOnInit(): void {
+    this.isCorporation = dt.data.isCorporation; // check disable field DivisionID
     this.user = this.auth.userValue;
-    if (this.action != 'edit') {
-      this.getParamerAsync(this.functionID);
-    }
-    this.cacheService
-      .gridViewSetup(
-        this.dialogRef.formModel.formName,
-        this.dialogRef.formModel.gridViewName
-      )
-      .subscribe((gv: any) => {
-        console.log('form', gv);
+
+  }
+  ngOnInit(): void {
+    this.getFucnName(this.functionID);
+    //xem lại bật tắt đánh số tự động
+    this.blocked = this.data.positionID ? false : true;
+  }
+  // get function name
+  getFucnName(funcID:string){
+    if(funcID){
+      this.cacheService.functionList(funcID).subscribe(func => {
+        if(func)
+        {
+          this.title = `${this.title} ${func.description}`;
+          this.cacheService
+          .gridViewSetup(func.formName,func.gridViewName).subscribe((gv: any) => {
+            console.log('form', gv);
+          });
+        }
       });
-  }
-
-  paramaterHR: any = null;
-  getParamerAsync(funcID: string) {
-    if (funcID) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumberDefaultsBusiness',
-          'GenAutoDefaultAsync',
-          [funcID]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.paramaterHR = res;
-            if (this.paramaterHR.stop) return;
-            else {
-              let funcID = this.dialogRef.formModel.funcID;
-              let entityName = this.dialogRef.formModel.entityName;
-              let fieldName = 'PositionID';
-              if (funcID && entityName) {
-                this.getDefaultPositionID(funcID, entityName, fieldName);
-              }
-            }
-          }
-        });
     }
   }
-  positionID: string = '';
-  getDefaultPositionID(
-    funcID: string,
-    entityName: string,
-    fieldName: string,
-    data: any = null
-  ) {
-    if (funcID && entityName && fieldName) {
-      this.api
-        .execSv(
-          'SYS',
-          'ERM.Business.AD',
-          'AutoNumbersBusiness',
-          'GenAutoNumberAsync',
-          [funcID, entityName, fieldName, null]
-        )
-        .subscribe((res: any) => {
-          if (res) {
-            this.positionID = res;
-            this.data.positionID = res;
-            this.detectorRef.detectChanges();
-          }
-        });
-    }
-  }
-  valueChange(event: any) {}
 
+  // value change
   dataChange(e: any, field: string) {
     if (e) {
       if (e?.length == undefined) {
-        this.position[field] = e?.data;
+        this.data[field] = e?.data;
       } else {
-        this.position[field] = e[0];
+        this.data[field] = e[0];
       }
     }
   }
-
-  beforeSave(op: any) {
-    var data = [];
-    op.methodName = 'UpdateAsync';
-    op.className = 'PositionsBusiness';
-    if (this.action === 'add') {
-      this.isNew = true;
-    } else if (this.action === 'edit') {
-      this.isNew = false;
-    }
-    data = [this.position, this.isNew];
-    op.data = data;
-    return true;
-  }
-
+  // click save
   OnSaveForm() {
-    debugger
-    if (this.action) {
-      this.isNew = this.action === 'add' ? true : false;
-      this.api
-        .execSv('HR', 'ERM.Business.HR', 'PositionsBusiness', 'UpdateAsync', [
-          this.data,
-          this.isNew,
-        ])
-        .subscribe((res) => {
-          if (res) {
-            this.dialogRef.close(res);
-          } else {
-            this.notiService.notify('Error');
-            this.dialogRef.close();
-          }
-        });
-    }
-  }
-
-  addPosition() {
-    this.dialogRef.dataService
-      .save((opt: any) => {
-        opt.data = [this.position];
-        return true;
-      })
+    let _method = this.isAdd ? "SaveAsync" : "UpdateAsync";
+    this.api.execSv(
+      'HR', 
+      'ERM.Business.HR',
+      'PositionsBusiness', 
+      _method, 
+      [this.data])
       .subscribe((res) => {
-        if (res.save) {
-          this.dialogRef.close();
-        }
-      });
+        this.dialogRef.close(res);
+    });
   }
 
   closePanel() {

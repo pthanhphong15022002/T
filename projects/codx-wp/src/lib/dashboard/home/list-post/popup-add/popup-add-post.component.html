@@ -76,17 +76,19 @@
                     </codx-file>
                 </ng-container>
                 <ng-template #codxFileNew>
-                    <codx-file 
+                    <!-- <codx-file 
                         #codxFile
                         [isNew]="true" 
                         [funcID]="dialogRef.formModel.funcID"
                         (evtRemoveFile)="removeFile($event)" 
                         (evtAddFile)="addFile($event)" 
                         [edit]='true'>
-                    </codx-file>
-                    <!-- <codx-view-files #codxViewFiles [allowEdit]="true" [formModel]="dialogRef.formModel" [objectType]="'WP_Comments'">
-
-                    </codx-view-files> -->
+                    </codx-file> -->
+                    <codx-view-files #codxViewFiles 
+                        [allowEdit]="true" 
+                        [formModel]="dialogRef.formModel" 
+                        [objectType]="'WP_Comments'">
+                    </codx-view-files>
                 </ng-template>
             </div>
             <!-- template chia sẻ --> 
