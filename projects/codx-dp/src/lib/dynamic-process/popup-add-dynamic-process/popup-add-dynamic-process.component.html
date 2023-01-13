@@ -518,7 +518,7 @@
       </div>
     </div>
     <div id="{{item.recID}}" class="main show-main">
-      <div *ngIf="item?.stepField?.length == 0" class="position-relative p-9">
+      <div *ngIf="item?.fields?.length == 0" class="position-relative p-9">
         <div class="position-absolute top-50 start-50 translate-middle">
           <button type="button" class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
             (click)="addCustomField(item.recID, item.processID)">
@@ -528,10 +528,10 @@
         </div>
       </div>
 
-      <div *ngIf="item?.stepField?.length > 0">
-        <div class="d-flex row" cdkDropList [cdkDropListData]="item?.stepField || []"
+      <div *ngIf="item?.fields?.length > 0">
+        <div class="d-flex row" cdkDropList [cdkDropListData]="item?.fields || []"
           (cdkDropListDropped)="dropFile($event, item.recID)">
-          <ng-container *ngFor="let item1 of item?.stepField">
+          <ng-container *ngFor="let item1 of item?.fields">
             <div class="col-{{ 12 / item.showColumnControl }} p-3" cdkDrag [cdkDragStartDelay]="200"
               [cdkDragData]="item1">
               <div class="fw-bold text-gray-700 fs-6 text-dark mt-2">

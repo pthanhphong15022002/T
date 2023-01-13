@@ -33,6 +33,7 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 import {
   DP_Processes,
   DP_Processes_Permission,
+  DP_Steps,
   DP_Steps_Fields,
   DP_Steps_TaskGroups,
 } from '../../models/models';
@@ -195,7 +196,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       processID: '41ebc7b7-8ed2-4f76-9eac-e336695cf652',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
-      stepField: [
+      fields: [
         {
           fieldName: 'File Name1',
           note: 'File nay de cho có',
@@ -239,7 +240,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       processID: '51ebc7b7-8ed2-4f76-9eac-e336695cf673',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
-      stepField: [
+      fields: [
         {
           fieldName: 'File Name1',
           note: 'File nay de cho có',
@@ -281,7 +282,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ];
   fieldNew: DP_Steps_Fields;
   crrDataStep: any;
-  dataStepCrr = this.arrSteps[0];
+  dataStepCrr :DP_Steps = new DP_Steps();
   isHover = '';
   vllType ='DP022'
   dataChild = [];
@@ -345,7 +346,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       });
 
-
+      this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
   }
 
   data = [
@@ -809,10 +810,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               //xu ly data đổ về 
               this.fieldNew = e.event ;
               if(this.dataStepCrr.recID ==  this.fieldNew.stepID){
-                this.dataStepCrr.stepField.push(this.fieldNew)
+                this.dataStepCrr.fields.push(this.fieldNew)
               }
               this.arrSteps.forEach(x=>{
-                if(x.recID == this.fieldNew.stepID) x.stepField.push(this.fieldNew)
+                if(x.recID == this.fieldNew.stepID) x.fields.push(this.fieldNew)
               })
               this.changeDetectorRef.detectChanges();
             }
@@ -837,7 +838,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
     if (crrIndex == -1) return;
-    this.dataChild = this.arrSteps[crrIndex].stepField;
+    this.dataChild = this.arrSteps[crrIndex].fields;
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
     this.changeDetectorRef.detectChanges();
   }
