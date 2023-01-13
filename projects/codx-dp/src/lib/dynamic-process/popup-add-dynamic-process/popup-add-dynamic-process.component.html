@@ -516,7 +516,7 @@
       </div>
     </div>
     <div id="{{item.recID}}" class="main show-main">
-      <div *ngIf="item?.stepField?.length == 0" class="position-relative p-9">
+      <div *ngIf="item?.fields?.length == 0" class="position-relative p-9">
         <div class="position-absolute top-50 start-50 translate-middle">
           <button type="button" class="btn btn-light-primary cursor-pointer text-hover-primary d-flex"
             (click)="addCustomField(item.recID, item.processID)">
@@ -526,10 +526,10 @@
         </div>
       </div>
 
-      <div *ngIf="item?.stepField?.length > 0">
-        <div class="d-flex row" cdkDropList [cdkDropListData]="item?.stepField || []"
+      <div *ngIf="item?.fields?.length > 0">
+        <div class="d-flex row" cdkDropList [cdkDropListData]="item?.fields || []"
           (cdkDropListDropped)="dropFile($event, item.recID)">
-          <ng-container *ngFor="let item1 of item?.stepField">
+          <ng-container *ngFor="let item1 of item?.fields">
             <div class="col-{{ 12 / item.showColumnControl }} p-3" cdkDrag [cdkDragStartDelay]="200"
               [cdkDragData]="item1">
               <div class="fw-bold text-gray-700 fs-6 text-dark mt-2">
@@ -538,7 +538,8 @@
               <div class="text-gray-400">{{ item1.note }}</div>
               <div class="d-flex">
                 <div class="datatypes me-4">
-                  {{ item1.dataType }}
+                  <!-- {{ item1.dataType }} -->
+                  <codx-vll [name]="vllType" [value]="item1?.dataType" [showText]="true" [showBgColor]="true"></codx-vll>
                 </div>
                 <codx-label class="text-danger" fiedName="IsRequired" default="Bắt buộc *"></codx-label>
                 <codx-input type="switch" field="isRequired" [checked]="true">
@@ -729,8 +730,16 @@
       </div>
     </div>
 
-    <div id="job-main" class="main-job" [ngClass]="'show-main'" style="margin-top: 10px">
-      <div class="d-flex justify-content-center" *ngIf="data.length == 0">
+    <div
+      id="job-main"
+      class="main-job"
+      [ngClass]="'show-main'"
+      style="margin-top: 10px"
+    >
+      <div
+        class="d-flex justify-content-center"
+        *ngIf="taskGroupList.length === 0"
+      >
         <div>
           <button class="button-custom">
             <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
@@ -745,11 +754,11 @@
         </div>
       </div>
       <!-- drap drop công việc ngoài-->
-      <div class="main-body" *ngIf="data.length > 0">
+      <div class="main-body" *ngIf="taskGroupList.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
-            <ng-container *ngFor="let item of data">
-              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="item">
+            <ng-container *ngFor="let taskList of taskGroupList">
+              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
                 <div class="card-job">
                   <div class="d-flex justify-content-start align-items-center">
                     <div class="icon-container">
@@ -760,21 +769,52 @@
                     </div>
                     <div class="steplist-hearder ms-5">
                       <div>
-                        <span class="" style="font-size: 1.2rem; font-weight: 500">{{ item.item }}</span>
-                        <span class="icon-message icon-20 text-primary-600 py-2 ms-2" style="color: #06a9f7"></span>
+                        <span
+                          class=""
+                          style="font-size: 1.2rem; font-weight: 500"
+                          >{{ taskList?.taskGroupName }}</span
+                        >
+                        <span
+                          class="icon-message icon-20 text-primary-600 py-2 ms-2"
+                          style="color: #06a9f7"
+                        ></span>
                       </div>
-                      <div class="">
-                        <span style="color: #06a9f7">20%</span>
-                        <span class="ms-5" style="font-weight: 400; color: #606060">
-                          Thời hạn 1.5 giờ
+                      <div class="" style="font-weight: 400; font-size: 1.1rem">
+                        <!-- TODO -->
+                        <span style="color: #06a9f7">0% </span>
+                        <codx-label
+                          fiedName="StepName"
+                          [formModel]=""
+                          [default]="'Thời hạn'"
+                        >
+                        </codx-label>
+                        <span>
+                          {{ taskList?.durationDay }}.{{
+                            taskList?.durationHour
+                          }}
                         </span>
+                        <codx-label
+                          fiedName="StepName"
+                          [formModel]=""
+                          [default]="'Giờ'"
+                        >
+                        </codx-label>
                       </div>
                     </div>
                   </div>
                   <!-- kéo thả ở trong  -->
-                  <div cdkDropList [cdkDropListData]="item?.data || []" (cdkDropListDropped)="drop($event)">
-                    <ng-container *ngFor="let item1 of item.data">
-                      <div cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="item1" class="drap-drop">
+                  <div
+                    cdkDropList
+                    [cdkDropListData]="taskList?.task || []"
+                    (cdkDropListDropped)="drop($event)"
+                  >
+                    <ng-container *ngFor="let task of taskList?.task">
+                      <div
+                        cdkDrag
+                        [cdkDragStartDelay]="200"
+                        [cdkDragData]="task"
+                        class="drap-drop"
+                      >
                         <div style="margin-left: 50px">
                           <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
                             <div class="icon-container" style="background-color: #3ef8e9">
@@ -786,15 +826,39 @@
                             </div>
                             <div class="steplist-hearder ms-5">
                               <div>
-                                <span class="" style="font-size: 1.2rem; font-weight: 500">{{ item1.item }}</span>
-                                <span class="icon-message icon-20 text-primary-600 py-2 ms-2"
-                                  style="color: #06a9f7"></span>
+                                <span
+                                  class=""
+                                  style="font-size: 1.2rem; font-weight: 500"
+                                  >{{ task?.taskName }}</span
+                                >
+                                <span
+                                  class="icon-message icon-20 text-primary-600 py-2 ms-2"
+                                  style="color: #06a9f7"
+                                ></span>
                               </div>
-                              <div class="">
-                                <span style="color: #06a9f7">20%</span>
-                                <span class="ms-5" style="font-weight: 400; color: #606060">
-                                  Thời hạn 1.5 giờ
+                              <div
+                                class=""
+                                style="font-weight: 400; font-size: 1.1rem"
+                              >
+                                <!-- TODO -->
+                                <span style="color: #06a9f7">0% </span>
+                                <codx-label
+                                  fiedName="StepName"
+                                  [formModel]=""
+                                  [default]="'Thời hạn'"
+                                >
+                                </codx-label>
+                                <span>
+                                  {{ taskList?.durationDay }}.{{
+                                    taskList?.durationHour
+                                  }}
                                 </span>
+                                <codx-label
+                                  fiedName="StepName"
+                                  [formModel]=""
+                                  [default]="'Giờ'"
+                                >
+                                </codx-label>
                               </div>
                             </div>
                           </div>
@@ -1328,8 +1392,12 @@
                 <div class="flex-row">
                   <div>
                     <strong>
-                      <codx-label class="text-muted text-opacity-25" fiedName=""
-                        default="Phân bố người phụ trách cho nhiệm vụ">
+                      <codx-label
+                        class="text-muted text-opacity-25"
+                        fiedName="AssignControl"
+                        default="Phân bố người phụ trách cho nhiệm vụ"
+                        [formModel]="formModel"
+                      >
                       </codx-label>
                     </strong>
                   </div>
@@ -1344,7 +1412,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <codx-input field="" type="valuelist" field="AssignControl" refValue="DP019"> </codx-input>
           </div>
         </div>
         <div class="row pb-5">
@@ -1352,8 +1420,13 @@
             <div class="d-flex align-items-start">
               <div>
                 <strong>
-                  <codx-label class="text-muted text-opacity-25" fiedName=""
-                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi">
+                  <codx-label
+                    class="text-muted text-opacity-25"
+                    fiedName=""
+                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi"
+                    [formModel]="formModel"
+
+                  >
                   </codx-label>
                 </strong>
               </div>
@@ -1361,7 +1434,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <codx-input  crrValue="1" type="valuelist" refValue="DP020"> </codx-input>
           </div>
         </div>
       </div>
@@ -1374,10 +1447,16 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label class="title" name="" default="Thời hạn"></codx-label>
+          <!-- chưa có -->
+          <codx-label class="title" fiedName="" default="Thời hạn"></codx-label>
         </div>
         <div>
-          <codx-label class="text-muted" name="" default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn">
+           <!-- chưa có -->
+          <codx-label
+            class="text-muted"
+            fiedName=""
+            default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn"
+          >
           </codx-label>
         </div>
       </div>
@@ -1412,8 +1491,59 @@
             </div>
           </div>
           <div class="col-6">
-            <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <div class="row">
+              <div class="col-6">
+                <div class="position-relative">
+                  <codx-input
+                    field="DurationDay"
+                    [formModel]=""
+                    [Group]=""
+                    type="text"
+                    [height]="'100'"
+                    [min]="0"
+                    [placeholder]="0"
+                    (valueChange)="changeValueInput($event)"
+                  ></codx-input>
+                  <div
+                    class="position-absolute text-muted"
+                    style="top: 7px; right: 7px"
+                  >
+                    <codx-label
+                      fiedName="StepName"
+                      [formModel]=""
+                      default="Ngày"
+                    ></codx-label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="position-relative">
+                  <codx-input
+                    field="durationHour"
+                    [formModel]=""
+                    [Group]=""
+                    type="text"
+                    [height]="'100'"
+                    [min]="0"
+                    [placeholder]="'00.00'"
+                    (valueChange)="changeValueInput($event)"
+                  ></codx-input>
+                  <div
+                    class="position-absolute text-gray-400"
+                    style="top: 7px; right: 7px"
+                  >
+                    <codx-label
+                      fiedName="StepName"
+                      [formModel]=""
+                      default="Giờ"
+                    ></codx-label>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
         </div>
 
@@ -1445,8 +1575,11 @@
             <div class="d-flex align-items-start">
               <div>
                 <strong>
-                  <codx-label class="text-muted text-opacity-25" fiedName=""
-                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong giai đoạn lúc">
+                  <codx-label
+                    class="text-muted text-opacity-25"
+                    fiedName="StartControl"
+                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong giai đoạn lúc"
+                  >
                   </codx-label>
                 </strong>
               </div>
@@ -1454,7 +1587,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <codx-input field="startControl" [formModel]="dialog.formModel" type="valuelist" refValue="DP019"> </codx-input>
           </div>
         </div>
 
@@ -1492,13 +1625,28 @@
           <div class="col-6">
             <div class="row">
               <div class="col-6">
-                <codx-input name="fail-radio" type="radio" style="width: 100%" field="yes" [label]="" [checked]=""
-                  [crrValue]="" (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
+                <codx-input
+                  name="fail-radio"
+                  type="radio"
+                  style="width: 100%"
+                  field="yes"
+                  [label]="titleRadioYes"
+                  [checked]=""
+                  [crrValue]=""
+                  (valueChange)="valueChangeRadio($event, '')"
+                >
                 </codx-input>
               </div>
               <div class="col-6">
-                <codx-input type="radio" name="fail-radio" field="no" [checked]="" [crrValue]="" [label]="titleRadioNo"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
+                <codx-input
+                  type="radio"
+                  name="fail-radio"
+                  field="no"
+                  [checked]=""
+                  [crrValue]=""
+                  [label]="titleRadioNo"
+                  (valueChange)="valueChangeRadio($event, '')"
+                >
                 </codx-input>
               </div>
             </div>
@@ -1514,7 +1662,12 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label class="title" name="" default="Hướng dẫn hoàn thành giai đoạn"></codx-label>
+          <codx-label
+            class="title"
+            fiedName="Memo"
+            [formModel]="dialog.formModel"
+            default="Hướng dẫn hoàn thành giai đoạn"
+          ></codx-label>
         </div>
         <div>
           <codx-label class="text-muted" name="" default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ trách">
@@ -1532,8 +1685,14 @@
     <div id="memo-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-3" *ngIf="data.length > 0">
         <div class="row pt-3 pb-5">
-          <codx-input field="comment" type="textarea" [placeholder]="" [crrValue]="''"
-            (valueChange)="valueMemoSetup($event)">
+          <codx-input
+            field="memo"
+            [formModel]="dialog.formModel"
+            type="textarea"
+            [placeholder]=""
+            [crrValue]="''"
+            (valueChange)="valueMemoSetup($event)"
+          >
           </codx-input>
         </div>
       </div>
