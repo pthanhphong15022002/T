@@ -14,20 +14,20 @@ import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'lib-popup-ebenefit',
   templateUrl: './popup-ebenefit.component.html',
-  styleUrls: ['./popup-ebenefit.component.css']
+  styleUrls: ['./popup-ebenefit.component.css'],
 })
 export class PopupEbenefitComponent extends UIComponent implements OnInit {
   formModel: FormModel;
   formGroup: FormGroup;
   dialog: DialogRef;
-  benefitObj
-  listBenefits
-  indexSelected
+  benefitObj;
+  listBenefits;
+  indexSelected;
   employId: string;
   isAfterRender = false;
   actionType: string;
   idField = 'RecID';
-  headerText: ''
+  headerText: '';
   funcID: string;
 
   @ViewChild('form') form: CodxFormComponent;
@@ -43,19 +43,22 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     super(injector);
     this.dialog = dialog;
     this.headerText = data?.data?.headerText;
-    this.employId = data?.data?.employeeId
+    this.employId = data?.data?.employeeId;
     this.funcID = data?.data?.funcID;
     this.formModel = dialog?.formModel;
-    this.indexSelected = data?.data?.indexSelected != undefined?data?.data?.indexSelected:-1
+    this.indexSelected =
+      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
     this.actionType = data?.data?.actionType;
     this.listBenefits = data?.data?.listBenefits;
     this.headerText = data?.data?.headerText;
-    if(this.actionType === 'edit' || this.actionType ==='copy'){
-      this.benefitObj = JSON.parse(JSON.stringify(this.listBenefits[this.indexSelected]));
+    if (this.actionType === 'edit' || this.actionType === 'copy') {
+      this.benefitObj = JSON.parse(
+        JSON.stringify(this.listBenefits[this.indexSelected])
+      );
     }
-   }
+  }
 
-   onInit(): void {
+  onInit(): void {
     this.hrService.getFormModel(this.funcID).then((formModel) => {
       if (formModel) {
         this.formModel = formModel;
@@ -64,7 +67,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
           .then((fg) => {
             if (fg) {
               this.formGroup = fg;
-              
+
               this.initForm();
             }
           });
@@ -100,49 +103,50 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     }
   }
 
-  onSaveForm(){
+  onSaveForm() {
     // if (this.formGroup.invalid) {
     //   this.hrService.notifyInvalid(this.formGroup, this.formModel);
     //   return;
     // }
 
     this.benefitObj.benefitID = '1'; // test combobox chua co
-    if(this.benefitObj.expiredDate < this.benefitObj.effectedDate){
-      this.notify.notifyCode('HR002')
-      return
+    if (this.benefitObj.expiredDate < this.benefitObj.effectedDate) {
+      this.notify.notifyCode('HR002');
+      return;
     }
 
-    if(this.actionType === 'copy' || this.actionType === 'add'){
-      delete this.benefitObj.recID
+    if (this.actionType === 'copy') {
+      delete this.benefitObj.recID;
     }
-    this.benefitObj.employeeID = this.employId 
-    if(this.actionType === 'add' || this.actionType === 'copy'){
-      this.hrService.AddEBenefit(this.benefitObj).subscribe(p => {
-        if(p != null){
-          this.benefitObj.recID = p.recID
-          this.notify.notifyCode('SYS007')
+    this.benefitObj.employeeID = this.employId;
+    if (this.actionType === 'add' || this.actionType === 'copy') {
+      this.hrService.AddEBenefit(this.benefitObj).subscribe((p) => {
+        if (p != null) {
+          this.benefitObj.recID = p.recID;
+          this.notify.notifyCode('SYS007');
           this.benefitObj.push(JSON.parse(JSON.stringify(this.benefitObj)));
           // if(this.listView){
           //   (this.listView.dataService as CRUDService).add(this.benefitObj).subscribe();
           // }
-          // this.dialog.close(p)
-        }
-        else this.notify.notifyCode('DM034')
+          this.hrService
+            .GetCurrentBenefit(this.benefitObj.employeeID)
+            .subscribe((res) => {
+              this.listBenefits = res;
+              this.dialog && this.dialog.close(p);
+            });
+        } else this.notify.notifyCode('DM034');
       });
-    } 
-    else{
-      this.hrService.EditEBenefit(this.formModel.currentData).subscribe(p => {
-        if(p != null){
-          this.notify.notifyCode('SYS007')
-        this.listBenefits[this.indexSelected] = p;
-        // if(this.listView){
-        //   (this.listView.dataService as CRUDService).update(this.lstPassports[this.indexSelected]).subscribe()
-        // }
+    } else {
+      this.hrService.EditEBenefit(this.formModel.currentData).subscribe((p) => {
+        if (p != null) {
+          this.notify.notifyCode('SYS007');
+          this.listBenefits[this.indexSelected] = p;
+          // if(this.listView){
+          //   (this.listView.dataService as CRUDService).update(this.lstPassports[this.indexSelected]).subscribe()
+          // }
           // this.dialog.close(this.data)
-        }
-        else this.notify.notifyCode('DM034')
+        } else this.notify.notifyCode('DM034');
       });
     }
- }
-
+  }
 }
