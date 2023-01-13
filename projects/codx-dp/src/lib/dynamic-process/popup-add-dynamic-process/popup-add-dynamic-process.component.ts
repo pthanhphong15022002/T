@@ -89,6 +89,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
   userPermissions: DP_Processes_Permission; // create object user in step
+  gridViewSetupStep:any; // grid view setup
 
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
@@ -104,12 +105,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly titleCheckBoxSat: string = 'Thứ 7'; // title checkbox saturday form duration
   readonly titleCheckBoxSun: string = 'Chủ nhật'; // title checkbox sunday form duration
+  readonly formNameSteps: string = 'DPSteps';
+  readonly gridViewNameSteps: string = 'grvDPSteps';
 
   //stage-nvthuan
   user: any;
   userId: string;
+
   taskGroup = {};
   taskGroupList = [];
+
+  step = {};
+  stepList = [];
+
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
@@ -120,33 +128,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   userGroupJob = [];
   nameStage = '';
   isAddStage = true;
-  processNo: any;
-  dataStage = [
-    {
-      id: 1,
-      name: 'Tiếp nhận yêu cầu',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 12,
-      name: 'Đánh giá giả năng',
-      time: '5',
-      phase: 3,
-    },
-    {
-      id: 13,
-      name: 'Giới thiệu sản phẩm',
-      time: 'N/A',
-      phase: 3,
-    },
-    {
-      id: 16,
-      name: 'Ký hợp đồng',
-      time: '5',
-      phase: 3,
-    },
-  ];
+
   listJobType = [
     {
       id: 'P',
@@ -323,7 +305,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (this.action != 'add') {
       this.getAvatar(this.process);
     }else{
-      this.process.instanceNoSetting = this.processNo;
+      this.process.instanceNoSetting = this.process.processNo;
     }
 
     this.cache
@@ -336,91 +318,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-      this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
+    this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
+    this.getGrvStep();
   }
 
   data = [
-    {
-      item: 'Spacing utilities that apply',
-      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
-      data: [
-        {
-          item: 'Item 112',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Spacing utilities that apply',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 117',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-      ],
-    },
-    {
-      item: 'Item 2',
-      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
-      data: [
-        {
-          item: 'Item 118',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 119',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 116',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-      ],
-    },
-    {
-      item: 'Item 3',
-      name: 'Tính chất của một trận bán kết khiến HLV Park Hang-seo lẫn Shin Tae-yong đều phải thận trọng 1. ',
-      data: [
-        {
-          item: 'Item 1111',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 1131',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-        {
-          item: 'Item 11134',
-          data: {
-            name: 'Đây là điều khác hẳn so với những lần gặp nhau trước đây. ',
-            item: 'Item3',
-          },
-        },
-      ],
-    },
   ];
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -1090,13 +992,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
-    this.titleViewStepCrr = this.dataStage[0].name;
+    this.titleViewStepCrr = this.stepList[0].name;
 
     // test nha
     // for(let i=0; i<10; i++){
     //   this.userPermissions.objectName = 'test123'+i;
     //   this.listRoleInStep.push(this.userPermissions);
     // }
+  }
+
+  getGrvStep(){
+    this.cache
+    .gridViewSetup(
+     this.formNameSteps,
+      this.gridViewNameSteps
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetupStep = res;
+      }
+    });
   }
   valueMemoSetup($event) {}
 

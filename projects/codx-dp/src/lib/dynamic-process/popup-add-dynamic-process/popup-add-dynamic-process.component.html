@@ -617,9 +617,9 @@
             </span>
           </button>
         </div>
-        <div class="example-list stage-body-left-main" cdkDropList (cdkDropListDropped)="drop($event, dataStage)">
+        <div class="example-list stage-body-left-main" cdkDropList (cdkDropListDropped)="drop($event, stepList)">
           <!-- danh sách giai đoạn -->
-          <div cdkDrag *ngFor="let item of dataStage; let i = index" class="list-stage example-box drap-drop"
+          <div cdkDrag *ngFor="let item of stepList; let i = index" class="list-stage example-box drap-drop"
             (click)="clickViewReason($event, viewStepCustom, item ?? strEmpty)">
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
