@@ -191,7 +191,9 @@
               id="pane_3"
               [ngClass]="currentTab == 2 ? 'active show' : ''"
             >
-              <ng-container [ngTemplateOutlet]="dynamicFieldsAllSteps"></ng-container>
+              <ng-container
+                [ngTemplateOutlet]="dynamicFieldsAllSteps"
+              ></ng-container>
             </div>
           </div>
         </div>
@@ -680,8 +682,8 @@
       </div>
     </div>
     <div id="memo-main" class="main" [ngClass]="'show-main'">
-       <div class="form-group margin-form mb-4">
-       <!-- <codx-input
+      <div class="form-group margin-form mb-4">
+        <!-- <codx-input
           field="memo"
           type="textarea"
           headerposition="none"
@@ -815,11 +817,8 @@
         </div>
       </div>
     </div>
-    <div id="{{item.recID}}" class="main show-main">
-      <div
-        *ngIf="item?.stepField?.length == 0"
-        class="position-relative p-9"
-      >
+    <div id="{{ item.recID }}" class="main show-main">
+      <div *ngIf="item?.stepField?.length == 0" class="position-relative p-9">
         <div class="position-absolute top-50 start-50 translate-middle">
           <button
             type="button"
@@ -1121,7 +1120,10 @@
       [ngClass]="'show-main'"
       style="margin-top: 10px"
     >
-      <div class="d-flex justify-content-center" *ngIf="data.length == 0">
+      <div
+        class="d-flex justify-content-center"
+        *ngIf="taskGroupList.length === 0"
+      >
         <div>
           <button class="button-custom">
             <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
@@ -1136,11 +1138,11 @@
         </div>
       </div>
       <!-- drap drop công việc ngoài-->
-      <div class="main-body" *ngIf="data.length > 0">
+      <div class="main-body" *ngIf="taskGroupList.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
-            <ng-container *ngFor="let item of data">
-              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="item">
+            <ng-container *ngFor="let taskList of taskGroupList">
+              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
                 <div class="card-job">
                   <div class="d-flex justify-content-start align-items-center">
                     <div class="icon-container">
@@ -1158,35 +1160,47 @@
                         <span
                           class=""
                           style="font-size: 1.2rem; font-weight: 500"
-                          >{{ item.item }}</span
+                          >{{ taskList?.taskGroupName }}</span
                         >
                         <span
                           class="icon-message icon-20 text-primary-600 py-2 ms-2"
                           style="color: #06a9f7"
                         ></span>
                       </div>
-                      <div class="">
-                        <span style="color: #06a9f7">20%</span>
-                        <span
-                          class="ms-5"
-                          style="font-weight: 400; color: #606060"
+                      <div class="" style="font-weight: 400; font-size: 1.1rem">
+                        <!-- TODO -->
+                        <span style="color: #06a9f7">0% </span>
+                        <codx-label
+                          fiedName="StepName"
+                          [formModel]=""
+                          [default]="'Thời hạn'"
                         >
-                          Thời hạn 1.5 giờ
+                        </codx-label>
+                        <span>
+                          {{ taskList?.durationDay }}.{{
+                            taskList?.durationHour
+                          }}
                         </span>
+                        <codx-label
+                          fiedName="StepName"
+                          [formModel]=""
+                          [default]="'Giờ'"
+                        >
+                        </codx-label>
                       </div>
                     </div>
                   </div>
                   <!-- kéo thả ở trong  -->
                   <div
                     cdkDropList
-                    [cdkDropListData]="item?.data || []"
+                    [cdkDropListData]="taskList?.task || []"
                     (cdkDropListDropped)="drop($event)"
                   >
-                    <ng-container *ngFor="let item1 of item.data">
+                    <ng-container *ngFor="let task of taskList?.task">
                       <div
                         cdkDrag
                         [cdkDragStartDelay]="200"
-                        [cdkDragData]="item1"
+                        [cdkDragData]="task"
                         class="drap-drop"
                       >
                         <div style="margin-left: 50px">
@@ -1213,21 +1227,36 @@
                                 <span
                                   class=""
                                   style="font-size: 1.2rem; font-weight: 500"
-                                  >{{ item1.item }}</span
+                                  >{{ task?.taskName }}</span
                                 >
                                 <span
                                   class="icon-message icon-20 text-primary-600 py-2 ms-2"
                                   style="color: #06a9f7"
                                 ></span>
                               </div>
-                              <div class="">
-                                <span style="color: #06a9f7">20%</span>
-                                <span
-                                  class="ms-5"
-                                  style="font-weight: 400; color: #606060"
+                              <div
+                                class=""
+                                style="font-weight: 400; font-size: 1.1rem"
+                              >
+                                <!-- TODO -->
+                                <span style="color: #06a9f7">0% </span>
+                                <codx-label
+                                  fiedName="StepName"
+                                  [formModel]=""
+                                  [default]="'Thời hạn'"
                                 >
-                                  Thời hạn 1.5 giờ
+                                </codx-label>
+                                <span>
+                                  {{ taskList?.durationDay }}.{{
+                                    taskList?.durationHour
+                                  }}
                                 </span>
+                                <codx-label
+                                  fiedName="StepName"
+                                  [formModel]=""
+                                  [default]="'Giờ'"
+                                >
+                                </codx-label>
                               </div>
                             </div>
                           </div>
