@@ -1,5 +1,11 @@
 import { Component, OnInit, Optional } from '@angular/core';
-import { CallFuncService, DialogData, DialogRef, FormModel } from 'codx-core';
+import {
+  CallFuncService,
+  DialogData,
+  DialogRef,
+  FormModel,
+  Util,
+} from 'codx-core';
 import { CodxEmailComponent } from 'projects/codx-share/src/lib/components/codx-email/codx-email.component';
 
 @Component({
@@ -21,22 +27,37 @@ export class PopupJobComponent implements OnInit {
   listChair = [];
   recIdEmail = '';
   isNewEmails = true;
+  groupTackList = [];
+  stepsTasks = {};
   constructor(
     private callfunc: CallFuncService,
-    @Optional() dt?: DialogData, 
+    @Optional() dt?: DialogData,
     @Optional() dialog?: DialogRef
-    ) {
+  ) {
     this.title = dt?.data[1]['text'];
     this.stepType = dt?.data[1]['id'];
+    this.groupTackList = dt?.data[2];
     this.dialog = dialog;
   }
-  ngOnInit(): void {}
-  valueChange(e) {}
+  ngOnInit(): void {
+    this.stepsTasks['recID'] = Util.uid();
+    // this.stepsTasks['taskGroupID'] = this.groupTackList['recID'];
+    // this.stepsTasks['createdOn'] = this.groupTackList['createdOn'];
+    // this.stepsTasks['createdBy'] = this.groupTackList['createdBy'];
+  }
+  valueChangeText(event) {
+    this.stepsTasks[event?.field] = event?.data;
+  }
+
+  changeSelect(event) {
+    this.stepsTasks['taskGroupID'] = event.target.value;
+    console.log(event.target.value);
+  }
   valueChangeAlert(e) {}
   addFile(evt: any) {
     // this.attachment.uploadFile();
   }
-  eventApply(e,datas) {
+  eventApply(e, datas) {
     if (!e || e?.data.length == 0) return;
     let listUser = e?.data;
     listUser.forEach((element) => {
@@ -50,12 +71,14 @@ export class PopupJobComponent implements OnInit {
     });
   }
 
-  onDeleteOwner(objectID,data) {
-    let index = data.findIndex(item => item.id == objectID);
+  onDeleteOwner(objectID, data) {
+    let index = data.findIndex((item) => item.id == objectID);
     if (index != -1) data.splice(index, 1);
   }
 
   saveData() {
+    this.dialog.close(this.stepsTasks);
+
     // let headerText = await this.checkValidate();
     // if (headerText.length > 0) {
     //   this.notiService.notifyCode(

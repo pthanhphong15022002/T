@@ -916,11 +916,7 @@ export class AttachmentComponent implements OnInit, OnChanges {
           false
         );
     }
-    if(!this.fileUploadList[i]) 
-    {
-      this.notificationsService.notifyCode("DM006",0,this.fileUploadList[i].fileName)
-      return null;
-    }
+   
     if (remainingStorage >= 0 && toltalUsed > remainingStorage)
       return this.notificationsService.notifyCode('DM053');
     this.atSV.fileListAdded = [];
@@ -1090,6 +1086,11 @@ export class AttachmentComponent implements OnInit, OnChanges {
           }
         });
     } else if (total == 1) {
+      if(!this.fileUploadList[0]) 
+      {
+        this.notificationsService.notifyCode("DM006",0,this.fileUploadList[0].fileName)
+        return null;
+      }
       this.fileUploadList[0].description = this.description[0];
       this.fileUploadList[0].data = '';
       this.addFileLargeLong(this.fileUploadList[0]);
