@@ -24,12 +24,12 @@ export class DP_Processes {
   activedOn: Date;
   stopOn: Date;
   closeInstanceControl: number;
-  showInstanceControl: boolean;
+  showInstanceControl: string;
   note: string;
   options: string; // json
   attachments: number;
   comments: number;
-  permission: DP_Processes_Permission[]; // string
+  permissions: DP_Processes_Permission[]; // string
   owner: string;
   bUID: string;
   createdOn: Date;
@@ -46,7 +46,7 @@ export class DP_Processes_Permission {
   objectType: string;
   objectName: string;
   objectID: string;
-  adminsitrator: boolean;
+  full: boolean;
   create: boolean;
   read: boolean;
   update: boolean;

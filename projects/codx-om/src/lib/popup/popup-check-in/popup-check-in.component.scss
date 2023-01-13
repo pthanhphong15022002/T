@@ -1,14 +1,19 @@
 
-#om-tab .e-tab-header .e-toolbar-item.e-active
-{
-    border-bottom: solid 2px #0379FF !important;
-}
-
 .bgEDEDED
 {
     background-color: #EDEDED;
 }
-
+#om-tab .e-tab-header .e-toolbar-item.e-active  {
+    border-bottom: solid 2px var(--text-primary) !important;
+    color: var(--text-primary) !important;
+  }
+  #om-tab .e-tab-header .e-toolbar-item.e-active span, #om-tab .e-tab-header .e-toolbar-item.e-active codx-label .codx-label{
+    
+    color: var(--text-primary) !important;
+  }
+  .e-tab .e-tab-header .e-toolbar-item.e-active span {
+    color: var(--text-primary) !important;
+  }
 .om-input
 {
     border : solid 1px white !important;

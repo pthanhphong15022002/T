@@ -52,8 +52,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     this.actionType = data?.data?.actionType;
     this.lstAccident = data?.data?.lstAccident;
     this.funcID = data?.data?.funcID;
-    this.indexSelected =
-      data?.data?.indexSelected != undefined ? data?.data?.indexSelected : -1;
+    this.indexSelected = data?.data?.indexSelected ?? -1;
 
     if (this.actionType === 'edit' || this.actionType === 'copy') {
       this.accidentObj = JSON.parse(
@@ -62,6 +61,23 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     }
   }
 
+  onInit(): void {
+    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
+      if (formModel) {
+        this.formModel = formModel;
+        this.hrSevice
+          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+          .then((fg) => {
+            if (fg) {
+              this.formGroup = fg;
+              this.initForm();
+            }
+          });
+      }
+    });
+  }
+
+  
   initForm() {
     if (this.actionType == 'add') {
       this.hrSevice
@@ -83,24 +99,7 @@ export class PopupEaccidentsComponent extends UIComponent implements OnInit {
     }
   }
 
-  onInit(): void {
-    this.hrSevice.getFormModel(this.funcID).then((formModel) => {
-      if (formModel) {
-        this.formModel = formModel;
-        this.hrSevice
-          .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-          .then((fg) => {
-            if (fg) {
-              this.formGroup = fg;
-              this.initForm();
-            }
-          });
-      }
-    });
-  }
-
   onSaveForm() {
-    
     if (this.actionType === 'copy' || this.actionType === 'add') {
       delete this.accidentObj.recID;
     }

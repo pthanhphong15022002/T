@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PopupAddNotifyComponent } from './popup-add-notify.component';
+import { ChartOfAccountsComponent } from './chart-of-accounts.component';
 
-describe('PopupAddNotifyComponent', () => {
-  let component: PopupAddNotifyComponent;
-  let fixture: ComponentFixture<PopupAddNotifyComponent>;
+describe('ChartOfAccountsComponent', () => {
+  let component: ChartOfAccountsComponent;
+  let fixture: ComponentFixture<ChartOfAccountsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PopupAddNotifyComponent ]
+      declarations: [ ChartOfAccountsComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PopupAddNotifyComponent);
+    fixture = TestBed.createComponent(ChartOfAccountsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
