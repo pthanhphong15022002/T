@@ -85,6 +85,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   isTurnOnNoFailure: boolean = false; //Create variable Click no for reason failure
   listRoleInStep: DP_Processes_Permission[] = []; // creat list user role in step
   userPermissions: DP_Processes_Permission; // create object user in step
+  gridViewSetupStep:any; // grid view setup
 
   // const value string
   readonly strEmpty: string = ''; // value empty for methond have variable is null
@@ -100,6 +101,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly titlecheckBoxStepReasonSuccess: string = 'Thành công'; // title form step reason failure
   readonly titleCheckBoxSat: string = 'Thứ 7'; // title checkbox saturday form duration
   readonly titleCheckBoxSun: string = 'Chủ nhật'; // title checkbox sunday form duration
+  readonly formNameSteps: string = 'DPSteps';
+  readonly gridViewNameSteps: string = 'grvDPSteps';
 
   //stage-nvthuan
   taskGroups = {};
@@ -344,8 +347,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-
-
+    this.getGrvStep();
   }
 
   data = [
@@ -806,7 +808,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
-              //xu ly data đổ về 
+              //xu ly data đổ về
               this.fieldNew = e.event ;
               if(this.dataStepCrr.recID ==  this.fieldNew.stepID){
                 this.dataStepCrr.stepField.push(this.fieldNew)
@@ -1007,6 +1009,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     //   this.userPermissions.objectName = 'test123'+i;
     //   this.listRoleInStep.push(this.userPermissions);
     // }
+  }
+
+  getGrvStep(){
+    this.cache
+    .gridViewSetup(
+     this.formNameSteps,
+      this.gridViewNameSteps
+    )
+    .subscribe((res) => {
+      if (res) {
+        this.gridViewSetupStep = res;
+      }
+    });
   }
   valueMemoSetup($event) {}
 
