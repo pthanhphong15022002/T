@@ -248,7 +248,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
+        <div class="col-6 group-permission witdh-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'O'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -279,7 +279,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
+        <div class="col-6 group-permission witdh-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'P'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -310,7 +310,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
+        <div class="col-6 group-permission witdh-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'F'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -1079,7 +1079,7 @@
       </div>
     </div>
     <div class="main-job" id="setup-step" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
+      <div class="main-body p-3">
         <div class="row pt-3 pb-5">
           <div class="col-6">
             <div class="title-switch">
@@ -1151,7 +1151,7 @@
     </div>
     <div class="main-job has-actions-menu" id="reason-success" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'"
       #view>
-      <div class="main-body pt-5 ps-5" *ngIf="data.length > 0">
+      <div class="main-body pt-5 ps-5" >
         <ul class="text-left" style="display: inline-block; vertical-align: middle">
           <li class="pb-3">Khách hàng thích sản phẩm mà công ty cung cấp</li>
           <li class="pb-3">Khách hàng không còn lựa chọn nào khác</li>
@@ -1184,7 +1184,7 @@
       </div>
     </div>
     <div class="main-job" id="setup-step" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
+      <div class="main-body p-3" >
         <div class="row pt-3 pb-5">
           <div class="col-6">
             <div class="title-switch">
@@ -1273,10 +1273,10 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label class="title" name="" default="Các vai trò trong quy trình"></codx-label>
+          <codx-label class="title" fieldName="Roles" default="Các vai trò trong giai đoạn"></codx-label>
         </div>
         <div>
-          <codx-label class="text-muted" name="" default="Những người liên quan đến giai đoạn">
+          <codx-label class="text-muted"  default="Những người liên quan đến giai đoạn">
           </codx-label>
         </div>
       </div>
@@ -1289,74 +1289,35 @@
       </div>
     </div>
     <div id="role-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
-        <div class="row pt-3 pb-5">
-          <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <div class="flex-row">
-                  <div>
-                    <div class="d-flex align-items-start">
-                      <div>
-                        <strong>
-                          <codx-label class="text-muted text-opacity-25" fiedName=""
-                            default="Người phụ trách giai đoạn">
-                          </codx-label>
-                        </strong>
-                      </div>
-                      <div class="ps-3">
-                        <i class="icon-person_add_alt_1 text-hover-primary icon-20"
-                          (click)="sharePerm(controlShare, '')"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <codx-label class="text-muted"
-                      default="Người phụ trách có thể thực hiện xem/sửa/xóa công việc và cập nhật trạng thái nhiệm vụ trong giai đoạn">
-                    </codx-label>
-                  </div>
-                </div>
-              </div>
+      <div class="row">
+        <div class="col-6">
+          <div class="d-flex flex-column margin-form mb-4">
+            <div class="d-flex flex">
+              <codx-label class="fw-bolder" fiedName="Permission" default="Người giám sát">
+              </codx-label>
+              <i class="icon-person_add_alt_1 text-hover-primary icon-20 margin-user"
+                  (click)="sharePerm(controlShare, 'participants-2')"></i>
             </div>
-          </div>
-          <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <codx-img [width]="25" [objectId]="'ADMIN'" objectType="AD_Users">
-                </codx-img>
-              </div>
-              <div class="ps-3"><strong>Lương Viết Bảo</strong></div>
+            <div>
+              <codx-label class="fw-normal text-gray-400" fiedName="LocationControl" default="Có quyền xem và giám sát tất cả nhiệm vụ của các thành
+                viên trong quy trình nhưng không có quyền tạo hoặc chỉnh sửa
+                nhiệm vụ">
+              </codx-label>
             </div>
           </div>
         </div>
-        <div class="row pb-5">
-          <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <div class="flex-row">
-                  <div>
-                    <strong>
-                      <codx-label class="text-muted text-opacity-25" fiedName="" default="Người liên quan">
-                      </codx-label>
-                    </strong>
-                  </div>
-                  <div>
-                    <codx-label class="text-muted"
-                      default="Người liên quan có thể cập nhật công việc mà họ đang phụ trách"></codx-label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-6">
-            <div class="d-flex align-items-start">
-              <div>
-                <codx-img [width]="25" [objectId]="'ADMIN'" objectType="AD_Users">
+        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0">
+          <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
+            <div *ngIf="perm.roleType == 'O'" class="me-4 d-flex align-items-center margin-form mb-4">
+              <div class="d-flex align-items-center position-relative">
+                <codx-img class="" [width]="25" [objectId]="perm.objectName" objectType="AD_Users">
                 </codx-img>
               </div>
-              <div class="ps-3"><strong>Lương Viết Bảo</strong></div>
+              <div class="ms-1">
+                <div class="text-dark fw-bold">{{ perm.objectName }}</div>
+              </div>
             </div>
-          </div>
+          </ng-container>
         </div>
       </div>
     </div>
@@ -1384,7 +1345,7 @@
       </div>
     </div>
     <div id="step-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
+      <div class="main-body p-3" >
         <div class="row pt-3 pb-5">
           <div class="col-6">
             <div class="d-flex align-items-start">
@@ -1469,7 +1430,7 @@
       </div>
     </div>
     <div id="duration-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
+      <div class="main-body p-3">
         <div class="row pb-5">
           <div class="col-6">
             <div class="d-flex align-items-start">
@@ -1548,7 +1509,7 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <codx-label default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
+              <codx-label class="text-muted" default="Bỏ qua ngày nghỉ trong tuần khi tính toán ngày đến hạn cho nhiệm vụ trong giai đoạn">
               </codx-label>
             </div>
           </div>
@@ -1592,7 +1553,7 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <codx-label default="Cho phép người phụ trách chỉnh sửa thời gian hoành thành giai đoạn thực tế">
+              <codx-label class="text-muted" default="Cho phép người phụ trách chỉnh sửa thời gian hoành thành giai đoạn thực tế">
               </codx-label>
             </div>
           </div>
@@ -1617,7 +1578,7 @@
         <div class="row pb-5">
           <div class="col-6">
             <div class="title-switch">
-              <codx-label default="Cho phép người phụ trách chỉnh sửa thời hạn công việc mặc định"></codx-label>
+              <codx-label class="text-muted" default="Cho phép người phụ trách chỉnh sửa thời hạn công việc mặc định"></codx-label>
             </div>
           </div>
           <div class="col-6">
@@ -1681,7 +1642,7 @@
       </div>
     </div>
     <div id="memo-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
-      <div class="main-body p-3" *ngIf="data.length > 0">
+      <div class="main-body p-3">
         <div class="row pt-3 pb-5">
           <codx-input
             field="memo"

@@ -19,7 +19,7 @@ import { CodxHrService } from '../../codx-hr.service';
 import { HR_Positions } from '../../model/HR_Positions.module';
 
 @Component({
-  selector: 'lib-popup-add-positions',
+  selector: 'hr-popup-add-positions',
   templateUrl: './popup-add-positions.component.html',
   styleUrls: ['./popup-add-positions.component.css'],
 })
@@ -29,7 +29,7 @@ export class PopupAddPositionsComponent implements OnInit {
   user: any;
   functionID: string;
   isAdd = '';
-  data: HR_Positions = new HR_Positions();;
+  data: any = null;
   isCorporation;
   formModel;
   blocked:boolean = false;
@@ -37,12 +37,9 @@ export class PopupAddPositionsComponent implements OnInit {
   @Output() Savechange = new EventEmitter();
 
   constructor(
-    private detectorRef: ChangeDetectorRef,
-    private notiService: NotificationsService,
     private auth: AuthService,
     private api: ApiHttpService,
     private cacheService: CacheService,
-    private reportingLine: CodxHrService,
     @Optional() dialog?: DialogRef,
     @Optional() dt?: DialogData
   ) {
@@ -58,8 +55,6 @@ export class PopupAddPositionsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.getFucnName(this.functionID);
-    //xem lại bật tắt đánh số tự động
-    this.blocked = this.data.positionID ? false : true;
   }
   // get function name
   getFucnName(funcID:string){
