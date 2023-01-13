@@ -34,6 +34,7 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 import {
   DP_Processes,
   DP_Processes_Permission,
+  DP_Steps,
   DP_Steps_Fields,
   DP_Steps_TaskGroups,
 } from '../../models/models';
@@ -199,41 +200,41 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       processID: '41ebc7b7-8ed2-4f76-9eac-e336695cf652',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
-      stepField: [
+      fields: [
         {
           fieldName: 'File Name1',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 1,
         },
         {
           fieldName: 'File Name2',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 2,
         },
         {
           fieldName: 'File Name3',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 3,
         },
         {
           fieldName: 'File Name4',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 4,
         },
         {
           fieldName: 'File Name5',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 5,
         },
         {
           fieldName: 'File Name6',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 6,
         },
       ],
@@ -243,41 +244,41 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       processID: '51ebc7b7-8ed2-4f76-9eac-e336695cf673',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
-      stepField: [
+      fields: [
         {
           fieldName: 'File Name1',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 1,
         },
         {
           fieldName: 'File Name2',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 2,
         },
         {
           fieldName: 'File Name3',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 3,
         },
         {
           fieldName: 'File Name4',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 4,
         },
         {
           fieldName: 'File Name5',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 5,
         },
         {
           fieldName: 'File Name6',
           note: 'File nay de cho có',
-          dataType: 'Text',
+          dataType: 'T',
           sorting: 6,
         },
       ],
@@ -285,8 +286,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ];
   fieldNew: DP_Steps_Fields;
   crrDataStep: any;
-  dataStepCrr = this.arrSteps[0];
+  dataStepCrr :DP_Steps = new DP_Steps();
   isHover = '';
+  vllType ='DP022'
   dataChild = [];
 
   //end data Test
@@ -312,9 +314,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
     this.process = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+
     this.action = dt.data.action;
-    this.user = this.authStore.get();
-    this.userId = this.user?.userID;
+    if(this.action != 'edit'){
+      this.dpService
+      .genAutoNumber(
+        this.dialog.formModel.formName,
+        this.funcID,
+        this.dialog.formModel.entityName,
+        'processNo'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.showID = true;
+          this.process.processNo = res;
+        }else{
+          this.showID = false;
+        }
+      });
+    }
     if (this.action != 'add') {
       this.getAvatar(this.process);
       if (this.process.permissions.length > 0) {
@@ -332,6 +350,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+
+      this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
   }
 
   data = [
@@ -418,22 +438,43 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
   ];
 
+  ngAfterViewInit(): void {
+  }
+
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
     this.getTitleStepViewSetup();
-
+    this.initForm();
     // this.isTurnOnYesFailure = true;
     console.log(this.isTurnOnYesFailure);
   }
 
+  //#region setup formModels and formGroup
+  initForm(){
+    this.formModel = new FormModel();
+    this.formModel.entityName = this.dialog.formModel.entityName;
+    this.formModel.formName = this.dialog.formModel.formName;
+    this.formModel.gridViewName = this.dialog.formModel.gridViewName;
+    this.dpService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        console.log(fg);
+        if (fg) {
+          this.formGroup = fg;
+        }
+      });
+  }
+  //#endregion
   //#region onSave
   beforeSave(op) {
     var data = [];
+    op.className = 'ProcessesBusiness';
     if (this.action == 'add') {
       op.methodName = 'AddProcessAsync';
-      op.className = 'ProcessesBusiness';
-      data = [this.process];
+    } else {
+      op.methodName = 'UpdateProcessAsync';
     }
+    data = [this.process];
     op.data = data;
   }
 
@@ -448,22 +489,48 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       });
   }
 
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.imageAvatar.clearData();
+          this.dialog.close(res.update);
+        }
+      });
+  }
+
   async onSave() {
+    if (
+      this.process.processNo == null ||
+      this.process.processNo.trim() == ''
+    ) {
+      this.notiService.notify('Test mã');
+      return;
+    }
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
     ) {
-      this.notiService.notify('Test');
+      this.notiService.notify('Test name');
       return;
     }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.onAdd();
+          if (this.action == 'edit') {
+            this.onUpdate();
+          } else {
+            this.onAdd();
+          }
         }
       });
     } else {
-      this.onAdd();
+      if (this.action == 'edit') {
+        this.onUpdate();
+      } else {
+        this.onAdd();
+      }
     }
   }
 
@@ -682,6 +749,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
+  //Popup roles process
   clickRoles(e) {
     this.callfc.openForm(
       PopupRolesDynamicComponent,
@@ -689,7 +757,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       950,
       650,
       '',
-      [e],
+      this.permissions,
       '',
       this.dialog
     );
@@ -721,29 +789,41 @@ export class PopupAddDynamicProcessComponent implements OnInit {
 
   //add trường tùy chỉnh
   addCustomField(stepID, processID) {
-    this.fieldNew = new DP_Steps_Fields();
-    this.fieldNew.stepID = stepID;
-    this.fieldNew.processID = processID;
-    let titleAction = '';
-    let option = new SidebarModel();
-    let formModel = this.dialog?.formModel;
-    formModel.formName = 'DPStepsFields';
-    formModel.gridViewName = 'grvDPStepsFields';
-    formModel.entityName = 'DP_Steps_Fields';
-    option.FormModel = formModel;
-    option.Width = '550px';
-    option.zIndex = 1010;
-    var dialogCustomField = this.callfc.openSide(
-      PopupAddCustomFieldComponent,
-      [this.fieldNew, 'add', titleAction],
-      option
-    );
-    dialogCustomField.closed.subscribe((e) => {
-      if (e.event != null) {
-        //xu ly data đổ về
-
-        this.changeDetectorRef.detectChanges();
-      }
+    this.cache.gridView('grvDPStepsFields').subscribe((res) => {
+      this.cache
+        .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
+        .subscribe((res) => {
+          this.fieldNew = new DP_Steps_Fields();
+          this.fieldNew.stepID = stepID;
+          this.fieldNew.processID = processID;
+          let titleAction = '';
+          let option = new SidebarModel();
+          let formModel = this.dialog?.formModel;
+          formModel.formName = 'DPStepsFields';
+          formModel.gridViewName = 'grvDPStepsFields';
+          formModel.entityName = 'DP_Steps_Fields';
+          option.FormModel = formModel;
+          option.Width = '550px';
+          option.zIndex = 1010;
+          var dialogCustomField = this.callfc.openSide(
+            PopupAddCustomFieldComponent,
+            [this.fieldNew, 'add', titleAction],
+            option
+          );
+          dialogCustomField.closed.subscribe((e) => {
+            if (e && e.event != null) {
+              //xu ly data đổ về 
+              this.fieldNew = e.event ;
+              if(this.dataStepCrr.recID ==  this.fieldNew.stepID){
+                this.dataStepCrr.fields.push(this.fieldNew)
+              }
+              this.arrSteps.forEach(x=>{
+                if(x.recID == this.fieldNew.stepID) x.fields.push(this.fieldNew)
+              })
+              this.changeDetectorRef.detectChanges();
+            }
+          });
+        });
     });
   }
 
@@ -763,7 +843,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
     if (crrIndex == -1) return;
-    this.dataChild = this.arrSteps[crrIndex].stepField;
+    this.dataChild = this.arrSteps[crrIndex].fields;
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
     this.changeDetectorRef.detectChanges();
   }

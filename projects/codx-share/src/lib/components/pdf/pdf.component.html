@@ -214,7 +214,7 @@
       <ejs-tab #rightToolbar id="rightToolbar" [class.d-none]="hideActions" heightAdjustMode="Fill"
         (selecting)="changeRightTab($event)">
         <e-tabitems>
-          <e-tabitem *ngIf="isEditable && !isPublic">
+          <e-tabitem *ngIf="isEditable && !isPublic && !isInteractPDF">
             <ng-template #headerText>
               <codx-label name="lblHeaderRight0" [formModel]="" [default]="headerRightName[0].text"
                 class="text-header d-block"></codx-label>
@@ -287,7 +287,7 @@
             </ng-template>
           </e-tabitem>
 
-          <e-tabitem *ngIf="inputUrl == null">
+          <e-tabitem *ngIf="inputUrl == null && !isInteractPDF">
             <ng-template #headerText>
               <codx-label name="lblHeaderRight1" [formModel]="" [default]="headerRightName[1].text"
                 class="text-header d-block"></codx-label>
