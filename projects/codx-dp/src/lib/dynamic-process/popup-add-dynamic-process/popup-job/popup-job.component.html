@@ -46,6 +46,32 @@
       </div>
     </div>
     <!--End Link group -->
+    <div
+      class="form-group d-flex justify-content-between align-item-center w-100"
+    >
+      <div class="step-name w-100">
+        <div>
+          <codx-label
+            fiedName="StepName"
+            [formModel]=""
+            default="Nhóm công việc"
+          >
+          </codx-label>
+        </div>
+        <div>
+          <select
+            class="w-100"
+            style="height: 32px; border: 1px solid #ced4da; border-radius: 3px"
+            aria-label="Default select example"
+            (change)="changeSelect($event)"
+          >
+            <option [value]="tack.recID" *ngFor="let tack of groupTackList">
+              {{ tack?.taskGroupName }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
     <!-- Ten Cong Viec -->
     <div
       class="form-group d-flex justify-content-between align-item-center w-100"
@@ -55,18 +81,18 @@
       <div class="step-name w-100" [ngClass]="stepType === 'P' ? 'me-4' : ''">
         <div>
           <codx-label
-            fiedName="StepName"
+            fiedName="taskName"
             [formModel]=""
             default="Tên công việc"
           >
           </codx-label>
         </div>
         <codx-input
-          field="stepName"
+          field="taskName"
           [formModel]=""
           type="text"
           [Group]=""
-          (valueChange)="valueChange($event)"
+          (valueChange)="valueChangeText($event)"
         >
         </codx-input>
       </div>
@@ -75,18 +101,18 @@
       <div *ngIf="stepType === 'P'" class="w-100 ms-4" style="flex-basis: 100%">
         <div>
           <codx-label
-            fiedName="StepName"
+            fiedName="taskType"
             [formModel]=""
             default="Loại cuộc gọi"
           >
           </codx-label>
         </div>
         <codx-input
-          field="stepName"
+          field="taskType"
           [formModel]=""
           type="valuelist"
           [Group]=""
-          (valueChange)="valueChange($event)"
+          (valueChange)="valueChangeText($event)"
         >
         </codx-input>
       </div>
@@ -96,7 +122,7 @@
       <div *ngIf="stepType === 'M'" style="flex-basis: 25%" class="">
         <div class="d-flex justify-content-end">
           <codx-label
-            fiedName="StepName"
+            fiedName="isOnline"
             [formModel]=""
             default="Họp trực tuyến"
           >
@@ -107,7 +133,7 @@
             type="switch"
             class="test-check"
             [checked]=""
-            field="isAlert"
+            field="isOnline"
             (valueChange)="valueChangeAlert($event)"
           >
           </codx-input>
@@ -115,21 +141,28 @@
       </div>
       <!-- End cuoc hop -->
       <!-- Gui mail -->
+      <!-- TODO: mail chưa có tài liệu -->
       <div
         *ngIf="stepType === 'E' || stepType === 'Q'"
         class=""
         style="flex-basis: 10%"
       >
         <div>
-          <codx-label ></codx-label>
+          <codx-label></codx-label>
         </div>
-        <div *ngIf="stepType === 'E'" class="d-flex justify-content-end" style="margin-top: 2px;">
+        <div
+          *ngIf="stepType === 'E'"
+          class="d-flex justify-content-end"
+          style="margin-top: 2px"
+        >
           <button
             class="button-mail"
             *ngIf="stepType == 'E'"
             (click)="handelMail()"
           >
-            <span class="icon-email icon-20 text-primary-600 py-2 text-muted"></span>
+            <span
+              class="icon-email icon-20 text-primary-600 py-2 text-muted"
+            ></span>
           </button>
         </div>
       </div>
@@ -151,7 +184,7 @@
         [formModel]=""
         type="text"
         [Group]=""
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
       <a class="cursor-pointer text-primary"> {{ linkQuesiton }}</a>
@@ -161,7 +194,7 @@
       <div class="d-flex justify-content-between row">
         <div class="col-6">
           <codx-label
-            fiedName="Interval"
+            fiedName="durationDay"
             [formModel]=""
             default="Thời lượng công việc"
           >
@@ -169,22 +202,22 @@
           <div class="d-flex justify-content-between row">
             <div class="col-6">
               <codx-input
-                field="stepName"
+                field="durationDay"
                 [formModel]=""
-                type="valuelist"
+                type="text"
                 [Group]=""
-                (valueChange)="valueChange($event)"
+                (valueChange)="valueChangeText($event)"
               >
               </codx-input>
             </div>
 
             <div class="col-6">
               <codx-input
-                field="stepName"
+                field="durationHour"
                 [formModel]=""
-                type="valuelist"
+                type="text"
                 [Group]=""
-                (valueChange)="valueChange($event)"
+                (valueChange)="valueChangeText($event)"
               >
               </codx-input>
             </div>
@@ -192,7 +225,7 @@
         </div>
         <div class="col-6">
           <codx-label
-            fiedName="Interval"
+            fiedName="reminders"
             [formModel]=""
             default="Nhắc nhở trước khi bắt đầu"
           >
@@ -200,18 +233,18 @@
           <div>
             <!-- combobox -->
             <codx-input
-              field="stepName"
+              field="reminders"
               [formModel]=""
               type="valuelist"
               [Group]=""
-              (valueChange)="valueChange($event)"
+              (valueChange)="valueChangeText($event)"
             >
             </codx-input>
           </div>
         </div>
         <!-- <codx-input field="interval" [formModel]="form.formModel"
                     [Group]="form.formGroup"
-                    (valueChange)="valueChange($event)">
+                    (valueChange)="valueChangeText($event)">
                 </codx-input> -->
       </div>
     </div>
@@ -219,18 +252,18 @@
     <div class="form-group">
       <div>
         <codx-label
-          fiedName="StepName"
+          fiedName="parentID"
           [formModel]=""
           default="Công việc liên kết"
         >
         </codx-label>
       </div>
       <codx-input
-        field="stepName"
+        field="parentID"
         type="valuelist"
         [formModel]=""
         [Group]=""
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -238,18 +271,18 @@
     <div class="form-group">
       <div>
         <codx-label
-          fiedName="StepName"
+          fiedName="dependRule"
           [formModel]=""
           default="Bắt đầu công việc khi"
         >
         </codx-label>
       </div>
       <codx-input
-        field="stepName"
+        field="dependRule"
         [formModel]=""
         [Group]=""
         type="valuelist"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -261,7 +294,7 @@
       >
         <div>
           <codx-label
-            fiedName="StepName"
+            fiedName="roles"
             [formModel]=""
             default="Người chủ trì"
           ></codx-label>
@@ -269,11 +302,11 @@
         <codx-input
           type="Share"
           [refValue]="vllShare"
-          field="Owners"
+          field=""
           [dataShared]="[]"
           [multiple]="true"
           [showInput]="false"
-          (valueChange)="eventApply($event,listChair)"
+          (valueChange)="eventApply($event, listChair)"
         >
         </codx-input>
       </div>
@@ -288,7 +321,7 @@
       <div class="d-flex justify-content-between align-item-center">
         <div>
           <codx-label
-            fiedName="StepName"
+            fiedName="roles"
             [formModel]=""
             default="Vai trò bộ phận thực hiện"
           >
@@ -297,11 +330,11 @@
         <codx-input
           type="Share"
           [refValue]="vllShare"
-          field="Owners"
+          field="roles"
           [dataShared]="[]"
           [multiple]="true"
           [showInput]="false"
-          (valueChange)="eventApply($event,listOwner)"
+          (valueChange)="eventApply($event, listOwner)"
         >
         </codx-input>
       </div>
@@ -315,18 +348,18 @@
     <div class="form-group">
       <div>
         <codx-label
-          fiedName="StepName"
+          fiedName="assignControl"
           [formModel]=""
           default="Phân công công việc khi"
         >
         </codx-label>
       </div>
       <codx-input
-        field="stepName"
+        field="assignControl"
         [formModel]=""
         [Group]=""
         type="valuelist"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
     </div>
@@ -334,39 +367,20 @@
     <div class="form-group">
       <div>
         <codx-label
-          fiedName="StepName"
+          fiedName="memo"
           [formModel]=""
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
-        field="stepName"
+        field="memo"
         [formModel]=""
         [Group]=""
         type="text"
         [height]="'100'"
-        (valueChange)="valueChange($event)"
+        (valueChange)="valueChangeText($event)"
       >
       </codx-input>
-    </div>
-
-    <div class="form-group">
-      <codx-input
-        type="switch"
-        class="test-check"
-        [checked]=""
-        field="isAlert"
-        (valueChange)="valueChangeAlert($event)"
-      >
-      </codx-input>
-      <span style="margin-left: 10px">
-        <codx-label
-          name="lblAlert"
-          [formModel]="form.formModel"
-          default="Phải được hoàn tất trước khi chuyển công đoạn"
-        >
-        </codx-label>
-      </span>
     </div>
 
     <div class="form-group">
@@ -383,6 +397,25 @@
           name="lblAlert"
           [formModel]="form.formModel"
           default="Tạo tack trong phân hệ quản lý công việc"
+        >
+        </codx-label>
+      </span>
+    </div>
+
+    <div class="form-group">
+      <codx-input
+        type="switch"
+        class="test-check"
+        [checked]=""
+        field="createTask"
+        (valueChange)="valueChangeAlert($event)"
+      >
+      </codx-input>
+      <span style="margin-left: 10px">
+        <codx-label
+          name="createTask"
+          [formModel]="form.formModel"
+          default="Phải được hoàn tất trước khi chuyển công đoạn"
         >
         </codx-label>
       </span>

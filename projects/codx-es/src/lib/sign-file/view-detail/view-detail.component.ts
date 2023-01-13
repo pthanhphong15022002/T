@@ -77,6 +77,8 @@ export class ViewDetailComponent implements OnInit {
   isAfterRender: boolean = false;
   gridViewSetup: any = {};
 
+  mfRelease: any;
+
   @ViewChild('itemDetailTemplate') itemDetailTemplate;
   @ViewChild('addCancelComment') addCancelComment;
 
@@ -284,6 +286,11 @@ export class ViewDetailComponent implements OnInit {
     var unbm = e.filter(
       (x: { functionID: string }) => x.functionID == 'EST01104'
     );
+    var release = e.filter(
+      (x: { functionID: string }) => x.functionID == 'EST01105'
+    );
+
+    this.mfRelease = release;
 
     if (bookmarked == true) {
       if (bm && bm.length) bm[0].disabled = true;
@@ -298,6 +305,9 @@ export class ViewDetailComponent implements OnInit {
         (x: { functionID: string }) => x.functionID == 'EST01101'
       );
       if (cancel && cancel.length) cancel[0].disabled = true;
+    }
+    if (data.approveStatus != 1 && data.approveStatus != 2) {
+      if (release?.length) release[0].disabled = true;
     }
   }
 
@@ -381,6 +391,7 @@ export class ViewDetailComponent implements OnInit {
           formModel: this.view?.formModel,
           option: option,
           headerText: mF?.text,
+          moreFunction: this.mfRelease,
         },
         '',
         dialogModel

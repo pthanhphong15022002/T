@@ -109,14 +109,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
         [this.functionID, this.dialog.formModel.entityName]
       )
       .subscribe((res) => {
-        if (res && res.stop) {
-          this.showInput = false;
-          if (this.action == 'add' || this.action == 'copy') {
-            this.data.taskGroupID = '';
-            this.taskGroups.taskGroupID = '';
-          }
-        } else {
+        if (res && !res.stop && res.autoAssignRule=='1') {
           this.showInput = true;
+        } else {
+          this.showInput = false;
         }
       });
   }
