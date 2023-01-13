@@ -62,7 +62,7 @@ export class CodxApprovalComponent
   dataItem: any;
   lstDtDis: any;
   lstUserID: any;
-  listApproveMF: any;
+  listApproveMF: any = [];
 
   tabControl: TabModel[] = [];
   /**
@@ -221,7 +221,10 @@ export class CodxApprovalComponent
         )
           list[i].disabled = true;
       }
-      this.listApproveMF = list.filter((p) => p.disabled == false);
+      this.listApproveMF = list.filter((p) => p.data.functionID == 'SYS208' || p.disabled == false );
+
+      console.log(this.listApproveMF);
+      
       //Ẩn thêm xóa sửa
       var list2 = data.filter(
         (x) =>
