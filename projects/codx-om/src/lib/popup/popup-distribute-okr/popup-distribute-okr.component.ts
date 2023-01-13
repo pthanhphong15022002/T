@@ -217,7 +217,9 @@ export class PopupDistributeOKRComponent extends UIComponent implements AfterVie
     });
     this.codxOmService.distributeOKR(this.dataOKR.recID,this.distributeToType,lastListDistribute)
     .subscribe(res=>{
-      let x= res;
+      if(res){        
+        this.notificationsService.notifyCode('SYS034');
+      }
       this.dialogRef && this.dialogRef.close();
       
     })

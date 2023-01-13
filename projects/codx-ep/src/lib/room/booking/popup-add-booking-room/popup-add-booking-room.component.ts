@@ -1123,7 +1123,10 @@ export class PopupAddBookingRoomComponent extends UIComponent {
   }
 
   valueAttendeesChange(event: any) {
-    if (event?.data) {
+    if (event?.data!=null) {
+      if(event.data<0){
+        event.data=0;
+      }
       this.data.attendees = event.data;
       this.changeDetectorRef.detectChanges();
     }
@@ -1343,13 +1346,14 @@ export class PopupAddBookingRoomComponent extends UIComponent {
 
   valueQuantityChange(event?) {
     if (event?.data !=null && event?.field) {
+      if(event?.data<0){
+        event.data=0;
+      }
       this.lstStationery.forEach((item) => {
         if (item.id === event?.field) {
-          if (event.data > 0) {
+          
             item.quantity = event.data;
-          } else {
-            item.quantity = 0;
-          }
+          
         }
       });
       this.changeDetectorRef.detectChanges();
