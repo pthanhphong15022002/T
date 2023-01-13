@@ -248,7 +248,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
+        <div class="col-6 group-permission witdh-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'O'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -279,7 +279,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
+        <div class="col-6 group-permission witdh-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'P'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -310,7 +310,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
+        <div class="col-6 group-permission witdh-permission scroll-user" *ngIf="permissions != null && permissions.length > 0">
           <ng-container *ngFor="let perm of process.permissions; index as i">
             <div *ngIf="perm.roleType == 'F'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
@@ -1306,7 +1306,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 group-permission scroll-user" *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0">
+        <div class="col-6 group-permission witdh-roles scroll-user" *ngIf="dataStepCrr.roles != null && dataStepCrr.roles.length > 0">
           <ng-container *ngFor="let perm of dataStepCrr.roles; index as i">
             <div *ngIf="perm.roleType == 'O'" class="me-4 d-flex align-items-center margin-form mb-4">
               <div class="d-flex align-items-center position-relative">
