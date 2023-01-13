@@ -152,50 +152,50 @@
         <div class="col-6">
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessNo" [formModel]="dialog.formModel" default="Mã quy trình">
+              <codx-label fiedName="ProcessNo" [formModel]="formModel" default="Mã quy trình">
               </codx-label>
             </div>
-            <!-- <codx-input field="processNo" type="text" [placeholder]="gridViewSetup['ProcessNo']?.description"
+            <codx-input field="processNo" type="text" [placeholder]="gridViewSetup['ProcessNo']?.description"
               [crrValue]="process.processNo" (valueChange)="valueChange($event)" [disabled]="showID">
-            </codx-input> -->
-            <codx-input field="processNo" [formModel]="formModel" [Group]="formGroup" [disabled]="showID">
             </codx-input>
+            <!-- <codx-input field="processNo" [crrValue]="process.processNo" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" [disabled]="showID">
+            </codx-input> -->
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="GroupID" [formModel]="dialog.formModel" default="Nhóm quy trình">
+              <codx-label fiedName="GroupID" [formModel]="formModel" default="Nhóm quy trình">
               </codx-label>
             </div>
-            <codx-input field="groupID" [formModel]="formModel" [Group]="formGroup" >
-            </codx-input>
-            <!-- <codx-input field="groupID" type="combobox" [placeholder]="gridViewSetup['GroupID']?.description"
+            <!-- <codx-input field="groupID" [crrValue]="process.groupID" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
+            </codx-input> -->
+            <codx-input field="groupID" type="combobox" [placeholder]="gridViewSetup['GroupID']?.description"
               [crrValue]="process.groupID" [refValue]="gridViewSetup?.GroupID.referedValue"
               (valueChange)="valueChange($event)">
-            </codx-input> -->
+            </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ProcessName" [formModel]="dialog.formModel" default="Tên quy trình">
+              <codx-label fiedName="ProcessName" [formModel]="formModel" default="Tên quy trình">
               </codx-label>
             </div>
-            <codx-input field="processName" [formModel]="formModel" [Group]="formGroup" >
-            </codx-input>
-            <!-- <codx-input field="processName" [placeholder]="gridViewSetup['ProcessName']?.description" type="text"
-              [crrValue]="process.processName" (valueChange)="valueChange($event)">
+            <!-- <codx-input field="processName" [crrValue]="process.processName" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup" >
             </codx-input> -->
+            <codx-input field="processName" [placeholder]="gridViewSetup['ProcessName']?.description" type="text"
+              [crrValue]="process.processName" (valueChange)="valueChange($event)">
+            </codx-input>
           </div>
           <div class="form-group margin-form">
             <div>
-              <codx-label fiedName="ApplyFor" [formModel]="dialog.formModel"
+              <codx-label fiedName="ApplyFor" [formModel]="formModel"
                 default="Đối tượng nhiệm vụ áp dụng trong quy trình">
               </codx-label>
             </div>
-            <codx-input field="applyFor" [formModel]="formModel" [Group]="formGroup">
-            </codx-input>
-            <!-- <codx-input field="applyFor" type="combobox" [crrValue]="process.applyFor"
+            <!-- <codx-input field="applyFor" [crrValue]="process.applyFor" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup">
+            </codx-input> -->
+            <codx-input field="applyFor" type="valuelist" [crrValue]="process.applyFor"
               [refValue]="gridViewSetup?.ApplyFor.referedValue" (valueChange)="valueChange($event)"
               [placeholder]="gridViewSetup['ApplyFor']?.description">
-            </codx-input> -->
+            </codx-input>
           </div>
         </div>
         <div class="col-6">
@@ -350,21 +350,21 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="InstanceNoSetting" [formModel]="dialog.formModel"
+            <codx-label fiedName="InstanceNoSetting" [formModel]="formModel"
               default="Định dạng đánh số tự động cho nhiệm vụ khi tạo mới">
             </codx-label>
           </div>
           <div class="col-6 row">
             <div class="col-11">
-              <codx-input [formModel]="formModel" [Group]="formGroup"  field="instanceNoSetting">
-              </codx-input>
-              <!-- <codx-input type="text" [crrValue]="process.instanceNoSetting"
+              <!-- <codx-input [crrValue]="process.instanceNoSetting" (valueChange)="valueChange($event)" [formModel]="formModel" [Group]="formGroup"  field="instanceNoSetting">
+              </codx-input> -->
+              <codx-input type="text" [crrValue]="process.instanceNoSetting"
                 [placeholder]="gridViewSetup['InstanceNoSetting']?.description" (valueChange)="valueChange($event)"
                 field="instanceNoSetting">
-              </codx-input> -->
+              </codx-input>
             </div>
             <div class="col-1">
-              <i class="icon-settings form-control-feedback"></i>
+              <i class="icon-settings form-control-feedback" (click)="openAutoNumPopup()"></i>
             </div>
           </div>
         </div>
@@ -372,39 +372,37 @@
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="ShowInstanceControl" [formModel]="dialog.formModel"
-              default="Chỉ xem nhiệm vụ ở tình trạng">
+            <codx-label fiedName="ShowInstanceControl" [formModel]="formModel" default="Chỉ xem nhiệm vụ ở tình trạng">
             </codx-label>
           </div>
           <div class="col-6">
-            <!-- <codx-input type="valuelist" [refValue]="refValue"
+            <codx-input type="valuelist" [refValue]="gridViewSetup?.ShowInstanceControl.referedValue"
               [placeholder]="gridViewSetup['ShowInstanceControl']?.description" [crrValue]="process.showInstanceControl"
               (valueChange)="valueChange($event)" field="showInstanceControl">
-            </codx-input> -->
-            <codx-input field="showInstanceControl" [formModel]="formModel" [Group]="formGroup" >
             </codx-input>
+            <!-- <codx-input [crrValue]="process.showInstanceControl" (valueChange)="valueChange($event)" field="showInstanceControl" [formModel]="formModel" [Group]="formGroup" >
+            </codx-input> -->
           </div>
         </div>
       </div>
       <div class="form-group margin-form mb-4">
         <div class="row">
           <div class="col-6">
-            <codx-label fiedName="CloseInstanceControl" [formModel]="dialog.formModel"
+            <codx-label fiedName="CloseInstanceControl" [formModel]="formModel"
               default="Tự đóng nhiệm vụ khi không có bất kỳ hoạt động nào sau">
             </codx-label>
           </div>
-          <div class="col-6 row">
-            <div class="col-11">
-              <codx-input field="closeInstanceControl" [formModel]="formModel" [Group]="formGroup" >
-              </codx-input>
-              <!-- <codx-input field="closeInstanceControl" type="text" [placeholder]="
-                  gridViewSetup['CloseInstanceControl']?.description
-                " (valueChange)="valueChange($event)" [crrValue]="process.closeInstanceControl"
-                field="closeInstanceControl">
+          <div class="col-6">
+            <!-- <codx-input [crrValue]="process.closeInstanceControl" (valueChange)="valueChange($event)" field="closeInstanceControl" [formModel]="formModel" [Group]="formGroup" >
               </codx-input> -->
-            </div>
-            <div class="col-1">
-              <codx-label fiedName="lblDate" default="Ngày"> </codx-label>
+            <div class="position-relative">
+              <codx-input field="closeInstanceControl" type="text" [placeholder]="
+              gridViewSetup['CloseInstanceControl']?.description
+            " (valueChange)="valueChange($event)" [crrValue]="process.closeInstanceControl"
+                field="closeInstanceControl"></codx-input>
+              <div class="position-absolute text-gray-400" style="top: 7px; right: 7px">
+                <codx-label fiedName="lblDate" default="Ngày"></codx-label>
+              </div>
             </div>
           </div>
         </div>
@@ -416,8 +414,8 @@
     <div class="header-job">
       <div class="left">
         <div>
-          <codx-label class="title" name="Memo" [formModel]="dialog.formModel"
-            default="Hướng dẫn làm việc với quy trình"></codx-label>
+          <codx-label class="title" name="Memo" [formModel]="formModel" default="Hướng dẫn làm việc với quy trình">
+          </codx-label>
         </div>
         <div>
           <codx-label name="lblMemo" default="Mô tả chi tiết quy trình" style="color: #898989">
@@ -459,7 +457,7 @@
       </ng-container>
     </div>
   </div>
-  <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="dialog.formModel.entityName" hideFolder="1"
+  <codx-attachment #imageAvatar [objectId]="process.recID" [objectType]="formModel.entityName" hideFolder="1"
     hideImageUpload="1" hideImageThumb="1" hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="0"
     [formModel]="formModel" allowExtensions=".jpg,.png" [isSaveSelected]="0" (fileAdded)="fileImgAdded($event)"
     displayThumb="full" showMessage="0" category="0">
@@ -732,8 +730,16 @@
       </div>
     </div>
 
-    <div id="job-main" class="main-job" [ngClass]="'show-main'" style="margin-top: 10px">
-      <div class="d-flex justify-content-center" *ngIf="data.length == 0">
+    <div
+      id="job-main"
+      class="main-job"
+      [ngClass]="'show-main'"
+      style="margin-top: 10px"
+    >
+      <div
+        class="d-flex justify-content-center"
+        *ngIf="taskGroupList.length === 0"
+      >
         <div>
           <button class="button-custom">
             <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
@@ -748,11 +754,11 @@
         </div>
       </div>
       <!-- drap drop công việc ngoài-->
-      <div class="main-body" *ngIf="data.length > 0">
+      <div class="main-body" *ngIf="taskGroupList.length > 0">
         <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
           <div cdkDropListGroup>
-            <ng-container *ngFor="let item of data">
-              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="item">
+            <ng-container *ngFor="let taskList of taskGroupList">
+              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
                 <div class="card-job">
                   <div class="d-flex justify-content-start align-items-center">
                     <div class="icon-container">
@@ -763,21 +769,52 @@
                     </div>
                     <div class="steplist-hearder ms-5">
                       <div>
-                        <span class="" style="font-size: 1.2rem; font-weight: 500">{{ item.item }}</span>
-                        <span class="icon-message icon-20 text-primary-600 py-2 ms-2" style="color: #06a9f7"></span>
+                        <span
+                          class=""
+                          style="font-size: 1.2rem; font-weight: 500"
+                          >{{ taskList?.taskGroupName }}</span
+                        >
+                        <span
+                          class="icon-message icon-20 text-primary-600 py-2 ms-2"
+                          style="color: #06a9f7"
+                        ></span>
                       </div>
-                      <div class="">
-                        <span style="color: #06a9f7">20%</span>
-                        <span class="ms-5" style="font-weight: 400; color: #606060">
-                          Thời hạn 1.5 giờ
+                      <div class="" style="font-weight: 400; font-size: 1.1rem">
+                        <!-- TODO -->
+                        <span style="color: #06a9f7">0% </span>
+                        <codx-label
+                          fiedName="StepName"
+                          [formModel]=""
+                          [default]="'Thời hạn'"
+                        >
+                        </codx-label>
+                        <span>
+                          {{ taskList?.durationDay }}.{{
+                            taskList?.durationHour
+                          }}
                         </span>
+                        <codx-label
+                          fiedName="StepName"
+                          [formModel]=""
+                          [default]="'Giờ'"
+                        >
+                        </codx-label>
                       </div>
                     </div>
                   </div>
                   <!-- kéo thả ở trong  -->
-                  <div cdkDropList [cdkDropListData]="item?.data || []" (cdkDropListDropped)="drop($event)">
-                    <ng-container *ngFor="let item1 of item.data">
-                      <div cdkDrag [cdkDragStartDelay]="200" [cdkDragData]="item1" class="drap-drop">
+                  <div
+                    cdkDropList
+                    [cdkDropListData]="taskList?.task || []"
+                    (cdkDropListDropped)="drop($event)"
+                  >
+                    <ng-container *ngFor="let task of taskList?.task">
+                      <div
+                        cdkDrag
+                        [cdkDragStartDelay]="200"
+                        [cdkDragData]="task"
+                        class="drap-drop"
+                      >
                         <div style="margin-left: 50px">
                           <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
                             <div class="icon-container" style="background-color: #3ef8e9">
@@ -789,15 +826,39 @@
                             </div>
                             <div class="steplist-hearder ms-5">
                               <div>
-                                <span class="" style="font-size: 1.2rem; font-weight: 500">{{ item1.item }}</span>
-                                <span class="icon-message icon-20 text-primary-600 py-2 ms-2"
-                                  style="color: #06a9f7"></span>
+                                <span
+                                  class=""
+                                  style="font-size: 1.2rem; font-weight: 500"
+                                  >{{ task?.taskName }}</span
+                                >
+                                <span
+                                  class="icon-message icon-20 text-primary-600 py-2 ms-2"
+                                  style="color: #06a9f7"
+                                ></span>
                               </div>
-                              <div class="">
-                                <span style="color: #06a9f7">20%</span>
-                                <span class="ms-5" style="font-weight: 400; color: #606060">
-                                  Thời hạn 1.5 giờ
+                              <div
+                                class=""
+                                style="font-weight: 400; font-size: 1.1rem"
+                              >
+                                <!-- TODO -->
+                                <span style="color: #06a9f7">0% </span>
+                                <codx-label
+                                  fiedName="StepName"
+                                  [formModel]=""
+                                  [default]="'Thời hạn'"
+                                >
+                                </codx-label>
+                                <span>
+                                  {{ taskList?.durationDay }}.{{
+                                    taskList?.durationHour
+                                  }}
                                 </span>
+                                <codx-label
+                                  fiedName="StepName"
+                                  [formModel]=""
+                                  [default]="'Giờ'"
+                                >
+                                </codx-label>
                               </div>
                             </div>
                           </div>

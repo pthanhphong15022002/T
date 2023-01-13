@@ -54,36 +54,37 @@ export class DynamicProcessComponent
   crrFunID: string = '';
   funcID: string = '';
   gridViewSetup: any;
-
+  showID = false;
+  processNo: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
- heightWin: any;
- widthWin: any;
- itemSelected: any;
- titleAction:any;
- moreFunc: any;
+  heightWin: any;
+  widthWin: any;
+  itemSelected: any;
+  titleAction: any;
+  moreFunc: any;
 
   // create variables for list
   listDynamicProcess: DP_Processes[] = [];
   listUserInUse: DP_Processes_Permission[] = [];
 
- //test chưa có api
- popoverDetail: any;
- popupOld: any;
- popoverList: any;
+  //test chưa có api
+  popoverDetail: any;
+  popupOld: any;
+  popoverList: any;
 
-// Call API Dynamic Proccess
-readonly service = 'DP';
-readonly assemblyName = 'ERM.Business.DP';
-readonly entityName = 'DP_Processes';
-readonly className = 'ProcessesBusiness'
+  // Call API Dynamic Proccess
+  readonly service = 'DP';
+  readonly assemblyName = 'ERM.Business.DP';
+  readonly entityName = 'DP_Processes';
+  readonly className = 'ProcessesBusiness';
 
- // Method API dynamic proccess
-readonly methodGetList = 'GetListDynProcessesAsync';
+  // Method API dynamic proccess
+  readonly methodGetList = 'GetListDynProcessesAsync';
 
-// Get idField
-readonly idField = 'recID'
+  // Get idField
+  readonly idField = 'processNo';
 
   constructor(
     private inject: Injector,
@@ -92,7 +93,8 @@ readonly idField = 'recID'
     private codxDpService: CodxDpService,
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
-    private callFunc: CallFuncService
+    private callFunc: CallFuncService,
+    private dpService: CodxDpService,
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
@@ -104,10 +106,11 @@ readonly idField = 'recID'
     this.button = {
       id: this.btnAdd,
     };
-
     // gán tạm để test
     this.getListUser();
   }
+
+
 
   afterLoad() {}
   onDragDrop(e: any) {}
@@ -176,27 +179,29 @@ readonly idField = 'recID'
     if (data) {
       this.view.dataService.dataSelected = data;
     }
-    this.view.dataService.edit(this.view.dataService.dataSelected).subscribe((res) => {
-      var obj = {
-        action: 'edit',
-      };
-      let dialogModel = new DialogModel();
-      dialogModel.IsFull = true;
-      dialogModel.zIndex = 999;
-      dialogModel.DataService = this.view?.dataService;
-      dialogModel.FormModel = this.view.formModel;
-      this.dialog = this.callfc.openForm(
-        PopupAddDynamicProcessComponent,
-        '',
-        this.widthWin,
-        this.heightWin,
-        '',
-        obj,
-        '',
-        dialogModel
-      );
-      this.dialog.closed.subscribe((e) => {
-        if (!e?.event) this.view.dataService.clear();
+    this.view.dataService
+      .edit(this.view.dataService.dataSelected)
+      .subscribe((res) => {
+        var obj = {
+          action: 'edit',
+        };
+        let dialogModel = new DialogModel();
+        dialogModel.IsFull = true;
+        dialogModel.zIndex = 999;
+        dialogModel.DataService = this.view?.dataService;
+        dialogModel.FormModel = this.view.formModel;
+        this.dialog = this.callfc.openForm(
+          PopupAddDynamicProcessComponent,
+          '',
+          this.widthWin,
+          this.heightWin,
+          '',
+          obj,
+          '',
+          dialogModel
+        );
+        this.dialog.closed.subscribe((e) => {
+          if (!e?.event) this.view.dataService.clear();
           if (e?.event == null)
             this.view.dataService.delete(
               [this.view.dataService.dataSelected],
@@ -206,8 +211,8 @@ readonly idField = 'recID'
             this.view.dataService.update(e.event).subscribe();
             this.detectorRef.detectChanges();
           }
+        });
       });
-    });
     this.changeDetectorRef.detectChanges();
   }
   copy(data: any) {
