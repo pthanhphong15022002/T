@@ -24,7 +24,7 @@ export class DP_Processes {
   activedOn: Date;
   stopOn: Date;
   closeInstanceControl: number;
-  showInstanceControl: boolean;
+  showInstanceControl: string;
   note: string;
   options: string; // json
   attachments: number;

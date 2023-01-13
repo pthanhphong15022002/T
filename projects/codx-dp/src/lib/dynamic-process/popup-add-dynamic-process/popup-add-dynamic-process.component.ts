@@ -26,6 +26,7 @@ import {
   NotificationsService,
   FormModel,
   CacheService,
+  AuthStore,
 } from 'codx-core';
 import { AttachmentComponent } from 'projects/codx-share/src/lib/components/attachment/attachment.component';
 import { environment } from 'src/environments/environment';
@@ -33,12 +34,14 @@ import { PopupAddCustomFieldComponent } from './popup-add-custom-field/popup-add
 import {
   DP_Processes,
   DP_Processes_Permission,
+  DP_Steps,
   DP_Steps_Fields,
   DP_Steps_TaskGroups,
 } from '../../models/models';
 import { PopupRolesDynamicComponent } from './popup-roles-dynamic/popup-roles-dynamic.component';
 import { format } from 'path';
 import { FormGroup } from '@angular/forms';
+import { PopupAddAutoNumberComponent } from 'projects/codx-es/src/lib/setting/category/popup-add-auto-number/popup-add-auto-number.component';
 
 @Component({
   selector: 'lib-popup-add-dynamic-process',
@@ -105,7 +108,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   readonly gridViewNameSteps: string = 'grvDPSteps';
 
   //stage-nvthuan
-  taskGroups = {};
+  user: any;
+  userId: string;
+  taskGroup = {};
+  taskGroupList = [];
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
   popupAddStage: DialogRef;
@@ -116,6 +122,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   userGroupJob = [];
   nameStage = '';
   isAddStage = true;
+  processNo: any;
   dataStage = [
     {
       id: 1,
@@ -198,7 +205,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       processID: '41ebc7b7-8ed2-4f76-9eac-e336695cf652',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
-      stepField: [
+      fields: [
         {
           fieldName: 'File Name1',
           note: 'File nay de cho có',
@@ -242,7 +249,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       processID: '51ebc7b7-8ed2-4f76-9eac-e336695cf673',
       stepName: 'Quy trinh test',
       showColumnControl: 1,
-      stepField: [
+      fields: [
         {
           fieldName: 'File Name1',
           note: 'File nay de cho có',
@@ -284,7 +291,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ];
   fieldNew: DP_Steps_Fields;
   crrDataStep: any;
-  dataStepCrr = this.arrSteps[0];
+  dataStepCrr :DP_Steps = new DP_Steps();
   isHover = '';
   vllType ='DP022'
   dataChild = [];
@@ -305,36 +312,19 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     private notiService: NotificationsService,
     private cache: CacheService,
     private dpService: CodxDpService,
+    private authStore: AuthStore,
     @Optional() dialog: DialogRef,
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
+    this.initForm();
+
     this.funcID = this.dialog.formModel.funcID;
     this.process = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
-
     this.action = dt.data.action;
-    if(this.action != 'edit'){
-      this.dpService
-      .genAutoNumber(
-        this.dialog.formModel.formName,
-        this.funcID,
-        this.dialog.formModel.entityName,
-        'processNo'
-      )
-      .subscribe((res) => {
-        if (res) {
-          this.showID = true;
-          this.process.processNo = res;
-        }else{
-          this.showID = false;
-        }
-      });
-    }
     if (this.action != 'add') {
       this.getAvatar(this.process);
-      if (this.process.permissions.length > 0) {
-        this.permissions = this.process.permissions;
-      }
+
     }
 
     this.cache
@@ -347,6 +337,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+    this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
     this.getGrvStep();
   }
 
@@ -437,26 +428,50 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ngAfterViewInit(): void {
   }
 
+  //genAutoNumber
+  genAutoNumber() {
+    this.dpService
+      .genAutoNumber(
+        'DPProcesses',
+        this.funcID,
+        'grvDPProcesses',
+        'processNo'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.showID = true;
+          this.process.processNo = res;
+        } else {
+          this.showID = false;
+        }
+      });
+  }
+
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
     this.getTitleStepViewSetup();
-    this.initForm();
     // this.isTurnOnYesFailure = true;
     console.log(this.isTurnOnYesFailure);
   }
 
   //#region setup formModels and formGroup
-  initForm(){
+  async initForm(){
     this.formModel = new FormModel();
     this.formModel.entityName = this.dialog.formModel.entityName;
     this.formModel.formName = this.dialog.formModel.formName;
     this.formModel.gridViewName = this.dialog.formModel.gridViewName;
     this.dpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
-      .then((fg) => {
-        console.log(fg);
-        if (fg) {
-          this.formGroup = fg;
+      .then(async (fg) => {
+        if(this.process.processNo == undefined){
+          this.dpService.getAutonumber(this.funcID, this.dialog.formModel.entityName, 'processNo').subscribe((key)=>{
+            if(key && this.action == 'add'){
+              this.process.processNo = key;
+              this.isShow = true;
+            }else{
+              this.isShow = false;
+            }
+          })
         }
       });
   }
@@ -758,8 +773,53 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       this.dialog
     );
   }
-
   //end
+
+  //Popup setiing autoNumber
+   openAutoNumPopup() {
+    if (this.process.instanceNoSetting != this.process.processNo) {
+      //save new autoNumber
+      let popupAutoNum = this.callfc.openForm(
+        PopupAddAutoNumberComponent,
+        '',
+        550,
+        (screen.width * 40) / 100,
+        '',
+        {
+          formModel: this.dialog.formModel,
+          autoNoCode: this.process.instanceNoSetting,
+          description: this.formModel?.entityName,
+          newAutoNoCode: this.process.processNo,
+          isSaveNew: '1',
+        }
+      );
+      popupAutoNum.closed.subscribe((res) => {
+        if (res?.event) {
+
+        }
+      });
+    } else {
+      //cap
+      let popupAutoNum = this.callfc.openForm(
+        PopupAddAutoNumberComponent,
+        '',
+        550,
+        (screen.width * 40) / 100,
+        '',
+        {
+          formModel: this.dialog.formModel,
+          autoNoCode: this.process.processNo,
+
+          description: this.formModel?.entityName,
+        }
+      );
+      popupAutoNum.closed.subscribe((res) => {
+        if (res?.event) {
+          this.process.instanceNoSetting = this.process.processNo;
+        }
+      });
+    }
+  }
   //#endregion THÔNG TIN QUY TRÌNH - PHÚC LÀM ------------------------------------------------------------------ >>>>>>>>>>
 
   //#region Trường tùy chỉnh
@@ -811,10 +871,10 @@ export class PopupAddDynamicProcessComponent implements OnInit {
               //xu ly data đổ về
               this.fieldNew = e.event ;
               if(this.dataStepCrr.recID ==  this.fieldNew.stepID){
-                this.dataStepCrr.stepField.push(this.fieldNew)
+                this.dataStepCrr.fields.push(this.fieldNew)
               }
               this.arrSteps.forEach(x=>{
-                if(x.recID == this.fieldNew.stepID) x.stepField.push(this.fieldNew)
+                if(x.recID == this.fieldNew.stepID) x.fields.push(this.fieldNew)
               })
               this.changeDetectorRef.detectChanges();
             }
@@ -839,7 +899,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     if (event.previousIndex == event.currentIndex) return;
     let crrIndex = this.arrSteps.findIndex((x) => x.recID == recID);
     if (crrIndex == -1) return;
-    this.dataChild = this.arrSteps[crrIndex].stepField;
+    this.dataChild = this.arrSteps[crrIndex].fields;
     moveItemInArray(this.dataChild, event.previousIndex, event.currentIndex);
     this.changeDetectorRef.detectChanges();
   }
@@ -899,16 +959,26 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     option.zIndex = 1001;
     let dialog = this.callfc.openSide(
       PopupJobComponent,
-      ['add', this.jobType],
+      ['add', this.jobType, this.taskGroupList],
       option
     );
     dialog.closed.subscribe((e) => {
-      this.jobType = null;
+      if (e?.event) {
+        let taskData = e?.event;
+        let index = this.taskGroupList.findIndex(
+          (task) => task.recID == taskData.taskGroupID
+        );
+        this.taskGroupList[index]['task'].push(taskData);
+      }
     });
   }
   //# group job
   openGroupJob() {
-    this.taskGroups['recID'] = Util.uid();
+    this.taskGroup = new DP_Steps_TaskGroups();
+    this.taskGroup['recID'] = Util.uid();
+    this.taskGroup['createdOn'] = Date.now();
+    this.taskGroup['createdBy'] = this.userId;
+    this.taskGroup['task'] = [];
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
       '',
@@ -916,8 +986,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       500
     );
   }
+  savePopupGroupJob() {
+    this.popupGroupJob.close();
+    this.taskGroupList.push(this.taskGroup);
+  }
   changeValueInput(event) {
-    this.taskGroups[event?.field] = event?.data;
+    this.taskGroup[event?.field] = event?.data;
   }
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
@@ -938,10 +1012,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         });
       }
     });
-    this.taskGroups[status] = JSON.parse(JSON.stringify(datas));
-  }
-  savePopupGroupJob() {
-    console.log(this.taskGroups);
+    this.taskGroup[status] = JSON.parse(JSON.stringify(datas));
   }
   //#End stage -- nvthuan
 
