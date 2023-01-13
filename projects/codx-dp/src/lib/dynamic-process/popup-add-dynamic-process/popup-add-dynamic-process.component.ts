@@ -58,7 +58,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Processes();
   permissions = [];
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -984,6 +984,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
+    // this.titleViewStepCrr = this.stepList[0].name;
 
     // test nha
     // for(let i=0; i<10; i++){
