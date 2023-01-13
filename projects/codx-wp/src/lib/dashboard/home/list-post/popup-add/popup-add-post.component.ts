@@ -101,12 +101,10 @@ export class PopupAddPostComponent implements OnInit {
         }
         else
         {
-
           // bài viết
           this.data.category = "1";
           this.data.refType ="WP_Comments";
         }
-        
       }
     }
     // get grv set up
@@ -228,9 +226,6 @@ export class PopupAddPostComponent implements OnInit {
       this.codxFile.addFiles(event.data);
     }
   }
-
-  
-
   // click tag 
   clickTagsUser(){
     this.showCBB = !this.showCBB;
@@ -271,7 +266,7 @@ export class PopupAddPostComponent implements OnInit {
       return;
     }
     this.data.category = "1" // post;
-    this.data.approveControl = "0"; // tạm thời chưa bật xét duyệt
+    this.data.approveControl = "0";
     this.data.createdBy = this.user.userID;
     this.data.createdName = this.user.userName;
     this.data.createdOn = new Date();
@@ -281,52 +276,27 @@ export class PopupAddPostComponent implements OnInit {
       "CommentsBusiness",
       "PublishPostAsync",
       [this.data])
-      .subscribe(async (res1: any) => {
-        if (res1) {
-          if (this.fileUpload.length > 0) {
-            this.codxATM.objectId = res1.recID;
-            this.codxATM.fileUploadList = this.fileUpload;
-            (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
-              if (res2) 
-              {
-                let files:any[] = [];
-                if(Array.isArray(res2)){
-                  res2.forEach(element => {
-                    files.push(element.data)
-                  });;
-                }
-                else
-                {
-                  files.push(res2.data);
-                }
-                res1.files = JSON.parse(JSON.stringify(files));
-                this.dialogRef.close(res1);
-              }
-              else 
-              {
-                this.notifySvr.notifyCode('WP013');
-              }
-            });
-          }
-          else 
-          {
-            this.dialogRef.close(res1);
-          }
+      .subscribe((res1: any) => {
+        if (res1)
+        {
+          this.codxViewFiles.objectID = res1.recID;
+          this.codxViewFiles.save().subscribe((res2)=>{
+            this.notifySvr.notifyCode('WP024');
+            this.dialogRef.close(res1);  
+          });
         }
         else
         {
+          this.dialogRef.close(null);  
           this.notifySvr.notifyCode('WP013');
         }
       });
   }
   // edit post
   editPost(){
-    if (!this.data.content && this.data.category != "4") 
+    if (!this.data.content && this.codxViewFiles.files.length == 0 && this.data.category != "4") 
     {
-      if(this.grvSetup["Comments"]["headerText"]){
-        this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
-      }
-      return;
+      return this.notifySvr.notifyCode("SYS009",0,this.grvSetup["Comments"]["headerText"]);
     }
     this.api.execSv<any>(
       'WP',
@@ -337,14 +307,10 @@ export class PopupAddPostComponent implements OnInit {
       .subscribe(async (res: any) => {
         if (res) 
         {
-          if(this.fileUpload.length > 0) {
-            this.codxATM.objectId = this.data.recID;
-            this.codxATM.fileUploadList = this.fileUpload;
-            (await this.codxATM.saveFilesObservable()).subscribe();
-          }
-          this.data = res;
-          this.data.files = this.codxFile.files;
-          this.dialogRef.close(this.data);
+          this.codxViewFiles.save().subscribe((res2)=>{
+            this.notifySvr.notifyCode('WP021');
+            this.dialogRef.close(this.data);
+          });
         }
         else
         {
@@ -366,37 +332,14 @@ export class PopupAddPostComponent implements OnInit {
       "CommentsBusiness",
       "PublishPostAsync",
       [this.data])
-      .subscribe(async (res1: any) => {
-        if (res1) {
-          if (this.fileUpload.length > 0) {
-            this.codxATM.objectId = res1.recID;
-            this.codxATM.fileUploadList = this.fileUpload;
-            (await this.codxATM.saveFilesObservable()).subscribe((res2: any) => {
-              if (res2) 
-              {
-                let files:any[] = [];
-                if(Array.isArray(res2)){
-                  res2.forEach(element => {
-                    files.push(element.data)
-                  });;
-                }
-                else
-                {
-                  files.push(res2.data);
-                }
-                res1.files = JSON.parse(JSON.stringify(files));
-                this.dialogRef.close(res1);
-              }
-              else 
-              {
-                this.notifySvr.notifyCode('WP013');
-              }
-            });
-          }
-          else 
-          {
-            this.dialogRef.close(res1);
-          }
+      .subscribe((res1: any) =>{
+        if (res1) 
+        {
+          this.codxViewFiles.objectID = res1.recID;
+          this.codxViewFiles.save().subscribe((res2)=>{
+            this.notifySvr.notifyCode('WP020');
+            this.dialogRef.close(res1);  
+          });
         }
         else
         {

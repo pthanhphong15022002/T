@@ -12,10 +12,12 @@
                             <source [src]="fileSelected.source" type="video/mp4">
                         </video>
                     </ng-container>
-                    <div class="next-previrous">
-                        <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
-                        <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
-                    </div>
+                    <ng-container *ngIf="files.length > 1">
+                        <div class="next-previrous">
+                            <span class="icon-arrow_back_ios next-previrous-btn" (click)="previousFile()"></span>
+                            <span class="icon-arrow_forward_ios next-previrous-btn" (click)="nextFile()"></span>
+                        </div>
+                    </ng-container>
                 </div>
             </ng-container>
             

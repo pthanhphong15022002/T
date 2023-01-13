@@ -51,7 +51,8 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   dtStatus: any;
   dataOKR:any;
   listAlign=[];
-  openAccordion = [];
+  openAccordionAlign = [];
+  openAccordionAssign = [];
   dataKR: any;
   progressHistory = [];
   krCheckIn = [];
@@ -123,6 +124,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   obRecID: any;
   okrChild= [];
   title='';
+  listAssign: any;
   load(args: ILoadedEventArgs): void {
     // custom code start
     let selectedTheme: string = location.hash.split('/')[1];
@@ -172,6 +174,7 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   onInit(): void {
     this.getObjectData();    
     this.getListAlign();
+    this.getListAssign();
     //this.getChartData();
     
   }
@@ -187,12 +190,15 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   //-----------------------End-------------------------------//
 
   //-----------------------Get Data Func---------------------//
-  getItemOKR(i: any, recID: any) {
-    this.openAccordion[i] = !this.openAccordion[i];
+  getItemOKRAlign(i: any, recID: any) {
+    this.openAccordionAlign[i] = !this.openAccordionAlign[i];
     // if(this.dataOKR[i].child && this.dataOKR[i].child.length<=0)
     //   this.okrService.getKRByOKR(recID).subscribe((item:any)=>{
     //     if(item) this.dataOKR[i].child = item
     //   });
+  }
+  getItemOKRAssign(i: any, recID: any) {
+    this.openAccordionAssign[i] = !this.openAccordionAssign[i];
   }
   getObjectData(){
     this.codxOmService
@@ -207,10 +213,19 @@ export class PopupShowOBComponent extends UIComponent implements AfterViewInit {
   }
   getListAlign(){
     this.codxOmService
-        .getListAlign(this.obRecID)
+        .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Align)
         .subscribe((res: any) => {
           if (res) {
             this.listAlign = res;           
+          }
+        });
+  }
+  getListAssign(){
+    this.codxOmService
+        .getListAlignAssign(this.obRecID, OMCONST.VLL.RefType_Link.Assign)
+        .subscribe((res: any) => {
+          if (res) {
+            this.listAssign = res;           
           }
         });
   }

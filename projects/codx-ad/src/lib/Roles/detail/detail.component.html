@@ -94,7 +94,7 @@
                             </th>
                             <th scope="col" class="w-170px">
                               <codx-label
-                                name="lblRecordLevelControl"
+                                name="lblpermissionControl"
                                 formName="Roles"
                                 default="
                               Quyền dữ liệu"
@@ -164,12 +164,12 @@
                                   "
                                   ngDefaultControl
                                   refValue="SYS029"
-                                  field="recordLevelControl"
+                                  field="permissionControl"
                                   [crrValue]="
                                     dataRole[item.functionID]?.DataPer
-                                      ?.recordLevelControl
+                                      ?.permissionControl
                                       ? dataRole[item.functionID]?.DataPer
-                                          ?.recordLevelControl
+                                          ?.permissionControl
                                       : 0
                                   "
                                   (valueChange)="

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { DialogData, DialogRef } from 'codx-core';
-import { Currency } from '../models/Currency.model';
+import { Currency } from '../../models/Currency.model';
 import { PopAddCurrencyComponent } from '../pop-add-currency/pop-add-currency.component';
 
 @Component({

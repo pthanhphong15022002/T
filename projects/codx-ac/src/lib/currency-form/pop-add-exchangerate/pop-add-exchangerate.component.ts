@@ -2,8 +2,8 @@ import { formatDate } from '@angular/common';
 import { ChangeDetectorRef, Component, Injector, Input, OnInit, Optional, ViewChild } from '@angular/core';
 import { DateTime } from '@syncfusion/ej2-angular-charts';
 import { CodxFormComponent, DialogData, DialogRef, NotificationsService, UIComponent } from 'codx-core';
-import { Currency } from '../models/Currency.model';
-import { ExchangeRates } from '../models/ExchangeRates.model';
+import { Currency } from '../../models/Currency.model';
+import { ExchangeRates } from '../../models/ExchangeRates.model';
 
 @Component({
   selector: 'lib-pop-add-exchangerate',
