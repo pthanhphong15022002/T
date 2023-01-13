@@ -106,6 +106,7 @@ export class PopupEbenefitComponent extends UIComponent implements OnInit {
     //   return;
     // }
 
+    this.benefitObj.benefitID = '1'; // test combobox chua co
     if(this.benefitObj.expiredDate < this.benefitObj.effectedDate){
       this.notify.notifyCode('HR002')
       return

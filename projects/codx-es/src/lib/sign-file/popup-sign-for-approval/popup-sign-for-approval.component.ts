@@ -56,6 +56,8 @@ export class PopupSignForApprovalComponent extends UIComponent {
   subTitle: string;
   lstMF: any;
 
+  disabled: boolean = false;
+
   constructor(
     private inject: Injector,
     private esService: CodxEsService,
@@ -88,6 +90,14 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
     this.sfRecID = this.data.sfRecID;
     this.transRecID = this.data.transRecID;
+    this.esService.getSFByID(this.data?.oTrans?.transID).subscribe((res) => {
+      if (res) {
+        let sf = res?.signFile;
+        if (sf && sf.files) {
+          this.disabled = sf.files[0]?.isEdited;
+        }
+      }
+    });
     this.cache.functionList(this.funcID).subscribe((res) => {
       this.formModel = res;
       this.esService
@@ -96,7 +106,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
           this.formModel.formName,
           this.formModel.gridViewName
         )
-        .subscribe((res) => { });
+        .subscribe((res) => {});
 
       this.esService
         .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
@@ -154,7 +164,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
 
   imgAreaConfig = ['S1', 'S2', 'S3'];
   clickOpenPopupADR(mf) {
-    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206
+    //Duyệt SYS201 , Ký SYS202 , Đồng thuận SYS203 , Hoàn tất SYS204 , Từ chối SYS205 , Làm lại SYS206, Chỉnh sửa SYS208
     let morefuncID = mf.functionID;
     this.title = mf.text ?? '';
 
@@ -184,6 +194,27 @@ export class PopupSignForApprovalComponent extends UIComponent {
       case 'SYS206': //lam lai
         this.mode = 2;
         break;
+      case 'SYS208': {
+        //chỉnh sửa pdf
+        let hasCA = this.pdfView.lstCA
+          ? this.pdfView.lstCA.length != 0
+            ? true
+            : false
+          : false;
+        if (hasCA) {
+          this.notify.alertCode('ES029').subscribe((x) => {
+            if (x.event.status == 'Y') {
+              this.disabled = !this.disabled;
+              this.pdfView && this.pdfView.changeEditMode();
+            }
+            return;
+          });
+        } else {
+          this.disabled = !this.disabled;
+          this.pdfView && this.pdfView.changeEditMode();
+        }
+        return;
+      }
       default: {
         if (
           morefuncID == 'SYS201' ||
@@ -340,7 +371,7 @@ export class PopupSignForApprovalComponent extends UIComponent {
               if (updateTransStatus) {
                 let result = {
                   result: true,
-                  mode: mode.toString() == '5' ? 9: mode, //dang ky
+                  mode: mode.toString() == '5' ? 9 : mode, //dang ky
                 };
                 this.pdfView
                   .signPDF(mode, this.dialogSignFile.value.comment)

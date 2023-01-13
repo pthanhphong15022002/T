@@ -59,11 +59,13 @@ export class ActiviesSliderComponent implements OnInit {
       'GetApprovalAsync',
       [this.model])
       .subscribe((res:any[]) => {
-      if(res){
+      if(res)
+      {
         this.lstApproval = res[0];
         let totalRecord = res[1];
         this.totalPage = totalRecord / this.model.pageSize;
         this.isScroll = false;
+        this.loaded = false;
         this.dt.detectChanges();
       }
       else
