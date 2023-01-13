@@ -1,0 +1,309 @@
+<codx-layout-add #form [title]="headerText" [tabInfo]="tabInfo" [footer]="footer" [formModel]="dialog.formModel"
+    [dialog]="dialog" [openMore]="true" [tabContent]="[tabDescription, tabestablish]" [data]="chartOfAccounts">
+</codx-layout-add>
+<ng-template #tabDescription>
+    <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="AccountID"
+            default="Tài khoản"
+          ></codx-label>
+            <codx-input
+                    [formModel]="form.formModel"
+                    field="accountID"
+                    (valueChange)="valueChange($event)"
+                  >
+            </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="parentID"
+            default="Tài khoản cha"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="parentID"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="accountName"
+            default="Tên tài khoản"      
+          ></codx-label>
+          <codx-input
+          field="accountName"
+          [formModel]="form.formModel"
+          (valueChange)="valueChange($event)"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="accountType"
+            default="Loại tài khoản"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="accountType"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+      <codx-input
+        type="switch"
+        field="detail"
+        (valueChange)="valueChange($event)"
+        [checked]="true"
+      >
+      </codx-input>
+        <div>
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="detail"
+            default="Là tài khoản chi tiết"
+          ></codx-label> 
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+      <codx-input
+        type="switch"
+        field="multiCurrency"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+        <div>
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="multiCurrency"
+            default="Theo dõi ngoại tệ"
+          ></codx-label> 
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+      <codx-input
+        type="switch"
+        field="subLGControl"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+        <div>
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="subLGControl"
+            default="Tài khoản có theo dõi đối tượng công nợ?"
+          ></codx-label> 
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="subLGType"
+            default="Loại công nợ"
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="subLGType"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+          </div>   
+        </div>
+        <div class="col-6 pe-0">
+          <div class="form-group">
+            <codx-label
+            [formModel]="form.formModel"
+            fiedName="objectID"
+            default="Đối tượng mặc định"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="objectID"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+      <codx-input
+        type="switch"
+        field="invoiceDetail"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+        <div>
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="invoiceDetail"
+            default="Theo dõi công nợ chi tiết đến hóa đơn/chứng từ"
+          ></codx-label> 
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mx-0 mt-3">
+        <div class="col-6 ps-0">
+          <div class="form-group">
+        <div>
+          <codx-label
+            [formModel]="form.formModel"
+            fiedName="note"
+            default="Diễn giải"
+          ></codx-label> 
+        </div>
+      <codx-input
+        [formModel]="form.formModel"
+        field="note"
+        (valueChange)="valueChange($event)"
+      >
+      </codx-input>
+        
+          </div>
+        </div>
+      </div>
+</ng-template>
+<ng-template #tabestablish>
+    <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            default="Ràng buộc nhập liệu"      
+          ></codx-label>
+      </div>
+    <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="diM1Control"
+            default="Phòng ban"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="diM1Control"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="projectControl"
+            default="Dự án"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="projectControl"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="diM2Control"
+            default="Trung tâm chi phí"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="diM2Control"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="diM3Control"
+            default="Mục phí"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="diM3Control"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="loanControl"
+            default="Khế ước vay"      
+          ></codx-label>
+          <codx-input type="combobox" field="recID"  refValue="UserRoles"
+          field="loanControl"
+          (valueChange)="valueChange($event)" [dataSelected]="false" [multiple]="false"
+          [disabled]="false" loadFull="true">
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="assetControl"
+            default="Kiểm soát tài sản/CCDC/CPTT"      
+          ></codx-label>
+          <codx-input
+          (valueChange)="valueChange($event)"
+          field="assetControl"
+          [formModel]="form.formModel"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            default="Kiểm soát ghi số"      
+          ></codx-label>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="BudgetControl"
+            default="Kiểm soát ngân sách"      
+          ></codx-label>
+          <codx-input
+          (valueChange)="valueChange($event)"  
+          field="BudgetControl"
+          [formModel]="form.formModel"
+        >
+        </codx-input>
+      </div>
+      <div class="form-group">
+        <codx-label
+            [formModel]="form.formModel"
+            fiedName="BalControl"
+            default="Kiểm soát số dư"      
+          ></codx-label>
+          <codx-input
+          [Group]="form.formGroup"    
+          field="BalControl"
+          [formModel]="form.formModel"
+        >
+        </codx-input>
+      </div>
+</ng-template>
+<ng-template #footer>
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" (click)="onSave()">
+            <codx-label fiedName="lblSave" [formName]="formModel?.formName" [gridViewName]="formModel?.gridViewName"
+                default="Lưu"></codx-label>
+        </button>
+    </div>
+</ng-template>

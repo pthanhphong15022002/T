@@ -46,7 +46,6 @@ export class CurrencyFormComponent extends UIComponent {
     },
   ];
   onInit(): void {
-    var cur = this.gridViewSetup['CurrencyName'].headerText;
     this.button = {
       id: 'btnAdd',
     };
@@ -58,8 +57,6 @@ export class CurrencyFormComponent extends UIComponent {
       sameData: true,
       active: true,
       model : {
-        // template2:this.morefunc,
-        // frozenColumns:1
         resources: this.columnsGrid,
         template2: this.itemTemplate,  
         frozenColumns:1
