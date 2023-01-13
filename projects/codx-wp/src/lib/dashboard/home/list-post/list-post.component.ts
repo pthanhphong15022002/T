@@ -267,7 +267,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
     popup.closed.subscribe((res: any) => {
       if (res?.event?.recID) {
         (this.listview.dataService as CRUDService).add(res.event).subscribe();
-        this.notifySvr.notifyCode('WP024');
       }
     });
   }
@@ -297,7 +296,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       if (res?.event?.recID) {
         (this.listview.dataService as CRUDService)
         .update(res.event).subscribe();
-        this.notifySvr.notifyCode('WP021');
       }
     });
   }
@@ -331,7 +329,6 @@ export class ListPostComponent implements OnInit, AfterViewInit {
       popup.closed.subscribe((res: any) => {
         if (res?.event?.recID) {
           (this.listview.dataService as CRUDService).add(res.event).subscribe();
-          this.notifySvr.notifyCode('WP020');
         }
       });
     }

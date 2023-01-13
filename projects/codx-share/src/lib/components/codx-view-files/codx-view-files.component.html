@@ -173,13 +173,9 @@
 <!-- template view image -->
 <ng-template #image let-file>
     <div class="position-relative w-100 h-100 p-0">
-        <ng-container *ngIf="file.recID;else imageNoSource">
+        <ng-container>
             <img (click)="clickViewDetail(file)" [src]="file.source" class="codx-view-file_image"/>
         </ng-container>
-        <ng-template #imageNoSource>
-            <!-- hình chưa lưu -->
-            <img (click)="clickViewDetail(file)" [src]="file.avatar" class="codx-view-file_image"/>
-        </ng-template>
         <ng-container *ngIf="allowEdit">
             <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
         </ng-container>
@@ -189,16 +185,12 @@
 <!-- template video -->
 <ng-template #video let-file>
     <div class="position-relative w-100 h-100 p-0">
-        <ng-container *ngIf="file.source;else videoNoSource">
-            <video (click)="clickViewDetail(file)" [autoplay]="false" controls class="codx-view-file_video">
-                <source [src]="file.source" type="video/mp4" />
-            </video>
+        <video (click)="clickViewDetail(file)" [autoplay]="false" controls class="codx-view-file_video">
+            <source [src]="file.source | safe:'url'" />
+        </video>
+        <ng-container *ngIf="allowEdit">
+            <ng-container *ngTemplateOutlet="removeFile;context: { $implicit: file}"></ng-container>
         </ng-container>
-        <ng-template #videoNoSource>
-            <video (click)="clickViewDetail(file)" [autoplay]="false" controls class="codx-view-file_video">
-                <source [src]="file.data" type="video/mp4" />
-            </video>
-        </ng-template>
     </div>
 </ng-template>
 
