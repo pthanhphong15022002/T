@@ -1331,8 +1331,12 @@
                 <div class="flex-row">
                   <div>
                     <strong>
-                      <codx-label class="text-muted text-opacity-25" fiedName=""
-                        default="Phân bố người phụ trách cho nhiệm vụ">
+                      <codx-label
+                        class="text-muted text-opacity-25"
+                        fiedName="AssignControl"
+                        default="Phân bố người phụ trách cho nhiệm vụ"
+                        [formModel]="formModel"
+                      >
                       </codx-label>
                     </strong>
                   </div>
@@ -1347,7 +1351,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <codx-input field="" type="valuelist" field="AssignControl" refValue="DP019"> </codx-input>
           </div>
         </div>
         <div class="row pb-5">
@@ -1355,8 +1359,13 @@
             <div class="d-flex align-items-start">
               <div>
                 <strong>
-                  <codx-label class="text-muted text-opacity-25" fiedName=""
-                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi">
+                  <codx-label
+                    class="text-muted text-opacity-25"
+                    fiedName=""
+                    default="Tự động chuyển nhiệm vụ qua giai đoạn tiếp theo khi"
+                    [formModel]="formModel"
+
+                  >
                   </codx-label>
                 </strong>
               </div>
@@ -1364,7 +1373,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <codx-input  crrValue="1" type="valuelist" refValue="DP020"> </codx-input>
           </div>
         </div>
       </div>
@@ -1377,10 +1386,16 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label class="title" name="" default="Thời hạn"></codx-label>
+          <!-- chưa có -->
+          <codx-label class="title" fiedName="" default="Thời hạn"></codx-label>
         </div>
         <div>
-          <codx-label class="text-muted" name="" default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn">
+           <!-- chưa có -->
+          <codx-label
+            class="text-muted"
+            fiedName=""
+            default="Lên kế hoạch cho các nhiệm vụ trong giai đoạn"
+          >
           </codx-label>
         </div>
       </div>
@@ -1415,8 +1430,59 @@
             </div>
           </div>
           <div class="col-6">
-            <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <div class="row">
+              <div class="col-6">
+                <div class="position-relative">
+                  <codx-input
+                    field="DurationDay"
+                    [formModel]=""
+                    [Group]=""
+                    type="text"
+                    [height]="'100'"
+                    [min]="0"
+                    [placeholder]="0"
+                    (valueChange)="changeValueInput($event)"
+                  ></codx-input>
+                  <div
+                    class="position-absolute text-muted"
+                    style="top: 7px; right: 7px"
+                  >
+                    <codx-label
+                      fiedName="StepName"
+                      [formModel]=""
+                      default="Ngày"
+                    ></codx-label>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="position-relative">
+                  <codx-input
+                    field="durationHour"
+                    [formModel]=""
+                    [Group]=""
+                    type="text"
+                    [height]="'100'"
+                    [min]="0"
+                    [placeholder]="'00.00'"
+                    (valueChange)="changeValueInput($event)"
+                  ></codx-input>
+                  <div
+                    class="position-absolute text-gray-400"
+                    style="top: 7px; right: 7px"
+                  >
+                    <codx-label
+                      fiedName="StepName"
+                      [formModel]=""
+                      default="Giờ"
+                    ></codx-label>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
           </div>
         </div>
 
@@ -1448,8 +1514,11 @@
             <div class="d-flex align-items-start">
               <div>
                 <strong>
-                  <codx-label class="text-muted text-opacity-25" fiedName=""
-                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong giai đoạn lúc">
+                  <codx-label
+                    class="text-muted text-opacity-25"
+                    fiedName="StartControl"
+                    default="Bắt đầu tính thời gian thực tế cho nhiệm vụ trong giai đoạn lúc"
+                  >
                   </codx-label>
                 </strong>
               </div>
@@ -1457,7 +1526,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" refValue=""> </codx-input>
+            <codx-input field="startControl" [formModel]="dialog.formModel" type="valuelist" refValue="DP019"> </codx-input>
           </div>
         </div>
 
@@ -1495,13 +1564,28 @@
           <div class="col-6">
             <div class="row">
               <div class="col-6">
-                <codx-input name="fail-radio" type="radio" style="width: 100%" field="yes" [label]="" [checked]=""
-                  [crrValue]="" (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
+                <codx-input
+                  name="fail-radio"
+                  type="radio"
+                  style="width: 100%"
+                  field="yes"
+                  [label]="titleRadioYes"
+                  [checked]=""
+                  [crrValue]=""
+                  (valueChange)="valueChangeRadio($event, '')"
+                >
                 </codx-input>
               </div>
               <div class="col-6">
-                <codx-input type="radio" name="fail-radio" field="no" [checked]="" [crrValue]="" [label]="titleRadioNo"
-                  (valueChange)="valueChangeRadio($event, viewStepReasonFail)">
+                <codx-input
+                  type="radio"
+                  name="fail-radio"
+                  field="no"
+                  [checked]=""
+                  [crrValue]=""
+                  [label]="titleRadioNo"
+                  (valueChange)="valueChangeRadio($event, '')"
+                >
                 </codx-input>
               </div>
             </div>
@@ -1517,7 +1601,12 @@
     <div class="header-job p-3">
       <div class="left">
         <div>
-          <codx-label class="title" name="" default="Hướng dẫn hoàn thành giai đoạn"></codx-label>
+          <codx-label
+            class="title"
+            fiedName="Memo"
+            [formModel]="dialog.formModel"
+            default="Hướng dẫn hoàn thành giai đoạn"
+          ></codx-label>
         </div>
         <div>
           <codx-label class="text-muted" name="" default="Mô tả chi tiết cách hoàn thành giai đoạn cho người phụ trách">
@@ -1535,8 +1624,14 @@
     <div id="memo-setup-step" class="main-job" [ngClass]="isShowstage ? 'show-main' : 'hidden-main'">
       <div class="main-body p-3" *ngIf="data.length > 0">
         <div class="row pt-3 pb-5">
-          <codx-input field="comment" type="textarea" [placeholder]="" [crrValue]="''"
-            (valueChange)="valueMemoSetup($event)">
+          <codx-input
+            field="memo"
+            [formModel]="dialog.formModel"
+            type="textarea"
+            [placeholder]=""
+            [crrValue]="''"
+            (valueChange)="valueMemoSetup($event)"
+          >
           </codx-input>
         </div>
       </div>
