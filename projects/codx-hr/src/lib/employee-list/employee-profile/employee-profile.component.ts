@@ -1621,16 +1621,16 @@ export class EmployeeProfileComponent extends UIComponent {
     let option = new SidebarModel();
     // option.DataService = this.view.dataService;
     option.FormModel = this.view.formModel;
-    option.Width = '850px';
+    option.Width = '550px';
     let dialogAdd = this.callfunc.openSide(
       PopupEbenefitComponent,
       {
         employeeId: this.data.employeeID,
         actionType: actionType,
         headerText: 'Phụ cấp',
-        funcID: 'HRT030203',
+        funcID: 'HRT03020303',
         listBenefits: this.listCrrBenefit,
-        indexSelected: this.listCrrBenefit.indexOf(data),
+        indexSelected: this.listCrrBenefit?.indexOf(data) ?? 0
       },
       option
     );
@@ -1643,6 +1643,7 @@ export class EmployeeProfileComponent extends UIComponent {
       if (!res?.event) this.view.dataService.clear();
     });
   }
+
 
   handlEmployeeExperiences(actionType: string, data: any) {
     this.view.dataService.dataSelected = this.data;
