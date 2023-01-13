@@ -12,6 +12,7 @@ import {
   Input,
   OnInit,
   Optional,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -314,14 +315,15 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     @Optional() dt: DialogData
   ) {
     this.dialog = dialog;
-    this.initForm();
-
     this.funcID = this.dialog.formModel.funcID;
+
     this.process = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+
     this.action = dt.data.action;
     if (this.action != 'add') {
       this.getAvatar(this.process);
-
+    }else{
+      this.process.instanceNoSetting = this.processNo;
     }
 
     this.cache
@@ -334,7 +336,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
-
       this.dataStepCrr = JSON.parse(JSON.stringify(this.arrSteps[0]))
   }
 
@@ -422,7 +423,34 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
   ];
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if(this.process.processNo == undefined){
+      this.dpService.getAutonumber(this.funcID, this.dialog.formModel.entityName, 'processNo').subscribe((key)=>{
+        if(key){
+          this.process.processNo = key;
+        }
+      })
+    }
+
+  }
+
   ngAfterViewInit(): void {
+    this.api
+      .execSv<any>(
+        'SYS',
+        'AD',
+        'AutoNumberDefaultsBusiness',
+        'GetFieldAutoNoAsync',
+        [this.funcID, this.dialog.formModel.entityName]
+      )
+      .subscribe((res) => {
+        if (res && !res.stop && res.autoAssignRule=='1') {
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
+
   }
 
   //genAutoNumber
@@ -447,6 +475,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
     this.getTitleStepViewSetup();
+    this.initForm();
     // this.isTurnOnYesFailure = true;
     console.log(this.isTurnOnYesFailure);
   }
@@ -460,16 +489,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dpService
       .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
       .then(async (fg) => {
-        if(this.process.processNo == undefined){
-          this.dpService.getAutonumber(this.funcID, this.dialog.formModel.entityName, 'processNo').subscribe((key)=>{
-            if(key && this.action == 'add'){
-              this.process.processNo = key;
-              this.isShow = true;
-            }else{
-              this.isShow = false;
-            }
-          })
-        }
+        this.formGroup = fg;
       });
   }
   //#endregion
@@ -865,7 +885,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           );
           dialogCustomField.closed.subscribe((e) => {
             if (e && e.event != null) {
-              //xu ly data đổ về 
+              //xu ly data đổ về
               this.fieldNew = e.event ;
               if(this.dataStepCrr.recID ==  this.fieldNew.stepID){
                 this.dataStepCrr.fields.push(this.fieldNew)
