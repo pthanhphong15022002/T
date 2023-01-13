@@ -325,18 +325,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   data = [
   ];
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if(this.process.processNo == undefined){
-      this.dpService.getAutonumber(this.funcID, this.dialog.formModel.entityName, 'processNo').subscribe((key)=>{
-        if(key){
-          this.process.processNo = key;
-        }
-      })
-    }
-
-  }
 
   ngAfterViewInit(): void {
+    this.genAutoNumber();
     this.api
       .execSv<any>(
         'SYS',
@@ -352,7 +343,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.showID = false;
         }
       });
-
   }
 
   //genAutoNumber
@@ -372,6 +362,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.showID = false;
         }
       });
+
   }
 
   ngOnInit(): void {
@@ -379,6 +370,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.getTitleStepViewSetup();
     this.initForm();
     // this.isTurnOnYesFailure = true;
+    this.process.instanceNoSetting = this.process.processNo;
     console.log(this.isTurnOnYesFailure);
   }
 
