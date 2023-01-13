@@ -165,12 +165,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
 
   getGridViewSetUp() {
     this.cache.functionList(this.functionID).subscribe((func) => {
-      console.log('functuonID: ', func);
       this.cache
         .gridViewSetup(func?.formName, func?.gridViewName)
         .subscribe((grd) => {
           this.gridViewSetUp = grd;
-          console.log('gridViewSetUp: ', this.gridViewSetUp);
         });
     });
   }
@@ -550,10 +548,10 @@ export class PopAddTaskgroupComponent implements OnInit, AfterViewInit {
     var data = [];
     if (this.action === 'add') {
       op.method = 'AddTaskGroupsAsync';
-      data = [this.taskGroups];
+      data = [this.taskGroups,this.functionID];
     } else if (this.action === 'edit') {
       op.method = 'UpdateTaskGroupsAsync';
-      data = [this.taskGroups];
+      data = [this.taskGroups,this.functionID];
     }
 
     op.data = data;

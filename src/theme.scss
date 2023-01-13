@@ -158,9 +158,14 @@
         --bg-color: #192440;
         --border-light: #dbc5f5;
         --bg-aside-dark: #1e033f;
+        --bg-body: #f1f1f1;
 
         codx-wrapper {
-            background-color: #f1f1f1;
+            background-color: var(--bg-body);
+        }
+
+        .aside.aside-transparent {
+            background-color: var(--bg-body);
         }
 
         .menu-state-title-primary .menu-item .menu-link.active .menu-title {

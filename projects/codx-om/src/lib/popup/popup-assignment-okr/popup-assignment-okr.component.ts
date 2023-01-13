@@ -46,7 +46,7 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   @ViewChild('body') body: TemplateRef<any>;
 
   dialogRef: DialogRef;
-  headerText='';
+  title='';
   okrName='';
   recID: any;
   curUser: any;
@@ -57,12 +57,15 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   funcID:'';
   radioKRCheck=true;
   radioOBCheck=false;
-  distributeType=OMCONST.VLL.OKRType.KResult;
   listDistribute=[];
 
+  typeKR= OMCONST.VLL.OKRType.KResult;
+  typeOB= OMCONST.VLL.OKRType.Obj;
   cbbOrg=[];  
   fields: Object = { text: 'orgUnitName', value: 'orgUnitID' };
   assignmentOKR:any;
+  distributeToType: string;
+  distributeType: any;
   constructor(
     private injector: Injector,
     private authService: AuthService,
@@ -79,9 +82,18 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
     this.recID=dialogData.data[1];
     this.distributeType=dialogData.data[2];
     this.funcID=dialogData.data[3];
-    this.headerText = dialogData?.data[4];
-    this.curUser= authStore.get();
-    
+    this.title = dialogData?.data[4];
+    this.curUser= authStore.get();    
+    this.assignmentOKR=new DistributeOKR(); 
+    this.distributeToType=this.distributeType;
+    if(this.distributeToType==this.typeKR){      
+      this.radioKRCheck=true;
+      this.radioOBCheck=false;
+    }
+    else{
+      this.radioKRCheck=false;
+      this.radioOBCheck=true;
+    }
   }
   //-----------------------Base Func-------------------------//
   ngAfterViewInit(): void {
@@ -101,47 +113,6 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
 
   onInit(): void {
     this.getOKRByID();
-    
-    this.cache.getCompany(this.curUser.userID).subscribe(item=>{
-      if(item) 
-      {
-        this.userInfo=item;   
-        let tempOrgID='';   
-        switch (this.funcID){
-          case OMCONST.FUNCID.COMP:
-            tempOrgID=this.userInfo.companyID;
-          break;
-          case OMCONST.FUNCID.DEPT:
-            tempOrgID=this.userInfo.departmentID;
-          break;
-          case OMCONST.FUNCID.ORG:
-            tempOrgID=this.userInfo.orgUnitID;
-          break;
-          case OMCONST.FUNCID.PERS:
-            tempOrgID=this.userInfo.employeeID;
-          break;
-        }
-        this.codxOmService.getlistOrgUnit(tempOrgID).subscribe((res:any)=>{
-          if(res){
-            this.orgUnitTree= res;           
-            Array.from(this.orgUnitTree.listChildrens).forEach((item:any)=>{
-              let temp = new DistributeOKR();
-              temp.orgUnitID= item.orgUnitID;
-              temp.orgUnitName= item.orgUnitName;
-              this.cbbOrg.push(temp)
-            });
-            this.assignmentOKR=new DistributeOKR();
-            this.assignmentOKR.okrName= this.dataOKR.okrName;
-            this.assignmentOKR.umid=this.dataOKR.umid;
-            this.assignmentOKR.isActive=false;
-            this.assignmentOKR.distributePct=100;
-            this.assignmentOKR.distributeValue=this.dataOKR.target;
-            this.detectorRef.detectChanges();
-            this.isAfterRender=true;
-          }
-        });
-      }
-    });
   }
 
   //-----------------------End-------------------------------//
@@ -153,13 +124,13 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   }
   valueTypeChange(event) {
     
-      if (event?.data) {
-        this.distributeType=OMCONST.VLL.OKRType.KResult;
-      } else {
-        this.distributeType=OMCONST.VLL.OKRType.Obj;
-      }
-    this.detectorRef.detectChanges();
-  }
+    if (event?.field==this.typeKR) {
+      this.distributeToType=OMCONST.VLL.OKRType.KResult;
+    } else if(event?.field==this.typeOB){
+      this.distributeToType=OMCONST.VLL.OKRType.Obj;
+    }
+  this.detectorRef.detectChanges();
+}
 
   //-----------------------End-------------------------------//
 
@@ -170,7 +141,14 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
     .getOKRByID(this.recID)
     .subscribe((res: any) => {
       if (res) {
-        this.dataOKR = res;
+        this.dataOKR = res;       
+        this.assignmentOKR.okrName= this.dataOKR.okrName;
+        this.assignmentOKR.umid=this.dataOKR.umid;
+        this.assignmentOKR.isActive=false;
+        this.assignmentOKR.distributePct=100;
+        this.assignmentOKR.distributeValue=this.dataOKR.target;
+        this.detectorRef.detectChanges();
+        this.isAfterRender=true;
       }
     });
   }
@@ -185,16 +163,11 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
   
   onSaveForm(){
     if(this.assignmentOKR.orgUnitID==null){
-      this.notificationsService.notify("Đối tượng phân công không được bỏ trống!",'2',null);
+      this.notificationsService.notify("OM",'2',null);
       return;
     }
-    this.api.execSv(
-      OMCONST.SERVICES,
-      OMCONST.ASSEMBLY,
-      OMCONST.BUSINESS.KR,
-      'DistributeKRAsync',
-      [this.dataOKR.recID,this.distributeType,[this.assignmentOKR]]
-    ).subscribe(res=>{
+    this.codxOmService.distributeOKR( this.dataOKR.recID,this.distributeToType,[this.assignmentOKR])
+    .subscribe(res=>{
       let x= res;
       this.dialogRef && this.dialogRef.close();
     })
@@ -207,15 +180,17 @@ export class PopupAssignmentOKRComponent extends UIComponent implements AfterVie
 
   //-----------------------Custom Func-----------------------//
   cbxOrgChange(evt:any){
-    if(evt){     
-      this.assignmentOKR.orgUnitID= evt;
+    if(evt?.data!=null){     
+      this.assignmentOKR.orgUnitID= evt.data;
       this.detectorRef.detectChanges();
     }
   }
   //-----------------------End-------------------------------//
 
   //-----------------------Custom Event-----------------------//
-  
+  cancel(){
+    this.dialogRef.close();
+  }
   nameChange(evt:any){
     if(evt && evt?.data){
       this.assignmentOKR.okrName= evt.data;
