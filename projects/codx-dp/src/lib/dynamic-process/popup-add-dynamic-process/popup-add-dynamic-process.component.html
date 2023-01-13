@@ -855,7 +855,8 @@
               <div class="text-gray-400">{{ item1.note }}</div>
               <div class="d-flex">
                 <div class="datatypes me-4">
-                  {{ item1.dataType }}
+                  <!-- {{ item1.dataType }} -->
+                  <codx-vll [name]="vllType" [value]="item1?.dataType" [showText]="true" [showBgColor]="true"></codx-vll>
                 </div>
                 <codx-label
                   class="text-danger"

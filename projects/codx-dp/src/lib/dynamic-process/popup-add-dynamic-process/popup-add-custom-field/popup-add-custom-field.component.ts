@@ -13,8 +13,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   dialog: DialogRef;
   field: DP_Steps_Fields;
   grvSetup: any;
-  action ='add' ;
-  titleAction ='Thêm' ;
+  action = 'add';
+  titleAction = 'Thêm';
   // value: number = 100;
   // options: Options = {
   //   floor: 0,
@@ -30,11 +30,10 @@ export class PopupAddCustomFieldComponent implements OnInit {
     @Optional() dialog?: DialogRef
   ) {
     this.dialog = dialog;
-    this.field = JSON.parse(JSON.stringify(dt?.data[0])) 
-    this.action= dt?.data[1]
-    this.titleAction= dt?.data[2]
-  
-    
+    this.field = JSON.parse(JSON.stringify(dt?.data[0]));
+    this.action = dt?.data[1];
+    this.titleAction = dt?.data[2];
+
     this.cache
       .gridViewSetup('DPStepsFields', 'grvDPStepsFields')
       .subscribe((res) => {
@@ -46,6 +45,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.field.recID) this.field.recID = Util.uid();
+   
   }
 
   valueChangeCbx(e) {}
@@ -53,8 +53,8 @@ export class PopupAddCustomFieldComponent implements OnInit {
   valueChange(e) {
     if (e && e.data && e.field) this.field[e.field] = e.data;
   }
-  valueChangeIcon(e){
-   debugger
+  valueChangeIcon(e) {
+    if (e) this.field.rankIcon = e;
   }
   valueChangeRating(e) {}
 
