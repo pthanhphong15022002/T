@@ -992,7 +992,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
-    this.titleViewStepCrr = this.stepList[0].name;
 
     // test nha
     // for(let i=0; i<10; i++){
