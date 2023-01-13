@@ -1,5 +1,5 @@
 <codx-form
-  #forms
+  #form
   [headerText]="headerText"
   [body]="body"
   [formModel]="dialog.formModel"
@@ -7,59 +7,72 @@
   [footer]="footer"
   [data]="exchangerate"
   subToolbarCss="text-end"
-  
 >
 </codx-form>
 <ng-template popup adde #body>
     <div class="form-group">
         <codx-label
-            [formModel]="forms.formModel"
+            [formModel]="form.formModel"
             fiedName="ToDate"
             default="Ngày"      
           ></codx-label>
           <codx-input
-          [Group]="forms.formGroup"    
-          field="ToDate"
-          [formModel]="forms.formModel"          
+          *ngIf="formtype == 'addexrate'"
+          [Group]="form.formGroup"
+          [formModel]="form.formModel" 
+          [crrValue]="toDate"      
+          field="ToDate"            
         >
         </codx-input>
+        <codx-input
+        *ngIf="formtype == 'editexrate'"
+        [Group]="form.formGroup"
+        [formModel]="form.formModel" 
+        [crrValue]="toDate"      
+        field="ToDate"     
+        [disabled]="true"       
+      >
+      </codx-input>
       </div>
       <div class="form-group">
         <codx-label
-            [formModel]="forms.formModel"
-            fiedName="ExchangeRate"
+            [formModel]="form.formModel"
+            fiedName="exchangeRate"
             default="Tỷ giá"      
           ></codx-label>
-          <codx-input
-          [Group]="forms.formGroup"    
-          field="ExchangeRate"
-          [formModel]="forms.formModel"          
+          <codx-input     
+          [formModel]="form.formModel"
+          [crrValue]="exchangeRate"        
+          field="exchangeRate"        
+          (valueChange)="valueChange($event)"                 
         >
         </codx-input>
       </div>
       <div class="form-group">
         <codx-label
-            [formModel]="forms.formModel"
-            fiedName="SourceType"
+            [formModel]="form.formModel"
+            fiedName="sourceType"
             default="Nguồn tỷ giá"      
           ></codx-label>
           <codx-input
-          [Group]="forms.formGroup"    
-          field="SourceType"
-          [formModel]="forms.formModel"          
+          [crrValue]="SourceType"
+          (valueChange)="valueChangeSourceType($event)"     
+          field="sourceType"
+          [formModel]="form.formModel"          
         >
         </codx-input>
       </div>
       <div class="form-group">
         <codx-label
-            [formModel]="forms.formModel"
-            fiedName="Note"
+            [formModel]="form.formModel"
+            fiedName="note"
             default="Ghi chú"      
           ></codx-label>
           <codx-input
-          [Group]="forms.formGroup"    
-          field="Note"
-          [formModel]="forms.formModel"          
+          [crrValue]="note"
+          (valueChange)="valueChangeNote($event)"     
+          field="note"
+          [formModel]="form.formModel"          
         >
         </codx-input>
       </div>

@@ -5,6 +5,7 @@
   [dialog]="dialog"
   [formModel]="dialog?.formModel"
   [data]="field"
+  [openMore]="true"
   #form
 >
   <ng-template #body>
@@ -127,7 +128,7 @@
         ></codx-input>
       </div>
 
-      <div class="form-group">
+      <div class="form-group row">
         <div class="col-6">
           <codx-label
             fiedName="Rank"
@@ -135,6 +136,8 @@
             default="Loại icon hiển thị"
           >
           </codx-label>
+          <codx-valuelist [name]="'L1470'" [iconOnly]="true" (valueChange)="valueChangeIcon($event)">
+          </codx-valuelist>
           <codx-input
             field="rank"
             [formModel]="form.formModel"
@@ -148,9 +151,9 @@
             fiedName="RankIcon"
             [formModel]="form.formModel"
             default="Điểm tối đa"
-          > 
+          >
           </codx-label>
-          <div class="progress">
+          <!-- <div class="progress">
             <div
               class="progress-bar"
               role="progressbar"
@@ -159,16 +162,38 @@
               aria-valuemin="0"
               aria-valuemax="100"
             ></div>
+          </div> -->
+          <div>
+            <input
+              id="progressInput"
+              type="range"
+              min="0"
+              max="100"
+              step="1"
+              value="25"
+              (click)="valueChangeRating('progressInput')"
+              style="width: 100%"
+            />
           </div>
-          <input
-            id="progressInput"
-            type="range"
-            min="0"
-            max="100"
-            step="1"
-            value="25"
-            (onChange)="valueChange($event)"
-          />
+          <!-- <ngx-slider value="100" [options]="options"></ngx-slider> -->
+          <!-- <ion-range-slider #sliderElement
+          type="double"
+          [min]="0"
+          max="100"
+          from="28"
+          from_min="10"
+          from_max="30"
+          from_shadow="true"
+          to="40"
+          to_min="40"
+          to_max="90"
+          to_shadow="true"
+          grid="true"
+          grid_num="10"
+          prefix="Weight: "
+          postfix=" million pounds"
+          decorate_both="false"
+          (onChange)="valueChangeRating($event)"></ion-range-slider>-->
         </div>
       </div>
       <div class="form-group">
@@ -189,7 +214,7 @@
             </codx-input>
           </div>
         </div>
-      </div> 
+      </div>
       <div class="form-group">
         <codx-label
           class="text-danger"

@@ -22,4 +22,13 @@ export class CodxDpService {
       data
     );
   }
+
+  onAddProcess(data){
+    return this.api.exec<any>(
+      'DP',
+      'ProcessesBusiness',
+      'AddProcessAsync',
+      data
+    );
+  }
 }

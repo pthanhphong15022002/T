@@ -149,7 +149,7 @@
         --primary-lighter: #f5faff;
         --primary-lightest: #f0f4f8;
 
-        --text-primary: #1b2746;
+        --text-primary: #365294;
         --bs-active-primary: #1e2b4e;
         --title-color: #1a2644;
         --icon-color: #1b2849;
@@ -158,9 +158,14 @@
         --bg-color: #192440;
         --border-light: #dbc5f5;
         --bg-aside-dark: #1e033f;
+        --bg-body: #f1f1f1;
 
         codx-wrapper {
-            background-color: #f1f1f1;
+            background-color: var(--bg-body);
+        }
+
+        .aside.aside-transparent {
+            background-color: var(--bg-body);
         }
 
         .menu-state-title-primary .menu-item .menu-link.active .menu-title {
@@ -182,7 +187,7 @@
     }
 
     &.dark {
-        // --primary: #2a2b3a;
+        //--primary: #2a2b3a;
         --primary-active: #3a3c50;
 
         --primary-darkest: #14141d;

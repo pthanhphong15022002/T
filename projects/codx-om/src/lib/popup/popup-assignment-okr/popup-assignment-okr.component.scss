@@ -11,9 +11,16 @@
 #om-tab .e-tab-header::before {
   border-style: none;
 }
-#om-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: solid 2px #0379ff !important;
-  color: #0379ff !important;
+#om-tab .e-tab-header .e-toolbar-item.e-active  {
+  border-bottom: solid 2px var(--text-primary) !important;
+  color: var(--text-primary) !important;
+}
+#om-tab .e-tab-header .e-toolbar-item.e-active span, #om-tab .e-tab-header .e-toolbar-item.e-active codx-label .codx-label{
+  
+  color: var(--text-primary) !important;
+}
+.e-tab .e-tab-header .e-toolbar-item.e-active span {
+  color: var(--text-primary) !important;
 }
 #om-tab > .e-content 
 {

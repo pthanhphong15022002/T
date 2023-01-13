@@ -1,26 +1,20 @@
-import { NgForOf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Host,
   Input,
   OnInit,
   Optional,
   Output,
-  ViewChild,
 } from '@angular/core';
-import { Subject } from 'rxjs';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DomSanitizer } from '@angular/platform-browser';
 import {
-  AlertConfirmInputConfig,
   ApiHttpService,
   AuthStore,
   CacheService,
   CallFuncService,
-  DataRequest,
   DialogData,
   DialogRef,
   NotificationsService,

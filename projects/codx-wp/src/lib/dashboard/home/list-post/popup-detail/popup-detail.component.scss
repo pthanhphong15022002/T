@@ -1,30 +1,20 @@
-.img-full .image,
-.img-full codx-img {
-    width: 100% !important;
-    height: 100% !important;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-}
 
-.show-pic {
-    height: 100%;
-}
-
-.img-full .image>img {
-    width: auto;
-    height: auto;
-    max-height: calc(100vh - 35px);
-    max-width: 100%;
-}
-
-.img-full {
-    display: flex;
-    align-items: center;
-}
-
-.img-btntop {
+.moreFC-top {
+    position: absolute;
+    width: 100%;
     top: 15px;
     left: 15px;
     right: 15px;
+}
+.next-previrous{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+}
+.next-previrous-btn{
+    font-size: 30px !important;
+    color: white;
+    font-weight: bolder;
 }

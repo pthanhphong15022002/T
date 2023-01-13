@@ -194,7 +194,7 @@ export class PopupShowKRComponent extends UIComponent implements AfterViewInit {
   //-----------------------Get Data Func---------------------//
   getKRData(){
     this.codxOmService
-        .getKRByID(this.krRecID)
+        .getOKRByID(this.krRecID)
         .subscribe((res: any) => {
           if (res) {
             this.dataKR = res;      
