@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ApiHttpService, AuthStore, CacheService, Util } from 'codx-core';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -102,5 +103,22 @@ export class CodxDpService {
           resolve(this.fb.group(model, { updateOn: 'blur' }));
         });
     });
+  }
+
+  getAutonumber(functionID, entityName, fieldName): Observable<any> {
+    var subject = new Subject<any>();
+    this.api
+      .execSv<any>(
+        'SYS',
+        'ERM.Business.AD',
+        'AutoNumbersBusiness',
+        'GenAutoNumberAsync',
+        [functionID, entityName, fieldName, null]
+      )
+      .subscribe((item) => {
+        if (item) subject.next(item);
+        else subject.next(null);
+      });
+    return subject.asObservable();
   }
 }
