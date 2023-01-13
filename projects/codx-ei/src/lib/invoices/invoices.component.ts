@@ -40,9 +40,6 @@ export class InvoicesComponent extends UIComponent {
     // };
 
     // this.api.exec<any>('EI', 'GoodsBusiness', 'SaveAsync', g).subscribe();
-    this.api
-      .execSv<any>('AC', 'GL', 'TestBusiness', 'Get', [1, '2', false])
-      .subscribe();
     this.cache.moreFunction('CoDXSystem', '').subscribe((res) => {
       if (res && res.length) {
         let m = res.find((x) => x.functionID == 'SYS01');
