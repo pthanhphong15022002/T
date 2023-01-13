@@ -1,6 +1,6 @@
 <codx-layout-add
   #form
-  (setTitle)="setTile($event, form)"
+  (setTitle)="setTile(form)"
   [tabInfo]="tabInfo"
   [formModel]="dialogRef.formModel"
   [footer]="footer"
@@ -310,7 +310,7 @@
             <codx-input
               [Group]="form.formGroup"
               [formModel]="form.formModel"
-              [disabled]="action != 'edit'"
+              [disabled]="isAdd"
               field="hiredOn"
               (valueChange)="dataChange($event)"
             >

@@ -308,7 +308,25 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.dialog = dialog;
     this.funcID = this.dialog.formModel.funcID;
     this.process = JSON.parse(JSON.stringify(dialog.dataService!.dataSelected));
+
     this.action = dt.data.action;
+    if(this.action != 'edit'){
+      this.dpService
+      .genAutoNumber(
+        this.dialog.formModel.formName,
+        this.funcID,
+        this.dialog.formModel.entityName,
+        'processNo'
+      )
+      .subscribe((res) => {
+        if (res) {
+          this.showID = true;
+          this.process.processNo = res;
+        }else{
+          this.showID = false;
+        }
+      });
+    }
     if (this.action != 'add') {
       this.getAvatar(this.process);
       if (this.process.permissions.length > 0) {
@@ -326,6 +344,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
           this.gridViewSetup = res;
         }
       });
+
+
   }
 
   data = [
@@ -412,22 +432,43 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     },
   ];
 
+  ngAfterViewInit(): void {
+  }
+
   ngOnInit(): void {
     // this.updateNodeStatus(0,1);
     this.getTitleStepViewSetup();
-
+    this.initForm();
     // this.isTurnOnYesFailure = true;
     console.log(this.isTurnOnYesFailure);
   }
 
+  //#region setup formModels and formGroup
+  initForm(){
+    this.formModel = new FormModel();
+    this.formModel.entityName = this.dialog.formModel.entityName;
+    this.formModel.formName = this.dialog.formModel.formName;
+    this.formModel.gridViewName = this.dialog.formModel.gridViewName;
+    this.dpService
+      .getFormGroup(this.formModel.formName, this.formModel.gridViewName)
+      .then((fg) => {
+        console.log(fg);
+        if (fg) {
+          this.formGroup = fg;
+        }
+      });
+  }
+  //#endregion
   //#region onSave
   beforeSave(op) {
     var data = [];
+    op.className = 'ProcessesBusiness';
     if (this.action == 'add') {
       op.methodName = 'AddProcessAsync';
-      op.className = 'ProcessesBusiness';
-      data = [this.process];
+    } else {
+      op.methodName = 'UpdateProcessAsync';
     }
+    data = [this.process];
     op.data = data;
   }
 
@@ -442,22 +483,48 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       });
   }
 
+  onUpdate() {
+    this.dialog.dataService
+      .save((option: any) => this.beforeSave(option))
+      .subscribe((res) => {
+        if (res.update) {
+          this.imageAvatar.clearData();
+          this.dialog.close(res.update);
+        }
+      });
+  }
+
   async onSave() {
+    if (
+      this.process.processNo == null ||
+      this.process.processNo.trim() == ''
+    ) {
+      this.notiService.notify('Test mã');
+      return;
+    }
     if (
       this.process.processName == null ||
       this.process.processName.trim() == ''
     ) {
-      this.notiService.notify('Test');
+      this.notiService.notify('Test name');
       return;
     }
     if (this.imageAvatar?.fileUploadList?.length > 0) {
       (await this.imageAvatar.saveFilesObservable()).subscribe((res) => {
         if (res) {
-          this.onAdd();
+          if (this.action == 'edit') {
+            this.onUpdate();
+          } else {
+            this.onAdd();
+          }
         }
       });
     } else {
-      this.onAdd();
+      if (this.action == 'edit') {
+        this.onUpdate();
+      } else {
+        this.onAdd();
+      }
     }
   }
 
@@ -676,6 +743,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.attachment.uploadFile();
   }
 
+  //Popup roles process
   clickRoles(e) {
     this.callfc.openForm(
       PopupRolesDynamicComponent,
@@ -683,7 +751,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
       950,
       650,
       '',
-      [e],
+      this.permissions,
       '',
       this.dialog
     );

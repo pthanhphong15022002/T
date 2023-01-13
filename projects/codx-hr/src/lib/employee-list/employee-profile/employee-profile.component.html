@@ -362,7 +362,25 @@
           </div>
           <div class="user-menu scroll-y w-100 border-top">
             <ul class="nav nav-tabs nav-pills flex-column px-2 pt-2 fs-6 w-100">
-              <li class="nav-item w-100 mb-1">
+              <ng-container *ngFor="let item of lstTab">
+                <li class="nav-item w-100 mb-1">
+                  <a
+                    class="nav-link w-100 btn btn-flex btn-active-light-primary"
+                    data-bs-toggle="tab"
+                    id="tab_0"
+                    [class]="crrFuncTab == item.functionID ? 'active' : ''"
+                    (click)="clickTab(item)"
+                  >
+                    <span class="me-2">
+                      <span class="icon-person icon-18"></span>
+                    </span>
+                    <div class="fw-bold">
+                      {{item.customName}}
+                    </div>
+                  </a>
+                </li>
+              </ng-container>
+              <!-- <li class="nav-item w-100 mb-1">
                 <a
                   class="nav-link w-100 btn btn-flex btn-active-light-primary"
                   data-bs-toggle="tab"
@@ -531,7 +549,7 @@
                     </codx-label>
                   </div>
                 </a>
-              </li>
+              </li> -->
             </ul>
           </div>
         </div>
@@ -542,28 +560,28 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_0"
-                  [class]="crrTab == 0 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030201' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="info"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_1"
-                  [class]="crrTab == 1 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030202' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="jobInfo"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_2"
-                  [class]="crrTab == 2 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030203' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="benefit"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_3"
-                  [class]="crrTab == 3 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030204' ? 'active' : ''"
                 >
                   <ng-container
                     [ngTemplateOutlet]="processingInfo"
@@ -572,14 +590,14 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_4"
-                  [class]="crrTab == 4 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030205' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="knowledge"></ng-container>
                 </div>
                 <div
                   class="tab-pane fade show"
                   id="pane_5"
-                  [class]="crrTab == 5 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030206' ? 'active' : ''"
                 >
                   <ng-container
                     [ngTemplateOutlet]="rewardDiscipline"
@@ -588,7 +606,7 @@
                 <div
                   class="tab-pane fade show"
                   id="pane_6"
-                  [class]="crrTab == 6 ? 'active' : ''"
+                  [class]="crrFuncTab == 'HRT030207' ? 'active' : ''"
                 >
                   <ng-container [ngTemplateOutlet]="healthInfo"></ng-container>
                 </div>
@@ -606,7 +624,7 @@
       </span>
       <div ngbDropdownMenu class="" style="min-width: 200px">
         <div class="card card-flush">
-          <div class="d-flex flex-column" *ngIf="crrTab == 0">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030201'">
             <div
               class="d-flex btn btn-hover-primary"
               (click)="handleEFamilyInfo('add', null)"
@@ -664,7 +682,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex flex-column" *ngIf="crrTab == 1">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030202'">
             <div class="d-flex btn btn-hover-primary">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -677,7 +695,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex flex-column" *ngIf="crrTab == 2">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030203'">
             <div
               class="d-flex btn btn-hover-primary"
               (click)="HandleEmployeeBasicSalariesInfo('add', null)"
@@ -755,7 +773,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex flex-column" *ngIf="crrTab == 3">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030204'">
             <div class="d-flex btn btn-hover-primary">
               <span
                 class="icon-keyboard_arrow_down icon-18 text-hover-primary me-2"
@@ -818,7 +836,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex flex-column" *ngIf="crrTab == 4">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030205'">
             <div
               class="d-flex btn btn-hover-primary"
               (click)="HandleEmployeeDegreeInfo('add', null)"
@@ -876,7 +894,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex flex-column" *ngIf="crrTab == 5">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030206'">
             <div
               class="d-flex btn btn-hover-primary"
               (click)="addEmployeeAwardsInfo('add', null)"
@@ -906,7 +924,7 @@
               </codx-label>
             </div>
           </div>
-          <div class="d-flex flex-column" *ngIf="crrTab == 6">
+          <div class="d-flex flex-column" *ngIf="crrFuncTab == 'HRT030207'">
             <div
               class="d-flex btn btn-hover-primary"
               (click)="HandleEmployeeEHealths('add', null)"
