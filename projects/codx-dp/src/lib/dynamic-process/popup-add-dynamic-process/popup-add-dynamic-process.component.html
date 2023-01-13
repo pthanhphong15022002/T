@@ -584,7 +584,7 @@
       <div class="rights">
         <div class="button-group">
           <button type="button" class="btn btn-primary d-flex align-items-center" style="padding: 0 15px 0 0 !important"
-            (click)="openAddStage('add')">
+            (click)="openAddStep('add')">
             <span class="icon-add icon-20 text-primary-600 py-2"
               style="font-weight: 600; margin-left: 5px; color: white">
             </span>
@@ -617,18 +617,18 @@
         </div>
         <div class="example-list stage-body-left-main" cdkDropList (cdkDropListDropped)="drop($event, stepList)">
           <!-- danh sách giai đoạn -->
-          <div cdkDrag *ngFor="let item of stepList; let i = index" class="list-stage example-box drap-drop"
-            (click)="clickViewReason($event, viewStepCustom, item ?? strEmpty)">
+          <div cdkDrag *ngFor="let step of stepList; let i = index" class="list-stage example-box drap-drop"
+            (click)="clickViewReason($event, viewStepCustom, step ?? strEmpty)">
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
-                {{ item?.name + item?.id }}
+                {{step?.stepName}}
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
-                Thời hạn {{ item?.time }} ngày 0:00 giờ
+                Thời hạn {{ step?.durationDay || 0}} ngày {{step?.durationHour || 0}} giờ
               </div>
               <div style="font-size: 1.1rem; font-weight: 500">
-                Công việc {{ item?.phase }}
+                Công việc {{ step?.taskGroups.length }}
               </div>
             </div>
           </div>
@@ -671,7 +671,7 @@
               <codx-input class="test-check" type="switch" style="width: 100%" field="read">
               </codx-input>
             </div>
-            <div class="icon-more_vert" style="cursor: pointer" (click)="openAddStage('edit')"></div>
+            <div class="icon-more_vert" style="cursor: pointer" (click)="openAddStep('edit')"></div>
           </div>
         </div>
         <div class="main">
@@ -928,7 +928,7 @@
         <codx-label fiedName="taskGroupName" [formModel]="" default="Tên nhóm công việc"></codx-label>
       </div>
       <codx-input field="taskGroupName" [formModel]="" [Group]="" type="text" [height]="'100'"
-        (valueChange)="changeValueInput($event)">
+        (valueChange)="changeValueInput($event,taskGroup)">
       </codx-input>
     </div>
 
@@ -939,7 +939,7 @@
         </div>
         <div class="position-relative">
           <codx-input field="durationDay" [formModel]="" [Group]="" type="text" [height]="'100'" [min]="0"
-            (valueChange)="changeValueInput($event)"></codx-input>
+            (valueChange)="changeValueInput($event,taskGroup)"></codx-input>
           <div class="position-absolute text-gray-400" style="top: 7px; right: 7px">
             <codx-label fiedName="StepName" [formModel]="" default="Ngày"></codx-label>
           </div>
@@ -952,7 +952,7 @@
         </div>
         <div class="position-relative">
           <codx-input field="durationHour" [formModel]="" [Group]="" type="text" [height]="'100'" [min]="0"
-            (valueChange)="changeValueInput($event)"></codx-input>
+            (valueChange)="changeValueInput($event,taskGroup)"></codx-input>
           <div class="position-absolute text-gray-400" style="top: 7px; right: 7px">
             <codx-label fiedName="StepName" [formModel]="" default="Giờ"></codx-label>
           </div>
@@ -979,7 +979,7 @@
         <codx-label fiedName="memo" [formModel]="" default="Ghi chú"></codx-label>
       </div>
       <codx-input field="memo" [formModel]="" [Group]="" type="textarea" [height]="'100'"
-        (valueChange)="changeValueInput($event)">
+        (valueChange)="changeValueInput($event,taskGroup)">
       </codx-input>
     </div>
   </div>
@@ -1024,7 +1024,7 @@
 <!-- chon loai cong viec -- nvthuan -->
 <!-- Popup thêm giai đoạn  -->
 <ng-template #addStage>
-  <codx-form [headerText]="'Thêm Nhóm Công Việc'" [body]="addStageBody" [footer]="addStageFooter"
+  <codx-form [headerText]="'Thêm Giai Đoạn'" [body]="addStageBody" [footer]="addStageFooter"
     [dialog]="popupAddStage">
   </codx-form>
 </ng-template>
@@ -1036,7 +1036,7 @@
         <codx-label fiedName="StepName" [formModel]="" default="Tên giai đoạn"></codx-label>
       </div>
       <codx-input field="stepName" [formModel]="" [Group]="" type="text" [value]="isAddStage"
-        (valueChange)="changeValueInput($event)">
+        (valueChange)="changeValueInput($event,step)">
       </codx-input>
     </div>
     <div class="form-group text-gray-400" *ngIf="isAddStage">
@@ -1052,7 +1052,7 @@
       <codx-label name="Save" formName="Tasks" default="Hủy" (click)="popupAddStage.close()"></codx-label>
     </button>
     <button type="button" class="btn btn-primary">
-      <codx-label name="Save" formName="Tasks" default="Đồng ý" (click)="saveAddStage()"></codx-label>
+      <codx-label name="Save" formName="Tasks" default="Đồng ý" (click)="saveAddStep()"></codx-label>
     </button>
   </div>
 </ng-template>
@@ -1502,7 +1502,6 @@
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="0"
-                    (valueChange)="changeValueInput($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-muted"
@@ -1526,7 +1525,6 @@
                     [height]="'100'"
                     [min]="0"
                     [placeholder]="'00.00'"
-                    (valueChange)="changeValueInput($event)"
                   ></codx-input>
                   <div
                     class="position-absolute text-gray-400"

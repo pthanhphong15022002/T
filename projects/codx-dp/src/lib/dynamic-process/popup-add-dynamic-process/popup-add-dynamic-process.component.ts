@@ -116,7 +116,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   taskGroupList = [];
 
   step = {};
+  stepSelect = {};
   stepList = [];
+  // stepList: DP_Steps[];
 
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
@@ -830,14 +832,23 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   //#endregion
 
   //#stage -- nvthuan
-  openAddStage(type) {
-    this.isAddStage = type == 'add' ? true : false;
-    this.nameStage = type == 'add' ? '' : 'Thuan nè';
-
+  async openAddStep(type) {
+    this.step = {};
+    this.step['recID'] = Util.uid();
+    this.step['processID'] = this.process?.recID;
+    this.step['stepNo'] = this.stepList.length + 1;
+    this.step['createdOn'] = new Date();
+    this.step['durationDay'] = 0;
+    this.step['durationHour'] = 0;
+    this.step['createdBy'] = this.userId;
+    this.step['taskGroups'] = [];
     this.popupAddStage = this.callfc.openForm(this.addStagePopup, '', 500, 280);
   }
 
-  saveAddStage() {}
+  saveAddStep() {
+    this.stepList.push(this.step);  
+    this.popupAddStage.close(); 
+  }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
     if (event.previousContainer === event.container) {
@@ -909,8 +920,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.popupGroupJob.close();
     this.taskGroupList.push(this.taskGroup);
   }
-  changeValueInput(event) {
-    this.taskGroup[event?.field] = event?.data;
+  changeValueInput(event, data) {
+    data[event?.field] = event?.data;
   }
   shareUser(share) {
     this.callfc.openForm(share, '', 500, 500);
@@ -992,7 +1003,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
   getTitleStepViewSetup() {
-    // this.titleViewStepCrr = this.stepList[0].name;
+    if(this.stepList.length > 0){
+      this.titleViewStepCrr = this.stepList[0].stepName;
+    }   
 
     // test nha
     // for(let i=0; i<10; i++){
