@@ -294,14 +294,6 @@ export class CreateFolderComponent implements OnInit {
       }
     });
 
-    this.dmSV.isLocation.subscribe((item) => {
-      if (item) {
-        this.location = item;
-        if (this.fileEditing === undefined) this.fileEditing = new FileUpload();
-        this.fileEditing.location = item;
-        this.changeDetectorRef.detectChanges();
-      }
-    });
 
     // this.dmSV.isListSubFolder.subscribe((item) => {
     //   this.listSubFolder = item;
@@ -646,7 +638,6 @@ export class CreateFolderComponent implements OnInit {
     var that = this;
     if (!this.edit) {
       this.fileEditing.folderType = this.dmSV.idMenuActive;
-      debugger;
       this.folderService.addFolder(this.fileEditing).subscribe(async (res) => {
         if (res.status == 0) {
           var folders = this.dmSV.listFolder;
@@ -863,7 +854,7 @@ export class CreateFolderComponent implements OnInit {
   }
 
   openPhysical() {
-    this.callfc.openForm(
+    let dialog = this.callfc.openForm(
       PhysicalComponent,
       this.titleDialogPHysical,
       450,
@@ -872,6 +863,9 @@ export class CreateFolderComponent implements OnInit {
       [this.functionID, this.location],
       ''
     );
+    dialog.closed.subscribe(item=>{
+      if(item && item.event) this.fileEditing.location = item.event;
+    })
   }
 
   disableRight(item: string) {
