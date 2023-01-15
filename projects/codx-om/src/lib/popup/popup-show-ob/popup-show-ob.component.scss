@@ -11,8 +11,9 @@
 #om-tab .e-tab-header::before {
   border-style: none;
 }
-#om-tab .e-tab-header .e-toolbar-item.e-active {
-  border-bottom: solid 2px #0379ff !important;
+#om-tab .e-tab-header .e-toolbar-item.e-active  {
+  border-bottom: solid 2px var(--text-primary) !important;
+  color: var(--text-primary) !important;
 }
 #om-tab > .e-content 
 {

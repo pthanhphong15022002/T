@@ -234,8 +234,7 @@ export class DynamicProcessComponent
   }
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
-    // chưa có api
-    opt.methodName = 'DeletedDynamicProcessesAsync';
+    opt.methodName = 'DeletedProcessesAsync';
     opt.data = [itemSelected.recID, true];
     return true;
   }
