@@ -253,6 +253,7 @@ export class CreateFolderComponent implements OnInit {
   objectUpdate = {};
   fieldUpdate = '';
   showPopup = false;
+  dataParent : any
   constructor(
     private folderService: FolderService,
     private api: ApiHttpService,
@@ -337,6 +338,12 @@ export class CreateFolderComponent implements OnInit {
       //console.log(res);
       this.listFormat4 = res.datas;
     });
+
+    this.folderService.getFolder(this.dmSV.folderID
+      ).subscribe(item=>{
+        if(item)
+          this.dataParent = item
+      })
   }
   refesh() {
     this.revision = false;
@@ -372,7 +379,7 @@ export class CreateFolderComponent implements OnInit {
 
   openForm() {
     var that = this;
-    this.showAll = false;
+    this.showAll = true;
     if (that.id != '' && this.id != null) {
       this.noeditName = false;
       this.folderService.getFolder(this.id).subscribe(async (res) => {
