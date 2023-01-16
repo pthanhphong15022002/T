@@ -110,7 +110,7 @@
   overflow: scroll;
 }
 
-.group-permission{
+.group-permission {
   height: 10vh;
   display: flex;
   flex-direction: row;
@@ -120,11 +120,11 @@
   white-space: nowrap;
 }
 
-.witdh-permission{
+.witdh-permission {
   width: 91vh;
 }
 
-.witdh-roles{
+.witdh-roles {
   width: 60vh;
 }
 
@@ -211,6 +211,7 @@
 .background-job {
   font-size: 16px;
   box-shadow: #f0f0f0 0px 5px 5px 5px;
+  margin-bottom: 15px;
   .header-job {
     background-color: #cde7f1;
     display: flex;
@@ -376,12 +377,11 @@
   border-radius: 5px;
   background-color: #f0f8ff;
 }
-.more-funtion-step{
-  codx-mfunc{
+.more-funtion-step {
+  codx-mfunc {
     top: -5px !important;
     right: -5px !important;
   }
 }
 
 // End Drop drap -- nvthuan
-

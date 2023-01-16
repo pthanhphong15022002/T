@@ -113,8 +113,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   user: any;
   userId: string;
 
-  taskGroup = {};
-  taskGroupList = [];
+  taskGroup: DP_Steps_TaskGroups;
+  taskGroupList: DP_Steps_TaskGroups[] = [];
 
   step: DP_Steps;
   stepList: DP_Steps[] = [];
@@ -980,7 +980,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   openGroupJob() {
     this.taskGroup = new DP_Steps_TaskGroups();
     this.taskGroup['recID'] = Util.uid();
-    this.taskGroup['createdOn'] = Date.now();
+    this.taskGroup['createdOn'] = new Date();
     this.taskGroup['createdBy'] = this.userId;
     this.taskGroup['stepID'] = this.step['recID'];
     this.taskGroup['task'] = [];
@@ -1068,11 +1068,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (data) {
           // gán tạm name để test
           this.titleViewStepCrr = data.stepName;
-
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
           this.step = data;
+          this.taskGroupList = this.step['taskGroups'];
         }
       }
     }
@@ -1106,7 +1106,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     }
     this.changeDetectorRef.detectChanges();
   }
-  valueChangeTransferCtrl($event){
+  valueChangeTransferCtrl($event) {
     if ($event && $event != null) {
       //  let secleted = $event.data;
       this.step.transferControl = $event.data;
