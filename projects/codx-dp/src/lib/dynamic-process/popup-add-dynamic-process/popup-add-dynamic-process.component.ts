@@ -1067,6 +1067,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         }
       });
   }
+  valueChangeAssignCtrl($event){
+    if($event && $event != null){
+   //  let secleted = $event.data;
+    }
+  }
+
   valueMemoSetup($event) {}
 
   //#endregion

@@ -691,198 +691,201 @@
 <!-- Công Việc -- nvthuan -->
 
 <ng-template #job>
-  <ng-container [ngTemplateOutlet]="rolesInStep"> </ng-container>
-  <ng-container [ngTemplateOutlet]="setupInStep"> </ng-container>
-  <ng-container [ngTemplateOutlet]="durationInStep"> </ng-container>
+  <div *ngIf="stepList.length>0 && stepList">
+    <ng-container [ngTemplateOutlet]="rolesInStep"> </ng-container>
+    <ng-container [ngTemplateOutlet]="setupInStep"> </ng-container>
+    <ng-container [ngTemplateOutlet]="durationInStep"> </ng-container>
 
-  <div class="background-job">
-    <div class="header-job mb-5">
-      <div class="left" style="margin: auto 10px">
-        <div>
-          <span class="title">Công việc</span>
-        </div>
-        <div>
-          <span style="color: #898989">Công việc mặc định người phụ trách phải thực hiện trong giai
-            đoạn</span>
-        </div>
-      </div>
-      <div class="right">
-        <div class="time ml-2">
-          <div class="d-flex align-items-center">
-            <span style="font-weight: 400; color: #4e4e4e">Thời hạn công việc so với giai đoạn</span>
-            <span class="icon-replay icon-22 text-primary-600 py-2" style="font-weight: 600; margin-left: 5px"></span>
+    <div class="background-job">
+      <div class="header-job mb-5">
+        <div class="left" style="margin: auto 10px">
+          <div>
+            <span class="title">Công việc</span>
           </div>
           <div>
-            <span style="float: right; color: #2274ae; font-size: 1.1rem">0 ngày 4:05 giờ / 5 ngày 0:00 giờ</span>
+            <span style="color: #898989">Công việc mặc định người phụ trách phải thực hiện trong giai
+              đoạn</span>
           </div>
         </div>
-        <div class="group-button">
-          <button class="button-custom" (click)="openGroupJob()">
-            <span class="icon-add icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-          </button>
-          <button class="button-custom" (click)="setJob()">
-            <span class="icon-add_task icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-          </button>
-          <button class="button-custom" (click)="clickShow($event, 'job-main')">
-            <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
-          </button>
+        <div class="right">
+          <div class="time ml-2">
+            <div class="d-flex align-items-center">
+              <span style="font-weight: 400; color: #4e4e4e">Thời hạn công việc so với giai đoạn</span>
+              <span class="icon-replay icon-22 text-primary-600 py-2" style="font-weight: 600; margin-left: 5px"></span>
+            </div>
+            <div>
+              <span style="float: right; color: #2274ae; font-size: 1.1rem">0 ngày 4:05 giờ / 5 ngày 0:00 giờ</span>
+            </div>
+          </div>
+          <div class="group-button">
+            <button class="button-custom" (click)="openGroupJob()">
+              <span class="icon-add icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+            </button>
+            <button class="button-custom" (click)="setJob()">
+              <span class="icon-add_task icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+            </button>
+            <button class="button-custom" (click)="clickShow($event, 'job-main')">
+              <span class="icon-expand_less icon-20 text-primary-600 py-2" style="font-weight: 500"></span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div
-      id="job-main"
-      class="main-job"
-      [ngClass]="'show-main'"
-      style="margin-top: 10px"
-    >
       <div
-        class="d-flex justify-content-center"
-        *ngIf="taskGroupList.length === 0"
+        id="job-main"
+        class="main-job"
+        [ngClass]="'show-main'"
+        style="margin-top: 10px"
       >
-        <div>
-          <button class="button-custom">
-            <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
-            <span>Thêm nhóm công việc</span>
-          </button>
+        <div
+          class="d-flex justify-content-center"
+          *ngIf="taskGroupList.length === 0"
+        >
+          <div>
+            <button class="button-custom">
+              <span class="icon-add_task icon-20 text-primary-600 py-2"></span>
+              <span>Thêm nhóm công việc</span>
+            </button>
+          </div>
+          <div>
+            <button class="button-custom">
+              <span class="icon-add icon-20 text-primary-600 py-2"></span>
+              <span>Thêm công việc</span>
+            </button>
+          </div>
         </div>
-        <div>
-          <button class="button-custom">
-            <span class="icon-add icon-20 text-primary-600 py-2"></span>
-            <span>Thêm công việc</span>
-          </button>
-        </div>
-      </div>
-      <!-- drap drop công việc ngoài-->
-      <div class="main-body" *ngIf="taskGroupList.length > 0">
-        <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
-          <div cdkDropListGroup>
-            <ng-container *ngFor="let taskList of taskGroupList">
-              <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
-                <div class="card-job">
-                  <div class="d-flex justify-content-start align-items-center">
-                    <div class="icon-container">
-                      <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
-                    </div>
-                    <div class="icon-container">
-                      <span class="icon-supervised_user_circle icon-20 text-primary-600 py-2"></span>
-                    </div>
-                    <div class="steplist-hearder ms-5">
-                      <div>
-                        <span
-                          class=""
-                          style="font-size: 1.2rem; font-weight: 500"
-                          >{{ taskList?.taskGroupName }}</span
-                        >
-                        <span
-                          class="icon-message icon-20 text-primary-600 py-2 ms-2"
-                          style="color: #06a9f7"
-                        ></span>
+        <!-- drap drop công việc ngoài-->
+        <div class="main-body" *ngIf="taskGroupList.length > 0">
+          <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+            <div cdkDropListGroup>
+              <ng-container *ngFor="let taskList of taskGroupList">
+                <div class="mb-3 card-job-list" cdkDrag [cdkDragData]="taskList">
+                  <div class="card-job">
+                    <div class="d-flex justify-content-start align-items-center">
+                      <div class="icon-container">
+                        <span class="icon-add_circle icon-20 text-primary-600 py-2"></span>
                       </div>
-                      <div class="" style="font-weight: 400; font-size: 1.1rem">
-                        <!-- TODO -->
-                        <span style="color: #06a9f7">0% </span>
-                        <codx-label
-                          fiedName="StepName"
-                          [formModel]=""
-                          [default]="'Thời hạn'"
-                        >
-                        </codx-label>
-                        <span>
-                          {{ taskList?.durationDay }}.{{
-                            taskList?.durationHour
-                          }}
-                        </span>
-                        <codx-label
-                          fiedName="StepName"
-                          [formModel]=""
-                          [default]="'Giờ'"
-                        >
-                        </codx-label>
+                      <div class="icon-container">
+                        <span class="icon-supervised_user_circle icon-20 text-primary-600 py-2"></span>
                       </div>
-                    </div>
-                  </div>
-                  <!-- kéo thả ở trong  -->
-                  <div
-                    cdkDropList
-                    [cdkDropListData]="taskList?.task || []"
-                    (cdkDropListDropped)="drop($event)"
-                  >
-                    <ng-container *ngFor="let task of taskList?.task">
-                      <div
-                        cdkDrag
-                        [cdkDragStartDelay]="200"
-                        [cdkDragData]="task"
-                        class="drap-drop"
-                      >
-                        <div style="margin-left: 50px">
-                          <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
-                            <div class="icon-container" style="background-color: #3ef8e9">
-                              <span class="icon-add_circle icon-20 text-primary-600 py-2"
-                                (click)="addFile($event)"></span>
-                            </div>
-                            <div class="icon-container">
-                              <span class="icon-supervised_user_circle icon-20 text-primary-600 py-2"></span>
-                            </div>
-                            <div class="steplist-hearder ms-5">
-                              <div>
-                                <span
-                                  class=""
-                                  style="font-size: 1.2rem; font-weight: 500"
-                                  >{{ task?.taskName }}</span
-                                >
-                                <span
-                                  class="icon-message icon-20 text-primary-600 py-2 ms-2"
-                                  style="color: #06a9f7"
-                                ></span>
-                              </div>
-                              <div
-                                class=""
-                                style="font-weight: 400; font-size: 1.1rem"
-                              >
-                                <!-- TODO -->
-                                <span style="color: #06a9f7">0% </span>
-                                <codx-label
-                                  fiedName="StepName"
-                                  [formModel]=""
-                                  [default]="'Thời hạn'"
-                                >
-                                </codx-label>
-                                <span>
-                                  {{ taskList?.durationDay }}.{{
-                                    taskList?.durationHour
-                                  }}
-                                </span>
-                                <codx-label
-                                  fiedName="StepName"
-                                  [formModel]=""
-                                  [default]="'Giờ'"
-                                >
-                                </codx-label>
-                              </div>
-                            </div>
-                          </div>
-                          <div>
-                            <codx-attachment #attachment hideFolder="1" hideImageUpload="0" hideImageThumb="0"
-                              hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1" displayThumb="full"
-                              showMessage="1">
-                            </codx-attachment>
-                          </div>
+                      <div class="steplist-hearder ms-5">
+                        <div>
+                          <span
+                            class=""
+                            style="font-size: 1.2rem; font-weight: 500"
+                            >{{ taskList?.taskGroupName }}</span
+                          >
+                          <span
+                            class="icon-message icon-20 text-primary-600 py-2 ms-2"
+                            style="color: #06a9f7"
+                          ></span>
+                        </div>
+                        <div class="" style="font-weight: 400; font-size: 1.1rem">
+                          <!-- TODO -->
+                          <span style="color: #06a9f7">0% </span>
+                          <codx-label
+                            fiedName="StepName"
+                            [formModel]=""
+                            [default]="'Thời hạn'"
+                          >
+                          </codx-label>
+                          <span>
+                            {{ taskList?.durationDay }}.{{
+                              taskList?.durationHour
+                            }}
+                          </span>
+                          <codx-label
+                            fiedName="StepName"
+                            [formModel]=""
+                            [default]="'Giờ'"
+                          >
+                          </codx-label>
                         </div>
                       </div>
-                    </ng-container>
+                    </div>
+                    <!-- kéo thả ở trong  -->
+                    <div
+                      cdkDropList
+                      [cdkDropListData]="taskList?.task || []"
+                      (cdkDropListDropped)="drop($event)"
+                    >
+                      <ng-container *ngFor="let task of taskList?.task">
+                        <div
+                          cdkDrag
+                          [cdkDragStartDelay]="200"
+                          [cdkDragData]="task"
+                          class="drap-drop"
+                        >
+                          <div style="margin-left: 50px">
+                            <div class="d-flex justify-content-start align-items-center" style="font-size: 1rem">
+                              <div class="icon-container" style="background-color: #3ef8e9">
+                                <span class="icon-add_circle icon-20 text-primary-600 py-2"
+                                  (click)="addFile($event)"></span>
+                              </div>
+                              <div class="icon-container">
+                                <span class="icon-supervised_user_circle icon-20 text-primary-600 py-2"></span>
+                              </div>
+                              <div class="steplist-hearder ms-5">
+                                <div>
+                                  <span
+                                    class=""
+                                    style="font-size: 1.2rem; font-weight: 500"
+                                    >{{ task?.taskName }}</span
+                                  >
+                                  <span
+                                    class="icon-message icon-20 text-primary-600 py-2 ms-2"
+                                    style="color: #06a9f7"
+                                  ></span>
+                                </div>
+                                <div
+                                  class=""
+                                  style="font-weight: 400; font-size: 1.1rem"
+                                >
+                                  <!-- TODO -->
+                                  <span style="color: #06a9f7">0% </span>
+                                  <codx-label
+                                    fiedName="StepName"
+                                    [formModel]=""
+                                    [default]="'Thời hạn'"
+                                  >
+                                  </codx-label>
+                                  <span>
+                                    {{ taskList?.durationDay }}.{{
+                                      taskList?.durationHour
+                                    }}
+                                  </span>
+                                  <codx-label
+                                    fiedName="StepName"
+                                    [formModel]=""
+                                    [default]="'Giờ'"
+                                  >
+                                  </codx-label>
+                                </div>
+                              </div>
+                            </div>
+                            <div>
+                              <codx-attachment #attachment hideFolder="1" hideImageUpload="0" hideImageThumb="0"
+                                hideUploadBtn="1" hideDes="1" type="inline" allowMultiFile="1" displayThumb="full"
+                                showMessage="1">
+                              </codx-attachment>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </ng-container>
+              </ng-container>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <ng-container [ngTemplateOutlet]="dynamicFieldsOneSteps"> </ng-container>
+    <ng-container [ngTemplateOutlet]="memoInStep"> </ng-container>
   </div>
 
-  <ng-container [ngTemplateOutlet]="dynamicFieldsOneSteps"> </ng-container>
-  <ng-container [ngTemplateOutlet]="memoInStep"> </ng-container>
 </ng-template>
 <!-- popup them cong viec -- nvthuan -->
 <ng-template #setJobPopup>
@@ -1400,7 +1403,9 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input field="" type="valuelist" field="AssignControl" refValue="DP019"> </codx-input>
+            <codx-input field="assignControl" type="valuelist" field="AssignControl" refValue="DP019" crrValue="1"
+            (valueChange)="valueChangeAssignCtrl($event)">
+            > </codx-input>
           </div>
         </div>
         <div class="row pb-5">
@@ -1422,7 +1427,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input  crrValue="1" type="valuelist" refValue="DP020"> </codx-input>
+            <codx-input field="transferControl"  crrValue="1" type="valuelist" refValue="DP020" crrValue="0"> </codx-input>
           </div>
         </div>
       </div>
