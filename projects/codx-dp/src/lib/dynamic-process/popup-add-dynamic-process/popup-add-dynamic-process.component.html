@@ -1121,9 +1121,10 @@
 <!-- Công Việc -- nvthuan -->
 
 <ng-template #job>
-  <ng-container [ngTemplateOutlet]="rolesInStep"> </ng-container>
-  <ng-container [ngTemplateOutlet]="setupInStep"> </ng-container>
-  <ng-container [ngTemplateOutlet]="durationInStep"> </ng-container>
+  <div *ngIf="stepList.length > 0 && stepList">
+    <ng-container [ngTemplateOutlet]="rolesInStep"> </ng-container>
+    <ng-container [ngTemplateOutlet]="setupInStep"> </ng-container>
+    <ng-container [ngTemplateOutlet]="durationInStep"> </ng-container>
 
   <div class="background-job">
     <div class="header-job mb-5">
@@ -1352,8 +1353,9 @@
     </div>
   </div>
 
-  <ng-container [ngTemplateOutlet]="dynamicFieldsOneSteps"> </ng-container>
-  <ng-container [ngTemplateOutlet]="memoInStep"> </ng-container>
+    <ng-container [ngTemplateOutlet]="dynamicFieldsOneSteps"> </ng-container>
+    <ng-container [ngTemplateOutlet]="memoInStep"> </ng-container>
+  </div>
 </ng-template>
 <!-- popup them cong viec -- nvthuan -->
 <ng-template #setJobPopup>
@@ -1618,12 +1620,8 @@
 <!-- chon loai cong viec -- nvthuan -->
 <!-- Popup thêm giai đoạn  -->
 <ng-template #addStage>
-  <codx-form
-    [headerText]="headerText"
-    [body]="addStageBody"
-    [footer]="addStageFooter"
-    [dialog]="popupAddStage"
-  >
+  <codx-form [headerText]="'Thêm Giai Đoạn'" [body]="addStageBody" [footer]="addStageFooter"
+    [dialog]="popupAddStage">
   </codx-form>
 </ng-template>
 
@@ -1637,14 +1635,8 @@
           default="Tên giai đoạn"
         ></codx-label>
       </div>
-      <codx-input
-        field="stepName"
-        [formModel]=""
-        [Group]=""
-        type="text"
-        [crrValue]="stepName"
-        (valueChange)="changeValueInput($event, step)"
-      >
+      <codx-input field="stepName" [formModel]="" [Group]="" type="text" [value]="isAddStage"
+        (valueChange)="changeValueInput($event,step)">
       </codx-input>
     </div>
     <div class="form-group text-gray-400" *ngIf="isAddStage">
@@ -2210,13 +2202,7 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input
-              field=""
-              type="valuelist"
-              field="AssignControl"
-              refValue="DP019"
-            >
-            </codx-input>
+            <codx-input field="" type="valuelist" field="AssignControl" refValue="DP019"> </codx-input>
           </div>
         </div>
         <div class="row pb-5">
@@ -2237,7 +2223,13 @@
           </div>
           <div class="col-6">
             <!-- Gán tạm chờ refvalue -->
-            <codx-input crrValue="1" type="valuelist" refValue="DP020">
+            <codx-input
+              field="transferControl"
+              crrValue="1"
+              type="valuelist"
+              refValue="DP020"
+              crrValue="0"
+            >
             </codx-input>
           </div>
         </div>
