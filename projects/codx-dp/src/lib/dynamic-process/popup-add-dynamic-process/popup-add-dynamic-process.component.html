@@ -1460,13 +1460,13 @@
       <div>
         <codx-label
           fiedName="taskGroupName"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Tên nhóm công việc"
         ></codx-label>
       </div>
       <codx-input
         field="taskGroupName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="text"
         [height]="'100'"
@@ -1480,14 +1480,14 @@
         <div>
           <codx-label
             fiedName="durationDay"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             default="Thời gian dự kiến"
           ></codx-label>
         </div>
         <div class="position-relative">
           <codx-input
             field="durationDay"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             [Group]=""
             type="text"
             [height]="'100'"
@@ -1500,7 +1500,7 @@
           >
             <codx-label
               fiedName="StepName"
-              [formModel]=""
+              [formModel]="dialog.formModel"
               default="Ngày"
             ></codx-label>
           </div>
@@ -1518,7 +1518,7 @@
         <div class="position-relative">
           <codx-input
             field="durationHour"
-            [formModel]=""
+            [formModel]="dialog.formModel"
             [Group]=""
             type="text"
             [height]="'100'"
@@ -1571,13 +1571,13 @@
       <div>
         <codx-label
           fiedName="memo"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Ghi chú"
         ></codx-label>
       </div>
       <codx-input
         field="memo"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="textarea"
         [height]="'100'"
@@ -1662,13 +1662,13 @@
       <div>
         <codx-label
           fiedName="StepName"
-          [formModel]=""
+          [formModel]="dialog.formModel"
           default="Tên giai đoạn"
         ></codx-label>
       </div>
       <codx-input
         field="stepName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         [Group]=""
         type="text"
         [crrValue]="stepName"
@@ -1679,7 +1679,7 @@
     <div class="form-group text-gray-400" *ngIf="isAddStage">
       <codx-label
         fiedName="StepName"
-        [formModel]=""
+        [formModel]="dialog.formModel"
         default="Mặc định giai đoạn sẽ được thêm vào vị trí cuối cùng (trước giai đoạn hoàn tất)"
       ></codx-label>
     </div>
