@@ -618,7 +618,7 @@
         <div class="example-list stage-body-left-main" cdkDropList (cdkDropListDropped)="drop($event, stepList)">
           <!-- danh sách giai đoạn -->
           <div cdkDrag *ngFor="let step of stepList; let i = index" class="list-stage example-box drap-drop"
-            (click)="clickViewReason($event, viewStepCustom, step ?? strEmpty)">
+            (click)="clickViewStep($event, viewStepCustom, step ?? strEmpty)">
             <div class="order">{{ i + 1 }}</div>
             <div class="p-3 content">
               <div style="font-weight: 600; font-size: 1.2rem">
@@ -634,7 +634,7 @@
           </div>
           <!-- Reason successs -->
           <div class="list-stage cursor-pointer drap-drop"
-            (click)="clickViewReason($event, viewStepReasonSuccess, strEmpty)">
+            (click)="clickViewStep($event, viewStepReasonSuccess, strEmpty)">
             <div class="order">T</div>
             <div class="content">
               <div style="font-weight: 600; font-size: 1.2rem">
@@ -646,7 +646,7 @@
 
           <!-- Reason fail -->
           <div class="list-stage cursor-pointer drap-drop"
-            (click)="clickViewReason($event, viewStepReasonFail, strEmpty)">
+            (click)="clickViewStep($event, viewStepReasonFail, strEmpty)">
             <div class="order">F</div>
             <div class="content">
               <div style="font-weight: 600; font-size: 1.2rem">

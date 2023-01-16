@@ -119,7 +119,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   step: DP_Steps;
   stepSelect: DP_Steps;
   stepList: DP_Steps[] = [];
-  // stepList: DP_Steps[];
 
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
@@ -279,12 +278,6 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   vllType = 'DP022';
   dataChild = [];
   //end data Test
-
-  isTurnOnYesNo: boolean = false; //Create variable Click yes/no for reason success/failure
-  viewReasonSuccess: string = 'viewReasonSuccess'; // test click view Reason Success
-  viewReasonFail: string = 'viewReasonFail'; // test click view Reason Success
-  ngTemplateOutlet: any;
-
   isShowstage = true;
 
   constructor(
@@ -892,8 +885,8 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   saveAddStep() {
-    this.stepList.push(this.step);  
-    this.popupAddStage.close(); 
+    this.stepList.push(this.step);
+    this.popupAddStage.close();
   }
 
   drop(event: CdkDragDrop<string[]>, data = null) {
@@ -1015,7 +1008,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-  clickViewReason($event: any, view: any, data: any) {
+  clickViewStep($event: any, view: any, data: any) {
     if ($event && $event != null) {
       if (
         view === this.viewStepReasonSuccess ||
@@ -1053,7 +1046,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   getTitleStepViewSetup() {
     if(this.stepList.length > 0){
       this.titleViewStepCrr = this.stepList[0].stepName;
-    }   
+    }
 
     // test nha
     // for(let i=0; i<10; i++){
