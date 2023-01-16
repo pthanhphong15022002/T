@@ -59,7 +59,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   process = new DP_Processes();
   permissions = [];
   dialog: any;
-  currentTab = 0; //Bước hiện tại
+  currentTab = 1; //Bước hiện tại
   processTab = 0; // Tổng bước đã đi qua
 
   newNode: number; //vị trí node mới
@@ -114,12 +114,12 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   user: any;
   userId: string;
 
-  taskGroup = {};
-  taskGroupList = [];
+  taskGroup: DP_Steps_TaskGroups;
+  taskGroupList: DP_Steps_TaskGroups[] = [];
 
   step: DP_Steps;
-  stepSelect: DP_Steps;
   stepList: DP_Steps[] = [];
+  stepName = '';
 
   popupJob: DialogRef;
   popupGroupJob: DialogRef;
@@ -130,6 +130,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   userGroupJob = [];
   nameStage = '';
   isAddStage = true;
+  headerText = '';
 
   listJobType = [
     {
@@ -886,12 +887,43 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         500,
         280
       );
+      this.stepName = '';
+      this.headerText = 'Thêm Giai Đoạn';
     } else {
+      this.headerText = 'Sửa Giai Đoạn';
+      this.stepName = this.step['stepName'];
+      this.popupAddStage = this.callfc.openForm(
+        this.addStagePopup,
+        '',
+        500,
+        280
+      );
+    }
+  }
+
+  clickMFStep(e: any, data?: any) {
+    switch (e.functionID) {
+      case 'SYS01':
+        // this.add();
+        break;
+      case 'SYS03':
+        this.openAddStep('edit');
+        break;
+      case 'SYS04':
+        // this.copy(data);
+        this.openAddStep('edit');
+        break;
+      case 'SYS02':
+        // this.delete(data);
+        break;
     }
   }
 
   saveAddStep() {
-    this.stepList.push(this.step);
+    if (!this.stepName) {
+      this.stepList.push(this.step);
+      this.titleViewStepCrr = this.step?.stepName;
+    }
     this.popupAddStage.close();
   }
 
@@ -917,7 +949,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
 
   //job -- nvthuan
-  setJob() {
+  openJob() {
     this.popupJob = this.callfc.openForm(this.setJobPopup, '', 400, 400);
   }
   selectJob(id) {
@@ -951,9 +983,9 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   openGroupJob() {
     this.taskGroup = new DP_Steps_TaskGroups();
     this.taskGroup['recID'] = Util.uid();
-    this.taskGroup['createdOn'] = Date.now();
+    this.taskGroup['createdOn'] = new Date();
     this.taskGroup['createdBy'] = this.userId;
-    this.taskGroup['stepID'] = this.stepSelect['recID'];
+    this.taskGroup['stepID'] = this.step['recID'];
     this.taskGroup['task'] = [];
     this.popupGroupJob = this.callfc.openForm(
       this.addGroupJobPopup,
@@ -1039,11 +1071,11 @@ export class PopupAddDynamicProcessComponent implements OnInit {
         if (data) {
           // gán tạm name để test
           this.titleViewStepCrr = data.stepName;
-
           // hidden swtich reason change
           this.isSwitchReason = false;
           // this.crrDataStep = data;
-          this.stepSelect = data;
+          this.step = data;
+          this.taskGroupList = this.step['taskGroups'];
         }
       }
     }
@@ -1051,7 +1083,7 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   }
   getTitleStepViewSetup() {
     if (this.stepList.length > 0) {
-      this.titleViewStepCrr = this.stepList[0].stepName;
+      this.titleViewStepCrr = this.step?.stepName;
     }
 
     // test nha
@@ -1073,6 +1105,24 @@ export class PopupAddDynamicProcessComponent implements OnInit {
   valueChangeAssignCtrl($event) {
     if ($event && $event != null) {
       //  let secleted = $event.data;
+      this.step.assignControl = $event.data;
+    }
+    this.changeDetectorRef.detectChanges();
+  }
+  valueChangeTransferCtrl($event) {
+    if ($event && $event != null) {
+      //  let secleted = $event.data;
+      this.step.transferControl = $event.data;
+    }
+  }
+  valueChangeDuraDay($event) {
+    if ($event && $event != null) {
+      this.step.durationDay = $event.data;
+    }
+  }
+  valueChangeDuraHour($event) {
+    if ($event && $event != null) {
+      this.step.durationHour = $event.data;
     }
   }
 
