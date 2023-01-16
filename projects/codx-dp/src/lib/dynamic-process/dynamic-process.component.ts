@@ -27,6 +27,7 @@ import {
 } from 'codx-core';
 import { CodxDpService } from '../codx-dp.service';
 import { DP_Processes, DP_Processes_Permission } from '../models/models';
+import { PopupViewsDetailsProcessComponent } from './popup-views-details-process/popup-views-details-process.component';
 
 @Component({
   selector: 'lib-dynamic-process',
@@ -56,6 +57,7 @@ export class DynamicProcessComponent
   gridViewSetup: any;
   showID = false;
   processNo: any;
+  instanceNo: any;
   // const set value
   readonly btnAdd: string = 'btnAdd';
 
@@ -81,10 +83,10 @@ export class DynamicProcessComponent
   readonly className = 'ProcessesBusiness';
 
   // Method API dynamic proccess
-  readonly methodGetList = 'GetListDynProcessesAsync';
+  readonly methodGetList = 'GetListProcessesAsync';
 
   // Get idField
-  readonly idField = 'processNo';
+  readonly idField = 'recID';
 
   constructor(
     private inject: Injector,
@@ -94,12 +96,13 @@ export class DynamicProcessComponent
     private notificationsService: NotificationsService,
     private authStore: AuthStore,
     private callFunc: CallFuncService,
-    private dpService: CodxDpService,
+    private dpService: CodxDpService
   ) {
     super(inject);
     this.heightWin = Util.getViewPort().height - 100;
     this.widthWin = Util.getViewPort().width - 100;
     this.funcID = this.activedRouter.snapshot.params['funcID'];
+    // this.genAutoNumber();
   }
 
   onInit(): void {
@@ -110,14 +113,13 @@ export class DynamicProcessComponent
     this.getListUser();
   }
 
-
-
   afterLoad() {}
   onDragDrop(e: any) {}
 
   click(evt: ButtonModel) {
     switch (evt.id) {
       case this.btnAdd:
+        this.genAutoNumber();
         this.add();
         break;
     }
@@ -143,11 +145,26 @@ export class DynamicProcessComponent
     if ($event) this.changeDetectorRef.detectChanges();
   }
 
+  async genAutoNumber() {
+    this.dpService
+      .genAutoNumber(this.funcID, 'DP_Processes', 'processNo')
+      .subscribe((res) => {
+        if (res) {
+          this.processNo = res;
+          this.showID = true;
+        } else {
+          this.showID = false;
+        }
+      });
+  }
   // CRUD methods
   add() {
     this.view.dataService.addNew().subscribe((res) => {
       var obj = {
         action: 'add',
+        processNo: this.processNo,
+        showID: this.showID,
+        instanceNo: this.instanceNo
       };
       let dialogModel = new DialogModel();
       dialogModel.IsFull = true;
@@ -235,7 +252,7 @@ export class DynamicProcessComponent
   beforeDel(opt: RequestOption) {
     var itemSelected = opt.data[0];
     opt.methodName = 'DeletedProcessesAsync';
-    opt.data = [itemSelected.recID, true];
+    opt.data = [itemSelected.recID];
     return true;
   }
 
@@ -305,4 +322,24 @@ export class DynamicProcessComponent
   }
 
   //#endregion đang test
+
+  doubleClickViewProcess(data){
+    let obj = {
+    //can gi nem qua
+    };
+
+    let dialogModel = new DialogModel();
+    dialogModel.IsFull = true;
+    dialogModel.zIndex = 999;
+    var dialog = this.callfc.openForm(
+      PopupViewsDetailsProcessComponent,
+      '',
+      this.widthWin,
+      this.heightWin,
+      '',
+      obj,
+      '',
+      dialogModel
+    );
+  }
 }

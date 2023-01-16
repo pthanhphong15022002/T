@@ -142,8 +142,8 @@ app-list-post .e-listview .e-list-item {
 .border,
 .border-bottom,
 .border-top,
-.border-left,
-.border-right {
+.border-start,
+.border-end {
     border-color: var(--border-gray) !important;
 }
 
@@ -451,6 +451,7 @@ h1,
 
 .feed-box {
     background-color: var(--bg-input);
+    border: 1px #3f3f56 solid;
 }
 
 .codx-toast-container .e-toast-success {
@@ -531,6 +532,10 @@ codx-view-kanban .e-kanban .e-kanban-content .e-content-row .e-content-cells .e-
 
 .e-dialog .card-footer .btn {
     color: var(--text-title);
+}
+
+.e-dialog .btn.btn-primary {
+    color: var(--white);
 }
 
 .e-dlg-header,
@@ -642,6 +647,49 @@ ejs-listview,
 
 .menu-sub-dropdown {
     background-color: var(--bg-card);
+}
+
+.e-schedule .e-month-agenda-view .e-appointment-wrap {
+    border-color: var(--border-gray);
+}
+
+.e-schedule .e-year-view .e-calendar-wrapper .e-month-calendar.e-calendar {
+    margin: 0 5px 5px 0;
+}
+
+.col-form-label {
+    color: var(--text-title);
+}
+
+.table {
+    color: var(--text-body);
+}
+
+.e-float-input:focus,
+.form-control:focus,
+.e-richtexteditor .e-rte-content .e-content:focus {
+    background-color: inherit !important;
+    border-color: var(--primary) !important;
+    color: var(--text-body) !important;
+}
+
+.e-richtexteditor.e-focused {
+    border-color: var(--primary) !important;
+}
+
+label,
+.e-checkbox-wrapper .e-label,
+.e-css.e-checkbox-wrapper .e-label,
+.e-radio+label .e-label {
+    color: var(--text-des);
+
+}
+
+.e-schedule .e-timeline-view .e-work-cells,
+.e-schedule .e-timeline-month-view .e-work-cells {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: var(--border-list);
+    color: inherit;
 }
 
 //end dark

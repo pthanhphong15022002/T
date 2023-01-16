@@ -45,6 +45,7 @@ export class PopupAddCustomFieldComponent implements OnInit {
 
   ngOnInit(): void {
     if (!this.field.recID) this.field.recID = Util.uid();
+    this.changdef.detectChanges() ;
    
   }
 

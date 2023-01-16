@@ -29,6 +29,8 @@ export class PopupJobComponent implements OnInit {
   isNewEmails = true;
   groupTackList = [];
   stepsTasks = {};
+  fields = { text: "recID", value: "taskGroupName" };
+  tasksItem = '';
   constructor(
     private callfunc: CallFuncService,
     @Optional() dt?: DialogData,
@@ -49,9 +51,10 @@ export class PopupJobComponent implements OnInit {
     this.stepsTasks[event?.field] = event?.data;
   }
 
-  changeSelect(event) {
-    this.stepsTasks['taskGroupID'] = event.target.value;
-    console.log(event.target.value);
+  filterText(value) {
+    if(value.itemData){
+      this.stepsTasks['taskGroupID'] = value['itemData']['recID'];
+    } 
   }
   valueChangeAlert(e) {}
   addFile(evt: any) {

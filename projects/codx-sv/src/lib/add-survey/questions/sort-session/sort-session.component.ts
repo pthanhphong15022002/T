@@ -65,6 +65,7 @@ export class SortSessionComponent extends UIComponent implements OnInit {
   }
 
   drop(event: CdkDragDrop<string[]>) {
+    debugger;
     moveItemInArray(this.data, event.previousIndex, event.currentIndex);
     this.data.forEach((x, index) => {
       x.seqNo = index;

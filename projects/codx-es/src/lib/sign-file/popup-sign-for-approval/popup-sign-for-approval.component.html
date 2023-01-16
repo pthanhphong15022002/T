@@ -12,7 +12,7 @@
             type="button"
             [style.background]="item?.color"
             class="btn btn-sm text-inverse-danger me-2 mb-2 min-w-60px rounded-4"
-            [disabled]="!canOpenSubPopup || !isConfirm || ((item.functionID != 'SYS206' && item.functionID != 'SYS208') && disabled)"
+            [disabled]="!canOpenSubPopup || !isConfirm || ((item.functionID != 'SYS206') && disabled)"
             (click)="clickOpenPopupADR(item)"
           >
             {{ item?.text }}
