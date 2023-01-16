@@ -1094,10 +1094,19 @@
               </codx-input>
             </div>
             <div
-              class="icon-more_vert"
+              *ngIf="step"
+              class="icon-more_vert has-action-menu"
               style="cursor: pointer"
-              (click)="openAddStep('edit')"
-            ></div>
+            >
+              <codx-mfunc
+                [formModel]="dialog.formModel"
+                (clickMF)="clickMF($event, data)"
+                [isBookMark]="true"
+                [dataItem]="data"
+                [type]="'hover'"
+              >
+              </codx-mfunc>
+            </div>
           </div>
         </div>
         <div class="main">
